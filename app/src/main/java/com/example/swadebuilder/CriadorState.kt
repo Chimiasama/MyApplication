@@ -2570,43 +2570,6 @@ class CriadorState {
         val key = v.nome.keyify()
         val ancestralidadeKey = ancestralidade.keyify()
 
-        if (compendioCidadeSolVaporAtivo) {
-            val blockedIdsCsv = setOf(
-                "artifice",
-                "senhor_das_feras",
-                "campeao",
-                "engenhoqueiro",
-                "guerreiro_sagrado_profano",
-                "mentalista",
-                "pontos_de_poder",
-                "surto_de_poder",
-                "recarga_rapida",
-                "recarga_rapida_aprimorada",
-                "drenar_a_alma",
-                "mago"
-            )
-            if (v.id in blockedIdsCsv) return false
-
-            // "Novos Poderes" disponível apenas para Tecnomagia.
-            if (v.id == "novos_poderes") {
-                val temTecnomagia = vantagensSelecionadas.any { it.id == "aa_tecnomagia" }
-                if (!temTecnomagia) return false
-            }
-
-            // Vantagens com pré-requisito de AA só se forem do próprio livro Cidade do Sol a Vapor.
-            val hasArcanePrereq = v.requisitos.vantagensPrevias.any { prevId ->
-                val p = prevId.uppercase().semAcentos().trim()
-                p == "ANTECEDENTE_ARCANO" ||
-                    p == "ANTECEDENTE_ARCANO:*" ||
-                    p.startsWith("ANTECEDENTE_ARCANO_") ||
-                    p.startsWith("AA_")
-            }
-            val origemNorm = v.origem.uppercase().semAcentos().trim()
-            if (hasArcanePrereq && origemNorm != "CIDADE_SOL_VAPOR" && origemNorm != "SOL_VAPOR") {
-                return false
-            }
-        }
-
         // Cidade do Sol a Vapor: AA (Demônio) disponível para Demônio e Meio-Demônio.
         if (v.id == "aa_demonio") {
             val isMeioDemonio = ancestralidadeKey.contains("MEIO-DEMONIO")

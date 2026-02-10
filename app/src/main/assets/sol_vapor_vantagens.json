@@ -523,8 +523,7 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-      ],
+      "vantagens_previas": [],
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
@@ -1641,7 +1640,7 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "antecedente_arcano_tecnomago"
+        "aa_tecnomagia"
       ],
       "observacoes": ""
     },
@@ -2659,20 +2658,20 @@
     "descricao": "Sempre que você obtiver um sucesso em Persuadir com um alvo que seja de sua área de trabalho e não possua a Vantagem Sindicalizado, seu nível de reação aumenta em um nível. Numa ampliação, ele se torna seu aliado e ajudará seu personagem como puder até o fim da aventura."
   },
   {
-      "id": "acordo_com_demonios",
-      "nome": "ACORDO COM DEMÔNIOS",
-      "categoria": "ANTECEDENTE",
-      "origem": "SOL_VAPOR",
-      "requisitos": "Novato, Conhecimento Geral d6+, Persuadir d6+, não pode ter escolhido a Vantagem Rico",
-      "descricao": "Entre os recém-chegados à Teia, há muitas pessoas que esperam tirar proveito do Programa Promessa de Almas, usando o dinheiro para ficar rico rapidamente. A primeira parte é fácil, mas poucos têm sucesso na segunda parte. Seu personagem tem sorte. Ele começa o jogo com uma quantia quatro vezes maior que a inicial e seu salário anual é de aproximadamente 200 mil sóis. No entanto, preocupações sobre o destino da alma imortal o levou a ter medo dos demônios. O personagem ganha a Complicação Fobia (Menor— demônios), mas não recebe pontos de criação por isso. Esta Vantagens pode ser usada no lugar de Rico para cumprir o requisito para Podre de Rico."
+    "id": "acordo_com_demonios",
+    "nome": "ACORDO COM DEMÔNIOS",
+    "categoria": "ANTECEDENTE",
+    "origem": "SOL_VAPOR",
+    "requisitos": "Novato, Conhecimento Geral d6+, Persuadir d6+, não pode ter escolhido a Vantagem Rico",
+    "descricao": "Entre os recém-chegados à Teia, há muitas pessoas que esperam tirar proveito do Programa Promessa de Almas, usando o dinheiro para ficar rico rapidamente. A primeira parte é fácil, mas poucos têm sucesso na segunda parte. Seu personagem tem sorte. Ele começa o jogo com uma quantia quatro vezes maior que a inicial e seu salário anual é de aproximadamente 200 mil sóis. No entanto, preocupações sobre o destino da alma imortal o levou a ter medo dos demônios. O personagem ganha a Complicação Fobia (Menor— demônios), mas não recebe pontos de criação por isso. Esta Vantagens pode ser usada no lugar de Rico para cumprir o requisito para Podre de Rico."
   },
   {
-      "id": "parrudo",
-      "nome": "PARRUDO",
-      "categoria": "ANTECEDENTE",
-      "origem": "SOL_VAPOR",
-      "requisitos": "Novato, Força d10+",
-      "descricao": "Seu personagem é muito robusto, não há penalidades quando for se mover e disparar com uma arma com a característica Tiro Rápido no mesmo turno. Se ele usar uma armadura a vapor, podem usar a Arma Estacionária como se fosse Tiro Rápido."
+    "id": "parrudo",
+    "nome": "PARRUDO",
+    "categoria": "ANTECEDENTE",
+    "origem": "SOL_VAPOR",
+    "requisitos": "Novato, Força d10+",
+    "descricao": "Seu personagem é muito robusto, não há penalidades quando for se mover e disparar com uma arma com a característica Tiro Rápido no mesmo turno. Se ele usar uma armadura a vapor, podem usar a Arma Estacionária como se fosse Tiro Rápido."
   },
   {
     "id": "cavalheiro_completo",
