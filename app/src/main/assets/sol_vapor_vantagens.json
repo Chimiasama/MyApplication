@@ -2461,7 +2461,7 @@
     "id": "anjo_cinza",
     "nome": "ANJO CINZA",
     "origem": "SOL_VAPOR",
-    "categoria": "RACIAL",
+    "categoria": "ANCESTRALIDADE",
     "requisitos": "Anjo, Novato",
     "descricao": "Anjos que passaram séculos em Limbo se tornaram praticamente invulneráveis a muitos de seus Perigos. Eles não são afetados pelos ares de Limbo, calor, frio, doenças e venenos."
   },
@@ -2469,7 +2469,7 @@
     "id": "guerreiro_celestial",
     "nome": "GUERREIRO CELESTIAL",
     "origem": "SOL_VAPOR",
-    "categoria": "RACIAL",
+    "categoria": "ANCESTRALIDADE",
     "requisitos": "Anjo, Experiente",
     "descricao": "Anjos guerreiros elevaram o controle sobre seus corpos a patamares incríveis. Eles podem lançar em si mesmos poderes como proteção arcana, aumentar característica, proteção ambiental, proteção, velocidade e dádiva do guerreiro rolando o Atributo ao invés da perícia Arcana. Não é possível prolongar o efeito dos poderes, mas uma ampliação dobrará a duração destes poderes. Estes poderes não podem ser usados simultaneamente com Modificadores de Poder aplicados neles. Esta Vantagem não pode ser escolhida junto com a Vantagem Antecedente Arcano (Anjo)."
   },
