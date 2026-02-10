@@ -21,7 +21,7 @@
   {
     "id": "antecedente_arcano",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -45,7 +45,7 @@
   {
     "id": "antecedente_arcano_dom",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -65,7 +65,7 @@
   {
     "id": "antecedente_arcano_magia",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -85,7 +85,7 @@
   {
     "id": "antecedente_arcano_milagres",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -105,7 +105,7 @@
   {
     "id": "antecedente_arcano_ciencia_estranha",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -125,7 +125,7 @@
   {
     "id": "antecedente_arcano_psionicos",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -523,8 +523,7 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-      ],
+      "vantagens_previas": [],
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
@@ -1641,7 +1640,7 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "antecedente_arcano_tecnomago"
+        "aa_tecnomagia"
       ],
       "observacoes": ""
     },
@@ -2447,8 +2446,8 @@
     "nome": "ANTECEDENTE ARCANO (Demônio)",
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
-    "requisitos": "Demônio",
-    "descricao": "Perícia: Conjurar (Astúcia)\nPoderes Iniciais: Disfarce Demoníaco e mais 3\nPontos de Poder Iniciais: 10\nTodos os demônios nascem com poderes mágicos, no entanto, seu potencial mágico depende de seu status. A maioria dos poderes disponíveis para demônios são os mesmos que os bruxos usam, mas os demônios são capazes de usar poderes que os humanos não podem usar de forma alguma."
+    "requisitos": "Novato, Demônio ou Meio-Demônio",
+    "descricao": "Perícia: Conjurar (Astúcia)\nPoderes Iniciais: Disfarce Demoníaco e mais 3\nPontos de Poder Iniciais: 10\n\nTodos os demônios nascem com poderes mágicos, no entanto, seu potencial mágico depende de seu status. A maioria dos poderes disponíveis para demônios são os mesmos que os bruxos usam (veja Magia no Livro dos Demônios (p. 141)), mas os demônios são capazes de usar poderes que os humanos não podem usar de forma alguma."
   },
   {
     "id": "aa_anjo",
@@ -2462,7 +2461,7 @@
     "id": "anjo_cinza",
     "nome": "ANJO CINZA",
     "origem": "SOL_VAPOR",
-    "categoria": "RACIAL",
+    "categoria": "ANCESTRALIDADE",
     "requisitos": "Anjo, Novato",
     "descricao": "Anjos que passaram séculos em Limbo se tornaram praticamente invulneráveis a muitos de seus Perigos. Eles não são afetados pelos ares de Limbo, calor, frio, doenças e venenos."
   },
@@ -2470,7 +2469,7 @@
     "id": "guerreiro_celestial",
     "nome": "GUERREIRO CELESTIAL",
     "origem": "SOL_VAPOR",
-    "categoria": "RACIAL",
+    "categoria": "ANCESTRALIDADE",
     "requisitos": "Anjo, Experiente",
     "descricao": "Anjos guerreiros elevaram o controle sobre seus corpos a patamares incríveis. Eles podem lançar em si mesmos poderes como proteção arcana, aumentar característica, proteção ambiental, proteção, velocidade e dádiva do guerreiro rolando o Atributo ao invés da perícia Arcana. Não é possível prolongar o efeito dos poderes, mas uma ampliação dobrará a duração destes poderes. Estes poderes não podem ser usados simultaneamente com Modificadores de Poder aplicados neles. Esta Vantagem não pode ser escolhida junto com a Vantagem Antecedente Arcano (Anjo)."
   },
@@ -2479,8 +2478,8 @@
     "nome": "ANTECEDENTE ARCANO (Tecnomagia)",
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
-    "requisitos": "Novato",
-    "descricao": "Perícia: Tecnomagia (Astúcia)\nPoderes Iniciais: Detectar Arcano e 2 poderes de sua escolha\nPontos de Poder: Especial\nAo contrário dos magos tradicionais, os tecnomagos não realizam suas magias usando seu próprio poder inerente, muito menos através de rituais arcanos. Ao invés disso, o tecnomago depende de equipamentos especialmente projetados (bateria, unidade de programação, emissor)."
+    "requisitos": "Novato, Humano, Tecnomagia d6+",
+    "descricao": "Perícia: Tecnomagia (Astúcia)\nPoderes Iniciais: Detectar Arcano e 2 poderes de sua escolha\nPontos de Poder: Especial\n\nA era da tecnomagia começou em 1882, após as descobertas revolucionárias do Professor Charles Strangelove. Ao contrário dos magos tradicionais, os tecnomagos não realizam suas magias usando seu próprio poder inerente, muito menos através de rituais arcanos. Ao invés disso, o tecnomago depende de equipamentos especialmente projetados.. Uma pessoa inexperiente pode pensar que se deseja praticar tecnomagia basta ter uma carteira cheia, mas isso não é verdade. Para usar seus poderes, um tecnomago precisa inserir um conjunto definido de valores na unidade de programação de seu kit. A base para cada conjunto é uma assinatura do poder selecionado. A maioria das assinaturas é comumente acessível entre a comunidade tecnomágica, portanto podem ser pesquisadas e adquiridas com relativa facilidade. (Para poderes que exigem o Estágio Veterano e acima, o Mestre do Jogo pode decidir que a busca por uma assinatura será uma missão separada). No entanto, para que um poder funcione, é necessário ajustar a assinatura, considerando o grande número de fatores (parâmetros individuais de um tecnomago, horário do dia, etc.). A capacidade de sentir esses parâmetros em um nível intuitivo é um fator que separa as pessoas que são capazes de se tornar tecnomagos das que não são.\n\nUsando Benes: Tecnomagos podem restaurar 5 PP gastando um Bene, conforme explicado em Savage Worlds Edição Aventura.\n\nModificadores de Poder Indisponíveis\nTecnomagos não podem usar os Modificadores Seletivo e Mortalha. Os Modificadores Apressar/ Atrasar só podem ser usado em poderes com a Limitação de Ressonância.\n\nLista de poderes\nA seguir está uma lista de poderes com exemplos de Manifestações que estão disponíveis para tecnomagos.\nSe uma Limitação é indicada entre parênteses, é obrigatória para aprender o poder. Se esta Limitação é um Aspecto, então apenas uma variante do poder é listada (por exemplo, “Iluminar”, mas não “Iluminar/Obscurecer”). Além disso, se diferentes versões do poder são itens independentes na lista, então eles são estudados separadamente.\nAlém disso, para alguns poderes, são indicadas particularidades de seu uso ou novas regras que diferem de Savage Worlds.\nNovato\nAjuda: Sons calmantes.\nAndar nas Paredes (Ressonância): O circuito nas luvas começa a brilhar levemente laranja.\nAtordoar: Ultrassom.\nAumentar/Diminuir Característica (Ressonância): Circuito de ressonância começa a brilhar levemente laranja.\nCegar: Um flash de luz.\nConfusão: O som de uma frequência específica, causando confusão no inimigo.\nDeflexão (Ressonância): Circuito de ressonância começa a gerar um campo magnético repelente.\nDevastação: Fluxo de poderosos ventos divergentes a partir do ponto-alvo.\nDetectar Arcano (Óculos, Aspecto): Sem Manifestações visíveis.\nParticularidades: A critério do Mestre, pode ser necessário uma rolagem de Ocultismo adicional para entender a essência do rastro mágico, se tiver uma origem não tecnomágica.\nEnredar: Envolve o alvo em gelo.\nExplosão: Explosão de fogo, trovão ou ventos congelantes.\nIluminar (Aspecto): O tecnomago preenche o objeto com energia, então ele começa a brilhar.\nParticularidades: Precisa ser um objeto pequeno, que será a fonte de luz. Pode ser qualquer sucata, mas não pode ser parte de algo maior (por exemplo, não pode usar uma área de solo como fonte de luz, mas pode usar uma poção de terra que você pegar).\nMedo: O som de uma frequência especialmente selecionada causa medo.\nOcultar o Arcano (Aspecto): Sem Manifestações visíveis.\nParticularidades: Aplicar este feitiço leva 15 minutos. A critério do Mestre, se for necessário ocultar energias arcanas em uma área grande, ou de um artefato especialmente poderoso, o tempo pode ser aumentado. Em caso de Falha Crítica, ele funciona como o poder Dissipar.\nProteção (Ressonância): O circuito começa a brilhar levemente azul.\nProteção Arcana (Ressonância): Circuito de ressonância pulsa com luz vermelha.\nRaio: Raio de trovão, fogo ou gelo.\nSom\\Silêncio: Ondas sonoras emanando do ponto-alvo.\nVisão Sombria (Óculos): O vidro dos óculos brilha fracamente com luz vermelha (este efeito pode ser percebido com um sucesso em uma rolagem de Perceber com uma penalidade de -6).\nExperiente\nCampo de Dano (Ressonância): Descargas elétricas no circuito de ressonância que são inofensivas para o usuário.\nDissipar: Explosão de energia, direcionada ao local afetado pela magia.\nParticularidades: Este poder não afeta as características naturais de criaturas do Limbo e objetos mágicos, a menos que a descrição do objeto diga o contrário. Para escolher o efeito de neutralização adequado, um tecnomago precisa determinar a natureza do rastro mágico primeiro com a ajuda do poder detectar arcano, caso contrário receberá uma penalidade de -4 para rolagens de Tecnomagia ao lançar este poder.\nExplosão: Bola de relâmpago, fogo ou gelo.\nFerir: Preenche projéteis ou armas com energia.\nInvisibilidade (Ressonância): Causa um efeito de camuflagem semelhante a de um camaleão.\nMorosidade/Velocidade (Ressonância): O circuito começa a brilhar com uma luz azul brilhante para velocidade, ou luz verde pálido para morosidade.\nSono: Som que causa sonolência.\nVisão Distante (Óculos): Sem manifestações visíveis.\nVeterano\nLimpeza mental: Ondas sonoras hipnotizantes.\nParticularidades: A modificação Editar não está disponível. Tecnomagos podem apagar até uma hora das memórias mais recentes, ou 24 horas com uma Ampliação.\nSobrecarga: Fluxo de energia dirigido ao mecanismo.\nPP: 4\nDistância: Astúcia x2.\nDuração: Instantânea\nAtingindo pontos sensíveis, o tecnomago sobrecarrega um mecanismo até quebrá-lo. Role os dados apropriados, dependendo do tamanho do mecanismo (d4 para mecanismos pequenos, como pistolas ou brinquedos mecânicos, d6 para médios, como armaduras mecanizadas ou autômatos, d8 para grandes, como veículos ou autômatos enormes). Se o resultado for menor que o PMF do mecanismo, ocorre um mau funcionamento imediatamente. Se este poder for aplicado novamente ao mesmo mecanismo, seus PMF aumentarão em 2 até o final do próximo turno.\nModificadores:\nFalha Catastrófica (+5): Se houver um mau funcionamento, o mecanismo explode. Mecanismos pequenos causam 2d4 de dano em um Modelo Pequeno de Explosão, 2d6 em um Modelo Médio de Explosão para mecanismos médios, e 2d8 em um Modelo Grande de Explosão para mecanismos grandes."
   },
   {
     "id": "magomecanico",
@@ -2488,7 +2487,7 @@
     "origem": "SOL_VAPOR",
     "categoria": "PROFISSIONAL",
     "requisitos": "Experiente, Antecedente Arcano (Tecnomagia), Consertar d8+, Ciência d8+, Tecnomagia d8+",
-    "descricao": "Alguns tecnomagos preferem não usar suas habilidades em combate, mas sim para o processamento refinado de materiais. Um personagem com esta Vantagem é capaz de fabricar produtos que ultrapassam os limites da ciência moderna. Personagens com essa vantagem podem usar sua perícia de Tecnomagia com os modificadores de nível do emissor em vez da perícia de Consertar, mesmo para consertar coisas que não deveriam ser consertadas. Processar matéria com tecnomagia custa 1 PP e 10 minutos."
+    "descricao": "Alguns tecnomagos preferem não usar suas habilidades em combate, mas sim para o processamento refinado de materiais. Esses tecnomagos geralmente são chamados de magomecânicos. Um personagem com esta Vantagem é capaz de fabricar produtos que ultrapassam os limites da ciência moderna (veja Invenções no livro dos Homens, p. 79). Personagens com essa vantagem podem usar sua perícia de Tecnomagia com os modificadores de nível do emissor em vez da perícia de Consertar, mesmo para consertar coisas que não deveriam ser consertadas (por exemplo, uma caldeira de vapor destruída). Processar matéria com tecnomagia custa 1 PP e 10 minutos."
   },
   {
     "id": "molda_carne",
@@ -2496,7 +2495,7 @@
     "origem": "SOL_VAPOR",
     "categoria": "PROFISSIONAL",
     "requisitos": "Veterano, Antecedente Arcano (Tecnomagia), Curar d8+, Tecnomagia d10+",
-    "descricao": "Você pode enxertar próteses tecnomágicas para substituir completamente a parte perdida do corpo. Além disso, personagens com esta Vantagem podem usar sua perícia de Tecnomagia com os modificadores de nível do emissor ao invés da perícia de Cura. Processar carne viva com tecnomagia custa 1 PP e 10 minutos."
+    "descricao": "O material mais difícil para o processamento tecnomágico é a carne viva, mas alguns tecnomagos dominaram esta arte também. Você pode enxertar próteses tecnomágicas para substituir completamente a parte perdida do corpo. Além disso, personagens com esta Vantagem podem usar sua perícia de Tecnomagia com os modificadores de nível do emissor ao invés da perícia de Cura. Processar carne viva com tecnomagia custa 1 PP e 10 minutos."
   },
   {
     "id": "poder_da_mente",
@@ -2504,15 +2503,15 @@
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
     "requisitos": "Novato, Antecedente Arcano (Tecnomagia)",
-    "descricao": "Tecnomagos experientes que usam seus equipamentos por muito tempo são capazes de personalizá-los e usá-los com maior eficiência. Um tecnomago com esta Vantagem pode introduzir novos poderes na unidade de programação em uma rodada."
+    "descricao": "Tecnomagos experientes que usam seus equipamentos por muito tempo são capazes de personalizá-los e usá-los com maior eficiência. Um tecnomago com esta Vantagem pode introduzir novos poderes na unidade de programação em uma rodada.\n\nModificadores de Poder Indisponíveis\nTecnomagos não podem usar os Modificadores Seletivo e Mortalha. Os Modificadores Apressar/Atrasar só podem ser usado em poderes com a Limitação de Ressonância."
   },
   {
     "id": "aa_magia_das_trevas",
     "nome": "ANTECEDENTE ARCANO (Magia das Trevas)",
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
-    "requisitos": "Novato",
-    "descricao": "Perícia: Ocultismo (Astúcia)\nPoderes Iniciais: Especiais\nPontos de Poder: Especiais\nCertas pessoas podem usar os segredos sombrios de antigos grimórios para praticar magia, mas para alimentar o poder da feitiçaria eles precisam de sacrifício humano. Um personagem com essa vantagem pode usar quaisquer poderes de feiticeiro disponíveis para seu nível. A preparação dos feitiços requer um ritual com sacrifício humano."
+    "requisitos": "Novato, Humano, Ocultismo d6+",
+    "descricao": "Perícia: Ocultismo (Astúcia)\nPoderes Iniciais: Especiais\nPontos de Poder: Especiais\n\nCertas pessoas podem usar os segredos sombrios de antigos grimórios para praticar magia, mas para alimentar o poder da feitiçaria eles precisam de sacrifício humano.\n\nPoderes disponíveis: Um personagem com essa vantagem pode usar quaisquer poderes de feiticeiro disponíveis para seu nível.\nSacrifício: A preparação dos feitiços requer um ritual com sacrifício humano. O ritual leva pelo menos meia hora, mais cinco minutos para preparar cada vítima. Cada sacrifício concede 10 Pontos de Poder; um feiticeiro pode distribuí-los para qualquer número de poderes ou investi-los em efeitos adicionais ou na duração de um poder. Uma rolagem de Ocultismo é feita durante o ritual para a ativação de cada poder. Se houver uma falha crítica, o poder funciona contra o próprio feiticeiro.\nFeitiços guardados: Após um ritual bem-sucedido, o feiticeiro pode manter o poder e usá-lo mais tarde sem uma rolagem da perícia. O único problema é que eles só podem manter três feitiços guardados sem penalidades. Se o feiticeiro quiser manter mais poderes, a cada seis horas eles precisam fazer uma rolagem de Ocultismo com uma penalidade de -2 para cada poder guardado acima dos três primeiros. No caso de uma falha, todos os poderes guardados, exceto os três primeiros, são perdidos. Se for uma Falha Crítica, todos os poderes guardados, incluindo os três primeiros, são descarregados no feiticeiro.\nUsando Benes: Feiticeiros não podem restaurar PP com Benes, mas podem gastar um Bene para receber 5 PP adicionais de um sacrifício.\nVantagens Indisponíveis\nFeiticeiros não podem escolher a Vantagem de Novos Poderes, porque todos os poderes correspondentes ao seu Estágio estão disponíveis para eles.\n\nLista de poderes\nAbaixo está uma lista de poderes com exemplos de Manifestações disponíveis para feiticeiros. Para alguns poderes, existem particularidades em seu uso ou novas regras que diferem do Savage Worlds Edição Aventura. Se “Aspecto” for indicado entre parênteses após o nome do poder, então o poder sempre tem essa Limitação, e apenas o Aspecto disponível está listado (por exemplo, “Iluminar” mas não “Iluminar/Obscurecer”).\nNovato\nAndar nas Paredes: Os braços e pernas do alvo são cobertos por sombras, permitindo que ele ande nas paredes e no teto.\nAtordoar: Um som estridente e alto.\nCegar: Sem manifestações visíveis, os olhos do alvo obscurecem.\nConfusão: Sem Manifestações visíveis.\nDeflexão: Sem Manifestações visíveis, apenas alguns obstáculos ocasionais perturbam os atacantes.\nDetectar/ocultar Arcano: Detectar arcano não possui manifestações visíveis, para ocultar arcano, símbolos cabalísticos são desenhados no alvo.\nDevastação: Tecidos das sombras devastam ao redor.\nEnredar: O alvo é enredado por tentáculos das sombras.\nFerir: Munição ou armas começam a brilhar com uma luz roxa.\nIlusão: Alucinação.\nParticularidades: A ilusão afeta apenas um alvo.\nMedo: Sem Manifestações visíveis.\nObscurecer (Aspecto): Um campo de escuridão.\nProteção Arcana: Um amuleto que brilha com uma luz carmesim e se quebra quando o poder acaba.\nProteção: Armadura azul-escura.\nRaio: Aglomerados de chamas carmesim.\nRajada: Rajada de chamas carmesim.\nReduzir Característica (Aspecto): Uma breve maldição.\nSom/Silêncio: Os sons se tornam distorcidos e assustadores.\nVisão Sombria: As pupilas do alvo brilham levemente em vermelho.\nExperiente\nCampo de Dano: Um exército de sombras em movimento.\nDisfarce: Ilusão intangível.\nParticularidades: Para mudar de tamanho, um feiticeiro cria uma ilusão intangível, então a penalidade para uma rolagem de perceber é reduzida em 2. Por exemplo, em uma situação em que um feiticeiro passar por baixo de árvores, os galhos passarão pela ilusão.\nExplosão: Um emaranhado de tentáculos, tecidos das sombras.\nInvisibilidade: O alvo se mistura com as sombras.\nParticularidades: Em luz intensa, as penalidades para sua detecção são reduzidas para -2 / -4.\nMorosidade: Sombras do chão, atrasando as pernas do alvo.\nSono: Sem manifestações visíveis, os alvos têm pesadelos (modificador +2 para rolagens de Espírito ao acordar por som alto).\nVisão Distante: Sem Manifestações visíveis.\nVeterano\nFantoche: Os olhos do mago e da vítima começam a brilhar com uma luz esverdeada.\nLimpeza Mental: Tocar a testa do alvo.\nHeróico\nAdivinhação: Adivinhações a partir das entranhas da vítima.\nPeculiaridades: Este poder não pode ser guardado e é usado imediatamente durante o ritual.\nIntangibilidade: O alvo se transforma em sombra."
   },
   {
     "id": "irmao_da_noite",
@@ -2543,8 +2542,8 @@
     "nome": "ANTECEDENTE ARCANO (Milagres)",
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
-    "requisitos": "Novato",
-    "descricao": "Perícia: Fé (Espírito)\nPoderes iniciais: Especial\nPontos de poder: Especial\nOs milagres consomem a força vital de um crente, às vezes até o ponto da fatalidade. Personagens com essa Vantagem podem usar qualquer poder dos abençoados que esteja disponível para o seu Estágio. Para obter poder, os abençoados consomem sua própria energia vital (adquirindo níveis de Fadiga para receber PP)."
+    "requisitos": "Novato, Humano, Fé d6+",
+    "descricao": "Perícia: Fé (Espírito)\nPoderes iniciais: Especial\nPontos de poder: Especial\n\nÀs vezes, entre os convictos religiosos, existem aqueles que são capazes de realizar milagres. Infelizmente, essa habilidade não vem da graça; os milagres consomem a força vital de um crente, às vezes até o ponto da fatalidade.\n\nPoderes disponíveis: Personagens com essa Vantagem podem usar qualquer poder dos abençoados que esteja disponível para o seu Estágio.\nCódigo: Os abençoados acreditam fielmente que o poder é concedido por algum deus. Para estar em harmonia consigo mesmos e realizar milagres, eles precisam ter absoluta certeza de que estão no caminho certo. Para violações menores dos códigos estabelecidas por sua religião, os personagens recebem uma penalidade de -2 em suas rolagens de Fé até completarem um ritual de perdão dos pecados de acordo com os ensinamentos de sua religião. Para violações médias, eles perdem seus poderes até receberem perdão por seus pecados. Nos casos mais graves, um personagem pode perder seus poderes permanentemente, ou até que ocorra um evento que possa ser interpretado como um perdão divino.\nO preço do milagre: Para obter poder, os abençoados consomem sua própria energia vital. Os PP dos abençoados não são restaurados automaticamente. A qualquer momento, eles podem adquirir até três níveis de Fadiga para receber 5 PP para cada nível, semelhante ao efeito da Vantagem Drena a Alma. Esses níveis de Fadiga só podem ser restaurados naturalmente, o uso do poder Ajuda ou qualquer outro meio e engenhoca estimulantes não ajudará nesse caso. Quando descansando, todos os PP não gastos são perdidos.\nDeterminação Religiosa: Se a próxima ação após receber PP for a realização de um milagre, não são aplicadas penalidades por níveis de Fadiga recém-adquiridos. Se o abençoado perder a consciência devido à Fadiga, isso acontecerá apenas após o uso do poder.\nUsando Benes: Os abençoados não podem restaurar PP usando Benes, mas ao receber PP pelos níveis de Fadiga, eles podem gastar um Bene para obter 5 PP adicionais.\nVantagens Indisponíveis: Os abençoados não podem adquirir a Vantagem Novos Poderes, pois todos os poderes correspondentes ao seu estágio estão disponíveis para eles.\n\nRestrições nos Modificadores de Poder:\nAbençoados podem usar o modificador de Fadiga com essa Vantagem apenas se tiverem a Vantagem Guerreiro do Senhor, e usar os modificadores de Arma Pesada e Dano Persistente requer ter a Vantagem Ira do Senhor.\n\nLista de Poderes:\nAbaixo está uma lista de poderes com exemplos de Manifestações disponíveis para abençoados. Para alguns poderes, as particularidades de seu uso ou novas regras que diferem do que é descrito em Savage Worlds são indicadas. Se uma Vantagem for indicada entre parênteses após o nome do poder, então é necessário ter essa Vantagem para o uso do poder. Se um Aspecto exigir essa Vantagem e o outro não, então os Aspectos serão listados como poderes separados. Se “Aspecto” for indicado entre parênteses, então o poder sempre terá essa Limitação, e apenas um Aspecto estará listado (por exemplo, “Iluminar” mas não “Iluminar/Obscurecer”).\nNovato\nAjuda: Imposição das mãos.\nAumentar Característica: Uma breve oração.\nCura: Imposição das mãos e uma breve oração.\nParticularidades: Um abençoado pode curar a doença Sopro do Limbo (veja Ermos do Limbo no Livro dos Anjos (p. XXX)) com esse poder se o Modificador de Cura Maior for aplicado.\nDeflexão: Sem manifestações visíveis, apenas alguns obstáculos ocasionais perturbam os atacantes.\nDetectar Arcano (Aspecto): Uma breve oração com o pedido para mostrar o caminho.\nEnredar: O alvo é envolvido por espinhos.\nParticularidades: Cada tentativa falha de se soltar causa 2d4 de dano ao alvo.\nIluminar (Aspecto): Uma bola de luz.\nProteção Ambiental: Uma breve oração, não tem manifestações externas.\nParticularidades: Este poder também fornece proteção completa contra o efeito dos ventos do Limbo (veja Ermos do Limbo no Livro dos Anjos, p. 187).\nProteção Arcana: Uma bolha brilhante rodeando o alvo.\nProteção: Armadura de luz.\nSom/Silêncio: Os sons devem estar associados aos rituais da fé do abençoado (sino tocando, sons de oração, mantras, etc.).\nVisão Sombria: Sem manifestações visíveis.\nExperiente\nAtordoar (Guerreiro do Senhor): A vítima tem uma sensação avassaladora de culpa.\nParticularidades: O alvo faz uma rolagem de Espírito ao invés de Vigor.\nCampo de Dano (Guerreiro do Senhor): Uma aura brilhante em torno do alvo.\nCegar (Guerreiro do Senhor): Para o alvo parece que tudo está inundado de luz brilhante.\nConfusão (Guerreiro do Senhor): Sem sinais visíveis.\nDevastação (Guerreiro do Senhor): Um redemoinho, girando e jogando os oponentes para longe.\nDissipar: Uma oração; a luz irrompe da mão abençoada.\nParticularidades: Este poder não afeta as características naturais das criaturas do Limbo e objetos mágicos, a menos que a descrição do objeto diga o contrário.\nInvisibilidade: O alvo simplesmente deixa de ser percebido.\nMorosidade (Guerreiro do Senhor): As pernas do alvo começam a crescer e se prender como raízes no chão.\nRaio (Guerreiro do Senhor): Um raio fino de luz brilhante irrompe da mão abençoada.\nReduzir Característica (Guerreiro do Senhor): Uma breve oração.\nSono: Os alvos têm sonhos serenos (penalidade de -2 em rolagem de Espírito ao acordar por um som alto).\nVelocidade: Um leve brilho ao redor das pernas do alvo.\nVeterano\nDádiva do Guerreiro (Ira do Senhor): O alvo é envolvido por um brilho.\nExplosão (Ira do Senhor): Uma bola de luz branca brilhante.\nModificadores:\nLuz cegante (+2): Além do dano, o poder causa um efeito cegante (similar ao poder cegar).\nFerir (Ira do Senhor): Uma oração que faz projéteis ou armas brilharem com uma luz branca tênue.\nMedo (Ira do Senhor): Sem manifestações visíveis.\nRajada (Ira do Senhor): Um jato de chama branca irrompe das mãos do abençoado.\nHeroico\nAdivinhação: Uma longa prece pedindo orientação.\nRessurreição: Uma longa prece (cerca de meia hora).\nParticularidades: A ressurreição é o maior milagre, mas, infelizmente, na maioria das vezes, reviver uma pessoa só é possível ao custo de outra. A recuperação frequentemente leva à morte do abençoado. Se um personagem morreu não mais do que meia hora atrás, o abençoado pode tentar revivê-lo. Se o poder for usado com sucesso, o alvo volta à vida e todos os seus Ferimentos desaparecem."
   },
   {
     "id": "guerreiro_do_senhor",
@@ -2659,27 +2658,27 @@
     "descricao": "Sempre que você obtiver um sucesso em Persuadir com um alvo que seja de sua área de trabalho e não possua a Vantagem Sindicalizado, seu nível de reação aumenta em um nível. Numa ampliação, ele se torna seu aliado e ajudará seu personagem como puder até o fim da aventura."
   },
   {
-      "id": "acordo_com_demonios",
-      "nome": "ACORDO COM DEMÔNIOS",
-      "categoria": "ANTECEDENTE",
-      "origem": "SOL_VAPOR",
-      "requisitos": "Novato, Conhecimento Geral d6+, Persuadir d6+, não pode ter escolhido a Vantagem Rico",
-      "descricao": "Entre os recém-chegados à Teia, há muitas pessoas que esperam tirar proveito do Programa Promessa de Almas, usando o dinheiro para ficar rico rapidamente. A primeira parte é fácil, mas poucos têm sucesso na segunda parte. Seu personagem tem sorte. Ele começa o jogo com uma quantia quatro vezes maior que a inicial e seu salário anual é de aproximadamente 200 mil sóis. No entanto, preocupações sobre o destino da alma imortal o levou a ter medo dos demônios. O personagem ganha a Complicação Fobia (Menor— demônios), mas não recebe pontos de criação por isso. Esta Vantagens pode ser usada no lugar de Rico para cumprir o requisito para Podre de Rico."
+    "id": "acordo_com_demonios",
+    "nome": "ACORDO COM DEMÔNIOS",
+    "categoria": "ANTECEDENTE",
+    "origem": "SOL_VAPOR",
+    "requisitos": "Novato, Conhecimento Geral d6+, Persuadir d6+, não pode ter escolhido a Vantagem Rico.",
+    "descricao": "Entre os recém-chegados à Teia, há muitas pessoas que esperam tirar proveito do Programa Promessa de Almas, usando o dinheiro para ficar rico rapidamente. A primeira parte é fácil, mas poucos têm sucesso na segunda parte. Seu personagem tem sorte. Ele começa o jogo com uma quantia quatro vezes maior que a inicial e seu salário anual é de aproximadamente 200 mil sóis. No entanto, preocupações sobre o destino da alma imortal o levou a ter medo dos demônios. O personagem ganha a Complicação Fobia (Menor—demônios), mas não recebe pontos de criação por isso. Esta Vantagens pode ser usada no lugar de Rico para cumprir o requisito para Podre de Rico."
   },
   {
-      "id": "parrudo",
-      "nome": "PARRUDO",
-      "categoria": "ANTECEDENTE",
-      "origem": "SOL_VAPOR",
-      "requisitos": "Novato, Força d10+",
-      "descricao": "Seu personagem é muito robusto, não há penalidades quando for se mover e disparar com uma arma com a característica Tiro Rápido no mesmo turno. Se ele usar uma armadura a vapor, podem usar a Arma Estacionária como se fosse Tiro Rápido."
+    "id": "parrudo",
+    "nome": "PARRUDO",
+    "categoria": "ANTECEDENTE",
+    "origem": "SOL_VAPOR",
+    "requisitos": "Novato, Força d10+.",
+    "descricao": "Seu personagem é muito robusto, não há penalidades quando for se mover e disparar com uma arma com a característica Tiro Rápido no mesmo turno. Se ele usar uma armadura a vapor, podem usar a Arma Estacionária como se fosse Tiro Rápido."
   },
   {
     "id": "cavalheiro_completo",
     "nome": "CAVALHEIRO COMPLETO",
     "categoria": "ANTECEDENTE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Aristocrata, Lutar d8+, Atirar d8+",
+    "requisitos": "Novato, Aristocrata, Lutar d8+, Atirar d8+.",
     "descricao": "Seu personagem é bom em esgrima, boxe e tiro; mas essas nobres habilidades são boas somente em uma luta franca contra um único oponente. Em uma briga de rua, elas tendem a ser inúteis. O personagem recebe +2 para Lutar, Atirar e dano ao enfrentar um oponente no mano-a-mano."
   },
   {
@@ -2687,7 +2686,7 @@
     "nome": "ATIRADOR PERCEPTIVO",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Atirar d4+",
+    "requisitos": "Novato, Atirar d4+.",
     "descricao": "Seu personagem conhece uma arma de ar como ninguém e é capaz de determinar a condição de um cilindro de gás e válvula através do som. Quando ocorrer um Mau Funcionamento em uma arma de ar, se comprar um dez ou mais alto ao diagnosticar o Mau Funcionamento, ignore-a ao atirar."
   },
   {
@@ -2695,15 +2694,15 @@
     "nome": "ATIRADOR OLÍMPICO",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Veterano, Atirar d10+",
-    "descricao": "O gatilho da arma de ar comprimido se tornou uma extensão do dedo do seu personagem, então, se ele quiser, pode facilmente ganhar um bom dinheiro fazendo espetáculos públicos. Seja uma moeda jogada, um charuto preso entre os dentes, o segundo ponteiro de um relógio de parede— todos são alvos fáceis para ele. Seu personagem sofre metade das penalidades por ações múltiplas, desde que sejam ações de Atirar (-1 para a segunda ação, -2 para a terceira)."
+    "requisitos": "Veterano, Atirar d10+.",
+    "descricao": "O gatilho da arma de ar comprimido se tornou uma extensão do dedo do seu personagem, então, se ele quiser, pode facilmente ganhar um bom dinheiro fazendo espetáculos públicos. Seja uma moeda jogada, um charuto preso entre os dentes, o segundo ponteiro de um relógio de parede—todos são alvos fáceis para ele. Seu personagem sofre metade das penalidades por ações múltiplas, desde que sejam ações de Atirar (-1 para a segunda ação, -2 para a terceira)."
   },
   {
     "id": "atirador_urbano",
     "nome": "ATIRADOR URBANO",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Lutar d6+, Atirar d6+",
+    "requisitos": "Novato, Lutar d6+, Atirar d6+.",
     "descricao": "Seu personagem aprendeu a atirar nas ruas, então ele se sente confortável numa briga de rua. Quando ele atira em combate um corpo-a-corpo, ele não fica Vulnerável e ignora o Aparar do alvo, como se estivesse atirando à distância."
   },
   {
@@ -2711,7 +2710,7 @@
     "nome": "CAÇADOR DE POMBOS",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Atirador Urbano",
+    "requisitos": "Novato, Atirador Urbano.",
     "descricao": "Um filósofo uma vez disse que a quantidade, cedo ou tarde, se torna qualidade. Isso é absolutamente verdadeiro sobre as habilidades do seu personagem: ele praticou tanto com a pistola de ar que agora pode acertar facilmente os alvos mais difíceis. Ao atirar, Espectadores Inocentes de Savage Worlds só entram em efeito em uma Falha Crítica."
   },
   {
@@ -2719,7 +2718,7 @@
     "nome": "CAÇADOR DE TIGRES",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Experiente, Atirar d8+",
+    "requisitos": "Experiente, Atirar d8+.",
     "descricao": "No mundo exterior, as armas de ar são consideradas brinquedos perto de armas reais. De fato, seu poder de matar e alcance efetivo são muito pequenos em comparação com as armas de pólvora. No entanto, seu personagem sabe que, em suas mãos, um rifle de ar comprimido pode ser realmente letal; o principal é mirar corretamente. Ao mirar com um rifle de ar, eles recebem +d6 de dano , ou +d8 em uma Ampliação (em vez do aumento de dano padrão de uma Ampliação)."
   },
   {
@@ -2728,7 +2727,7 @@
     "categoria": "PODER",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato, Humano, Ocultismo d6+",
-    "descricao": "Seu personagem passou muito tempo estudando antigos grimórios cheios de mistérios sombrios em busca de poder. Sua busca teve resultados, mas o acesso ao poder é cobrado com sangue. Normalmente pago com o sangue de outra pessoa. Para mais informações sobre Bruxos, consulte a Magia no Livro dos Demônios."
+    "descricao": "Perícia: Ocultismo (Astúcia)\nPoderes Iniciais: Especiais\nPontos de Poder: Especiais\n\nCertas pessoas podem usar os segredos sombrios de antigos grimórios para praticar magia, mas para alimentar o poder da feitiçaria eles precisam de sacrifício humano.\n\nPoderes disponíveis: Um personagem com essa vantagem pode usar quaisquer poderes de feiticeiro disponíveis para seu nível.\nSacrifício: A preparação dos feitiços requer um ritual com sacrifício humano. O ritual leva pelo menos meia hora, mais cinco minutos para preparar cada vítima. Cada sacrifício concede 10 Pontos de Poder; um feiticeiro pode distribuí-los para qualquer número de poderes ou investi-los em efeitos adicionais ou na duração de um poder. Uma rolagem de Ocultismo é feita durante o ritual para a ativação de cada poder. Se houver uma falha crítica, o poder funciona contra o próprio feiticeiro.\nFeitiços guardados: Após um ritual bem-sucedido, o feiticeiro pode manter o poder e usá-lo mais tarde sem uma rolagem da perícia. O único problema é que eles só podem manter três feitiços guardados sem penalidades. Se o feiticeiro quiser manter mais poderes, a cada seis horas eles precisam fazer uma rolagem de Ocultismo com uma penalidade de -2 para cada poder guardado acima dos três primeiros. No caso de uma falha, todos os poderes guardados, exceto os três primeiros, são perdidos. Se for uma Falha Crítica, todos os poderes guardados, incluindo os três primeiros, são descarregados no feiticeiro.\nUsando Benes: Feiticeiros não podem restaurar PP com Benes, mas podem gastar um Bene para receber 5 PP adicionais de um sacrifício.\nVantagens Indisponíveis\nFeiticeiros não podem escolher a Vantagem de Novos Poderes, porque todos os poderes correspondentes ao seu Estágio estão disponíveis para eles.\n\nLista de poderes\nAbaixo está uma lista de poderes com exemplos de Manifestações disponíveis para feiticeiros. Para alguns poderes, existem particularidades em seu uso ou novas regras que diferem do Savage Worlds Edição Aventura. Se “Aspecto” for indicado entre parênteses após o nome do poder, então o poder sempre tem essa Limitação, e apenas o Aspecto disponível está listado (por exemplo, “Iluminar” mas não “Iluminar/Obscurecer”).\nNovato\nAndar nas Paredes: Os braços e pernas do alvo são cobertos por sombras, permitindo que ele ande nas paredes e no teto.\nAtordoar: Um som estridente e alto.\nCegar: Sem manifestações visíveis, os olhos do alvo obscurecem.\nConfusão: Sem Manifestações visíveis.\nDeflexão: Sem Manifestações visíveis, apenas alguns obstáculos ocasionais perturbam os atacantes.\nDetectar/ocultar Arcano: Detectar arcano não possui manifestações visíveis, para ocultar arcano, símbolos cabalísticos são desenhados no alvo.\nDevastação: Tecidos das sombras devastam ao redor.\nEnredar: O alvo é enredado por tentáculos das sombras.\nFerir: Munição ou armas começam a brilhar com uma luz roxa.\nIlusão: Alucinação.\nParticularidades: A ilusão afeta apenas um alvo.\nMedo: Sem Manifestações visíveis.\nObscurecer (Aspecto): Um campo de escuridão.\nProteção Arcana: Um amuleto que brilha com uma luz carmesim e se quebra quando o poder acaba.\nProteção: Armadura azul-escura.\nRaio: Aglomerados de chamas carmesim.\nRajada: Rajada de chamas carmesim.\nReduzir Característica (Aspecto): Uma breve maldição.\nSom/Silêncio: Os sons se tornam distorcidos e assustadores.\nVisão Sombria: As pupilas do alvo brilham levemente em vermelho.\nExperiente\nCampo de Dano: Um exército de sombras em movimento.\nDisfarce: Ilusão intangível.\nParticularidades: Para mudar de tamanho, um feiticeiro cria uma ilusão intangível, então a penalidade para uma rolagem de perceber é reduzida em 2. Por exemplo, em uma situação em que um feiticeiro passar por baixo de árvores, os galhos passarão pela ilusão.\nExplosão: Um emaranhado de tentáculos, tecidos das sombras.\nInvisibilidade: O alvo se mistura com as sombras.\nParticularidades: Em luz intensa, as penalidades para sua detecção são reduzidas para -2 / -4.\nMorosidade: Sombras do chão, atrasando as pernas do alvo.\nSono: Sem manifestações visíveis, os alvos têm pesadelos (modificador +2 para rolagens de Espírito ao acordar por som alto).\nVisão Distante: Sem Manifestações visíveis.\nVeterano\nFantoche: Os olhos do mago e da vítima começam a brilhar com uma luz esverdeada.\nLimpeza Mental: Tocar a testa do alvo.\nHeróico\nAdivinhação: Adivinhações a partir das entranhas da vítima.\nPeculiaridades: Este poder não pode ser guardado e é usado imediatamente durante o ritual.\nIntangibilidade: O alvo se transforma em sombra."
   },
   {
     "id": "aa_milagres",
@@ -2736,7 +2735,7 @@
     "categoria": "PODER",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato, Humano, Fé d6+",
-    "descricao": "Seu personagem pode realizar milagres, mas cada milagre realizado consome suas forças vitais. Para mais informações sobre os abençoados, consulte a Magia no Livro dos Demônios."
+    "descricao": "Perícia: Fé (Espírito)\nPoderes iniciais: Especial\nPontos de poder: Especial\n\nÀs vezes, entre os convictos religiosos, existem aqueles que são capazes de realizar milagres. Infelizmente, essa habilidade não vem da graça; os milagres consomem a força vital de um crente, às vezes até o ponto da fatalidade.\n\nPoderes disponíveis: Personagens com essa Vantagem podem usar qualquer poder dos abençoados que esteja disponível para o seu Estágio.\nCódigo: Os abençoados acreditam fielmente que o poder é concedido por algum deus. Para estar em harmonia consigo mesmos e realizar milagres, eles precisam ter absoluta certeza de que estão no caminho certo. Para violações menores dos códigos estabelecidas por sua religião, os personagens recebem uma penalidade de -2 em suas rolagens de Fé até completarem um ritual de perdão dos pecados de acordo com os ensinamentos de sua religião. Para violações médias, eles perdem seus poderes até receberem perdão por seus pecados. Nos casos mais graves, um personagem pode perder seus poderes permanentemente, ou até que ocorra um evento que possa ser interpretado como um perdão divino.\nO preço do milagre: Para obter poder, os abençoados consomem sua própria energia vital. Os PP dos abençoados não são restaurados automaticamente. A qualquer momento, eles podem adquirir até três níveis de Fadiga para receber 5 PP para cada nível, semelhante ao efeito da Vantagem Drena a Alma. Esses níveis de Fadiga só podem ser restaurados naturalmente, o uso do poder Ajuda ou qualquer outro meio e engenhoca estimulantes não ajudará nesse caso. Quando descansando, todos os PP não gastos são perdidos.\nDeterminação Religiosa: Se a próxima ação após receber PP for a realização de um milagre, não são aplicadas penalidades por níveis de Fadiga recém-adquiridos. Se o abençoado perder a consciência devido à Fadiga, isso acontecerá apenas após o uso do poder.\nUsando Benes: Os abençoados não podem restaurar PP usando Benes, mas ao receber PP pelos níveis de Fadiga, eles podem gastar um Bene para obter 5 PP adicionais.\nVantagens Indisponíveis: Os abençoados não podem adquirir a Vantagem Novos Poderes, pois todos os poderes correspondentes ao seu estágio estão disponíveis para eles.\n\nRestrições nos Modificadores de Poder:\nAbençoados podem usar o modificador de Fadiga com essa Vantagem apenas se tiverem a Vantagem Guerreiro do Senhor, e usar os modificadores de Arma Pesada e Dano Persistente requer ter a Vantagem Ira do Senhor.\n\nLista de Poderes:\nAbaixo está uma lista de poderes com exemplos de Manifestações disponíveis para abençoados. Para alguns poderes, as particularidades de seu uso ou novas regras que diferem do que é descrito em Savage Worlds são indicadas. Se uma Vantagem for indicada entre parênteses após o nome do poder, então é necessário ter essa Vantagem para o uso do poder. Se um Aspecto exigir essa Vantagem e o outro não, então os Aspectos serão listados como poderes separados. Se “Aspecto” for indicado entre parênteses, então o poder sempre terá essa Limitação, e apenas um Aspecto estará listado (por exemplo, “Iluminar” mas não “Iluminar/Obscurecer”).\nNovato\nAjuda: Imposição das mãos.\nAumentar Característica: Uma breve oração.\nCura: Imposição das mãos e uma breve oração.\nParticularidades: Um abençoado pode curar a doença Sopro do Limbo (veja Ermos do Limbo no Livro dos Anjos (p. XXX)) com esse poder se o Modificador de Cura Maior for aplicado.\nDeflexão: Sem manifestações visíveis, apenas alguns obstáculos ocasionais perturbam os atacantes.\nDetectar Arcano (Aspecto): Uma breve oração com o pedido para mostrar o caminho.\nEnredar: O alvo é envolvido por espinhos.\nParticularidades: Cada tentativa falha de se soltar causa 2d4 de dano ao alvo.\nIluminar (Aspecto): Uma bola de luz.\nProteção Ambiental: Uma breve oração, não tem manifestações externas.\nParticularidades: Este poder também fornece proteção completa contra o efeito dos ventos do Limbo (veja Ermos do Limbo no Livro dos Anjos, p. 187).\nProteção Arcana: Uma bolha brilhante rodeando o alvo.\nProteção: Armadura de luz.\nSom/Silêncio: Os sons devem estar associados aos rituais da fé do abençoado (sino tocando, sons de oração, mantras, etc.).\nVisão Sombria: Sem manifestações visíveis.\nExperiente\nAtordoar (Guerreiro do Senhor): A vítima tem uma sensação avassaladora de culpa.\nParticularidades: O alvo faz uma rolagem de Espírito ao invés de Vigor.\nCampo de Dano (Guerreiro do Senhor): Uma aura brilhante em torno do alvo.\nCegar (Guerreiro do Senhor): Para o alvo parece que tudo está inundado de luz brilhante.\nConfusão (Guerreiro do Senhor): Sem sinais visíveis.\nDevastação (Guerreiro do Senhor): Um redemoinho, girando e jogando os oponentes para longe.\nDissipar: Uma oração; a luz irrompe da mão abençoada.\nParticularidades: Este poder não afeta as características naturais das criaturas do Limbo e objetos mágicos, a menos que a descrição do objeto diga o contrário.\nInvisibilidade: O alvo simplesmente deixa de ser percebido.\nMorosidade (Guerreiro do Senhor): As pernas do alvo começam a crescer e se prender como raízes no chão.\nRaio (Guerreiro do Senhor): Um raio fino de luz brilhante irrompe da mão abençoada.\nReduzir Característica (Guerreiro do Senhor): Uma breve oração.\nSono: Os alvos têm sonhos serenos (penalidade de -2 em rolagem de Espírito ao acordar por um som alto).\nVelocidade: Um leve brilho ao redor das pernas do alvo.\nVeterano\nDádiva do Guerreiro (Ira do Senhor): O alvo é envolvido por um brilho.\nExplosão (Ira do Senhor): Uma bola de luz branca brilhante.\nModificadores:\nLuz cegante (+2): Além do dano, o poder causa um efeito cegante (similar ao poder cegar).\nFerir (Ira do Senhor): Uma oração que faz projéteis ou armas brilharem com uma luz branca tênue.\nMedo (Ira do Senhor): Sem manifestações visíveis.\nRajada (Ira do Senhor): Um jato de chama branca irrompe das mãos do abençoado.\nHeroico\nAdivinhação: Uma longa prece pedindo orientação.\nRessurreição: Uma longa prece (cerca de meia hora).\nParticularidades: A ressurreição é o maior milagre, mas, infelizmente, na maioria das vezes, reviver uma pessoa só é possível ao custo de outra. A recuperação frequentemente leva à morte do abençoado. Se um personagem morreu não mais do que meia hora atrás, o abençoado pode tentar revivê-lo. Se o poder for usado com sucesso, o alvo volta à vida e todos os seus Ferimentos desaparecem."
   },
   {
     "id": "aa_tecnomagia",
@@ -2744,14 +2743,14 @@
     "categoria": "PODER",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato, Humano, Tecnomagia d6+",
-    "descricao": "As pessoas não aprenderam a magia dos demônios, mas a descoberta do Professor Charles Strangelove estimulou o desenvolvimento da tecnomagia—uma disciplina que combina o talento natural de uma pessoa, equipamento especial e a capacidade de calcular assinaturas das magias. Seu personagem está entre os que têm as habilidades necessárias, a única coisa que ele precisa é dos equipamentos. Para mais informações sobre tecnomagia, consulte a Magia no Livro dos Demônios."
+    "descricao": "Perícia: Tecnomagia (Astúcia)\nPoderes Iniciais: Detectar Arcano e 2 poderes de sua escolha\nPontos de Poder: Especial\n\nA era da tecnomagia começou em 1882, após as descobertas revolucionárias do Professor Charles Strangelove. Ao contrário dos magos tradicionais, os tecnomagos não realizam suas magias usando seu próprio poder inerente, muito menos através de rituais arcanos. Ao invés disso, o tecnomago depende de equipamentos especialmente projetados.. Uma pessoa inexperiente pode pensar que se deseja praticar tecnomagia basta ter uma carteira cheia, mas isso não é verdade. Para usar seus poderes, um tecnomago precisa inserir um conjunto definido de valores na unidade de programação de seu kit. A base para cada conjunto é uma assinatura do poder selecionado. A maioria das assinaturas é comumente acessível entre a comunidade tecnomágica, portanto podem ser pesquisadas e adquiridas com relativa facilidade. (Para poderes que exigem o Estágio Veterano e acima, o Mestre do Jogo pode decidir que a busca por uma assinatura será uma missão separada). No entanto, para que um poder funcione, é necessário ajustar a assinatura, considerando o grande número de fatores (parâmetros individuais de um tecnomago, horário do dia, etc.). A capacidade de sentir esses parâmetros em um nível intuitivo é um fator que separa as pessoas que são capazes de se tornar tecnomagos das que não são.\n\nUsando Benes: Tecnomagos podem restaurar 5 PP gastando um Bene, conforme explicado em Savage Worlds Edição Aventura.\n\nModificadores de Poder Indisponíveis\nTecnomagos não podem usar os Modificadores Seletivo e Mortalha. Os Modificadores Apressar/ Atrasar só podem ser usado em poderes com a Limitação de Ressonância.\n\nLista de poderes\nA seguir está uma lista de poderes com exemplos de Manifestações que estão disponíveis para tecnomagos.\nSe uma Limitação é indicada entre parênteses, é obrigatória para aprender o poder. Se esta Limitação é um Aspecto, então apenas uma variante do poder é listada (por exemplo, “Iluminar”, mas não “Iluminar/Obscurecer”). Além disso, se diferentes versões do poder são itens independentes na lista, então eles são estudados separadamente.\nAlém disso, para alguns poderes, são indicadas particularidades de seu uso ou novas regras que diferem de Savage Worlds.\nNovato\nAjuda: Sons calmantes.\nAndar nas Paredes (Ressonância): O circuito nas luvas começa a brilhar levemente laranja.\nAtordoar: Ultrassom.\nAumentar/Diminuir Característica (Ressonância): Circuito de ressonância começa a brilhar levemente laranja.\nCegar: Um flash de luz.\nConfusão: O som de uma frequência específica, causando confusão no inimigo.\nDeflexão (Ressonância): Circuito de ressonância começa a gerar um campo magnético repelente.\nDevastação: Fluxo de poderosos ventos divergentes a partir do ponto-alvo.\nDetectar Arcano (Óculos, Aspecto): Sem Manifestações visíveis.\nParticularidades: A critério do Mestre, pode ser necessário uma rolagem de Ocultismo adicional para entender a essência do rastro mágico, se tiver uma origem não tecnomágica.\nEnredar: Envolve o alvo em gelo.\nExplosão: Explosão de fogo, trovão ou ventos congelantes.\nIluminar (Aspecto): O tecnomago preenche o objeto com energia, então ele começa a brilhar.\nParticularidades: Precisa ser um objeto pequeno, que será a fonte de luz. Pode ser qualquer sucata, mas não pode ser parte de algo maior (por exemplo, não pode usar uma área de solo como fonte de luz, mas pode usar uma poção de terra que você pegar).\nMedo: O som de uma frequência especialmente selecionada causa medo.\nOcultar o Arcano (Aspecto): Sem Manifestações visíveis.\nParticularidades: Aplicar este feitiço leva 15 minutos. A critério do Mestre, se for necessário ocultar energias arcanas em uma área grande, ou de um artefato especialmente poderoso, o tempo pode ser aumentado. Em caso de Falha Crítica, ele funciona como o poder Dissipar.\nProteção (Ressonância): O circuito começa a brilhar levemente azul.\nProteção Arcana (Ressonância): Circuito de ressonância pulsa com luz vermelha.\nRaio: Raio de trovão, fogo ou gelo.\nSom\\Silêncio: Ondas sonoras emanando do ponto-alvo.\nVisão Sombria (Óculos): O vidro dos óculos brilha fracamente com luz vermelha (este efeito pode ser percebido com um sucesso em uma rolagem de Perceber com uma penalidade de -6).\nExperiente\nCampo de Dano (Ressonância): Descargas elétricas no circuito de ressonância que são inofensivas para o usuário.\nDissipar: Explosão de energia, direcionada ao local afetado pela magia.\nParticularidades: Este poder não afeta as características naturais de criaturas do Limbo e objetos mágicos, a menos que a descrição do objeto diga o contrário. Para escolher o efeito de neutralização adequado, um tecnomago precisa determinar a natureza do rastro mágico primeiro com a ajuda do poder detectar arcano, caso contrário receberá uma penalidade de -4 para rolagens de Tecnomagia ao lançar este poder.\nExplosão: Bola de relâmpago, fogo ou gelo.\nFerir: Preenche projéteis ou armas com energia.\nInvisibilidade (Ressonância): Causa um efeito de camuflagem semelhante a de um camaleão.\nMorosidade/Velocidade (Ressonância): O circuito começa a brilhar com uma luz azul brilhante para velocidade, ou luz verde pálido para morosidade.\nSono: Som que causa sonolência.\nVisão Distante (Óculos): Sem manifestações visíveis.\nVeterano\nLimpeza mental: Ondas sonoras hipnotizantes.\nParticularidades: A modificação Editar não está disponível. Tecnomagos podem apagar até uma hora das memórias mais recentes, ou 24 horas com uma Ampliação.\nSobrecarga: Fluxo de energia dirigido ao mecanismo.\nPP: 4\nDistância: Astúcia x2.\nDuração: Instantânea\nAtingindo pontos sensíveis, o tecnomago sobrecarrega um mecanismo até quebrá-lo. Role os dados apropriados, dependendo do tamanho do mecanismo (d4 para mecanismos pequenos, como pistolas ou brinquedos mecânicos, d6 para médios, como armaduras mecanizadas ou autômatos, d8 para grandes, como veículos ou autômatos enormes). Se o resultado for menor que o PMF do mecanismo, ocorre um mau funcionamento imediatamente. Se este poder for aplicado novamente ao mesmo mecanismo, seus PMF aumentarão em 2 até o final do próximo turno.\nModificadores:\nFalha Catastrófica (+5): Se houver um mau funcionamento, o mecanismo explode. Mecanismos pequenos causam 2d4 de dano em um Modelo Pequeno de Explosão, 2d6 em um Modelo Médio de Explosão para mecanismos médios, e 2d8 em um Modelo Grande de Explosão para mecanismos grandes."
   },
   {
     "id": "mecanico_cego",
     "nome": "MECÂNICO CEGO",
     "categoria": "PROFISSIONAL",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Astúcia d8+, Consertar d8+",
+    "requisitos": "Novato, Astúcia d8+, Consertar d8+.",
     "descricao": "A parte mais difícil da manutenção de grandes máquinas é descobrir o que causou a falha no labirinto de pinhões e eixos. Seu personagem pode ouvir o que está provocando a falha. Ele recebe +2 em todas as rolagens de Consertar e não sofrem penalidades em situações em que não podem ver no que estão trabalhando."
   },
   {
@@ -2759,7 +2758,7 @@
     "nome": "MESTRE DAS CALDEIRAS",
     "categoria": "PROFISSIONAL",
     "origem": "SOL_VAPOR",
-    "requisitos": "Veterano, Astúcia d6+, Consertar d8+",
+    "requisitos": "Veterano, Astúcia d6+, Consertar d8+.",
     "descricao": "Seu personagem dominou o trabalho com mecanismos a vapor e é capaz de diagnosticar uma falha pelo som da caldeira. Se um mau funcionamento ocorrer durante qualquer rolagem relacionada à operação de um mecanismo a vapor, o personagem pode realizar uma rolagem de Astúcia. Em um sucesso, a falha é evitada."
   },
   {
@@ -2767,7 +2766,7 @@
     "nome": "ELEGANTE",
     "categoria": "SOCIAIS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato",
+    "requisitos": "Novato.",
     "descricao": "Seu personagem tem um senso inato de moda e, em dois minutos, pode criar um traje a partir de trapos, concedendo +1 em todas as rolagens de Persuadir. Se algo acontecer com suas roupas, elas perdem esse modificador até que o traje esteja em ordem. Isso leva 2d6 minutos. Outros personagens também podem se beneficiar de suas habilidades de estilista. Para vestir outra pessoa bem, são necessários d6x10 minutos e uma rolagem de Astúcia. Em caso de sucesso, essa pessoa receberá +1 nas rolagens de Persuadir até o final do dia ou até o traje ser arruinado. Em caso de falha, você apenas perdeu seu tempo."
   },
   {
@@ -2775,7 +2774,7 @@
     "nome": "ME CHAMO IGOR",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Experiente, Carta Selvagem, Consertar d8+, ter sua própria oficina",
+    "requisitos": "Experiente, Carta Selvagem, Consertar d8+, ter sua própria oficina.",
     "descricao": "Todo cientista louco que se preze precisa de um assistente que seja muito bom em mecanismos e auxílio na oficina. Seu personagem tem um assistente que possui as perícias de Consertar e Curar. Essas perícias avançam à medida que o Estágio de seu personagem aumenta (d6 no Experiente, d8 no Veterano, etc.). Ele nunca participa de combates, mas se houver um problema em sua oficina, como um incêndio ou roubo, ele sempre consegue de alguma maneira fantástica salvar a maioria dos equipamentos."
   },
   {
@@ -2783,7 +2782,7 @@
     "nome": "SEGUIDOR DE NIETZSCHE",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Espírito d8+",
+    "requisitos": "Novato, Espírito d8+.",
     "descricao": "O que não mata seu personagem o torna mais forte. Sempre que este personagem rolar uma Falha Crítica, o jogador recebe um marcador de Convicção. Apenas lembre-se, o que mata seu personagem o torna morto."
   },
   {
@@ -2791,7 +2790,7 @@
     "nome": "TARÔ: 0-PEREGRINO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Alguém que tem um objetivo, irá evitar perigos em seu caminho.”\n\nDizem que crianças, Tolos e andarilhos sempre têm sorte. Seu personagem não é uma criança e nunca foi um tolo, mas suas viagens geralmente são seguras, sem acidentes desagradáveis. Uma vez por sessão, antes de uma jornada começar, o jogador pode gastar um Bene. Se fizer isso, não sofrerá acidentes desagradáveis durante a jornada. Se você usar as mecânicas de detecção de acidentes, compre cartas até obter Copas ou Ouros.\n\nNota de design: Esta Vantagem só protege contra acidentes. Se os heróis estiverem sendo perseguidos, os vilões poderão atacá-los na estrada, independente desta Vantagem."
   },
   {
@@ -2799,23 +2798,23 @@
     "nome": "TARÔ: I-CHARLATÃO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
-    "descricao": "“Às vezes, mentir para os outros é a melhor maneira de acreditar em si mesmo.”\n\nSeu personagem recebe +2 para Persuasão para provar que têm algum Antecedente Arcano (mesmo que não tenha). Eles não apenas enganam os outros, mas também a si mesmos — de forma tão poderosa que às vezes são capazes de realizar um pequeno milagre. Eles podem gastar um Bene para usar um poder da lista abaixo, usando Provocar em vez de uma perícia Arcana. Todos esses poderes são usados em sua forma base, sem modificação.\n\nLista de poderes disponíveis: atordoar, cegar, confusão, cura, enredar, iluminar/obscurecer, medo, manipulação elemental e raio."
+    "requisitos": "Novato, Humano, Carta Selvagem.",
+    "descricao": "“Às vezes, mentir para os outros é a melhor maneira de acreditar em si mesmo.”\n\nSeu personagem recebe +2 para Persuasão para provar que têm algum Antecedente Arcano (mesmo que não tenha). Eles não apenas enganam os outros, mas também a si mesmos — de forma tão poderosa que às vezes são capazes de realizar um pequeno milagre. Eles podem gastar um Bene para usar um poder da lista abaixo, usando Provocar em vez de uma perícia Arcana. Todos esses poderes são usados em sua forma base, sem modificação.\nLista de poderes disponíveis: atordoar, cegar, confusão, cura, enredar, iluminar/obscurecer, medo, manipulação elemental e raio."
   },
   {
     "id": "taro_espiritualista",
     "nome": "TARÔ: II. ESPIRITUALISTA",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
-    "descricao": "“Não é tão difícil falar com os mortos, quanto persuadi-los a falar com você.”\n\nSeu personagem é capaz de abrir o véu que separa o mundo dos mortos do mundo dos vivos por um breve momento. Isso lhe dá acesso a conhecimentos secretos, e ele recebe +2 em todas as rolagens de Ocultismo. Ao gastar um Bene, o personagem pode se comunicar com um espírito ou ver a última coisa que o falecido viu em vida. Para fazer isso, o personagem precisa tocar na cabeça de um cadáver: o espiritualista verá uma imagem estática e ouvirá o que o falecido ouviu em seus últimos 5 segundos. Para uma conversa com o espírito, é suficiente ter um objeto que esteja intimamente relacionado à personalidade do falecido (cartas, jóias). No entanto, as respostas recebidas podem ser vagas, especialmente se o corpo não for o de um ser humano. Perguntas após a primeira exigem uma rolagem bem-sucedida de Persuadir com uma penalidade cumulativa para cada rolagem subsequente (sem penalidade na primeira rolagem, penalidade de -2 na segunda rolagem, -4 para a terceira, etc).\n\nNota de design: Se estiver narrando uma história de detetive ligada a um assassinato e um personagem tiver esta Vantagem, vale a pena elaborar o enredo da história para que a vítima não veja o rosto do assassino. Talvez em vez disso ela tenha olhado para algo importante, que os jogadores possam usar para investigar o caso."
+    "requisitos": "Novato, Humano, Carta Selvagem.",
+    "descricao": "“Não é tão difícil falar com os mortos, quanto persuadi-los a falar com você.”\n\nSeu personagem é capaz de abrir o véu que separa o mundo dos mortos do mundo dos vivos por um breve momento. Isso lhe dá acesso a conhecimentos secretos, e ele recebe +2 em todas as rolagens de Ocultismo. Ao gastar um Bene, o personagem pode se comunicar com um espírito ou ver a última coisa que o falecido viu em vida. Para fazer isso, o personagem precisa tocar na cabeça de um cadáver: o espiritualista verá uma imagem estática e ouvirá o que o falecido ouviu em seus últimos 5 segundos. Para uma conversa com o espírito, é suficiente ter um objeto que esteja intimamente relacionado à personalidade do falecido (cartas, jóias). No entanto, as respostas recebidas podem ser vagas, especialmente se o corpo não for o de um ser humano. Perguntas após a primeira exigem uma rolagem bem-sucedida de Persuadir com uma penalidade cumulativa para cada rolagem subsequente (sem penalidade na primeira rolagem, penalidade de -2 na segunda rolagem, -4 para a terceira, etc)."
   },
   {
     "id": "taro_confusao",
     "nome": "TARÔ: III. CONFUSÃO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“A loucura interna pode passar despercebida, mas é contagiosa.”\n\nÀs vezes, seu personagem tem habilidades semelhantes à hipnose. Uma vez por sessão, ele pode gastar um Bene para dar qualquer ordem a um Extra e ele irá obedecer. Uma vez que o comando tenha sido concluído, a vítima, se ainda estiver viva, não se lembrará do que a inspirou a agir."
   },
   {
@@ -2823,7 +2822,7 @@
     "nome": "TARÔ: IV. SENTINELA",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Aquele que estiver disposto a se sacrificar evitará o perigo.”\n\nA paixão deste personagem é proteger os outros. Ele pode redirecionar ataques para si mesmo, protegendo um aliado próximo. Ao correr esses riscos, eles podem salvar sua própria vida. A qualquer momento da rodada, um personagem com essa Vantagem pode gastar um Bene para se aproximar de um aliado dentro de seu alcance de movimentação (mesmo que ela já tenha sido realizada nesta rodada) para protegê-lo, redirecionando o dano para si mesmo. Se quiser usar outro Bene para Absorver, pode fazer isso com um modificador +2 (somado com a Vantagem Queixo de Ferro, se ele tiver)."
   },
   {
@@ -2831,7 +2830,7 @@
     "nome": "TARÔ: V. ENGENHEIRO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Haverão centenas de artesãos no caminho feito por um gênio.”\n\nSeu personagem não tinha talento e paixão suficientes para se tornar um inventor verdadeiramente excepcional. Ele nunca aprendeu a desenvolver seus próprios mecanismos, mas é proficiente em reproduzi-los. Seu personagem não pode criar engenhocas de acordo com as regras da seção de Invenções, mas se obtiver um invento (inclusive tecnomágico), ele pode desmontá-lo após 4d6 horas com um sucesso em Consertar. O tempo necessário é reduzido pela metade em caso de Ampliação. Mais tarde, uma vez por sessão, este personagem pode gastar um Bene e criar qualquer mecanismo previamente estudado tendo um sucesso em Consertar. Ele ainda precisa de componentes - pelo menos metade do custo do invento - e algum tempo para este trabalho. Se um mecanismo estava quebrado no momento em que foi estudado, todas as falhas também são reproduzidas com precisão perfeita."
   },
   {
@@ -2839,7 +2838,7 @@
     "nome": "TARÔ: VI. PORTÃO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Qualquer porta levará ao destino de uma pessoa guiada pelo coração.”\n\nSeu personagem tem uma relação especial com portas. Ao contrário de demônios, ele não pode abrir portais estacionários, mas pode usar qualquer porta para chegar onde precisa ir. Uma vez por sessão, ele pode gastar um Bene e passar por qualquer porta, terminando onde precisa chegar. Deve haver uma porta ou arco no ponto de saída. É impossível chegar a um lugar completamente desconhecido e, se seu personagem conhece seu destino apenas pela descrição geral, precisará fazer uma rolagem bem-sucedida em Espírito. O personagem pode levar até duas pessoas consigo, mas sofre um nível de Fadiga para cada uma."
   },
   {
@@ -2847,7 +2846,7 @@
     "nome": "TARÔ: VII. VOO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“O destino de Ícaro deveria nos ensinar a ser cautelosos, mas não deveria nos fazer esquecer o céu.”\n\nSeu personagem sente os como ninguém, então pode pilotar aeronaves mesmo fora da cidade. O problema é que quase não há aeronaves na Teia; é praticamente impossível para qualquer outra pessoa usá-las aqui. No início da aventura, este personagem montou o mais simples girocóptero (Tamanho 2 (Normal), Velocidade Máxima 30, Resistência 8(1), Tripulação 1+1, Manuseio -2, número máximo de torres para armas 1). O girocóptero pode ser melhorado de acordo com as regras gerais para invenções. Se o girocóptero for perdido, o personagem precisará de 1000 sóis e uma semana para consertá-lo."
   },
   {
@@ -2855,7 +2854,7 @@
     "nome": "TARÔ: VIII. PACTO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Se você acha que enganou o destino, pense no perdeu e não percebeu.”\n\nSeu personagem tem mais sucesso que os outros. Para todas as rolagens, eles usam um d8 como seu Dado Selvagem. Mas tudo tem seu preço, e ele trata qualquer combinação de 1 e 2 em seu Dado de Perícia e Dado Selvagem como Falha Crítica"
   },
   {
@@ -2863,7 +2862,7 @@
     "nome": "TARÔ: IX. EXPEDIÇÃO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Ventos, pragas, ou escuridão da noite não podem deter um verdadeiro pesquisador.”\n\nSeu personagem tem uma incrível resiliência ao ambiente externo. Os não têm influência sobre ele, mesmo sem um equipamento especial. Ele também não sofre penalidades por Fadiga e recebe +2 em rolagens de Vigor para evitar Fadiga."
   },
   {
@@ -2871,7 +2870,7 @@
     "nome": "TARÔ: X. FORTUNA",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Para ser sortudo, você precisa aproveitar os bons momentos.”\n\nÀs vezes, seu personagem tem uma sorte incrível. Ele aprendeu a antecipar esses momentos de sorte e usá-los a seu favor. Uma vez por sessão, eles pode gastar um Bene para adicionar um d6 a qualquer rolagem."
   },
   {
@@ -2879,7 +2878,7 @@
     "nome": "TARÔ: XI. MECANISMO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Um mecânico talentoso é como Cristo, que reviveu Lázaro.”\n\nSeu personagem pode trabalhar com absolutamente qualquer mecanismo, inclusive com aqueles reduzidos a sucata enferrujada. Uma vez por sessão, eles podem gastar um Bene para fazer com que um mecanismo que tenha conservado ao menos a integridade externa funcione até o final da cena. Avarias internas e falta de combustível não são um problema."
   },
   {
@@ -2895,7 +2894,7 @@
     "nome": "TARÔ: XIII. MORTE",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Se a morte se aproxima de você, ela também estará perto de seus inimigos.”\n\nA morte segue seu personagem. Ele recebem -2 na Resistência, mas às vezes pode direcionar a atenção da Morte para outra pessoa. Após gastar um Bene, ele pode fazer um ataque bem-sucedido sem a necessidade de fazer uma rolagem de Luta ou Atirar. Se o dano do ataque não for suficiente para causar um Ferimento, o ataque ainda causará um Ferimento."
   },
   {
@@ -2903,7 +2902,7 @@
     "nome": "TARÔ: XIV. CONHECIMENTO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Quando alcança novas descobertas, é sempre importante parar e refletir sobre as experiências do passado.”\n\nInicialmente, seu personagem pode não ter muitas habilidades, mas tem grande aptidão em aprender. Sempre que ganhar um novo Estágio, ele pode escolher uma Vantagem adicional de qualquer Estágio anterior gratuitamente. Ele deve atender a todos os seus requisitos."
   },
   {
@@ -2911,15 +2910,15 @@
     "nome": "TARÔ: XV. DEMÔNIO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
-    "descricao": "“Aquele que vence trapaceando raramente paga por sua própria derrota.”\n\nSeu personagem pode escapar da morte traindo outras criaturas. Quando é atacado, ele pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante. Se este personagem vencer, o dano é redirecionado para um personagem aleatório a até cinco quadros de distância.\n\nNota de design: A redirecionamento de dano não significa necessariamente que o ataque é redirecionado; uma vítima pode ser ferida acidentalmente."
+    "requisitos": "Novato, Humano, Carta Selvagem.",
+    "descricao": "“Aquele que vence trapaceando raramente paga por sua própria derrota.”\n\nSeu personagem pode escapar da morte traindo outras criaturas. Quando é atacado, ele pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante. Se este personagem vencer, o dano é redirecionado para um personagem aleatório a até cinco quadros de distância."
   },
   {
     "id": "taro_estrela_morta",
     "nome": "TARÔ: XVI. ESTRELA MORTA",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Verdadeiros milagres só podem acontecer sob a luz de estrelas reais.”\n\nSeu personagem incorpora o lado sombrio da Era da Razão - aquele que não tem lugar para nada além de explicações lógicas e teorias científicas comprovadas. Ele não pode ter nenhum Antecedente Arcano.\n\nUma vez por sessão ele pode gastar um Bene para que nas próximas cinco rodadas (ou cinco minutos se esta Vantagem não for usada em combate) seja aplicada uma penalidade de -4 no uso de todos os poderes e tiros de pistolas tecnomágicas dentro de 10 quadros do personagem."
   },
   {
@@ -2927,7 +2926,7 @@
     "nome": "TARÔ: XVII. ÉTER",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Tecnomagia)",
+    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Tecnomagia).",
     "descricao": "“O éter do mundo contém respostas para todas as perguntas. Você apenas precisa ser capaz de ouvi-las.”\n\nSeu personagem conhece intuitivamente os princípios para criar magias tecnomágicas. Ele pode gastar um Bene para usar qualquer poder tecnomágico disponível para seu Estágio. Pontos de Poder são usados normalmente e uma rolagem de Tecnomagia é realizada como de costume."
   },
   {
@@ -2935,7 +2934,7 @@
     "nome": "TARÔ: XVIII. VAZIO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Magia Negra)",
+    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Magia Negra).",
     "descricao": "“A escuridão carrega muitos perigos, mas às vezes devora a si mesma.”\n\nUm mago negro com esta Vantagem está constantemente sob efeito do poder Ocultar Arcano."
   },
   {
@@ -2943,7 +2942,7 @@
     "nome": "TARÔ: XIX. LUZ",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Milagres)",
+    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Milagres).",
     "descricao": "“O bem que você faz retornará a você nos dias mais sombrios.”\n\nO espírito de algumas pessoas é mais forte do que o de outras, e isso lhes dá a força para a realização de milagres. Este é o seu personagem. Um abençoado com esta Vantagem ignora até dois pontos de penalidade de Ferimentos e Fadiga durante uma rolagem de Fé."
   },
   {
@@ -2951,15 +2950,15 @@
     "nome": "TARÔ: XX. GALVANISMO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
-    "descricao": "“A criação de uma nova vida não coloca um homem em pé de igualdade com Deus, mas assume que ele já está lá.”\n\nSeu personagem é obcecado pela vida e morte e conseguiu desenvolver meios que acredita poder reviver os mortos. Pode ser um ritual especial, uma máquina que usa o poder do raio, soro injetado na veia de um cadáver ou outra coisa. Uma vez por sessão, ele pode gastar um Bene para uma rolagem de Ciência. Em um Sucesso, ele pode reviver uma criatura morta.\n\nNota de design: Se 10 minutos se passaram depois da morte, não haverá uma alma no corpo e a criatura revivida pode ser bastante diferente do que era em vida."
+    "requisitos": "Novato, Humano, Carta Selvagem.",
+    "descricao": "“A criação de uma nova vida não coloca um homem em pé de igualdade com Deus, mas assume que ele já está lá.”\n\nSeu personagem é obcecado pela vida e morte e conseguiu desenvolver meios que acredita poder reviver os mortos. Pode ser um ritual especial, uma máquina que usa o poder do raio, soro injetado na veia de um cadáver ou outra coisa. Uma vez por sessão, ele pode gastar um Bene para uma rolagem de Ciência. Em um Sucesso, ele pode reviver uma criatura morta."
   },
   {
     "id": "taro_cidade",
     "nome": "TARÔ: XXI. CIDADE",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Uma besta com mil bocas e um milhão de olhos, cuja respiração fecha o céu.”\n\nAlguns filósofos veem a Cidade como uma criatura viva com uma mente coletiva. Seu personagem é capaz de interagir superficialmente com essa mente. Ao olhar por qualquer janela ou reflexo (por exemplo, de uma poça d’água), ele pode fazer uma rolagem de Espírito para ver o que está acontecendo em um quarto ou parte da rua que o personagem está familiarizado como se estivesse olhando por uma janela para aquele lugar. Quanto mais Ampliações o personagem obtiver, mais perto a janela estará do local desejado."
   }
 ]

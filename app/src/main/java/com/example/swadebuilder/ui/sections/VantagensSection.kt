@@ -1052,6 +1052,22 @@ fun VantagensContent(
             }
         } else emptyList()
 
+        // Cidade do Sol a Vapor: apenas os AA do cenário
+        val opcoesCidadeSolVapor: List<Pair<String, Vantagem>> = if (state.compendioCidadeSolVaporAtivo) {
+            val map = mapOf(
+                "Magia Negra" to "aa_magia_negra",
+                "Milagres" to "aa_milagres",
+                "Tecnomagia" to "aa_tecnomagia"
+            )
+            map.mapNotNull { (label, id) ->
+                val v = listaVantagens.firstOrNull { it.id == id }
+                if (v != null) {
+                    val reqs = formatarRequisitos(v)
+                    "$label$reqs" to v
+                } else null
+            }
+        } else emptyList()
+
         AlertDialog(
             onDismissRequest = {
                 dialogMostrandoAntecedente = null
@@ -1079,6 +1095,23 @@ fun VantagensContent(
                         }
                     } else if (state.compendioDeadlandsAtivo) {
                         opcoesDeadlands.forEach { (label, _) ->
+                            Row(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .clickable { subOpcaoSelecionada = label }
+                                    .padding(vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                RadioButton(
+                                    selected = (subOpcaoSelecionada == label),
+                                    onClick = { subOpcaoSelecionada = label }
+                                )
+                                Spacer(Modifier.size(8.dp))
+                                Text(label)
+                            }
+                        }
+                    } else if (state.compendioCidadeSolVaporAtivo) {
+                        opcoesCidadeSolVapor.forEach { (label, _) ->
                             Row(
                                 Modifier
                                     .fillMaxWidth()
@@ -1156,6 +1189,24 @@ fun VantagensContent(
                         } else if (state.compendioDeadlandsAtivo) {
                             val choiceLabel = subOpcaoSelecionada!!
                             val specificEdge = opcoesDeadlands.firstOrNull { it.first == choiceLabel }?.second
+
+                            if (specificEdge != null) {
+                                if (state.podeSelecionar(specificEdge)) {
+                                    if (state.advantageAdvancementInProgress) {
+                                        viewModel.selectAdvantageForAdvancement(specificEdge)
+                                    } else {
+                                        state.comprarVantagem(specificEdge) { msg ->
+                                            viewModel.logFeedback(msg)
+                                            onUserFeedback()
+                                        }
+                                    }
+                                } else {
+                                    viewModel.logFeedback("Requisitos não atendidos para ${specificEdge.nome}")
+                                }
+                            }
+                        } else if (state.compendioCidadeSolVaporAtivo) {
+                            val choiceLabel = subOpcaoSelecionada!!
+                            val specificEdge = opcoesCidadeSolVapor.firstOrNull { it.first == choiceLabel }?.second
 
                             if (specificEdge != null) {
                                 if (state.podeSelecionar(specificEdge)) {

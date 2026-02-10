@@ -54,10 +54,12 @@ import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.Serializable
@@ -192,12 +194,28 @@ fun PoderesSection(
         }
     }
 
+    val includeBasicPowers = remember(
+        state.compendioFantasiaAtivo,
+        state.compendioHorrorAtivo,
+        state.compendioSciFiAtivo,
+        state.compendioPathfinderAtivo,
+        state.compendioDeadlandsAtivo,
+        state.compendioCrystalHeartAtivo,
+        state.compendioArteDaGuerraAtivo,
+        state.compendioCidadeSolVaporAtivo,
+        state.compendioWiseguysAtivo,
+        state.modoSupers
+    ) {
+        "BASICO" in state.getActiveOrigins()
+    }
+
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
     val powersByArcKey = remember(
         powerCache,
         searchQuery,
         selectedRank,
         displayKeys,
+        includeBasicPowers,
         state.vantagensSelecionadas,
         state.tropoSelecionado,
         state.dominioClerigoSelecionado,
@@ -236,7 +254,8 @@ fun PoderesSection(
             var sourceList = when {
                 usaListaChi -> specificList
                 normalizedOrigin == "BASICO" -> basicList
-                else -> (specificList + basicList).distinctBy { it.id }
+                includeBasicPowers -> (specificList + basicList).distinctBy { it.id }
+                else -> specificList
             }
 
             // Fantasy Cleric Domain Filtering
@@ -276,6 +295,26 @@ fun PoderesSection(
             }
 
             sourceList.filter { power ->
+                val isDemonExclusivePower = power.id.endsWith("_demonio")
+                val hasDemonAb = state.vantagensSelecionadas.any { it.id == "aa_demonio" }
+                if (isDemonExclusivePower) {
+                    if (arcKey != "DEMONIO") return@filter false
+                    if (!hasDemonAb) return@filter false
+                }
+
+                // Meio-Demônio (Cidade do Sol a Vapor):
+                // Disfarce Demoníaco não é inicial e só fica disponível em Experiente.
+                if (
+                    state.compendioCidadeSolVaporAtivo &&
+                    arcKey == "DEMONIO" &&
+                    state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
+                    power.id == "disfarce_demoniaco"
+                ) {
+                    val estagioAtual = state.estagioAtual().nome.semAcentos().uppercase()
+                    val podeUsarDisfarce = estagioAtual in setOf("EXPERIENTE", "VETERANO", "HEROICO", "HEROICO", "LENDARIO")
+                    if (!podeUsarDisfarce) return@filter false
+                }
+
                 // 1. Check permissions/blocks
                 val isAllowed = if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
                     true // Already filtered by domain logic above (Fantasy Cleric)
@@ -595,17 +634,28 @@ fun PoderesSection(
                                 }
                         ) {
                             Column(Modifier.padding(8.dp)) { // Compact internal padding
+                                val ppExibicao = if (
+                                    state.compendioCidadeSolVaporAtivo &&
+                                    arcKey == "DEMONIO" &&
+                                    state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
+                                    poder.id == "disfarce_demoniaco"
+                                ) {
+                                    "2"
+                                } else {
+                                    poder.pontosDePoder
+                                }
+
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(poder.nome.toSentenceCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
-                                    Text("PP: ${poder.pontosDePoder}", style = MaterialTheme.typography.bodySmall)
+                                    Text("PP: $ppExibicao", style = MaterialTheme.typography.bodySmall)
                                 }
 
                                 if (state.usarSemPontosDePoder) {
-                                    Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}", style = MaterialTheme.typography.bodySmall)
+                                    Text("Penalidade base: ${custoParaPenalidadeTexto(ppExibicao)}", style = MaterialTheme.typography.bodySmall)
                                 }
 
                                 val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }
