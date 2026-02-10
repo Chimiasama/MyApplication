@@ -674,26 +674,6 @@
     ]
   },
   {
-    "id": "leitura_mental",
-    "origem": "SOL_VAPOR",
-    "nome": "LEITURA MENTAL",
-    "estagio": "Novato",
-    "pontosDePoder": 2,
-    "distancia": "Astúcia",
-    "duracao": "Instantâneo",
-    "manifestacoes": [
-      "Invasão psiônica",
-      "visão da alma"
-    ],
-    "descricao": "Leitura mental é uma rolagem resistida contra a Astúcia do alvo. Sucesso permite conseguir uma resposta verdadeira do alvo. O alvo fica ciente da invasão mental a menos que a pessoa fazendo a leitura consiga uma ampliação. Mestres podem aplicar modificadores com base nas Complicações mentais do indivíduo ou no atual estado emocional.",
-    "modificadores": [],
-    "tags": [
-      "stage:novato",
-      "tipo:informacao",
-      "mental"
-    ]
-  },
-  {
     "id": "limpeza_mental",
     "origem": "SOL_VAPOR",
     "nome": "LIMPEZA MENTAL",
@@ -1089,91 +1069,51 @@
       "sentidos"
     ]
   },
-    {
-      "id": "disfarce_demoniaco",
-      "origem": "SOL_VAPOR",
-      "nome": "DISFARCE DEMONÍACO",
-      "estagio": "Novato",
-      "pontosDePoder": 0,
-      "distancia": "Pessoal",
-      "duracao": "Especial",
-      "manifestacoes": [
-        "Ilusão qualitativa",
-        "Mudança de aparência"
-      ],
-      "descricao": "Os demônios têm a habilidade inata de mudar sua aparência, criando uma ilusão qualitativa. A alteração da aparência leva entre 5 a 10 minutos, dependendo do estágio. A aparência alterada deve ser mantida constantemente; um demônio deve realizar regularmente rolagens de Conjurar para manter sua nova aparência. O disfarce permanece no demônio durante o sono, mas desaparece se ele perder a consciência contra a sua vontade. Pode ser removido pelo poder de dissipar de acordo com as regras usuais.\n\nExistem várias maneiras de descobrir que um demônio não é quem ele diz ser. Em primeiro lugar, uma pessoa familiarizada com aquele que está sendo copiado pelo demônio pode perceber que um impostor está diante dele, tendo obtido um sucesso numa rolagem de Perceber. Em segundo lugar, isso pode ser feito por um tecnomago usando óculos, também com uma rolagem de Perceber bem-sucedida. Em ambos os casos, a rolagem de Perceber é realizada com um modificador dependendo do Estágio do demônio e uma penalidade adicional de -2 quando o demônio obtém uma Ampliação. Terceiro, é possível identificar um demônio disfarçado usando o poder de detectar arcano com uma rolagem resistida da perícia Arcana; semelhante ao poder de ocultar arcano, os modificadores de Estágio não são aplicados.\n\nTempo de Conjuração e Duração por Estágio:\n- Novato: 10 minutos (Duração 1 hora, Modificador de reconhecimento +2)\n- Experiente: 1 minuto (Duração 12 horas, Modificador de reconhecimento 0)\n- Veterano: 30 segundos (Duração 1 dia, Modificador de reconhecimento -2)\n- Heróico: Instantâneo (Duração Indefinido, Modificador de reconhecimento -4)\n- Lendário: Instantâneo (Duração Indefinido, Modificador de reconhecimento -6)",
-      "modificadores": [],
-      "tags": [
-        "stage:novato",
-        "tipo:utilitario",
-        "ilusao",
-        "demonio"
-      ]
-    },
-    {
-      "id": "drenar_pontos_de_poder_demonio",
-      "origem": "SOL_VAPOR",
-      "nome": "DRENAR PONTOS DE PODER (DEMÔNIO)",
-      "estagio": "Heroico",
-      "pontosDePoder": 2,
-      "distancia": "Astúcia",
-      "duracao": "Instantâneo",
-      "manifestacoes": [
-        "Corte de fonte arcana"
-      ],
-      "descricao": "Este poder corta a fonte de energia arcana da vítima, restringindo o uso de magias. Não funciona em tecnomagos e abençoados. Um demônio escolhe um alvo ao alcance e realiza uma rolagem resistida de perícia Arcana. Se o demônio for bem-sucedido contra outro demônio ou um anjo, o alvo perde 1d6+1 pontos de poder. Com uma ampliação, a vítima perde 1d8+2 pontos de poder. Estas rolagens não provocam Ases. Os PP de uma vítima não podem cair abaixo de zero. Se um mago negro for o alvo, ele perde dois Poderes Guardados de sua escolha, se houver ampliações, o mago negro perde todos os Poderes Guardados. Tecnomagos e abençoados não são afetados por este poder.",
-      "modificadores": [],
-      "tags": [
-        "stage:heroico",
-        "tipo:ataque",
-        "dreno",
-        "demonio"
-      ]
-    },
-    {
-      "id": "leitura_mental_demonio",
-      "origem": "SOL_VAPOR",
-      "nome": "LEITURA MENTAL (DEMÔNIO)",
-      "estagio": "Veterano",
-      "pontosDePoder": 5,
-      "distancia": "Astúcia",
-      "duracao": "Instantâneo",
-      "manifestacoes": [
-        "Contato visual"
-      ],
-      "descricao": "Este poder permite que um demônio possa ler a mente de outras pessoas. Para ativá-lo, é necessário contato visual, então é realizada uma rolagem resistida da perícia Arcana do demônio contra a Astúcia da vítima. Se bem-sucedido, um demônio pode ler os pensamentos superficiais de uma vítima; com uma ampliação, o demônio recebe uma resposta completa e honesta de uma pergunta. A vítima não sabe que alguém está lendo seus pensamentos.",
-      "modificadores": [],
-      "tags": [
-        "stage:veterano",
-        "tipo:informacao",
-        "mental",
-        "demonio"
-      ]
-    },
-    {
-      "id": "sobrecarga",
-      "origem": "SOL_VAPOR",
-      "nome": "SOBRECARGA",
-      "estagio": "Veterano",
-      "pontosDePoder": 4,
-      "distancia": "Astúcia x2",
-      "duracao": "Instantânea",
-      "manifestacoes": [
-        "Fluxo de energia dirigido ao mecanismo"
-      ],
-      "descricao": "Atingindo pontos sensíveis, o tecnomago sobrecarrega um mecanismo até quebrá-lo. Role os dados apropriados, dependendo do tamanho do mecanismo (d4 para mecanismos pequenos, como pistolas ou brinquedos mecânicos, d6 para médios, como armaduras mecanizadas ou autômatos, d8 para grandes, como veículos ou autômatos enormes). Se o resultado for menor que o PMF (Probabilidade de Mau Funcionamento) do mecanismo, ocorre um mau funcionamento imediatamente. Se este poder for aplicado novamente ao mesmo mecanismo, seus PMF aumentarão em 2 até o final do próximo turno.",
-      "modificadores": [
-        {
-          "nome": "Falha Catastrófica",
-          "custo": "+5",
-          "descricao": "Se houver um mau funcionamento, o mecanismo explode. Mecanismos pequenos causam 2d4 de dano em um Modelo Pequeno de Explosão, 2d6 em um Modelo Médio de Explosão para mecanismos médios, e 2d8 em um Modelo Grande de Explosão para mecanismos grandes."
-        }
-      ],
-      "tags": [
-        "stage:veterano",
-        "tipo:ataque",
-        "tecnomagia",
-        "mecanico"
-      ]
-    }
+  {
+    "id": "disfarce_demoniaco",
+    "origem": "SOL_VAPOR",
+    "nome": "DISFARCE DEMONÍACO",
+    "estagio": "Novato",
+    "pontosDePoder": 0,
+    "distancia": "Pessoal",
+    "duracao": "Especial",
+    "manifestacoes": [
+      "Ilusão qualitativa",
+      "Mudança de aparência"
+    ],
+    "descricao": "Os demônios têm a habilidade inata de mudar sua aparência, criando uma ilusão qualitativa. A alteração da aparência leva entre 5 a 10 minutos, dependendo do estágio. A aparência alterada deve ser mantida constantemente; um demônio deve realizar regularmente rolagens de Conjurar para manter sua nova aparência. O disfarce permanece no demônio durante o sono, mas desaparece se ele perder a consciência contra a sua vontade. Pode ser removido pelo poder de dissipar de acordo com as regras usuais.\n\nExistem várias maneiras de descobrir que um demônio não é quem ele diz ser. Em primeiro lugar, uma pessoa familiarizada com aquele que está sendo copiado pelo demônio pode perceber que um impostor está diante dele, tendo obtido um sucesso numa rolagem de Perceber. Em segundo lugar, isso pode ser feito por um tecnomago usando óculos, também com uma rolagem de Perceber bem-sucedida. Em ambos os casos, a rolagem de Perceber é realizada com um modificador dependendo do Estágio do demônio e uma penalidade adicional de -2 quando o demônio obtém uma Ampliação. Terceiro, é possível identificar um demônio disfarçado usando o poder de detectar arcano com uma rolagem resistida da perícia Arcana; semelhante ao poder de ocultar arcano, os modificadores de Estágio não são aplicados.\n\nTempo de Conjuração e Duração por Estágio:\n- Novato: 10 minutos (Duração 1 hora, Modificador de reconhecimento +2)\n- Experiente: 1 minuto (Duração 12 horas, Modificador de reconhecimento 0)\n- Veterano: 30 segundos (Duração 1 dia, Modificador de reconhecimento -2)\n- Heróico: Instantâneo (Duração Indefinido, Modificador de reconhecimento -4)\n- Lendário: Instantâneo (Duração Indefinido, Modificador de reconhecimento -6)",
+    "modificadores": [],
+    "tags": [
+      "stage:novato",
+      "tipo:utilitario",
+      "ilusao",
+      "demonio"
+    ]
+  },
+  {
+    "id": "sobrecarga",
+    "origem": "SOL_VAPOR",
+    "nome": "SOBRECARGA",
+    "estagio": "Veterano",
+    "pontosDePoder": 4,
+    "distancia": "Astúcia x2",
+    "duracao": "Instantânea",
+    "manifestacoes": [
+      "Fluxo de energia dirigido ao mecanismo"
+    ],
+    "descricao": "Atingindo pontos sensíveis, o tecnomago sobrecarrega um mecanismo até quebrá-lo. Role os dados apropriados, dependendo do tamanho do mecanismo (d4 para mecanismos pequenos, como pistolas ou brinquedos mecânicos, d6 para médios, como armaduras mecanizadas ou autômatos, d8 para grandes, como veículos ou autômatos enormes). Se o resultado for menor que o PMF (Probabilidade de Mau Funcionamento) do mecanismo, ocorre um mau funcionamento imediatamente. Se este poder for aplicado novamente ao mesmo mecanismo, seus PMF aumentarão em 2 até o final do próximo turno.",
+    "modificadores": [
+      {
+        "nome": "Falha Catastrófica",
+        "custo": "+5",
+        "descricao": "Se houver um mau funcionamento, o mecanismo explode. Mecanismos pequenos causam 2d4 de dano em um Modelo Pequeno de Explosão, 2d6 em um Modelo Médio de Explosão para mecanismos médios, e 2d8 em um Modelo Grande de Explosão para mecanismos grandes."
+      }
+    ],
+    "tags": [
+      "stage:veterano",
+      "tipo:ataque",
+      "tecnomagia",
+      "mecanico"
+    ]
+  }
 ]
