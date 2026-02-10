@@ -197,9 +197,9 @@ fun AncestralidadesSection(
             val origin = it.origem?.uppercase() ?: "BASICO"
             val key = it.nome.keyify()
 
-            // Cidade do Sol a Vapor (jogadores): apenas Humanos e Meio-Demônios.
+            // Cidade do Sol a Vapor (jogadores): Humanos, Demônios e Meio-Demônios.
             if (compendioCidadeSolVaporAtivo && origin == "CIDADE_SOL_VAPOR") {
-                val allowedCsvKeys = setOf("HUMANO TEIA", "MEIO-DEMONIO")
+                val allowedCsvKeys = setOf("HUMANO TEIA", "DEMONIO ABISMO", "MEIO-DEMONIO")
                 if (key !in allowedCsvKeys) return@filter false
             }
 

@@ -2570,10 +2570,11 @@ class CriadorState {
         val key = v.nome.keyify()
         val ancestralidadeKey = ancestralidade.keyify()
 
-        // Cidade do Sol a Vapor: apenas Meio-Demônio pode comprar AA (Demônio).
+        // Cidade do Sol a Vapor: AA (Demônio) disponível para Demônio e Meio-Demônio.
         if (v.id == "aa_demonio") {
             val isMeioDemonio = ancestralidadeKey.contains("MEIO-DEMONIO")
-            if (!isMeioDemonio) return false
+            val isDemonio = ancestralidadeKey.contains("DEMONIO") && !isMeioDemonio
+            if (!isMeioDemonio && !isDemonio) return false
         }
 
         // Crystal Heart Blocks
