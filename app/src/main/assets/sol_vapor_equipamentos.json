@@ -1,138 +1,1206 @@
 [
   {
-    "tipo": "Armas de Ar",
-    "subtipo": "Pistolas",
+    "tipo": "Equipamento Geral",
+    "subtipo": "Animais e Arreios",
     "origem": "CIDADE_SOL_VAPOR",
     "itens": [
       {
-        "nome": "Pistola de Ar 'Brisa'",
-        "dano": "2d4",
-        "pmf": 2,
-        "peso": "1",
-        "custo": 150,
-        "observacoes": "Silenciosa. 30 tiros. Dist 6/12/24.",
-        "origem": "CIDADE_SOL_VAPOR"
-      },
-      {
-        "nome": "Pistola de Ar 'Siroco'",
-        "dano": "2d4+1",
-        "pmf": 1,
-        "peso": "1",
-        "custo": 350,
-        "observacoes": "Silenciosa. 25 tiros. Dist 10/20/40.",
-        "origem": "CIDADE_SOL_VAPOR"
-      },
-      {
-        "nome": "Pistola de Ar 'Pixie'",
-        "dano": "2d6",
-        "pmf": 2,
-        "peso": "2",
+        "nome": "Cavalo",
         "custo": 300,
-        "observacoes": "Silenciosa. 20 tiros. CdT 2. Dist 10/20/40.",
-        "origem": "CIDADE_SOL_VAPOR"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas de Ar",
-    "subtipo": "Rifles",
-    "origem": "CIDADE_SOL_VAPOR",
-    "itens": [
-      {
-        "nome": "Rifle de Ar 'Chinook'",
-        "dano": "2d6-1",
-        "pmf": 2,
-        "peso": "4.5",
-        "custo": 300,
-        "observacoes": "Silenciosa. 10 tiros. Dist 20/40/80.",
+        "peso": 0,
+        "observacoes": "Animal de montaria.",
         "origem": "CIDADE_SOL_VAPOR"
       },
       {
-        "nome": "Rifle de Ar 'Garmsil'",
-        "dano": "2d6",
-        "pmf": 1,
-        "peso": "5",
-        "custo": 600,
-        "observacoes": "Silenciosa. PA 1. 20 tiros. Dist 20/40/80.",
+        "nome": "Cavalo de Guerra",
+        "custo": 750,
+        "peso": 0,
+        "observacoes": "Treinado para combate.",
         "origem": "CIDADE_SOL_VAPOR"
       },
       {
-        "nome": "Rifle de Ar 'Pampeiro'",
-        "dano": "2d6+1",
-        "pmf": 2,
-        "peso": "4",
-        "custo": 1200,
-        "observacoes": "Silenciosa. PA 1. 22 tiros. Dist 24/48/96.",
+        "nome": "Sela",
+        "custo": 10,
+        "peso": 5,
         "origem": "CIDADE_SOL_VAPOR"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas a Vapor",
-    "subtipo": "Pesadas",
-    "origem": "CIDADE_SOL_VAPOR",
-    "itens": [
+      },
       {
-        "nome": "Rifle a Vapor",
-        "dano": "2d12",
-        "pmf": 2,
-        "peso": "20",
-        "custo": 12000,
-        "observacoes": "Tiro Rápido, Pesada, PA 4. Proibida.",
-        "origem": "CIDADE_SOL_VAPOR"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Aço Vermelho",
-    "origem": "CIDADE_SOL_VAPOR",
-    "itens": [
-      {
-        "nome": "Faca de Aço Vermelho",
-        "dano": "For+d4+2",
-        "peso": "0.25",
+        "nome": "Sela Elaborada",
         "custo": 50,
-        "observacoes": "PA 1.",
+        "peso": 5,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Geral",
+    "subtipo": "Acessórios para armas de fogo",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Bipé/Tripé",
+        "custo": 100,
+        "peso": 1,
+        "observacoes": "Requer ação para posicionar. Nega Recuo e Força Mínima.",
         "origem": "CIDADE_SOL_VAPOR"
       },
       {
-        "nome": "Espada-Bengala de Aço Vermelho",
-        "dano": "For+d4+2",
-        "peso": "0.75",
-        "custo": 450,
-        "observacoes": "Aparar +1, PA 1, Porte Oculto.",
+        "nome": "Luneta de Rifle",
+        "custo": 100,
+        "peso": 1,
+        "observacoes": "Cancela 2 pontos de penalidade ao Mirar.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Geral",
+    "subtipo": "Equipamento de Aventura",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Algemas (grilhões)",
+        "custo": 15,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Mochila",
+        "custo": 50,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Óculos",
+        "custo": 20,
+        "peso": 0.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Óleo (meio litro)",
+        "custo": 2,
+        "peso": 0.5,
+        "observacoes": "Para lamparina.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pá",
+        "custo": 5,
+        "peso": 2.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pé de Cabra",
+        "custo": 10,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pederneira e Aço",
+        "custo": 3,
+        "peso": 0.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pedra de Amolar",
+        "custo": 5,
+        "peso": 0.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Sabão",
+        "custo": 1,
+        "peso": 0.1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Saco de dormir",
+        "custo": 25,
+        "peso": 2,
+        "observacoes": "Preparado para o inverno.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Tocha",
+        "custo": 5,
+        "peso": 0.5,
+        "observacoes": "Uma hora, 4 quadros de raio.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Vela",
+        "custo": 1,
+        "peso": 0.5,
+        "observacoes": "Uma hora, 2 quadros de raio.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Aljava",
+        "custo": 25,
+        "peso": 1,
+        "observacoes": "Guarda até 20 flechas/virotes.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Apito",
+        "custo": 2,
+        "peso": 0,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Câmera (normal)",
+        "custo": 75,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Cantil (odre)",
+        "custo": 5,
+        "peso": 0.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Cobertor",
+        "custo": 10,
+        "peso": 2,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Corda, cânhamo (20m)",
+        "custo": 10,
+        "peso": 7.5,
+        "observacoes": "10 quadros/20 metros.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Frasco (cerâmica)",
+        "custo": 5,
+        "peso": 0.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Gancho de Escalada",
+        "custo": 100,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Gazuas",
+        "custo": 200,
+        "peso": 0.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Guarda-Chuva",
+        "custo": 5,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Kit de Ferramentas",
+        "custo": 200,
+        "peso": 2.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Kit de Primeiros Socorros",
+        "custo": 10,
+        "peso": 0.5,
+        "observacoes": "Três usos, veja Cura.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Kit Médico",
+        "custo": 100,
+        "peso": 2,
+        "observacoes": "Cinco usos, +1 em rolagens de Curar; $25 para reabastecer.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Lamparina",
+        "custo": 25,
+        "peso": 1.5,
+        "observacoes": "4 horas, 4 quadros de raio.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Martelo",
+        "custo": 10,
+        "peso": 0.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Geral",
+    "subtipo": "Vestuário",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Botas de Inverno",
+        "custo": 100,
+        "peso": 0.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Botas, Caminhada",
+        "custo": 100,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Equipamento de Inverno",
+        "custo": 200,
+        "peso": 1.5,
+        "observacoes": "Capa/jaqueta.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Vestuário Casual",
+        "custo": 20,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Vestuário Formal",
+        "custo": 200,
+        "peso": 1.5,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Munição",
+    "subtipo": "Geral",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Balas Pequenas",
+        "custo": 10,
+        "peso": 0.5,
+        "observacoes": "50 munições. Calibre .22 a .32.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Balas Médias",
+        "custo": 20,
+        "peso": 1,
+        "observacoes": "50 munições. Calibre 9mm a .45.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Balas Grandes",
+        "custo": 50,
+        "peso": 7.5,
+        "observacoes": "50 munições. Calibre .50+.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Balas (c/ pólvora)",
+        "custo": 1,
+        "peso": 0.25,
+        "observacoes": "10 munições. Para armas de pólvora negra.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Cartuchos de Escopeta",
+        "custo": 15,
+        "peso": 0.7,
+        "observacoes": "25 cartuchos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Balas Sólidas (Escopeta)",
+        "custo": 20,
+        "peso": 0.7,
+        "observacoes": "25 balas. Veja pág. 121.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Flechas/Virotes",
+        "custo": 1,
+        "peso": 0.5,
+        "observacoes": "2 flechas/virotes. Peso por 5 flechas.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pedras de funda",
+        "custo": 2,
+        "peso": 0.5,
+        "observacoes": "20 pedras. Peso por 20.",
         "origem": "CIDADE_SOL_VAPOR"
       }
     ]
   },
   {
     "tipo": "Armaduras",
-    "subtipo": "Especiais",
+    "subtipo": "Tecido e Couro",
     "origem": "CIDADE_SOL_VAPOR",
     "itens": [
       {
-        "nome": "Sobretudo de Lã Pesada",
+        "nome": "Jaqueta",
         "armadura": "+1",
-        "peso": "4",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 20,
+        "observacoes": "Tronco, braços.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Manto",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 30,
+        "observacoes": "Tronco, braços, pernas.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Calças (Tecido)",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 20,
+        "observacoes": "Pernas.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Capuz (Tecido)",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 5,
+        "observacoes": "Cabeça.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Jaqueta (Couro Fervido)",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 80,
+        "observacoes": "Tronco, braços.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Calças (Couro Fervido)",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 3.5,
+        "custo": 40,
+        "observacoes": "Pernas.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Capuz (Couro Fervido)",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 0.5,
+        "custo": 20,
+        "observacoes": "Cabeça.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Medievais de Metal",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Camisa de Cota de Malha",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 12.5,
+        "custo": 300,
+        "observacoes": "Tronco, braços.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Calças de Cota de Malha",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 5,
         "custo": 150,
-        "observacoes": "Cobre tronco, braços e pernas.",
+        "observacoes": "Pernas.",
         "origem": "CIDADE_SOL_VAPOR"
       },
       {
-        "nome": "Peitoral de Aço Vermelho",
+        "nome": "Capuz de Cota ou Elmo",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 2,
+        "custo": 25,
+        "observacoes": "Cabeça.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Corselete de Bronze",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 6.5,
+        "custo": 80,
+        "observacoes": "Tronco.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Braçadeiras de Bronze",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 2.5,
+        "custo": 40,
+        "observacoes": "Braços.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Grevas de Bronze",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 50,
+        "observacoes": "Pernas.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Elmo de Bronze",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 25,
+        "observacoes": "Cabeça.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Barda de Bronze (Cavalo)",
+        "armadura": "+3",
+        "forcaMin": "d10",
+        "peso": 25,
+        "custo": 1500,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Corselete de Placas",
         "armadura": "+4",
-        "peso": "8",
-        "custo": 5000,
-        "observacoes": "Cobre tronco.",
+        "forcaMin": "d10",
+        "peso": 15,
+        "custo": 500,
+        "observacoes": "Tronco.",
         "origem": "CIDADE_SOL_VAPOR"
       },
       {
-        "nome": "Armadura a Vapor",
-        "armadura": "+6",
-        "peso": "90",
-        "custo": 20000,
-        "observacoes": "Corpo todo. For Min d10 se sem combustível. Aumenta Força em 2 passos.",
+        "nome": "Braçadeiras de Placas",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 5,
+        "custo": 200,
+        "observacoes": "Braços.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Grevas de Placas",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 5,
+        "custo": 200,
+        "observacoes": "Pernas.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Elmo Pesado",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 2,
+        "custo": 100,
+        "observacoes": "Cabeça.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Elmo Pesado Fechado",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 4,
+        "custo": 200,
+        "observacoes": "Cabeça. -1 em Perceber (visão).",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Barda de Placas (Cavalo)",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 25,
+        "custo": 1500,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Escudos",
+    "subtipo": "Geral",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Escudo Pequeno",
+        "aparar": "+1",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 50,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Escudo Médio",
+        "aparar": "+2",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 100,
+        "observacoes": "Cobertura -2.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Escudo Grande",
+        "aparar": "+3",
+        "forcaMin": "d8",
+        "peso": 6,
+        "custo": 200,
+        "observacoes": "Cobertura -4.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Medievais",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Adaga/Faca",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 25,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Alabarda",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 250,
+        "observacoes": "Alcance 1, duas mãos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Bastão",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 10,
+        "observacoes": "Aparar +1, Alcance 1, duas mãos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Clava Leve",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 25,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Clava Pesada",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 2.5,
+        "custo": 50,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Espada Curta",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 100,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Espada Grande",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "peso": 3,
+        "custo": 400,
+        "observacoes": "Duas mãos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Espada Longa",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 1.5,
+        "custo": 300,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Katana",
+        "dano": "For+d6+1",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 1000,
+        "observacoes": "Duas mãos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Lança",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 100,
+        "observacoes": "Alcance 1, Aparar +1 se duas mãos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Lança de Cavalaria",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 300,
+        "observacoes": "PA 2 em investidas, Alcance 2, combate montado.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Maça",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 2,
+        "custo": 100,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Machado de Batalha",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 2,
+        "custo": 300,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Machado de Mão",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 100,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Machado Grande",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "peso": 3.5,
+        "custo": 400,
+        "observacoes": "PA 2, Aparar -1, duas mãos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Malho",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "peso": 5,
+        "custo": 400,
+        "observacoes": "Duas mãos, +2 dano quebrar objetos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Mangual",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 200,
+        "observacoes": "Ignora bônus de escudo.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Martelo de Guerra",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 250,
+        "observacoes": "PA 1.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pique",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 9,
+        "custo": 400,
+        "observacoes": "Alcance 2, duas mãos.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Rapieira",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 150,
+        "observacoes": "Aparar +1.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Modernas e Futuristas",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Baioneta",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 25,
+        "observacoes": "For+d6 e Aparar +1 se fixada em rifle.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Canivete",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.25,
+        "custo": 10,
+        "observacoes": "-2 em Perceber se escondido.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Cassetete/Porrete",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 10,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Faca de Sobrevivência",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 50,
+        "observacoes": "+1 em Sobrevivência.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Soqueiras",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 20,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas à Distância",
+    "subtipo": "Medievais",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Adaga/Faca (Arremesso)",
+        "distancia": "3/6/12",
+        "dano": "For+d4",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 25,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Arco",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 250,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Arco Longo",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "forcaMin": "d8",
+        "peso": 1.5,
+        "custo": 300,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Besta",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 2.5,
+        "custo": 250,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Besta Pesada",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 400,
+        "observacoes": "Recarregar 2.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Funda",
+        "distancia": "4/8/16",
+        "dano": "For+d4",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 10,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Lança/Dardo (Arremesso)",
+        "distancia": "3/6/12",
+        "dano": "For+d6",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 100,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Machado de Arremesso",
+        "distancia": "3/6/12",
+        "dano": "For+d6",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 100,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Rede",
+        "distancia": "3/6/12",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 50,
+        "observacoes": "Alvo fica Enredado.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Pólvora Negra",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Pistola Flintlock",
+        "distancia": "5/10/20",
+        "dano": "2d6+1",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": 1.5,
+        "custo": 150,
+        "observacoes": "Recarregar 3.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Bacamarte",
+        "distancia": "10/20/40",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 6,
+        "custo": 300,
+        "observacoes": "Recarregar 3. Trate como Escopeta.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Mosquete (Brown Bess)",
+        "distancia": "10/20/40",
+        "dano": "2d8",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 7.5,
+        "custo": 300,
+        "observacoes": "Recarregar 3.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Rifle Kentucky",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 300,
+        "observacoes": "Recarregar 4.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Springfield Modelo 1861",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 5.5,
+        "custo": 250,
+        "observacoes": "Recarregar 3.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Pistolas Modernas",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Colt Peacemaker (.45)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 200,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Derringer (.41)",
+        "distancia": "3/6/12",
+        "dano": "2d4",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 100,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Revólver Policial (.38)",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 150,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Rifles",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Carabina Spencer (.52)",
+        "distancia": "20/40/80",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "7",
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 250,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Sharps Big 50 (.50)",
+        "distancia": "30/60/120",
+        "dano": "2d10",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d8",
+        "peso": 5.5,
+        "custo": 400,
+        "observacoes": "Tiro Rápido.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Winchester '73 (.44-40)",
+        "distancia": "24/48/96",
+        "dano": "2d8-1",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "15",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 300,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Escopetas",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Cano Duplo",
+        "distancia": "12/24/48",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d6",
+        "peso": 5.5,
+        "custo": 150,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Cano Duplo Serrado",
+        "distancia": "5/10/20",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d4",
+        "peso": 3,
+        "custo": 150,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Pump Action",
+        "distancia": "12/24/48",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 150,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Metralhadoras",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Gatling (.45)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "100",
+        "peso": 85,
+        "custo": 500,
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Canhões e Catapultas",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Canhão (12 lb)",
+        "distancia": "50/100/200",
+        "dano": "3d6+1",
+        "pa": 4,
+        "cdt": 1,
+        "peso": 600,
+        "custo": 10000,
+        "observacoes": "Arma Pesada. Recarregar 8.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Catapulta",
+        "distancia": "24/48/96",
+        "dano": "3d6",
+        "pa": 4,
+        "custo": 10000,
+        "observacoes": "Arma Pesada. MME. Recarregar a cada 5 min.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Trabuco",
+        "distancia": "30/60/120",
+        "dano": "3d8",
+        "pa": 4,
+        "custo": 50000,
+        "observacoes": "Arma Pesada. MME. Recarregar a cada 5 min.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Terrestres Civis",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Bicicleta",
+        "tamanho": -1,
+        "manobrabilidade": 1,
+        "velMaxima": 25,
+        "resistencia": "4",
+        "tripulacao": "1",
+        "custo": 250,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Carruagem",
+        "tamanho": 3,
+        "manobrabilidade": -2,
+        "velMaxima": 25,
+        "resistencia": "6",
+        "tripulacao": "1+3",
+        "custo": 1000,
+        "observacoes": "Tração animal.",
+        "origem": "CIDADE_SOL_VAPOR"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Embarcações",
+    "origem": "CIDADE_SOL_VAPOR",
+    "itens": [
+      {
+        "nome": "Barco a Remo",
+        "tamanho": 0,
+        "manobrabilidade": -2,
+        "velMaxima": 8,
+        "resistencia": "8 (1)",
+        "tripulacao": "1+3",
+        "custo": 500,
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Galeão",
+        "tamanho": 14,
+        "manobrabilidade": -2,
+        "velMaxima": 15,
+        "resistencia": "20 (4)",
+        "tripulacao": "20+80",
+        "custo": 300000,
+        "observacoes": "Armadura Pesada.",
+        "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "nome": "Galé",
+        "tamanho": 13,
+        "manobrabilidade": -1,
+        "velMaxima": 30,
+        "resistencia": "20 (4)",
+        "tripulacao": "20+100",
+        "custo": 150000,
+        "observacoes": "Armadura Pesada. Remos.",
         "origem": "CIDADE_SOL_VAPOR"
       }
     ]
