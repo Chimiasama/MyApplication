@@ -59,6 +59,7 @@ import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.Serializable
@@ -294,6 +295,20 @@ fun PoderesSection(
             }
 
             sourceList.filter { power ->
+                // Meio-Demônio (Cidade do Sol a Vapor):
+                // Disfarce Demoníaco não é inicial e só fica disponível em Experiente.
+                if (
+                    state.compendioCidadeSolVaporAtivo &&
+                    arcKey == "DEMONIO" &&
+                    state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
+                    power.id == "disfarce_demoniaco"
+                ) {
+                    val estagioExperiente = state.listaDeEstagios.indexOfFirst { it.nome.equals("Experiente", ignoreCase = true) }
+                        .takeIf { it >= 0 } ?: 1
+                    val estagioAtualIdx = state.listaDeEstagios.indexOf(state.estagioAtual())
+                    if (estagioAtualIdx < estagioExperiente) return@filter false
+                }
+
                 // 1. Check permissions/blocks
                 val isAllowed = if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {
                     true // Already filtered by domain logic above (Fantasy Cleric)
@@ -619,11 +634,21 @@ fun PoderesSection(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(poder.nome.toSentenceCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
-                                    Text("PP: ${poder.pontosDePoder}", style = MaterialTheme.typography.bodySmall)
+                                    val ppExibicao = if (
+                                        state.compendioCidadeSolVaporAtivo &&
+                                        arcKey == "DEMONIO" &&
+                                        state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
+                                        poder.id == "disfarce_demoniaco"
+                                    ) {
+                                        "2"
+                                    } else {
+                                        poder.pontosDePoder
+                                    }
+                                    Text("PP: $ppExibicao", style = MaterialTheme.typography.bodySmall)
                                 }
 
                                 if (state.usarSemPontosDePoder) {
-                                    Text("Penalidade base: ${custoParaPenalidadeTexto(poder.pontosDePoder)}", style = MaterialTheme.typography.bodySmall)
+                                    Text("Penalidade base: ${custoParaPenalidadeTexto(ppExibicao)}", style = MaterialTheme.typography.bodySmall)
                                 }
 
                                 val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }

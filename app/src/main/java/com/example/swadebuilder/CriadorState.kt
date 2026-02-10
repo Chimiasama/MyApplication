@@ -2568,6 +2568,13 @@ class CriadorState {
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
+        val ancestralidadeKey = ancestralidade.keyify()
+
+        // Cidade do Sol a Vapor: apenas Meio-Demônio pode comprar AA (Demônio).
+        if (v.id == "aa_demonio") {
+            val isMeioDemonio = ancestralidadeKey.contains("MEIO-DEMONIO")
+            if (!isMeioDemonio) return false
+        }
 
         // Crystal Heart Blocks
         if (compendioCrystalHeartAtivo) {

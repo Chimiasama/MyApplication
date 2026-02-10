@@ -197,6 +197,12 @@ fun AncestralidadesSection(
             val origin = it.origem?.uppercase() ?: "BASICO"
             val key = it.nome.keyify()
 
+            // Cidade do Sol a Vapor (jogadores): apenas Humanos e Meio-Demônios.
+            if (compendioCidadeSolVaporAtivo && origin == "CIDADE_SOL_VAPOR") {
+                val allowedCsvKeys = setOf("HUMANO TEIA", "MEIO-DEMONIO")
+                if (key !in allowedCsvKeys) return@filter false
+            }
+
             // Logic for Fantasy Compendium exclusions
             if (compendioFantasiaAtivo) {
                 if (key == "ANDROIDES") return@filter false
