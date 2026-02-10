@@ -600,7 +600,7 @@ fun AncestralidadesSection(
 
                                         // Free Advantages
                                         val vantagensGratisVisiveis = item.vantagensGratis.filterNot {
-                                            it.keyify() == Constants.ID_AA_AGENT_SYN.keyify()
+                                            it.keyify() == Constants.ID_AA_CANALIZAR_CRISTAL.keyify()
                                         }
                                         if (vantagensGratisVisiveis.isNotEmpty()) {
                                             val advsText = vantagensGratisVisiveis.joinToString(", ") { it.titleCase() }
