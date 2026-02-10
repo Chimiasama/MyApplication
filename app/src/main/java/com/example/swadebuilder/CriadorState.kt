@@ -16,6 +16,7 @@ import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.EquipFilter
 import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoItem
@@ -1006,7 +1007,7 @@ class CriadorState {
             .toSet()
 
         // Also check raw IDs in vantagensRaciais/Automaticas because some JSONs use IDs directly
-        // like "aa_agente_syn" which doesn't match the name "ANTECEDENTE ARCANO"
+        // like "antecedente_arcano_canalizar_cristal" which doesn't match the name "ANTECEDENTE ARCANO"
         val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
 
         return key in autoKeys ||
@@ -2633,8 +2634,8 @@ class CriadorState {
         // 3) Antecedente Arcano e multi-arcano
         if (key.startsWith("ANTECEDENTE ARCANO")) {
             if (compendioCrystalHeartAtivo) {
-                // Allows only "Antecedente Arcano: Canalizar Cristal" which has ID "aa_agente_syn"
-                if (v.id == "aa_agente_syn") return true
+                // Allows only "Antecedente Arcano: Canalizar Cristal" which has ID "antecedente_arcano_canalizar_cristal"
+                if (v.id == Constants.ID_AA_CANALIZAR_CRISTAL) return true
                 return false
             }
 
@@ -3153,7 +3154,7 @@ class CriadorState {
             val candidatos = vantagensSelecionadas.filter { v ->
                 val isScenarioEdge = v.id == "superpoderes" ||
                         v.id == "agente_syn" ||
-                        v.id == "aa_agente_syn" ||
+                    v.id == Constants.ID_AA_CANALIZAR_CRISTAL ||
                         (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
 
                 !isRacialFree(v) &&

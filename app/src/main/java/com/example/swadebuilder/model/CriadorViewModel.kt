@@ -411,8 +411,8 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.compendioCrystalHeartAtivo) {
-            listaVantagens.firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
-                if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
+            listaVantagens.firstOrNull { it.id == Constants.ID_AA_CANALIZAR_CRISTAL }?.let { aa ->
+                if (state.vantagensSelecionadas.none { it.id == Constants.ID_AA_CANALIZAR_CRISTAL }) {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
             }

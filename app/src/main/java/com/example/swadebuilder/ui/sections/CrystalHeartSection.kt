@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.listaCoracoesCrystal
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
@@ -59,7 +60,7 @@ fun CrystalHeartSection(
         showHeader = false
     ) {
         val context = LocalContext.current
-        val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "aa_agente_syn" }
+        val temAgenteSyn = state.vantagensSelecionadas.any { it.id == Constants.ID_AA_CANALIZAR_CRISTAL }
         val stageOrder = listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário")
         val maxNameLength = 60
         val maxTextLength = 500
