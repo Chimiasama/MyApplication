@@ -310,10 +310,9 @@ fun PoderesSection(
                     state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
                     power.id == "disfarce_demoniaco"
                 ) {
-                    val estagioExperiente = state.listaDeEstagios.indexOfFirst { it.nome.equals("Experiente", ignoreCase = true) }
-                        .takeIf { it >= 0 } ?: 1
-                    val estagioAtualIdx = state.listaDeEstagios.indexOf(state.estagioAtual())
-                    if (estagioAtualIdx < estagioExperiente) return@filter false
+                    val estagioAtual = state.estagioAtual().nome.semAcentos().uppercase()
+                    val podeUsarDisfarce = estagioAtual in setOf("EXPERIENTE", "VETERANO", "HEROICO", "HEROICO", "LENDARIO")
+                    if (!podeUsarDisfarce) return@filter false
                 }
 
                 // 1. Check permissions/blocks
@@ -635,22 +634,23 @@ fun PoderesSection(
                                 }
                         ) {
                             Column(Modifier.padding(8.dp)) { // Compact internal padding
+                                val ppExibicao = if (
+                                    state.compendioCidadeSolVaporAtivo &&
+                                    arcKey == "DEMONIO" &&
+                                    state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
+                                    poder.id == "disfarce_demoniaco"
+                                ) {
+                                    "2"
+                                } else {
+                                    poder.pontosDePoder
+                                }
+
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Text(poder.nome.toSentenceCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
-                                    val ppExibicao = if (
-                                        state.compendioCidadeSolVaporAtivo &&
-                                        arcKey == "DEMONIO" &&
-                                        state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
-                                        poder.id == "disfarce_demoniaco"
-                                    ) {
-                                        "2"
-                                    } else {
-                                        poder.pontosDePoder
-                                    }
                                     Text("PP: $ppExibicao", style = MaterialTheme.typography.bodySmall)
                                 }
 
