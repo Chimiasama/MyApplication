@@ -21,7 +21,7 @@
   {
     "id": "antecedente_arcano",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -45,7 +45,7 @@
   {
     "id": "antecedente_arcano_dom",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -65,7 +65,7 @@
   {
     "id": "antecedente_arcano_magia",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -85,7 +85,7 @@
   {
     "id": "antecedente_arcano_milagres",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -105,7 +105,7 @@
   {
     "id": "antecedente_arcano_ciencia_estranha",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -125,7 +125,7 @@
   {
     "id": "antecedente_arcano_psionicos",
     "nome": "ANTECEDENTE ARCANO",
-    "categoria": "ANTECEDENTE",
+    "categoria": "PODER",
     "origem": "BASICO",
     "requisitos": {
       "estagio": "Novato",
@@ -2662,15 +2662,15 @@
     "nome": "ACORDO COM DEMÔNIOS",
     "categoria": "ANTECEDENTE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Conhecimento Geral d6+, Persuadir d6+, não pode ter escolhido a Vantagem Rico",
-    "descricao": "Entre os recém-chegados à Teia, há muitas pessoas que esperam tirar proveito do Programa Promessa de Almas, usando o dinheiro para ficar rico rapidamente. A primeira parte é fácil, mas poucos têm sucesso na segunda parte. Seu personagem tem sorte. Ele começa o jogo com uma quantia quatro vezes maior que a inicial e seu salário anual é de aproximadamente 200 mil sóis. No entanto, preocupações sobre o destino da alma imortal o levou a ter medo dos demônios. O personagem ganha a Complicação Fobia (Menor— demônios), mas não recebe pontos de criação por isso. Esta Vantagens pode ser usada no lugar de Rico para cumprir o requisito para Podre de Rico."
+    "requisitos": "Novato, Conhecimento Geral d6+, Persuadir d6+, não pode ter escolhido a Vantagem Rico.",
+    "descricao": "Entre os recém-chegados à Teia, há muitas pessoas que esperam tirar proveito do Programa Promessa de Almas, usando o dinheiro para ficar rico rapidamente. A primeira parte é fácil, mas poucos têm sucesso na segunda parte. Seu personagem tem sorte. Ele começa o jogo com uma quantia quatro vezes maior que a inicial e seu salário anual é de aproximadamente 200 mil sóis. No entanto, preocupações sobre o destino da alma imortal o levou a ter medo dos demônios. O personagem ganha a Complicação Fobia (Menor—demônios), mas não recebe pontos de criação por isso. Esta Vantagens pode ser usada no lugar de Rico para cumprir o requisito para Podre de Rico."
   },
   {
     "id": "parrudo",
     "nome": "PARRUDO",
     "categoria": "ANTECEDENTE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Força d10+",
+    "requisitos": "Novato, Força d10+.",
     "descricao": "Seu personagem é muito robusto, não há penalidades quando for se mover e disparar com uma arma com a característica Tiro Rápido no mesmo turno. Se ele usar uma armadura a vapor, podem usar a Arma Estacionária como se fosse Tiro Rápido."
   },
   {
@@ -2678,7 +2678,7 @@
     "nome": "CAVALHEIRO COMPLETO",
     "categoria": "ANTECEDENTE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Aristocrata, Lutar d8+, Atirar d8+",
+    "requisitos": "Novato, Aristocrata, Lutar d8+, Atirar d8+.",
     "descricao": "Seu personagem é bom em esgrima, boxe e tiro; mas essas nobres habilidades são boas somente em uma luta franca contra um único oponente. Em uma briga de rua, elas tendem a ser inúteis. O personagem recebe +2 para Lutar, Atirar e dano ao enfrentar um oponente no mano-a-mano."
   },
   {
@@ -2686,7 +2686,7 @@
     "nome": "ATIRADOR PERCEPTIVO",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Atirar d4+",
+    "requisitos": "Novato, Atirar d4+.",
     "descricao": "Seu personagem conhece uma arma de ar como ninguém e é capaz de determinar a condição de um cilindro de gás e válvula através do som. Quando ocorrer um Mau Funcionamento em uma arma de ar, se comprar um dez ou mais alto ao diagnosticar o Mau Funcionamento, ignore-a ao atirar."
   },
   {
@@ -2694,15 +2694,15 @@
     "nome": "ATIRADOR OLÍMPICO",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Veterano, Atirar d10+",
-    "descricao": "O gatilho da arma de ar comprimido se tornou uma extensão do dedo do seu personagem, então, se ele quiser, pode facilmente ganhar um bom dinheiro fazendo espetáculos públicos. Seja uma moeda jogada, um charuto preso entre os dentes, o segundo ponteiro de um relógio de parede— todos são alvos fáceis para ele. Seu personagem sofre metade das penalidades por ações múltiplas, desde que sejam ações de Atirar (-1 para a segunda ação, -2 para a terceira)."
+    "requisitos": "Veterano, Atirar d10+.",
+    "descricao": "O gatilho da arma de ar comprimido se tornou uma extensão do dedo do seu personagem, então, se ele quiser, pode facilmente ganhar um bom dinheiro fazendo espetáculos públicos. Seja uma moeda jogada, um charuto preso entre os dentes, o segundo ponteiro de um relógio de parede—todos são alvos fáceis para ele. Seu personagem sofre metade das penalidades por ações múltiplas, desde que sejam ações de Atirar (-1 para a segunda ação, -2 para a terceira)."
   },
   {
     "id": "atirador_urbano",
     "nome": "ATIRADOR URBANO",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Lutar d6+, Atirar d6+",
+    "requisitos": "Novato, Lutar d6+, Atirar d6+.",
     "descricao": "Seu personagem aprendeu a atirar nas ruas, então ele se sente confortável numa briga de rua. Quando ele atira em combate um corpo-a-corpo, ele não fica Vulnerável e ignora o Aparar do alvo, como se estivesse atirando à distância."
   },
   {
@@ -2710,7 +2710,7 @@
     "nome": "CAÇADOR DE POMBOS",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Atirador Urbano",
+    "requisitos": "Novato, Atirador Urbano.",
     "descricao": "Um filósofo uma vez disse que a quantidade, cedo ou tarde, se torna qualidade. Isso é absolutamente verdadeiro sobre as habilidades do seu personagem: ele praticou tanto com a pistola de ar que agora pode acertar facilmente os alvos mais difíceis. Ao atirar, Espectadores Inocentes de Savage Worlds só entram em efeito em uma Falha Crítica."
   },
   {
@@ -2718,7 +2718,7 @@
     "nome": "CAÇADOR DE TIGRES",
     "categoria": "COMBATE",
     "origem": "SOL_VAPOR",
-    "requisitos": "Experiente, Atirar d8+",
+    "requisitos": "Experiente, Atirar d8+.",
     "descricao": "No mundo exterior, as armas de ar são consideradas brinquedos perto de armas reais. De fato, seu poder de matar e alcance efetivo são muito pequenos em comparação com as armas de pólvora. No entanto, seu personagem sabe que, em suas mãos, um rifle de ar comprimido pode ser realmente letal; o principal é mirar corretamente. Ao mirar com um rifle de ar, eles recebem +d6 de dano , ou +d8 em uma Ampliação (em vez do aumento de dano padrão de uma Ampliação)."
   },
   {
@@ -2750,7 +2750,7 @@
     "nome": "MECÂNICO CEGO",
     "categoria": "PROFISSIONAL",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Astúcia d8+, Consertar d8+",
+    "requisitos": "Novato, Astúcia d8+, Consertar d8+.",
     "descricao": "A parte mais difícil da manutenção de grandes máquinas é descobrir o que causou a falha no labirinto de pinhões e eixos. Seu personagem pode ouvir o que está provocando a falha. Ele recebe +2 em todas as rolagens de Consertar e não sofrem penalidades em situações em que não podem ver no que estão trabalhando."
   },
   {
@@ -2758,7 +2758,7 @@
     "nome": "MESTRE DAS CALDEIRAS",
     "categoria": "PROFISSIONAL",
     "origem": "SOL_VAPOR",
-    "requisitos": "Veterano, Astúcia d6+, Consertar d8+",
+    "requisitos": "Veterano, Astúcia d6+, Consertar d8+.",
     "descricao": "Seu personagem dominou o trabalho com mecanismos a vapor e é capaz de diagnosticar uma falha pelo som da caldeira. Se um mau funcionamento ocorrer durante qualquer rolagem relacionada à operação de um mecanismo a vapor, o personagem pode realizar uma rolagem de Astúcia. Em um sucesso, a falha é evitada."
   },
   {
@@ -2766,7 +2766,7 @@
     "nome": "ELEGANTE",
     "categoria": "SOCIAIS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato",
+    "requisitos": "Novato.",
     "descricao": "Seu personagem tem um senso inato de moda e, em dois minutos, pode criar um traje a partir de trapos, concedendo +1 em todas as rolagens de Persuadir. Se algo acontecer com suas roupas, elas perdem esse modificador até que o traje esteja em ordem. Isso leva 2d6 minutos. Outros personagens também podem se beneficiar de suas habilidades de estilista. Para vestir outra pessoa bem, são necessários d6x10 minutos e uma rolagem de Astúcia. Em caso de sucesso, essa pessoa receberá +1 nas rolagens de Persuadir até o final do dia ou até o traje ser arruinado. Em caso de falha, você apenas perdeu seu tempo."
   },
   {
@@ -2774,7 +2774,7 @@
     "nome": "ME CHAMO IGOR",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Experiente, Carta Selvagem, Consertar d8+, ter sua própria oficina",
+    "requisitos": "Experiente, Carta Selvagem, Consertar d8+, ter sua própria oficina.",
     "descricao": "Todo cientista louco que se preze precisa de um assistente que seja muito bom em mecanismos e auxílio na oficina. Seu personagem tem um assistente que possui as perícias de Consertar e Curar. Essas perícias avançam à medida que o Estágio de seu personagem aumenta (d6 no Experiente, d8 no Veterano, etc.). Ele nunca participa de combates, mas se houver um problema em sua oficina, como um incêndio ou roubo, ele sempre consegue de alguma maneira fantástica salvar a maioria dos equipamentos."
   },
   {
@@ -2782,7 +2782,7 @@
     "nome": "SEGUIDOR DE NIETZSCHE",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Espírito d8+",
+    "requisitos": "Novato, Espírito d8+.",
     "descricao": "O que não mata seu personagem o torna mais forte. Sempre que este personagem rolar uma Falha Crítica, o jogador recebe um marcador de Convicção. Apenas lembre-se, o que mata seu personagem o torna morto."
   },
   {
@@ -2790,7 +2790,7 @@
     "nome": "TARÔ: 0-PEREGRINO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Alguém que tem um objetivo, irá evitar perigos em seu caminho.”\n\nDizem que crianças, Tolos e andarilhos sempre têm sorte. Seu personagem não é uma criança e nunca foi um tolo, mas suas viagens geralmente são seguras, sem acidentes desagradáveis. Uma vez por sessão, antes de uma jornada começar, o jogador pode gastar um Bene. Se fizer isso, não sofrerá acidentes desagradáveis durante a jornada. Se você usar as mecânicas de detecção de acidentes, compre cartas até obter Copas ou Ouros.\n\nNota de design: Esta Vantagem só protege contra acidentes. Se os heróis estiverem sendo perseguidos, os vilões poderão atacá-los na estrada, independente desta Vantagem."
   },
   {
@@ -2798,23 +2798,23 @@
     "nome": "TARÔ: I-CHARLATÃO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
-    "descricao": "“Às vezes, mentir para os outros é a melhor maneira de acreditar em si mesmo.”\n\nSeu personagem recebe +2 para Persuasão para provar que têm algum Antecedente Arcano (mesmo que não tenha). Eles não apenas enganam os outros, mas também a si mesmos — de forma tão poderosa que às vezes são capazes de realizar um pequeno milagre. Eles podem gastar um Bene para usar um poder da lista abaixo, usando Provocar em vez de uma perícia Arcana. Todos esses poderes são usados em sua forma base, sem modificação.\n\nLista de poderes disponíveis: atordoar, cegar, confusão, cura, enredar, iluminar/obscurecer, medo, manipulação elemental e raio."
+    "requisitos": "Novato, Humano, Carta Selvagem.",
+    "descricao": "“Às vezes, mentir para os outros é a melhor maneira de acreditar em si mesmo.”\n\nSeu personagem recebe +2 para Persuasão para provar que têm algum Antecedente Arcano (mesmo que não tenha). Eles não apenas enganam os outros, mas também a si mesmos — de forma tão poderosa que às vezes são capazes de realizar um pequeno milagre. Eles podem gastar um Bene para usar um poder da lista abaixo, usando Provocar em vez de uma perícia Arcana. Todos esses poderes são usados em sua forma base, sem modificação.\nLista de poderes disponíveis: atordoar, cegar, confusão, cura, enredar, iluminar/obscurecer, medo, manipulação elemental e raio."
   },
   {
     "id": "taro_espiritualista",
     "nome": "TARÔ: II. ESPIRITUALISTA",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
-    "descricao": "“Não é tão difícil falar com os mortos, quanto persuadi-los a falar com você.”\n\nSeu personagem é capaz de abrir o véu que separa o mundo dos mortos do mundo dos vivos por um breve momento. Isso lhe dá acesso a conhecimentos secretos, e ele recebe +2 em todas as rolagens de Ocultismo. Ao gastar um Bene, o personagem pode se comunicar com um espírito ou ver a última coisa que o falecido viu em vida. Para fazer isso, o personagem precisa tocar na cabeça de um cadáver: o espiritualista verá uma imagem estática e ouvirá o que o falecido ouviu em seus últimos 5 segundos. Para uma conversa com o espírito, é suficiente ter um objeto que esteja intimamente relacionado à personalidade do falecido (cartas, jóias). No entanto, as respostas recebidas podem ser vagas, especialmente se o corpo não for o de um ser humano. Perguntas após a primeira exigem uma rolagem bem-sucedida de Persuadir com uma penalidade cumulativa para cada rolagem subsequente (sem penalidade na primeira rolagem, penalidade de -2 na segunda rolagem, -4 para a terceira, etc).\n\nNota de design: Se estiver narrando uma história de detetive ligada a um assassinato e um personagem tiver esta Vantagem, vale a pena elaborar o enredo da história para que a vítima não veja o rosto do assassino. Talvez em vez disso ela tenha olhado para algo importante, que os jogadores possam usar para investigar o caso."
+    "requisitos": "Novato, Humano, Carta Selvagem.",
+    "descricao": "“Não é tão difícil falar com os mortos, quanto persuadi-los a falar com você.”\n\nSeu personagem é capaz de abrir o véu que separa o mundo dos mortos do mundo dos vivos por um breve momento. Isso lhe dá acesso a conhecimentos secretos, e ele recebe +2 em todas as rolagens de Ocultismo. Ao gastar um Bene, o personagem pode se comunicar com um espírito ou ver a última coisa que o falecido viu em vida. Para fazer isso, o personagem precisa tocar na cabeça de um cadáver: o espiritualista verá uma imagem estática e ouvirá o que o falecido ouviu em seus últimos 5 segundos. Para uma conversa com o espírito, é suficiente ter um objeto que esteja intimamente relacionado à personalidade do falecido (cartas, jóias). No entanto, as respostas recebidas podem ser vagas, especialmente se o corpo não for o de um ser humano. Perguntas após a primeira exigem uma rolagem bem-sucedida de Persuadir com uma penalidade cumulativa para cada rolagem subsequente (sem penalidade na primeira rolagem, penalidade de -2 na segunda rolagem, -4 para a terceira, etc)."
   },
   {
     "id": "taro_confusao",
     "nome": "TARÔ: III. CONFUSÃO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“A loucura interna pode passar despercebida, mas é contagiosa.”\n\nÀs vezes, seu personagem tem habilidades semelhantes à hipnose. Uma vez por sessão, ele pode gastar um Bene para dar qualquer ordem a um Extra e ele irá obedecer. Uma vez que o comando tenha sido concluído, a vítima, se ainda estiver viva, não se lembrará do que a inspirou a agir."
   },
   {
@@ -2822,7 +2822,7 @@
     "nome": "TARÔ: IV. SENTINELA",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Aquele que estiver disposto a se sacrificar evitará o perigo.”\n\nA paixão deste personagem é proteger os outros. Ele pode redirecionar ataques para si mesmo, protegendo um aliado próximo. Ao correr esses riscos, eles podem salvar sua própria vida. A qualquer momento da rodada, um personagem com essa Vantagem pode gastar um Bene para se aproximar de um aliado dentro de seu alcance de movimentação (mesmo que ela já tenha sido realizada nesta rodada) para protegê-lo, redirecionando o dano para si mesmo. Se quiser usar outro Bene para Absorver, pode fazer isso com um modificador +2 (somado com a Vantagem Queixo de Ferro, se ele tiver)."
   },
   {
@@ -2830,7 +2830,7 @@
     "nome": "TARÔ: V. ENGENHEIRO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Haverão centenas de artesãos no caminho feito por um gênio.”\n\nSeu personagem não tinha talento e paixão suficientes para se tornar um inventor verdadeiramente excepcional. Ele nunca aprendeu a desenvolver seus próprios mecanismos, mas é proficiente em reproduzi-los. Seu personagem não pode criar engenhocas de acordo com as regras da seção de Invenções, mas se obtiver um invento (inclusive tecnomágico), ele pode desmontá-lo após 4d6 horas com um sucesso em Consertar. O tempo necessário é reduzido pela metade em caso de Ampliação. Mais tarde, uma vez por sessão, este personagem pode gastar um Bene e criar qualquer mecanismo previamente estudado tendo um sucesso em Consertar. Ele ainda precisa de componentes - pelo menos metade do custo do invento - e algum tempo para este trabalho. Se um mecanismo estava quebrado no momento em que foi estudado, todas as falhas também são reproduzidas com precisão perfeita."
   },
   {
@@ -2838,7 +2838,7 @@
     "nome": "TARÔ: VI. PORTÃO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Qualquer porta levará ao destino de uma pessoa guiada pelo coração.”\n\nSeu personagem tem uma relação especial com portas. Ao contrário de demônios, ele não pode abrir portais estacionários, mas pode usar qualquer porta para chegar onde precisa ir. Uma vez por sessão, ele pode gastar um Bene e passar por qualquer porta, terminando onde precisa chegar. Deve haver uma porta ou arco no ponto de saída. É impossível chegar a um lugar completamente desconhecido e, se seu personagem conhece seu destino apenas pela descrição geral, precisará fazer uma rolagem bem-sucedida em Espírito. O personagem pode levar até duas pessoas consigo, mas sofre um nível de Fadiga para cada uma."
   },
   {
@@ -2846,7 +2846,7 @@
     "nome": "TARÔ: VII. VOO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“O destino de Ícaro deveria nos ensinar a ser cautelosos, mas não deveria nos fazer esquecer o céu.”\n\nSeu personagem sente os como ninguém, então pode pilotar aeronaves mesmo fora da cidade. O problema é que quase não há aeronaves na Teia; é praticamente impossível para qualquer outra pessoa usá-las aqui. No início da aventura, este personagem montou o mais simples girocóptero (Tamanho 2 (Normal), Velocidade Máxima 30, Resistência 8(1), Tripulação 1+1, Manuseio -2, número máximo de torres para armas 1). O girocóptero pode ser melhorado de acordo com as regras gerais para invenções. Se o girocóptero for perdido, o personagem precisará de 1000 sóis e uma semana para consertá-lo."
   },
   {
@@ -2854,7 +2854,7 @@
     "nome": "TARÔ: VIII. PACTO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Se você acha que enganou o destino, pense no perdeu e não percebeu.”\n\nSeu personagem tem mais sucesso que os outros. Para todas as rolagens, eles usam um d8 como seu Dado Selvagem. Mas tudo tem seu preço, e ele trata qualquer combinação de 1 e 2 em seu Dado de Perícia e Dado Selvagem como Falha Crítica"
   },
   {
@@ -2862,7 +2862,7 @@
     "nome": "TARÔ: IX. EXPEDIÇÃO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Ventos, pragas, ou escuridão da noite não podem deter um verdadeiro pesquisador.”\n\nSeu personagem tem uma incrível resiliência ao ambiente externo. Os não têm influência sobre ele, mesmo sem um equipamento especial. Ele também não sofre penalidades por Fadiga e recebe +2 em rolagens de Vigor para evitar Fadiga."
   },
   {
@@ -2870,7 +2870,7 @@
     "nome": "TARÔ: X. FORTUNA",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Para ser sortudo, você precisa aproveitar os bons momentos.”\n\nÀs vezes, seu personagem tem uma sorte incrível. Ele aprendeu a antecipar esses momentos de sorte e usá-los a seu favor. Uma vez por sessão, eles pode gastar um Bene para adicionar um d6 a qualquer rolagem."
   },
   {
@@ -2878,7 +2878,7 @@
     "nome": "TARÔ: XI. MECANISMO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Um mecânico talentoso é como Cristo, que reviveu Lázaro.”\n\nSeu personagem pode trabalhar com absolutamente qualquer mecanismo, inclusive com aqueles reduzidos a sucata enferrujada. Uma vez por sessão, eles podem gastar um Bene para fazer com que um mecanismo que tenha conservado ao menos a integridade externa funcione até o final da cena. Avarias internas e falta de combustível não são um problema."
   },
   {
@@ -2894,7 +2894,7 @@
     "nome": "TARÔ: XIII. MORTE",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Se a morte se aproxima de você, ela também estará perto de seus inimigos.”\n\nA morte segue seu personagem. Ele recebem -2 na Resistência, mas às vezes pode direcionar a atenção da Morte para outra pessoa. Após gastar um Bene, ele pode fazer um ataque bem-sucedido sem a necessidade de fazer uma rolagem de Luta ou Atirar. Se o dano do ataque não for suficiente para causar um Ferimento, o ataque ainda causará um Ferimento."
   },
   {
@@ -2902,7 +2902,7 @@
     "nome": "TARÔ: XIV. CONHECIMENTO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Quando alcança novas descobertas, é sempre importante parar e refletir sobre as experiências do passado.”\n\nInicialmente, seu personagem pode não ter muitas habilidades, mas tem grande aptidão em aprender. Sempre que ganhar um novo Estágio, ele pode escolher uma Vantagem adicional de qualquer Estágio anterior gratuitamente. Ele deve atender a todos os seus requisitos."
   },
   {
@@ -2910,15 +2910,15 @@
     "nome": "TARÔ: XV. DEMÔNIO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
-    "descricao": "“Aquele que vence trapaceando raramente paga por sua própria derrota.”\n\nSeu personagem pode escapar da morte traindo outras criaturas. Quando é atacado, ele pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante. Se este personagem vencer, o dano é redirecionado para um personagem aleatório a até cinco quadros de distância.\n\nNota de design: A redirecionamento de dano não significa necessariamente que o ataque é redirecionado; uma vítima pode ser ferida acidentalmente."
+    "requisitos": "Novato, Humano, Carta Selvagem.",
+    "descricao": "“Aquele que vence trapaceando raramente paga por sua própria derrota.”\n\nSeu personagem pode escapar da morte traindo outras criaturas. Quando é atacado, ele pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante. Se este personagem vencer, o dano é redirecionado para um personagem aleatório a até cinco quadros de distância."
   },
   {
     "id": "taro_estrela_morta",
     "nome": "TARÔ: XVI. ESTRELA MORTA",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Verdadeiros milagres só podem acontecer sob a luz de estrelas reais.”\n\nSeu personagem incorpora o lado sombrio da Era da Razão - aquele que não tem lugar para nada além de explicações lógicas e teorias científicas comprovadas. Ele não pode ter nenhum Antecedente Arcano.\n\nUma vez por sessão ele pode gastar um Bene para que nas próximas cinco rodadas (ou cinco minutos se esta Vantagem não for usada em combate) seja aplicada uma penalidade de -4 no uso de todos os poderes e tiros de pistolas tecnomágicas dentro de 10 quadros do personagem."
   },
   {
@@ -2926,7 +2926,7 @@
     "nome": "TARÔ: XVII. ÉTER",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Tecnomagia)",
+    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Tecnomagia).",
     "descricao": "“O éter do mundo contém respostas para todas as perguntas. Você apenas precisa ser capaz de ouvi-las.”\n\nSeu personagem conhece intuitivamente os princípios para criar magias tecnomágicas. Ele pode gastar um Bene para usar qualquer poder tecnomágico disponível para seu Estágio. Pontos de Poder são usados normalmente e uma rolagem de Tecnomagia é realizada como de costume."
   },
   {
@@ -2934,7 +2934,7 @@
     "nome": "TARÔ: XVIII. VAZIO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Magia Negra)",
+    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Magia Negra).",
     "descricao": "“A escuridão carrega muitos perigos, mas às vezes devora a si mesma.”\n\nUm mago negro com esta Vantagem está constantemente sob efeito do poder Ocultar Arcano."
   },
   {
@@ -2942,7 +2942,7 @@
     "nome": "TARÔ: XIX. LUZ",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Milagres)",
+    "requisitos": "Novato, Humano, Carta Selvagem, Antecedente Arcano (Milagres).",
     "descricao": "“O bem que você faz retornará a você nos dias mais sombrios.”\n\nO espírito de algumas pessoas é mais forte do que o de outras, e isso lhes dá a força para a realização de milagres. Este é o seu personagem. Um abençoado com esta Vantagem ignora até dois pontos de penalidade de Ferimentos e Fadiga durante uma rolagem de Fé."
   },
   {
@@ -2950,15 +2950,15 @@
     "nome": "TARÔ: XX. GALVANISMO",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
-    "descricao": "“A criação de uma nova vida não coloca um homem em pé de igualdade com Deus, mas assume que ele já está lá.”\n\nSeu personagem é obcecado pela vida e morte e conseguiu desenvolver meios que acredita poder reviver os mortos. Pode ser um ritual especial, uma máquina que usa o poder do raio, soro injetado na veia de um cadáver ou outra coisa. Uma vez por sessão, ele pode gastar um Bene para uma rolagem de Ciência. Em um Sucesso, ele pode reviver uma criatura morta.\n\nNota de design: Se 10 minutos se passaram depois da morte, não haverá uma alma no corpo e a criatura revivida pode ser bastante diferente do que era em vida."
+    "requisitos": "Novato, Humano, Carta Selvagem.",
+    "descricao": "“A criação de uma nova vida não coloca um homem em pé de igualdade com Deus, mas assume que ele já está lá.”\n\nSeu personagem é obcecado pela vida e morte e conseguiu desenvolver meios que acredita poder reviver os mortos. Pode ser um ritual especial, uma máquina que usa o poder do raio, soro injetado na veia de um cadáver ou outra coisa. Uma vez por sessão, ele pode gastar um Bene para uma rolagem de Ciência. Em um Sucesso, ele pode reviver uma criatura morta."
   },
   {
     "id": "taro_cidade",
     "nome": "TARÔ: XXI. CIDADE",
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
-    "requisitos": "Novato, Humano, Carta Selvagem",
+    "requisitos": "Novato, Humano, Carta Selvagem.",
     "descricao": "“Uma besta com mil bocas e um milhão de olhos, cuja respiração fecha o céu.”\n\nAlguns filósofos veem a Cidade como uma criatura viva com uma mente coletiva. Seu personagem é capaz de interagir superficialmente com essa mente. Ao olhar por qualquer janela ou reflexo (por exemplo, de uma poça d’água), ele pode fazer uma rolagem de Espírito para ver o que está acontecendo em um quarto ou parte da rua que o personagem está familiarizado como se estivesse olhando por uma janela para aquele lugar. Quanto mais Ampliações o personagem obtiver, mais perto a janela estará do local desejado."
   }
 ]
