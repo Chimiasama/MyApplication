@@ -250,7 +250,7 @@ object DataLoader {
         // 5. Atributos (Always load core)
         val atributosData = dataCache.getOrPut("geral_atributos.json") {
             runCatching {
-                loadJsonAsset<AtributoList>(context, "geral_atributos.json")
+                context.loadJsonAsset<AtributoList>("geral_atributos.json")
             }.getOrElse { AtributoList(emptyList()) }
         } as AtributoList
 
@@ -271,7 +271,7 @@ object DataLoader {
             val pListWrapper = dataCache.getOrPut(module.fileName) {
                 // Try loading as PericiaList (wrapped)
                 val asWrapper = runCatching {
-                    loadJsonAsset<PericiaList>(context, module.fileName)
+                    context.loadJsonAsset<PericiaList>(module.fileName)
                 }.getOrNull()
 
                 if (asWrapper != null) {
@@ -279,7 +279,7 @@ object DataLoader {
                 } else {
                     // Try loading as List<PericiaJson> (direct)
                     val asList = runCatching {
-                        loadJsonAsset<List<PericiaJson>>(context, module.fileName)
+                        context.loadJsonAsset<List<PericiaJson>>(module.fileName)
                     }.getOrNull()
 
                     if (asList != null) {
@@ -338,7 +338,7 @@ object DataLoader {
         val adgTropos = if ("ARTE_DA_GUERRA" in keys) {
             @Suppress("UNCHECKED_CAST")
             val cached = dataCache.getOrPut("adg_tropos.json") {
-                runCatching { loadJsonAsset<List<Tropo>>(context, "adg_tropos.json") }.getOrElse { emptyList<Tropo>() }
+                runCatching { context.loadJsonAsset<List<Tropo>>("adg_tropos.json") }.getOrElse { emptyList<Tropo>() }
             } as List<Tropo>
             cached
         } else emptyList()
@@ -346,7 +346,7 @@ object DataLoader {
         val chTropos = if ("CRYSTAL_HEART" in keys) {
             @Suppress("UNCHECKED_CAST")
             val cached = dataCache.getOrPut("crystal_tropos.json") {
-                runCatching { loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json") }.getOrElse { emptyList<Tropo>() }
+                runCatching { context.loadJsonAsset<List<Tropo>>("crystal_tropos.json") }.getOrElse { emptyList<Tropo>() }
             } as List<Tropo>
             cached
         } else emptyList()
@@ -450,4 +450,3 @@ object DataLoader {
         item.mods_slots?.toString()
     ).joinToString("|")
 }
-
