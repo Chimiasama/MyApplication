@@ -48,6 +48,41 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.util.keyify
 import kotlin.random.Random
 
+@Composable
+private fun DetalhesTexto(
+    key: String,
+    texto: String,
+    allowLongTexts: Boolean,
+    detalhesExpandidos: MutableMap<String, Boolean>,
+    modifier: Modifier = Modifier
+) {
+    if (!allowLongTexts || texto.isBlank()) return
+    Spacer(Modifier.height(2.dp))
+    TextButton(
+        onClick = {
+            val current = detalhesExpandidos[key] ?: false
+            detalhesExpandidos[key] = !current
+        },
+        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+    ) {
+        Text(
+            if (detalhesExpandidos[key] == true) "Ocultar detalhes" else "Ver detalhes",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+
+    AnimatedVisibility(visible = detalhesExpandidos[key] == true) {
+        Text(
+            text = texto,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = modifier,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TroposSection(
@@ -205,9 +240,11 @@ fun TroposSection(
                                         label = nome,
                                         onSelect = { state.buXistaCaminhoSelecionado = nome }
                                     )
-                                    Text(
-                                        text = descricao,
-                                        style = MaterialTheme.typography.bodySmall,
+                                    DetalhesTexto(
+                                        key = "buxista_$nome",
+                                        texto = descricao,
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
                                         modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
                                     )
                                 }
@@ -241,9 +278,11 @@ fun TroposSection(
                                         label = nome,
                                         onSelect = { state.elementalistaElementoSelecionado = nome }
                                     )
-                                    Text(
-                                        text = descricao,
-                                        style = MaterialTheme.typography.bodySmall,
+                                    DetalhesTexto(
+                                        key = "elementalista_$nome",
+                                        texto = descricao,
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
                                         modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
                                     )
                                 }
@@ -275,9 +314,11 @@ fun TroposSection(
                                         label = nome,
                                         onSelect = { state.kuiFerramentaSelecionada = nome }
                                     )
-                                    Text(
-                                        text = descricao,
-                                        style = MaterialTheme.typography.bodySmall,
+                                    DetalhesTexto(
+                                        key = "kui_$nome",
+                                        texto = descricao,
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
                                         modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
                                     )
                                 }
@@ -375,7 +416,12 @@ fun TroposSection(
                                         )
                                         Column(modifier = Modifier.padding(start = 8.dp)) {
                                             Text(text = nome, style = MaterialTheme.typography.bodyMedium)
-                                            Text(text = descricao, style = MaterialTheme.typography.bodySmall)
+                                            DetalhesTexto(
+                                                key = "samurai_postura_$nome",
+                                                texto = descricao,
+                                                allowLongTexts = allowLongTexts,
+                                                detalhesExpandidos = detalhesExpandidos
+                                            )
                                         }
                                     }
                                 }
@@ -408,9 +454,11 @@ fun TroposSection(
                                         label = nome,
                                         onSelect = { state.shinobiTalentoSelecionado = nome }
                                     )
-                                    Text(
-                                        text = descricao,
-                                        style = MaterialTheme.typography.bodySmall,
+                                    DetalhesTexto(
+                                        key = "shinobi_talento_$nome",
+                                        texto = descricao,
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
                                         modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
                                     )
                                 }
@@ -440,9 +488,11 @@ fun TroposSection(
                                         label = nome,
                                         onSelect = { state.shinobiTreinamentoSelecionado = nome }
                                     )
-                                    Text(
-                                        text = descricao,
-                                        style = MaterialTheme.typography.bodySmall,
+                                    DetalhesTexto(
+                                        key = "shinobi_treinamento_$nome",
+                                        texto = descricao,
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
                                         modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
                                     )
                                 }
@@ -496,9 +546,11 @@ fun TroposSection(
                                         label = nome,
                                         onSelect = { state.atualizarYouxiaHistoricoSelecionado(nome) }
                                     )
-                                    Text(
-                                        text = descricao,
-                                        style = MaterialTheme.typography.bodySmall,
+                                    DetalhesTexto(
+                                        key = "youxia_historico_$nome",
+                                        texto = descricao,
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
                                         modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
                                     )
                                 }
@@ -624,7 +676,12 @@ fun TroposSection(
                                         )
                                         Column(modifier = Modifier.padding(start = 8.dp)) {
                                             Text(text = nome, style = MaterialTheme.typography.bodyMedium)
-                                            Text(text = descricao, style = MaterialTheme.typography.bodySmall)
+                                            DetalhesTexto(
+                                                key = "artista_tecnica_$nome",
+                                                texto = descricao,
+                                                allowLongTexts = allowLongTexts,
+                                                detalhesExpandidos = detalhesExpandidos
+                                            )
                                         }
                                     }
                                 }
