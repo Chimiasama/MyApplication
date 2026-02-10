@@ -16,7 +16,10 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     if (compendioPathfinderAtivo) add("PATHFINDER")
     if (compendioDeadlandsAtivo) add("DEADLANDS")
     if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
-    if (compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
+    if (compendioCidadeSolVaporAtivo) {
+        add("CIDADE_SOL_VAPOR")
+        add("SOL_VAPOR") // compatibilidade com assets legados do cenário
+    }
     if (compendioWiseguysAtivo) add("WISEGUYS")
     if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
 
