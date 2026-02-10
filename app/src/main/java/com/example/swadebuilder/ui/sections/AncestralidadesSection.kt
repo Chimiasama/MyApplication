@@ -175,7 +175,7 @@ fun AncestralidadesSection(
         }
 
         val activeOrigins = buildList {
-            if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioSciFiAtivo && !compendioPathfinderAtivo) add("BASICO")
+            if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioSciFiAtivo && !compendioPathfinderAtivo && !compendioCidadeSolVaporAtivo) add("BASICO")
             if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
             if (compendioFantasiaAtivo) add("FANTASIA")
             if (compendioPathfinderAtivo) add("PATHFINDER")
@@ -196,6 +196,15 @@ fun AncestralidadesSection(
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
             val key = it.nome.keyify()
+
+            // Cidade do Sol a Vapor (jogadores): Humanos, Demônios e Meio-Demônios.
+            if (compendioCidadeSolVaporAtivo && origin == "CIDADE_SOL_VAPOR") {
+                val nomeSemSufixo = stripScenarioSuffix(it.nome).keyify()
+                val isHumano = key.startsWith("HUMANO") || nomeSemSufixo == "HUMANO"
+                val isDemonio = key.startsWith("DEMONIO") || nomeSemSufixo == "DEMONIO"
+                val isMeioDemonio = key.startsWith("MEIO-DEMONIO") || nomeSemSufixo == "MEIO-DEMONIO"
+                if (!isHumano && !isDemonio && !isMeioDemonio) return@filter false
+            }
 
             // Logic for Fantasy Compendium exclusions
             if (compendioFantasiaAtivo) {

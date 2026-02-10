@@ -16,7 +16,10 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     if (compendioPathfinderAtivo) add("PATHFINDER")
     if (compendioDeadlandsAtivo) add("DEADLANDS")
     if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
-    if (compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
+    if (compendioCidadeSolVaporAtivo) {
+        add("CIDADE_SOL_VAPOR")
+        add("SOL_VAPOR") // compatibilidade com assets legados do cenário
+    }
     if (compendioWiseguysAtivo) add("WISEGUYS")
     if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
 
@@ -29,7 +32,8 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
         compendioPathfinderAtivo ||
         compendioDeadlandsAtivo ||
         compendioArteDaGuerraAtivo ||
-        compendioHorrorAtivo
+        compendioHorrorAtivo ||
+        compendioCidadeSolVaporAtivo
 
     if (!replacementSettingsActive) {
         add("BASICO")
@@ -130,6 +134,7 @@ fun CriadorState.isVantagemVisible(
     }
 
     // 3. Arcane Background UI Logic
+
 
     val isGenericAB = vant.id == "antecedente_arcano"
     val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))

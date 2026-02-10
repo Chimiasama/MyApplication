@@ -2105,6 +2105,17 @@ class CriadorState {
         "LIGEIRO" to setOf("LENTO"),
         "OBESO"      to setOf("MUSCULOSO"),
         "MUSCULOSO"  to setOf("OBESO"),
+        "COMP ALMA PENHORADA" to setOf("ANTECEDENTE ARCANO MILAGRES", "AA MILAGRES"),
+        "COMP ALMA VENDIDA" to setOf("ANTECEDENTE ARCANO MILAGRES", "AA MILAGRES"),
+        "ANTECEDENTE ARCANO MILAGRES" to setOf("COMP ALMA PENHORADA", "COMP ALMA VENDIDA"),
+        "AA MILAGRES" to setOf("COMP ALMA PENHORADA", "COMP ALMA VENDIDA"),
+        "COMP MALDICAO GREMLIN" to setOf("ANTECEDENTE ARCANO TECNOMAGIA", "AA TECNOMAGIA"),
+        "ANTECEDENTE ARCANO TECNOMAGIA" to setOf("COMP MALDICAO GREMLIN"),
+        "AA TECNOMAGIA" to setOf("COMP MALDICAO GREMLIN"),
+        "COMP TECNOFOBIA" to setOf("TARO ENGENHEIRO", "MESTRE DAS CALDEIRAS", "MECANICO CEGO"),
+        "TARO ENGENHEIRO" to setOf("COMP TECNOFOBIA"),
+        "MESTRE DAS CALDEIRAS" to setOf("COMP TECNOFOBIA"),
+        "MECANICO CEGO" to setOf("COMP TECNOFOBIA"),
         "POBREZA"        to setOf("RICO", "PODRE DE RICO"),
         "RICO"           to setOf("POBREZA"),
         "PODRE DE RICO"  to setOf("POBREZA"),
@@ -2113,8 +2124,9 @@ class CriadorState {
     )
 
     fun mensagemConflitoParaVantagem(vantagem: Vantagem): String? {
-        val key = vantagem.nome.keyify()
-        val compsConfl = incompatibilidades[key] ?: return null
+        val keys = setOf(vantagem.nome.keyify(), vantagem.id.keyify())
+        val compsConfl = keys.flatMap { incompatibilidades[it].orEmpty() }.toSet()
+        if (compsConfl.isEmpty()) return null
         val conflito = complicacoesSelecionadas.keys.firstOrNull { comp ->
             comp.id.keyify() in compsConfl
         }
@@ -2125,7 +2137,7 @@ class CriadorState {
         val key = complicacao.id.keyify()
         val vantConfl = incompatibilidades[key] ?: return null
         val conflito = vantagensSelecionadas.firstOrNull { vant ->
-            vant.nome.keyify() in vantConfl
+            vant.nome.keyify() in vantConfl || vant.id.keyify() in vantConfl
         }
         return conflito?.let { "Remova ${it.nome} para pegar ${complicacao.name}." }
     }
@@ -2564,6 +2576,14 @@ class CriadorState {
 
     fun podeSelecionar(v: Vantagem): Boolean {
         val key = v.nome.keyify()
+        val ancestralidadeKey = ancestralidade.keyify()
+
+        // Cidade do Sol a Vapor: AA (Demônio) disponível para Demônio e Meio-Demônio.
+        if (v.id == "aa_demonio") {
+            val isMeioDemonio = ancestralidadeKey.contains("MEIO-DEMONIO")
+            val isDemonio = ancestralidadeKey.contains("DEMONIO") && !isMeioDemonio
+            if (!isMeioDemonio && !isDemonio) return false
+        }
 
         // Crystal Heart Blocks
         if (compendioCrystalHeartAtivo) {
@@ -2827,7 +2847,7 @@ class CriadorState {
         }
 
         // 14) Conflitos com complicações (Lento x Ligeiro, etc.)
-        val compsConfl = incompatibilidades[key] ?: emptySet()
+        val compsConfl = (incompatibilidades[key].orEmpty() + incompatibilidades[v.id.keyify()].orEmpty()).toSet()
         val vantKey = v.nome.trim().uppercase()
         if (vantKey == "RICO" || vantKey == "PODRE DE RICO") {
             val tenhoPobreza = complicacoesSelecionadas.keys.any {

@@ -257,7 +257,7 @@ object DataLoader {
         mapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val skillModulesToLoad = if ("CRYSTAL_HEART" in keys || "ARTE_DA_GUERRA" in keys) {
+        val skillModulesToLoad = if ("CRYSTAL_HEART" in keys || "ARTE_DA_GUERRA" in keys || "CIDADE_SOL_VAPOR" in keys) {
             skillModules.filter { it.fileName != "basico_pericias.json" }
         } else {
             skillModules
@@ -315,7 +315,7 @@ object DataLoader {
         }
 
         // 7. Vantagens
-        val advantagesToLoad = if ("ARTE_DA_GUERRA" in keys) {
+        val advantagesToLoad = if ("ARTE_DA_GUERRA" in keys || "CIDADE_SOL_VAPOR" in keys) {
             advantageModules.filter { it.fileName != "basico_vantagens.json" }
         } else {
             advantageModules
@@ -352,7 +352,7 @@ object DataLoader {
 
         listaTropos = adgTropos + chTropos
 
-        val complicationModulesToLoad = if ("ARTE_DA_GUERRA" in keys) {
+        val complicationModulesToLoad = if ("ARTE_DA_GUERRA" in keys || "CIDADE_SOL_VAPOR" in keys) {
             complicationModules.filter { it.fileName != "basico_complicacoes.json" }
         } else {
             complicationModules
@@ -363,7 +363,7 @@ object DataLoader {
         }
 
         // 9. Ancestralidades
-        val ancestriesToLoad = if ("DEADLANDS" in keys || "PATHFINDER" in keys || "CRYSTAL_HEART" in keys || "ARTE_DA_GUERRA" in keys) {
+        val ancestriesToLoad = if ("DEADLANDS" in keys || "PATHFINDER" in keys || "CRYSTAL_HEART" in keys || "ARTE_DA_GUERRA" in keys || "CIDADE_SOL_VAPOR" in keys) {
             ancestryModules.filter { it.fileName != "basico_ancestralidades.json" }
         } else {
             ancestryModules
