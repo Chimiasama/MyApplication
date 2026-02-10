@@ -61,6 +61,7 @@ import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
@@ -512,7 +513,7 @@ fun VantagensSection(
 
                     val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
                     val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
-                    val isCrystalHeartLocked = state.compendioCrystalHeartAtivo && vant.id == "aa_agente_syn"
+                    val isCrystalHeartLocked = state.compendioCrystalHeartAtivo && vant.id == Constants.ID_AA_CANALIZAR_CRISTAL
                     val isCelestialAAMilagres = state.ancestralidade == "CELESTIAIS" &&
                             vant.id == "antecedente_arcano_milagres"
                     val isProtagonistaAutomatic = state.vantagensAutomaticasDoProtagonista.contains(vant.id)

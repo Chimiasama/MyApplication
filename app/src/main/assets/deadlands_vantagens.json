@@ -2597,7 +2597,7 @@
       "pericias": {
         "Foco": 4
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Artista Marcial"
       ]
     },
@@ -2676,7 +2676,7 @@
       "pericias": {
         "Ocultismo": 6
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Carta Selvagem"
       ]
     },
@@ -2724,7 +2724,7 @@
       "pericias": {
         "Atirar": 10
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Martelar o Cão"
       ]
     },
@@ -2778,7 +2778,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Mateiro"
       ]
     },
@@ -2909,7 +2909,7 @@
       "atributos": {
         "Espírito": 6
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Carta Selvagem"
       ]
     },
@@ -2925,7 +2925,7 @@
       "atributos": {
         "Espírito": 8
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Coragem"
       ]
     },
@@ -2951,7 +2951,7 @@
       "atributos": {
         "Espírito": 6
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Carta Selvagem",
         "Reputação"
       ]
@@ -2968,7 +2968,7 @@
       "atributos": {
         "Espírito": 10
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Determinação"
       ]
     },
@@ -2996,7 +2996,7 @@
         "Lutar": 10,
         "Atletismo": 10
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Arma Predileta"
       ]
     },
@@ -3012,7 +3012,7 @@
       "atributos": {
         "Agilidade": 10
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Rápido"
       ]
     },
@@ -3025,7 +3025,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3038,7 +3038,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3051,7 +3051,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3064,7 +3064,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3077,7 +3077,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3090,7 +3090,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3103,7 +3103,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3116,7 +3116,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Lendário",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3129,7 +3129,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Lendário",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3142,7 +3142,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3158,7 +3158,7 @@
       "pericias": {
         "Persuadir": 6
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3171,7 +3171,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3184,7 +3184,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3197,7 +3197,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3210,7 +3210,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3223,7 +3223,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado",
         "Rastro de Dentes"
       ]
@@ -3237,7 +3237,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3253,7 +3253,7 @@
       "pericias": {
         "Furtividade": 8
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3266,7 +3266,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3279,7 +3279,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3292,7 +3292,7 @@
     "origem": "DEADLANDS",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
+      "vantagens_previas": [
         "Atormentado"
       ]
     },
@@ -3309,7 +3309,7 @@
         "Ciência Estranha": 8,
         "Ocultismo": 6
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Antecedente Arcano (Cientista Louco)"
       ]
     },
@@ -3344,7 +3344,7 @@
       "pericias": {
         "Fé": 8
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Antecedente Arcano (Vuduísmo)"
       ]
     },
@@ -3363,7 +3363,7 @@
       "pericias": {
         "Fé": 8
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Antecedente Arcano (Vuduísmo)"
       ]
     },
@@ -3395,7 +3395,7 @@
       "pericias": {
         "Conjurar": 8
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Antecedente Arcano (Bruxa)"
       ]
     },
@@ -3411,7 +3411,7 @@
       "pericias": {
         "Conjurar": 8
       },
-      "vantagens": [
+      "vantagens_previas": [
         "Antecedente Arcano (Bruxa)"
       ]
     },

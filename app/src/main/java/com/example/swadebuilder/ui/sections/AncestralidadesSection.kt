@@ -42,8 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
@@ -132,7 +132,6 @@ fun AncestralidadesSection(
     onSelectAncestralidade: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
-    val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
@@ -147,6 +146,7 @@ fun AncestralidadesSection(
     val compendioHorrorAtivo = state.compendioHorrorAtivo
     val compendioSciFiAtivo = state.compendioSciFiAtivo
     val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
+    val pathfinderLabel = stringResource(id = R.string.sw_pathfinder_label)
 
     val ancestralidadesState = androidx.compose.runtime.produceState(
         initialValue = emptyList<RacialModifierLite>(),
@@ -158,10 +158,10 @@ fun AncestralidadesSection(
         compendioCidadeSolVaporAtivo,
         compendioHorrorAtivo,
         compendioSciFiAtivo,
-        compendioCrystalHeartAtivo
+        compendioCrystalHeartAtivo,
+        pathfinderLabel
     ) {
         val all = com.example.swadebuilder.listaAncestralidadesJson
-        val pathfinderLabel = context.getString(R.string.sw_pathfinder_label)
 
         fun adjustName(nome: String): String {
             if (compendioPathfinderAtivo) {
@@ -600,7 +600,7 @@ fun AncestralidadesSection(
 
                                         // Free Advantages
                                         val vantagensGratisVisiveis = item.vantagensGratis.filterNot {
-                                            it.keyify() == Constants.ID_AA_AGENT_SYN.keyify()
+                                            it.keyify() == Constants.ID_AA_CANALIZAR_CRISTAL.keyify()
                                         }
                                         if (vantagensGratisVisiveis.isNotEmpty()) {
                                             val advsText = vantagensGratisVisiveis.joinToString(", ") { it.titleCase() }

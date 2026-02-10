@@ -1,6 +1,6 @@
 [
   {
-    "id": "aa_agente_syn",
+    "id": "antecedente_arcano_canalizar_cristal",
     "nome": "ANTECEDENTE ARCANO: CANALIZAR CRISTAL",
     "categoria": "ANTECEDENTE",
     "origem": "CRYSTAL_HEART",
@@ -113,7 +113,7 @@
     "nome": "FOCUS APRIMORADO",
     "categoria": "PODER",
     "origem": "CRYSTAL_HEART",
-    "requisitos": { "estagio": "Veterano", "pericias": { "Canalizar Cristal": 8 }, "vantagensPrevias": ["focus_ch"] },
+    "requisitos": { "estagio": "Veterano", "pericias": { "Canalizar Cristal": 8 }, "vantagens_previas": ["focus_ch"] },
     "descricao": "Rerrolagem gratuita em Canalizar Cristal."
   },
   {
@@ -163,7 +163,7 @@
     "nome": "ESPECIALISTA APRIMORADO",
     "categoria": "PROFISSIONAL",
     "origem": "CRYSTAL_HEART",
-    "requisitos": { "estagio": "Veterano", "vantagensPrevias": ["especialista_cristal"] },
+    "requisitos": { "estagio": "Veterano", "vantagens_previas": ["especialista_cristal"] },
     "descricao": "Ganha novo poder com o Cristal especializado. No Heroico, ganha mais um."
   },
   {
@@ -206,7 +206,7 @@
     "requisitos": {
       "estagio": "Novato",
       "vantagens_previas": [
-        "aa_agente_syn"
+        "antecedente_arcano_canalizar_cristal"
       ]
     },
     "descricao": "+2 nas rolagens de Canalizar para ativar poderes do Coração."
