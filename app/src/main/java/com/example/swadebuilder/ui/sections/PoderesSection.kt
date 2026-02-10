@@ -95,6 +95,9 @@ fun PoderesSection(
         if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_elementalista") {
             ativos.add("ELEMENTALISTA")
         }
+        if (state.compendioArteDaGuerraAtivo && (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0) {
+            ativos.add("MESTRE DO CHI")
+        }
         ativos.distinct()
     }
 
@@ -190,17 +193,36 @@ fun PoderesSection(
     }
 
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
-    val powersByArcKey = remember(powerCache, searchQuery, selectedRank, displayKeys, state.vantagensSelecionadas, state.dominioClerigoSelecionado, state.dominioClerigoPathfinderSelecionado, dominiosCache, dominiosPathfinderCache) {
+    val powersByArcKey = remember(
+        powerCache,
+        searchQuery,
+        selectedRank,
+        displayKeys,
+        state.vantagensSelecionadas,
+        state.tropoSelecionado,
+        state.dominioClerigoSelecionado,
+        state.dominioClerigoPathfinderSelecionado,
+        dominiosCache,
+        dominiosPathfinderCache
+    ) {
         displayKeys.associateWith { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
             // Determine origin
             val advantage = state.vantagensSelecionadas.find { it.toArcanoKey() == arcKeyRaw }
+            val usaTecnicasTropo = state.compendioArteDaGuerraAtivo &&
+                arcKey == "MESTRE DO CHI" &&
+                advantage == null &&
+                (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
+            val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "MESTRE DO CHI"
 
             val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
                 ?: ArcaneConfig.getPermittedPowers(arcKey)
             val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
-            val originRaw = advantage?.origem?.uppercase()
-                ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
+            val originRaw = when {
+                usaListaChi -> "ARTE DA GUERRA"
+                else -> advantage?.origem?.uppercase()
+                    ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
+            }
             val normalizedOrigin = when (originRaw) {
                 "SCI_FI", "SCIFI" -> "SCIFI"
                 "SOL E VAPOR", "SOL_VAPOR" -> "SOL_VAPOR"
@@ -211,7 +233,11 @@ fun PoderesSection(
 
             val specificList = powerCache[normalizedOrigin] ?: emptyList()
             val basicList = powerCache["BASICO"] ?: emptyList()
-            var sourceList = if (normalizedOrigin == "BASICO") basicList else (specificList + basicList).distinctBy { it.id }
+            var sourceList = when {
+                usaListaChi -> specificList
+                normalizedOrigin == "BASICO" -> basicList
+                else -> (specificList + basicList).distinctBy { it.id }
+            }
 
             // Fantasy Cleric Domain Filtering
             if (state.compendioFantasiaAtivo && arcKey == "CLERIGO") {

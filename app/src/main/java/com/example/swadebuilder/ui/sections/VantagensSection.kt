@@ -564,7 +564,14 @@ fun VantagensContent(
                         },
                         enabled = canRemove,
                         label = {
-                            val labelText = vant.choice?.let { "${vant.nomeExibicao} ($it)" } ?: vant.nomeExibicao
+                            val labelText = when {
+                                vant.id == "arma_predileta" &&
+                                    state.compendioArteDaGuerraAtivo &&
+                                    state.tropoSelecionado?.id == "tropo_youxia" &&
+                                    !state.youxiaJutsuSelecionado.isNullOrBlank() ->
+                                    "${vant.nomeExibicao} (${state.youxiaJutsuSelecionado})"
+                                else -> vant.choice?.let { "${vant.nomeExibicao} ($it)" } ?: vant.nomeExibicao
+                            }
                             val finalText = if (isCelestialAAMilagresDesabilitado) {
                                 "$labelText (DESABILITADO)"
                             } else {

@@ -80,6 +80,20 @@ class CriadorState {
     var protagonistaPericiasEscolhidas by mutableStateOf<List<String>>(emptyList())
     var protagonistaPericiasPaixao by mutableStateOf<List<String>>(emptyList())
     var protagonistaBonusPv by mutableStateOf(false)
+    var artistaMarcialJutsuOpcao by mutableStateOf(ARTISTA_MARCIAL_JUTSU_D6)
+    var artistaMarcialPotencialFisico by mutableStateOf<String?>(null)
+    val artistaMarcialTecnicasSelecionadas = mutableStateListOf<String>()
+    var buXistaCaminhoSelecionado by mutableStateOf<String?>(null)
+    var elementalistaElementoSelecionado by mutableStateOf<String?>(null)
+    var kuiFerramentaSelecionada by mutableStateOf<String?>(null)
+    var samuraiPericiaEscolhida by mutableStateOf<String?>(null)
+    var samuraiVantagemEscolhida by mutableStateOf<String?>(null)
+    val samuraiPosturasSelecionadas = mutableStateListOf<String>()
+    val samuraiCombatSlotIds = mutableStateListOf<String>()
+    var shinobiTalentoSelecionado by mutableStateOf<String?>(null)
+    var shinobiTreinamentoSelecionado by mutableStateOf<String?>(null)
+    var youxiaJutsuSelecionado by mutableStateOf<String?>(null)
+    var youxiaHistoricoSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
@@ -159,6 +173,7 @@ class CriadorState {
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
+    val vantagensAutomaticasDoPotencialFisico = mutableStateListOf<String>()
 
     val fixedPowersByArcano = mapOf(
         "ABENCOADO" to listOf("simbolo_sagrado"),
@@ -208,6 +223,8 @@ class CriadorState {
         const val BASE_SP_POOL = 15
         const val DEFAULT_HAPTIC_STRENGTH = 70
         const val DEFAULT_SOUND_VOLUME = 70
+        const val ARTISTA_MARCIAL_JUTSU_D6 = "D6"
+        const val ARTISTA_MARCIAL_JUTSU_D4_D4 = "D4_D4"
         val SIGNOS_ADG = listOf(
             "Nenhum", "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
             "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
@@ -996,6 +1013,7 @@ class CriadorState {
                 v.id in vantagensAutomaticasDoProtagonista ||
                 v.id in vantagensAutomaticasDoSigno ||
                 v.id in vantagensAutomaticasDoElemento ||
+                v.id in vantagensAutomaticasDoPotencialFisico ||
                 (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
     }
 
@@ -1017,6 +1035,13 @@ class CriadorState {
         if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_protagonista") false
         else {
             vantagensSlotProtagonista.isEmpty()
+        }
+    }
+
+    val samuraiCombatSlotAvailable: Boolean by derivedStateOf {
+        if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_samurai") false
+        else {
+            samuraiVantagemEscolhida == "Combate" && samuraiCombatSlotIds.isEmpty()
         }
     }
 
@@ -1049,8 +1074,9 @@ class CriadorState {
         // Standard Advantage
         val isFreePathfinder = pathfinderSlotAvailable && isPathfinderEligible(v)
         val isFreeProtagonista = protagonistaSlotAvailable && isProtagonistaEligible(v)
+        val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
-        if (!isFreePathfinder && !isFreeProtagonista && pontosVantagem <= 0) return false // No points
+        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) return false // No points
 
         applyVantagemDinheiro(v)
         adicionarVantagem(v)
@@ -1060,6 +1086,9 @@ class CriadorState {
         } else if (isFreeProtagonista) {
             vantagensSlotProtagonista.add(v.id)
             onFeedback("Vantagem ${v.nome} adicionada (Slot de Protagonista Gratuito).")
+        } else if (isFreeSamuraiCombat) {
+            samuraiCombatSlotIds.add(v.id)
+            onFeedback("Vantagem ${v.nome} adicionada (Slot de Combate do Samurai).")
         } else {
             pontosVantagem--
             onFeedback("Vantagem ${v.nome} adicionada.")
@@ -1090,6 +1119,7 @@ class CriadorState {
         // Standard Advantage
         val wasEligible = isPathfinderEligible(v)
         val wasProtagonistaEligible = v.id in vantagensSlotProtagonista
+        val wasSamuraiEligible = v.id in samuraiCombatSlotIds
 
         removeVantagemDinheiro(v)
         removerVantagem(v)
@@ -1109,6 +1139,10 @@ class CriadorState {
         }
         if (wasProtagonistaEligible && compendioArteDaGuerraAtivo) {
             vantagensSlotProtagonista.remove(v.id)
+            shouldRefund = false
+        }
+        if (wasSamuraiEligible && compendioArteDaGuerraAtivo) {
+            samuraiCombatSlotIds.remove(v.id)
             shouldRefund = false
         }
 
@@ -1463,6 +1497,49 @@ class CriadorState {
             val pericias = protagonistaPericiasDoTropo()
             if (perKey in pericias) {
                 modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
+        // Arte da Guerra - Bu Xista
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_buxista") {
+            if (perKey == "CONVENCAO" || perKey == "OCULTISMO") {
+                modifiedBase = if (modifiedBase > 0) {
+                    maxOf(modifiedBase, applySuperStepsFrom(modifiedBase, 1))
+                } else {
+                    maxOf(modifiedBase, 4)
+                }
+            }
+        }
+
+        // Arte da Guerra - Samurai
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_samurai") {
+            val samuraiChoice = samuraiPericiaEscolhida?.keyify()
+            val isJutsuChoice = samuraiChoice == "JUTSU"
+            val chosenKey = if (isJutsuChoice) "LUTAR" else samuraiChoice
+            if (chosenKey != null && perKey == chosenKey) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
+        // Arte da Guerra - Youxia (Kensai)
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_youxia") {
+            if (perKey == "LUTAR" && !youxiaJutsuSelecionado.isNullOrBlank()) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
+        // Arte da Guerra - Artista Marcial (Jutsu inicial)
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_artista_marcial") {
+            val slotIndex = jutsuSlotIndex(per)
+            if (slotIndex != null) {
+                when (artistaMarcialJutsuOpcao) {
+                    ARTISTA_MARCIAL_JUTSU_D6 -> if (slotIndex == 1) {
+                        modifiedBase = maxOf(modifiedBase, 6)
+                    }
+                    ARTISTA_MARCIAL_JUTSU_D4_D4 -> if (slotIndex == 2) {
+                        modifiedBase = maxOf(modifiedBase, 4)
+                    }
+                }
             }
         }
 
@@ -1997,9 +2074,15 @@ class CriadorState {
 
             val fav = run {
                 val choiceSnapshot = vant.choice
+                val isYouxiaAuto =
+                    compendioArteDaGuerraAtivo &&
+                        tropoSelecionado?.id == "tropo_youxia" &&
+                        vant.id == "arma_predileta" &&
+                        vantagensAutomaticasDoTropo.contains(vant.id)
                 if (
                     vant.nome.trim().equals("Arma Predileta", ignoreCase = true)
                     && choiceSnapshot != null
+                    && !isYouxiaAuto
                 ) {
                     getBestPericia(choiceSnapshot)
                         ?.let { per -> listOf(per to 8) }
@@ -2121,7 +2204,13 @@ class CriadorState {
     }
 
     fun getSlotsCountForArcano(arcKey: String): Int {
-        val base = arcanoInfo[arcKey]?.first ?: 0
+        val arcKeyNorm = arcKey.normAAKey()
+        val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
+        val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
+            arcKeyNorm == "MESTRE DO CHI" &&
+            !hasArcanoVantagem &&
+            (tropoSelecionado?.tecnicasIniciais ?: 0) > 0
+        val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 0)
         var bonusSlots = 0
 
         vantagensSelecionadas
@@ -2140,19 +2229,19 @@ class CriadorState {
                     if (choice.contains("&")) {
                         // Split logic: "Key1 & Key2"
                         // Normalize each part individually
-                        if (choice.split("&").any { it.normAAKey() == arcKey }) {
+                        if (choice.split("&").any { it.normAAKey() == arcKeyNorm }) {
                             bonusSlots += 1
                         }
                     } else {
                         // Single target
-                        if (choice.normAAKey() == arcKey) {
+                        if (choice.normAAKey() == arcKeyNorm) {
                             bonusSlots += 2
                         }
                     }
                 }
             }
 
-        val bonusTecnicas = if (arcKey == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
+        val bonusTecnicas = if (arcKeyNorm == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
         return base + bonusSlots + bonusTecnicas
     }
 
@@ -2238,11 +2327,15 @@ class CriadorState {
 
     val tecnicasIniciaisFromTropo by derivedStateOf {
         val base = tropoSelecionado?.tecnicasIniciais ?: 0
-        if (tropoSelecionado?.id == "tropo_protagonista") {
+        var total = if (tropoSelecionado?.id == "tropo_protagonista") {
             base + tecnicasIniciaisProtagonista()
         } else {
             base
         }
+        if (tropoSelecionado?.id == "tropo_shinobi" && shinobiTalentoSelecionado?.keyify() == "MISTICO") {
+            total += 1
+        }
+        total
     }
 
     val reservaChi by derivedStateOf {
@@ -2600,7 +2693,8 @@ class CriadorState {
 
         // 5) Estágio mínimo (respeita Nasce um Herói)
         val ignorarEstagioPorNasce = (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
-        if (!ignorarEstagioPorNasce) {
+        val ignorarEstagioPorSamurai = shouldIgnoreLeadershipStage(v)
+        if (!ignorarEstagioPorNasce && !ignorarEstagioPorSamurai) {
             val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
             if (estagioRequerido != null) {
                 val estagioAtual = overrideStageForVantagem?.let { stageName ->
@@ -2747,6 +2841,13 @@ class CriadorState {
         ) return false
 
         return true
+    }
+
+    private fun shouldIgnoreLeadershipStage(v: Vantagem): Boolean {
+        if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_samurai") return false
+        if (v.categoria != Categoria.LIDERANCA) return false
+        val pericia = getBestPericia("Conhecimento Batalha") ?: return false
+        return rawTotal(pericia) >= 8
     }
 
     var pontosComplicacaoGastos by mutableIntStateOf(0)
@@ -3316,7 +3417,9 @@ class CriadorState {
         val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
         if (estagioRequerido != null) {
             val atual = estagioAtual()
-            if (listaDeEstagios.indexOf(atual) < listaDeEstagios.indexOf(estagioRequerido)) return false
+            if (!shouldIgnoreLeadershipStage(v) &&
+                listaDeEstagios.indexOf(atual) < listaDeEstagios.indexOf(estagioRequerido)
+            ) return false
         }
 
         // Prévias
@@ -3505,6 +3608,9 @@ class CriadorState {
         for (nome in listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue
             val base = atributoBaseRacial(nome)
+            val stackSize = paCostStackPorAtributo[nome]?.size ?: 0
+            val valorSemBonus = applySuperStepsFrom(base, stackSize)
+            val valorParaCusto = if (atual > valorSemBonus) valorSemBonus else atual
 
             // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
             // Steps count: d4=0, d6=1, d8=2, d10=3, d12=4
@@ -3514,7 +3620,7 @@ class CriadorState {
             // Refactoring to be clearer/more explicit if needed, but the loop is robust for d12+ handling.
 
             var cur = base
-            while (cur < atual) {
+            while (cur < valorParaCusto) {
                 cur += if (cur < 12) 2 else 1
                 usados += 1
             }
@@ -3529,6 +3635,25 @@ class CriadorState {
         val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
+    }
+
+    private fun artistaMarcialPotencialFisicoAttrKey(): String? {
+        if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_artista_marcial") return null
+        return when (artistaMarcialPotencialFisico?.keyify()) {
+            "AGILIDADE" -> "AGILIDADE"
+            "FORCA" -> "FORCA"
+            "VIGOR" -> "VIGOR"
+            else -> null
+        }
+    }
+
+    private fun shouldApplyArtistaMarcialBonus(attrKey: String): Boolean {
+        val selected = artistaMarcialPotencialFisicoAttrKey() ?: return false
+        if (selected != attrKey) return false
+        val base = atributoBaseRacial(attrKey)
+        val stackSize = paCostStackPorAtributo[attrKey]?.size ?: 0
+        val valueFromStack = applySuperStepsFrom(base, stackSize)
+        return valueFromStack < atributoMaxRaw(attrKey)
     }
 
     fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
@@ -3546,6 +3671,14 @@ class CriadorState {
 
             if (state != null) {
                 state.intValue = newValue
+            }
+        }
+
+        listaAtributos.forEach { attrKey ->
+            val state = valoresAtributos[attrKey] ?: return@forEach
+            if (shouldApplyArtistaMarcialBonus(attrKey)) {
+                val max = atributoMaxRaw(attrKey)
+                state.intValue = minOf(applySuperStepsFrom(state.intValue, 1), max)
             }
         }
 
@@ -3604,6 +3737,130 @@ class CriadorState {
 
         recalcularPontosAtributo()
         rebuildAllPericiaStacks()
+    }
+
+    private fun syncArtistaMarcialPotencialFisico() {
+        if (vantagensAutomaticasDoPotencialFisico.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoPotencialFisico }
+            vantagensAutomaticasDoPotencialFisico.clear()
+        }
+
+        if (tropoSelecionado?.id != "tropo_artista_marcial") return
+
+        val edgeId = when (artistaMarcialPotencialFisico?.keyify()) {
+            "AGILIDADE" -> "esquiva"
+            "FORCA" -> "bloquear"
+            "VIGOR" -> "reflexos_de_combate"
+            else -> null
+        } ?: return
+
+        val vant = listaVantagens.firstOrNull { it.id == edgeId }
+        if (vant != null && vantagensSelecionadas.none { it.id == vant.id }) {
+            vantagensSelecionadas.add(vant)
+            vantagensAutomaticasDoPotencialFisico.add(vant.id)
+        }
+    }
+
+    fun atualizarArtistaMarcialJutsuOpcao(novaOpcao: String) {
+        if (artistaMarcialJutsuOpcao == novaOpcao) return
+        artistaMarcialJutsuOpcao = novaOpcao
+        rebuildAllPericiaStacks()
+        syncJutsuSlots()
+    }
+
+    fun atualizarArtistaMarcialPotencialFisico(novoPotencial: String?) {
+        if (artistaMarcialPotencialFisico == novoPotencial) return
+        artistaMarcialPotencialFisico = novoPotencial
+        syncArtistaMarcialPotencialFisico()
+        recalcularPontosAtributo()
+    }
+
+    private fun syncYouxiaKensai() {
+        if (tropoSelecionado?.id != "tropo_youxia") return
+        val choice = "Lutar"
+        val idx = vantagensSelecionadas.indexOfFirst { it.id == "arma_predileta" }
+        if (idx >= 0) {
+            val current = vantagensSelecionadas[idx]
+            if (current.choice != choice) {
+                vantagensSelecionadas[idx] = current.copy(choice = choice)
+            }
+        } else {
+            val vant = listaVantagens.firstOrNull { it.id == "arma_predileta" } ?: return
+            vantagensSelecionadas.add(vant.copy(choice = choice))
+            vantagensAutomaticasDoTropo.add(vant.id)
+        }
+
+        if (youxiaJutsuSelecionado.isNullOrBlank()) {
+            notasPericia.remove("Lutar")
+        } else {
+            notasPericia["Lutar"] = youxiaJutsuSelecionado!!
+        }
+    }
+
+    fun atualizarYouxiaJutsuSelecionado(novoJutsu: String) {
+        val normalized = novoJutsu.trim().ifBlank { null }
+        if (youxiaJutsuSelecionado == normalized) return
+        youxiaJutsuSelecionado = normalized
+        syncYouxiaKensai()
+        rebuildAllPericiaStacks()
+    }
+
+    fun atualizarYouxiaHistoricoSelecionado(novoHistorico: String) {
+        if (youxiaHistoricoSelecionado == novoHistorico) return
+        youxiaHistoricoSelecionado = novoHistorico
+    }
+
+    private fun syncSamuraiVantagemEscolhida() {
+        if (tropoSelecionado?.id != "tropo_samurai") return
+        if (samuraiVantagemEscolhida == "Combate") {
+            val comando = listaVantagens.firstOrNull { it.id == "comando" }
+            if (comando != null) {
+                vantagensSelecionadas.removeAll { it.id == comando.id }
+            }
+            vantagensAutomaticasDoTropo.removeAll { it == "comando" }
+        } else {
+            val comando = listaVantagens.firstOrNull { it.id == "comando" }
+            if (comando != null && vantagensSelecionadas.none { it.id == comando.id }) {
+                vantagensSelecionadas.add(comando)
+            }
+            if (!vantagensAutomaticasDoTropo.contains("comando")) {
+                vantagensAutomaticasDoTropo.add("comando")
+            }
+            if (samuraiCombatSlotIds.isNotEmpty()) {
+                vantagensSelecionadas.removeAll { it.id in samuraiCombatSlotIds }
+                samuraiCombatSlotIds.clear()
+            }
+        }
+    }
+
+    fun atualizarSamuraiVantagemEscolhida(nova: String) {
+        if (samuraiVantagemEscolhida == nova) return
+        samuraiVantagemEscolhida = nova
+        syncSamuraiVantagemEscolhida()
+    }
+
+    fun atualizarSamuraiPericiaEscolhida(nova: String) {
+        if (samuraiPericiaEscolhida == nova) return
+        samuraiPericiaEscolhida = nova
+        rebuildAllPericiaStacks()
+    }
+
+    fun toggleSamuraiPostura(postura: String) {
+        if (samuraiPosturasSelecionadas.contains(postura)) {
+            samuraiPosturasSelecionadas.remove(postura)
+            return
+        }
+        if (samuraiPosturasSelecionadas.size >= 2) return
+        samuraiPosturasSelecionadas.add(postura)
+    }
+
+    fun toggleArtistaMarcialTecnica(tecnica: String) {
+        if (artistaMarcialTecnicasSelecionadas.contains(tecnica)) {
+            artistaMarcialTecnicasSelecionadas.remove(tecnica)
+            return
+        }
+        if (artistaMarcialTecnicasSelecionadas.size >= 3) return
+        artistaMarcialTecnicasSelecionadas.add(tecnica)
     }
 
     fun selecionarPericiaGnomo(pericia: String?) {
@@ -3787,9 +4044,42 @@ class CriadorState {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
             vantagensAutomaticasDoTropo.clear()
         }
+        if (vantagensAutomaticasDoPotencialFisico.isNotEmpty()) {
+            vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoPotencialFisico }
+            vantagensAutomaticasDoPotencialFisico.clear()
+        }
         if (vantagensAutomaticasDoProtagonista.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoProtagonista }
             vantagensAutomaticasDoProtagonista.clear()
+        }
+        if (tropoSelecionado?.id != "tropo_artista_marcial") {
+            artistaMarcialTecnicasSelecionadas.clear()
+        }
+        if (tropoSelecionado?.id != "tropo_buxista") {
+            buXistaCaminhoSelecionado = null
+        }
+        if (tropoSelecionado?.id != "tropo_elementalista") {
+            elementalistaElementoSelecionado = null
+        }
+        if (tropoSelecionado?.id != "tropo_kui") {
+            kuiFerramentaSelecionada = null
+        }
+        if (tropoSelecionado?.id != "tropo_samurai") {
+            samuraiPericiaEscolhida = null
+            samuraiVantagemEscolhida = null
+            samuraiPosturasSelecionadas.clear()
+            samuraiCombatSlotIds.clear()
+        }
+        if (tropoSelecionado?.id != "tropo_shinobi") {
+            shinobiTalentoSelecionado = null
+            shinobiTreinamentoSelecionado = null
+        }
+        if (tropoSelecionado?.id != "tropo_youxia") {
+            if (!youxiaJutsuSelecionado.isNullOrBlank() && notasPericia["Lutar"] == youxiaJutsuSelecionado) {
+                notasPericia.remove("Lutar")
+            }
+            youxiaJutsuSelecionado = null
+            youxiaHistoricoSelecionado = null
         }
 
         tropoSelecionado = novoTropo
@@ -3834,6 +4124,48 @@ class CriadorState {
                 atualizarProtagonistaAutoVantagens()
                 syncProtagonistaBonusPv()
             }
+            if (novoTropo.id == "tropo_artista_marcial" && artistaMarcialPotencialFisico == null) {
+                artistaMarcialPotencialFisico = "Agilidade"
+            }
+            syncArtistaMarcialPotencialFisico()
+            if (novoTropo.id != "tropo_artista_marcial") {
+                artistaMarcialTecnicasSelecionadas.clear()
+            }
+            if (novoTropo.id == "tropo_buxista" && buXistaCaminhoSelecionado == null) {
+                buXistaCaminhoSelecionado = "Equilibrado"
+            }
+            if (novoTropo.id == "tropo_elementalista" && elementalistaElementoSelecionado == null) {
+                elementalistaElementoSelecionado = "Fogo"
+            }
+            if (novoTropo.id == "tropo_kui" && kuiFerramentaSelecionada == null) {
+                kuiFerramentaSelecionada = "Armas Abençoadas"
+            }
+            if (novoTropo.id == "tropo_samurai") {
+                if (samuraiPericiaEscolhida == null) {
+                    samuraiPericiaEscolhida = "Jutsu"
+                }
+                if (samuraiVantagemEscolhida == null) {
+                    samuraiVantagemEscolhida = "Comando"
+                }
+                syncSamuraiVantagemEscolhida()
+            }
+            if (novoTropo.id == "tropo_shinobi") {
+                if (shinobiTalentoSelecionado == null) {
+                    shinobiTalentoSelecionado = "Alteração"
+                }
+                if (shinobiTreinamentoSelecionado == null) {
+                    shinobiTreinamentoSelecionado = "Infiltrador"
+                }
+            }
+            if (novoTropo.id == "tropo_youxia") {
+                if (youxiaJutsuSelecionado == null) {
+                    youxiaJutsuSelecionado = "Espada"
+                }
+                if (youxiaHistoricoSelecionado == null) {
+                    youxiaHistoricoSelecionado = "Ancestral"
+                }
+                syncYouxiaKensai()
+            }
         } else {
             protagonistaRollTecnicas = null
             protagonistaRollPericia = null
@@ -3844,9 +4176,28 @@ class CriadorState {
             protagonistaPericiasPaixao = emptyList()
             vantagensSlotProtagonista.clear()
             syncProtagonistaBonusPv()
+            syncArtistaMarcialPotencialFisico()
+            artistaMarcialTecnicasSelecionadas.clear()
+            buXistaCaminhoSelecionado = null
+            elementalistaElementoSelecionado = null
+            kuiFerramentaSelecionada = null
+            samuraiPericiaEscolhida = null
+            samuraiVantagemEscolhida = null
+            samuraiPosturasSelecionadas.clear()
+            samuraiCombatSlotIds.clear()
+            shinobiTalentoSelecionado = null
+            shinobiTreinamentoSelecionado = null
+            if (!youxiaJutsuSelecionado.isNullOrBlank() && notasPericia["Lutar"] == youxiaJutsuSelecionado) {
+                notasPericia.remove("Lutar")
+            }
+            youxiaJutsuSelecionado = null
+            youxiaHistoricoSelecionado = null
         }
 
         syncMestreDoChiSlots()
+        recalcularPontosAtributo()
+        rebuildAllPericiaStacks()
+        syncJutsuSlots()
     }
 
     private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
@@ -4212,6 +4563,20 @@ class CriadorState {
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
+                artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
+                artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
+                artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
+                buXistaCaminhoSelecionado = buXistaCaminhoSelecionado,
+                elementalistaElementoSelecionado = elementalistaElementoSelecionado,
+                kuiFerramentaSelecionada = kuiFerramentaSelecionada,
+                samuraiPericiaEscolhida = samuraiPericiaEscolhida,
+                samuraiVantagemEscolhida = samuraiVantagemEscolhida,
+                samuraiPosturasSelecionadas = samuraiPosturasSelecionadas.toList(),
+                samuraiCombatSlotIds = samuraiCombatSlotIds.toList(),
+                shinobiTalentoSelecionado = shinobiTalentoSelecionado,
+                shinobiTreinamentoSelecionado = shinobiTreinamentoSelecionado,
+                youxiaJutsuSelecionado = youxiaJutsuSelecionado,
+                youxiaHistoricoSelecionado = youxiaHistoricoSelecionado,
                 protagonistaRollTecnicas = protagonistaRollTecnicas,
                 protagonistaRollPericia = protagonistaRollPericia,
                 protagonistaRollVantagem = protagonistaRollVantagem,
@@ -4323,6 +4688,23 @@ class CriadorState {
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
+        artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
+        artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
+        artistaMarcialTecnicasSelecionadas.clear()
+        artistaMarcialTecnicasSelecionadas.addAll(snapshot.selecoes.artistaMarcialTecnicasSelecionadas)
+        buXistaCaminhoSelecionado = snapshot.selecoes.buXistaCaminhoSelecionado
+        elementalistaElementoSelecionado = snapshot.selecoes.elementalistaElementoSelecionado
+        kuiFerramentaSelecionada = snapshot.selecoes.kuiFerramentaSelecionada
+        samuraiPericiaEscolhida = snapshot.selecoes.samuraiPericiaEscolhida
+        samuraiVantagemEscolhida = snapshot.selecoes.samuraiVantagemEscolhida
+        samuraiPosturasSelecionadas.clear()
+        samuraiPosturasSelecionadas.addAll(snapshot.selecoes.samuraiPosturasSelecionadas)
+        samuraiCombatSlotIds.clear()
+        samuraiCombatSlotIds.addAll(snapshot.selecoes.samuraiCombatSlotIds)
+        shinobiTalentoSelecionado = snapshot.selecoes.shinobiTalentoSelecionado
+        shinobiTreinamentoSelecionado = snapshot.selecoes.shinobiTreinamentoSelecionado
+        youxiaJutsuSelecionado = snapshot.selecoes.youxiaJutsuSelecionado
+        youxiaHistoricoSelecionado = snapshot.selecoes.youxiaHistoricoSelecionado
         protagonistaRollTecnicas = snapshot.selecoes.protagonistaRollTecnicas
         protagonistaRollPericia = snapshot.selecoes.protagonistaRollPericia
         protagonistaRollVantagem = snapshot.selecoes.protagonistaRollVantagem
@@ -4466,12 +4848,22 @@ class CriadorState {
             clear()
             addAll(snapshot.selecoes.vantagensTropoAutomaticas)
         }
+        if (tropoSelecionado?.id == "tropo_samurai") {
+            syncSamuraiVantagemEscolhida()
+        }
         vantagensAutomaticasDoProtagonista.clear()
         if (tropoSelecionado?.id == "tropo_protagonista") {
             atualizarProtagonistaAutoVantagens()
         }
         protagonistaBonusPv = tropoSelecionado?.id == "tropo_protagonista" &&
             protagonistaRollHabilidade == 4
+        syncArtistaMarcialPotencialFisico()
+        if (tropoSelecionado?.id == "tropo_youxia") {
+            if (notasPericia["Lutar"].isNullOrBlank() && !youxiaJutsuSelecionado.isNullOrBlank()) {
+                notasPericia["Lutar"] = youxiaJutsuSelecionado!!
+            }
+            syncYouxiaKensai()
+        }
 
         poderSlotsPorArcano.clear()
         snapshot.selecoes.poderSlotsPorArcano.forEach { (key, slots) ->

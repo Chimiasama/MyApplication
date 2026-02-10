@@ -336,6 +336,20 @@ class CriadorViewModel : ViewModel() {
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.tropoSelecionado = null
         state.signoAdgSelecionado = null
+        state.artistaMarcialJutsuOpcao = CriadorState.ARTISTA_MARCIAL_JUTSU_D6
+        state.artistaMarcialPotencialFisico = null
+        state.artistaMarcialTecnicasSelecionadas.clear()
+        state.buXistaCaminhoSelecionado = null
+        state.elementalistaElementoSelecionado = null
+        state.kuiFerramentaSelecionada = null
+        state.samuraiPericiaEscolhida = null
+        state.samuraiVantagemEscolhida = null
+        state.samuraiPosturasSelecionadas.clear()
+        state.samuraiCombatSlotIds.clear()
+        state.shinobiTalentoSelecionado = null
+        state.shinobiTreinamentoSelecionado = null
+        state.youxiaJutsuSelecionado = null
+        state.youxiaHistoricoSelecionado = null
         state.descendenteElementalSelecionado = null
         state.gnomoPericiaEscolhida = null
         state.dominioClerigoSelecionado = null
@@ -371,6 +385,7 @@ class CriadorViewModel : ViewModel() {
         state.vantagensAutomaticasDoTropo.clear()
         state.vantagensAutomaticasDoSigno.clear()
         state.vantagensAutomaticasDoElemento.clear()
+        state.vantagensAutomaticasDoPotencialFisico.clear()
         state.transtornos.clear()
         state.notasPericia.clear()
         state.manifestacoesPoderes.clear()
