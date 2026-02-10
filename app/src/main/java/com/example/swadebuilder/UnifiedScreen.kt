@@ -67,7 +67,7 @@ import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
-import com.example.swadebuilder.ui.sections.AtributosContent
+import com.example.swadebuilder.ui.sections.AtributosSection
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
 import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
@@ -77,7 +77,7 @@ import com.example.swadebuilder.ui.sections.SummaryContent
 import com.example.swadebuilder.ui.sections.SuperPoderesContent
 import com.example.swadebuilder.ui.sections.TipoMonstroSection
 import com.example.swadebuilder.ui.sections.TroposSection
-import com.example.swadebuilder.ui.sections.VantagensContent
+import com.example.swadebuilder.ui.sections.VantagensSection
 import com.example.swadebuilder.ui.sections.XpSection
 import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.SecurityUtils
@@ -758,18 +758,12 @@ private fun ProgressionDetailContent(
 ) {
     when (selectedSection) {
         MainSection.VANTAGENS -> {
-            SectionCard(
-                title    = "Vantagens",
-                icon     = Icons.Default.Star,
-                showHeader = false
-            ) {
-                VantagensContent(
-                    state = state,
-                    multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                    viewModel = viewModel,
-                    onUserFeedback = onUserFeedback
-                )
-            }
+            VantagensSection(
+                state = state,
+                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+                viewModel = viewModel,
+                onUserFeedback = onUserFeedback
+            )
 
             if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
                 Spacer(Modifier.height(8.dp))
@@ -828,13 +822,7 @@ private fun ProgressionDetailContent(
             }
         }
         MainSection.ATRIBUTOS -> {
-            SectionCard(
-                title    = "Atributos",
-                icon     = Icons.Default.FitnessCenter,
-                showHeader = false
-            ) {
-                AtributosContent(state = state, onUserFeedback = onUserFeedback)
-            }
+            AtributosSection(state = state, onUserFeedback = onUserFeedback)
 
             Spacer(Modifier.height(16.dp))
             HorizontalDivider(thickness = 3.dp)
@@ -933,30 +921,18 @@ private fun CreationDetailContent(
             onUserFeedback = onUserFeedback,
             onLogFeedback = viewModel::logFeedback
         )
-        MainSection.ATRIBUTOS -> SectionCard(
-            title    = "Atributos",
-            icon     = Icons.Default.FitnessCenter,
-            showHeader = false
-        ) {
-            AtributosContent(state, onUserFeedback)
-        }
+        MainSection.ATRIBUTOS -> AtributosSection(state, onUserFeedback)
         MainSection.PERICIAS -> PericiasContent(
             state = state,
             feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
             onUserFeedback = onUserFeedback
         )
-        MainSection.VANTAGENS -> SectionCard(
-            title    = "Vantagens",
-            icon     = Icons.Default.Star,
-            showHeader = false
-        ) {
-            VantagensContent(
-                state = state,
-                multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
-                viewModel = viewModel,
-                onUserFeedback = onUserFeedback
-            )
-        }
+        MainSection.VANTAGENS -> VantagensSection(
+            state = state,
+            multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
+            viewModel = viewModel,
+            onUserFeedback = onUserFeedback
+        )
         MainSection.CRYSTAL_HEART -> CrystalHeartSection(
             state = state,
             viewModel = viewModel

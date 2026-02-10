@@ -44,14 +44,15 @@ import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.mapaAtributosDescricao
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
-import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
+import com.example.swadebuilder.ui.components.ResourceControlRow
+import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun AtributosContent(
+fun AtributosSection(
     state: CriadorState,
     onUserFeedback: () -> Unit
 ) {
@@ -86,14 +87,19 @@ fun AtributosContent(
         with(density) { (maxPx + 100).toDp() }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(pergaminho, shape = RoundedCornerShape(12.dp))
-            .verticalScroll(rememberScrollState())
-            .padding(12.dp)
+    SectionCard(
+        title = "Atributos",
+        icon = Icons.Default.FitnessCenter,
+        showHeader = false
     ) {
-        SectionHeader(
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(pergaminho, shape = RoundedCornerShape(12.dp))
+                .verticalScroll(rememberScrollState())
+                .padding(12.dp)
+        ) {
+            SectionHeader(
             onHelpClick = null,
             centerText = "Pontos de Atributo: ${state.pontosAtributo}",
             onListaCompletaClick = null,
@@ -120,13 +126,13 @@ fun AtributosContent(
                     }
                 )
             } else {
-                PbLegacyActions(
-                    spendLabel = "Usar PB em Atributos",
-                    refundLabel = "Desfazer uso de PB",
-                    spendEnabled = !locked && pcLivres >= 2,
-                    refundEnabled = !locked && paUsados > 0,
-                    onSpend = { state.gastarPcParaAtributo() },
-                    onRefund = {
+                ResourceControlRow(
+                    labelAdd = "Usar PB em Atributos",
+                    labelRemove = "Desfazer uso de PB",
+                    canAdd = !locked && pcLivres >= 2,
+                    canRemove = !locked && paUsados > 0,
+                    onAdd = { state.gastarPcParaAtributo() },
+                    onRemove = {
                         state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
                         state.pontosComplicacaoGastos =
                             (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)

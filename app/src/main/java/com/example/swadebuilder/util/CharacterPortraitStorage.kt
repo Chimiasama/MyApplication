@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.security.crypto.EncryptedFile
-import androidx.security.crypto.MasterKey
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -18,12 +16,6 @@ object CharacterPortraitStorage {
 
     private fun portraitsDirectory(context: Context): File {
         return File(context.filesDir, PORTRAIT_DIR).apply { mkdirs() }
-    }
-
-    private fun getMasterKey(context: Context): MasterKey {
-        return MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
     }
 
     private fun extensionFor(uri: Uri, context: Context): String {
@@ -70,37 +62,6 @@ object CharacterPortraitStorage {
             // Ignore
         }
 
-        // 2. Try Encrypted (Legacy)
-        try {
-            val encryptedFile = EncryptedFile.Builder(
-                context,
-                file,
-                getMasterKey(context),
-                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-            ).build()
-
-            val opts = if (targetWidth != null) {
-                // First pass for bounds
-                val boundsOpts = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-                encryptedFile.openFileInput().use { input ->
-                    BitmapFactory.decodeStream(input, null, boundsOpts)
-                }
-                val finalOpts = BitmapFactory.Options()
-                var scale = 1
-                if (boundsOpts.outWidth > targetWidth) {
-                    scale = boundsOpts.outWidth / targetWidth
-                }
-                finalOpts.inSampleSize = scale
-                finalOpts
-            } else null
-
-            return@withContext encryptedFile.openFileInput().use { input ->
-                BitmapFactory.decodeStream(input, null, opts)
-            }
-        } catch (e: Exception) {
-            // Ignore
-        }
-
         return@withContext null
     }
 
@@ -128,7 +89,6 @@ object CharacterPortraitStorage {
             } ?: return@withContext null
 
             // Validate that the file is actually an image
-            // We need to read it back via EncryptedFile to validate
             val isValid = try {
                  loadPortrait(context, fileName) != null
             } catch (e: Exception) { false }

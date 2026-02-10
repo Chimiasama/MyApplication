@@ -54,10 +54,10 @@ import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
-import com.example.swadebuilder.model.loadJsonAsset
-import com.example.swadebuilder.normAAKey
-import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.util.loadJsonAsset
+import com.example.swadebuilder.util.normAAKey
+import com.example.swadebuilder.util.toArcanoKey
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.Serializable

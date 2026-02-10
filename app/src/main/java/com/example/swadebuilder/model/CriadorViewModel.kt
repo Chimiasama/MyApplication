@@ -13,13 +13,13 @@ import com.example.swadebuilder.listaCoracoesCrystal
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaPericias
-import com.example.swadebuilder.normAAKey
-import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.normAAKey
+import com.example.swadebuilder.util.toArcanoKey
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)

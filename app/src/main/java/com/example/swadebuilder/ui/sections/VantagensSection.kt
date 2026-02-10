@@ -68,12 +68,13 @@ import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.isVantagemVisible
-import com.example.swadebuilder.model.loadJsonAsset
-import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.CollapsibleSection
+import com.example.swadebuilder.util.loadJsonAsset
+import com.example.swadebuilder.util.toArcanoKey
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
-import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
+import com.example.swadebuilder.ui.components.ResourceControlRow
+import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
@@ -164,7 +165,7 @@ fun VantFilterDialog(
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun VantagensContent(
+fun VantagensSection(
     state: CriadorState,
     multiplosAAHabilitados: Boolean,
     viewModel: CriadorViewModel = viewModel(),
@@ -328,10 +329,14 @@ fun VantagensContent(
         else -> null
     }
 
-    // Reusable Header Content
-    val headerContent: @Composable () -> Unit = {
-        Column {
-            SectionHeader(
+    SectionCard(
+        title    = "Vantagens",
+        icon     = Icons.Default.Star,
+        showHeader = false
+    ) {
+        val headerContent: @Composable () -> Unit = {
+            Column {
+                SectionHeader(
                 onHelpClick = null,
                 centerText = "Pontos de Vantagem: ${state.pontosVantagem}",
                 onListaCompletaClick = null,
@@ -400,13 +405,13 @@ fun VantagensContent(
                         onRefund = { state.devolverPcDeVantagem() }
                     )
                 } else {
-                    PbLegacyActions(
-                        spendLabel = "Usar PB em Vantagens",
-                        refundLabel = "Desfazer uso de PB",
-                        spendEnabled = !locked && pcLivres >= 2,
-                        refundEnabled = !locked && pvUsados > 0,
-                        onSpend = { state.gastarPcParaVantagem() },
-                        onRefund = { state.devolverPcDeVantagem() }
+                    ResourceControlRow(
+                        labelAdd = "Usar PB em Vantagens",
+                        labelRemove = "Desfazer uso de PB",
+                        canAdd = !locked && pcLivres >= 2,
+                        canRemove = !locked && pvUsados > 0,
+                        onAdd = { state.gastarPcParaVantagem() },
+                        onRemove = { state.devolverPcDeVantagem() }
                     )
                 }
                 Spacer(Modifier.size(8.dp))
@@ -589,24 +594,24 @@ fun VantagensContent(
                 }
             }
 
-            Spacer(Modifier.size(16.dp))
-        }
-    }
-
-    if (browsingMode) {
-        // Browse Mode (Accordions) - NOW OPTIMIZED WITH LAZYCOLUMN
-        val categoriasBy = remember(filteredListGlobal) {
-            filteredListGlobal.groupBy { it.categoria }
+                Spacer(Modifier.size(16.dp))
+            }
         }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            item { headerContent() }
+        if (browsingMode) {
+            // Browse Mode (Accordions) - NOW OPTIMIZED WITH LAZYCOLUMN
+            val categoriasBy = remember(filteredListGlobal) {
+                filteredListGlobal.groupBy { it.categoria }
+            }
 
-            Categoria.entries.forEach { cat ->
-                val lista = categoriasBy[cat]
-                if (lista == null) return@forEach // Skip empty
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                item { headerContent() }
+
+                Categoria.entries.forEach { cat ->
+                    val lista = categoriasBy[cat]
+                    if (lista == null) return@forEach // Skip empty
 
                 if (state.modoSupers && cat == Categoria.PODER) return@forEach
                 if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@forEach
@@ -709,53 +714,53 @@ fun VantagensContent(
                                  onError = { msg ->
                                      viewModel.logFeedback(msg)
                                      onUserFeedback()
-                                 }
-                             )
-                         }
+                                     }
+                                 )
+                             }
+                        }
                     }
                 }
             }
-        }
-    } else {
-        // Search Mode (Flat List) - Preserving Fixed Header
-        Column(modifier = Modifier.fillMaxWidth()) {
-            headerContent()
+        } else {
+            // Search Mode (Flat List) - Preserving Fixed Header
+            Column(modifier = Modifier.fillMaxWidth()) {
+                headerContent()
 
-            val flatList = remember(filteredListGlobal, selectedCategories, searchQuery) {
-                filteredListGlobal.filter { vant ->
-                    if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return@filter false
-                    if (isSearching) {
-                        val q = searchQuery.semAcentos().lowercase()
-                        val n = vant.nomeExibicao.semAcentos().lowercase()
-                        val d = vant.descricao.semAcentos().lowercase()
-                        val original = vant.nome.semAcentos().lowercase()
-                        if (!n.contains(q) && !d.contains(q) && !original.contains(q)) return@filter false
+                val flatList = remember(filteredListGlobal, selectedCategories, searchQuery) {
+                    filteredListGlobal.filter { vant ->
+                        if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return@filter false
+                        if (isSearching) {
+                            val q = searchQuery.semAcentos().lowercase()
+                            val n = vant.nomeExibicao.semAcentos().lowercase()
+                            val d = vant.descricao.semAcentos().lowercase()
+                            val original = vant.nome.semAcentos().lowercase()
+                            if (!n.contains(q) && !d.contains(q) && !original.contains(q)) return@filter false
+                        }
+                        true
                     }
-                    true
                 }
-            }
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f) // Fill remaining space
-                    .padding(horizontal = 8.dp, vertical = 8.dp)
-            ) {
-                 if (flatList.isEmpty()) {
-                     item(key = "empty_list", contentType = "message") { Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp)) }
-                 } else {
-                     items(flatList, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
-                         VantagemItem(
-                             vant = vant,
-                             state = state,
-                             locked = locked,
-                             allowLongTexts = allowLongTexts,
-                             showOfficialNames = showOfficialNames,
-                             idParaNome = idParaNome,
-                             detalhesExpandidos = detalhesExpandidos,
-                             protagonistaSlotCategoria = protagonistaSlotCategoria,
-                             onSelect = {
-                                if (vant.vinculadoPericia) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f) // Fill remaining space
+                        .padding(horizontal = 8.dp, vertical = 8.dp)
+                ) {
+                     if (flatList.isEmpty()) {
+                         item(key = "empty_list", contentType = "message") { Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp)) }
+                     } else {
+                         items(flatList, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
+                             VantagemItem(
+                                 vant = vant,
+                                 state = state,
+                                 locked = locked,
+                                 allowLongTexts = allowLongTexts,
+                                 showOfficialNames = showOfficialNames,
+                                 idParaNome = idParaNome,
+                                 detalhesExpandidos = detalhesExpandidos,
+                                 protagonistaSlotCategoria = protagonistaSlotCategoria,
+                                 onSelect = {
+                                    if (vant.vinculadoPericia) {
                                     pendingVantagem = vant
                                     showChoiceDialog = true
                                 } else if (vant.id == "antecedente_arcano") {
@@ -803,15 +808,16 @@ fun VantagensContent(
                                             onUserFeedback()
                                         }
                                     }
-                                }
-                            },
-                             onError = { msg ->
-                                 viewModel.logFeedback(msg)
-                                 onUserFeedback()
-                             }
-                         )
+                                    }
+                                },
+                                 onError = { msg ->
+                                     viewModel.logFeedback(msg)
+                                     onUserFeedback()
+                                 }
+                             )
+                         }
                      }
-                 }
+                }
             }
         }
     }

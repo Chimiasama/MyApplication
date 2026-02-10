@@ -29,6 +29,7 @@ import com.example.swadebuilder.racialSkillStartMap
 import com.example.swadebuilder.superequipCategorias
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -450,10 +451,3 @@ object DataLoader {
     ).joinToString("|")
 }
 
-@OptIn(ExperimentalSerializationApi::class)
-private inline fun <reified T> loadJsonAsset(context: Context, fileName: String): T {
-    val json = Json { ignoreUnknownKeys = true }
-    return context.assets.open(fileName).use { input ->
-        json.decodeFromStream(input)
-    }
-}

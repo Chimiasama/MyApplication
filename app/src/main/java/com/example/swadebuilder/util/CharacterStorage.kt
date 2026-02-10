@@ -1,14 +1,11 @@
 package com.example.swadebuilder.util
 
 import android.content.Context
-import androidx.security.crypto.EncryptedFile
-import androidx.security.crypto.MasterKey
 import com.example.swadebuilder.model.PersonagemSnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
@@ -59,14 +56,8 @@ object CharacterStorage {
         return SecurityUtils.getSafeChildFile(savesDirectory(context), "$id.json")
     }
 
-    private fun getMasterKey(context: Context): MasterKey {
-        return MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-    }
-
     private fun checksumFor(snapshot: PersonagemSnapshot): String {
-        val payload = json.encodeToString(snapshot.copy(checksum = null))
+        val payload = json.encodeToString(PersonagemSnapshot.serializer(), snapshot.copy(checksum = null))
         val digest = MessageDigest.getInstance("SHA-256").digest(payload.toByteArray())
         return digest.joinToString("") { "%02x".format(it) }
     }
@@ -83,85 +74,25 @@ object CharacterStorage {
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun listSaves(context: Context): List<SaveEntry> = withContext(Dispatchers.IO) {
         val dir = savesDirectory(context)
-        val masterKey = getMasterKey(context)
 
         dir.listFiles()?.mapNotNull { file ->
             if (file.length() > MAX_FILE_SIZE) return@mapNotNull null
 
-            val metadata = decodeMetadataSafely(context, file, masterKey)
-                ?: decodeSnapshotSafely(context, file, masterKey)
-                    ?.takeIf { validateChecksum(it) }
-                    ?.let {
-                        MetadataSnapshot(
-                            version = it.version,
-                            id = it.id,
-                            nome = it.nome,
-                            timestamp = it.timestamp,
-                            checksum = it.checksum
-                        )
-                    }
-                ?: return@mapNotNull null
+            // 1. Try Plaintext (Only supported method now)
+            val metadata = try {
+                file.inputStream().use { input ->
+                    json.decodeFromStream<MetadataSnapshot>(input)
+                }
+            } catch (e: Exception) {
+                null
+            } ?: return@mapNotNull null
+
+            // Validate Checksum if full snapshot (optional optimization: partial read)
+            // For listing, we trust metadata structure unless we want to validate integrity fully.
+            // But let's keep it simple: if metadata loads, it's a valid save file structure.
 
             SaveEntry(file.nameWithoutExtension, metadata.nome, metadata.timestamp)
         }?.sortedByDescending { it.timestamp } ?: emptyList()
-    }
-
-    @OptIn(ExperimentalSerializationApi::class)
-    private fun decodeMetadataSafely(context: Context, file: File, masterKey: MasterKey): MetadataSnapshot? {
-        // 1. Try Plaintext (Preferred)
-        try {
-            file.inputStream().use { input ->
-                return json.decodeFromStream<MetadataSnapshot>(input)
-            }
-        } catch (e: Exception) {
-            // If failed, fall through to encrypted check
-        }
-
-        // 2. Try Encrypted (Legacy)
-        try {
-            val encryptedFile = EncryptedFile.Builder(
-                context,
-                file,
-                masterKey,
-                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-            ).build()
-
-            return encryptedFile.openFileInput().use { input ->
-                json.decodeFromStream<MetadataSnapshot>(input)
-            }
-        } catch (e: Exception) {
-            // Both failed
-        }
-        return null
-    }
-
-    @OptIn(ExperimentalSerializationApi::class)
-    private fun decodeSnapshotSafely(context: Context, file: File, masterKey: MasterKey): PersonagemSnapshot? {
-        // 1. Try Plaintext (Preferred)
-        try {
-            file.inputStream().use { input ->
-                return json.decodeFromStream<PersonagemSnapshot>(input)
-            }
-        } catch (e: Exception) {
-            // If failed, fall through to encrypted check
-        }
-
-        // 2. Try Encrypted (Legacy)
-        try {
-            val encryptedFile = EncryptedFile.Builder(
-                context,
-                file,
-                masterKey,
-                EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-            ).build()
-
-            return encryptedFile.openFileInput().use { input ->
-                json.decodeFromStream<PersonagemSnapshot>(input)
-            }
-        } catch (e: Exception) {
-            // Both failed
-        }
-        return null
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -175,31 +106,13 @@ object CharacterStorage {
 
             var snapshot: PersonagemSnapshot? = null
 
-            // 1. Try Plaintext (Preferred)
+            // 1. Try Plaintext (Only supported method now)
             try {
                 snapshot = file.inputStream().use { input ->
                     json.decodeFromStream<PersonagemSnapshot>(input)
                 }
             } catch (e: Exception) {
-                // Ignore and try encrypted
-            }
-
-            // 2. Try Encrypted (Legacy) if not loaded yet
-            if (snapshot == null) {
-                try {
-                    val encryptedFile = EncryptedFile.Builder(
-                        context,
-                        file,
-                        getMasterKey(context),
-                        EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
-                    ).build()
-
-                    snapshot = encryptedFile.openFileInput().use { input ->
-                        json.decodeFromStream<PersonagemSnapshot>(input)
-                    }
-                } catch (e: Exception) {
-                    // Ignore
-                }
+                // Ignore
             }
 
             if (snapshot == null) {
@@ -232,7 +145,7 @@ object CharacterStorage {
 
         // Write plaintext to temp file
         tempFile.outputStream().use { output ->
-            val jsonString = json.encodeToString(snapshotToSave)
+            val jsonString = json.encodeToString(PersonagemSnapshot.serializer(), snapshotToSave)
             output.write(jsonString.toByteArray(Charsets.UTF_8))
         }
 

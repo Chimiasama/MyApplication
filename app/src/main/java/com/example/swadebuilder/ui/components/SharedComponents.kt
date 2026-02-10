@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,7 +36,40 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+
+@Composable
+fun ResourceControlRow(
+    labelAdd: String,
+    labelRemove: String,
+    canAdd: Boolean,
+    canRemove: Boolean,
+    onAdd: () -> Unit,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        TextButton(
+            onClick = onAdd,
+            enabled = canAdd,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(labelAdd)
+        }
+
+        TextButton(
+            onClick = onRemove,
+            enabled = canRemove,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(labelRemove, color = if (canRemove) MaterialTheme.colorScheme.error else Color.Unspecified)
+        }
+    }
+}
 
 @Composable
 fun ExpandableSearchFilter(

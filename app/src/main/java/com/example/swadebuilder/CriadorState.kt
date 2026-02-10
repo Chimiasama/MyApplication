@@ -39,7 +39,9 @@ import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.normAAKey
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toArcanoKey
 import kotlinx.serialization.json.JsonPrimitive
 import java.util.UUID
 

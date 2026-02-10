@@ -1,7 +1,6 @@
-package com.example.swadebuilder
+package com.example.swadebuilder.util
 
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.util.semAcentos
 
 fun String.normAAKey(): String =
     this.uppercase().semAcentos().trim()

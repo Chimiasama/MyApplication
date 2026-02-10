@@ -63,8 +63,8 @@ import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
 import com.example.swadebuilder.toDiceString
-import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
+import com.example.swadebuilder.ui.components.ResourceControlRow
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
@@ -193,16 +193,16 @@ fun PericiasContent(
                             }
                         )
                     } else {
-                        PbLegacyActions(
-                            spendLabel = "Usar PB em Perícias",
-                            refundLabel = "Desfazer uso de PB",
-                            spendEnabled = !locked && pcLivres > 0,
-                            refundEnabled = !locked && spUsados > 0,
-                            onSpend = {
+                        ResourceControlRow(
+                            labelAdd = "Usar PB em Perícias",
+                            labelRemove = "Desfazer uso de PB",
+                            canAdd = !locked && pcLivres > 0,
+                            canRemove = !locked && spUsados > 0,
+                            onAdd = {
                                 state.cpSpStack.add(Unit)
                                 state.pontosComplicacaoGastos += 1
                             },
-                            onRefund = {
+                            onRemove = {
                                 state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
                                 state.pontosComplicacaoGastos =
                                     (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
