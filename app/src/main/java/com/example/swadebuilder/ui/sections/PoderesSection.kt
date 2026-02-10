@@ -295,6 +295,13 @@ fun PoderesSection(
             }
 
             sourceList.filter { power ->
+                val isDemonExclusivePower = power.id.endsWith("_demonio")
+                val hasDemonAb = state.vantagensSelecionadas.any { it.id == "aa_demonio" }
+                if (isDemonExclusivePower) {
+                    if (arcKey != "DEMONIO") return@filter false
+                    if (!hasDemonAb) return@filter false
+                }
+
                 // Meio-Demônio (Cidade do Sol a Vapor):
                 // Disfarce Demoníaco não é inicial e só fica disponível em Experiente.
                 if (

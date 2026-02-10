@@ -1115,5 +1115,155 @@
       "tecnomagia",
       "mecanico"
     ]
+  },
+  {
+    "id": "drenar_pontos_de_poder_demonio",
+    "origem": "SOL_VAPOR",
+    "nome": "DRENAR PONTOS DE PODER (DEMÔNIO)",
+    "estagio": "Heróico",
+    "pontosDePoder": 2,
+    "distancia": "Astúcia",
+    "duracao": "Instantâneo",
+    "manifestacoes": [
+      "Prece",
+      "gestos"
+    ],
+    "descricao": "Esta habilidade é usada para drenar a energia arcana de oponentes. Às vezes é possível até mesmo sugar a energia roubada para uso próprio.\nO poder é resistido pelo Espírito do alvo, e a personagem conjuradora sofre uma penalidade de -2 em sua rolagem se o alvo tiver um Antecedente Arcano diferente do seu.\nSucesso drena 1d6 Pontos de Poder do alvo (se houver e a rolagem não gerar Ases). Com uma ampliação, adiciona os pontos drenados aos seus próprios pontos de poder. Isso pode levar acima do seu máximo normal! Eles duram até serem usados e devem ser os primeiros gastos em uma conjuração.\nDrenar Pontos de Poder também pode ser usado em um dispositivo arcano (quem criou ainda resiste com sua perícia arcana, esteja o portando ou não). O dispositivo não pode perder mais Pontos de Poder do que tem.\n\nExclusivo para Antecedente Arcano (Demônio).",
+    "modificadores": [],
+    "tags": [
+      "stage:heroico",
+      "tipo:ataque",
+      "dreno",
+      "demonio"
+    ]
+  },
+  {
+    "id": "voar_demonio",
+    "origem": "SOL_VAPOR",
+    "nome": "VOAR (DEMÔNIO)",
+    "estagio": "Veterano",
+    "pontosDePoder": 3,
+    "distancia": "Astúcia",
+    "duracao": "5",
+    "manifestacoes": [
+      "Vento",
+      "asas"
+    ],
+    "descricao": "Voar permite planar com uma Movimentação de 12 quadros, ou o dobro disso com uma ampliação (não é possível Correr).\n\nExclusivo para Antecedente Arcano (Demônio).",
+    "modificadores": [
+      {
+        "nome": "Receptores Adicionais",
+        "custo": "+2",
+        "descricao": "O poder afeta um novo alvo para cada 2 Pontos de Poder adicionais investidos."
+      }
+    ],
+    "tags": [
+      "stage:veterano",
+      "tipo:movimento",
+      "voo",
+      "demonio"
+    ]
+  },
+  {
+    "id": "elo_mental_demonio",
+    "origem": "SOL_VAPOR",
+    "nome": "ELO MENTAL (DEMÔNIO)",
+    "estagio": "Novato",
+    "pontosDePoder": 1,
+    "distancia": "Astúcia",
+    "duracao": "30 minutos",
+    "manifestacoes": [
+      "Tiaras",
+      "talismãs",
+      "cristais"
+    ],
+    "descricao": "Elo mental cria uma conexão telepática entre dois indivíduos (que não necessariamente deve incluir a pessoa conjurando). O elo acomoda apenas indivíduos dispostos e comunicação intencional — pensamentos que não são transmitidos conscientemente não são repassados.\nUma vez ativado, a Distância entre todas as mentes conectadas é de até um quilômetro e meio, ou oito com uma ampliação.\nSe qualquer uma das pessoas conectadas sofrer um Ferimento, quem mais estiver na conexão deve fazer uma rolagem de Astúcia ou fica em Estado Abalado (isso não pode causar um Ferimento).\nA velocidade da comunicação é a velocidade normal de fala, mas, com uma ampliação, membros podem se comunicar por até 30 segundos de fala em um único turno de combate.\n\nExclusivo para Antecedente Arcano (Demônio).",
+    "modificadores": [
+      {
+        "nome": "Receptores Adicionais",
+        "custo": "+1",
+        "descricao": "O poder afeta um novo alvo para cada Ponto de Poder adicional."
+      }
+    ],
+    "tags": [
+      "stage:novato",
+      "tipo:comunicacao",
+      "utilitario",
+      "demonio"
+    ]
+  },
+  {
+    "id": "leitura_mental_demonio",
+    "origem": "SOL_VAPOR",
+    "nome": "LEITURA MENTAL (DEMÔNIO)",
+    "estagio": "Veterano",
+    "pontosDePoder": 5,
+    "distancia": "Astúcia",
+    "duracao": "Instantâneo",
+    "manifestacoes": [
+      "Invasão psiônica",
+      "visão da alma"
+    ],
+    "descricao": "Leitura mental é uma rolagem resistida contra a Astúcia do alvo. Sucesso permite conseguir uma resposta verdadeira do alvo. O alvo fica ciente da invasão mental a menos que a pessoa fazendo a leitura consiga uma ampliação. Mestres podem aplicar modificadores com base nas Complicações mentais do indivíduo ou no atual estado emocional.\n\nExclusivo para Antecedente Arcano (Demônio).",
+    "modificadores": [],
+    "tags": [
+      "stage:veterano",
+      "tipo:informacao",
+      "mental",
+      "demonio"
+    ]
+  },
+  {
+    "id": "limpeza_mental_demonio",
+    "origem": "SOL_VAPOR",
+    "nome": "LIMPEZA MENTAL (DEMÔNIO)",
+    "estagio": "Veterano",
+    "pontosDePoder": 3,
+    "distancia": "Astúcia",
+    "duracao": "Instantâneo",
+    "manifestacoes": [
+      "Bebida tóxica",
+      "toque"
+    ],
+    "descricao": "Limpeza mental remove as memórias de um alvo, uma violação terrível na maioria das sociedades civilizadas. O poder é resistido pela Astúcia da vítima e requer um minuto completo de embate mental. A vítima deve estar consciente durante este período, então, se não estiver contida, pode simplesmente se afastar além da Distância\nSe bem-sucedida, a vítima esquece um único evento (cerca de 30 minutos de duração). Uma ampliação remove uma memória complexa de várias horas.\nSe o alvo vencer, a mesma pessoa não pode afetá-lo com limpeza mental por 24 horas (contudo, outras pessoas podem tentar novamente o poder).\nA memória permanece apagada, mas fortes evidências que desafiem sua “lógica” permitem uma rolagem de Astúcia com -2 para lembrar de fragmentos determinados pelo Mestre.\n\nExclusivo para Antecedente Arcano (Demônio).",
+    "modificadores": [
+      {
+        "nome": "Conjuração Rápida",
+        "custo": "+2",
+        "descricao": "É possível limpar uma memória como uma ação."
+      },
+      {
+        "nome": "Editar",
+        "custo": "+1",
+        "descricao": "Em vez de limpar a memória, permite editá-la como achar melhor."
+      }
+    ],
+    "tags": [
+      "stage:veterano",
+      "tipo:controle",
+      "mental",
+      "demonio"
+    ]
+  },
+  {
+    "id": "telecinese_demonio",
+    "origem": "SOL_VAPOR",
+    "nome": "TELECINESE (DEMÔNIO)",
+    "estagio": "Experiente",
+    "pontosDePoder": 5,
+    "distancia": "Astúcia x2",
+    "duracao": "5",
+    "manifestacoes": [
+      "Aceno",
+      "olhar"
+    ],
+    "descricao": "Telecinese é a habilidade de mover objetos ou criaturas (incluindo a própria personagem conjuradora) com a vontade arcana. Ela tem Força d10, ou d12 com uma ampliação. Ao ativar, é possível realizar um dos “usos” a seguir. Usos subsequentes são ações e usam a perícia arcana (mas não são consideradas rolagens de ativação e não estão sujeitos a Choque de Retorno e Falhas Críticas).\nOponentes relutantes resistem à perícia arcana com uma rolagem de Espírito quando alvejados pela primeira vez e novamente no início de cada um de seus turnos até se libertarem. Ser bem-sucedido ao resistir não significa que o poder falhou, quem conjura pode tentar novamente no seu próximo turno.\nArremessar: O alvo pode ser arremessado contra o chão, teto ou paredes, provocando For+d6 de dano.\nManipular: É possível usar ferramentas para realizar ações simples ou segurar uma arma, usando a perícia arcana de que conjurou. (Isso não afeta o Aparar de quem conjura se usar uma arma e sua perícia arcana for diferente de seu dado de Lutar.)\nMover: O alvo ou ferramenta pode ser movido um número de quadros igual à Astúcia da personagem conjuradora como ação livre.\nMudar alvo: Quem conjura pode libertar a vítima ou ferramenta como uma ação livre. Pegar uma nova arma ouferramenta é uma ação livre. Selecionar um novo alvo relutante é uma ação e é resistida como descrita acima.\n\nExclusivo para Antecedente Arcano (Demônio).",
+    "modificadores": [],
+    "tags": [
+      "stage:experiente",
+      "tipo:controle",
+      "utilitario",
+      "demonio"
+    ]
   }
 ]
