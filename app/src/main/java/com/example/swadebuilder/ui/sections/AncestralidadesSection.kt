@@ -199,8 +199,11 @@ fun AncestralidadesSection(
 
             // Cidade do Sol a Vapor (jogadores): Humanos, Demônios e Meio-Demônios.
             if (compendioCidadeSolVaporAtivo && origin == "CIDADE_SOL_VAPOR") {
-                val allowedCsvKeys = setOf("HUMANO TEIA", "DEMONIO ABISMO", "MEIO-DEMONIO")
-                if (key !in allowedCsvKeys) return@filter false
+                val nomeSemSufixo = stripScenarioSuffix(it.nome).keyify()
+                val isHumano = key.startsWith("HUMANO") || nomeSemSufixo == "HUMANO"
+                val isDemonio = key.startsWith("DEMONIO") || nomeSemSufixo == "DEMONIO"
+                val isMeioDemonio = key.startsWith("MEIO-DEMONIO") || nomeSemSufixo == "MEIO-DEMONIO"
+                if (!isHumano && !isDemonio && !isMeioDemonio) return@filter false
             }
 
             // Logic for Fantasy Compendium exclusions
