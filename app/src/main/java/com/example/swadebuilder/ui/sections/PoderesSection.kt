@@ -54,6 +54,7 @@ import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
@@ -192,12 +193,28 @@ fun PoderesSection(
         }
     }
 
+    val includeBasicPowers = remember(
+        state.compendioFantasiaAtivo,
+        state.compendioHorrorAtivo,
+        state.compendioSciFiAtivo,
+        state.compendioPathfinderAtivo,
+        state.compendioDeadlandsAtivo,
+        state.compendioCrystalHeartAtivo,
+        state.compendioArteDaGuerraAtivo,
+        state.compendioCidadeSolVaporAtivo,
+        state.compendioWiseguysAtivo,
+        state.modoSupers
+    ) {
+        "BASICO" in state.getActiveOrigins()
+    }
+
     // Pre-calculate powers for each displayed key to avoid doing it inside LazyColumn (and avoid @Composable error)
     val powersByArcKey = remember(
         powerCache,
         searchQuery,
         selectedRank,
         displayKeys,
+        includeBasicPowers,
         state.vantagensSelecionadas,
         state.tropoSelecionado,
         state.dominioClerigoSelecionado,
@@ -236,7 +253,8 @@ fun PoderesSection(
             var sourceList = when {
                 usaListaChi -> specificList
                 normalizedOrigin == "BASICO" -> basicList
-                else -> (specificList + basicList).distinctBy { it.id }
+                includeBasicPowers -> (specificList + basicList).distinctBy { it.id }
+                else -> specificList
             }
 
             // Fantasy Cleric Domain Filtering

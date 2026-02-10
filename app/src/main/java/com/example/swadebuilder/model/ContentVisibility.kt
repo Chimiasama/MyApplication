@@ -29,7 +29,8 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
         compendioPathfinderAtivo ||
         compendioDeadlandsAtivo ||
         compendioArteDaGuerraAtivo ||
-        compendioHorrorAtivo
+        compendioHorrorAtivo ||
+        compendioCidadeSolVaporAtivo
 
     if (!replacementSettingsActive) {
         add("BASICO")
