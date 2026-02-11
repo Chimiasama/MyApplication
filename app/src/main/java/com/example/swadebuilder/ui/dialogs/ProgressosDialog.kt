@@ -1014,7 +1014,7 @@ fun ProgressosDialog(
                                         pendingMysticPowersAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showMysticPowersSelection = true
-                                    } else if (vant.requiresChoice) {
+                                    } else if (vant.requiresChoice || vant.vinculadoPericia || vant.id == "arma_predileta_aprimorada") {
                                         pendingAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showPendingChoice = true
@@ -1023,7 +1023,10 @@ fun ProgressosDialog(
                                         viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
                                         viewModel.selectAdvantageForAdvancement(vant)
 
-                                        if (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso) {
+                                        val requiresPowerFlow =
+                                            vant.id == "novos_poderes" || vant.id.startsWith("antecedente_arcano")
+
+                                        if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
                                             // Transition to Power Selection
                                             showAdvSelection = false
                                             showPowerSelection = true
@@ -1249,7 +1252,10 @@ fun ProgressosDialog(
             viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
             viewModel.selectAdvantageForAdvancement(vantChoice)
 
-            if (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso) {
+            val requiresPowerFlow =
+                vantChoice.id == "novos_poderes" || vantChoice.id.startsWith("antecedente_arcano")
+
+            if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
                 showPendingChoice = false
                 showAdvSelection = false
                 pendingAdv = null
@@ -1425,6 +1431,25 @@ private fun maxEffectiveSelections(v: Vantagem): Int? =
 
 private fun validChoiceOptionsFor(v: Vantagem, state: CriadorState): List<String> {
     return when (v.id) {
+        "arma_predileta" -> {
+            state.periciasComIdiomas()
+                .filter { per ->
+                    val nome = per.nome
+                    val isAllowed =
+                        nome.equals("Atirar", ignoreCase = true) ||
+                            nome.equals("Atletismo", ignoreCase = true) ||
+                            nome.equals("Lutar", ignoreCase = true)
+
+                    isAllowed && state.rawTotal(per) >= 8
+                }
+                .map { it.nome }
+        }
+        "arma_predileta_aprimorada" -> {
+            state.vantagensSelecionadas
+                .filter { it.id == "arma_predileta" && !it.choice.isNullOrBlank() }
+                .mapNotNull { it.choice }
+                .distinct()
+        }
         "discipulo_artes_marciais" -> {
             state.vantagensSelecionadas
                 .filter { it.id == "estudante_artes_marciais" && !it.choice.isNullOrBlank() }
