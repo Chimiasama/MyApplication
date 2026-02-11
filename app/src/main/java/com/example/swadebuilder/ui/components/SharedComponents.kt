@@ -44,6 +44,7 @@ fun ExpandableSearchFilter(
     placeholder: String = "Pesquisar...",
     isExpanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
+    onClear: () -> Unit = {},
     content: @Composable () -> Unit = {}
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -67,8 +68,13 @@ fun ExpandableSearchFilter(
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
                         IconButton(onClick = {
-                            onQueryChange("")
-                            onExpandedChange(false)
+                            if (query.isNotEmpty()) {
+                                onQueryChange("")
+                                onClear()
+                            } else {
+                                onClear()
+                                onExpandedChange(false)
+                            }
                         }) {
                             Icon(Icons.Default.Close, contentDescription = "Fechar")
                         }

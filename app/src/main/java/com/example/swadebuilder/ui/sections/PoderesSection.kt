@@ -367,6 +367,10 @@ fun PoderesSection(
                 onQueryChange = { searchQuery = it },
                 isExpanded = isSearchExpanded,
                 onExpandedChange = { isSearchExpanded = it },
+                onClear = {
+                    searchQuery = ""
+                    selectedRank = "Todos"
+                },
                 placeholder = "Pesquisar Poderes..."
             )
         }

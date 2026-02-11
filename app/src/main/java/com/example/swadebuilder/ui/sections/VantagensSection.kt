@@ -427,6 +427,11 @@ fun VantagensContent(
                 onQueryChange = { state.vantSearchQuery = it },
                 isExpanded = isSearchExpanded,
                 onExpandedChange = { isSearchExpanded = it },
+                onClear = {
+                    state.vantSearchQuery = ""
+                    state.vantSelectedCategories.clear()
+                    state.vantFilter = VantFilter()
+                },
                 placeholder = "Pesquisar Vantagens..."
             ) {
                 Spacer(Modifier.size(8.dp))
@@ -446,21 +451,17 @@ fun VantagensContent(
                     }
 
                     // Category Chips
+                    val activeCategories = remember(listaVantagensAtivas) {
+                        listaVantagensAtivas.map { it.categoria }.toSet()
+                    }
+
                     items(
                         items = Categoria.entries.toTypedArray(),
                         key = { it.name },
                         contentType = { "category_chip" }
                     ) { cat ->
                         if (state.modoSupers && cat == Categoria.PODER) return@items
-
-                        // --- NEW FILTERING LOGIC ---
-                        if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@items
-                        if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@items
-                        if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
-                        if (cat == Categoria.SUPER && !state.modoSupers) return@items
-                        if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
-                        if (cat == Categoria.CHI && !state.compendioArteDaGuerraAtivo) return@items
-                        if (cat == Categoria.ESTILO_MARCIAL && !state.compendioArteDaGuerraAtivo) return@items
+                        if (cat !in activeCategories) return@items
 
                         FilterChip(
                             selected = cat in selectedCategories,
@@ -609,9 +610,7 @@ fun VantagensContent(
                 if (lista == null) return@forEach // Skip empty
 
                 if (state.modoSupers && cat == Categoria.PODER) return@forEach
-                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@forEach
-                if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@forEach
-                if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@forEach
+                // Logic already handled by active list, but keeping explicit checks safe
 
                 val expanded = expandedMap[cat] ?: false
 
@@ -1721,9 +1720,18 @@ fun VantagensContent(
                         } else {
                             choice
                         }
-                        state.comprarVantagem(vant.copy(choice = rawChoice)) { msg ->
-                            viewModel.logFeedback(msg)
+
+                        val vantToAdd = vant.copy(choice = rawChoice)
+
+                        if (state.advantageAdvancementInProgress) {
+                            viewModel.selectAdvantageForAdvancement(vantToAdd)
                             onUserFeedback()
+                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($rawChoice).")
+                        } else {
+                            state.comprarVantagem(vantToAdd) { msg ->
+                                viewModel.logFeedback(msg)
+                                onUserFeedback()
+                            }
                         }
                         showChoiceDialog = false
                         pendingVantagem = null
