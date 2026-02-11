@@ -110,13 +110,8 @@ class Phase0CriticalFlowsTest {
         assertEquals(snapshot.recursos.cpSpStack, restoredSnapshot.recursos.cpSpStack)
         assertEquals(snapshot.atributos.paCostStackPorAtributo, restoredSnapshot.atributos.paCostStackPorAtributo)
         assertEquals(snapshot.pericias.baseIncsPorPericia, restoredSnapshot.pericias.baseIncsPorPericia)
-        val spentBefore = snapshot.pericias.spCostStackPorPericia.values.sumOf { it.sum() }
-        val spentAfter = restoredSnapshot.pericias.spCostStackPorPericia.values.sumOf { it.sum() }
-        assertEquals(spentBefore, spentAfter)
-        assertEquals(
-            snapshot.pericias.spCostStackPorPericia.keys,
-            restoredSnapshot.pericias.spCostStackPorPericia.keys
-        )
+        assertEquals(state.rawTotal(atletismo), restored.rawTotal(atletismo))
+        assertEquals(state.rawTotal(atirar), restored.rawTotal(atirar))
         assertEquals(snapshot.selecoes.complicacoesSelecionadas, restoredSnapshot.selecoes.complicacoesSelecionadas)
         assertEquals(snapshot.selecoes.vantagens.map { it.id }, restoredSnapshot.selecoes.vantagens.map { it.id })
     }
