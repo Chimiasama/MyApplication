@@ -131,11 +131,13 @@ object RequirementValidator {
             // complicações alternativas (OR), não uma lista cumulativa (AND).
             if (v.id == "ameacador") {
                 val complicacoesSelecionadasIds = state.complicacoesSelecionadas.keys
-                    .map { it.id }
+                    .map { it.id.keyify() }
                     .toSet()
 
                 val complicacoesQueLiberam =
-                    (v.requisitos.vantagensPrevias.toSet() + ameacadorComplicacoesBase + ameacadorComplicacoesExtras)
+                    (v.requisitos.vantagensPrevias.map { it.keyify() }.toSet() +
+                            ameacadorComplicacoesBase +
+                            ameacadorComplicacoesExtras)
 
                 if (complicacoesSelecionadasIds.none { it in complicacoesQueLiberam }) {
                     return false
