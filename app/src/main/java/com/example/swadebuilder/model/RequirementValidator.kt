@@ -13,6 +13,18 @@ import com.example.swadebuilder.util.semAcentos
  */
 object RequirementValidator {
 
+    private val ameacadorComplicacoesBase = setOf(
+        "sanguinario",
+        "desagradavel",
+        "sem_escrupulos",
+        "feio"
+    ).map { it.keyify() }.toSet()
+
+    // Alguns compêndios descrevem que estas complicações também liberam Ameaçador.
+    private val ameacadorComplicacoesExtras = setOf("sombrio", "sinistro").map { it.keyify() }.toSet()
+
+    private val ameacadorId = "ameacador".keyify()
+
     fun canSelect(v: Vantagem, state: CriadorState): Boolean {
         val key = v.nome.keyify()
 
@@ -117,22 +129,39 @@ object RequirementValidator {
 
         // 6) Vantagens prévias
         if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-            val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-                when (prevId) {
-                    Constants.ID_AA_PREFIX, "${Constants.ID_AA_PREFIX}:*" -> {
-                        state.vantagensSelecionadas.none { poss ->
-                            poss.id.startsWith("${Constants.ID_AA_PREFIX}_") ||
-                                    (poss.id == Constants.ID_AA_PREFIX && !poss.choice.isNullOrBlank())
+            // Regra especial de Ameaçador: os IDs em `vantagens_previas` representam
+            // complicações alternativas (OR), não uma lista cumulativa (AND).
+            if (v.id.keyify() == ameacadorId) {
+                val complicacoesSelecionadasIds = state.complicacoesSelecionadas.keys
+                    .map { it.id.keyify() }
+                    .toSet()
+
+                val complicacoesQueLiberam =
+                    (v.requisitos.vantagensPrevias.map { it.keyify() }.toSet() +
+                            ameacadorComplicacoesBase +
+                            ameacadorComplicacoesExtras)
+
+                if (complicacoesSelecionadasIds.none { it in complicacoesQueLiberam }) {
+                    return false
+                }
+            } else {
+                val faltam = v.requisitos.vantagensPrevias.any { prevId ->
+                    when (prevId) {
+                        Constants.ID_AA_PREFIX, "${Constants.ID_AA_PREFIX}:*" -> {
+                            state.vantagensSelecionadas.none { poss ->
+                                poss.id.startsWith("${Constants.ID_AA_PREFIX}_") ||
+                                        (poss.id == Constants.ID_AA_PREFIX && !poss.choice.isNullOrBlank())
+                            }
                         }
-                    }
-                    else -> {
-                        state.vantagensSelecionadas.none { poss ->
-                            poss.id == prevId
+                        else -> {
+                            state.vantagensSelecionadas.none { poss ->
+                                poss.id == prevId
+                            }
                         }
                     }
                 }
+                if (faltam) return false
             }
-            if (faltam) return false
         }
 
         // 7) PPs de novo (segurança extra)

@@ -46,6 +46,50 @@ import java.util.UUID
 enum class TabStyle { ICONES, TEXTO }
 
 class CriadorState {
+    private val ameacadorComplicacoesLiberadoras = setOf(
+        "sanguinario",
+        "desagradavel",
+        "sem_escrupulos",
+        "feio",
+        "sombrio",
+        "sinistro"
+    ).map { it.keyify() }.toSet()
+
+    private val ameacadorId = "ameacador".keyify()
+
+    private fun atendePreviasPorComplicacaoParaAmeacador(v: Vantagem): Boolean {
+        if (v.id.keyify() != ameacadorId) return false
+
+        val requisitadas = v.requisitos.vantagensPrevias.map { it.keyify() }.toSet()
+        val liberadoras = (ameacadorComplicacoesLiberadoras + requisitadas)
+        val selecionadas = complicacoesSelecionadas.keys.map { it.id.keyify() }.toSet()
+
+        return selecionadas.any { it in liberadoras }
+    }
+
+    private fun atendeVantagensPrevias(v: Vantagem): Boolean {
+        if (v.requisitos.vantagensPrevias.isEmpty()) return true
+
+        if (atendePreviasPorComplicacaoParaAmeacador(v)) return true
+
+        val faltam = v.requisitos.vantagensPrevias.any { prevId ->
+            when (prevId.keyify()) {
+                "antecedente_arcano", "antecedente_arcano:*" -> {
+                    vantagensSelecionadas.none { poss ->
+                        poss.id.startsWith("antecedente_arcano_") ||
+                                (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
+                    }
+                }
+                else -> {
+                    vantagensSelecionadas.none { poss ->
+                        poss.id.keyify() == prevId.keyify()
+                    }
+                }
+            }
+        }
+        return !faltam
+    }
+
     var appTheme by mutableStateOf(AppTheme.DEFAULT)
     var mostrarIdentificadorLivro by mutableStateOf(true)
     var estiloAbas by mutableStateOf(TabStyle.TEXTO)
@@ -2726,24 +2770,7 @@ class CriadorState {
         }
 
         // 6) Vantagens prévias
-        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-            val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-                when (prevId) {
-                    "antecedente_arcano", "antecedente_arcano:*" -> {
-                        vantagensSelecionadas.none { poss ->
-                            poss.id.startsWith("antecedente_arcano_") ||
-                                    (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
-                        }
-                    }
-                    else -> {
-                        vantagensSelecionadas.none { poss ->
-                            poss.id == prevId
-                        }
-                    }
-                }
-            }
-            if (faltam) return false
-        }
+        if (!atendeVantagensPrevias(v)) return false
 
         // 7) PPs de novo (segurança extra)
         if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
@@ -3439,20 +3466,7 @@ class CriadorState {
         }
 
         // Prévias
-        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-            val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-                when (prevId) {
-                    "antecedente_arcano", "antecedente_arcano:*" -> {
-                        vantagensSelecionadas.none { poss ->
-                            poss.id.startsWith("antecedente_arcano_") ||
-                                    (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
-                        }
-                    }
-                    else -> vantagensSelecionadas.none { it.id == prevId }
-                }
-            }
-            if (faltam) return false
-        }
+        if (!atendeVantagensPrevias(v)) return false
 
         // Atributos
         if (v.requisitos.atributoMin.any { (nome, min) ->

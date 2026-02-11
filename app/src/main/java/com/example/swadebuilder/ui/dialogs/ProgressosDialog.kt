@@ -73,6 +73,7 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.HindranceChangeType
 import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
+import com.example.swadebuilder.model.RequirementValidator
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
@@ -208,13 +209,9 @@ fun ProgressosDialog(
             }
             if (!ok) return false
         }
-        if (v.requisitos.vantagensPrevias.isNotEmpty()) {
-            val tenhoTodas = v.requisitos.vantagensPrevias.all { req ->
-                val reqNorm = req.uppercase().semAcentos().trim()
-                state.vantagensSelecionadas.any { it.nome.uppercase().semAcentos().trim() == reqNorm }
-            }
-            if (!tenhoTodas) return false
-        }
+        // Reaproveita a validação central para manter comportamento idêntico
+        // (inclui regras especiais como Ameaçador por complicações OR).
+        if (!RequirementValidator.canSelect(v, state)) return false
         if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
         return true
     }
