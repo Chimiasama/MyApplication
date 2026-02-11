@@ -2406,6 +2406,7 @@
     "categoria": "SOCIAIS",
     "requisitos": {
       "estagio": "Novato",
+      "vantagens_previas": ["sanguinario", "desagradavel", "sem_escrupulos", "feio"],
       "observacoes": "qualquer um dentre Sanguinário, Desagradável, Sem Escrúpulos ou Feio"
     },
     "descricao": "Ameaçador permite que personagens deem um bom uso para sua má aparência ou atitude ruim, permitindo adicionar +2 em suas rolagens de Intimidar."
