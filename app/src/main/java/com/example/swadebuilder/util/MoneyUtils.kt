@@ -5,6 +5,46 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlin.math.roundToInt
 
 object MoneyUtils {
+    private val pathfinderCostRegex = Regex("""^([\d.,]+)\s*([A-Za-z]{2})?$""")
+
+    private fun parseLocalizedNumber(raw: String): Double? {
+        val value = raw.trim().replace(" ", "")
+        if (value.isBlank()) return null
+
+        val commaCount = value.count { it == ',' }
+        val dotCount = value.count { it == '.' }
+
+        val normalized = when {
+            commaCount > 0 && dotCount > 0 -> {
+                val decimalSeparator = if (value.lastIndexOf(',') > value.lastIndexOf('.')) ',' else '.'
+                val thousandsSeparator = if (decimalSeparator == ',') '.' else ','
+                value
+                    .replace(thousandsSeparator.toString(), "")
+                    .replace(decimalSeparator, '.')
+            }
+
+            commaCount > 0 || dotCount > 0 -> {
+                val separator = if (commaCount > 0) ',' else '.'
+                val separatorCount = if (separator == ',') commaCount else dotCount
+
+                if (separatorCount > 1) {
+                    value.replace(separator.toString(), "")
+                } else {
+                    val index = value.indexOf(separator)
+                    val decimalDigits = value.length - index - 1
+                    val isThousands = decimalDigits == 3 && index > 0
+
+                    if (isThousands) value.replace(separator.toString(), "")
+                    else value.replace(separator, '.')
+                }
+            }
+
+            else -> value
+        }
+
+        return normalized.toDoubleOrNull()
+    }
+
     // Helper to parse costs into a single integer base unit.
     // For Pathfinder (Buscatrilha), this is copper pieces (pc).
     // For standard SWADE, this is dollars.
@@ -17,35 +57,20 @@ object MoneyUtils {
         if (content == "-") return 0
 
         if (isPathfinder) {
-            val parts = content.split(" ")
-            if (parts.isNotEmpty()) {
-                // Handle "5,5 po" -> "5.5"
-                // Replace dot thousands with nothing? Actually standard format for currency might use dots for thousands.
-                // But for decimals, comma is common in BR. "5.500" vs "5,5".
-                // If we assume standard "5.5" or "5,5" is decimal...
-                // Safest is to replace comma with dot for parsing.
-                // But if dot is thousand separator... "1.000" -> 1000.
-                // Simple heuristic: remove dots (thousands), replace comma with dot (decimal).
+            val match = pathfinderCostRegex.matchEntire(content) ?: return 0
+            val value = parseLocalizedNumber(match.groupValues[1]) ?: return 0
+            val unit = match.groupValues.getOrNull(2)?.lowercase().orEmpty()
 
-                val numberString = parts[0].replace(".", "").replace(",", ".")
-                val value = numberString.toDoubleOrNull() ?: return 0
-
-                if (parts.size > 1) {
-                    return when (parts[1].lowercase()) {
-                        "pl" -> (value * 1000).roundToInt()
-                        "po" -> (value * 100).roundToInt()
-                        "pp" -> (value * 10).roundToInt()
-                        "pc" -> value.roundToInt()
-                        else -> (value * 100).roundToInt() // Assume gold (po -> pc) if unit is weird
-                    }
-                }
-                return (value * 100).roundToInt() // Assume gold (po -> pc) if no unit
+            return when (unit) {
+                "pl" -> (value * 1000).roundToInt()
+                "po", "" -> (value * 100).roundToInt()
+                "pp" -> (value * 10).roundToInt()
+                "pc" -> value.roundToInt()
+                else -> (value * 100).roundToInt() // fallback: ouro
             }
-            return 0
         } else {
             // Standard system just uses integers usually, but let's support decimal just in case
-            val numberString = content.replace(".", "").replace(",", ".")
-            return numberString.toDoubleOrNull()?.roundToInt() ?: 0
+            return parseLocalizedNumber(content)?.roundToInt() ?: 0
         }
     }
 
