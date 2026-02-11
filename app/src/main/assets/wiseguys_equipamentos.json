@@ -1,264 +1,443 @@
 [
   {
-    "tipo": "Armas de Combate à Distância",
-    "subtipo": "Submetralhadoras",
-    "origem": "WISEGUYS",
-    "itens": [
-      {
-        "nome": "Tommy Gun (.45)",
-        "distancia": "12/24/48",
-        "dano": "2d6+1",
-        "pa": 1,
-        "cdt": 3,
-        "forcaMin": "20",
-        "peso": "6,5",
-        "custo": 350,
-        "observacoes": "Tambor 50 balas adiciona 1kg e custa $50",
-        "origem": "WISEGUYS"
-      }
-    ]
-  },
-  {
     "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Armas de Rua",
+    "subtipo": "Novas Armas (Wiseguys)",
     "origem": "WISEGUYS",
     "itens": [
       {
         "nome": "Garrote",
-        "dano": "Especial",
+        "dano": "Quando agarrado (corda de piano+d4)",
         "forcaMin": "d4",
-        "peso": "1",
-        "observacoes": "Requer Surpresa e Agarrar. +2 em Força para sufocar.",
+        "peso": 1,
+        "custo": "—",
+        "observacoes": "Duas mãos, requer manobra Surpresa & Agarrar, +2 na rolagem contra alvo para sufocar; se for corda de piano, sofre Fadiga numa Falha Crítica sem luvas",
         "origem": "WISEGUYS"
       },
       {
         "nome": "Facão",
         "dano": "For+d6",
         "forcaMin": "d6",
-        "peso": "2",
+        "peso": 2,
         "custo": 25,
-        "observacoes": "PA 1.",
+        "pa": 1,
+        "observacoes": "PA 1",
         "origem": "WISEGUYS"
       },
       {
         "nome": "Nunchaku",
         "dano": "For+d4",
         "forcaMin": "d4",
-        "peso": "4",
+        "peso": 4,
         "custo": 50,
-        "observacoes": "Ignora escudos. Requer Agilidade d8.",
+        "observacoes": "Agilidade mín. d8. Ignora escudos",
         "origem": "WISEGUYS"
       },
       {
         "nome": "Sai",
         "dano": "For+d4",
         "forcaMin": "d4",
-        "peso": "2",
+        "peso": 2,
         "custo": 20,
-        "observacoes": "Aparar +1. +1 Desarmar.",
+        "aparar": "+1",
+        "observacoes": "+1 para manobra de Desarmar; tipicamente comprado e usado em pares",
         "origem": "WISEGUYS"
       },
       {
-        "nome": "Sai",
-        "dano": "For+d4",
+        "nome": "Shuriken",
+        "dano": "For+1",
         "forcaMin": "d4",
-        "peso": "2",
-        "custo": 20,
-        "observacoes": "Aparar +1, +1 para manobra de Desarmar; tipicamente comprado e usado em pares",
+        "peso": "0.5",
+        "custo": 5,
+        "distancia": "3/6/12",
+        "observacoes": "Distância 3/6/12",
         "origem": "WISEGUYS"
       }
     ]
   },
   {
     "tipo": "Armas Especiais",
-    "subtipo": "Explosivos e Incendiários",
+    "subtipo": "Novas Armas Especiais (Wiseguys)",
     "origem": "WISEGUYS",
     "itens": [
       {
         "nome": "Coquetel Molotov",
+        "distancia": "2/4/8",
         "dano": "2d10",
-        "peso": "2",
+        "pa": "—",
+        "cdt": "—",
+        "observacoes": "Explosão MPE. Alvos inflamáveis podem pegar fogo (4–6 em um d6) e o fogo pode se espalhar; em Falha Crítica o atacante se incendeia",
+        "peso": 2,
         "custo": 10,
-        "observacoes": "MPE. Pode incendiar. Falha crítica incendeia usuário.",
         "origem": "WISEGUYS"
       },
       {
         "nome": "Explosivos Improvisados",
+        "distancia": "2/4/8",
         "dano": "4d6",
-        "peso": "10",
+        "pa": "—",
+        "cdt": "—",
+        "observacoes": "Explosão MME. Arma Pesada",
+        "peso": 10,
         "custo": 50,
-        "observacoes": "MME. Arma Pesada.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Explosivos Militares",
+        "distancia": "2/4/8",
+        "dano": "4d6",
+        "pa": 4,
+        "cdt": "—",
+        "observacoes": "Explosão MGE. Arma Pesada, +1d6 de dano adicional por carga usada",
+        "peso": 7,
+        "custo": 1500,
         "origem": "WISEGUYS"
       }
     ]
   },
   {
     "tipo": "Acessórios",
-    "subtipo": "Trapaça",
+    "subtipo": "Acessórios de Trapaça",
     "origem": "WISEGUYS",
     "itens": [
       {
         "nome": "Dados Adulterados",
+        "peso": "—",
         "custo": 20,
-        "observacoes": "+2 em Jogar (dados). Concede bônus em testes de 'Jogar' (Gambling) ou 'Ladinagem' (Thievery) para fins de trapaça.",
+        "observacoes": "Dados viciados usados em jogos de cassino. Acessórios de trapaça concedem +2 em rolagens de Ladinagem ou Jogar; em Falha Crítica, o trapaceiro é descoberto e deve lidar com a segurança ou pior.",
         "origem": "WISEGUYS"
       },
       {
-        "nome": "Dispositivo Óptico",
+        "nome": "Moedas Iô-Iô",
+        "peso": "—",
+        "custo": "0.25",
+        "observacoes": "Moeda presa a linha para subir e descer na ranhura da máquina. Acessórios de trapaça concedem +2 em rolagens de Ladinagem ou Jogar; em Falha Crítica, o trapaceiro é descoberto e deve lidar com a segurança ou pior.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Descanso",
+        "peso": 1,
+        "custo": 25,
+        "observacoes": "Dispositivo de fio que prende alavanca de pagamento para fraudar contagem. Acessórios de trapaça concedem +2 em rolagens de Ladinagem ou Jogar; em Falha Crítica, o trapaceiro é descoberto e deve lidar com a segurança ou pior.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Dispositivo Óptico de Luz",
+        "peso": 1,
         "custo": 200,
-        "peso": "1",
-        "observacoes": "Engana caça-níqueis. +2 em Ladinagem/Jogar. Concede bônus em testes de 'Jogar' (Gambling) ou 'Ladinagem' (Thievery) para fins de trapaça.",
+        "observacoes": "Luz brilhante confunde sensores de caça-níqueis e força prêmio máximo. Acessórios de trapaça concedem +2 em rolagens de Ladinagem ou Jogar; em Falha Crítica, o trapaceiro é descoberto e deve lidar com a segurança ou pior.",
         "origem": "WISEGUYS"
       },
       {
         "nome": "Patas de Macaco",
+        "peso": 1,
         "custo": 50,
-        "peso": "1",
-        "observacoes": "Manipula alavancas de caça-níqueis. +2 Ladinagem. Concede bônus em testes de 'Jogar' (Gambling) ou 'Ladinagem' (Thievery) para fins de trapaça.",
+        "observacoes": "Calço mecânico para manipular máquina caça-níqueis e forçar prêmio máximo. Acessórios de trapaça concedem +2 em rolagens de Ladinagem ou Jogar; em Falha Crítica, o trapaceiro é descoberto e deve lidar com a segurança ou pior.",
         "origem": "WISEGUYS"
       }
     ]
   },
   {
     "tipo": "Equipamento Mundano",
-    "subtipo": "Ferramentas do Crime",
+    "subtipo": "Ferramentas da Profissão (Wiseguys)",
     "origem": "WISEGUYS",
     "itens": [
       {
         "nome": "Máscara Balaclava",
+        "peso": "—",
         "custo": 10,
-        "observacoes": "Esconde identidade.",
+        "observacoes": "Cobre a cabeça e esconde identidade, com aberturas para olhos e boca",
         "origem": "WISEGUYS"
       },
       {
-        "nome": "Kit de Limpeza",
-        "peso": "15",
+        "nome": "Maçarico",
+        "peso": 2,
+        "custo": 8,
+        "observacoes": "Ferramenta para aplicar calor/chamas em superfície",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Maleta",
+        "peso": 5,
         "custo": 100,
-        "observacoes": "Remove evidências.",
+        "observacoes": "Acessório profissional para carregar papelada e itens",
         "origem": "WISEGUYS"
       },
       {
-        "nome": "Kit de Arrombamento de Cofres",
-        "peso": "20",
+        "nome": "Saco de Estopa",
+        "peso": 1,
+        "custo": 2,
+        "observacoes": "Jogado sobre a cabeça do alvo para impedir visão",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Laboratório Químico",
+        "peso": "—",
+        "custo": 10000,
+        "observacoes": "Instalação fixa com equipamentos e suprimentos químicos",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit de Química",
+        "peso": 12,
+        "custo": 200,
+        "observacoes": "Kit portátil para coleta de evidências e análise superficial",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Aparador de Charutos",
+        "peso": 1,
+        "custo": 10,
+        "observacoes": "Símbolo de prestígio e item utilitário",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit de limpeza",
+        "peso": 15,
+        "custo": 100,
+        "observacoes": "Luvas de látex, traje, UV e químicos para higienizar/remover evidências",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Pente",
+        "peso": "—",
+        "custo": 1,
+        "observacoes": "Item cotidiano",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Equip. de Contravigilância",
+        "peso": 11,
+        "custo": 1500,
+        "observacoes": "Varre frequências eletrônicas e detecta dispositivos em um MME com Eletrônica",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit de Disfarce",
+        "peso": 10,
+        "custo": 150,
+        "observacoes": "Perucas, próteses, chapéus e maquiagem para mudar aparência",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mochila",
+        "peso": 3,
+        "custo": 40,
+        "observacoes": "Bolsa versátil para transportar ferramentas/equipamentos/armas",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Chapéu",
+        "peso": 1,
+        "custo": 80,
+        "observacoes": "Item social e estético",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Clipe de Dinheiro",
+        "peso": "—",
+        "custo": 5,
+        "observacoes": "Forma tradicional de carregar dinheiro no cenário",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Estojo de Instrumento Musical",
+        "peso": 12,
+        "custo": 50,
+        "observacoes": "-2 em Perceber a arma dentro",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Envelope de Papel",
+        "peso": "—",
+        "custo": "—",
+        "observacoes": "Etiqueta comum para transferências, contribuições e subornos",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Baralho de Cartas",
+        "peso": 1,
+        "custo": 2,
+        "observacoes": "Usado em jogos e trapaças",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Scanner Policial",
+        "peso": 2,
+        "custo": 50,
+        "observacoes": "Monitora frequência policial",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Polígrafo",
+        "peso": 15,
+        "custo": 2000,
+        "observacoes": "Operador recebe +2 em Perceber para detectar mentiras",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit Arrombador de Cofres",
+        "peso": 20,
         "custo": 2500,
-        "observacoes": "Brocas, C-4, etc.",
+        "observacoes": "Inclui brocas, C-4, detonadores e escaneamento",
         "origem": "WISEGUYS"
       },
       {
         "nome": "Supressor",
-        "peso": "2",
+        "peso": 2,
         "custo": 100,
-        "observacoes": "-2 para Perceber tiros.",
+        "observacoes": "-2 para Perceber o som de tiros da arma equipada",
         "origem": "WISEGUYS"
       },
       {
-        "nome": "Estojo de Instrumento (Arma)",
-        "peso": "12",
-        "custo": 50,
-        "observacoes": "-2 para perceber arma dentro.",
+        "nome": "Equip. de vigilância",
+        "peso": 11,
+        "custo": 2000,
+        "observacoes": "Câmeras, microfones e gravação para espionagem discreta",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Soro da Verdade",
+        "peso": 1,
+        "custo": 200,
+        "observacoes": "Alvo rola Vigor ou fica Distraído e Fatigado; Exausto em Falha Crítica",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Tapete",
+        "peso": 8,
+        "custo": 100,
+        "observacoes": "Pode ocultar corpo enrolado",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Saco de Papel marrom amassado",
+        "peso": "—",
+        "custo": "—",
+        "observacoes": "Esconde dinheiro, arma ou bebida",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Isqueiro Zippo",
+        "peso": "—",
+        "custo": 20,
+        "observacoes": "Isqueiro metálico clássico",
         "origem": "WISEGUYS"
       }
     ]
   },
   {
     "tipo": "Veículos",
-    "subtipo": "Carros",
+    "subtipo": "Ferramentas da Profissão (Wiseguys)",
     "origem": "WISEGUYS",
     "itens": [
-      {
-        "nome": "Carro Luxuoso",
-        "tamanho": 5,
-        "resistencia": "12(3)",
-        "velMaxima": 140,
-        "custo": 40000,
-        "observacoes": "Cadillac/Lincoln.",
-        "origem": "WISEGUYS"
-      },
-      {
-        "nome": "Muscle Car",
-        "tamanho": 4,
-        "resistencia": "11(3)",
-        "velMaxima": 160,
-        "manobrabilidade": 2,
-        "custo": 20000,
-        "observacoes": "GTO, Mustang.",
-        "origem": "WISEGUYS"
-      },
       {
         "nome": "Caminhão Blindado",
-        "tamanho": 5,
-        "resistencia": "18(6)",
+        "tamanho": "5 (Grande)",
+        "manobrabilidade": "–2",
         "velMaxima": 90,
-        "manobrabilidade": -2,
-        "custo": 50000,
-        "observacoes": "Armadura Pesada.",
+        "resistencia": "18(6)",
+        "tripulacao": "1+1",
+        "custo": "$50-100K+",
+        "observacoes": "Armadura Pesada",
         "origem": "WISEGUYS"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas",
-    "subtipo": "Submetralhadoras",
-    "origem": "WISEGUYS",
-    "itens": [
-      {
-        "nome": "Thompson 1928 (Tommy Gun)",
-        "dano": "2d6+1",
-        "pa": "1",
-        "distancia": "12/24/48",
-        "cdt": "3",
-        "tiros": "50",
-        "peso": "5",
-        "custo": 500,
-        "observacoes": "A clássica 'Máquina de Escrever'. Tambor de 50 tiros. Pode usar rajada curta.",
-        "origem": "WISEGUYS"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas",
-    "subtipo": "Especiais",
-    "origem": "WISEGUYS",
-    "itens": [
-      {
-        "nome": "Canivete Automático (Switchblade)",
-        "dano": "For+d4",
-        "peso": "0.5",
-        "custo": 25,
-        "observacoes": "Ação livre para sacar. +1 em Furtividade para esconder no corpo.",
-        "origem": "WISEGUYS"
-      }
-    ]
-  },
-  {
-    "tipo": "Veículos",
-    "subtipo": "Terrestres",
-    "origem": "WISEGUYS",
-    "itens": [
+      },
       {
         "nome": "Limusine",
-        "tamanho": 6,
-        "resistencia": "14(2)",
-        "velMaxima": 100,
-        "tripulacao": "1+6",
-        "custo": 80000,
-        "observacoes": "Conforto luxuoso. Divisória de vidro.",
+        "tamanho": "5 (Grande)",
+        "manobrabilidade": "–1",
+        "velMaxima": 120,
+        "resistencia": "13(3)",
+        "tripulacao": "1+10",
+        "custo": "$60-200K+",
+        "observacoes": "Artigo de Luxo",
         "origem": "WISEGUYS"
-      }
-    ]
-  },
-  {
-    "tipo": "Armas Corpo a Corpo",
-    "subtipo": "Exóticas",
-    "origem": "WISEGUYS",
-    "itens": [
+      },
       {
-        "nome": "Sai",
-        "dano": "For+d4",
-        "peso": "0.5",
-        "custo": 1,
-        "observacoes": "Arremesso (3/6/12). +1 Desarmar.",
-        "originalName": "Sai",
+        "nome": "Carro luxuoso",
+        "tamanho": "5 (Grande)",
+        "manobrabilidade": "0",
+        "velMaxima": 140,
+        "resistencia": "12(3)",
+        "tripulacao": "1+4",
+        "custo": "$40-80K+",
+        "observacoes": "Artigo de luxo, Cadillac Eldorado, Lincoln Continental",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Caminhão Monstro",
+        "tamanho": "7 (Grande)",
+        "manobrabilidade": "–1",
+        "velMaxima": 80,
+        "resistencia": "14(2)",
+        "tripulacao": "1+1",
+        "custo": "$200k+",
+        "observacoes": "4x4",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Muscle car",
+        "tamanho": "4 (Grande)",
+        "manobrabilidade": "2",
+        "velMaxima": 160,
+        "resistencia": "11(3)",
+        "tripulacao": "1+3",
+        "custo": "$20-80K+",
+        "observacoes": "Pontiac GTO, Plymouth GTX, Dodge Challenger",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Picape",
+        "tamanho": "5 (Grande)",
+        "manobrabilidade": "–1",
+        "velMaxima": 120,
+        "resistencia": "12(3)",
+        "tripulacao": "1+2",
+        "custo": "$20-48k+",
+        "observacoes": "4x4",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Carro de Polícia",
+        "tamanho": "4 (Grande)",
+        "manobrabilidade": "1",
+        "velMaxima": 160,
+        "resistencia": "11(3)",
+        "tripulacao": "1+3",
+        "custo": "$20-40K+",
+        "observacoes": "—",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Patins",
+        "tamanho": "–2 (Peq.)",
+        "manobrabilidade": "1",
+        "velMaxima": "Ver notas",
+        "resistencia": "3",
+        "tripulacao": "1",
+        "custo": 100,
+        "observacoes": "Duplica a movimentação e o resultado do dado de corrida do patinador. Terreno Difícil conta como 4 quadrados de movimento. Qualquer acerto crítico destrói os patins (SWADE pág. 156)",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Carro Recreativo",
+        "tamanho": "6 (Grande)",
+        "manobrabilidade": "–2",
+        "velMaxima": 80,
+        "resistencia": "14(3)",
+        "tripulacao": "1+8",
+        "custo": "$100k+",
+        "observacoes": "Veículo recreativo. Leve sua família de férias",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Van",
+        "tamanho": "5 (Grande)",
+        "manobrabilidade": "0",
+        "velMaxima": 100,
+        "resistencia": "12(3)",
+        "tripulacao": "1+6",
+        "custo": "$10-40k+",
+        "observacoes": "Para entrega, pequenos negócio ou equipes de vigilância",
         "origem": "WISEGUYS"
       }
     ]

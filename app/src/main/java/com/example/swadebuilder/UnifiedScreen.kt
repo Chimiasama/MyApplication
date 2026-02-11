@@ -718,7 +718,7 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
     val mostraTecnicasTropo = state.compendioArteDaGuerraAtivo &&
         (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0 &&
         !state.compendioCrystalHeartAtivo
-    if (mostraPoderesArcanos || mostraTecnicasTropo || state.modoSupers) {
+    if (!state.compendioWiseguysAtivo && (mostraPoderesArcanos || mostraTecnicasTropo || state.modoSupers)) {
         sections += MainSection.PODERES
     }
 
