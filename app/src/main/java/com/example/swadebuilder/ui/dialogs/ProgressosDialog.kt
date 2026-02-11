@@ -933,6 +933,14 @@ fun ProgressosDialog(
                     ) {
                          Spacer(Modifier.height(8.dp))
 
+                        // Calculate active categories based on visible items - moved outside LazyRow
+                        val activeCategories = remember(listaVantagens) {
+                            listaVantagens
+                                .filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
+                                .map { it.categoria }
+                                .toSet()
+                        }
+
                         LazyRow(
                             modifier = Modifier.fillMaxWidth(),
                             contentPadding = PaddingValues(horizontal = 4.dp),
@@ -944,14 +952,6 @@ fun ProgressosDialog(
                                     onClick = { showFilterDialog = true },
                                     label = { Text("Filtros Avançados${if(!advFilter.isEmpty()) " (!)" else ""}") }
                                 )
-                            }
-
-                            // Calculate active categories based on visible items
-                            val activeCategories = remember(listaVantagens) {
-                                listaVantagens
-                                    .filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
-                                    .map { it.categoria }
-                                    .toSet()
                             }
 
                             items(

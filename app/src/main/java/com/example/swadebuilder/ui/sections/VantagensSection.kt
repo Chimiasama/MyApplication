@@ -436,6 +436,11 @@ fun VantagensContent(
             ) {
                 Spacer(Modifier.size(8.dp))
 
+                // Category Chips - moved outside LazyRow
+                val activeCategories = remember(listaVantagensAtivas) {
+                    listaVantagensAtivas.map { it.categoria }.toSet()
+                }
+
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     contentPadding = PaddingValues(horizontal = 8.dp),
@@ -448,11 +453,6 @@ fun VantagensContent(
                             onClick = { showFilterDialog = true },
                             label = { Text("Filtros Avançados${if(!filter.isEmpty()) " (!)" else ""}") }
                         )
-                    }
-
-                    // Category Chips
-                    val activeCategories = remember(listaVantagensAtivas) {
-                        listaVantagensAtivas.map { it.categoria }.toSet()
                     }
 
                     items(
