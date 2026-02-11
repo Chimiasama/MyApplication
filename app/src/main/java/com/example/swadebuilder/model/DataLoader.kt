@@ -176,10 +176,23 @@ object DataLoader {
         val keys = activeModules + "BASICO" // Always include basic
         val assets = context.assets
 
+        val replacementBookKeys = setOf(
+            "FANTASIA",
+            "HORROR",
+            "SCI_FI",
+            "PATHFINDER",
+            "DEADLANDS",
+            "CRYSTAL_HEART",
+            "ARTE_DA_GUERRA",
+            "CIDADE_SOL_VAPOR",
+            "WISEGUYS"
+        )
+        val shouldReplaceBasico = keys.any { it in replacementBookKeys }
+
         // 1. Equipamentos
         val equipmentModulesToLoad = if ("CRYSTAL_HEART" in keys) {
             equipmentModules.filter { it.fileName == "crystal_equipamentos.json" }
-        } else if ("ARTE_DA_GUERRA" in keys || "WISEGUYS" in keys) {
+        } else if (shouldReplaceBasico) {
             equipmentModules.filter { it.fileName != "basico_equipamentos.json" }
         } else {
             equipmentModules
@@ -257,12 +270,7 @@ object DataLoader {
         mapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val skillModulesToLoad = if (
-            "CRYSTAL_HEART" in keys ||
-            "ARTE_DA_GUERRA" in keys ||
-            "CIDADE_SOL_VAPOR" in keys ||
-            "WISEGUYS" in keys
-        ) {
+        val skillModulesToLoad = if (shouldReplaceBasico) {
             skillModules.filter { it.fileName != "basico_pericias.json" }
         } else {
             skillModules
@@ -320,11 +328,7 @@ object DataLoader {
         }
 
         // 7. Vantagens
-        val advantagesToLoad = if (
-            "ARTE_DA_GUERRA" in keys ||
-            "CIDADE_SOL_VAPOR" in keys ||
-            "WISEGUYS" in keys
-        ) {
+        val advantagesToLoad = if (shouldReplaceBasico) {
             advantageModules.filter { it.fileName != "basico_vantagens.json" }
         } else {
             advantageModules
@@ -361,11 +365,7 @@ object DataLoader {
 
         listaTropos = adgTropos + chTropos
 
-        val complicationModulesToLoad = if (
-            "ARTE_DA_GUERRA" in keys ||
-            "CIDADE_SOL_VAPOR" in keys ||
-            "WISEGUYS" in keys
-        ) {
+        val complicationModulesToLoad = if (shouldReplaceBasico) {
             complicationModules.filter { it.fileName != "basico_complicacoes.json" }
         } else {
             complicationModules
@@ -376,14 +376,7 @@ object DataLoader {
         }
 
         // 9. Ancestralidades
-        val ancestriesToLoad = if (
-            "DEADLANDS" in keys ||
-            "PATHFINDER" in keys ||
-            "CRYSTAL_HEART" in keys ||
-            "ARTE_DA_GUERRA" in keys ||
-            "CIDADE_SOL_VAPOR" in keys ||
-            "WISEGUYS" in keys
-        ) {
+        val ancestriesToLoad = if (shouldReplaceBasico) {
             ancestryModules.filter { it.fileName != "basico_ancestralidades.json" }
         } else {
             ancestryModules
@@ -423,7 +416,12 @@ object DataLoader {
         // Kept for consistency if needed later
 
         // 13. Poderes
-        val todosPoderes = assets.loadAndMerge<Poder>(powerModules, keys) { item, override ->
+        val powerModulesToLoad = if (shouldReplaceBasico) {
+            powerModules.filter { it.fileName != "basico_poderes.json" }
+        } else {
+            powerModules
+        }
+        val todosPoderes = assets.loadAndMerge<Poder>(powerModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
         listaPoderes = todosPoderes
