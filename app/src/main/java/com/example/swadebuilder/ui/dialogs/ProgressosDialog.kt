@@ -1425,6 +1425,25 @@ private fun maxEffectiveSelections(v: Vantagem): Int? =
 
 private fun validChoiceOptionsFor(v: Vantagem, state: CriadorState): List<String> {
     return when (v.id) {
+        "arma_predileta" -> {
+            state.periciasComIdiomas()
+                .filter { per ->
+                    val nome = per.nome
+                    val isAllowed =
+                        nome.equals("Atirar", ignoreCase = true) ||
+                            nome.equals("Atletismo", ignoreCase = true) ||
+                            nome.equals("Lutar", ignoreCase = true)
+
+                    isAllowed && state.rawTotal(per) >= 8
+                }
+                .map { it.nome }
+        }
+        "arma_predileta_aprimorada" -> {
+            state.vantagensSelecionadas
+                .filter { it.id == "arma_predileta" && !it.choice.isNullOrBlank() }
+                .mapNotNull { it.choice }
+                .distinct()
+        }
         "discipulo_artes_marciais" -> {
             state.vantagensSelecionadas
                 .filter { it.id == "estudante_artes_marciais" && !it.choice.isNullOrBlank() }
