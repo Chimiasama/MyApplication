@@ -146,7 +146,7 @@ fun PericiasContent(
             }
         }.filter {
             it.origem?.uppercase() != "SUPLEMENTO" || state.rawTotal(it) > 0
-        }
+        }.distinctBy { it.nome.keyify() }
     }
 
     SectionCard(

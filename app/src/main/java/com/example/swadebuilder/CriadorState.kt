@@ -1408,11 +1408,9 @@ class CriadorState {
                     per.origem != "ARTE_DA_GUERRA"
                 }
 
-                val lei = Pericia("Lei", "ASTUCIA", false, "WISEGUYS")
-                if (!baseIncsPorPericia.containsKey(lei)) {
-                    ensurePericiaEntry(lei)
-                }
-                (filtered + lei).sortedBy { it.nome }
+                filtered
+                    .distinctBy { it.nome.keyify() }
+                    .sortedBy { it.nome }
             } else {
                 // If neither AdG nor Wiseguys specific filtering is active:
                 // Hide any skill marked with ARTE_DA_GUERRA
