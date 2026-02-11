@@ -397,7 +397,7 @@
     "tipo": "MENOR",
     "origem": "WISEGUYS",
     "severity": "menor",
-    "description": "Pessoas próximas tendem a morrer. Extras aliados sofrem -2 em testes de Vigor para sobreviver."
+    "description": "Essa personagem durona não permite que\nas pessoas se aproximem dela porque todos\ncom quem ela se importou estão mortos. Na\nverdade, as pessoas com quem ela cria um\nvínculo emocional tem o hábito de morrer.\nCoisas infelizes tendem a acontecer com\npessoas próximas a ela.\nAo aplicar as regras de Extras e\nConsequências após uma batalha, todos os\nExtras aliados incapacitados sofrem uma\npenalidade de -2 em seus testes de Vigor para\ncontinuarem vivos."
   },
   {
     "id": "comp_brincalhao",
@@ -405,14 +405,14 @@
     "tipo": "MENOR",
     "origem": "WISEGUYS",
     "severity": "menor",
-    "description": "Faz piadas em momentos tensos. Causa -2 em rolagens de Intimidar/Provocar de aliados."
+    "description": "Esse palhaço é o comediante do grupo\nque lhe torna um membro querido para a\nEquipe, mas lhe falta um pouco de tato. Ele\ntem esse hábito irritante de contar uma piada\nsempre que um membro da Equipe tenta\nIntimidar ou insultar alguém. A piada dele\ntem o infeliz efeito de dispersar a tensão.\nComo resultado, sempre que um de\nseus colegas iniciar um Desafio baseado\nem Intimidar ou Provocar, e o piadista for\ncapaz de entender a conversa, sua infeliz\nnecessidade de fazer um comentário causará\numa penalidade de -2 na rolagem dele."
   },
   {
     "id": "chamativo",
     "name": "CHAMATIVO",
     "origem": "WISEGUYS",
     "severity": "Menor",
-    "description": "O personagem adora ostentar. Usa roupas caras, joias e carros vistosos. Sofre -2 em Furtividade e testes para se misturar à multidão. É facilmente lembrado por testemunhas."
+    "description": "Por alguma razão, esse personagem tende\na atrair atenção e ficar na mente das pessoas.\nEla pode ser inquieta ou gaguejar muito, suar\nexcessivamente (com cheiro forte de alho),\ngesticular descontroladamente enquanto\nfala alto, usar muito spray de cabelo e\nperfume, que ela reaplica constantemente,\nou tem algum outro tipo de maneirismo\nexagerado ou tiques nervosos que a fazem\ndifícil de passar despercebida. Algo sobre ela\né decididamente único ou excepcionalmente\ndistinto (mesmo para os padrões de Vegas).\nAs testemunhas geralmente se lembram dela\ne conseguem descrevê-la para a polícia.\nEla sofre uma penalidade de -2 em\nrolagens de Furtividade ao tentar se\nmisturar na multidão, testemunhas podem\nidentificá-la rapidamente, como em uma fila\nde reconhecimento policial, a menos que\nela tome muito cuidado para disfarçar seus\nmaneirismos."
   },
   {
     "id": "segredo_wiseguys",
@@ -427,7 +427,7 @@
     "tipo": "MAIOR",
     "origem": "WISEGUYS",
     "severity": "maior",
-    "description": "Não serve para o crime. Sofre -2 em qualquer traço enquanto comete um crime."
+    "description": "Esta alma azarada já viveu uma vida\nsaudável, mas por azar ou por uma série de\nmás decisões, ela terminou do lado errado\nda lei. Ela não é adequada para esse estilo\nde vida. Quando se trata de cometer crimes,\nela faz todas as coisas erradas. A única saída\nagora é num caixão.\nEste personagem sofre -2 em qualquer\nteste de Característica enquanto comete um\ncrime. O que constitui um crime em cada\nsituação fica a critério do Don."
   },
   {
     "id": "comp_cugine",
@@ -435,7 +435,7 @@
     "tipo": "MENOR",
     "origem": "WISEGUYS",
     "severity": "menor",
-    "description": "Novato do grupo. Encarregado de tarefas humilhantes e alvo de piadas."
+    "description": "Como o membro mais jovem ou mais\nrecente do Grupo, este personagem é\nencarregado das tarefas menos desejáveis,\ncomo pegar café, limpar a bagunça de\nalguém ou lavar o Cadillac. Ele também é o\nalvo de todas as piadas."
   },
   {
     "id": "comp_divida",
@@ -443,7 +443,7 @@
     "tipo": "MENOR_MAIOR",
     "origem": "WISEGUYS",
     "severity": "menor/maior",
-    "description": "Deve favores ou dinheiro. Menor: Culpa/Incômodo. Maior: Chantagem/Risco de Vida."
+    "description": "Um cara fez um favor ao seu personagem\ne boa sorte fazendo ele deixá-la em paz agora\n(mesmo se ela já o retribuiu). Ele se sente\nno direito de obter ajuda dela sempre que\nquiser. Agora que ela está nesta situação,\nnão consegue sair e seu algoz não a deixa\nesquecer. Além disso, ele pode saber de\nalguma sujeira dela. Esse chantagista tende\na precisar de ajuda nos momentos mais\ninoportunos e não desiste de seus pedidos.\nComo uma Complicação Menor, ele causará\nnela uma sensação de culpa ou incômodo.\nComo uma Complicação Maior, ele tem o\npoder de destruir a vida dela e chantageá-la\nse ela não cumprir suas demandas. Em\nqualquer um dos casos, a dívida nunca é\ntotalmente paga e um jogador que deseja\ncomprar esta Complicação deve substituí-la\npor outra Complicação.\nExemplo: Shirley quase comeu capim\npela raiz porque devia dinheiro a um agiota\nexcepcionalmente cruel. Ela finalmente\nconseguiu sair da situação e agora tem a\nComplicação Voto (chega de jogos de azar!)."
   },
   {
     "id": "comp_dedo_leve",
@@ -451,7 +451,7 @@
     "tipo": "MENOR",
     "origem": "WISEGUYS",
     "severity": "menor",
-    "description": "-1 em Persuadir (exceto ameaças). Em falha crítica de Intimidar com arma, a arma dispara acidentalmente."
+    "description": "Este indivíduo violento possui uma\nreputação bem merecida de atirar primeiro e\nperguntar depois. Ela recebe uma penalidade\nde -1 na perícia Persuadir, exceto em\nsituações onde a ameaça de violência é útil.\nSe ela tentar intimidar alguém sacudindo\numa arma e rolar um 1 natural no dado\nde Característica, a arma “acidentalmente”\ndispara; faça imediatamente um ataque de\nAtirar contra o alvo como uma ação livre."
   },
   {
     "id": "comp_condicional",
@@ -459,7 +459,7 @@
     "tipo": "MAIOR",
     "origem": "WISEGUYS",
     "severity": "maior",
-    "description": "Se sacar um Curinga no início da sessão, violou a condicional e será preso ao fim da sessão."
+    "description": "Sua personagem teve alguns problemas\ncom a lei. Com um pouco de sorte, bom\ncomportamento ou talvez se pedir alguns\nfavores, ela é capaz de garantir a sua\nliberdade. Mas, qualquer erro pode levá-la\nde volta em cana.\nNo início de cada sessão de jogo, compre\numa carta do Baralho de Ação.\nSe você sacar um Curinga, sua liberdade\nvai pelos ares. Sua personagem violou as\ncondições de sua liberdade condicional. A lei\nestá chegando para pegá-la e ela está prestes\na ser presa para sempre desta vez. Você tem\naté o fim da sessão atual para amarrar pontas\nsoltas e fazer as pazes antes da carreira do\nsua personagem acabar."
   },
   {
     "id": "comp_fardo",
@@ -467,7 +467,7 @@
     "tipo": "MENOR_MAIOR",
     "origem": "WISEGUYS",
     "severity": "menor/maior",
-    "description": "Atrai a ira do chefe. Cartas de face no início da sessão trazem punições ou tentativas de assassinato (se Maior)."
+    "description": "Não importa o que esse personagem faça,\nele parece atrair a ira de seu supervisor. Ele\npode não violar as leis de seu sindicato do\ncrime diretamente, mas seu entusiasmo\ntraz atenção indesejada para a família. Ele\ncontinuamente desrespeita seus superiores,\nfalha em tarefas rotineiras, deixa pistas para\ntrás, provoca policiais, etc. Quanto tempo\nlevará até que seu chefe ou o resto da Equipe\ndecida se livrar dele?\nNo início de cada sessão de jogo, sorteie\numa carta. Uma carta com face ilustrada\nsignifica que o chefe deste idiota decidiu\nretirar alguns de seus privilégios, relegar sua\nfunção a algo menor ou aumentar suas taxas\nem 10-20% (a critério do Don). Isso entra em\nvigor imediatamente durante toda a sessão.\nTambém há um efeito adicional dependendo\nda gravidade da Complicação.\nNum Curinga, se for uma Complicação\nMenor, as pessoas já aguentaram o suficiente\nsuas bobagens. Eles enviaram alguém para\nmatá-lo e estão planejando fazer isso antes\ndo final da sessão. Este trapalhão pode\npressentir que algo está para acontecer,\nmas não sabe quando. Se ele sobreviver,\nseu inimigo perde o elemento de surpresa e\nrecua até que outra oportunidade surja (você\nsortear outra carta de face ilustrada).\nSe for uma Complicação Maior, seu\npersonagem será executado até o final da\nsessão e não há nada que você possa fazer\na respeito. É recomendável trabalhar com o\nDon para tornar esse evento memorável."
   },
   {
     "id": "comp_ma_reputacao",
@@ -475,7 +475,7 @@
     "tipo": "MENOR",
     "origem": "WISEGUYS",
     "severity": "menor",
-    "description": "Conhecido como criminoso. -2 em Persuadir com não-criminosos."
+    "description": "A população em geral conhece seu\npersonagem como um criminoso e teme\nqualquer associação com ele. Os civis\no tratam como tal, então ele sofre uma\npenalidade de -2 em todas as rolagens\nde Persuadir contra não-criminosos. Ele\ntambém recebe -2 em tentativas de Persuadir\nque envolvam a regra de Rede de Contatos."
   },
   {
     "id": "comp_lista_negra",
@@ -483,7 +483,7 @@
     "tipo": "MENOR",
     "origem": "WISEGUYS",
     "severity": "menor",
-    "description": "Banido de cassinos. Escoltado para fora se identificado pela segurança."
+    "description": "O Conselho de Apostas colocou este\njogador na lista negra por cometer crimes\nem territórios de casinos, associação ao\ncrime organizado ou por vencer com muita\nfrequência. O Livro Negro agora tem seu\nnome nele e você será escoltado para fora de\num cassino ou estabelecimento de jogos de\nazar se o pessoal de segurança te achar por lá."
   },
   {
     "id": "comp_suspeito",
@@ -491,7 +491,7 @@
     "tipo": "MAIOR",
     "origem": "WISEGUYS",
     "severity": "maior",
-    "description": "Primeiro a ser interrogado pela polícia quando algo acontece. Vigilância constante."
+    "description": "“Se um cara tropeçasse em uma casca de\nbanana, eles me culpariam por isso.”\n- Nikky Santoro, Casino\nA reputação de criminoso desse malandro\no precede e ele é bem conhecido pelas\nautoridades policiais. Ele é regularmente\nalvo de assédio e vigilância por parte das\nautoridades. Quando um crime é cometido\nna cidade, os policiais ou federais aparecem\ne têm perguntas para ele. Não importa se ele\nteve envolvimento com o crime ou não."
   },
   {
     "id": "comp_pe_frio",
@@ -499,7 +499,7 @@
     "tipo": "MENOR",
     "origem": "WISEGUYS",
     "severity": "menor",
-    "description": "Traz azar. Ninguém perto pode gastar Benes em rolagens de Jogar."
+    "description": "“Melhor sorte na próxima vez”\n-Bernie, The Cooler\nEsse cara transforma a sorte de qualquer\num em puro azar. Houve momentos no\npassado em que pessoas ao seu redor\nperceberam isso e o surraram. Normalmente,\nele é excluído por seus parceiros quando tem\njogo envolvido. O “Pé-Frio” e todos na sala\nou dentro de um Modelo Grande de Explosão\ncentrado nele (o que for menor) não podem\ngastar Bennies em rolagens da perícia jogar."
   },
   {
     "id": "comp_peso_consciencia",
@@ -507,7 +507,7 @@
     "tipo": "MENOR_MAIOR",
     "origem": "WISEGUYS",
     "severity": "menor/maior",
-    "description": "Sente culpa. Maior: O Don ganha um Bene para usar contra você após atos hediondos."
+    "description": "Quando essa franguinha comete um\ncrime, ela fica cheia de adrenalina e o\ninstinto entra em ação. Porém, ela tem plena\nconsciência de que o que está fazendo é\nerrado e depois de algum tempo, para pra\nrefletir sobre isso. Como uma Complicação\nMenor, sua consciência muitas vezes a\ndomina e, nesses casos, ela se sente obrigada\na corrigir algo de errado que fez ou permitiu\nque fizessem. É difícil deixar o passado para\ntrás e essa falha de caráter vai pesar mais\ncedo ou mais tarde.\nComo uma Complicação Maior,\nquando ela comete um ato particularmente\nhediondo, o Don recebe um Bene que ele\ndeve usar contra ela. Isso é limitado a uma\nvez por sessão."
   },
   {
     "id": "comp_relacao_disfuncional",
@@ -515,6 +515,6 @@
     "tipo": "MENOR_MAIOR",
     "origem": "WISEGUYS",
     "severity": "menor/maior",
-    "description": "Parente ou amigo problemático que causa inconveniência (Menor) ou perigo real (Maior)."
+    "description": "Um dos parentes ou amigos deste\npersonagem tem um talento para se meter\nem encrencas, e isso muitas vezes reflete\nnegativamente para ele. Talvez ele tenha um\nirmão viciado em drogas, um filho ou filha\nadolescente que furta em lojas buscando sua\natenção, um tio alcoólatra com predisposição\ná violência ou um parceiro de negócios\nque continua lhe causando problemas,\nenquanto ele tenta manter uma reputação\nimpecável ou passar desapercebido.\nComo uma Complicação Menor, o parente\ngeralmente é apenas uma inconveniência e\nconstrangimento, já como uma Complicação\nMaior, as ações dele causam problemas\nfrequentes e arriscam de comprometer\nseriamente a sua carreira. Caso o parente\nencontre um fim súbito e repentino,\nsubstitua a Relação Disfuncional por outra\nComplicação apropriada."
   }
 ]

@@ -325,8 +325,7 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-      ],
+      "vantagens_previas": [],
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
@@ -2169,7 +2168,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Imune a testes de Medo por Náusea/Cenas horríveis. Polígrafos não funcionam."
+    "descricao": "Roubar é uma coisa; a horrível realidade\nda morte pode abalar a maioria dos\nindivíduos. Um assassino impiedoso não\né perturbado pela visão horrível de corpos\nmutilados ou tortura cruel. Seu coração não\nacelera. A visão e o cheiro de cadáveres não o\nincomodam. Quando confrontado com o que\nfez, ele não demonstra remorso. Como tal, ele\né imune à variante Náusea da regra de Medo\ne um polígrafo não tem vantagem contra ele."
   },
   {
     "id": "bom_companheiro",
@@ -2187,7 +2186,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Membro oficial. Ganha Manha gratuitamente. Intocável por outros membros sem permissão. Paga menos tributo (25%). Ganha Voto Maior (Omertà)."
+    "descricao": "Apenas homens descendentes de\nitalianos, que provaram ser leais e lucrativos\npara a La Cosa Nostra, podem receber\nessa honra.\nUm Bom Companheiro ganhou seu\nrespeito e se tornou um membro oficial. Ele tem\nacesso a segredos que apenas os membros da\nirmandade conhecem. Esse título prestigioso\nconcede ao gângster a vantagem Manha.\nSe o personagem já tiver essa vantagem,\nele pode escolher outra Vantagem Social,\ndesde que atenda aos requisitos.\nComo membro oficial, ele também\nrecebe uma série de benefícios gratuitos.\nSuas roupas lhe são dadas e, quando ele\nvai a um restaurante, a conta é paga pela\ncasa. Os associados também lhe repassam\ndinheiro. Portanto, leva um mês para que seu\nnível de riqueza diminua se ele não receber\nRecompensas durante esse período (em vez\nde uma semana), e ele só precisa repassar\n25% de seus ganhos em vez de 50% (ver La\nCosa Nostra no Capítulo Dois).\nAlém disso, um Bom Companheiro é\nconsiderado intocável. Outros membros da\nCosa Nostra não o atacarão a menos que\ntenham permissão (ver Omertà no Capítulo\nUm). Essa proteção também se estende a\noutros indivíduos obscuros do submundo,\nque não criarão hostilidades a menos que\nprovocados primeiro. Aqueles que cruzarem\nessa linha podem contar que toda a família\nda máfia irá se vingar do infrator.\nDito isso, a vida de um gângster vem\ncom dinheiro e poder, mas também com\nresponsabilidades. Portanto, o mafioso\nrecebe a Complicação Voto (Maior - Omertà).\nIsso não conta para o número máximo de\nComplicações que ele pode ter, nem fornece\npontos extras para a criação do personagem."
   },
   {
     "id": "nascido_ruas",
@@ -2205,7 +2204,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora até 2 pontos de penalidade ao lidar com segurança/crime."
+    "descricao": "Esta personagem foi criada em um\nbairro pobre e aprendeu desde muito jovem\na sobreviver nesse ambiente hostil. Como\nmuitos outros, ela teve que cometer crimes\ne ser mais esperta que a polícia. Ela pode\nignorar até 2 pontos de penalidade ao lidar\ncom a segurança na prática de crimes."
   },
   {
     "id": "notorio",
@@ -2225,7 +2224,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sua fama de violento o precede. +2 em Intimidar. Inimigos tendem a focar em você ou fugir (teste de Moral ao vê-lo)."
+    "descricao": "Esta pessoa ganhou certa fama e\nprestígio no submundo do crime e na mídia\npor meio de algum feito icônico que ela\nrealizou ou por sua reputação de modo geral.\nVocê e o Don devem trabalhar juntos para\ndeterminar as circunstâncias da ascensão\nda sua personagem ganhar destaque e\ndar um apelido igualmente memorável e\nimpressionante para combinar.\nA reputação dela causa medo no coração de\nseus inimigos e exige o respeito de seus iguais.\nEla ganha uma nova rerrolagem gratuita\nem testes de Intimidação quando lida com\nhabitantes do submundo do crime, e dobra o\ndinheiro sujo que ela ganha com trambiques.\nNo entanto, há uma desvantagem nisso.\nGangsters Notórios são frequentemente alvo\nde criminosos emergentes que procuram\nsubir na hierarquia."
   },
   {
     "id": "artista_gunfu",
@@ -2248,7 +2247,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Usa armas de fogo em combate corpo a corpo. O número alvo é o menor entre 4 ou Aparar do alvo."
+    "descricao": "Esta combatente está sempre em\ncompleto domínio de sua arma de fogo e\npode dispará-la com extrema precisão em\nalvos na distância de combate corpo a corpo.\nNesta situação, o número alvo para atirar\ncom sucesso em seu inimigo com uma arma\nde tamanho igual ou menor que uma pistola\né o menor entre 4 ou o Aparar do alvo."
   },
   {
     "id": "beijo_morte",
@@ -2256,19 +2255,19 @@
     "categoria": "COMBATE",
     "origem": "WISEGUYS",
     "requisitos": {
-      "estagio": "Veterano",
+      "estagio": "Novato",
       "atributos": {},
-      "pericias": {
-        "Lutar": 8
-      },
-      "vantagens_previas": [],
+      "pericias": {},
+      "vantagens_previas": [
+        "atraente"
+      ],
       "observacoes": "",
       "choiceOptions": []
     },
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Um ataque corpo a corpo bem sucedido na cabeça causa +4 de dano extra em vez de +2 (totalizando +8 se for um Ataque Localizado na cabeça)."
+    "descricao": "Manusear venenos requer anos de\nprática para dominar. Essa assassina exótica\ne enganadora aprendeu como usá-los em\ncombate ou surpreendendo vítimas. Através\nde treinamento rigoroso, a envenenadora\nobteve Imunidade ao Veneno. Além disso, ela\ncarrega doses de Veneno Leve (ver Veneno\nem Savage Worlds) que pode aplicar em\ncombate, através de um ataque de toque, ou\nfora de combate, de forma automática, se ela\ntiver a Surpresa. Se a vítima tiver qualquer\nmotivo para suspeitar da armadilha, role\nPersuadir vs. Perceber. Em caso de sucesso,\na potencial vítima não tem ideia do que\nestá por vir!"
   },
   {
     "id": "guarda_costas",
@@ -2288,7 +2287,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode estender benefícios da manobra Defender ou Cobertura para aliado adjacente."
+    "descricao": "Ao colocar seu próprio corpo em perigo,\neste herói pode proteger um indivíduo\nadjacente. O Guarda-costas pode estender\no benefício da manobra Defender para (ou\natuar como Cobertura Média para ataques à\ndistância feitos contra) um aliado adjacente."
   },
   {
     "id": "fanfarrao",
@@ -2311,7 +2310,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "1/cena gasta Bene para criar armadilha (Ladinagem). Alvos rolam Evasão ou ficam Distraídos/Vulneráveis."
+    "descricao": "Seu criminoso sempre vem preparado\npara o pior. Ele fabrica vários dispositivos\nque são inofensivos, mas que podem fazer\nbarulho, projetar luz ou dispersar fumaça ou\ngás fedorento.\nUma vez por cena, este personagem\npode gastar um Bene para desencadear\numa de suas pegadinhas. O criminoso\ndeve explicar como ele conseguiu montar a\ndistração ou armadilha. Ele pode ter contado\ncom a ajuda de um cúmplice ou visitado\nanteriormente o local.\nEle então faz uma rolagem de Ladinagem\npara colocar um Modelo Pequeno de\nExplosão no ponto de origem. Alvos\natingidos dentro da área do modelo devem\nrolar Evasão (com –2 se o Pregador de Peças\ntiver uma Ampliação). Qualquer alvo que\nfalhe fica Distraído ou Vulnerável (à escolha\ndo jogador). Se a tentativa de um alvo for\nFalha Crítica, ele fica atordoado."
   },
   {
     "id": "lutadora_patins",
@@ -2332,7 +2331,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Não sofre Plataforma Instável em patins. Patins são armas indesarmáveis."
+    "descricao": "Este personagem dominou a arte de\nlutar usando patins. Ela não os trata como\nPlataforma Instável e pode usá-los como\narmas que o alvo não pode Desarmar (e\nsem quaisquer penalidades por armas\nimprovisadas) enquanto as usa. Isso deixa\nsuas mãos livres para segurar outros\nitens ou armas."
   },
   {
     "id": "manobrar_atirar",
@@ -2353,7 +2352,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reduz em 2 penalidades de Ação Múltipla ao dirigir e atirar."
+    "descricao": "Atirar com uma arma de uma mão\nenquanto dirige em alta velocidade requer\numa coordenação precisa. Este personagem\npode reduzir em 2 as penalidades de Ações\nMúltiplas ao dirigir um veículo e atirar com\numa arma de uma mão."
   },
   {
     "id": "sequestrador",
@@ -2373,7 +2372,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Usa refém como escudo humano (regra Espectadores Inocentes). Pode gastar Bene para repassar dano ao refém."
+    "descricao": "Quando balas começam a voar e um\nmafioso está em apuros, é bom ter alguém\npara levar um tiro por ele. Uma das mãos deve\nestar livre para segurar o refém. Qualquer\npessoa que tente atirar no Sequestrador\nenquanto ele está segurando um refém\ndeve usar a regra de Espectadores Inocentes\n(qualquer bala perdida com um resultado de\n1 no dado de característica atinge o refém).\nAlém disso, se o Sequestrador for atingido\npor um ataque que o machuque o suficiente\npara feri-lo, ele pode gastar um Bene para\nusar seu refém como o receptor do dano em\nseu lugar. A maioria dos reféns não tentarão\nlutar ou fugir; o gângster pode agarrá-los e\narrastá-los por aí."
   },
   {
     "id": "telecatch",
@@ -2396,7 +2395,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sucesso em Desafio permite Desarmar/Empurrar livre. Ampliação permite Ataque ou Agarrar livre."
+    "descricao": "Este brigão aperfeiçoou a arte da luta\nlivre televisionada. Ele pode dar uma surra\ne entreter a multidão ao mesmo tempo. Um\ntraje colorido e uma máscara fazem parte\ndo show, mas ele ainda é eficaz sem os\nacessórios e a multidão.\nQuando o lutador obtém sucesso em\num Desafio, ele obtém benefícios adicionais\nalém dos resultados normais. Com um\nsucesso básico, ele pode executar a manobra\nde Desarmar ou Empurrar como uma ação\nlivre. Com uma ampliação, ele pode realizar\num ataque livre ou iniciar uma ação de\nagarrar como uma ação livre. Se ele já estiver\nenvolvido em agarrão, ele pode causar\ndano de Força.\nPara que os benefícios dessa vantagem\nse apliquem, o lutador deve estar a uma\ndistância adequada do alvo até o fim de seu\nturno ou empregar um meio alternativo de\ninteragir com ele que atenda de acordo com\na aprovação do Don (como jogar uma cadeira\npara tentar Desarmar)."
   },
   {
     "id": "lider_time",
@@ -2420,7 +2419,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode compartilhar Benes com equipe mesmo sem comunicação direta."
+    "descricao": "Os aliados sob comando de uma\nCarta Selvagem enviados para completar\numa missão precisam ser lembrados das\nconsequências de um possível fracasso. Isso\nfunciona como a Vantagem Elo Comum,\nmas uma Líder de Time pode compartilhar\nseus Benes com a equipe mesmo que ela não\npossa se comunicar diretamente com eles.\nIsso ajuda a garantir o sucesso da equipe sob\nsua supervisão e a minimizar perdas."
   },
   {
     "id": "cozinheiro",
@@ -2440,7 +2439,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Fabrica drogas/álcool. Dobra dinheiro arrecadado em trambiques dessa natureza."
+    "descricao": "Este criminoso sabe fazer cerveja,\ndestilar álcool, ou fabricar drogas. Escolha\num que seja atualmente ilegal. O Cozinheiro\nconta com um laboratório e um auxiliar\n(Seguidor com a habilidade Tenente) que\npode empregar para produzir produtos\nilegais prontos para distribuição. É preciso\numa semana ou mais para reconstruir seu\nlaboratório se ele for destruído. Dobre a\nquantidade de dinheiro arrecadado desta\nforma (ver Trambiques na página 65). Isso se\nacumula com outras Vantagens."
   },
   {
     "id": "especialista_explosivos",
@@ -2461,7 +2460,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Consertar/Perceber explosivos. Ampliações permitem modificar bombas (Dano, PA, Área, Ocultação)."
+    "descricao": "Esta personagem adora quando as\ncoisas explodem! Não importa se ela está\ntrabalhando com explosivos comerciais\nou caseiros, a Especialista em Explosivos\npode fazer isso acontecer. Nada envia uma\nmensagem tão bem como uma bomba bem\ncolocada. Enquanto qualquer pessoa com\na Perícia Consertar pode plantar cargas\nexplosivas, o Especialista em Explosivos\npode levar as coisas mais longe. Esta virtuosa\nvê seu talento como uma forma de arte.\nEsta vantagem concede à personagem\n+2 em Consertar quando fabrica ou prepara\nexplosivos. Ela também concede +1 para\nPerceber explosivos escondidos.\nCada ampliação no teste de Consertar\npermite que a personagem selecione uma\ndas seguintes modificações. Salvo indicação\ndo contrário, as modificações só podem ser\naplicadas uma vez.\n• Potência: O explosivo causa +d6 de dano.\n• Perfuração: O explosivo ganha 2 PA.\nEsta modificação pode ser aplicada mais\nde uma vez.\n• Área de Efeito: Pode ser aumentada ou\ndiminuída em um tamanho. Pessoal, MPE,\nMME, MGE. Esta modificação pode ser\naplicada mais de uma vez.\n• Ocultação: O tamanho padrão do\nexplosivo ocupa o tamanho de uma mala.\nCada ampliação aumenta a penalidade\nem rolagens de Perceber para identificar o\nexplosivo em -2. Esta modificação pode ser\nrealizada até duas vezes.\nAlternativamente, a Especialista em\nExplosivos pode rolar com penalidade de -4\npara cada modificação que ela deseja aplicar\na seu dispositivo explosivo."
   },
   {
     "id": "falsificador",
@@ -2483,7 +2482,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Ladinagem para falsificar itens."
+    "descricao": "É necessária uma habilidade excepcional\npara fazer uma cópia perfeita de um objeto.\nSeja para forjar uma cópia perfeita de uma\npintura, uma chave ou documentos de\nidentificação, o patife ganha uma rerrolagem\ngratuita de Ladinagem para falsificar o\nitem desejado."
   },
   {
     "id": "limpador",
@@ -2504,7 +2503,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Curar para limpar cenas de crime. Usa Curar para investigação forense."
+    "descricao": "Esta personagem foi treinada para limpar\ncenas de crimes e conhece os métodos\nforenses usados pela polícia durante\ninvestigações criminais.\nA Limpadora pode rolar Curar com um\nbônus de +2 para limpar uma cena de crime\nusando apenas produtos domésticos e pode\nconcluir a limpeza na metade do tempo. Ela\ntambém pode usar Curar em vez de Perceber\nou Sobrevivência para encontrar e seguir as\npistas em cena de crime."
   },
   {
     "id": "mestre_fuga",
@@ -2525,7 +2524,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Atletismo para fugir/espaços apertados. +2 Ladinagem para escapar de amarras."
+    "descricao": "Esta mestra da escapologia é adepta\nde tirar algemas de si mesma, escapar de\namarras e até mesmo se soltar de uma\ncamisa de força. Ela também pode se\nespremer através de pequenas aberturas,\nembora isso seja relativo ao tamanho dela\ne a critério do Don; uma personagem com\na Complicação Pequeno ou Jovem pode\npassar por um abertura menores do que\nalguém com a Vantagem Musculoso ou a\nComplicação Obeso.\nA Mestre da Fuga recebe um bônus de +2\nem todas as rolagens de Atletismo ao tentar\nfugir ou passar por pequenas aberturas além\nde poder se espremer por espaços apertados\ncom sua Movimentação total (embora ela\nnão possa correr em tais circunstâncias\nde confinamento). Ela também recebe um\nbônus de +2 em rolagens de Ladinagem para\nremover algemas ou escapar das amarras."
   },
   {
     "id": "mestre_disfarce",
@@ -2547,7 +2546,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Performance ao usar disfarces."
+    "descricao": "Este camaleão pode andar no meio de\numa multidão enquanto segue alguém sem\nser detectado, pegando um chapéu, jornal\nou adereço. Ele possui um baú com várias\nfantasias, perucas e um kit de maquiagem\nprofissional. Tendo tempo suficiente para se\npreparar ou com acesso aos adereços certos,\nele pode se passar por quem quiser.\nUm Artista do Disfarce ganha uma\nrerrolagem gratuita em Performance sempre\nque usar um disfarce."
   },
   {
     "id": "motorista_agressivo",
@@ -2567,7 +2566,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode realizar manobras Forçar e Abalroar a uma carta de distância."
+    "descricao": "Este motorista é especialista em usar\nseu veículo para tirar pessoas da estrada.\nDurante uma perseguição, um Motorista\nAgressivo pode realizar as manobras Forçar\ne Abalroar contra veículos a uma carta de\ndistância em vez de na mesma carta."
   },
   {
     "id": "motorista_fuga",
@@ -2587,7 +2586,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidades de terreno difícil e instável ao dirigir. Em perseguições, recebe +2 nas rolagens de Dirigir para manobras evasivas."
+    "descricao": "Este condutor aperfeiçoou a arte de\nescapar de perseguidores durante uma\nperseguição de carro em um ambiente\nurbano, usando rampas de estacionamento\ne becos escuros para despistá-los. Os\nMotoristas de Fuga podem tentar Fugir de\numa perseguição com uma carta a menos de\ndistância do que o habitual."
   },
   {
     "id": "trambiqueiro",
@@ -2607,7 +2606,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Conhecimento Geral para esquemas de ganhar dinheiro."
+    "descricao": "Sua personagem sabe como realizar\ntrambiques e fazer uma graninha. Cada vez\nque você escolher esta vantagem, escolha\ntrês esquemas que ela possa usar usando o\nConhecimento Geral. Você pode rolar com\num bônus de +1 para esses Esquemas."
   },
   {
     "id": "trapaceiro",
@@ -2629,7 +2628,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+4 em Jogar ao trapacear. Usa Jogar para truques de mão."
+    "descricao": "Esse vigarista vem praticando golpes\ne truques de mãos por toda a sua vida. Ele\ngeralmente tem alguém no salão trabalhando\ncom ele ou conhece o jogo tão bem que pode\nexplorar as fraquezas das pessoas e deixá-las\nsem nada. Ele conhece todos os truques.\nUm Trapaceiro recebe +4 em Jogar em vez\nde +2 quando trapaceia num jogo de cartas\ne pode gastar um Bene para rerrolar uma\nFalha Crítica. Ele também pode usar Jogar\nem vez de Ladinagem para realizar truques\nde mão com acessórios para Jogar, como\ncartas ou fichas de poker."
   },
   {
     "id": "capanga",
@@ -2647,7 +2646,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um Seguidor leal por estágio. Pode promovê-los a Tenente/Resiliente."
+    "descricao": "Não importa o quão durão ou inteligente\nvocê pensa que é, mais cedo ou mais tarde\nvocê vai precisar de alguém para cobrir sua\nretaguarda ou para realizar uma tarefa que\nvocê não tem a qualificação exata. Para isso\nque servem os capangas, amigo! Além disso,\nvocê parece mais importante quando um\nmotorista abre a porta para você.\nSeu personagem mantém o leal serviço de\num Seguidor (veja Savage Worlds) por estágio.\nAlternativamente, quando alcança um novo\nestágio, o jogador pode decidir atualizar um\nseguidor existente para se tornar Resiliente\nou um Tenente como uma de suas habilidades\nespeciais. A lista de potenciais capangas\ninclui, mas não limitada a, meretrizes,\ncapangas, guarda-costas, motoristas,\nadvogados ou espiões. Eles podem ser de\ndiferentes tipos. Se eles morrerem ou forem\ndemitidos, eles são substituídos em cerca de\numa semana. Os capangas são tratados como\naliados e podem obter progressos."
   },
   {
     "id": "acima_da_lei",
@@ -2665,7 +2664,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Polícia local não pode prendê-lo. Federais têm jurisdição limitada."
+    "descricao": "A polícia não pode deter esse\npersonagem. Mesmo se for preso, ele não\npode ser detido ou acusado, a menos que\nseja pego em flagrante cometendo um crime.\nAgentes federais podem pegar alguém com\nAcima da Lei sob custódia, mas ele deve\npermanecer em custódia federal ou então\nser libertado."
   },
   {
     "id": "dama_sorte",
@@ -2683,7 +2682,7 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 1 Bene especial para Jogar por sessão. Pode compartilhar Benes em Jogar. Ganha joia valiosa (+1 Persuadir)."
+    "descricao": "Grandes apostadores e jogadores\nprofissionais gostam de ter esta personagem\nao seu lado quando jogam os dados ou\ncartas. Ela parece trazer boa sorte e eles\ncontinuam mimando-a na esperança de que\nfique por perto.\nEsta encarnação viva da boa sorte\ncomeça cada sessão com um Bene especial\nque só pode ser gasto em rolagens de Jogar.\nEla é capaz de compartilhar todos os Benes\n(incluindo o concedido por esta Vantagem)\ncom quem ela quiser em qualquer rolagem\nde Jogar. Ela também usa uma joia cara (colar,\nbrincos, relógio, anel, abotoaduras, etc.) que\nlhe foi dado por um apostador agradecido\nque a considera seu amuleto da sorte. Esta\njoia fornece +1 em Persuadir ao usar sua Rede\nde Contatos. Se estiver com pouco dinheiro,\nela pode vender aj óia por US$ 50.000. Porém,\nse vendê-la ou perdê-la, a personagem\ntambém perde todos os benefícios desta\nVantagem até que um benfeitor compre para\nela outra joia de igual valor."
   },
   {
     "id": "intocavel",
@@ -2703,6 +2702,130 @@
     "limite_compra": "",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Imune a processos criminais. Até federais precisam de casos incontestáveis."
+    "descricao": "Este personagem escorregadio não pode\nser tocado pelas forças da lei – até mesmo os\nfederais. A polícia local sabe que não vale a\npena tentar prendê-lo. Agentes federais podem\ntentar deter o Intocável, mas devem ter algo\nincontestável ao acusá-lo e, mesmo assim, ele\ntem imunidade contra processos criminais."
+  },
+  {
+    "id": "beijo_morte_aprimorado",
+    "nome": "BEIJO DA MORTE APRIMORADO",
+    "categoria": "COMBATE",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "beijo_morte"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como Beijo da Morte, mas a assassina\ntambém tem acesso ao veneno Nocauteador,\nLetal ou Paralisante (escolha um). Cada\nataque feito com este veneno faz com que o\natacante fique fatigado. Essa Vantagem pode\nser adquirida várias vezes, ganhando acesso\npara um tipo de veneno diferente a cada vez."
+  },
+  {
+    "id": "rebaixar",
+    "nome": "REBAIXAR",
+    "categoria": "LIDERANCA",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {
+        "Intimidar": 8
+      },
+      "vantagens_previas": [
+        "comando"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Alguns líderes causam medo nos seus\nsubordinados. Este medo de falhar com\nseu líder os lembra das consequências de\ndecepcioná-lo. Tais líderes não precisam ser\nvistos para serem eficazes.\nEsta Vantagem amplia o alcance do\ncomando das Vantagens de Liderança para\nExtras dentro da mesma cidade"
+  },
+  {
+    "id": "insistente",
+    "nome": "INSISTENTE",
+    "categoria": "SOCIAIS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Persuadir": 8
+      },
+      "vantagens_previas": [],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Seu personagem conhece muitas\npessoas que podem ajudá-lo quando ele\npede. Seja ele os forçando a colaborar ou os\nenganando para que atendam o telefone ou\nabram a porta.\nVocê pode obter a ajuda de um Contato\nadicional por sessão (veja Nossos Amigos no\nCapítulo Dois)."
+  },
+  {
+    "id": "persistente",
+    "nome": "PERSISTENTE",
+    "categoria": "SOCIAIS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "insistente"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Esse mafioso não cultivou uma extensa\nrede de contatos para que seja mandado\nembora quando pedir ajuda. Ele pode contar\ncom a ajuda de mais dois Contatos por\nsessão."
+  },
+  {
+    "id": "um_amigo_meu",
+    "nome": "UM AMIGO MEU",
+    "categoria": "SOCIAIS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Persuadir": 8
+      },
+      "vantagens_previas": [
+        "manha"
+      ],
+      "observacoes": "",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Este personagem faz amigos de todos os\ntipos e tem muito cuidado para gerenciar\nesse recurso. Uma rede de contatos\nvasta e robusta é uma mercadoria básica\nno Submundo.\nUma vez por sessão, o mafioso pode\npedir um Favor sem gastar um Bene. O\npersonagem do jogador deve fornecer ao\nDon pelo menos informações básicas sobre\no conhecido que deve esse Favor. Poderia ser\num falsificador, um político, um traficante de\narmas, uma testemunha e etc.\n(Veja Favores no Capítulo Dois para obter\nmais informações).\nUma vez feito o Favor, o conhecido\ntorna-se automaticamente um novo Contato\npermanente – não precisa mais gastar bene\npara usá-lo novamente.."
+  },
+  {
+    "id": "em_outro_patamar",
+    "nome": "EM OUTRO PATAMAR",
+    "categoria": "LENDARIAS",
+    "origem": "WISEGUYS",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem",
+      "choiceOptions": []
+    },
+    "limite_compra": "",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Por meio de anos de experiência e\nprática, esta personagem alcançou um\nnível de experiência incomparável em seu\ncampo profissional. Seu Dado Selvagem\nse torna um d8 (se ela tiver a vantagem\nMestre em uma característica, o dado se\ntorna um d12) quando fizer um teste de\ncaracterística relacionado ao seu campo de\nespecialização não-relacionado a combate.\nO Dado Selvagem de um Gatuno será d8\nao se esgueirar (Furtividade) em uma casa\nou prédio, derrubar sistemas de vigilância\n(Percepção, Consertar ou Furtividade)\ne arrombar um cofre (Ladinagem). Um\nlimpador obtém benefícios dessa vantagem\nao remover evidências de uma cena de crime\n(Curar), um Apostador Profissional de Texas\nHold’Em usa essa vantagem ao jogar seu\njogo favorito (Jogar) e um motorista de fuga\nquando estiver um passo à frente da polícia\nem uma perseguição de carro (Dirigir)\napós um assalto. O Don tem a palavra final\nsobre o que constitui o uso apropriado\ndessa vantagem."
   }
 ]
