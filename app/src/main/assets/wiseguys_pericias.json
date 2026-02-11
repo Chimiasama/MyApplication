@@ -36,13 +36,6 @@
       "descricao": "Quem possui essa perícia estudou várias ciências complexas como biologia, xenobiologia, química, geologia, engenharia ou qualquer outra ciência “complexa”. Uma rolagem bem-sucedida de Ciência revela informações básicas sobre o tópico e uma ampliação dá mais detalhes."
     },
     {
-      "nome": "Ciência Estranha",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "WISEGUYS",
-      "descricao": "Pessoas que fazem Ciência “louca”, inventores em mundos com magia (ou tecnologia muito além da nossa), alquimistas ou artífices podem ser encontrados em muitos Mundos Selvagens. Embora suas técnicas possam variar, sempre usam Ciência Estranha como perícia arcana. Veja a Vantagem Antecedente Arcano (Ciência Estranha) na pág. 178 para saber mais sobre suas maravilhas."
-    },
-    {
       "nome": "Conhecimento Acadêmico",
       "atributo": "Astúcia",
       "basica": false,
@@ -55,13 +48,6 @@
       "basica": true,
       "origem": "WISEGUYS",
       "descricao": "Personagens rolam Conhecimento Geral para conhecer pessoas, lugares e coisas do seu mundo, incluindo etiqueta, geografia, cultura, tecnologia popular, contatos e costumes."
-    },
-    {
-      "nome": "Conjurar",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "WISEGUYS",
-      "descricao": "Magia, feitiçaria e bruxaria são usos de Conjurar para utilizar poderes. Veja a Vantagem Antecedente Arcano (Magia) na pág. 178."
     },
     {
       "nome": "Consertar",
@@ -90,13 +76,6 @@
       "basica": false,
       "origem": "WISEGUYS",
       "descricao": "Eletrônica permite o uso de dispositivos complexos ou especializados como os painéis de controle em uma máquina industrial ou os sistemas de sensores encontrados nas espaçonaves dos cenários futuristas.\nEletrodomésticos ou dispositivos eletrônicos comuns no cenário não requerem Eletrônica— Conhecimento Geral basta caso uma rolagem seja necessária. Em um mundo moderno isso se aplica a aparelhos de vídeo, celulares, etc.\nPara reparar qualquer tipo de eletrônico quebrado usa-se a perícia Consertar (veja pág. 33)."
-    },
-    {
-      "nome": "Fé",
-      "atributo": "Espírito",
-      "basica": false,
-      "origem": "WISEGUYS",
-      "descricao": "Fé é a perícia arcana requerida para o Antecedente Arcano (Milagres), descrito na pág. 178."
     },
     {
       "nome": "Foco",
@@ -209,13 +188,6 @@
       "basica": false,
       "origem": "WISEGUYS",
       "descricao": "Provocar ataca o orgulho com ridicularização, tiradas cruéis ou demonstrações de superioridade.\nProvocar é uma rolagem resistida pela Astúcia de oponentes. Em combate, isto é um Desafio (veja pág. 119).\nFora de combate, um sucesso significa que a vítima recua, escapa ou começa uma briga. Uma ampliação a deixa acovardada pelo resto da cena, faz com que saia da área espumando ou até chorando ou ainda faz com que ela ataque seu algoz de modo inconsequente (talvez com um Ataque Selvagem na primeira rodada de combate).\nUma Falha Crítica significa que o alvo é imune às provocações pessoais pelo resto do encontro."
-    },
-    {
-      "nome": "Psiônicos",
-      "atributo": "Astúcia",
-      "basica": false,
-      "origem": "WISEGUYS",
-      "descricao": "É a perícia que \"psions\" ou \"psis\" usam para ativar e controlar suas habilidades psiônicas. Veja a Vantagem Antecedente Arcano (Psiônicos) na pág. 178."
     },
     {
       "nome": "Sobrevivência",
