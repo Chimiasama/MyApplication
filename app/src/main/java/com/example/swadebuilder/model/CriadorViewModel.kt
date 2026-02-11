@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaComplicacoes
@@ -42,16 +41,20 @@ class CriadorViewModel(
     private val _feedbackMessages = mutableStateListOf<String>()
     val feedbackMessages: List<String> = _feedbackMessages
 
-    private var loadedGameData by mutableStateOf<GameDataSnapshot?>(null)
+    private val gameDataStore = GameDataStore()
 
-    private fun periciasData() = loadedGameData?.listaPericias ?: listaPericias
-    private fun vantagensData() = loadedGameData?.listaVantagens ?: listaVantagens
-    private fun complicacoesData() = loadedGameData?.listaComplicacoes ?: listaComplicacoes
-    private fun coracoesData() = loadedGameData?.listaCoracoesCrystal ?: listaCoracoesCrystal
-    private fun periciasMapData() = loadedGameData?.mapaPericias ?: mapaPericias
+    private fun periciasData() = gameDataStore.pericias(listaPericias)
+    private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
+    private fun complicacoesData() = gameDataStore.complicacoes(listaComplicacoes)
+    private fun coracoesData() = gameDataStore.coracoesCrystal(listaCoracoesCrystal)
+    private fun periciasMapData() = gameDataStore.periciasMap(mapaPericias)
 
     suspend fun carregarDadosDeJogo(context: Context, activeModules: Set<String>): GameDataSnapshot {
-        return gameDataRepository.load(context, activeModules).also { loadedGameData = it }
+        return gameDataRepository.load(context, activeModules).also { gameDataStore.updateSnapshot(it) }
+    }
+
+    internal fun aplicarGameDataSnapshot(snapshot: GameDataSnapshot) {
+        gameDataStore.updateSnapshot(snapshot)
     }
     fun logFeedback(message: String) {
         _feedbackMessages.add(message)
@@ -902,7 +905,7 @@ class CriadorViewModel(
             updated.add(saved)
         }
         listaCoracoesCrystal = updated
-        loadedGameData = loadedGameData?.copy(listaCoracoesCrystal = updated)
+        gameDataStore.withUpdatedCoracoesCrystal(updated)
         return saved
     }
 
@@ -910,7 +913,7 @@ class CriadorViewModel(
         val removed = CustomCrystalHeartStorage.deleteCustomHeart(context, heartId)
         if (!removed) return false
         listaCoracoesCrystal = coracoesData().filterNot { it.id == heartId }
-        loadedGameData = loadedGameData?.copy(listaCoracoesCrystal = listaCoracoesCrystal)
+        gameDataStore.withUpdatedCoracoesCrystal(listaCoracoesCrystal)
         if (state.coracaoCrystalSelecionado?.id == heartId) {
             val starter = coracoesData().firstOrNull { it.placeholder }
             state.coracaoCrystalSelecionado = starter

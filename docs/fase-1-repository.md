@@ -45,3 +45,10 @@ Esse passo reduz acoplamento da camada de regra à fonte global mutável sem que
 - Extrair um `GameDataStore` interno ao ViewModel/State para substituir gradualmente leituras globais restantes.
 - Encapsular writes de conteúdo customizado (ex.: Crystal Hearts) nesse store para eliminar sincronização manual.
 - Adicionar testes unitários do ViewModel com `FakeGameDataRepository`.
+
+
+## Etapa 3 (store de transição + testes)
+
+- Criado `GameDataStore` para centralizar leitura do `GameDataSnapshot` com fallback explícito para globais legadas.
+- `CriadorViewModel` passou a usar o store (em vez de manter estado solto de snapshot), reduzindo dispersão da lógica de fallback.
+- Adicionados testes unitários de `GameDataStore` cobrindo fallback, preferência por snapshot e atualização de corações customizados em memória.
