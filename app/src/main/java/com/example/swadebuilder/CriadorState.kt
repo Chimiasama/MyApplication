@@ -3192,21 +3192,21 @@ class CriadorState {
             pontosVantagem += 1
         }
 
-        // --- Ajuste de atributos pela nova raça ---
+        // Troca efetiva da ancestralidade
+        ancestralidade = anc
 
+        // --- Ajuste de atributos pela nova raça ---
+        // IMPORTANTE: usa atributoMinRaw/atributoMaxRaw para respeitar limites dinâmicos
+        // (ex.: FORÇA máxima por Diminuto/Tamanho).
         periciasComIdiomas().associateWith { rawTotal(it) }
 
-        val newAttrMods = racialAttrMinMap[anc] ?: emptyMap()
-
         listaAtributos.forEach { nome ->
-            val st     = valoresAtributos[nome]!!
-            val newMin = newAttrMods[nome] ?: 4
-
-            val extras = ((newMin - 4).coerceAtLeast(0) / 2)
-            val newMax = 12 + extras
+            val st = valoresAtributos[nome]!!
+            val newMin = atributoMinRaw(nome)
+            val newMax = atributoMaxRaw(nome)
 
             val stack = paCostStackPorAtributo.getValue(nome)
-            var raw   = newMin
+            var raw = newMin.coerceAtMost(newMax)
             var appliedSteps = 0
 
             repeat(stack.size) {
@@ -3229,8 +3229,6 @@ class CriadorState {
             st.intValue = raw
         }
 
-        // Troca efetiva da ancestralidade
-        ancestralidade = anc
         if (compendioArteDaGuerraAtivo && anc.keyify().contains("HUMANO")) {
             if (signoAdgSelecionado == null) {
                 selecionarSigno("Nenhum")
