@@ -1408,17 +1408,7 @@ class CriadorState {
                     per.origem != "ARTE_DA_GUERRA"
                 }
 
-                val lei = Pericia("Lei", "ASTUCIA", false, "WISEGUYS")
-                val filteredComLei = if (filtered.any { it.nome.keyify() == "LEI" }) {
-                    filtered
-                } else {
-                    if (!baseIncsPorPericia.containsKey(lei)) {
-                        ensurePericiaEntry(lei)
-                    }
-                    filtered + lei
-                }
-
-                filteredComLei
+                filtered
                     .distinctBy { it.nome.keyify() }
                     .sortedBy { it.nome }
             } else {
