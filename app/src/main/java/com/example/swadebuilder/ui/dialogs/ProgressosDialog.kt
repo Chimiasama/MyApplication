@@ -859,9 +859,10 @@ fun ProgressosDialog(
         val hasProfissional = state.vantagensSelecionadas.any { it.id == "profissional" }
 
         val candidatas = remember(listaVantagens, advSearchQuery, advSelectedCategories, advFilter, estIndex, hasProfissional) {
-            listaVantagens.filter { vant ->
-                if (!state.isVantagemVisible(vant, state.permiteMultiAntecedenteArcano)) return@filter false
+            // First, filter visibility (which accounts for module rules)
+            val visible = listaVantagens.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
 
+            visible.filter { vant ->
                 // Filters
                 if (advSelectedCategories.isNotEmpty() && vant.categoria !in advSelectedCategories) return@filter false
                 if (advSearchQuery.isNotBlank()) {
@@ -923,9 +924,22 @@ fun ProgressosDialog(
                         onQueryChange = { advSearchQuery = it },
                         isExpanded = isSearchExpanded,
                         onExpandedChange = { isSearchExpanded = it },
+                        onClear = {
+                            advSearchQuery = ""
+                            advSelectedCategories = emptySet()
+                            advFilter = VantFilter()
+                        },
                         placeholder = "Pesquisar Vantagens..."
                     ) {
                          Spacer(Modifier.height(8.dp))
+
+                        // Calculate active categories based on visible items - moved outside LazyRow
+                        val activeCategories = remember(listaVantagens) {
+                            listaVantagens
+                                .filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
+                                .map { it.categoria }
+                                .toSet()
+                        }
 
                         LazyRow(
                             modifier = Modifier.fillMaxWidth(),
@@ -945,13 +959,7 @@ fun ProgressosDialog(
                                 key = { it.name }
                             ) { cat ->
                                 if (state.modoSupers && cat == Categoria.PODER) return@items
-                                if ((cat == Categoria.CLASSE || cat == Categoria.PRESTIGIO || cat == Categoria.VANTAGEM_DE_CLASSE) && !state.compendioPathfinderAtivo) return@items
-                                if (cat == Categoria.ATORMENTADO && !state.compendioDeadlandsAtivo) return@items
-                                if (cat == Categoria.TROPO && !state.compendioArteDaGuerraAtivo) return@items
-                                if (cat == Categoria.SUPER && !state.modoSupers) return@items
-                                if (cat == Categoria.MONSTRUOSAS && !state.compendioHorrorAtivo) return@items
-                                if (cat == Categoria.CHI && !state.compendioArteDaGuerraAtivo) return@items
-                                if (cat == Categoria.ESTILO_MARCIAL && !state.compendioArteDaGuerraAtivo) return@items
+                                if (cat !in activeCategories) return@items
 
                                 FilterChip(
                                     selected = cat in advSelectedCategories,

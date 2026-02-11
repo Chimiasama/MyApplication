@@ -473,6 +473,12 @@ fun EquipamentoSection(
                 onQueryChange = { state.equipSearchQuery = it },
                 isExpanded = isSearchExpanded,
                 onExpandedChange = { isSearchExpanded = it },
+                onClear = {
+                    state.equipSearchQuery = ""
+                    state.equipFilter = EquipFilter()
+                    state.equipSelectedSuperTypes.clear()
+                    state.equipSectionFilters.clear()
+                },
                 placeholder = "Pesquisar Equipamentos..."
             ) {
                 Spacer(Modifier.size(8.dp))

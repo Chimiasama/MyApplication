@@ -181,6 +181,10 @@ fun ComplicacoesSection(
                     onQueryChange = { searchQuery = it },
                     isExpanded = isSearchExpanded,
                     onExpandedChange = { isSearchExpanded = it },
+                    onClear = {
+                        searchQuery = ""
+                        selectedSeverity = "Todos"
+                    },
                     placeholder = "Pesquisar Complicações..."
                 ) {
                     // Filters UI inside search expansion

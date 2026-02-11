@@ -551,6 +551,7 @@ fun SuperPoderesSection(
             onQueryChange = { searchQuery = it },
             isExpanded = isSearchExpanded,
             onExpandedChange = { isSearchExpanded = it },
+            onClear = { searchQuery = "" },
             placeholder = "Pesquisar Superpoderes..."
         )
 
