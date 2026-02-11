@@ -1023,7 +1023,10 @@ fun ProgressosDialog(
                                         viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
                                         viewModel.selectAdvantageForAdvancement(vant)
 
-                                        if (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso) {
+                                        val requiresPowerFlow =
+                                            vant.id == "novos_poderes" || vant.id.startsWith("antecedente_arcano")
+
+                                        if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
                                             // Transition to Power Selection
                                             showAdvSelection = false
                                             showPowerSelection = true
@@ -1249,7 +1252,10 @@ fun ProgressosDialog(
             viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
             viewModel.selectAdvantageForAdvancement(vantChoice)
 
-            if (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso) {
+            val requiresPowerFlow =
+                vantChoice.id == "novos_poderes" || vantChoice.id.startsWith("antecedente_arcano")
+
+            if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
                 showPendingChoice = false
                 showAdvSelection = false
                 pendingAdv = null
