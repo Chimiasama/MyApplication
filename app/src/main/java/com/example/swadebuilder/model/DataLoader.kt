@@ -168,11 +168,13 @@ object DataLoader {
 
     private var loadedArcanoInfoList: List<ArcanoInfo> = emptyList()
 
+    @OptIn(ExperimentalSerializationApi::class)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun loadCore(context: Context): GameDataSnapshot {
         return updateActiveModules(context, setOf("BASICO"))
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun updateActiveModules(context: Context, activeModules: Set<String>): GameDataSnapshot {
         val keys = activeModules + "BASICO" // Always include basic

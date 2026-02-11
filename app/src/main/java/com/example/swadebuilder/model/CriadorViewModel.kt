@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.listaComplicacoes
@@ -41,10 +42,16 @@ class CriadorViewModel(
     private val _feedbackMessages = mutableStateListOf<String>()
     val feedbackMessages: List<String> = _feedbackMessages
 
+    private var loadedGameData by mutableStateOf<GameDataSnapshot?>(null)
 
+    private fun periciasData() = loadedGameData?.listaPericias ?: listaPericias
+    private fun vantagensData() = loadedGameData?.listaVantagens ?: listaVantagens
+    private fun complicacoesData() = loadedGameData?.listaComplicacoes ?: listaComplicacoes
+    private fun coracoesData() = loadedGameData?.listaCoracoesCrystal ?: listaCoracoesCrystal
+    private fun periciasMapData() = loadedGameData?.mapaPericias ?: mapaPericias
 
     suspend fun carregarDadosDeJogo(context: Context, activeModules: Set<String>): GameDataSnapshot {
-        return gameDataRepository.load(context, activeModules)
+        return gameDataRepository.load(context, activeModules).also { loadedGameData = it }
     }
     fun logFeedback(message: String) {
         _feedbackMessages.add(message)
@@ -57,7 +64,7 @@ class CriadorViewModel(
     fun ensureDefaultSpecializations() {
         if (!state.usarEspecializacoesDePericia) return
 
-        listaPericias.forEach { per ->
+        periciasData().forEach { per ->
             val raw = state.rawTotal(per)
             // Skills that have points or are basic (unless 0 and non-basic, which rawTotal handles)
             val visible = raw > 0 || per.basica
@@ -277,7 +284,7 @@ class CriadorViewModel(
         val convertidos = state.vantagensSelecionadas.map { v ->
             if (v.id == "antecedente_arcano" && v.choice != null) {
                 val novoId = mapChoiceToArcanoId(v.choice)
-                val novo = listaVantagens.find { it.id == novoId }
+                val novo = vantagensData().find { it.id == novoId }
                 novo ?: v
             } else v
         }
@@ -409,7 +416,7 @@ class CriadorViewModel(
         state.aplicarAncestralidade(targetAncestralidade, mutableListOf())
 
         if (state.modoSupers) {
-            listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
+            vantagensData().firstOrNull { it.id == "superpoderes" }?.let { sp ->
                 if (state.vantagensSelecionadas.none { it.id == "superpoderes" }) {
                     // Use copy to prevent shared state issues even here
                     state.vantagensSelecionadas.add(sp.copy())
@@ -418,13 +425,13 @@ class CriadorViewModel(
         }
 
         if (state.compendioCrystalHeartAtivo) {
-            listaVantagens.firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
+            vantagensData().firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
                 if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
             }
             // Auto-select Basic Heart
-            val basicHeart = listaCoracoesCrystal.firstOrNull { it.id == "heart_starter" }
+            val basicHeart = coracoesData().firstOrNull { it.id == "heart_starter" }
             if (basicHeart != null) {
                 state.coracaoCrystalSelecionado = basicHeart
             }
@@ -525,7 +532,7 @@ class CriadorViewModel(
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
         state.recalcularPontosAtributo(mutableListOf())
 
-        listaPericias.forEach { per ->
+        periciasData().forEach { per ->
             state.baseIncsPorPericia[per] = 0
             state.spCostStackPorPericia.getValue(per).clear()
             state.compCostStackPorPericia[per]?.clear()
@@ -645,7 +652,7 @@ class CriadorViewModel(
             is PowerEffect.BonusMovimentacao -> { /* ok */ }
 
             is PowerEffect.SuperVantagem -> {
-                val vant = listaVantagens.firstOrNull {
+                val vant = vantagensData().firstOrNull {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 } ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
 
@@ -673,7 +680,7 @@ class CriadorViewModel(
                 // Validações específicas para Superfeitiçaria e Superciência
                 val nomeKey = efeito.nome.keyify()
                 if (nomeKey == "SUPERFEITICARIA") {
-                    val ocultismo = mapaPericias["OCULTISMO"]
+                    val ocultismo = periciasMapData()["OCULTISMO"]
                     if (ocultismo != null) {
                         val raw = state.rawTotalComSupers(ocultismo)
                         if (raw < 10) {
@@ -681,7 +688,7 @@ class CriadorViewModel(
                         }
                     }
                 } else if (nomeKey == "SUPERCIENCIA") {
-                    val ciencias = mapaPericias["CIENCIA"]
+                    val ciencias = periciasMapData()["CIENCIA"]
                     if (ciencias != null) {
                         val raw = state.rawTotalComSupers(ciencias)
                         if (raw < 10) {
@@ -757,7 +764,7 @@ class CriadorViewModel(
             }
 
             is PowerEffect.SuperVantagem -> {
-                listaVantagens.firstOrNull { it.id == efeito.vantagemId }?.let { v ->
+                vantagensData().firstOrNull { it.id == efeito.vantagemId }?.let { v ->
                     state.adicionarVantagemPorSuper(v.copy()) // Fix: Use copy
                     logFeedback("Vantagem ${v.nome} adicionada.")
                 }
@@ -804,7 +811,7 @@ class CriadorViewModel(
             }
 
             is PowerEffect.SuperPericia -> {
-                val perObj = mapaPericias[efeito.periciaKey.keyify()]
+                val perObj = periciasMapData()[efeito.periciaKey.keyify()]
                 if (perObj != null) {
                     val baseRaw = state.rawTotal(perObj)
                     val incsAtuais = state.superInvestments
@@ -862,7 +869,7 @@ class CriadorViewModel(
             }
 
             is PowerEffect.SuperVantagem -> {
-                listaVantagens.firstOrNull {
+                vantagensData().firstOrNull {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 }?.let { v ->
                     state.removerVantagemPorSuper(v)
@@ -887,7 +894,7 @@ class CriadorViewModel(
 
     fun salvarCrystalHeartPersonalizado(context: Context, heart: CrystalHeart): CrystalHeart? {
         val saved = CustomCrystalHeartStorage.saveCustomHeart(context, heart) ?: return null
-        val updated = listaCoracoesCrystal.toMutableList()
+        val updated = coracoesData().toMutableList()
         val existingIndex = updated.indexOfFirst { it.id == saved.id }
         if (existingIndex >= 0) {
             updated[existingIndex] = saved
@@ -895,15 +902,17 @@ class CriadorViewModel(
             updated.add(saved)
         }
         listaCoracoesCrystal = updated
+        loadedGameData = loadedGameData?.copy(listaCoracoesCrystal = updated)
         return saved
     }
 
     fun removerCrystalHeartPersonalizado(context: Context, heartId: String): Boolean {
         val removed = CustomCrystalHeartStorage.deleteCustomHeart(context, heartId)
         if (!removed) return false
-        listaCoracoesCrystal = listaCoracoesCrystal.filterNot { it.id == heartId }
+        listaCoracoesCrystal = coracoesData().filterNot { it.id == heartId }
+        loadedGameData = loadedGameData?.copy(listaCoracoesCrystal = listaCoracoesCrystal)
         if (state.coracaoCrystalSelecionado?.id == heartId) {
-            val starter = listaCoracoesCrystal.firstOrNull { it.placeholder }
+            val starter = coracoesData().firstOrNull { it.placeholder }
             state.coracaoCrystalSelecionado = starter
         }
         return true
@@ -971,7 +980,7 @@ class CriadorViewModel(
             val skillValuesSnapshot = skills.associateWith { skillName ->
                 val key = skillName.keyify()
                 val pericia = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
-                    ?: mapaPericias[key]
+                    ?: periciasMapData()[key]
                 pericia?.let { state.rawTotal(it) }
             }.filterValues { it != null }.mapValues { it.value!! }
             state.advancementHistory.add(
@@ -1294,7 +1303,7 @@ class CriadorViewModel(
             // Revert changes made during this session
             state.skillsForCurrentAdvancement.forEach { skillName ->
                 val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
-                    ?: mapaPericias[skillName.keyify()]
+                    ?: periciasMapData()[skillName.keyify()]
                 if (skill != null) {
                     state.decreasePericia(skill)
                 }
@@ -1416,7 +1425,7 @@ class CriadorViewModel(
                 // Reverte o gasto dos pontos de perícia
                 lastAction.skillsIncreased.forEach { skillName ->
                     val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
-                        ?: mapaPericias[skillName.keyify()]
+                        ?: periciasMapData()[skillName.keyify()]
                     if (skill != null) {
                         state.decreasePericia(skill)
                     }
@@ -1427,7 +1436,7 @@ class CriadorViewModel(
                 state.rebuildAllPericiaStacks()
             }
             is AdvancementAction.RemoveHindrance -> {
-                val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
+                val hindrance = complicacoesData().first { it.id == lastAction.hindranceId }
                 when (lastAction.changeType) {
                     HindranceChangeType.RESERVATION -> {
                         state.reservasComplicacaoMaior.remove(hindrance.id)

@@ -1,8 +1,8 @@
 # Fase 1 — isolamento de dados globais com Repository
 
-Implementação inicial da Fase 1 concluída com foco em **introduzir abstração sem quebrar o legado**.
+Implementação da Fase 1 evoluída em duas etapas incrementais:
 
-## O que foi implementado
+## Etapa 1 (bridge de carregamento)
 
 1. **Contrato de repositório**
    - `GameDataRepository` com método `load(context, activeModules)`.
@@ -13,23 +13,35 @@ Implementação inicial da Fase 1 concluída com foco em **introduzir abstraçã
    - Mantém compatibilidade com o fluxo atual enquanto centraliza o ponto de acesso a dados.
 
 3. **Bridge no DataLoader**
-   - `DataLoader.loadCore` e `DataLoader.updateActiveModules` agora retornam `GameDataSnapshot`.
-   - Continuidade garantida para o legado: as globais ainda são preenchidas, mas o carregamento também devolve snapshot explícito.
+   - `DataLoader.loadCore` e `DataLoader.updateActiveModules` retornam `GameDataSnapshot`.
+   - As globais legadas continuam sendo preenchidas para compatibilidade.
 
 4. **Orquestração via ViewModel**
-   - `CriadorViewModel` passa a receber `GameDataRepository` (injeção por construtor com default).
-   - Nova API `carregarDadosDeJogo(context, activeModules)` para concentrar o carregamento no ViewModel.
+   - `CriadorViewModel` recebe `GameDataRepository` (injeção por construtor com default).
+   - API `carregarDadosDeJogo(context, activeModules)` centraliza carregamento no ViewModel.
 
-5. **Camada de UI usando ViewModel (não DataLoader direto)**
-   - `MainActivity` e `TelaInicial` passaram a chamar o ViewModel para carregar dados.
+5. **UI sem DataLoader direto**
+   - `MainActivity` e `TelaInicial` chamam ViewModel para carregar dados.
+
+## Etapa 2 (redução de leitura direta de globais)
+
+No `CriadorViewModel`, pontos críticos passaram a ler preferencialmente do snapshot carregado (`loadedGameData`) com fallback para globais durante transição:
+
+- listas de perícias, vantagens, complicações e corações;
+- mapa de perícias (`mapaPericias`) usado em validações/efeitos;
+- atualização de Crystal Hearts customizados sincronizando também o snapshot em memória.
+
+Esse passo reduz acoplamento da camada de regra à fonte global mutável sem quebrar o legado.
 
 ## Resultado desta iteração
 
-- O app deixa de acoplar UI diretamente ao `DataLoader`.
-- O ponto de entrada para dados agora é um contrato (`GameDataRepository`), preparando a troca futura das globais por fonte imutável/injetada.
-- A migração é incremental (Branch by Abstraction), sem rewrite.
+- O acoplamento da UI com `DataLoader` foi removido.
+- O ponto de entrada para dados agora é um contrato (`GameDataRepository`).
+- O ViewModel já começa a consumir fonte de dados carregada explicitamente (snapshot) em vez de depender somente de globais.
+- Migração segue incremental (Branch by Abstraction), sem rewrite.
 
-## Próximo passo sugerido (Fase 1.1)
+## Próximo passo sugerido (Fase 1.2)
 
-- Migrar consumidores de listas globais para usar `GameDataSnapshot` diretamente no estado/viewmodel.
-- Reduzir escrita em globais para uma camada de compatibilidade única, até remoção total.
+- Extrair um `GameDataStore` interno ao ViewModel/State para substituir gradualmente leituras globais restantes.
+- Encapsular writes de conteúdo customizado (ex.: Crystal Hearts) nesse store para eliminar sincronização manual.
+- Adicionar testes unitários do ViewModel com `FakeGameDataRepository`.
