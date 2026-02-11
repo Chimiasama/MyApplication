@@ -89,7 +89,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
-import com.example.swadebuilder.model.DataLoader
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MonstroTemplate
@@ -233,11 +232,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                if (activeKeys.isEmpty()) {
-                    DataLoader.loadCore(this@MainActivity)
-                } else {
-                    DataLoader.updateActiveModules(this@MainActivity, activeKeys)
-                }
+                viewModel.carregarDadosDeJogo(this@MainActivity, activeKeys)
                 isDataLoaded.value = LoadingState.Success
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao carregar dados: ${e.message}")

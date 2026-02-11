@@ -143,4 +143,30 @@ class Phase0CriticalFlowsTest {
         assertEquals(6, state.periciaStartRaw("ELFOS", atletismo))
         assertEquals(6, state.rawTotal(atletismo))
     }
+    @Test
+    fun periciasFiltradasPorCompendio_consideraLivrosAtivosAlemDoBasico() {
+        val state = CriadorState()
+
+        val pilotarBasico = Pericia(nome = "PILOTAR", atributo = "AGILIDADE", basica = false, origem = "BASICO")
+        val pilotarSciFi = Pericia(nome = "PILOTAR", atributo = "AGILIDADE", basica = false, origem = "SCI_FI")
+        val ocultismoFantasia = Pericia(nome = "OCULTISMO", atributo = "ASTUCIA", basica = false, origem = "FANTASIA")
+
+        listaPericias = listOf(atletismo, pilotarBasico, pilotarSciFi, ocultismoFantasia)
+        mapaPericias = listaPericias.associateBy { it.nome }
+
+        state.compendioFantasiaAtivo = false
+        state.compendioSciFiAtivo = false
+        var filtradas = state.periciasFiltradasPorCompendio.map { it.nome to (it.origem ?: "") }
+        assertTrue(filtradas.any { it.first == "PILOTAR" && it.second == "BASICO" })
+        assertFalse(filtradas.any { it.first == "OCULTISMO" })
+
+        state.compendioSciFiAtivo = true
+        filtradas = state.periciasFiltradasPorCompendio.map { it.nome to (it.origem ?: "") }
+        assertTrue(filtradas.any { it.first == "PILOTAR" && it.second == "SCI_FI" })
+
+        state.compendioFantasiaAtivo = true
+        filtradas = state.periciasFiltradasPorCompendio.map { it.nome to (it.origem ?: "") }
+        assertTrue(filtradas.any { it.first == "OCULTISMO" && it.second == "FANTASIA" })
+    }
+
 }

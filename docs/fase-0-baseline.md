@@ -14,6 +14,7 @@ Cenários-ouro cobertos:
 - **Round-trip de snapshot** preservando pilhas e seleções críticas de criação.
 - **Rebuild de perícias com limite de pool** para garantir que `pontosPericia` não fica negativo.
 - **Troca de ancestralidade** aplicando base racial de perícia (`HUMANOS` -> `ELFOS` para `ATLETISMO`).
+- **Filtro por compêndios ativos** validando seleção de perícias de livros não-básicos (ex.: `SCI_FI`, `FANTASIA`) e priorização da origem ativa.
 
 Esses cenários servem como “golden tests” para comparar comportamento durante as próximas fases.
 
@@ -35,7 +36,7 @@ Métricas iniciais registradas pelo script:
 ./scripts/phase0_baseline_metrics.sh
 ```
 
-## 4) Critério de saída da Fase 0 (atendido)
+## 4) Critério de saída da Fase 0 (atendido e validado para múltiplos livros)
 
 - [x] Fluxos sensíveis cobertos por testes de regressão iniciais.
 - [x] Cenários-ouro definidos para comparação de comportamento.

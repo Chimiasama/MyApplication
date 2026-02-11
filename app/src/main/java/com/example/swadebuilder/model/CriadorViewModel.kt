@@ -28,7 +28,9 @@ data class InvestResult(val ok: Boolean, val mensagem: String)
 /**
  * ViewModel que gerencia o estado de criação de personagem.
  */
-class CriadorViewModel : ViewModel() {
+class CriadorViewModel(
+    private val gameDataRepository: GameDataRepository = AssetGameDataRepository()
+) : ViewModel() {
 
     companion object {
         private const val DEFAULT_CHARACTER_NAME = "Nome"
@@ -39,6 +41,11 @@ class CriadorViewModel : ViewModel() {
     private val _feedbackMessages = mutableStateListOf<String>()
     val feedbackMessages: List<String> = _feedbackMessages
 
+
+
+    suspend fun carregarDadosDeJogo(context: Context, activeModules: Set<String>): GameDataSnapshot {
+        return gameDataRepository.load(context, activeModules)
+    }
     fun logFeedback(message: String) {
         _feedbackMessages.add(message)
     }
