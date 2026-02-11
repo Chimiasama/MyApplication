@@ -53,10 +53,12 @@ class CriadorState {
         "feio",
         "sombrio",
         "sinistro"
-    )
+    ).map { it.keyify() }.toSet()
+
+    private val ameacadorId = "ameacador".keyify()
 
     private fun atendePreviasPorComplicacaoParaAmeacador(v: Vantagem): Boolean {
-        if (v.id.keyify() != "ameacador") return false
+        if (v.id.keyify() != ameacadorId) return false
 
         val requisitadas = v.requisitos.vantagensPrevias.map { it.keyify() }.toSet()
         val liberadoras = (ameacadorComplicacoesLiberadoras + requisitadas)

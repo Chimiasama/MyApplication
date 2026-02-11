@@ -18,10 +18,12 @@ object RequirementValidator {
         "desagradavel",
         "sem_escrupulos",
         "feio"
-    )
+    ).map { it.keyify() }.toSet()
 
     // Alguns compêndios descrevem que estas complicações também liberam Ameaçador.
-    private val ameacadorComplicacoesExtras = setOf("sombrio", "sinistro")
+    private val ameacadorComplicacoesExtras = setOf("sombrio", "sinistro").map { it.keyify() }.toSet()
+
+    private val ameacadorId = "ameacador".keyify()
 
     fun canSelect(v: Vantagem, state: CriadorState): Boolean {
         val key = v.nome.keyify()
@@ -129,7 +131,7 @@ object RequirementValidator {
         if (v.requisitos.vantagensPrevias.isNotEmpty()) {
             // Regra especial de Ameaçador: os IDs em `vantagens_previas` representam
             // complicações alternativas (OR), não uma lista cumulativa (AND).
-            if (v.id == "ameacador") {
+            if (v.id.keyify() == ameacadorId) {
                 val complicacoesSelecionadasIds = state.complicacoesSelecionadas.keys
                     .map { it.id.keyify() }
                     .toSet()
