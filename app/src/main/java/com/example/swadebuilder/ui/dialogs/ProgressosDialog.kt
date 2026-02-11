@@ -1014,7 +1014,7 @@ fun ProgressosDialog(
                                         pendingMysticPowersAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showMysticPowersSelection = true
-                                    } else if (vant.requiresChoice) {
+                                    } else if (vant.requiresChoice || vant.vinculadoPericia || vant.id == "arma_predileta_aprimorada") {
                                         pendingAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showPendingChoice = true
