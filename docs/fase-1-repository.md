@@ -52,3 +52,14 @@ Esse passo reduz acoplamento da camada de regra à fonte global mutável sem que
 - Criado `GameDataStore` para centralizar leitura do `GameDataSnapshot` com fallback explícito para globais legadas.
 - `CriadorViewModel` passou a usar o store (em vez de manter estado solto de snapshot), reduzindo dispersão da lógica de fallback.
 - Adicionados testes unitários de `GameDataStore` cobrindo fallback, preferência por snapshot e atualização de corações customizados em memória.
+
+
+## Etapa 4 (testes de ViewModel com repositório fake)
+
+- Adicionados testes do `CriadorViewModel` com `FakeGameDataRepository` para validar que o carregamento via repositório alimenta o fluxo de especializações usando o snapshot (sem depender de listas globais).
+- Coberto também o caminho `aplicarGameDataSnapshot(...)` para permitir testes sem contexto Android e facilitar próxima etapa de desacoplamento.
+
+## Status da Fase 1
+
+- Com as etapas 1 a 4, a Fase 1 está **funcionalmente concluída** no objetivo de introduzir contrato de dados, remover acoplamento direto da UI ao loader e iniciar consumo via store/snapshot no ViewModel.
+- Próximo marco recomendado: iniciar Fase 2 com extração de regras de domínio em use cases puros.
