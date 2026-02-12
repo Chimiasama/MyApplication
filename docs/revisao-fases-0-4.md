@@ -56,6 +56,7 @@
 3. Implementar `RulesResolver` com precedência de módulos.
 4. Aplicar o resolver em fluxo real do app (`CriadorViewModel.resetStateParaNovoPersonagem`).
 5. Cobrir o resolver com teste unitário.
+6. Expandir estratégia de cenário para defaults de ancestralidade/vantagens mandatórias/coração inicial.
 
 ### Execução
 - [x] Item 1 concluído.
@@ -63,3 +64,4 @@
 - [x] Item 3 concluído.
 - [x] Item 4 concluído.
 - [x] Item 5 concluído.
+- [x] Item 6 concluído (continuação da Fase 4 em `docs/fase-4-kickoff.md`).

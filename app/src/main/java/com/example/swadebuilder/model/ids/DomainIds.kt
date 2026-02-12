@@ -51,3 +51,13 @@ object PathfinderCurrencyIds {
     const val PP = "PP"
     const val PC = "PC"
 }
+
+
+object AdvantageIds {
+    const val SUPERPODERES = "superpoderes"
+    const val AA_AGENTE_SYN = "aa_agente_syn"
+}
+
+object CrystalHeartIds {
+    const val HEART_STARTER = "heart_starter"
+}

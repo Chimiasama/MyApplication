@@ -38,7 +38,9 @@ import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
 import com.example.swadebuilder.model.usecase.CalculateCurrentSuperSkillStepsUseCase
 import com.example.swadebuilder.model.usecase.ResolveAdvantageByIdUseCase
 import com.example.swadebuilder.model.usecase.NormalizeArcaneBackgroundChoiceUseCase
+import com.example.swadebuilder.model.ids.AdvantageIds
 import com.example.swadebuilder.model.ids.ArcaneBackgroundIds
+import com.example.swadebuilder.model.ids.CrystalHeartIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.ids.PowerIds
 import com.example.swadebuilder.model.rules.RulesResolver
@@ -375,17 +377,17 @@ class CriadorViewModel(
 
         state.pontosVantagem = 0
 
+        val selectedRules = rulesResolver.resolve(
+            compendioPathfinderAtivo = compendioPathfinderAtivo,
+            compendioSciFiAtivo = compendioSciFiAtivo,
+            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+            compendioFantasiaAtivo = compendioFantasiaAtivo,
+            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
+        )
+
         // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully
         state.ancestralidade = ""
-        val targetAncestralidade = if (state.compendioPathfinderAtivo) {
-            "Humano (Pathfinder)"
-        } else if (state.compendioDeadlandsAtivo) {
-            "Humano"
-        } else if (state.compendioCrystalHeartAtivo) {
-            "As Ilhas"
-        } else {
-            "HUMANOS"
-        }
+        val targetAncestralidade = selectedRules.defaultAncestralidade()
 
         // Fix: Ensure all loaded skills are registered in the state maps to prevent crashes in rawTotal
         state.ensureAllPericiasRegistered()
@@ -415,23 +417,22 @@ class CriadorViewModel(
 
         state.aplicarAncestralidade(targetAncestralidade, mutableListOf())
 
-        if (state.modoSupers) {
-            vantagensData().firstOrNull { it.id == "superpoderes" }?.let { sp ->
-                if (state.vantagensSelecionadas.none { it.id == "superpoderes" }) {
-                    // Use copy to prevent shared state issues even here
-                    state.vantagensSelecionadas.add(sp.copy())
+        val mandatoryEdgeIds = buildSet {
+            addAll(selectedRules.mandatoryAdvantageIds())
+            if (state.modoSupers) add(AdvantageIds.SUPERPODERES)
+        }
+
+        mandatoryEdgeIds.forEach { edgeId ->
+            vantagensData().firstOrNull { it.id == edgeId }?.let { edge ->
+                if (state.vantagensSelecionadas.none { it.id == edgeId }) {
+                    state.vantagensSelecionadas.add(edge.copy())
                 }
             }
         }
 
         if (state.compendioCrystalHeartAtivo) {
-            vantagensData().firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
-                if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
-                    state.vantagensSelecionadas.add(aa.copy())
-                }
-            }
-            // Auto-select Basic Heart
-            val basicHeart = coracoesData().firstOrNull { it.id == "heart_starter" }
+            val starterHeartId = selectedRules.defaultCrystalHeartId() ?: CrystalHeartIds.HEART_STARTER
+            val basicHeart = coracoesData().firstOrNull { it.id == starterHeartId }
             if (basicHeart != null) {
                 state.coracaoCrystalSelecionado = basicHeart
             }
@@ -496,12 +497,6 @@ class CriadorViewModel(
         state.naturalArmorFromRace = 0
         // ─────────────────────────────────────────────────────────────
 
-        val selectedRules = rulesResolver.resolve(
-            compendioPathfinderAtivo = compendioPathfinderAtivo,
-            compendioSciFiAtivo = compendioSciFiAtivo,
-            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-            compendioFantasiaAtivo = compendioFantasiaAtivo
-        )
         val startingResources = selectedRules.startingResources()
         state.dinheiro = startingResources.dinheiro
 

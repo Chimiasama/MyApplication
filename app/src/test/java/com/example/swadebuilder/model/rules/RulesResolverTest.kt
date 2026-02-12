@@ -1,6 +1,9 @@
 package com.example.swadebuilder.model.rules
 
+import com.example.swadebuilder.model.ids.AdvantageIds
+import com.example.swadebuilder.model.ids.CrystalHeartIds
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class RulesResolverTest {
@@ -13,17 +16,34 @@ class RulesResolverTest {
             compendioPathfinderAtivo = true,
             compendioSciFiAtivo = true,
             compendioDeadlandsAtivo = true,
-            compendioFantasiaAtivo = true
+            compendioFantasiaAtivo = true,
+            compendioCrystalHeartAtivo = true
         )
 
         assertEquals(30000, rules.startingResources().dinheiro)
+        assertEquals("Humano (Pathfinder)", rules.defaultAncestralidade())
     }
 
     @Test
     fun `resolve valores de dinheiro por modulo`() {
-        assertEquals(1000, resolver.resolve(false, true, false, false).startingResources().dinheiro)
-        assertEquals(250, resolver.resolve(false, false, true, false).startingResources().dinheiro)
-        assertEquals(300, resolver.resolve(false, false, false, true).startingResources().dinheiro)
-        assertEquals(500, resolver.resolve(false, false, false, false).startingResources().dinheiro)
+        assertEquals(1000, resolver.resolve(false, true, false, false, false).startingResources().dinheiro)
+        assertEquals(250, resolver.resolve(false, false, true, false, false).startingResources().dinheiro)
+        assertEquals(300, resolver.resolve(false, false, false, true, false).startingResources().dinheiro)
+        assertEquals(500, resolver.resolve(false, false, false, false, false).startingResources().dinheiro)
+    }
+
+    @Test
+    fun `crystal heart define defaults de cenário`() {
+        val rules = resolver.resolve(
+            compendioPathfinderAtivo = false,
+            compendioSciFiAtivo = false,
+            compendioDeadlandsAtivo = false,
+            compendioFantasiaAtivo = false,
+            compendioCrystalHeartAtivo = true
+        )
+
+        assertEquals("As Ilhas", rules.defaultAncestralidade())
+        assertTrue(rules.mandatoryAdvantageIds().contains(AdvantageIds.AA_AGENTE_SYN))
+        assertEquals(CrystalHeartIds.HEART_STARTER, rules.defaultCrystalHeartId())
     }
 }
