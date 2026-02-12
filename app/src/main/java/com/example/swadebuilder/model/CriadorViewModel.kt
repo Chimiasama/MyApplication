@@ -36,6 +36,7 @@ import com.example.swadebuilder.model.usecase.AdjustNonNegativeBonusUseCase
 import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentWorkflowUseCase
 import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
 import com.example.swadebuilder.model.usecase.CalculateCurrentSuperSkillStepsUseCase
+import com.example.swadebuilder.model.usecase.ResolveAdvantageByIdUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -74,6 +75,7 @@ class CriadorViewModel(
     private val validatePowerInvestmentWorkflowUseCase = ValidatePowerInvestmentWorkflowUseCase()
     private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val calculateCurrentSuperSkillStepsUseCase = CalculateCurrentSuperSkillStepsUseCase()
+    private val resolveAdvantageByIdUseCase = ResolveAdvantageByIdUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -612,9 +614,10 @@ class CriadorViewModel(
             }
 
             is PowerEffect.SuperVantagem -> {
-                val vant = vantagensData().firstOrNull {
-                    it.id.equals(efeito.vantagemId, ignoreCase = true)
-                }
+                val vant = resolveAdvantageByIdUseCase.execute(
+                    vantagens = vantagensData(),
+                    vantagemId = efeito.vantagemId
+                )
 
                 val permitido = if (vant != null) {
                     val progressoAnterior = state.overrideStageForVantagem
@@ -724,7 +727,10 @@ class CriadorViewModel(
             }
 
             is PowerEffect.SuperVantagem -> {
-                vantagensData().firstOrNull { it.id == efeito.vantagemId }?.let { v ->
+                resolveAdvantageByIdUseCase.execute(
+                    vantagens = vantagensData(),
+                    vantagemId = efeito.vantagemId
+                )?.let { v ->
                     state.adicionarVantagemPorSuper(v.copy()) // Fix: Use copy
                     logFeedback("Vantagem ${v.nome} adicionada.")
                 }
@@ -840,9 +846,10 @@ class CriadorViewModel(
             }
 
             is PowerEffect.SuperVantagem -> {
-                vantagensData().firstOrNull {
-                    it.id.equals(efeito.vantagemId, ignoreCase = true)
-                }?.let { v ->
+                resolveAdvantageByIdUseCase.execute(
+                    vantagens = vantagensData(),
+                    vantagemId = efeito.vantagemId
+                )?.let { v ->
                     state.removerVantagemPorSuper(v)
                     logFeedback("Vantagem ${v.nome} removida.")
                 }

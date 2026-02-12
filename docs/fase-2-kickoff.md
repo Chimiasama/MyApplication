@@ -19,6 +19,7 @@ Com a Fase 1 funcionalmente concluída, iniciamos a Fase 2 com uma extração pe
 - Orquestração de validações de investimento de poder extraída para `ValidatePowerInvestmentWorkflowUseCase`.
 - Rebuild de stacks de perícia após mudanças de poder extraído para `RebuildSkillStacksUseCase`.
 - Cálculo de passos atuais de Super Perícia extraído para `CalculateCurrentSuperSkillStepsUseCase`.
+- Resolução de vantagem por ID (case-insensitive) extraída para `ResolveAdvantageByIdUseCase`.
 - O ViewModel agora apenas orquestra entradas/saídas e aplica o resultado no estado.
 - Testes unitários puros dos use cases adicionados.
 
