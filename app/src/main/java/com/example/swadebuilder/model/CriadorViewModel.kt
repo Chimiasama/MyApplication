@@ -28,6 +28,7 @@ import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentUseCase
 import com.example.swadebuilder.model.usecase.ValidateSpecialPowerRequirementsUseCase
 import com.example.swadebuilder.model.usecase.ValidateSuperAdvantageInvestmentUseCase
 import com.example.swadebuilder.model.usecase.ValidateSuperAttributeInvestmentUseCase
+import com.example.swadebuilder.model.usecase.ApplySuperAttributeDeltaUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -58,6 +59,7 @@ class CriadorViewModel(
     private val validateSpecialPowerRequirementsUseCase = ValidateSpecialPowerRequirementsUseCase()
     private val validateSuperAdvantageInvestmentUseCase = ValidateSuperAdvantageInvestmentUseCase()
     private val validateSuperAttributeInvestmentUseCase = ValidateSuperAttributeInvestmentUseCase()
+    private val applySuperAttributeDeltaUseCase = ApplySuperAttributeDeltaUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -691,13 +693,13 @@ class CriadorViewModel(
                 val holder = state.valoresAtributos[key]
                 if (holder != null) {
                     val antes = holder.intValue
-                    repeat(efeito.steps.coerceAtLeast(0)) {
-                        holder.intValue = if (holder.intValue < 12) {
-                            (holder.intValue + 2).coerceAtMost(30)
-                        } else {
-                            (holder.intValue + 1).coerceAtMost(30)
-                        }
-                    }
+                    holder.intValue = applySuperAttributeDeltaUseCase.execute(
+                        ApplySuperAttributeDeltaUseCase.Input(
+                            currentRaw = holder.intValue,
+                            steps = efeito.steps,
+                            direction = ApplySuperAttributeDeltaUseCase.Direction.INCREASE
+                        )
+                    )
                     logFeedback("Atributo $key aumentado de d$antes para d${holder.intValue}.")
                 }
             }
@@ -766,13 +768,13 @@ class CriadorViewModel(
                 val holder = state.valoresAtributos[key]
                 if (holder != null) {
                     val antes = holder.intValue
-                    repeat(efeito.steps.coerceAtLeast(0)) {
-                        holder.intValue = if (holder.intValue > 12) {
-                            (holder.intValue - 1).coerceAtLeast(4)
-                        } else {
-                            (holder.intValue - 2).coerceAtLeast(4)
-                        }
-                    }
+                    holder.intValue = applySuperAttributeDeltaUseCase.execute(
+                        ApplySuperAttributeDeltaUseCase.Input(
+                            currentRaw = holder.intValue,
+                            steps = efeito.steps,
+                            direction = ApplySuperAttributeDeltaUseCase.Direction.DECREASE
+                        )
+                    )
                     logFeedback("Atributo $key reduzido de d$antes para d${holder.intValue}.")
                 }
             }
