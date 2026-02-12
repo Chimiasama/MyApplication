@@ -38,6 +38,31 @@ class BuildUsageInstructionsUseCaseTest {
     }
 
     @Test
+    fun `inclui livro de monstros quando modo monstro ativo`() {
+        val text = useCase.execute(
+            BuildUsageInstructionsUseCase.Input(
+                compendioFantasiaAtivo = false,
+                compendioHorrorAtivo = false,
+                compendioSciFiAtivo = false,
+                compendioPathfinderAtivo = false,
+                compendioDeadlandsAtivo = false,
+                compendioCrystalHeartAtivo = false,
+                compendioArteDaGuerraAtivo = false,
+                compendioCidadeSolVaporAtivo = false,
+                compendioWiseguysAtivo = false,
+                modoSupers = false,
+                modoMonstroAtivo = true,
+                pathfinderLabel = "Pathfinder",
+                supersBookLabel = "Livro Supers",
+                monsterBookLabel = "Livro de Monstros"
+            )
+        )
+
+        assertTrue(text.contains("Livro de Monstros"))
+        assertFalse(text.contains("Livro Supers"))
+    }
+
+    @Test
     fun `nao inclui livros desativados`() {
         val text = useCase.execute(
             BuildUsageInstructionsUseCase.Input(
@@ -61,5 +86,6 @@ class BuildUsageInstructionsUseCaseTest {
         assertFalse(text.contains("Compêndio Fantasia"))
         assertFalse(text.contains("Compêndio Crystal Heart"))
         assertFalse(text.contains("Supers"))
+        assertFalse(text.contains("Monstros"))
     }
 }
