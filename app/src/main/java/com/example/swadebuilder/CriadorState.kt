@@ -1805,6 +1805,10 @@ class CriadorState {
         listaPericias.forEach { ensurePericiaEntry(it) }
     }
 
+    fun ensurePericiasRegistered(pericias: List<Pericia>) {
+        pericias.forEach { ensurePericiaEntry(it) }
+    }
+
     fun ensureAllAtributosRegistered() {
         listaAtributos.forEach { nome ->
             if (!valoresAtributos.containsKey(nome)) {

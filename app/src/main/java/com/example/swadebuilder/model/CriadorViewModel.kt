@@ -20,6 +20,16 @@ import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.model.usecase.EnsureDefaultSpecializationsUseCase
+import com.example.swadebuilder.model.usecase.RemoveCrystalHeartUseCase
+import com.example.swadebuilder.model.usecase.UpsertCrystalHeartUseCase
+import com.example.swadebuilder.model.usecase.GenerateSequentialNameUseCase
+import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentUseCase
+import com.example.swadebuilder.model.usecase.ValidateSpecialPowerRequirementsUseCase
+import com.example.swadebuilder.model.usecase.ValidateSuperAdvantageInvestmentUseCase
+import com.example.swadebuilder.model.usecase.ValidateSuperAttributeInvestmentUseCase
+import com.example.swadebuilder.model.usecase.ApplySuperAttributeDeltaUseCase
+import com.example.swadebuilder.model.usecase.CalculatePerPowerLimitUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -28,7 +38,9 @@ data class InvestResult(val ok: Boolean, val mensagem: String)
 /**
  * ViewModel que gerencia o estado de criação de personagem.
  */
-class CriadorViewModel : ViewModel() {
+class CriadorViewModel(
+    private val gameDataRepository: GameDataRepository = AssetGameDataRepository()
+) : ViewModel() {
 
     companion object {
         private const val DEFAULT_CHARACTER_NAME = "Nome"
@@ -39,6 +51,31 @@ class CriadorViewModel : ViewModel() {
     private val _feedbackMessages = mutableStateListOf<String>()
     val feedbackMessages: List<String> = _feedbackMessages
 
+    private val gameDataStore = GameDataStore()
+    private val ensureDefaultSpecializationsUseCase = EnsureDefaultSpecializationsUseCase()
+    private val upsertCrystalHeartUseCase = UpsertCrystalHeartUseCase()
+    private val removeCrystalHeartUseCase = RemoveCrystalHeartUseCase()
+    private val generateSequentialNameUseCase = GenerateSequentialNameUseCase(defaultName = DEFAULT_CHARACTER_NAME)
+    private val validatePowerInvestmentUseCase = ValidatePowerInvestmentUseCase()
+    private val validateSpecialPowerRequirementsUseCase = ValidateSpecialPowerRequirementsUseCase()
+    private val validateSuperAdvantageInvestmentUseCase = ValidateSuperAdvantageInvestmentUseCase()
+    private val validateSuperAttributeInvestmentUseCase = ValidateSuperAttributeInvestmentUseCase()
+    private val applySuperAttributeDeltaUseCase = ApplySuperAttributeDeltaUseCase()
+    private val calculatePerPowerLimitUseCase = CalculatePerPowerLimitUseCase()
+
+    private fun periciasData() = gameDataStore.pericias(listaPericias)
+    private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
+    private fun complicacoesData() = gameDataStore.complicacoes(listaComplicacoes)
+    private fun coracoesData() = gameDataStore.coracoesCrystal(listaCoracoesCrystal)
+    private fun periciasMapData() = gameDataStore.periciasMap(mapaPericias)
+
+    suspend fun carregarDadosDeJogo(context: Context, activeModules: Set<String>): GameDataSnapshot {
+        return gameDataRepository.load(context, activeModules).also { gameDataStore.updateSnapshot(it) }
+    }
+
+    internal fun aplicarGameDataSnapshot(snapshot: GameDataSnapshot) {
+        gameDataStore.updateSnapshot(snapshot)
+    }
     fun logFeedback(message: String) {
         _feedbackMessages.add(message)
     }
@@ -48,25 +85,18 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun ensureDefaultSpecializations() {
-        if (!state.usarEspecializacoesDePericia) return
+        val pericias = periciasData()
+        state.ensurePericiasRegistered(pericias)
 
-        listaPericias.forEach { per ->
-            val raw = state.rawTotal(per)
-            // Skills that have points or are basic (unless 0 and non-basic, which rawTotal handles)
-            val visible = raw > 0 || per.basica
+        val atualizado = ensureDefaultSpecializationsUseCase.execute(
+            usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
+            pericias = pericias,
+            rawTotalProvider = { per -> state.rawTotal(per) },
+            atual = state.especializacoesPorPericia.toMap()
+        )
 
-            if (visible) {
-                val spec = state.especializacoesPorPericia[per.nome]
-                if (spec?.principal == null) {
-                    val currentList = spec?.lista ?: emptyList()
-                    val novo = EspecializacoesDto(
-                        principal = "Especialização 1",
-                        lista = currentList
-                    )
-                    state.especializacoesPorPericia[per.nome] = novo
-                }
-            }
-        }
+        state.especializacoesPorPericia.clear()
+        state.especializacoesPorPericia.putAll(atualizado)
     }
 
     // === NOVO: toggle global (por enquanto via MainActivity) ===
@@ -117,38 +147,11 @@ class CriadorViewModel : ViewModel() {
     }
 
     suspend fun prepararNomeInicial(context: Context) {
-        state.nomePersonagem = gerarNomeSequencial(
-            DEFAULT_CHARACTER_NAME,
-            listarPersonagensSalvos(context).map { it.nome },
+        state.nomePersonagem = generateSequentialNameUseCase.execute(
+            baseName = DEFAULT_CHARACTER_NAME,
+            existingNames = listarPersonagensSalvos(context).map { it.nome },
             usarParenteses = false
         )
-    }
-
-    private fun gerarNomeSequencial(
-        baseName: String,
-        existingNames: List<String>,
-        usarParenteses: Boolean
-    ): String {
-        val normalizedExisting = existingNames.map { it.lowercase() }.toSet()
-        val desiredBase = baseName.ifBlank { DEFAULT_CHARACTER_NAME }
-
-        if (!normalizedExisting.contains(desiredBase.lowercase())) {
-            return desiredBase
-        }
-
-        var counter = 2
-        var candidate: String
-
-        do {
-            candidate = if (usarParenteses) {
-                "$desiredBase ($counter)"
-            } else {
-                "$desiredBase $counter"
-            }
-            counter++
-        } while (normalizedExisting.contains(candidate.lowercase()))
-
-        return candidate
     }
 
     suspend fun salvarPersonagem(
@@ -176,9 +179,9 @@ class CriadorViewModel : ViewModel() {
             .map { it.nome }
 
         val finalName = if (desiredName.equals(DEFAULT_CHARACTER_NAME, ignoreCase = true)) {
-            gerarNomeSequencial(DEFAULT_CHARACTER_NAME, otherNames, usarParenteses = false)
+            generateSequentialNameUseCase.execute(DEFAULT_CHARACTER_NAME, otherNames, usarParenteses = false)
         } else {
-            gerarNomeSequencial(desiredName, otherNames, usarParenteses = true)
+            generateSequentialNameUseCase.execute(desiredName, otherNames, usarParenteses = true)
         }
 
         state.nomePersonagem = finalName
@@ -270,7 +273,7 @@ class CriadorViewModel : ViewModel() {
         val convertidos = state.vantagensSelecionadas.map { v ->
             if (v.id == "antecedente_arcano" && v.choice != null) {
                 val novoId = mapChoiceToArcanoId(v.choice)
-                val novo = listaVantagens.find { it.id == novoId }
+                val novo = vantagensData().find { it.id == novoId }
                 novo ?: v
             } else v
         }
@@ -402,7 +405,7 @@ class CriadorViewModel : ViewModel() {
         state.aplicarAncestralidade(targetAncestralidade, mutableListOf())
 
         if (state.modoSupers) {
-            listaVantagens.firstOrNull { it.id == "superpoderes" }?.let { sp ->
+            vantagensData().firstOrNull { it.id == "superpoderes" }?.let { sp ->
                 if (state.vantagensSelecionadas.none { it.id == "superpoderes" }) {
                     // Use copy to prevent shared state issues even here
                     state.vantagensSelecionadas.add(sp.copy())
@@ -411,13 +414,13 @@ class CriadorViewModel : ViewModel() {
         }
 
         if (state.compendioCrystalHeartAtivo) {
-            listaVantagens.firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
+            vantagensData().firstOrNull { it.id == "aa_agente_syn" }?.let { aa ->
                 if (state.vantagensSelecionadas.none { it.id == "aa_agente_syn" }) {
                     state.vantagensSelecionadas.add(aa.copy())
                 }
             }
             // Auto-select Basic Heart
-            val basicHeart = listaCoracoesCrystal.firstOrNull { it.id == "heart_starter" }
+            val basicHeart = coracoesData().firstOrNull { it.id == "heart_starter" }
             if (basicHeart != null) {
                 state.coracaoCrystalSelecionado = basicHeart
             }
@@ -518,7 +521,7 @@ class CriadorViewModel : ViewModel() {
         state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
         state.recalcularPontosAtributo(mutableListOf())
 
-        listaPericias.forEach { per ->
+        periciasData().forEach { per ->
             state.baseIncsPorPericia[per] = 0
             state.spCostStackPorPericia.getValue(per).clear()
             state.compCostStackPorPericia[per]?.clear()
@@ -549,10 +552,14 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun perPowerLimit(poderId: String): Int {
-        return if (state.poderFavoritoId != null && state.poderFavoritoId == poderId)
-            state.limiteFavorecido
-        else
-            state.limitePorPoderPadrao
+        return calculatePerPowerLimitUseCase.execute(
+            CalculatePerPowerLimitUseCase.Input(
+                favoritePowerId = state.poderFavoritoId,
+                targetPowerId = poderId,
+                favoriteLimit = state.limiteFavorecido,
+                defaultLimit = state.limitePorPoderPadrao
+            )
+        )
     }
 
     fun definirPoderFavorecido(poderId: String?) {
@@ -560,16 +567,14 @@ class CriadorViewModel : ViewModel() {
     }
 
     fun podeSubirAtributoPorSuper(attrKey: String, steps: Int): InvestCheck {
-        if (steps == 0) return InvestCheck(true)
-
-        val atualRaw = state.atributoRawComSupers(attrKey)          // base + supers já aplicados
-        val alvoRaw  = state.applySuperStepsFrom(atualRaw, steps)   // simula steps corretamente
-
-        val tetoTecnico = 30
-        if (alvoRaw > tetoTecnico) {
-            return InvestCheck(false, "Limite técnico de atributo excedido ($tetoTecnico).")
-        }
-        return InvestCheck(true)
+        val erro = validateSuperAttributeInvestmentUseCase.execute(
+            ValidateSuperAttributeInvestmentUseCase.Input(
+                currentRaw = state.atributoRawComSupers(attrKey),
+                steps = steps,
+                applySteps = { raw, delta -> state.applySuperStepsFrom(raw, delta) }
+            )
+        )
+        return if (erro == null) InvestCheck(true) else InvestCheck(false, erro)
     }
 
     private fun bloqueioClasseExclusiva(vant: Vantagem): String? {
@@ -585,36 +590,18 @@ class CriadorViewModel : ViewModel() {
         custo: Int,
         efeito: PowerEffect
     ): InvestCheck {
-        // 1) Saldo de Pontos de Super (SP)
-        if (custo <= 0) return InvestCheck(false, "Custo inválido.")
-        if (state.superPontosDisponiveis < custo) {
-            return InvestCheck(false, "Sem saldo: precisa de $custo, tem ${state.superPontosDisponiveis}.")
-        }
-
-        // 2) Limite Individual de CUSTO (quantos SP gastei neste poder)
-        val jaGastoNestePoder = state.gastosPorPoder[poderId] ?: 0
-        val limiteIndividual = perPowerLimit(poderId)
-        if (jaGastoNestePoder + custo > limiteIndividual) {
-            val falta = (jaGastoNestePoder + custo) - limiteIndividual
-            return InvestCheck(false, "Limite de gasto neste poder excedido em $falta (limite: $limiteIndividual).")
-        }
-
-        // 3) Limite Compartilhado de CUSTO (Armadura + Resistência)
-        // Regra: a soma de SP gastos em Resistência e Armadura não pode ultrapassar o Limite de Poder da campanha.
-        if (poderId == "sp_armor" || poderId == "sp_res") {
-            val gastosArmor = state.gastosPorPoder["sp_armor"] ?: 0
-            val gastosRes   = state.gastosPorPoder["sp_res"] ?: 0
-            val shareAtual  = gastosArmor + gastosRes
-            val shareLimite = state.limiteDePoderDaCampanha
-            val shareDepois = shareAtual + custo
-
-            if (shareDepois > shareLimite) {
-                val excedeu = shareDepois - shareLimite
-                return InvestCheck(
-                    ok = false,
-                    motivoBloqueio = "Limite compartilhado de Armadura+Resistência excedido em $excedeu (gasto previsto: $shareDepois / limite $shareLimite)."
-                )
-            }
+        val erroBasico = validatePowerInvestmentUseCase.execute(
+            ValidatePowerInvestmentUseCase.Input(
+                poderId = poderId,
+                custo = custo,
+                superPontosDisponiveis = state.superPontosDisponiveis,
+                gastosPorPoder = state.gastosPorPoder,
+                limitePorPoder = perPowerLimit(poderId),
+                limiteCompartilhadoArmaduraResistencia = state.limiteDePoderDaCampanha
+            )
+        )
+        if (erroBasico != null) {
+            return InvestCheck(false, erroBasico)
         }
 
         // 4) Checagens específicas de outros efeitos
@@ -638,49 +625,51 @@ class CriadorViewModel : ViewModel() {
             is PowerEffect.BonusMovimentacao -> { /* ok */ }
 
             is PowerEffect.SuperVantagem -> {
-                val vant = listaVantagens.firstOrNull {
+                val vant = vantagensData().firstOrNull {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
-                } ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
-
-                val bloqueioClasse = bloqueioClasseExclusiva(vant)
-                if (bloqueioClasse != null) {
-                    return InvestCheck(false, bloqueioClasse)
-                }
-
-                // NÃO permitir comprar de novo se já tiver a vantagem de qualquer forma
-                if (state.vantagensSelecionadas.any { it.id == vant.id }) {
-                    return InvestCheck(false, "Você já possui a vantagem ${vant.nome}.")
                 }
 
                 // valida requisitos ignorando Estágio (simula “Lendário” para não travar pelo estágio)
-                val progressoAnterior = state.overrideStageForVantagem
-                state.overrideStageForVantagem = "Lendário"
-                val permitido = state.podeSelecionar(vant)
-                state.overrideStageForVantagem = progressoAnterior
+                val permitido = if (vant != null) {
+                    val progressoAnterior = state.overrideStageForVantagem
+                    state.overrideStageForVantagem = "Lendário"
+                    val podeSelecionar = state.podeSelecionar(vant)
+                    state.overrideStageForVantagem = progressoAnterior
+                    podeSelecionar
+                } else {
+                    false
+                }
 
-                if (!permitido) {
-                    return InvestCheck(false, "Requisitos não atendidos para a vantagem (exceto Estágio).")
+                val erroSuperVantagem = validateSuperAdvantageInvestmentUseCase.execute(
+                    ValidateSuperAdvantageInvestmentUseCase.Input(
+                        vantagemIdSolicitada = efeito.vantagemId,
+                        vantagemEncontrada = vant?.let {
+                            ValidateSuperAdvantageInvestmentUseCase.AdvantageRef(
+                                id = it.id,
+                                nome = it.nome
+                            )
+                        },
+                        mensagemBloqueioClasse = vant?.let { bloqueioClasseExclusiva(it) },
+                        jaPossuiVantagem = vant != null && state.vantagensSelecionadas.any { it.id == vant.id },
+                        requisitosAtendidosIgnorandoEstagio = permitido
+                    )
+                )
+
+                if (erroSuperVantagem != null) {
+                    return InvestCheck(false, erroSuperVantagem)
                 }
             }
             is PowerEffect.Generico -> {
-                // Validações específicas para Superfeitiçaria e Superciência
-                val nomeKey = efeito.nome.keyify()
-                if (nomeKey == "SUPERFEITICARIA") {
-                    val ocultismo = mapaPericias["OCULTISMO"]
-                    if (ocultismo != null) {
-                        val raw = state.rawTotalComSupers(ocultismo)
-                        if (raw < 10) {
-                            return InvestCheck(false, "Requer Ocultismo d10+ (atual: ${raw.toDiceString()}).")
-                        }
-                    }
-                } else if (nomeKey == "SUPERCIENCIA") {
-                    val ciencias = mapaPericias["CIENCIA"]
-                    if (ciencias != null) {
-                        val raw = state.rawTotalComSupers(ciencias)
-                        if (raw < 10) {
-                            return InvestCheck(false, "Requer Ciência d10+ (atual: ${raw.toDiceString()}).")
-                        }
-                    }
+                val pericias = periciasMapData()
+                val erroEspecial = validateSpecialPowerRequirementsUseCase.execute(
+                    ValidateSpecialPowerRequirementsUseCase.Input(
+                        effectNameKey = efeito.nome.keyify(),
+                        ocultismoRaw = pericias["OCULTISMO"]?.let { state.rawTotalComSupers(it) },
+                        cienciaRaw = pericias["CIENCIA"]?.let { state.rawTotalComSupers(it) }
+                    )
+                )
+                if (erroEspecial != null) {
+                    return InvestCheck(false, erroEspecial)
                 }
             }
         }
@@ -710,13 +699,13 @@ class CriadorViewModel : ViewModel() {
                 val holder = state.valoresAtributos[key]
                 if (holder != null) {
                     val antes = holder.intValue
-                    repeat(efeito.steps.coerceAtLeast(0)) {
-                        holder.intValue = if (holder.intValue < 12) {
-                            (holder.intValue + 2).coerceAtMost(30)
-                        } else {
-                            (holder.intValue + 1).coerceAtMost(30)
-                        }
-                    }
+                    holder.intValue = applySuperAttributeDeltaUseCase.execute(
+                        ApplySuperAttributeDeltaUseCase.Input(
+                            currentRaw = holder.intValue,
+                            steps = efeito.steps,
+                            direction = ApplySuperAttributeDeltaUseCase.Direction.INCREASE
+                        )
+                    )
                     logFeedback("Atributo $key aumentado de d$antes para d${holder.intValue}.")
                 }
             }
@@ -750,7 +739,7 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.SuperVantagem -> {
-                listaVantagens.firstOrNull { it.id == efeito.vantagemId }?.let { v ->
+                vantagensData().firstOrNull { it.id == efeito.vantagemId }?.let { v ->
                     state.adicionarVantagemPorSuper(v.copy()) // Fix: Use copy
                     logFeedback("Vantagem ${v.nome} adicionada.")
                 }
@@ -785,19 +774,19 @@ class CriadorViewModel : ViewModel() {
                 val holder = state.valoresAtributos[key]
                 if (holder != null) {
                     val antes = holder.intValue
-                    repeat(efeito.steps.coerceAtLeast(0)) {
-                        holder.intValue = if (holder.intValue > 12) {
-                            (holder.intValue - 1).coerceAtLeast(4)
-                        } else {
-                            (holder.intValue - 2).coerceAtLeast(4)
-                        }
-                    }
+                    holder.intValue = applySuperAttributeDeltaUseCase.execute(
+                        ApplySuperAttributeDeltaUseCase.Input(
+                            currentRaw = holder.intValue,
+                            steps = efeito.steps,
+                            direction = ApplySuperAttributeDeltaUseCase.Direction.DECREASE
+                        )
+                    )
                     logFeedback("Atributo $key reduzido de d$antes para d${holder.intValue}.")
                 }
             }
 
             is PowerEffect.SuperPericia -> {
-                val perObj = mapaPericias[efeito.periciaKey.keyify()]
+                val perObj = periciasMapData()[efeito.periciaKey.keyify()]
                 if (perObj != null) {
                     val baseRaw = state.rawTotal(perObj)
                     val incsAtuais = state.superInvestments
@@ -855,7 +844,7 @@ class CriadorViewModel : ViewModel() {
             }
 
             is PowerEffect.SuperVantagem -> {
-                listaVantagens.firstOrNull {
+                vantagensData().firstOrNull {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 }?.let { v ->
                     state.removerVantagemPorSuper(v)
@@ -880,25 +869,25 @@ class CriadorViewModel : ViewModel() {
 
     fun salvarCrystalHeartPersonalizado(context: Context, heart: CrystalHeart): CrystalHeart? {
         val saved = CustomCrystalHeartStorage.saveCustomHeart(context, heart) ?: return null
-        val updated = listaCoracoesCrystal.toMutableList()
-        val existingIndex = updated.indexOfFirst { it.id == saved.id }
-        if (existingIndex >= 0) {
-            updated[existingIndex] = saved
-        } else {
-            updated.add(saved)
-        }
+        val updated = upsertCrystalHeartUseCase.execute(coracoesData(), saved)
         listaCoracoesCrystal = updated
+        gameDataStore.withUpdatedCoracoesCrystal(updated)
         return saved
     }
 
     fun removerCrystalHeartPersonalizado(context: Context, heartId: String): Boolean {
         val removed = CustomCrystalHeartStorage.deleteCustomHeart(context, heartId)
         if (!removed) return false
-        listaCoracoesCrystal = listaCoracoesCrystal.filterNot { it.id == heartId }
-        if (state.coracaoCrystalSelecionado?.id == heartId) {
-            val starter = listaCoracoesCrystal.firstOrNull { it.placeholder }
-            state.coracaoCrystalSelecionado = starter
-        }
+
+        val result = removeCrystalHeartUseCase.execute(
+            current = coracoesData(),
+            heartIdToRemove = heartId,
+            currentlySelectedId = state.coracaoCrystalSelecionado?.id
+        )
+
+        listaCoracoesCrystal = result.updated
+        gameDataStore.withUpdatedCoracoesCrystal(result.updated)
+        state.coracaoCrystalSelecionado = result.newSelected
         return true
     }
 
@@ -964,7 +953,7 @@ class CriadorViewModel : ViewModel() {
             val skillValuesSnapshot = skills.associateWith { skillName ->
                 val key = skillName.keyify()
                 val pericia = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
-                    ?: mapaPericias[key]
+                    ?: periciasMapData()[key]
                 pericia?.let { state.rawTotal(it) }
             }.filterValues { it != null }.mapValues { it.value!! }
             state.advancementHistory.add(
@@ -1287,7 +1276,7 @@ class CriadorViewModel : ViewModel() {
             // Revert changes made during this session
             state.skillsForCurrentAdvancement.forEach { skillName ->
                 val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
-                    ?: mapaPericias[skillName.keyify()]
+                    ?: periciasMapData()[skillName.keyify()]
                 if (skill != null) {
                     state.decreasePericia(skill)
                 }
@@ -1409,7 +1398,7 @@ class CriadorViewModel : ViewModel() {
                 // Reverte o gasto dos pontos de perícia
                 lastAction.skillsIncreased.forEach { skillName ->
                     val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
-                        ?: mapaPericias[skillName.keyify()]
+                        ?: periciasMapData()[skillName.keyify()]
                     if (skill != null) {
                         state.decreasePericia(skill)
                     }
@@ -1420,7 +1409,7 @@ class CriadorViewModel : ViewModel() {
                 state.rebuildAllPericiaStacks()
             }
             is AdvancementAction.RemoveHindrance -> {
-                val hindrance = listaComplicacoes.first { it.id == lastAction.hindranceId }
+                val hindrance = complicacoesData().first { it.id == lastAction.hindranceId }
                 when (lastAction.changeType) {
                     HindranceChangeType.RESERVATION -> {
                         state.reservasComplicacaoMaior.remove(hindrance.id)
