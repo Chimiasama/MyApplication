@@ -41,6 +41,7 @@ import com.example.swadebuilder.model.usecase.NormalizeArcaneBackgroundChoiceUse
 import com.example.swadebuilder.model.ids.ArcaneBackgroundIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.ids.PowerIds
+import com.example.swadebuilder.model.rules.RulesResolver
 import com.example.swadebuilder.model.ids.SkillIds
 
 // ---- OBJETOS DE RETORNO ----
@@ -82,6 +83,7 @@ class CriadorViewModel(
     private val calculateCurrentSuperSkillStepsUseCase = CalculateCurrentSuperSkillStepsUseCase()
     private val resolveAdvantageByIdUseCase = ResolveAdvantageByIdUseCase()
     private val normalizeArcaneBackgroundChoiceUseCase = NormalizeArcaneBackgroundChoiceUseCase()
+    private val rulesResolver = RulesResolver()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -494,24 +496,18 @@ class CriadorViewModel(
         state.naturalArmorFromRace = 0
         // ─────────────────────────────────────────────────────────────
 
-        state.dinheiro = if (compendioPathfinderAtivo) {
-            30000
-        } else if (compendioSciFiAtivo) {
-            1000
-        } else if (compendioDeadlandsAtivo) {
-            250
-        } else if (compendioFantasiaAtivo) {
-            300
-        } else {
-            500
-        }
+        val selectedRules = rulesResolver.resolve(
+            compendioPathfinderAtivo = compendioPathfinderAtivo,
+            compendioSciFiAtivo = compendioSciFiAtivo,
+            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+            compendioFantasiaAtivo = compendioFantasiaAtivo
+        )
+        val startingResources = selectedRules.startingResources()
+        state.dinheiro = startingResources.dinheiro
 
         if (compendioPathfinderAtivo) {
             state.carteiraPathfinder.clear()
-            state.carteiraPathfinder[PathfinderCurrencyIds.PL] = 0
-            state.carteiraPathfinder[PathfinderCurrencyIds.PO] = 300
-            state.carteiraPathfinder[PathfinderCurrencyIds.PP] = 0
-            state.carteiraPathfinder[PathfinderCurrencyIds.PC] = 0
+            state.carteiraPathfinder.putAll(startingResources.carteiraPathfinder)
             state.updateTotalPathfinderMoney()
         }
         state.progresso = 0

@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.swadebuilder.ArcanoInfo
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.model.usecase.ValidateGameDataSnapshotIntegrityUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -43,12 +44,20 @@ interface GameDataRepository {
  * mas passa a expor os dados por um contrato explícito de repositório.
  */
 class AssetGameDataRepository : GameDataRepository {
+    private val validateGameDataSnapshotIntegrityUseCase = ValidateGameDataSnapshotIntegrityUseCase()
+
     override suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot =
         withContext(Dispatchers.IO) {
-            if (activeModules.isEmpty()) {
+            val snapshot = if (activeModules.isEmpty()) {
                 DataLoader.loadCore(context)
             } else {
                 DataLoader.updateActiveModules(context, activeModules)
             }
+
+            val integrity = validateGameDataSnapshotIntegrityUseCase.execute(snapshot)
+            check(integrity.ok) {
+                "Falha de integridade no carregamento de dados: ${integrity.issues.joinToString(" | ")}"
+            }
+            snapshot
         }
 }

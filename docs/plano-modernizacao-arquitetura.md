@@ -120,6 +120,7 @@ Isso tende a dar melhor resultado que “parar tudo para refatorar”.
 - Fase 1: concluída (repositório/snapshot/store transitório em uso).
 - Fase 2: concluída (extrações centrais para use-cases + testes puros).
 - Fase 3: em andamento (catálogo expandido para módulos/arcano/moedas Pathfinder, remoção adicional de literais críticas e normalização de AA extraída para use-case testado).
+- Fase 4: iniciada (contrato inicial `GameRules`, resolver de estratégia e aplicação no fluxo de recursos iniciais).
 
 ## Indicadores de sucesso
 - Redução de arquivos tocados por feature de regra.

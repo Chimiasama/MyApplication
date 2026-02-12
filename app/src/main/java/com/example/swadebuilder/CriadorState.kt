@@ -38,6 +38,7 @@ import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
+import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -48,6 +49,7 @@ import java.util.UUID
 enum class TabStyle { ICONES, TEXTO }
 
 class CriadorState {
+    private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -178,22 +180,20 @@ class CriadorState {
         if (candidates.isEmpty()) return null
         if (candidates.size == 1) return candidates.first()
 
+        val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
+            compendioFantasiaAtivo = compendioFantasiaAtivo,
+            compendioHorrorAtivo = compendioHorrorAtivo,
+            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+            compendioWiseguysAtivo = compendioWiseguysAtivo,
+            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+            compendioSciFiAtivo = compendioSciFiAtivo,
+            compendioPathfinderAtivo = compendioPathfinderAtivo
+        )
+
         val activeCandidates = candidates.filter { item ->
-            val origin = item.origem.uppercase()
-            when (origin) {
-                ModuleIds.FANTASIA -> compendioFantasiaAtivo
-                ModuleIds.HORROR -> compendioHorrorAtivo
-                ModuleIds.ARTE_DA_GUERRA -> compendioArteDaGuerraAtivo
-                ModuleIds.DEADLANDS -> compendioDeadlandsAtivo
-                ModuleIds.WISEGUYS -> compendioWiseguysAtivo
-                ModuleIds.CIDADE_SOL_VAPOR -> compendioCidadeSolVaporAtivo
-                ModuleIds.CRYSTAL_HEART -> compendioCrystalHeartAtivo
-                ModuleIds.SCI_FI_ALIAS_FC, ModuleIds.SCI_FI_ALIAS_SCIFI -> compendioSciFiAtivo
-                else -> {
-                    if (origin.contains("TRILHADOR") || origin.contains("PATHFINDER")) compendioPathfinderAtivo
-                    else true // BASICO or others
-                }
-            }
+            resolveActiveAncestryCandidatesUseCase.isOriginActive(item.origem, ancestryFlags)
         }
 
         if (activeCandidates.isEmpty()) return candidates.firstOrNull()
