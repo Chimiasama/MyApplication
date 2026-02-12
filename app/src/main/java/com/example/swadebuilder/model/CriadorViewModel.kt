@@ -34,6 +34,7 @@ import com.example.swadebuilder.model.usecase.CalculateSuperSkillRawAfterRevertU
 import com.example.swadebuilder.model.usecase.ResolveDependentPowerRemovalUseCase
 import com.example.swadebuilder.model.usecase.AdjustNonNegativeBonusUseCase
 import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentWorkflowUseCase
+import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -70,6 +71,7 @@ class CriadorViewModel(
     private val resolveDependentPowerRemovalUseCase = ResolveDependentPowerRemovalUseCase()
     private val adjustNonNegativeBonusUseCase = AdjustNonNegativeBonusUseCase()
     private val validatePowerInvestmentWorkflowUseCase = ValidatePowerInvestmentWorkflowUseCase()
+    private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -732,7 +734,7 @@ class CriadorViewModel(
         }
 
         // 3) derivados de perícia / etc.
-        state.rebuildAllPericiaStacks()
+        rebuildSkillStacksUseCase.execute { state.rebuildAllPericiaStacks() }
         // IMPORTANTE: NÃO recalcular atributos básicos aqui,
         // para não “somar de novo” os supers nem mexer na etapa de criação com PAs.
 
@@ -841,7 +843,7 @@ class CriadorViewModel(
         }
 
         // Atualiza apenas derivados que dependem de supers / perícias
-        state.rebuildAllPericiaStacks()
+        rebuildSkillStacksUseCase.execute { state.rebuildAllPericiaStacks() }
         // De novo: nada de recalcular atributos de criação aqui.
 
         return InvestResult(true, "Investimento revertido.")

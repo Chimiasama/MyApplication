@@ -17,6 +17,7 @@ Com a Fase 1 funcionalmente concluída, iniciamos a Fase 2 com uma extração pe
 - Resolução de remoção de poder dependente após queda de perícia extraída para `ResolveDependentPowerRemovalUseCase`.
 - Ajuste de bônus não-negativo (aplicar/reverter) extraído para `AdjustNonNegativeBonusUseCase`.
 - Orquestração de validações de investimento de poder extraída para `ValidatePowerInvestmentWorkflowUseCase`.
+- Rebuild de stacks de perícia após mudanças de poder extraído para `RebuildSkillStacksUseCase`.
 - O ViewModel agora apenas orquestra entradas/saídas e aplica o resultado no estado.
 - Testes unitários puros dos use cases adicionados.
 
