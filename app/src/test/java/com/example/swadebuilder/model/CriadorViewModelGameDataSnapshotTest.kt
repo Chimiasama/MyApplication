@@ -1,7 +1,7 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
-import android.test.mock.MockContext
+import android.content.ContextWrapper
 import com.example.swadebuilder.ArcanoInfo
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.SuperPoder
@@ -23,7 +23,7 @@ class CriadorViewModelGameDataSnapshotTest {
         )
         vm.state.usarEspecializacoesDePericia = true
 
-        vm.carregarDadosDeJogo(MockContext(), setOf("SCI_FI"))
+        vm.carregarDadosDeJogo(ContextWrapper(null), setOf("SCI_FI"))
         vm.ensureDefaultSpecializations()
 
         assertTrue(vm.state.especializacoesPorPericia.containsKey("ATLETISMO"))
