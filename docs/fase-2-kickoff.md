@@ -15,6 +15,7 @@ Com a Fase 1 funcionalmente concluída, iniciamos a Fase 2 com uma extração pe
 - Cálculo de limite por poder favorecido extraído para `CalculatePerPowerLimitUseCase`.
 - Cálculo de raw de perícia após reversão de Super Perícia extraído para `CalculateSuperSkillRawAfterRevertUseCase`.
 - Resolução de remoção de poder dependente após queda de perícia extraída para `ResolveDependentPowerRemovalUseCase`.
+- Ajuste de bônus não-negativo (aplicar/reverter) extraído para `AdjustNonNegativeBonusUseCase`.
 - O ViewModel agora apenas orquestra entradas/saídas e aplica o resultado no estado.
 - Testes unitários puros dos use cases adicionados.
 

@@ -32,6 +32,7 @@ import com.example.swadebuilder.model.usecase.ApplySuperAttributeDeltaUseCase
 import com.example.swadebuilder.model.usecase.CalculatePerPowerLimitUseCase
 import com.example.swadebuilder.model.usecase.CalculateSuperSkillRawAfterRevertUseCase
 import com.example.swadebuilder.model.usecase.ResolveDependentPowerRemovalUseCase
+import com.example.swadebuilder.model.usecase.AdjustNonNegativeBonusUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -66,6 +67,7 @@ class CriadorViewModel(
     private val calculatePerPowerLimitUseCase = CalculatePerPowerLimitUseCase()
     private val calculateSuperSkillRawAfterRevertUseCase = CalculateSuperSkillRawAfterRevertUseCase()
     private val resolveDependentPowerRemovalUseCase = ResolveDependentPowerRemovalUseCase()
+    private val adjustNonNegativeBonusUseCase = AdjustNonNegativeBonusUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -721,23 +723,23 @@ class CriadorViewModel(
             }
 
             is PowerEffect.BonusArmadura -> {
-                state.updateArmorFromPower((state.armorFromPower + efeito.value).coerceAtLeast(0))
+                state.updateArmorFromPower(adjustNonNegativeBonusUseCase.execute(AdjustNonNegativeBonusUseCase.Input(state.armorFromPower, efeito.value)))
                 logFeedback("Armadura aumentada em ${efeito.value}.")
             }
 
             is PowerEffect.BonusResistencia -> {
-                state.updateBonusResFromPower((state.bonusResFromPower + efeito.value).coerceAtLeast(0))
+                state.updateBonusResFromPower(adjustNonNegativeBonusUseCase.execute(AdjustNonNegativeBonusUseCase.Input(state.bonusResFromPower, efeito.value)))
                 logFeedback("Resistência aumentada em ${efeito.value}.")
             }
 
             is PowerEffect.BonusAparar -> {
-                state.updateBonusApararFromPower((state.bonusApararFromPower + efeito.value).coerceAtLeast(0))
+                state.updateBonusApararFromPower(adjustNonNegativeBonusUseCase.execute(AdjustNonNegativeBonusUseCase.Input(state.bonusApararFromPower, efeito.value)))
                 logFeedback("Aparar aumentado em ${efeito.value}.")
             }
 
             is PowerEffect.BonusMovimentacao -> {
                 state.updateBonusMovimentacaoFromPower(
-                    (state.bonusMovimentacaoFromPower + efeito.value).coerceAtLeast(0)
+                    adjustNonNegativeBonusUseCase.execute(AdjustNonNegativeBonusUseCase.Input(state.bonusMovimentacaoFromPower, efeito.value))
                 )
                 logFeedback("Movimentação aumentada em ${efeito.value}.")
             }
@@ -829,23 +831,23 @@ class CriadorViewModel(
             }
 
             is PowerEffect.BonusArmadura -> {
-                state.updateArmorFromPower((state.armorFromPower - efeito.value).coerceAtLeast(0))
+                state.updateArmorFromPower(adjustNonNegativeBonusUseCase.execute(AdjustNonNegativeBonusUseCase.Input(state.armorFromPower, -efeito.value)))
                 logFeedback("Armadura reduzida em ${efeito.value}.")
             }
 
             is PowerEffect.BonusResistencia -> {
-                state.updateBonusResFromPower((state.bonusResFromPower - efeito.value).coerceAtLeast(0))
+                state.updateBonusResFromPower(adjustNonNegativeBonusUseCase.execute(AdjustNonNegativeBonusUseCase.Input(state.bonusResFromPower, -efeito.value)))
                 logFeedback("Resistência reduzida em ${efeito.value}.")
             }
 
             is PowerEffect.BonusAparar -> {
-                state.updateBonusApararFromPower((state.bonusApararFromPower - efeito.value).coerceAtLeast(0))
+                state.updateBonusApararFromPower(adjustNonNegativeBonusUseCase.execute(AdjustNonNegativeBonusUseCase.Input(state.bonusApararFromPower, -efeito.value)))
                 logFeedback("Aparar reduzido em ${efeito.value}.")
             }
 
             is PowerEffect.BonusMovimentacao -> {
                 state.updateBonusMovimentacaoFromPower(
-                    (state.bonusMovimentacaoFromPower - efeito.value).coerceAtLeast(0)
+                    adjustNonNegativeBonusUseCase.execute(AdjustNonNegativeBonusUseCase.Input(state.bonusMovimentacaoFromPower, -efeito.value))
                 )
                 logFeedback("Movimentação reduzida em ${efeito.value}.")
             }
