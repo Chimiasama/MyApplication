@@ -1,4 +1,4 @@
-# Revisão consolidada: Fases 0 → 5
+# Revisão consolidada: Fases 0 → 6
 
 ## Fase 0 — Baseline e segurança
 
@@ -88,3 +88,21 @@
 - [x] Item 4 concluído.
 - [x] Item 5 concluído.
 - [x] Item 6 concluído.
+
+---
+
+## Fase 6 — Confiabilidade operacional e gate de regressão
+
+### Lista de execução
+1. Definir checklist executável de confiabilidade mínima pós-Fase 5.
+2. Implementar gate automatizado com falha rápida para regressões críticas.
+3. Cobrir no gate: extrações da Activity, resources críticos e cobertura mínima do use-case de instruções.
+4. Executar baseline da Fase 0 dentro do gate.
+5. Atualizar checkpoint documental com status final da fase.
+
+### Execução
+- [x] Item 1 concluído.
+- [x] Item 2 concluído (`scripts/phase6_reliability_gate.sh`).
+- [x] Item 3 concluído.
+- [x] Item 4 concluído.
+- [x] Item 5 concluído.

@@ -89,6 +89,18 @@ Objetivo: finalizar separação de responsabilidades.
 
 **Critério de saída**: `Activity` focada em composição/observação de estado.
 
+---
+
+### Fase 6 — Confiabilidade operacional e gate de regressão (1 sprint)
+Objetivo: transformar os ganhos das fases anteriores em verificações automatizadas de alta confiança.
+
+1. Definir checklist executável de confiabilidade pós-Fase 5.
+2. Implementar gate em script com falha rápida para regressões críticas.
+3. Validar extrações da Activity, resources críticos e cobertura mínima de testes de instruções.
+4. Incluir baseline de métricas como etapa obrigatória do gate.
+
+**Critério de saída**: comando único de gate executa com sucesso e protege pontos críticos sem depender de build completo Android.
+
 ## Prioridade sugerida (se houver pouco tempo)
 1. **Fase 0 (mínimo viável de testes)**
 2. **Fase 1 (Repository)**
@@ -122,6 +134,7 @@ Isso tende a dar melhor resultado que “parar tudo para refatorar”.
 - Fase 3: em andamento (catálogo expandido para módulos/arcano/moedas Pathfinder, remoção adicional de literais críticas e normalização de AA extraída para use-case testado).
 - Fase 4: em andamento (strategy por cenário aplicada a recursos, defaults de reset e políticas de visibilidade de vantagens por cenário).
 - Fase 5: concluída (helpers remanescentes removidos da Activity, integração da UI com componentes extraídos, cobertura unitária dos artefatos extraídos e checkpoint documental atualizado).
+- Fase 6: concluída (checklist executável e gate automatizado de confiabilidade com validações críticas e baseline).
 
 ## Indicadores de sucesso
 - Redução de arquivos tocados por feature de regra.
