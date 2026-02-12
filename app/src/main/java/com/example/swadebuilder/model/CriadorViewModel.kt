@@ -21,6 +21,8 @@ import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.model.usecase.EnsureDefaultSpecializationsUseCase
+import com.example.swadebuilder.model.usecase.RemoveCrystalHeartUseCase
+import com.example.swadebuilder.model.usecase.UpsertCrystalHeartUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -44,6 +46,8 @@ class CriadorViewModel(
 
     private val gameDataStore = GameDataStore()
     private val ensureDefaultSpecializationsUseCase = EnsureDefaultSpecializationsUseCase()
+    private val upsertCrystalHeartUseCase = UpsertCrystalHeartUseCase()
+    private val removeCrystalHeartUseCase = RemoveCrystalHeartUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -889,13 +893,7 @@ class CriadorViewModel(
 
     fun salvarCrystalHeartPersonalizado(context: Context, heart: CrystalHeart): CrystalHeart? {
         val saved = CustomCrystalHeartStorage.saveCustomHeart(context, heart) ?: return null
-        val updated = coracoesData().toMutableList()
-        val existingIndex = updated.indexOfFirst { it.id == saved.id }
-        if (existingIndex >= 0) {
-            updated[existingIndex] = saved
-        } else {
-            updated.add(saved)
-        }
+        val updated = upsertCrystalHeartUseCase.execute(coracoesData(), saved)
         listaCoracoesCrystal = updated
         gameDataStore.withUpdatedCoracoesCrystal(updated)
         return saved
@@ -904,12 +902,16 @@ class CriadorViewModel(
     fun removerCrystalHeartPersonalizado(context: Context, heartId: String): Boolean {
         val removed = CustomCrystalHeartStorage.deleteCustomHeart(context, heartId)
         if (!removed) return false
-        listaCoracoesCrystal = coracoesData().filterNot { it.id == heartId }
-        gameDataStore.withUpdatedCoracoesCrystal(listaCoracoesCrystal)
-        if (state.coracaoCrystalSelecionado?.id == heartId) {
-            val starter = coracoesData().firstOrNull { it.placeholder }
-            state.coracaoCrystalSelecionado = starter
-        }
+
+        val result = removeCrystalHeartUseCase.execute(
+            current = coracoesData(),
+            heartIdToRemove = heartId,
+            currentlySelectedId = state.coracaoCrystalSelecionado?.id
+        )
+
+        listaCoracoesCrystal = result.updated
+        gameDataStore.withUpdatedCoracoesCrystal(result.updated)
+        state.coracaoCrystalSelecionado = result.newSelected
         return true
     }
 
