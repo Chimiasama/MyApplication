@@ -20,6 +20,7 @@ import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.model.usecase.EnsureDefaultSpecializationsUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -42,6 +43,7 @@ class CriadorViewModel(
     val feedbackMessages: List<String> = _feedbackMessages
 
     private val gameDataStore = GameDataStore()
+    private val ensureDefaultSpecializationsUseCase = EnsureDefaultSpecializationsUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -65,25 +67,15 @@ class CriadorViewModel(
     }
 
     fun ensureDefaultSpecializations() {
-        if (!state.usarEspecializacoesDePericia) return
+        val atualizado = ensureDefaultSpecializationsUseCase.execute(
+            usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
+            pericias = periciasData(),
+            rawTotalProvider = { per -> state.rawTotal(per) },
+            atual = state.especializacoesPorPericia.toMap()
+        )
 
-        periciasData().forEach { per ->
-            val raw = state.rawTotal(per)
-            // Skills that have points or are basic (unless 0 and non-basic, which rawTotal handles)
-            val visible = raw > 0 || per.basica
-
-            if (visible) {
-                val spec = state.especializacoesPorPericia[per.nome]
-                if (spec?.principal == null) {
-                    val currentList = spec?.lista ?: emptyList()
-                    val novo = EspecializacoesDto(
-                        principal = "Especialização 1",
-                        lista = currentList
-                    )
-                    state.especializacoesPorPericia[per.nome] = novo
-                }
-            }
-        }
+        state.especializacoesPorPericia.clear()
+        state.especializacoesPorPericia.putAll(atualizado)
     }
 
     // === NOVO: toggle global (por enquanto via MainActivity) ===
