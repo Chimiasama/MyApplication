@@ -23,6 +23,7 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.model.usecase.EnsureDefaultSpecializationsUseCase
 import com.example.swadebuilder.model.usecase.RemoveCrystalHeartUseCase
 import com.example.swadebuilder.model.usecase.UpsertCrystalHeartUseCase
+import com.example.swadebuilder.model.usecase.GenerateSequentialNameUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -48,6 +49,7 @@ class CriadorViewModel(
     private val ensureDefaultSpecializationsUseCase = EnsureDefaultSpecializationsUseCase()
     private val upsertCrystalHeartUseCase = UpsertCrystalHeartUseCase()
     private val removeCrystalHeartUseCase = RemoveCrystalHeartUseCase()
+    private val generateSequentialNameUseCase = GenerateSequentialNameUseCase(defaultName = DEFAULT_CHARACTER_NAME)
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -130,38 +132,11 @@ class CriadorViewModel(
     }
 
     suspend fun prepararNomeInicial(context: Context) {
-        state.nomePersonagem = gerarNomeSequencial(
-            DEFAULT_CHARACTER_NAME,
-            listarPersonagensSalvos(context).map { it.nome },
+        state.nomePersonagem = generateSequentialNameUseCase.execute(
+            baseName = DEFAULT_CHARACTER_NAME,
+            existingNames = listarPersonagensSalvos(context).map { it.nome },
             usarParenteses = false
         )
-    }
-
-    private fun gerarNomeSequencial(
-        baseName: String,
-        existingNames: List<String>,
-        usarParenteses: Boolean
-    ): String {
-        val normalizedExisting = existingNames.map { it.lowercase() }.toSet()
-        val desiredBase = baseName.ifBlank { DEFAULT_CHARACTER_NAME }
-
-        if (!normalizedExisting.contains(desiredBase.lowercase())) {
-            return desiredBase
-        }
-
-        var counter = 2
-        var candidate: String
-
-        do {
-            candidate = if (usarParenteses) {
-                "$desiredBase ($counter)"
-            } else {
-                "$desiredBase $counter"
-            }
-            counter++
-        } while (normalizedExisting.contains(candidate.lowercase()))
-
-        return candidate
     }
 
     suspend fun salvarPersonagem(
@@ -189,9 +164,9 @@ class CriadorViewModel(
             .map { it.nome }
 
         val finalName = if (desiredName.equals(DEFAULT_CHARACTER_NAME, ignoreCase = true)) {
-            gerarNomeSequencial(DEFAULT_CHARACTER_NAME, otherNames, usarParenteses = false)
+            generateSequentialNameUseCase.execute(DEFAULT_CHARACTER_NAME, otherNames, usarParenteses = false)
         } else {
-            gerarNomeSequencial(desiredName, otherNames, usarParenteses = true)
+            generateSequentialNameUseCase.execute(desiredName, otherNames, usarParenteses = true)
         }
 
         state.nomePersonagem = finalName
