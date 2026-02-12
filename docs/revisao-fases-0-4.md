@@ -74,11 +74,15 @@
 ## Fase 5 — Limpeza UI e hardening
 
 ### Lista de execução
-1. Mover helper de orientação/uso do app da `MainActivity` para use case.
-2. Integrar uso do helper extraído no fluxo de UI.
-3. Cobrir o helper com teste unitário.
+1. Identificar helpers de regra remanescentes em `MainActivity.kt`.
+2. Extrair instruções de uso para use case puro.
+3. Extrair helpers genéricos (dado/estágio por slot) para arquivos dedicados fora da Activity.
+4. Integrar UI com os componentes extraídos.
+5. Cobrir o novo use case com teste unitário.
 
 ### Execução
 - [x] Item 1 concluído.
 - [x] Item 2 concluído.
 - [x] Item 3 concluído.
+- [x] Item 4 concluído.
+- [x] Item 5 concluído.

@@ -1126,9 +1126,6 @@ sealed class LoadingState {
     data class Error(val message: String) : LoadingState()
 }
 
-fun Int.toDiceString(): String =
-    if (this == 0) "-" else if (this <= 12) "d$this" else "d12+${(this - 12)}"
-
 data class Pericia(
     val nome: String,
     val atributo: String,
@@ -1164,45 +1161,6 @@ var listaPericias by mutableStateOf<List<Pericia>>(emptyList())
 var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
 var mapaAtributosDescricao by mutableStateOf<Map<String, String>>(emptyMap())
 
-fun periciaStartRaw(anc: String, per: Pericia): Int {
-    val ancKey = anc.keyify()
-    val perKey = per.nome.keyify()
-    return racialSkillStartMap[ancKey]?.get(perKey)
-        ?: if (per.basica) 4 else 0
-}
-
-var listaVantagens by mutableStateOf<List<Vantagem>>(emptyList())
-var listaPoderes by mutableStateOf<List<Poder>>(emptyList())
-var listaTropos by mutableStateOf<List<Tropo>>(emptyList())
-var listaEquipamentos by mutableStateOf<List<EquipamentoItem>>(emptyList())
-var equipamentoCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
-var superequipCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
-var listaSuperPoderes by mutableStateOf<List<SuperPoder>>(emptyList())
-
-data class Estagio(
-    val nome: String,
-    val minProgress: Int,
-    val maxProgress: Int
-)
-
-val listaDeEstagios = listOf(
-    Estagio("Novato",     0,  3),
-    Estagio("Experiente", 4,  7),
-    Estagio("Veterano",   8, 11),
-    Estagio("Heroico",   12, 15),
-    Estagio("Lendário",  16, Int.MAX_VALUE)
-)
-
-fun stageIndexForSlot(slotIndex: Int): Int {
-    var remaining = slotIndex
-    dynamicStageCaps.forEachIndexed { idx, cap ->
-        if (remaining < cap) return idx
-        remaining -= cap
-    }
-    return dynamicStageCaps.lastIndex
-}
-
-fun stageForSlot(slotIndex: Int): Estagio = listaDeEstagios[stageIndexForSlot(slotIndex)]
 
 val nivelParaEstagio = mapOf(
     "N" to listaDeEstagios.first { it.nome == "Novato" },
