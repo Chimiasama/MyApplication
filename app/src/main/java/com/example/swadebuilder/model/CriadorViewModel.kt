@@ -27,6 +27,7 @@ import com.example.swadebuilder.model.usecase.GenerateSequentialNameUseCase
 import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentUseCase
 import com.example.swadebuilder.model.usecase.ValidateSpecialPowerRequirementsUseCase
 import com.example.swadebuilder.model.usecase.ValidateSuperAdvantageInvestmentUseCase
+import com.example.swadebuilder.model.usecase.ValidateSuperAttributeInvestmentUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -56,6 +57,7 @@ class CriadorViewModel(
     private val validatePowerInvestmentUseCase = ValidatePowerInvestmentUseCase()
     private val validateSpecialPowerRequirementsUseCase = ValidateSpecialPowerRequirementsUseCase()
     private val validateSuperAdvantageInvestmentUseCase = ValidateSuperAdvantageInvestmentUseCase()
+    private val validateSuperAttributeInvestmentUseCase = ValidateSuperAttributeInvestmentUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -557,16 +559,14 @@ class CriadorViewModel(
     }
 
     fun podeSubirAtributoPorSuper(attrKey: String, steps: Int): InvestCheck {
-        if (steps == 0) return InvestCheck(true)
-
-        val atualRaw = state.atributoRawComSupers(attrKey)          // base + supers já aplicados
-        val alvoRaw  = state.applySuperStepsFrom(atualRaw, steps)   // simula steps corretamente
-
-        val tetoTecnico = 30
-        if (alvoRaw > tetoTecnico) {
-            return InvestCheck(false, "Limite técnico de atributo excedido ($tetoTecnico).")
-        }
-        return InvestCheck(true)
+        val erro = validateSuperAttributeInvestmentUseCase.execute(
+            ValidateSuperAttributeInvestmentUseCase.Input(
+                currentRaw = state.atributoRawComSupers(attrKey),
+                steps = steps,
+                applySteps = { raw, delta -> state.applySuperStepsFrom(raw, delta) }
+            )
+        )
+        return if (erro == null) InvestCheck(true) else InvestCheck(false, erro)
     }
 
     private fun bloqueioClasseExclusiva(vant: Vantagem): String? {

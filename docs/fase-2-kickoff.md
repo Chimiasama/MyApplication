@@ -10,6 +10,7 @@ Com a Fase 1 funcionalmente concluída, iniciamos a Fase 2 com uma extração pe
 - Validações básicas de investimento de poder extraídas para `ValidatePowerInvestmentUseCase`.
 - Validações específicas de poderes genéricos (Superfeitiçaria/Superciência) extraídas para `ValidateSpecialPowerRequirementsUseCase`.
 - Validação de Super Vantagem extraída para `ValidateSuperAdvantageInvestmentUseCase`.
+- Validação de Super Atributo extraída para `ValidateSuperAttributeInvestmentUseCase`.
 - O ViewModel agora apenas orquestra entradas/saídas e aplica o resultado no estado.
 - Testes unitários puros dos use cases adicionados.
 
