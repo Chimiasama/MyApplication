@@ -30,6 +30,7 @@ import com.example.swadebuilder.model.usecase.ValidateSuperAdvantageInvestmentUs
 import com.example.swadebuilder.model.usecase.ValidateSuperAttributeInvestmentUseCase
 import com.example.swadebuilder.model.usecase.ApplySuperAttributeDeltaUseCase
 import com.example.swadebuilder.model.usecase.CalculatePerPowerLimitUseCase
+import com.example.swadebuilder.model.usecase.CalculateSuperSkillRawAfterRevertUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -62,6 +63,7 @@ class CriadorViewModel(
     private val validateSuperAttributeInvestmentUseCase = ValidateSuperAttributeInvestmentUseCase()
     private val applySuperAttributeDeltaUseCase = ApplySuperAttributeDeltaUseCase()
     private val calculatePerPowerLimitUseCase = CalculatePerPowerLimitUseCase()
+    private val calculateSuperSkillRawAfterRevertUseCase = CalculateSuperSkillRawAfterRevertUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -793,8 +795,14 @@ class CriadorViewModel(
                         .mapNotNull { it.effect as? PowerEffect.SuperPericia }
                         .filter { it.periciaKey.equals(perObj.nome, ignoreCase = true) }
                         .sumOf { it.steps }
-                    val incsDepois = (incsAtuais - efeito.steps).coerceAtLeast(0)
-                    val rawDepois = state.applySuperStepsFrom(baseRaw, incsDepois)
+                    val rawDepois = calculateSuperSkillRawAfterRevertUseCase.execute(
+                        CalculateSuperSkillRawAfterRevertUseCase.Input(
+                            baseRaw = baseRaw,
+                            currentSuperSteps = incsAtuais,
+                            revertingSteps = efeito.steps,
+                            applySteps = { raw, steps -> state.applySuperStepsFrom(raw, steps) }
+                        )
+                    )
 
                     val perKey = perObj.nome.keyify()
                     // Auto-remove dependent powers instead of blocking
