@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.ids.PowerIds
 class ValidatePowerInvestmentUseCase {
 
     data class Input(
@@ -24,9 +25,9 @@ class ValidatePowerInvestmentUseCase {
             return "Limite de gasto neste poder excedido em $falta (limite: ${input.limitePorPoder})."
         }
 
-        if (input.poderId == "sp_armor" || input.poderId == "sp_res") {
-            val gastosArmor = input.gastosPorPoder["sp_armor"] ?: 0
-            val gastosRes = input.gastosPorPoder["sp_res"] ?: 0
+        if (input.poderId == PowerIds.ARMOR || input.poderId == PowerIds.RESISTANCE) {
+            val gastosArmor = input.gastosPorPoder[PowerIds.ARMOR] ?: 0
+            val gastosRes = input.gastosPorPoder[PowerIds.RESISTANCE] ?: 0
             val shareDepois = gastosArmor + gastosRes + input.custo
 
             if (shareDepois > input.limiteCompartilhadoArmaduraResistencia) {

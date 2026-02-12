@@ -37,6 +37,8 @@ import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentWorkflowUse
 import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
 import com.example.swadebuilder.model.usecase.CalculateCurrentSuperSkillStepsUseCase
 import com.example.swadebuilder.model.usecase.ResolveAdvantageByIdUseCase
+import com.example.swadebuilder.model.ids.PowerIds
+import com.example.swadebuilder.model.ids.SkillIds
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -642,8 +644,8 @@ class CriadorViewModel(
                 val pericias = periciasMapData()
                 ValidatePowerInvestmentWorkflowUseCase.EffectInput.Generico(
                     effectNameKey = efeito.nome.keyify(),
-                    ocultismoRaw = pericias["OCULTISMO"]?.let { state.rawTotalComSupers(it) },
-                    cienciaRaw = pericias["CIENCIA"]?.let { state.rawTotalComSupers(it) }
+                    ocultismoRaw = pericias[SkillIds.OCULTISMO]?.let { state.rawTotalComSupers(it) },
+                    cienciaRaw = pericias[SkillIds.CIENCIA]?.let { state.rawTotalComSupers(it) }
                 )
             }
 
@@ -896,7 +898,7 @@ class CriadorViewModel(
 
     /**
      * Função genérica "façade" para a UI: tenta investir e retorna mensagem pronta.
-     * Use um poderId estável por alvo (ex.: "sp_pericia_LUTAR", "sp_attr_FORCA", "sp_armor").
+     * Use um poderId estável por alvo (ex.: "sp_pericia_LUTAR", "sp_attr_FORCA", PowerIds.ARMOR).
      */
     fun tentarInvestirSuper(investment: SuperInvestment): InvestResult {
         val check = canInvestInPower(

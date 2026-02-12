@@ -28,11 +28,8 @@ Com a Fase 1 funcionalmente concluída, iniciamos a Fase 2 com uma extração pe
 - Reduzir lógica de negócio dentro do ViewModel.
 - Criar padrão de extração incremental para próximas regras críticas (ex.: ancestralidade, rebuild de perícias, validações de progresso).
 
-## Próximos passos da Fase 2
+## Encerramento da Fase 2
 
-1. Extrair `SkillPointRebuildUseCase` (regras de custo/normalização de perícia).
-2. Extrair `ApplyAncestryUseCase` (ajustes raciais e reembolso).
-3. Isolar validações em `ValidationUseCase` com testes por cenário.
-4. Extrair próximas regras críticas de custo/progressão para casos de uso puros.
-5. Migrar mais regras de seleção/efeitos do `CriadorViewModel` para casos de uso puros.
-6. Manter estratégia de migração incremental com comparação de comportamento.
+A Fase 2 foi encerrada com a maior parte das regras críticas extraídas para use-cases puros e cobertura unitária correspondente.
+
+Pendências remanescentes foram transferidas como backlog da Fase 3 (padronização de IDs e remoção de strings mágicas).

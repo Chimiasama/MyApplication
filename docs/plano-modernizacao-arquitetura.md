@@ -115,6 +115,12 @@ Isso tende a dar melhor resultado que “parar tudo para refatorar”.
 - **Risco:** escopo inflar e virar rewrite.
   - **Mitigação:** metas por fase com critério de saída objetivo.
 
+## Status atual (checkpoint)
+- Fase 0: concluída (baseline + testes críticos iniciais).
+- Fase 1: concluída (repositório/snapshot/store transitório em uso).
+- Fase 2: concluída (extrações centrais para use-cases + testes puros).
+- Fase 3: iniciada (catálogo inicial de IDs e troca de literais críticos).
+
 ## Indicadores de sucesso
 - Redução de arquivos tocados por feature de regra.
 - Redução de regressões de cálculo por release.
