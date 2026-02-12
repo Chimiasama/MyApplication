@@ -26,6 +26,7 @@ import com.example.swadebuilder.model.usecase.UpsertCrystalHeartUseCase
 import com.example.swadebuilder.model.usecase.GenerateSequentialNameUseCase
 import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentUseCase
 import com.example.swadebuilder.model.usecase.ValidateSpecialPowerRequirementsUseCase
+import com.example.swadebuilder.model.usecase.ValidateSuperAdvantageInvestmentUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -54,6 +55,7 @@ class CriadorViewModel(
     private val generateSequentialNameUseCase = GenerateSequentialNameUseCase(defaultName = DEFAULT_CHARACTER_NAME)
     private val validatePowerInvestmentUseCase = ValidatePowerInvestmentUseCase()
     private val validateSpecialPowerRequirementsUseCase = ValidateSpecialPowerRequirementsUseCase()
+    private val validateSuperAdvantageInvestmentUseCase = ValidateSuperAdvantageInvestmentUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -617,26 +619,36 @@ class CriadorViewModel(
             is PowerEffect.SuperVantagem -> {
                 val vant = vantagensData().firstOrNull {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
-                } ?: return InvestCheck(false, "Vantagem não encontrada: ${efeito.vantagemId}.")
-
-                val bloqueioClasse = bloqueioClasseExclusiva(vant)
-                if (bloqueioClasse != null) {
-                    return InvestCheck(false, bloqueioClasse)
-                }
-
-                // NÃO permitir comprar de novo se já tiver a vantagem de qualquer forma
-                if (state.vantagensSelecionadas.any { it.id == vant.id }) {
-                    return InvestCheck(false, "Você já possui a vantagem ${vant.nome}.")
                 }
 
                 // valida requisitos ignorando Estágio (simula “Lendário” para não travar pelo estágio)
-                val progressoAnterior = state.overrideStageForVantagem
-                state.overrideStageForVantagem = "Lendário"
-                val permitido = state.podeSelecionar(vant)
-                state.overrideStageForVantagem = progressoAnterior
+                val permitido = if (vant != null) {
+                    val progressoAnterior = state.overrideStageForVantagem
+                    state.overrideStageForVantagem = "Lendário"
+                    val podeSelecionar = state.podeSelecionar(vant)
+                    state.overrideStageForVantagem = progressoAnterior
+                    podeSelecionar
+                } else {
+                    false
+                }
 
-                if (!permitido) {
-                    return InvestCheck(false, "Requisitos não atendidos para a vantagem (exceto Estágio).")
+                val erroSuperVantagem = validateSuperAdvantageInvestmentUseCase.execute(
+                    ValidateSuperAdvantageInvestmentUseCase.Input(
+                        vantagemIdSolicitada = efeito.vantagemId,
+                        vantagemEncontrada = vant?.let {
+                            ValidateSuperAdvantageInvestmentUseCase.AdvantageRef(
+                                id = it.id,
+                                nome = it.nome
+                            )
+                        },
+                        mensagemBloqueioClasse = vant?.let { bloqueioClasseExclusiva(it) },
+                        jaPossuiVantagem = vant != null && state.vantagensSelecionadas.any { it.id == vant.id },
+                        requisitosAtendidosIgnorandoEstagio = permitido
+                    )
+                )
+
+                if (erroSuperVantagem != null) {
+                    return InvestCheck(false, erroSuperVantagem)
                 }
             }
             is PowerEffect.Generico -> {
