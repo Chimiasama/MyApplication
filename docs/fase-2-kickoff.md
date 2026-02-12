@@ -7,6 +7,7 @@ Com a Fase 1 funcionalmente concluída, iniciamos a Fase 2 com uma extração pe
 - Regra extraída do `CriadorViewModel` para `EnsureDefaultSpecializationsUseCase`.
 - Regras de manutenção de Crystal Hearts customizados extraídas para `UpsertCrystalHeartUseCase` e `RemoveCrystalHeartUseCase`.
 - Regra de geração de nome sequencial extraída para `GenerateSequentialNameUseCase`.
+- Validações básicas de investimento de poder extraídas para `ValidatePowerInvestmentUseCase`.
 - O ViewModel agora apenas orquestra entradas/saídas e aplica o resultado no estado.
 - Testes unitários puros dos use cases adicionados.
 

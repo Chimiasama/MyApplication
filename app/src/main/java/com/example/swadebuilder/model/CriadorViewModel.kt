@@ -24,6 +24,7 @@ import com.example.swadebuilder.model.usecase.EnsureDefaultSpecializationsUseCas
 import com.example.swadebuilder.model.usecase.RemoveCrystalHeartUseCase
 import com.example.swadebuilder.model.usecase.UpsertCrystalHeartUseCase
 import com.example.swadebuilder.model.usecase.GenerateSequentialNameUseCase
+import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -50,6 +51,7 @@ class CriadorViewModel(
     private val upsertCrystalHeartUseCase = UpsertCrystalHeartUseCase()
     private val removeCrystalHeartUseCase = RemoveCrystalHeartUseCase()
     private val generateSequentialNameUseCase = GenerateSequentialNameUseCase(defaultName = DEFAULT_CHARACTER_NAME)
+    private val validatePowerInvestmentUseCase = ValidatePowerInvestmentUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -576,36 +578,18 @@ class CriadorViewModel(
         custo: Int,
         efeito: PowerEffect
     ): InvestCheck {
-        // 1) Saldo de Pontos de Super (SP)
-        if (custo <= 0) return InvestCheck(false, "Custo inválido.")
-        if (state.superPontosDisponiveis < custo) {
-            return InvestCheck(false, "Sem saldo: precisa de $custo, tem ${state.superPontosDisponiveis}.")
-        }
-
-        // 2) Limite Individual de CUSTO (quantos SP gastei neste poder)
-        val jaGastoNestePoder = state.gastosPorPoder[poderId] ?: 0
-        val limiteIndividual = perPowerLimit(poderId)
-        if (jaGastoNestePoder + custo > limiteIndividual) {
-            val falta = (jaGastoNestePoder + custo) - limiteIndividual
-            return InvestCheck(false, "Limite de gasto neste poder excedido em $falta (limite: $limiteIndividual).")
-        }
-
-        // 3) Limite Compartilhado de CUSTO (Armadura + Resistência)
-        // Regra: a soma de SP gastos em Resistência e Armadura não pode ultrapassar o Limite de Poder da campanha.
-        if (poderId == "sp_armor" || poderId == "sp_res") {
-            val gastosArmor = state.gastosPorPoder["sp_armor"] ?: 0
-            val gastosRes   = state.gastosPorPoder["sp_res"] ?: 0
-            val shareAtual  = gastosArmor + gastosRes
-            val shareLimite = state.limiteDePoderDaCampanha
-            val shareDepois = shareAtual + custo
-
-            if (shareDepois > shareLimite) {
-                val excedeu = shareDepois - shareLimite
-                return InvestCheck(
-                    ok = false,
-                    motivoBloqueio = "Limite compartilhado de Armadura+Resistência excedido em $excedeu (gasto previsto: $shareDepois / limite $shareLimite)."
-                )
-            }
+        val erroBasico = validatePowerInvestmentUseCase.execute(
+            ValidatePowerInvestmentUseCase.Input(
+                poderId = poderId,
+                custo = custo,
+                superPontosDisponiveis = state.superPontosDisponiveis,
+                gastosPorPoder = state.gastosPorPoder,
+                limitePorPoder = perPowerLimit(poderId),
+                limiteCompartilhadoArmaduraResistencia = state.limiteDePoderDaCampanha
+            )
+        )
+        if (erroBasico != null) {
+            return InvestCheck(false, erroBasico)
         }
 
         // 4) Checagens específicas de outros efeitos
