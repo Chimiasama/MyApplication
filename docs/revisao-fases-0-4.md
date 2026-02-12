@@ -1,4 +1,4 @@
-# Revisão consolidada: Fases 0 → 4
+# Revisão consolidada: Fases 0 → 5
 
 ## Fase 0 — Baseline e segurança
 
@@ -79,6 +79,7 @@
 3. Extrair helpers genéricos (dado/estágio por slot) para arquivos dedicados fora da Activity.
 4. Integrar UI com os componentes extraídos.
 5. Cobrir o novo use case com teste unitário.
+6. Atualizar documentação de revisão/checkpoint com status final da fase.
 
 ### Execução
 - [x] Item 1 concluído.
@@ -86,3 +87,4 @@
 - [x] Item 3 concluído.
 - [x] Item 4 concluído.
 - [x] Item 5 concluído.
+- [x] Item 6 concluído.

@@ -16,8 +16,8 @@ Mover responsabilidades de regra da camada de UI para domínio/arquitetura de su
 - [x] Item 2 concluído (`BuildUsageInstructionsUseCase`).
 - [x] Item 3 concluído (`DiceExtensions.kt`, `ProgressionSlotRules.kt`).
 - [x] Item 4 concluído (MainActivity delega e não mantém helpers antigos).
-- [x] Item 5 concluído (`BuildUsageInstructionsUseCaseTest`, `DiceExtensionsTest`, `ProgressionSlotRulesTest`).
-- [x] Item 6 concluído (`docs/revisao-fases-0-4.md` e `docs/plano-modernizacao-arquitetura.md`).
+- [x] Item 5 concluído (`BuildUsageInstructionsUseCaseTest`, `DiceExtensionsTest`, `ProgressionSlotRulesTest`, incluindo cenário explícito de `modoMonstroAtivo`).
+- [x] Item 6 concluído (`docs/revisao-fases-0-4.md` e `docs/plano-modernizacao-arquitetura.md` atualizados com checkpoint final da fase).
 
 ## Resultado
 - `MainActivity.kt` deixou de carregar helpers utilitários/regras de domínio que não pertencem à composição da tela.

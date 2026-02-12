@@ -121,7 +121,7 @@ Isso tende a dar melhor resultado que “parar tudo para refatorar”.
 - Fase 2: concluída (extrações centrais para use-cases + testes puros).
 - Fase 3: em andamento (catálogo expandido para módulos/arcano/moedas Pathfinder, remoção adicional de literais críticas e normalização de AA extraída para use-case testado).
 - Fase 4: em andamento (strategy por cenário aplicada a recursos, defaults de reset e políticas de visibilidade de vantagens por cenário).
-- Fase 5: em andamento (helpers de regra/utilitários removidos da Activity para use-cases/arquivos dedicados com cobertura unitária inicial).
+- Fase 5: concluída (helpers remanescentes removidos da Activity, integração da UI com componentes extraídos, cobertura unitária dos artefatos extraídos e checkpoint documental atualizado).
 
 ## Indicadores de sucesso
 - Redução de arquivos tocados por feature de regra.
