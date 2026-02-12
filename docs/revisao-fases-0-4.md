@@ -67,3 +67,18 @@
 - [x] Item 5 concluído.
 - [x] Item 6 concluído (continuação da Fase 4 em `docs/fase-4-kickoff.md`).
 - [x] Item 7 concluído (continuação da Fase 4 em `docs/fase-4-kickoff.md`).
+
+
+---
+
+## Fase 5 — Limpeza UI e hardening
+
+### Lista de execução
+1. Mover helper de orientação/uso do app da `MainActivity` para use case.
+2. Integrar uso do helper extraído no fluxo de UI.
+3. Cobrir o helper com teste unitário.
+
+### Execução
+- [x] Item 1 concluído.
+- [x] Item 2 concluído.
+- [x] Item 3 concluído.
