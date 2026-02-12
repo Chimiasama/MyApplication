@@ -382,7 +382,11 @@ class CriadorViewModel(
             compendioSciFiAtivo = compendioSciFiAtivo,
             compendioDeadlandsAtivo = compendioDeadlandsAtivo,
             compendioFantasiaAtivo = compendioFantasiaAtivo,
-            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
+            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+            compendioHorrorAtivo = compendioHorrorAtivo,
+            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+            compendioWiseguysAtivo = compendioWiseguysAtivo
         )
 
         // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully

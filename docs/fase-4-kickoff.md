@@ -29,3 +29,18 @@ Reduzir regras espalhadas por `if/else` no `CriadorViewModel` criando estratégi
   - dinheiro/carteira inicial,
   - vantagens mandatórias por cenário,
   - coração inicial no Crystal Heart.
+
+
+## Lista explícita — continuação
+1. Expandir `RulesResolver` para cobrir todos os cenários (Horror, Arte da Guerra, Cidade do Sol a Vapor, Wiseguys).
+2. Levar políticas de visibilidade de vantagens para `GameRules` (bloqueio de AA, lista proibida e ocultação de categoria PODER).
+3. Aplicar essas políticas em `ContentVisibility.isVantagemVisible(...)`.
+4. Atualizar `CriadorViewModel` para usar a nova assinatura completa do `RulesResolver`.
+5. Atualizar e ampliar testes de `RulesResolver` para as novas políticas.
+
+## Execução da continuação
+- [x] Item 1 concluído.
+- [x] Item 2 concluído.
+- [x] Item 3 concluído.
+- [x] Item 4 concluído.
+- [x] Item 5 concluído.

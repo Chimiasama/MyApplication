@@ -17,7 +17,11 @@ class RulesResolverTest {
             compendioSciFiAtivo = true,
             compendioDeadlandsAtivo = true,
             compendioFantasiaAtivo = true,
-            compendioCrystalHeartAtivo = true
+            compendioCrystalHeartAtivo = true,
+            compendioHorrorAtivo = true,
+            compendioArteDaGuerraAtivo = true,
+            compendioCidadeSolVaporAtivo = true,
+            compendioWiseguysAtivo = true
         )
 
         assertEquals(30000, rules.startingResources().dinheiro)
@@ -26,10 +30,10 @@ class RulesResolverTest {
 
     @Test
     fun `resolve valores de dinheiro por modulo`() {
-        assertEquals(1000, resolver.resolve(false, true, false, false, false).startingResources().dinheiro)
-        assertEquals(250, resolver.resolve(false, false, true, false, false).startingResources().dinheiro)
-        assertEquals(300, resolver.resolve(false, false, false, true, false).startingResources().dinheiro)
-        assertEquals(500, resolver.resolve(false, false, false, false, false).startingResources().dinheiro)
+        assertEquals(1000, resolver.resolve(false, true, false, false, false, false, false, false, false).startingResources().dinheiro)
+        assertEquals(250, resolver.resolve(false, false, true, false, false, false, false, false, false).startingResources().dinheiro)
+        assertEquals(300, resolver.resolve(false, false, false, true, false, false, false, false, false).startingResources().dinheiro)
+        assertEquals(500, resolver.resolve(false, false, false, false, false, false, false, false, false).startingResources().dinheiro)
     }
 
     @Test
@@ -39,11 +43,27 @@ class RulesResolverTest {
             compendioSciFiAtivo = false,
             compendioDeadlandsAtivo = false,
             compendioFantasiaAtivo = false,
-            compendioCrystalHeartAtivo = true
+            compendioCrystalHeartAtivo = true,
+            compendioHorrorAtivo = false,
+            compendioArteDaGuerraAtivo = false,
+            compendioCidadeSolVaporAtivo = false,
+            compendioWiseguysAtivo = false
         )
 
         assertEquals("As Ilhas", rules.defaultAncestralidade())
         assertTrue(rules.mandatoryAdvantageIds().contains(AdvantageIds.AA_AGENTE_SYN))
         assertEquals(CrystalHeartIds.HEART_STARTER, rules.defaultCrystalHeartId())
+    }
+
+    @Test
+    fun `wiseguys e arte da guerra aplicam políticas de vantagem`() {
+        val wiseguys = resolver.resolve(false, false, false, false, false, false, false, false, true)
+        assertTrue(wiseguys.blocksArcaneBackgrounds())
+        assertTrue(wiseguys.hidePowerCategoryAdvantagesExceptMysticPowers())
+        assertTrue(wiseguys.forbiddenAdvantageIds().contains("aristocrata"))
+
+        val adg = resolver.resolve(false, false, false, false, false, false, true, false, false)
+        assertTrue(adg.blocksArcaneBackgrounds())
+        assertTrue(adg.forbiddenAdvantageIds().contains("resistencia_arcana"))
     }
 }

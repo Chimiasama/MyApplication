@@ -57,6 +57,7 @@
 4. Aplicar o resolver em fluxo real do app (`CriadorViewModel.resetStateParaNovoPersonagem`).
 5. Cobrir o resolver com teste unitário.
 6. Expandir estratégia de cenário para defaults de ancestralidade/vantagens mandatórias/coração inicial.
+7. Expandir Strategy por cenário para políticas de visibilidade de vantagens (AA/lista proibida/categoria PODER).
 
 ### Execução
 - [x] Item 1 concluído.
@@ -65,3 +66,4 @@
 - [x] Item 4 concluído.
 - [x] Item 5 concluído.
 - [x] Item 6 concluído (continuação da Fase 4 em `docs/fase-4-kickoff.md`).
+- [x] Item 7 concluído (continuação da Fase 4 em `docs/fase-4-kickoff.md`).
