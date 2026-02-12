@@ -35,6 +35,7 @@ import com.example.swadebuilder.model.usecase.ResolveDependentPowerRemovalUseCas
 import com.example.swadebuilder.model.usecase.AdjustNonNegativeBonusUseCase
 import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentWorkflowUseCase
 import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
+import com.example.swadebuilder.model.usecase.CalculateCurrentSuperSkillStepsUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -72,6 +73,7 @@ class CriadorViewModel(
     private val adjustNonNegativeBonusUseCase = AdjustNonNegativeBonusUseCase()
     private val validatePowerInvestmentWorkflowUseCase = ValidatePowerInvestmentWorkflowUseCase()
     private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
+    private val calculateCurrentSuperSkillStepsUseCase = CalculateCurrentSuperSkillStepsUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -772,10 +774,18 @@ class CriadorViewModel(
                 val perObj = periciasMapData()[efeito.periciaKey.keyify()]
                 if (perObj != null) {
                     val baseRaw = state.rawTotal(perObj)
-                    val incsAtuais = state.superInvestments
-                        .mapNotNull { it.effect as? PowerEffect.SuperPericia }
-                        .filter { it.periciaKey.equals(perObj.nome, ignoreCase = true) }
-                        .sumOf { it.steps }
+                    val incsAtuais = calculateCurrentSuperSkillStepsUseCase.execute(
+                        CalculateCurrentSuperSkillStepsUseCase.Input(
+                            targetSkillName = perObj.nome,
+                            investments = state.superInvestments.mapNotNull { inv ->
+                                val effect = inv.effect as? PowerEffect.SuperPericia ?: return@mapNotNull null
+                                CalculateCurrentSuperSkillStepsUseCase.Investment(
+                                    skillKey = effect.periciaKey,
+                                    steps = effect.steps
+                                )
+                            }
+                        )
+                    )
                     val rawDepois = calculateSuperSkillRawAfterRevertUseCase.execute(
                         CalculateSuperSkillRawAfterRevertUseCase.Input(
                             baseRaw = baseRaw,
