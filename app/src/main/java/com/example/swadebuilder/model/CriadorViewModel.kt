@@ -33,6 +33,7 @@ import com.example.swadebuilder.model.usecase.CalculatePerPowerLimitUseCase
 import com.example.swadebuilder.model.usecase.CalculateSuperSkillRawAfterRevertUseCase
 import com.example.swadebuilder.model.usecase.ResolveDependentPowerRemovalUseCase
 import com.example.swadebuilder.model.usecase.AdjustNonNegativeBonusUseCase
+import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentWorkflowUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -68,6 +69,7 @@ class CriadorViewModel(
     private val calculateSuperSkillRawAfterRevertUseCase = CalculateSuperSkillRawAfterRevertUseCase()
     private val resolveDependentPowerRemovalUseCase = ResolveDependentPowerRemovalUseCase()
     private val adjustNonNegativeBonusUseCase = AdjustNonNegativeBonusUseCase()
+    private val validatePowerInvestmentWorkflowUseCase = ValidatePowerInvestmentWorkflowUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -596,46 +598,20 @@ class CriadorViewModel(
         custo: Int,
         efeito: PowerEffect
     ): InvestCheck {
-        val erroBasico = validatePowerInvestmentUseCase.execute(
-            ValidatePowerInvestmentUseCase.Input(
-                poderId = poderId,
-                custo = custo,
-                superPontosDisponiveis = state.superPontosDisponiveis,
-                gastosPorPoder = state.gastosPorPoder,
-                limitePorPoder = perPowerLimit(poderId),
-                limiteCompartilhadoArmaduraResistencia = state.limiteDePoderDaCampanha
-            )
-        )
-        if (erroBasico != null) {
-            return InvestCheck(false, erroBasico)
-        }
-
-        // 4) Checagens específicas de outros efeitos
-        when (efeito) {
+        val effectInput = when (efeito) {
             is PowerEffect.SuperAtributo -> {
-                val valida = podeSubirAtributoPorSuper(efeito.attrKey, efeito.steps)
-                if (!valida.ok) return valida
+                ValidatePowerInvestmentWorkflowUseCase.EffectInput.SuperAtributo(
+                    currentRaw = state.atributoRawComSupers(efeito.attrKey),
+                    steps = efeito.steps,
+                    applySteps = { raw, delta -> state.applySuperStepsFrom(raw, delta) }
+                )
             }
-
-            is PowerEffect.SuperPericia -> {
-                // A lógica de steps foi removida daqui, será tratada na UI/ViewModel
-            }
-
-            // Armadura/Resistência: não há checagem adicional aqui,
-            // o limite compartilhado já foi tratado acima pelo custo.
-            is PowerEffect.BonusArmadura    -> { /* nada extra */ }
-            is PowerEffect.BonusResistencia -> { /* nada extra */ }
-
-            is PowerEffect.BonusAparar -> { /* ok */ }
-
-            is PowerEffect.BonusMovimentacao -> { /* ok */ }
 
             is PowerEffect.SuperVantagem -> {
                 val vant = vantagensData().firstOrNull {
                     it.id.equals(efeito.vantagemId, ignoreCase = true)
                 }
 
-                // valida requisitos ignorando Estágio (simula “Lendário” para não travar pelo estágio)
                 val permitido = if (vant != null) {
                     val progressoAnterior = state.overrideStageForVantagem
                     state.overrideStageForVantagem = "Lendário"
@@ -646,41 +622,40 @@ class CriadorViewModel(
                     false
                 }
 
-                val erroSuperVantagem = validateSuperAdvantageInvestmentUseCase.execute(
-                    ValidateSuperAdvantageInvestmentUseCase.Input(
-                        vantagemIdSolicitada = efeito.vantagemId,
-                        vantagemEncontrada = vant?.let {
-                            ValidateSuperAdvantageInvestmentUseCase.AdvantageRef(
-                                id = it.id,
-                                nome = it.nome
-                            )
-                        },
-                        mensagemBloqueioClasse = vant?.let { bloqueioClasseExclusiva(it) },
-                        jaPossuiVantagem = vant != null && state.vantagensSelecionadas.any { it.id == vant.id },
-                        requisitosAtendidosIgnorandoEstagio = permitido
-                    )
+                ValidatePowerInvestmentWorkflowUseCase.EffectInput.SuperVantagem(
+                    vantagemIdSolicitada = efeito.vantagemId,
+                    vantagemNome = vant?.nome,
+                    mensagemBloqueioClasse = vant?.let { bloqueioClasseExclusiva(it) },
+                    jaPossuiVantagem = vant != null && state.vantagensSelecionadas.any { it.id == vant.id },
+                    requisitosAtendidosIgnorandoEstagio = permitido
                 )
-
-                if (erroSuperVantagem != null) {
-                    return InvestCheck(false, erroSuperVantagem)
-                }
             }
+
             is PowerEffect.Generico -> {
                 val pericias = periciasMapData()
-                val erroEspecial = validateSpecialPowerRequirementsUseCase.execute(
-                    ValidateSpecialPowerRequirementsUseCase.Input(
-                        effectNameKey = efeito.nome.keyify(),
-                        ocultismoRaw = pericias["OCULTISMO"]?.let { state.rawTotalComSupers(it) },
-                        cienciaRaw = pericias["CIENCIA"]?.let { state.rawTotalComSupers(it) }
-                    )
+                ValidatePowerInvestmentWorkflowUseCase.EffectInput.Generico(
+                    effectNameKey = efeito.nome.keyify(),
+                    ocultismoRaw = pericias["OCULTISMO"]?.let { state.rawTotalComSupers(it) },
+                    cienciaRaw = pericias["CIENCIA"]?.let { state.rawTotalComSupers(it) }
                 )
-                if (erroEspecial != null) {
-                    return InvestCheck(false, erroEspecial)
-                }
             }
+
+            else -> ValidatePowerInvestmentWorkflowUseCase.EffectInput.Other
         }
 
-        return InvestCheck(true, null)
+        val erro = validatePowerInvestmentWorkflowUseCase.execute(
+            ValidatePowerInvestmentWorkflowUseCase.Input(
+                poderId = poderId,
+                custo = custo,
+                superPontosDisponiveis = state.superPontosDisponiveis,
+                gastosPorPoder = state.gastosPorPoder,
+                limitePorPoder = perPowerLimit(poderId),
+                limiteCompartilhadoArmaduraResistencia = state.limiteDePoderDaCampanha,
+                effect = effectInput
+            )
+        )
+
+        return if (erro == null) InvestCheck(true, null) else InvestCheck(false, erro)
     }
 
     /**
