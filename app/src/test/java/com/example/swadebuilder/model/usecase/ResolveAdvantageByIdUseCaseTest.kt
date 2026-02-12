@@ -2,6 +2,7 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.Requisito
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -13,7 +14,7 @@ class ResolveAdvantageByIdUseCaseTest {
     @Test
     fun `resolve vantagem por id ignorando case`() {
         val vantagens = listOf(
-            Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE)
+            Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE, requisitos = Requisito())
         )
 
         val out = useCase.execute(vantagens, "ALERTA")
@@ -24,7 +25,7 @@ class ResolveAdvantageByIdUseCaseTest {
     @Test
     fun `retorna nulo quando id nao existe`() {
         val vantagens = listOf(
-            Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE)
+            Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE, requisitos = Requisito())
         )
 
         val out = useCase.execute(vantagens, "nao_existe")

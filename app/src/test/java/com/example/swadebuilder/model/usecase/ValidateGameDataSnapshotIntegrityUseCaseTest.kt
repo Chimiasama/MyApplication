@@ -7,6 +7,7 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.GameDataSnapshot
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
@@ -23,8 +24,8 @@ class ValidateGameDataSnapshotIntegrityUseCaseTest {
     fun `retorna erro quando detecta ids duplicados`() {
         val snapshot = snapshot(
             vantagens = listOf(
-                Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE),
-                Vantagem(id = "ALERTA", nome = "Alerta 2", categoria = Categoria.COMBATE)
+                Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE, requisitos = Requisito()),
+                Vantagem(id = "ALERTA", nome = "Alerta 2", categoria = Categoria.COMBATE, requisitos = Requisito())
             )
         )
 
@@ -41,7 +42,7 @@ class ValidateGameDataSnapshotIntegrityUseCaseTest {
     }
 
     private fun snapshot(
-        vantagens: List<Vantagem> = listOf(Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE)),
+        vantagens: List<Vantagem> = listOf(Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE, requisitos = Requisito())),
         pericias: List<Pericia> = listOf(Pericia(nome = "Lutar", atributo = "AGILIDADE", basica = true)),
         poderes: List<Poder> = listOf(Poder(id = "rajada", nome = "Rajada", origem = "BASICO", estagio = "Novato", pontosDePoder = "1", distancia = "", duracao = "", descricao = ""))
     ) = GameDataSnapshot(
