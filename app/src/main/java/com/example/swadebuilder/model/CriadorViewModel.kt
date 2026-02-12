@@ -37,6 +37,9 @@ import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentWorkflowUse
 import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
 import com.example.swadebuilder.model.usecase.CalculateCurrentSuperSkillStepsUseCase
 import com.example.swadebuilder.model.usecase.ResolveAdvantageByIdUseCase
+import com.example.swadebuilder.model.usecase.NormalizeArcaneBackgroundChoiceUseCase
+import com.example.swadebuilder.model.ids.ArcaneBackgroundIds
+import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.ids.PowerIds
 import com.example.swadebuilder.model.ids.SkillIds
 
@@ -78,6 +81,7 @@ class CriadorViewModel(
     private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val calculateCurrentSuperSkillStepsUseCase = CalculateCurrentSuperSkillStepsUseCase()
     private val resolveAdvantageByIdUseCase = ResolveAdvantageByIdUseCase()
+    private val normalizeArcaneBackgroundChoiceUseCase = NormalizeArcaneBackgroundChoiceUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -273,22 +277,11 @@ class CriadorViewModel(
         return LoadOutcome(success = true)
     }
 
-    private fun mapChoiceToArcanoId(choice: String?): String? {
-        return when (choice?.trim()?.uppercase()) {
-            "DOM"                -> "antecedente_arcano_dom"
-            "MAGIA"              -> "antecedente_arcano_magia"
-            "MILAGRES"           -> "antecedente_arcano_milagres"
-            "PSIÔNICOS", "PSIONICOS" -> "antecedente_arcano_psionicos"
-            "CIÊNCIA ESTRANHA", "CIENCIA ESTRANHA" -> "antecedente_arcano_ciencia_estranha"
-            else -> null
-        }
-    }
-
     fun normalizeArcanoIdsNoCarregamento() {
 
         val convertidos = state.vantagensSelecionadas.map { v ->
-            if (v.id == "antecedente_arcano" && v.choice != null) {
-                val novoId = mapChoiceToArcanoId(v.choice)
+            if (v.id == ArcaneBackgroundIds.BASE && v.choice != null) {
+                val novoId = normalizeArcaneBackgroundChoiceUseCase.execute(v.choice)
                 val novo = vantagensData().find { it.id == novoId }
                 novo ?: v
             } else v
@@ -515,10 +508,10 @@ class CriadorViewModel(
 
         if (compendioPathfinderAtivo) {
             state.carteiraPathfinder.clear()
-            state.carteiraPathfinder["PL"] = 0
-            state.carteiraPathfinder["PO"] = 300
-            state.carteiraPathfinder["PP"] = 0
-            state.carteiraPathfinder["PC"] = 0
+            state.carteiraPathfinder[PathfinderCurrencyIds.PL] = 0
+            state.carteiraPathfinder[PathfinderCurrencyIds.PO] = 300
+            state.carteiraPathfinder[PathfinderCurrencyIds.PP] = 0
+            state.carteiraPathfinder[PathfinderCurrencyIds.PC] = 0
             state.updateTotalPathfinderMoney()
         }
         state.progresso = 0

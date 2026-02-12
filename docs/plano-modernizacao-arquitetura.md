@@ -119,7 +119,7 @@ Isso tende a dar melhor resultado que “parar tudo para refatorar”.
 - Fase 0: concluída (baseline + testes críticos iniciais).
 - Fase 1: concluída (repositório/snapshot/store transitório em uso).
 - Fase 2: concluída (extrações centrais para use-cases + testes puros).
-- Fase 3: iniciada (catálogo inicial de IDs e troca de literais críticos).
+- Fase 3: em andamento (catálogo expandido para módulos/arcano/moedas Pathfinder, remoção adicional de literais críticas e normalização de AA extraída para use-case testado).
 
 ## Indicadores de sucesso
 - Redução de arquivos tocados por feature de regra.
