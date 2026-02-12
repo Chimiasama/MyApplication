@@ -25,6 +25,7 @@ import com.example.swadebuilder.model.usecase.RemoveCrystalHeartUseCase
 import com.example.swadebuilder.model.usecase.UpsertCrystalHeartUseCase
 import com.example.swadebuilder.model.usecase.GenerateSequentialNameUseCase
 import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentUseCase
+import com.example.swadebuilder.model.usecase.ValidateSpecialPowerRequirementsUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -52,6 +53,7 @@ class CriadorViewModel(
     private val removeCrystalHeartUseCase = RemoveCrystalHeartUseCase()
     private val generateSequentialNameUseCase = GenerateSequentialNameUseCase(defaultName = DEFAULT_CHARACTER_NAME)
     private val validatePowerInvestmentUseCase = ValidatePowerInvestmentUseCase()
+    private val validateSpecialPowerRequirementsUseCase = ValidateSpecialPowerRequirementsUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -638,24 +640,16 @@ class CriadorViewModel(
                 }
             }
             is PowerEffect.Generico -> {
-                // Validações específicas para Superfeitiçaria e Superciência
-                val nomeKey = efeito.nome.keyify()
-                if (nomeKey == "SUPERFEITICARIA") {
-                    val ocultismo = periciasMapData()["OCULTISMO"]
-                    if (ocultismo != null) {
-                        val raw = state.rawTotalComSupers(ocultismo)
-                        if (raw < 10) {
-                            return InvestCheck(false, "Requer Ocultismo d10+ (atual: ${raw.toDiceString()}).")
-                        }
-                    }
-                } else if (nomeKey == "SUPERCIENCIA") {
-                    val ciencias = periciasMapData()["CIENCIA"]
-                    if (ciencias != null) {
-                        val raw = state.rawTotalComSupers(ciencias)
-                        if (raw < 10) {
-                            return InvestCheck(false, "Requer Ciência d10+ (atual: ${raw.toDiceString()}).")
-                        }
-                    }
+                val pericias = periciasMapData()
+                val erroEspecial = validateSpecialPowerRequirementsUseCase.execute(
+                    ValidateSpecialPowerRequirementsUseCase.Input(
+                        effectNameKey = efeito.nome.keyify(),
+                        ocultismoRaw = pericias["OCULTISMO"]?.let { state.rawTotalComSupers(it) },
+                        cienciaRaw = pericias["CIENCIA"]?.let { state.rawTotalComSupers(it) }
+                    )
+                )
+                if (erroEspecial != null) {
+                    return InvestCheck(false, erroEspecial)
                 }
             }
         }
