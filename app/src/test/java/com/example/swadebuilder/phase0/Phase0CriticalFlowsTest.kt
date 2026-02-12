@@ -90,6 +90,7 @@ class Phase0CriticalFlowsTest {
             description = "",
             origem = "BASICO"
         )
+        listaComplicacoes = listOf(complicacao)
         state.complicacoesSelecionadas[complicacao] = "Menor"
 
         val vantagem = Vantagem(
@@ -98,6 +99,7 @@ class Phase0CriticalFlowsTest {
             categoria = Categoria.COMBATE,
             requisitos = Requisito(estagio = "Novato")
         )
+        listaVantagens = listOf(vantagem)
         state.vantagensSelecionadas.add(vantagem)
 
         val snapshot = state.toSnapshot()

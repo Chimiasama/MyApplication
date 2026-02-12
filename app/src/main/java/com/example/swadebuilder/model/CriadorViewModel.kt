@@ -73,9 +73,12 @@ class CriadorViewModel(
     }
 
     fun ensureDefaultSpecializations() {
+        val pericias = periciasData()
+        state.ensurePericiasRegistered(pericias)
+
         val atualizado = ensureDefaultSpecializationsUseCase.execute(
             usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
-            pericias = periciasData(),
+            pericias = pericias,
             rawTotalProvider = { per -> state.rawTotal(per) },
             atual = state.especializacoesPorPericia.toMap()
         )
