@@ -8,7 +8,7 @@ Mover responsabilidades de regra da camada de UI para domínio/arquitetura de su
 2. Extrair instruções dinâmicas de uso para um use case puro.
 3. Extrair helpers genéricos de domínio (formatação de dado e regra de estágio por slot) para arquivos dedicados fora da Activity.
 4. Atualizar a UI para consumir exclusivamente os componentes extraídos.
-5. Cobrir os itens novos com teste unitário (use case).
+5. Cobrir os itens novos com teste unitário (use case + helpers extraídos).
 6. Atualizar documentação de revisão/checkpoint com status da Fase 5.
 
 ## Execução
@@ -16,7 +16,7 @@ Mover responsabilidades de regra da camada de UI para domínio/arquitetura de su
 - [x] Item 2 concluído (`BuildUsageInstructionsUseCase`).
 - [x] Item 3 concluído (`DiceExtensions.kt`, `ProgressionSlotRules.kt`).
 - [x] Item 4 concluído (MainActivity delega e não mantém helpers antigos).
-- [x] Item 5 concluído (`BuildUsageInstructionsUseCaseTest`).
+- [x] Item 5 concluído (`BuildUsageInstructionsUseCaseTest`, `DiceExtensionsTest`, `ProgressionSlotRulesTest`).
 - [x] Item 6 concluído (`docs/revisao-fases-0-4.md` e `docs/plano-modernizacao-arquitetura.md`).
 
 ## Resultado
