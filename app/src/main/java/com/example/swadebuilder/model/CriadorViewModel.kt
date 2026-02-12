@@ -31,6 +31,7 @@ import com.example.swadebuilder.model.usecase.ValidateSuperAttributeInvestmentUs
 import com.example.swadebuilder.model.usecase.ApplySuperAttributeDeltaUseCase
 import com.example.swadebuilder.model.usecase.CalculatePerPowerLimitUseCase
 import com.example.swadebuilder.model.usecase.CalculateSuperSkillRawAfterRevertUseCase
+import com.example.swadebuilder.model.usecase.ResolveDependentPowerRemovalUseCase
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -64,6 +65,7 @@ class CriadorViewModel(
     private val applySuperAttributeDeltaUseCase = ApplySuperAttributeDeltaUseCase()
     private val calculatePerPowerLimitUseCase = CalculatePerPowerLimitUseCase()
     private val calculateSuperSkillRawAfterRevertUseCase = CalculateSuperSkillRawAfterRevertUseCase()
+    private val resolveDependentPowerRemovalUseCase = ResolveDependentPowerRemovalUseCase()
 
     private fun periciasData() = gameDataStore.pericias(listaPericias)
     private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
@@ -805,24 +807,21 @@ class CriadorViewModel(
                     )
 
                     val perKey = perObj.nome.keyify()
-                    // Auto-remove dependent powers instead of blocking
-                    if (perKey == "OCULTISMO" && rawDepois < 10) {
-                        val dep = state.superInvestments.firstOrNull { it.displayName.keyify() == "SUPERFEITICARIA" }
-                        if (dep != null) {
-                            val res = revertPowerInvestment(dep.powerId, dep.cost, dep.effect)
-                            if (res.ok) {
-                                state.removerSuperPoder(dep, desfazerNoLedger = false)
-                                logFeedback("Superfeitiçaria removida por falta de requisito (Ocultismo < d10).")
-                            }
+                    val dependentPowerToRemove = resolveDependentPowerRemovalUseCase.execute(
+                        ResolveDependentPowerRemovalUseCase.Input(
+                            skillKey = perKey,
+                            skillRawAfterRevert = rawDepois
+                        )
+                    )
+                    if (dependentPowerToRemove != null) {
+                        val dep = state.superInvestments.firstOrNull {
+                            it.displayName.keyify() == dependentPowerToRemove.dependentDisplayNameKey
                         }
-                    }
-                    if (perKey == "CIENCIA" && rawDepois < 10) {
-                        val dep = state.superInvestments.firstOrNull { it.displayName.keyify() == "SUPERCIENCIA" }
                         if (dep != null) {
                             val res = revertPowerInvestment(dep.powerId, dep.cost, dep.effect)
                             if (res.ok) {
                                 state.removerSuperPoder(dep, desfazerNoLedger = false)
-                                logFeedback("Superciência removida por falta de requisito (Ciência < d10).")
+                                logFeedback(dependentPowerToRemove.feedbackMessage)
                             }
                         }
                     }
