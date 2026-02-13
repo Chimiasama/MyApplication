@@ -67,6 +67,25 @@ fun CriadorState.isVantagemVisible(
     vant: Vantagem,
     multiplosAAHabilitados: Boolean
 ): Boolean {
+    return evaluateVantagemVisibility(vant, multiplosAAHabilitados).visible
+}
+
+fun CriadorState.explainVantagemVisibility(
+    vant: Vantagem,
+    multiplosAAHabilitados: Boolean
+): String {
+    return evaluateVantagemVisibility(vant, multiplosAAHabilitados).reason
+}
+
+private data class VantagemVisibilityDecision(
+    val visible: Boolean,
+    val reason: String
+)
+
+private fun CriadorState.evaluateVantagemVisibility(
+    vant: Vantagem,
+    multiplosAAHabilitados: Boolean
+): VantagemVisibilityDecision {
     val activeOrigins = getActiveOrigins()
     val selectedRules = resolveScenarioRules()
     val origemNorm = canonicalOriginKey(vant.origem)
@@ -81,7 +100,7 @@ fun CriadorState.isVantagemVisible(
         if (isGenericAB && selectedRules.allowsGenericArcaneSelector()) {
             // Allow it
         } else {
-            return false
+            return VantagemVisibilityDecision(false, "blocked_origin:$origemNorm")
         }
     }
 
@@ -89,34 +108,43 @@ fun CriadorState.isVantagemVisible(
 
     // Monstrous Advantages (Horror) - Require Monster Rule
     if (vant.categoria == Categoria.MONSTRUOSAS && !modoMonstroAtivo) {
-        return false
+        return VantagemVisibilityDecision(false, "blocked_monstruosa_without_monster_mode")
     }
 
     // Scenario strategy policies (Fase 4)
     if (selectedRules.blocksArcaneBackgrounds()) {
         if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-            return false
+            return VantagemVisibilityDecision(false, "blocked_arcane_backgrounds_by_rules")
         }
     }
 
     if (selectedRules.hidePowerCategoryAdvantagesExceptMysticPowers()) {
         if (vant.categoria == Categoria.PODER && vant.id != "poderes_misticos") {
-            return false
+            return VantagemVisibilityDecision(false, "blocked_power_category_by_rules")
         }
     }
 
     if (vant.id in selectedRules.forbiddenAdvantageIds()) {
-        return false
+        return VantagemVisibilityDecision(false, "blocked_forbidden_id_by_rules:${vant.id}")
     }
 
 
     // Supers Logic
     if (modoSupers) {
-        if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) return false
-        if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") return false
-        if (vant.categoria == Categoria.PODER) return false
+        if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
+            return VantagemVisibilityDecision(false, "blocked_supers_arcane")
+        }
+        if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
+            return VantagemVisibilityDecision(false, "blocked_supers_resistencia_arcana")
+        }
+        if (vant.categoria == Categoria.PODER) {
+            return VantagemVisibilityDecision(false, "blocked_supers_power_category")
+        }
         if (vant.requisitos.vantagensPrevias.contains("antecedente_arcano") ||
-            vant.id == "superpoderes") return false
+            vant.id == "superpoderes"
+        ) {
+            return VantagemVisibilityDecision(false, "blocked_supers_arcane_requirement")
+        }
     }
 
     // 3. Arcane Background UI Logic
@@ -125,17 +153,17 @@ fun CriadorState.isVantagemVisible(
     // Rule-driven generic selector policy
     // Em cenários que usam seletor genérico, ele deve ser forçado apenas quando múltiplos AA estão desabilitados.
     if (selectedRules.allowsGenericArcaneSelector() && !multiplosAAHabilitados) {
-        if (isSpecificAB) return false
-        if (isGenericAB) return true
+        if (isSpecificAB) return VantagemVisibilityDecision(false, "blocked_specific_ab_generic_selector_rule")
+        if (isGenericAB) return VantagemVisibilityDecision(true, "visible_generic_ab_generic_selector_rule")
     }
 
     if (!multiplosAAHabilitados) {
         // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
-        if (isSpecificAB) return false
+        if (isSpecificAB) return VantagemVisibilityDecision(false, "blocked_specific_ab_when_multi_disabled")
     } else {
         // If Multiple ABs ENABLED: Show Specific ABs (Hide the Generic one)
-        if (isGenericAB) return false
+        if (isGenericAB) return VantagemVisibilityDecision(false, "blocked_generic_ab_when_multi_enabled")
     }
 
-    return true
+    return VantagemVisibilityDecision(true, "visible")
 }

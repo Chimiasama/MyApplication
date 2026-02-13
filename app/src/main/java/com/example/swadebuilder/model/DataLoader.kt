@@ -3,6 +3,7 @@ package com.example.swadebuilder.model
 import android.content.Context
 import android.content.res.AssetManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.swadebuilder.AppData
 import com.example.swadebuilder.ArcanoInfo
@@ -350,6 +351,21 @@ object DataLoader {
 
         listaVantagens = todasVantagens
         AppData.superVantagensParaDetalhe = AppData.superVantagens
+
+        if ("CIDADE_SOL_VAPOR" in keys) {
+            val steamAll = todasVantagens.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }
+            Log.d(
+                "SWADE_DEBUG",
+                "[DataLoader] keys=$keys, shouldReplaceBasico=$shouldReplaceBasico, " +
+                    "vantagens_total=${todasVantagens.size}, sol_vapor_total=${steamAll.size}"
+            )
+            steamAll.take(20).forEach { vant ->
+                Log.d(
+                    "SWADE_DEBUG",
+                    "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
+                )
+            }
+        }
 
         // 8. Tropos e Complicações
         val adgTropos = if ("ARTE_DA_GUERRA" in keys) {

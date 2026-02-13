@@ -1,15 +1,15 @@
 # Reliability Inventory
 
-- Date (UTC): 2026-02-13T20:26:44Z
-- Commit: 4b5e174
+- Date (UTC): 2026-02-13T20:37:36Z
+- Commit: f52d22e
 - Branch: work
 
 ## Critical file sizes
   4902 app/src/main/java/com/example/swadebuilder/CriadorState.kt
   1180 app/src/main/java/com/example/swadebuilder/MainActivity.kt
-   505 app/src/main/java/com/example/swadebuilder/model/DataLoader.kt
+   521 app/src/main/java/com/example/swadebuilder/model/DataLoader.kt
   1439 app/src/main/java/com/example/swadebuilder/model/CriadorViewModel.kt
-  8026 total
+  8042 total
 
 ## Global mutable declarations (listas + mapas de domínio)
 global_list_count=11
