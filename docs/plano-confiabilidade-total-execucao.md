@@ -158,3 +158,53 @@ Próxima etapa sugerida:
   - `MainActivity.kt`: 1180 linhas;
   - `CriadorViewModel.kt`: 1439 linhas;
   - 5 declarações de listas globais mutáveis de domínio no escopo principal.
+
+
+## Etapa E1 — Catálogo completo de globais remanescentes (Trilha B1)
+
+| Global | Arquivo | Tipo | Dono atual | Uso principal atual | Destino alvo | Risco de migração |
+|---|---|---|---|---|---|---|
+| `listaComplicacoes` | `MainActivity.kt` | Lista mutável global | UI/escopo raiz | composições e regras em estado legado | `GameDataStore.complicacoes()` | médio (muitas leituras indiretas) |
+| `listaCoracoesCrystal` | `MainActivity.kt` | Lista mutável global | UI/escopo raiz | regras de cenário Crystal Heart | `GameDataStore.coracoesCrystal()` | médio |
+| `listaAncestralidadesJson` | `MainActivity.kt` | Lista mutável global | UI/escopo raiz | aplicação de ancestralidade | `GameDataStore.ancestralidades()` | alto (impacta build/racial pipeline) |
+| `listaMonstroTemplates` | `MainActivity.kt` | Lista mutável global | UI/escopo raiz | modo monstro/templates | `GameDataStore.monstroTemplates()` | médio |
+| `listaAtributos` | `MainActivity.kt` | Lista mutável global | UI/escopo raiz | UI e validações de atributos | `GameDataStore.atributos()` | médio |
+| `listaPericias` | `MainActivity.kt` | Lista mutável global | UI/escopo raiz | árvore de perícias/stacking | `GameDataStore.pericias()` | alto (efeito cascata no state) |
+| `mapaPericias` | `MainActivity.kt` | Mapa mutável global | UI/escopo raiz | lookup de perícia por nome | `GameDataStore.mapaPericias()` | alto |
+| `mapaAtributosDisplay` | `MainActivity.kt` | Mapa mutável global | UI/escopo raiz | labels de atributo | `GameDataStore.atributosDisplay()` | baixo |
+| `mapaAtributosDescricao` | `MainActivity.kt` | Mapa mutável global | UI/escopo raiz | descrição contextual | `GameDataStore.atributosDescricao()` | baixo |
+| `racialAttrMinMap` | `MainActivity.kt` | Mapa mutável global | UI/escopo raiz | mínimos por ancestralidade | `GameDataStore.racialAttrMinMap()` | médio |
+| `racialSkillStartMap` | `MainActivity.kt` | Mapa mutável global | UI/escopo raiz | baseline de perícias raciais | `GameDataStore.racialSkillStartMap()` | médio |
+| `listaVantagens` | `GameDataGlobals.kt` | Lista mutável global | globais de domínio | seleção/validação de vantagens | `GameDataStore.vantagens()` | alto (alto acoplamento atual) |
+| `listaTropos` | `GameDataGlobals.kt` | Lista mutável global | globais de domínio | regras de tropos/supers | `GameDataStore.tropos()` | médio |
+| `listaEquipamentos` | `GameDataGlobals.kt` | Lista mutável global | globais de domínio | catálogo e filtros de equipamento | `GameDataStore.equipamentos()` | médio |
+| `listaPoderes` | `GameDataGlobals.kt` | Lista mutável global | globais de domínio | poderes arcanos/seleção | `GameDataStore.poderes()` | alto |
+| `equipamentoCategorias` | `GameDataGlobals.kt` | Lista mutável global | globais de domínio | categorização no UI | `GameDataStore.equipamentoCategorias()` | baixo |
+| `superequipCategorias` | `GameDataGlobals.kt` | Lista mutável global | globais de domínio | categorização supers | `GameDataStore.superequipCategorias()` | baixo |
+| `listaSuperPoderes` | `GameDataGlobals.kt` | Lista mutável global | globais de domínio | fluxo supers | `GameDataStore.superPoderes()` | alto |
+| `arcanoInfo` | `MainActivity.kt` | Mapa mutável global | UI/escopo raiz | regras de antecedentes arcanos | `GameDataStore.arcanoInfo()` | médio |
+
+### Política de migração (B2/B3)
+1. **Trocar leitura primeiro**: todo novo código lê `GameDataStore`; globais ficam como mirror temporário.
+2. **Bloquear crescimento**: gate falha se número de globais-lista aumentar acima do baseline atual.
+3. **Remover escrita global tardia**: após convergência de leituras, remover side effects globais do pipeline principal.
+
+## Etapa E2 — Drift controls no gate (Trilha D2)
+- [x] Limiar bloqueante para crescimento de listas globais mutáveis (baseline atual: 11).
+- [x] Limiar de atenção para crescimento de `CriadorState.kt` (warning operacional).
+- [x] Verificação explícita de presença de testes críticos de contrato (sanitização/repositório/rules).
+
+## Etapa E3 — Priorização de hotspots (Trilha C1)
+
+Hotspots priorizados para extração incremental (ordem de execução):
+1. `aplicarAncestralidade(...)` — linha ~3148 em `CriadorState.kt` (alto impacto de regras raciais + estado derivado).
+2. `rebuildAllPericiaStacks(...)` — linha ~4405 em `CriadorState.kt` (núcleo de consistência das perícias).
+3. `podeSelecionar(v: Vantagem)` — linha ~2625 em `CriadorState.kt` (gate central de elegibilidade de vantagens).
+
+Critérios de extração por hotspot:
+- manter assinatura pública e comportamento;
+- criar use-case puro com testes de contrato (feliz + borda + regressão conhecida);
+- migrar por adapter fino no `CriadorState` e validar com gate completo.
+
+## Próxima etapa operacional (E4)
+- Iniciar extração do hotspot #1 (`aplicarAncestralidade`) para use-case dedicado com bateria de testes de contrato antes de alterar os demais hotspots.
