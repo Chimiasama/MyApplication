@@ -70,8 +70,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -86,16 +84,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.model.CrystalHeart
-import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.EquipamentoItem
-import com.example.swadebuilder.model.MonstroTemplate
-import com.example.swadebuilder.model.Poder
-import com.example.swadebuilder.model.RacialModifier
-import com.example.swadebuilder.model.Tropo
-import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.usecase.BuildUsageInstructionsUseCase
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -103,15 +92,12 @@ import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.SecurityUtils
-import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 import java.text.DateFormat
 import kotlin.math.roundToInt
 
@@ -181,34 +167,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             val loadingState by isDataLoaded.collectAsState()
 
-            when (val currentState = loadingState) {
-                is LoadingState.Loading -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = Color.White)
-                    }
-                }
-                is LoadingState.Error -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(Color.Black),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Erro ao carregar dados:\n${currentState.message}",
-                            color = Color.Red,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
-                is LoadingState.Success -> {
-                    val criadorViewModel: CriadorViewModel = viewModel()
+            // --- HOISTED STATE ---
+            // Moved state variables here to persist across Loading state changes
+            val criadorViewModel: CriadorViewModel = viewModel()
             criadorViewModel.setMultiplosAAHabilitados(MULTIPLOS_AA_HABILITADOS)
             val state = criadorViewModel.state
             val snackHost = remember { SnackbarHostState() }
@@ -219,7 +180,7 @@ class MainActivity : ComponentActivity() {
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
             var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
-            var showExitDialog     by rememberSaveable { mutableStateOf(false) }
+            var showExitDialog by rememberSaveable { mutableStateOf(false) }
 
             val feedbackController = remember { FeedbackController(context) }
             DisposableEffect(Unit) {
@@ -263,7 +224,7 @@ class MainActivity : ComponentActivity() {
 
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
             var showLoadDialog by rememberSaveable { mutableStateOf(false) }
-            var showResetDialog by rememberSaveable { mutableStateOf(false) } // New Reset Dialog
+            var showResetDialog by rememberSaveable { mutableStateOf(false) }
             var saveName by rememberSaveable { mutableStateOf("") }
             var pendingNavigationAction by rememberSaveable {
                 mutableStateOf<PendingNavigationAction?>(null)
@@ -345,802 +306,830 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            // -- Settings Dialog --
-            if (showSettingsDialog) {
-                AlertDialog(
-                    onDismissRequest = { showSettingsDialog = false },
-                    title = { Text("Configurações") },
-                    text = {
-                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                            // --- GERAL ---
-                            Text("Geral", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+            // --- END HOISTED STATE ---
 
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Descrições na tela inicial")
-                                androidx.compose.material3.Switch(
-                                    checked = state.mostrarDescricaoHome,
-                                    onCheckedChange = {
-                                        state.mostrarDescricaoHome = it
-                                        persistPrefs()
-                                    }
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Mensagens do Sistema")
-                                androidx.compose.material3.Switch(
-                                    checked = state.showSystemMessages,
-                                    onCheckedChange = {
-                                        state.showSystemMessages = it
-                                        persistPrefs()
-                                    }
-                                )
-                            }
-
-                            HorizontalDivider(Modifier.padding(vertical = 8.dp))
-
-                            // --- APARÊNCIA ---
-                            Text("Aparência", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Ícone do livro na ficha")
-                                androidx.compose.material3.Switch(
-                                    checked = state.mostrarIdentificadorLivro,
-                                    onCheckedChange = {
-                                        state.mostrarIdentificadorLivro = it
-                                        persistPrefs()
-                                    }
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Expandir retrato no resumo")
-                                androidx.compose.material3.Switch(
-                                    checked = state.expandirRetrato,
-                                    onCheckedChange = { state.expandirRetrato = it }
-                                )
-                            }
-
-                            Text("Estilo das Abas / Opções", style = MaterialTheme.typography.bodyMedium)
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                androidx.compose.material3.RadioButton(
-                                    selected = state.estiloAbas == TabStyle.ICONES,
-                                    onClick = {
-                                        state.estiloAbas = TabStyle.ICONES
-                                        persistPrefs()
-                                    }
-                                )
-                                Text("Ícones")
-                                Spacer(Modifier.width(16.dp))
-                                androidx.compose.material3.RadioButton(
-                                    selected = state.estiloAbas == TabStyle.TEXTO,
-                                    onClick = {
-                                        state.estiloAbas = TabStyle.TEXTO
-                                        persistPrefs()
-                                    }
-                                )
-                                Text("Texto")
-                            }
-
-                            Spacer(Modifier.height(8.dp))
-
-                            TextButton(
-                                onClick = {
-                                    triggerFeedback()
-                                    showThemeSelectionDialog = true
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(Icons.Default.Palette, contentDescription = null)
-                                Spacer(Modifier.width(8.dp))
-                                Text("Mudar Tema do App")
-                            }
-
-                            HorizontalDivider(Modifier.padding(vertical = 8.dp))
-
-                            // --- FEEDBACK ---
-                            Text("Feedback", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
-                            Text("Resposta háptica: ${state.hapticStrength}%")
-                            Slider(
-                                value = state.hapticStrength.toFloat(),
-                                onValueChange = { state.hapticStrength = it.roundToInt() },
-                                onValueChangeFinished = {
-                                    persistFeedbackPrefs()
-                                    feedbackController.play(state.hapticStrength, 0)
-                                },
-                                valueRange = 0f..100f,
-                                steps = 4
-                            )
-
-                            Text("Sons do app: ${state.soundVolume}%")
-                            Slider(
-                                value = state.soundVolume.toFloat(),
-                                onValueChange = { state.soundVolume = it.roundToInt() },
-                                onValueChangeFinished = {
-                                    persistFeedbackPrefs()
-                                    feedbackController.play(0, state.soundVolume)
-                                },
-                                valueRange = 0f..100f,
-                                steps = 4,
-                                colors = SliderDefaults.colors(
-                                    thumbColor = MaterialTheme.colorScheme.secondary,
-                                    activeTrackColor = MaterialTheme.colorScheme.secondary,
-                                    inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-                                )
-                            )
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showSettingsDialog = false }) {
-                            Text("Fechar")
-                        }
-                    }
-                )
-            }
-
-            if (showHelpDialog) {
-                val pathfinderLabel = stringResource(R.string.sw_pathfinder_label)
-                AlertDialog(
-                    onDismissRequest = { showHelpDialog = false },
-                    title = { Text("Como usar o app") },
-                    text = {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(max = 360.dp)
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            Text(
-                                buildUsageInstructionsUseCase.execute(
-                                    BuildUsageInstructionsUseCase.Input(
-                                        compendioFantasiaAtivo = state.compendioFantasiaAtivo,
-                                        compendioHorrorAtivo = state.compendioHorrorAtivo,
-                                        compendioSciFiAtivo = state.compendioSciFiAtivo,
-                                        compendioPathfinderAtivo = state.compendioPathfinderAtivo,
-                                        compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
-                                        compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
-                                        compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
-                                        compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,
-                                        compendioWiseguysAtivo = state.compendioWiseguysAtivo,
-                                        modoSupers = state.modoSupers,
-                                        modoMonstroAtivo = state.modoMonstroAtivo,
-                                        pathfinderLabel = pathfinderLabel,
-                                        supersBookLabel = stringResource(R.string.sw_supers_book_title),
-                                        monsterBookLabel = stringResource(R.string.sw_monsters_book_title)
-                                    )
-                                )
-                            )
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showHelpDialog = false }) {
-                            Text("Entendi")
-                        }
-                    }
-                )
-            }
-
-            // -- Nested Theme Selection Dialog --
-            if (showThemeSelectionDialog) {
-                val themeNames = remember {
-                    mapOf(
-                        com.example.swadebuilder.ui.theme.AppTheme.DEFAULT   to "Padrão",
-                        com.example.swadebuilder.ui.theme.AppTheme.MEDIEVAL  to "Medieval",
-                        com.example.swadebuilder.ui.theme.AppTheme.CYBERPUNK to "Cyberpunk",
-                        com.example.swadebuilder.ui.theme.AppTheme.WW2       to "Segunda Guerra",
-                        com.example.swadebuilder.ui.theme.AppTheme.HORROR    to "Horror",
-                        com.example.swadebuilder.ui.theme.AppTheme.SCIFI     to "Sci-Fi",
-                        com.example.swadebuilder.ui.theme.AppTheme.MINIMALIST to "Minimalista",
-                        com.example.swadebuilder.ui.theme.AppTheme.HALLOWEEN to "Halloween"
-                    )
-                }
-
-                AlertDialog(
-                    onDismissRequest = { showThemeSelectionDialog = false },
-                    title = { Text(stringResource(R.string.select_theme)) },
-                    text = {
-                        LazyColumn {
-                            items(com.example.swadebuilder.ui.theme.AppTheme.entries) { theme ->
-                                TextButton(
-                                    onClick = {
-                                        criadorViewModel.setAppTheme(theme)
-                                        showThemeSelectionDialog = false
-                                        // Also close main settings if desired? keeping open for now.
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text(themeNames[theme] ?: theme.name)
-                                }
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showThemeSelectionDialog = false }) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    }
-                )
-            }
-
-            if (entryToDelete != null) {
-                AlertDialog(
-                    onDismissRequest = { entryToDelete = null },
-                    title = { Text("Apagar personagem") },
-                    text = { Text("Deseja apagar \"${entryToDelete?.nome}\"?") },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            entryToDelete?.let { entry ->
-                                scope.launch {
-                                    val snapshotToDelete = when (
-                                        val result = CharacterStorage.load(context, entry.id)
-                                    ) {
-                                        is CharacterStorage.LoadResult.Success -> result.snapshot
-                                        else -> null
-                                    }
-                                    CharacterStorage.delete(context, entry.id)
-                                    savedEntries.removeAll { it.id == entry.id }
-                                    if (state.idAtual == entry.id) {
-                                        state.idAtual = null
-                                    }
-                                    snapshotToDelete?.selecoes?.retratoFileName?.let { fileName ->
-                                        CharacterPortraitStorage.deleteIfUnused(context, fileName)
-                                    }
-                                    snackHost.showSnackbar("Personagem removido")
-                                }
-                            }
-                            entryToDelete = null
-                        }) {
-                            Text("Apagar")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { entryToDelete = null }) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    }
-                )
-            }
-
-            if (showSaveDialog) {
-                val isValid = SecurityUtils.isValidFilename(saveName)
-                var saveAsNew by rememberSaveable { mutableStateOf(false) }
-
-                AlertDialog(
-                    onDismissRequest = { showSaveDialog = false },
-                    title = { Text("Salvar personagem") },
-                    text = {
-                        Column {
-                            Text("Defina um nome para o salvamento.")
-                            OutlinedTextField(
-                                value = saveName,
-                                onValueChange = { saveName = it },
-                                label = { Text("Nome do arquivo") },
-                                isError = !isValid,
-                                supportingText = if (!isValid) {
-                                    { Text("Inválido: use apenas letras, números, '.', '_' ou '-' (máx 50).") }
-                                } else null,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            if (state.idAtual != null) {
-                                Spacer(Modifier.height(8.dp))
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Checkbox(
-                                        checked = saveAsNew,
-                                        onCheckedChange = { saveAsNew = it }
-                                    )
-                                    Text(
-                                        text = "Salvar como novo arquivo (Cópia)",
-                                        modifier = Modifier.clickable { saveAsNew = !saveAsNew }
-                                    )
-                                }
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                triggerFeedback()
-                                scope.launch {
-                                    val entry = criadorViewModel.salvarPersonagem(
-                                        context,
-                                        saveName,
-                                        criarCopia = saveAsNew
-                                    )
-                                    showSaveDialog = false
-                                    snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
-                                }
-                            },
-                            enabled = isValid
-                        ) {
-                            Text("Salvar")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showSaveDialog = false }) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    }
-                )
-            }
-
-            if (showSaveBeforeNavigateDialog && pendingNavigationAction != null) {
-                val action = pendingNavigationAction!!
-                val dialogMessage = when (action) {
-                    PendingNavigationAction.StartProgression ->
-                        "Deseja salvar o personagem antes de ir para os progressos?"
-                    PendingNavigationAction.ReturnToHome,
-                    PendingNavigationAction.ResetAndReturnHome ->
-                        "Deseja salvar o personagem antes de voltar para a tela inicial?"
-                }
-
-                AlertDialog(
-                    onDismissRequest = {
-                        showSaveBeforeNavigateDialog = false
-                        pendingNavigationAction = null
-                    },
-                    title = { Text("Salvar personagem?") },
-                    text = { Text(dialogMessage) },
-                    confirmButton = {
-                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            TextButton(onClick = {
-                                triggerFeedback()
-                                scope.launch {
-                                    val entry = criadorViewModel.salvarPersonagem(
-                                        context,
-                                        state.nomePersonagem
-                                    )
-                                    showSaveBeforeNavigateDialog = false
-                                    pendingNavigationAction = null
-                                    executePendingNavigation(action)
-
-                                    launch {
-                                        snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
-                                    }
-                                }
-                            }) {
-                                Text("Salvar")
-                            }
-                            TextButton(onClick = {
-                                triggerFeedback()
-                                showSaveBeforeNavigateDialog = false
-                                pendingNavigationAction = null
-                                executePendingNavigation(action)
-                            }) {
-                                Text("Não salvar")
-                            }
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            showSaveBeforeNavigateDialog = false
-                            pendingNavigationAction = null
-                        }) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    }
-                )
-            }
-
-            if (showLoadDialog) {
-                AlertDialog(
-                    onDismissRequest = { showLoadDialog = false },
-                    title = { Text("Carregar personagem") },
-                    text = {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(max = 350.dp)
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            if (savedEntries.isEmpty()) {
-                                Text("Nenhum personagem salvo.")
-                            } else {
-                                savedEntries.forEach { entry ->
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 4.dp),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(entry.nome)
-                                            Text(
-                                                DateFormat.getDateTimeInstance().format(entry.timestamp),
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        }
-                                        Row {
-                                            TextButton(onClick = { entryToDelete = entry }) {
-                                                Icon(Icons.Default.Delete, contentDescription = "Apagar personagem")
-                                                Spacer(Modifier.width(4.dp))
-                                                Text("Apagar")
-                                            }
-                                            TextButton(onClick = {
-                                                triggerFeedback()
-                                                scope.launch {
-                                                    val result = criadorViewModel.carregarPersonagem(
-                                                        context,
-                                                        entry.id
-                                                    )
-                                                    if (result.success) {
-                                                        creationSession++
-                                                        mostrouTelaInicial = false
-                                                        showLoadDialog = false
-                                                        snackHost.showSnackbar("Carregado: ${entry.nome}")
-                                                    } else {
-                                                        snackHost.showSnackbar(
-                                                            result.message
-                                                                ?: "Falha ao carregar o personagem"
-                                                        )
-                                                    }
-                                                }
-                                            }) {
-                                                Text("Carregar")
-                                            }
-                                        }
-                                    }
-                                    HorizontalDivider()
-                                }
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showLoadDialog = false }) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    }
-                )
-            }
-
-            if (showResetDialog) {
-                AlertDialog(
-                    onDismissRequest = { showResetDialog = false },
-                    title = { Text("Limpar personagem") },
-                    text = { Text("Deseja limpar a ficha atual e iniciar um novo personagem?") },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            val cartaSelvagem = state.cartaSelvagem
-                            val maisPontosPericias = state.maisPontosPericias
-                            val modoSupers = state.modoSupers
-                            val compendioFantasiaAtivo = state.compendioFantasiaAtivo
-                            val compendioHorrorAtivo = state.compendioHorrorAtivo
-                            val compendioSciFiAtivo = state.compendioSciFiAtivo
-                            val compendioPathfinderAtivo = state.compendioPathfinderAtivo
-                            val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
-                            val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
-                            val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
-                            val compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
-                            val compendioWiseguysAtivo = state.compendioWiseguysAtivo
-                            val modoMonstroAtivo = state.modoMonstroAtivo
-                            val usarEspecializacoesDePericia = state.usarEspecializacoesDePericia
-                            val grandesResponsabilidades = state.grandesResponsabilidades
-                            val regraMultiplosIdiomas = state.regraMultiplosIdiomas
-                            val nasceUmHeroi = state.nasceUmHeroi
-                            val usarSemPontosDePoder = state.usarSemPontosDePoder
-                            val compendioScifiMechasCiberneticosAtivo = state.compendioScifiMechasCiberneticosAtivo
-
-                            criadorViewModel.resetStateParaNovoPersonagem(
-                                cartaSelvagem = cartaSelvagem,
-                                maisPontosPericias = maisPontosPericias,
-                                modoSupers = modoSupers,
-                                compendioFantasiaAtivo = compendioFantasiaAtivo,
-                                compendioHorrorAtivo = compendioHorrorAtivo,
-                                compendioSciFiAtivo = compendioSciFiAtivo,
-                                compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo,
-                                compendioPathfinderAtivo = compendioPathfinderAtivo,
-                                compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-                                compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-                                compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-                                compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-                                compendioWiseguysAtivo = compendioWiseguysAtivo,
-                                modoMonstroAtivo = modoMonstroAtivo,
-                                usarEspecializacoesDePericia = usarEspecializacoesDePericia,
-                                grandesResponsabilidades = grandesResponsabilidades,
-                                regraMultiplosIdiomas = regraMultiplosIdiomas
-                            )
-                            scope.launch {
-                                criadorViewModel.prepararNomeInicial(context)
-                            }
-                            state.nasceUmHeroi = nasceUmHeroi
-                            state.usarSemPontosDePoder = usarSemPontosDePoder
-                            state.grandesResponsabilidades = grandesResponsabilidades
-                            showResetDialog = false
-                            scope.launch {
-                                snackHost.showSnackbar("Ficha limpa.")
-                            }
-                        }) {
-                            Text("Limpar")
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showResetDialog = false }) {
-                            Text("Cancelar")
-                        }
-                    }
-                )
-            }
-
-            BackHandler(enabled = mostrouTelaInicial) {
-                showExitDialog = true
-            }
-
-            if (showExitDialog) {
-                AlertDialog(
-                    onDismissRequest = { showExitDialog = false },
-                    title            = { Text("Deseja encerrar o app?") },
-                    confirmButton    = {
-                        TextButton(onClick = {
-                            activity?.finishAffinity()
-                        }) {
-                            Text("Sim")
-                        }
-                    },
-                    dismissButton    = {
-                        TextButton(onClick = { showExitDialog = false }) {
-                            Text("Não")
-                        }
-                    }
-                )
-            }
-
-            SWADEbuilderTheme(appTheme = state.appTheme) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surface)
-                ) {
+            when (val currentState = loadingState) {
+                is LoadingState.Loading -> {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .systemBarsPadding()
+                            .background(Color.Black),
+                        contentAlignment = Alignment.Center
                     ) {
-                        if (mostrouTelaInicial) {
-                            TelaInicial(
-                                onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
-                                                nasceUmHeroi, usarEspecializacaoPer,
-                                                semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
-                                                optRegraFama, optRegraRiqueza, optRegraCosaNostra,
-                                                optRegraMechasCiberneticos ->
+                        CircularProgressIndicator(color = Color.White)
+                    }
+                }
+                is LoadingState.Error -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Erro ao carregar dados:\n${currentState.message}",
+                            color = Color.Red,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                }
+                is LoadingState.Success -> {
+                    // -- Settings Dialog --
+                    if (showSettingsDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showSettingsDialog = false },
+                            title = { Text("Configurações") },
+                            text = {
+                                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                    // --- GERAL ---
+                                    Text("Geral", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
 
-                                    creationSession++
-                                    isDataLoaded.value = LoadingState.Loading
-
-                                    this@MainActivity.lifecycleScope.launch {
-                                        val activeKeys = mutableSetOf<String>()
-                                        if (compendioFantasiaAtivo) activeKeys.add("FANTASIA")
-                                        if (compendioHorrorAtivo) activeKeys.add("HORROR")
-                                        if (compendioSciFiAtivo) activeKeys.add("SCI_FI")
-                                        if (compendioPathfinderAtivo) activeKeys.add("PATHFINDER")
-                                        if (compendioDeadlandsAtivo) activeKeys.add("DEADLANDS")
-                                        if (compendioCrystalHeartAtivo) activeKeys.add("CRYSTAL_HEART")
-                                        if (compendioArteDaGuerraAtivo) activeKeys.add("ARTE_DA_GUERRA")
-                                        if (compendioCidadeSolVaporAtivo) activeKeys.add("CIDADE_SOL_VAPOR")
-                                        if (compendioWiseguysAtivo) activeKeys.add("WISEGUYS")
-                                        if (modoSupers) activeKeys.add("SUPER")
-
-                                        withContext(Dispatchers.IO) {
-                                            criadorViewModel.carregarDadosDeJogo(context, activeKeys)
-                                        }
-
-                                        criadorViewModel.resetStateParaNovoPersonagem(
-                                            cartaSelvagem = cartaSelvagem,
-                                            maisPontosPericias = maisPontosPericias,
-                                            modoSupers = modoSupers,
-                                            compendioFantasiaAtivo = compendioFantasiaAtivo,
-                                            compendioHorrorAtivo = compendioHorrorAtivo,
-                                            compendioSciFiAtivo = compendioSciFiAtivo,
-                                            compendioScifiMechasCiberneticosAtivo = optRegraMechasCiberneticos,
-                                            compendioPathfinderAtivo = compendioPathfinderAtivo,
-                                            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-                                            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-                                            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-                                            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-                                            compendioWiseguysAtivo = compendioWiseguysAtivo,
-                                            modoMonstroAtivo = modoMonstroAtivo,
-                                            usarEspecializacoesDePericia = usarEspecializacaoPer,
-                                            regraMultiplosIdiomas = multiplosIdiomas,
-                                            optRegraFama = optRegraFama,
-                                            optRegraRiqueza = optRegraRiqueza,
-                                            optRegraCosaNostra = optRegraCosaNostra
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Descrições na tela inicial")
+                                        androidx.compose.material3.Switch(
+                                            checked = state.mostrarDescricaoHome,
+                                            onCheckedChange = {
+                                                state.mostrarDescricaoHome = it
+                                                persistPrefs()
+                                            }
                                         )
-
-                                        criadorViewModel.prepararNomeInicial(context)
-
-                                        criadorViewModel.state.nasceUmHeroi = nasceUmHeroi
-                                        criadorViewModel.state.usarSemPontosDePoder = semPontosDePoder
-                                        criadorViewModel.normalizeArcanoIdsNoCarregamento()
-                                        criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
-
-                                        isDataLoaded.value = LoadingState.Success
-                                        mostrouTelaInicial = false
                                     }
-                                },
-                                onCarregarPersonagem = { showLoadDialog = true },
-                                onOpenSettings = { showSettingsDialog = true },
-                                viewModel = criadorViewModel
-                            )
-                        } else {
-                            BackHandler {
-                                requestNavigation(PendingNavigationAction.ReturnToHome)
-                            }
 
-                            Scaffold(
-                                snackbarHost = { SnackbarHost(hostState = snackHost) },
-                                floatingActionButton = {
-                                    if (!state.modoProgressaoAtivo && state.creationComplete()) {
-                                        ExtendedFloatingActionButton(
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Mensagens do Sistema")
+                                        androidx.compose.material3.Switch(
+                                            checked = state.showSystemMessages,
+                                            onCheckedChange = {
+                                                state.showSystemMessages = it
+                                                persistPrefs()
+                                            }
+                                        )
+                                    }
+
+                                    HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+                                    // --- APARÊNCIA ---
+                                    Text("Aparência", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Ícone do livro na ficha")
+                                        androidx.compose.material3.Switch(
+                                            checked = state.mostrarIdentificadorLivro,
+                                            onCheckedChange = {
+                                                state.mostrarIdentificadorLivro = it
+                                                persistPrefs()
+                                            }
+                                        )
+                                    }
+
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Expandir retrato no resumo")
+                                        androidx.compose.material3.Switch(
+                                            checked = state.expandirRetrato,
+                                            onCheckedChange = { state.expandirRetrato = it }
+                                        )
+                                    }
+
+                                    Text("Estilo das Abas / Opções", style = MaterialTheme.typography.bodyMedium)
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        androidx.compose.material3.RadioButton(
+                                            selected = state.estiloAbas == TabStyle.ICONES,
                                             onClick = {
-                                                triggerFeedback()
-                                                requestNavigation(PendingNavigationAction.StartProgression)
-                                            },
-                                            icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
-                                            text = { Text("Finalizar") },
-                                            containerColor = MaterialTheme.colorScheme.primary,
-                                            contentColor = MaterialTheme.colorScheme.onPrimary
+                                                state.estiloAbas = TabStyle.ICONES
+                                                persistPrefs()
+                                            }
                                         )
+                                        Text("Ícones")
+                                        Spacer(Modifier.width(16.dp))
+                                        androidx.compose.material3.RadioButton(
+                                            selected = state.estiloAbas == TabStyle.TEXTO,
+                                            onClick = {
+                                                state.estiloAbas = TabStyle.TEXTO
+                                                persistPrefs()
+                                            }
+                                        )
+                                        Text("Texto")
                                     }
-                                },
-                                containerColor = Color.Transparent,
-                                topBar         = {
-                                    TopAppBar(
-                                        colors = TopAppBarDefaults.topAppBarColors(
-                                            containerColor = Color.Transparent
-                                        ),
-                                        title = {
-                                            Box(
-                                                modifier = Modifier.fillMaxWidth(),
-                                                contentAlignment = Alignment.Center
+
+                                    Spacer(Modifier.height(8.dp))
+
+                                    TextButton(
+                                        onClick = {
+                                            triggerFeedback()
+                                            showThemeSelectionDialog = true
+                                        },
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Icon(Icons.Default.Palette, contentDescription = null)
+                                        Spacer(Modifier.width(8.dp))
+                                        Text("Mudar Tema do App")
+                                    }
+
+                                    HorizontalDivider(Modifier.padding(vertical = 8.dp))
+
+                                    // --- FEEDBACK ---
+                                    Text("Feedback", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+
+                                    Text("Resposta háptica: ${state.hapticStrength}%")
+                                    Slider(
+                                        value = state.hapticStrength.toFloat(),
+                                        onValueChange = { state.hapticStrength = it.roundToInt() },
+                                        onValueChangeFinished = {
+                                            persistFeedbackPrefs()
+                                            feedbackController.play(state.hapticStrength, 0)
+                                        },
+                                        valueRange = 0f..100f,
+                                        steps = 4
+                                    )
+
+                                    Text("Sons do app: ${state.soundVolume}%")
+                                    Slider(
+                                        value = state.soundVolume.toFloat(),
+                                        onValueChange = { state.soundVolume = it.roundToInt() },
+                                        onValueChangeFinished = {
+                                            persistFeedbackPrefs()
+                                            feedbackController.play(0, state.soundVolume)
+                                        },
+                                        valueRange = 0f..100f,
+                                        steps = 4,
+                                        colors = SliderDefaults.colors(
+                                            thumbColor = MaterialTheme.colorScheme.secondary,
+                                            activeTrackColor = MaterialTheme.colorScheme.secondary,
+                                            inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+                                        )
+                                    )
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { showSettingsDialog = false }) {
+                                    Text("Fechar")
+                                }
+                            }
+                        )
+                    }
+
+                    if (showHelpDialog) {
+                        val pathfinderLabel = stringResource(R.string.sw_pathfinder_label)
+                        AlertDialog(
+                            onDismissRequest = { showHelpDialog = false },
+                            title = { Text("Como usar o app") },
+                            text = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .heightIn(max = 360.dp)
+                                        .verticalScroll(rememberScrollState())
+                                ) {
+                                    Text(
+                                        buildUsageInstructionsUseCase.execute(
+                                            BuildUsageInstructionsUseCase.Input(
+                                                compendioFantasiaAtivo = state.compendioFantasiaAtivo,
+                                                compendioHorrorAtivo = state.compendioHorrorAtivo,
+                                                compendioSciFiAtivo = state.compendioSciFiAtivo,
+                                                compendioPathfinderAtivo = state.compendioPathfinderAtivo,
+                                                compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
+                                                compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
+                                                compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
+                                                compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,
+                                                compendioWiseguysAtivo = state.compendioWiseguysAtivo,
+                                                modoSupers = state.modoSupers,
+                                                modoMonstroAtivo = state.modoMonstroAtivo,
+                                                pathfinderLabel = pathfinderLabel,
+                                                supersBookLabel = stringResource(R.string.sw_supers_book_title),
+                                                monsterBookLabel = stringResource(R.string.sw_monsters_book_title)
+                                            )
+                                        )
+                                    )
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { showHelpDialog = false }) {
+                                    Text("Entendi")
+                                }
+                            }
+                        )
+                    }
+
+                    // -- Nested Theme Selection Dialog --
+                    if (showThemeSelectionDialog) {
+                        val themeNames = remember {
+                            mapOf(
+                                com.example.swadebuilder.ui.theme.AppTheme.DEFAULT   to "Padrão",
+                                com.example.swadebuilder.ui.theme.AppTheme.MEDIEVAL  to "Medieval",
+                                com.example.swadebuilder.ui.theme.AppTheme.CYBERPUNK to "Cyberpunk",
+                                com.example.swadebuilder.ui.theme.AppTheme.WW2       to "Segunda Guerra",
+                                com.example.swadebuilder.ui.theme.AppTheme.HORROR    to "Horror",
+                                com.example.swadebuilder.ui.theme.AppTheme.SCIFI     to "Sci-Fi",
+                                com.example.swadebuilder.ui.theme.AppTheme.MINIMALIST to "Minimalista",
+                                com.example.swadebuilder.ui.theme.AppTheme.HALLOWEEN to "Halloween"
+                            )
+                        }
+
+                        AlertDialog(
+                            onDismissRequest = { showThemeSelectionDialog = false },
+                            title = { Text(stringResource(R.string.select_theme)) },
+                            text = {
+                                LazyColumn {
+                                    items(com.example.swadebuilder.ui.theme.AppTheme.entries) { theme ->
+                                        TextButton(
+                                            onClick = {
+                                                criadorViewModel.setAppTheme(theme)
+                                                showThemeSelectionDialog = false
+                                            },
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Text(themeNames[theme] ?: theme.name)
+                                        }
+                                    }
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { showThemeSelectionDialog = false }) {
+                                    Text(stringResource(R.string.cancel))
+                                }
+                            }
+                        )
+                    }
+
+                    if (entryToDelete != null) {
+                        AlertDialog(
+                            onDismissRequest = { entryToDelete = null },
+                            title = { Text("Apagar personagem") },
+                            text = { Text("Deseja apagar \"${entryToDelete?.nome}\"?") },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    entryToDelete?.let { entry ->
+                                        scope.launch {
+                                            val snapshotToDelete = when (
+                                                val result = CharacterStorage.load(context, entry.id)
                                             ) {
-                                            if (state.estiloAbas == TabStyle.ICONES) {
-                                                IconButton(onClick = {
-                                                    triggerFeedback()
-                                                    showHelpDialog = true
-                                                }) {
-                                                    Icon(
-                                                        imageVector = Icons.AutoMirrored.Filled.Help,
-                                                        contentDescription = "Como usar"
-                                                    )
-                                                }
-                                            } else {
-                                                TextButton(onClick = {
-                                                    triggerFeedback()
-                                                    showHelpDialog = true
-                                                }) {
+                                                is CharacterStorage.LoadResult.Success -> result.snapshot
+                                                else -> null
+                                            }
+                                            CharacterStorage.delete(context, entry.id)
+                                            savedEntries.removeAll { it.id == entry.id }
+                                            if (state.idAtual == entry.id) {
+                                                state.idAtual = null
+                                            }
+                                            snapshotToDelete?.selecoes?.retratoFileName?.let { fileName ->
+                                                CharacterPortraitStorage.deleteIfUnused(context, fileName)
+                                            }
+                                            snackHost.showSnackbar("Personagem removido")
+                                        }
+                                    }
+                                    entryToDelete = null
+                                }) {
+                                    Text("Apagar")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { entryToDelete = null }) {
+                                    Text(stringResource(R.string.cancel))
+                                }
+                            }
+                        )
+                    }
+
+                    if (showSaveDialog) {
+                        val isValid = SecurityUtils.isValidFilename(saveName)
+                        var saveAsNew by rememberSaveable { mutableStateOf(false) }
+
+                        AlertDialog(
+                            onDismissRequest = { showSaveDialog = false },
+                            title = { Text("Salvar personagem") },
+                            text = {
+                                Column {
+                                    Text("Defina um nome para o salvamento.")
+                                    OutlinedTextField(
+                                        value = saveName,
+                                        onValueChange = { saveName = it },
+                                        label = { Text("Nome do arquivo") },
+                                        isError = !isValid,
+                                        supportingText = if (!isValid) {
+                                            { Text("Inválido: use apenas letras, números, '.', '_' ou '-' (máx 50).") }
+                                        } else null,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                    if (state.idAtual != null) {
+                                        Spacer(Modifier.height(8.dp))
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.fillMaxWidth()
+                                        ) {
+                                            Checkbox(
+                                                checked = saveAsNew,
+                                                onCheckedChange = { saveAsNew = it }
+                                            )
+                                            Text(
+                                                text = "Salvar como novo arquivo (Cópia)",
+                                                modifier = Modifier.clickable { saveAsNew = !saveAsNew }
+                                            )
+                                        }
+                                    }
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        triggerFeedback()
+                                        scope.launch {
+                                            val entry = criadorViewModel.salvarPersonagem(
+                                                context,
+                                                saveName,
+                                                criarCopia = saveAsNew
+                                            )
+                                            showSaveDialog = false
+                                            snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                        }
+                                    },
+                                    enabled = isValid
+                                ) {
+                                    Text("Salvar")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showSaveDialog = false }) {
+                                    Text(stringResource(R.string.cancel))
+                                }
+                            }
+                        )
+                    }
+
+                    if (showSaveBeforeNavigateDialog && pendingNavigationAction != null) {
+                        val action = pendingNavigationAction!!
+                        val dialogMessage = when (action) {
+                            PendingNavigationAction.StartProgression ->
+                                "Deseja salvar o personagem antes de ir para os progressos?"
+                            PendingNavigationAction.ReturnToHome,
+                            PendingNavigationAction.ResetAndReturnHome ->
+                                "Deseja salvar o personagem antes de voltar para a tela inicial?"
+                        }
+
+                        AlertDialog(
+                            onDismissRequest = {
+                                showSaveBeforeNavigateDialog = false
+                                pendingNavigationAction = null
+                            },
+                            title = { Text("Salvar personagem?") },
+                            text = { Text(dialogMessage) },
+                            confirmButton = {
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    TextButton(onClick = {
+                                        triggerFeedback()
+                                        scope.launch {
+                                            val entry = criadorViewModel.salvarPersonagem(
+                                                context,
+                                                state.nomePersonagem
+                                            )
+                                            showSaveBeforeNavigateDialog = false
+                                            pendingNavigationAction = null
+                                            executePendingNavigation(action)
+
+                                            launch {
+                                                snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                            }
+                                        }
+                                    }) {
+                                        Text("Salvar")
+                                    }
+                                    TextButton(onClick = {
+                                        triggerFeedback()
+                                        showSaveBeforeNavigateDialog = false
+                                        pendingNavigationAction = null
+                                        executePendingNavigation(action)
+                                    }) {
+                                        Text("Não salvar")
+                                    }
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = {
+                                    showSaveBeforeNavigateDialog = false
+                                    pendingNavigationAction = null
+                                }) {
+                                    Text(stringResource(R.string.cancel))
+                                }
+                            }
+                        )
+                    }
+
+                    if (showLoadDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showLoadDialog = false },
+                            title = { Text("Carregar personagem") },
+                            text = {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .heightIn(max = 350.dp)
+                                        .verticalScroll(rememberScrollState())
+                                ) {
+                                    if (savedEntries.isEmpty()) {
+                                        Text("Nenhum personagem salvo.")
+                                    } else {
+                                        savedEntries.forEach { entry ->
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(vertical = 4.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Column(modifier = Modifier.weight(1f)) {
+                                                    Text(entry.nome)
                                                     Text(
-                                                        text = "Como usar",
-                                                        style = MaterialTheme.typography.titleMedium,
-                                                        textAlign = TextAlign.Center
+                                                        DateFormat.getDateTimeInstance().format(entry.timestamp),
+                                                        style = MaterialTheme.typography.bodySmall
                                                     )
                                                 }
-                                                }
-                                            }
-                                        },
-                                        navigationIcon = {
-                                            if (state.estiloAbas == TabStyle.ICONES) {
-                                                IconButton(onClick = {
-                                                    triggerFeedback()
-                                                    requestNavigation(PendingNavigationAction.ResetAndReturnHome)
-                                                }) {
-                                                    Icon(
-                                                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                                        contentDescription = "Voltar"
-                                                    )
-                                                }
-                                            } else {
-                                                TextButton(onClick = {
-                                                    triggerFeedback()
-                                                    requestNavigation(PendingNavigationAction.ResetAndReturnHome)
-                                                }) {
-                                                    Text(
-                                                        text       = "Voltar",
-                                                        fontWeight = FontWeight.Bold,
-                                                        fontSize   = 18.sp
-                                                    )
-                                                }
-                                            }
-                                        },
-                                        actions = {
-                                            // Reset Character Button
-                                            if (!state.modoProgressaoAtivo) {
-                                                IconButton(onClick = {
-                                                    triggerFeedback()
-                                                    showResetDialog = true
-                                                }) {
-                                                    Icon(Icons.Default.Delete, contentDescription = "Reiniciar personagem")
-                                                }
-                                            }
-
-                                            IconButton(onClick = {
-                                                triggerFeedback()
-                                                saveName = SecurityUtils.sanitizeFilename(state.nomePersonagem)
-                                                showSaveDialog = true
-                                            }) {
-                                                Icon(Icons.Default.Save, contentDescription = "Salvar personagem")
-                                            }
-
-                                            IconButton(onClick = {
-                                                triggerFeedback()
-                                                showLoadDialog = true
-                                            }) {
-                                                Icon(Icons.Default.FolderOpen, contentDescription = "Carregar personagem")
-                                            }
-
-                                            IconButton(onClick = {
-                                                triggerFeedback()
-                                                val personagem = state.toMeuPersonagem()
-
-                                                scope.launch(Dispatchers.IO) {
-                                                    produzirEExibirFichaPdf(this@MainActivity, personagem) { msg ->
+                                                Row {
+                                                    TextButton(onClick = { entryToDelete = entry }) {
+                                                        Icon(Icons.Default.Delete, contentDescription = "Apagar personagem")
+                                                        Spacer(Modifier.width(4.dp))
+                                                        Text("Apagar")
+                                                    }
+                                                    TextButton(onClick = {
+                                                        triggerFeedback()
                                                         scope.launch {
-                                                            snackHost.showSnackbar(msg)
+                                                            val result = criadorViewModel.carregarPersonagem(
+                                                                context,
+                                                                entry.id
+                                                            )
+                                                            if (result.success) {
+                                                                creationSession++
+                                                                mostrouTelaInicial = false
+                                                                showLoadDialog = false
+                                                                snackHost.showSnackbar("Carregado: ${entry.nome}")
+                                                            } else {
+                                                                snackHost.showSnackbar(
+                                                                    result.message
+                                                                        ?: "Falha ao carregar o personagem"
+                                                                )
+                                                            }
                                                         }
+                                                    }) {
+                                                        Text("Carregar")
                                                     }
                                                 }
-                                            }) {
-                                                Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                             }
+                                            HorizontalDivider()
+                                        }
+                                    }
+                                }
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { showLoadDialog = false }) {
+                                    Text(stringResource(R.string.cancel))
+                                }
+                            }
+                        )
+                    }
 
-                                            IconButton(onClick = {
-                                                triggerFeedback()
-                                                showSettingsDialog = true
-                                            }) {
-                                                Icon(Icons.Default.Settings, contentDescription = "Change Theme")
+                    if (showResetDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showResetDialog = false },
+                            title = { Text("Limpar personagem") },
+                            text = { Text("Deseja limpar a ficha atual e iniciar um novo personagem?") },
+                            confirmButton = {
+                                TextButton(onClick = {
+                                    val cartaSelvagem = state.cartaSelvagem
+                                    val maisPontosPericias = state.maisPontosPericias
+                                    val modoSupers = state.modoSupers
+                                    val compendioFantasiaAtivo = state.compendioFantasiaAtivo
+                                    val compendioHorrorAtivo = state.compendioHorrorAtivo
+                                    val compendioSciFiAtivo = state.compendioSciFiAtivo
+                                    val compendioPathfinderAtivo = state.compendioPathfinderAtivo
+                                    val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
+                                    val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
+                                    val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
+                                    val compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
+                                    val compendioWiseguysAtivo = state.compendioWiseguysAtivo
+                                    val modoMonstroAtivo = state.modoMonstroAtivo
+                                    val usarEspecializacoesDePericia = state.usarEspecializacoesDePericia
+                                    val grandesResponsabilidades = state.grandesResponsabilidades
+                                    val regraMultiplosIdiomas = state.regraMultiplosIdiomas
+                                    val nasceUmHeroi = state.nasceUmHeroi
+                                    val usarSemPontosDePoder = state.usarSemPontosDePoder
+                                    val compendioScifiMechasCiberneticosAtivo = state.compendioScifiMechasCiberneticosAtivo
+
+                                    criadorViewModel.resetStateParaNovoPersonagem(
+                                        cartaSelvagem = cartaSelvagem,
+                                        maisPontosPericias = maisPontosPericias,
+                                        modoSupers = modoSupers,
+                                        compendioFantasiaAtivo = compendioFantasiaAtivo,
+                                        compendioHorrorAtivo = compendioHorrorAtivo,
+                                        compendioSciFiAtivo = compendioSciFiAtivo,
+                                        compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo,
+                                        compendioPathfinderAtivo = compendioPathfinderAtivo,
+                                        compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                        compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                                        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                                        compendioWiseguysAtivo = compendioWiseguysAtivo,
+                                        modoMonstroAtivo = modoMonstroAtivo,
+                                        usarEspecializacoesDePericia = usarEspecializacoesDePericia,
+                                        grandesResponsabilidades = grandesResponsabilidades,
+                                        regraMultiplosIdiomas = regraMultiplosIdiomas
+                                    )
+                                    scope.launch {
+                                        criadorViewModel.prepararNomeInicial(context)
+                                    }
+                                    state.nasceUmHeroi = nasceUmHeroi
+                                    state.usarSemPontosDePoder = usarSemPontosDePoder
+                                    state.grandesResponsabilidades = grandesResponsabilidades
+                                    showResetDialog = false
+                                    scope.launch {
+                                        snackHost.showSnackbar("Ficha limpa.")
+                                    }
+                                }) {
+                                    Text("Limpar")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showResetDialog = false }) {
+                                    Text("Cancelar")
+                                }
+                            }
+                        )
+                    }
+
+                    BackHandler(enabled = mostrouTelaInicial) {
+                        showExitDialog = true
+                    }
+
+                    if (showExitDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showExitDialog = false },
+                            title            = { Text("Deseja encerrar o app?") },
+                            confirmButton    = {
+                                TextButton(onClick = {
+                                    activity?.finishAffinity()
+                                }) {
+                                    Text("Sim")
+                                }
+                            },
+                            dismissButton    = {
+                                TextButton(onClick = { showExitDialog = false }) {
+                                    Text("Não")
+                                }
+                            }
+                        )
+                    }
+
+                    SWADEbuilderTheme(appTheme = state.appTheme) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.surface)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .systemBarsPadding()
+                            ) {
+                                if (mostrouTelaInicial) {
+                                    TelaInicial(
+                                        onCriarNovo = { cartaSelvagem, maisPontosPericias, modoSupers, compendioFantasiaAtivo, compendioHorrorAtivo, compendioSciFiAtivo, compendioPathfinderAtivo, compendioDeadlandsAtivo, compendioCrystalHeartAtivo, compendioArteDaGuerraAtivo, compendioCidadeSolVaporAtivo, compendioWiseguysAtivo, modoMonstroAtivo,
+                                                        nasceUmHeroi, usarEspecializacaoPer,
+                                                        semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
+                                                        optRegraFama, optRegraRiqueza, optRegraCosaNostra,
+                                                        optRegraMechasCiberneticos ->
+
+                                            creationSession++
+                                            isDataLoaded.value = LoadingState.Loading
+
+                                            this@MainActivity.lifecycleScope.launch {
+                                                val activeKeys = mutableSetOf<String>()
+                                                if (compendioFantasiaAtivo) activeKeys.add("FANTASIA")
+                                                if (compendioHorrorAtivo) activeKeys.add("HORROR")
+                                                if (compendioSciFiAtivo) activeKeys.add("SCI_FI")
+                                                if (compendioPathfinderAtivo) activeKeys.add("PATHFINDER")
+                                                if (compendioDeadlandsAtivo) activeKeys.add("DEADLANDS")
+                                                if (compendioCrystalHeartAtivo) activeKeys.add("CRYSTAL_HEART")
+                                                if (compendioArteDaGuerraAtivo) activeKeys.add("ARTE_DA_GUERRA")
+                                                if (compendioCidadeSolVaporAtivo) activeKeys.add("CIDADE_SOL_VAPOR")
+                                                if (compendioWiseguysAtivo) activeKeys.add("WISEGUYS")
+                                                if (modoSupers) activeKeys.add("SUPER")
+
+                                                withContext(Dispatchers.IO) {
+                                                    criadorViewModel.carregarDadosDeJogo(context, activeKeys)
+                                                }
+
+                                                criadorViewModel.resetStateParaNovoPersonagem(
+                                                    cartaSelvagem = cartaSelvagem,
+                                                    maisPontosPericias = maisPontosPericias,
+                                                    modoSupers = modoSupers,
+                                                    compendioFantasiaAtivo = compendioFantasiaAtivo,
+                                                    compendioHorrorAtivo = compendioHorrorAtivo,
+                                                    compendioSciFiAtivo = compendioSciFiAtivo,
+                                                    compendioScifiMechasCiberneticosAtivo = optRegraMechasCiberneticos,
+                                                    compendioPathfinderAtivo = compendioPathfinderAtivo,
+                                                    compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                                    compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                                    compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                                                    compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                                                    compendioWiseguysAtivo = compendioWiseguysAtivo,
+                                                    modoMonstroAtivo = modoMonstroAtivo,
+                                                    usarEspecializacoesDePericia = usarEspecializacaoPer,
+                                                    regraMultiplosIdiomas = multiplosIdiomas,
+                                                    optRegraFama = optRegraFama,
+                                                    optRegraRiqueza = optRegraRiqueza,
+                                                    optRegraCosaNostra = optRegraCosaNostra
+                                                )
+
+                                                criadorViewModel.prepararNomeInicial(context)
+
+                                                criadorViewModel.state.nasceUmHeroi = nasceUmHeroi
+                                                criadorViewModel.state.usarSemPontosDePoder = semPontosDePoder
+                                                criadorViewModel.normalizeArcanoIdsNoCarregamento()
+                                                criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
+
+                                                isDataLoaded.value = LoadingState.Success
+                                                mostrouTelaInicial = false
+                                            }
+                                        },
+                                        onCarregarPersonagem = { showLoadDialog = true },
+                                        onOpenSettings = { showSettingsDialog = true },
+                                        viewModel = criadorViewModel
+                                    )
+                                } else {
+                                    BackHandler {
+                                        requestNavigation(PendingNavigationAction.ReturnToHome)
+                                    }
+
+                                    Scaffold(
+                                        snackbarHost = { SnackbarHost(hostState = snackHost) },
+                                        floatingActionButton = {
+                                            if (!state.modoProgressaoAtivo && state.creationComplete()) {
+                                                ExtendedFloatingActionButton(
+                                                    onClick = {
+                                                        triggerFeedback()
+                                                        requestNavigation(PendingNavigationAction.StartProgression)
+                                                    },
+                                                    icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
+                                                    text = { Text("Finalizar") },
+                                                    containerColor = MaterialTheme.colorScheme.primary,
+                                                    contentColor = MaterialTheme.colorScheme.onPrimary
+                                                )
+                                            }
+                                        },
+                                        containerColor = Color.Transparent,
+                                        topBar         = {
+                                            TopAppBar(
+                                                colors = TopAppBarDefaults.topAppBarColors(
+                                                    containerColor = Color.Transparent
+                                                ),
+                                                title = {
+                                                    Box(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        contentAlignment = Alignment.Center
+                                                    ) {
+                                                    if (state.estiloAbas == TabStyle.ICONES) {
+                                                        IconButton(onClick = {
+                                                            triggerFeedback()
+                                                            showHelpDialog = true
+                                                        }) {
+                                                            Icon(
+                                                                imageVector = Icons.AutoMirrored.Filled.Help,
+                                                                contentDescription = "Como usar"
+                                                            )
+                                                        }
+                                                    } else {
+                                                        TextButton(onClick = {
+                                                            triggerFeedback()
+                                                            showHelpDialog = true
+                                                        }) {
+                                                            Text(
+                                                                text = "Como usar",
+                                                                style = MaterialTheme.typography.titleMedium,
+                                                                textAlign = TextAlign.Center
+                                                            )
+                                                        }
+                                                        }
+                                                    }
+                                                },
+                                                navigationIcon = {
+                                                    if (state.estiloAbas == TabStyle.ICONES) {
+                                                        IconButton(onClick = {
+                                                            triggerFeedback()
+                                                            requestNavigation(PendingNavigationAction.ResetAndReturnHome)
+                                                        }) {
+                                                            Icon(
+                                                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                                                contentDescription = "Voltar"
+                                                            )
+                                                        }
+                                                    } else {
+                                                        TextButton(onClick = {
+                                                            triggerFeedback()
+                                                            requestNavigation(PendingNavigationAction.ResetAndReturnHome)
+                                                        }) {
+                                                            Text(
+                                                                text       = "Voltar",
+                                                                fontWeight = FontWeight.Bold,
+                                                                fontSize   = 18.sp
+                                                            )
+                                                        }
+                                                    }
+                                                },
+                                                actions = {
+                                                    // Reset Character Button
+                                                    if (!state.modoProgressaoAtivo) {
+                                                        IconButton(onClick = {
+                                                            triggerFeedback()
+                                                            showResetDialog = true
+                                                        }) {
+                                                            Icon(Icons.Default.Delete, contentDescription = "Reiniciar personagem")
+                                                        }
+                                                    }
+
+                                                    IconButton(onClick = {
+                                                        triggerFeedback()
+                                                        saveName = SecurityUtils.sanitizeFilename(state.nomePersonagem)
+                                                        showSaveDialog = true
+                                                    }) {
+                                                        Icon(Icons.Default.Save, contentDescription = "Salvar personagem")
+                                                    }
+
+                                                    IconButton(onClick = {
+                                                        triggerFeedback()
+                                                        showLoadDialog = true
+                                                    }) {
+                                                        Icon(Icons.Default.FolderOpen, contentDescription = "Carregar personagem")
+                                                    }
+
+                                                    IconButton(onClick = {
+                                                        triggerFeedback()
+                                                        val personagem = state.toMeuPersonagem()
+
+                                                        scope.launch(Dispatchers.IO) {
+                                                            produzirEExibirFichaPdf(this@MainActivity, personagem) { msg ->
+                                                                scope.launch {
+                                                                    snackHost.showSnackbar(msg)
+                                                                }
+                                                            }
+                                                        }
+                                                    }) {
+                                                        Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
+                                                    }
+
+                                                    IconButton(onClick = {
+                                                        triggerFeedback()
+                                                        showSettingsDialog = true
+                                                    }) {
+                                                        Icon(Icons.Default.Settings, contentDescription = "Change Theme")
+                                                    }
+                                                }
+                                            )
+                                        },
+                                        content = { innerPadding ->
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxSize()
+                                                    .padding(innerPadding)
+                                            ) {
+                                                UnifiedScreen(
+                                                    state = state,
+                                                    viewModel = criadorViewModel,
+                                                    equipamentoCategorias = equipamentoCategorias,
+                                                    superequipCategorias  = superequipCategorias,
+                                                    listaSuperPoderes     = listaSuperPoderes,
+                                                    modoOficialAtivo      = state.modoOficialAtivo,
+                                                    onShowMessage         = { message ->
+                                                        scope.launch {
+                                                            snackHost.showSnackbar(message)
+                                                        }
+                                                    },
+                                                    onUserFeedback        = triggerFeedback,
+                                                    onRequestProgression  = {
+                                                        requestNavigation(PendingNavigationAction.StartProgression)
+                                                    }
+                                                )
                                             }
                                         }
                                     )
-                                },
-                                content = { innerPadding ->
-                                    Box(
-                                        modifier = Modifier
-                                            .fillMaxSize()
-                                            .padding(innerPadding)
-                                    ) {
-                                        UnifiedScreen(
-                                            state = state,
-                                            viewModel = criadorViewModel,
-                                            equipamentoCategorias = equipamentoCategorias,
-                                            superequipCategorias  = superequipCategorias,
-                                            listaSuperPoderes     = listaSuperPoderes,
-                                            modoOficialAtivo      = state.modoOficialAtivo,
-                                            onShowMessage         = { message ->
-                                                scope.launch {
-                                                    snackHost.showSnackbar(message)
-                                                }
-                                            },
-                                            onUserFeedback        = triggerFeedback,
-                                            onRequestProgression  = {
-                                                requestNavigation(PendingNavigationAction.StartProgression)
-                                            }
-                                        )
-                                    }
                                 }
-                            )
+                            }
                         }
                     }
                 }
             }
-            } // Close else block (actually close Success state block)
-            } // Close when
         }
     }
 }
