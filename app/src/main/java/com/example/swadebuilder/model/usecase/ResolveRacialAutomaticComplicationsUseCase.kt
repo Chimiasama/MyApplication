@@ -19,27 +19,39 @@ class ResolveRacialAutomaticComplicationsUseCase {
 
     fun execute(params: Params): Result {
         val oldAutoKeys = params.previousAutomaticDisadvantages
-            .map { it.substringBefore("(").trim().keyify() }
+            .map { normalizeToken(it.substringBefore("(").trim()) }
             .toSet()
 
         val withoutOld = params.selectedComplications
-            .filterKeys { it.id.keyify() !in oldAutoKeys }
+            .filterKeys { complication ->
+                val complicationTokens = setOf(
+                    normalizeToken(complication.id),
+                    normalizeToken(complication.name)
+                )
+                complicationTokens.none { it in oldAutoKeys }
+            }
             .toMutableMap()
 
         val autoBaseKeys = params.currentAutomaticDisadvantages
-            .map { it.substringBefore("(").trim().keyify() }
+            .map { normalizeToken(it.substringBefore("(").trim()) }
             .toSet()
 
         params.availableComplications
-            .filter { it.id.keyify() in autoBaseKeys }
-            .groupBy { it.id.keyify() }
+            .filter { complication ->
+                val complicationTokens = setOf(
+                    normalizeToken(complication.id),
+                    normalizeToken(complication.name)
+                )
+                complicationTokens.any { it in autoBaseKeys }
+            }
+            .groupBy { normalizeToken(it.id) }
             .forEach { (_, variants) ->
                 val selected = variants.maxByOrNull { params.originPriorityResolver(it.origem) }
                     ?: variants.first()
 
                 val severity = when {
-                    hasSeverity(params.currentAutomaticDisadvantages, selected.id, "Maior") -> "Maior"
-                    hasSeverity(params.currentAutomaticDisadvantages, selected.id, "Menor") -> "Menor"
+                    hasSeverity(params.currentAutomaticDisadvantages, selected, "Maior") -> "Maior"
+                    hasSeverity(params.currentAutomaticDisadvantages, selected, "Menor") -> "Menor"
                     else -> "Menor"
                 }
 
@@ -49,11 +61,24 @@ class ResolveRacialAutomaticComplicationsUseCase {
         return Result(selectedComplications = withoutOld)
     }
 
-    private fun hasSeverity(automaticDisadvantages: List<String>, complicationId: String, severity: String): Boolean {
-        val key = complicationId.keyify()
+    private fun hasSeverity(
+        automaticDisadvantages: List<String>,
+        complication: Complicacao,
+        severity: String
+    ): Boolean {
+        val tokens = setOf(
+            normalizeToken(complication.id),
+            normalizeToken(complication.name)
+        )
         return automaticDisadvantages.any {
-            it.substringBefore("(").trim().keyify() == key &&
+            normalizeToken(it.substringBefore("(").trim()) in tokens &&
                 it.contains(severity, ignoreCase = true)
         }
     }
+
+    private fun normalizeToken(value: String): String =
+        value.keyify()
+            .replace("_", "")
+            .replace("-", "")
+            .replace(" ", "")
 }
