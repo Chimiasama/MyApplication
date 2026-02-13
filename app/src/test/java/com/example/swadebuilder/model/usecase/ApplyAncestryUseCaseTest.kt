@@ -40,7 +40,7 @@ class ApplyAncestryUseCaseTest {
     private val darkVisionEdge = Vantagem(
         id = "visao_no_escuro",
         nome = "Visão no Escuro",
-        categoria = Categoria.RACIAL,
+        categoria = Categoria.ANCESTRALIDADE,
         requisitos = Requisito(),
         descricao = "Dwarf vision"
     )
