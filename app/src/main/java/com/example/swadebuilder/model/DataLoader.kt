@@ -157,6 +157,11 @@ object DataLoader {
                         json.decodeFromStream<List<T>>(input)
                     }
                 } catch (e: Exception) {
+                    Log.e(
+                        "SWADE_DEBUG",
+                        "[DataLoader] falha ao carregar ${module.fileName} (originOverride=${module.originOverride}): ${e::class.simpleName}: ${e.message}",
+                        e
+                    )
                     emptyList<T>()
                 }
             } as List<T>
