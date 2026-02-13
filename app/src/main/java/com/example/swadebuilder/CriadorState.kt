@@ -3352,7 +3352,9 @@ class CriadorState {
                 previousAutomaticDisadvantages = getAncestralidadeDef(prevAnc)?.desvantagens ?: emptyList(),
                 currentAutomaticDisadvantages = desvantagensAutomaticas.toList(),
                 availableComplications = listaComplicacoes,
-                selectedComplications = complicacoesSelecionadas.toMap(),
+                selectedComplications = complicacoesSelecionadas
+                    .mapNotNull { (complicacao, severidade) -> severidade?.let { complicacao to it } }
+                    .toMap(),
                 originPriorityResolver = { getOriginPriority(it) }
             )
         )
