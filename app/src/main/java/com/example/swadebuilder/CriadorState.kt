@@ -40,6 +40,7 @@ import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
 import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
+import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -54,6 +55,7 @@ class CriadorState {
     private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
     private val applyHumanAncestryTransitionUseCase = ApplyHumanAncestryTransitionUseCase()
     private val resolveRacialAutomaticComplicationsUseCase = ResolveRacialAutomaticComplicationsUseCase()
+    private val removeInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -3371,32 +3373,20 @@ class CriadorState {
         if (pvDepois > pvAntes) feedbackMessages.add("${pvDepois - pvAntes} ponto(s) de vantagem devolvido(s).")
 
         // Validar requisitos das vantagens existentes
-        var changed = true
-        while (changed) {
-            changed = false
-            val iterator = vantagensSelecionadas.iterator()
-            while (iterator.hasNext()) {
-                val v = iterator.next()
+        val invalidAdvantagesResult = removeInvalidAdvantagesAfterAncestryChangeUseCase.execute(
+            RemoveInvalidAdvantagesAfterAncestryChangeUseCase.Params(
+                selectedAdvantages = vantagensSelecionadas,
+                automaticAdvantages = vantagensAutomaticas.toList(),
+                automaticRacialAdvantages = vantagensRaciais.toList(),
+                automaticTropoAdvantageIds = vantagensAutomaticasDoTropo.toSet(),
+                meetsRequirements = { atendeRequisitosMantidos(it) }
+            )
+        )
 
-                val autoKeys = (vantagensAutomaticas + vantagensRaciais)
-                    .map { it.substringBefore("(").trim().keyify() }
-                    .toSet()
-
-                val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
-
-                if (v.nome.substringBefore("(").trim().keyify() in autoKeys) continue
-                if (v.id in autoIds) continue
-                if (v.id in vantagensAutomaticasDoTropo) continue
-                if (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true) continue
-
-                if (!atendeRequisitosMantidos(v)) {
-                    iterator.remove()
-                    removeVantagemDinheiro(v)
-                    pontosVantagem++
-                    feedbackMessages.add("Vantagem '${v.nome}' removida (requisitos não atendidos).")
-                    changed = true
-                }
-            }
+        invalidAdvantagesResult.removedAdvantages.forEach { removed ->
+            removeVantagemDinheiro(removed)
+            pontosVantagem++
+            feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
         }
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
