@@ -301,7 +301,14 @@ object DataLoader {
             )
         }
 
+        // Deduplicate Skills: prefer override source, fallback to BASICO
         val listaPericias = rawPericias
+            .groupBy { it.nome.keyify() }
+            .map { (_, duplicates) ->
+                duplicates.firstOrNull { it.origem != "BASICO" } ?: duplicates.first()
+            }
+            .sortedBy { it.nome }
+
         val mapaPericias = listaPericias.associateBy { it.nome.keyify() }
 
         val mapaAtributosDescricao = atributosData.atributos.associate {
@@ -319,23 +326,13 @@ object DataLoader {
              if (override != null) item.copy(origem = override) else item
         }
 
-        // Updating AppData globals is legacy behavior we want to avoid, but if AppData is a singleton object,
-        // we might still need to update it OR refactor consumers to use snapshot.
-        // For Phase 1, we update AppData only if it's considered "safe" legacy bridge,
-        // but ideally we return these lists in snapshot.
-        // AppData.basicasVantagens = ... (Side Effect)
-        // We will SKIP updating AppData here. Consumers should filter the snapshot list.
-        // Wait, AppData is used by VantagensSection UI directly.
-        // If we stop updating it, UI breaks.
-        // Strategy: We will DEPRECATE AppData usage and update it here temporarily as a bridge,
-        // OR better: Update AppData in the Repository after loading, explicitly.
-        // But the plan says "Refactor DataLoader to return GameDataSnapshot WITHOUT modifying globals".
-        // So we will NOT update AppData here. The Repository or ViewModel must handle the bridge if necessary.
-        // *Correction*: AppData is a global object. If we don't update it, the app breaks immediately.
-        // We must stick to the plan: "Unify Data Loading".
-        // We will return the snapshot. The caller (Repository) can update globals/bridges if needed for legacy support.
-
+        // Deduplicate Advantages by ID
         val listaVantagens = todasVantagens
+            .groupBy { it.id.keyify() }
+            .map { (_, duplicates) ->
+                duplicates.firstOrNull { it.origem != "BASICO" } ?: duplicates.first()
+            }
+            .sortedBy { it.nome }
 
         // 8. Tropos e Complicações
         val adgTropos = if ("ARTE_DA_GUERRA" in keys) {
