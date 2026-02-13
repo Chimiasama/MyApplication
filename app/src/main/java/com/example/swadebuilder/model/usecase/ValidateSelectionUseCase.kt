@@ -99,7 +99,7 @@ class ValidateSelectionUseCase {
                 "rico", "podre_de_rico",
                 "aristocrata", "arma_predileta", "comando", "conexoes",
                 "antecedente_arcano"
-            )
+            ).map { it.keyify() }.toSet()
             val vKey = v.id.keyify()
 
             if (vKey in forbiddenIds) return Result(false, "Não permitido em Crystal Heart.")

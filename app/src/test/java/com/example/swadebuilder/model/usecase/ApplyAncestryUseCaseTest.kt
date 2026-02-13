@@ -82,7 +82,6 @@ class ApplyAncestryUseCaseTest {
 
         val output = useCase.execute(input)
 
-        assertEquals("Anões", output.racialAdvantages.firstOrNull()) // Wait, output returns list of strings from JSON
         // dwarf.vantagensGratis is ["Visão no Escuro"]
         assertTrue(output.racialAdvantages.contains("Visão no Escuro"))
 
