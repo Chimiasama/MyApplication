@@ -2633,6 +2633,7 @@ class CriadorState {
             periciasRaw = periciasComIdiomas().associate { it.nome.keyify() to rawTotal(it) },
             getBestPericia = { name -> getBestPericia(name) },
             getRawTotal = { per -> rawTotal(per) },
+            getMaxAttributeRaw = { attr -> atributoMaxRaw(attr) },
             vantagensSelecionadas = vantagensSelecionadas,
             complicacoesSelecionadas = complicacoesSelecionadas,
             cartaSelvagem = cartaSelvagem,

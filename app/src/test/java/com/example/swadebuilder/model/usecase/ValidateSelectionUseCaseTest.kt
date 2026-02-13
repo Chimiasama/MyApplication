@@ -29,6 +29,7 @@ class ValidateSelectionUseCaseTest {
             periciasRaw = emptyMap(),
             getBestPericia = { null },
             getRawTotal = { 0 },
+            getMaxAttributeRaw = { 12 },
             vantagensSelecionadas = vantagensSelecionadas,
             complicacoesSelecionadas = emptyMap(),
             cartaSelvagem = true,

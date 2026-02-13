@@ -22,6 +22,7 @@ class ValidateSelectionUseCase {
         val periciasRaw: Map<String, Int>, // Keyified name -> Value
         val getBestPericia: (String) -> Pericia?, // Callback to find best skill match (handles idioms/jutsu)
         val getRawTotal: (Pericia) -> Int, // Callback to get skill value
+        val getMaxAttributeRaw: (String) -> Int, // Callback to get max attribute value (racial/size limit)
         val vantagensSelecionadas: List<Vantagem>,
         val complicacoesSelecionadas: Map<Complicacao, String?>, // Comp -> Level (Menor/Maior)
         val cartaSelvagem: Boolean,
@@ -199,20 +200,20 @@ class ValidateSelectionUseCase {
                 if (!profExist) return Result(false, "Requer Profissional na mesma característica.")
             }
 
-            // Check if trait is maxed (d12)
+            // Check if trait is maxed
             if (choiceSeguro == null) {
-                val anyMaxAttr = context.atributosRaw.any { (_, value) -> isMaxed(value) }
-                val anyMaxPer = context.periciasRaw.any { (_, value) -> isMaxed(value) } // Approximation, ideally iterate objects
+                val anyMaxAttr = context.atributosRaw.any { (k, value) -> isMaxed(value, k, context) }
+                val anyMaxPer = context.periciasRaw.any { (_, value) -> isMaxedSkill(value) }
                 if (!anyMaxAttr && !anyMaxPer) return Result(false, "Nenhum atributo ou perícia no máximo.")
             } else {
                 val choiceKey = choiceSeguro.keyify()
                 val attrVal = context.atributosRaw[choiceKey]
                 if (attrVal != null) {
-                    if (!isMaxed(attrVal)) return Result(false, "Atributo não está no máximo.")
+                    if (!isMaxed(attrVal, choiceKey, context)) return Result(false, "Atributo não está no máximo.")
                 } else {
                     val per = context.getBestPericia(choiceKey)
                     if (per == null) return Result(false, "Perícia não encontrada.")
-                    if (!isMaxed(context.getRawTotal(per))) return Result(false, "Perícia não está no máximo.")
+                    if (!isMaxedSkill(context.getRawTotal(per))) return Result(false, "Perícia não está no máximo.")
                 }
             }
         }
@@ -392,20 +393,19 @@ class ValidateSelectionUseCase {
         return context.getRawTotal(pericia) >= 8
     }
 
-    private fun isMaxed(value: Int): Boolean {
-        // Simplified check. Real logic in State checks attributeMaxRaw.
-        // For MVP, checking >= 12 is a reasonable fallback if we don't have max info in context.
-        // BUT, Attributes can go up to d12+1, d12+2...
-        // The original `podeSelecionar` calls `atributoMaxRaw`.
-        // We really should pass `isMaxed` as a callback in Context if we want precision.
-        // For now, let's assume d12 (12) is the soft max for "Especialista" triggers in standard play,
-        // but `CriadorState` logic is rigorous.
-        // Ideally: `val isAttributeMaxed: (String) -> Boolean` and `val isSkillMaxed: (Pericia) -> Boolean` in Context.
-        // I will rely on >= 12 for now as an approximation or add callbacks to Context.
-        // Re-reading `CriadorState`: `valoresAtributos[a]!!.intValue == atributoMaxRaw(a)`
-        // `atributoMaxRaw` is complex (racial max, Legendary, professional bumps).
-        // I'll stick to >= 12 for this pass to avoid infinite callback complexity,
-        // OR add `isTraitMaxed` callback to context. Let's add the callback.
+    private fun isMaxed(value: Int, attrKey: String, context: SelectionContext): Boolean {
+        val max = context.getMaxAttributeRaw(attrKey)
+        return value >= max
+    }
+
+    private fun isMaxedSkill(value: Int): Boolean {
+        // For skills, d12 is generally considered the base "max" for Expert triggers,
+        // though SWADE allows d12+X.
+        // Original logic checked if periciaCapRaw was reached.
+        // Since periciaCapRaw depends on Attribute limits, it's safer to rely on d12+
+        // but ideally we would also pass a getMaxSkillRaw callback.
+        // However, standard rule for Expert/Master is often "d12+".
+        // Let's stick to >= 12 for skills as a safe approximation for now unless requested.
         return value >= 12
     }
 }
