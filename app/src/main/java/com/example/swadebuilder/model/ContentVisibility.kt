@@ -1,11 +1,25 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.model.rules.RulesResolver
 import com.example.swadebuilder.util.semAcentos
 
 /**
  * Centralizes logic for determining content visibility based on active compendiums.
  */
+
+
+private fun CriadorState.resolveScenarioRules() = RulesResolver().resolve(
+    compendioPathfinderAtivo = compendioPathfinderAtivo,
+    compendioSciFiAtivo = compendioSciFiAtivo,
+    compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+    compendioFantasiaAtivo = compendioFantasiaAtivo,
+    compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+    compendioHorrorAtivo = compendioHorrorAtivo,
+    compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+    compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+    compendioWiseguysAtivo = compendioWiseguysAtivo
+)
 
 fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     // 1. Add active compendiums to the set
@@ -56,6 +70,7 @@ fun CriadorState.isVantagemVisible(
     multiplosAAHabilitados: Boolean
 ): Boolean {
     val activeOrigins = getActiveOrigins()
+    val selectedRules = resolveScenarioRules()
     val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase().semAcentos().trim()
 
     // 1. Basic Origin Check
@@ -76,56 +91,23 @@ fun CriadorState.isVantagemVisible(
         return false
     }
 
-    // Crystal Heart Logic
-    if (compendioCrystalHeartAtivo) {
+    // Scenario strategy policies (Fase 4)
+    if (selectedRules.blocksArcaneBackgrounds()) {
         if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-            // Only specific Crystal Heart ABs allowed (handled by dataset, but hiding generics here)
-            // If Generic AB is BASICO and BASICO is active (it is, for CH), we might want to hide it if CH forbids it.
             return false
         }
     }
 
-    // Pathfinder Logic (Redundant if BASICO is excluded, but kept for safety/specific exclusions within Pathfinder set)
-    if (compendioPathfinderAtivo) {
-        val forbiddenIds = setOf(
-            "antecedente_arcano_ciencia_estranha",
-            "antecedente_arcano_psionicos",
-            "antecedente_arcano_dom",
-            "rico",
-            "podre_de_rico"
-        )
-        if (vant.id in forbiddenIds) return false
-    }
-
-    // Arte da Guerra Logic
-    if (compendioArteDaGuerraAtivo) {
-        if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-            return false
-        }
+    if (selectedRules.hidePowerCategoryAdvantagesExceptMysticPowers()) {
         if (vant.categoria == Categoria.PODER && vant.id != "poderes_misticos") {
             return false
         }
-        if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
-            return false
-        }
     }
 
-    // Wiseguys Logic
-    if (compendioWiseguysAtivo) {
-        if (vant.categoria == Categoria.PODER && vant.id != "poderes_misticos") {
-            return false
-        }
-        if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
-            return false
-        }
-        if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-            return false
-        }
-        val forbiddenIds = setOf("aristocrata", "chi", "campeao", "matador_de_gigantes", "corajoso")
-        if (vant.id in forbiddenIds) {
-            return false
-        }
+    if (vant.id in selectedRules.forbiddenAdvantageIds()) {
+        return false
     }
+
 
     // Supers Logic
     if (modoSupers) {
@@ -142,27 +124,8 @@ fun CriadorState.isVantagemVisible(
     val isGenericAB = vant.id == "antecedente_arcano"
     val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
 
-    // Fantasy Logic: Keep Generic visible, Hide Specifics (Use Generic as selector)
-    if (compendioFantasiaAtivo) {
-        if (isSpecificAB) return false
-        if (isGenericAB) return true
-    }
-
-    // Horror Logic: Keep Generic visible, Hide Specifics (Use Generic as selector)
-    if (compendioHorrorAtivo) {
-        if (isSpecificAB) return false
-        if (isGenericAB) return true
-    }
-
-    // Pathfinder Exception: Uses Generic AB as selector for Magia/Milagres
-    if (compendioPathfinderAtivo) {
-        // Show Generic, Hide Specific (unless owned?)
-        if (isSpecificAB) return false
-        if (isGenericAB) return true
-    }
-
-    // Deadlands Exception: Uses Generic AB as selector
-    if (compendioDeadlandsAtivo) {
+    // Rule-driven generic selector policy
+    if (selectedRules.allowsGenericArcaneSelector()) {
         if (isSpecificAB) return false
         if (isGenericAB) return true
     }

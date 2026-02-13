@@ -60,7 +60,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.model.DataLoader
 import com.example.swadebuilder.ui.components.ModuleCard
 import com.example.swadebuilder.util.toEditionDisplayName
 import androidx.compose.ui.platform.LocalContext
@@ -389,7 +388,7 @@ fun TelaInicial(
                     if (optSuperPoderes) activeModules.add("SUPER")
 
                     scope.launch(Dispatchers.IO) {
-                        DataLoader.updateActiveModules(context, activeModules)
+                        viewModel.carregarDadosDeJogo(context, activeModules)
                         withContext(Dispatchers.Main) {
                             onCriarNovo(
                                 optCartaSelvagem,

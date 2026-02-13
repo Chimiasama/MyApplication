@@ -166,13 +166,17 @@ object DataLoader {
         }
     }
 
+    private var loadedArcanoInfoList: List<ArcanoInfo> = emptyList()
+
+    @OptIn(ExperimentalSerializationApi::class)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun loadCore(context: Context) {
-        updateActiveModules(context, setOf("BASICO"))
+    fun loadCore(context: Context): GameDataSnapshot {
+        return updateActiveModules(context, setOf("BASICO"))
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun updateActiveModules(context: Context, activeModules: Set<String>) {
+    fun updateActiveModules(context: Context, activeModules: Set<String>): GameDataSnapshot {
         val keys = activeModules + "BASICO" // Always include basic
         val assets = context.assets
 
@@ -252,6 +256,7 @@ object DataLoader {
             }.getOrElse { emptyList<ArcanoInfo>() }
         } as List<ArcanoInfo>
 
+        loadedArcanoInfoList = arcanoList
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -424,7 +429,30 @@ object DataLoader {
         val todosPoderes = assets.loadAndMerge<Poder>(powerModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
+
         listaPoderes = todosPoderes
+
+        return GameDataSnapshot(
+            listaComplicacoes = listaComplicacoes,
+            listaCoracoesCrystal = listaCoracoesCrystal,
+            listaAncestralidadesJson = listaAncestralidadesJson,
+            listaMonstroTemplates = listaMonstroTemplates,
+            racialAttrMinMap = racialAttrMinMap,
+            racialSkillStartMap = racialSkillStartMap,
+            listaAtributos = listaAtributos,
+            mapaAtributosDisplay = mapaAtributosDisplay,
+            listaPericias = listaPericias,
+            mapaPericias = mapaPericias,
+            mapaAtributosDescricao = mapaAtributosDescricao,
+            listaVantagens = listaVantagens,
+            listaPoderes = listaPoderes,
+            listaTropos = listaTropos,
+            listaEquipamentos = listaEquipamentos,
+            equipamentoCategorias = equipamentoCategorias,
+            superequipCategorias = superequipCategorias,
+            listaSuperPoderes = listaSuperPoderes,
+            arcanoInfo = loadedArcanoInfoList
+        )
     }
 
     private fun deduplicarEquipamentoCategorias(
