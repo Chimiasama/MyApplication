@@ -66,4 +66,21 @@ class RulesResolverTest {
         assertTrue(adg.blocksArcaneBackgrounds())
         assertTrue(adg.forbiddenAdvantageIds().contains("resistencia_arcana"))
     }
+
+    @Test
+    fun `cidade do sol a vapor permite seletor generico de antecedente arcano`() {
+        val rules = resolver.resolve(
+            compendioPathfinderAtivo = false,
+            compendioSciFiAtivo = false,
+            compendioDeadlandsAtivo = false,
+            compendioFantasiaAtivo = false,
+            compendioCrystalHeartAtivo = false,
+            compendioHorrorAtivo = false,
+            compendioArteDaGuerraAtivo = false,
+            compendioCidadeSolVaporAtivo = true,
+            compendioWiseguysAtivo = false
+        )
+
+        assertTrue(rules.allowsGenericArcaneSelector())
+    }
 }

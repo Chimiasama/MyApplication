@@ -1,0 +1,30 @@
+package com.example.swadebuilder.model
+
+import com.example.swadebuilder.CriadorState
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class ContentVisibilityTest {
+
+    @Test
+    fun `cidade do sol a vapor mantém seletor generico de antecedente arcano visivel`() {
+        val state = CriadorState().apply {
+            compendioCidadeSolVaporAtivo = true
+        }
+
+        val genericArcane = Vantagem(
+            id = "antecedente_arcano",
+            nome = "ANTECEDENTE ARCANO",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "BASICO",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = genericArcane,
+            multiplosAAHabilitados = false
+        )
+
+        assertTrue(visible)
+    }
+}

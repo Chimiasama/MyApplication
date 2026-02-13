@@ -86,6 +86,7 @@ object WiseguysRules : GameRules {
 object CidadeSolVaporRules : GameRules {
     override fun startingResources(): StartingResources = StartingResources(dinheiro = 500)
     override fun defaultAncestralidade(): String = "HUMANOS"
+    override fun allowsGenericArcaneSelector(): Boolean = true
 }
 
 object PathfinderRules : GameRules {

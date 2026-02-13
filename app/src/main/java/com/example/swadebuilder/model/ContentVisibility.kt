@@ -73,11 +73,14 @@ fun CriadorState.isVantagemVisible(
     val selectedRules = resolveScenarioRules()
     val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase().semAcentos().trim()
 
+    val isGenericAB = vant.id == "antecedente_arcano"
+    val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
+
     // 1. Basic Origin Check
     // If the advantage's origin is not in the active set, hide it.
     if (origemNorm !in activeOrigins) {
-        // Exception: Pathfinder uses the Generic "Antecedente Arcano" (from Basic) as a selector.
-        if (compendioPathfinderAtivo && vant.id == "antecedente_arcano") {
+        // Exception: cenários que usam o seletor genérico de AA (ex.: Pathfinder, Cidade do Sol a Vapor)
+        if (isGenericAB && selectedRules.allowsGenericArcaneSelector()) {
             // Allow it
         } else {
             return false
@@ -120,9 +123,6 @@ fun CriadorState.isVantagemVisible(
 
     // 3. Arcane Background UI Logic
 
-
-    val isGenericAB = vant.id == "antecedente_arcano"
-    val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
 
     // Rule-driven generic selector policy
     if (selectedRules.allowsGenericArcaneSelector()) {
