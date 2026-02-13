@@ -38,6 +38,7 @@ import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
+import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
 import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -50,6 +51,7 @@ enum class TabStyle { ICONES, TEXTO }
 
 class CriadorState {
     private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
+    private val applyHumanAncestryTransitionUseCase = ApplyHumanAncestryTransitionUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -3171,59 +3173,21 @@ class CriadorState {
                 .toSet()
 
         // --- Ajuste do +1 PV de HUMANOS (sem apagar tudo e respeitando pré-requisitos) ---
+        val humanTransition = applyHumanAncestryTransitionUseCase.execute(
+            ApplyHumanAncestryTransitionUseCase.Params(
+                wasHumano = wasHumano,
+                vaiSerHumano = vaiSerHumano,
+                pontosVantagemAtuais = pontosVantagem,
+                vantagensSelecionadas = vantagensSelecionadas.toList(),
+                prevFreeKeys = prevFreeKeys
+            )
+        )
 
-        if (wasHumano && !vaiSerHumano) {
-            // Helper: vantagem é racial gratuita da raça anterior?
-            fun isRacialFree(v: Vantagem): Boolean =
-                v.nome.keyify() in prevFreeKeys
-
-            // Helper: vantagem é pré-requisito de outra?
-            fun isUsedAsPrereq(v: Vantagem): Boolean {
-                v.id
-                return vantagensSelecionadas.any { other ->
-                    other != v && other.requisitos.vantagensPrevias.any { prevId ->
-                        when (prevId) {
-                            "antecedente_arcano",
-                            "antecedente_arcano:*" -> {
-                                other.id.startsWith("antecedente_arcano_") ||
-                                        (other.id == "antecedente_arcano" && !other.choice.isNullOrBlank())
-                            }
-                            else -> other.id == prevId
-                        }
-                    }
-                }
-            }
-
-            // Candidatos a serem removidos para "pagar" o edge grátis de humano:
-            // - não raciais
-            // - não são pré-requisito de outra
-            // - não são vantagens de PODER (superpoderes)
-            // - não são vantagens de cenário automáticas (Superpoderes, Canalizar Cristal, Conexões Máfia)
-            val candidatos = vantagensSelecionadas.filter { v ->
-                val isScenarioEdge = v.id == "superpoderes" ||
-                        v.id == "agente_syn" ||
-                        v.id == "aa_agente_syn" ||
-                        (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
-
-                !isRacialFree(v) &&
-                        !isUsedAsPrereq(v) &&
-                        !isScenarioEdge &&
-                        !v.categoria.name.equals("PODER", ignoreCase = true)
-            }
-
-            if (candidatos.isNotEmpty()) {
-                // Remove só UMA vantagem (a última adquirida, por simplicidade)
-                val toRemove = candidatos.last()
-                vantagensSelecionadas.remove(toRemove)
-                feedbackMessages.add("Vantagem ${toRemove.nome} removida para compensar a troca de Ancestralidade.")
-            } else {
-                // Não sobrou nada "seguro" pra remover → ajusta só o pool de PV
-                pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
-            }
-        } else if (!wasHumano && vaiSerHumano) {
-            // Entrando em HUMANOS → ganha 1 PV racial
-            pontosVantagem += 1
+        humanTransition.vantagemRemovida?.let { toRemove ->
+            vantagensSelecionadas.remove(toRemove)
+            feedbackMessages.add("Vantagem ${toRemove.nome} removida para compensar a troca de Ancestralidade.")
         }
+        pontosVantagem = humanTransition.novosPontosVantagem
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc

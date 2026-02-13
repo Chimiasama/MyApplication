@@ -208,3 +208,9 @@ Critérios de extração por hotspot:
 
 ## Próxima etapa operacional (E4)
 - Iniciar extração do hotspot #1 (`aplicarAncestralidade`) para use-case dedicado com bateria de testes de contrato antes de alterar os demais hotspots.
+
+## Etapa E4 — Extração inicial aplicada (hotspot #1, parcial)
+- [x] Extraído bloco de transição do bônus humano (+1 PV) para `ApplyHumanAncestryTransitionUseCase`.
+- [x] `CriadorState.aplicarAncestralidade(...)` agora delega essa regra ao use-case mantendo o fluxo restante inalterado.
+- [x] Testes de contrato adicionados para o use-case (remoção elegível, fallback de pontos, entrada em humano, no-op).
+- [ ] Próximo subpasso E4.1: extrair subseção de complicações automáticas raciais para use-case dedicado.
