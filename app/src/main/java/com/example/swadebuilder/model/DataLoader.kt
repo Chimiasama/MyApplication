@@ -369,10 +369,7 @@ object DataLoader {
         } else {
             ancestryModules
         }
-        val listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules, keys) // Fix: use ancestryModules (typofix in variable name in original?)
-        // Ah, original used `ancestriesToLoad`.
-        // Wait, original code: `listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestriesToLoad, keys)`
-        // I should use `ancestriesToLoad` here too.
+        val listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestriesToLoad, keys)
 
         // 10. Monstros
         val listaMonstroTemplates = if ("HORROR" in keys) {

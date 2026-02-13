@@ -1,7 +1,7 @@
 [
   {
     "id": "adivinhacao",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "ADIVINHAÇÃO",
     "estagio": "Experiente",
     "pontosDePoder": 5,
@@ -22,7 +22,7 @@
   },
   {
     "id": "ajuda",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "AJUDA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -55,7 +55,7 @@
   },
   {
     "id": "andar_nas_paredes",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "ANDAR NAS PAREDES",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -81,7 +81,7 @@
   },
   {
     "id": "atordoar",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "ATORDOAR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -110,7 +110,7 @@
   },
   {
     "id": "aumentar_reduzir_caracteristica",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "AUMENTAR/REDUZIR CARACTERÍSTICA",
     "estagio": "Novato",
     "pontosDePoder": 3,
@@ -143,7 +143,7 @@
   },
   {
     "id": "campo_de_dano",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "CAMPO DE DANO",
     "estagio": "Experiente",
     "pontosDePoder": 4,
@@ -171,7 +171,7 @@
   },
   {
     "id": "cegar",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "CEGAR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -204,7 +204,7 @@
   },
   {
     "id": "confusao",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "CONFUSÃO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -232,7 +232,7 @@
   },
   {
     "id": "cura",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "CURA",
     "estagio": "Novato",
     "pontosDePoder": 3,
@@ -269,7 +269,7 @@
   },
   {
     "id": "dadiva_do_guerreiro",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "DÁDIVA DO GUERREIRO",
     "estagio": "Experiente",
     "pontosDePoder": 4,
@@ -297,7 +297,7 @@
   },
   {
     "id": "deflexao",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "DEFLEXÃO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -324,7 +324,7 @@
   },
   {
     "id": "detectar_ocultar_arcano",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "DETECTAR/OCULTAR ARCANO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -360,7 +360,7 @@
   },
   {
     "id": "devastacao",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "DEVASTAÇÃO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -393,7 +393,7 @@
   },
   {
     "id": "disfarce",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "DISFARCE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -424,7 +424,7 @@
   },
   {
     "id": "dissipar",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "DISSIPAR",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -455,7 +455,7 @@
   },
   {
     "id": "enredar",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "ENREDAR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -487,7 +487,7 @@
   },
   {
     "id": "explosao",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "EXPLOSÃO",
     "estagio": "Experiente",
     "pontosDePoder": 3,
@@ -520,7 +520,7 @@
   },
   {
     "id": "fantoche",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "FANTOCHE",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -547,7 +547,7 @@
   },
   {
     "id": "ferir",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "FERIR",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -569,7 +569,7 @@
   },
   {
     "id": "iluminar_obscurecer",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "ILUMINAR/OBSCURECER",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -596,7 +596,7 @@
   },
   {
     "id": "ilusao",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "ILUSÃO",
     "estagio": "Novato",
     "pontosDePoder": 3,
@@ -627,7 +627,7 @@
   },
   {
     "id": "intangibilidade",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "INTANGIBILIDADE",
     "estagio": "Veterano",
     "pontosDePoder": 5,
@@ -648,7 +648,7 @@
   },
   {
     "id": "invisibilidade",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "INVISIBILIDADE",
     "estagio": "Experiente",
     "pontosDePoder": 5,
@@ -675,7 +675,7 @@
   },
   {
     "id": "limpeza_mental",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "LIMPEZA MENTAL",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -706,7 +706,7 @@
   },
   {
     "id": "medo",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "MEDO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -732,7 +732,7 @@
   },
   {
     "id": "morosidade_velocidade",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "MOROSIDADE/VELOCIDADE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -774,7 +774,7 @@
   },
   {
     "id": "protecao",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "PROTEÇÃO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -800,7 +800,7 @@
   },
   {
     "id": "protecao_ambiental",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "PROTEÇÃO AMBIENTAL",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -826,7 +826,7 @@
   },
   {
     "id": "protecao_arcana",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "PROTEÇÃO ARCANA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -852,7 +852,7 @@
   },
   {
     "id": "raio",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "RAIO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -879,7 +879,7 @@
   },
   {
     "id": "rajada",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "RAJADA",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -906,7 +906,7 @@
   },
   {
     "id": "ressurreicao",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "RESSURREIÇÃO",
     "estagio": "Heroico",
     "pontosDePoder": 30,
@@ -932,7 +932,7 @@
   },
   {
     "id": "santuario",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "SANTUÁRIO",
     "estagio": "Novato",
     "pontosDePoder": 2,
@@ -963,7 +963,7 @@
   },
   {
     "id": "som_silencio",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "SOM/SILÊNCIO",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -994,7 +994,7 @@
   },
   {
     "id": "sono",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "SONO",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -1020,7 +1020,7 @@
   },
   {
     "id": "visao_distante",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "VISÃO DISTANTE",
     "estagio": "Experiente",
     "pontosDePoder": 2,
@@ -1045,7 +1045,7 @@
   },
   {
     "id": "visao_sombria",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "VISÃO SOMBRIA",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -1071,7 +1071,7 @@
   },
   {
     "id": "disfarce_demoniaco",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "DISFARCE DEMONÍACO",
     "estagio": "Novato",
     "pontosDePoder": 0,
@@ -1092,7 +1092,7 @@
   },
   {
     "id": "sobrecarga",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "SOBRECARGA",
     "estagio": "Veterano",
     "pontosDePoder": 4,
@@ -1118,7 +1118,7 @@
   },
   {
     "id": "drenar_pontos_de_poder_demonio",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "DRENAR PONTOS DE PODER (DEMÔNIO)",
     "estagio": "Heróico",
     "pontosDePoder": 2,
@@ -1139,7 +1139,7 @@
   },
   {
     "id": "voar_demonio",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "VOAR (DEMÔNIO)",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -1166,7 +1166,7 @@
   },
   {
     "id": "elo_mental_demonio",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "ELO MENTAL (DEMÔNIO)",
     "estagio": "Novato",
     "pontosDePoder": 1,
@@ -1194,7 +1194,7 @@
   },
   {
     "id": "leitura_mental_demonio",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "LEITURA MENTAL (DEMÔNIO)",
     "estagio": "Veterano",
     "pontosDePoder": 5,
@@ -1215,7 +1215,7 @@
   },
   {
     "id": "limpeza_mental_demonio",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "LIMPEZA MENTAL (DEMÔNIO)",
     "estagio": "Veterano",
     "pontosDePoder": 3,
@@ -1247,7 +1247,7 @@
   },
   {
     "id": "telecinese_demonio",
-    "origem": "SOL_VAPOR",
+    "origem": "CIDADE_SOL_VAPOR",
     "nome": "TELECINESE (DEMÔNIO)",
     "estagio": "Experiente",
     "pontosDePoder": 5,

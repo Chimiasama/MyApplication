@@ -243,7 +243,7 @@ fun PoderesSection(
             }
             val normalizedOrigin = when (originRaw) {
                 "SCI_FI", "SCIFI" -> "SCIFI"
-                "SOL E VAPOR", "SOL_VAPOR" -> "SOL_VAPOR"
+                "SOL E VAPOR", "SOL_VAPOR", "CIDADE_SOL_VAPOR" -> "SOL_VAPOR"
                 "CRYSTAL HEARTS", "CRYSTAL" -> "CRYSTAL"
                 "ARTE DA GUERRA", "ADG" -> "ADG"
                 else -> originRaw
