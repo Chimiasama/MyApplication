@@ -922,38 +922,57 @@ class MainActivity : ComponentActivity() {
                                                 optRegraMechasCiberneticos ->
 
                                     creationSession++
+                                    isDataLoaded.value = LoadingState.Loading
 
-                                    criadorViewModel.resetStateParaNovoPersonagem(
-                                        cartaSelvagem      = cartaSelvagem,
-                                        maisPontosPericias = maisPontosPericias,
-                                        modoSupers         = modoSupers,
-                                        compendioFantasiaAtivo = compendioFantasiaAtivo,
-                                        compendioHorrorAtivo = compendioHorrorAtivo,
-                                        compendioSciFiAtivo = compendioSciFiAtivo,
-                                        compendioScifiMechasCiberneticosAtivo = optRegraMechasCiberneticos,
-                                        compendioPathfinderAtivo = compendioPathfinderAtivo,
-                                        compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-                                        compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-                                        compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-                                        compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-                                        compendioWiseguysAtivo = compendioWiseguysAtivo,
-                                        modoMonstroAtivo = modoMonstroAtivo,
-                                        usarEspecializacoesDePericia = usarEspecializacaoPer,
-                                        regraMultiplosIdiomas = multiplosIdiomas,
-                                        optRegraFama = optRegraFama,
-                                        optRegraRiqueza = optRegraRiqueza,
-                                        optRegraCosaNostra = optRegraCosaNostra
-                                    )
                                     scope.launch {
+                                        val activeKeys = mutableSetOf<String>()
+                                        if (compendioFantasiaAtivo) activeKeys.add("FANTASIA")
+                                        if (compendioHorrorAtivo) activeKeys.add("HORROR")
+                                        if (compendioSciFiAtivo) activeKeys.add("SCI_FI")
+                                        if (compendioPathfinderAtivo) activeKeys.add("PATHFINDER")
+                                        if (compendioDeadlandsAtivo) activeKeys.add("DEADLANDS")
+                                        if (compendioCrystalHeartAtivo) activeKeys.add("CRYSTAL_HEART")
+                                        if (compendioArteDaGuerraAtivo) activeKeys.add("ARTE_DA_GUERRA")
+                                        if (compendioCidadeSolVaporAtivo) activeKeys.add("CIDADE_SOL_VAPOR")
+                                        if (compendioWiseguysAtivo) activeKeys.add("WISEGUYS")
+                                        if (modoSupers) activeKeys.add("SUPER")
+
+                                        withContext(Dispatchers.IO) {
+                                            criadorViewModel.carregarDadosDeJogo(context, activeKeys)
+                                        }
+
+                                        criadorViewModel.resetStateParaNovoPersonagem(
+                                            cartaSelvagem = cartaSelvagem,
+                                            maisPontosPericias = maisPontosPericias,
+                                            modoSupers = modoSupers,
+                                            compendioFantasiaAtivo = compendioFantasiaAtivo,
+                                            compendioHorrorAtivo = compendioHorrorAtivo,
+                                            compendioSciFiAtivo = compendioSciFiAtivo,
+                                            compendioScifiMechasCiberneticosAtivo = optRegraMechasCiberneticos,
+                                            compendioPathfinderAtivo = compendioPathfinderAtivo,
+                                            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                                            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                                            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                                            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                                            compendioWiseguysAtivo = compendioWiseguysAtivo,
+                                            modoMonstroAtivo = modoMonstroAtivo,
+                                            usarEspecializacoesDePericia = usarEspecializacaoPer,
+                                            regraMultiplosIdiomas = multiplosIdiomas,
+                                            optRegraFama = optRegraFama,
+                                            optRegraRiqueza = optRegraRiqueza,
+                                            optRegraCosaNostra = optRegraCosaNostra
+                                        )
+
                                         criadorViewModel.prepararNomeInicial(context)
+
+                                        criadorViewModel.state.nasceUmHeroi = nasceUmHeroi
+                                        criadorViewModel.state.usarSemPontosDePoder = semPontosDePoder
+                                        criadorViewModel.normalizeArcanoIdsNoCarregamento()
+                                        criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
+
+                                        isDataLoaded.value = LoadingState.Success
+                                        mostrouTelaInicial = false
                                     }
-                                    criadorViewModel.state.nasceUmHeroi          = nasceUmHeroi
-
-                                    criadorViewModel.state.usarSemPontosDePoder  = semPontosDePoder
-                                    criadorViewModel.normalizeArcanoIdsNoCarregamento()
-                                    criadorViewModel.state.grandesResponsabilidades = grandesResponsabilidades
-
-                                    mostrouTelaInicial = false
                                 },
                                 onCarregarPersonagem = { showLoadDialog = true },
                                 onOpenSettings = { showSettingsDialog = true },
