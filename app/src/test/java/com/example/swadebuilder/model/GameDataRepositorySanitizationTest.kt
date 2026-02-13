@@ -15,8 +15,8 @@ class GameDataRepositorySanitizationTest {
                 Pericia(nome = "Atirar", atributo = "ESPIRITO", basica = false, origem = "SUPER")
             ),
             vantagens = listOf(
-                Vantagem(id = "parceiro", nome = "Parceiro (Básico)", categoria = Categoria.SOCIAL, origem = "BASICO", requisitos = Requisito()),
-                Vantagem(id = "PARCEIRO", nome = "Parceiro (Super)", categoria = Categoria.SOCIAL, origem = "SUPER", requisitos = Requisito())
+                Vantagem(id = "parceiro", nome = "Parceiro (Básico)", categoria = Categoria.SOCIAIS, origem = "BASICO", requisitos = Requisito()),
+                Vantagem(id = "PARCEIRO", nome = "Parceiro (Super)", categoria = Categoria.SOCIAIS, origem = "SUPER", requisitos = Requisito())
             ),
             poderes = listOf(
                 Poder(id = "rajada", nome = "Rajada (Básico)", origem = "BASICO", estagio = "Novato", pontosDePoder = "1", distancia = "", duracao = "", descricao = ""),
