@@ -19,6 +19,17 @@ require_file() {
   pass "Arquivo presente: $f"
 }
 
+search_any() {
+  local pattern="$1"
+  shift
+
+  if command -v rg >/dev/null 2>&1; then
+    rg -n "$pattern" "$@" >/dev/null
+  else
+    grep -R -n -E "$pattern" "$@" >/dev/null
+  fi
+}
+
 # 1) Artefatos obrigatórios das fases 5 e 6
 require_file "docs/fase-5-kickoff.md"
 require_file "docs/fase-6-kickoff.md"
@@ -30,23 +41,23 @@ require_file "app/src/test/java/com/example/swadebuilder/DiceExtensionsTest.kt"
 require_file "app/src/test/java/com/example/swadebuilder/ProgressionSlotRulesTest.kt"
 
 # 2) Garantias de não-regressão da extração de helpers da Activity
-if rg -n "fun buildUsageInstructions\(" app/src/main/java/com/example/swadebuilder/MainActivity.kt >/dev/null; then
+if search_any "fun buildUsageInstructions\\(" app/src/main/java/com/example/swadebuilder/MainActivity.kt; then
   fail "MainActivity voltou a declarar buildUsageInstructions inline"
 fi
 pass "MainActivity não contém helper inline buildUsageInstructions(...)"
 
 # 3) Garantias de wiring do use-case e resources exigidos
-rg -n "BuildUsageInstructionsUseCase" app/src/main/java/com/example/swadebuilder/MainActivity.kt >/dev/null \
+search_any "BuildUsageInstructionsUseCase" app/src/main/java/com/example/swadebuilder/MainActivity.kt \
   || fail "MainActivity não referencia BuildUsageInstructionsUseCase"
 pass "MainActivity referencia BuildUsageInstructionsUseCase"
 
-rg -n "sw_supers_book_title|sw_monsters_book_title" app/src/main/res/values/strings.xml >/dev/null \
+search_any "sw_supers_book_title|sw_monsters_book_title" app/src/main/res/values/strings.xml \
   || fail "Strings obrigatórias de livros não encontradas em strings.xml"
 pass "Strings de livros Supers/Monstros presentes"
 
 # 4) Garantia de cobertura mínima do cenário de monstro no teste do use-case
-rg -n "modoMonstroAtivo\s*=\s*true|Livro de Monstros|Monstros" \
-  app/src/test/java/com/example/swadebuilder/model/usecase/BuildUsageInstructionsUseCaseTest.kt >/dev/null \
+search_any "modoMonstroAtivo[[:space:]]*=[[:space:]]*true|Livro de Monstros|Monstros" \
+  app/src/test/java/com/example/swadebuilder/model/usecase/BuildUsageInstructionsUseCaseTest.kt \
   || fail "Teste de instruções não cobre explicitamente cenário de modo monstro"
 pass "Teste do use-case cobre modo monstro"
 
