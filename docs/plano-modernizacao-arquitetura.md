@@ -131,8 +131,8 @@ Isso tende a dar melhor resultado que “parar tudo para refatorar”.
 - Fase 0: concluída (baseline + testes críticos iniciais).
 - Fase 1: concluída (repositório/snapshot/store transitório em uso).
 - Fase 2: concluída (extrações centrais para use-cases + testes puros).
-- Fase 3: em andamento (catálogo expandido para módulos/arcano/moedas Pathfinder, remoção adicional de literais críticas e normalização de AA extraída para use-case testado).
-- Fase 4: em andamento (strategy por cenário aplicada a recursos, defaults de reset e políticas de visibilidade de vantagens por cenário).
+- Fase 3: concluída (catálogo de IDs expandido, literais críticas removidas em fluxos centrais e normalização de AA extraída/coberta por teste).
+- Fase 4: concluída (strategy por cenário aplicada a recursos, defaults de reset e políticas de visibilidade de vantagens, com resolver e testes atualizados).
 - Fase 5: concluída (helpers remanescentes removidos da Activity, integração da UI com componentes extraídos, cobertura unitária dos artefatos extraídos e checkpoint documental atualizado).
 - Fase 6: concluída (checklist executável e gate automatizado de confiabilidade com validações críticas e baseline).
 
