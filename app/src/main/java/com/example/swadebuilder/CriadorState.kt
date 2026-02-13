@@ -4244,6 +4244,7 @@ class CriadorState {
 
     private val rebuildSkillsUseCase = com.example.swadebuilder.model.usecase.RebuildSkillsUseCase()
     private val applyAncestryUseCase = com.example.swadebuilder.model.usecase.ApplyAncestryUseCase()
+    private val validateSelectionUseCase = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase()
 
     fun rebuildAllPericiaStacks(
         feedbackMessages: MutableList<String> = mutableListOf(),
