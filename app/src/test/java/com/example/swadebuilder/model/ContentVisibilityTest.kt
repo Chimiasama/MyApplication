@@ -72,4 +72,27 @@ class ContentVisibilityTest {
 
         assertFalse(visible)
     }
+
+    @Test
+    fun `cidade do sol a vapor aceita alias de origem sol e vapor`() {
+        val state = CriadorState().apply {
+            compendioCidadeSolVaporAtivo = true
+        }
+
+        val steamAdvantage = Vantagem(
+            id = "engenhoca_1",
+            nome = "Engenhoca",
+            categoria = Categoria.PROFISSIONAIS,
+            origem = "SOL E VAPOR",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = steamAdvantage,
+            multiplosAAHabilitados = true
+        )
+
+        assertTrue(visible)
+    }
+
 }

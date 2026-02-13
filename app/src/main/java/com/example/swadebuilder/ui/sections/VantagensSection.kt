@@ -66,6 +66,7 @@ import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.model.loadJsonAsset
@@ -297,8 +298,8 @@ fun VantagensContent(
 
             // Advanced Filters
             if (!filter.isEmpty()) {
-                val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
-                if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens) return@filter false
+                val vantOrigem = canonicalOriginKey(vant.origem)
+                if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens.map(::canonicalOriginKey).toSet()) return@filter false
                 if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return@filter false
                 if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return@filter false
                 if (filter.pericias.isNotEmpty()) {

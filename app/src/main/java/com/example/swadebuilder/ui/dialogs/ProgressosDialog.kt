@@ -76,6 +76,7 @@ import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
 import com.example.swadebuilder.model.RequirementValidator
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.isVantagemVisible
@@ -872,8 +873,8 @@ fun ProgressosDialog(
 
                 // Advanced Filter
                 if (!advFilter.isEmpty()) {
-                    val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
-                    if (advFilter.origens.isNotEmpty() && vantOrigem !in advFilter.origens) return@filter false
+                    val vantOrigem = canonicalOriginKey(vant.origem)
+                    if (advFilter.origens.isNotEmpty() && vantOrigem !in advFilter.origens.map(::canonicalOriginKey).toSet()) return@filter false
                     if (advFilter.estagios.isNotEmpty() && vant.requisitos.estagio !in advFilter.estagios) return@filter false
                     if (advFilter.atributos.isNotEmpty() && advFilter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return@filter false
                     if (advFilter.pericias.isNotEmpty()) {

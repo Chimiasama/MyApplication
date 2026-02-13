@@ -219,4 +219,6 @@ Critérios de extração por hotspot:
 - [x] Próximo subpasso E4.4 concluído: regras específicas por ancestralidade (`when (anc)`) extraídas para `ResolveAncestrySpecificAdjustmentsUseCase` com testes de contrato.
 - [x] Próximo subpasso E4.5 concluído: aplicação genérica de vantagens raciais gratuitas extraída para `ResolveGrantedAncestryAdvantagesUseCase` com testes de contrato.
 
-- [ ] Próximo subpasso E4.6: extrair resolução de ancestrais ativos e prévias para um orchestrator de ancestralidade com cobertura de regressão de cenário.
+- [x] Próximo subpasso E4.6 concluído (parcial incremental): resolução do contexto de transição de ancestralidade (humano/adaptável + vantagens grátis prévias) extraída para `ResolveAncestryTransitionContextUseCase` com testes de contrato.
+
+- [ ] Próximo subpasso E4.7: extrair orquestração completa de `aplicarAncestralidade(...)` para coordinator dedicado, preservando contratos de visibilidade por cenário.

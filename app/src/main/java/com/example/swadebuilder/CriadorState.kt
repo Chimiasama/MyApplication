@@ -34,6 +34,7 @@ import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.ids.ModuleIds
@@ -44,6 +45,7 @@ import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUse
 import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
 import com.example.swadebuilder.model.usecase.ResolveAncestrySpecificAdjustmentsUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -61,6 +63,7 @@ class CriadorState {
     private val resolveRacialAutomaticComplicationsUseCase = ResolveRacialAutomaticComplicationsUseCase()
     private val removeInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
     private val resolveAncestrySpecificAdjustmentsUseCase = ResolveAncestrySpecificAdjustmentsUseCase()
+    private val resolveAncestryTransitionContextUseCase = ResolveAncestryTransitionContextUseCase()
     private val resolveGrantedAncestryAdvantagesUseCase = ResolveGrantedAncestryAdvantagesUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
@@ -262,7 +265,7 @@ class CriadorState {
 
     companion object {
         fun getOriginPriority(origin: String?): Int {
-            val o = origin?.uppercase() ?: "BASICO"
+            val o = canonicalOriginKey(origin)
             return when {
                 o == "HORROR" -> 1000
                 o == "FANTASIA" -> 900
@@ -3161,26 +3164,26 @@ class CriadorState {
         val prevAnc = ancestralidade
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
-        val wasHumano = (prevAnc == "HUMANOS" || prevAncDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
-
         val ancDef = getAncestralidadeDef(anc)
-        val vaiSerHumano = (anc == "HUMANOS" || ancDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
+
+        val ancestryTransitionContext = resolveAncestryTransitionContextUseCase.execute(
+            ResolveAncestryTransitionContextUseCase.Params(
+                previousAncestry = prevAnc,
+                targetAncestry = anc,
+                previousAncestryDef = prevAncDef,
+                targetAncestryDef = ancDef,
+                currentAutomaticAdvantages = vantagensAutomaticas.toList()
+            )
+        )
+
+        val wasHumano = ancestryTransitionContext.wasHumano
+        val vaiSerHumano = ancestryTransitionContext.willBeHumano
 
         val paAntes = pontosAtributo
         val spAntes = pontosPericia
         val pvAntes = pontosVantagem
 
-        // Mapeia as vantagens raciais gratuitas da ancestralidade ANTERIOR
-        val prevFreeKeys: Set<String> =
-            (vantagensAutomaticas.toSet() +
-                    when (prevAnc) {
-                        "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
-                        "PEQUENINOS" -> setOf("Sorte")
-            "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
-                        else         -> emptySet()
-                    }
-                    ).map { it.keyify() }
-                .toSet()
+        val prevFreeKeys = ancestryTransitionContext.previousFreeAdvantageKeys
 
         // --- Ajuste do +1 PV de HUMANOS (sem apagar tudo e respeitando pré-requisitos) ---
         val humanTransition = applyHumanAncestryTransitionUseCase.execute(

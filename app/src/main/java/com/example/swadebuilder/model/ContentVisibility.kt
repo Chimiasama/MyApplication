@@ -2,7 +2,6 @@ package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.rules.RulesResolver
-import com.example.swadebuilder.util.semAcentos
 
 /**
  * Centralizes logic for determining content visibility based on active compendiums.
@@ -32,7 +31,6 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
     if (compendioCidadeSolVaporAtivo) {
         add("CIDADE_SOL_VAPOR")
-        add("SOL_VAPOR") // compatibilidade com assets legados do cenário
     }
     if (compendioWiseguysAtivo) add("WISEGUYS")
     if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
@@ -61,7 +59,7 @@ fun CriadorState.isComplicacaoVisible(
     comp: Complicacao,
     activeOrigins: Set<String> = getActiveOrigins()
 ): Boolean {
-    val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem.uppercase().semAcentos().trim()
+    val origemSafe = canonicalOriginKey(comp.origem)
     return origemSafe in activeOrigins
 }
 
@@ -71,7 +69,7 @@ fun CriadorState.isVantagemVisible(
 ): Boolean {
     val activeOrigins = getActiveOrigins()
     val selectedRules = resolveScenarioRules()
-    val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase().semAcentos().trim()
+    val origemNorm = canonicalOriginKey(vant.origem)
 
     val isGenericAB = vant.id == "antecedente_arcano"
     val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
