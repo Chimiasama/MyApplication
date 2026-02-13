@@ -5,6 +5,7 @@ import com.example.swadebuilder.ArcanoInfo
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.model.usecase.ValidateGameDataSnapshotIntegrityUseCase
+import com.example.swadebuilder.util.keyify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -54,10 +55,32 @@ class AssetGameDataRepository : GameDataRepository {
                 DataLoader.updateActiveModules(context, activeModules)
             }
 
-            val integrity = validateGameDataSnapshotIntegrityUseCase.execute(snapshot)
+            val sanitizedSnapshot = sanitizeSnapshotForRuntime(snapshot)
+
+            val integrity = validateGameDataSnapshotIntegrityUseCase.execute(sanitizedSnapshot)
             check(integrity.ok) {
-                "Falha de integridade no carregamento de dados: ${integrity.issues.joinToString(" | ")}"
+                "Falha de integridade no carregamento de dados: ${integrity.issues.joinToString(" | ")}" 
             }
-            snapshot
+            sanitizedSnapshot
         }
+}
+
+internal fun sanitizeSnapshotForRuntime(snapshot: GameDataSnapshot): GameDataSnapshot {
+    fun <T> dedupePreferLast(items: List<T>, keySelector: (T) -> String): List<T> {
+        return items
+            .asReversed()
+            .distinctBy { keySelector(it).trim().lowercase() }
+            .asReversed()
+    }
+
+    val sanitizedPericias = dedupePreferLast(snapshot.listaPericias) { it.nome.keyify() }
+    val sanitizedVantagens = dedupePreferLast(snapshot.listaVantagens) { it.id.keyify() }
+    val sanitizedPoderes = dedupePreferLast(snapshot.listaPoderes) { it.id.keyify() }
+
+    return snapshot.copy(
+        listaPericias = sanitizedPericias,
+        mapaPericias = sanitizedPericias.associateBy { it.nome.keyify() },
+        listaVantagens = sanitizedVantagens,
+        listaPoderes = sanitizedPoderes
+    )
 }
