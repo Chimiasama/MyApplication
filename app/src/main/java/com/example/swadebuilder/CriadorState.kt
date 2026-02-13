@@ -2623,275 +2623,38 @@ class CriadorState {
     }
 
     fun podeSelecionar(v: Vantagem): Boolean {
-        val key = v.nome.keyify()
-        val ancestralidadeKey = ancestralidade.keyify()
+        // Delegate to UseCase
+        val context = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase.SelectionContext(
+            ancestralidade = ancestralidade,
+            racialDef = getAncestralidadeDef(ancestralidade),
+            estagioAtual = estagioAtual(),
+            listaEstagios = listaDeEstagios,
+            atributosRaw = valoresAtributos.entries.associate { it.key to it.value.intValue },
+            periciasRaw = periciasComIdiomas().associate { it.nome.keyify() to rawTotal(it) },
+            getBestPericia = { name -> getBestPericia(name) },
+            getRawTotal = { per -> rawTotal(per) },
+            vantagensSelecionadas = vantagensSelecionadas,
+            complicacoesSelecionadas = complicacoesSelecionadas,
+            cartaSelvagem = cartaSelvagem,
+            isMonstro = modoMonstroAtivo,
+            tipoMonstro = tipoMonstroSelecionado,
+            emProgresso = emProgresso,
+            nasceUmHeroi = nasceUmHeroi,
+            pvFromXpOutstanding = pvFromXpOutstanding,
+            permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano,
+            comprasPpPorEstagioSum = comprasPpPorEstagio.values.sum(),
+            maxComprasPpAteAgora = maxComprasPpAteAgora(),
+            superInvestmentsCount = superInvestments.size,
+            compendioFantasiaAtivo = compendioFantasiaAtivo,
+            compendioHorrorAtivo = compendioHorrorAtivo,
+            compendioPathfinderAtivo = compendioPathfinderAtivo,
+            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+            overrideStageForVantagem = overrideStageForVantagem,
+            tropoSamuraiActive = tropoSelecionado?.id == "tropo_samurai"
+        )
 
-        // Cidade do Sol a Vapor: AA (Demônio) disponível para Demônio e Meio-Demônio.
-        if (v.id == "aa_demonio") {
-            val isMeioDemonio = ancestralidadeKey.contains("MEIO-DEMONIO")
-            val isDemonio = ancestralidadeKey.contains("DEMONIO") && !isMeioDemonio
-            if (!isMeioDemonio && !isDemonio) return false
-        }
-
-        // Crystal Heart Blocks
-        if (compendioCrystalHeartAtivo) {
-            val forbiddenIds = setOf(
-                "campeao", "chi", "linguista", "resistencia_arcana", "resistencia_arcana_aprimorada",
-                "rico", "podre_de_rico",
-                "aristocrata", "arma_predileta", "comando", "conexoes",
-                // "antecedente_arcano" generic block handled below in generic logic usually,
-                // but explicit block helps if logic is complex.
-                "antecedente_arcano"
-            )
-            val vKey = v.id.keyify()
-
-            if (vKey in forbiddenIds) return false
-
-            // Block Power Edges unless Crystal Heart specific
-            if (v.categoria == Categoria.PODER && v.origem != "CRYSTAL_HEART") {
-                return false
-            }
-        }
-
-        // Regra: "Mago" do básico oculto se Fantasia ativo
-        if (compendioFantasiaAtivo && v.id == "mago") return false
-
-        // Regra: Antecedentes Arcanos que não existem em Pathfinder (Ciência Estranha, Psiônicos, Dom)
-        if (compendioPathfinderAtivo) {
-            val forbiddenIds = setOf(
-                "antecedente_arcano_ciencia_estranha",
-                "antecedente_arcano_psionicos",
-                "antecedente_arcano_dom"
-            )
-            if (v.id in forbiddenIds) return false
-        }
-
-        // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
-        if (vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
-
-        // 1) Regra especial: O MELHOR QUE HÁ
-        if (key == "o_melhor_que_ha") {
-            if (emProgresso) return false
-            if (superInvestments.isEmpty()) return false
-        }
-
-        // 1a) Regra especial: CAVALEIRO (Fantasia)
-        if (key == "CAVALEIRO") {
-            val hasObligation = complicacoesSelecionadas.entries.any { (k, v) ->
-                k.id.keyify() == "OBRIGACAO" && v == "Maior"
-            }
-            if (!hasObligation) return false
-        }
-
-        // 2) Pontos de Poder por estágio
-        if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
-            val totalFeitas = comprasPpPorEstagio.values.sum()
-            val maxPermitidas = maxComprasPpAteAgora()
-            if (totalFeitas >= maxPermitidas) return false
-        }
-
-        // 2a) Vantagens exclusivas de Ressuscitado exigem ter a vantagem-base
-        if (v.categoria == Categoria.ATORMENTADO) {
-            val temRessuscitado = vantagensSelecionadas.any { it.id == "atormentado" }
-            if (!temRessuscitado) return false
-        }
-
-        // 3) Antecedente Arcano e multi-arcano
-        if (key.startsWith("ANTECEDENTE ARCANO")) {
-            if (compendioCrystalHeartAtivo) {
-                // Allows only "Antecedente Arcano: Canalizar Cristal" which has ID "aa_agente_syn"
-                if (v.id == "aa_agente_syn") return true
-                return false
-            }
-
-            if (!permiteMultiAntecedenteArcano && !compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioPathfinderAtivo) {
-                val anyArcano = vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }
-                if (anyArcano && vantagensSelecionadas.none { it.nome.keyify() == key }) {
-                    return false
-                }
-            } else {
-                val jaTemMesmoId = vantagensSelecionadas.any { it.id == v.id }
-                if (jaTemMesmoId) return false
-                if (v.id == "antecedente_arcano" && v.choice != null) {
-                    val jaTemMesmaChoice = vantagensSelecionadas.any {
-                        it.id == "antecedente_arcano" && it.choice?.keyify() == v.choice?.keyify()
-                    }
-                    if (jaTemMesmaChoice) return false
-                }
-            }
-        }
-
-        // 4) PROFISSIONAL / ESPECIALISTA
-        if (key == "profissional" || key == "especialista") {
-            val choiceSeguro = v.choice
-
-            if (v.requiresChoice && choiceSeguro != null) {
-                val already = vantagensSelecionadas.any {
-                    it.nome.keyify() == key &&
-                            it.choice?.keyify() == choiceSeguro.keyify()
-                }
-                if (already) return false
-            }
-
-            if (key == "especialista" && choiceSeguro != null) {
-                val profExist = vantagensSelecionadas.any {
-                    it.id == "profissional" && it.choice?.keyify() == choiceSeguro.keyify()
-                }
-                if (!profExist) return false
-            }
-
-            if (choiceSeguro == null) {
-                val anyMaxAttr = listaAtributos.any { a ->
-                    valoresAtributos[a]!!.intValue == atributoMaxRaw(a)
-                }
-                val anyMaxPer = periciasComIdiomas().any { p ->
-                    rawTotal(p) == periciaCapRaw(p)
-                }
-                return anyMaxAttr || anyMaxPer
-            }
-
-            val choiceKey = choiceSeguro.keyify()
-            return if (listaAtributos.contains(choiceKey)) {
-                valoresAtributos[choiceKey]!!.intValue == atributoMaxRaw(choiceKey)
-            } else {
-                val per = getBestPericia(choiceKey) ?: return false
-                rawTotal(per) == periciaCapRaw(per)
-            }
-        }
-
-        // 5) Estágio mínimo (respeita Nasce um Herói)
-        val ignorarEstagioPorNasce = (nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0)
-        val ignorarEstagioPorSamurai = shouldIgnoreLeadershipStage(v)
-        if (!ignorarEstagioPorNasce && !ignorarEstagioPorSamurai) {
-            val estagioRequerido = listaDeEstagios.firstOrNull { it.nome.equals(v.requisitos.estagio, ignoreCase = true) }
-            if (estagioRequerido != null) {
-                val estagioAtual = overrideStageForVantagem?.let { stageName ->
-                    listaDeEstagios.firstOrNull { it.nome.equals(stageName, ignoreCase = true) }
-                } ?: estagioAtual()
-
-                if (listaDeEstagios.indexOf(estagioAtual) < listaDeEstagios.indexOf(estagioRequerido)) {
-                    return false
-                }
-            }
-        }
-
-        // 6) Vantagens prévias
-        if (!atendeVantagensPrevias(v)) return false
-
-        // 7) PPs de novo (segurança extra)
-        if (v.nome.contains("Pontos de Poder", ignoreCase = true)) {
-            val totalCompras = comprasPpPorEstagio.values.sum()
-            val limite = maxComprasPpAteAgora()
-            if (totalCompras >= limite) return false
-        }
-        else if (v.limiteCompra != "infinito" && v.maxSelections > 0) {
-            val ja = vantagensSelecionadas.count { it.id.keyify() == v.id.keyify() }
-            if (ja >= v.maxSelections) return false
-        }
-
-        // 8) Evita repetir a MESMA choice em vantagens com escolha
-        val choiceSeguro2 = v.choice
-        if (v.requiresChoice && choiceSeguro2 != null) {
-            val repetida = vantagensSelecionadas.any {
-                it.id == v.id && it.choice == choiceSeguro2
-            }
-            if (repetida) return false
-        }
-
-        // 9) Estágio alternativo (tabela nivelParaEstagio)
-        nivelParaEstagio[v.requisitos.estagio]?.let { estReqObj2 ->
-            if (estReqObj2.minProgress > effectiveProgressoParaVantagens()) return false
-        }
-
-        // 10) Atributos mínimos
-        if (v.requisitos.atributoMin.any { (nome, min) ->
-                val chaveNorm = nome.uppercase().semAcentos().trim()
-                val attrKey = mapaAtributosDisplay.keys.firstOrNull {
-                    it.equals(chaveNorm, ignoreCase = true)
-                } ?: chaveNorm
-                val atual = valoresAtributos[attrKey]?.intValue ?: return false
-                atual < min
-            }) return false
-
-        // 11) Perícias mínimas obrigatórias
-        val periciaMinMap = v.requisitos.periciaMin
-        if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
-            val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
-                val per = getBestPericia(perNome)
-                per != null && rawTotal(per) >= minRaw
-            }
-            if (!atendeUma) return false
-        } else {
-            if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = getBestPericia(perNome) ?: return@any false
-                    rawTotal(per) < minRaw
-                }) {
-                return false
-            }
-        }
-
-        // 12) Perícias mínimas opcionais (qualquer uma)
-        val periciaMinOpcMap = v.requisitos.periciaMinOpcional
-        if (periciaMinOpcMap.isNotEmpty()) {
-            if (v.vinculadoPericia && !v.choice.isNullOrBlank()) {
-                val choiceKey = v.choice!!.keyify()
-                val matchEntry = periciaMinOpcMap.entries.firstOrNull { it.key.keyify() == choiceKey }
-                if (matchEntry == null) return false
-                val per = getBestPericia(choiceKey) ?: return false
-                if (rawTotal(per) < matchEntry.value) return false
-            } else {
-                val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
-                    val per = getBestPericia(perNome)
-                    per != null && rawTotal(per) >= minRaw
-                }
-                if (!atendeUmaOpc) return false
-            }
-        }
-
-        // 13) Exige Carta Selvagem?
-        if (v.requisitos.exigeCS && !cartaSelvagem) return false
-
-        // 13a) Tags Raciais
-        if (v.requisitos.tags.isNotEmpty()) {
-            val ancDef = getAncestralidadeDef(ancestralidade)
-            if (ancDef == null || !ancDef.tags.containsAll(v.requisitos.tags)) {
-                return false
-            }
-        }
-
-        // 13b) Tiro Duplo Aprimorado
-        if (v.id == "tiro_duplo_aprimorado") {
-            val base = vantagensSelecionadas.firstOrNull { it.id == "tiro_duplo" }
-            if (base == null) return false
-            val choice = base.choice
-            if (choice.isNullOrBlank()) return false
-            val skill = getBestPericia(choice) ?: return false
-            if (rawTotal(skill) < 10) return false
-        }
-
-        // 13c) Template Monstruoso
-        if (v.requisitos.templatesRequired.isNotEmpty()) {
-            val selected = tipoMonstroSelecionado
-            if (selected == null || selected !in v.requisitos.templatesRequired) {
-                return false
-            }
-        }
-
-        // 14) Conflitos com complicações (Lento x Ligeiro, etc.)
-        val compsConfl = (incompatibilidades[key].orEmpty() + incompatibilidades[v.id.keyify()].orEmpty()).toSet()
-        val vantKey = v.nome.trim().uppercase()
-        if (vantKey == "RICO" || vantKey == "PODRE DE RICO") {
-            val tenhoPobreza = complicacoesSelecionadas.keys.any {
-                it.id.trim().uppercase() == "POBREZA"
-            }
-            if (tenhoPobreza) return false
-        }
-        if (complicacoesSelecionadas.keys
-                .map { it.id.keyify() }
-                .any { it in compsConfl }
-        ) return false
-
-        return true
+        return validateSelectionUseCase.execute(v, context).allowed
     }
 
     private fun shouldIgnoreLeadershipStage(v: Vantagem): Boolean {

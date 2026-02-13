@@ -7,8 +7,8 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.normAAKey
 import com.example.swadebuilder.util.semAcentos
 
 class ValidateSelectionUseCase {
