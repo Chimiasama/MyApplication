@@ -1,7 +1,7 @@
 # Reliability Inventory
 
-- Date (UTC): 2026-02-13T14:49:58Z
-- Commit: afc943b
+- Date (UTC): 2026-02-13T15:34:05Z
+- Commit: caf42b4
 - Branch: work
 
 ## Critical file sizes
@@ -35,15 +35,15 @@ app/src/main/java/com/example/swadebuilder/GameDataGlobals.kt:20:var listaSuperP
 ## Direct DataLoader usage outside repository
 
 ## CriadorState hotspots (line anchors)
-2631:    fun podeSelecionar(v: Vantagem): Boolean {
-3154:    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
+2633:    fun podeSelecionar(v: Vantagem): Boolean {
+3156:    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
 4339:    fun rebuildAllPericiaStacks(
 
 ## Key architectural markers
 GameDataRepository=1
 GameDataStore=1
 RulesResolver=1
-UseCases=22
+UseCases=23
 
 ## Test inventory
-tests_unitarios=106
+tests_unitarios=109

@@ -215,4 +215,5 @@ Critérios de extração por hotspot:
 - [x] Testes de contrato adicionados para o use-case (remoção elegível, fallback de pontos, entrada em humano, no-op).
 - [x] Próximo subpasso E4.1 concluído: subseção de complicações automáticas raciais extraída para `ResolveRacialAutomaticComplicationsUseCase` com testes de contrato.
 - [x] Próximo subpasso E4.2 concluído: validação/remoção de vantagens por requisitos extraída para `RemoveInvalidAdvantagesAfterAncestryChangeUseCase` com testes de contrato.
-- [ ] Próximo subpasso E4.3: extrair ajuste de atributos na troca de ancestralidade para use-case dedicado.
+- [x] Próximo subpasso E4.3 concluído: ajuste de atributos na troca de ancestralidade extraído para `AdjustAttributesForAncestryChangeUseCase` com testes de contrato.
+- [ ] Próximo subpasso E4.4: extrair regras específicas por ancestralidade (bloco `when (anc)`) para use-case dedicado.

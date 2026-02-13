@@ -38,6 +38,7 @@ import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
+import com.example.swadebuilder.model.usecase.AdjustAttributesForAncestryChangeUseCase
 import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
 import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
 import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
@@ -54,6 +55,7 @@ enum class TabStyle { ICONES, TEXTO }
 class CriadorState {
     private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
     private val applyHumanAncestryTransitionUseCase = ApplyHumanAncestryTransitionUseCase()
+    private val adjustAttributesForAncestryChangeUseCase = AdjustAttributesForAncestryChangeUseCase()
     private val resolveRacialAutomaticComplicationsUseCase = ResolveRacialAutomaticComplicationsUseCase()
     private val removeInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
@@ -3201,33 +3203,31 @@ class CriadorState {
         // (ex.: FORÇA máxima por Diminuto/Tamanho).
         periciasComIdiomas().associateWith { rawTotal(it) }
 
-        listaAtributos.forEach { nome ->
-            val st = valoresAtributos[nome]!!
-            val newMin = atributoMinRaw(nome)
-            val newMax = atributoMaxRaw(nome)
+        val attributeAdjustmentResult = adjustAttributesForAncestryChangeUseCase.execute(
+            AdjustAttributesForAncestryChangeUseCase.Params(
+                attributeNames = listaAtributos,
+                attributeCaps = listaAtributos.associateWith { nome ->
+                    AdjustAttributesForAncestryChangeUseCase.AttributeCap(
+                        minRaw = atributoMinRaw(nome),
+                        maxRaw = atributoMaxRaw(nome)
+                    )
+                },
+                paCostStacks = listaAtributos.associateWith { nome ->
+                    paCostStackPorAtributo.getValue(nome).toList()
+                }
+            )
+        )
 
+        attributeAdjustmentResult.adjustmentsByAttribute.forEach { (nome, adjustment) ->
             val stack = paCostStackPorAtributo.getValue(nome)
-            var raw = newMin.coerceAtMost(newMax)
-            var appliedSteps = 0
+            stack.clear()
+            stack.addAll(adjustment.adjustedStack)
 
-            repeat(stack.size) {
-                val candidate = if (raw < 12) raw + 2 else raw + 1
-                if (candidate > newMax) {
-                    return@repeat
-                }
-                raw = candidate
-                appliedSteps++
+            if (adjustment.refundedPoints > 0) {
+                feedbackMessages.add("${adjustment.refundedPoints} ponto(s) de atributo devolvido(s) de $nome.")
             }
 
-            if (appliedSteps < stack.size) {
-                val removidos = stack.size - appliedSteps
-                repeat(removidos) {
-                    stack.removeAt(stack.lastIndex)
-                }
-                feedbackMessages.add("$removidos ponto(s) de atributo devolvido(s) de $nome.")
-            }
-
-            st.intValue = raw
+            valoresAtributos[nome]!!.intValue = adjustment.newRaw
         }
 
         if (compendioArteDaGuerraAtivo && anc.keyify().contains("HUMANO")) {
