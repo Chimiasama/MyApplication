@@ -3146,240 +3146,88 @@ class CriadorState {
     }
 
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
+        val input = com.example.swadebuilder.model.usecase.ApplyAncestryUseCase.Input(
+            newAncestryName = anc,
+            previousAncestryName = ancestralidade,
+            availableAncestries = listaAncestralidadesJson,
+            allAdvantages = listaVantagens,
+            allHindrances = listaComplicacoes,
+            racialAttrMinMap = racialAttrMinMap,
+            currentAttributesRaw = valoresAtributos.entries.associate { it.key to it.value.intValue },
+            currentAttributeStacks = paCostStackPorAtributo.entries.associate { it.key to it.value.toList() },
+            currentSelectedEdges = vantagensSelecionadas.toList(),
+            currentAutoEdges = vantagensAutomaticas.toList(),
+            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+            signoAdgSelecionado = signoAdgSelecionado
+        )
+
+        val output = applyAncestryUseCase.execute(input)
+
         val prevAnc = ancestralidade
-
-        val prevAncDef = getAncestralidadeDef(prevAnc)
-        val wasHumano = (prevAnc == "HUMANOS" || prevAncDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
-
-        val ancDef = getAncestralidadeDef(anc)
-        val vaiSerHumano = (anc == "HUMANOS" || ancDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
-
-        val paAntes = pontosAtributo
-        val spAntes = pontosPericia
-        val pvAntes = pontosVantagem
-
-        // Mapeia as vantagens raciais gratuitas da ancestralidade ANTERIOR
-        val prevFreeKeys: Set<String> =
-            (vantagensAutomaticas.toSet() +
-                    when (prevAnc) {
-                        "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
-                        "PEQUENINOS" -> setOf("Sorte")
-            "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
-                        else         -> emptySet()
-                    }
-                    ).map { it.keyify() }
-                .toSet()
-
-        // --- Ajuste do +1 PV de HUMANOS (sem apagar tudo e respeitando pré-requisitos) ---
-
-        if (wasHumano && !vaiSerHumano) {
-            // Helper: vantagem é racial gratuita da raça anterior?
-            fun isRacialFree(v: Vantagem): Boolean =
-                v.nome.keyify() in prevFreeKeys
-
-            // Helper: vantagem é pré-requisito de outra?
-            fun isUsedAsPrereq(v: Vantagem): Boolean {
-                v.id
-                return vantagensSelecionadas.any { other ->
-                    other != v && other.requisitos.vantagensPrevias.any { prevId ->
-                        when (prevId) {
-                            "antecedente_arcano",
-                            "antecedente_arcano:*" -> {
-                                other.id.startsWith("antecedente_arcano_") ||
-                                        (other.id == "antecedente_arcano" && !other.choice.isNullOrBlank())
-                            }
-                            else -> other.id == prevId
-                        }
-                    }
-                }
-            }
-
-            // Candidatos a serem removidos para "pagar" o edge grátis de humano:
-            // - não raciais
-            // - não são pré-requisito de outra
-            // - não são vantagens de PODER (superpoderes)
-            // - não são vantagens de cenário automáticas (Superpoderes, Canalizar Cristal, Conexões Máfia)
-            val candidatos = vantagensSelecionadas.filter { v ->
-                val isScenarioEdge = v.id == "superpoderes" ||
-                        v.id == "agente_syn" ||
-                        v.id == "aa_agente_syn" ||
-                        (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
-
-                !isRacialFree(v) &&
-                        !isUsedAsPrereq(v) &&
-                        !isScenarioEdge &&
-                        !v.categoria.name.equals("PODER", ignoreCase = true)
-            }
-
-            if (candidatos.isNotEmpty()) {
-                // Remove só UMA vantagem (a última adquirida, por simplicidade)
-                val toRemove = candidatos.last()
-                vantagensSelecionadas.remove(toRemove)
-                feedbackMessages.add("Vantagem ${toRemove.nome} removida para compensar a troca de Ancestralidade.")
-            } else {
-                // Não sobrou nada "seguro" pra remover → ajusta só o pool de PV
-                pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
-            }
-        } else if (!wasHumano && vaiSerHumano) {
-            // Entrando em HUMANOS → ganha 1 PV racial
-            pontosVantagem += 1
-        }
-
-        // Troca efetiva da ancestralidade
         ancestralidade = anc
 
-        // --- Ajuste de atributos pela nova raça ---
-        // IMPORTANTE: usa atributoMinRaw/atributoMaxRaw para respeitar limites dinâmicos
-        // (ex.: FORÇA máxima por Diminuto/Tamanho).
-        periciasComIdiomas().associateWith { rawTotal(it) }
-
-        listaAtributos.forEach { nome ->
-            val st = valoresAtributos[nome]!!
-            val newMin = atributoMinRaw(nome)
-            val newMax = atributoMaxRaw(nome)
-
-            val stack = paCostStackPorAtributo.getValue(nome)
-            var raw = newMin.coerceAtMost(newMax)
-            var appliedSteps = 0
-
-            repeat(stack.size) {
-                val candidate = if (raw < 12) raw + 2 else raw + 1
-                if (candidate > newMax) {
-                    return@repeat
-                }
-                raw = candidate
-                appliedSteps++
+        // Apply Attributes
+        output.newAttributesRaw.forEach { (k, v) -> valoresAtributos[k]?.intValue = v }
+        output.newAttributeStacks.forEach { (k, v) ->
+            paCostStackPorAtributo[k]?.apply {
+                clear()
+                addAll(v)
             }
+        }
 
-            if (appliedSteps < stack.size) {
-                val removidos = stack.size - appliedSteps
-                repeat(removidos) {
-                    stack.removeAt(stack.lastIndex)
-                }
-                feedbackMessages.add("$removidos ponto(s) de atributo devolvido(s) de $nome.")
+        // Apply Points
+        if (output.pvAdjustment != 0) {
+            pontosVantagem = (pontosVantagem + output.pvAdjustment).coerceAtLeast(0)
+        }
+
+        // Apply Edges
+        output.edgesToRemove.forEach { v ->
+            vantagensSelecionadas.remove(v)
+            removeVantagemDinheiro(v)
+        }
+        output.edgesToAdd.forEach { v ->
+            if (vantagensSelecionadas.none { it.id == v.id }) {
+                vantagensSelecionadas.add(v)
             }
-
-            st.intValue = raw
         }
 
-        if (compendioArteDaGuerraAtivo && anc.keyify().contains("HUMANO")) {
-            if (signoAdgSelecionado == null) {
-                selecionarSigno("Nenhum")
-            }
-        } else if (signoAdgSelecionado != null) {
-            selecionarSigno(null)
-        }
-        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
-        if (anc != "MEIO-ELFOS") {
-            meioElfoAgil = false
-        }
-        if (anc != "MEIO-ORCS") {
-            meioOrcForca = false
-        }
-        if (anc.keyify() != "DESCENDENTE ELEMENTAL" && anc.keyify() != "DESC_ELEMENTAL") {
-            selecionarDescendenteElemental(null)
-        }
-        if (!anc.keyify().contains("GNOMO")) {
-            selecionarPericiaGnomo(null)
-        }
-
-        // --- Vantagens / desvantagens raciais ---
-
-        // Remove APENAS as vantagens raciais automáticas da raça anterior
-        if (prevFreeKeys.isNotEmpty()) {
-            vantagensSelecionadas.removeAll { it.nome.keyify() in prevFreeKeys }
-        }
-
-        desvantagensAutomaticas.clear()
+        // Apply Auto Lists
         vantagensAutomaticas.clear()
+        vantagensAutomaticas.addAll(output.autoAdvantages)
+        desvantagensAutomaticas.clear()
+        desvantagensAutomaticas.addAll(output.autoHindrances)
         vantagensRaciais.clear()
+        vantagensRaciais.addAll(output.racialAdvantages)
         desvantagensRaciais.clear()
+        desvantagensRaciais.addAll(output.racialHindrances)
 
-        getAncestralidadeDef(anc)?.let { rm ->
-            desvantagensAutomaticas.addAll(rm.desvantagens)
-            vantagensAutomaticas.addAll(rm.vantagensGratis)
-            vantagensRaciais.addAll(rm.vantagensGratis)
-            desvantagensRaciais.addAll(rm.desvantagens)
+        // Apply Flags
+        naturalArmorFromRace = output.naturalArmor
+        armadura = 0
+
+        if (output.resetSigno) {
+            if (signoAdgSelecionado != null) selecionarSigno(null)
+            else selecionarSigno("Nenhum")
         }
 
-        naturalArmorFromRace = 0
-
-        // Generic Logic for Edges listed in vantagesGratis strings
-        getAncestralidadeDef(anc)?.vantagensGratis?.forEach { featString ->
-            val featKey = featString.keyify()
-            val edge = listaVantagens.firstOrNull { it.nome.keyify() == featKey || it.id == featString || it.id.keyify() == featKey }
-            if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
-                vantagensSelecionadas.add(edge)
-            }
+        // Apply Feedback
+        feedbackMessages.addAll(output.feedbackMessages)
+        if (output.paRefunded > 0) {
+            feedbackMessages.add("${output.paRefunded} ponto(s) de atributo devolvido(s).")
         }
 
-        when (anc) {
-            "SAURIOS" -> {
-                // Prontidão is handled by the generic logic above now, but keeping this doesn't hurt (idempotent).
-                // "Sentidos Aguçados" removal is handled earlier.
-                naturalArmorFromRace = 2
-                armadura = 0
-            }
-            "PEQUENINOS" -> {
-                // "Sorte" vem do JSON. Apenas garantimos a Vantagem mecânica.
-                listaVantagens.firstOrNull { it.nome.equals("Sorte", ignoreCase = true) }
-                    ?.let {
-                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
-                            vantagensSelecionadas.add(it)
-                        }
-                    }
-                // "Sorte" já está em vantagensGratis do JSON, então não adicionamos strings duplicadas.
-                listaVantagens.firstOrNull { it.nome.equals("Espirituoso", ignoreCase = true) }
-                    ?.let {
-                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
-                            vantagensSelecionadas.add(it)
-                        }
-                    }
-
-                if (desvantagensRaciais.none { it.contains("Tamanho", ignoreCase = true) }) {
-                    desvantagensRaciais.add("Tamanho -1")
-                }
-                if (desvantagensRaciais.none { it.contains("Movimentação Reduzida", ignoreCase = true) }) {
-                    desvantagensRaciais.add("Movimentação Reduzida")
-                }
-                armadura = 0
-            }
-            "CELESTIAIS" -> {
-                val aaMilagres = listaVantagens.firstOrNull {
-                    it.id == "antecedente_arcano_milagres"
-                }
-                if (aaMilagres != null && vantagensSelecionadas.none { it.id == aaMilagres.id }) {
-                    vantagensSelecionadas.add(aaMilagres)
-                }
-                vantagensAutomaticas.add("ANTECEDENTE ARCANO (MILAGRES)")
-                armadura = 0
-            }
-            "HUMANO (WISEGUYS)".keyify() -> {
-                val conexoesMafia = listaVantagens.firstOrNull {
-                    it.nome.equals("Conexões (Máfia)", ignoreCase = true)
-                }
-                if (conexoesMafia != null && vantagensSelecionadas.none { it.nome.equals("Conexões (Máfia)", ignoreCase = true) }) {
-                    vantagensSelecionadas.add(conexoesMafia)
-                }
-            }
-            "DESCENDENTE ELEMENTAL" -> {
-                if (descendenteElementalSelecionado == null) {
-                    selecionarDescendenteElemental("Água")
-                } else {
-                    // Re-apply to ensure consistency
-                    val current = descendenteElementalSelecionado
-                    descendenteElementalSelecionado = null
-                    selecionarDescendenteElemental(current)
-                }
-                armadura = 0
-            }
-            else -> {
-                armadura = 0
-            }
+        // Side-effects (Flags not in Output yet)
+        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
+        if (anc != "MEIO-ELFOS") meioElfoAgil = false
+        if (anc != "MEIO-ORCS") meioOrcForca = false
+        if (!anc.keyify().contains("DESCENDENTE ELEMENTAL") && !anc.keyify().contains("DESC_ELEMENTAL")) {
+             selecionarDescendenteElemental(null)
+        } else if (anc.keyify().contains("DESCENDENTE") && descendenteElementalSelecionado == null) {
+             selecionarDescendenteElemental("Água")
         }
+        if (!anc.keyify().contains("GNOMO")) selecionarPericiaGnomo(null)
 
-        // --- Complicações raciais automáticas ---
-
+        // Complications Sync
         val oldAutoKeys = getAncestralidadeDef(prevAnc)
             ?.desvantagens
             ?.map { it.substringBefore("(").trim().keyify() }
@@ -3416,19 +3264,11 @@ class CriadorState {
                 }
             }
 
-        // Recalcula pontos de atributo/perícias após o ajuste racial
         recalcularPontosAtributo(feedbackMessages)
         rebuildAllPericiaStacks(feedbackMessages)
 
-        val paDepois = pontosAtributo
-        val spDepois = pontosPericia
+        // Validation Loop
         val pvDepois = pontosVantagem
-
-        if (paDepois > paAntes) feedbackMessages.add("${paDepois - paAntes} ponto(s) de atributo devolvido(s).")
-        if (spDepois > spAntes) feedbackMessages.add("${spDepois - spAntes} ponto(s) de perícia devolvido(s).")
-        if (pvDepois > pvAntes) feedbackMessages.add("${pvDepois - pvAntes} ponto(s) de vantagem devolvido(s).")
-
-        // Validar requisitos das vantagens existentes
         var changed = true
         while (changed) {
             changed = false
@@ -4402,6 +4242,9 @@ class CriadorState {
         recalcularPontosAtributo()
     }
 
+    private val rebuildSkillsUseCase = com.example.swadebuilder.model.usecase.RebuildSkillsUseCase()
+    private val applyAncestryUseCase = com.example.swadebuilder.model.usecase.ApplyAncestryUseCase()
+
     fun rebuildAllPericiaStacks(
         feedbackMessages: MutableList<String> = mutableListOf(),
         enforcePoolLimit: Boolean = true
@@ -4411,84 +4254,47 @@ class CriadorState {
         syncLinguistaIdiomas()
         syncJutsuSlots()
 
-        var cumulativeCost = 0
-        val pool = totalSpPool
-
-        periciasComIdiomas().forEach { per ->
-
-            val desiredRaw = rawTotal(per)
-            val cap       = periciaCapRaw(per)
-            val minRaw    = maxOf(if (isPericiaBasicaEfetiva(per)) 4 else 0, linguistaMinRawFor(per))
-
-            var target = desiredRaw.coerceIn(minRaw, cap)
-
-            fun costFor(tgt: Int): Int {
-                var curr = periciaStartRaw(ancestralidade, per)
-                var freeSteps = compIncsPorPericia.getValue(per)
-                var sum  = 0
-                while (curr < tgt) {
-                    val next     = if (curr == 0) 4 else curr + 2
-                    val attrKey  = atributoBaseParaPericia(per)
-
-                    // >>> AQUI: atributo para custo ignora supers enquanto estiver na fase supers de criação
-                    val attrRawForCost =
-                        if (faseSupersAtiva && !emProgresso) {
-                            atributoRawBaseSemSupers(attrKey)
-                        } else {
-                            valoresAtributos[attrKey]!!.intValue
-                        }
-
-                    val stepCost = if (next <= attrRawForCost) 1 else 2
-                    if (freeSteps > 0) {
-                        freeSteps -= 1
-                    } else {
-                        sum += stepCost
-                    }
-                    curr = next
-                }
-                return sum
-            }
-
-            var cost = costFor(target)
-
-            if (enforcePoolLimit && cost > 0 && cumulativeCost + cost > pool) {
-                feedbackMessages.add("Perícia ${per.nome} reduzida para d$target para compensar pontos.")
-            }
-            while (enforcePoolLimit && cumulativeCost + cost > pool) {
-                target = (target - 2).coerceAtLeast(minRaw)
-                cost   = costFor(target)
-            }
-
-            val stack = spCostStackPorPericia.getValue(per)
-            stack.clear()
-            baseIncsPorPericia[per] = 0
-
-            var currRaw = periciaStartRaw(ancestralidade, per)
-            var freeSteps = compIncsPorPericia.getValue(per)
-            while (currRaw < target) {
-                val next     = if (currRaw == 0) 4 else currRaw + 2
-                val attrKey  = atributoBaseParaPericia(per)
-
-                // >>> MESMA REGRA AQUI
-                val attrRawForCost =
-                    if (faseSupersAtiva && !emProgresso) {
-                        atributoRawBaseSemSupers(attrKey)
-                    } else {
-                        valoresAtributos[attrKey]!!.intValue
-                    }
-
-                val stepCost = if (next <= attrRawForCost) 1 else 2
-                if (freeSteps > 0) {
-                    freeSteps -= 1
+        // Phase 2: Delegating logic to Use Case
+        val input = com.example.swadebuilder.model.usecase.RebuildSkillsUseCase.Input(
+            pericias = periciasComIdiomas(),
+            periciaStartRawProvider = { per -> periciaStartRaw(ancestralidade, per) },
+            periciaCapRawProvider = { per -> periciaCapRaw(per) },
+            periciaMinRawProvider = { per -> maxOf(if (isPericiaBasicaEfetiva(per)) 4 else 0, linguistaMinRawFor(per)) },
+            atributoBaseParaPericiaProvider = { per -> atributoBaseParaPericia(per) },
+            atributoRawForCostProvider = { attrKey ->
+                if (faseSupersAtiva && !emProgresso) {
+                    atributoRawBaseSemSupers(attrKey)
                 } else {
-                    stack.add(stepCost)
-                    baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
+                    valoresAtributos[attrKey]?.intValue ?: 4
                 }
-                currRaw = next
-            }
+            },
+            totalSpPool = totalSpPool,
+            currentBaseIncs = baseIncsPorPericia.mapKeys { it.key.nome },
+            currentCompIncs = compIncsPorPericia.mapKeys { it.key.nome },
+            currentSpStacks = spCostStackPorPericia.mapKeys { it.key.nome }.mapValues { it.value.toList() },
+            enforcePoolLimit = enforcePoolLimit,
+            isPericiaBasicaEfetiva = { isPericiaBasicaEfetiva(it) }
+        )
 
-            cumulativeCost += cost
+        val output = rebuildSkillsUseCase.execute(input)
+
+        // Apply Output back to State
+        output.spCostStacks.forEach { (name, stack) ->
+            val per = periciasComIdiomas().find { it.nome == name }
+            if (per != null) {
+                spCostStackPorPericia.getValue(per).apply {
+                    clear()
+                    addAll(stack)
+                }
+            }
         }
+        output.baseIncs.forEach { (name, incs) ->
+            val per = periciasComIdiomas().find { it.nome == name }
+            if (per != null) {
+                baseIncsPorPericia[per] = incs
+            }
+        }
+        feedbackMessages.addAll(output.feedbackMessages)
     }
 
     fun toSnapshot(): PersonagemSnapshot {
