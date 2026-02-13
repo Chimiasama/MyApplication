@@ -925,7 +925,7 @@ class MainActivity : ComponentActivity() {
                                     creationSession++
                                     isDataLoaded.value = LoadingState.Loading
 
-                                    scope.launch {
+                                    this@MainActivity.lifecycleScope.launch {
                                         val activeKeys = mutableSetOf<String>()
                                         if (compendioFantasiaAtivo) activeKeys.add("FANTASIA")
                                         if (compendioHorrorAtivo) activeKeys.add("HORROR")
