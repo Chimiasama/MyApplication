@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -26,5 +27,49 @@ class ContentVisibilityTest {
         )
 
         assertTrue(visible)
+    }
+
+    @Test
+    fun `cidade do sol a vapor mostra AA especifico quando multiplos antecedentes estão habilitados`() {
+        val state = CriadorState().apply {
+            compendioCidadeSolVaporAtivo = true
+        }
+
+        val specificArcane = Vantagem(
+            id = "aa_magia_negra",
+            nome = "ANTECEDENTE ARCANO (Magia Negra)",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "CIDADE_SOL_VAPOR",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = specificArcane,
+            multiplosAAHabilitados = true
+        )
+
+        assertTrue(visible)
+    }
+
+    @Test
+    fun `cidade do sol a vapor esconde AA especifico quando multiplos antecedentes estão desabilitados`() {
+        val state = CriadorState().apply {
+            compendioCidadeSolVaporAtivo = true
+        }
+
+        val specificArcane = Vantagem(
+            id = "aa_magia_negra",
+            nome = "ANTECEDENTE ARCANO (Magia Negra)",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "CIDADE_SOL_VAPOR",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = specificArcane,
+            multiplosAAHabilitados = false
+        )
+
+        assertFalse(visible)
     }
 }

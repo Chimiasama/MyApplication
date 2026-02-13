@@ -1,15 +1,15 @@
 # Reliability Inventory
 
-- Date (UTC): 2026-02-13T19:45:38Z
-- Commit: c7f9866
+- Date (UTC): 2026-02-13T19:55:05Z
+- Commit: 24b8ee3
 - Branch: work
 
 ## Critical file sizes
-  4897 app/src/main/java/com/example/swadebuilder/CriadorState.kt
+  4899 app/src/main/java/com/example/swadebuilder/CriadorState.kt
   1180 app/src/main/java/com/example/swadebuilder/MainActivity.kt
    505 app/src/main/java/com/example/swadebuilder/model/DataLoader.kt
   1439 app/src/main/java/com/example/swadebuilder/model/CriadorViewModel.kt
-  8021 total
+  8023 total
 
 ## Global mutable declarations (listas + mapas de domínio)
 global_list_count=11
@@ -35,15 +35,15 @@ app/src/main/java/com/example/swadebuilder/GameDataGlobals.kt:20:var listaSuperP
 ## Direct DataLoader usage outside repository
 
 ## CriadorState hotspots (line anchors)
-2635:    fun podeSelecionar(v: Vantagem): Boolean {
-3158:    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
-4326:    fun rebuildAllPericiaStacks(
+2637:    fun podeSelecionar(v: Vantagem): Boolean {
+3160:    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
+4328:    fun rebuildAllPericiaStacks(
 
 ## Key architectural markers
 GameDataRepository=1
 GameDataStore=1
 RulesResolver=1
-UseCases=24
+UseCases=25
 
 ## Test inventory
-tests_unitarios=115
+tests_unitarios=119

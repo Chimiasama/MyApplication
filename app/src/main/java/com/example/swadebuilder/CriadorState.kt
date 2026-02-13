@@ -41,6 +41,7 @@ import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.usecase.AdjustAttributesForAncestryChangeUseCase
 import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
 import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
+import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
 import com.example.swadebuilder.model.usecase.ResolveAncestrySpecificAdjustmentsUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
@@ -60,6 +61,7 @@ class CriadorState {
     private val resolveRacialAutomaticComplicationsUseCase = ResolveRacialAutomaticComplicationsUseCase()
     private val removeInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
     private val resolveAncestrySpecificAdjustmentsUseCase = ResolveAncestrySpecificAdjustmentsUseCase()
+    private val resolveGrantedAncestryAdvantagesUseCase = ResolveGrantedAncestryAdvantagesUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -3274,14 +3276,14 @@ class CriadorState {
 
         naturalArmorFromRace = 0
 
-        // Generic Logic for Edges listed in vantagesGratis strings
-        getAncestralidadeDef(anc)?.vantagensGratis?.forEach { featString ->
-            val featKey = featString.keyify()
-            val edge = listaVantagens.firstOrNull { it.nome.keyify() == featKey || it.id == featString || it.id.keyify() == featKey }
-            if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
-                vantagensSelecionadas.add(edge)
-            }
-        }
+        val grantedAdvantagesResult = resolveGrantedAncestryAdvantagesUseCase.execute(
+            ResolveGrantedAncestryAdvantagesUseCase.Params(
+                grantedAdvantageNamesOrIds = getAncestralidadeDef(anc)?.vantagensGratis ?: emptyList(),
+                allAdvantages = listaVantagens,
+                selectedAdvantages = vantagensSelecionadas
+            )
+        )
+        vantagensSelecionadas.addAll(grantedAdvantagesResult.advantagesToAdd)
 
         val ancestrySpecificAdjustments = resolveAncestrySpecificAdjustmentsUseCase.execute(
             anc = anc,

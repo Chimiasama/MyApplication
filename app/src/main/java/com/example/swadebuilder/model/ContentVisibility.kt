@@ -125,7 +125,8 @@ fun CriadorState.isVantagemVisible(
 
 
     // Rule-driven generic selector policy
-    if (selectedRules.allowsGenericArcaneSelector()) {
+    // Em cenários que usam seletor genérico, ele deve ser forçado apenas quando múltiplos AA estão desabilitados.
+    if (selectedRules.allowsGenericArcaneSelector() && !multiplosAAHabilitados) {
         if (isSpecificAB) return false
         if (isGenericAB) return true
     }
