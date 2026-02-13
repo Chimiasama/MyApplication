@@ -8,18 +8,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaComplicacoes
-import com.example.swadebuilder.listaCoracoesCrystal
-import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.listaVantagens
-import com.example.swadebuilder.mapaPericias
-import com.example.swadebuilder.normAAKey
-import com.example.swadebuilder.toArcanoKey
-import com.example.swadebuilder.toDiceString
-import com.example.swadebuilder.util.CharacterPortraitStorage
-import com.example.swadebuilder.util.CharacterStorage
-import com.example.swadebuilder.util.CustomCrystalHeartStorage
-import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.model.usecase.EnsureDefaultSpecializationsUseCase
 import com.example.swadebuilder.model.usecase.RemoveCrystalHeartUseCase
 import com.example.swadebuilder.model.usecase.UpsertCrystalHeartUseCase
@@ -45,6 +33,13 @@ import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.ids.PowerIds
 import com.example.swadebuilder.model.rules.RulesResolver
 import com.example.swadebuilder.model.ids.SkillIds
+import com.example.swadebuilder.normAAKey
+import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.util.CharacterPortraitStorage
+import com.example.swadebuilder.util.CharacterStorage
+import com.example.swadebuilder.util.CustomCrystalHeartStorage
+import com.example.swadebuilder.util.keyify
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -87,11 +82,18 @@ class CriadorViewModel(
     private val normalizeArcaneBackgroundChoiceUseCase = NormalizeArcaneBackgroundChoiceUseCase()
     private val rulesResolver = RulesResolver()
 
-    private fun periciasData() = gameDataStore.pericias(listaPericias)
-    private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
-    private fun complicacoesData() = gameDataStore.complicacoes(listaComplicacoes)
-    private fun coracoesData() = gameDataStore.coracoesCrystal(listaCoracoesCrystal)
-    private fun periciasMapData() = gameDataStore.periciasMap(mapaPericias)
+    // Using GameDataStore to access data, ensuring it is used throughout
+    private fun periciasData() = gameDataStore.pericias(emptyList()) // Phase 1: Avoid global fallback if possible, but keep safe default
+    private fun vantagensData() = gameDataStore.vantagens(emptyList())
+    private fun complicacoesData() = gameDataStore.complicacoes(emptyList())
+    private fun coracoesData() = gameDataStore.coracoesCrystal(emptyList())
+    private fun periciasMapData() = gameDataStore.periciasMap(emptyMap())
+
+    init {
+        // Inject data store into state if needed, or state should read from VM/Store
+        // For Phase 1, we assume state still uses globals, but we are moving VM to use store.
+        // The plan is to migrate consumers.
+    }
 
     suspend fun carregarDadosDeJogo(context: Context, activeModules: Set<String>): GameDataSnapshot {
         return gameDataRepository.load(context, activeModules).also { gameDataStore.updateSnapshot(it) }
@@ -863,7 +865,7 @@ class CriadorViewModel(
     fun salvarCrystalHeartPersonalizado(context: Context, heart: CrystalHeart): CrystalHeart? {
         val saved = CustomCrystalHeartStorage.saveCustomHeart(context, heart) ?: return null
         val updated = upsertCrystalHeartUseCase.execute(coracoesData(), saved)
-        listaCoracoesCrystal = updated
+        // listaCoracoesCrystal = updated (DEPRECATED: Updated via store now)
         gameDataStore.withUpdatedCoracoesCrystal(updated)
         return saved
     }
@@ -878,7 +880,7 @@ class CriadorViewModel(
             currentlySelectedId = state.coracaoCrystalSelecionado?.id
         )
 
-        listaCoracoesCrystal = result.updated
+        // listaCoracoesCrystal = result.updated (DEPRECATED: Updated via store now)
         gameDataStore.withUpdatedCoracoesCrystal(result.updated)
         state.coracaoCrystalSelecionado = result.newSelected
         return true

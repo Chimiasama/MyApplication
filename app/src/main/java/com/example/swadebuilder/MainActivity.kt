@@ -114,6 +114,11 @@ import kotlinx.serialization.json.JsonElement
 import java.text.DateFormat
 import kotlin.math.roundToInt
 
+// --- REMOVED GLOBAL VARIABLES FROM ACTIVITY ---
+// They are now in GameDataGlobals.kt (deprecated) or loaded via GameDataStore.
+// ArcanoInfo, Pericia, etc. definitions should be moved to model package.
+// For Phase 3, we ensure MainActivity does not define data structures.
+
 @Serializable
 data class ArcanoInfo(
     val key: String,
@@ -1134,47 +1139,19 @@ data class Pericia(
     val descricao: String? = null
 )
 
-var listaComplicacoes by mutableStateOf<List<Complicacao>>(emptyList())
-
-var listaCoracoesCrystal by mutableStateOf<List<CrystalHeart>>(emptyList())
-
-@Serializable
-data class SuperPoder(
-    val nome: String,
-    val estagio: String = "iniciante",
-    val custoBase: String? = null,
-    val modificadores: List<String>? = null,
-    val descricao: String? = null,
-    val manifestacoes: JsonElement? = null
-)
-
-var listaAncestralidadesJson by mutableStateOf<List<RacialModifier>>(emptyList())
-var listaMonstroTemplates by mutableStateOf<List<MonstroTemplate>>(emptyList())
-
-var racialAttrMinMap by mutableStateOf<Map<String, Map<String,Int>>>(emptyMap())
-var racialSkillStartMap by mutableStateOf<Map<String, Map<String,Int>>>(emptyMap())
-
-var listaAtributos by mutableStateOf<List<String>>(emptyList())
-var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
-
-var listaPericias by mutableStateOf<List<Pericia>>(emptyList())
-var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
-var mapaAtributosDescricao by mutableStateOf<Map<String, String>>(emptyMap())
-
-
-val nivelParaEstagio = mapOf(
-    "N" to listaDeEstagios.first { it.nome == "Novato" },
-    "E" to listaDeEstagios.first { it.nome == "Experiente" },
-    "V" to listaDeEstagios.first { it.nome == "Veterano" },
-    "H" to listaDeEstagios.first { it.nome == "Heroico" },
-    "L" to listaDeEstagios.first { it.nome == "Lendário" }
-)
-
-const val TOTAL_PROGRESS_LIMIT = 20
-val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
-    val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
-    if (idx < listaDeEstagios.lastIndex)
-        st.maxProgress - prevMax
-    else
-        (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
-}
+// MOVED TO GameDataGlobals.kt or Model
+// var listaComplicacoes ...
+// var listaCoracoesCrystal ...
+// data class SuperPoder ...
+// var listaAncestralidadesJson ...
+// var listaMonstroTemplates ...
+// var racialAttrMinMap ...
+// var racialSkillStartMap ...
+// var listaAtributos ...
+// var mapaAtributosDisplay ...
+// var listaPericias ...
+// var mapaPericias ...
+// var mapaAtributosDescricao ...
+// val nivelParaEstagio ...
+// const val TOTAL_PROGRESS_LIMIT ...
+// val dynamicStageCaps ...
