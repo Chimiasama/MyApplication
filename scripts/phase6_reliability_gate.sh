@@ -65,4 +65,21 @@ pass "Teste do use-case cobre modo monstro"
 ./scripts/phase0_baseline_metrics.sh >/dev/null
 pass "Baseline da Fase 0 executou com sucesso"
 
+# 6) Guard-rails adicionais de regressão conhecidos
+if search_any "Categoria\.SOCIAL\b" app/src/test/java app/src/main/java; then
+  fail "Encontrada referência inválida a Categoria.SOCIAL (use Categoria.SOCIAIS)"
+fi
+pass "Sem referência inválida a Categoria.SOCIAL"
+
+if command -v rg >/dev/null 2>&1; then
+  data_loader_hits="$(rg -n "DataLoader\." app/src/main/java/com/example/swadebuilder -g'*.kt' | grep -v "model/GameDataRepository.kt" || true)"
+else
+  data_loader_hits="$(grep -R -n -E "DataLoader\." app/src/main/java/com/example/swadebuilder --include='*.kt' | grep -v "model/GameDataRepository.kt" || true)"
+fi
+
+if [[ -n "${data_loader_hits}" ]]; then
+  fail "Uso direto de DataLoader fora do repositório detectado"
+fi
+pass "Sem uso direto de DataLoader fora do repositório"
+
 echo "[phase6] Reliability gate concluído com sucesso."
