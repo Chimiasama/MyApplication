@@ -42,6 +42,7 @@ import com.example.swadebuilder.model.usecase.AdjustAttributesForAncestryChangeU
 import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
 import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
 import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestrySpecificAdjustmentsUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -58,6 +59,7 @@ class CriadorState {
     private val adjustAttributesForAncestryChangeUseCase = AdjustAttributesForAncestryChangeUseCase()
     private val resolveRacialAutomaticComplicationsUseCase = ResolveRacialAutomaticComplicationsUseCase()
     private val removeInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
+    private val resolveAncestrySpecificAdjustmentsUseCase = ResolveAncestrySpecificAdjustmentsUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -3281,69 +3283,54 @@ class CriadorState {
             }
         }
 
-        when (anc) {
-            "SAURIOS" -> {
-                // Prontidão is handled by the generic logic above now, but keeping this doesn't hurt (idempotent).
-                // "Sentidos Aguçados" removal is handled earlier.
-                naturalArmorFromRace = 2
-                armadura = 0
-            }
-            "PEQUENINOS" -> {
-                // "Sorte" vem do JSON. Apenas garantimos a Vantagem mecânica.
-                listaVantagens.firstOrNull { it.nome.equals("Sorte", ignoreCase = true) }
-                    ?.let {
-                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
-                            vantagensSelecionadas.add(it)
-                        }
-                    }
-                // "Sorte" já está em vantagensGratis do JSON, então não adicionamos strings duplicadas.
-                listaVantagens.firstOrNull { it.nome.equals("Espirituoso", ignoreCase = true) }
-                    ?.let {
-                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
-                            vantagensSelecionadas.add(it)
-                        }
-                    }
+        val ancestrySpecificAdjustments = resolveAncestrySpecificAdjustmentsUseCase.execute(
+            anc = anc,
+            descendenteElementalSelecionado = descendenteElementalSelecionado
+        )
 
-                if (desvantagensRaciais.none { it.contains("Tamanho", ignoreCase = true) }) {
-                    desvantagensRaciais.add("Tamanho -1")
+        naturalArmorFromRace = ancestrySpecificAdjustments.naturalArmorFromRace
+        if (ancestrySpecificAdjustments.forceArmorZero) {
+            armadura = 0
+        }
+
+        ancestrySpecificAdjustments.ensureAdvantageNames.forEach { advantageName ->
+            listaVantagens.firstOrNull { it.nome.equals(advantageName, ignoreCase = true) }
+                ?.let { edge ->
+                    if (vantagensSelecionadas.none { sel -> sel.id == edge.id }) {
+                        vantagensSelecionadas.add(edge)
+                    }
                 }
-                if (desvantagensRaciais.none { it.contains("Movimentação Reduzida", ignoreCase = true) }) {
-                    desvantagensRaciais.add("Movimentação Reduzida")
-                }
-                armadura = 0
+        }
+
+        ancestrySpecificAdjustments.ensureAdvantageIds.forEach { advantageId ->
+            val edge = listaVantagens.firstOrNull { it.id == advantageId }
+            if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
+                vantagensSelecionadas.add(edge)
             }
-            "CELESTIAIS" -> {
-                val aaMilagres = listaVantagens.firstOrNull {
-                    it.id == "antecedente_arcano_milagres"
-                }
-                if (aaMilagres != null && vantagensSelecionadas.none { it.id == aaMilagres.id }) {
-                    vantagensSelecionadas.add(aaMilagres)
-                }
-                vantagensAutomaticas.add("ANTECEDENTE ARCANO (MILAGRES)")
-                armadura = 0
+        }
+
+        ancestrySpecificAdjustments.ensureAutomaticAdvantages.forEach { automaticAdvantage ->
+            if (vantagensAutomaticas.none { it.equals(automaticAdvantage, ignoreCase = true) }) {
+                vantagensAutomaticas.add(automaticAdvantage)
             }
-            "HUMANO (WISEGUYS)".keyify() -> {
-                val conexoesMafia = listaVantagens.firstOrNull {
-                    it.nome.equals("Conexões (Máfia)", ignoreCase = true)
-                }
-                if (conexoesMafia != null && vantagensSelecionadas.none { it.nome.equals("Conexões (Máfia)", ignoreCase = true) }) {
-                    vantagensSelecionadas.add(conexoesMafia)
-                }
+        }
+
+        ancestrySpecificAdjustments.ensureRacialDisadvantages.forEach { racialDisadvantage ->
+            if (desvantagensRaciais.none { it.equals(racialDisadvantage, ignoreCase = true) }) {
+                desvantagensRaciais.add(racialDisadvantage)
             }
-            "DESCENDENTE ELEMENTAL" -> {
-                if (descendenteElementalSelecionado == null) {
-                    selecionarDescendenteElemental("Água")
-                } else {
-                    // Re-apply to ensure consistency
-                    val current = descendenteElementalSelecionado
-                    descendenteElementalSelecionado = null
-                    selecionarDescendenteElemental(current)
-                }
-                armadura = 0
+        }
+
+        when (ancestrySpecificAdjustments.elementalAction) {
+            ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {
+                selecionarDescendenteElemental("Água")
             }
-            else -> {
-                armadura = 0
+            ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {
+                val current = descendenteElementalSelecionado
+                descendenteElementalSelecionado = null
+                selecionarDescendenteElemental(current)
             }
+            ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE -> Unit
         }
 
         // --- Complicações raciais automáticas ---
