@@ -213,4 +213,5 @@ Critérios de extração por hotspot:
 - [x] Extraído bloco de transição do bônus humano (+1 PV) para `ApplyHumanAncestryTransitionUseCase`.
 - [x] `CriadorState.aplicarAncestralidade(...)` agora delega essa regra ao use-case mantendo o fluxo restante inalterado.
 - [x] Testes de contrato adicionados para o use-case (remoção elegível, fallback de pontos, entrada em humano, no-op).
-- [ ] Próximo subpasso E4.1: extrair subseção de complicações automáticas raciais para use-case dedicado.
+- [x] Próximo subpasso E4.1 concluído: subseção de complicações automáticas raciais extraída para `ResolveRacialAutomaticComplicationsUseCase` com testes de contrato.
+- [ ] Próximo subpasso E4.2: extrair validação/remoção de vantagens por requisitos para use-case dedicado.

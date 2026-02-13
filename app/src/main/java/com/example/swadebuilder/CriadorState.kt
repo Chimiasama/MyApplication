@@ -40,6 +40,7 @@ import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
 import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
+import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -52,6 +53,7 @@ enum class TabStyle { ICONES, TEXTO }
 class CriadorState {
     private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
     private val applyHumanAncestryTransitionUseCase = ApplyHumanAncestryTransitionUseCase()
+    private val resolveRacialAutomaticComplicationsUseCase = ResolveRacialAutomaticComplicationsUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -3343,42 +3345,18 @@ class CriadorState {
         }
 
         // --- Complicações raciais automáticas ---
+        val resolvedAutomaticComplications = resolveRacialAutomaticComplicationsUseCase.execute(
+            ResolveRacialAutomaticComplicationsUseCase.Params(
+                previousAutomaticDisadvantages = getAncestralidadeDef(prevAnc)?.desvantagens ?: emptyList(),
+                currentAutomaticDisadvantages = desvantagensAutomaticas.toList(),
+                availableComplications = listaComplicacoes,
+                selectedComplications = complicacoesSelecionadas.toMap(),
+                originPriorityResolver = { getOriginPriority(it) }
+            )
+        )
 
-        val oldAutoKeys = getAncestralidadeDef(prevAnc)
-            ?.desvantagens
-            ?.map { it.substringBefore("(").trim().keyify() }
-            ?.toSet()
-            ?: emptySet()
-
-        complicacoesSelecionadas.keys
-            .filter { it.id.keyify() in oldAutoKeys }
-            .forEach { complicacoesSelecionadas.remove(it) }
-
-        val autoBaseKeys = desvantagensAutomaticas
-            .map { it.substringBefore("(").trim().keyify() }
-            .toSet()
-
-        listaComplicacoes
-            .filter { it.id.keyify() in autoBaseKeys }
-            .groupBy { it.id.keyify() }
-            .forEach { (_, variants) ->
-                val comp = variants.maxByOrNull { getOriginPriority(it.origem) } ?: variants.first()
-
-                val hasMenor = desvantagensAutomaticas.any {
-                    it.substringBefore("(").trim().keyify() == comp.id.keyify()
-                            && it.contains("Menor", ignoreCase = true)
-                }
-                val hasMaior = desvantagensAutomaticas.any {
-                    it.substringBefore("(").trim().keyify() == comp.id.keyify()
-                            && it.contains("Maior", ignoreCase = true)
-                }
-
-                when {
-                    hasMaior -> complicacoesSelecionadas[comp] = "Maior"
-                    hasMenor -> complicacoesSelecionadas[comp] = "Menor"
-                    else -> complicacoesSelecionadas[comp] = "Menor"
-                }
-            }
+        complicacoesSelecionadas.clear()
+        complicacoesSelecionadas.putAll(resolvedAutomaticComplications.selectedComplications)
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
         recalcularPontosAtributo(feedbackMessages)
