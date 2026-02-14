@@ -20,18 +20,21 @@ class ResolveAncestryTransitionContextUseCase {
     )
 
     fun execute(params: Params): Result {
-        val wasHumano = params.previousAncestry == "HUMANOS" ||
-            params.previousAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true
+        val previousAncestryKey = params.previousAncestry.keyify()
+        val targetAncestryKey = params.targetAncestry.keyify()
 
-        val willBeHumano = params.targetAncestry == "HUMANOS" ||
-            params.targetAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true
+        val wasHumano = previousAncestryKey == "humanos" ||
+            params.previousAncestryDef?.vantagensGratis?.any { it.keyify() == "adaptavel" } == true
+
+        val willBeHumano = targetAncestryKey == "humanos" ||
+            params.targetAncestryDef?.vantagensGratis?.any { it.keyify() == "adaptavel" } == true
 
         val previousFreeAdvantageKeys = (
             params.currentAutomaticAdvantages.toSet() +
-                when (params.previousAncestry) {
-                    "SAURIOS" -> setOf("Sentidos Aguçados", "Prontidão")
-                    "PEQUENINOS" -> setOf("Sorte")
-                    "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
+                when (previousAncestryKey) {
+                    "saurios" -> setOf("Sentidos Aguçados", "Prontidão")
+                    "pequeninos" -> setOf("Sorte")
+                    "celestiais" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
                     else -> emptySet()
                 }
             ).map { it.keyify() }
