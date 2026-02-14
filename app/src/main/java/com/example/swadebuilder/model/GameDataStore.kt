@@ -40,4 +40,18 @@ class GameDataStore {
 
     fun superPoderes(fallback: List<SuperPoder>): List<SuperPoder> =
         snapshot?.listaSuperPoderes ?: fallback
+
+    // Phase 9: Accessors for migration, initially returning empty list if snapshot is null
+    fun getPericias(): List<Pericia> = snapshot?.listaPericias ?: emptyList()
+    fun getVantagens(): List<Vantagem> = snapshot?.listaVantagens ?: emptyList()
+    fun getComplicacoes(): List<Complicacao> = snapshot?.listaComplicacoes ?: emptyList()
+    fun getAncestralidades(): List<RacialModifier> = snapshot?.listaAncestralidadesJson ?: emptyList()
+    fun getAtributos(): List<String> = snapshot?.listaAtributos ?: emptyList()
+    fun getEquipamentos(): List<EquipamentoItem> = snapshot?.listaEquipamentos ?: emptyList()
+    fun getTropos(): List<Tropo> = snapshot?.listaTropos ?: emptyList()
+    fun getMonstroTemplates(): List<MonstroTemplate> = snapshot?.listaMonstroTemplates ?: emptyList()
+    fun getRacialAttrMinMap(): Map<String, Map<String, Int>> = snapshot?.racialAttrMinMap ?: emptyMap()
+    fun getRacialSkillStartMap(): Map<String, Map<String, Int>> = snapshot?.racialSkillStartMap ?: emptyMap()
+    fun getMapaAtributosDisplay(): Map<String, String> = snapshot?.mapaAtributosDisplay ?: emptyMap()
+    fun getMapaPericias(): Map<String, Pericia> = snapshot?.mapaPericias ?: emptyMap()
 }
