@@ -70,21 +70,18 @@ class RebuildSkillStacksUseCase {
             }
 
             var cost = costFor(target)
-
-            if (input.enforcePoolLimit && cost > 0 && cumulativeCost + cost > pool) {
-                feedbackMessages.add("Perícia $perName reduzida para d$target para compensar pontos.")
-            }
+            val originalTarget = target
 
             while (input.enforcePoolLimit && cumulativeCost + cost > pool) {
-                // Reduce target by one step (usually 2, but handle d4 start carefully if needed)
-                // Logic in original code: target = (target - 2).coerceAtLeast(minRaw)
-                // If target is 4 and we reduce, it goes to 2 (which is invalid usually, so likely 0 or minRaw)
-                // The original code does `(target - 2)`.
                 target = (target - 2).coerceAtLeast(minRaw)
                 cost = costFor(target)
 
                 // Safety break if we can't reduce further (target == minRaw)
                 if (target <= minRaw) break
+            }
+
+            if (target < originalTarget) {
+                feedbackMessages.add("Perícia $perName reduzida para d$target para compensar pontos.")
             }
 
             // Now rebuild the stack for the final target
