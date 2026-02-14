@@ -3324,7 +3324,7 @@ class CriadorState {
         // Validar requisitos das vantagens existentes
         val invalidAdvantagesResolution = ancestryChangeCoordination.invalidAdvantagesResolution
 
-        invalidAdvantagesResult.removedAdvantages.forEach { removed ->
+        invalidAdvantagesResolution.removedAdvantages.forEach { removed ->
             removeVantagemDinheiro(removed)
             pontosVantagem++
             feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
