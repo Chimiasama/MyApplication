@@ -34,8 +34,19 @@ import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.getActiveOrigins
+import com.example.swadebuilder.model.ids.ModuleIds
+import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
+import com.example.swadebuilder.model.usecase.AdjustAttributesForAncestryChangeUseCase
+import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
+import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
+import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
+import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestrySpecificAdjustmentsUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUseCase
+import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -46,6 +57,32 @@ import java.util.UUID
 enum class TabStyle { ICONES, TEXTO }
 
 class CriadorState {
+    private val resolveActiveAncestryCandidatesUseCase = ResolveActiveAncestryCandidatesUseCase()
+    private val applyHumanAncestryTransitionUseCase = ApplyHumanAncestryTransitionUseCase()
+    private val adjustAttributesForAncestryChangeUseCase = AdjustAttributesForAncestryChangeUseCase()
+    private val resolveRacialAutomaticComplicationsUseCase = ResolveRacialAutomaticComplicationsUseCase()
+    private val resolveAncestryComplicationsSnapshotUseCase = ResolveAncestryComplicationsSnapshotUseCase(
+        resolveRacialAutomaticComplicationsUseCase = resolveRacialAutomaticComplicationsUseCase
+    )
+    private val removeInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
+    private val resolveAncestrySpecificAdjustmentsUseCase = ResolveAncestrySpecificAdjustmentsUseCase()
+    private val resolveAncestryTransitionContextUseCase = ResolveAncestryTransitionContextUseCase()
+    private val resolveAncestryTransitionBootstrapUseCase = ResolveAncestryTransitionBootstrapUseCase(
+        resolveAncestryTransitionContextUseCase = resolveAncestryTransitionContextUseCase,
+        applyHumanAncestryTransitionUseCase = applyHumanAncestryTransitionUseCase
+    )
+    private val resolveGrantedAncestryAdvantagesUseCase = ResolveGrantedAncestryAdvantagesUseCase()
+    private val resolveAncestryRacialPackageUseCase = ResolveAncestryRacialPackageUseCase(
+        resolveGrantedAncestryAdvantagesUseCase = resolveGrantedAncestryAdvantagesUseCase,
+        resolveAncestrySpecificAdjustmentsUseCase = resolveAncestrySpecificAdjustmentsUseCase
+    )
+    private val applyAncestryChangeCoordinatorUseCase = ApplyAncestryChangeCoordinatorUseCase(
+        resolveAncestryTransitionBootstrapUseCase = resolveAncestryTransitionBootstrapUseCase,
+        adjustAttributesForAncestryChangeUseCase = adjustAttributesForAncestryChangeUseCase,
+        resolveAncestryRacialPackageUseCase = resolveAncestryRacialPackageUseCase,
+        resolveAncestryComplicationsSnapshotUseCase = resolveAncestryComplicationsSnapshotUseCase,
+        resolveAncestryInvalidAdvantagesUseCase = resolveAncestryInvalidAdvantagesUseCase
+    )
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -146,16 +183,16 @@ class CriadorState {
 
     fun getActiveModuleKeys(): Set<String> {
         val keys = mutableSetOf<String>()
-        if (compendioFantasiaAtivo) keys.add("FANTASIA")
-        if (compendioHorrorAtivo) keys.add("HORROR")
-        if (compendioSciFiAtivo) keys.add("SCI_FI")
-        if (compendioPathfinderAtivo) keys.add("PATHFINDER")
-        if (compendioDeadlandsAtivo) keys.add("DEADLANDS")
-        if (compendioCrystalHeartAtivo) keys.add("CRYSTAL_HEART")
-        if (compendioArteDaGuerraAtivo) keys.add("ARTE_DA_GUERRA")
-        if (compendioCidadeSolVaporAtivo) keys.add("CIDADE_SOL_VAPOR")
-        if (compendioWiseguysAtivo) keys.add("WISEGUYS")
-        if (modoSupers) keys.add("SUPER")
+        if (compendioFantasiaAtivo) keys.add(ModuleIds.FANTASIA)
+        if (compendioHorrorAtivo) keys.add(ModuleIds.HORROR)
+        if (compendioSciFiAtivo) keys.add(ModuleIds.SCI_FI)
+        if (compendioPathfinderAtivo) keys.add(ModuleIds.PATHFINDER)
+        if (compendioDeadlandsAtivo) keys.add(ModuleIds.DEADLANDS)
+        if (compendioCrystalHeartAtivo) keys.add(ModuleIds.CRYSTAL_HEART)
+        if (compendioArteDaGuerraAtivo) keys.add(ModuleIds.ARTE_DA_GUERRA)
+        if (compendioCidadeSolVaporAtivo) keys.add(ModuleIds.CIDADE_SOL_VAPOR)
+        if (compendioWiseguysAtivo) keys.add(ModuleIds.WISEGUYS)
+        if (modoSupers) keys.add(ModuleIds.SUPER)
         return keys
     }
 
@@ -176,22 +213,20 @@ class CriadorState {
         if (candidates.isEmpty()) return null
         if (candidates.size == 1) return candidates.first()
 
+        val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
+            compendioFantasiaAtivo = compendioFantasiaAtivo,
+            compendioHorrorAtivo = compendioHorrorAtivo,
+            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+            compendioWiseguysAtivo = compendioWiseguysAtivo,
+            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+            compendioSciFiAtivo = compendioSciFiAtivo,
+            compendioPathfinderAtivo = compendioPathfinderAtivo
+        )
+
         val activeCandidates = candidates.filter { item ->
-            val origin = item.origem.uppercase()
-            when (origin) {
-                "FANTASIA" -> compendioFantasiaAtivo
-                "HORROR" -> compendioHorrorAtivo
-                "ARTE_DA_GUERRA" -> compendioArteDaGuerraAtivo
-                "DEADLANDS" -> compendioDeadlandsAtivo
-                "WISEGUYS" -> compendioWiseguysAtivo
-                "CIDADE_SOL_VAPOR" -> compendioCidadeSolVaporAtivo
-                "CRYSTAL_HEART" -> compendioCrystalHeartAtivo
-                "FC", "SCIFI" -> compendioSciFiAtivo
-                else -> {
-                    if (origin.contains("TRILHADOR") || origin.contains("PATHFINDER")) compendioPathfinderAtivo
-                    else true // BASICO or others
-                }
-            }
+            resolveActiveAncestryCandidatesUseCase.isOriginActive(item.origem, ancestryFlags)
         }
 
         if (activeCandidates.isEmpty()) return candidates.firstOrNull()
@@ -248,7 +283,7 @@ class CriadorState {
 
     companion object {
         fun getOriginPriority(origin: String?): Int {
-            val o = origin?.uppercase() ?: "BASICO"
+            val o = canonicalOriginKey(origin)
             return when {
                 o == "HORROR" -> 1000
                 o == "FANTASIA" -> 900
@@ -294,14 +329,14 @@ class CriadorState {
     var cartaSelvagem       by mutableStateOf(true)
     var dinheiro by mutableIntStateOf(500)
     var requisicao by mutableIntStateOf(1)
-    val carteiraPathfinder = mutableStateMapOf("PL" to 0, "PO" to 0, "PP" to 0, "PC" to 0)
+    val carteiraPathfinder = mutableStateMapOf(PathfinderCurrencyIds.PL to 0, PathfinderCurrencyIds.PO to 0, PathfinderCurrencyIds.PP to 0, PathfinderCurrencyIds.PC to 0)
 
     fun updateTotalPathfinderMoney() {
         if (!compendioPathfinderAtivo) return
-        val pl = carteiraPathfinder["PL"] ?: 0
-        val po = carteiraPathfinder["PO"] ?: 0
-        val pp = carteiraPathfinder["PP"] ?: 0
-        val pc = carteiraPathfinder["PC"] ?: 0
+        val pl = carteiraPathfinder[PathfinderCurrencyIds.PL] ?: 0
+        val po = carteiraPathfinder[PathfinderCurrencyIds.PO] ?: 0
+        val pp = carteiraPathfinder[PathfinderCurrencyIds.PP] ?: 0
+        val pc = carteiraPathfinder[PathfinderCurrencyIds.PC] ?: 0
         dinheiro = (pl * 1000) + (po * 100) + (pp * 10) + pc
     }
 
@@ -324,9 +359,9 @@ class CriadorState {
         // Add PC
         val pcToAdd = remaining
 
-        if (poToAdd > 0) carteiraPathfinder["PO"] = (carteiraPathfinder["PO"] ?: 0) + poToAdd
-        if (ppToAdd > 0) carteiraPathfinder["PP"] = (carteiraPathfinder["PP"] ?: 0) + ppToAdd
-        if (pcToAdd > 0) carteiraPathfinder["PC"] = (carteiraPathfinder["PC"] ?: 0) + pcToAdd
+        if (poToAdd > 0) carteiraPathfinder[PathfinderCurrencyIds.PO] = (carteiraPathfinder[PathfinderCurrencyIds.PO] ?: 0) + poToAdd
+        if (ppToAdd > 0) carteiraPathfinder[PathfinderCurrencyIds.PP] = (carteiraPathfinder[PathfinderCurrencyIds.PP] ?: 0) + ppToAdd
+        if (pcToAdd > 0) carteiraPathfinder[PathfinderCurrencyIds.PC] = (carteiraPathfinder[PathfinderCurrencyIds.PC] ?: 0) + pcToAdd
 
         updateTotalPathfinderMoney()
     }
@@ -339,14 +374,14 @@ class CriadorState {
         var costRemaining = amountInCopper
 
         // 1. Spend PC
-        val currentPC = carteiraPathfinder["PC"] ?: 0
+        val currentPC = carteiraPathfinder[PathfinderCurrencyIds.PC] ?: 0
         if (currentPC >= costRemaining) {
-            carteiraPathfinder["PC"] = currentPC - costRemaining
+            carteiraPathfinder[PathfinderCurrencyIds.PC] = currentPC - costRemaining
             updateTotalPathfinderMoney()
             return true
         } else {
             // Spend all PC
-            carteiraPathfinder["PC"] = 0
+            carteiraPathfinder[PathfinderCurrencyIds.PC] = 0
             costRemaining -= currentPC
         }
 
@@ -355,50 +390,50 @@ class CriadorState {
         // 1 PP covers 10 CP.
         // We need ceil(costRemaining / 10.0) PPs.
         val neededPP = (costRemaining + 9) / 10
-        val currentPP = carteiraPathfinder["PP"] ?: 0
+        val currentPP = carteiraPathfinder[PathfinderCurrencyIds.PP] ?: 0
 
         if (currentPP >= neededPP) {
-            carteiraPathfinder["PP"] = currentPP - neededPP
+            carteiraPathfinder[PathfinderCurrencyIds.PP] = currentPP - neededPP
             val change = (neededPP * 10) - costRemaining
             if (change > 0) {
-                carteiraPathfinder["PC"] = (carteiraPathfinder["PC"] ?: 0) + change
+                carteiraPathfinder[PathfinderCurrencyIds.PC] = (carteiraPathfinder[PathfinderCurrencyIds.PC] ?: 0) + change
             }
             updateTotalPathfinderMoney()
             return true
         } else {
             // Spend all PP
-            carteiraPathfinder["PP"] = 0
+            carteiraPathfinder[PathfinderCurrencyIds.PP] = 0
             costRemaining -= (currentPP * 10)
         }
 
         // 3. Spend PO (1 PO = 100 PC)
         val neededPO = (costRemaining + 99) / 100
-        val currentPO = carteiraPathfinder["PO"] ?: 0
+        val currentPO = carteiraPathfinder[PathfinderCurrencyIds.PO] ?: 0
 
         if (currentPO >= neededPO) {
-            carteiraPathfinder["PO"] = currentPO - neededPO
+            carteiraPathfinder[PathfinderCurrencyIds.PO] = currentPO - neededPO
             val changeTotal = (neededPO * 100) - costRemaining
             // Change needs to be broken down into PP and PC
             val changePP = changeTotal / 10
             val changePC = changeTotal % 10
 
-            if (changePP > 0) carteiraPathfinder["PP"] = (carteiraPathfinder["PP"] ?: 0) + changePP
-            if (changePC > 0) carteiraPathfinder["PC"] = (carteiraPathfinder["PC"] ?: 0) + changePC
+            if (changePP > 0) carteiraPathfinder[PathfinderCurrencyIds.PP] = (carteiraPathfinder[PathfinderCurrencyIds.PP] ?: 0) + changePP
+            if (changePC > 0) carteiraPathfinder[PathfinderCurrencyIds.PC] = (carteiraPathfinder[PathfinderCurrencyIds.PC] ?: 0) + changePC
 
             updateTotalPathfinderMoney()
             return true
         } else {
             // Spend all PO
-            carteiraPathfinder["PO"] = 0
+            carteiraPathfinder[PathfinderCurrencyIds.PO] = 0
             costRemaining -= (currentPO * 100)
         }
 
         // 4. Spend PL (1 PL = 1000 PC)
         val neededPL = (costRemaining + 999) / 1000
-        val currentPL = carteiraPathfinder["PL"] ?: 0
+        val currentPL = carteiraPathfinder[PathfinderCurrencyIds.PL] ?: 0
 
         if (currentPL >= neededPL) {
-            carteiraPathfinder["PL"] = currentPL - neededPL
+            carteiraPathfinder[PathfinderCurrencyIds.PL] = currentPL - neededPL
             val changeTotal = (neededPL * 1000) - costRemaining
 
             // Change breakdown (PO, PP, PC)
@@ -407,9 +442,9 @@ class CriadorState {
             val changePP = rem1 / 10
             val changePC = rem1 % 10
 
-            if (changePO > 0) carteiraPathfinder["PO"] = (carteiraPathfinder["PO"] ?: 0) + changePO
-            if (changePP > 0) carteiraPathfinder["PP"] = (carteiraPathfinder["PP"] ?: 0) + changePP
-            if (changePC > 0) carteiraPathfinder["PC"] = (carteiraPathfinder["PC"] ?: 0) + changePC
+            if (changePO > 0) carteiraPathfinder[PathfinderCurrencyIds.PO] = (carteiraPathfinder[PathfinderCurrencyIds.PO] ?: 0) + changePO
+            if (changePP > 0) carteiraPathfinder[PathfinderCurrencyIds.PP] = (carteiraPathfinder[PathfinderCurrencyIds.PP] ?: 0) + changePP
+            if (changePC > 0) carteiraPathfinder[PathfinderCurrencyIds.PC] = (carteiraPathfinder[PathfinderCurrencyIds.PC] ?: 0) + changePC
 
             updateTotalPathfinderMoney()
             return true
@@ -430,10 +465,10 @@ class CriadorState {
         val pp = remaining / 10
         val pc = remaining % 10
 
-        carteiraPathfinder["PL"] = pl
-        carteiraPathfinder["PO"] = po
-        carteiraPathfinder["PP"] = pp
-        carteiraPathfinder["PC"] = pc
+        carteiraPathfinder[PathfinderCurrencyIds.PL] = pl
+        carteiraPathfinder[PathfinderCurrencyIds.PO] = po
+        carteiraPathfinder[PathfinderCurrencyIds.PP] = pp
+        carteiraPathfinder[PathfinderCurrencyIds.PC] = pc
     }
 
     var famaManual by mutableIntStateOf(0)
@@ -1805,6 +1840,10 @@ class CriadorState {
         listaPericias.forEach { ensurePericiaEntry(it) }
     }
 
+    fun ensurePericiasRegistered(pericias: List<Pericia>) {
+        pericias.forEach { ensurePericiaEntry(it) }
+    }
+
     fun ensureAllAtributosRegistered() {
         listaAtributos.forEach { nome ->
             if (!valoresAtributos.containsKey(nome)) {
@@ -3143,272 +3182,124 @@ class CriadorState {
         val prevAnc = ancestralidade
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
-        val wasHumano = (prevAnc == "HUMANOS" || prevAncDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
-
         val ancDef = getAncestralidadeDef(anc)
-        val vaiSerHumano = (anc == "HUMANOS" || ancDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true)
 
         val paAntes = pontosAtributo
         val spAntes = pontosPericia
         val pvAntes = pontosVantagem
 
-        // Mapeia as vantagens raciais gratuitas da ancestralidade ANTERIOR
-        val prevFreeKeys: Set<String> =
-            (vantagensAutomaticas.toSet() +
-                    when (prevAnc) {
-                        "SAURIOS"    -> setOf("Sentidos Aguçados", "Prontidão")
-                        "PEQUENINOS" -> setOf("Sorte")
-            "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
-                        else         -> emptySet()
-                    }
-                    ).map { it.keyify() }
-                .toSet()
+        periciasComIdiomas().associateWith { rawTotal(it) }
 
-        // --- Ajuste do +1 PV de HUMANOS (sem apagar tudo e respeitando pré-requisitos) ---
+        val ancestryChangeCoordination = applyAncestryChangeCoordinatorUseCase.execute(
+            ApplyAncestryChangeCoordinatorUseCase.Params(
+                previousAncestry = prevAnc,
+                targetAncestry = anc,
+                previousAncestryDef = prevAncDef,
+                targetAncestryDef = ancDef,
+                currentAutomaticAdvantages = vantagensAutomaticas.toList(),
+                pontosVantagemAtuais = pontosVantagem,
+                vantagensSelecionadas = vantagensSelecionadas.toList(),
+                attributeNames = listaAtributos,
+                attributeCaps = listaAtributos.associateWith { nome ->
+                    AdjustAttributesForAncestryChangeUseCase.AttributeCap(
+                        minRaw = atributoMinRaw(nome),
+                        maxRaw = atributoMaxRaw(nome)
+                    )
+                },
+                paCostStacks = listaAtributos.associateWith { nome ->
+                    paCostStackPorAtributo.getValue(nome).toList()
+                },
+                descendenteElementalSelecionado = descendenteElementalSelecionado,
+                allAdvantages = listaVantagens,
+                availableComplications = listaComplicacoes,
+                selectedComplications = complicacoesSelecionadas,
+                automaticTropoAdvantageIds = vantagensAutomaticasDoTropo.toSet(),
+                meetsRequirements = { atendeRequisitosMantidos(it) },
+                originPriorityResolver = { getOriginPriority(it) },
+                compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                signoAdgSelecionado = signoAdgSelecionado,
+                modoSupers = modoSupers
+            )
+        )
 
-        if (wasHumano && !vaiSerHumano) {
-            // Helper: vantagem é racial gratuita da raça anterior?
-            fun isRacialFree(v: Vantagem): Boolean =
-                v.nome.keyify() in prevFreeKeys
-
-            // Helper: vantagem é pré-requisito de outra?
-            fun isUsedAsPrereq(v: Vantagem): Boolean {
-                v.id
-                return vantagensSelecionadas.any { other ->
-                    other != v && other.requisitos.vantagensPrevias.any { prevId ->
-                        when (prevId) {
-                            "antecedente_arcano",
-                            "antecedente_arcano:*" -> {
-                                other.id.startsWith("antecedente_arcano_") ||
-                                        (other.id == "antecedente_arcano" && !other.choice.isNullOrBlank())
-                            }
-                            else -> other.id == prevId
-                        }
-                    }
-                }
-            }
-
-            // Candidatos a serem removidos para "pagar" o edge grátis de humano:
-            // - não raciais
-            // - não são pré-requisito de outra
-            // - não são vantagens de PODER (superpoderes)
-            // - não são vantagens de cenário automáticas (Superpoderes, Canalizar Cristal, Conexões Máfia)
-            val candidatos = vantagensSelecionadas.filter { v ->
-                val isScenarioEdge = v.id == "superpoderes" ||
-                        v.id == "agente_syn" ||
-                        v.id == "aa_agente_syn" ||
-                        (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
-
-                !isRacialFree(v) &&
-                        !isUsedAsPrereq(v) &&
-                        !isScenarioEdge &&
-                        !v.categoria.name.equals("PODER", ignoreCase = true)
-            }
-
-            if (candidatos.isNotEmpty()) {
-                // Remove só UMA vantagem (a última adquirida, por simplicidade)
-                val toRemove = candidatos.last()
-                vantagensSelecionadas.remove(toRemove)
-                feedbackMessages.add("Vantagem ${toRemove.nome} removida para compensar a troca de Ancestralidade.")
-            } else {
-                // Não sobrou nada "seguro" pra remover → ajusta só o pool de PV
-                pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
-            }
-        } else if (!wasHumano && vaiSerHumano) {
-            // Entrando em HUMANOS → ganha 1 PV racial
-            pontosVantagem += 1
+        ancestryChangeCoordination.humanTransition.vantagemRemovida?.let { toRemove ->
+            vantagensSelecionadas.remove(toRemove)
+            feedbackMessages.add("Vantagem ${toRemove.nome} removida para compensar a troca de Ancestralidade.")
         }
+        pontosVantagem = ancestryChangeCoordination.humanTransition.novosPontosVantagem
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
 
-        // --- Ajuste de atributos pela nova raça ---
-        // IMPORTANTE: usa atributoMinRaw/atributoMaxRaw para respeitar limites dinâmicos
-        // (ex.: FORÇA máxima por Diminuto/Tamanho).
-        periciasComIdiomas().associateWith { rawTotal(it) }
+        val attributeAdjustmentResult = ancestryChangeCoordination.attributeAdjustmentResult
 
-        listaAtributos.forEach { nome ->
-            val st = valoresAtributos[nome]!!
-            val newMin = atributoMinRaw(nome)
-            val newMax = atributoMaxRaw(nome)
-
+        attributeAdjustmentResult.adjustmentsByAttribute.forEach { (nome, adjustment) ->
             val stack = paCostStackPorAtributo.getValue(nome)
-            var raw = newMin.coerceAtMost(newMax)
-            var appliedSteps = 0
+            stack.clear()
+            stack.addAll(adjustment.adjustedStack)
 
-            repeat(stack.size) {
-                val candidate = if (raw < 12) raw + 2 else raw + 1
-                if (candidate > newMax) {
-                    return@repeat
-                }
-                raw = candidate
-                appliedSteps++
+            if (adjustment.refundedPoints > 0) {
+                feedbackMessages.add("${adjustment.refundedPoints} ponto(s) de atributo devolvido(s) de $nome.")
             }
 
-            if (appliedSteps < stack.size) {
-                val removidos = stack.size - appliedSteps
-                repeat(removidos) {
-                    stack.removeAt(stack.lastIndex)
-                }
-                feedbackMessages.add("$removidos ponto(s) de atributo devolvido(s) de $nome.")
-            }
-
-            st.intValue = raw
+            valoresAtributos[nome]!!.intValue = adjustment.newRaw
         }
 
-        if (compendioArteDaGuerraAtivo && anc.keyify().contains("HUMANO")) {
-            if (signoAdgSelecionado == null) {
-                selecionarSigno("Nenhum")
-            }
-        } else if (signoAdgSelecionado != null) {
-            selecionarSigno(null)
+        when (ancestryChangeCoordination.signoAction) {
+            ApplyAncestryChangeCoordinatorUseCase.SignoAction.SELECT_NONE -> selecionarSigno("Nenhum")
+            ApplyAncestryChangeCoordinatorUseCase.SignoAction.CLEAR -> selecionarSigno(null)
+            ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP -> Unit
         }
-        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
-        if (anc != "MEIO-ELFOS") {
+        celestialAAMilagresDesabilitado = ancestryChangeCoordination.celestialAAMilagresDesabilitado
+        if (ancestryChangeCoordination.resetMeioElfoAgil) {
             meioElfoAgil = false
         }
-        if (anc != "MEIO-ORCS") {
+        if (ancestryChangeCoordination.resetMeioOrcForca) {
             meioOrcForca = false
         }
-        if (anc.keyify() != "DESCENDENTE ELEMENTAL" && anc.keyify() != "DESC_ELEMENTAL") {
+        if (ancestryChangeCoordination.clearDescendenteElemental) {
             selecionarDescendenteElemental(null)
         }
-        if (!anc.keyify().contains("GNOMO")) {
+        if (ancestryChangeCoordination.clearPericiaGnomo) {
             selecionarPericiaGnomo(null)
         }
 
-        // --- Vantagens / desvantagens raciais ---
+        val racialPackage = ancestryChangeCoordination.racialPackage
 
-        // Remove APENAS as vantagens raciais automáticas da raça anterior
-        if (prevFreeKeys.isNotEmpty()) {
-            vantagensSelecionadas.removeAll { it.nome.keyify() in prevFreeKeys }
-        }
+        vantagensSelecionadas.clear()
+        vantagensSelecionadas.addAll(racialPackage.selectedAdvantages)
 
         desvantagensAutomaticas.clear()
+        desvantagensAutomaticas.addAll(ancDef?.desvantagens ?: emptyList())
+
         vantagensAutomaticas.clear()
+        vantagensAutomaticas.addAll(racialPackage.vantagensAutomaticas)
+
         vantagensRaciais.clear()
+        vantagensRaciais.addAll(racialPackage.vantagensRaciais)
+
         desvantagensRaciais.clear()
+        desvantagensRaciais.addAll(racialPackage.desvantagensRaciais)
 
-        getAncestralidadeDef(anc)?.let { rm ->
-            desvantagensAutomaticas.addAll(rm.desvantagens)
-            vantagensAutomaticas.addAll(rm.vantagensGratis)
-            vantagensRaciais.addAll(rm.vantagensGratis)
-            desvantagensRaciais.addAll(rm.desvantagens)
+        naturalArmorFromRace = racialPackage.naturalArmorFromRace
+        if (racialPackage.forceArmorZero) {
+            armadura = 0
         }
 
-        naturalArmorFromRace = 0
-
-        // Generic Logic for Edges listed in vantagesGratis strings
-        getAncestralidadeDef(anc)?.vantagensGratis?.forEach { featString ->
-            val featKey = featString.keyify()
-            val edge = listaVantagens.firstOrNull { it.nome.keyify() == featKey || it.id == featString || it.id.keyify() == featKey }
-            if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
-                vantagensSelecionadas.add(edge)
+        when (racialPackage.elementalAction) {
+            ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {
+                selecionarDescendenteElemental("Água")
             }
+            ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {
+                val current = descendenteElementalSelecionado
+                descendenteElementalSelecionado = null
+                selecionarDescendenteElemental(current)
+            }
+            ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE -> Unit
         }
 
-        when (anc) {
-            "SAURIOS" -> {
-                // Prontidão is handled by the generic logic above now, but keeping this doesn't hurt (idempotent).
-                // "Sentidos Aguçados" removal is handled earlier.
-                naturalArmorFromRace = 2
-                armadura = 0
-            }
-            "PEQUENINOS" -> {
-                // "Sorte" vem do JSON. Apenas garantimos a Vantagem mecânica.
-                listaVantagens.firstOrNull { it.nome.equals("Sorte", ignoreCase = true) }
-                    ?.let {
-                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
-                            vantagensSelecionadas.add(it)
-                        }
-                    }
-                // "Sorte" já está em vantagensGratis do JSON, então não adicionamos strings duplicadas.
-                listaVantagens.firstOrNull { it.nome.equals("Espirituoso", ignoreCase = true) }
-                    ?.let {
-                        if (vantagensSelecionadas.none { sel -> sel.id == it.id }) {
-                            vantagensSelecionadas.add(it)
-                        }
-                    }
-
-                if (desvantagensRaciais.none { it.contains("Tamanho", ignoreCase = true) }) {
-                    desvantagensRaciais.add("Tamanho -1")
-                }
-                if (desvantagensRaciais.none { it.contains("Movimentação Reduzida", ignoreCase = true) }) {
-                    desvantagensRaciais.add("Movimentação Reduzida")
-                }
-                armadura = 0
-            }
-            "CELESTIAIS" -> {
-                val aaMilagres = listaVantagens.firstOrNull {
-                    it.id == "antecedente_arcano_milagres"
-                }
-                if (aaMilagres != null && vantagensSelecionadas.none { it.id == aaMilagres.id }) {
-                    vantagensSelecionadas.add(aaMilagres)
-                }
-                vantagensAutomaticas.add("ANTECEDENTE ARCANO (MILAGRES)")
-                armadura = 0
-            }
-            "HUMANO (WISEGUYS)".keyify() -> {
-                val conexoesMafia = listaVantagens.firstOrNull {
-                    it.nome.equals("Conexões (Máfia)", ignoreCase = true)
-                }
-                if (conexoesMafia != null && vantagensSelecionadas.none { it.nome.equals("Conexões (Máfia)", ignoreCase = true) }) {
-                    vantagensSelecionadas.add(conexoesMafia)
-                }
-            }
-            "DESCENDENTE ELEMENTAL" -> {
-                if (descendenteElementalSelecionado == null) {
-                    selecionarDescendenteElemental("Água")
-                } else {
-                    // Re-apply to ensure consistency
-                    val current = descendenteElementalSelecionado
-                    descendenteElementalSelecionado = null
-                    selecionarDescendenteElemental(current)
-                }
-                armadura = 0
-            }
-            else -> {
-                armadura = 0
-            }
-        }
-
-        // --- Complicações raciais automáticas ---
-
-        val oldAutoKeys = getAncestralidadeDef(prevAnc)
-            ?.desvantagens
-            ?.map { it.substringBefore("(").trim().keyify() }
-            ?.toSet()
-            ?: emptySet()
-
-        complicacoesSelecionadas.keys
-            .filter { it.id.keyify() in oldAutoKeys }
-            .forEach { complicacoesSelecionadas.remove(it) }
-
-        val autoBaseKeys = desvantagensAutomaticas
-            .map { it.substringBefore("(").trim().keyify() }
-            .toSet()
-
-        listaComplicacoes
-            .filter { it.id.keyify() in autoBaseKeys }
-            .groupBy { it.id.keyify() }
-            .forEach { (_, variants) ->
-                val comp = variants.maxByOrNull { getOriginPriority(it.origem) } ?: variants.first()
-
-                val hasMenor = desvantagensAutomaticas.any {
-                    it.substringBefore("(").trim().keyify() == comp.id.keyify()
-                            && it.contains("Menor", ignoreCase = true)
-                }
-                val hasMaior = desvantagensAutomaticas.any {
-                    it.substringBefore("(").trim().keyify() == comp.id.keyify()
-                            && it.contains("Maior", ignoreCase = true)
-                }
-
-                when {
-                    hasMaior -> complicacoesSelecionadas[comp] = "Maior"
-                    hasMenor -> complicacoesSelecionadas[comp] = "Menor"
-                    else -> complicacoesSelecionadas[comp] = "Menor"
-                }
-            }
+        complicacoesSelecionadas.clear()
+        complicacoesSelecionadas.putAll(ancestryChangeCoordination.complicationsSnapshot.selectedComplications)
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
         recalcularPontosAtributo(feedbackMessages)
@@ -3423,32 +3314,12 @@ class CriadorState {
         if (pvDepois > pvAntes) feedbackMessages.add("${pvDepois - pvAntes} ponto(s) de vantagem devolvido(s).")
 
         // Validar requisitos das vantagens existentes
-        var changed = true
-        while (changed) {
-            changed = false
-            val iterator = vantagensSelecionadas.iterator()
-            while (iterator.hasNext()) {
-                val v = iterator.next()
+        val invalidAdvantagesResolution = ancestryChangeCoordination.invalidAdvantagesResolution
 
-                val autoKeys = (vantagensAutomaticas + vantagensRaciais)
-                    .map { it.substringBefore("(").trim().keyify() }
-                    .toSet()
-
-                val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
-
-                if (v.nome.substringBefore("(").trim().keyify() in autoKeys) continue
-                if (v.id in autoIds) continue
-                if (v.id in vantagensAutomaticasDoTropo) continue
-                if (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true) continue
-
-                if (!atendeRequisitosMantidos(v)) {
-                    iterator.remove()
-                    removeVantagemDinheiro(v)
-                    pontosVantagem++
-                    feedbackMessages.add("Vantagem '${v.nome}' removida (requisitos não atendidos).")
-                    changed = true
-                }
-            }
+        invalidAdvantagesResult.removedAdvantages.forEach { removed ->
+            removeVantagemDinheiro(removed)
+            pontosVantagem++
+            feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
         }
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
@@ -4773,10 +4644,10 @@ class CriadorState {
             rem %= 100
             val pp = rem / 10
             val pc = rem % 10
-            carteiraPathfinder["PL"] = pl
-            carteiraPathfinder["PO"] = po
-            carteiraPathfinder["PP"] = pp
-            carteiraPathfinder["PC"] = pc
+            carteiraPathfinder[PathfinderCurrencyIds.PL] = pl
+            carteiraPathfinder[PathfinderCurrencyIds.PO] = po
+            carteiraPathfinder[PathfinderCurrencyIds.PP] = pp
+            carteiraPathfinder[PathfinderCurrencyIds.PC] = pc
         }
 
         aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages)

@@ -3,7 +3,7 @@
     "id": "ambidestro",
     "nome": "AMBIDESTRO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -22,7 +22,7 @@
     "id": "antecedente_arcano",
     "nome": "ANTECEDENTE ARCANO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -46,7 +46,7 @@
     "id": "antecedente_arcano_dom",
     "nome": "ANTECEDENTE ARCANO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -66,7 +66,7 @@
     "id": "antecedente_arcano_magia",
     "nome": "ANTECEDENTE ARCANO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -86,7 +86,7 @@
     "id": "antecedente_arcano_milagres",
     "nome": "ANTECEDENTE ARCANO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -106,7 +106,7 @@
     "id": "antecedente_arcano_ciencia_estranha",
     "nome": "ANTECEDENTE ARCANO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -126,7 +126,7 @@
     "id": "antecedente_arcano_psionicos",
     "nome": "ANTECEDENTE ARCANO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -146,7 +146,7 @@
     "id": "aristocrata",
     "nome": "ARISTOCRATA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -163,7 +163,7 @@
     "id": "atraente",
     "nome": "ATRAENTE",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -182,7 +182,7 @@
     "id": "muito_atraente",
     "nome": "MUITO ATRAENTE",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -201,7 +201,7 @@
     "id": "brutamontes",
     "nome": "BRUTAMONTES",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -221,7 +221,7 @@
     "id": "carismatico",
     "nome": "CARISMÁTICO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -240,7 +240,7 @@
     "id": "corajoso",
     "nome": "CORAJOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -259,7 +259,7 @@
     "id": "cura_rapida",
     "nome": "CURA RÁPIDA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -278,7 +278,7 @@
     "id": "famoso",
     "nome": "FAMOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -295,7 +295,7 @@
     "id": "muito_famoso",
     "nome": "MUITO FAMOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -314,7 +314,7 @@
     "id": "furioso",
     "nome": "FURIOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -331,7 +331,7 @@
     "id": "impulso",
     "nome": "IMPULSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -350,7 +350,7 @@
     "id": "ligeiro",
     "nome": "LIGEIRO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -369,7 +369,7 @@
     "id": "linguista",
     "nome": "LINGUISTA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -388,7 +388,7 @@
     "id": "musculoso",
     "nome": "MUSCULOSO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -408,7 +408,7 @@
     "id": "prontidao",
     "nome": "PRONTIDÃO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -425,7 +425,7 @@
     "id": "rapido",
     "nome": "RÁPIDO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -444,7 +444,7 @@
     "id": "resistencia_arcana",
     "nome": "RESISTÊNCIA ARCANA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -463,7 +463,7 @@
     "id": "resistencia_arcana_aprimorada",
     "nome": "RESISTÊNCIA ARCANA APRIMORADA",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -482,7 +482,7 @@
     "id": "rico",
     "nome": "RICO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -499,7 +499,7 @@
     "id": "podre_de_rico",
     "nome": "PODRE DE RICO",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -518,7 +518,7 @@
     "id": "sorte",
     "nome": "SORTE",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -535,7 +535,7 @@
     "id": "sorte_grande",
     "nome": "SORTE GRANDE",
     "categoria": "ANTECEDENTE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -554,7 +554,7 @@
     "id": "arma_predileta",
     "nome": "ARMA PREDILETA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -576,7 +576,7 @@
     "id": "arma_predileta_aprimorada",
     "nome": "ARMA PREDILETA APRIMORADA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -595,7 +595,7 @@
     "id": "artista_marcial",
     "nome": "ARTISTA MARCIAL",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -614,7 +614,7 @@
     "id": "guerreiro_marcial",
     "nome": "GUERREIRO MARCIAL",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -633,7 +633,7 @@
     "id": "atacar_primeiro",
     "nome": "ATACAR PRIMEIRO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -652,7 +652,7 @@
     "id": "atacar_primeiro_aprimorado",
     "nome": "ATACAR PRIMEIRO APRIMORADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Heroico",
       "atributos": {},
@@ -671,7 +671,7 @@
     "id": "atirador",
     "nome": "ATIRADOR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -692,7 +692,7 @@
     "id": "atirar_com_duas_armas",
     "nome": "ATIRAR COM DUAS ARMAS",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -711,7 +711,7 @@
     "id": "bloquear",
     "nome": "BLOQUEAR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -730,7 +730,7 @@
     "id": "bloquear_aprimorado",
     "nome": "BLOQUEAR APRIMORADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -749,7 +749,7 @@
     "id": "brigao",
     "nome": "BRIGÃO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -769,7 +769,7 @@
     "id": "pugilista",
     "nome": "PUGILISTA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -788,7 +788,7 @@
     "id": "calculista",
     "nome": "CALCULISTA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -807,7 +807,7 @@
     "id": "contra_ataque",
     "nome": "CONTRA-ATAQUE",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -826,7 +826,7 @@
     "id": "contra_ataque_aprimorado",
     "nome": "CONTRA-ATAQUE APRIMORADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -845,7 +845,7 @@
     "id": "corredor",
     "nome": "CORREDOR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -866,7 +866,7 @@
     "id": "disparo_duplo",
     "nome": "DISPARO DUPLO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -885,7 +885,7 @@
     "id": "disparo_rapido",
     "nome": "DISPARO RÁPIDO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -904,7 +904,7 @@
     "id": "disparo_rapido_aprimorado",
     "nome": "DISPARO RÁPIDO APRIMORADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -923,7 +923,7 @@
     "id": "duro_de_matar",
     "nome": "DURO DE MATAR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -942,7 +942,7 @@
     "id": "muito_duro_de_matar",
     "nome": "MUITO DURO DE MATAR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -961,7 +961,7 @@
     "id": "esquiva",
     "nome": "ESQUIVA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -980,7 +980,7 @@
     "id": "esquiva_aprimorada",
     "nome": "ESQUIVA APRIMORADA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -999,7 +999,7 @@
     "id": "finta",
     "nome": "FINTA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1018,7 +1018,7 @@
     "id": "focado",
     "nome": "FOCADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1037,7 +1037,7 @@
     "id": "extremamente_focado",
     "nome": "EXTREMAMENTE FOCADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1056,7 +1056,7 @@
     "id": "frenesi",
     "nome": "FRENESI",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1075,7 +1075,7 @@
     "id": "frenesi_aprimorado",
     "nome": "FRENESI APRIMORADO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -1094,7 +1094,7 @@
     "id": "golpe_poderoso",
     "nome": "GOLPE PODEROSO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1113,7 +1113,7 @@
     "id": "impiedoso",
     "nome": "IMPIEDOSO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1130,7 +1130,7 @@
     "id": "instinto_assassino",
     "nome": "INSTINTO ASSASSINO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1147,7 +1147,7 @@
     "id": "lutador_improvisador",
     "nome": "LUTADOR IMPROVISADOR",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1166,7 +1166,7 @@
     "id": "lutar_com_duas_armas",
     "nome": "LUTAR COM DUAS ARMAS",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1185,7 +1185,7 @@
     "id": "maos_firmes",
     "nome": "MÃOS FIRMES",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1204,7 +1204,7 @@
     "id": "matador_de_gigantes",
     "nome": "MATADOR DE GIGANTES",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -1221,7 +1221,7 @@
     "id": "nervos_de_aco",
     "nome": "NERVOS DE AÇO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1240,7 +1240,7 @@
     "id": "nervos_de_aco_aprimorados",
     "nome": "NERVOS DE AÇO APRIMORADOS",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1259,7 +1259,7 @@
     "id": "queixo_de_ferro",
     "nome": "QUEIXO DE FERRO",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1278,7 +1278,7 @@
     "id": "reflexos_de_combate",
     "nome": "REFLEXOS DE COMBATE",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1295,7 +1295,7 @@
     "id": "retirada",
     "nome": "RETIRADA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1314,7 +1314,7 @@
     "id": "retirada_aprimorada",
     "nome": "RETIRADA APRIMORADA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1333,7 +1333,7 @@
     "id": "rock_and_roll",
     "nome": "ROCK AND ROLL!",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1352,7 +1352,7 @@
     "id": "tiro_mortal",
     "nome": "TIRO MORTAL",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1373,7 +1373,7 @@
     "id": "varredura",
     "nome": "VARREDURA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1394,7 +1394,7 @@
     "id": "varredura_aprimorada",
     "nome": "VARREDURA APRIMORADA",
     "categoria": "COMBATE",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -1413,7 +1413,7 @@
     "id": "comando",
     "nome": "COMANDO",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1432,7 +1432,7 @@
     "id": "presenca_de_comando",
     "nome": "PRESENÇA DE COMANDO",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1451,7 +1451,7 @@
     "id": "estrategista",
     "nome": "ESTRATEGISTA",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -1474,7 +1474,7 @@
     "id": "mestre_estrategista",
     "nome": "MESTRE ESTRATEGISTA",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -1493,7 +1493,7 @@
     "id": "fervor",
     "nome": "FERVOR",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {
@@ -1514,7 +1514,7 @@
     "id": "inspirar",
     "nome": "INSPIRAR",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1533,7 +1533,7 @@
     "id": "lider_nato",
     "nome": "LÍDER NATO",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -1554,7 +1554,7 @@
     "id": "mantenham_a_formacao",
     "nome": "MANTENHAM A FORMAÇÃO!",
     "categoria": "LIDERANCA",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -1575,7 +1575,7 @@
     "id": "canalizacao",
     "nome": "CANALIZAÇÃO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1594,7 +1594,7 @@
     "id": "concentracao",
     "nome": "CONCENTRAÇÃO",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1613,7 +1613,7 @@
     "id": "esforco_extra",
     "nome": "ESFORÇO EXTRA",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1634,7 +1634,7 @@
     "id": "novos_poderes",
     "nome": "NOVOS PODERES",
     "categoria": "PODER",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1653,7 +1653,7 @@
     "id": "acrobata",
     "nome": "ACROBATA",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1674,7 +1674,7 @@
     "id": "combatente_acrobata",
     "nome": "COMBATENTE ACROBATA",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1693,7 +1693,7 @@
     "id": "as",
     "nome": "ÁS",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1712,7 +1712,7 @@
     "id": "assassino",
     "nome": "ASSASSINO",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1734,7 +1734,7 @@
     "id": "erudito",
     "nome": "ERUDITO",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1753,7 +1753,7 @@
     "id": "investigador",
     "nome": "INVESTIGADOR",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1774,7 +1774,7 @@
     "id": "ladrao",
     "nome": "LADRÃO",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1796,7 +1796,7 @@
     "id": "mateiro",
     "nome": "MATEIRO",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1817,7 +1817,7 @@
     "id": "mcgyver",
     "nome": "MCGYVER",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1839,7 +1839,7 @@
     "id": "pau_pra_toda_obra",
     "nome": "PAU PRA TODA OBRA",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1858,7 +1858,7 @@
     "id": "senhor_conserta_tudo",
     "nome": "SENHOR CONSERTA TUDO",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1877,7 +1877,7 @@
     "id": "soldado",
     "nome": "SOLDADO",
     "categoria": "PROFISSIONAL",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1897,7 +1897,7 @@
     "id": "ameacador",
     "nome": "AMEAÇADOR",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1919,7 +1919,7 @@
     "id": "agitador",
     "nome": "AGITADOR",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {
@@ -1938,7 +1938,7 @@
     "id": "cativar_o_ambiente",
     "nome": "CATIVAR O AMBIENTE",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -1957,7 +1957,7 @@
     "id": "cativar_a_multidao",
     "nome": "CATIVAR A MULTIDÃO",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -1976,7 +1976,7 @@
     "id": "conexoes",
     "nome": "CONEXÕES",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -1993,7 +1993,7 @@
     "id": "confiavel",
     "nome": "CONFIÁVEL",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2012,7 +2012,7 @@
     "id": "elevar_o_moral",
     "nome": "ELEVAR O MORAL",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2031,7 +2031,7 @@
     "id": "elo_comum",
     "nome": "ELO COMUM",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2050,7 +2050,7 @@
     "id": "humilhar",
     "nome": "HUMILHAR",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2069,7 +2069,7 @@
     "id": "manha",
     "nome": "MANHA",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2088,7 +2088,7 @@
     "id": "obstinado",
     "nome": "OBSTINADO",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2107,7 +2107,7 @@
     "id": "vontade_de_ferro",
     "nome": "VONTADE DE FERRO",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Experiente",
       "atributos": {},
@@ -2127,7 +2127,7 @@
     "id": "provocador",
     "nome": "PROVOCADOR",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2146,7 +2146,7 @@
     "id": "replica",
     "nome": "RÉPLICA",
     "categoria": "SOCIAIS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2165,7 +2165,7 @@
     "id": "chi",
     "nome": "CHI",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {},
@@ -2184,7 +2184,7 @@
     "id": "coragem_liquida",
     "nome": "CORAGEM LÍQUIDA",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2203,7 +2203,7 @@
     "id": "curandeiro",
     "nome": "CURANDEIRO",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {
@@ -2222,7 +2222,7 @@
     "id": "elo_animal",
     "nome": "ELO ANIMAL",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2239,7 +2239,7 @@
     "id": "nocao_do_perigo",
     "nome": "NOÇÃO DO PERIGO",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2256,7 +2256,7 @@
     "id": "sucateiro",
     "nome": "SUCATEIRO",
     "categoria": "ESTRANHAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
@@ -2275,7 +2275,7 @@
     "id": "seguidores",
     "nome": "SEGUIDORES",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2294,7 +2294,7 @@
     "id": "profissional",
     "nome": "PROFISSIONAL",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2311,7 +2311,7 @@
     "id": "especialista",
     "nome": "ESPECIALISTA",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2330,7 +2330,7 @@
     "id": "mestre",
     "nome": "MESTRE",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2350,7 +2350,7 @@
     "id": "parceiro",
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Veterano",
       "atributos": {
@@ -2369,7 +2369,7 @@
     "id": "duro_na_queda",
     "nome": "DURO NA QUEDA",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {
@@ -2388,7 +2388,7 @@
     "id": "muito_duro_na_queda",
     "nome": "MUITO DURO NA QUEDA",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2407,7 +2407,7 @@
     "id": "mestre_de_arma",
     "nome": "MESTRE DE ARMA",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},
@@ -2426,7 +2426,7 @@
     "id": "mestre_das_armas",
     "nome": "MESTRE DAS ARMAS",
     "categoria": "LENDARIAS",
-    "origem": "BASICO",
+    "origem": "CIDADE_SOL_VAPOR",
     "requisitos": {
       "estagio": "Lendário",
       "atributos": {},

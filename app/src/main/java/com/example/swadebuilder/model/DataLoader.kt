@@ -3,6 +3,7 @@ package com.example.swadebuilder.model
 import android.content.Context
 import android.content.res.AssetManager
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.swadebuilder.AppData
 import com.example.swadebuilder.ArcanoInfo
@@ -156,6 +157,11 @@ object DataLoader {
                         json.decodeFromStream<List<T>>(input)
                     }
                 } catch (e: Exception) {
+                    Log.e(
+                        "SWADE_DEBUG",
+                        "[DataLoader] falha ao carregar ${module.fileName} (originOverride=${module.originOverride}): ${e::class.simpleName}: ${e.message}",
+                        e
+                    )
                     emptyList<T>()
                 }
             } as List<T>
@@ -166,13 +172,17 @@ object DataLoader {
         }
     }
 
+    private var loadedArcanoInfoList: List<ArcanoInfo> = emptyList()
+
+    @OptIn(ExperimentalSerializationApi::class)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun loadCore(context: Context) {
-        updateActiveModules(context, setOf("BASICO"))
+    fun loadCore(context: Context): GameDataSnapshot {
+        return updateActiveModules(context, setOf("BASICO"))
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun updateActiveModules(context: Context, activeModules: Set<String>) {
+    fun updateActiveModules(context: Context, activeModules: Set<String>): GameDataSnapshot {
         val keys = activeModules + "BASICO" // Always include basic
         val assets = context.assets
 
@@ -252,6 +262,7 @@ object DataLoader {
             }.getOrElse { emptyList<ArcanoInfo>() }
         } as List<ArcanoInfo>
 
+        loadedArcanoInfoList = arcanoList
         arcanoInfo = arcanoList.associate {
             it.key
                 .uppercase()
@@ -346,6 +357,21 @@ object DataLoader {
         listaVantagens = todasVantagens
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
+        if ("CIDADE_SOL_VAPOR" in keys) {
+            val steamAll = todasVantagens.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }
+            Log.d(
+                "SWADE_DEBUG",
+                "[DataLoader] keys=$keys, shouldReplaceBasico=$shouldReplaceBasico, " +
+                    "vantagens_total=${todasVantagens.size}, sol_vapor_total=${steamAll.size}"
+            )
+            steamAll.take(20).forEach { vant ->
+                Log.d(
+                    "SWADE_DEBUG",
+                    "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
+                )
+            }
+        }
+
         // 8. Tropos e Complicações
         val adgTropos = if ("ARTE_DA_GUERRA" in keys) {
             @Suppress("UNCHECKED_CAST")
@@ -424,7 +450,30 @@ object DataLoader {
         val todosPoderes = assets.loadAndMerge<Poder>(powerModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
+
         listaPoderes = todosPoderes
+
+        return GameDataSnapshot(
+            listaComplicacoes = listaComplicacoes,
+            listaCoracoesCrystal = listaCoracoesCrystal,
+            listaAncestralidadesJson = listaAncestralidadesJson,
+            listaMonstroTemplates = listaMonstroTemplates,
+            racialAttrMinMap = racialAttrMinMap,
+            racialSkillStartMap = racialSkillStartMap,
+            listaAtributos = listaAtributos,
+            mapaAtributosDisplay = mapaAtributosDisplay,
+            listaPericias = listaPericias,
+            mapaPericias = mapaPericias,
+            mapaAtributosDescricao = mapaAtributosDescricao,
+            listaVantagens = listaVantagens,
+            listaPoderes = listaPoderes,
+            listaTropos = listaTropos,
+            listaEquipamentos = listaEquipamentos,
+            equipamentoCategorias = equipamentoCategorias,
+            superequipCategorias = superequipCategorias,
+            listaSuperPoderes = listaSuperPoderes,
+            arcanoInfo = loadedArcanoInfoList
+        )
     }
 
     private fun deduplicarEquipamentoCategorias(

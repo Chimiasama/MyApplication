@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -66,7 +67,9 @@ import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.model.explainVantagemVisibility
 import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.toArcanoKey
@@ -234,6 +237,33 @@ fun VantagensContent(
             .sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
     }
 
+    LaunchedEffect(
+        state.compendioCidadeSolVaporAtivo,
+        listaVantagens,
+        listaVantagensAtivas,
+        multiplosAAHabilitados
+    ) {
+        if (!state.compendioCidadeSolVaporAtivo) return@LaunchedEffect
+
+        val steamAll = listaVantagens.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }
+        val steamVisible = listaVantagensAtivas.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }
+        val hiddenSteam = steamAll.filterNot { state.isVantagemVisible(it, multiplosAAHabilitados) }
+
+        Log.d(
+            "SWADE_DEBUG",
+            "[SolVapor] vantagens totais=${listaVantagens.size}, sol_vapor_total=${steamAll.size}, " +
+                "sol_vapor_visiveis=${steamVisible.size}, multiAA=$multiplosAAHabilitados"
+        )
+
+        hiddenSteam.take(30).forEach { vant ->
+            Log.d(
+                "SWADE_DEBUG",
+                "[SolVapor] hidden id=${vant.id}, nome=${vant.nomeExibicao}, origem=${vant.origem}, " +
+                    "reason=${state.explainVantagemVisibility(vant, multiplosAAHabilitados)}"
+            )
+        }
+    }
+
     val idParaNome = remember(listaVantagens) {
         listaVantagens.associate { it.id to it.nomeExibicao.toSentenceCase() }
     }
@@ -297,8 +327,8 @@ fun VantagensContent(
 
             // Advanced Filters
             if (!filter.isEmpty()) {
-                val vantOrigem = vant.origem.ifBlank { "BASICO" }.uppercase()
-                if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens) return@filter false
+                val vantOrigem = canonicalOriginKey(vant.origem)
+                if (filter.origens.isNotEmpty() && vantOrigem !in filter.origens.map(::canonicalOriginKey).toSet()) return@filter false
                 if (filter.estagios.isNotEmpty() && vant.requisitos.estagio !in filter.estagios) return@filter false
                 if (filter.atributos.isNotEmpty() && filter.atributos.intersect(vant.requisitos.atributoMin.keys).isEmpty()) return@filter false
                 if (filter.pericias.isNotEmpty()) {

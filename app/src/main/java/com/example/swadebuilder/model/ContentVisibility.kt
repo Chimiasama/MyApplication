@@ -1,11 +1,24 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.model.rules.RulesResolver
 
 /**
  * Centralizes logic for determining content visibility based on active compendiums.
  */
+
+
+private fun CriadorState.resolveScenarioRules() = RulesResolver().resolve(
+    compendioPathfinderAtivo = compendioPathfinderAtivo,
+    compendioSciFiAtivo = compendioSciFiAtivo,
+    compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+    compendioFantasiaAtivo = compendioFantasiaAtivo,
+    compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+    compendioHorrorAtivo = compendioHorrorAtivo,
+    compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+    compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+    compendioWiseguysAtivo = compendioWiseguysAtivo
+)
 
 fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     // 1. Add active compendiums to the set
@@ -18,7 +31,6 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
     if (compendioCidadeSolVaporAtivo) {
         add("CIDADE_SOL_VAPOR")
-        add("SOL_VAPOR") // compatibilidade com assets legados do cenário
     }
     if (compendioWiseguysAtivo) add("WISEGUYS")
     if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
@@ -47,7 +59,7 @@ fun CriadorState.isComplicacaoVisible(
     comp: Complicacao,
     activeOrigins: Set<String> = getActiveOrigins()
 ): Boolean {
-    val origemSafe = if (comp.origem.isBlank()) "BASICO" else comp.origem.uppercase().semAcentos().trim()
+    val origemSafe = canonicalOriginKey(comp.origem)
     return origemSafe in activeOrigins
 }
 
@@ -55,17 +67,40 @@ fun CriadorState.isVantagemVisible(
     vant: Vantagem,
     multiplosAAHabilitados: Boolean
 ): Boolean {
+    return evaluateVantagemVisibility(vant, multiplosAAHabilitados).visible
+}
+
+fun CriadorState.explainVantagemVisibility(
+    vant: Vantagem,
+    multiplosAAHabilitados: Boolean
+): String {
+    return evaluateVantagemVisibility(vant, multiplosAAHabilitados).reason
+}
+
+private data class VantagemVisibilityDecision(
+    val visible: Boolean,
+    val reason: String
+)
+
+private fun CriadorState.evaluateVantagemVisibility(
+    vant: Vantagem,
+    multiplosAAHabilitados: Boolean
+): VantagemVisibilityDecision {
     val activeOrigins = getActiveOrigins()
-    val origemNorm = (vant.origem.ifBlank { "BASICO" }).uppercase().semAcentos().trim()
+    val selectedRules = resolveScenarioRules()
+    val origemNorm = canonicalOriginKey(vant.origem)
+
+    val isGenericAB = vant.id == "antecedente_arcano"
+    val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
 
     // 1. Basic Origin Check
     // If the advantage's origin is not in the active set, hide it.
     if (origemNorm !in activeOrigins) {
-        // Exception: Pathfinder uses the Generic "Antecedente Arcano" (from Basic) as a selector.
-        if (compendioPathfinderAtivo && vant.id == "antecedente_arcano") {
+        // Exception: cenários que usam o seletor genérico de AA (ex.: Pathfinder, Cidade do Sol a Vapor)
+        if (isGenericAB && selectedRules.allowsGenericArcaneSelector()) {
             // Allow it
         } else {
-            return false
+            return VantagemVisibilityDecision(false, "blocked_origin:$origemNorm")
         }
     }
 
@@ -73,107 +108,62 @@ fun CriadorState.isVantagemVisible(
 
     // Monstrous Advantages (Horror) - Require Monster Rule
     if (vant.categoria == Categoria.MONSTRUOSAS && !modoMonstroAtivo) {
-        return false
+        return VantagemVisibilityDecision(false, "blocked_monstruosa_without_monster_mode")
     }
 
-    // Crystal Heart Logic
-    if (compendioCrystalHeartAtivo) {
+    // Scenario strategy policies (Fase 4)
+    if (selectedRules.blocksArcaneBackgrounds()) {
         if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-            // Only specific Crystal Heart ABs allowed (handled by dataset, but hiding generics here)
-            // If Generic AB is BASICO and BASICO is active (it is, for CH), we might want to hide it if CH forbids it.
-            return false
+            return VantagemVisibilityDecision(false, "blocked_arcane_backgrounds_by_rules")
         }
     }
 
-    // Pathfinder Logic (Redundant if BASICO is excluded, but kept for safety/specific exclusions within Pathfinder set)
-    if (compendioPathfinderAtivo) {
-        val forbiddenIds = setOf(
-            "antecedente_arcano_ciencia_estranha",
-            "antecedente_arcano_psionicos",
-            "antecedente_arcano_dom",
-            "rico",
-            "podre_de_rico"
-        )
-        if (vant.id in forbiddenIds) return false
-    }
-
-    // Arte da Guerra Logic
-    if (compendioArteDaGuerraAtivo) {
-        if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-            return false
-        }
+    if (selectedRules.hidePowerCategoryAdvantagesExceptMysticPowers()) {
         if (vant.categoria == Categoria.PODER && vant.id != "poderes_misticos") {
-            return false
-        }
-        if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
-            return false
+            return VantagemVisibilityDecision(false, "blocked_power_category_by_rules")
         }
     }
 
-    // Wiseguys Logic
-    if (compendioWiseguysAtivo) {
-        if (vant.categoria == Categoria.PODER && vant.id != "poderes_misticos") {
-            return false
-        }
-        if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
-            return false
-        }
-        if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
-            return false
-        }
-        val forbiddenIds = setOf("aristocrata", "chi", "campeao", "matador_de_gigantes", "corajoso")
-        if (vant.id in forbiddenIds) {
-            return false
-        }
+    if (vant.id in selectedRules.forbiddenAdvantageIds()) {
+        return VantagemVisibilityDecision(false, "blocked_forbidden_id_by_rules:${vant.id}")
     }
+
 
     // Supers Logic
     if (modoSupers) {
-        if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) return false
-        if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") return false
-        if (vant.categoria == Categoria.PODER) return false
+        if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {
+            return VantagemVisibilityDecision(false, "blocked_supers_arcane")
+        }
+        if (vant.id == "resistencia_arcana" || vant.id == "resistencia_arcana_aprimorada") {
+            return VantagemVisibilityDecision(false, "blocked_supers_resistencia_arcana")
+        }
+        if (vant.categoria == Categoria.PODER) {
+            return VantagemVisibilityDecision(false, "blocked_supers_power_category")
+        }
         if (vant.requisitos.vantagensPrevias.contains("antecedente_arcano") ||
-            vant.id == "superpoderes") return false
+            vant.id == "superpoderes"
+        ) {
+            return VantagemVisibilityDecision(false, "blocked_supers_arcane_requirement")
+        }
     }
 
     // 3. Arcane Background UI Logic
 
 
-    val isGenericAB = vant.id == "antecedente_arcano"
-    val isSpecificAB = (vant.id.startsWith("antecedente_arcano_") || vant.id.startsWith("aa_"))
-
-    // Fantasy Logic: Keep Generic visible, Hide Specifics (Use Generic as selector)
-    if (compendioFantasiaAtivo) {
-        if (isSpecificAB) return false
-        if (isGenericAB) return true
-    }
-
-    // Horror Logic: Keep Generic visible, Hide Specifics (Use Generic as selector)
-    if (compendioHorrorAtivo) {
-        if (isSpecificAB) return false
-        if (isGenericAB) return true
-    }
-
-    // Pathfinder Exception: Uses Generic AB as selector for Magia/Milagres
-    if (compendioPathfinderAtivo) {
-        // Show Generic, Hide Specific (unless owned?)
-        if (isSpecificAB) return false
-        if (isGenericAB) return true
-    }
-
-    // Deadlands Exception: Uses Generic AB as selector
-    if (compendioDeadlandsAtivo) {
-        if (isSpecificAB) return false
-        if (isGenericAB) return true
+    // Rule-driven generic selector policy
+    // Em cenários que usam seletor genérico, ele deve ser forçado apenas quando múltiplos AA estão desabilitados.
+    if (selectedRules.allowsGenericArcaneSelector() && !multiplosAAHabilitados) {
+        if (isSpecificAB) return VantagemVisibilityDecision(false, "blocked_specific_ab_generic_selector_rule")
+        if (isGenericAB) return VantagemVisibilityDecision(true, "visible_generic_ab_generic_selector_rule")
     }
 
     if (!multiplosAAHabilitados) {
         // If Multiple ABs DISABLED: Show ONLY the Generic AB (Hide specific ones)
-        if (isSpecificAB) return false
+        if (isSpecificAB) return VantagemVisibilityDecision(false, "blocked_specific_ab_when_multi_disabled")
     } else {
         // If Multiple ABs ENABLED: Show Specific ABs (Hide the Generic one)
-        if (isGenericAB) return false
+        if (isGenericAB) return VantagemVisibilityDecision(false, "blocked_generic_ab_when_multi_enabled")
     }
 
-    return true
+    return VantagemVisibilityDecision(true, "visible")
 }

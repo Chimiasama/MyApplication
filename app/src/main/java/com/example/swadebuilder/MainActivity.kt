@@ -89,7 +89,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
-import com.example.swadebuilder.model.DataLoader
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.MonstroTemplate
@@ -97,6 +96,7 @@ import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.usecase.BuildUsageInstructionsUseCase
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
@@ -125,81 +125,12 @@ data class ArcanoInfo(
 var arcanoInfo by mutableStateOf<Map<String, Triple<Int, Int, String>>>(emptyMap())
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
+private val buildUsageInstructionsUseCase = BuildUsageInstructionsUseCase()
 
 enum class PendingNavigationAction {
     ReturnToHome,
     ResetAndReturnHome,
     StartProgression
-}
-
-private fun buildUsageInstructions(state: CriadorState, pathfinderLabel: String): String {
-    val activeBooks = buildList {
-        add("Básico (sempre ativo)")
-        if (state.compendioFantasiaAtivo) add("Compêndio Fantasia")
-        if (state.compendioHorrorAtivo) add("Compêndio Horror")
-        if (state.compendioSciFiAtivo) add("Compêndio Sci-Fi")
-        if (state.compendioPathfinderAtivo) add("Compêndio $pathfinderLabel")
-        if (state.compendioDeadlandsAtivo) add("Compêndio Deadlands".toEditionDisplayName())
-        if (state.compendioArteDaGuerraAtivo) add("Arte da Guerra".toEditionDisplayName())
-        if (state.compendioCidadeSolVaporAtivo) add("Cidade do Sol a Vapor".toEditionDisplayName())
-        if (state.compendioWiseguysAtivo) add("Wiseguys".toEditionDisplayName())
-        if (state.compendioCrystalHeartAtivo) add("Crystal Heart".toEditionDisplayName())
-        if (state.modoSupers) add("Supers")
-        if (state.modoMonstroAtivo) add("Monstros")
-    }
-
-    val booksText = activeBooks.joinToString(separator = "\n") { "• $it" }
-
-    return buildString {
-        append("Bem-vindo ao SWADE Builder! Este guia se adapta às regras que você ativou.")
-        append("\n\n")
-
-        append("--- CRIAÇÃO DE PERSONAGEM ---\n")
-
-        // Ancestralidades (Regra Wiseguys vs Padrão)
-        if (state.compendioWiseguysAtivo) {
-            append("• Ancestralidades: Em Wiseguys, todos os personagens são Humanos. Esta seção fica oculta.\n")
-        } else {
-            append("• Ancestralidades: Escolha sua raça ou espécie inicial.\n")
-        }
-
-        // Seções específicas de Cenário
-        if (state.compendioArteDaGuerraAtivo) {
-            append("• Tropos: (Arte da Guerra) Escolha seu arquétipo para definir vantagens iniciais.\n")
-        }
-        if (state.modoMonstroAtivo) {
-            append("• Monstros: (Horror) Escolha o template base da sua criatura.\n")
-        }
-        if (state.compendioCrystalHeartAtivo) {
-            append("• Crystal Heart: Selecione seu Coração de Cristal e sua Origem (nacionalidade).\n")
-        }
-
-        append("• Atributos e Perícias: Distribua seus pontos. O app avisa se faltar ou exceder.\n")
-        append("• Complicações: Adicione complicações para ganhar pontos extras de criação.\n")
-        append("• Vantagens: Compre vantagens com pontos iniciais ou de complicações.\n")
-
-        // Lógica de Poderes
-        if (state.modoSupers) {
-            append("• Super Poderes: Gerencie seus poderes e pontos na aba dedicada.\n")
-        } else if (state.compendioCrystalHeartAtivo) {
-            append("• Poderes: Em Crystal Heart, seus poderes vêm do Coração ou de Técnicas.\n")
-        } else {
-            append("• Poderes: A aba 'Poderes' aparecerá automaticamente se você selecionar um Antecedente Arcano em 'Vantagens'.\n")
-        }
-
-        append("• Equipamentos: Gerencie seu inventário, carga e riqueza.\n")
-
-        append("\n--- PROGRESSÃO (XP) ---\n")
-        append("• Ao terminar a ficha, clique no botão 'Finalizar' (seta) na aba Resumo.\n")
-        append("• Isso trava a criação base e libera a aba 'XP' para gastar Avanços conforme sobe de Rank.\n")
-
-        append("\n--- MENU SUPERIOR ---\n")
-        append("• Ícones: Salvar, Carregar, Configurações (Tema/Sons) e Gerar PDF.\n")
-
-        append("\n\n")
-        append("--- LIVROS ATIVOS NESTE PERSONAGEM ---\n")
-        append(booksText)
-    }
 }
 
 @ExperimentalSerializationApi
@@ -233,11 +164,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                if (activeKeys.isEmpty()) {
-                    DataLoader.loadCore(this@MainActivity)
-                } else {
-                    DataLoader.updateActiveModules(this@MainActivity, activeKeys)
-                }
+                viewModel.carregarDadosDeJogo(this@MainActivity, activeKeys)
                 isDataLoaded.value = LoadingState.Success
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao carregar dados: ${e.message}")
@@ -574,7 +501,26 @@ class MainActivity : ComponentActivity() {
                                 .heightIn(max = 360.dp)
                                 .verticalScroll(rememberScrollState())
                         ) {
-                            Text(buildUsageInstructions(state, pathfinderLabel))
+                            Text(
+                                buildUsageInstructionsUseCase.execute(
+                                    BuildUsageInstructionsUseCase.Input(
+                                        compendioFantasiaAtivo = state.compendioFantasiaAtivo,
+                                        compendioHorrorAtivo = state.compendioHorrorAtivo,
+                                        compendioSciFiAtivo = state.compendioSciFiAtivo,
+                                        compendioPathfinderAtivo = state.compendioPathfinderAtivo,
+                                        compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
+                                        compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
+                                        compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
+                                        compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,
+                                        compendioWiseguysAtivo = state.compendioWiseguysAtivo,
+                                        modoSupers = state.modoSupers,
+                                        modoMonstroAtivo = state.modoMonstroAtivo,
+                                        pathfinderLabel = pathfinderLabel,
+                                        supersBookLabel = stringResource(R.string.sw_supers_book_title),
+                                        monsterBookLabel = stringResource(R.string.sw_monsters_book_title)
+                                    )
+                                )
+                            )
                         }
                     },
                     confirmButton = {
@@ -1180,9 +1126,6 @@ sealed class LoadingState {
     data class Error(val message: String) : LoadingState()
 }
 
-fun Int.toDiceString(): String =
-    if (this == 0) "-" else if (this <= 12) "d$this" else "d12+${(this - 12)}"
-
 data class Pericia(
     val nome: String,
     val atributo: String,
@@ -1218,45 +1161,6 @@ var listaPericias by mutableStateOf<List<Pericia>>(emptyList())
 var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
 var mapaAtributosDescricao by mutableStateOf<Map<String, String>>(emptyMap())
 
-fun periciaStartRaw(anc: String, per: Pericia): Int {
-    val ancKey = anc.keyify()
-    val perKey = per.nome.keyify()
-    return racialSkillStartMap[ancKey]?.get(perKey)
-        ?: if (per.basica) 4 else 0
-}
-
-var listaVantagens by mutableStateOf<List<Vantagem>>(emptyList())
-var listaPoderes by mutableStateOf<List<Poder>>(emptyList())
-var listaTropos by mutableStateOf<List<Tropo>>(emptyList())
-var listaEquipamentos by mutableStateOf<List<EquipamentoItem>>(emptyList())
-var equipamentoCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
-var superequipCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
-var listaSuperPoderes by mutableStateOf<List<SuperPoder>>(emptyList())
-
-data class Estagio(
-    val nome: String,
-    val minProgress: Int,
-    val maxProgress: Int
-)
-
-val listaDeEstagios = listOf(
-    Estagio("Novato",     0,  3),
-    Estagio("Experiente", 4,  7),
-    Estagio("Veterano",   8, 11),
-    Estagio("Heroico",   12, 15),
-    Estagio("Lendário",  16, Int.MAX_VALUE)
-)
-
-fun stageIndexForSlot(slotIndex: Int): Int {
-    var remaining = slotIndex
-    dynamicStageCaps.forEachIndexed { idx, cap ->
-        if (remaining < cap) return idx
-        remaining -= cap
-    }
-    return dynamicStageCaps.lastIndex
-}
-
-fun stageForSlot(slotIndex: Int): Estagio = listaDeEstagios[stageIndexForSlot(slotIndex)]
 
 val nivelParaEstagio = mapOf(
     "N" to listaDeEstagios.first { it.nome == "Novato" },

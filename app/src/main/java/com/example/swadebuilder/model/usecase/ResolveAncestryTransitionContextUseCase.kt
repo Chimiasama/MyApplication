@@ -1,0 +1,60 @@
+package com.example.swadebuilder.model.usecase
+
+import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.semAcentos
+
+class ResolveAncestryTransitionContextUseCase {
+
+    data class Params(
+        val previousAncestry: String,
+        val targetAncestry: String,
+        val previousAncestryDef: RacialModifier?,
+        val targetAncestryDef: RacialModifier?,
+        val currentAutomaticAdvantages: List<String>
+    )
+
+    data class Result(
+        val wasHumano: Boolean,
+        val willBeHumano: Boolean,
+        val previousFreeAdvantageKeys: Set<String>
+    )
+
+    fun execute(params: Params): Result {
+        val previousAncestryKey = params.previousAncestry.keyify()
+        val targetAncestryKey = params.targetAncestry.keyify()
+
+        val wasHumano = previousAncestryKey == "HUMANOS" ||
+            params.previousAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true
+
+        val willBeHumano = targetAncestryKey == "HUMANOS" ||
+            params.targetAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true
+
+        val previousFreeAdvantageKeys = (
+            params.currentAutomaticAdvantages.toSet() +
+                when (previousAncestryKey) {
+                    "SAURIOS" -> setOf("Sentidos Aguçados", "Prontidão")
+                    "PEQUENINOS" -> setOf("Sorte")
+                    "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
+                    else -> emptySet()
+                }
+            ).flatMap { advantageName ->
+                listOf(advantageName.keyify(), advantageName.toLegacyKey())
+            }
+            .toSet()
+
+        return Result(
+            wasHumano = wasHumano,
+            willBeHumano = willBeHumano,
+            previousFreeAdvantageKeys = previousFreeAdvantageKeys
+        )
+    }
+
+    private fun String.toLegacyKey(): String =
+        trim()
+            .lowercase()
+            .semAcentos()
+            .replace("(", "")
+            .replace(")", "")
+            .replace(Regex("\\s+"), "_")
+}
