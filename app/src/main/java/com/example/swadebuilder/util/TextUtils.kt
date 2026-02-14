@@ -10,6 +10,7 @@ import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 
+@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 inline fun <reified T> Context.loadJsonAsset(fileName: String): T {
     val json = Json {
         ignoreUnknownKeys = true
