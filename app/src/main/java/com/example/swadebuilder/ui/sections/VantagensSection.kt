@@ -1054,6 +1054,9 @@ fun VantagensContent(
         // Cidade do Sol a Vapor: apenas os AA do cenário
         val opcoesCidadeSolVapor: List<Pair<String, Vantagem>> = if (state.compendioCidadeSolVaporAtivo) {
             val map = mapOf(
+                "Demônio" to "aa_demonio",
+                "Anjo" to "aa_anjo",
+                "Magia das Trevas" to "aa_magia_das_trevas",
                 "Magia Negra" to "aa_magia_negra",
                 "Milagres" to "aa_milagres",
                 "Tecnomagia" to "aa_tecnomagia"
