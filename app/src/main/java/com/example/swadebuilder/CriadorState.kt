@@ -40,17 +40,12 @@ import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.usecase.AdjustAttributesForAncestryChangeUseCase
-import com.example.swadebuilder.model.usecase.ApplyAncestryChangeCoordinatorUseCase
 import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
-import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
-import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
 import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
-import com.example.swadebuilder.model.usecase.ResolveAncestryComplicationsSnapshotUseCase
-import com.example.swadebuilder.model.usecase.ResolveAncestryRacialPackageUseCase
-import com.example.swadebuilder.model.usecase.ResolveAncestrySpecificAdjustmentsUseCase
-import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionBootstrapUseCase
-import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUseCase
 import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
+import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestrySpecificAdjustmentsUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -81,14 +76,15 @@ class CriadorState {
         resolveGrantedAncestryAdvantagesUseCase = resolveGrantedAncestryAdvantagesUseCase,
         resolveAncestrySpecificAdjustmentsUseCase = resolveAncestrySpecificAdjustmentsUseCase
     )
-    private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val applyAncestryChangeCoordinatorUseCase = ApplyAncestryChangeCoordinatorUseCase(
         resolveAncestryTransitionBootstrapUseCase = resolveAncestryTransitionBootstrapUseCase,
         adjustAttributesForAncestryChangeUseCase = adjustAttributesForAncestryChangeUseCase,
         resolveAncestryRacialPackageUseCase = resolveAncestryRacialPackageUseCase,
         resolveAncestryComplicationsSnapshotUseCase = resolveAncestryComplicationsSnapshotUseCase,
-        removeInvalidAdvantagesAfterAncestryChangeUseCase = removeInvalidAdvantagesAfterAncestryChangeUseCase
+        resolveAncestryInvalidAdvantagesUseCase = resolveAncestryInvalidAdvantagesUseCase
     )
+    private val validateSelectionUseCase = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase()
+
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -3239,9 +3235,7 @@ class CriadorState {
 
         val attributeAdjustmentResult = ancestryChangeCoordination.attributeAdjustmentResult
 
-        attributeAdjustmentResult.adjustmentsByAttribute.forEach { entry ->
-            val nome = entry.key
-            val adjustment = entry.value
+        attributeAdjustmentResult.adjustmentsByAttribute.forEach { (nome, adjustment) ->
             val stack = paCostStackPorAtributo.getValue(nome)
             stack.clear()
             stack.addAll(adjustment.adjustedStack)
@@ -3324,7 +3318,7 @@ class CriadorState {
         // Validar requisitos das vantagens existentes
         val invalidAdvantagesResolution = ancestryChangeCoordination.invalidAdvantagesResolution
 
-        invalidAdvantagesResolution.removedAdvantages.forEach { removed ->
+        invalidAdvantagesResult.removedAdvantages.forEach { removed ->
             removeVantagemDinheiro(removed)
             pontosVantagem++
             feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
