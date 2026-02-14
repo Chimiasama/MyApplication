@@ -4,6 +4,7 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.Estagio
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -37,8 +38,8 @@ class ValidateSelectionUseCaseTest {
             atributoMaxRaw = { 12 },
             periciaCapRaw = { 12 },
             permiteMultiAntecedenteArcano = false,
-            estagioAtual = com.example.swadebuilder.model.Estagio("Novato", 0, 3, 0),
-            listaDeEstagios = listOf(com.example.swadebuilder.model.Estagio("Novato", 0, 3, 0)),
+            estagioAtual = Estagio("Novato", 0, 3),
+            listaDeEstagios = listOf(Estagio("Novato", 0, 3)),
             overrideStageForVantagem = null,
             effectiveProgressoParaVantagens = 0,
             nivelParaEstagio = emptyMap(),
