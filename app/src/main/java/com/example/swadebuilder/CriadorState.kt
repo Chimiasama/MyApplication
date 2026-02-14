@@ -41,6 +41,7 @@ import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.usecase.AdjustAttributesForAncestryChangeUseCase
 import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
+import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
 import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
 import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
@@ -76,6 +77,7 @@ class CriadorState {
         resolveGrantedAncestryAdvantagesUseCase = resolveGrantedAncestryAdvantagesUseCase,
         resolveAncestrySpecificAdjustmentsUseCase = resolveAncestrySpecificAdjustmentsUseCase
     )
+    private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val applyAncestryChangeCoordinatorUseCase = ApplyAncestryChangeCoordinatorUseCase(
         resolveAncestryTransitionBootstrapUseCase = resolveAncestryTransitionBootstrapUseCase,
         adjustAttributesForAncestryChangeUseCase = adjustAttributesForAncestryChangeUseCase,
@@ -4276,84 +4278,40 @@ class CriadorState {
         syncLinguistaIdiomas()
         syncJutsuSlots()
 
-        var cumulativeCost = 0
-        val pool = totalSpPool
+        val pericias = periciasComIdiomas()
 
-        periciasComIdiomas().forEach { per ->
-
-            val desiredRaw = rawTotal(per)
-            val cap       = periciaCapRaw(per)
-            val minRaw    = maxOf(if (isPericiaBasicaEfetiva(per)) 4 else 0, linguistaMinRawFor(per))
-
-            var target = desiredRaw.coerceIn(minRaw, cap)
-
-            fun costFor(tgt: Int): Int {
-                var curr = periciaStartRaw(ancestralidade, per)
-                var freeSteps = compIncsPorPericia.getValue(per)
-                var sum  = 0
-                while (curr < tgt) {
-                    val next     = if (curr == 0) 4 else curr + 2
-                    val attrKey  = atributoBaseParaPericia(per)
-
-                    // >>> AQUI: atributo para custo ignora supers enquanto estiver na fase supers de criação
-                    val attrRawForCost =
-                        if (faseSupersAtiva && !emProgresso) {
-                            atributoRawBaseSemSupers(attrKey)
-                        } else {
-                            valoresAtributos[attrKey]!!.intValue
-                        }
-
-                    val stepCost = if (next <= attrRawForCost) 1 else 2
-                    if (freeSteps > 0) {
-                        freeSteps -= 1
-                    } else {
-                        sum += stepCost
-                    }
-                    curr = next
-                }
-                return sum
-            }
-
-            var cost = costFor(target)
-
-            if (enforcePoolLimit && cost > 0 && cumulativeCost + cost > pool) {
-                feedbackMessages.add("Perícia ${per.nome} reduzida para d$target para compensar pontos.")
-            }
-            while (enforcePoolLimit && cumulativeCost + cost > pool) {
-                target = (target - 2).coerceAtLeast(minRaw)
-                cost   = costFor(target)
-            }
-
-            val stack = spCostStackPorPericia.getValue(per)
-            stack.clear()
-            baseIncsPorPericia[per] = 0
-
-            var currRaw = periciaStartRaw(ancestralidade, per)
-            var freeSteps = compIncsPorPericia.getValue(per)
-            while (currRaw < target) {
-                val next     = if (currRaw == 0) 4 else currRaw + 2
-                val attrKey  = atributoBaseParaPericia(per)
-
-                // >>> MESMA REGRA AQUI
-                val attrRawForCost =
-                    if (faseSupersAtiva && !emProgresso) {
-                        atributoRawBaseSemSupers(attrKey)
-                    } else {
-                        valoresAtributos[attrKey]!!.intValue
-                    }
-
-                val stepCost = if (next <= attrRawForCost) 1 else 2
-                if (freeSteps > 0) {
-                    freeSteps -= 1
+        val input = RebuildSkillStacksUseCase.Input(
+            pericias = pericias,
+            totalSpPool = totalSpPool,
+            currentRawValues = pericias.associate { it.nome to rawTotal(it) },
+            startRawValues = pericias.associate { it.nome to periciaStartRaw(ancestralidade, it) },
+            capRawValues = pericias.associate { it.nome to periciaCapRaw(it) },
+            minRawValues = pericias.associate { it.nome to maxOf(if (isPericiaBasicaEfetiva(it)) 4 else 0, linguistaMinRawFor(it)) },
+            freeStepsMap = compIncsPorPericia.mapKeys { it.key.nome },
+            effectiveAttributeValues = listaAtributos.associateWith { attrKey ->
+                if (faseSupersAtiva && !emProgresso) {
+                    atributoRawBaseSemSupers(attrKey)
                 } else {
-                    stack.add(stepCost)
-                    baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
+                    valoresAtributos[attrKey]!!.intValue
                 }
-                currRaw = next
-            }
+            },
+            skillAttributeMap = pericias.associate { it.nome to atributoBaseParaPericia(it) },
+            enforcePoolLimit = enforcePoolLimit
+        )
 
-            cumulativeCost += cost
+        val result = rebuildSkillStacksUseCase.execute(input)
+
+        pericias.forEach { per ->
+            val newStack = result.spCostStacks[per.nome] ?: emptyList()
+            val stateStack = spCostStackPorPericia.getValue(per)
+            stateStack.clear()
+            stateStack.addAll(newStack)
+
+            val newBase = result.baseIncs[per.nome] ?: 0
+            baseIncsPorPericia[per] = newBase
         }
+
+        feedbackMessages.addAll(result.feedbackMessages)
     }
 
     fun toSnapshot(): PersonagemSnapshot {
