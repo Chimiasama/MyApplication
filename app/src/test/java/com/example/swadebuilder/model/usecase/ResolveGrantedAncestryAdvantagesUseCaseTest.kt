@@ -14,9 +14,27 @@ class ResolveGrantedAncestryAdvantagesUseCaseTest {
     @Test
     fun `resolves by name id and keyified id`() {
         val advantages = listOf(
-            Vantagem("sorte", "Sorte", Categoria.SOCIAIS, "BASICO", Requisito()),
-            Vantagem("antecedente_arcano_poderes", "Antecedente Arcano (Poderes)", Categoria.ANTECEDENTE, "SOL_VAPOR", Requisito()),
-            Vantagem("ameacador_special", "Ameaçador Special", Categoria.COMBATE, "BASICO", Requisito())
+            Vantagem(
+                id = "sorte",
+                nome = "Sorte",
+                categoria = Categoria.SOCIAIS,
+                origem = "BASICO",
+                requisitos = Requisito()
+            ),
+            Vantagem(
+                id = "antecedente_arcano_poderes",
+                nome = "Antecedente Arcano (Poderes)",
+                categoria = Categoria.ANTECEDENTE,
+                origem = "SOL_VAPOR",
+                requisitos = Requisito()
+            ),
+            Vantagem(
+                id = "ameacador_special",
+                nome = "Ameaçador Special",
+                categoria = Categoria.COMBATE,
+                origem = "BASICO",
+                requisitos = Requisito()
+            )
         )
 
         val result = useCase.execute(
@@ -33,8 +51,20 @@ class ResolveGrantedAncestryAdvantagesUseCaseTest {
     @Test
     fun `skips already selected and removes duplicates by id`() {
         val advantages = listOf(
-            Vantagem("sorte", "Sorte", Categoria.SOCIAIS, "BASICO", Requisito()),
-            Vantagem("espirituoso", "Espirituoso", Categoria.SOCIAIS, "BASICO", Requisito())
+            Vantagem(
+                id = "sorte",
+                nome = "Sorte",
+                categoria = Categoria.SOCIAIS,
+                origem = "BASICO",
+                requisitos = Requisito()
+            ),
+            Vantagem(
+                id = "espirituoso",
+                nome = "Espirituoso",
+                categoria = Categoria.SOCIAIS,
+                origem = "BASICO",
+                requisitos = Requisito()
+            )
         )
 
         val result = useCase.execute(

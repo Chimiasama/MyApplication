@@ -82,7 +82,7 @@ class ContentVisibilityTest {
         val steamAdvantage = Vantagem(
             id = "engenhoca_1",
             nome = "Engenhoca",
-            categoria = Categoria.PROFISSIONAIS,
+            categoria = Categoria.PROFISSIONAL,
             origem = "SOL E VAPOR",
             requisitos = Requisito()
         )
