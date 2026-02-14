@@ -2,6 +2,7 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.semAcentos
 
 class ResolveAncestryTransitionContextUseCase {
 
@@ -23,21 +24,23 @@ class ResolveAncestryTransitionContextUseCase {
         val previousAncestryKey = params.previousAncestry.keyify()
         val targetAncestryKey = params.targetAncestry.keyify()
 
-        val wasHumano = previousAncestryKey == "humanos" ||
-            params.previousAncestryDef?.vantagensGratis?.any { it.keyify() == "adaptavel" } == true
+        val wasHumano = previousAncestryKey == "HUMANOS" ||
+            params.previousAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true
 
-        val willBeHumano = targetAncestryKey == "humanos" ||
-            params.targetAncestryDef?.vantagensGratis?.any { it.keyify() == "adaptavel" } == true
+        val willBeHumano = targetAncestryKey == "HUMANOS" ||
+            params.targetAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true
 
         val previousFreeAdvantageKeys = (
             params.currentAutomaticAdvantages.toSet() +
                 when (previousAncestryKey) {
-                    "saurios" -> setOf("Sentidos Aguçados", "Prontidão")
-                    "pequeninos" -> setOf("Sorte")
-                    "celestiais" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
+                    "SAURIOS" -> setOf("Sentidos Aguçados", "Prontidão")
+                    "PEQUENINOS" -> setOf("Sorte")
+                    "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
                     else -> emptySet()
                 }
-            ).map { it.keyify() }
+            ).flatMap { advantageName ->
+                listOf(advantageName.keyify(), advantageName.toLegacyKey())
+            }
             .toSet()
 
         return Result(
@@ -46,4 +49,12 @@ class ResolveAncestryTransitionContextUseCase {
             previousFreeAdvantageKeys = previousFreeAdvantageKeys
         )
     }
+
+    private fun String.toLegacyKey(): String =
+        trim()
+            .lowercase()
+            .semAcentos()
+            .replace("(", "")
+            .replace(")", "")
+            .replace(Regex("\\s+"), "_")
 }
