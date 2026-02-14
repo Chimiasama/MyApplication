@@ -76,6 +76,13 @@ class CriadorState {
         resolveGrantedAncestryAdvantagesUseCase = resolveGrantedAncestryAdvantagesUseCase,
         resolveAncestrySpecificAdjustmentsUseCase = resolveAncestrySpecificAdjustmentsUseCase
     )
+    private val applyAncestryChangeCoordinatorUseCase = ApplyAncestryChangeCoordinatorUseCase(
+        resolveAncestryTransitionBootstrapUseCase = resolveAncestryTransitionBootstrapUseCase,
+        adjustAttributesForAncestryChangeUseCase = adjustAttributesForAncestryChangeUseCase,
+        resolveAncestryRacialPackageUseCase = resolveAncestryRacialPackageUseCase,
+        resolveAncestryComplicationsSnapshotUseCase = resolveAncestryComplicationsSnapshotUseCase,
+        resolveAncestryInvalidAdvantagesUseCase = resolveAncestryInvalidAdvantagesUseCase
+    )
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -3177,47 +3184,21 @@ class CriadorState {
         val prevAncDef = getAncestralidadeDef(prevAnc)
         val ancDef = getAncestralidadeDef(anc)
 
-        val transitionBootstrap = resolveAncestryTransitionBootstrapUseCase.execute(
-            ResolveAncestryTransitionBootstrapUseCase.Params(
+        val paAntes = pontosAtributo
+        val spAntes = pontosPericia
+        val pvAntes = pontosVantagem
+
+        periciasComIdiomas().associateWith { rawTotal(it) }
+
+        val ancestryChangeCoordination = applyAncestryChangeCoordinatorUseCase.execute(
+            ApplyAncestryChangeCoordinatorUseCase.Params(
                 previousAncestry = prevAnc,
                 targetAncestry = anc,
                 previousAncestryDef = prevAncDef,
                 targetAncestryDef = ancDef,
                 currentAutomaticAdvantages = vantagensAutomaticas.toList(),
                 pontosVantagemAtuais = pontosVantagem,
-                vantagensSelecionadas = vantagensSelecionadas.toList()
-            )
-        )
-
-        val ancestryTransitionContext = transitionBootstrap.ancestryTransitionContext
-        val wasHumano = ancestryTransitionContext.wasHumano
-        val vaiSerHumano = ancestryTransitionContext.willBeHumano
-
-        val paAntes = pontosAtributo
-        val spAntes = pontosPericia
-        val pvAntes = pontosVantagem
-
-        val prevFreeKeys = ancestryTransitionContext.previousFreeAdvantageKeys
-
-        // --- Ajuste do +1 PV de HUMANOS (sem apagar tudo e respeitando pré-requisitos) ---
-        val humanTransition = transitionBootstrap.humanTransition
-
-        humanTransition.vantagemRemovida?.let { toRemove ->
-            vantagensSelecionadas.remove(toRemove)
-            feedbackMessages.add("Vantagem ${toRemove.nome} removida para compensar a troca de Ancestralidade.")
-        }
-        pontosVantagem = humanTransition.novosPontosVantagem
-
-        // Troca efetiva da ancestralidade
-        ancestralidade = anc
-
-        // --- Ajuste de atributos pela nova raça ---
-        // IMPORTANTE: usa atributoMinRaw/atributoMaxRaw para respeitar limites dinâmicos
-        // (ex.: FORÇA máxima por Diminuto/Tamanho).
-        periciasComIdiomas().associateWith { rawTotal(it) }
-
-        val attributeAdjustmentResult = adjustAttributesForAncestryChangeUseCase.execute(
-            AdjustAttributesForAncestryChangeUseCase.Params(
+                vantagensSelecionadas = vantagensSelecionadas.toList(),
                 attributeNames = listaAtributos,
                 attributeCaps = listaAtributos.associateWith { nome ->
                     AdjustAttributesForAncestryChangeUseCase.AttributeCap(
@@ -3227,9 +3208,30 @@ class CriadorState {
                 },
                 paCostStacks = listaAtributos.associateWith { nome ->
                     paCostStackPorAtributo.getValue(nome).toList()
-                }
+                },
+                descendenteElementalSelecionado = descendenteElementalSelecionado,
+                allAdvantages = listaVantagens,
+                availableComplications = listaComplicacoes,
+                selectedComplications = complicacoesSelecionadas,
+                automaticTropoAdvantageIds = vantagensAutomaticasDoTropo.toSet(),
+                meetsRequirements = { atendeRequisitosMantidos(it) },
+                originPriorityResolver = { getOriginPriority(it) },
+                compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                signoAdgSelecionado = signoAdgSelecionado,
+                modoSupers = modoSupers
             )
         )
+
+        ancestryChangeCoordination.humanTransition.vantagemRemovida?.let { toRemove ->
+            vantagensSelecionadas.remove(toRemove)
+            feedbackMessages.add("Vantagem ${toRemove.nome} removida para compensar a troca de Ancestralidade.")
+        }
+        pontosVantagem = ancestryChangeCoordination.humanTransition.novosPontosVantagem
+
+        // Troca efetiva da ancestralidade
+        ancestralidade = anc
+
+        val attributeAdjustmentResult = ancestryChangeCoordination.attributeAdjustmentResult
 
         attributeAdjustmentResult.adjustmentsByAttribute.forEach { (nome, adjustment) ->
             val stack = paCostStackPorAtributo.getValue(nome)
@@ -3243,39 +3245,26 @@ class CriadorState {
             valoresAtributos[nome]!!.intValue = adjustment.newRaw
         }
 
-        if (compendioArteDaGuerraAtivo && anc.keyify().contains("HUMANO")) {
-            if (signoAdgSelecionado == null) {
-                selecionarSigno("Nenhum")
-            }
-        } else if (signoAdgSelecionado != null) {
-            selecionarSigno(null)
+        when (ancestryChangeCoordination.signoAction) {
+            ApplyAncestryChangeCoordinatorUseCase.SignoAction.SELECT_NONE -> selecionarSigno("Nenhum")
+            ApplyAncestryChangeCoordinatorUseCase.SignoAction.CLEAR -> selecionarSigno(null)
+            ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP -> Unit
         }
-        celestialAAMilagresDesabilitado = (anc == "CELESTIAIS" && modoSupers)
-        if (anc != "MEIO-ELFOS") {
+        celestialAAMilagresDesabilitado = ancestryChangeCoordination.celestialAAMilagresDesabilitado
+        if (ancestryChangeCoordination.resetMeioElfoAgil) {
             meioElfoAgil = false
         }
-        if (anc != "MEIO-ORCS") {
+        if (ancestryChangeCoordination.resetMeioOrcForca) {
             meioOrcForca = false
         }
-        if (anc.keyify() != "DESCENDENTE ELEMENTAL" && anc.keyify() != "DESC_ELEMENTAL") {
+        if (ancestryChangeCoordination.clearDescendenteElemental) {
             selecionarDescendenteElemental(null)
         }
-        if (!anc.keyify().contains("GNOMO")) {
+        if (ancestryChangeCoordination.clearPericiaGnomo) {
             selecionarPericiaGnomo(null)
         }
 
-        // --- Vantagens / desvantagens raciais ---
-        val racialPackage = resolveAncestryRacialPackageUseCase.execute(
-            ResolveAncestryRacialPackageUseCase.Params(
-                anc = anc,
-                descendenteElementalSelecionado = descendenteElementalSelecionado,
-                allAdvantages = listaVantagens,
-                selectedAdvantages = vantagensSelecionadas.toList(),
-                previousFreeAdvantageKeys = prevFreeKeys,
-                ancestryGrantedAdvantages = ancDef?.vantagensGratis ?: emptyList(),
-                ancestryAutomaticDisadvantages = ancDef?.desvantagens ?: emptyList()
-            )
-        )
+        val racialPackage = ancestryChangeCoordination.racialPackage
 
         vantagensSelecionadas.clear()
         vantagensSelecionadas.addAll(racialPackage.selectedAdvantages)
@@ -3309,19 +3298,8 @@ class CriadorState {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE -> Unit
         }
 
-        // --- Complicações raciais automáticas ---
-        val ancestryComplicationsSnapshot = resolveAncestryComplicationsSnapshotUseCase.execute(
-            ResolveAncestryComplicationsSnapshotUseCase.Params(
-                previousAutomaticDisadvantages = getAncestralidadeDef(prevAnc)?.desvantagens ?: emptyList(),
-                currentAutomaticDisadvantages = desvantagensAutomaticas.toList(),
-                availableComplications = listaComplicacoes,
-                selectedComplications = complicacoesSelecionadas,
-                originPriorityResolver = { getOriginPriority(it) }
-            )
-        )
-
         complicacoesSelecionadas.clear()
-        complicacoesSelecionadas.putAll(ancestryComplicationsSnapshot.selectedComplications)
+        complicacoesSelecionadas.putAll(ancestryChangeCoordination.complicationsSnapshot.selectedComplications)
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
         recalcularPontosAtributo(feedbackMessages)
@@ -3336,15 +3314,7 @@ class CriadorState {
         if (pvDepois > pvAntes) feedbackMessages.add("${pvDepois - pvAntes} ponto(s) de vantagem devolvido(s).")
 
         // Validar requisitos das vantagens existentes
-        val invalidAdvantagesResult = removeInvalidAdvantagesAfterAncestryChangeUseCase.execute(
-            RemoveInvalidAdvantagesAfterAncestryChangeUseCase.Params(
-                selectedAdvantages = vantagensSelecionadas,
-                automaticAdvantages = vantagensAutomaticas.toList(),
-                automaticRacialAdvantages = vantagensRaciais.toList(),
-                automaticTropoAdvantageIds = vantagensAutomaticasDoTropo.toSet(),
-                meetsRequirements = { atendeRequisitosMantidos(it) }
-            )
-        )
+        val invalidAdvantagesResolution = ancestryChangeCoordination.invalidAdvantagesResolution
 
         invalidAdvantagesResult.removedAdvantages.forEach { removed ->
             removeVantagemDinheiro(removed)
