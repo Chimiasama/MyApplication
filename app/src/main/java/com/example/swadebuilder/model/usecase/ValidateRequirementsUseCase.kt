@@ -1,6 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
-import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
