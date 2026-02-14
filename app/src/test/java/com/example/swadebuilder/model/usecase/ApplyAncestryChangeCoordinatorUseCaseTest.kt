@@ -43,7 +43,8 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
 
         assertEquals(ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP, result.signoAction)
         assertFalse(result.invalidAdvantagesResolution.removedAdvantages.isEmpty())
-        assertTrue(result.invalidAdvantagesResolution.refundedAdvantagePoints > 0)
+        // Points refund is handled by the caller based on removedAdvantages size
+        assertEquals(1, result.invalidAdvantagesResolution.removedAdvantages.size)
     }
 
     private fun baseParams(
@@ -95,7 +96,7 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             descendenteElementalSelecionado = null,
             allAdvantages = ResolveAncestryRacialPackageUseCaseTestFixtures.sampleAdvantages(),
             availableComplications = listOf(complicacao),
-            selectedComplications = mapOf(complicacao to 1),
+            selectedComplications = mapOf(complicacao to "Menor"),
             automaticTropoAdvantageIds = emptySet(),
             meetsRequirements = meetsRequirements,
             originPriorityResolver = { 0 },

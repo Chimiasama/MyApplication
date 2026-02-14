@@ -20,7 +20,7 @@ class ResolveAncestryComplicationsSnapshotUseCaseTest {
                 currentAutomaticDisadvantages = emptyList(),
                 availableComplications = listOf(medo, arrogante),
                 selectedComplications = mapOf(
-                    medo to 1,
+                    medo to "Menor",
                     arrogante to null
                 ),
                 originPriorityResolver = { 0 }
