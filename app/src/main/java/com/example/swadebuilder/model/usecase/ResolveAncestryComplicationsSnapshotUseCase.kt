@@ -11,7 +11,7 @@ class ResolveAncestryComplicationsSnapshotUseCase(
         val currentAutomaticDisadvantages: List<String>,
         val availableComplications: List<Complicacao>,
         val selectedComplications: Map<Complicacao, String?>,
-        val originPriorityResolver: (Complicacao) -> Int
+        val originPriorityResolver: (String?) -> Int
     )
 
     data class Result(
@@ -20,8 +20,7 @@ class ResolveAncestryComplicationsSnapshotUseCase(
 
     fun execute(params: Params): Result {
         val normalizedSelectedComplications = params.selectedComplications
-            .mapValues { (_, v) -> if (v == "Maior") 2 else 1 }
-            .mapNotNull { (complicacao, severidade) -> severidade.let { complicacao to it } }
+            .mapNotNull { (complicacao, severidade) -> severidade?.let { complicacao to it } }
             .toMap()
 
         val resolvedAutomaticComplications = resolveRacialAutomaticComplicationsUseCase.execute(
@@ -35,9 +34,7 @@ class ResolveAncestryComplicationsSnapshotUseCase(
         )
 
         return Result(
-            selectedComplications = resolvedAutomaticComplications.selectedComplications.mapValues { (_, v) ->
-                if (v == 2) "Maior" else "Menor"
-            }
+            selectedComplications = resolvedAutomaticComplications.selectedComplications
         )
     }
 }

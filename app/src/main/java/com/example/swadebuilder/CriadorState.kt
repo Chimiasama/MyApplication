@@ -40,13 +40,17 @@ import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.usecase.AdjustAttributesForAncestryChangeUseCase
+import com.example.swadebuilder.model.usecase.ApplyAncestryChangeCoordinatorUseCase
 import com.example.swadebuilder.model.usecase.ApplyHumanAncestryTransitionUseCase
 import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
-import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
-import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.RemoveInvalidAdvantagesAfterAncestryChangeUseCase
+import com.example.swadebuilder.model.usecase.ResolveActiveAncestryCandidatesUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestryComplicationsSnapshotUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestryRacialPackageUseCase
 import com.example.swadebuilder.model.usecase.ResolveAncestrySpecificAdjustmentsUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionBootstrapUseCase
 import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUseCase
+import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
@@ -3235,7 +3239,9 @@ class CriadorState {
 
         val attributeAdjustmentResult = ancestryChangeCoordination.attributeAdjustmentResult
 
-        attributeAdjustmentResult.adjustmentsByAttribute.forEach { (nome, adjustment) ->
+        attributeAdjustmentResult.adjustmentsByAttribute.forEach { entry ->
+            val nome = entry.key
+            val adjustment = entry.value
             val stack = paCostStackPorAtributo.getValue(nome)
             stack.clear()
             stack.addAll(adjustment.adjustedStack)

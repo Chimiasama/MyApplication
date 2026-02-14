@@ -32,7 +32,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val selectedComplications: Map<Complicacao, String?>,
         val automaticTropoAdvantageIds: Set<String>,
         val meetsRequirements: (Vantagem) -> Boolean,
-        val originPriorityResolver: (Complicacao) -> Int,
+        val originPriorityResolver: (String?) -> Int,
         val compendioArteDaGuerraAtivo: Boolean,
         val signoAdgSelecionado: String?,
         val modoSupers: Boolean
@@ -105,7 +105,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
 
         val invalidAdvantagesResolution = removeInvalidAdvantagesAfterAncestryChangeUseCase.execute(
             RemoveInvalidAdvantagesAfterAncestryChangeUseCase.Params(
-                selectedAdvantages = racialPackage.selectedAdvantages,
+                selectedAdvantages = racialPackage.selectedAdvantages.toMutableList(),
                 automaticAdvantages = racialPackage.vantagensAutomaticas,
                 automaticRacialAdvantages = racialPackage.vantagensRaciais,
                 automaticTropoAdvantageIds = params.automaticTropoAdvantageIds,
