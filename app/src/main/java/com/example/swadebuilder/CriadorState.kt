@@ -61,6 +61,9 @@ class CriadorState {
     private val applyHumanAncestryTransitionUseCase = ApplyHumanAncestryTransitionUseCase()
     private val adjustAttributesForAncestryChangeUseCase = AdjustAttributesForAncestryChangeUseCase()
     private val resolveRacialAutomaticComplicationsUseCase = ResolveRacialAutomaticComplicationsUseCase()
+    private val resolveAncestryComplicationsSnapshotUseCase = ResolveAncestryComplicationsSnapshotUseCase(
+        resolveRacialAutomaticComplicationsUseCase = resolveRacialAutomaticComplicationsUseCase
+    )
     private val removeInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
     private val resolveAncestrySpecificAdjustmentsUseCase = ResolveAncestrySpecificAdjustmentsUseCase()
     private val resolveAncestryTransitionContextUseCase = ResolveAncestryTransitionContextUseCase()
@@ -3307,20 +3310,18 @@ class CriadorState {
         }
 
         // --- Complicações raciais automáticas ---
-        val resolvedAutomaticComplications = resolveRacialAutomaticComplicationsUseCase.execute(
-            ResolveRacialAutomaticComplicationsUseCase.Params(
+        val ancestryComplicationsSnapshot = resolveAncestryComplicationsSnapshotUseCase.execute(
+            ResolveAncestryComplicationsSnapshotUseCase.Params(
                 previousAutomaticDisadvantages = getAncestralidadeDef(prevAnc)?.desvantagens ?: emptyList(),
                 currentAutomaticDisadvantages = desvantagensAutomaticas.toList(),
                 availableComplications = listaComplicacoes,
-                selectedComplications = complicacoesSelecionadas
-                    .mapNotNull { (complicacao, severidade) -> severidade?.let { complicacao to it } }
-                    .toMap(),
+                selectedComplications = complicacoesSelecionadas,
                 originPriorityResolver = { getOriginPriority(it) }
             )
         )
 
         complicacoesSelecionadas.clear()
-        complicacoesSelecionadas.putAll(resolvedAutomaticComplications.selectedComplications)
+        complicacoesSelecionadas.putAll(ancestryComplicationsSnapshot.selectedComplications)
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
         recalcularPontosAtributo(feedbackMessages)

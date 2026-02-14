@@ -226,3 +226,5 @@ Critérios de extração por hotspot:
 - [x] Testes de contrato para o bootstrap adicionados (`ResolveAncestryTransitionBootstrapUseCaseTest`).
 - [x] E4.7b (incremental): extraído `ResolveAncestryRacialPackageUseCase` para consolidar limpeza de vantagens livres anteriores + concessões raciais + ajustes específicos de ancestralidade antes da fase de complicações automáticas.
 - [x] Testes de contrato adicionados para o pacote racial (`ResolveAncestryRacialPackageUseCaseTest`).
+- [x] E4.7d (incremental): extraído `ResolveAncestryComplicationsSnapshotUseCase` para normalizar snapshot de complicações selecionadas e delegar a resolução de automáticas sem lógica de mapeamento no state.
+- [x] Testes de contrato adicionados para snapshot de complicações (`ResolveAncestryComplicationsSnapshotUseCaseTest`).
