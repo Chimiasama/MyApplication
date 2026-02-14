@@ -224,3 +224,5 @@ Critérios de extração por hotspot:
 - [ ] Próximo subpasso E4.7: extrair orquestração completa de `aplicarAncestralidade(...)` para coordinator dedicado, preservando contratos de visibilidade por cenário.
 - [x] E4.7a (incremental): criado `ResolveAncestryTransitionBootstrapUseCase` para coordenar contexto de transição + ajuste humano inicial; `CriadorState.aplicarAncestralidade(...)` agora delega esse bootstrap.
 - [x] Testes de contrato para o bootstrap adicionados (`ResolveAncestryTransitionBootstrapUseCaseTest`).
+- [x] E4.7b (incremental): extraído `ResolveAncestryRacialPackageUseCase` para consolidar limpeza de vantagens livres anteriores + concessões raciais + ajustes específicos de ancestralidade antes da fase de complicações automáticas.
+- [x] Testes de contrato adicionados para o pacote racial (`ResolveAncestryRacialPackageUseCaseTest`).

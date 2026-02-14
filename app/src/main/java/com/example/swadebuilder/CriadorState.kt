@@ -69,6 +69,10 @@ class CriadorState {
         applyHumanAncestryTransitionUseCase = applyHumanAncestryTransitionUseCase
     )
     private val resolveGrantedAncestryAdvantagesUseCase = ResolveGrantedAncestryAdvantagesUseCase()
+    private val resolveAncestryRacialPackageUseCase = ResolveAncestryRacialPackageUseCase(
+        resolveGrantedAncestryAdvantagesUseCase = resolveGrantedAncestryAdvantagesUseCase,
+        resolveAncestrySpecificAdjustmentsUseCase = resolveAncestrySpecificAdjustmentsUseCase
+    )
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
         "desagradavel",
@@ -3258,74 +3262,39 @@ class CriadorState {
         }
 
         // --- Vantagens / desvantagens raciais ---
-
-        // Remove APENAS as vantagens raciais automáticas da raça anterior
-        if (prevFreeKeys.isNotEmpty()) {
-            vantagensSelecionadas.removeAll { it.nome.keyify() in prevFreeKeys }
-        }
-
-        desvantagensAutomaticas.clear()
-        vantagensAutomaticas.clear()
-        vantagensRaciais.clear()
-        desvantagensRaciais.clear()
-
-        getAncestralidadeDef(anc)?.let { rm ->
-            desvantagensAutomaticas.addAll(rm.desvantagens)
-            vantagensAutomaticas.addAll(rm.vantagensGratis)
-            vantagensRaciais.addAll(rm.vantagensGratis)
-            desvantagensRaciais.addAll(rm.desvantagens)
-        }
-
-        naturalArmorFromRace = 0
-
-        val grantedAdvantagesResult = resolveGrantedAncestryAdvantagesUseCase.execute(
-            ResolveGrantedAncestryAdvantagesUseCase.Params(
-                grantedAdvantageNamesOrIds = getAncestralidadeDef(anc)?.vantagensGratis ?: emptyList(),
+        val racialPackage = resolveAncestryRacialPackageUseCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = anc,
+                descendenteElementalSelecionado = descendenteElementalSelecionado,
                 allAdvantages = listaVantagens,
-                selectedAdvantages = vantagensSelecionadas
+                selectedAdvantages = vantagensSelecionadas.toList(),
+                previousFreeAdvantageKeys = prevFreeKeys,
+                ancestryGrantedAdvantages = ancDef?.vantagensGratis ?: emptyList(),
+                ancestryAutomaticDisadvantages = ancDef?.desvantagens ?: emptyList()
             )
         )
-        vantagensSelecionadas.addAll(grantedAdvantagesResult.advantagesToAdd)
 
-        val ancestrySpecificAdjustments = resolveAncestrySpecificAdjustmentsUseCase.execute(
-            anc = anc,
-            descendenteElementalSelecionado = descendenteElementalSelecionado
-        )
+        vantagensSelecionadas.clear()
+        vantagensSelecionadas.addAll(racialPackage.selectedAdvantages)
 
-        naturalArmorFromRace = ancestrySpecificAdjustments.naturalArmorFromRace
-        if (ancestrySpecificAdjustments.forceArmorZero) {
+        desvantagensAutomaticas.clear()
+        desvantagensAutomaticas.addAll(ancDef?.desvantagens ?: emptyList())
+
+        vantagensAutomaticas.clear()
+        vantagensAutomaticas.addAll(racialPackage.vantagensAutomaticas)
+
+        vantagensRaciais.clear()
+        vantagensRaciais.addAll(racialPackage.vantagensRaciais)
+
+        desvantagensRaciais.clear()
+        desvantagensRaciais.addAll(racialPackage.desvantagensRaciais)
+
+        naturalArmorFromRace = racialPackage.naturalArmorFromRace
+        if (racialPackage.forceArmorZero) {
             armadura = 0
         }
 
-        ancestrySpecificAdjustments.ensureAdvantageNames.forEach { advantageName ->
-            listaVantagens.firstOrNull { it.nome.equals(advantageName, ignoreCase = true) }
-                ?.let { edge ->
-                    if (vantagensSelecionadas.none { sel -> sel.id == edge.id }) {
-                        vantagensSelecionadas.add(edge)
-                    }
-                }
-        }
-
-        ancestrySpecificAdjustments.ensureAdvantageIds.forEach { advantageId ->
-            val edge = listaVantagens.firstOrNull { it.id == advantageId }
-            if (edge != null && vantagensSelecionadas.none { it.id == edge.id }) {
-                vantagensSelecionadas.add(edge)
-            }
-        }
-
-        ancestrySpecificAdjustments.ensureAutomaticAdvantages.forEach { automaticAdvantage ->
-            if (vantagensAutomaticas.none { it.equals(automaticAdvantage, ignoreCase = true) }) {
-                vantagensAutomaticas.add(automaticAdvantage)
-            }
-        }
-
-        ancestrySpecificAdjustments.ensureRacialDisadvantages.forEach { racialDisadvantage ->
-            if (desvantagensRaciais.none { it.equals(racialDisadvantage, ignoreCase = true) }) {
-                desvantagensRaciais.add(racialDisadvantage)
-            }
-        }
-
-        when (ancestrySpecificAdjustments.elementalAction) {
+        when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {
                 selecionarDescendenteElemental("Água")
             }
