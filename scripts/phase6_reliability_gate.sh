@@ -30,9 +30,8 @@ search_any() {
   fi
 }
 
-# 1) Artefatos obrigatórios das fases 5 e 6
-require_file "docs/fase-5-kickoff.md"
-require_file "docs/fase-6-kickoff.md"
+# 1) Artefatos obrigatórios do plano unificado
+require_file "docs/plano-unificado-execucao-confiabilidade.md"
 require_file "app/src/main/java/com/example/swadebuilder/model/usecase/BuildUsageInstructionsUseCase.kt"
 require_file "app/src/main/java/com/example/swadebuilder/DiceExtensions.kt"
 require_file "app/src/main/java/com/example/swadebuilder/ProgressionSlotRules.kt"
