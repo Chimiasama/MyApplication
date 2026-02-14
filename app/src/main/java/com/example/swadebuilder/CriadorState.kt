@@ -64,6 +64,10 @@ class CriadorState {
     private val removeInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
     private val resolveAncestrySpecificAdjustmentsUseCase = ResolveAncestrySpecificAdjustmentsUseCase()
     private val resolveAncestryTransitionContextUseCase = ResolveAncestryTransitionContextUseCase()
+    private val resolveAncestryTransitionBootstrapUseCase = ResolveAncestryTransitionBootstrapUseCase(
+        resolveAncestryTransitionContextUseCase = resolveAncestryTransitionContextUseCase,
+        applyHumanAncestryTransitionUseCase = applyHumanAncestryTransitionUseCase
+    )
     private val resolveGrantedAncestryAdvantagesUseCase = ResolveGrantedAncestryAdvantagesUseCase()
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
@@ -3166,16 +3170,19 @@ class CriadorState {
         val prevAncDef = getAncestralidadeDef(prevAnc)
         val ancDef = getAncestralidadeDef(anc)
 
-        val ancestryTransitionContext = resolveAncestryTransitionContextUseCase.execute(
-            ResolveAncestryTransitionContextUseCase.Params(
+        val transitionBootstrap = resolveAncestryTransitionBootstrapUseCase.execute(
+            ResolveAncestryTransitionBootstrapUseCase.Params(
                 previousAncestry = prevAnc,
                 targetAncestry = anc,
                 previousAncestryDef = prevAncDef,
                 targetAncestryDef = ancDef,
-                currentAutomaticAdvantages = vantagensAutomaticas.toList()
+                currentAutomaticAdvantages = vantagensAutomaticas.toList(),
+                pontosVantagemAtuais = pontosVantagem,
+                vantagensSelecionadas = vantagensSelecionadas.toList()
             )
         )
 
+        val ancestryTransitionContext = transitionBootstrap.ancestryTransitionContext
         val wasHumano = ancestryTransitionContext.wasHumano
         val vaiSerHumano = ancestryTransitionContext.willBeHumano
 
@@ -3186,15 +3193,7 @@ class CriadorState {
         val prevFreeKeys = ancestryTransitionContext.previousFreeAdvantageKeys
 
         // --- Ajuste do +1 PV de HUMANOS (sem apagar tudo e respeitando pré-requisitos) ---
-        val humanTransition = applyHumanAncestryTransitionUseCase.execute(
-            ApplyHumanAncestryTransitionUseCase.Params(
-                wasHumano = wasHumano,
-                vaiSerHumano = vaiSerHumano,
-                pontosVantagemAtuais = pontosVantagem,
-                vantagensSelecionadas = vantagensSelecionadas.toList(),
-                prevFreeKeys = prevFreeKeys
-            )
-        )
+        val humanTransition = transitionBootstrap.humanTransition
 
         humanTransition.vantagemRemovida?.let { toRemove ->
             vantagensSelecionadas.remove(toRemove)

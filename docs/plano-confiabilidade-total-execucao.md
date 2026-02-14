@@ -222,3 +222,5 @@ Critérios de extração por hotspot:
 - [x] Próximo subpasso E4.6 concluído (parcial incremental): resolução do contexto de transição de ancestralidade (humano/adaptável + vantagens grátis prévias) extraída para `ResolveAncestryTransitionContextUseCase` com testes de contrato.
 
 - [ ] Próximo subpasso E4.7: extrair orquestração completa de `aplicarAncestralidade(...)` para coordinator dedicado, preservando contratos de visibilidade por cenário.
+- [x] E4.7a (incremental): criado `ResolveAncestryTransitionBootstrapUseCase` para coordenar contexto de transição + ajuste humano inicial; `CriadorState.aplicarAncestralidade(...)` agora delega esse bootstrap.
+- [x] Testes de contrato para o bootstrap adicionados (`ResolveAncestryTransitionBootstrapUseCaseTest`).
