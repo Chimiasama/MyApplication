@@ -38,7 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
@@ -507,15 +507,15 @@ private fun CreatorTabRow(
     }
     val selectedIndex = tabs.indexOfFirst { it.section == selectedSection }.coerceAtLeast(0)
 
-    ScrollableTabRow(
+    PrimaryScrollableTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 0.dp,
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.primary,
-        indicator = { tabPositions ->
-            if (selectedIndex < tabPositions.size) {
+        indicator = {
+            if (selectedIndex < it.size) {
                 TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
+                    modifier = Modifier.tabIndicatorOffset(it[selectedIndex]),
                     height = 3.dp,
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)
                 )
