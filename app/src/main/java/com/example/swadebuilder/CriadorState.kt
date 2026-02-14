@@ -83,7 +83,7 @@ class CriadorState {
         adjustAttributesForAncestryChangeUseCase = adjustAttributesForAncestryChangeUseCase,
         resolveAncestryRacialPackageUseCase = resolveAncestryRacialPackageUseCase,
         resolveAncestryComplicationsSnapshotUseCase = resolveAncestryComplicationsSnapshotUseCase,
-        resolveAncestryInvalidAdvantagesUseCase = resolveAncestryInvalidAdvantagesUseCase
+        removeInvalidAdvantagesAfterAncestryChangeUseCase = removeInvalidAdvantagesAfterAncestryChangeUseCase
     )
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",

@@ -10,7 +10,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
     private val adjustAttributesForAncestryChangeUseCase: AdjustAttributesForAncestryChangeUseCase = AdjustAttributesForAncestryChangeUseCase(),
     private val resolveAncestryRacialPackageUseCase: ResolveAncestryRacialPackageUseCase = ResolveAncestryRacialPackageUseCase(),
     private val resolveAncestryComplicationsSnapshotUseCase: ResolveAncestryComplicationsSnapshotUseCase = ResolveAncestryComplicationsSnapshotUseCase(),
-    private val resolveAncestryInvalidAdvantagesUseCase: ResolveAncestryInvalidAdvantagesUseCase = ResolveAncestryInvalidAdvantagesUseCase()
+    private val removeInvalidAdvantagesAfterAncestryChangeUseCase: RemoveInvalidAdvantagesAfterAncestryChangeUseCase = RemoveInvalidAdvantagesAfterAncestryChangeUseCase()
 ) {
 
     enum class SignoAction { KEEP, SELECT_NONE, CLEAR }
@@ -29,7 +29,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val descendenteElementalSelecionado: String?,
         val allAdvantages: List<Vantagem>,
         val availableComplications: List<Complicacao>,
-        val selectedComplications: Map<Complicacao, Int?>,
+        val selectedComplications: Map<Complicacao, String?>,
         val automaticTropoAdvantageIds: Set<String>,
         val meetsRequirements: (Vantagem) -> Boolean,
         val originPriorityResolver: (Complicacao) -> Int,
@@ -50,7 +50,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val clearPericiaGnomo: Boolean,
         val racialPackage: ResolveAncestryRacialPackageUseCase.Result,
         val complicationsSnapshot: ResolveAncestryComplicationsSnapshotUseCase.Result,
-        val invalidAdvantagesResolution: ResolveAncestryInvalidAdvantagesUseCase.Result
+        val invalidAdvantagesResolution: RemoveInvalidAdvantagesAfterAncestryChangeUseCase.Result
     )
 
     fun execute(params: Params): Result {
@@ -103,8 +103,8 @@ class ApplyAncestryChangeCoordinatorUseCase(
             )
         )
 
-        val invalidAdvantagesResolution = resolveAncestryInvalidAdvantagesUseCase.execute(
-            ResolveAncestryInvalidAdvantagesUseCase.Params(
+        val invalidAdvantagesResolution = removeInvalidAdvantagesAfterAncestryChangeUseCase.execute(
+            RemoveInvalidAdvantagesAfterAncestryChangeUseCase.Params(
                 selectedAdvantages = racialPackage.selectedAdvantages,
                 automaticAdvantages = racialPackage.vantagensAutomaticas,
                 automaticRacialAdvantages = racialPackage.vantagensRaciais,
