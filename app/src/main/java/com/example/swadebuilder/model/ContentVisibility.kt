@@ -62,7 +62,8 @@ fun CriadorState.isVantagemVisible(
     // If the advantage's origin is not in the active set, hide it.
     if (origemNorm !in activeOrigins) {
         // Exception: Pathfinder uses the Generic "Antecedente Arcano" (from Basic) as a selector.
-        if (compendioPathfinderAtivo && vant.id == "antecedente_arcano") {
+        // Cidade do Sol a Vapor also uses it.
+        if ((compendioPathfinderAtivo || compendioCidadeSolVaporAtivo) && vant.id == "antecedente_arcano") {
             // Allow it
         } else {
             return false
