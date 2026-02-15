@@ -1325,7 +1325,7 @@ fun ProgressosDialog(
             "ANTECEDENTE ARCANO" -> {
                 if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
                     val opcoesArcano = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo) {
-                        listaVantagens
+                        allAdvantages
                             .filter {
                                 val isAb = it.id.startsWith("antecedente_arcano_")
                                 val isSrc = (state.compendioFantasiaAtivo && (it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true))) ||

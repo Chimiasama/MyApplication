@@ -5,6 +5,7 @@ import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
 import kotlin.math.max

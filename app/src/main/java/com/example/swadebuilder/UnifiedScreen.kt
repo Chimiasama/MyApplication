@@ -474,6 +474,7 @@ fun UnifiedScreen(
             viewModel = viewModel,
             onShowMessage = onShowMessage,
             slotIndex = currentSlotIndex,
+            allAdvantages = viewModel.gameDataStore.getVantagens(),
             onDismiss = {
                 showAllocDialog = false
                 activeSection = MainSection.XP
@@ -870,6 +871,7 @@ private fun ProgressionDetailContent(
         )
         MainSection.XP -> XpSection(
             state = state,
+            allAdvantages = viewModel.gameDataStore.getVantagens(),
             onUseProgress = onUseProgress,
             onUndo = {
                 viewModel.revertLastAdvancement()
@@ -969,6 +971,7 @@ private fun CreationDetailContent(
             SuperPoderesSection(
                 state = state,
                 listaSuperPoderes = listaSuperPoderes,
+                allAdvantages = viewModel.gameDataStore.getVantagens(),
                 onShowMessage = onShowMessage
             )
         }
@@ -1063,12 +1066,14 @@ private fun PoderesSection(
 private fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
+    allAdvantages: List<Vantagem>,
     onShowMessage: (String) -> Unit
 ) {
     if (state.modoSupers) {
         SuperPoderesContent(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
+            allAdvantages = allAdvantages,
             onShowMessage = onShowMessage
         )
     }
