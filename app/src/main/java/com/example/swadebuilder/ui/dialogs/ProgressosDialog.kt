@@ -64,7 +64,6 @@ import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.AdvancementAction
@@ -103,6 +102,7 @@ fun ProgressosDialog(
     viewModel: CriadorViewModel,
     onShowMessage: (String) -> Unit,
     slotIndex: Int,
+    allAdvantages: List<Vantagem>,
     onDismiss: () -> Unit
 ) {
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
@@ -145,8 +145,8 @@ fun ProgressosDialog(
     val stageIndex = stageIndexForSlot(slotIndex)
     var selectedTab by rememberSaveable { mutableIntStateOf(stageIndex) }
 
-    val idParaNome = remember(listaVantagens) {
-        listaVantagens.associate { it.id to it.nomeExibicao.toSentenceCase() }
+    val idParaNome = remember(allAdvantages) {
+        allAdvantages.associate { it.id to it.nomeExibicao.toSentenceCase() }
     }
 
     // ── Cálculos de atributo via XP ────────────────────────────────────────────
@@ -856,9 +856,9 @@ fun ProgressosDialog(
         val prevStageSpent = state.stageXpSpent.getValue(estSel.nome)
         val hasProfissional = state.vantagensSelecionadas.any { it.id == "profissional" }
 
-        val candidatas = remember(listaVantagens, advSearchQuery, advSelectedCategories, advFilter, estIndex, hasProfissional) {
+        val candidatas = remember(allAdvantages, advSearchQuery, advSelectedCategories, advFilter, estIndex, hasProfissional) {
             // First, filter visibility (which accounts for module rules)
-            val visible = listaVantagens.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
+            val visible = allAdvantages.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
 
             visible.filter { vant ->
                 // Filters
@@ -932,8 +932,8 @@ fun ProgressosDialog(
                          Spacer(Modifier.height(8.dp))
 
                         // Calculate active categories based on visible items - moved outside LazyRow
-                        val activeCategories = remember(listaVantagens) {
-                            listaVantagens
+                        val activeCategories = remember(allAdvantages) {
+                            allAdvantages
                                 .filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
                                 .map { it.categoria }
                                 .toSet()
@@ -1325,7 +1325,7 @@ fun ProgressosDialog(
             "ANTECEDENTE ARCANO" -> {
                 if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
                     val opcoesArcano = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo) {
-                        listaVantagens
+                        allAdvantages
                             .filter {
                                 val isAb = it.id.startsWith("antecedente_arcano_")
                                 val isSrc = (state.compendioFantasiaAtivo && (it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true))) ||

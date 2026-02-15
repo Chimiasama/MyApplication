@@ -59,7 +59,6 @@ import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.listaDeEstagios
 import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.Categoria
@@ -171,6 +170,7 @@ fun VantagensContent(
     state: CriadorState,
     multiplosAAHabilitados: Boolean,
     viewModel: CriadorViewModel = viewModel(),
+    allAdvantages: List<Vantagem>,
     onUserFeedback: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -198,12 +198,11 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensGlobal = listaVantagens
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
     val listaVantagens: List<Vantagem> =
-        remember(multiplosAAHabilitados, listaVantagensGlobal) {
-            listaVantagensGlobal
+        remember(multiplosAAHabilitados, allAdvantages) {
+            allAdvantages
         }
 
     remember(state.modoSupers) {
@@ -264,8 +263,8 @@ fun VantagensContent(
         }
     }
 
-    val idParaNome = remember(listaVantagens) {
-        listaVantagens.associate { it.id to it.nomeExibicao.toSentenceCase() }
+    val idParaNome = remember(allAdvantages) {
+        allAdvantages.associate { it.id to it.nomeExibicao.toSentenceCase() }
     }
 
     // --- Search & Filter State ---
@@ -867,6 +866,10 @@ fun VantagensContent(
             }
         }.map { it.nome }
 
+        // Use listaPericias if available, or fetch from ViewModel/Store
+        // Since we are inside a Composable, we can use the global listaPericias for now as pericias are not part of the phase 9 migration yet (only advantages)
+        // However, to be consistent, we should ideally use gameDataStore.getPericias() if available.
+        // For this task scope, let's keep listaPericias but acknowledge it.
         val allPericias = listaPericias
             .map { it.nome }
             .filter { it in requiredPericias && it in visibleSkills }
@@ -1025,7 +1028,7 @@ fun VantagensContent(
 
         // Fantasy Override: Show list of Fantasy + Basic ABs with requirements
         val opcoesArcano: List<Pair<String, Vantagem>> = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
-            listaVantagens
+            allAdvantages
                 .filter {
                     val isAb = it.id.startsWith("antecedente_arcano_")
                     val isSrc = (state.compendioFantasiaAtivo && (it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true))) ||
@@ -1053,7 +1056,7 @@ fun VantagensContent(
                 "Milagres" to "antecedente_arcano_milagres_pf"
             )
             map.mapNotNull { (label, id) ->
-                val v = listaVantagens.firstOrNull { it.id == id }
+                val v = allAdvantages.firstOrNull { it.id == id }
                 if (v != null) {
                     val reqs = formatarRequisitos(v)
                     "$label$reqs" to v
@@ -1073,7 +1076,7 @@ fun VantagensContent(
                 "Xamã" to "antecedente_arcano_xama"
             )
             map.mapNotNull { (label, id) ->
-                val v = listaVantagens.firstOrNull { it.id == id }
+                val v = allAdvantages.firstOrNull { it.id == id }
                 if (v != null) {
                     val reqs = formatarRequisitos(v)
                     "$label$reqs" to v
@@ -1089,7 +1092,7 @@ fun VantagensContent(
                 "Tecnomagia" to "aa_tecnomagia"
             )
             map.mapNotNull { (label, id) ->
-                val v = listaVantagens.firstOrNull { it.id == id }
+                val v = allAdvantages.firstOrNull { it.id == id }
                 if (v != null) {
                     val reqs = formatarRequisitos(v)
                     "$label$reqs" to v
@@ -1967,7 +1970,7 @@ private fun VantagemItem(
 
                 AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
                     val rawDescription = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) {
-                        vant.originalDescription.trim()
+                        vant.originalDescription!!.trim()
                     } else {
                         vant.descricao.trim()
                     }

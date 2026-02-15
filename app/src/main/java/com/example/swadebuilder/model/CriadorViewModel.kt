@@ -66,7 +66,7 @@ class CriadorViewModel(
     private val _feedbackMessages = mutableStateListOf<String>()
     val feedbackMessages: List<String> = _feedbackMessages
 
-    private val gameDataStore = GameDataStore()
+    val gameDataStore = GameDataStore()
     private val ensureDefaultSpecializationsUseCase = EnsureDefaultSpecializationsUseCase()
     private val upsertCrystalHeartUseCase = UpsertCrystalHeartUseCase()
     private val removeCrystalHeartUseCase = RemoveCrystalHeartUseCase()
@@ -81,7 +81,6 @@ class CriadorViewModel(
     private val resolveDependentPowerRemovalUseCase = ResolveDependentPowerRemovalUseCase()
     private val adjustNonNegativeBonusUseCase = AdjustNonNegativeBonusUseCase()
     private val validatePowerInvestmentWorkflowUseCase = ValidatePowerInvestmentWorkflowUseCase()
-    private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val calculateCurrentSuperSkillStepsUseCase = CalculateCurrentSuperSkillStepsUseCase()
     private val resolveAdvantageByIdUseCase = ResolveAdvantageByIdUseCase()
     private val normalizeArcaneBackgroundChoiceUseCase = NormalizeArcaneBackgroundChoiceUseCase()
@@ -732,7 +731,7 @@ class CriadorViewModel(
         }
 
         // 3) derivados de perícia / etc.
-        rebuildSkillStacksUseCase.execute { state.rebuildAllPericiaStacks() }
+        state.rebuildAllPericiaStacks()
         // IMPORTANTE: NÃO recalcular atributos básicos aqui,
         // para não “somar de novo” os supers nem mexer na etapa de criação com PAs.
 
@@ -850,7 +849,7 @@ class CriadorViewModel(
         }
 
         // Atualiza apenas derivados que dependem de supers / perícias
-        rebuildSkillStacksUseCase.execute { state.rebuildAllPericiaStacks() }
+        state.rebuildAllPericiaStacks()
         // De novo: nada de recalcular atributos de criação aqui.
 
         return InvestResult(true, "Investimento revertido.")

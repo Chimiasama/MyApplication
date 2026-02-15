@@ -549,8 +549,8 @@ fun EquipamentoSection(
             }
 
             val totalWeight = equipamentosComprados
-                .mapNotNull {
-                    (it.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
+            .mapNotNull { item ->
+                (item.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
                 }
                 .sum()
             val effectiveStrength = if (hasSoldado && soldadoCargaAtivo) {

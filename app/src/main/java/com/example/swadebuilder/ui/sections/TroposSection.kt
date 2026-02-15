@@ -720,11 +720,7 @@ fun TroposSection(
                             val d12Options = (1..12).map { it.toString() }
 
                             fun rollDie(sides: Int): Int = random.nextInt(1, sides + 1)
-                            fun applyVantagemRoll(value: Int?) {
-                                if (value == null) {
-                                    state.updateProtagonistaRollVantagem(null)
-                                    return
-                                }
+                            fun applyVantagemRoll(value: Int) {
                                 var roll = value
                                 while (roll == 7) {
                                     roll = rollDie(8)

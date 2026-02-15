@@ -52,6 +52,7 @@ data class MeuPersonagem(
 
     // Ledger de efeitos de poder (somente supers)
     val superInvestments: List<SuperInvestment> = emptyList(),
+    @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
     @JsonNames("bonusPararFromPower")
     val bonusApararFromPower: Int = 0,
     val bonusResFromPower: Int = 0,

@@ -28,6 +28,7 @@ object CustomCrystalHeartStorage {
         return SecurityUtils.getSafeChildFile(context.filesDir, FILE_NAME)
     }
 
+    @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
     fun load(context: Context): List<CrystalHeart> {
         val file = storageFile(context)
         if (!file.exists() || file.length() > MAX_FILE_SIZE) return emptyList()

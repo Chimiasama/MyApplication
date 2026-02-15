@@ -74,71 +74,42 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 ## 5) Estado atual (resumo executivo)
 - ✅ Fases 0–6: concluídas e estabilizadas.
 - ✅ Hotspot #1 (`aplicarAncestralidade`): concluído com coordinator completo (E4.7 fechado).
-- 🔄 Próxima prioridade: Hotspot #2 (`rebuildAllPericiaStacks`) e Hotspot #3 (`podeSelecionar`).
+- ✅ Fase 7 (`rebuildAllPericiaStacks`): concluída (`RebuildSkillStacksUseCase`).
+- ✅ Fase 8 (`podeSelecionar`): concluída (`ValidateSelectionUseCase`).
+- ✅ Fase 9 (`GameDataStore`): concluída.
+- ✅ Fase 10 (Hardening de CI): concluída.
 
 ---
 
 ## 6) Plano futuro (o que falta, por que e como)
 
-## Fase 7 — Extração do hotspot #2 (`rebuildAllPericiaStacks`)
-### Por quê
-- É núcleo de consistência de perícias e afeta múltiplos fluxos de progressão.
-- Alto risco de regressão silenciosa quando alterado diretamente no state.
+## Fase 7 — Extração do hotspot #2 (`rebuildAllPericiaStacks`) (CONCLUÍDA)
+- **Status:** Entregue via `RebuildSkillStacksUseCase`.
+- A lógica de cálculo de custos, stacks e limites de pool foi extraída para um UseCase puro.
+- `CriadorState` agora delega a reconstrução para o domínio.
 
-### O que fazer
-1. Mapear subblocos determinísticos (cálculo base, bônus por origem, efeitos de complicação, ajustes de supers).
-2. Criar coordinator de rebuild com contratos explícitos de entrada/saída.
-3. Migrar lógica pura para use-cases e manter somente side-effects no state.
-4. Cobrir com testes de contrato por subbloco + cenário integrado.
+## Fase 8 — Extração do hotspot #3 (`podeSelecionar`) (CONCLUÍDA)
+- **Status:** Entregue via `ValidateSelectionUseCase`.
+- A validação de vantagens foi quebrada em validadores granulares (`ValidateRequirementsUseCase`, `ValidatePrerequisiteUseCase`, etc.).
+- `podeSelecionar` no state agora é um wrapper fino.
 
-### Critério de pronto
-- Método no state reduzido para adapter/orquestração mínima.
-- Testes cobrindo feliz/borda/regressão conhecida.
+## Fase 9 — Convergência de fonte de verdade (B2/B3) (CONCLUÍDA)
+- **Status:** Entregue via refatoração de UI e `GameDataStore`.
+- `DataLoader` agora é puro e retorna snapshot.
+- `UnifiedScreen` e ViewModels consomem dados injetados via `GameDataStore`.
+- Uso direto de globais removido da camada de UI principal.
 
-## Fase 8 — Extração do hotspot #3 (`podeSelecionar`)
-### Por quê
-- É gate central de elegibilidade de vantagens; regressões impactam criação inteira.
-
-### O que fazer
-1. Separar validações por categoria: estágio, pré-requisitos, atributos/perícias, exceções por cenário.
-2. Criar use-cases por domínio de validação + agregador de decisão final.
-3. Remover branching espalhado e usar regras compostas.
-
-### Critério de pronto
-- Fluxo de elegibilidade totalmente testável fora do state.
-- Redução de complexidade ciclomática no método original.
-
-## Fase 9 — Convergência de fonte de verdade (B2/B3)
-### Por quê
-- Ainda há legado em globais; risco de drift entre snapshot/store e estado global.
-
-### O que fazer
-1. Migrar leituras remanescentes para `GameDataStore`.
-2. Eliminar escrita tardia em globais (manter apenas mirror transitório quando inevitável).
-3. Adicionar check de drift para impedir regressão da convergência.
-
-### Critério de pronto
-- Fluxos críticos sem dependência de globais como fonte primária.
-
-## Fase 10 — Hardening de CI e alertas de warnings
-### Por quê
-- Warnings não bloqueantes acumulados podem virar erro em upgrades futuros.
-
-### O que fazer
-1. Criar backlog priorizado por risco de warnings (Kotlin/AGP/Compose/serialization).
-2. Tratar por ondas pequenas sem misturar com bugfix funcional.
-3. Evoluir gate para monitorar tendência (não necessariamente bloquear no início).
-
-### Critério de pronto
-- Tendência de warnings em queda + risco futuro controlado.
+## Fase 10 — Hardening de CI e alertas de warnings (CONCLUÍDA)
+- **Status:** Concluído.
+- Correção de warnings de compilador (Unnecessary safe call, Elvis operator, Deprecated APIs).
+- Remoção de plugins e flags Gradle obsoletos.
+- Atualização do Gate de Confiabilidade para prevenir regressão de arquitetura.
 
 ---
 
 ## 7) Ordem de execução recomendada (curto prazo)
-1. Fase 7 (`rebuildAllPericiaStacks`)
-2. Fase 8 (`podeSelecionar`)
-3. Fase 9 (convergência de fonte de verdade)
-4. Fase 10 (hardening de warnings)
+1. Fase 9 (convergência de fonte de verdade) - **CONCLUÍDA**
+2. Fase 10 (hardening de warnings) - **CONCLUÍDA**
 
 ---
 
@@ -154,5 +125,16 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 ---
 
 ## 9) Status vivo
-- Última atualização: fechamento E4.7 + centralização documental.
-- Próximo marco: iniciar Fase 7.
+- Última atualização: Conclusão Fases 9 e 10. Projeto finalizado.
+
+## 10) Conclusão e Próximos Passos
+O plano de refatoração para confiabilidade e modernização arquitetural foi executado com sucesso.
+- **Confiabilidade:** Gate de regressão implementado e ativo no CI.
+- **Arquitetura:** Lógica de negócio extraída de `CriadorState` para UseCases testáveis (`RebuildSkillStacks`, `ValidateSelection`, `ApplyAncestry`).
+- **Dados:** Fonte de verdade unificada em `GameDataStore`/`Snapshot`, desacoplando a UI de variáveis globais.
+- **Qualidade:** Redução significativa de warnings e limpeza de código legado.
+
+**Recomendação de Manutenção:**
+- Monitorar novos warnings em atualizações de dependências.
+- Manter o script `phase6_reliability_gate.sh` no pipeline de CI.
+- Continuar a migração gradual de quaisquer referências legadas remanescentes (se houver) para `GameDataStore`.

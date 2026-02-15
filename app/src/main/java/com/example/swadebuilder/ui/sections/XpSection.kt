@@ -32,16 +32,17 @@ import com.example.swadebuilder.TOTAL_PROGRESS_LIMIT
 import com.example.swadebuilder.dynamicStageCaps
 import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.listaDeEstagios
-import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.HindranceChangeType
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 
 @Composable
 fun XpSection(
     state: CriadorState,
+    allAdvantages: List<Vantagem>,
     onUseProgress: (Int) -> Unit,
     onUndo: () -> Unit
 ) {
@@ -59,7 +60,7 @@ fun XpSection(
             state.recomputeAvailableProgress()
         }
 
-        val slotDescriptions = buildSlotDescriptions(state)
+        val slotDescriptions = buildSlotDescriptions(state, allAdvantages)
         val slotStageLabels = buildStageLabels()
         val listState = rememberLazyListState()
 
@@ -142,11 +143,11 @@ private fun buildStageLabels(): List<String> {
     return labels
 }
 
-private fun buildSlotDescriptions(state: CriadorState): List<String?> {
+private fun buildSlotDescriptions(state: CriadorState, allAdvantages: List<Vantagem>): List<String?> {
     val descriptions = mutableListOf<String?>()
 
     state.advancementHistory.forEach { action ->
-        val desc = describeAction(action, state)
+        val desc = describeAction(action, state, allAdvantages)
         repeat(action.progressCost.coerceAtLeast(1)) {
             if (descriptions.size < TOTAL_PROGRESS_LIMIT) {
                 descriptions += desc
@@ -161,9 +162,13 @@ private fun buildSlotDescriptions(state: CriadorState): List<String?> {
     return descriptions.take(TOTAL_PROGRESS_LIMIT)
 }
 
-private fun describeAction(action: AdvancementAction, state: CriadorState): String = when (action) {
+private fun describeAction(
+    action: AdvancementAction,
+    state: CriadorState,
+    allAdvantages: List<Vantagem>
+): String = when (action) {
     is AdvancementAction.SpendOnAdvantage -> {
-        val advantageName = listaVantagens.firstOrNull { it.id == action.advantageId }?.nome
+        val advantageName = allAdvantages.firstOrNull { it.id == action.advantageId }?.nome
         "Vantagem: ${advantageName ?: action.advantageId}"
     }
 

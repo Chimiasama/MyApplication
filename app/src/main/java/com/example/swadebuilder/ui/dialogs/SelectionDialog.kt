@@ -30,7 +30,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
@@ -135,10 +134,11 @@ private fun <T> SelectDialog(
 @Composable
 fun AdvantageSelectionDialog(
     state: CriadorState,
+    allAdvantages: List<Vantagem>,
     onSelect: (Vantagem) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val candidatas = listaVantagens.filter { state.podeSelecionar(it) }
+    val candidatas = allAdvantages.filter { state.podeSelecionar(it) }
 
     SelectDialog(
         title = "Escolha sua Vantagem",

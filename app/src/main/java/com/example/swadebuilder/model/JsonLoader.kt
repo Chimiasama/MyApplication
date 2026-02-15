@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.decodeFromStream
 
+@OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
 suspend inline fun <reified T> Context.loadJsonAsset(fileName: String): T {
     return withContext(Dispatchers.IO) {
         val json = kotlinx.serialization.json.Json {

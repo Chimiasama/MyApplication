@@ -201,6 +201,7 @@ data class SnapshotSupers(
     val superLimitePorPoder: Int,
     val poderFavoritoId: String?,
     val limiteDePoderDaCampanha: Int,
+    @OptIn(kotlinx.serialization.ExperimentalSerializationApi::class)
     @JsonNames("bonusPararFromPower")
     val bonusApararFromPower: Int,
     val bonusResFromPower: Int,

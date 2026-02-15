@@ -9,25 +9,6 @@ import com.example.swadebuilder.AppData
 import com.example.swadebuilder.ArcanoInfo
 import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.SuperPoder
-import com.example.swadebuilder.arcanoInfo
-import com.example.swadebuilder.equipamentoCategorias
-import com.example.swadebuilder.listaAncestralidadesJson
-import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.listaComplicacoes
-import com.example.swadebuilder.listaCoracoesCrystal
-import com.example.swadebuilder.listaEquipamentos
-import com.example.swadebuilder.listaMonstroTemplates
-import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.listaPoderes
-import com.example.swadebuilder.listaSuperPoderes
-import com.example.swadebuilder.listaTropos
-import com.example.swadebuilder.listaVantagens
-import com.example.swadebuilder.mapaAtributosDescricao
-import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.mapaPericias
-import com.example.swadebuilder.racialAttrMinMap
-import com.example.swadebuilder.racialSkillStartMap
-import com.example.swadebuilder.superequipCategorias
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -211,21 +192,21 @@ object DataLoader {
         val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
-        listaEquipamentos = allEquip.flatMap { it.itens }
+        val localListaEquipamentos = allEquip.flatMap { it.itens }
 
-        equipamentoCategorias = deduplicarEquipamentoCategorias(
+        val localEquipamentoCategorias = deduplicarEquipamentoCategorias(
             allEquip.filter { cat ->
                 cat.origem?.equals("super", ignoreCase = true)?.not() ?: true
             }
         )
-        superequipCategorias = deduplicarEquipamentoCategorias(
+        val localSuperequipCategorias = deduplicarEquipamentoCategorias(
             allEquip.filter { cat ->
                 cat.origem?.equals("super", ignoreCase = true) ?: false
             }
         )
 
         // 2. Crystal Hearts
-        if ("CRYSTAL_HEART" in keys) {
+        val localListaCoracoesCrystal = if ("CRYSTAL_HEART" in keys) {
             @Suppress("UNCHECKED_CAST")
             val hearts = dataCache.getOrPut("crystal_coracoes.json") {
                 runCatching {
@@ -234,13 +215,13 @@ object DataLoader {
                 }.getOrElse { emptyList<CrystalHeart>() }
             } as List<CrystalHeart>
             val customHearts = CustomCrystalHeartStorage.load(context)
-            listaCoracoesCrystal = (hearts + customHearts).distinctBy { it.id }
+            (hearts + customHearts).distinctBy { it.id }
         } else {
-            listaCoracoesCrystal = emptyList()
+            emptyList()
         }
 
         // 3. Super Poderes
-        if ("SUPER" in keys) {
+        val localListaSuperPoderes = if ("SUPER" in keys) {
             @Suppress("UNCHECKED_CAST")
             val supers = dataCache.getOrPut("super_poderes.json") {
                 runCatching {
@@ -248,9 +229,9 @@ object DataLoader {
                         .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
                 }.getOrElse { emptyList<SuperPoder>() }
             } as List<SuperPoder>
-            listaSuperPoderes = supers
+            supers
         } else {
-            listaSuperPoderes = emptyList()
+            emptyList()
         }
 
         // 4. Arcano Info (Always load core)
@@ -263,12 +244,7 @@ object DataLoader {
         } as List<ArcanoInfo>
 
         loadedArcanoInfoList = arcanoList
-        arcanoInfo = arcanoList.associate {
-            it.key
-                .uppercase()
-                .semAcentos()
-                .trim() to Triple(it.slots, it.pp, it.foco)
-        }
+        // arcanoInfo removed from global write, handled in snapshot
 
         // 5. Atributos (Always load core)
         val atributosData = dataCache.getOrPut("geral_atributos.json") {
@@ -277,8 +253,8 @@ object DataLoader {
             }.getOrElse { AtributoList(emptyList()) }
         } as AtributoList
 
-        listaAtributos = atributosData.atributos.map { it.nome.keyify() }
-        mapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
+        val localListaAtributos = atributosData.atributos.map { it.nome.keyify() }
+        val localMapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
         val skillModulesToLoad = if (shouldReplaceBasico) {
@@ -331,10 +307,10 @@ object DataLoader {
             )
         }
 
-        listaPericias = rawPericias
-        mapaPericias = listaPericias.associateBy { it.nome.keyify() }
+        val localListaPericias = rawPericias
+        val localMapaPericias = localListaPericias.associateBy { it.nome.keyify() }
 
-        mapaAtributosDescricao = atributosData.atributos.associate {
+        val localMapaAtributosDescricao = atributosData.atributos.associate {
             it.nome.keyify() to (it.descricao ?: "")
         }
 
@@ -354,7 +330,7 @@ object DataLoader {
         AppData.horrorVantagens = todasVantagens.filter { it.origem.equals("HORROR", ignoreCase = true) }
         AppData.pathfinderVantagens = todasVantagens.filter { it.origem.equals("PATHFINDER", ignoreCase = true) }
 
-        listaVantagens = todasVantagens
+        val localListaVantagens = todasVantagens
         AppData.superVantagensParaDetalhe = AppData.superVantagens
 
         if ("CIDADE_SOL_VAPOR" in keys) {
@@ -389,7 +365,7 @@ object DataLoader {
             cached
         } else emptyList()
 
-        listaTropos = adgTropos + chTropos
+        val localListaTropos = adgTropos + chTropos
 
         val complicationModulesToLoad = if (shouldReplaceBasico) {
             complicationModules.filter { it.fileName != "basico_complicacoes.json" }
@@ -397,7 +373,7 @@ object DataLoader {
             complicationModules
         }
 
-        listaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModulesToLoad, keys) { item, override ->
+        val localListaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
 
@@ -407,10 +383,16 @@ object DataLoader {
         } else {
             ancestryModules
         }
-        listaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestriesToLoad, keys)
+        val localListaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules.filter {
+            // Apply filtering logic similar to other modules if needed,
+            // or simply reuse the `ancestriesToLoad` calculated above.
+            // The original code calculated `ancestriesToLoad` but then passed it to `loadAndMerge`.
+            // Here we just use the variable we defined.
+            it in ancestriesToLoad
+        }, keys)
 
         // 10. Monstros
-        if ("HORROR" in keys) {
+        val localListaMonstroTemplates = if ("HORROR" in keys) {
             @Suppress("UNCHECKED_CAST")
             val monstros = dataCache.getOrPut("horror_monstros.json") {
                 runCatching {
@@ -418,20 +400,20 @@ object DataLoader {
                         .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
                 }.getOrElse { emptyList<MonstroTemplate>() }
             } as List<MonstroTemplate>
-            listaMonstroTemplates = monstros
+            monstros
         } else {
-            listaMonstroTemplates = emptyList()
+            emptyList()
         }
 
         // 11. Mapas Raciais
-        racialAttrMinMap = listaAncestralidadesJson.associate { rm ->
+        val localRacialAttrMinMap = localListaAncestralidadesJson.associate { rm ->
             val m = rm.atributos
                 .mapKeys   { it.key.keyify() }
                 .mapValues { 4 + it.value }
             rm.nome.keyify() to m
         }
 
-        racialSkillStartMap = listaAncestralidadesJson.associate { rm ->
+        val localRacialSkillStartMap = localListaAncestralidadesJson.associate { rm ->
             val m = rm.pericias
                 .mapKeys   { it.key.keyify() }
                 .mapValues { 4 + it.value }
@@ -451,27 +433,27 @@ object DataLoader {
             if (override != null) item.copy(origem = override) else item
         }
 
-        listaPoderes = todosPoderes
+        val localListaPoderes = todosPoderes
 
         return GameDataSnapshot(
-            listaComplicacoes = listaComplicacoes,
-            listaCoracoesCrystal = listaCoracoesCrystal,
-            listaAncestralidadesJson = listaAncestralidadesJson,
-            listaMonstroTemplates = listaMonstroTemplates,
-            racialAttrMinMap = racialAttrMinMap,
-            racialSkillStartMap = racialSkillStartMap,
-            listaAtributos = listaAtributos,
-            mapaAtributosDisplay = mapaAtributosDisplay,
-            listaPericias = listaPericias,
-            mapaPericias = mapaPericias,
-            mapaAtributosDescricao = mapaAtributosDescricao,
-            listaVantagens = listaVantagens,
-            listaPoderes = listaPoderes,
-            listaTropos = listaTropos,
-            listaEquipamentos = listaEquipamentos,
-            equipamentoCategorias = equipamentoCategorias,
-            superequipCategorias = superequipCategorias,
-            listaSuperPoderes = listaSuperPoderes,
+            listaComplicacoes = localListaComplicacoes,
+            listaCoracoesCrystal = localListaCoracoesCrystal,
+            listaAncestralidadesJson = localListaAncestralidadesJson,
+            listaMonstroTemplates = localListaMonstroTemplates,
+            racialAttrMinMap = localRacialAttrMinMap,
+            racialSkillStartMap = localRacialSkillStartMap,
+            listaAtributos = localListaAtributos,
+            mapaAtributosDisplay = localMapaAtributosDisplay,
+            listaPericias = localListaPericias,
+            mapaPericias = localMapaPericias,
+            mapaAtributosDescricao = localMapaAtributosDescricao,
+            listaVantagens = localListaVantagens,
+            listaPoderes = localListaPoderes,
+            listaTropos = localListaTropos,
+            listaEquipamentos = localListaEquipamentos,
+            equipamentoCategorias = localEquipamentoCategorias,
+            superequipCategorias = localSuperequipCategorias,
+            listaSuperPoderes = localListaSuperPoderes,
             arcanoInfo = loadedArcanoInfoList
         )
     }

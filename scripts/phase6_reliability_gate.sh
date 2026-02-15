@@ -113,4 +113,10 @@ require_file "app/src/test/java/com/example/swadebuilder/model/GameDataRepositor
 require_file "app/src/test/java/com/example/swadebuilder/model/CriadorViewModelGameDataSnapshotTest.kt"
 require_file "app/src/test/java/com/example/swadebuilder/model/rules/RulesResolverTest.kt"
 
+# 9) Proteção contra regressão de Fase 9 (Fonte de Verdade)
+if search_any "listaVantagens" app/src/main/java/com/example/swadebuilder/UnifiedScreen.kt; then
+  fail "UnifiedScreen.kt voltou a referenciar listaVantagens global diretamente"
+fi
+pass "UnifiedScreen.kt não referencia listaVantagens global"
+
 echo "[phase6] Reliability gate concluído com sucesso."

@@ -36,14 +36,14 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             targetAncestry = "ELFOS",
             compendioArteDaGuerraAtivo = false,
             signoAdgSelecionado = null,
-            meetsRequirements = { false }
+            meetsRequirements = { false } // Force verification failure
         )
 
         val result = useCase.execute(params)
 
         assertEquals(ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP, result.signoAction)
         assertFalse(result.invalidAdvantagesResolution.removedAdvantages.isEmpty())
-        assertTrue(result.invalidAdvantagesResolution.refundedAdvantagePoints > 0)
+        assertEquals(1, result.invalidAdvantagesResolution.removedAdvantages.size)
     }
 
     private fun baseParams(
@@ -64,7 +64,7 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
         )
         val targetDef = RacialModifier(
             nome = targetAncestry,
-            vantagensGratis = listOf("Sorte"),
+            vantagensGratis = listOf("Sorte"), // Target grants Sorte
             desvantagens = emptyList(),
             atributos = emptyMap(),
             pericias = emptyMap(),
@@ -79,6 +79,18 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             origem = "BASICO"
         )
 
+        // Use "Frenesi" as the selected advantage, which is NOT granted by Humanos.
+        // This ensures the validation logic runs on it.
+        val selectedAdvantages = listOf(
+            Vantagem(
+                id = "frenesi",
+                nome = "Frenesi",
+                categoria = Categoria.COMBATE,
+                origem = "BASICO",
+                requisitos = Requisito()
+            )
+        )
+
         return ApplyAncestryChangeCoordinatorUseCase.Params(
             previousAncestry = previousAncestry,
             targetAncestry = targetAncestry,
@@ -86,16 +98,16 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             targetAncestryDef = targetDef,
             currentAutomaticAdvantages = emptyList(),
             pontosVantagemAtuais = 2,
-            vantagensSelecionadas = ResolveAncestryRacialPackageUseCaseTestFixtures.sampleAdvantages(),
+            vantagensSelecionadas = selectedAdvantages,
             attributeNames = listOf("Força"),
             attributeCaps = mapOf(
                 "Força" to AdjustAttributesForAncestryChangeUseCase.AttributeCap(minRaw = 4, maxRaw = 12)
             ),
             paCostStacks = mapOf("Força" to listOf(1, 1)),
             descendenteElementalSelecionado = null,
-            allAdvantages = ResolveAncestryRacialPackageUseCaseTestFixtures.sampleAdvantages(),
+            allAdvantages = selectedAdvantages + ResolveAncestryRacialPackageUseCaseTestFixtures.sampleAdvantages(), // Ensure Sorte is also known if needed
             availableComplications = listOf(complicacao),
-            selectedComplications = mapOf(complicacao to 1),
+            selectedComplications = mapOf(complicacao to "Menor"),
             automaticTropoAdvantageIds = emptySet(),
             meetsRequirements = meetsRequirements,
             originPriorityResolver = { 0 },

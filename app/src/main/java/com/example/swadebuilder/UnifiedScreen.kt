@@ -38,7 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
-import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
@@ -63,6 +63,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
@@ -474,6 +475,7 @@ fun UnifiedScreen(
             viewModel = viewModel,
             onShowMessage = onShowMessage,
             slotIndex = currentSlotIndex,
+            allAdvantages = viewModel.gameDataStore.getVantagens(),
             onDismiss = {
                 showAllocDialog = false
                 activeSection = MainSection.XP
@@ -507,19 +509,17 @@ private fun CreatorTabRow(
     }
     val selectedIndex = tabs.indexOfFirst { it.section == selectedSection }.coerceAtLeast(0)
 
-    ScrollableTabRow(
+    PrimaryScrollableTabRow(
         selectedTabIndex = selectedIndex,
         edgePadding = 0.dp,
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.primary,
-        indicator = { tabPositions ->
-            if (selectedIndex < tabPositions.size) {
-                TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
-                    height = 3.dp,
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)
-                )
-            }
+        indicator = {
+            TabRowDefaults.PrimaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(selectedIndex),
+                height = 3.dp,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)
+            )
         }
     ) {
         tabs.forEach { tab ->
@@ -767,6 +767,7 @@ private fun ProgressionDetailContent(
                     state = state,
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
                     viewModel = viewModel,
+                    allAdvantages = viewModel.gameDataStore.getVantagens(),
                     onUserFeedback = onUserFeedback
                 )
             }
@@ -871,6 +872,7 @@ private fun ProgressionDetailContent(
         )
         MainSection.XP -> XpSection(
             state = state,
+            allAdvantages = viewModel.gameDataStore.getVantagens(),
             onUseProgress = onUseProgress,
             onUndo = {
                 viewModel.revertLastAdvancement()
@@ -954,6 +956,7 @@ private fun CreationDetailContent(
                 state = state,
                 multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
                 viewModel = viewModel,
+                allAdvantages = viewModel.gameDataStore.getVantagens(),
                 onUserFeedback = onUserFeedback
             )
         }
@@ -969,6 +972,7 @@ private fun CreationDetailContent(
             SuperPoderesSection(
                 state = state,
                 listaSuperPoderes = listaSuperPoderes,
+                allAdvantages = viewModel.gameDataStore.getVantagens(),
                 onShowMessage = onShowMessage
             )
         }
@@ -1063,12 +1067,14 @@ private fun PoderesSection(
 private fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
+    allAdvantages: List<Vantagem>,
     onShowMessage: (String) -> Unit
 ) {
     if (state.modoSupers) {
         SuperPoderesContent(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
+            allAdvantages = allAdvantages,
             onShowMessage = onShowMessage
         )
     }
@@ -1088,7 +1094,8 @@ private fun EquipamentoSection(
     val tensaoLimite = if (isPersonagemRobotico) {
         state.limiteModsRoboticos()
     } else {
-        state.valoresAtributos["VIGOR"]?.intValue ?: 4
+        val vigor = state.valoresAtributos["VIGOR"]
+        vigor?.intValue ?: 4
     }
 
     EquipamentoSection(

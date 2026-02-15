@@ -79,12 +79,15 @@ object ModifierEngine {
                 it.contains("TAMANHO", ignoreCase = true) && !it.keyify().startsWith("DIMINUTO")
             }
 
-            val racialSize = sizeSource
-                ?.substringAfter("TAMANHO", "") // Try uppercase first
-                ?.ifBlank { sizeSource?.substringAfter("Tamanho", "") } // Try title case
-                ?.trim()
-                ?.toIntOrNull()
-                ?: 0
+            val racialSize = if (sizeSource != null) {
+                sizeSource.substringAfter("TAMANHO", "") // Try uppercase first
+                    .ifBlank { sizeSource.substringAfter("Tamanho", "") } // Try title case
+                    .trim()
+                    .toIntOrNull()
+                    ?: 0
+            } else {
+                0
+            }
 
             if (racialSize != 0) {
                 modifiers.add(Modifier(

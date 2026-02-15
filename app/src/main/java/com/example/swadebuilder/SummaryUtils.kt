@@ -5,6 +5,7 @@ import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
 import kotlin.math.max
@@ -13,7 +14,10 @@ import kotlin.math.max
 // SHARED SUMMARY BUILDER (Used by ResumoSection.kt)
 // =================================================================================================
 
-fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
+fun buildSummaryLines(
+    personagem: MeuPersonagem,
+    allAdvantages: List<Vantagem>
+): List<String> {
     val lines = mutableListOf<String>()
 
     val showOfficialNames = personagem.modoOficialAtivo
@@ -57,7 +61,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
         " (Monstro: $tipoNome)"
     } else ""
 
-    val vantagensNomeKey: List<String> = listaVantagens
+    val vantagensNomeKey: List<String> = allAdvantages
         .filter { it.id in personagem.vantagens }
         .map { it.nome.keyify() }
     val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes, showOfficialNames)
@@ -118,7 +122,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
 
         val espRaw = personagem.atributos["ESPIRITO"] ?: 0
         val racialPenalty = if (personagem.ancestralidade.keyify() == "TERRACOTA") 1 else 0
-        val chiBonus = listaVantagens
+        val chiBonus = allAdvantages
             .filter { it.id in personagem.vantagens }
             .count { it.categoria == Categoria.CHI }
 
@@ -228,7 +232,7 @@ fun buildSummaryLines(personagem: MeuPersonagem): List<String> {
     lines += ""
 
     // Create a lookup map: ID -> Best Definition
-    val definitionMap = listaVantagens
+    val definitionMap = allAdvantages
         .groupBy { it.id.keyify() }
         .mapValues { (_, candidates) ->
             candidates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!

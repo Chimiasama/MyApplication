@@ -1093,9 +1093,9 @@ class MainActivity : ComponentActivity() {
                                         UnifiedScreen(
                                             state = state,
                                             viewModel = criadorViewModel,
-                                            equipamentoCategorias = equipamentoCategorias,
-                                            superequipCategorias  = superequipCategorias,
-                                            listaSuperPoderes     = listaSuperPoderes,
+                                            equipamentoCategorias = criadorViewModel.gameDataStore.getEquipamentoCategorias(),
+                                            superequipCategorias  = criadorViewModel.gameDataStore.getSuperequipCategorias(),
+                                            listaSuperPoderes     = criadorViewModel.gameDataStore.getSuperPoderes(),
                                             modoOficialAtivo      = state.modoOficialAtivo,
                                             onShowMessage         = { message ->
                                                 scope.launch {

@@ -10,12 +10,12 @@ class ResolveAncestryComplicationsSnapshotUseCase(
         val previousAutomaticDisadvantages: List<String>,
         val currentAutomaticDisadvantages: List<String>,
         val availableComplications: List<Complicacao>,
-        val selectedComplications: Map<Complicacao, Int?>,
-        val originPriorityResolver: (Complicacao) -> Int
+        val selectedComplications: Map<Complicacao, String?>,
+        val originPriorityResolver: (String?) -> Int
     )
 
     data class Result(
-        val selectedComplications: Map<Complicacao, Int>
+        val selectedComplications: Map<Complicacao, String?>
     )
 
     fun execute(params: Params): Result {
