@@ -78,6 +78,8 @@ import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.toMeuPersonagem
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.keyify
 import kotlinx.coroutines.Dispatchers
@@ -122,6 +124,7 @@ private fun getCompendiumIcons(state: CriadorState): List<Pair<ImageVector, Colo
 @Composable
 fun SummaryContent(
     state: CriadorState,
+    viewModel: CriadorViewModel = viewModel(),
     imageUri: Uri? = null,
     onSelectImage: () -> Unit = {}
 ) {
@@ -176,7 +179,7 @@ fun SummaryContent(
         }
     }
 
-    val sections = rememberSummarySections(state)
+    val sections = rememberSummarySections(state, viewModel)
 
     val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
@@ -471,7 +474,7 @@ fun BasicCharacterInfo(
     state: CriadorState,
     showDerivedStats: Boolean = false
 ) {
-    val sections = rememberSummarySections(state)
+    val sections = rememberSummarySections(state, viewModel())
     val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
 
@@ -520,8 +523,8 @@ fun BasicCharacterInfo(
 }
 
 @Composable
-fun SummaryCompact(state: CriadorState) {
-    val sections = rememberSummarySections(state)
+fun SummaryCompact(state: CriadorState, viewModel: CriadorViewModel = viewModel()) {
+    val sections = rememberSummarySections(state, viewModel)
     val traitsSection = sections.firstOrNull { it.title == "Atributos" }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
     val gearSection = sections.firstOrNull { it.title == "Recursos & Equipamentos" }
@@ -574,9 +577,10 @@ private val inventoryTitles = setOf(
 )
 
 @Composable
-private fun rememberSummarySections(state: CriadorState): List<SummarySection> {
+private fun rememberSummarySections(state: CriadorState, viewModel: CriadorViewModel): List<SummarySection> {
     val personagem = state.toMeuPersonagem()
-    val allLines = buildSummaryLines(personagem)
+    val allAdvantages = viewModel.gameDataStore.getVantagens()
+    val allLines = buildSummaryLines(personagem, allAdvantages)
     val anotIndex = allLines.indexOf("Anotações")
     val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
 
