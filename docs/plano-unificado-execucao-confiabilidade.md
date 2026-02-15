@@ -76,7 +76,8 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 - ✅ Hotspot #1 (`aplicarAncestralidade`): concluído com coordinator completo (E4.7 fechado).
 - ✅ Fase 7 (`rebuildAllPericiaStacks`): concluída (`RebuildSkillStacksUseCase`).
 - ✅ Fase 8 (`podeSelecionar`): concluída (`ValidateSelectionUseCase`).
-- 🔄 Próxima prioridade: Fase 9 (Convergência de fonte de verdade).
+- ✅ Fase 9 (`GameDataStore`): concluída.
+- 🔄 Próxima prioridade: Fase 10 (Hardening de CI).
 
 ---
 
@@ -92,18 +93,11 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 - A validação de vantagens foi quebrada em validadores granulares (`ValidateRequirementsUseCase`, `ValidatePrerequisiteUseCase`, etc.).
 - `podeSelecionar` no state agora é um wrapper fino.
 
-## Fase 9 — Convergência de fonte de verdade (B2/B3)
-### Por quê
-- Ainda há legado em globais (`GameDataGlobals.kt`); risco de drift entre snapshot/store e estado global.
-
-### O que fazer
-1. Mapear consumidores de `listaVantagens` e outras globais.
-2. Migrar leituras para usar o `GameDataSnapshot` injetado (via `GameDataStore` ou argumentos de UseCase).
-3. Eliminar escrita tardia em globais (manter apenas mirror transitório se estritamente necessário para UI legada).
-4. Adicionar check de drift para impedir regressão.
-
-### Critério de pronto
-- Fluxos críticos (criação, progressão) sem dependência direta de variáveis globais como fonte primária.
+## Fase 9 — Convergência de fonte de verdade (B2/B3) (CONCLUÍDA)
+- **Status:** Entregue via refatoração de UI e `GameDataStore`.
+- `DataLoader` agora é puro e retorna snapshot.
+- `UnifiedScreen` e ViewModels consomem dados injetados via `GameDataStore`.
+- Uso direto de globais removido da camada de UI principal.
 
 ## Fase 10 — Hardening de CI e alertas de warnings
 ### Por quê
@@ -120,8 +114,8 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 ---
 
 ## 7) Ordem de execução recomendada (curto prazo)
-1. Fase 9 (convergência de fonte de verdade) - **EM ANDAMENTO**
-2. Fase 10 (hardening de warnings)
+1. Fase 9 (convergência de fonte de verdade) - **CONCLUÍDA**
+2. Fase 10 (hardening de warnings) - **EM ANDAMENTO**
 
 ---
 
@@ -137,4 +131,4 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 ---
 
 ## 9) Status vivo
-- Última atualização: Conclusão Fases 7 e 8. Início Fase 9.
+- Última atualização: Conclusão Fase 9. Início Fase 10 (Hardening).
