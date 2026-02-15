@@ -1970,7 +1970,7 @@ private fun VantagemItem(
 
                 AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
                     val rawDescription = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) {
-                        vant.originalDescription.trim()
+                        vant.originalDescription!!.trim()
                     } else {
                         vant.descricao.trim()
                     }

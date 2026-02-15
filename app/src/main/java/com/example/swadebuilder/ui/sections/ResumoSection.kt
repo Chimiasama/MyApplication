@@ -30,7 +30,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Remove
@@ -114,7 +114,7 @@ private fun getCompendiumIcons(state: CriadorState): List<Pair<ImageVector, Colo
             state.compendioCidadeSolVaporAtivo
 
     if (!isAnySpecificBook) {
-        icons.add(Icons.Default.MenuBook to Color(0xFF6D4C41)) // Brown 600
+        icons.add(Icons.AutoMirrored.Filled.MenuBook to Color(0xFF6D4C41)) // Brown 600
     }
 
     return icons

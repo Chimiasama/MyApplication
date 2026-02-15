@@ -572,7 +572,7 @@ fun SuperPoderesSection(
                         is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
                         is JsonPrimitive -> listOfNotNull(m.contentOrNull)
                         else -> emptyList()
-                    }.mapNotNull { it?.trim() }
+                    }.mapNotNull { it.trim() }
                         .filter { it.isNotEmpty() }
                         .distinct()
                 }

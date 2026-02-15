@@ -1094,7 +1094,8 @@ private fun EquipamentoSection(
     val tensaoLimite = if (isPersonagemRobotico) {
         state.limiteModsRoboticos()
     } else {
-        state.valoresAtributos["VIGOR"]?.intValue ?: 4
+        val vigor = state.valoresAtributos["VIGOR"]
+        vigor?.intValue ?: 4
     }
 
     EquipamentoSection(

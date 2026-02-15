@@ -161,7 +161,7 @@ fun AncestralidadesSection(
         compendioCrystalHeartAtivo
     ) {
         val all = com.example.swadebuilder.listaAncestralidadesJson
-        val pathfinderLabel = context.getString(R.string.sw_pathfinder_label)
+        val pathfinderLabel = context.getString(R.string.sw_pathfinder_label) ?: "Pathfinder"
 
         fun adjustName(nome: String): String {
             if (compendioPathfinderAtivo) {
