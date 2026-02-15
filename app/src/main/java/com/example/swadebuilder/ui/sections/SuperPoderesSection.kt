@@ -62,7 +62,6 @@ import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.R
 import com.example.swadebuilder.SuperPoder
 import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.PowerEffect
@@ -339,6 +338,7 @@ fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     viewModel: CriadorViewModel = viewModel(),
+    allAdvantages: List<Vantagem>,
     onShowMessage: (String) -> Unit
 ) {
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
@@ -1034,7 +1034,7 @@ fun SuperPoderesSection(
     }
 
     if (showSuperVantPicker) {
-        val vantagensDisponiveis: List<Vantagem> = listaVantagens.filter { v ->
+        val vantagensDisponiveis: List<Vantagem> = allAdvantages.filter { v ->
             v.categoria != Categoria.LENDARIAS &&
                     !v.bloqueadaComoSuperVantagem() &&
                     state.vantagensSelecionadas.none { it.id == v.id }
@@ -1195,6 +1195,7 @@ fun SuperPoderesSection(
 fun SuperPoderesContent(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
+    allAdvantages: List<Vantagem>,
     onShowMessage: (String) -> Unit
 ) {
     SectionCard(
@@ -1213,6 +1214,7 @@ fun SuperPoderesContent(
         SuperPoderesSection(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
+            allAdvantages = allAdvantages,
             onShowMessage = onShowMessage
         )
     }
