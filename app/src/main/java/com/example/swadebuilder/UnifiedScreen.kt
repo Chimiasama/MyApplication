@@ -765,6 +765,7 @@ private fun ProgressionDetailContent(
                     state = state,
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
                     viewModel = viewModel,
+                    allAdvantages = viewModel.gameDataStore.getVantagens(),
                     onUserFeedback = onUserFeedback
                 )
             }
@@ -952,6 +953,7 @@ private fun CreationDetailContent(
                 state = state,
                 multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
                 viewModel = viewModel,
+                allAdvantages = viewModel.gameDataStore.getVantagens(),
                 onUserFeedback = onUserFeedback
             )
         }

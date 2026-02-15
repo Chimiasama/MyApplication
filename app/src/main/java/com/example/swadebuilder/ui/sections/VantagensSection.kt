@@ -171,6 +171,7 @@ fun VantagensContent(
     state: CriadorState,
     multiplosAAHabilitados: Boolean,
     viewModel: CriadorViewModel = viewModel(),
+    allAdvantages: List<Vantagem>,
     onUserFeedback: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -198,12 +199,11 @@ fun VantagensContent(
         }
     }
 
-    val listaVantagensGlobal = listaVantagens
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
     val listaVantagens: List<Vantagem> =
-        remember(multiplosAAHabilitados, listaVantagensGlobal) {
-            listaVantagensGlobal
+        remember(multiplosAAHabilitados, allAdvantages) {
+            allAdvantages
         }
 
     remember(state.modoSupers) {
