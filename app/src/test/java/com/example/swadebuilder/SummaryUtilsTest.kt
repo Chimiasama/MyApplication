@@ -40,7 +40,7 @@ class SummaryUtilsTest {
             pontosRestantes = 0
         )
 
-        val lines = buildSummaryLines(personagem)
+        val lines = buildSummaryLines(personagem, emptyList())
 
         // Find lines starting with "Atletismo:"
         val atletismoLines = lines.filter { it.startsWith("Atletismo:") }
