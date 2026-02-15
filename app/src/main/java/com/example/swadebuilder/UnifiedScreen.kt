@@ -63,6 +63,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
