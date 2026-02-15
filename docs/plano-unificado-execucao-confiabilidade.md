@@ -77,7 +77,7 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 - ✅ Fase 7 (`rebuildAllPericiaStacks`): concluída (`RebuildSkillStacksUseCase`).
 - ✅ Fase 8 (`podeSelecionar`): concluída (`ValidateSelectionUseCase`).
 - ✅ Fase 9 (`GameDataStore`): concluída.
-- 🔄 Próxima prioridade: Fase 10 (Hardening de CI).
+- ✅ Fase 10 (Hardening de CI): concluída.
 
 ---
 
@@ -99,23 +99,17 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 - `UnifiedScreen` e ViewModels consomem dados injetados via `GameDataStore`.
 - Uso direto de globais removido da camada de UI principal.
 
-## Fase 10 — Hardening de CI e alertas de warnings
-### Por quê
-- Warnings não bloqueantes acumulados podem virar erro em upgrades futuros.
-
-### O que fazer
-1. Criar backlog priorizado por risco de warnings (Kotlin/AGP/Compose/serialization).
-2. Tratar por ondas pequenas sem misturar com bugfix funcional.
-3. Evoluir gate para monitorar tendência (não necessariamente bloquear no início).
-
-### Critério de pronto
-- Tendência de warnings em queda + risco futuro controlado.
+## Fase 10 — Hardening de CI e alertas de warnings (CONCLUÍDA)
+- **Status:** Concluído.
+- Correção de warnings de compilador (Unnecessary safe call, Elvis operator, Deprecated APIs).
+- Remoção de plugins e flags Gradle obsoletos.
+- Atualização do Gate de Confiabilidade para prevenir regressão de arquitetura.
 
 ---
 
 ## 7) Ordem de execução recomendada (curto prazo)
 1. Fase 9 (convergência de fonte de verdade) - **CONCLUÍDA**
-2. Fase 10 (hardening de warnings) - **EM ANDAMENTO**
+2. Fase 10 (hardening de warnings) - **CONCLUÍDA**
 
 ---
 
@@ -131,4 +125,16 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 ---
 
 ## 9) Status vivo
-- Última atualização: Conclusão Fase 9. Início Fase 10 (Hardening).
+- Última atualização: Conclusão Fases 9 e 10. Projeto finalizado.
+
+## 10) Conclusão e Próximos Passos
+O plano de refatoração para confiabilidade e modernização arquitetural foi executado com sucesso.
+- **Confiabilidade:** Gate de regressão implementado e ativo no CI.
+- **Arquitetura:** Lógica de negócio extraída de `CriadorState` para UseCases testáveis (`RebuildSkillStacks`, `ValidateSelection`, `ApplyAncestry`).
+- **Dados:** Fonte de verdade unificada em `GameDataStore`/`Snapshot`, desacoplando a UI de variáveis globais.
+- **Qualidade:** Redução significativa de warnings e limpeza de código legado.
+
+**Recomendação de Manutenção:**
+- Monitorar novos warnings em atualizações de dependências.
+- Manter o script `phase6_reliability_gate.sh` no pipeline de CI.
+- Continuar a migração gradual de quaisquer referências legadas remanescentes (se houver) para `GameDataStore`.
