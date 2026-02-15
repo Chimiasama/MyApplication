@@ -66,7 +66,7 @@ class CriadorViewModel(
     private val _feedbackMessages = mutableStateListOf<String>()
     val feedbackMessages: List<String> = _feedbackMessages
 
-    private val gameDataStore = GameDataStore()
+    val gameDataStore = GameDataStore()
     private val ensureDefaultSpecializationsUseCase = EnsureDefaultSpecializationsUseCase()
     private val upsertCrystalHeartUseCase = UpsertCrystalHeartUseCase()
     private val removeCrystalHeartUseCase = RemoveCrystalHeartUseCase()
