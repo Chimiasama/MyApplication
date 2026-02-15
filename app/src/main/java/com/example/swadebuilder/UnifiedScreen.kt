@@ -512,14 +512,12 @@ private fun CreatorTabRow(
         edgePadding = 0.dp,
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.primary,
-        indicator = { tabPositions ->
-            if (selectedIndex < tabPositions.size) {
-                TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedIndex]),
-                    height = 3.dp,
-                    shape = androidx.compose.foundation.shape.RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)
-                )
-            }
+        indicator = {
+            TabRowDefaults.PrimaryIndicator(
+                modifier = Modifier.tabIndicatorOffset(selectedIndex),
+                height = 3.dp,
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp)
+            )
         }
     ) {
         tabs.forEach { tab ->
