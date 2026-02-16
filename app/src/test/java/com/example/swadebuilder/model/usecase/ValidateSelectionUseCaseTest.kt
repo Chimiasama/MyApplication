@@ -4,7 +4,7 @@ import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
-import com.example.swadebuilder.Estagio
+import com.example.swadebuilder.model.Estagio
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

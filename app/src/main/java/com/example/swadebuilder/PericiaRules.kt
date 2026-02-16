@@ -1,5 +1,6 @@
 package com.example.swadebuilder
 
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RuleConstants
 import com.example.swadebuilder.util.keyify
 import kotlin.math.max

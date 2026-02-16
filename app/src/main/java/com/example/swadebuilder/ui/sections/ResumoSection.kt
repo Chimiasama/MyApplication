@@ -74,9 +74,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.buildSummaryLines
-import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.toMeuPersonagem
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.CriadorViewModel
@@ -262,7 +261,7 @@ fun SummaryContent(
     val heartValue = state.coracaoCrystalSelecionado?.nome
 
     val monstroInfo = if (state.modoMonstroAtivo) {
-        val tipoNome = com.example.swadebuilder.listaMonstroTemplates.find { it.id == state.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
+        val tipoNome = state.listaMonstroTemplates.find { it.id == state.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
         "\nTipo de Monstro: $tipoNome"
     } else ""
 
@@ -489,7 +488,7 @@ fun BasicCharacterInfo(
     val heartValue = state.coracaoCrystalSelecionado?.nome
 
     val monstroInfo = if (state.modoMonstroAtivo) {
-        val tipoNome = com.example.swadebuilder.listaMonstroTemplates
+        val tipoNome = state.listaMonstroTemplates
             .find { it.id == state.tipoMonstroSelecionado }
             ?.nome
             ?: "Desconhecido"
@@ -580,7 +579,18 @@ private val inventoryTitles = setOf(
 private fun rememberSummarySections(state: CriadorState, viewModel: CriadorViewModel): List<SummarySection> {
     val personagem = state.toMeuPersonagem()
     val allAdvantages = viewModel.gameDataStore.getVantagens()
-    val allLines = buildSummaryLines(personagem, allAdvantages)
+    val allLines = buildSummaryLines(
+        personagem = personagem,
+        allAdvantages = allAdvantages,
+        listaAncestralidades = viewModel.gameDataStore.getAncestralidades(),
+        listaMonstros = viewModel.gameDataStore.getMonstroTemplates(),
+        listaComplicacoes = viewModel.gameDataStore.getComplicacoes(),
+        listaAtributos = viewModel.gameDataStore.getAtributos(),
+        mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
+        listaPericias = viewModel.gameDataStore.getPericias(),
+        listaPoderes = viewModel.gameDataStore.getPoderes(),
+        arcanoInfo = viewModel.gameDataStore.getArcanoInfoMap()
+    )
     val anotIndex = allLines.indexOf("Anotações")
     val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines
 
@@ -1064,7 +1074,7 @@ private fun SpecializationsSummaryCard(
     var editNewName by rememberSaveable { mutableStateOf("") }
     var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
 
-    val skillsWithSpecs = listaPericias.filter { per ->
+    val skillsWithSpecs = state.listaPericias.filter { per ->
         val hasPoints = state.rawTotal(per) > 0 || per.basica
         val specs = state.especializacoesPorPericia[per.nome]
         hasPoints && specs != null && (specs.principal != null || specs.lista.isNotEmpty())

@@ -45,7 +45,7 @@ object DerivedAttributesCalculator {
         val base = 6
 
         val racialPenalty =
-            com.example.swadebuilder.listaAncestralidadesJson
+            state.listaAncestralidadesJson
                 .firstOrNull { it.nome.keyify() == state.ancestralidade }
                 ?.desvantagens
                 ?.any { it.contains("MOVIMENTAÇÃO REDUZIDA", ignoreCase = true) }

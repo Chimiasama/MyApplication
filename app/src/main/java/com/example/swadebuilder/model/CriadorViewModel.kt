@@ -8,11 +8,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaComplicacoes
-import com.example.swadebuilder.listaCoracoesCrystal
-import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.listaVantagens
-import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.toDiceString
@@ -45,6 +40,9 @@ import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.ids.PowerIds
 import com.example.swadebuilder.model.rules.RulesResolver
 import com.example.swadebuilder.model.ids.SkillIds
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.model.ArcanoInfo
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -86,18 +84,22 @@ class CriadorViewModel(
     private val normalizeArcaneBackgroundChoiceUseCase = NormalizeArcaneBackgroundChoiceUseCase()
     private val rulesResolver = RulesResolver()
 
-    private fun periciasData() = gameDataStore.pericias(listaPericias)
-    private fun vantagensData() = gameDataStore.vantagens(listaVantagens)
-    private fun complicacoesData() = gameDataStore.complicacoes(listaComplicacoes)
-    private fun coracoesData() = gameDataStore.coracoesCrystal(listaCoracoesCrystal)
-    private fun periciasMapData() = gameDataStore.periciasMap(mapaPericias)
+    private fun periciasData() = gameDataStore.getPericias()
+    private fun vantagensData() = gameDataStore.getVantagens()
+    private fun complicacoesData() = gameDataStore.getComplicacoes()
+    private fun coracoesData() = gameDataStore.getCoracoesCrystal()
+    private fun periciasMapData() = gameDataStore.getPericiasMap()
 
     suspend fun carregarDadosDeJogo(context: Context, activeModules: Set<String>): GameDataSnapshot {
-        return gameDataRepository.load(context, activeModules).also { gameDataStore.updateSnapshot(it) }
+        return gameDataRepository.load(context, activeModules).also {
+            gameDataStore.updateSnapshot(it)
+            state.updateGameData(it)
+        }
     }
 
     internal fun aplicarGameDataSnapshot(snapshot: GameDataSnapshot) {
         gameDataStore.updateSnapshot(snapshot)
+        state.updateGameData(snapshot)
     }
     fun logFeedback(message: String) {
         _feedbackMessages.add(message)
@@ -862,7 +864,7 @@ class CriadorViewModel(
     fun salvarCrystalHeartPersonalizado(context: Context, heart: CrystalHeart): CrystalHeart? {
         val saved = CustomCrystalHeartStorage.saveCustomHeart(context, heart) ?: return null
         val updated = upsertCrystalHeartUseCase.execute(coracoesData(), saved)
-        listaCoracoesCrystal = updated
+        state.listaCoracoesCrystal = updated
         gameDataStore.withUpdatedCoracoesCrystal(updated)
         return saved
     }
@@ -877,7 +879,7 @@ class CriadorViewModel(
             currentlySelectedId = state.coracaoCrystalSelecionado?.id
         )
 
-        listaCoracoesCrystal = result.updated
+        state.listaCoracoesCrystal = result.updated
         gameDataStore.withUpdatedCoracoesCrystal(result.updated)
         state.coracaoCrystalSelecionado = result.newSelected
         return true
@@ -966,7 +968,7 @@ class CriadorViewModel(
         }
     }
 
-    fun increaseSkillForAdvancement(skill: com.example.swadebuilder.Pericia): Boolean {
+    fun increaseSkillForAdvancement(skill: com.example.swadebuilder.model.Pericia): Boolean {
         if (!state.skillAdvancementInProgress) return false
 
         // Check if user has points
@@ -987,7 +989,7 @@ class CriadorViewModel(
         return true
     }
 
-    fun decreaseSkillForAdvancement(skill: com.example.swadebuilder.Pericia): Boolean {
+    fun decreaseSkillForAdvancement(skill: com.example.swadebuilder.model.Pericia): Boolean {
         if (!state.skillAdvancementInProgress) return false
 
         // Ensure the skill was actually increased in this session

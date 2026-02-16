@@ -40,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaCoracoesCrystal
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.ui.components.CollapsibleSection
@@ -78,9 +77,9 @@ fun CrystalHeartSection(
                 )
             } else {
                 val selectedHeart = state.coracaoCrystalSelecionado
-                val placeholderHeart = listaCoracoesCrystal.firstOrNull { it.placeholder }
-                val customHearts = listaCoracoesCrystal.filter { it.custom }
-                val standardHearts = listaCoracoesCrystal.filter { !it.custom && !it.placeholder }
+                val placeholderHeart = state.listaCoracoesCrystal.firstOrNull { it.placeholder }
+                val customHearts = state.listaCoracoesCrystal.filter { it.custom }
+                val standardHearts = state.listaCoracoesCrystal.filter { !it.custom && !it.placeholder }
                 var previewHeart by remember { mutableStateOf<CrystalHeart?>(null) }
                 var editHeart by remember { mutableStateOf<CrystalHeart?>(null) }
 

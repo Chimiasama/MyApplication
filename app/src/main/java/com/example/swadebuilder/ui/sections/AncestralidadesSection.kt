@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -160,7 +159,7 @@ fun AncestralidadesSection(
         compendioSciFiAtivo,
         compendioCrystalHeartAtivo
     ) {
-        val all = com.example.swadebuilder.listaAncestralidadesJson
+        val all = state.listaAncestralidadesJson
         val pathfinderLabel = context.getString(R.string.sw_pathfinder_label) ?: "Pathfinder"
 
         fun adjustName(nome: String): String {

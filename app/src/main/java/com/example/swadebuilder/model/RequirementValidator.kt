@@ -1,10 +1,8 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaDeEstagios
-import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.mapaPericias
-import com.example.swadebuilder.nivelParaEstagio
+import com.example.swadebuilder.model.listaDeEstagios
+import com.example.swadebuilder.model.nivelParaEstagio
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 
@@ -94,7 +92,7 @@ object RequirementValidator {
             }
 
             if (choiceSeguro == null) {
-                val anyMaxAttr = com.example.swadebuilder.listaAtributos.any { a ->
+                val anyMaxAttr = state.listaAtributos.any { a ->
                     state.valoresAtributos[a]!!.intValue == state.atributoMaxRaw(a)
                 }
                 val anyMaxPer = state.periciasComIdiomas().any { p ->
@@ -104,10 +102,10 @@ object RequirementValidator {
             }
 
             val choiceKey = choiceSeguro.keyify()
-            return if (com.example.swadebuilder.listaAtributos.contains(choiceKey)) {
+            return if (state.listaAtributos.contains(choiceKey)) {
                 state.valoresAtributos[choiceKey]!!.intValue == state.atributoMaxRaw(choiceKey)
             } else {
-                val per = mapaPericias[choiceKey] ?: return false
+                val per = state.mapaPericias[choiceKey] ?: return false
                 state.rawTotal(per) == state.periciaCapRaw(per)
             }
         }
@@ -200,7 +198,7 @@ object RequirementValidator {
         // 10) Atributos mínimos
         if (v.requisitos.atributoMin.any { (nome, min) ->
                 val chaveNorm = nome.uppercase().semAcentos().trim()
-                val attrKey = mapaAtributosDisplay.keys.firstOrNull {
+                val attrKey = state.mapaAtributosDisplay.keys.firstOrNull {
                     it.equals(chaveNorm, ignoreCase = true)
                 } ?: chaveNorm
                 val atual = state.valoresAtributos[attrKey]?.intValue ?: return false
@@ -211,13 +209,13 @@ object RequirementValidator {
         val periciaMinMap = v.requisitos.periciaMin
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
             val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
-                val per = mapaPericias[perNome.keyify()]
+                val per = state.mapaPericias[perNome.keyify()]
                 per != null && state.rawTotal(per) >= minRaw
             }
             if (!atendeUma) return false
         } else {
             if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = mapaPericias[perNome.keyify()] ?: return@any false
+                    val per = state.mapaPericias[perNome.keyify()] ?: return@any false
                     state.rawTotal(per) < minRaw
                 }) {
                 return false
@@ -228,7 +226,7 @@ object RequirementValidator {
         val periciaMinOpcMap = v.requisitos.periciaMinOpcional
         if (periciaMinOpcMap.isNotEmpty()) {
             val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
-                val per = mapaPericias[perNome.keyify()]
+                val per = state.mapaPericias[perNome.keyify()]
                 per != null && state.rawTotal(per) >= minRaw
             }
             if (!atendeUmaOpc) return false

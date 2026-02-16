@@ -5,10 +5,9 @@ import android.content.res.AssetManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.swadebuilder.AppData
-import com.example.swadebuilder.ArcanoInfo
-import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.model.ArcanoInfo
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -325,13 +324,7 @@ object DataLoader {
              if (override != null) item.copy(origem = override) else item
         }
 
-        AppData.basicasVantagens = todasVantagens.filter { it.origem.equals("BASICO", true) }
-        AppData.superVantagens = todasVantagens.filter { it.origem.equals("SUPER", ignoreCase = true) }
-        AppData.horrorVantagens = todasVantagens.filter { it.origem.equals("HORROR", ignoreCase = true) }
-        AppData.pathfinderVantagens = todasVantagens.filter { it.origem.equals("PATHFINDER", ignoreCase = true) }
-
         val localListaVantagens = todasVantagens
-        AppData.superVantagensParaDetalhe = AppData.superVantagens
 
         if ("CIDADE_SOL_VAPOR" in keys) {
             val steamAll = todasVantagens.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }

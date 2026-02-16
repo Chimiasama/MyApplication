@@ -58,9 +58,8 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.PericiaRuleSnapshot
 import com.example.swadebuilder.R
 import com.example.swadebuilder.calcularPericiaRules
-import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.EspecializacoesDto
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbLegacyActions
@@ -91,23 +90,23 @@ fun PericiasContent(
 
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
-    var specTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var specTarget by remember { mutableStateOf<Pericia?>(null) }
     var buyingExtraSpec by rememberSaveable { mutableStateOf(false) }
 
     var showEditDialog by rememberSaveable { mutableStateOf(false) }
     var editIsPrincipal by rememberSaveable { mutableStateOf(false) }
-    var editPerTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var editPerTarget by remember { mutableStateOf<Pericia?>(null) }
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
 
     // PROMPT 5: State for Note Dialog
     var showNoteDialog by rememberSaveable { mutableStateOf(false) }
     var noteText by rememberSaveable { mutableStateOf("") }
-    var noteTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var noteTarget by remember { mutableStateOf<Pericia?>(null) }
 
     var showIdiomaDialog by rememberSaveable { mutableStateOf(false) }
     var idiomaText by rememberSaveable { mutableStateOf("") }
-    var idiomaTarget by rememberSaveable { mutableStateOf<com.example.swadebuilder.Pericia?>(null) }
+    var idiomaTarget by remember { mutableStateOf<Pericia?>(null) }
     var idiomaPendingCost by rememberSaveable { mutableIntStateOf(0) }
     var idiomaEditMode by rememberSaveable { mutableStateOf(false) }
 
@@ -288,7 +287,7 @@ fun PericiasContent(
                                             }
                                         }
                                         withStyle(SpanStyle(fontSize = defaultSize / 2)) {
-                                            val displayAtr = mapaAtributosDisplay[regra.attrKey] ?: regra.attrKey
+                                            val displayAtr = state.mapaAtributosDisplay[regra.attrKey] ?: regra.attrKey
                                             append(" ($displayAtr)")
                                         }
                                     },

@@ -48,10 +48,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.listaVantagens
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
@@ -65,6 +63,9 @@ import kotlinx.coroutines.launch
 fun SupersDialog(
     state: CriadorState,
     viewModel: CriadorViewModel,
+    listaAtributos: List<String>,
+    listaPericias: List<Pericia>,
+    listaVantagens: List<Vantagem>,
     onConfirmLock: () -> Unit,
     onDismiss: () -> Unit
 ) {

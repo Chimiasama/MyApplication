@@ -56,8 +56,6 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
-import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.listaComplicacoes
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.isComplicacaoVisible
@@ -104,7 +102,7 @@ fun ComplicacoesSection(
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedSeverity by rememberSaveable { mutableStateOf("Todos") }
 
-    val complicacoesFiltradas = listaComplicacoes.filter { comp ->
+    val complicacoesFiltradas = state.listaComplicacoes.filter { comp ->
         if (!state.isComplicacaoVisible(comp, origensAtivas)) return@filter false
 
         // Filter Logic

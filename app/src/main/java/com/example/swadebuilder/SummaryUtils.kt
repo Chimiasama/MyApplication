@@ -1,10 +1,14 @@
 package com.example.swadebuilder
 
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.model.MonstroTemplate
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
@@ -16,13 +20,21 @@ import kotlin.math.max
 
 fun buildSummaryLines(
     personagem: MeuPersonagem,
-    allAdvantages: List<Vantagem>
+    allAdvantages: List<Vantagem>,
+    listaAncestralidades: List<RacialModifier>,
+    listaMonstros: List<MonstroTemplate>,
+    listaComplicacoes: List<Complicacao>,
+    listaAtributos: List<String>,
+    mapaAtributosDisplay: Map<String, String>,
+    listaPericias: List<Pericia>,
+    listaPoderes: List<Poder>,
+    arcanoInfo: Map<String, Triple<Int, Int, String>>
 ): List<String> {
     val lines = mutableListOf<String>()
 
     val showOfficialNames = personagem.modoOficialAtivo
 
-    val ancestralidadeNomeObj = listaAncestralidadesJson
+    val ancestralidadeNomeObj = listaAncestralidades
         .filter { it.nome.keyify() == personagem.ancestralidade }
         .filter { item ->
             val origin = item.origem.uppercase()
@@ -42,7 +54,7 @@ fun buildSummaryLines(
             }
         }
         .maxByOrNull { CriadorState.getOriginPriority(it.origem) }
-        ?: listaAncestralidadesJson.firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+        ?: listaAncestralidades.firstOrNull { it.nome.keyify() == personagem.ancestralidade }
 
     val rawAncestralidadeNome = if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
         ancestralidadeNomeObj.originalName
@@ -57,9 +69,25 @@ fun buildSummaryLines(
         .titleCase()
 
     val monstroNome = if (personagem.modoMonstroAtivo) {
-        val tipoNome = listaMonstroTemplates.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
+        val tipoNome = listaMonstros.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
         " (Monstro: $tipoNome)"
     } else ""
+
+    fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
+        val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
+        return rawIds.map { compId ->
+            val comp = mapPorId[compId.keyify()]
+            if (comp != null) {
+                if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
+                    comp.originalName
+                } else {
+                    comp.name
+                }
+            } else {
+                compId.replace('_', ' ').titleCase()
+            }
+        }
+    }
 
     val vantagensNomeKey: List<String> = allAdvantages
         .filter { it.id in personagem.vantagens }
@@ -476,20 +504,4 @@ fun buildSummaryLines(
     }
 
     return lines
-}
-
-private fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
-    val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
-    return rawIds.map { compId ->
-        val comp = mapPorId[compId.keyify()]
-        if (comp != null) {
-            if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
-                comp.originalName
-            } else {
-                comp.name
-            }
-        } else {
-            compId.replace('_', ' ').titleCase()
-        }
-    }
 }

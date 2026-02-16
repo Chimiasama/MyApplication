@@ -28,14 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.TOTAL_PROGRESS_LIMIT
-import com.example.swadebuilder.dynamicStageCaps
-import com.example.swadebuilder.listaComplicacoes
-import com.example.swadebuilder.listaDeEstagios
-import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.HindranceChangeType
+import com.example.swadebuilder.model.TOTAL_PROGRESS_LIMIT
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.dynamicStageCaps
+import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 
@@ -173,7 +171,7 @@ private fun describeAction(
     }
 
     is AdvancementAction.IncreaseAttribute -> {
-        val attrName = mapaAtributosDisplay[action.attributeName] ?: action.attributeName
+        val attrName = state.mapaAtributosDisplay[action.attributeName] ?: action.attributeName
         "Atributo: $attrName"
     }
 
@@ -190,7 +188,7 @@ private fun describeAction(
     }
 
     is AdvancementAction.RemoveHindrance -> {
-        val compName = listaComplicacoes.firstOrNull { it.id == action.hindranceId }
+        val compName = state.listaComplicacoes.firstOrNull { it.id == action.hindranceId }
         val baseLabel = compName?.id ?: action.hindranceId
         when (action.changeType) {
             HindranceChangeType.RESERVATION -> "Reserva de Complicação: $baseLabel"

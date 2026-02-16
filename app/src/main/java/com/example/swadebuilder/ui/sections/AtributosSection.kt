@@ -40,9 +40,6 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.mapaAtributosDescricao
-import com.example.swadebuilder.mapaAtributosDisplay
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
@@ -53,14 +50,15 @@ import com.example.swadebuilder.util.semAcentos
 @Composable
 fun AtributosContent(
     state: CriadorState,
+    listaAtributos: List<String>,
+    mapaAtributosDisplay: Map<String, String>,
+    mapaAtributosDescricao: Map<String, String>,
     onUserFeedback: () -> Unit
 ) {
     LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
-
-    listaAtributos
 
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
 

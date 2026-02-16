@@ -1,27 +1,13 @@
 package com.example.swadebuilder.phase0
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.listaAncestralidadesJson
-import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.listaComplicacoes
-import com.example.swadebuilder.listaEquipamentos
-import com.example.swadebuilder.listaMonstroTemplates
-import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.listaPoderes
-import com.example.swadebuilder.listaSuperPoderes
-import com.example.swadebuilder.listaTropos
-import com.example.swadebuilder.listaVantagens
-import com.example.swadebuilder.mapaAtributosDescricao
-import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.mapaPericias
-import com.example.swadebuilder.racialAttrMinMap
-import com.example.swadebuilder.racialSkillStartMap
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.GameDataSnapshot
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -32,41 +18,84 @@ class Phase0CriticalFlowsTest {
 
     private lateinit var atletismo: Pericia
     private lateinit var atirar: Pericia
+    private lateinit var testSnapshot: GameDataSnapshot
 
     @Before
     fun setupFixtureData() {
-        listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
-        mapaAtributosDisplay = listaAtributos.associateWith { it }
-        mapaAtributosDescricao = listaAtributos.associateWith { "" }
+        val listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
+        val mapaAtributosDisplay = listaAtributos.associateWith { it }
+        val mapaAtributosDescricao = listaAtributos.associateWith { "" }
 
         atletismo = Pericia(nome = "ATLETISMO", atributo = "AGILIDADE", basica = true, origem = "BASICO")
         atirar = Pericia(nome = "ATIRAR", atributo = "AGILIDADE", basica = false, origem = "BASICO")
 
-        listaPericias = listOf(atletismo, atirar)
-        mapaPericias = listaPericias.associateBy { it.nome }
+        val listaPericias = listOf(atletismo, atirar)
+        val mapaPericias = listaPericias.associateBy { it.nome }
 
-        listaAncestralidadesJson = listOf(
+        val listaAncestralidadesJson = listOf(
             RacialModifier(nome = "HUMANOS", atributos = emptyMap(), pericias = emptyMap()),
             RacialModifier(nome = "ELFOS", atributos = emptyMap(), pericias = mapOf("ATLETISMO" to 6))
         )
 
-        racialSkillStartMap = mapOf(
+        val racialSkillStartMap = mapOf(
             "ELFOS" to mapOf("ATLETISMO" to 6)
         )
-        racialAttrMinMap = emptyMap()
+        val racialAttrMinMap = emptyMap<String, Map<String, Int>>()
 
-        listaVantagens = emptyList()
-        listaComplicacoes = emptyList()
-        listaPoderes = emptyList()
-        listaEquipamentos = emptyList()
-        listaMonstroTemplates = emptyList()
-        listaTropos = emptyList()
-        listaSuperPoderes = emptyList()
+        testSnapshot = GameDataSnapshot(
+            listaComplicacoes = emptyList(),
+            listaCoracoesCrystal = emptyList(),
+            listaAncestralidadesJson = listaAncestralidadesJson,
+            listaMonstroTemplates = emptyList(),
+            racialAttrMinMap = racialAttrMinMap,
+            racialSkillStartMap = racialSkillStartMap,
+            listaAtributos = listaAtributos,
+            mapaAtributosDisplay = mapaAtributosDisplay,
+            listaPericias = listaPericias,
+            mapaPericias = mapaPericias,
+            mapaAtributosDescricao = mapaAtributosDescricao,
+            listaVantagens = emptyList(),
+            listaPoderes = emptyList(),
+            listaTropos = emptyList(),
+            listaEquipamentos = emptyList(),
+            equipamentoCategorias = emptyList(),
+            superequipCategorias = emptyList(),
+            listaSuperPoderes = emptyList(),
+            arcanoInfo = emptyList()
+        )
+    }
+
+    private fun createStateWithSnapshot(snapshot: GameDataSnapshot = testSnapshot): CriadorState {
+        val state = CriadorState()
+        state.updateGameData(snapshot)
+        return state
     }
 
     @Test
     fun snapshotRoundTrip_preservesCriticalCreationStacks() {
-        val state = CriadorState()
+        // Need to update snapshot locally for this test case
+        val complicacao = Complicacao(
+            id = "desagradavel",
+            name = "Desagradável",
+            severity = "Menor",
+            description = "",
+            origem = "BASICO"
+        )
+
+        val vantagem = Vantagem(
+            id = "alerta",
+            nome = "Alerta",
+            categoria = Categoria.COMBATE,
+            requisitos = Requisito(estagio = "Novato")
+        )
+
+        val localSnapshot = testSnapshot.copy(
+            listaComplicacoes = listOf(complicacao),
+            listaVantagens = listOf(vantagem)
+        )
+
+        val state = createStateWithSnapshot(localSnapshot)
+
         state.ensureAllAtributosRegistered()
         state.ensureAllPericiasRegistered()
 
@@ -83,28 +112,13 @@ class Phase0CriticalFlowsTest {
         state.spCostStackPorPericia.getValue(atletismo).add(1)
         state.spCostStackPorPericia.getValue(atirar).addAll(listOf(1, 2))
 
-        val complicacao = Complicacao(
-            id = "desagradavel",
-            name = "Desagradável",
-            severity = "Menor",
-            description = "",
-            origem = "BASICO"
-        )
-        listaComplicacoes = listOf(complicacao)
         state.complicacoesSelecionadas[complicacao] = "Menor"
-
-        val vantagem = Vantagem(
-            id = "alerta",
-            nome = "Alerta",
-            categoria = Categoria.COMBATE,
-            requisitos = Requisito(estagio = "Novato")
-        )
-        listaVantagens = listOf(vantagem)
         state.vantagensSelecionadas.add(vantagem)
 
         val snapshot = state.toSnapshot()
 
         val restored = CriadorState()
+        restored.updateGameData(localSnapshot)
         restored.restoreFromSnapshot(snapshot, mutableListOf())
         val restoredSnapshot = restored.toSnapshot()
 
@@ -120,7 +134,7 @@ class Phase0CriticalFlowsTest {
 
     @Test
     fun rebuildAllPericiaStacks_keepsSkillPoolNonNegative() {
-        val state = CriadorState()
+        val state = createStateWithSnapshot()
         state.ensureAllPericiasRegistered()
 
         state.baseIncsPorPericia[atirar] = 8
@@ -138,7 +152,7 @@ class Phase0CriticalFlowsTest {
 
     @Test
     fun aplicarAncestralidade_appliesRacialSkillStart() {
-        val state = CriadorState()
+        val state = createStateWithSnapshot()
 
         assertEquals(4, state.periciaStartRaw("HUMANOS", atletismo))
 
@@ -149,16 +163,20 @@ class Phase0CriticalFlowsTest {
         assertEquals(6, state.periciaStartRaw("ELFOS", atletismo))
         assertEquals(6, state.rawTotal(atletismo))
     }
+
     @Test
     fun periciasFiltradasPorCompendio_consideraLivrosAtivosAlemDoBasico() {
-        val state = CriadorState()
-
         val pilotarBasico = Pericia(nome = "PILOTAR", atributo = "AGILIDADE", basica = false, origem = "BASICO")
         val pilotarSciFi = Pericia(nome = "PILOTAR", atributo = "AGILIDADE", basica = false, origem = "SCI_FI")
         val ocultismoFantasia = Pericia(nome = "OCULTISMO", atributo = "ASTUCIA", basica = false, origem = "FANTASIA")
 
-        listaPericias = listOf(atletismo, pilotarBasico, pilotarSciFi, ocultismoFantasia)
-        mapaPericias = listaPericias.associateBy { it.nome }
+        val localListaPericias = listOf(atletismo, pilotarBasico, pilotarSciFi, ocultismoFantasia)
+        val localSnapshot = testSnapshot.copy(
+            listaPericias = localListaPericias,
+            mapaPericias = localListaPericias.associateBy { it.nome }
+        )
+
+        val state = createStateWithSnapshot(localSnapshot)
 
         state.compendioFantasiaAtivo = false
         state.compendioSciFiAtivo = false

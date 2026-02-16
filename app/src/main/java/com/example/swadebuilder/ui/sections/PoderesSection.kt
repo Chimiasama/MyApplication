@@ -50,7 +50,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
-import com.example.swadebuilder.arcanoInfo
 import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
@@ -84,6 +83,7 @@ private fun custoParaPenalidadeTexto(custo: String): String {
 @Composable
 fun PoderesSection(
     state: CriadorState,
+    arcanoInfoMap: Map<String, Triple<Int, Int, String>>,
     onShowMessage: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -187,9 +187,9 @@ fun PoderesSection(
         arcanosAtivos
     }
 
-    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, arcanosAtivos, state.bonusPoderExtra) {
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap) {
         if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo) 0 else {
-            val maxBase = arcanosAtivos.maxOfOrNull { k -> arcanoInfo[k.normAAKey()]?.second ?: 0 } ?: 0
+            val maxBase = arcanosAtivos.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
             maxBase + state.bonusPoderExtra
         }
     }
@@ -400,7 +400,7 @@ fun PoderesSection(
         // --- ARCANE BACKGROUND SECTIONS ---
         displayKeys.forEach { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
-            val baseInfo = arcanoInfo[arcKey] ?: Triple(0, 0, "—")
+            val baseInfo = arcanoInfoMap[arcKey] ?: Triple(0, 0, "—")
             val ppTotal = baseInfo.second
             val foco = baseInfo.third
             val slotsCount = state.getEffectiveSlotsCountForArcano(arcKey)
