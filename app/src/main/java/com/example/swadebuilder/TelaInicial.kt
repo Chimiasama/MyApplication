@@ -189,6 +189,14 @@ fun TelaInicial(
                 optRegraCosaNostra = false
                 optRegraFama = false
             }
+            "Fantasia" -> {
+                optCartaSelvagem = true
+                optMaisPontosPericias = false
+                optNasceUmHeroi = false
+                optRegraRiqueza = false
+                optRegraCosaNostra = false
+                optRegraFama = false
+            }
         }
     }
 
@@ -238,8 +246,11 @@ fun TelaInicial(
             Icons.Default.AutoAwesome,
             optCompendioFantasia,
             !isAnyBookSelected || optCompendioFantasia,
-            { optCompendioFantasia = !optCompendioFantasia },
-            { applyRulesPreset("Básico"); showRulesDialog = true } // Fantasy usually builds on Basic
+            {
+                optCompendioFantasia = !optCompendioFantasia
+                if (optCompendioFantasia) applyRulesPreset("Fantasia")
+            },
+            { applyRulesPreset("Fantasia"); showRulesDialog = true }
         ),
         ModuleItemData(
             "Compêndio de Ficção",
