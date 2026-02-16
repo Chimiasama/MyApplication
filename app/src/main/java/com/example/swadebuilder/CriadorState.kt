@@ -183,8 +183,8 @@ class CriadorState {
         if (atendePreviasPorComplicacaoParaAmeacador(v)) return true
 
         val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-            when (prevId.keyify()) {
-                "antecedente_arcano", "antecedente_arcano:*" -> {
+            when (prevId.keyify().replace(" ", "_")) {
+                "ANTECEDENTE_ARCANO", "ANTECEDENTE_ARCANO:*" -> {
                     vantagensSelecionadas.none { poss ->
                         poss.id.startsWith("antecedente_arcano_") ||
                                 poss.id.startsWith("aa_") ||
@@ -193,7 +193,7 @@ class CriadorState {
                 }
                 else -> {
                     vantagensSelecionadas.none { poss ->
-                        poss.id.keyify() == prevId.keyify()
+                        poss.id.keyify().replace(" ", "_") == prevId.keyify().replace(" ", "_")
                     }
                 }
             }
