@@ -145,6 +145,7 @@ O plano de refatoração para confiabilidade e modernização arquitetural foi e
 - **Arquitetura:** Lógica de negócio extraída de `CriadorState` para UseCases testáveis (`RebuildSkillStacks`, `ValidateSelection`, `ApplyAncestry`).
 - **Dados:** Fonte de verdade unificada em `GameDataStore`/`Snapshot`, com eliminação total de variáveis globais legadas.
 - **Qualidade:** Redução significativa de warnings e limpeza de código legado.
+- **Governança de confiabilidade:** inventário e gate atualizados para impedir reintrodução de `GameDataGlobals.kt`/`AppData.kt` e bloquear globais mutáveis de domínio na `MainActivity`.
 
 **Recomendação de Manutenção:**
 - Monitorar novos warnings em atualizações de dependências.
