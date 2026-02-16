@@ -78,6 +78,7 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 - ✅ Fase 8 (`podeSelecionar`): concluída (`ValidateSelectionUseCase`).
 - ✅ Fase 9 (`GameDataStore`): concluída.
 - ✅ Fase 10 (Hardening de CI): concluída.
+- ✅ Fase Pós-10 (Extinção de Legado): concluída.
 
 ---
 
@@ -105,11 +106,22 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 - Remoção de plugins e flags Gradle obsoletos.
 - Atualização do Gate de Confiabilidade para prevenir regressão de arquitetura.
 
+## Fase Pós-10 — Extinção de Legado (CONCLUÍDA)
+- **Status:** Concluído.
+- **Objetivo:** Remover completamente as variáveis globais (`GameDataGlobals.kt`, `AppData.kt`) e o mecanismo de "Bridge" no repositório.
+- **Ações:**
+    - Refatoração de testes unitários para usar injeção de dados/snapshots.
+    - Atualização de `SummaryUtils`, `CriadorState` e componentes de UI para não depender de globais.
+    - Remoção física dos arquivos `GameDataGlobals.kt` e `AppData.kt`.
+    - Atualização do `DataLoader` para não escrever em variáveis estáticas (apenas retornar Snapshot).
+    - Ajustes no Gate de Confiabilidade para refletir a remoção das globais.
+
 ---
 
 ## 7) Ordem de execução recomendada (curto prazo)
 1. Fase 9 (convergência de fonte de verdade) - **CONCLUÍDA**
 2. Fase 10 (hardening de warnings) - **CONCLUÍDA**
+3. Fase Pós-10 (Extinção de Legado) - **CONCLUÍDA**
 
 ---
 
@@ -125,16 +137,16 @@ Extração da orquestração completa para coordinator dedicado, com subetapas:
 ---
 
 ## 9) Status vivo
-- Última atualização: Conclusão Fases 9 e 10. Projeto finalizado.
+- Última atualização: Conclusão Fase Pós-10 (Extinção de Legado). Projeto tecnicamente finalizado e modernizado.
 
 ## 10) Conclusão e Próximos Passos
 O plano de refatoração para confiabilidade e modernização arquitetural foi executado com sucesso.
 - **Confiabilidade:** Gate de regressão implementado e ativo no CI.
 - **Arquitetura:** Lógica de negócio extraída de `CriadorState` para UseCases testáveis (`RebuildSkillStacks`, `ValidateSelection`, `ApplyAncestry`).
-- **Dados:** Fonte de verdade unificada em `GameDataStore`/`Snapshot`, desacoplando a UI de variáveis globais.
+- **Dados:** Fonte de verdade unificada em `GameDataStore`/`Snapshot`, com eliminação total de variáveis globais legadas.
 - **Qualidade:** Redução significativa de warnings e limpeza de código legado.
 
 **Recomendação de Manutenção:**
 - Monitorar novos warnings em atualizações de dependências.
 - Manter o script `phase6_reliability_gate.sh` no pipeline de CI.
-- Continuar a migração gradual de quaisquer referências legadas remanescentes (se houver) para `GameDataStore`.
+- Para novas features, seguir o padrão de arquitetura estabelecido: UseCases puros para lógica, State para UI, e Dados via Snapshot/Store.

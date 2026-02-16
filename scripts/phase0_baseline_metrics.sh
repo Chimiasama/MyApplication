@@ -9,9 +9,9 @@ count_matches() {
   shift
 
   if command -v rg >/dev/null 2>&1; then
-    rg -n "$pattern" "$@" | wc -l
+    (rg -n "$pattern" "$@" || true) | wc -l
   else
-    grep -R -n -E "$pattern" "$@" | wc -l
+    (grep -R -n -E "$pattern" "$@" || true) | wc -l
   fi
 }
 

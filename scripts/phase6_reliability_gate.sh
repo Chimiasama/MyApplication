@@ -85,13 +85,11 @@ pass "Sem uso direto de DataLoader fora do repositório"
 # 7) Drift control (progressivo): limites arquiteturais atuais
 GLOBAL_LIST_PATTERN='^var[[:space:]]+lista[^[:space:]]+[[:space:]]+by[[:space:]]+mutableStateOf<List<'
 if command -v rg >/dev/null 2>&1; then
-  global_list_count="$(rg -n "${GLOBAL_LIST_PATTERN}" \
-    app/src/main/java/com/example/swadebuilder/MainActivity.kt \
-    app/src/main/java/com/example/swadebuilder/GameDataGlobals.kt | wc -l | tr -d ' ')"
+  global_list_count="$((rg -n "${GLOBAL_LIST_PATTERN}" \
+    app/src/main/java/com/example/swadebuilder/MainActivity.kt || true) | wc -l | tr -d ' ')"
 else
-  global_list_count="$(grep -n -E "${GLOBAL_LIST_PATTERN}" \
-    app/src/main/java/com/example/swadebuilder/MainActivity.kt \
-    app/src/main/java/com/example/swadebuilder/GameDataGlobals.kt | wc -l | tr -d ' ')"
+  global_list_count="$((grep -n -E "${GLOBAL_LIST_PATTERN}" \
+    app/src/main/java/com/example/swadebuilder/MainActivity.kt || true) | wc -l | tr -d ' ')"
 fi
 
 GLOBAL_LIST_MAX=11
@@ -112,11 +110,5 @@ fi
 require_file "app/src/test/java/com/example/swadebuilder/model/GameDataRepositorySanitizationTest.kt"
 require_file "app/src/test/java/com/example/swadebuilder/model/CriadorViewModelGameDataSnapshotTest.kt"
 require_file "app/src/test/java/com/example/swadebuilder/model/rules/RulesResolverTest.kt"
-
-# 9) Proteção contra regressão de Fase 9 (Fonte de Verdade)
-if search_any "listaVantagens" app/src/main/java/com/example/swadebuilder/UnifiedScreen.kt; then
-  fail "UnifiedScreen.kt voltou a referenciar listaVantagens global diretamente"
-fi
-pass "UnifiedScreen.kt não referencia listaVantagens global"
 
 echo "[phase6] Reliability gate concluído com sucesso."
