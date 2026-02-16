@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaAtributos
 import com.example.swadebuilder.toDiceString
 
 @Composable
@@ -39,7 +38,7 @@ fun SuperAtributosPickerDialog(
     // alocações por atributo (em "steps" de superatributo)
     val alocacoes = remember {
         mutableStateMapOf<String, Int>().apply {
-            listaAtributos.forEach { put(it, 0) }
+            state.listaAtributos.forEach { put(it, 0) }
         }
     }
 
@@ -67,7 +66,7 @@ fun SuperAtributosPickerDialog(
                 Spacer(Modifier.height(8.dp))
 
                 // lista com + / - mostrando o VALOR FINAL (dado) e não mais só o número de steps
-                listaAtributos.forEach { attr ->
+                state.listaAtributos.forEach { attr ->
                     val steps = alocacoes[attr] ?: 0
 
                     // valor atual (já com supers existentes)

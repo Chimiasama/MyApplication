@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaMonstroTemplates
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.components.SectionCard
 
@@ -44,7 +43,7 @@ fun TipoMonstroSection(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            listaMonstroTemplates.forEach { template ->
+            state.listaMonstroTemplates.forEach { template ->
                 val selected = state.tipoMonstroSelecionado == template.id
 
                 Card(

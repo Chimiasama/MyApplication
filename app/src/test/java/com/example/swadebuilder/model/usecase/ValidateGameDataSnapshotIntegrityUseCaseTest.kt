@@ -11,7 +11,7 @@ import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.Pericia
+import com.example.swadebuilder.model.Pericia
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

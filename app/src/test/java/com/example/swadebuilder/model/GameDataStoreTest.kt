@@ -1,8 +1,8 @@
 package com.example.swadebuilder.model
 
-import com.example.swadebuilder.ArcanoInfo
-import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.SuperPoder
+import com.example.swadebuilder.model.ArcanoInfo
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.SuperPoder
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

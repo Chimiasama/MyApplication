@@ -3,8 +3,6 @@ package com.example.swadebuilder.model
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.SuperPoder
 
 /**
  * Store transitório para Fase 1: centraliza leitura preferencial do snapshot
@@ -51,12 +49,15 @@ class GameDataStore {
     fun getEquipamentoCategorias(): List<EquipamentoCategoria> = snapshot?.equipamentoCategorias ?: emptyList()
     fun getSuperequipCategorias(): List<EquipamentoCategoria> = snapshot?.superequipCategorias ?: emptyList()
     fun getSuperPoderes(): List<SuperPoder> = snapshot?.listaSuperPoderes ?: emptyList()
+    fun getPoderes(): List<Poder> = snapshot?.listaPoderes ?: emptyList()
     fun getTropos(): List<Tropo> = snapshot?.listaTropos ?: emptyList()
     fun getMonstroTemplates(): List<MonstroTemplate> = snapshot?.listaMonstroTemplates ?: emptyList()
     fun getRacialAttrMinMap(): Map<String, Map<String, Int>> = snapshot?.racialAttrMinMap ?: emptyMap()
     fun getRacialSkillStartMap(): Map<String, Map<String, Int>> = snapshot?.racialSkillStartMap ?: emptyMap()
     fun getMapaAtributosDisplay(): Map<String, String> = snapshot?.mapaAtributosDisplay ?: emptyMap()
     fun getMapaPericias(): Map<String, Pericia> = snapshot?.mapaPericias ?: emptyMap()
+    fun getPericiasMap(): Map<String, Pericia> = snapshot?.mapaPericias ?: emptyMap()
+    fun getCoracoesCrystal(): List<CrystalHeart> = snapshot?.listaCoracoesCrystal ?: emptyList()
 
     fun getArcanoInfoMap(): Map<String, Triple<Int, Int, String>> {
         return snapshot?.arcanoInfo?.associate {

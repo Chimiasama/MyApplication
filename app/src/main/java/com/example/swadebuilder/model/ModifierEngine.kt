@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaAncestralidadesJson
 import com.example.swadebuilder.util.keyify
 
 enum class ModifierTarget {
@@ -68,7 +67,7 @@ object ModifierEngine {
 
         // 2. Ancestralidade
         val ancestralName = state.ancestralidade
-        val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralName.keyify() }
+        val ancestral = state.listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralName.keyify() }
 
         ancestral?.let { anc ->
             val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens

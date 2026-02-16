@@ -63,7 +63,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
@@ -476,6 +478,11 @@ fun UnifiedScreen(
             onShowMessage = onShowMessage,
             slotIndex = currentSlotIndex,
             allAdvantages = viewModel.gameDataStore.getVantagens(),
+            listaAtributos = viewModel.gameDataStore.getAtributos(),
+            listaPericias = viewModel.gameDataStore.getPericias(),
+            mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
+            mapaPericias = viewModel.gameDataStore.getMapaPericias(),
+            allEstagios = listaDeEstagios,
             onDismiss = {
                 showAllocDialog = false
                 activeSection = MainSection.XP
@@ -768,13 +775,19 @@ private fun ProgressionDetailContent(
                     multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
                     viewModel = viewModel,
                     allAdvantages = viewModel.gameDataStore.getVantagens(),
+                allSkills = viewModel.gameDataStore.getPericias(),
+                allEstagios = listaDeEstagios,
                     onUserFeedback = onUserFeedback
                 )
             }
 
             if (state.mostrandoPoderesProgresso || state.arcanoCompraPendente()) {
                 Spacer(Modifier.height(8.dp))
-                PoderesSection(state = state, onShowMessage = onShowMessage)
+                PoderesSection(
+                    state = state,
+                    arcanoInfoMap = viewModel.gameDataStore.getArcanoInfoMap(),
+                    onShowMessage = onShowMessage
+                )
             }
 
             Spacer(Modifier.height(16.dp))
@@ -834,7 +847,13 @@ private fun ProgressionDetailContent(
                 icon     = Icons.Default.FitnessCenter,
                 showHeader = false
             ) {
-                AtributosContent(state = state, onUserFeedback = onUserFeedback)
+                AtributosContent(
+                    state = state,
+                    listaAtributos = viewModel.gameDataStore.getAtributos(),
+                    mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
+                    mapaAtributosDescricao = viewModel.gameDataStore.currentSnapshot()?.mapaAtributosDescricao ?: emptyMap(),
+                    onUserFeedback = onUserFeedback
+                )
             }
 
             Spacer(Modifier.height(16.dp))
@@ -923,6 +942,8 @@ private fun CreationDetailContent(
         )
         MainSection.TROPOS -> TroposSection(
             state = state,
+            listaTropos = viewModel.gameDataStore.getTropos(),
+            listaVantagens = viewModel.gameDataStore.getVantagens(),
             onUserFeedback = onUserFeedback
         )
         MainSection.MONSTRO -> TipoMonstroSection(
@@ -940,7 +961,13 @@ private fun CreationDetailContent(
             icon     = Icons.Default.FitnessCenter,
             showHeader = false
         ) {
-            AtributosContent(state, onUserFeedback)
+            AtributosContent(
+                state = state,
+                listaAtributos = viewModel.gameDataStore.getAtributos(),
+                mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
+                mapaAtributosDescricao = viewModel.gameDataStore.currentSnapshot()?.mapaAtributosDescricao ?: emptyMap(),
+                onUserFeedback = onUserFeedback
+            )
         }
         MainSection.PERICIAS -> PericiasContent(
             state = state,
@@ -957,6 +984,8 @@ private fun CreationDetailContent(
                 multiplosAAHabilitados = state.permiteMultiAntecedenteArcano,
                 viewModel = viewModel,
                 allAdvantages = viewModel.gameDataStore.getVantagens(),
+                allSkills = viewModel.gameDataStore.getPericias(),
+                allEstagios = listaDeEstagios,
                 onUserFeedback = onUserFeedback
             )
         }
@@ -966,7 +995,11 @@ private fun CreationDetailContent(
         )
         MainSection.PODERES -> {
             if (!state.compendioCrystalHeartAtivo) {
-                PoderesSection(state = state, onShowMessage = onShowMessage)
+                PoderesSection(
+                    state = state,
+                    arcanoInfoMap = viewModel.gameDataStore.getArcanoInfoMap(),
+                    onShowMessage = onShowMessage
+                )
                 Spacer(Modifier.height(8.dp))
             }
             SuperPoderesSection(
@@ -1044,6 +1077,7 @@ private fun SummaryTabContent(
 @Composable
 private fun PoderesSection(
     state: CriadorState,
+    arcanoInfoMap: Map<String, Triple<Int, Int, String>>,
     onShowMessage: (String) -> Unit = {}
 ) {
     val temArcano = state.temAntecedenteArcano()
@@ -1054,8 +1088,9 @@ private fun PoderesSection(
             icon = Icons.Default.FlashOn,
             showHeader = false
         ) {
-            PoderesSection(
+            com.example.swadebuilder.ui.sections.PoderesSection(
                 state = state,
+                arcanoInfoMap = arcanoInfoMap,
                 onShowMessage = onShowMessage
             )
         }

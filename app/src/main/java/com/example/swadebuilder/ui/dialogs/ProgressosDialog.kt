@@ -60,18 +60,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.dynamicStageCaps
-import com.example.swadebuilder.listaAtributos
-import com.example.swadebuilder.listaDeEstagios
-import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.HindranceChangeType
 import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RequirementValidator
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
@@ -91,6 +87,7 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
+import com.example.swadebuilder.model.dynamicStageCaps
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -103,6 +100,11 @@ fun ProgressosDialog(
     onShowMessage: (String) -> Unit,
     slotIndex: Int,
     allAdvantages: List<Vantagem>,
+    listaAtributos: List<String>,
+    listaPericias: List<Pericia>,
+    mapaAtributosDisplay: Map<String, String>,
+    mapaPericias: Map<String, Pericia>,
+    allEstagios: List<Estagio>,
     onDismiss: () -> Unit
 ) {
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
@@ -141,7 +143,7 @@ fun ProgressosDialog(
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
-    val stages = listaDeEstagios
+    val stages = allEstagios
     val stageIndex = stageIndexForSlot(slotIndex)
     var selectedTab by rememberSaveable { mutableIntStateOf(stageIndex) }
 
@@ -173,7 +175,7 @@ fun ProgressosDialog(
     fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {
         val reqEst = v.requisitos.estagio
         if (reqEst.isNotBlank()) {
-            val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(reqEst, ignoreCase = true) }
+            val reqIdx = stages.indexOfFirst { it.nome.equals(reqEst, ignoreCase = true) }
             if (reqIdx != -1 && reqIdx > estIndex) return false
         }
         if (v.requisitos.atributoMin.any { (nome, min) ->
@@ -852,7 +854,7 @@ fun ProgressosDialog(
 
     if (showAdvSelection) {
         val estIndex = if (advSelectedStageIndex >= 0) advSelectedStageIndex else selectedTab
-        val estSel   = listaDeEstagios[estIndex]
+        val estSel   = stages[estIndex]
         val prevStageSpent = state.stageXpSpent.getValue(estSel.nome)
         val hasProfissional = state.vantagensSelecionadas.any { it.id == "profissional" }
 
@@ -892,7 +894,7 @@ fun ProgressosDialog(
                 val qtdJaTem = state.vantagensSelecionadas.count { it.nome.equals(vant.nome, ignoreCase = true) }
                 val repeticaoOk = when (val maxEff = maxEffectiveSelections(vant)) { null -> true; else -> qtdJaTem < maxEff }
                 val stageOk = vant.requisitos.estagio.let { req ->
-                    val reqIdx = listaDeEstagios.indexOfFirst { it.nome.equals(req, ignoreCase = true) }
+                    val reqIdx = stages.indexOfFirst { it.nome.equals(req, ignoreCase = true) }
                     reqIdx == -1 || reqIdx <= estIndex
                 }
                 val requiresChoice = vant.requiresChoice
@@ -985,6 +987,7 @@ fun ProgressosDialog(
                                 showOfficialNames = state.modoOficialAtivo,
                                 idParaNome = idParaNome,
                                 detalhesExpandidos = detalhesExpandidos,
+                                stages = stages, // Pass stages to avoid using global list
                                 onSelect = {
                                     val qtdJaTemClick = state.vantagensSelecionadas.count {
                                         it.nome.equals(vant.nome, ignoreCase = true)
@@ -1052,12 +1055,12 @@ fun ProgressosDialog(
     }
 
     if (showFilterDialog) {
-        val allEstagios = listaDeEstagios.map { it.nome }
+        val allEstagiosNames = stages.map { it.nome }
         val allAtributos = mapaAtributosDisplay.values.toList()
         val allPericias = listaPericias.map { it.nome }
 
         VantFilterDialog(
-            allEstagios = allEstagios,
+            allEstagios = allEstagiosNames,
             allAtributos = allAtributos,
             allPericias = allPericias,
             current = advFilter,
@@ -1076,7 +1079,7 @@ fun ProgressosDialog(
             title = { Text("Selecione os Poderes") },
             text = {
                 Column(Modifier.fillMaxHeight(0.8f)) {
-                    PoderesSection(state = state, onShowMessage = onShowMessage)
+                    PoderesSection(state = state, arcanoInfoMap = state.arcanoInfo, onShowMessage = onShowMessage)
                 }
             },
             confirmButton = {
@@ -1199,7 +1202,7 @@ fun ProgressosDialog(
                         }
 
                         val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
-                        val estSel = listaDeEstagios[estIndexFinal]
+                        val estSel = stages[estIndexFinal]
 
                         if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
                             showSnack("Você não cumpre os requisitos gerais para ${vant.nome}.")
@@ -1234,7 +1237,7 @@ fun ProgressosDialog(
         state.identifyMaxedTraits()
         val vant = pendingAdv!!
         val key = vant.nome.keyify()
-        val estSel = listaDeEstagios[advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab]
+        val estSel = stages[advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab]
 
         fun finishWithChoice(choice: String) {
             val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
@@ -1355,7 +1358,7 @@ fun ProgressosDialog(
                                 val specificEdge = opcoesArcano.firstOrNull { it.first == choiceLabel }?.second
                                 if (specificEdge != null) {
                                     val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
-                                    val estSel = listaDeEstagios[estIndexFinal]
+                                    val estSel = stages[estIndexFinal]
 
                                     if (!state.podeSelecionar(specificEdge) || !strictRequirementsOk(specificEdge, estIndexFinal)) {
                                         showSnack("Você não cumpre os requisitos para ${specificEdge.nome}.")
@@ -1481,13 +1484,14 @@ private fun DialogVantagemItem(
     showOfficialNames: Boolean,
     idParaNome: Map<String, String>,
     detalhesExpandidos: MutableMap<String, Boolean>,
+    stages: List<Estagio>,
     onSelect: () -> Unit,
     onError: (String) -> Unit
 ) {
     val themeData = LocalAppThemeData.current
 
     val reqList = buildList {
-        listaDeEstagios.firstOrNull {
+        stages.firstOrNull {
             it.nome.equals(vant.requisitos.estagio, true)
         }?.let { add(it.nome) }
 

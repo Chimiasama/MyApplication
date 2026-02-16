@@ -13,16 +13,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.swadebuilder.model.AdvantageSnapshot
+import com.example.swadebuilder.model.ArcanoInfo
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
+import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.EquipFilter
 import com.example.swadebuilder.model.EquipSuperType
+import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.Estagio
+import com.example.swadebuilder.model.GameDataSnapshot
 import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
+import com.example.swadebuilder.model.MonstroTemplate
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.PersonagemSnapshot
+import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
+import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SnapshotAtributos
 import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.SnapshotPericias
@@ -31,6 +40,7 @@ import com.example.swadebuilder.model.SnapshotRecursos
 import com.example.swadebuilder.model.SnapshotSelecoes
 import com.example.swadebuilder.model.SnapshotSupers
 import com.example.swadebuilder.model.SuperInvestment
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
@@ -52,6 +62,10 @@ import com.example.swadebuilder.model.usecase.ResolveAncestryComplicationsSnapsh
 import com.example.swadebuilder.model.usecase.ResolveAncestryRacialPackageUseCase
 import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionBootstrapUseCase
 import com.example.swadebuilder.model.usecase.RebuildSkillStacksUseCase
+import com.example.swadebuilder.model.listaDeEstagios
+import com.example.swadebuilder.model.TOTAL_PROGRESS_LIMIT
+import com.example.swadebuilder.model.dynamicStageCaps
+import com.example.swadebuilder.model.nivelParaEstagio
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
@@ -90,6 +104,57 @@ class CriadorState {
     )
     private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val validateSelectionUseCase = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase()
+
+    // --- Game Data Properties (Replaces Globals) ---
+    var listaAtributos: List<String> = emptyList()
+    var listaPericias: List<Pericia> = emptyList()
+    var listaVantagens: List<Vantagem> = emptyList()
+    var listaComplicacoes: List<Complicacao> = emptyList()
+    var listaTropos: List<Tropo> = emptyList()
+    var listaEquipamentos: List<EquipamentoItem> = emptyList()
+    var listaPoderes: List<Poder> = emptyList()
+    var listaSuperPoderes: List<SuperPoder> = emptyList()
+    var listaAncestralidadesJson: List<RacialModifier> = emptyList()
+    var listaMonstroTemplates: List<MonstroTemplate> = emptyList()
+    var listaCoracoesCrystal: List<CrystalHeart> = emptyList()
+
+    var equipamentoCategorias: List<EquipamentoCategoria> = emptyList()
+    var superequipCategorias: List<EquipamentoCategoria> = emptyList()
+
+    var mapaAtributosDisplay: Map<String, String> = emptyMap()
+    var mapaPericias: Map<String, Pericia> = emptyMap()
+    var racialAttrMinMap: Map<String, Map<String, Int>> = emptyMap()
+    var racialSkillStartMap: Map<String, Map<String, Int>> = emptyMap()
+    var arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
+
+    // listaDeEstagios is imported from model (static rules)
+
+    fun updateGameData(snapshot: GameDataSnapshot) {
+        this.listaAtributos = snapshot.listaAtributos
+        this.listaPericias = snapshot.listaPericias
+        this.listaVantagens = snapshot.listaVantagens
+        this.listaComplicacoes = snapshot.listaComplicacoes
+        this.listaTropos = snapshot.listaTropos
+        this.listaEquipamentos = snapshot.listaEquipamentos
+        this.listaPoderes = snapshot.listaPoderes
+        this.listaSuperPoderes = snapshot.listaSuperPoderes
+        this.listaAncestralidadesJson = snapshot.listaAncestralidadesJson
+        this.listaMonstroTemplates = snapshot.listaMonstroTemplates
+        this.listaCoracoesCrystal = snapshot.listaCoracoesCrystal
+        this.equipamentoCategorias = snapshot.equipamentoCategorias
+        this.superequipCategorias = snapshot.superequipCategorias
+        this.mapaAtributosDisplay = snapshot.mapaAtributosDisplay
+        this.mapaPericias = snapshot.mapaPericias
+        this.racialAttrMinMap = snapshot.racialAttrMinMap
+        this.racialSkillStartMap = snapshot.racialSkillStartMap
+
+        this.arcanoInfo = snapshot.arcanoInfo.associate {
+            it.key.uppercase().trim() to Triple(it.slots, it.pp, it.foco)
+        }
+
+        ensureAllAtributosRegistered()
+        ensureAllPericiasRegistered()
+    }
 
     private val ameacadorComplicacoesLiberadoras = setOf(
         "sanguinario",
@@ -3997,6 +4062,12 @@ class CriadorState {
 
         return baseCreationComplete() && supersProntos
     }
+
+    val criacaoBasicaCongelada: Boolean
+        get() = creationComplete()
+
+    val criacaoBasicaCongeladaComXp: Boolean
+        get() = criacaoBasicaCongelada && !emProgresso
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
         listaDeEstagios.forEach { this[it.nome] = 0 }

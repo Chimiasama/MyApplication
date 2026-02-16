@@ -56,13 +56,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
-import com.example.swadebuilder.criacaoBasicaCongeladaComXp
-import com.example.swadebuilder.listaDeEstagios
-import com.example.swadebuilder.listaPericias
-import com.example.swadebuilder.mapaAtributosDisplay
-import com.example.swadebuilder.mapaPericias
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.Estagio
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
@@ -171,6 +168,8 @@ fun VantagensContent(
     multiplosAAHabilitados: Boolean,
     viewModel: CriadorViewModel = viewModel(),
     allAdvantages: List<Vantagem>,
+    allSkills: List<Pericia>,
+    allEstagios: List<Estagio>,
     onUserFeedback: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -671,6 +670,7 @@ fun VantagensContent(
                              VantagemItem(
                                  vant = vant,
                                  state = state,
+                                 allEstagios = allEstagios,
                                  locked = locked,
                                  allowLongTexts = allowLongTexts,
                                  showOfficialNames = showOfficialNames,
@@ -776,6 +776,7 @@ fun VantagensContent(
                          VantagemItem(
                              vant = vant,
                              state = state,
+                             allEstagios = allEstagios,
                              locked = locked,
                              allowLongTexts = allowLongTexts,
                              showOfficialNames = showOfficialNames,
@@ -845,8 +846,8 @@ fun VantagensContent(
     }
 
     if (showFilterDialog) {
-        val allEstagios = listaDeEstagios.map { it.nome }
-        val allAtributos = mapaAtributosDisplay.values.toList()
+        val allEstagiosNames = allEstagios.map { it.nome }
+        val allAtributos = state.mapaAtributosDisplay.values.toList()
         val requiredPericias = listaVantagensAtivas.flatMap { vant ->
             vant.requisitos.periciaMin.keys +
                     vant.requisitos.periciaMinOpcional.keys +
@@ -866,18 +867,14 @@ fun VantagensContent(
             }
         }.map { it.nome }
 
-        // Use listaPericias if available, or fetch from ViewModel/Store
-        // Since we are inside a Composable, we can use the global listaPericias for now as pericias are not part of the phase 9 migration yet (only advantages)
-        // However, to be consistent, we should ideally use gameDataStore.getPericias() if available.
-        // For this task scope, let's keep listaPericias but acknowledge it.
-        val allPericias = listaPericias
+        val allPericias = allSkills
             .map { it.nome }
             .filter { it in requiredPericias && it in visibleSkills }
             .map { applyJutsuSkinToSkillName(it, state) }
             .distinct()
 
         VantFilterDialog(
-            allEstagios = allEstagios,
+            allEstagios = allEstagiosNames,
             allAtributos = allAtributos,
             allPericias = allPericias,
             current = filter,
@@ -940,8 +937,7 @@ fun VantagensContent(
 
                         // Helper to find the active instance of a skill to ensure we check the correct point pool
                         fun getSkillTotal(nameKey: String): Int {
-                            val activePer = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == nameKey }
-                                ?: mapaPericias[nameKey]
+                            val activePer = state.getBestPericia(nameKey)
                             return activePer?.let { state.rawTotal(it) } ?: 0
                         }
 
@@ -1784,6 +1780,7 @@ fun VantagensContent(
 private fun VantagemItem(
     vant: Vantagem,
     state: CriadorState,
+    allEstagios: List<Estagio>,
     locked: Boolean,
     allowLongTexts: Boolean,
     showOfficialNames: Boolean,
@@ -1796,7 +1793,7 @@ private fun VantagemItem(
     val themeData = LocalAppThemeData.current
 
     val reqList = buildList {
-        listaDeEstagios.firstOrNull {
+        allEstagios.firstOrNull {
             it.nome.equals(vant.requisitos.estagio, true)
         }?.let { add(it.nome) }
 

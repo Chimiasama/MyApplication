@@ -41,9 +41,9 @@ OUT="docs/reports/reliability-inventory-latest.md"
     app/src/main/java/com/example/swadebuilder/model/CriadorViewModel.kt
   echo
   echo "## Global mutable declarations (listas + mapas de domínio)"
-  echo "global_list_count=$(search_count '^var[[:space:]]+lista[^[:space:]]+[[:space:]]+by[[:space:]]+mutableStateOf<List<' app/src/main/java/com/example/swadebuilder/MainActivity.kt app/src/main/java/com/example/swadebuilder/GameDataGlobals.kt)"
+  echo "global_list_count=$(search_count '^var[[:space:]]+lista[^[:space:]]+[[:space:]]+by[[:space:]]+mutableStateOf<List<' app/src/main/java/com/example/swadebuilder/MainActivity.kt)"
   echo "global_map_count=$(search_count '^var[[:space:]]+mapa[^[:space:]]+[[:space:]]+by[[:space:]]+mutableStateOf<Map<' app/src/main/java/com/example/swadebuilder/MainActivity.kt)"
-  search_lines '^var[[:space:]]+(lista|mapa|racial|arcano)[^[:space:]]+[[:space:]]+by[[:space:]]+mutableStateOf<(List|Map)<' app/src/main/java/com/example/swadebuilder/MainActivity.kt app/src/main/java/com/example/swadebuilder/GameDataGlobals.kt
+  search_lines '^var[[:space:]]+(lista|mapa|racial|arcano)[^[:space:]]+[[:space:]]+by[[:space:]]+mutableStateOf<(List|Map)<' app/src/main/java/com/example/swadebuilder/MainActivity.kt
   echo
   echo "## Direct DataLoader usage outside repository"
   search_lines 'DataLoader\.' app/src/main/java/com/example/swadebuilder | grep -v 'model/GameDataRepository.kt' || true

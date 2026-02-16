@@ -86,16 +86,21 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swadebuilder.model.ArcanoInfo
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.MonstroTemplate
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.model.usecase.BuildUsageInstructionsUseCase
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -113,16 +118,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonElement
 import java.text.DateFormat
 import kotlin.math.roundToInt
-
-@Serializable
-data class ArcanoInfo(
-    val key: String,
-    val slots: Int,
-    val pp: Int,
-    val foco: String
-)
-
-var arcanoInfo by mutableStateOf<Map<String, Triple<Int, Int, String>>>(emptyMap())
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
 private val buildUsageInstructionsUseCase = BuildUsageInstructionsUseCase()
@@ -1063,9 +1058,22 @@ class MainActivity : ComponentActivity() {
                                             IconButton(onClick = {
                                                 triggerFeedback()
                                                 val personagem = state.toMeuPersonagem()
+                                                val attributes = criadorViewModel.gameDataStore.getAtributos()
+                                                val mapAttrDisplay = criadorViewModel.gameDataStore.getMapaAtributosDisplay()
+                                                val complications = criadorViewModel.gameDataStore.getComplicacoes()
+                                                val advantages = criadorViewModel.gameDataStore.getVantagens()
+                                                val powers = criadorViewModel.gameDataStore.getPoderes()
 
                                                 scope.launch(Dispatchers.IO) {
-                                                    produzirEExibirFichaPdf(this@MainActivity, personagem) { msg ->
+                                                    produzirEExibirFichaPdf(
+                                                        this@MainActivity,
+                                                        personagem,
+                                                        attributes,
+                                                        mapAttrDisplay,
+                                                        complications,
+                                                        advantages,
+                                                        powers
+                                                    ) { msg ->
                                                         scope.launch {
                                                             snackHost.showSnackbar(msg)
                                                         }
@@ -1124,57 +1132,4 @@ sealed class LoadingState {
     object Loading : LoadingState()
     object Success : LoadingState()
     data class Error(val message: String) : LoadingState()
-}
-
-data class Pericia(
-    val nome: String,
-    val atributo: String,
-    val basica: Boolean,
-    val origem: String? = null,
-    val descricao: String? = null
-)
-
-var listaComplicacoes by mutableStateOf<List<Complicacao>>(emptyList())
-
-var listaCoracoesCrystal by mutableStateOf<List<CrystalHeart>>(emptyList())
-
-@Serializable
-data class SuperPoder(
-    val nome: String,
-    val estagio: String = "iniciante",
-    val custoBase: String? = null,
-    val modificadores: List<String>? = null,
-    val descricao: String? = null,
-    val manifestacoes: JsonElement? = null
-)
-
-var listaAncestralidadesJson by mutableStateOf<List<RacialModifier>>(emptyList())
-var listaMonstroTemplates by mutableStateOf<List<MonstroTemplate>>(emptyList())
-
-var racialAttrMinMap by mutableStateOf<Map<String, Map<String,Int>>>(emptyMap())
-var racialSkillStartMap by mutableStateOf<Map<String, Map<String,Int>>>(emptyMap())
-
-var listaAtributos by mutableStateOf<List<String>>(emptyList())
-var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
-
-var listaPericias by mutableStateOf<List<Pericia>>(emptyList())
-var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
-var mapaAtributosDescricao by mutableStateOf<Map<String, String>>(emptyMap())
-
-
-val nivelParaEstagio = mapOf(
-    "N" to listaDeEstagios.first { it.nome == "Novato" },
-    "E" to listaDeEstagios.first { it.nome == "Experiente" },
-    "V" to listaDeEstagios.first { it.nome == "Veterano" },
-    "H" to listaDeEstagios.first { it.nome == "Heroico" },
-    "L" to listaDeEstagios.first { it.nome == "Lendário" }
-)
-
-const val TOTAL_PROGRESS_LIMIT = 20
-val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
-    val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
-    if (idx < listaDeEstagios.lastIndex)
-        st.maxProgress - prevMax
-    else
-        (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
 }

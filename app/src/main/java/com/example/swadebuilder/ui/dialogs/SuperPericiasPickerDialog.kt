@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.keyify
 
@@ -48,11 +47,11 @@ fun SuperPericiasPickerDialog(
     onDismiss: () -> Unit
 ) {
     // Filter and prepare skill list
-    val skillsParaExibir = remember(listaPericias) {
+    val skillsParaExibir = remember(state.listaPericias) {
         val blacklist = setOf(
             "ALQUIMIA", "ACROBACIA", "LEI", "TRANSICAO", "CONVENCAO", "OFICIO"
         )
-        listaPericias
+        state.listaPericias
             .filter { it.nome.keyify() !in blacklist }
             .distinctBy { it.nome.keyify() } // Deduplicate "Foco" and others
             .sortedBy { it.nome }

@@ -58,11 +58,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.Pericia
 import com.example.swadebuilder.R
-import com.example.swadebuilder.SuperPoder
-import com.example.swadebuilder.listaPericias
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.SuperInvestment
@@ -1098,7 +1097,7 @@ fun SuperPoderesSection(
                     )
                     Spacer(Modifier.height(8.dp))
 
-                    listaPericias.forEach { per ->
+                    state.listaPericias.forEach { per ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()

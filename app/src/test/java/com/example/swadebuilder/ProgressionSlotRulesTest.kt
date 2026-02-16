@@ -1,5 +1,6 @@
 package com.example.swadebuilder
 
+import com.example.swadebuilder.model.listaDeEstagios
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -17,8 +18,9 @@ class ProgressionSlotRulesTest {
 
     @Test
     fun `retorna estágio correspondente ao slot`() {
-        assertEquals(listaDeEstagios.first(), stageForSlot(0))
-        assertEquals(listaDeEstagios.first(), stageForSlot(3))
+        val firstStage = listaDeEstagios.first()
+        assertEquals(firstStage, stageForSlot(0))
+        assertEquals(firstStage, stageForSlot(3))
 
         val expected = listaDeEstagios[1.coerceAtMost(listaDeEstagios.lastIndex)]
         assertEquals(expected, stageForSlot(4))

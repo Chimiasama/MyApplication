@@ -18,7 +18,11 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.Log
 import androidx.core.content.FileProvider
+import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
@@ -115,6 +119,11 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
 suspend fun produzirEExibirFichaPdf(
     context: Context,
     dadosDoPersonagem: MeuPersonagem,
+    listaAtributos: List<String>,
+    mapaAtributosDisplay: Map<String, String>,
+    listaComplicacoes: List<Complicacao>,
+    listaVantagens: List<Vantagem>,
+    listaPoderes: List<Poder>,
     onShowMessage: (String) -> Unit
 ) {
     withContext(Dispatchers.IO) {
@@ -138,7 +147,16 @@ suspend fun produzirEExibirFichaPdf(
                 }
             }
 
-            gerarFichaEmPdf(pdfFile, dadosDoPersonagem, portrait)
+            gerarFichaEmPdf(
+                pdfFile,
+                dadosDoPersonagem,
+                portrait,
+                listaAtributos,
+                mapaAtributosDisplay,
+                listaComplicacoes,
+                listaVantagens,
+                listaPoderes
+            )
 
             val uri: Uri = FileProvider.getUriForFile(
                 context,
@@ -295,10 +313,14 @@ abstract class TextListBlock(private val title: String, private val items: List<
     }
 }
 
-class AttributeBlock(private val p: MeuPersonagem) : PdfBlock {
+class AttributeBlock(
+    private val p: MeuPersonagem,
+    private val listaAtributos: List<String>,
+    private val mapaAtributosDisplay: Map<String, String>
+) : PdfBlock {
     override fun measure(width: Float, theme: PdfTheme): Float {
-        // Fixed height: Title + 5 attributes * 50f
-        return 30f + (5 * 50f)
+        // Fixed height: Title + count * 50f
+        return 30f + (listaAtributos.size * 50f)
     }
 
     override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
@@ -306,9 +328,9 @@ class AttributeBlock(private val p: MeuPersonagem) : PdfBlock {
         canvas.drawText("Atributos", x, y + 14f, titlePaint)
 
         var currY = y + 30f
-        com.example.swadebuilder.listaAtributos.forEach { attr ->
+        listaAtributos.forEach { attr ->
             val value = p.atributos[attr] ?: 4
-            val display = com.example.swadebuilder.mapaAtributosDisplay[attr] ?: attr
+            val display = mapaAtributosDisplay[attr] ?: attr
             drawAttributeShape(canvas, x + 25f, currY + 20f, "d$value", theme)
             val namePaint = TextPaint().apply { color = theme.textColor; textSize = 12f; typeface = theme.typefaceBody; isFakeBoldText = true }
             canvas.drawText(display, x + 60f, currY + 25f, namePaint)
@@ -472,18 +494,27 @@ fun truncate(txt: String, paint: Paint, width: Float): String {
 // 4. MAIN GENERATION LOGIC
 // =================================================================================================
 
-fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem, portrait: Bitmap? = null) {
+fun gerarFichaEmPdf(
+    destino: File,
+    personagem: MeuPersonagem,
+    portrait: Bitmap? = null,
+    listaAtributos: List<String>,
+    mapaAtributosDisplay: Map<String, String>,
+    listaComplicacoes: List<Complicacao>,
+    listaVantagens: List<Vantagem>,
+    listaPoderes: List<Poder>
+) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
     val theme = getPdfTheme(personagem.appTheme)
 
     // Queues
     val leftQueue = ArrayDeque<PdfBlock>()
-    leftQueue.add(AttributeBlock(personagem))
+    leftQueue.add(AttributeBlock(personagem, listaAtributos, mapaAtributosDisplay))
     leftQueue.add(SkillListBlock(personagem))
 
     val hindranceNames = mutableListOf<String>()
-    val mapPorId = com.example.swadebuilder.listaComplicacoes.associateBy { it.id.keyify() }
+    val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
     personagem.complicacoes.forEach { id ->
         val comp = mapPorId[id.keyify()]
         if (comp != null) {
@@ -500,7 +531,7 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem, portrait: Bitmap? 
     // Edges
     val edgeNames = personagem.vantagens.map { id ->
         try {
-            com.example.swadebuilder.listaVantagens.firstOrNull { it.id == id }?.nome ?: id
+            listaVantagens.firstOrNull { it.id == id }?.nome ?: id
         } catch(e: Exception) { id }
     }
     rightQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
@@ -511,7 +542,7 @@ fun gerarFichaEmPdf(destino: File, personagem: MeuPersonagem, portrait: Bitmap? 
         personagem.poderes.forEach { (arc, list) ->
             powerLines.add("Arcano: $arc")
             val namedList = list.map { id ->
-                com.example.swadebuilder.listaPoderes.firstOrNull { it.id == id }?.nome ?: id
+                listaPoderes.firstOrNull { it.id == id }?.nome ?: id
             }
             powerLines.add(namedList.joinToString(", "))
         }

@@ -40,8 +40,8 @@ import androidx.compose.animation.AnimatedVisibility
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.criacaoBasicaCongelada
-import com.example.swadebuilder.listaTropos
-import com.example.swadebuilder.listaVantagens
+import com.example.swadebuilder.model.Tropo
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.DropdownField
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.components.SectionCard
@@ -87,14 +87,16 @@ private fun DetalhesTexto(
 @Composable
 fun TroposSection(
     state: CriadorState,
+    listaTropos: List<Tropo>,
+    listaVantagens: List<Vantagem>,
     onUserFeedback: () -> Unit
 ) {
     if (!state.compendioArteDaGuerraAtivo) return
 
-    val tropos = remember { listaTropos }
+    val tropos = remember(listaTropos) { listaTropos }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
     val allowLongTexts = EditionConfig.isFullEdition
-    val idParaNome = remember(showOfficialNames) {
+    val idParaNome = remember(showOfficialNames, listaVantagens) {
         listaVantagens.associate { vant ->
             val nome = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
             vant.id to nome

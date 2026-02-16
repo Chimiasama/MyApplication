@@ -2,10 +2,9 @@ package com.example.swadebuilder.model
 
 import android.content.Context
 import android.content.ContextWrapper
-import com.example.swadebuilder.ArcanoInfo
-import com.example.swadebuilder.Pericia
-import com.example.swadebuilder.SuperPoder
-import com.example.swadebuilder.listaPericias
+import com.example.swadebuilder.model.ArcanoInfo
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.SuperPoder
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -15,8 +14,6 @@ class CriadorViewModelGameDataSnapshotTest {
 
     @Test
     fun `carregarDadosDeJogo usa snapshot do repositorio para especializacoes`() = runBlocking {
-        listaPericias = listOf(Pericia("GLOBAL", "AGILIDADE", basica = true, origem = "BASICO"))
-
         val periciaSnapshot = Pericia("ATLETISMO", "AGILIDADE", basica = true, origem = "SCI_FI")
         val vm = CriadorViewModel(
             gameDataRepository = FakeGameDataRepository(snapshotBase(pericias = listOf(periciaSnapshot)))
@@ -32,8 +29,6 @@ class CriadorViewModelGameDataSnapshotTest {
 
     @Test
     fun `aplicarGameDataSnapshot permite usar snapshot sem contexto android`() {
-        listaPericias = emptyList()
-
         val vm = CriadorViewModel()
         vm.state.usarEspecializacoesDePericia = true
         vm.aplicarGameDataSnapshot(
