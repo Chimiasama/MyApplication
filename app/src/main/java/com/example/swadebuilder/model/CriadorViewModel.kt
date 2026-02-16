@@ -36,6 +36,7 @@ import com.example.swadebuilder.model.usecase.NormalizeArcaneBackgroundChoiceUse
 import com.example.swadebuilder.model.ids.AdvantageIds
 import com.example.swadebuilder.model.ids.ArcaneBackgroundIds
 import com.example.swadebuilder.model.ids.CrystalHeartIds
+import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.ids.PowerIds
 import com.example.swadebuilder.model.rules.RulesResolver
@@ -89,6 +90,19 @@ class CriadorViewModel(
     private fun complicacoesData() = gameDataStore.getComplicacoes()
     private fun coracoesData() = gameDataStore.getCoracoesCrystal()
     private fun periciasMapData() = gameDataStore.getPericiasMap()
+
+    private fun moduleKeysFromFlags(flags: SnapshotFlags): Set<String> = buildSet {
+        if (flags.compendioFantasiaAtivo) add(ModuleIds.FANTASIA)
+        if (flags.compendioHorrorAtivo) add(ModuleIds.HORROR)
+        if (flags.compendioSciFiAtivo) add(ModuleIds.SCI_FI)
+        if (flags.compendioPathfinderAtivo) add(ModuleIds.PATHFINDER)
+        if (flags.compendioDeadlandsAtivo) add(ModuleIds.DEADLANDS)
+        if (flags.compendioCrystalHeartAtivo) add(ModuleIds.CRYSTAL_HEART)
+        if (flags.compendioArteDaGuerraAtivo) add(ModuleIds.ARTE_DA_GUERRA)
+        if (flags.compendioCidadeSolVaporAtivo) add(ModuleIds.CIDADE_SOL_VAPOR)
+        if (flags.compendioWiseguysAtivo) add(ModuleIds.WISEGUYS)
+        if (flags.modoSupers) add(ModuleIds.SUPER)
+    }
 
     suspend fun carregarDadosDeJogo(context: Context, activeModules: Set<String>): GameDataSnapshot {
         return gameDataRepository.load(context, activeModules).also {
@@ -256,6 +270,10 @@ class CriadorViewModel(
         resetUiState()
         clearFeedbackMessages()
         val flags = snapshot.flags
+
+        val snapshotData = gameDataRepository.load(context, moduleKeysFromFlags(flags))
+        aplicarGameDataSnapshot(snapshotData)
+
         resetStateParaNovoPersonagem(
             cartaSelvagem = flags.cartaSelvagem,
             maisPontosPericias = flags.maisPontosPericias,

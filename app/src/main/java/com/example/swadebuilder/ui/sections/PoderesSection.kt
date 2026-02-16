@@ -534,7 +534,11 @@ fun PoderesSection(
             if (isExpanded) {
                 // SLOTS PANEL
                 item(key = "slots_$arcKey") {
-                    val slots = state.poderSlotsPorArcano[arcKey] ?: remember { mutableStateListOf() }
+                    val slots = state.poderSlotsPorArcano.getOrPut(arcKey) {
+                        mutableStateListOf<String?>().apply {
+                            repeat(state.getEffectiveSlotsCountForArcano(arcKey)) { add(null) }
+                        }
+                    }
                     // Lock logic
                     val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)
                         state.arcanoSnapshotAntesDaCompra?.size ?: 0
@@ -596,7 +600,11 @@ fun PoderesSection(
                         items = poderesParaEsteArcano,
                         key = { "${arcKey}_${it.id}" } // Unique key per AB + Power
                     ) { poder ->
-                        val slots = state.poderSlotsPorArcano[arcKey] ?: remember { mutableStateListOf() }
+                        val slots = state.poderSlotsPorArcano.getOrPut(arcKey) {
+                            mutableStateListOf<String?>().apply {
+                                repeat(state.getEffectiveSlotsCountForArcano(arcKey)) { add(null) }
+                            }
+                        }
                         val selecionado = slots.any { it?.equals(poder.id, ignoreCase = true) == true }
                         val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)
                             state.arcanoSnapshotAntesDaCompra?.size ?: 0
@@ -629,6 +637,10 @@ fun PoderesSection(
                                             }
                                         }
                                     } else {
+                                        val requiredSlots = state.getEffectiveSlotsCountForArcano(arcKey)
+                                        while (slots.size < requiredSlots) {
+                                            slots.add(null)
+                                        }
                                         val firstEmpty = slots.indexOfFirst { it == null }
                                         if (firstEmpty >= 0 && firstEmpty >= lockedCount) {
                                             slots[firstEmpty] = poder.id
