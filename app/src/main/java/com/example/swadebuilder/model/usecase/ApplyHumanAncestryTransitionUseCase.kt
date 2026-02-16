@@ -53,13 +53,14 @@ class ApplyHumanAncestryTransitionUseCase {
     private fun isUsedAsPrereq(vantagem: Vantagem, selecionadas: List<Vantagem>): Boolean =
         selecionadas.any { other ->
             other != vantagem && other.requisitos.vantagensPrevias.any { prevId ->
-                when (prevId) {
+                when (prevId.keyify()) {
                     "antecedente_arcano", "antecedente_arcano:*" -> {
                         other.id.startsWith("antecedente_arcano_") ||
+                            other.id.startsWith("aa_") ||
                             (other.id == "antecedente_arcano" && !other.choice.isNullOrBlank())
                     }
 
-                    else -> other.id == prevId
+                    else -> other.id.keyify() == prevId.keyify()
                 }
             }
         }

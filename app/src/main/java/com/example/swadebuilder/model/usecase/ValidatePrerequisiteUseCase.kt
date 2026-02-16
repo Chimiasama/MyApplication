@@ -44,6 +44,7 @@ class ValidatePrerequisiteUseCase {
                 "antecedente_arcano", "antecedente_arcano:*" -> {
                     input.vantagensSelecionadas.none { poss ->
                         poss.id.startsWith("antecedente_arcano_") ||
+                                poss.id.startsWith("aa_") ||
                                 (poss.id == "antecedente_arcano" && !poss.choice.isNullOrBlank())
                     }
                 }

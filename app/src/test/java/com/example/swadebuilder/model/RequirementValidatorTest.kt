@@ -51,6 +51,55 @@ class RequirementValidatorTest {
         assertTrue(RequirementValidator.canSelect(ameacador(), state))
     }
 
+
+    @Test
+    fun `requisito antecedente arcano reconhece AA de fantasia por id especifico`() {
+        val vantagemPoder = Vantagem(
+            id = "pontos_de_poder",
+            nome = "PONTOS DE PODER",
+            categoria = Categoria.PODER,
+            requisitos = Requisito(
+                estagio = "Novato",
+                vantagensPrevias = listOf("antecedente_arcano")
+            )
+        )
+
+        val state = CriadorState().apply {
+            vantagensSelecionadas += Vantagem(
+                id = "antecedente_arcano_mago_fantasia",
+                nome = "ANTECEDENTE ARCANO (Mago)",
+                categoria = Categoria.ANTECEDENTE,
+                requisitos = Requisito(estagio = "Novato")
+            )
+        }
+
+        assertTrue(RequirementValidator.canSelect(vantagemPoder, state))
+    }
+
+    @Test
+    fun `requisito antecedente arcano reconhece ids aa de outros livros`() {
+        val vantagemPoder = Vantagem(
+            id = "pontos_de_poder",
+            nome = "PONTOS DE PODER",
+            categoria = Categoria.PODER,
+            requisitos = Requisito(
+                estagio = "Novato",
+                vantagensPrevias = listOf("Antecedente Arcano")
+            )
+        )
+
+        val state = CriadorState().apply {
+            vantagensSelecionadas += Vantagem(
+                id = "aa_tecnomagia",
+                nome = "ANTECEDENTE ARCANO (Tecnomagia)",
+                categoria = Categoria.ANTECEDENTE,
+                requisitos = Requisito(estagio = "Novato")
+            )
+        }
+
+        assertTrue(RequirementValidator.canSelect(vantagemPoder, state))
+    }
+
     @Test
     fun `vantagens normais continuam exigindo todos prerequisitos`() {
         val vantagemComum = Vantagem(
