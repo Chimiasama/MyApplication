@@ -9,7 +9,7 @@ class ValidatePrerequisiteUseCase {
     data class Input(
         val vantagem: Vantagem,
         val vantagensSelecionadas: List<Vantagem>,
-        val complicacoesSelecionadas: List<Complicacao>
+        val complicacoesSelecionadas: Collection<Complicacao>
     )
 
     private val ameacadorComplicacoesLiberadoras = setOf(
@@ -23,7 +23,7 @@ class ValidatePrerequisiteUseCase {
 
     private val ameacadorId = "ameacador".keyify()
 
-    private fun atendePreviasPorComplicacaoParaAmeacador(v: Vantagem, complicacoes: List<Complicacao>): Boolean {
+    private fun atendePreviasPorComplicacaoParaAmeacador(v: Vantagem, complicacoes: Collection<Complicacao>): Boolean {
         if (v.id.keyify() != ameacadorId) return false
 
         val requisitadas = v.requisitos.vantagensPrevias.map { it.keyify() }.toSet()

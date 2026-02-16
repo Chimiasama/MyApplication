@@ -83,7 +83,7 @@ class ValidateSelectionUseCase(
                 ValidatePrerequisiteUseCase.Input(
                     vantagem,
                     context.vantagensSelecionadas,
-                    context.complicacoesSelecionadas.keys.toList()
+                    context.complicacoesSelecionadas.keys
                 )
             )) return false
 
