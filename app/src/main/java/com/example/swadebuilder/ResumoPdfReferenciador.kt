@@ -20,6 +20,7 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.AppTheme
