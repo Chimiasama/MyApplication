@@ -54,10 +54,10 @@ class RequirementValidatorTest {
 
     @Test
     fun `requisito antecedente arcano reconhece AA de fantasia por id especifico`() {
-        val vantagemPoder = Vantagem(
-            id = "pontos_de_poder",
-            nome = "PONTOS DE PODER",
-            categoria = Categoria.PODER,
+        val vantagemComRequisitoArcano = Vantagem(
+            id = "teste_arcano_fantasia",
+            nome = "TESTE ARCANO FANTASIA",
+            categoria = Categoria.SOCIAIS,
             requisitos = Requisito(
                 estagio = "Novato",
                 vantagensPrevias = listOf("antecedente_arcano")
@@ -73,15 +73,15 @@ class RequirementValidatorTest {
             )
         }
 
-        assertTrue(RequirementValidator.canSelect(vantagemPoder, state))
+        assertTrue(RequirementValidator.canSelect(vantagemComRequisitoArcano, state))
     }
 
     @Test
     fun `requisito antecedente arcano reconhece ids aa de outros livros`() {
-        val vantagemPoder = Vantagem(
-            id = "pontos_de_poder",
-            nome = "PONTOS DE PODER",
-            categoria = Categoria.PODER,
+        val vantagemComRequisitoArcano = Vantagem(
+            id = "teste_arcano_aa",
+            nome = "TESTE ARCANO AA",
+            categoria = Categoria.SOCIAIS,
             requisitos = Requisito(
                 estagio = "Novato",
                 vantagensPrevias = listOf("Antecedente Arcano")
@@ -97,7 +97,7 @@ class RequirementValidatorTest {
             )
         }
 
-        assertTrue(RequirementValidator.canSelect(vantagemPoder, state))
+        assertTrue(RequirementValidator.canSelect(vantagemComRequisitoArcano, state))
     }
 
     @Test
