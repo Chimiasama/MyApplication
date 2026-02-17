@@ -136,6 +136,8 @@ fun ComplicacoesSection(
         }.sortedBy { it.name }
     }
 
+    val selectedComplications = state.complicacoesSelecionadas.filterValues { it != null }
+
     SectionCard(
         title    = "Complicações",
         icon     = Icons.Default.Warning,
@@ -217,6 +219,124 @@ fun ComplicacoesSection(
                         }
                     }
                 }
+
+                if (selectedComplications.isNotEmpty() || state.transtornos.isNotEmpty()) {
+                    Spacer(Modifier.height(8.dp))
+
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier.alpha(if (locked && !state.modoProgressaoAtivo) 0.3f else 1f)
+                    ) {
+                        selectedComplications.forEach { (comp, tipo) ->
+                            val isAuto = comp.id.keyify() in autoBaseKeys
+                            val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
+                            val isClickable = !locked && !isAuto && !isYoungAuto
+
+                            AssistChip(
+                                onClick = {
+                                    if (!isClickable) return@AssistChip
+
+                                    val (pode, msg) = state.podeRemoverComplicacao(comp, tipo)
+                                    if (!pode) {
+                                        if (msg != null && msg.contains("Pontos em uso")) {
+                                            showPcInUseDialog = true
+                                        } else {
+                                            tempErrorMsg = msg ?: "Ação bloqueada."
+                                            showTempError = true
+                                            scope.launch {
+                                                delay(3000)
+                                                showTempError = false
+                                            }
+                                        }
+                                        return@AssistChip
+                                    }
+
+                                    onUserFeedback()
+
+                                    when (comp.id) {
+                                        "idoso" -> {
+                                            state.complicacoesSelecionadas.remove(comp)
+                                            state.idosoBonusSp = 0
+                                            state.syncFromCPRefund(
+                                                sp = true,
+                                                feedbackMessages = feedbackMessages
+                                            )
+                                        }
+
+                                        "jovem" -> {
+                                            val pequComp =
+                                                complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
+                                            if (pequComp != null) {
+                                                state.removeYoung(pequComp)
+                                            }
+                                            state.complicacoesSelecionadas.remove(comp)
+                                        }
+
+                                        "pobreza" -> {
+                                            state.complicacoesSelecionadas.remove(comp)
+                                            if (state.compendioPathfinderAtivo) {
+                                                state.dinheiro += 15000
+                                            } else if (state.compendioFantasiaAtivo) {
+                                                state.dinheiro += 150
+                                            } else {
+                                                state.dinheiro += 250
+                                            }
+                                        }
+
+                                        "obeso" -> {
+                                            state.complicacoesSelecionadas.remove(comp)
+                                            state.obesoBonusSize = 0
+                                            state.obesoMalusMov = 0
+                                        }
+
+                                        else -> {
+                                            state.complicacoesSelecionadas.remove(comp)
+                                        }
+                                    }
+                                    onLogFeedback("Complicação ${comp.name} removida.")
+                                },
+                                enabled = isClickable,
+                                label = {
+                                    Text(
+                                        text = "${comp.name} ($tipo)",
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Remover ${comp.name}"
+                                    )
+                                }
+                            )
+                        }
+
+                        state.transtornos.forEach { transtorno ->
+                            AssistChip(
+                                onClick = {
+                                    state.transtornos.remove(transtorno)
+                                    onUserFeedback()
+                                },
+                                label = {
+                                    Text(
+                                        text = "${transtorno.name} (Transtorno)",
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Remover Transtorno"
+                                    )
+                                },
+                                colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
+                                    containerColor = MaterialTheme.colorScheme.errorContainer
+                                )
+                            )
+                        }
+                    }
+                }
             } // End Fixed Header
 
             Spacer(Modifier.height(4.dp))
@@ -229,15 +349,9 @@ fun ComplicacoesSection(
                 contentPadding = PaddingValues(vertical = 4.dp)
             ) {
                 item {
-                    if (totalPc == 0) {
+                    if (selectedComplications.isEmpty()) {
                         Text(
                             "Escolha Complicações para ganhar Pontos Bônus de Criação.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    } else {
-                        Text(
-                            "Use seus Pontos Bônus de Complicação nas seções de Atributos, Perícias, Vantagens ou Equipamento.",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -258,117 +372,7 @@ fun ComplicacoesSection(
                     }
                 }
 
-                item {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement   = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.alpha(if (locked && !state.modoProgressaoAtivo) 0.3f else 1f)
-                    ) {
-                        // Standard Complications
-                        state.complicacoesSelecionadas
-                            .filterValues { it != null }
-                            .forEach { (comp, tipo) ->
-                                val isAuto = comp.id.keyify() in autoBaseKeys
-                                val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
-                                val cost = if (tipo == "Maior") 2 else 1
-                                val isClickable = !locked && !isAuto && !isYoungAuto
-
-                                AssistChip(
-                                    onClick = {
-                                        if (!isClickable) return@AssistChip
-
-                                        val (pode, msg) = state.podeRemoverComplicacao(comp, tipo)
-                                        if (!pode) {
-                                            if (msg != null && msg.contains("Pontos em uso")) {
-                                                showPcInUseDialog = true
-                                            } else {
-                                                tempErrorMsg = msg ?: "Ação bloqueada."
-                                                showTempError = true
-                                                scope.launch {
-                                                    delay(3000)
-                                                    showTempError = false
-                                                }
-                                            }
-                                            return@AssistChip
-                                        }
-
-                                        onUserFeedback()
-
-                                        when (comp.id) {
-                                            "idoso" -> {
-                                                state.complicacoesSelecionadas.remove(comp)
-                                                state.idosoBonusSp = 0
-                                                state.syncFromCPRefund(
-                                                    sp = true,
-                                                    feedbackMessages = feedbackMessages
-                                                )
-                                            }
-
-                                            "jovem" -> {
-                                                val pequComp =
-                                                    complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
-                                                if (pequComp != null) {
-                                                    state.removeYoung(pequComp)
-                                                }
-                                                state.complicacoesSelecionadas.remove(comp)
-                                            }
-
-                                            "pobreza" -> {
-                                                state.complicacoesSelecionadas.remove(comp)
-                                                if (state.compendioPathfinderAtivo) {
-                                                    state.dinheiro += 15000
-                                                } else if (state.compendioFantasiaAtivo) {
-                                                    state.dinheiro += 150
-                                                } else {
-                                                    state.dinheiro += 250
-                                                }
-                                            }
-
-                                            "obeso" -> {
-                                                state.complicacoesSelecionadas.remove(comp)
-                                                state.obesoBonusSize = 0
-                                                state.obesoMalusMov = 0
-                                            }
-
-                                            else -> {
-                                                state.complicacoesSelecionadas.remove(comp)
-                                            }
-                                        }
-                                        onLogFeedback("Complicação ${comp.name} removida.")
-                                    },
-                                    enabled = isClickable,
-                                    label = { Text("${comp.name} ($tipo)") },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Close,
-                                            contentDescription = "Remover ${comp.name}"
-                                        )
-                                    }
-                                )
-                            }
-
-                        // PROMPT 3: Display Transtornos
-                        state.transtornos.forEach { transtorno ->
-                            AssistChip(
-                                onClick = {
-                                    state.transtornos.remove(transtorno)
-                                    onUserFeedback()
-                                },
-                                label = { Text("${transtorno.name} (Transtorno)") },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Default.Close,
-                                        contentDescription = "Remover Transtorno"
-                                    )
-                                },
-                                colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
-                                    containerColor = MaterialTheme.colorScheme.errorContainer
-                                )
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(8.dp))
-                }
+                item { Spacer(Modifier.height(4.dp)) }
 
                 item {
                     // Dialogs Logic placed here to be part of the composition tree
