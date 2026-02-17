@@ -215,15 +215,15 @@ fun ComplicacoesSection(
                                         performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
                                     },
                                     enabled = isClickable,
-                                    label = { Text("${comp.name} ($tipo)", style = MaterialTheme.typography.bodySmall) },
+                                    label = { Text("${comp.name} ($tipo)", style = MaterialTheme.typography.labelSmall) },
                                     leadingIcon = {
                                         Icon(
                                             Icons.Default.Close,
                                             contentDescription = "Remover ${comp.name}",
-                                            modifier = Modifier.size(16.dp)
+                                            modifier = Modifier.size(12.dp)
                                         )
                                     },
-                                    modifier = Modifier.height(32.dp),
+                                    modifier = Modifier.height(24.dp),
                                     colors = AssistChipDefaults.assistChipColors(
                                         containerColor = MaterialTheme.colorScheme.secondaryContainer,
                                         labelColor = MaterialTheme.colorScheme.onSecondaryContainer
@@ -238,15 +238,15 @@ fun ComplicacoesSection(
                                     state.transtornos.remove(transtorno)
                                     onUserFeedback()
                                 },
-                                label = { Text("${transtorno.name} (T.)", style = MaterialTheme.typography.bodySmall) },
+                                label = { Text("${transtorno.name} (T.)", style = MaterialTheme.typography.labelSmall) },
                                 leadingIcon = {
                                     Icon(
                                         Icons.Default.Close,
                                         contentDescription = "Remover Transtorno",
-                                        modifier = Modifier.size(16.dp)
+                                        modifier = Modifier.size(12.dp)
                                     )
                                 },
-                                modifier = Modifier.height(32.dp),
+                                modifier = Modifier.height(24.dp),
                                 colors = AssistChipDefaults.assistChipColors(
                                     containerColor = MaterialTheme.colorScheme.errorContainer,
                                     labelColor = MaterialTheme.colorScheme.onErrorContainer
