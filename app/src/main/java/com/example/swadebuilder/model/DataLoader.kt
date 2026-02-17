@@ -324,7 +324,23 @@ object DataLoader {
              if (override != null) item.copy(origem = override) else item
         }
 
-        val localListaVantagens = todasVantagens
+        val localListaVantagens = buildList {
+            addAll(todasVantagens)
+
+            if (shouldReplaceBasico && none { it.id == "antecedente_arcano" }) {
+                @Suppress("UNCHECKED_CAST")
+                val basicoVantagens = dataCache.getOrPut("basico_vantagens.json") {
+                    runCatching {
+                        assets.open("basico_vantagens.json")
+                            .use { input -> json.decodeFromStream<List<Vantagem>>(input) }
+                    }.getOrElse { emptyList<Vantagem>() }
+                } as List<Vantagem>
+
+                basicoVantagens
+                    .firstOrNull { it.id == "antecedente_arcano" }
+                    ?.let { add(it) }
+            }
+        }
 
         if ("CIDADE_SOL_VAPOR" in keys) {
             val steamAll = todasVantagens.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }

@@ -4018,27 +4018,6 @@
     "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural.\nAdicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4."
   },
   {
-    "id": "mago",
-    "nome": "MAGO",
-    "categoria": "PODER",
-    "origem": "FANTASIA",
-    "requisitos": {
-      "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
-        "Conjurar": 6
-      },
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Gasta 1 PP extra ao conjurar para mudar Manifestação."
-  },
-  {
     "id": "mentalista",
     "nome": "MENTALISTA",
     "categoria": "PODER",

@@ -144,16 +144,17 @@ object RequirementValidator {
                 }
             } else {
                 val faltam = v.requisitos.vantagensPrevias.any { prevId ->
-                    when (prevId) {
-                        Constants.ID_AA_PREFIX, "${Constants.ID_AA_PREFIX}:*" -> {
+                    when (prevId.keyify().replace(" ", "_")) {
+                        Constants.ID_AA_PREFIX.keyify(), "${Constants.ID_AA_PREFIX}:*".keyify() -> {
                             state.vantagensSelecionadas.none { poss ->
                                 poss.id.startsWith("${Constants.ID_AA_PREFIX}_") ||
+                                        poss.id.startsWith("aa_") ||
                                         (poss.id == Constants.ID_AA_PREFIX && !poss.choice.isNullOrBlank())
                             }
                         }
                         else -> {
                             state.vantagensSelecionadas.none { poss ->
-                                poss.id == prevId
+                                poss.id.keyify().replace(" ", "_") == prevId.keyify().replace(" ", "_")
                             }
                         }
                     }
