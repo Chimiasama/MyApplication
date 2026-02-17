@@ -377,36 +377,68 @@ fun ComplicacoesSection(
                         val spCount = state.cpSpStack.size
                         val pvCount = state.cpPvStack.size
                         val recCount = state.cpRecursosStack.size
-                        val totalUsados = paCount + spCount + pvCount + recCount
 
                         AlertDialog(
                             onDismissRequest = { showPcInUseDialog = false },
                             confirmButton = {
                                 TextButton(onClick = { showPcInUseDialog = false }) {
-                                    Text("OK")
+                                    Text("Fechar")
                                 }
                             },
-                            title = { Text("Não é possível remover esta Complicação") },
+                            title = { Text("Desfaça os gastos para remover") },
                             text = {
                                 Column {
-                                    Text("Você já converteu Pontos Bônus de Criação vindos de Complicações em:")
+                                    Text("Você precisa liberar os pontos bônus que já gastou para poder remover esta Complicação.")
                                     Spacer(Modifier.height(8.dp))
 
-                                    if (totalUsados == 0) {
-                                        Text("Nenhum Ponto Bônus está em uso no momento.")
-                                    } else {
-                                        if (paCount > 0) Text("• $paCount em Atributos adicionais")
-                                        if (spCount > 0) Text("• $spCount em passos extras de Perícia")
-                                        if (pvCount > 0) Text("• $pvCount em Vantagens adicionais")
-                                        if (recCount > 0) Text("• $recCount em Recursos extras (500$ cada)")
-
-                                        Spacer(Modifier.height(8.dp))
-                                        Text(
-                                            "Para remover esta Complicação, primeiro desfaça alguns " +
-                                                    "desses Pontos Bônus nas seções de Atributos, Perícias, " +
-                                                    "Vantagens ou Equipamento.",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
+                                    if (paCount > 0) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text("Atributos ($paCount gastos)")
+                                            TextButton(onClick = { state.devolverPcDeAtributo() }) {
+                                                Text("Devolver 1")
+                                            }
+                                        }
+                                    }
+                                    if (spCount > 0) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text("Perícias ($spCount gastos)")
+                                            TextButton(onClick = { state.devolverPcDePericia() }) {
+                                                Text("Devolver 1")
+                                            }
+                                        }
+                                    }
+                                    if (pvCount > 0) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text("Vantagens ($pvCount gastos)")
+                                            TextButton(onClick = { state.devolverPcDeVantagem() }) {
+                                                Text("Devolver 1")
+                                            }
+                                        }
+                                    }
+                                    if (recCount > 0) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            val valor = if (state.compendioPathfinderAtivo) "60000" else "500"
+                                            Text("Recursos ($recCount gastos)")
+                                            TextButton(onClick = { state.devolverPcDeRecursos() }) {
+                                                Text("Devolver 1")
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -461,11 +493,15 @@ fun ComplicacoesSection(
                             onUserFeedback = onUserFeedback,
                             onLogFeedback = onLogFeedback,
                             onError = { msg ->
-                                tempErrorMsg = msg
-                                showTempError = true
-                                scope.launch {
-                                    delay(2_000)
-                                    showTempError = false
+                                if (msg.contains("Pontos em uso")) {
+                                    showPcInUseDialog = true
+                                } else {
+                                    tempErrorMsg = msg
+                                    showTempError = true
+                                    scope.launch {
+                                        delay(2_000)
+                                        showTempError = false
+                                    }
                                 }
                             },
                             peqComp = pequComp

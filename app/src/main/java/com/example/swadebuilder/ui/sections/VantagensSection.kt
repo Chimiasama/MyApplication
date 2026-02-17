@@ -71,8 +71,6 @@ import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
-import com.example.swadebuilder.ui.components.PbLegacyActions
-import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
@@ -303,7 +301,6 @@ fun VantagensContent(
 
     val locked = state.criacaoBasicaCongeladaComXp
     val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
-    val usePbWalletRedesign = booleanResource(com.example.swadebuilder.R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val pcTotal = state.pontosComplicacao
@@ -356,12 +353,46 @@ fun VantagensContent(
         else -> null
     }
 
+    // Helper to auto-spend BP and buy
+    val attemptPurchase: (Vantagem, () -> Unit) -> Unit = { vantToBuy, onSuccess ->
+        val isFreePathfinder = state.pathfinderSlotAvailable && state.isPathfinderEligible(vantToBuy)
+        val isFreeProtagonista = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vantToBuy)
+        val isFreeSamurai = state.samuraiCombatSlotAvailable && vantToBuy.categoria == Categoria.COMBATE
+
+        val needsPoints = !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai
+
+        var failed = false
+        if (needsPoints && state.pontosVantagem <= 0) {
+            if (pcLivres >= 2) {
+                state.gastarPcParaVantagem()
+            } else {
+                failed = true
+                viewModel.logFeedback("Pontos insuficientes.")
+            }
+        }
+
+        if (!failed) {
+            if (state.advantageAdvancementInProgress) {
+                viewModel.selectAdvantageForAdvancement(vantToBuy)
+                onUserFeedback()
+                viewModel.logFeedback("Vantagem ${vantToBuy.nome} adicionada.")
+                onSuccess()
+            } else {
+                val bought = state.comprarVantagem(vantToBuy) { msg ->
+                    viewModel.logFeedback(msg)
+                    onUserFeedback()
+                }
+                if (bought) onSuccess()
+            }
+        }
+    }
+
     // Reusable Header Content
     val headerContent: @Composable () -> Unit = {
         Column {
             SectionHeader(
                 onHelpClick = null,
-                centerText = "Pontos de Vantagem: ${state.pontosVantagem}",
+                centerText = "Pontos de Vantagem: ${state.pontosVantagem}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
                 onListaCompletaClick = null,
                 listaCompletaText = ""
             )
@@ -416,27 +447,8 @@ fun VantagensContent(
                     Spacer(Modifier.size(8.dp))
                 }
 
-                if (usePbWalletRedesign) {
-                    PbWalletBanner(
-                        pcTotal = pcTotal,
-                        pcLivres = pcLivres,
-                        spendLabel = "Usar PB em Vantagens",
-                        refundLabel = "Desfazer uso de PB",
-                        spendEnabled = !locked && pcLivres >= 2,
-                        refundEnabled = !locked && pvUsados > 0,
-                        onSpend = { state.gastarPcParaVantagem() },
-                        onRefund = { state.devolverPcDeVantagem() }
-                    )
-                } else {
-                    PbLegacyActions(
-                        spendLabel = "Usar PB em Vantagens",
-                        refundLabel = "Desfazer uso de PB",
-                        spendEnabled = !locked && pcLivres >= 2,
-                        refundEnabled = !locked && pvUsados > 0,
-                        onSpend = { state.gastarPcParaVantagem() },
-                        onRefund = { state.devolverPcDeVantagem() }
-                    )
-                }
+                // Legacy PB buttons removed
+
                 Spacer(Modifier.size(8.dp))
             }
 
@@ -584,6 +596,11 @@ fun VantagensContent(
                                 onUserFeedback()
                             }
 
+                            // Auto-Refund Logic
+                            if (state.pontosVantagem > 0 && state.cpPvStack.isNotEmpty()) {
+                                state.devolverPcDeVantagem()
+                            }
+
                             if (arcKey != null && arcKey == state.arcanoEmCompraViaXpKey) {
                                 state.limparCompraArcanoViaXp(restaurarSnapshot = true)
                                 if (state.advantageForCurrentAdvancement == vant.id) {
@@ -677,6 +694,7 @@ fun VantagensContent(
                                  idParaNome = idParaNome,
                                  detalhesExpandidos = detalhesExpandidos,
                                  protagonistaSlotCategoria = protagonistaSlotCategoria,
+                                 pcLivres = pcLivres,
                                  onSelect = {
                                     if (vant.vinculadoPericia) {
                                         pendingVantagem = vant
@@ -696,22 +714,7 @@ fun VantagensContent(
                                         if (activeABs.size > 1) {
                                             dialogMostrandoNovosPoderes = vant
                                         } else {
-                                            // Single AB: proceed normally (likely assigning default if blank or single choice)
-                                            // If standard purchase flow doesn't auto-assign, we might need to set choice.
-                                            // But for now, let's assume standard behavior works for single AB.
-                                            // Actually, if single AB, let's explicitly set it if not set?
-                                            // Legacy behavior handled blank as "The AB".
-                                            // Let's stick to standard flow.
-                                            if (state.advantageAdvancementInProgress) {
-                                                viewModel.selectAdvantageForAdvancement(vant)
-                                                onUserFeedback()
-                                                viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
-                                            } else {
-                                                state.comprarVantagem(vant) { msg ->
-                                                    viewModel.logFeedback(msg)
-                                                    onUserFeedback()
-                                                }
-                                            }
+                                            attemptPurchase(vant) {}
                                         }
                                     } else if (vant.id == "poder_favorito") {
                                         val ownedPowers = state.poderesSelecionados.filterNotNull()
@@ -722,16 +725,7 @@ fun VantagensContent(
                                             dialogMostrandoPoderFavorito = vant
                                         }
                                     } else {
-                                        if (state.advantageAdvancementInProgress) {
-                                            viewModel.selectAdvantageForAdvancement(vant)
-                                            onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
-                                        } else {
-                                            state.comprarVantagem(vant) { msg ->
-                                                viewModel.logFeedback(msg)
-                                                onUserFeedback()
-                                            }
-                                        }
+                                        attemptPurchase(vant) {}
                                     }
                                  },
                                  onError = { msg ->
@@ -783,6 +777,7 @@ fun VantagensContent(
                              idParaNome = idParaNome,
                              detalhesExpandidos = detalhesExpandidos,
                              protagonistaSlotCategoria = protagonistaSlotCategoria,
+                             pcLivres = pcLivres,
                              onSelect = {
                                 if (vant.vinculadoPericia) {
                                     pendingVantagem = vant
@@ -802,16 +797,7 @@ fun VantagensContent(
                                     if (activeABs.size > 1) {
                                         dialogMostrandoNovosPoderes = vant
                                     } else {
-                                        if (state.advantageAdvancementInProgress) {
-                                            viewModel.selectAdvantageForAdvancement(vant)
-                                            onUserFeedback()
-                                            viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
-                                        } else {
-                                            state.comprarVantagem(vant) { msg ->
-                                                viewModel.logFeedback(msg)
-                                                onUserFeedback()
-                                            }
-                                        }
+                                        attemptPurchase(vant) {}
                                     }
                                 } else if (vant.id == "poder_favorito") {
                                     val ownedPowers = state.poderesSelecionados.filterNotNull()
@@ -822,16 +808,7 @@ fun VantagensContent(
                                         dialogMostrandoPoderFavorito = vant
                                     }
                                 } else {
-                                    if (state.advantageAdvancementInProgress) {
-                                        viewModel.selectAdvantageForAdvancement(vant)
-                                        onUserFeedback()
-                                        viewModel.logFeedback("Vantagem ${vant.nome} adicionada.")
-                                    } else {
-                                        state.comprarVantagem(vant) { msg ->
-                                            viewModel.logFeedback(msg)
-                                            onUserFeedback()
-                                        }
-                                    }
+                                    attemptPurchase(vant) {}
                                 }
                             },
                              onError = { msg ->
@@ -983,19 +960,10 @@ fun VantagensContent(
 
                         val vantToAdd = vantOriginal.copy(choice = choice)
 
-                        if (state.advantageAdvancementInProgress) {
-                            viewModel.selectAdvantageForAdvancement(vantToAdd)
-                            onUserFeedback()
-                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($choice).")
-                        } else {
-                            state.comprarVantagem(vantToAdd) { msg ->
-                                viewModel.logFeedback(msg)
-                                onUserFeedback()
-                            }
+                        attemptPurchase(vantToAdd) {
+                            dialogMostrandoPoderesMisticos = null
+                            subOpcaoSelecionada = null
                         }
-
-                        dialogMostrandoPoderesMisticos = null
-                        subOpcaoSelecionada = null
                     }
                 ) { Text("OK") }
             },
@@ -1196,20 +1164,19 @@ fun VantagensContent(
                 TextButton(
                     enabled = (subOpcaoSelecionada != null),
                     onClick = {
+                        val handleDialogSuccess = {
+                            onUserFeedback()
+                            dialogMostrandoAntecedente = null
+                            subOpcaoSelecionada = null
+                        }
+
                         if (state.compendioPathfinderAtivo) {
                             val choiceLabel = subOpcaoSelecionada!!
                             val specificEdge = opcoesPathfinder.firstOrNull { it.first == choiceLabel }?.second
 
                             if (specificEdge != null) {
                                 if (state.podeSelecionar(specificEdge)) {
-                                    if (state.advantageAdvancementInProgress) {
-                                        viewModel.selectAdvantageForAdvancement(specificEdge)
-                                    } else {
-                                        state.comprarVantagem(specificEdge) { msg ->
-                                            viewModel.logFeedback(msg)
-                                            onUserFeedback()
-                                        }
-                                    }
+                                    attemptPurchase(specificEdge, handleDialogSuccess)
                                 } else {
                                     viewModel.logFeedback("Requisitos não atendidos para ${specificEdge.nome}")
                                 }
@@ -1220,14 +1187,7 @@ fun VantagensContent(
 
                             if (specificEdge != null) {
                                 if (state.podeSelecionar(specificEdge)) {
-                                    if (state.advantageAdvancementInProgress) {
-                                        viewModel.selectAdvantageForAdvancement(specificEdge)
-                                    } else {
-                                        state.comprarVantagem(specificEdge) { msg ->
-                                            viewModel.logFeedback(msg)
-                                            onUserFeedback()
-                                        }
-                                    }
+                                    attemptPurchase(specificEdge, handleDialogSuccess)
                                 } else {
                                     viewModel.logFeedback("Requisitos não atendidos para ${specificEdge.nome}")
                                 }
@@ -1238,14 +1198,7 @@ fun VantagensContent(
 
                             if (specificEdge != null) {
                                 if (state.podeSelecionar(specificEdge)) {
-                                    if (state.advantageAdvancementInProgress) {
-                                        viewModel.selectAdvantageForAdvancement(specificEdge)
-                                    } else {
-                                        state.comprarVantagem(specificEdge) { msg ->
-                                            viewModel.logFeedback(msg)
-                                            onUserFeedback()
-                                        }
-                                    }
+                                    attemptPurchase(specificEdge, handleDialogSuccess)
                                 } else {
                                     viewModel.logFeedback("Requisitos não atendidos para ${specificEdge.nome}")
                                 }
@@ -1256,14 +1209,7 @@ fun VantagensContent(
 
                             if (specificEdge != null) {
                                 if (state.podeSelecionar(specificEdge)) {
-                                    if (state.advantageAdvancementInProgress) {
-                                        viewModel.selectAdvantageForAdvancement(specificEdge)
-                                    } else {
-                                        state.comprarVantagem(specificEdge) { msg ->
-                                            viewModel.logFeedback(msg)
-                                            onUserFeedback()
-                                        }
-                                    }
+                                    attemptPurchase(specificEdge, handleDialogSuccess)
                                 } else {
                                     // Trigger error feedback if requirements not met
                                     viewModel.logFeedback("Requisitos não atendidos para ${specificEdge.nome}")
@@ -1275,19 +1221,9 @@ fun VantagensContent(
                             )
 
                             if (state.podeSelecionar(novaVantagem)) {
-                                if (state.advantageAdvancementInProgress) {
-                                    viewModel.selectAdvantageForAdvancement(novaVantagem)
-                                } else {
-                                    state.comprarVantagem(novaVantagem) { msg ->
-                                        viewModel.logFeedback(msg)
-                                        onUserFeedback()
-                                    }
-                                }
+                                attemptPurchase(novaVantagem, handleDialogSuccess)
                             }
                         }
-                        onUserFeedback()
-                        dialogMostrandoAntecedente = null
-                        subOpcaoSelecionada = null
                     }
                 ) { Text("OK") }
             },
@@ -1369,20 +1305,10 @@ fun VantagensContent(
                     onClick = {
                         val choice = subOpcaoSelecionada!!
                         val vantToAdd = vantOriginal.copy(choice = choice)
-
-                        if (state.advantageAdvancementInProgress) {
-                            viewModel.selectAdvantageForAdvancement(vantToAdd)
-                            onUserFeedback()
-                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($choice).")
-                        } else {
-                            state.comprarVantagem(vantToAdd) { msg ->
-                                viewModel.logFeedback(msg)
-                                onUserFeedback()
-                            }
+                        attemptPurchase(vantToAdd) {
+                            dialogMostrandoPoderFavorito = null
+                            subOpcaoSelecionada = null
                         }
-
-                        dialogMostrandoPoderFavorito = null
-                        subOpcaoSelecionada = null
                     }
                 ) { Text("OK") }
             },
@@ -1442,26 +1368,19 @@ fun VantagensContent(
                         val choice = subOpcaoSelecionada!!
                         if (state.podeSelecionar(vantOriginal)) {
                             val vantToAdd = vantOriginal.copy(choice = choice)
-
-                            if (state.advantageAdvancementInProgress) {
-                                viewModel.selectAdvantageForAdvancement(vantToAdd)
-                                onUserFeedback()
-                            } else {
-                                state.comprarVantagem(vantToAdd) { msg ->
-                                    viewModel.logFeedback(msg)
-                                    onUserFeedback()
+                            attemptPurchase(vantToAdd) {
+                                if (state.anotacoes.isNotBlank()) {
+                                    state.anotacoes += "\n"
                                 }
+                                state.anotacoes += "• Montaria: $choice"
+                                dialogMostrandoMontaria = null
+                                subOpcaoSelecionada = null
                             }
-
-                            if (state.anotacoes.isNotBlank()) {
-                                state.anotacoes += "\n"
-                            }
-                            state.anotacoes += "• Montaria: $choice"
-
-                            onUserFeedback()
+                        } else {
+                            // Should not happen if button was enabled
+                            dialogMostrandoMontaria = null
+                            subOpcaoSelecionada = null
                         }
-                        dialogMostrandoMontaria = null
-                        subOpcaoSelecionada = null
                     }
                 ) { Text("OK") }
             },
@@ -1525,20 +1444,10 @@ fun VantagensContent(
                     onClick = {
                         val choice = subOpcaoSelecionada!!
                         val vantToAdd = vantOriginal.copy(choice = choice)
-
-                        if (state.advantageAdvancementInProgress) {
-                            viewModel.selectAdvantageForAdvancement(vantToAdd)
-                            onUserFeedback()
-                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($choice).")
-                        } else {
-                            state.comprarVantagem(vantToAdd) { msg ->
-                                viewModel.logFeedback(msg)
-                                onUserFeedback()
-                            }
+                        attemptPurchase(vantToAdd) {
+                            dialogMostrandoNovosPoderes = null
+                            subOpcaoSelecionada = null
                         }
-
-                        dialogMostrandoNovosPoderes = null
-                        subOpcaoSelecionada = null
                     }
                 ) { Text("OK") }
             },
@@ -1589,8 +1498,18 @@ fun VantagensContent(
                     onClick = {
                         val armor = subOpcaoSelecionada!!
                         if (state.podeSelecionar(vantOriginal)) {
+                            // Custom logic for Cavaleiro bypasses attemptPurchase because it adds items
+                            // But we need to spend points first
+                            if (state.pontosVantagem <= 0) {
+                                if (pcLivres >= 2) {
+                                    state.gastarPcParaVantagem()
+                                } else {
+                                    viewModel.logFeedback("Pontos insuficientes.")
+                                    return@TextButton
+                                }
+                            }
+
                             if (state.advantageAdvancementInProgress) {
-                                // Pass choice to ViewModel
                                 viewModel.selectAdvantageForAdvancement(vantOriginal.copy(choice = armor))
                                 onUserFeedback()
                             } else {
@@ -1649,18 +1568,16 @@ fun VantagensContent(
                     ChoiceDialog(
                         options = knowledgeOptions,
                         onConfirm = { choice ->
-                        state.comprarVantagem(vant.copy(choice = choice)) { msg ->
-                            viewModel.logFeedback(msg)
-                            onUserFeedback()
+                            attemptPurchase(vant.copy(choice = choice)) {
+                                showChoiceDialog = false
+                                pendingVantagem = null
+                            }
+                        },
+                        onDismiss = {
+                            showChoiceDialog = false
+                            pendingVantagem = null
                         }
-                        showChoiceDialog = false
-                        pendingVantagem = null
-                    },
-                    onDismiss = {
-                        showChoiceDialog = false
-                        pendingVantagem = null
-                    }
-                )
+                    )
             }
         } else {
             val validOptions = when {
@@ -1751,19 +1668,10 @@ fun VantagensContent(
                         }
 
                         val vantToAdd = vant.copy(choice = rawChoice)
-
-                        if (state.advantageAdvancementInProgress) {
-                            viewModel.selectAdvantageForAdvancement(vantToAdd)
-                            onUserFeedback()
-                            viewModel.logFeedback("Vantagem ${vantToAdd.nome} adicionada ($rawChoice).")
-                        } else {
-                            state.comprarVantagem(vantToAdd) { msg ->
-                                viewModel.logFeedback(msg)
-                                onUserFeedback()
-                            }
+                        attemptPurchase(vantToAdd) {
+                            showChoiceDialog = false
+                            pendingVantagem = null
                         }
-                        showChoiceDialog = false
-                        pendingVantagem = null
                     },
                     onDismiss = {
                         showChoiceDialog = false
@@ -1787,6 +1695,7 @@ private fun VantagemItem(
     idParaNome: Map<String, String>,
     detalhesExpandidos: MutableMap<String, Boolean>,
     protagonistaSlotCategoria: String?,
+    pcLivres: Int,
     onSelect: () -> Unit,
     onError: (String) -> Unit
 ) {
@@ -1860,8 +1769,11 @@ private fun VantagemItem(
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
                     val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
 
+                    val hasBP = pcLivres >= 2
+                    val canAfford = state.pontosVantagem > 0 || hasBP
+
                     when {
-                        !isPathfinderFree && !isProtagonistaFree && state.pontosVantagem <= 0 -> onError("Sem PV disponível")
+                        !isPathfinderFree && !isProtagonistaFree && !canAfford -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         conflitoMsg != null -> onError(conflitoMsg)

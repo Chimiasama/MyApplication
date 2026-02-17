@@ -1142,6 +1142,30 @@ class CriadorState {
         return true
     }
 
+    fun devolverPcDeAtributo() {
+        if (cpPaStack.isNotEmpty()) {
+            cpPaStack.removeAt(cpPaStack.lastIndex)
+            pontosComplicacaoGastos = (pontosComplicacaoGastos - 2).coerceAtLeast(0)
+            recalcularPontosAtributo()
+        }
+    }
+
+    fun devolverPcDePericia() {
+        if (cpSpStack.isNotEmpty()) {
+            cpSpStack.removeLast()
+            pontosComplicacaoGastos = (pontosComplicacaoGastos - 1).coerceAtLeast(0)
+            rebuildAllPericiaStacks()
+        }
+    }
+
+    fun gastarPcParaPericia(): Boolean {
+        if (pontosComplicacao - pontosComplicacaoGastos < 1) return false
+        pontosComplicacaoGastos += 1
+        cpSpStack.add(Unit)
+        // O pool de perícia atualiza automaticamente via derivedStateOf
+        return true
+    }
+
     fun isPathfinderEligible(v: Vantagem): Boolean {
         if (!compendioPathfinderAtivo) return false
         return when (v.categoria) {

@@ -62,8 +62,6 @@ import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
 import com.example.swadebuilder.toDiceString
-import com.example.swadebuilder.ui.components.PbLegacyActions
-import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
@@ -78,7 +76,6 @@ fun PericiasContent(
 ) {
     LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
-    val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val locked = state.criacaoBasicaCongelada && !state.skillAdvancementInProgress
@@ -86,7 +83,6 @@ fun PericiasContent(
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
-    val spUsados = state.cpSpStack.size
 
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
@@ -99,7 +95,6 @@ fun PericiasContent(
     var editOldName by rememberSaveable { mutableStateOf("") }
     var editNewName by rememberSaveable { mutableStateOf("") }
 
-    // PROMPT 5: State for Note Dialog
     var showNoteDialog by rememberSaveable { mutableStateOf(false) }
     var noteText by rememberSaveable { mutableStateOf("") }
     var noteTarget by remember { mutableStateOf<Pericia?>(null) }
@@ -114,7 +109,6 @@ fun PericiasContent(
 
     val valorColWidthDp = 80.dp
 
-    // Jutsu description provided by user
     val jutsuDesc = """
         Jutsu representa o treinamento em uma categoria de instrumentos de combate corpo a corpo. Jutsu segue todas as regras da perícia Lutar, mas utiliza a regra Especialização de Perícia exclusivamente para esta perícia. Quando um personagem usa uma arma que não está coberta por uma perícia Jutsu conhecida, ele sofre uma penalidade de -2. Ao contrário da Especialização de Perícia, cada vez que um herói deseja aprender uma nova categoria através de um Progresso, isso é contado como aprender uma nova perícia. Isso significa que cada grupo de Jutsu é uma perícia separada. As seguintes categorias são exemplos, mas não abrangem a ampla gama de opções de combate corpo a corpo disponíveis. Jogadores e Narradores devem estar abertos a discutir a adição, remoção, agrupamento ou até mesmo a criação de novas categorias conforme necessário para se adequar à campanha. Jutsu (Concussão): Esta categoria de perícia foca no uso de objetos sólidos sem gumes cortantes. Desde o uso do bastão defensivo de 3 partes até as tonfas de madeira, a proficiência neste grupo também inclui nunchaku e chuis. Proficiência: bastões de 3 partes, chui (maça), pá do monge, nunchaku, tetsubo, tonfa, martelo de guerra. Jutsu (Corrente): Está incluído neste grupo armas únicas que exigem uma habilidade especial e oferecem alcance letal. Elas são consideradas não-convencionais (desonrosas). São usadas principalmente por diversos grupos de youxia e shinobi. Proficiência: dardo com corda, kusarigama, kyoketsu-shogi, manriki kusari, martelo meteoro, cabelo. Jutsu (Leve): A categoria de armas leves abrange uma mistura de habilidades variadas. Envolve desde as facas mais comuns até o leque de guerra do Daimiô; esses objetos atuam como complementos para espadas e armas primárias. Proficiência: faca, kama, tessen, jette, sai, espada borboleta, nunchaku, escova de ferro, tekko kagi. Jutsu (Massivo): Armas Massivas são usadas com destreza e grande facilidade. Aqueles familiarizados com itens Massivos não sofrem penalidades ao empunhá-los. Jutsu (Passivo): Instrumentos usados por aqueles que evitam o caminho da agressão. Proficiência: bastão-bo, escova de ferro, jitte, nunchaku, sai, tessen. Jutsu (Haste): Armas cortantes anexadas a longos bastões de madeira ou metal, armas desta categoria são vistas entre os camponeses e soldados voluntários. O treinamento abrange a prática no uso do yari no campo de batalha à frente, até lanças usadas pela cavalaria. Proficiência: bastão-bo, alabarda, lança, machado longo, naginata, yari. Jutsu (Samurai): Esta categoria é ensinada especificamente àqueles que frequentaram uma Academia de Guerra ou que foram aprendizes de um Samurai. Proficiência: katana, naginata, nodachi, tanto, tessen, wakizashi. Jutsu (Espada): O caminho da espada é o tipo de arma mais comum encontrado nas mãos de heróis em todo o reino. Em duelos, a esgrima é considerada a habilidade mais honrosa a ser utilizada pelos campeões. Proficiência: dao, jian, katana, nodachi, shang gou, wakizashi. Jutsu (Desarmado): O Caminho do Punho Vazio vem em formas variadas e é ensinado em muitos estilos diferentes. Esta é a perícia para o artista marcial desarmado que gosta de se envolver em combate desarmado. Proficiência: punho, pé, cabeçada, ombros, pernas, cotovelos, joelhos, dedos.
     """.trimIndent()
@@ -129,15 +123,10 @@ fun PericiasContent(
     ) {
         state.periciasComIdiomas().filter { per ->
             if (per.nome.equals("Jutsu", ignoreCase = true)) {
-                // Remove original "Jutsu" if present, we handle it via Lutar logic now,
-                // but if it's in the list it might be from the old json if not removed.
-                // The user removed it from json.
-                // But just in case:
                 false
             } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
                 state.compendioFantasiaAtivo || state.compendioHorrorAtivo
             } else if (state.compendioPathfinderAtivo) {
-                // Pathfinder exclusions
                 val n = per.nome.keyify()
                 n != "FOCO" && n !in SAVAGE_PATHFINDER_BLOCKED_SKILLS
             } else {
@@ -156,7 +145,6 @@ fun PericiasContent(
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-            // --- HEADER SECTION (Fixed) ---
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -164,55 +152,15 @@ fun PericiasContent(
             ) {
                 SectionHeader(
                     onHelpClick          = null,
-                    centerText           = "Pontos de Perícia: ${state.pontosPericia}",
+                    centerText           = "Pontos de Perícia: ${state.pontosPericia}${if (!locked && pcLivres >= 1) " (+${pcLivres} via PB)" else ""}",
                     onListaCompletaClick = null,
                     listaCompletaText    = ""
                 )
 
                 Spacer(Modifier.height(4.dp))
-
-                if (!state.emProgresso) {
-                    if (usePbWalletRedesign) {
-                        PbWalletBanner(
-                            pcTotal = pcTotal,
-                            pcLivres = pcLivres,
-                            spendLabel = "Usar PB em Perícias",
-                            refundLabel = "Desfazer uso de PB",
-                            spendEnabled = !locked && pcLivres > 0,
-                            refundEnabled = !locked && spUsados > 0,
-                            onSpend = {
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-                            },
-                            onRefund = {
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            }
-                        )
-                    } else {
-                        PbLegacyActions(
-                            spendLabel = "Usar PB em Perícias",
-                            refundLabel = "Desfazer uso de PB",
-                            spendEnabled = !locked && pcLivres > 0,
-                            refundEnabled = !locked && spUsados > 0,
-                            onSpend = {
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-                            },
-                            onRefund = {
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            }
-                        )
-                    }
-                }
+                // Legacy PB buttons removed
             }
 
-            // --- LIST SECTION (Scrollable) ---
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -296,7 +244,6 @@ fun PericiasContent(
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
-                                // PROMPT 5: Display Skill Note
                                 val note = state.notasPericia[per.nome]
                                 if (!note.isNullOrBlank()) {
                                     Text(
@@ -307,8 +254,6 @@ fun PericiasContent(
                                 }
                             }
 
-                            // PROMPT 5: Edit Note Button
-                            // Correction: Show edit button ONLY if optional rule is active OR it's Idioma/Jutsu
                             if ((isIdioma || isJutsu) && regra.displayRaw > 0) {
                                 IconButton(
                                     onClick = {
@@ -353,8 +298,14 @@ fun PericiasContent(
                                     state.decreasePericia(per)
                                     if (state.rawTotal(per) == 0) {
                                         state.especializacoesPorPericia.remove(per.nome)
-                                        state.notasPericia.remove(per.nome) // Clear note if skill is removed
+                                        state.notasPericia.remove(per.nome)
                                     }
+
+                                    // Auto-Refund Logic
+                                    while (state.pontosPericia > 0 && state.cpSpStack.isNotEmpty()) {
+                                        state.devolverPcDePericia()
+                                    }
+
                                     if (isIdioma) {
                                         state.syncIdiomaSlots()
                                     }
@@ -387,16 +338,28 @@ fun PericiasContent(
                                 textAlign = TextAlign.Center
                             )
 
+                            // Updated Increase Logic
+                            val canIncreaseWithBP = !locked && (pcLivres >= regra.cost) && (regra.nextRaw <= regra.capRaw)
+
                             IconButton(
                                 onClick = {
-                                    val regrasAtuais = state.calcularPericiaRules(
-                                        pericia = per,
-                                        idosoActive = idosoActive,
-                                        locked = locked
-                                    )
+                                    // Check rule again inside click
+                                    val regrasAtuais = state.calcularPericiaRules(per, idosoActive, locked)
 
+                                    // If standard checks fail, verify BP override
                                     if (!regrasAtuais.canIncrease) {
-                                        return@IconButton
+                                        val cost = regrasAtuais.cost
+                                        val hasBP = pcLivres >= cost
+                                        val notCapped = regrasAtuais.nextRaw <= regrasAtuais.capRaw
+                                        if (!(!locked && hasBP && notCapped)) return@IconButton
+
+                                        // Auto-spend BP
+                                        val missing = cost - state.pontosPericia
+                                        if (missing > 0) {
+                                            repeat(missing) {
+                                                if (!state.gastarPcParaPericia()) return@IconButton
+                                            }
+                                        }
                                     }
 
                                     if ((isIdioma || isJutsu) && state.rawTotal(per) == 0) {
@@ -427,7 +390,7 @@ fun PericiasContent(
                                         }
                                     }
                                 },
-                                enabled = regra.canIncrease,
+                                enabled = regra.canIncrease || canIncreaseWithBP,
                                 modifier = Modifier
                                     .size(32.dp)
                                     .padding(4.dp)
@@ -441,6 +404,8 @@ fun PericiasContent(
 
                             val jaTemPrincipal =
                                 state.especializacoesPorPericia[per.nome]?.principal != null
+
+                            val canAffordSpec = state.pontosPericia >= 1 || pcLivres >= 1
                             if (!isIdioma && !isJutsu && state.usarEspecializacoesDePericia && jaTemPrincipal) {
                                 TextButton(
                                     onClick = {
@@ -450,7 +415,7 @@ fun PericiasContent(
                                         showSpecDialog = true
                                         onUserFeedback()
                                     },
-                                    enabled = !locked && state.pontosPericia >= 1
+                                    enabled = !locked && canAffordSpec
                                 ) {
                                     Text("Esp+")
                                 }
@@ -589,6 +554,20 @@ fun PericiasContent(
                         }
                         state.notasPericia[per.nome] = label
                         if (!idiomaEditMode) {
+
+                            // Auto-Spend for Idioma/Jutsu
+                            if (state.pontosPericia < idiomaPendingCost) {
+                                val missing = idiomaPendingCost - state.pontosPericia
+                                if ((state.pontosComplicacao - state.pontosComplicacaoGastos) >= missing) {
+                                    repeat(missing) {
+                                        state.gastarPcParaPericia()
+                                    }
+                                } else {
+                                    // Should be handled by enabled state, but safety break
+                                    return@TextButton
+                                }
+                            }
+
                             state.increasePericiaFromAdvancement(per, idiomaPendingCost)
                             if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
                             onUserFeedback()
@@ -611,7 +590,6 @@ fun PericiasContent(
         )
     }
 
-    // PROMPT 5: Note Dialog
     if (showNoteDialog && noteTarget != null) {
         AlertDialog(
             onDismissRequest = { showNoteDialog = false },
@@ -678,7 +656,6 @@ fun PericiasContent(
                         val per = specTarget!!
                         var nomeEsp = specText.trim()
 
-                        // AUTO-FILL PLACEHOLDER IF EMPTY
                         if (nomeEsp.isEmpty()) {
                             val atual = state.especializacoesPorPericia[per.nome]
                             val count = (if (atual?.principal != null) 1 else 0) + (atual?.lista?.size ?: 0)
@@ -686,6 +663,17 @@ fun PericiasContent(
                         }
 
                         if (nomeEsp.isNotEmpty()) {
+                            // Auto-spend for Extra Spec
+                            if (buyingExtraSpec) {
+                                if (state.pontosPericia < 1) {
+                                    if ((state.pontosComplicacao - state.pontosComplicacaoGastos) >= 1) {
+                                        state.gastarPcParaPericia()
+                                    } else {
+                                        return@TextButton
+                                    }
+                                }
+                            }
+
                             val atual =
                                 state.especializacoesPorPericia[per.nome]
                                     ?: EspecializacoesDto()
