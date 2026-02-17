@@ -366,7 +366,22 @@ fun PericiasContent(
                                         locked = locked
                                     )
 
-                                    val tentouCobrirComPb = !state.emProgresso && state.ensurePericiaBudgetWithPb(regrasAtuais.cost)
+                                    if ((isIdioma || isJutsu) && state.rawTotal(per) == 0) {
+                                        val podeCobrirComPb = !state.emProgresso && state.pbLivres() >= regrasAtuais.cost
+                                        if (!regrasAtuais.canIncrease && !podeCobrirComPb) {
+                                            return@IconButton
+                                        }
+
+                                        idiomaTarget = per
+                                        idiomaText = ""
+                                        idiomaPendingCost = regrasAtuais.cost
+                                        idiomaEditMode = false
+                                        showIdiomaDialog = true
+                                        return@IconButton
+                                    }
+
+                                    val cpSpBefore = state.cpSpStack.size
+                                    val tentouCobrirComPb = !state.emProgresso && !regrasAtuais.canIncrease && state.ensurePericiaBudgetWithPb(regrasAtuais.cost)
                                     if (!regrasAtuais.canIncrease && !tentouCobrirComPb) {
                                         return@IconButton
                                     }
@@ -377,14 +392,13 @@ fun PericiasContent(
                                         locked = locked
                                     )
 
-                                    if (!regrasRecalculadas.canIncrease) return@IconButton
-
-                                    if ((isIdioma || isJutsu) && state.rawTotal(per) == 0) {
-                                        idiomaTarget = per
-                                        idiomaText = ""
-                                        idiomaPendingCost = regrasRecalculadas.cost
-                                        idiomaEditMode = false
-                                        showIdiomaDialog = true
+                                    if (!regrasRecalculadas.canIncrease) {
+                                        while (state.cpSpStack.size > cpSpBefore) {
+                                            state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                            state.pontosComplicacaoGastos =
+                                                (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                        }
+                                        state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
                                         return@IconButton
                                     }
 
@@ -407,7 +421,7 @@ fun PericiasContent(
                                         }
                                     }
                                 },
-                                enabled = regra.canIncrease,
+                                enabled = regra.canIncrease || (!state.emProgresso && state.pbLivres() >= regra.cost),
                                 modifier = Modifier
                                     .size(32.dp)
                                     .padding(4.dp)
@@ -569,6 +583,20 @@ fun PericiasContent(
                         }
                         state.notasPericia[per.nome] = label
                         if (!idiomaEditMode) {
+                            if (!state.calcularPericiaRules(
+                                    pericia = per,
+                                    idosoActive = idosoActive,
+                                    locked = locked
+                                ).canIncrease
+                            ) {
+                                val cobriu = !state.emProgresso && state.ensurePericiaBudgetWithPb(idiomaPendingCost)
+                                if (!cobriu) {
+                                    showIdiomaDialog = false
+                                    idiomaEditMode = false
+                                    idiomaTarget = null
+                                    return@TextButton
+                                }
+                            }
                             state.increasePericiaFromAdvancement(per, idiomaPendingCost)
                             if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
                             onUserFeedback()
