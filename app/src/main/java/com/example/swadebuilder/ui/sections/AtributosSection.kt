@@ -91,7 +91,7 @@ fun AtributosContent(
     ) {
         SectionHeader(
             onHelpClick = null,
-            centerText = "Pontos de Atributo: ${state.pontosAtributo}",
+            centerText = "Pontos de Atributo: ${state.pontosAtributo} (${pcLivres / 2} PB)",
             onListaCompletaClick = null,
             listaCompletaText = ""
         )

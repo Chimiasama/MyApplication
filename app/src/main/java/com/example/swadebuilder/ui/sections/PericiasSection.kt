@@ -162,7 +162,7 @@ fun PericiasContent(
             ) {
                 SectionHeader(
                     onHelpClick          = null,
-                    centerText           = "Pontos de Perícia: ${state.pontosPericia}",
+                    centerText           = "Pontos de Perícia: ${state.pontosPericia} (${pcLivres} PB)",
                     onListaCompletaClick = null,
                     listaCompletaText    = ""
                 )

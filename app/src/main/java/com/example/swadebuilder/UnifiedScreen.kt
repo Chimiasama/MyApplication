@@ -1175,6 +1175,7 @@ private fun EquipamentoSection(
         },
         onEquipamentoDoubleClick = { equipamento ->
             val custo = MoneyUtils.parseCostInBaseUnit(equipamento.custo, state.compendioPathfinderAtivo)
+            val pbAntes = state.pbLivres()
             val comSaldo = state.usaRiqueza || state.usaRequisicao || custo <= state.dinheiro || state.autoCompletarDinheiroComPbPara(custo)
             if (comSaldo) {
                 state.equipamentosComprados.add(equipamento)
@@ -1185,7 +1186,12 @@ private fun EquipamentoSection(
                         state.dinheiro -= custo
                     }
                 }
-                onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
+                val pbDepois = state.pbLivres()
+                if (pbDepois < pbAntes) {
+                    onLogFeedback("Equipamento ${equipamento.nome} adicionado (PB aplicado automaticamente em Recursos).")
+                } else {
+                    onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
+                }
                 onUserFeedback()
             } else {
                 onLogFeedback("Faltam recursos para obter o equipamento ${equipamento.nome}.")

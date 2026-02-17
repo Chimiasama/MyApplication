@@ -81,6 +81,7 @@ fun ComplicacoesSection(
     val locked = state.criacaoBasicaCongelada
 
     var showPcInUseDialog by rememberSaveable { mutableStateOf(false) }
+    var showConfirmUndoPbDialog by rememberSaveable { mutableStateOf(false) }
     // PROMPT 3: State for adding disorders
     var showAddTranstornoDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -389,16 +390,8 @@ fun ComplicacoesSection(
                             dismissButton = {
                                 TextButton(
                                     onClick = {
-                                        val desfeito = state.tentativaDesfazerUmaCompraPb()
-                                        if (!desfeito) {
-                                            tempErrorMsg = "Não foi possível desfazer compras automaticamente."
-                                            showTempError = true
-                                            scope.launch {
-                                                delay(3000)
-                                                showTempError = false
-                                            }
-                                        }
                                         showPcInUseDialog = false
+                                        showConfirmUndoPbDialog = true
                                     }
                                 ) {
                                     Text("Desfazer 1 compra de PB")
@@ -427,6 +420,39 @@ fun ComplicacoesSection(
                                         )
                                     }
                                 }
+                            }
+                        )
+                    }
+
+                    if (showConfirmUndoPbDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showConfirmUndoPbDialog = false },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        val desfeito = state.tentativaDesfazerUmaCompraPb()
+                                        if (!desfeito) {
+                                            tempErrorMsg = "Não foi possível desfazer compras automaticamente."
+                                            showTempError = true
+                                            scope.launch {
+                                                delay(3000)
+                                                showTempError = false
+                                            }
+                                        }
+                                        showConfirmUndoPbDialog = false
+                                    }
+                                ) {
+                                    Text("Confirmar")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(onClick = { showConfirmUndoPbDialog = false }) {
+                                    Text("Cancelar")
+                                }
+                            },
+                            title = { Text("Confirmar desfazer compra via PB") },
+                            text = {
+                                Text("Essa ação vai desfazer automaticamente 1 compra feita com PB para liberar remoção de Complicação.")
                             }
                         )
                     }
