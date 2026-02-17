@@ -4200,10 +4200,30 @@ class CriadorState {
     }
 
     val criacaoBasicaCongelada: Boolean
-        get() = creationComplete()
+        get() {
+            val emSupersComSaldo = modoSupers && superPontosTotais > 0 && superPontosDisponiveis > 0
+            val emProgressos = progresso > 0 && !emSupersComSaldo
+            val emFaseSupers = modoSupers && superNivelCampanha != null && superPontosTotais > 0
+
+            return when {
+                emProgressos -> true
+                emFaseSupers -> true
+                else -> false
+            }
+        }
 
     val criacaoBasicaCongeladaComXp: Boolean
-        get() = criacaoBasicaCongelada && !emProgresso
+        get() {
+            val emSupersComSaldo = modoSupers && superPontosTotais > 0 && superPontosDisponiveis > 0
+            val emProgressos = progresso > 0 && !emSupersComSaldo
+            val emFaseSupers = modoSupers && superNivelCampanha != null && superPontosTotais > 0
+
+            return when {
+                emProgressos -> !emProgresso
+                emFaseSupers -> true
+                else -> false
+            }
+        }
 
     val stageXpSpent: SnapshotStateMap<String, Int> = mutableStateMapOf<String, Int>().apply {
         listaDeEstagios.forEach { this[it.nome] = 0 }
