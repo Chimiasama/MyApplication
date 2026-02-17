@@ -572,6 +572,7 @@ private fun performRemoval(
             } else {
                 state.dinheiro += 250
             }
+            state.checkAndRefundResourcePb()
         }
 
         "obeso" -> {

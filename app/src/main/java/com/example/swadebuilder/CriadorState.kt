@@ -1099,6 +1099,14 @@ class CriadorState {
         }
     }
 
+    fun checkAndRefundResourcePb() {
+        if (usaRiqueza || usaRequisicao) return
+        val rate = if (compendioPathfinderAtivo) 60000 else 500
+        while (cpRecursosStack.isNotEmpty() && dinheiro >= rate) {
+            devolverPcDeRecursos()
+        }
+    }
+
     fun gastarPcParaVantagem(): Boolean {
         // custo de 2 PC para 1 PV
         if (pontosComplicacao - pontosComplicacaoGastos < 2) return false
@@ -1254,6 +1262,7 @@ class CriadorState {
         if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) return false // No points
 
         applyVantagemDinheiro(v)
+        checkAndRefundResourcePb()
         adicionarVantagem(v)
 
         if (isFreePathfinder) {
@@ -3168,7 +3177,14 @@ class CriadorState {
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
         recalcularPontosAtributo(feedbackMessages)
+        while (pontosAtributo > 0 && cpPaStack.isNotEmpty()) {
+            devolverPcDeAtributo()
+        }
+
         rebuildAllPericiaStacks(feedbackMessages)
+        while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
+            devolverPcDePericia()
+        }
 
         val paDepois = pontosAtributo
         val spDepois = pontosPericia
@@ -3186,6 +3202,13 @@ class CriadorState {
             pontosVantagem++
             feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
         }
+
+        while (pontosVantagem > 0 && cpPvStack.isNotEmpty()) {
+            devolverPcDeVantagem()
+        }
+
+        checkAndRefundResourcePb()
+
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
         }

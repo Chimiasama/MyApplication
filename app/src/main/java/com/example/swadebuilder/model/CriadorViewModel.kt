@@ -1121,6 +1121,7 @@ class CriadorViewModel(
                 state.comprarPontoDePoder(vantagemCopia)
             } else {
                 state.applyVantagemDinheiro(vantagemCopia)
+                state.checkAndRefundResourcePb()
                 state.adicionarVantagem(vantagemCopia)
             }
             state.pontosVantagem--
