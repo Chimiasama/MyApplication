@@ -1150,7 +1150,7 @@ class CriadorState {
     }
 
     fun autoRefundPvPbSePossivel() {
-        while (cpPvStack.isNotEmpty() && pontosVantagem > 0) {
+        if (cpPvStack.isNotEmpty() && pontosVantagem > 0) {
             cpPvStack.removeLast()
             pontosComplicacaoGastos = (pontosComplicacaoGastos - 2).coerceAtLeast(0)
             pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
@@ -2923,7 +2923,7 @@ class CriadorState {
     }
 
     fun autoRefundPaPbSePossivel() {
-        while (cpPaStack.isNotEmpty() && pontosAtributo > 0) {
+        if (cpPaStack.isNotEmpty() && pontosAtributo > 0) {
             cpPaStack.removeLast()
             pontosComplicacaoGastos = (pontosComplicacaoGastos - 2).coerceAtLeast(0)
         }
