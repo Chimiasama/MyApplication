@@ -97,7 +97,7 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
 
         // Use "Frenesi" as the selected advantage, which is NOT granted by Humanos.
         // This ensures the validation logic runs on it.
-        val selectedAdvantages = listOf(
+        val selectedAdvantages = extraAdvantages + listOf(
             Vantagem(
                 id = "frenesi",
                 nome = "Frenesi",
@@ -105,7 +105,7 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
                 origem = "BASICO",
                 requisitos = Requisito()
             )
-        ) + extraAdvantages
+        )
 
         return ApplyAncestryChangeCoordinatorUseCase.Params(
             previousAncestry = previousAncestry,
