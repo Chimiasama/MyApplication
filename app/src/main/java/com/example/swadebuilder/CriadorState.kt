@@ -4087,7 +4087,7 @@ class CriadorState {
     }
 
     val criacaoBasicaCongelada: Boolean
-        get() = creationComplete()
+        get() = creationComplete() && modoProgressaoAtivo
 
     val criacaoBasicaCongeladaComXp: Boolean
         get() = criacaoBasicaCongelada && !emProgresso
