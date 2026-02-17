@@ -1277,6 +1277,7 @@ class CriadorState {
         val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
         if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) {
+            if (emProgresso) return false
             if (!gastarPcParaVantagem()) return false
         }
 

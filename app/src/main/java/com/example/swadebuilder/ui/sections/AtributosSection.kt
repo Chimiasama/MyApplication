@@ -130,7 +130,8 @@ fun AtributosContent(
             val prevRaw = if (baseRaw <= 12) baseRaw - 2 else baseRaw - 1
 
             val allowedByRule = !state.isAttributeRankLimitReached() || state.isAttributeFreeForMonster(nome)
-            val canIncrease = !locked && (state.pontosAtributo > 0 || pcLivres >= 2) && (nextRaw <= maxRaw) && allowedByRule
+            val hasBudget = state.pontosAtributo > 0 || (!state.emProgresso && pcLivres >= 2)
+            val canIncrease = !locked && hasBudget && (nextRaw <= maxRaw) && allowedByRule
 
             val canReduce = run {
                 val baseCanReduce = !locked && stack.isNotEmpty() && (prevRaw >= minReq)
@@ -211,7 +212,10 @@ fun AtributosContent(
                 IconButton(
                     onClick = {
                         if (nextRaw > maxRaw) return@IconButton
-                        if (state.pontosAtributo <= 0 && !state.gastarPcParaAtributo()) return@IconButton
+                        if (state.pontosAtributo <= 0) {
+                            if (state.emProgresso) return@IconButton
+                            if (!state.gastarPcParaAtributo()) return@IconButton
+                        }
                         stack.add(1)
                         state.valoresAtributos[nome]!!.intValue = nextRaw
                         state.pontosAtributo--

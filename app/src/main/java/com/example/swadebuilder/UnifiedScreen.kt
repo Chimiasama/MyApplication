@@ -1176,7 +1176,8 @@ private fun EquipamentoSection(
         onEquipamentoDoubleClick = { equipamento ->
             val custo = MoneyUtils.parseCostInBaseUnit(equipamento.custo, state.compendioPathfinderAtivo)
             val pbAntes = state.pbLivres()
-            val comSaldo = state.usaRiqueza || state.usaRequisicao || custo <= state.dinheiro || state.autoCompletarDinheiroComPbPara(custo)
+            val podeAutoCompletarPb = !state.emProgresso && state.autoCompletarDinheiroComPbPara(custo)
+            val comSaldo = state.usaRiqueza || state.usaRequisicao || custo <= state.dinheiro || podeAutoCompletarPb
             if (comSaldo) {
                 state.equipamentosComprados.add(equipamento)
                 if (!state.usaRiqueza && !state.usaRequisicao) {

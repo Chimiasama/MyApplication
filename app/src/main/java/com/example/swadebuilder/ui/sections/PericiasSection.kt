@@ -366,7 +366,8 @@ fun PericiasContent(
                                         locked = locked
                                     )
 
-                                    if (!regrasAtuais.canIncrease && !state.ensurePericiaBudgetWithPb(regrasAtuais.cost)) {
+                                    val tentouCobrirComPb = !state.emProgresso && state.ensurePericiaBudgetWithPb(regrasAtuais.cost)
+                                    if (!regrasAtuais.canIncrease && !tentouCobrirComPb) {
                                         return@IconButton
                                     }
 
