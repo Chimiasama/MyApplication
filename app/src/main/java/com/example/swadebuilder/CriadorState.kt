@@ -1102,6 +1102,8 @@ class CriadorState {
         val falta = (custo - dinheiro).coerceAtLeast(0)
         val pbNecessarios = (falta + deltaPorPb - 1) / deltaPorPb
 
+        if (pbLivres() < pbNecessarios) return false
+
         repeat(pbNecessarios) {
             if (!gastarPcParaRecursos()) return false
         }
@@ -2914,8 +2916,10 @@ class CriadorState {
 
     fun ensurePericiaBudgetWithPb(cost: Int): Boolean {
         val needed = (cost - pontosPericia).coerceAtLeast(0)
+        if (needed == 0) return true
+        if (pbLivres() < needed) return false
+
         repeat(needed) {
-            if (pbLivres() <= 0) return false
             cpSpStack.add(Unit)
             pontosComplicacaoGastos += 1
         }
