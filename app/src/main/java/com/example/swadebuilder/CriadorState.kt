@@ -1090,13 +1090,20 @@ class CriadorState {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun devolverPcDeRecursos() {
         if (cpRecursosStack.isNotEmpty()) {
-            cpRecursosStack.removeLast()
+            cpRecursosStack.removeAt(cpRecursosStack.lastIndex)
             pontosComplicacaoGastos -= 1
             val amount = if (compendioPathfinderAtivo) 60000 else 500
             dinheiro = (dinheiro - amount).coerceAtLeast(0)
+        }
+    }
+
+    fun checkAndRefundResourcePb() {
+        if (usaRiqueza || usaRequisicao) return
+        val rate = if (compendioPathfinderAtivo) 60000 else 500
+        while (cpRecursosStack.isNotEmpty() && dinheiro >= rate) {
+            devolverPcDeRecursos()
         }
     }
 
@@ -1110,10 +1117,9 @@ class CriadorState {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun devolverPcDeVantagem() {
         if (cpPvStack.isNotEmpty()) {
-            cpPvStack.removeLast()
+            cpPvStack.removeAt(cpPvStack.lastIndex)
             pontosComplicacaoGastos -= 2
 
             val removedAdvantage = if (pontosVantagem == 0) {
@@ -1139,6 +1145,30 @@ class CriadorState {
         pontosComplicacaoGastos += custo // soma 2 ao total gasto
         recalcularPontosAtributo()       // recalcula PA restantes e stacks
 
+        return true
+    }
+
+    fun devolverPcDeAtributo() {
+        if (cpPaStack.isNotEmpty()) {
+            cpPaStack.removeAt(cpPaStack.lastIndex)
+            pontosComplicacaoGastos = (pontosComplicacaoGastos - 2).coerceAtLeast(0)
+            recalcularPontosAtributo()
+        }
+    }
+
+    fun devolverPcDePericia() {
+        if (cpSpStack.isNotEmpty()) {
+            cpSpStack.removeAt(cpSpStack.lastIndex)
+            pontosComplicacaoGastos = (pontosComplicacaoGastos - 1).coerceAtLeast(0)
+            rebuildAllPericiaStacks()
+        }
+    }
+
+    fun gastarPcParaPericia(): Boolean {
+        if (pontosComplicacao - pontosComplicacaoGastos < 1) return false
+        pontosComplicacaoGastos += 1
+        cpSpStack.add(Unit)
+        // O pool de perícia atualiza automaticamente via derivedStateOf
         return true
     }
 
@@ -1232,6 +1262,7 @@ class CriadorState {
         if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) return false // No points
 
         applyVantagemDinheiro(v)
+        checkAndRefundResourcePb()
         adicionarVantagem(v)
 
         if (isFreePathfinder) {
@@ -3019,7 +3050,7 @@ class CriadorState {
         return applySuperStepsFrom(startForSteps, steps)
     }
 
-    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
+    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {
         val prevAnc = ancestralidade
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
@@ -3146,7 +3177,18 @@ class CriadorState {
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
         recalcularPontosAtributo(feedbackMessages)
+        if (autoRefund) {
+            while (pontosAtributo > 0 && cpPaStack.isNotEmpty()) {
+                devolverPcDeAtributo()
+            }
+        }
+
         rebuildAllPericiaStacks(feedbackMessages)
+        if (autoRefund) {
+            while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
+                devolverPcDePericia()
+            }
+        }
 
         val paDepois = pontosAtributo
         val spDepois = pontosPericia
@@ -3164,6 +3206,14 @@ class CriadorState {
             pontosVantagem++
             feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
         }
+
+        if (autoRefund) {
+            while (pontosVantagem > 0 && cpPvStack.isNotEmpty()) {
+                devolverPcDeVantagem()
+            }
+            checkAndRefundResourcePb()
+        }
+
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
         }
@@ -4065,7 +4115,7 @@ class CriadorState {
     }
 
     val criacaoBasicaCongelada: Boolean
-        get() = creationComplete()
+        get() = creationComplete() && modoProgressaoAtivo
 
     val criacaoBasicaCongeladaComXp: Boolean
         get() = criacaoBasicaCongelada && !emProgresso
@@ -4455,7 +4505,7 @@ class CriadorState {
             carteiraPathfinder[PathfinderCurrencyIds.PC] = pc
         }
 
-        aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages)
+        aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages, autoRefund = false)
 
         paCostStackPorAtributo.forEach { (attr, stack) ->
             stack.clear()

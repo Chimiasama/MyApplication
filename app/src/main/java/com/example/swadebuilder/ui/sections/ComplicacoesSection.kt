@@ -4,7 +4,6 @@
 package com.example.swadebuilder.ui.sections
 
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
@@ -70,7 +71,6 @@ import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun ComplicacoesSection(
     state: CriadorState,
@@ -81,6 +81,8 @@ fun ComplicacoesSection(
     val locked = state.criacaoBasicaCongelada
 
     var showPcInUseDialog by rememberSaveable { mutableStateOf(false) }
+    var complicationToRemove by remember { mutableStateOf<Complicacao?>(null) }
+
     // PROMPT 3: State for adding disorders
     var showAddTranstornoDialog by rememberSaveable { mutableStateOf(false) }
 
@@ -151,9 +153,6 @@ fun ComplicacoesSection(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                // No extra padding here to match previous look, elements handle their own padding if needed
-                // But PericiasSection adds padding(8.dp). Let's check visually if it's too much.
-                // ComplicacoesSection previously didn't have padding on the ScrollColumn.
             ) {
                 SectionHeader(
                     onHelpClick          = null,
@@ -170,6 +169,91 @@ fun ComplicacoesSection(
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
+                }
+
+                // --- STICKY SELECTED COMPLICATIONS ---
+                if (state.complicacoesSelecionadas.isNotEmpty() || state.transtornos.isNotEmpty()) {
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement   = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
+                            .padding(8.dp)
+                            .alpha(if (locked && !state.modoProgressaoAtivo) 0.6f else 1f)
+                    ) {
+                        // Standard Complications
+                        state.complicacoesSelecionadas
+                            .filterValues { it != null }
+                            .forEach { (comp, tipo) ->
+                                val isAuto = comp.id.keyify() in autoBaseKeys
+                                val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
+                                // val cost = if (tipo == "Maior") 2 else 1
+                                val isClickable = !locked && !isAuto && !isYoungAuto
+
+                                AssistChip(
+                                    onClick = {
+                                        if (!isClickable) return@AssistChip
+
+                                        val (pode, msg) = state.podeRemoverComplicacao(comp, tipo)
+                                        if (!pode) {
+                                            if (msg != null && msg.contains("Pontos em uso")) {
+                                                complicationToRemove = comp
+                                                showPcInUseDialog = true
+                                            } else {
+                                                tempErrorMsg = msg ?: "Ação bloqueada."
+                                                showTempError = true
+                                                scope.launch {
+                                                    delay(3000)
+                                                    showTempError = false
+                                                }
+                                            }
+                                            return@AssistChip
+                                        }
+
+                                        onUserFeedback()
+                                        performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
+                                    },
+                                    enabled = isClickable,
+                                    label = { Text("${comp.name} ($tipo)", style = MaterialTheme.typography.labelSmall) },
+                                    leadingIcon = {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = "Remover ${comp.name}",
+                                            modifier = Modifier.size(12.dp)
+                                        )
+                                    },
+                                    modifier = Modifier.height(24.dp),
+                                    colors = AssistChipDefaults.assistChipColors(
+                                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                        labelColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                    )
+                                )
+                            }
+
+                        // PROMPT 3: Display Transtornos
+                        state.transtornos.forEach { transtorno ->
+                            AssistChip(
+                                onClick = {
+                                    state.transtornos.remove(transtorno)
+                                    onUserFeedback()
+                                },
+                                label = { Text("${transtorno.name} (T.)", style = MaterialTheme.typography.labelSmall) },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Remover Transtorno",
+                                        modifier = Modifier.size(12.dp)
+                                    )
+                                },
+                                modifier = Modifier.height(24.dp),
+                                colors = AssistChipDefaults.assistChipColors(
+                                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                                    labelColor = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                            )
+                        }
+                    }
                 }
 
                 Spacer(Modifier.height(4.dp))
@@ -227,18 +311,14 @@ fun ComplicacoesSection(
                     .weight(1f),
                 contentPadding = PaddingValues(vertical = 4.dp)
             ) {
-                item {
-                    if (totalPc == 0) {
+                // Dynamic Text: Only show if no complications selected
+                if (state.complicacoesSelecionadas.isEmpty()) {
+                    item {
                         Text(
-                            "Escolha Complicações para ganhar Pontos Bônus de Criação.",
+                            "Escolha Complicações para ganhar Pontos Bônus de Criação.\nUse-os em Atributos, Perícias, Vantagens ou Equipamento.",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    } else {
-                        Text(
-                            "Use seus Pontos Bônus de Complicação nas seções de Atributos, Perícias, Vantagens ou Equipamento.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                         )
                     }
                 }
@@ -258,155 +338,131 @@ fun ComplicacoesSection(
                 }
 
                 item {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement   = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier.alpha(if (locked && !state.modoProgressaoAtivo) 0.3f else 1f)
-                    ) {
-                        // Standard Complications
-                        state.complicacoesSelecionadas
-                            .filterValues { it != null }
-                            .forEach { (comp, tipo) ->
-                                val isAuto = comp.id.keyify() in autoBaseKeys
-                                val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
-                                val cost = if (tipo == "Maior") 2 else 1
-                                val isClickable = !locked && !isAuto && !isYoungAuto
+                    // Dialogs Logic
+                    if (showPcInUseDialog && complicationToRemove != null) {
+                        val comp = complicationToRemove!!
+                        val tipo = state.complicacoesSelecionadas[comp]
+                        val costToRemove = if (tipo == "Maior") 2 else 1
 
-                                AssistChip(
-                                    onClick = {
-                                        if (!isClickable) return@AssistChip
-
-                                        val (pode, msg) = state.podeRemoverComplicacao(comp, tipo)
-                                        if (!pode) {
-                                            if (msg != null && msg.contains("Pontos em uso")) {
-                                                showPcInUseDialog = true
-                                            } else {
-                                                tempErrorMsg = msg ?: "Ação bloqueada."
-                                                showTempError = true
-                                                scope.launch {
-                                                    delay(3000)
-                                                    showTempError = false
-                                                }
-                                            }
-                                            return@AssistChip
-                                        }
-
-                                        onUserFeedback()
-
-                                        when (comp.id) {
-                                            "idoso" -> {
-                                                state.complicacoesSelecionadas.remove(comp)
-                                                state.idosoBonusSp = 0
-                                                state.syncFromCPRefund(
-                                                    sp = true,
-                                                    feedbackMessages = feedbackMessages
-                                                )
-                                            }
-
-                                            "jovem" -> {
-                                                val pequComp =
-                                                    complicacoesFiltradas.firstOrNull { it.id == "pequeno" }
-                                                if (pequComp != null) {
-                                                    state.removeYoung(pequComp)
-                                                }
-                                                state.complicacoesSelecionadas.remove(comp)
-                                            }
-
-                                            "pobreza" -> {
-                                                state.complicacoesSelecionadas.remove(comp)
-                                                if (state.compendioPathfinderAtivo) {
-                                                    state.dinheiro += 15000
-                                                } else if (state.compendioFantasiaAtivo) {
-                                                    state.dinheiro += 150
-                                                } else {
-                                                    state.dinheiro += 250
-                                                }
-                                            }
-
-                                            "obeso" -> {
-                                                state.complicacoesSelecionadas.remove(comp)
-                                                state.obesoBonusSize = 0
-                                                state.obesoMalusMov = 0
-                                            }
-
-                                            else -> {
-                                                state.complicacoesSelecionadas.remove(comp)
-                                            }
-                                        }
-                                        onLogFeedback("Complicação ${comp.name} removida.")
-                                    },
-                                    enabled = isClickable,
-                                    label = { Text("${comp.name} ($tipo)") },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Close,
-                                            contentDescription = "Remover ${comp.name}"
-                                        )
-                                    }
-                                )
-                            }
-
-                        // PROMPT 3: Display Transtornos
-                        state.transtornos.forEach { transtorno ->
-                            AssistChip(
-                                onClick = {
-                                    state.transtornos.remove(transtorno)
-                                    onUserFeedback()
-                                },
-                                label = { Text("${transtorno.name} (Transtorno)") },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Default.Close,
-                                        contentDescription = "Remover Transtorno"
-                                    )
-                                },
-                                colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
-                                    containerColor = MaterialTheme.colorScheme.errorContainer
-                                )
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(8.dp))
-                }
-
-                item {
-                    // Dialogs Logic placed here to be part of the composition tree
-                    // They render on top of everything anyway
-                    if (showPcInUseDialog) {
                         val paCount = state.cpPaStack.size
                         val spCount = state.cpSpStack.size
                         val pvCount = state.cpPvStack.size
                         val recCount = state.cpRecursosStack.size
-                        val totalUsados = paCount + spCount + pvCount + recCount
+
+                        // We need to free up 'costToRemove' points.
+                        // Currently free: (totalPc - usadosPc) but totalPc will decrease by costToRemove upon removal.
+                        // Actually, totalPc is calculated FROM complications.
+                        // If I remove comp, totalPc decreases.
+                        // I need (newTotalPc - usadosPc) >= 0.
+                        // So I need to reduce 'usadosPc' by at least (usadosPc - newTotalPc).
+                        // Deficit = usadosPc - (currentTotalPc - costToRemove).
+                        // Since I can't remove yet, I need to reduce 'usadosPc' by Deficit.
+                        // Deficit is basically 'costToRemove' (assuming 0 free currently).
+                        // If I have 1 free, and remove Major (2), I have deficit of 1.
+
+                        val deficit = (state.pontosComplicacaoGastos - (state.pontosComplicacao - costToRemove)).coerceAtLeast(0)
 
                         AlertDialog(
-                            onDismissRequest = { showPcInUseDialog = false },
+                            onDismissRequest = {
+                                showPcInUseDialog = false
+                                complicationToRemove = null
+                            },
                             confirmButton = {
-                                TextButton(onClick = { showPcInUseDialog = false }) {
-                                    Text("OK")
+                                TextButton(onClick = {
+                                    showPcInUseDialog = false
+                                    complicationToRemove = null
+                                }) {
+                                    Text("Cancelar")
                                 }
                             },
-                            title = { Text("Não é possível remover esta Complicação") },
+                            title = { Text("Pontos em uso: Devolva $deficit ponto(s)") },
                             text = {
                                 Column {
-                                    Text("Você já converteu Pontos Bônus de Criação vindos de Complicações em:")
+                                    Text("Para remover ${comp.name} ($tipo), você precisa devolver recursos comprados com Pontos Bônus.")
                                     Spacer(Modifier.height(8.dp))
 
-                                    if (totalUsados == 0) {
-                                        Text("Nenhum Ponto Bônus está em uso no momento.")
-                                    } else {
-                                        if (paCount > 0) Text("• $paCount em Atributos adicionais")
-                                        if (spCount > 0) Text("• $spCount em passos extras de Perícia")
-                                        if (pvCount > 0) Text("• $pvCount em Vantagens adicionais")
-                                        if (recCount > 0) Text("• $recCount em Recursos extras (500$ cada)")
-
-                                        Spacer(Modifier.height(8.dp))
-                                        Text(
-                                            "Para remover esta Complicação, primeiro desfaça alguns " +
-                                                    "desses Pontos Bônus nas seções de Atributos, Perícias, " +
-                                                    "Vantagens ou Equipamento.",
-                                            style = MaterialTheme.typography.bodySmall
-                                        )
+                                    if (paCount > 0) {
+                                        val label = if (costToRemove <= 2) "Devolver e Remover" else "Devolver 1"
+                                        // Attribute gives 2 BP. Always enough for Minor or Major.
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text("Atributos (Gasto: $paCount)")
+                                            TextButton(onClick = {
+                                                state.devolverPcDeAtributo()
+                                                // Check if deficit covered
+                                                val newDeficit = (state.pontosComplicacaoGastos - (state.pontosComplicacao - costToRemove)).coerceAtLeast(0)
+                                                if (newDeficit == 0) {
+                                                    performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
+                                                    showPcInUseDialog = false
+                                                    complicationToRemove = null
+                                                }
+                                            }) {
+                                                Text("Devolver (+2 BP)")
+                                            }
+                                        }
+                                    }
+                                    if (spCount > 0) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text("Perícias (Gasto: $spCount)")
+                                            TextButton(onClick = {
+                                                state.devolverPcDePericia()
+                                                val newDeficit = (state.pontosComplicacaoGastos - (state.pontosComplicacao - costToRemove)).coerceAtLeast(0)
+                                                if (newDeficit == 0) {
+                                                    performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
+                                                    showPcInUseDialog = false
+                                                    complicationToRemove = null
+                                                }
+                                            }) {
+                                                Text("Devolver (+1 BP)")
+                                            }
+                                        }
+                                    }
+                                    if (pvCount > 0) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text("Vantagens (Gasto: $pvCount)")
+                                            TextButton(onClick = {
+                                                state.devolverPcDeVantagem()
+                                                val newDeficit = (state.pontosComplicacaoGastos - (state.pontosComplicacao - costToRemove)).coerceAtLeast(0)
+                                                if (newDeficit == 0) {
+                                                    performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
+                                                    showPcInUseDialog = false
+                                                    complicationToRemove = null
+                                                }
+                                            }) {
+                                                Text("Devolver (+2 BP)")
+                                            }
+                                        }
+                                    }
+                                    if (recCount > 0) {
+                                        Row(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text("Recursos (Gasto: $recCount)")
+                                            TextButton(onClick = {
+                                                state.devolverPcDeRecursos()
+                                                val newDeficit = (state.pontosComplicacaoGastos - (state.pontosComplicacao - costToRemove)).coerceAtLeast(0)
+                                                if (newDeficit == 0) {
+                                                    performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
+                                                    showPcInUseDialog = false
+                                                    complicationToRemove = null
+                                                }
+                                            }) {
+                                                Text("Devolver (+1 BP)")
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -461,11 +517,16 @@ fun ComplicacoesSection(
                             onUserFeedback = onUserFeedback,
                             onLogFeedback = onLogFeedback,
                             onError = { msg ->
-                                tempErrorMsg = msg
-                                showTempError = true
-                                scope.launch {
-                                    delay(2_000)
-                                    showTempError = false
+                                if (msg.contains("Pontos em uso")) {
+                                    complicationToRemove = comp
+                                    showPcInUseDialog = true
+                                } else {
+                                    tempErrorMsg = msg
+                                    showTempError = true
+                                    scope.launch {
+                                        delay(2_000)
+                                        showTempError = false
+                                    }
                                 }
                             },
                             peqComp = pequComp
@@ -475,6 +536,56 @@ fun ComplicacoesSection(
             } // End LazyColumn
         }
     }
+}
+
+private fun performRemoval(
+    state: CriadorState,
+    comp: Complicacao,
+    feedbackMessages: MutableList<String>,
+    onLogFeedback: (String) -> Unit,
+    allComps: List<Complicacao>
+) {
+    when (comp.id) {
+        "idoso" -> {
+            state.complicacoesSelecionadas.remove(comp)
+            state.idosoBonusSp = 0
+            state.syncFromCPRefund(
+                sp = true,
+                feedbackMessages = feedbackMessages
+            )
+        }
+
+        "jovem" -> {
+            val pequComp = allComps.firstOrNull { it.id == "pequeno" }
+            if (pequComp != null) {
+                state.removeYoung(pequComp)
+            }
+            state.complicacoesSelecionadas.remove(comp)
+        }
+
+        "pobreza" -> {
+            state.complicacoesSelecionadas.remove(comp)
+            if (state.compendioPathfinderAtivo) {
+                state.dinheiro += 15000
+            } else if (state.compendioFantasiaAtivo) {
+                state.dinheiro += 150
+            } else {
+                state.dinheiro += 250
+            }
+            state.checkAndRefundResourcePb()
+        }
+
+        "obeso" -> {
+            state.complicacoesSelecionadas.remove(comp)
+            state.obesoBonusSize = 0
+            state.obesoMalusMov = 0
+        }
+
+        else -> {
+            state.complicacoesSelecionadas.remove(comp)
+        }
+    }
+    onLogFeedback("Complicação ${comp.name} removida.")
 }
 
 @Composable

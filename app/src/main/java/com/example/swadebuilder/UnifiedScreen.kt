@@ -1175,7 +1175,23 @@ private fun EquipamentoSection(
         },
         onEquipamentoDoubleClick = { equipamento ->
             val custo = MoneyUtils.parseCostInBaseUnit(equipamento.custo, state.compendioPathfinderAtivo)
-            if (state.usaRiqueza || state.usaRequisicao || custo <= state.dinheiro) {
+
+            // NEW LOGIC: Organic BP Spend
+            val moneyNeeded = if (custo > state.dinheiro) custo - state.dinheiro else 0
+            val rate = if (state.compendioPathfinderAtivo) 60000 else 500
+            val bpNeeded = if (moneyNeeded > 0) kotlin.math.ceil(moneyNeeded.toDouble() / rate).toInt() else 0
+            val pcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
+
+            val canAfford = state.usaRiqueza || state.usaRequisicao || (custo <= state.dinheiro) || (bpNeeded <= pcLivres)
+
+            if (canAfford) {
+                // Auto-convert BP to money if needed
+                if (!state.usaRiqueza && !state.usaRequisicao && bpNeeded > 0) {
+                     repeat(bpNeeded) {
+                         state.gastarPcParaRecursos()
+                     }
+                }
+
                 state.equipamentosComprados.add(equipamento)
                 if (!state.usaRiqueza && !state.usaRequisicao) {
                     if (state.compendioPathfinderAtivo) {
@@ -1187,6 +1203,7 @@ private fun EquipamentoSection(
                 onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
                 onUserFeedback()
             } else {
+                val missing = moneyNeeded
                 onLogFeedback("Faltam recursos para obter o equipamento ${equipamento.nome}.")
                 onUserFeedback()
             }
@@ -1204,6 +1221,12 @@ private fun EquipamentoSection(
                         state.addPathfinderMoney(custo)
                     } else {
                         state.dinheiro += custo
+                    }
+
+                    // NEW LOGIC: Organic BP Refund
+                    val rate = if (state.compendioPathfinderAtivo) 60000 else 500
+                    while (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= rate) {
+                        state.devolverPcDeRecursos()
                     }
                 }
                 onLogFeedback("Equipamento ${equipamento.nome} removido.")

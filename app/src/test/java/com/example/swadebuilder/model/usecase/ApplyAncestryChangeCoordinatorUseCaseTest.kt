@@ -31,19 +31,34 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
 
     @Test
     fun `keeps signo action when not required and resolves invalid advantages`() {
+        // We need an extra advantage so that when one is removed by Human transition (Frenesi),
+        // another one remains (Corajoso) to be checked for validity.
+        // "Corajoso" requires Spirit d6 (default 4), so with meetsRequirements={false} it should be invalid.
+        val extraAdvantage = Vantagem(
+            id = "corajoso",
+            nome = "Corajoso",
+            categoria = Categoria.SOCIAIS,
+            origem = "BASICO",
+            requisitos = Requisito()
+        )
+
         val params = baseParams(
             previousAncestry = "HUMANOS",
             targetAncestry = "ELFOS",
             compendioArteDaGuerraAtivo = false,
             signoAdgSelecionado = null,
-            meetsRequirements = { false } // Force verification failure
+            meetsRequirements = { false }, // Force verification failure
+            extraAdvantages = listOf(extraAdvantage)
         )
 
         val result = useCase.execute(params)
 
         assertEquals(ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP, result.signoAction)
+        // One advantage removed by Human transition (Frenesi), one remains (Corajoso).
+        // Corajoso fails validation, so it should be in removedAdvantages.
         assertFalse(result.invalidAdvantagesResolution.removedAdvantages.isEmpty())
         assertEquals(1, result.invalidAdvantagesResolution.removedAdvantages.size)
+        assertEquals("corajoso", result.invalidAdvantagesResolution.removedAdvantages[0].id)
     }
 
     private fun baseParams(
@@ -51,7 +66,8 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
         targetAncestry: String = "HUMANOS",
         compendioArteDaGuerraAtivo: Boolean = false,
         signoAdgSelecionado: String? = null,
-        meetsRequirements: (Vantagem) -> Boolean = { true }
+        meetsRequirements: (Vantagem) -> Boolean = { true },
+        extraAdvantages: List<Vantagem> = emptyList()
     ): ApplyAncestryChangeCoordinatorUseCase.Params {
         val previousDef = RacialModifier(
             nome = previousAncestry,
@@ -81,7 +97,7 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
 
         // Use "Frenesi" as the selected advantage, which is NOT granted by Humanos.
         // This ensures the validation logic runs on it.
-        val selectedAdvantages = listOf(
+        val selectedAdvantages = extraAdvantages + listOf(
             Vantagem(
                 id = "frenesi",
                 nome = "Frenesi",

@@ -41,8 +41,6 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.toDiceString
-import com.example.swadebuilder.ui.components.PbLegacyActions
-import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
 
@@ -57,7 +55,6 @@ fun AtributosContent(
 ) {
     LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
-    val usePbWalletRedesign = booleanResource(R.bool.enable_pb_wallet_redesign)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val locked = state.criacaoBasicaCongelada && !state.attributeAdvancementInProgress
@@ -68,7 +65,6 @@ fun AtributosContent(
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
-    val paUsados = state.cpPaStack.size
 
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
@@ -91,50 +87,15 @@ fun AtributosContent(
             .verticalScroll(rememberScrollState())
             .padding(12.dp)
     ) {
+        // Updated Header to show potential BP
         SectionHeader(
             onHelpClick = null,
-            centerText = "Pontos de Atributo: ${state.pontosAtributo}",
+            centerText = "Pontos de Atributo: ${state.pontosAtributo}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
             onListaCompletaClick = null,
             listaCompletaText = ""
         )
 
         Spacer(Modifier.height(4.dp))
-
-        if (!state.emProgresso) {
-            if (usePbWalletRedesign) {
-                PbWalletBanner(
-                    pcTotal = pcTotal,
-                    pcLivres = pcLivres,
-                    spendLabel = "Usar PB em Atributos",
-                    refundLabel = "Desfazer uso de PB",
-                    spendEnabled = !locked && pcLivres >= 2,
-                    refundEnabled = !locked && paUsados > 0,
-                    onSpend = { state.gastarPcParaAtributo() },
-                    onRefund = {
-                        state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
-                        state.pontosComplicacaoGastos =
-                            (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
-                        state.recalcularPontosAtributo()
-                    }
-                )
-            } else {
-                PbLegacyActions(
-                    spendLabel = "Usar PB em Atributos",
-                    refundLabel = "Desfazer uso de PB",
-                    spendEnabled = !locked && pcLivres >= 2,
-                    refundEnabled = !locked && paUsados > 0,
-                    onSpend = { state.gastarPcParaAtributo() },
-                    onRefund = {
-                        state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
-                        state.pontosComplicacaoGastos =
-                            (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
-                        state.recalcularPontosAtributo()
-                    }
-                )
-            }
-
-            Spacer(Modifier.height(8.dp))
-        }
 
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue
@@ -153,7 +114,9 @@ fun AtributosContent(
             val prevRaw = if (baseRaw <= 12) baseRaw - 2 else baseRaw - 1
 
             val allowedByRule = !state.isAttributeRankLimitReached() || state.isAttributeFreeForMonster(nome)
-            val canIncrease = !locked && state.pontosAtributo > 0 && (nextRaw <= maxRaw) && allowedByRule
+
+            // Updated logic: allow increase if points > 0 OR if we have enough BP to auto-buy
+            val canIncrease = !locked && (state.pontosAtributo > 0 || pcLivres >= 2) && (nextRaw <= maxRaw) && allowedByRule
 
             val canReduce = run {
                 val baseCanReduce = !locked && stack.isNotEmpty() && (prevRaw >= minReq)
@@ -161,12 +124,9 @@ fun AtributosContent(
                     false
                 } else {
                     if (state.attributeAdvancementInProgress) {
-                        // Durante o avanço, só pode reduzir se a pilha atual for maior
-                        // do que era ANTES de começar a gastar o ponto.
                         val beforeSize = state.attributeStacksBeforeAdvancement?.get(nome) ?: 0
                         stack.size > beforeSize
                     } else {
-                        // Comportamento normal fora do avanço
                         true
                     }
                 }
@@ -200,86 +160,99 @@ fun AtributosContent(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                IconButton(
-                    onClick = {
-                        if (prevRaw < minReq) return@IconButton
-                        stack.removeAt(stack.lastIndex)
-                        state.valoresAtributos[nome]!!.intValue = prevRaw
-                        state.pontosAtributo++
-                        state.recalcularPontosAtributo()
-                        onUserFeedback()
-                    },
-                    enabled = canReduce,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(4.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Remove,
-                        contentDescription = "Diminuir ${mapaAtributosDisplay[nome]}",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                    IconButton(
+                        onClick = {
+                            if (prevRaw < minReq) return@IconButton
+                            stack.removeAt(stack.lastIndex)
+                            state.valoresAtributos[nome]!!.intValue = prevRaw
+                            state.pontosAtributo++
+                            state.recalcularPontosAtributo()
 
-                Text(
-                    text = efetivoRaw.toDiceString(),
-                    modifier = Modifier.width(valorColWidthDp),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Clip,
-                    textAlign = TextAlign.Center
-                )
+                            // Auto-Refund BP if we have a surplus and are using BP
+                            // We need to loop because one click might free up a point that allows refunding MULTIPLE BPs if logic was different,
+                            // but for Attributes 1 AP = 2 BP.
+                            if (state.pontosAtributo > 0 && state.cpPaStack.isNotEmpty()) {
+                                state.devolverPcDeAtributo()
+                            }
 
-                IconButton(
-                    onClick = {
-                        if (nextRaw > maxRaw || state.pontosAtributo <= 0) return@IconButton
-                        stack.add(1)
-                        state.valoresAtributos[nome]!!.intValue = nextRaw
-                        state.pontosAtributo--
-                        state.recalcularPontosAtributo()
-                        onUserFeedback()
-                    },
-                    enabled = canIncrease,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(4.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = "Aumentar ${mapaAtributosDisplay[nome]}",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                            onUserFeedback()
+                        },
+                        enabled = canReduce,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(4.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Remove,
+                            contentDescription = "Diminuir ${mapaAtributosDisplay[nome]}",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
 
-                Spacer(Modifier.width(4.dp))
-            }
-
-            if (allowLongTexts && descricao.isNotBlank()) {
-                Spacer(Modifier.height(2.dp))
-                TextButton(
-                    onClick = {
-                        val current = detalhesExpandidos[descKey] ?: false
-                        detalhesExpandidos[descKey] = !current
-                    },
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                ) {
                     Text(
-                        if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        text = efetivoRaw.toDiceString(),
+                        modifier = Modifier.width(valorColWidthDp),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Clip,
+                        textAlign = TextAlign.Center
                     )
+
+                    IconButton(
+                        onClick = {
+                            if (nextRaw > maxRaw) return@IconButton
+
+                            if (state.pontosAtributo <= 0) {
+                                // Auto-spend BP
+                                if (!state.gastarPcParaAtributo()) return@IconButton
+                            }
+
+                            stack.add(1)
+                            state.valoresAtributos[nome]!!.intValue = nextRaw
+                            state.pontosAtributo--
+                            state.recalcularPontosAtributo()
+                            onUserFeedback()
+                        },
+                        enabled = canIncrease,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(4.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Aumentar ${mapaAtributosDisplay[nome]}",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+
+                    Spacer(Modifier.width(4.dp))
                 }
 
-                AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
-                    Text(
-                        text = descricao,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                if (allowLongTexts && descricao.isNotBlank()) {
+                    Spacer(Modifier.height(2.dp))
+                    TextButton(
+                        onClick = {
+                            val current = detalhesExpandidos[descKey] ?: false
+                            detalhesExpandidos[descKey] = !current
+                        },
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                        Text(
+                            text = descricao,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
         }
     }
-}
-
 }

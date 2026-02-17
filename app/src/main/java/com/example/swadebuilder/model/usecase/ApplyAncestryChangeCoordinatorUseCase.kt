@@ -81,12 +81,18 @@ class ApplyAncestryChangeCoordinatorUseCase(
             else -> SignoAction.KEEP
         }
 
+        val filteredAdvantages = if (transitionBootstrap.humanTransition.vantagemRemovida != null) {
+            params.vantagensSelecionadas.filter { it.id != transitionBootstrap.humanTransition.vantagemRemovida.id }
+        } else {
+            params.vantagensSelecionadas
+        }
+
         val racialPackage = resolveAncestryRacialPackageUseCase.execute(
             ResolveAncestryRacialPackageUseCase.Params(
                 anc = params.targetAncestry,
                 descendenteElementalSelecionado = params.descendenteElementalSelecionado,
                 allAdvantages = params.allAdvantages,
-                selectedAdvantages = params.vantagensSelecionadas,
+                selectedAdvantages = filteredAdvantages,
                 previousFreeAdvantageKeys = transitionBootstrap.ancestryTransitionContext.previousFreeAdvantageKeys,
                 ancestryGrantedAdvantages = params.targetAncestryDef?.vantagensGratis ?: emptyList(),
                 ancestryAutomaticDisadvantages = params.targetAncestryDef?.desvantagens ?: emptyList()
