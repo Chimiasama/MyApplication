@@ -3050,7 +3050,7 @@ class CriadorState {
         return applySuperStepsFrom(startForSteps, steps)
     }
 
-    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>) {
+    fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {
         val prevAnc = ancestralidade
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
@@ -3177,13 +3177,17 @@ class CriadorState {
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
         recalcularPontosAtributo(feedbackMessages)
-        while (pontosAtributo > 0 && cpPaStack.isNotEmpty()) {
-            devolverPcDeAtributo()
+        if (autoRefund) {
+            while (pontosAtributo > 0 && cpPaStack.isNotEmpty()) {
+                devolverPcDeAtributo()
+            }
         }
 
         rebuildAllPericiaStacks(feedbackMessages)
-        while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
-            devolverPcDePericia()
+        if (autoRefund) {
+            while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
+                devolverPcDePericia()
+            }
         }
 
         val paDepois = pontosAtributo
@@ -3203,11 +3207,12 @@ class CriadorState {
             feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
         }
 
-        while (pontosVantagem > 0 && cpPvStack.isNotEmpty()) {
-            devolverPcDeVantagem()
+        if (autoRefund) {
+            while (pontosVantagem > 0 && cpPvStack.isNotEmpty()) {
+                devolverPcDeVantagem()
+            }
+            checkAndRefundResourcePb()
         }
-
-        checkAndRefundResourcePb()
 
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
@@ -4500,7 +4505,7 @@ class CriadorState {
             carteiraPathfinder[PathfinderCurrencyIds.PC] = pc
         }
 
-        aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages)
+        aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages, autoRefund = false)
 
         paCostStackPorAtributo.forEach { (attr, stack) ->
             stack.clear()

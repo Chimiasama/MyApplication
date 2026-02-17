@@ -164,8 +164,8 @@ fun AtributosContent(
                         onClick = {
                             if (prevRaw < minReq) return@IconButton
                             stack.removeAt(stack.lastIndex)
-                            // state.valoresAtributos[nome]!!.intValue = prevRaw // RecalcularPontosAtributo does this
-                            // state.pontosAtributo++ // RecalcularPontosAtributo does this
+                            state.valoresAtributos[nome]!!.intValue = prevRaw
+                            state.pontosAtributo++
                             state.recalcularPontosAtributo()
 
                             // Auto-Refund BP if we have a surplus and are using BP
@@ -209,8 +209,8 @@ fun AtributosContent(
                             }
 
                             stack.add(1)
-                            // state.valoresAtributos[nome]!!.intValue = nextRaw // RecalcularPontosAtributo does this
-                            // state.pontosAtributo-- // RecalcularPontosAtributo does this
+                            state.valoresAtributos[nome]!!.intValue = nextRaw
+                            state.pontosAtributo--
                             state.recalcularPontosAtributo()
                             onUserFeedback()
                         },
