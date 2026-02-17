@@ -97,8 +97,6 @@ fun AtributosContent(
 
         Spacer(Modifier.height(4.dp))
 
-        // PbLegacyActions removed here
-
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue
 
@@ -162,97 +160,99 @@ fun AtributosContent(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                IconButton(
-                    onClick = {
-                        if (prevRaw < minReq) return@IconButton
-                        stack.removeAt(stack.lastIndex)
-                        // state.valoresAtributos[nome]!!.intValue = prevRaw // RecalcularPontosAtributo does this
-                        // state.pontosAtributo++ // RecalcularPontosAtributo does this
-                        state.recalcularPontosAtributo()
+                    IconButton(
+                        onClick = {
+                            if (prevRaw < minReq) return@IconButton
+                            stack.removeAt(stack.lastIndex)
+                            // state.valoresAtributos[nome]!!.intValue = prevRaw // RecalcularPontosAtributo does this
+                            // state.pontosAtributo++ // RecalcularPontosAtributo does this
+                            state.recalcularPontosAtributo()
 
-                        // Auto-Refund BP if we have a surplus and are using BP
-                        if (state.pontosAtributo > 0 && state.cpPaStack.isNotEmpty()) {
-                            state.devolverPcDeAtributo()
-                        }
+                            // Auto-Refund BP if we have a surplus and are using BP
+                            // We need to loop because one click might free up a point that allows refunding MULTIPLE BPs if logic was different,
+                            // but for Attributes 1 AP = 2 BP.
+                            if (state.pontosAtributo > 0 && state.cpPaStack.isNotEmpty()) {
+                                state.devolverPcDeAtributo()
+                            }
 
-                        onUserFeedback()
-                    },
-                    enabled = canReduce,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(4.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Remove,
-                        contentDescription = "Diminuir ${mapaAtributosDisplay[nome]}",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                            onUserFeedback()
+                        },
+                        enabled = canReduce,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(4.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Remove,
+                            contentDescription = "Diminuir ${mapaAtributosDisplay[nome]}",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
 
-                Text(
-                    text = efetivoRaw.toDiceString(),
-                    modifier = Modifier.width(valorColWidthDp),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = onSurface,
-                    maxLines = 1,
-                    overflow = TextOverflow.Clip,
-                    textAlign = TextAlign.Center
-                )
-
-                IconButton(
-                    onClick = {
-                        if (nextRaw > maxRaw) return@IconButton
-
-                        if (state.pontosAtributo <= 0) {
-                            // Auto-spend BP
-                            if (!state.gastarPcParaAtributo()) return@IconButton
-                        }
-
-                        stack.add(1)
-                        // state.valoresAtributos[nome]!!.intValue = nextRaw // RecalcularPontosAtributo does this
-                        // state.pontosAtributo-- // RecalcularPontosAtributo does this
-                        state.recalcularPontosAtributo()
-                        onUserFeedback()
-                    },
-                    enabled = canIncrease,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(4.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Add,
-                        contentDescription = "Aumentar ${mapaAtributosDisplay[nome]}",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                Spacer(Modifier.width(4.dp))
-            }
-
-            if (allowLongTexts && descricao.isNotBlank()) {
-                Spacer(Modifier.height(2.dp))
-                TextButton(
-                    onClick = {
-                        val current = detalhesExpandidos[descKey] ?: false
-                        detalhesExpandidos[descKey] = !current
-                    },
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                ) {
                     Text(
-                        if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurface
+                        text = efetivoRaw.toDiceString(),
+                        modifier = Modifier.width(valorColWidthDp),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Clip,
+                        textAlign = TextAlign.Center
                     )
+
+                    IconButton(
+                        onClick = {
+                            if (nextRaw > maxRaw) return@IconButton
+
+                            if (state.pontosAtributo <= 0) {
+                                // Auto-spend BP
+                                if (!state.gastarPcParaAtributo()) return@IconButton
+                            }
+
+                            stack.add(1)
+                            // state.valoresAtributos[nome]!!.intValue = nextRaw // RecalcularPontosAtributo does this
+                            // state.pontosAtributo-- // RecalcularPontosAtributo does this
+                            state.recalcularPontosAtributo()
+                            onUserFeedback()
+                        },
+                        enabled = canIncrease,
+                        modifier = Modifier
+                            .size(32.dp)
+                            .padding(4.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            contentDescription = "Aumentar ${mapaAtributosDisplay[nome]}",
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+
+                    Spacer(Modifier.width(4.dp))
                 }
 
-                AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
-                    Text(
-                        text = descricao,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                if (allowLongTexts && descricao.isNotBlank()) {
+                    Spacer(Modifier.height(2.dp))
+                    TextButton(
+                        onClick = {
+                            val current = detalhesExpandidos[descKey] ?: false
+                            detalhesExpandidos[descKey] = !current
+                        },
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+
+                    AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                        Text(
+                            text = descricao,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
             }
         }
     }
-}
 }

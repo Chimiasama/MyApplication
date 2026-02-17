@@ -1090,10 +1090,9 @@ class CriadorState {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun devolverPcDeRecursos() {
         if (cpRecursosStack.isNotEmpty()) {
-            cpRecursosStack.removeLast()
+            cpRecursosStack.removeAt(cpRecursosStack.lastIndex)
             pontosComplicacaoGastos -= 1
             val amount = if (compendioPathfinderAtivo) 60000 else 500
             dinheiro = (dinheiro - amount).coerceAtLeast(0)
@@ -1110,10 +1109,9 @@ class CriadorState {
         return true
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun devolverPcDeVantagem() {
         if (cpPvStack.isNotEmpty()) {
-            cpPvStack.removeLast()
+            cpPvStack.removeAt(cpPvStack.lastIndex)
             pontosComplicacaoGastos -= 2
 
             val removedAdvantage = if (pontosVantagem == 0) {
@@ -1152,7 +1150,7 @@ class CriadorState {
 
     fun devolverPcDePericia() {
         if (cpSpStack.isNotEmpty()) {
-            cpSpStack.removeLast()
+            cpSpStack.removeAt(cpSpStack.lastIndex)
             pontosComplicacaoGastos = (pontosComplicacaoGastos - 1).coerceAtLeast(0)
             rebuildAllPericiaStacks()
         }
