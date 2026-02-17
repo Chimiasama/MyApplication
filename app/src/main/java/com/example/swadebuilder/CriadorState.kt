@@ -3295,9 +3295,17 @@ class CriadorState {
         val invalidAdvantagesResolution = ancestryChangeCoordination.invalidAdvantagesResolution
 
         invalidAdvantagesResolution.removedAdvantages.forEach { removed ->
-            removeVantagemDinheiro(removed)
-            pontosVantagem++
-            feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
+            val removedFromSelection = vantagensSelecionadas.removeAll { atual ->
+                val sameId = atual.id == removed.id
+                val sameChoice = atual.choice?.trim()?.keyify() == removed.choice?.trim()?.keyify()
+                sameId && (sameChoice || removed.choice.isNullOrBlank())
+            }
+
+            if (removedFromSelection) {
+                removeVantagemDinheiro(removed)
+                pontosVantagem++
+                feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
+            }
         }
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
