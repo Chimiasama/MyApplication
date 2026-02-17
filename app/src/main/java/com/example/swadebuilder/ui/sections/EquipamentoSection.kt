@@ -57,7 +57,6 @@ import com.example.swadebuilder.model.SAVAGE_PATHFINDER_ALLOWLIST
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
-import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -440,28 +439,17 @@ fun EquipamentoSection(
                 )
             }
 
-            if (!emProgresso && !usaRequisicao) {
-                if (usePbWalletRedesign) {
-                    PbWalletBanner(
-                        pcTotal = pcTotal,
-                        pcLivres = pcLivres,
-                        spendLabel = "Usar PB em Recursos",
-                        refundLabel = "Desfazer uso de PB",
-                        spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
-                        refundEnabled = recursosPcUsados > 0,
-                        onSpend = onUsarPontosBonusEmRecursos,
-                        onRefund = onDesfazerPontosBonusEmRecursos
-                    )
-                } else {
-                    PbLegacyActions(
-                        spendLabel = "Usar PB em Recursos",
-                        refundLabel = "Desfazer uso de PB",
-                        spendEnabled = pcLivres > 0 && recursosPcUsados == 0,
-                        refundEnabled = recursosPcUsados > 0,
-                        onSpend = onUsarPontosBonusEmRecursos,
-                        onRefund = onDesfazerPontosBonusEmRecursos
-                    )
-                }
+            if (!emProgresso && !usaRequisicao && usePbWalletRedesign) {
+                PbWalletBanner(
+                    pcTotal = pcTotal,
+                    pcLivres = pcLivres,
+                    spendLabel = "PB usado automaticamente quando faltar dinheiro",
+                    refundLabel = "PB devolvido automaticamente ao remover itens",
+                    spendEnabled = false,
+                    refundEnabled = false,
+                    onSpend = {},
+                    onRefund = {}
+                )
                 Spacer(Modifier.size(8.dp))
             }
 

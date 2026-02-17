@@ -62,7 +62,6 @@ import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
 import com.example.swadebuilder.toDiceString
-import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -86,7 +85,6 @@ fun PericiasContent(
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
-    val spUsados = state.cpSpStack.size
 
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
@@ -164,51 +162,24 @@ fun PericiasContent(
             ) {
                 SectionHeader(
                     onHelpClick          = null,
-                    centerText           = "Pontos de Perícia: ${state.pontosPericia}",
+                    centerText           = "Pontos de Perícia: ${state.pontosPericia} (${pcLivres} PB)",
                     onListaCompletaClick = null,
                     listaCompletaText    = ""
                 )
 
                 Spacer(Modifier.height(4.dp))
 
-                if (!state.emProgresso) {
-                    if (usePbWalletRedesign) {
-                        PbWalletBanner(
-                            pcTotal = pcTotal,
-                            pcLivres = pcLivres,
-                            spendLabel = "Usar PB em Perícias",
-                            refundLabel = "Desfazer uso de PB",
-                            spendEnabled = !locked && pcLivres > 0,
-                            refundEnabled = !locked && spUsados > 0,
-                            onSpend = {
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-                            },
-                            onRefund = {
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            }
-                        )
-                    } else {
-                        PbLegacyActions(
-                            spendLabel = "Usar PB em Perícias",
-                            refundLabel = "Desfazer uso de PB",
-                            spendEnabled = !locked && pcLivres > 0,
-                            refundEnabled = !locked && spUsados > 0,
-                            onSpend = {
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-                            },
-                            onRefund = {
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            }
-                        )
-                    }
+                if (!state.emProgresso && usePbWalletRedesign) {
+                    PbWalletBanner(
+                        pcTotal = pcTotal,
+                        pcLivres = pcLivres,
+                        spendLabel = "PB usado automaticamente ao subir Perícias",
+                        refundLabel = "PB devolvido automaticamente ao reduzir",
+                        spendEnabled = false,
+                        refundEnabled = false,
+                        onSpend = {},
+                        onRefund = {}
+                    )
                 }
             }
 
@@ -395,11 +366,12 @@ fun PericiasContent(
                                         locked = locked
                                     )
 
-                                    if (!regrasAtuais.canIncrease) {
-                                        return@IconButton
-                                    }
-
                                     if ((isIdioma || isJutsu) && state.rawTotal(per) == 0) {
+                                        val podeCobrirComPb = !state.emProgresso && state.pbLivres() >= regrasAtuais.cost
+                                        if (!regrasAtuais.canIncrease && !podeCobrirComPb) {
+                                            return@IconButton
+                                        }
+
                                         idiomaTarget = per
                                         idiomaText = ""
                                         idiomaPendingCost = regrasAtuais.cost
@@ -408,7 +380,29 @@ fun PericiasContent(
                                         return@IconButton
                                     }
 
-                                    state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
+                                    val cpSpBefore = state.cpSpStack.size
+                                    val tentouCobrirComPb = !state.emProgresso && !regrasAtuais.canIncrease && state.ensurePericiaBudgetWithPb(regrasAtuais.cost)
+                                    if (!regrasAtuais.canIncrease && !tentouCobrirComPb) {
+                                        return@IconButton
+                                    }
+
+                                    val regrasRecalculadas = state.calcularPericiaRules(
+                                        pericia = per,
+                                        idosoActive = idosoActive,
+                                        locked = locked
+                                    )
+
+                                    if (!regrasRecalculadas.canIncrease) {
+                                        while (state.cpSpStack.size > cpSpBefore) {
+                                            state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
+                                            state.pontosComplicacaoGastos =
+                                                (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
+                                        }
+                                        state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
+                                        return@IconButton
+                                    }
+
+                                    state.increasePericiaFromAdvancement(per, regrasRecalculadas.cost)
                                     if (isIdioma) {
                                         state.syncIdiomaSlots()
                                     }
@@ -427,7 +421,7 @@ fun PericiasContent(
                                         }
                                     }
                                 },
-                                enabled = regra.canIncrease,
+                                enabled = regra.canIncrease || (!state.emProgresso && state.pbLivres() >= regra.cost),
                                 modifier = Modifier
                                     .size(32.dp)
                                     .padding(4.dp)
@@ -587,11 +581,27 @@ fun PericiasContent(
                         val label = idiomaText.trim().ifBlank {
                             if (isJutsu) "Jutsu Desconhecido" else state.idiomaDefaultLabel(per)
                         }
-                        state.notasPericia[per.nome] = label
                         if (!idiomaEditMode) {
+                            if (!state.calcularPericiaRules(
+                                    pericia = per,
+                                    idosoActive = idosoActive,
+                                    locked = locked
+                                ).canIncrease
+                            ) {
+                                val cobriu = !state.emProgresso && state.ensurePericiaBudgetWithPb(idiomaPendingCost)
+                                if (!cobriu) {
+                                    showIdiomaDialog = false
+                                    idiomaEditMode = false
+                                    idiomaTarget = null
+                                    return@TextButton
+                                }
+                            }
+                            state.notasPericia[per.nome] = label
                             state.increasePericiaFromAdvancement(per, idiomaPendingCost)
                             if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
                             onUserFeedback()
+                        } else {
+                            state.notasPericia[per.nome] = label
                         }
                         showIdiomaDialog = false
                         idiomaEditMode = false

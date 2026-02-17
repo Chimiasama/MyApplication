@@ -1147,35 +1147,18 @@ private fun EquipamentoSection(
         modoProgressaoAtivo = state.modoProgressaoAtivo,
         onUsarPontosBonusEmRecursos = {
             if (state.usaRiqueza || state.usaRequisicao) return@EquipamentoSection
-            val pcLivresLocal =
-                (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
-            if (pcLivresLocal > 0 && state.cpRecursosStack.isEmpty()) {
-                state.cpRecursosStack.add(Unit)
-                state.pontosComplicacaoGastos += 1
-                if (state.compendioPathfinderAtivo) {
-                    state.addPathfinderMoney(60000)
-                } else {
-                    state.dinheiro += 500
-                }
-            }
+            state.gastarPcParaRecursos()
         },
         onDesfazerPontosBonusEmRecursos = {
             if (state.usaRiqueza || state.usaRequisicao) return@EquipamentoSection
-            val checkAmount = if (state.compendioPathfinderAtivo) 60000 else 500
-            if (state.cpRecursosStack.isNotEmpty() && state.dinheiro >= checkAmount) {
-                state.cpRecursosStack.removeAt(state.cpRecursosStack.lastIndex)
-                state.pontosComplicacaoGastos =
-                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                if (state.compendioPathfinderAtivo) {
-                    state.spendPathfinderMoney(60000)
-                } else {
-                    state.dinheiro -= 500
-                }
-            }
+            state.refundOneRecursoPbIfPossible()
         },
         onEquipamentoDoubleClick = { equipamento ->
             val custo = MoneyUtils.parseCostInBaseUnit(equipamento.custo, state.compendioPathfinderAtivo)
-            if (state.usaRiqueza || state.usaRequisicao || custo <= state.dinheiro) {
+            val pbAntes = state.pbLivres()
+            val podeAutoCompletarPb = !state.emProgresso && state.autoCompletarDinheiroComPbPara(custo)
+            val comSaldo = state.usaRiqueza || state.usaRequisicao || custo <= state.dinheiro || podeAutoCompletarPb
+            if (comSaldo) {
                 state.equipamentosComprados.add(equipamento)
                 if (!state.usaRiqueza && !state.usaRequisicao) {
                     if (state.compendioPathfinderAtivo) {
@@ -1184,7 +1167,12 @@ private fun EquipamentoSection(
                         state.dinheiro -= custo
                     }
                 }
-                onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
+                val pbDepois = state.pbLivres()
+                if (pbDepois < pbAntes) {
+                    onLogFeedback("Equipamento ${equipamento.nome} adicionado (PB aplicado automaticamente em Recursos).")
+                } else {
+                    onLogFeedback("Equipamento ${equipamento.nome} adicionado.")
+                }
                 onUserFeedback()
             } else {
                 onLogFeedback("Faltam recursos para obter o equipamento ${equipamento.nome}.")
@@ -1205,6 +1193,7 @@ private fun EquipamentoSection(
                     } else {
                         state.dinheiro += custo
                     }
+                    state.autoRefundRecursosPbSePossivel()
                 }
                 onLogFeedback("Equipamento ${equipamento.nome} removido.")
                 onUserFeedback()

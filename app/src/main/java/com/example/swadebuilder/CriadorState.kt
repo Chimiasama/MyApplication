@@ -1086,7 +1086,60 @@ class CriadorState {
         if (pontosComplicacao - pontosComplicacaoGastos < 1) return false
         pontosComplicacaoGastos += 1
         cpRecursosStack.add(Unit)
-        dinheiro += if (compendioPathfinderAtivo) 60000 else 500
+        if (compendioPathfinderAtivo) {
+            addPathfinderMoney(60000)
+        } else {
+            dinheiro += 500
+        }
+        return true
+    }
+
+    fun pbLivres(): Int = (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0)
+
+    fun dinheiroPorPb(): Int = if (compendioPathfinderAtivo) 60000 else 500
+
+    fun autoCompletarDinheiroComPbPara(custo: Int): Boolean {
+        if (usaRiqueza || usaRequisicao) return true
+        if (custo <= dinheiro) return true
+
+        val deltaPorPb = dinheiroPorPb().coerceAtLeast(1)
+        val falta = (custo - dinheiro).coerceAtLeast(0)
+        val pbNecessarios = (falta + deltaPorPb - 1) / deltaPorPb
+
+        if (pbLivres() < pbNecessarios) return false
+
+        repeat(pbNecessarios) {
+            if (!gastarPcParaRecursos()) return false
+        }
+        return custo <= dinheiro
+    }
+
+    fun autoRefundRecursosPbSePossivel() {
+        if (usaRiqueza || usaRequisicao) return
+        val delta = dinheiroPorPb()
+        while (cpRecursosStack.isNotEmpty() && dinheiro >= delta) {
+            cpRecursosStack.removeLast()
+            pontosComplicacaoGastos = (pontosComplicacaoGastos - 1).coerceAtLeast(0)
+            if (compendioPathfinderAtivo) {
+                spendPathfinderMoney(delta)
+            } else {
+                dinheiro = (dinheiro - delta).coerceAtLeast(0)
+            }
+        }
+    }
+
+    fun refundOneRecursoPbIfPossible(): Boolean {
+        if (usaRiqueza || usaRequisicao) return false
+        val delta = dinheiroPorPb()
+        if (cpRecursosStack.isEmpty() || dinheiro < delta) return false
+
+        cpRecursosStack.removeLast()
+        pontosComplicacaoGastos = (pontosComplicacaoGastos - 1).coerceAtLeast(0)
+        if (compendioPathfinderAtivo) {
+            spendPathfinderMoney(delta)
+        } else {
+            dinheiro = (dinheiro - delta).coerceAtLeast(0)
+        }
         return true
     }
 
@@ -1096,7 +1149,11 @@ class CriadorState {
             cpRecursosStack.removeLast()
             pontosComplicacaoGastos -= 1
             val amount = if (compendioPathfinderAtivo) 60000 else 500
-            dinheiro = (dinheiro - amount).coerceAtLeast(0)
+            if (compendioPathfinderAtivo) {
+                spendPathfinderMoney(amount)
+            } else {
+                dinheiro = (dinheiro - amount).coerceAtLeast(0)
+            }
         }
     }
 
@@ -1108,6 +1165,14 @@ class CriadorState {
         cpPvStack.add(Unit)   // registra que 1 vantagem foi comprada
         pontosVantagem += 1
         return true
+    }
+
+    fun autoRefundPvPbSePossivel() {
+        if (cpPvStack.isNotEmpty() && pontosVantagem > 0) {
+            cpPvStack.removeLast()
+            pontosComplicacaoGastos = (pontosComplicacaoGastos - 2).coerceAtLeast(0)
+            pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -1229,7 +1294,10 @@ class CriadorState {
         val isFreeProtagonista = protagonistaSlotAvailable && isProtagonistaEligible(v)
         val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
-        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) return false // No points
+        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) {
+            if (emProgresso) return false
+            if (!gastarPcParaVantagem()) return false
+        }
 
         applyVantagemDinheiro(v)
         adicionarVantagem(v)
@@ -1301,6 +1369,7 @@ class CriadorState {
 
         if (shouldRefund) {
             pontosVantagem++
+            autoRefundPvPbSePossivel()
         }
 
         if (v.id == "o_melhor_que_ha") {
@@ -2853,6 +2922,72 @@ class CriadorState {
         if (isJutsuPericia(per)) {
             syncJutsuSlots()
         }
+
+        if (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
+            cpSpStack.removeLast()
+            pontosComplicacaoGastos = (pontosComplicacaoGastos - 1).coerceAtLeast(0)
+            rebuildAllPericiaStacks(enforcePoolLimit = true)
+        }
+    }
+
+    fun ensurePericiaBudgetWithPb(cost: Int): Boolean {
+        val needed = (cost - pontosPericia).coerceAtLeast(0)
+        if (needed == 0) return true
+        if (pbLivres() < needed) return false
+
+        repeat(needed) {
+            cpSpStack.add(Unit)
+            pontosComplicacaoGastos += 1
+        }
+        return pontosPericia >= cost
+    }
+
+    fun autoRefundPaPbSePossivel() {
+        if (cpPaStack.isNotEmpty() && pontosAtributo > 0) {
+            cpPaStack.removeLast()
+            pontosComplicacaoGastos = (pontosComplicacaoGastos - 2).coerceAtLeast(0)
+        }
+        recalcularPontosAtributo()
+    }
+
+    fun tentativaDesfazerUmaCompraPb(): Boolean {
+        if (refundOneRecursoPbIfPossible()) {
+            return true
+        }
+
+        if (cpPvStack.isNotEmpty()) {
+            val removable = vantagensSelecionadas.lastOrNull { !isVantagemAutomatica(it) }
+            if (removable != null) {
+                venderVantagem(removable)
+                return true
+            }
+        }
+
+        if (cpSpStack.isNotEmpty()) {
+            val per = periciasComIdiomas().lastOrNull { spCostStackPorPericia.getValue(it).isNotEmpty() }
+            if (per != null) {
+                decreasePericia(per)
+                return true
+            }
+        }
+
+        if (cpPaStack.isNotEmpty()) {
+            val attr = listaAtributos.lastOrNull { paCostStackPorAtributo.getValue(it).isNotEmpty() }
+            if (attr != null) {
+                val stack = paCostStackPorAtributo.getValue(attr)
+                val prevRaw = atributoRawBaseSemSupers(attr).let { if (it <= 12) it - 2 else it - 1 }
+                val minReq = maxOf(atributoMinRaw(attr), minAttrPorVantagem[attr] ?: 4)
+                if (stack.isNotEmpty() && prevRaw >= minReq) {
+                    stack.removeLast()
+                    valoresAtributos[attr]!!.intValue = prevRaw
+                    pontosAtributo++
+                    autoRefundPaPbSePossivel()
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 
     private fun atributoBaseRacial(a: String): Int {
