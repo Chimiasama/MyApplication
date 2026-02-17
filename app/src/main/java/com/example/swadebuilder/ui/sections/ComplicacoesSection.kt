@@ -409,7 +409,7 @@ fun ComplicacoesSection(
                                         if (paCount > 0) Text("• $paCount em Atributos adicionais")
                                         if (spCount > 0) Text("• $spCount em passos extras de Perícia")
                                         if (pvCount > 0) Text("• $pvCount em Vantagens adicionais")
-                                        if (recCount > 0) Text("• $recCount em Recursos extras (500$ cada)")
+                                        if (recCount > 0) Text("• $recCount em Recursos extras (${state.dinheiroPorPb()}$ cada)")
 
                                         Spacer(Modifier.height(8.dp))
                                         Text(

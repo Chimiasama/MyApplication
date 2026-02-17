@@ -1118,6 +1118,17 @@ class CriadorState {
         }
     }
 
+    fun refundOneRecursoPbIfPossible(): Boolean {
+        if (usaRiqueza || usaRequisicao) return false
+        val delta = dinheiroPorPb()
+        if (cpRecursosStack.isEmpty() || dinheiro < delta) return false
+
+        cpRecursosStack.removeLast()
+        pontosComplicacaoGastos = (pontosComplicacaoGastos - 1).coerceAtLeast(0)
+        dinheiro = (dinheiro - delta).coerceAtLeast(0)
+        return true
+    }
+
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun devolverPcDeRecursos() {
         if (cpRecursosStack.isNotEmpty()) {
@@ -2914,14 +2925,12 @@ class CriadorState {
         while (cpPaStack.isNotEmpty() && pontosAtributo > 0) {
             cpPaStack.removeLast()
             pontosComplicacaoGastos = (pontosComplicacaoGastos - 2).coerceAtLeast(0)
-            pontosAtributo = (pontosAtributo - 1).coerceAtLeast(0)
         }
         recalcularPontosAtributo()
     }
 
     fun tentativaDesfazerUmaCompraPb(): Boolean {
-        if (cpRecursosStack.isNotEmpty() && dinheiro >= dinheiroPorPb()) {
-            autoRefundRecursosPbSePossivel()
+        if (refundOneRecursoPbIfPossible()) {
             return true
         }
 
