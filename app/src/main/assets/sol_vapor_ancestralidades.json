@@ -6,6 +6,9 @@
     "origem": "CIDADE_SOL_VAPOR",
     "atributos": {},
     "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ],
     "habilidades": [
       {
         "nome": "Adaptável",
