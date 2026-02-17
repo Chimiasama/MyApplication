@@ -41,7 +41,6 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.toDiceString
-import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
@@ -68,7 +67,6 @@ fun AtributosContent(
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
-    val paUsados = state.cpPaStack.size
 
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
@@ -100,38 +98,17 @@ fun AtributosContent(
 
         Spacer(Modifier.height(4.dp))
 
-        if (!state.emProgresso) {
-            if (usePbWalletRedesign) {
-                PbWalletBanner(
-                    pcTotal = pcTotal,
-                    pcLivres = pcLivres,
-                    spendLabel = "Usar PB em Atributos",
-                    refundLabel = "Desfazer uso de PB",
-                    spendEnabled = !locked && pcLivres >= 2,
-                    refundEnabled = !locked && paUsados > 0,
-                    onSpend = { state.gastarPcParaAtributo() },
-                    onRefund = {
-                        state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
-                        state.pontosComplicacaoGastos =
-                            (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
-                        state.recalcularPontosAtributo()
-                    }
-                )
-            } else {
-                PbLegacyActions(
-                    spendLabel = "Usar PB em Atributos",
-                    refundLabel = "Desfazer uso de PB",
-                    spendEnabled = !locked && pcLivres >= 2,
-                    refundEnabled = !locked && paUsados > 0,
-                    onSpend = { state.gastarPcParaAtributo() },
-                    onRefund = {
-                        state.cpPaStack.removeAt(state.cpPaStack.lastIndex)
-                        state.pontosComplicacaoGastos =
-                            (state.pontosComplicacaoGastos - 2).coerceAtLeast(0)
-                        state.recalcularPontosAtributo()
-                    }
-                )
-            }
+        if (!state.emProgresso && usePbWalletRedesign) {
+            PbWalletBanner(
+                pcTotal = pcTotal,
+                pcLivres = pcLivres,
+                spendLabel = "PB usado automaticamente ao subir Atributos",
+                refundLabel = "PB devolvido automaticamente ao reduzir",
+                spendEnabled = false,
+                refundEnabled = false,
+                onSpend = {},
+                onRefund = {}
+            )
 
             Spacer(Modifier.height(8.dp))
         }
@@ -153,7 +130,7 @@ fun AtributosContent(
             val prevRaw = if (baseRaw <= 12) baseRaw - 2 else baseRaw - 1
 
             val allowedByRule = !state.isAttributeRankLimitReached() || state.isAttributeFreeForMonster(nome)
-            val canIncrease = !locked && state.pontosAtributo > 0 && (nextRaw <= maxRaw) && allowedByRule
+            val canIncrease = !locked && (state.pontosAtributo > 0 || pcLivres >= 2) && (nextRaw <= maxRaw) && allowedByRule
 
             val canReduce = run {
                 val baseCanReduce = !locked && stack.isNotEmpty() && (prevRaw >= minReq)
@@ -206,7 +183,7 @@ fun AtributosContent(
                         stack.removeAt(stack.lastIndex)
                         state.valoresAtributos[nome]!!.intValue = prevRaw
                         state.pontosAtributo++
-                        state.recalcularPontosAtributo()
+                        state.autoRefundPaPbSePossivel()
                         onUserFeedback()
                     },
                     enabled = canReduce,
@@ -233,7 +210,8 @@ fun AtributosContent(
 
                 IconButton(
                     onClick = {
-                        if (nextRaw > maxRaw || state.pontosAtributo <= 0) return@IconButton
+                        if (nextRaw > maxRaw) return@IconButton
+                        if (state.pontosAtributo <= 0 && !state.gastarPcParaAtributo()) return@IconButton
                         stack.add(1)
                         state.valoresAtributos[nome]!!.intValue = nextRaw
                         state.pontosAtributo--

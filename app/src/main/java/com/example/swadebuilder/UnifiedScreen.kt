@@ -1175,7 +1175,8 @@ private fun EquipamentoSection(
         },
         onEquipamentoDoubleClick = { equipamento ->
             val custo = MoneyUtils.parseCostInBaseUnit(equipamento.custo, state.compendioPathfinderAtivo)
-            if (state.usaRiqueza || state.usaRequisicao || custo <= state.dinheiro) {
+            val comSaldo = state.usaRiqueza || state.usaRequisicao || custo <= state.dinheiro || state.autoCompletarDinheiroComPbPara(custo)
+            if (comSaldo) {
                 state.equipamentosComprados.add(equipamento)
                 if (!state.usaRiqueza && !state.usaRequisicao) {
                     if (state.compendioPathfinderAtivo) {
@@ -1205,6 +1206,7 @@ private fun EquipamentoSection(
                     } else {
                         state.dinheiro += custo
                     }
+                    state.autoRefundRecursosPbSePossivel()
                 }
                 onLogFeedback("Equipamento ${equipamento.nome} removido.")
                 onUserFeedback()

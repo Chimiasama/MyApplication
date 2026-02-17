@@ -383,7 +383,25 @@ fun ComplicacoesSection(
                             onDismissRequest = { showPcInUseDialog = false },
                             confirmButton = {
                                 TextButton(onClick = { showPcInUseDialog = false }) {
-                                    Text("OK")
+                                    Text("Fechar")
+                                }
+                            },
+                            dismissButton = {
+                                TextButton(
+                                    onClick = {
+                                        val desfeito = state.tentativaDesfazerUmaCompraPb()
+                                        if (!desfeito) {
+                                            tempErrorMsg = "Não foi possível desfazer compras automaticamente."
+                                            showTempError = true
+                                            scope.launch {
+                                                delay(3000)
+                                                showTempError = false
+                                            }
+                                        }
+                                        showPcInUseDialog = false
+                                    }
+                                ) {
+                                    Text("Desfazer 1 compra de PB")
                                 }
                             },
                             title = { Text("Não é possível remover esta Complicação") },

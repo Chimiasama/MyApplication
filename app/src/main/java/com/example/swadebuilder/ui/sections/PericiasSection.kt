@@ -62,7 +62,6 @@ import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.SAVAGE_PATHFINDER_BLOCKED_SKILLS
 import com.example.swadebuilder.toDiceString
-import com.example.swadebuilder.ui.components.PbLegacyActions
 import com.example.swadebuilder.ui.components.PbWalletBanner
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -86,7 +85,6 @@ fun PericiasContent(
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
-    val spUsados = state.cpSpStack.size
 
     var showSpecDialog by rememberSaveable { mutableStateOf(false) }
     var specText by rememberSaveable { mutableStateOf("") }
@@ -171,44 +169,17 @@ fun PericiasContent(
 
                 Spacer(Modifier.height(4.dp))
 
-                if (!state.emProgresso) {
-                    if (usePbWalletRedesign) {
-                        PbWalletBanner(
-                            pcTotal = pcTotal,
-                            pcLivres = pcLivres,
-                            spendLabel = "Usar PB em Perícias",
-                            refundLabel = "Desfazer uso de PB",
-                            spendEnabled = !locked && pcLivres > 0,
-                            refundEnabled = !locked && spUsados > 0,
-                            onSpend = {
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-                            },
-                            onRefund = {
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            }
-                        )
-                    } else {
-                        PbLegacyActions(
-                            spendLabel = "Usar PB em Perícias",
-                            refundLabel = "Desfazer uso de PB",
-                            spendEnabled = !locked && pcLivres > 0,
-                            refundEnabled = !locked && spUsados > 0,
-                            onSpend = {
-                                state.cpSpStack.add(Unit)
-                                state.pontosComplicacaoGastos += 1
-                            },
-                            onRefund = {
-                                state.cpSpStack.removeAt(state.cpSpStack.lastIndex)
-                                state.pontosComplicacaoGastos =
-                                    (state.pontosComplicacaoGastos - 1).coerceAtLeast(0)
-                                state.syncFromCPRefund(sp = true, feedbackMessages = feedbackMessages)
-                            }
-                        )
-                    }
+                if (!state.emProgresso && usePbWalletRedesign) {
+                    PbWalletBanner(
+                        pcTotal = pcTotal,
+                        pcLivres = pcLivres,
+                        spendLabel = "PB usado automaticamente ao subir Perícias",
+                        refundLabel = "PB devolvido automaticamente ao reduzir",
+                        spendEnabled = false,
+                        refundEnabled = false,
+                        onSpend = {},
+                        onRefund = {}
+                    )
                 }
             }
 
@@ -395,20 +366,28 @@ fun PericiasContent(
                                         locked = locked
                                     )
 
-                                    if (!regrasAtuais.canIncrease) {
+                                    if (!regrasAtuais.canIncrease && !state.ensurePericiaBudgetWithPb(regrasAtuais.cost)) {
                                         return@IconButton
                                     }
+
+                                    val regrasRecalculadas = state.calcularPericiaRules(
+                                        pericia = per,
+                                        idosoActive = idosoActive,
+                                        locked = locked
+                                    )
+
+                                    if (!regrasRecalculadas.canIncrease) return@IconButton
 
                                     if ((isIdioma || isJutsu) && state.rawTotal(per) == 0) {
                                         idiomaTarget = per
                                         idiomaText = ""
-                                        idiomaPendingCost = regrasAtuais.cost
+                                        idiomaPendingCost = regrasRecalculadas.cost
                                         idiomaEditMode = false
                                         showIdiomaDialog = true
                                         return@IconButton
                                     }
 
-                                    state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
+                                    state.increasePericiaFromAdvancement(per, regrasRecalculadas.cost)
                                     if (isIdioma) {
                                         state.syncIdiomaSlots()
                                     }
