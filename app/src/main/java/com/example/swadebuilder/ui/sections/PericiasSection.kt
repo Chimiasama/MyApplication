@@ -581,7 +581,6 @@ fun PericiasContent(
                         val label = idiomaText.trim().ifBlank {
                             if (isJutsu) "Jutsu Desconhecido" else state.idiomaDefaultLabel(per)
                         }
-                        state.notasPericia[per.nome] = label
                         if (!idiomaEditMode) {
                             if (!state.calcularPericiaRules(
                                     pericia = per,
@@ -597,9 +596,12 @@ fun PericiasContent(
                                     return@TextButton
                                 }
                             }
+                            state.notasPericia[per.nome] = label
                             state.increasePericiaFromAdvancement(per, idiomaPendingCost)
                             if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
                             onUserFeedback()
+                        } else {
+                            state.notasPericia[per.nome] = label
                         }
                         showIdiomaDialog = false
                         idiomaEditMode = false
