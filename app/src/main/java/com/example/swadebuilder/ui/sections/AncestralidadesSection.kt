@@ -196,7 +196,7 @@ fun AncestralidadesSection(
         // Find the "Versatile" template to use as the visible "Half-Elf" item
         val meioElfoTemplate = all.firstOrNull {
             val k = it.nome.keyify()
-            k.contains("MEIO_ELFOS") && k.contains("VERSATIL")
+            (k.contains("MEIO_ELFOS") || k.contains("MEIO-ELFOS")) && k.contains("VERSATIL")
         }?.copy(nome = "Meio-Elfos") // Rename to generic "Meio-Elfos"
 
         val filtered = all.filter {
@@ -204,7 +204,7 @@ fun AncestralidadesSection(
             val key = it.nome.keyify()
 
             // Filter out specific Half-Elf variants from the main list
-            if (key.contains("MEIO_ELFOS") && (key.contains("VERSATIL") || key.contains("AGIL"))) {
+            if ((key.contains("MEIO_ELFOS") || key.contains("MEIO-ELFOS")) && (key.contains("VERSATIL") || key.contains("AGIL"))) {
                 return@filter false
             }
 
@@ -704,7 +704,7 @@ fun AncestralidadesSection(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Versátil (Vantagem Grátis)")
+                        Text("Herança: Humano (Versátil)")
                     }
                     TextButton(
                         onClick = {
@@ -713,7 +713,7 @@ fun AncestralidadesSection(
                         },
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Ágil (Agilidade d6)")
+                        Text("Herança: Elfo (Ágil)")
                     }
                 }
             },
