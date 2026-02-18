@@ -11,7 +11,8 @@ class ResolveAncestryTransitionContextUseCase {
         val targetAncestry: String,
         val previousAncestryDef: RacialModifier?,
         val targetAncestryDef: RacialModifier?,
-        val currentAutomaticAdvantages: List<String>
+        val currentAutomaticAdvantages: List<String>,
+        val meioElfoAgil: Boolean // Added flag
     )
 
     data class Result(
@@ -25,7 +26,8 @@ class ResolveAncestryTransitionContextUseCase {
         val targetAncestryKey = params.targetAncestry.keyify()
 
         val wasHumano = previousAncestryKey == "HUMANOS" ||
-            params.previousAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true
+            params.previousAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true ||
+            (previousAncestryKey == "MEIO-ELFOS" && !params.meioElfoAgil) // Half-Elf without Agile = Adaptable
 
         val willBeHumano = targetAncestryKey == "HUMANOS" ||
             params.targetAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true

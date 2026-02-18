@@ -35,7 +35,8 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val originPriorityResolver: (String?) -> Int,
         val compendioArteDaGuerraAtivo: Boolean,
         val signoAdgSelecionado: String?,
-        val modoSupers: Boolean
+        val modoSupers: Boolean,
+        val meioElfoAgil: Boolean // Pass current flag
     )
 
     data class Result(
@@ -62,7 +63,8 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 targetAncestryDef = params.targetAncestryDef,
                 currentAutomaticAdvantages = params.currentAutomaticAdvantages,
                 pontosVantagemAtuais = params.pontosVantagemAtuais,
-                vantagensSelecionadas = params.vantagensSelecionadas
+                vantagensSelecionadas = params.vantagensSelecionadas,
+                meioElfoAgil = params.meioElfoAgil
             )
         )
 
