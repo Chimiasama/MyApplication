@@ -70,8 +70,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -86,21 +84,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.swadebuilder.model.ArcanoInfo
-import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.model.CrystalHeart
-import com.example.swadebuilder.model.EquipamentoCategoria
-import com.example.swadebuilder.model.EquipamentoItem
-import com.example.swadebuilder.model.Estagio
-import com.example.swadebuilder.model.MonstroTemplate
-import com.example.swadebuilder.model.Pericia
-import com.example.swadebuilder.model.Poder
-import com.example.swadebuilder.model.RacialModifier
-import com.example.swadebuilder.model.SuperPoder
-import com.example.swadebuilder.model.Tropo
-import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.model.usecase.BuildUsageInstructionsUseCase
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -108,14 +92,10 @@ import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.SecurityUtils
-import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonElement
 import java.text.DateFormat
 import kotlin.math.roundToInt
 
