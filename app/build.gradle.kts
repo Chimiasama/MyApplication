@@ -2,12 +2,11 @@
 
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     // Plugin de serialization
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.10"
 }
 
 // 🔹 Exclui globalmente a versão duplicada da JetBrains IntelliJ Annotations
@@ -25,9 +24,8 @@ android {
         applicationId = "com.swadebuilder"
         minSdk = 25
         targetSdk = 36
-        versionCode = 16
-        versionName = "2.5"
-
+        versionCode = 17
+        versionName = "2.6"
 
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -90,6 +88,12 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
+
+            // ✅ CORREÇÃO: Adiciona símbolos de depuração nativos para o Play Console
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -106,24 +110,7 @@ android {
         resValues = true
     }
 
-    // ------------------------------------------------------------
-// 🔹 Kotlin e Java
-// ------------------------------------------------------------
-    kotlin {
-        compilerOptions {
-            // Agora Kotlin também compila para Java 21
-            jvmTarget.set(JvmTarget.JVM_21)
-            freeCompilerArgs.addAll(
-                "-Xcontext-receivers",
-                "-opt-in=kotlin.RequiresOptIn"
-            )
-        }
-
-        jvmToolchain(21)
-    }
-
     compileOptions {
-
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
@@ -136,6 +123,23 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+// ------------------------------------------------------------
+// 🔹 Kotlin e Java
+// ✅ CORREÇÃO: Movido para fora do bloco android {}
+// ------------------------------------------------------------
+kotlin {
+    compilerOptions {
+        // Agora Kotlin também compila para Java 21
+        jvmTarget.set(JvmTarget.JVM_21)
+        freeCompilerArgs.addAll(
+            "-Xcontext-receivers",
+            "-opt-in=kotlin.RequiresOptIn"
+        )
+    }
+
+    jvmToolchain(21)
 }
 
 // ------------------------------------------------------------
