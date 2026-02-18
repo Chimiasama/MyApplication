@@ -3143,7 +3143,8 @@ class CriadorState {
                 originPriorityResolver = { getOriginPriority(it) },
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                 signoAdgSelecionado = signoAdgSelecionado,
-                modoSupers = modoSupers
+                modoSupers = modoSupers,
+                meioElfoAgil = meioElfoAgil
             )
         )
 
