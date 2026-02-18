@@ -658,110 +658,107 @@ fun VantagensContent(
         }
     }
 
-    if (browsingMode) {
-        // Browse Mode (Accordions) - NOW OPTIMIZED WITH LAZYCOLUMN
-        val categoriasBy = remember(filteredListGlobal) {
-            filteredListGlobal.groupBy { it.categoria }
-        }
+    // Refactored Layout: Fixed Header + Scrollable List
+    Column(modifier = Modifier.fillMaxWidth()) {
+        headerContent()
 
-        LazyColumn(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            item { headerContent() }
+        if (browsingMode) {
+            // Browse Mode (Accordions) - NOW OPTIMIZED WITH LAZYCOLUMN
+            val categoriasBy = remember(filteredListGlobal) {
+                filteredListGlobal.groupBy { it.categoria }
+            }
 
-            Categoria.entries.forEach { cat ->
-                val lista = categoriasBy[cat]
-                if (lista == null) return@forEach // Skip empty
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+            ) {
+                // REMOVED: item { headerContent() } - now fixed at top
 
-                if (state.modoSupers && cat == Categoria.PODER) return@forEach
-                // Logic already handled by active list, but keeping explicit checks safe
+                Categoria.entries.forEach { cat ->
+                    val lista = categoriasBy[cat]
+                    if (lista == null) return@forEach // Skip empty
 
-                val expanded = expandedMap[cat] ?: false
+                    if (state.modoSupers && cat == Categoria.PODER) return@forEach
+                    // Logic already handled by active list, but keeping explicit checks safe
 
-                // Category Header
-                item(key = "header_${cat.name}") {
-                    Column {
-                        CollapsibleSection(
-                            title = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase(),
-                            expanded = expanded,
-                            onToggle = { expandedMap[cat] = !expanded },
-                            onToggleFeedback = onUserFeedback
-                        ) {} // Empty content, we use CollapsibleSection just for header rendering
-                        // Note: CollapsibleSection has a Column wrapper. If we pass empty content, it just renders the header row.
+                    val expanded = expandedMap[cat] ?: false
 
-                        // We need a Spacer if not expanded to match original look?
-                        // Original had `Spacer(Modifier.size(8.dp))` AFTER CollapsibleSection.
-                        // We can add it as padding or separate item.
-                        // Let's add it to the item.
-                        Spacer(Modifier.size(8.dp))
+                    // Category Header
+                    item(key = "header_${cat.name}") {
+                        Column {
+                            CollapsibleSection(
+                                title = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase(),
+                                expanded = expanded,
+                                onToggle = { expandedMap[cat] = !expanded },
+                                onToggleFeedback = onUserFeedback
+                            ) {} // Empty content, we use CollapsibleSection just for header rendering
+
+                            Spacer(Modifier.size(8.dp))
+                        }
                     }
-                }
 
-                // Category Content (Only if expanded)
-                if (expanded) {
-                    items(lista, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
-                         // We need a wrapper to provide the padding used in the original Column
-                         // Original: padding(start = 8.dp, bottom = 8.dp)
-                         Column(modifier = Modifier.padding(start = 8.dp, bottom = 0.dp)) {
-                             VantagemItem(
-                                 vant = vant,
-                                 state = state,
-                                 allEstagios = allEstagios,
-                                 locked = locked,
-                                 allowLongTexts = allowLongTexts,
-                                 showOfficialNames = showOfficialNames,
-                                 idParaNome = idParaNome,
-                                 detalhesExpandidos = detalhesExpandidos,
-                                 protagonistaSlotCategoria = protagonistaSlotCategoria,
-                                 pcLivres = pcLivres,
-                                 onSelect = {
-                                    if (vant.vinculadoPericia) {
-                                        pendingVantagem = vant
-                                        showChoiceDialog = true
-                                    } else if (vant.id == "antecedente_arcano") {
-                                        dialogMostrandoAntecedente = vant
-                                    } else if (vant.id == "poderes_misticos") {
-                                        dialogMostrandoPoderesMisticos = vant
-                                    } else if (vant.nome.keyify() == "CAVALEIRO") {
-                                        dialogMostrandoCavaleiro = vant
-                                    } else if (vant.nome.keyify() == "MONTARIA") {
-                                        dialogMostrandoMontaria = vant
-                                    } else if (vant.id == "novos_poderes") {
-                                        val activeABs = state.vantagensSelecionadas
-                                            .mapNotNull { it.toArcanoKey() }
-                                            .distinct()
-                                        if (activeABs.size > 1) {
-                                            dialogMostrandoNovosPoderes = vant
+                    // Category Content (Only if expanded)
+                    if (expanded) {
+                        items(lista, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
+                             // We need a wrapper to provide the padding used in the original Column
+                             Column(modifier = Modifier.padding(start = 8.dp, bottom = 0.dp)) {
+                                 VantagemItem(
+                                     vant = vant,
+                                     state = state,
+                                     allEstagios = allEstagios,
+                                     locked = locked,
+                                     allowLongTexts = allowLongTexts,
+                                     showOfficialNames = showOfficialNames,
+                                     idParaNome = idParaNome,
+                                     detalhesExpandidos = detalhesExpandidos,
+                                     protagonistaSlotCategoria = protagonistaSlotCategoria,
+                                     pcLivres = pcLivres,
+                                     onSelect = {
+                                        if (vant.vinculadoPericia) {
+                                            pendingVantagem = vant
+                                            showChoiceDialog = true
+                                        } else if (vant.id == "antecedente_arcano") {
+                                            dialogMostrandoAntecedente = vant
+                                        } else if (vant.id == "poderes_misticos") {
+                                            dialogMostrandoPoderesMisticos = vant
+                                        } else if (vant.nome.keyify() == "CAVALEIRO") {
+                                            dialogMostrandoCavaleiro = vant
+                                        } else if (vant.nome.keyify() == "MONTARIA") {
+                                            dialogMostrandoMontaria = vant
+                                        } else if (vant.id == "novos_poderes") {
+                                            val activeABs = state.vantagensSelecionadas
+                                                .mapNotNull { it.toArcanoKey() }
+                                                .distinct()
+                                            if (activeABs.size > 1) {
+                                                dialogMostrandoNovosPoderes = vant
+                                            } else {
+                                                attemptPurchase(vant) {}
+                                            }
+                                        } else if (vant.id == "poder_favorito") {
+                                            val ownedPowers = state.poderesSelecionados.filterNotNull()
+                                            if (ownedPowers.isEmpty()) {
+                                                viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
+                                                onUserFeedback()
+                                            } else {
+                                                dialogMostrandoPoderFavorito = vant
+                                            }
                                         } else {
                                             attemptPurchase(vant) {}
                                         }
-                                    } else if (vant.id == "poder_favorito") {
-                                        val ownedPowers = state.poderesSelecionados.filterNotNull()
-                                        if (ownedPowers.isEmpty()) {
-                                            viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
-                                            onUserFeedback()
-                                        } else {
-                                            dialogMostrandoPoderFavorito = vant
-                                        }
-                                    } else {
-                                        attemptPurchase(vant) {}
-                                    }
-                                 },
-                                 onError = { msg ->
-                                     viewModel.logFeedback(msg)
-                                     onUserFeedback()
-                                 }
-                             )
-                         }
+                                     },
+                                     onError = { msg ->
+                                         viewModel.logFeedback(msg)
+                                         onUserFeedback()
+                                     }
+                                 )
+                             }
+                        }
                     }
                 }
             }
-        }
-    } else {
-        // Search Mode (Flat List) - Preserving Fixed Header
-        Column(modifier = Modifier.fillMaxWidth()) {
-            headerContent()
-
+        } else {
+            // Search Mode (Flat List)
             val flatList = remember(filteredListGlobal, selectedCategories, searchQuery) {
                 filteredListGlobal.filter { vant ->
                     if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return@filter false

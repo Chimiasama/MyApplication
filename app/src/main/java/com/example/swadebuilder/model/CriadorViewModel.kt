@@ -394,28 +394,8 @@ class CriadorViewModel(
         state.usarEspecializacoesDePericia = usarEspecializacoesDePericia
         state.especializacoesPorPericia.clear()
 
-        state.pontosVantagem = 0
-
-        val selectedRules = rulesResolver.resolve(
-            compendioPathfinderAtivo = compendioPathfinderAtivo,
-            compendioSciFiAtivo = compendioSciFiAtivo,
-            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-            compendioFantasiaAtivo = compendioFantasiaAtivo,
-            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-            compendioHorrorAtivo = compendioHorrorAtivo,
-            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-            compendioWiseguysAtivo = compendioWiseguysAtivo
-        )
-
-        // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully
-        state.ancestralidade = ""
-        val targetAncestralidade = selectedRules.defaultAncestralidade()
-
-        // Fix: Ensure all loaded skills are registered in the state maps to prevent crashes in rawTotal
-        state.ensureAllPericiasRegistered()
-        state.ensureAllAtributosRegistered()
-
+        // 1. Limpeza Completa de Estado (Stacks, Listas, Atributos, Perícias)
+        // Isso deve ocorrer ANTES de aplicar qualquer regra ou ancestralidade
         state.vantagensSelecionadas.clear()
         state.complicacoesSelecionadas.clear()
         state.reservasComplicacaoMaior.clear()
@@ -438,8 +418,111 @@ class CriadorViewModel(
         }
         state.sectionsExpanded[com.example.swadebuilder.ui.MainSection.RESUMO] = true
 
+        state.equipamentosComprados.clear()
+        state.pontosComplicacaoGastos = 0
+        state.cpRecursosStack.clear()
+        state.cpPaStack.clear()
+        state.paFromProgress = 0
+        state.spFromProgress = 0
+        state.pvFromXpOutstanding = 0
+        state.legendaryAttrReservations = 0
+        state.cpPvStack.clear()
+        state.cpSpStack.clear()
+        state.comprasPpPorEstagio.keys.forEach   { state.comprasPpPorEstagio[it] = 0 }
+        state.comprasAttrPorEstagio.keys.forEach { state.comprasAttrPorEstagio[it] = 0 }
+        state.paCostStackPorAtributo.values.forEach  { it.clear() }
+        state.compCostStackPorPericia.values.forEach { it.clear() }
+        state.spCostStackPorPericia.values.forEach   { it.clear() }
+        state.poderSlotsPorArcano.clear()
+        state.novosPoderesStacksPorArcano.clear()
+        state.attributeAdvancementInProgress = false
+        state.attributeStageForCurrentAdvancement = null
+        state.attributeStacksBeforeAdvancement = null
+        state.attributeUsedReservation = false
+        state.skillAdvancementInProgress = false
+        state.skillsForCurrentAdvancement.clear()
+        state.advantageAdvancementInProgress = false
+        state.advantageForCurrentAdvancement = null
+        state.stageNameForCurrentAdvancement = null
+        state.overrideStageForVantagem = null
+        state.openVantagensAfterGrant = false
+        state.arcanoEmCompraViaXpKey = null
+        state.arcanoSnapshotAntesDaCompra = null
+        state.mostrandoPoderesProgresso = false
+        state.mostrandoAtributosProgresso = false
+
+        // Reset Supers
+        state.superInvestments.clear()
+        state.superNivelCampanha = null
+        state.usarSemPontosDePoder = false
+        state.superPontosTotais = 0
+        state.superPontosDisponiveis = 0
+        state.superLimite = 0
+        state.superLimitePorPoder = 0
+        state.poderFavoritoId = null
+        state.limiteDePoderDaCampanha = Int.MAX_VALUE
+        state.faseSupersAtiva = false
+        state.bonusApararFromPower = 0
+        state.bonusResFromPower = 0
+        state.armorFromPower = 0
+        state.bonusMovimentacaoFromPower = 0
+        state.vantagensDePoder.clear()
+        state.gastosPorPoder.clear()
+        state.naturalArmorFromRace = 0
+
+        // Reset Progresso
+        state.progresso = 0
+        state.progressosDisponiveis = 0
+        state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
+        state.xpSlots.fill(false)
+        state.frozenAdvantageCount = 0
+        state.advancementHistory.clear()
+        state.emProgresso = false
+        state.modoProgressaoAtivo = false
+        state.mostrandoVantagensProgresso = false
+        state.mostrandoPericiasProgresso = false
+        state.frozenSkillIncrements.clear()
+        resetUiState()
+
+        // Reset Atributos e Perícias para o base (sem raça ainda)
+        state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
+        state.recalcularPontosAtributo(mutableListOf())
+
+        periciasData().forEach { per ->
+            state.baseIncsPorPericia[per] = 0
+            state.spCostStackPorPericia.getValue(per).clear()
+            state.compCostStackPorPericia[per]?.clear()
+        }
+        state.rebuildAllPericiaStacks(mutableListOf())
+
+        // 2. Zerar PV explicitamente antes de aplicar ancestralidade
+        state.pontosVantagem = 0
+
+        // 3. Resolver Regras e Ancestralidade
+        val selectedRules = rulesResolver.resolve(
+            compendioPathfinderAtivo = compendioPathfinderAtivo,
+            compendioSciFiAtivo = compendioSciFiAtivo,
+            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+            compendioFantasiaAtivo = compendioFantasiaAtivo,
+            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+            compendioHorrorAtivo = compendioHorrorAtivo,
+            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+            compendioWiseguysAtivo = compendioWiseguysAtivo
+        )
+
+        // Fix: Force transition from empty string to ensure aplicarAncestralidade logic runs fully
+        state.ancestralidade = ""
+        val targetAncestralidade = selectedRules.defaultAncestralidade()
+
+        // Fix: Ensure all loaded skills are registered in the state maps to prevent crashes in rawTotal
+        state.ensureAllPericiasRegistered()
+        state.ensureAllAtributosRegistered()
+
+        // Aplica ancestralidade (agora com stacks limpos, então autoRefund não vai comer pontos)
         state.aplicarAncestralidade(targetAncestralidade, mutableListOf())
 
+        // 4. Itens Obrigatórios e Defaults
         val mandatoryEdgeIds = buildSet {
             addAll(selectedRules.mandatoryAdvantageIds())
             if (state.modoSupers) add(AdvantageIds.SUPERPODERES)
@@ -461,65 +544,7 @@ class CriadorViewModel(
             }
         }
 
-        state.equipamentosComprados.clear()
-
-        state.pontosComplicacaoGastos = 0
-
-        state.cpRecursosStack.clear()
-        state.cpPaStack.clear()
-        state.paFromProgress = 0
-        state.spFromProgress = 0
-        state.pvFromXpOutstanding = 0 // Fix: reset outstanding points
-        state.legendaryAttrReservations = 0
-        state.cpPvStack.clear()
-        state.cpSpStack.clear()
-        state.comprasPpPorEstagio.keys.forEach   { state.comprasPpPorEstagio[it] = 0 }
-        state.comprasAttrPorEstagio.keys.forEach { state.comprasAttrPorEstagio[it] = 0 }
-        state.paCostStackPorAtributo.values.forEach  { it.clear() }
-        state.compCostStackPorPericia.values.forEach { it.clear() }
-        state.spCostStackPorPericia.values.forEach   { it.clear() }
-        state.poderSlotsPorArcano.clear()
-        state.novosPoderesStacksPorArcano.clear()
-        state.attributeAdvancementInProgress = false
-        state.attributeStageForCurrentAdvancement = null
-        state.attributeStacksBeforeAdvancement = null
-        state.attributeUsedReservation = false
-        state.skillAdvancementInProgress = false
-        state.skillsForCurrentAdvancement.clear()
-        state.advantageAdvancementInProgress = false
-        state.advantageForCurrentAdvancement = null
-        state.stageNameForCurrentAdvancement = null
-        state.overrideStageForVantagem = null
-        state.openVantagensAfterGrant = false // Fix: reset UI flag
-        state.arcanoEmCompraViaXpKey = null
-        state.arcanoSnapshotAntesDaCompra = null
-        state.mostrandoPoderesProgresso = false
-        state.mostrandoAtributosProgresso = false
-
-        // ─────────────────────────────────────────────────────────────
-        // RESET COMPLETO DE SUPERS – NÃO VAZAR ENTRE PERSONAGENS
-        // ─────────────────────────────────────────────────────────────
-        state.superInvestments.clear()
-        state.superNivelCampanha = null
-        state.usarSemPontosDePoder = false
-
-        state.superPontosTotais = 0
-        state.superPontosDisponiveis = 0
-        state.superLimite = 0
-        state.superLimitePorPoder = 0
-        state.poderFavoritoId = null
-        state.limiteDePoderDaCampanha = Int.MAX_VALUE
-
-        state.faseSupersAtiva = false
-        state.bonusApararFromPower = 0
-        state.bonusResFromPower = 0
-        state.armorFromPower = 0
-        state.bonusMovimentacaoFromPower = 0
-        state.vantagensDePoder.clear()
-        state.gastosPorPoder.clear()
-        state.naturalArmorFromRace = 0
-        // ─────────────────────────────────────────────────────────────
-
+        // 5. Recursos Iniciais
         val startingResources = selectedRules.startingResources()
         state.dinheiro = startingResources.dinheiro
 
@@ -528,28 +553,6 @@ class CriadorViewModel(
             state.carteiraPathfinder.putAll(startingResources.carteiraPathfinder)
             state.updateTotalPathfinderMoney()
         }
-        state.progresso = 0
-        state.progressosDisponiveis = 0
-        state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
-        state.xpSlots.fill(false)
-        state.frozenAdvantageCount = 0
-        state.advancementHistory.clear()
-        state.emProgresso = false
-        state.modoProgressaoAtivo = false
-        state.mostrandoVantagensProgresso = false
-        state.mostrandoPericiasProgresso = false
-        state.frozenSkillIncrements.clear()
-        resetUiState()
-
-        state.valoresAtributos.forEach { (_, holder) -> holder.intValue = 4 }
-        state.recalcularPontosAtributo(mutableListOf())
-
-        periciasData().forEach { per ->
-            state.baseIncsPorPericia[per] = 0
-            state.spCostStackPorPericia.getValue(per).clear()
-            state.compCostStackPorPericia[per]?.clear()
-        }
-        state.rebuildAllPericiaStacks(mutableListOf())
 
         // Note: Points logic (ADAPTAVEL +1 PV) is now handled correctly by aplicarAncestralidade
         // because we force a transition from "" to targetAncestralidade.

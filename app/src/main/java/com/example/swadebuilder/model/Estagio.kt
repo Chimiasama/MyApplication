@@ -7,11 +7,11 @@ data class Estagio(
 )
 
 val listaDeEstagios = listOf(
-    Estagio("Novato", 0, 3),
-    Estagio("Experiente", 4, 7),
-    Estagio("Veterano", 8, 11),
-    Estagio("Heroico", 12, 15),
-    Estagio("Lendário", 16, Int.MAX_VALUE)
+    Estagio("Novato", 0, 2),
+    Estagio("Experiente", 3, 6),
+    Estagio("Veterano", 7, 10),
+    Estagio("Heroico", 11, 14),
+    Estagio("Lendário", 15, Int.MAX_VALUE)
 )
 
 val nivelParaEstagio = mapOf(
@@ -24,7 +24,7 @@ val nivelParaEstagio = mapOf(
 
 const val TOTAL_PROGRESS_LIMIT = 20
 val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
-    val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
+    val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: -1
     if (idx < listaDeEstagios.lastIndex)
         st.maxProgress - prevMax
     else
