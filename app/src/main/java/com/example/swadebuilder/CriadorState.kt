@@ -3302,14 +3302,14 @@ class CriadorState {
         complicacoesSelecionadas.putAll(ancestryChangeCoordination.complicationsSnapshot.selectedComplications)
 
         // Recalcula pontos de atributo/perícias após o ajuste racial
-        recalcularPontosAtributo(feedbackMessages)
+        recalcularPontosAtributo(feedbackMessages, autoRefundPb = autoRefund)
         if (autoRefund) {
             while (pontosAtributo > 0 && cpPaStack.isNotEmpty()) {
                 devolverPcDeAtributo()
             }
         }
 
-        rebuildAllPericiaStacks(feedbackMessages)
+        rebuildAllPericiaStacks(feedbackMessages, autoRefundPb = autoRefund)
         if (autoRefund) {
             while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
                 devolverPcDePericia()
@@ -3341,7 +3341,7 @@ class CriadorState {
         }
 
         if (pontosVantagem != pvDepois) {
-            rebuildAllPericiaStacks(feedbackMessages)
+            rebuildAllPericiaStacks(feedbackMessages, autoRefundPb = autoRefund)
         }
     }
 
@@ -3576,7 +3576,7 @@ class CriadorState {
         return valueFromStack < atributoMaxRaw(attrKey)
     }
 
-    fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf()) {
+    fun recalcularPontosAtributo(feedbackMessages: MutableList<String> = mutableListOf(), autoRefundPb: Boolean = true) {
 
         // Ensure current values meet the new racial base (e.g. if Sign increased base from d4 to d6)
         listaAtributos.forEach { attrKey ->
@@ -3606,7 +3606,7 @@ class CriadorState {
 
         trimAttributeStacks(feedbackMessages)
 
-        rebuildAllPericiaStacks(feedbackMessages)
+        rebuildAllPericiaStacks(feedbackMessages, autoRefundPb = autoRefundPb)
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -4308,12 +4308,13 @@ class CriadorState {
                 valoresAtributos[attr]!!.intValue = prev
             }
         }
-        recalcularPontosAtributo()
+        recalcularPontosAtributo(autoRefundPb = false)
     }
 
     fun rebuildAllPericiaStacks(
         feedbackMessages: MutableList<String> = mutableListOf(),
-        enforcePoolLimit: Boolean = true
+        enforcePoolLimit: Boolean = true,
+        autoRefundPb: Boolean = true
     ) {
         if (modoProgressaoAtivo) return
 
@@ -4358,7 +4359,7 @@ class CriadorState {
         // Fix: Auto-refund PB (Bonus Points) if we have excess Skill Points and PB was spent.
         // This handles the case where increasing an attribute makes skills cheaper, creating a surplus
         // that should be returned to the PB pool (LIFO logic) instead of staying as unused SP.
-        if (!modoProgressaoAtivo) {
+        if (!modoProgressaoAtivo && autoRefundPb) {
             // Use a loop to refund as many PBs as possible while we have surplus SP
             // Check condition: We have unused SP (pontosPericia > 0) AND we spent PB on skills (cpSpStack not empty)
             // Note: pontosPericia is derived. We need to check it in loop.
@@ -4855,7 +4856,7 @@ class CriadorState {
         }
 
         trimAttributeStacks(feedbackMessages)
-        rebuildAllPericiaStacks(feedbackMessages)
+        rebuildAllPericiaStacks(feedbackMessages, autoRefundPb = false)
         updateEmProgressoFlag()
         syncPoderesSelecionadosFromSlots()
     }
