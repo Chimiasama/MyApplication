@@ -24,8 +24,8 @@ android {
         applicationId = "com.swadebuilder"
         minSdk = 25
         targetSdk = 36
-        versionCode = 17
-        versionName = "2.6"
+        versionCode = 18
+        versionName = "2.7"
 
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -89,7 +89,8 @@ android {
             isShrinkResources = true
             isDebuggable = false
 
-            // ✅ CORREÇÃO: Adiciona símbolos de depuração nativos para o Play Console
+            // ✅ CORREÇÃO: Adiciona símbolos de depuração nativos para o Play Console.
+            // Nota: Se as bibliotecas de terceiros já estiverem "stripped" (sem símbolos), o aviso pode persistir.
             ndk {
                 debugSymbolLevel = "FULL"
             }
