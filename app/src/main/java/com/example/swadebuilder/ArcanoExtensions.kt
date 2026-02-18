@@ -9,11 +9,18 @@ fun String.normAAKey(): String =
 fun Vantagem.toArcanoKey(): String? {
     if (!subtipoArcano.isNullOrBlank()) return subtipoArcano.normAAKey()
 
+    val n = nome.normAAKey()
+
     // Fix for "Poderes Místicos": force MISTICO key even if choice (class) is present
     // to ensure fixed power lookup works correctly in CriadorState.
-    if ("PODERES MISTICOS" in nome.normAAKey()) return "MISTICO"
+    if ("PODERES MISTICOS" in n) return "MISTICO"
 
-    if (!choice.isNullOrBlank()) {
+    // Only use choice if this is actually the generic "Antecedente Arcano" edge.
+    // Other edges like "Arma Predileta" use 'choice' for other purposes (e.g. Skill Name),
+    // and should not return it as an Arcane Key.
+    val isGenericAB = "ANTECEDENTE ARCANO" in n || id == "antecedente_arcano"
+
+    if (isGenericAB && !choice.isNullOrBlank()) {
         val c = choice!!.normAAKey()
         // Map new (Básico) keys to standard keys
         return when {
@@ -26,7 +33,7 @@ fun Vantagem.toArcanoKey(): String? {
             else -> c
         }
     }
-    val n = nome.normAAKey()
+
     return when {
         "(DOM" in n -> "DOM"
         "(MAGIA" in n -> "MAGIA"
