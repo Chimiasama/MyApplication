@@ -164,7 +164,7 @@ object ModifierEngine {
 
             // Resistência (Auto advantage or racial trait)
             // Checks for FRAGIL/ESGUIOS (-1)
-            val hasFragil = state.desvantagensRaciais.any { it.keyify() == "FRAGIL" }
+            val hasFragil = state.desvantagensRaciais.any { it.keyify().contains("FRAGIL") } // Relaxed check
             val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
 
             if (hasFragil) {
@@ -189,12 +189,16 @@ object ModifierEngine {
             sources.forEach { str ->
                 val k = str.keyify()
                 if (k.contains("RESISTENCIA")) {
-                    val match = Regex("""RESISTENCIA\s*\+(\d+)""").find(k)
+                    val match = Regex("""RESISTENCIA\s*(\+|\-)\s*(\d+)""").find(k) // Enhanced regex to capture sign and spaces
                     if (match != null) {
-                        val valInt = match.groupValues[1].toInt()
-                        // Avoid duplicates if caught by hardcoded check above
-                        // (see reasoning in previous revision)
-                        modifiers.add(Modifier("racial_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, valInt))
+                        val sign = match.groupValues[1]
+                        val value = match.groupValues[2].toInt()
+                        val finalValue = if (sign == "-") -value else value
+
+                        // Avoid duplicates if caught by hardcoded check above (e.g. Frágil might say "Resistência -1")
+                        // But Fragil logic above relies on name "FRAGIL". This regex handles explicit "+1" or "-1".
+                        // Aquarianos: "Resistência +1".
+                        modifiers.add(Modifier("racial_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, finalValue))
                     }
                 }
                 if (k.contains("ARMADURA")) {
@@ -356,7 +360,16 @@ object ModifierEngine {
     }
 
     fun sizeDisplay(state: CriadorState): Int {
-        return sizeRawDisplay(state).coerceIn(-4, 20)
+        val raw = sizeRawDisplay(state)
+        // Check if character is Diminuto/Tiny to bypass clamp
+        val isDiminuto = collect(state).any { it.id == "racial_diminuto" }
+
+        // If not Diminuto, clamp minimum visual size to -1
+        return if (!isDiminuto && raw < -1) {
+            -1
+        } else {
+            raw.coerceIn(-4, 20)
+        }
     }
 
     fun sizeForToughness(state: CriadorState): Int {

@@ -890,6 +890,7 @@ class CriadorState {
             ?: return emptyList()
 
         val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")
+        val addedTypes = mutableSetOf<String>()
         val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome }
 
         // Helper to find description for a keyword
@@ -987,31 +988,37 @@ class CriadorState {
                     }
                 }
 
-                weapons.add(
-                    EquipamentoItem(
-                        nome = finalName,
-                        dano = JsonPrimitive(dmgMatch),
-                        pa = if (paMatch > 0) JsonPrimitive(paMatch) else null,
-                        distancia = JsonPrimitive("Toque"),
-                        peso = JsonPrimitive(0),
-                        custo = JsonPrimitive(0)
+                if (addedTypes.add(key.uppercase())) {
+                    weapons.add(
+                        EquipamentoItem(
+                            nome = finalName,
+                            dano = JsonPrimitive(dmgMatch),
+                            pa = if (paMatch > 0) JsonPrimitive(paMatch) else null,
+                            distancia = JsonPrimitive("Toque"),
+                            peso = JsonPrimitive(0),
+                            custo = JsonPrimitive(0)
+                        )
                     )
-                )
+                }
             }
         }
 
-        // Always add "Ataque Natural" (Unarmed) using central logic
-        val (unarmedDmg, unarmedNotes) = calculaAtaqueDesarmado()
-        weapons.add(
-            EquipamentoItem(
-                nome = "Ataque Natural",
-                dano = JsonPrimitive(unarmedDmg),
-                distancia = JsonPrimitive("Toque"),
-                peso = JsonPrimitive(0),
-                custo = JsonPrimitive(0),
-                observacoes = if (unarmedNotes.isNotBlank()) JsonPrimitive(unarmedNotes) else null
+        // Always add "Ataque Natural" (Unarmed) using central logic - Filter if specific natural weapons exist
+        val hasSpecificNaturalWeapons = weapons.any { it.nome.equals("Garras", ignoreCase = true) }
+
+        if (!hasSpecificNaturalWeapons) {
+            val (unarmedDmg, unarmedNotes) = calculaAtaqueDesarmado()
+            weapons.add(
+                EquipamentoItem(
+                    nome = "Ataque Natural",
+                    dano = JsonPrimitive(unarmedDmg),
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0),
+                    observacoes = if (unarmedNotes.isNotBlank()) JsonPrimitive(unarmedNotes) else null
+                )
             )
-        )
+        }
 
         return weapons
     }
@@ -1438,6 +1445,38 @@ class CriadorState {
     fun removerVantagemPorSuper(v: Vantagem) {
         vantagensSelecionadas.remove(v)
         vantagensDePoder.remove(v.id)
+    }
+
+    fun adicionarComplicacao(comp: Complicacao, nivel: String) {
+        if (comp.id.keyify() == "CEGO") {
+            pontosVantagem += 1
+        }
+        complicacoesSelecionadas[comp] = nivel
+    }
+
+    fun removerComplicacao(comp: Complicacao, onFeedback: (String) -> Unit = {}) {
+        val key = comp.id.keyify()
+
+        if (key == "IDOSO") {
+             if (pontosPericia < 5) {
+                 onFeedback("Não é possível remover Idoso pois os pontos de perícia extras já foram gastos. Remova pontos em perícias de Astúcia primeiro.")
+                 return
+             }
+        }
+
+        if (key == "CEGO") {
+            if (pontosVantagem > 0) {
+                pontosVantagem -= 1
+            } else {
+               // Try to remove a purchased advantage to balance
+               val removed = removerUltimaVantagemCompradaComPv()
+               if (!removed) {
+                   onFeedback("Não é possível remover Cego pois o Ponto de Vantagem extra já foi gasto.")
+                   return
+               }
+            }
+        }
+        complicacoesSelecionadas.remove(comp)
     }
 
     fun adicionarVantagemPorSuper(v: Vantagem): Boolean {
@@ -1980,9 +2019,15 @@ class CriadorState {
 
     private fun trimIdiomaSlots(desiredSlots: Int) {
         val desired = desiredSlots.coerceAtLeast(1)
+        // Sort explicitly to remove from end
         while (idiomasExtras.size > desired - 1) {
-            val ultimo = idiomasExtras.maxByOrNull { idiomaSlotIndex(it) ?: 0 } ?: break
-            if (rawTotal(ultimo) > 0 || compIncsPorPericia.getValue(ultimo) > 0) break
+            // Find candidates for removal (extras)
+            val candidates = idiomasExtras.sortedByDescending { idiomaSlotIndex(it) ?: 0 }
+            val ultimo = candidates.firstOrNull() ?: break
+
+            // Safety check: if we somehow have points, stop trimming
+            if (rawTotal(ultimo) > 0 || (compIncsPorPericia[ultimo] ?: 0) > 0) break
+
             idiomasExtras.remove(ultimo)
             baseIncsPorPericia.remove(ultimo)
             compIncsPorPericia.remove(ultimo)
@@ -2202,19 +2247,27 @@ class CriadorState {
 
     fun applyVantagemDinheiro(v: Vantagem) {
         if (usaRiqueza) return
-        dinheiro += when (v.nome.trim().uppercase()) {
-            "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
-            "PODRE DE RICO" -> 1500
+        val nomeKey = v.nome.trim().keyify()
+
+        dinheiro += when {
+            nomeKey == "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
+            nomeKey == "PODRE_DE_RICO" -> {
+                val hasRico = vantagensSelecionadas.any { it.nome.keyify() == "RICO" }
+                if (hasRico) 1000 else 2000
+            }
             else -> 0
         }
     }
 
     fun removeVantagemDinheiro(vant: Vantagem) {
         if (usaRiqueza) return
-        val key = vant.nome.trim().uppercase()
-        val amount = when (key) {
-            "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
-            "PODRE DE RICO" -> 1500
+        val key = vant.nome.trim().keyify()
+        val amount = when {
+            key == "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
+            key == "PODRE_DE_RICO" -> {
+                 val hasRico = vantagensSelecionadas.any { it.nome.keyify() == "RICO" && it != vant }
+                 if (hasRico) 1000 else 2000
+            }
             else -> 0
         }
         if (amount <= 0) return
@@ -3481,6 +3534,12 @@ class CriadorState {
         trimAttributeStacks(feedbackMessages)
 
         rebuildAllPericiaStacks(feedbackMessages)
+
+        // Auto-refund surplus Skill Points (e.g. from PB) if attributes made skills cheaper
+        while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
+             devolverPcDePericia()
+             feedbackMessages.add("Ponto de Perícia (PB) devolvido devido ao aumento de Atributo.")
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -4084,10 +4143,29 @@ class CriadorState {
         }
     }
 
-    fun increasePericiaFromAdvancement(per: Pericia, cost: Int) {
+    fun increasePericiaFromAdvancement(per: Pericia, cost: Int, feedbackMessages: MutableList<String>? = null) {
+        // Safety check for creation mode + Idoso
+        if (!modoProgressaoAtivo) {
+             val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
+             if (hasIdoso && per.atributo != "Astúcia") {
+                 val spentOnSmarts = periciasComIdiomas()
+                     .filter { it.atributo == "Astúcia" }
+                     .sumOf { spCostStackPorPericia[it]?.sum() ?: 0 }
+                 if (spentOnSmarts < 5) {
+                     feedbackMessages?.add("Distribua ao menos 5 pontos em perícias de astúcia antes.")
+                     return
+                 }
+             }
+        }
+
         if (skillAdvancementInProgress) {
             skillsForCurrentAdvancement.add(per.nome)
         }
+
+        // Ensure entry exists before accessing
+        if (!baseIncsPorPericia.containsKey(per)) baseIncsPorPericia[per] = 0
+        if (!spCostStackPorPericia.containsKey(per)) spCostStackPorPericia[per] = mutableStateListOf()
+
         baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
         spCostStackPorPericia.getValue(per).add(cost)
         if (isIdiomaPericia(per)) {
@@ -4106,10 +4184,43 @@ class CriadorState {
             pontosVantagem == 0 &&
             (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
 
+    fun checkIdosoConstraint(pericia: Pericia): Boolean {
+        // Only active if Idoso complication is present
+        val idosoKey = "IDOSO"
+        val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == idosoKey }
+        if (!hasIdoso) return true
+
+        // If trying to reduce a Smarts-based skill
+        if (pericia.atributo == "Astúcia") {
+            // Check if removing this point would violate the 5-point minimum IF we have spent points on non-Smarts skills?
+            // Actually, simply returning true allows reduction. The constraint is checked at completion.
+            return true
+        }
+        return true
+    }
+
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
         // Em campanha supers, também exige ter zerado os Pontos de Super.
         val supersProntos = !modoSupers || (superPontosTotais > 0 && superPontosDisponiveis == 0)
+
+        // Check Arcane Background Powers
+        if (temAntecedenteArcano()) {
+             // Check if powers are selected for each AB
+             val pending = poderSlotsPorArcano.any { (_, slots) -> slots.any { it == null } }
+             if (pending) return false
+        }
+
+        // Check Idoso constraint
+        val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
+        if (hasIdoso) {
+             // "ter gasto ao menos 5 sp em perícias de Astúcia"
+             val spentOnSmarts = periciasComIdiomas()
+                 .filter { it.atributo == "Astúcia" }
+                 .sumOf { spCostStackPorPericia[it]?.sum() ?: 0 }
+
+             if (spentOnSmarts < 5) return false
+        }
 
         return baseCreationComplete() && supersProntos
     }

@@ -371,7 +371,7 @@ fun PericiasContent(
                                         return@IconButton
                                     }
 
-                                    state.increasePericiaFromAdvancement(per, regrasAtuais.cost)
+                                    state.increasePericiaFromAdvancement(per, regrasAtuais.cost, feedbackMessages)
                                     if (isIdioma) {
                                         state.syncIdiomaSlots()
                                     }
@@ -568,7 +568,7 @@ fun PericiasContent(
                                 }
                             }
 
-                            state.increasePericiaFromAdvancement(per, idiomaPendingCost)
+                            state.increasePericiaFromAdvancement(per, idiomaPendingCost, feedbackMessages)
                             if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
                             onUserFeedback()
                         }

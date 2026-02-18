@@ -545,9 +545,10 @@ private fun performRemoval(
     onLogFeedback: (String) -> Unit,
     allComps: List<Complicacao>
 ) {
+    state.removerComplicacao(comp) // Use the new method to handle side effects (e.g. Cego)
+
     when (comp.id) {
         "idoso" -> {
-            state.complicacoesSelecionadas.remove(comp)
             state.idosoBonusSp = 0
             state.syncFromCPRefund(
                 sp = true,
@@ -560,11 +561,9 @@ private fun performRemoval(
             if (pequComp != null) {
                 state.removeYoung(pequComp)
             }
-            state.complicacoesSelecionadas.remove(comp)
         }
 
         "pobreza" -> {
-            state.complicacoesSelecionadas.remove(comp)
             if (state.compendioPathfinderAtivo) {
                 state.dinheiro += 15000
             } else if (state.compendioFantasiaAtivo) {
@@ -576,13 +575,8 @@ private fun performRemoval(
         }
 
         "obeso" -> {
-            state.complicacoesSelecionadas.remove(comp)
             state.obesoBonusSize = 0
             state.obesoMalusMov = 0
-        }
-
-        else -> {
-            state.complicacoesSelecionadas.remove(comp)
         }
     }
     onLogFeedback("Complicação ${comp.name} removida.")
@@ -682,18 +676,19 @@ private fun ComplicacaoItem(
                                 return@TextButton
                             }
                             onUserFeedback()
+
+                            // Use new method
+                            state.adicionarComplicacao(comp, "Menor")
+
                             when (comp.id) {
                                 "jovem" -> {
-                                    state.complicacoesSelecionadas[comp] = "Menor"
                                     state.applyYoungMinor()
                                 }
                                 "obeso" -> {
-                                    state.complicacoesSelecionadas[comp] = "Menor"
                                     state.obesoBonusSize = 1
                                     state.obesoMalusMov = 1
                                 }
                                 "pobreza" -> {
-                                    state.complicacoesSelecionadas[comp] = "Menor"
                                     if(state.compendioPathfinderAtivo){
                                         state.dinheiro -= 15000
                                     } else if (state.compendioFantasiaAtivo) {
@@ -701,9 +696,6 @@ private fun ComplicacaoItem(
                                     } else {
                                         state.dinheiro -= 250
                                     }
-                                }
-                                else -> {
-                                    state.complicacoesSelecionadas[comp] = "Menor"
                                 }
                             }
                             onLogFeedback("Complicação ${comp.name} (Menor) adicionada.")
@@ -734,25 +726,23 @@ private fun ComplicacaoItem(
                                 return@TextButton
                             }
                             onUserFeedback()
+
+                            // Use new method
+                            state.adicionarComplicacao(comp, "Maior")
+
                             when (comp.id) {
                                 "idoso" -> {
-                                    state.complicacoesSelecionadas[comp] = "Maior"
                                     state.idosoBonusSp = 5
                                     state.rebuildAllPericiaStacks()
                                 }
                                 "jovem" -> {
                                     if (peqComp != null) {
-                                        state.complicacoesSelecionadas[comp] = "Maior"
                                         state.applyYoungMajor(peqComp)
                                     }
                                 }
                                 "obeso" -> {
-                                    state.complicacoesSelecionadas[comp] = "Maior"
                                     state.obesoBonusSize = 1
                                     state.obesoMalusMov = 1
-                                }
-                                else -> {
-                                    state.complicacoesSelecionadas[comp] = "Maior"
                                 }
                             }
                             onLogFeedback("Complicação ${comp.name} (Maior) adicionada.")

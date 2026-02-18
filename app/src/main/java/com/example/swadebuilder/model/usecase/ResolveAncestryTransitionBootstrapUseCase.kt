@@ -15,7 +15,8 @@ class ResolveAncestryTransitionBootstrapUseCase(
         val targetAncestryDef: RacialModifier?,
         val currentAutomaticAdvantages: List<String>,
         val pontosVantagemAtuais: Int,
-        val vantagensSelecionadas: List<Vantagem>
+        val vantagensSelecionadas: List<Vantagem>,
+        val meioElfoAgil: Boolean // Pass flag
     )
 
     data class Result(
@@ -30,7 +31,8 @@ class ResolveAncestryTransitionBootstrapUseCase(
                 targetAncestry = params.targetAncestry,
                 previousAncestryDef = params.previousAncestryDef,
                 targetAncestryDef = params.targetAncestryDef,
-                currentAutomaticAdvantages = params.currentAutomaticAdvantages
+                currentAutomaticAdvantages = params.currentAutomaticAdvantages,
+                meioElfoAgil = params.meioElfoAgil
             )
         )
 
