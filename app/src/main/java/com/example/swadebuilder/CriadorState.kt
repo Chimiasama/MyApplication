@@ -3143,7 +3143,8 @@ class CriadorState {
                 originPriorityResolver = { getOriginPriority(it) },
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                 signoAdgSelecionado = signoAdgSelecionado,
-                modoSupers = modoSupers
+                modoSupers = modoSupers,
+                meioElfoAgil = meioElfoAgil
             )
         )
 
@@ -4594,10 +4595,6 @@ class CriadorState {
         spFromProgress = snapshot.recursos.spFromProgress
         legendaryAttrReservations = snapshot.recursos.legendaryAttrReservations
 
-        cpPaStack.apply { clear(); addAll(snapshot.recursos.cpPaStack) }
-        cpSpStack.apply { clear(); repeat(snapshot.recursos.cpSpStack.size) { add(Unit) } }
-        cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvStack.size) { add(Unit) } }
-        cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosStack.size) { add(Unit) } }
         riquezaModifier = snapshot.recursos.riquezaModifier
 
         carteiraPathfinder.clear()
@@ -4617,6 +4614,11 @@ class CriadorState {
         }
 
         aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages, autoRefund = false)
+
+        cpPaStack.apply { clear(); addAll(snapshot.recursos.cpPaStack) }
+        cpSpStack.apply { clear(); repeat(snapshot.recursos.cpSpStack.size) { add(Unit) } }
+        cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvStack.size) { add(Unit) } }
+        cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosStack.size) { add(Unit) } }
 
         paCostStackPorAtributo.forEach { (attr, stack) ->
             stack.clear()

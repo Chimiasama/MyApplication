@@ -27,7 +27,8 @@ class ResolveAncestryTransitionContextUseCaseTest {
                 targetAncestry = "ELFOS",
                 previousAncestryDef = previousDef,
                 targetAncestryDef = null,
-                currentAutomaticAdvantages = listOf("Sorte")
+                currentAutomaticAdvantages = listOf("Sorte"),
+                meioElfoAgil = false
             )
         )
 
@@ -44,7 +45,8 @@ class ResolveAncestryTransitionContextUseCaseTest {
                 targetAncestry = "HUMANOS",
                 previousAncestryDef = null,
                 targetAncestryDef = null,
-                currentAutomaticAdvantages = emptyList()
+                currentAutomaticAdvantages = emptyList(),
+                meioElfoAgil = false
             )
         )
 
@@ -54,7 +56,8 @@ class ResolveAncestryTransitionContextUseCaseTest {
                 targetAncestry = "HUMANOS",
                 previousAncestryDef = null,
                 targetAncestryDef = null,
-                currentAutomaticAdvantages = emptyList()
+                currentAutomaticAdvantages = emptyList(),
+                meioElfoAgil = false
             )
         )
 

@@ -129,7 +129,8 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             originPriorityResolver = { 0 },
             compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
             signoAdgSelecionado = signoAdgSelecionado,
-            modoSupers = false
+            modoSupers = false,
+            meioElfoAgil = false
         )
     }
 }

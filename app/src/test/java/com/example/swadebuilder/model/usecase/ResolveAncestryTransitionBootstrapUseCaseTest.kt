@@ -20,7 +20,8 @@ class ResolveAncestryTransitionBootstrapUseCaseTest {
                 targetAncestryDef = null,
                 currentAutomaticAdvantages = emptyList(),
                 pontosVantagemAtuais = 1,
-                vantagensSelecionadas = emptyList()
+                vantagensSelecionadas = emptyList(),
+                meioElfoAgil = false
             )
         )
 
@@ -49,7 +50,8 @@ class ResolveAncestryTransitionBootstrapUseCaseTest {
                 targetAncestryDef = null,
                 currentAutomaticAdvantages = listOf("Sorte"),
                 pontosVantagemAtuais = 2,
-                vantagensSelecionadas = emptyList()
+                vantagensSelecionadas = emptyList(),
+                meioElfoAgil = false
             )
         )
 
