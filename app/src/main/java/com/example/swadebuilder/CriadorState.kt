@@ -1992,37 +1992,57 @@ class CriadorState {
     }
 
     private fun trimIdiomaSlots(desiredSlots: Int) {
-        val desired = desiredSlots.coerceAtLeast(1)
+        val desired = desiredSlots.coerceAtLeast(1) // Usually 2 (Base + 1 Extra) minimum if we have extras
 
-        // Collect candidates for removal to avoid issues during iteration or partial state updates
-        val toRemove = mutableListOf<Pericia>()
-
-        // Sort by index descending to remove from end
-        val sortedExtras = idiomasExtras.sortedByDescending { idiomaSlotIndex(it) ?: 0 }
-
-        for (per in sortedExtras) {
-            if (idiomasExtras.size - toRemove.size <= desired - 1) break
-
+        // Identifying used vs unused extras
+        val usedExtras = idiomasExtras.filter { per ->
             val total = try { rawTotal(per) } catch (e: Exception) { 0 }
             val compIncs = compIncsPorPericia[per] ?: 0
-
-            if (total > 0 || compIncs > 0) {
-                // If we hit a used slot, we stop trimming (assuming sequential usage is preferred)
-                // or we just skip it? The original logic broke on first used.
-                // "If I remove the initial... crash trying to remove the last".
-                // If we break here, we stop trimming.
-                break
-            }
-            toRemove.add(per)
+            total > 0 || compIncs > 0
         }
 
-        toRemove.forEach { per ->
-            idiomasExtras.remove(per)
-            baseIncsPorPericia.remove(per)
-            compIncsPorPericia.remove(per)
-            compCostStackPorPericia.remove(per)
-            spCostStackPorPericia.remove(per)
-            notasPericia.remove(per.nome)
+        val unusedExtras = idiomasExtras.filter { !usedExtras.contains(it) }
+
+        // We want total extras to match (Used Extras + 1 Empty Slot) ideally,
+        // but at least enough to satisfy 'desiredSlots'.
+        // Wait, desiredSlots usually comes from sync logic as: (Count Used + 1).
+        // If Base is used, desiredSlots might be 2. If Base unused, desiredSlots might be 1.
+        // But 'idiomasExtras' doesn't contain Base.
+        // desiredSlots is TOTAL slots (Base + Extras).
+        // So we need (desiredSlots - 1) extras.
+
+        val neededExtrasCount = (desiredSlots - 1).coerceAtLeast(0)
+        val currentExtrasCount = idiomasExtras.size
+
+        if (currentExtrasCount > neededExtrasCount) {
+            // We have excess slots. We should remove unused ones.
+            val toRemoveCount = currentExtrasCount - neededExtrasCount
+            // Prioritize removing unused extras.
+            // We can remove ANY unused extra.
+            // To be nice, maybe we remove higher indices?
+            // Or maybe strictly the ones that are empty holes?
+            // Since the user wants "the one I cleared to disappear", we should just remove enough unused ones.
+            // If we sort by index descending, we remove the "newest" empty ones first.
+            // But if user cleared #1 and #3 is empty, and we remove #3, #1 stays.
+            // User annoyance: "I cleared #1, why is it still there?"
+            // So we should arguably remove "holes" (lower indices) first?
+            // Let's try removing based on index ASCENDING (remove holes first) to compact the list visually?
+            // No, if I remove #1, #2 and #3 remain. It looks fine: "Idiomas 2", "Idiomas 3".
+            // If I remove #3, #1 remains. "Idiomas 1", "Idiomas 2".
+            // If I cleared #1, I probably want #1 gone.
+            // Let's sort unused by index ASCENDING to remove gaps first.
+
+            val unusedSorted = unusedExtras.sortedBy { idiomaSlotIndex(it) ?: Int.MAX_VALUE }
+            val toRemove = unusedSorted.take(toRemoveCount)
+
+            toRemove.forEach { per ->
+                idiomasExtras.remove(per)
+                baseIncsPorPericia.remove(per)
+                compIncsPorPericia.remove(per)
+                compCostStackPorPericia.remove(per)
+                spCostStackPorPericia.remove(per)
+                notasPericia.remove(per.nome)
+            }
         }
     }
 
@@ -2775,7 +2795,7 @@ class CriadorState {
                     compCostStackPorPericia.values.sumOf { it.sum() }
             val poolWithoutElderly = totalSpPool - 5
             if (usedSp > poolWithoutElderly) {
-                return false to "Pontos de perícia extras já utilizados. Remova perícias antes."
+                return false to "Pontos de perícia extras em Astúcia já utilizados. Devolva para poder remover IDOSO."
             }
         }
 
@@ -2822,24 +2842,12 @@ class CriadorState {
 
         when (comp.id) {
             "cego" -> {
-                // If we granted a point, we take it back.
-                // If points were spent, we might go negative?
-                // pontosVantagem tracks *available* or *spent*?
-                // pontosVantagem is "Available Points".
-                // If user spent it, pointsVantagem might be 0. Decrementing makes it -1.
-                // This is fine, it indicates a deficit.
-                if (pontosVantagem > 0) {
-                    pontosVantagem -= 1
-                } else {
-                    // Try to remove bought edge?
-                    // Usually we just let it go negative or force user to sell edge.
-                    // For now, decrement.
-                    pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
-                    // If 0 and we remove, we should probably warn or remove last edge.
-                    // But simpler: just remove last edge if possible.
-                    if (pontosVantagem == 0) {
-                         removerUltimaVantagemCompradaComPv()
-                    }
+                pontosVantagem -= 1
+                // Se ficar negativo (significando que o ponto extra já foi gasto),
+                // removemos uma vantagem para quitar a dívida e resetamos para 0.
+                if (pontosVantagem < 0) {
+                    removerUltimaVantagemCompradaComPv()
+                    pontosVantagem = 0
                 }
             }
             "idoso" -> {

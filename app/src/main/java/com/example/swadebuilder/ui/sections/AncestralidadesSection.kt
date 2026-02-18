@@ -195,7 +195,8 @@ fun AncestralidadesSection(
         // --- HALF-ELF SPECIAL HANDLING ---
         // Find the "Versatile" template to use as the visible "Half-Elf" item
         val meioElfoTemplate = all.firstOrNull {
-            it.nome.keyify().contains("MEIO_ELFOS") && it.nome.keyify().contains("VERSATIL")
+            val k = it.nome.keyify()
+            k.contains("MEIO_ELFOS") && k.contains("VERSATIL")
         }?.copy(nome = "Meio-Elfos") // Rename to generic "Meio-Elfos"
 
         val filtered = all.filter {
