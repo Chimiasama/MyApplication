@@ -24,7 +24,7 @@ val nivelParaEstagio = mapOf(
 
 const val TOTAL_PROGRESS_LIMIT = 20
 val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
-    val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: 0
+    val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: -1
     if (idx < listaDeEstagios.lastIndex)
         st.maxProgress - prevMax
     else
