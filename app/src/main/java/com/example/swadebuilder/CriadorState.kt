@@ -2245,28 +2245,46 @@ class CriadorState {
         }
     }
 
+    private fun getBaseWealth(): Int {
+        return if (compendioFantasiaAtivo) 300 else 500
+    }
+
     fun applyVantagemDinheiro(v: Vantagem) {
         if (usaRiqueza) return
         val nomeKey = v.nome.trim().keyify()
+        val id = v.id.keyify()
 
-        dinheiro += when {
-            nomeKey == "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
-            nomeKey == "PODRE_DE_RICO" -> {
-                val hasRico = vantagensSelecionadas.any { it.nome.keyify() == "RICO" }
-                if (hasRico) 1000 else 2000
+        val base = getBaseWealth()
+
+        val amount = when {
+            id == "RICO" || nomeKey == "RICO" -> {
+                if (compendioArteDaGuerraAtivo) 2000 else (2 * base)
+            }
+            id == "PODRE_DE_RICO" || nomeKey == "PODRE DE RICO" -> {
+                val hasRico = vantagensSelecionadas.any { it.nome.keyify() == "RICO" || it.id.keyify() == "RICO" }
+                if (hasRico) (2 * base) else (4 * base)
             }
             else -> 0
         }
+        dinheiro += amount
     }
 
     fun removeVantagemDinheiro(vant: Vantagem) {
         if (usaRiqueza) return
         val key = vant.nome.trim().keyify()
+        val id = vant.id.keyify()
+        val base = getBaseWealth()
+
         val amount = when {
-            key == "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
-            key == "PODRE_DE_RICO" -> {
-                 val hasRico = vantagensSelecionadas.any { it.nome.keyify() == "RICO" && it != vant }
-                 if (hasRico) 1000 else 2000
+            id == "RICO" || key == "RICO" -> {
+                if (compendioArteDaGuerraAtivo) 2000 else (2 * base)
+            }
+            id == "PODRE_DE_RICO" || key == "PODRE DE RICO" -> {
+                 val hasRico = vantagensSelecionadas.any {
+                     val ok = it.nome.keyify() == "RICO" || it.id.keyify() == "RICO"
+                     ok && it != vant
+                 }
+                 if (hasRico) (2 * base) else (4 * base)
             }
             else -> 0
         }
