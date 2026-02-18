@@ -3026,9 +3026,6 @@ class CriadorState {
         val minRaw = atributoMinRaw(a)
 
         var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
-        if (a.keyify() == "AGILIDADE" && meioElfoAgil) {
-            extras += 1
-        }
         val baseCap = 12 + extras
 
         val chave = a.keyify()
