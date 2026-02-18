@@ -689,7 +689,7 @@ fun AncestralidadesSection(
     }
 
     if (showHalfElfDialog) {
-        AlertDialog(
+        androidx.compose.material3.AlertDialog(
             onDismissRequest = { showHalfElfDialog = false },
             title = { Text("Meio-Elfos: Herança") },
             text = {
