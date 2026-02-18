@@ -1002,16 +1002,29 @@ class CriadorState {
 
         // Always add "Ataque Natural" (Unarmed) using central logic
         val (unarmedDmg, unarmedNotes) = calculaAtaqueDesarmado()
-        weapons.add(
-            EquipamentoItem(
-                nome = "Ataque Natural",
-                dano = JsonPrimitive(unarmedDmg),
-                distancia = JsonPrimitive("Toque"),
-                peso = JsonPrimitive(0),
-                custo = JsonPrimitive(0),
-                observacoes = if (unarmedNotes.isNotBlank()) JsonPrimitive(unarmedNotes) else null
+
+        // Fix: Avoid duplicate "Claws" if specific Natural Weapons were already added
+        val specificClawsAdded = weapons.any {
+            val n = it.nome.keyify()
+            n.contains("GARRA") || n.contains("GARRAS")
+        }
+
+        // If we have specific claws, and the unarmed note is just "Garra", we skip adding the generic one
+        // to avoid cluttering the summary with duplicates (e.g. "Garras" and "Ataque Natural (Garra)")
+        val skipUnarmed = specificClawsAdded && unarmedNotes.equals("Garra", ignoreCase = true)
+
+        if (!skipUnarmed) {
+            weapons.add(
+                EquipamentoItem(
+                    nome = "Ataque Natural",
+                    dano = JsonPrimitive(unarmedDmg),
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0),
+                    observacoes = if (unarmedNotes.isNotBlank()) JsonPrimitive(unarmedNotes) else null
+                )
             )
-        )
+        }
 
         return weapons
     }
@@ -1980,15 +1993,36 @@ class CriadorState {
 
     private fun trimIdiomaSlots(desiredSlots: Int) {
         val desired = desiredSlots.coerceAtLeast(1)
-        while (idiomasExtras.size > desired - 1) {
-            val ultimo = idiomasExtras.maxByOrNull { idiomaSlotIndex(it) ?: 0 } ?: break
-            if (rawTotal(ultimo) > 0 || compIncsPorPericia.getValue(ultimo) > 0) break
-            idiomasExtras.remove(ultimo)
-            baseIncsPorPericia.remove(ultimo)
-            compIncsPorPericia.remove(ultimo)
-            compCostStackPorPericia.remove(ultimo)
-            spCostStackPorPericia.remove(ultimo)
-            notasPericia.remove(ultimo.nome)
+
+        // Collect candidates for removal to avoid issues during iteration or partial state updates
+        val toRemove = mutableListOf<Pericia>()
+
+        // Sort by index descending to remove from end
+        val sortedExtras = idiomasExtras.sortedByDescending { idiomaSlotIndex(it) ?: 0 }
+
+        for (per in sortedExtras) {
+            if (idiomasExtras.size - toRemove.size <= desired - 1) break
+
+            val total = try { rawTotal(per) } catch (e: Exception) { 0 }
+            val compIncs = compIncsPorPericia[per] ?: 0
+
+            if (total > 0 || compIncs > 0) {
+                // If we hit a used slot, we stop trimming (assuming sequential usage is preferred)
+                // or we just skip it? The original logic broke on first used.
+                // "If I remove the initial... crash trying to remove the last".
+                // If we break here, we stop trimming.
+                break
+            }
+            toRemove.add(per)
+        }
+
+        toRemove.forEach { per ->
+            idiomasExtras.remove(per)
+            baseIncsPorPericia.remove(per)
+            compIncsPorPericia.remove(per)
+            compCostStackPorPericia.remove(per)
+            spCostStackPorPericia.remove(per)
+            notasPericia.remove(per.nome)
         }
     }
 
@@ -2204,7 +2238,7 @@ class CriadorState {
         if (usaRiqueza) return
         dinheiro += when (v.nome.trim().uppercase()) {
             "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
-            "PODRE DE RICO" -> 1500
+            "PODRE DE RICO" -> 1000
             else -> 0
         }
     }
@@ -2214,7 +2248,7 @@ class CriadorState {
         val key = vant.nome.trim().uppercase()
         val amount = when (key) {
             "RICO" -> if (compendioArteDaGuerraAtivo) 2000 else 1000
-            "PODRE DE RICO" -> 1500
+            "PODRE DE RICO" -> 1000
             else -> 0
         }
         if (amount <= 0) return
@@ -2735,6 +2769,16 @@ class CriadorState {
              }
         }
 
+        // Elderly Check (Validation of spent points)
+        if (comp.id == "idoso") {
+            val usedSp = spCostStackPorPericia.values.sumOf { it.sum() } +
+                    compCostStackPorPericia.values.sumOf { it.sum() }
+            val poolWithoutElderly = totalSpPool - 5
+            if (usedSp > poolWithoutElderly) {
+                return false to "Pontos de perícia extras já utilizados. Remova perícias antes."
+            }
+        }
+
         // Points check
         val cost = if (currentType == "Maior") 2 else 1
         if (!modoProgressaoAtivo && pontosComplicacaoGastos > pontosComplicacao - cost) {
@@ -2742,6 +2786,88 @@ class CriadorState {
         }
 
         return true to null
+    }
+
+    fun adicionarComplicacao(comp: Complicacao, tipo: String) {
+        complicacoesSelecionadas[comp] = tipo
+
+        when (comp.id) {
+            "cego" -> {
+                pontosVantagem += 1
+            }
+            "idoso" -> {
+                idosoBonusSp = 5
+                rebuildAllPericiaStacks()
+            }
+            "jovem" -> {
+                if (tipo == "Menor") applyYoungMinor()
+                // Major is handled separately via params usually, but if called here:
+                // We need the "pequeno" reference.
+                // For simplicity, specific logic is kept in UI or specific methods for complex ones.
+            }
+            "obeso" -> {
+                obesoBonusSize = 1
+                obesoMalusMov = 1
+            }
+            "pobreza" -> {
+                val reduction = if(compendioPathfinderAtivo) 15000 else if (compendioFantasiaAtivo) 150 else 250
+                dinheiro = (dinheiro - reduction).coerceAtLeast(0)
+            }
+        }
+    }
+
+    fun removerComplicacao(comp: Complicacao) {
+        val tipo = complicacoesSelecionadas[comp] ?: return
+        complicacoesSelecionadas.remove(comp)
+
+        when (comp.id) {
+            "cego" -> {
+                // If we granted a point, we take it back.
+                // If points were spent, we might go negative?
+                // pontosVantagem tracks *available* or *spent*?
+                // pontosVantagem is "Available Points".
+                // If user spent it, pointsVantagem might be 0. Decrementing makes it -1.
+                // This is fine, it indicates a deficit.
+                if (pontosVantagem > 0) {
+                    pontosVantagem -= 1
+                } else {
+                    // Try to remove bought edge?
+                    // Usually we just let it go negative or force user to sell edge.
+                    // For now, decrement.
+                    pontosVantagem = (pontosVantagem - 1).coerceAtLeast(0)
+                    // If 0 and we remove, we should probably warn or remove last edge.
+                    // But simpler: just remove last edge if possible.
+                    if (pontosVantagem == 0) {
+                         removerUltimaVantagemCompradaComPv()
+                    }
+                }
+            }
+            "idoso" -> {
+                idosoBonusSp = 0
+                // We rely on podeRemoverComplicacao to ensure we don't have deficit.
+                // But we still need to rebuild stacks to clear the bonus base.
+                // The deficit check ensures we fit in the new pool.
+                rebuildAllPericiaStacks()
+            }
+            "jovem" -> {
+                // "Pequeno" removal logic handled in UI?
+                // We need reference to "pequeno" comp object to call removeYoung properly if it was Major.
+                // We can find it in listaComplicacoes.
+                val pequComp = listaComplicacoes.firstOrNull { it.id == "pequeno" }
+                if (pequComp != null) {
+                    removeYoung(pequComp)
+                }
+            }
+            "pobreza" -> {
+                val amount = if (compendioPathfinderAtivo) 15000 else if (compendioFantasiaAtivo) 150 else 250
+                dinheiro += amount
+                checkAndRefundResourcePb()
+            }
+            "obeso" -> {
+                obesoBonusSize = 0
+                obesoMalusMov = 0
+            }
+        }
     }
 
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
@@ -4111,7 +4237,26 @@ class CriadorState {
         // Em campanha supers, também exige ter zerado os Pontos de Super.
         val supersProntos = !modoSupers || (superPontosTotais > 0 && superPontosDisponiveis == 0)
 
+        // Validação de Antecedente Arcano: Exige escolha de poderes se aplicável
+        if (temAntecedenteArcano() && !powersChosenValid()) return false
+
         return baseCreationComplete() && supersProntos
+    }
+
+    private fun powersChosenValid(): Boolean {
+        val abKeys = vantagensSelecionadas.mapNotNull { it.toArcanoKey()?.normAAKey() }.distinct().toMutableSet()
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista") {
+            abKeys.add("ELEMENTALISTA")
+        }
+
+        for (key in abKeys) {
+            val req = getSlotsCountForArcano(key)
+            if (req > 0) {
+                val filled = poderSlotsPorArcano[key]?.count { it != null } ?: 0
+                if (filled < req) return false
+            }
+        }
+        return true
     }
 
     val criacaoBasicaCongelada: Boolean
@@ -4209,6 +4354,27 @@ class CriadorState {
         }
 
         feedbackMessages.addAll(result.feedbackMessages)
+
+        // Fix: Auto-refund PB (Bonus Points) if we have excess Skill Points and PB was spent.
+        // This handles the case where increasing an attribute makes skills cheaper, creating a surplus
+        // that should be returned to the PB pool (LIFO logic) instead of staying as unused SP.
+        if (!modoProgressaoAtivo) {
+            // Use a loop to refund as many PBs as possible while we have surplus SP
+            // Check condition: We have unused SP (pontosPericia > 0) AND we spent PB on skills (cpSpStack not empty)
+            // Note: pontosPericia is derived. We need to check it in loop.
+            // But deleting from cpSpStack changes totalSpPool, thus reducing pontosPericia.
+            // So we can do it as long as removing one unit keeps points >= 0?
+            // "pontosPericia" is the CURRENT surplus.
+            // If surplus is 1, and we spent 1 PB (worth 1 SP usually), we can refund.
+            // Refund logic: removes 1 unit from stack.
+            // This reduces totalSpPool by 1.
+            // So pontosPericia reduces by 1.
+
+            while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
+                devolverPcDePericia()
+                // Loop condition re-evaluates derived state 'pontosPericia'
+            }
+        }
     }
 
     fun toSnapshot(): PersonagemSnapshot {

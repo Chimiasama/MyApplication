@@ -164,7 +164,9 @@ object ModifierEngine {
 
             // Resistência (Auto advantage or racial trait)
             // Checks for FRAGIL/ESGUIOS (-1)
-            val hasFragil = state.desvantagensRaciais.any { it.keyify() == "FRAGIL" }
+            // Fix: Check abilities list for "Frágil" as well, since it might not be in disadvantages
+            val hasFragil = state.desvantagensRaciais.any { it.keyify() == "FRAGIL" } ||
+                    anc.habilidades.any { it.nome.keyify() == "FRAGIL" }
             val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
 
             if (hasFragil) {
@@ -175,7 +177,9 @@ object ModifierEngine {
             }
 
             // Checks for RESISTENCIA/FEROCIDADE (+1)
-            val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }
+            // Fix: Check abilities list for "Resistência" (Aquarianos)
+            val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" } ||
+                    anc.habilidades.any { it.nome.keyify() == "RESISTENCIA" }
             val hasFerocidade = anc.habilidades.any { it.nome.contains("Ferocidade", ignoreCase = true) }
 
             if (hasResistencia) {
@@ -188,13 +192,26 @@ object ModifierEngine {
             // Generic Parsing
             sources.forEach { str ->
                 val k = str.keyify()
+                // Avoid double counting named abilities processed above
+                if (str.keyify() == "RESISTENCIA" || str.keyify() == "FRAGIL") return@forEach
+
                 if (k.contains("RESISTENCIA")) {
-                    val match = Regex("""RESISTENCIA\s*\+(\d+)""").find(k)
-                    if (match != null) {
-                        val valInt = match.groupValues[1].toInt()
-                        // Avoid duplicates if caught by hardcoded check above
-                        // (see reasoning in previous revision)
+                    val matchPlus = Regex("""RESISTENCIA\s*\+(\d+)""").find(k)
+                    val matchMinus = Regex("""RESISTENCIA\s*\-(\d+)""").find(k)
+
+                    if (matchPlus != null) {
+                        val valInt = matchPlus.groupValues[1].toInt()
                         modifiers.add(Modifier("racial_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, valInt))
+                    } else if (matchMinus != null) {
+                        val valInt = matchMinus.groupValues[1].toInt()
+                        modifiers.add(Modifier("racial_res_generic_neg", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, -valInt))
+                    } else {
+                        // Attempt to parse phrases like "Adicione +1 a sua Resistência"
+                        val matchFree = Regex("""\+(\d+).*RESISTENCIA""").find(k)
+                        if (matchFree != null) {
+                            val valInt = matchFree.groupValues[1].toInt()
+                            modifiers.add(Modifier("racial_res_generic_free", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, valInt))
+                        }
                     }
                 }
                 if (k.contains("ARMADURA")) {
@@ -356,7 +373,43 @@ object ModifierEngine {
     }
 
     fun sizeDisplay(state: CriadorState): Int {
-        return sizeRawDisplay(state).coerceIn(-4, 20)
+        val total = sizeRawDisplay(state)
+
+        // Fix: If race is "Small" (Size -1) and takes "Small" Hindrance (-1), total is -2.
+        // But visual size limit for Small races is -1 unless they are effectively "Diminuto" (Tiny).
+        // We approximate "Diminuto" as a race that STARTS with size <= -2 or has "DIMINUTO" trait.
+        // If race starts with Size -1 (e.g. Halfling) and ends up -2, we cap at -1.
+
+        val ancestralName = state.ancestralidade
+        val ancestral = state.listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralName.keyify() }
+
+        // Determine racial base size
+        var racialSize = 0
+        ancestral?.let { anc ->
+            val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val sizeSource = sources.firstOrNull {
+                it.contains("TAMANHO", ignoreCase = true) && !it.keyify().startsWith("DIMINUTO")
+            }
+            if (sizeSource != null) {
+                val valStr = sizeSource.substringAfter("TAMANHO", "").ifBlank { sizeSource.substringAfter("Tamanho", "") }
+                racialSize = valStr.trim().toIntOrNull() ?: 0
+            }
+
+            // Check Diminuto explicitly
+            val diminutoSource = sources.firstOrNull { it.keyify().startsWith("DIMINUTO") }
+            if (diminutoSource != null) {
+                // Diminuto races (like Pixies) usually start at -2 or lower
+                // If found, we assume they are naturally tiny, so we don't clamp at -1.
+                return total.coerceIn(-4, 20)
+            }
+        }
+
+        // Logic: If I am NOT naturally Tiny (Size <= -2), I cannot go below -1.
+        if (racialSize > -2) {
+            if (total < -1) return -1
+        }
+
+        return total.coerceIn(-4, 20)
     }
 
     fun sizeForToughness(state: CriadorState): Int {

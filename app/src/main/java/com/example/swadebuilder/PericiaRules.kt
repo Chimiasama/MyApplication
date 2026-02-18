@@ -66,18 +66,14 @@ fun CriadorState.calcularPericiaRules(
     }
 
     val astuciaSpent = spCostStackPorPericia
-        .filterKeys { p -> p.atributo == RuleConstants.ATRIBUTO_ASTUCIA }
+        .filterKeys { p -> p.atributo.keyify() == RuleConstants.ATRIBUTO_ASTUCIA.keyify() }
         .values
         .sumOf { costs -> costs.sum() }
 
     val canIncrease = !locked &&
         pontosPericia >= costNormal &&
-        nextRaw <= capRaw &&
-        (if (idosoActive && astuciaSpent < 5) {
-            pericia.atributo == RuleConstants.ATRIBUTO_ASTUCIA
-        } else {
-            true
-        })
+        nextRaw <= capRaw
+        // Elderly check moved to UI to provide specific feedback
 
     return PericiaRuleSnapshot(
         attrKey = attrKey,

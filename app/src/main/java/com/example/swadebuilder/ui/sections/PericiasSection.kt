@@ -346,6 +346,18 @@ fun PericiasContent(
                                     // Check rule again inside click
                                     val regrasAtuais = state.calcularPericiaRules(per, idosoActive, locked)
 
+                                    if (idosoActive) {
+                                        val astuciaSpent = state.spCostStackPorPericia
+                                            .filterKeys { p -> p.atributo.keyify() == "ASTUCIA" }
+                                            .values.sumOf { it.sum() }
+
+                                        if (astuciaSpent < 5 && per.atributo.keyify() != "ASTUCIA") {
+                                            feedbackMessages.add("Distribua ao menos 5 pontos em perícias de Astúcia antes.")
+                                            onUserFeedback()
+                                            return@IconButton
+                                        }
+                                    }
+
                                     // If standard checks fail, verify BP override
                                     if (!regrasAtuais.canIncrease) {
                                         val cost = regrasAtuais.cost

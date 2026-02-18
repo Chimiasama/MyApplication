@@ -192,9 +192,20 @@ fun AncestralidadesSection(
             setOf("BASICO")
         }
 
+        // --- HALF-ELF SPECIAL HANDLING ---
+        // Find the "Versatile" template to use as the visible "Half-Elf" item
+        val meioElfoTemplate = all.firstOrNull {
+            it.nome.keyify().contains("MEIO_ELFOS") && it.nome.keyify().contains("VERSATIL")
+        }?.copy(nome = "Meio-Elfos") // Rename to generic "Meio-Elfos"
+
         val filtered = all.filter {
             val origin = it.origem?.uppercase() ?: "BASICO"
             val key = it.nome.keyify()
+
+            // Filter out specific Half-Elf variants from the main list
+            if (key.contains("MEIO_ELFOS") && (key.contains("VERSATIL") || key.contains("AGIL"))) {
+                return@filter false
+            }
 
             // Cidade do Sol a Vapor (jogadores): Humanos, Demônios e Meio-Demônios.
             if (compendioCidadeSolVaporAtivo && origin == "CIDADE_SOL_VAPOR") {
@@ -219,8 +230,15 @@ fun AncestralidadesSection(
             origin in allowedOrigins
         }
 
+        // Add the synthetic Half-Elf item if applicable
+        val listToProcess = if (meioElfoTemplate != null && !compendioPathfinderAtivo) {
+            filtered + meioElfoTemplate
+        } else {
+            filtered
+        }
+
         // Deduplicate by Name first, prioritizing Settings over Basic
-        val prioritized = filtered.groupBy { it.nome.keyify() }
+        val prioritized = listToProcess.groupBy { it.nome.keyify() }
             .map { (_, duplicates) ->
                 if (duplicates.size == 1) return@map duplicates.first()
 
@@ -265,7 +283,13 @@ fun AncestralidadesSection(
                 }
                 val aliasKeys = group
                     .map { adjustName(it.nome).uppercase().semAcentos() }
-                    .toSet()
+                    .toMutableSet()
+
+                // Add aliases for the synthetic Half-Elf item to match its variants
+                if (representative.nome == "Meio-Elfos") {
+                    aliasKeys.add("MEIO_ELFOS_VERSATIL")
+                    aliasKeys.add("MEIO_ELFOS_AGIL")
+                }
 
                 val habilidadesLite = representative.habilidades.map {
                     RacialAbilityLite(it.nome, it.descricao)
@@ -290,6 +314,7 @@ fun AncestralidadesSection(
     }
 
     val selectedKey = rememberSaveable { mutableStateOf("") }
+    var showHalfElfDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(ancestralidadesState.value, currentAncestralidade) {
         val available = ancestralidadesState.value
@@ -387,8 +412,12 @@ fun AncestralidadesSection(
                             .clickable(enabled = !supersLocked) {
                                 if (supersLocked) return@clickable
                                 onUserFeedback()
-                                selectedKey.value = itemKey
-                                onSelectAncestralidade(item.nome)
+                                if (item.nome == "Meio-Elfos" && item.origens.contains("BASICO")) {
+                                    showHalfElfDialog = true
+                                } else {
+                                    selectedKey.value = itemKey
+                                    onSelectAncestralidade(item.nome)
+                                }
                             },
                         colors = CardDefaults.cardColors(
                             containerColor = if (isSelected) {
@@ -657,6 +686,43 @@ fun AncestralidadesSection(
                 }
             }
         }
+    }
+
+    if (showHalfElfDialog) {
+        AlertDialog(
+            onDismissRequest = { showHalfElfDialog = false },
+            title = { Text("Meio-Elfos: Herança") },
+            text = {
+                Column {
+                    Text("Escolha a herança predominante:")
+                    Spacer(Modifier.height(16.dp))
+                    TextButton(
+                        onClick = {
+                            onSelectAncestralidade("MEIO-ELFOS (Versátil)")
+                            showHalfElfDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Versátil (Vantagem Grátis)")
+                    }
+                    TextButton(
+                        onClick = {
+                            onSelectAncestralidade("MEIO-ELFOS (Ágil)")
+                            showHalfElfDialog = false
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Ágil (Agilidade d6)")
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showHalfElfDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }
 

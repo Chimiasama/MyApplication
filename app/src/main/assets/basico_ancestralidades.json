@@ -133,10 +133,39 @@
     ]
   },
   {
-    "nome": "MEIO-ELFOS",
+    "nome": "MEIO-ELFOS (Versátil)",
     "origem": "BASICO",
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
     "atributos": {},
+    "pericias": {},
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ],
+    "desvantagens": [
+      "FORASTEIRO (Menor)"
+    ],
+    "habilidades": [
+      {
+        "nome": "Forasteiro (Menor)",
+        "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria."
+      },
+      {
+        "nome": "Herança (Versátil)",
+        "descricao": "Por sua natureza adaptável herdada dos humanos, começam com uma Vantagem em Estágio Novato gratuita de sua escolha."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
+      }
+    ]
+  },
+  {
+    "nome": "MEIO-ELFOS (Ágil)",
+    "origem": "BASICO",
+    "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
+    "atributos": {
+      "Agilidade": 2
+    },
     "pericias": {},
     "vantagensGratis": [],
     "desvantagens": [
@@ -148,8 +177,8 @@
         "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria."
       },
       {
-        "nome": "Herança",
-        "descricao": "Possuem a graça de parentes élficos ou a adaptabilidade por sua parte humana. Podem começar com uma Vantagem em Estágio Novato gratuita de sua escolha ou um d6 em Agilidade em vez de um d4 (o que também aumenta sua Agilidade máxima para d12+1)."
+        "nome": "Herança (Ágil)",
+        "descricao": "Herdaram a graça élfica. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1."
       },
       {
         "nome": "Visão no Escuro",
@@ -182,7 +211,9 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
+    "vantagensGratis": [
+      "SORTE"
+    ],
     "desvantagens": [],
     "habilidades": [
       {
@@ -192,10 +223,6 @@
       {
         "nome": "Movimentação Reduzida",
         "descricao": "Reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo."
-      },
-      {
-        "nome": "Sorte",
-        "descricao": "Sacam um Bene adicional por sessão de jogo."
       },
       {
         "nome": "Tamanho -1",
@@ -271,10 +298,6 @@
       {
         "nome": "Mordida",
         "descricao": "As presas de personagens são Armas Naturais (pág. 114) e causam Força + d4 de dano."
-      },
-      {
-        "nome": "Sentidos Aguçados",
-        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão."
       }
     ]
   },
