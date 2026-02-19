@@ -55,7 +55,11 @@ class RebuildSkillStacksUseCase {
                 var sum = 0
 
                 while (curr < tgt) {
-                    val next = if (curr == 0) 4 else curr + 2
+                    val next = when {
+                        curr == 0 -> 4
+                        curr < 12 -> curr + 2
+                        else -> curr + 1
+                    }
 
                     val stepCost = if (next <= attrValue) 1 else 2
 
@@ -73,7 +77,11 @@ class RebuildSkillStacksUseCase {
             val originalTarget = target
 
             while (input.enforcePoolLimit && cumulativeCost + cost > pool) {
-                target = (target - 2).coerceAtLeast(minRaw)
+                target = if (target > 12) {
+                    target - 1
+                } else {
+                    target - 2
+                }.coerceAtLeast(minRaw)
                 cost = costFor(target)
 
                 // Safety break if we can't reduce further (target == minRaw)
@@ -92,7 +100,11 @@ class RebuildSkillStacksUseCase {
             var freeSteps = initialFreeSteps
 
             while (currRaw < target) {
-                val next = if (currRaw == 0) 4 else currRaw + 2
+                val next = when {
+                    currRaw == 0 -> 4
+                    currRaw < 12 -> currRaw + 2
+                    else -> currRaw + 1
+                }
 
                 val stepCost = if (next <= attrValue) 1 else 2
 
