@@ -74,6 +74,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.toMeuPersonagem

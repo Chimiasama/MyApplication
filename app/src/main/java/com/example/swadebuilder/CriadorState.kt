@@ -3133,7 +3133,7 @@ class CriadorState {
         if (!compendioFantasiaAtivo) return false
         if (!ancestralidade.keyify().contains("HUMANO")) return false
         val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
-        return ancDef.origens.any { it == "FANTASIA" }
+        return canonicalOriginKey(ancDef.origem) == "FANTASIA"
     }
 
     fun atributoMinRaw(a: String): Int =
