@@ -2931,11 +2931,11 @@ class CriadorState {
     }
 
     fun decreasePericia(per: Pericia) {
-        val spStack = spCostStackPorPericia.getValue(per)
+        val spStack = spCostStackPorPericia[per] ?: return
         val idx = spStack.indexOfLast { it > 0 }
         if (idx >= 0) {
             spStack.removeAt(idx)
-            val newIncs = baseIncsPorPericia.getValue(per) - 1
+            val newIncs = (baseIncsPorPericia[per] ?: 0) - 1
             baseIncsPorPericia[per] = newIncs
 
             if (newIncs == 0) {
@@ -3103,8 +3103,8 @@ class CriadorState {
 
     fun rawTotal(per: Pericia): Int {
         val startRaw     = periciaStartRaw(ancestralidade, per)
-        val normalIncs   = baseIncsPorPericia.getValue(per)
-        val complicsIncs = compIncsPorPericia.getValue(per)
+        val normalIncs   = baseIncsPorPericia[per] ?: 0
+        val complicsIncs = compIncsPorPericia[per] ?: 0
         val totalIncs    = normalIncs + complicsIncs
 
         if (startRaw == 0 && totalIncs == 0) return 0
