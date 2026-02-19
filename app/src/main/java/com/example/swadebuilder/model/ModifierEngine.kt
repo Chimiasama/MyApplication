@@ -67,10 +67,11 @@ object ModifierEngine {
 
         // 2. Ancestralidade
         val ancestralName = state.ancestralidade
-        val ancestral = state.listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralName.keyify() }
+        val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
             val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val abilityDescriptions = anc.habilidades.map { it.descricao }
 
             // Size from Ancestry (Tamanho X)
             // Fix: Exclude "DIMINUTO" entries to avoid double-counting if they contain "Tamanho" in text (e.g., "Diminuto (Tamanho -3)")
@@ -78,14 +79,31 @@ object ModifierEngine {
                 it.contains("TAMANHO", ignoreCase = true) && !it.keyify().startsWith("DIMINUTO")
             }
 
+            val racialSizeFromText = abilityDescriptions
+                .firstNotNullOfOrNull { desc ->
+                    val key = desc.keyify()
+                    val fromSize = Regex("""TAMANHO\s*([\+\-]\s*\d+)""").find(key)
+                        ?.groupValues
+                        ?.getOrNull(1)
+                        ?.replace(" ", "")
+                        ?.toIntOrNull()
+                    if (fromSize != null) return@firstNotNullOfOrNull fromSize
+
+                    if (key.contains("REDUZINDO SEU TAMANHO") && key.contains("EM 1")) return@firstNotNullOfOrNull -1
+                    if (key.contains("ADICIONE") && key.contains("A SUA RESISTENCIA") && key.contains("TAMANHO +1")) return@firstNotNullOfOrNull 1
+                    null
+                }
+
             val racialSize = if (sizeSource != null) {
                 sizeSource.substringAfter("TAMANHO", "") // Try uppercase first
                     .ifBlank { sizeSource.substringAfter("Tamanho", "") } // Try title case
                     .trim()
                     .toIntOrNull()
                     ?: 0
+            } else if (sources.any { it.keyify() == "PEQUENOS" || it.keyify() == "PEQUENO" }) {
+                -1
             } else {
-                0
+                racialSizeFromText ?: 0
             }
 
             if (racialSize != 0) {
@@ -164,7 +182,8 @@ object ModifierEngine {
 
             // Resistência (Auto advantage or racial trait)
             // Checks for FRAGIL/ESGUIOS (-1)
-            val hasFragil = state.desvantagensRaciais.any { it.keyify().contains("FRAGIL") } // Relaxed check
+            val hasFragil = state.desvantagensRaciais.any { it.keyify().contains("FRAGIL") } ||
+                sources.any { it.keyify() == "FRAGIL" }
             val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
 
             if (hasFragil) {
@@ -175,7 +194,9 @@ object ModifierEngine {
             }
 
             // Checks for RESISTENCIA/FEROCIDADE (+1)
-            val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" }
+            // NOTE: exact token "RESISTENCIA" to avoid matching "RESISTENCIA AMBIENTAL"
+            val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" } ||
+                sources.any { it.keyify() == "RESISTENCIA" }
             val hasFerocidade = anc.habilidades.any { it.nome.contains("Ferocidade", ignoreCase = true) }
 
             if (hasResistencia) {

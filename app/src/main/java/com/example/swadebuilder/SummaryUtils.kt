@@ -14,6 +14,27 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
 import kotlin.math.max
 
+fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
+    val base = (ancestralidadeNomeBase ?: personagem.ancestralidade).titleCase()
+
+    val sufixo = when {
+        base.keyify().contains("HUMANO") && !personagem.signoAdgSelecionado.isNullOrBlank() -> {
+            val sign = personagem.signoAdgSelecionado
+            if (sign.equals("Nenhum", ignoreCase = true)) "Humano Padrão" else "Signo do $sign"
+        }
+        base.keyify().contains("DESCENDENTE ELEMENTAL") && !personagem.descendenteElementalSelecionado.isNullOrBlank() -> {
+            personagem.descendenteElementalSelecionado
+        }
+        base.keyify().contains("HUMANO") && !personagem.pacoteCulturalFantasiaSelecionado.isNullOrBlank() -> {
+            val pack = personagem.pacoteCulturalFantasiaSelecionado
+            if (pack.equals("Humano padrão", ignoreCase = true)) null else pack
+        }
+        else -> null
+    }
+
+    return if (sufixo.isNullOrBlank()) base else "$base ($sufixo)"
+}
+
 // =================================================================================================
 // SHARED SUMMARY BUILDER (Used by ResumoSection.kt)
 // =================================================================================================
@@ -169,7 +190,8 @@ fun buildSummaryLines(
 
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
-    lines += "Ancestralidade: $ancestralidadeNome$monstroNome"
+    val ancestralidadeDisplay = buildAncestralidadeDisplay(personagem, ancestralidadeNome)
+    lines += "$ancestralidadeDisplay$monstroNome"
     if (personagem.coracaoCrystalSelecionado != null) {
         lines += "Coração de Cristal: ${personagem.coracaoCrystalSelecionado.nome}"
     }
@@ -364,7 +386,25 @@ fun buildSummaryLines(
             }
         }
     }
-    val habilidadesRaciais = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val habilidadesRaciaisBase = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
+        val elem = personagem.descendenteElementalSelecionado?.keyify()
+        habilidadesRaciaisBase
+            .map { it.substringBefore("(").trim() }
+            .filter {
+                val key = it.keyify()
+                when {
+                    key == "AQUATICO" -> elem == "AGUA"
+                    key == "AR INTERNO" -> elem == "AR"
+                    key == "RAPIDO" -> elem == "FOGO"
+                    key == "SOLIDO COMO ROCHA" -> elem == "TERRA"
+                    key == "RESISTENCIA AMBIENTAL" || key == "FORASTEIRO" -> true
+                    else -> true
+                }
+            }
+    } else {
+        habilidadesRaciaisBase
+    }
     // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
     val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
         .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }

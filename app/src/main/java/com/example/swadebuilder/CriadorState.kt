@@ -227,6 +227,7 @@ class CriadorState {
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
+    var pacoteCulturalFantasiaSelecionado by mutableStateOf("Humano padrão")
     var protagonistaRollTecnicas by mutableStateOf<Int?>(null)
     var protagonistaRollPericia by mutableStateOf<Int?>(null)
     var protagonistaRollVantagem by mutableStateOf<Int?>(null)
@@ -303,9 +304,50 @@ class CriadorState {
             resolveActiveAncestryCandidatesUseCase.isOriginActive(item.origem, ancestryFlags)
         }
 
-        if (activeCandidates.isEmpty()) return candidates.firstOrNull()
+        val selected = if (activeCandidates.isEmpty()) {
+            candidates.firstOrNull()
+        } else {
+            activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
+        } ?: return null
 
-        return activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
+        return withInferredAncestryMechanics(withBaselineCounterpartMechanics(selected, key))
+    }
+
+    private fun withBaselineCounterpartMechanics(
+        selected: RacialModifier,
+        ancestryKey: String
+    ): RacialModifier {
+        val selectedOrigin = canonicalOriginKey(selected.origem)
+        val shouldNormalize = selectedOrigin in setOf("FANTASIA", "HORROR", "SCIFI", "SCI_FI", "FC", "SUPER")
+        if (!shouldNormalize) return selected
+
+        val baseline = listaAncestralidadesJson.firstOrNull {
+            canonicalOriginKey(it.origem) == "BASICO" && it.nome.keyify() == ancestryKey
+        } ?: return selected
+
+        return selected.copy(
+            atributos = baseline.atributos,
+            pericias = baseline.pericias,
+            vantagensGratis = baseline.vantagensGratis,
+            desvantagens = baseline.desvantagens,
+            habilidades = baseline.habilidades
+        )
+    }
+
+    private fun withInferredAncestryMechanics(selected: RacialModifier): RacialModifier {
+        val hasFreeNoviceEdgeByText = selected.habilidades.any { hab ->
+            val text = "${hab.nome} ${hab.descricao}".keyify()
+            text.contains("VANTAGEM") &&
+                (text.contains("ESTAGIO NOVATO") || text.contains("NIVEL NOVATO")) &&
+                text.contains("A SUA ESCOLHA")
+        }
+
+        if (!hasFreeNoviceEdgeByText) return selected
+
+        val hasAdaptavel = selected.vantagensGratis.any { it.keyify() == "ADAPTAVEL" }
+        if (hasAdaptavel) return selected
+
+        return selected.copy(vantagensGratis = selected.vantagensGratis + "ADAPTÁVEL")
     }
 
     fun isAttributeRankLimitReached(): Boolean {
@@ -326,6 +368,7 @@ class CriadorState {
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
+    val habilidadesRaciaisDoElemento = mutableStateListOf<String>()
     val vantagensAutomaticasDoPotencialFisico = mutableStateListOf<String>()
 
     val fixedPowersByArcano = mapOf(
@@ -381,6 +424,20 @@ class CriadorState {
         val SIGNOS_ADG = listOf(
             "Nenhum", "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
             "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
+        )
+        val PACOTES_CULTURAIS_FANTASIA = listOf(
+            "Humano padrão",
+            "Nômades do Deserto",
+            "Povo da Montanha",
+            "Povo do Mar",
+            "Senhores dos Cavalos"
+        )
+        val PACOTES_CULTURAIS_FANTASIA_DESC = mapOf(
+            "Humano padrão" to "Mantém o pacote padrão de humanos de Fantasia: Adaptável (uma Vantagem Novato à escolha).",
+            "Nômades do Deserto" to "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).",
+            "Povo da Montanha" to "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).",
+            "Povo do Mar" to "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.",
+            "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Cruel e Analfabeto, a critério do Mestre."
         )
         val SIGNOS_ADG_DESC = mapOf(
             "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e 1 PV).",
@@ -788,7 +845,7 @@ class CriadorState {
         equipamentosComprados.sumOf { (it.mods_slots as? JsonPrimitive)?.content?.toIntOrNull() ?: 0 }
 
     fun isPersonagemRobotico(): Boolean {
-        val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val ancestral = getAncestralidadeDef(ancestralidade)
         val nomeKey = (ancestral?.nome ?: ancestralidade).keyify()
         val robotByName = listOf("ANDROID", "CONSTRUTO", "CONSTRUCTO").any { nomeKey.contains(it) }
         val robotBySkill = ancestral?.habilidades?.any { it.nome.keyify() == "MODIFICACOES" } == true
@@ -854,7 +911,7 @@ class CriadorState {
         }
 
         // Check Claws (Garra)
-        val ancestry = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val ancestry = getAncestralidadeDef(ancestralidade)
         val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true ||
                 ancestry?.vantagensGratis?.any { it.keyify().contains("GARRA") } == true
 
@@ -886,7 +943,7 @@ class CriadorState {
 
     fun extrairArmasNaturais(): List<EquipamentoItem> {
         val weapons = mutableListOf<EquipamentoItem>()
-        val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
             ?: return emptyList()
 
         val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")
@@ -1710,6 +1767,23 @@ class CriadorState {
                     }
                 }
                 // Macaco: Unskilled d4+1 (Not represented in start raw)
+            }
+        }
+
+        // Fantasia - Pacotes Culturais (only for Fantasy Humans)
+        if (isHumanoFantasiaSelecionado()) {
+            when (pacoteCulturalFantasiaSelecionado) {
+                "Nômades do Deserto" -> {
+                    if (perKey == "SOBREVIVENCIA") modifiedBase = maxOf(modifiedBase, 6)
+                }
+                "Povo do Mar" -> {
+                    if (perKey == "ATLETISMO" || perKey == "NAVEGAR") {
+                        modifiedBase = maxOf(modifiedBase, 6)
+                    }
+                }
+                "Senhores dos Cavalos" -> {
+                    if (perKey == "CAVALGAR") modifiedBase = maxOf(modifiedBase, 6)
+                }
             }
         }
 
@@ -2688,7 +2762,8 @@ class CriadorState {
 
     val pontosComplicacao: Int
         get() {
-            val autoKeys = desvantagensAutomaticas
+            val ancestryAuto = getAncestralidadeDef(ancestralidade)?.desvantagens.orEmpty()
+            val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
                 .map { it.substringBefore("(").trim().keyify() }
                 .toSet()
 
@@ -2792,7 +2867,10 @@ class CriadorState {
         if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
 
         // Automatic checks
-        val autoKeys = desvantagensAutomaticas.map { it.substringBefore("(").trim().keyify() }.toSet()
+        val ancestryAuto = getAncestralidadeDef(ancestralidade)?.desvantagens.orEmpty()
+        val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
+            .map { it.substringBefore("(").trim().keyify() }
+            .toSet()
         if (comp.id.keyify() in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."
 
         // Young check
@@ -2816,6 +2894,15 @@ class CriadorState {
     }
 
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
+        val keyId = vantagem.id.keyify()
+        val keyNome = vantagem.nome.keyify()
+        val automaticIds = vantagensAutomaticas.map { it.keyify() }.toSet()
+        val racialKeys = vantagensRaciais.map { it.keyify() }.toSet()
+
+        if (keyId in automaticIds || keyId in racialKeys || keyNome in racialKeys) {
+            return false to "Vantagem automática (Racial ou de Cenário)."
+        }
+
         if (vantagem.id in vantagensAutomaticasDoProtagonista) {
             return false to "Vantagem automática do Protagonista."
         }
@@ -3034,7 +3121,21 @@ class CriadorState {
             }
         }
 
+        if (isHumanoFantasiaSelecionado() &&
+            pacoteCulturalFantasiaSelecionado == "Povo da Montanha" &&
+            a.keyify() == "VIGOR"
+        ) {
+            modifiedBase = maxOf(modifiedBase, 6)
+        }
+
         return modifiedBase
+    }
+
+    private fun isHumanoFantasiaSelecionado(): Boolean {
+        if (!compendioFantasiaAtivo) return false
+        if (!ancestralidade.keyify().contains("HUMANO")) return false
+        val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
+        return canonicalOriginKey(ancDef.origem) == "FANTASIA"
     }
 
     fun atributoMinRaw(a: String): Int =
@@ -3193,6 +3294,9 @@ class CriadorState {
             ApplyAncestryChangeCoordinatorUseCase.SignoAction.CLEAR -> selecionarSigno(null)
             ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP -> Unit
         }
+        if (!isHumanoFantasiaSelecionado()) {
+            pacoteCulturalFantasiaSelecionado = "Humano padrão"
+        }
         celestialAAMilagresDesabilitado = ancestryChangeCoordination.celestialAAMilagresDesabilitado
         if (ancestryChangeCoordination.resetMeioElfoAgil) {
             meioElfoAgil = false
@@ -3223,6 +3327,8 @@ class CriadorState {
 
         desvantagensRaciais.clear()
         desvantagensRaciais.addAll(racialPackage.desvantagensRaciais)
+
+        syncPacoteCulturalFantasia()
 
         naturalArmorFromRace = racialPackage.naturalArmorFromRace
         if (racialPackage.forceArmorZero) {
@@ -3608,6 +3714,43 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun selecionarPacoteCulturalFantasia(novoPacote: String) {
+        if (pacoteCulturalFantasiaSelecionado == novoPacote) return
+        pacoteCulturalFantasiaSelecionado = novoPacote
+        syncPacoteCulturalFantasia()
+        recalcularPontosAtributo()
+        rebuildAllPericiaStacks()
+    }
+
+    private fun syncPacoteCulturalFantasia() {
+        if (!isHumanoFantasiaSelecionado()) return
+
+        val ancDef = getAncestralidadeDef(ancestralidade)
+        val baseDesvantagens = ancDef?.desvantagens ?: emptyList()
+        val extras = when (pacoteCulturalFantasiaSelecionado) {
+            "Nômades do Deserto" -> listOf("Fraqueza Ambiental (Menor)")
+            "Povo da Montanha" -> listOf("Fraqueza Ambiental (Menor)")
+            else -> emptyList()
+        }
+
+        val oldAuto = desvantagensRaciais.toList()
+        desvantagensRaciais.clear()
+        desvantagensRaciais.addAll(baseDesvantagens + extras)
+
+        val snapshot = resolveAncestryComplicationsSnapshotUseCase.execute(
+            ResolveAncestryComplicationsSnapshotUseCase.Params(
+                previousAutomaticDisadvantages = oldAuto,
+                currentAutomaticDisadvantages = desvantagensRaciais.toList(),
+                availableComplications = listaComplicacoes,
+                selectedComplications = complicacoesSelecionadas,
+                originPriorityResolver = { getOriginPriority(it) }
+            )
+        )
+        complicacoesSelecionadas.clear()
+        complicacoesSelecionadas.putAll(snapshot.selectedComplications)
+    }
+
     private fun syncArtistaMarcialPotencialFisico() {
         if (vantagensAutomaticasDoPotencialFisico.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoPotencialFisico }
@@ -3879,17 +4022,38 @@ class CriadorState {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoElemento }
             vantagensAutomaticasDoElemento.clear()
         }
+        if (habilidadesRaciaisDoElemento.isNotEmpty()) {
+            vantagensRaciais.removeAll(habilidadesRaciaisDoElemento.toSet())
+            habilidadesRaciaisDoElemento.clear()
+        }
 
         descendenteElementalSelecionado = novoElemento
 
         // 2. Add new edges
         if (novoElemento != null) {
             val edgesToAdd = mutableListOf<String>()
+            val racialTraits = mutableListOf<String>()
             when (novoElemento) {
-                "Ar" -> edgesToAdd.add("ar_interno")
-                "Água" -> edgesToAdd.add("aquatico")
-                "Fogo" -> edgesToAdd.add("rapido")
-                "Terra" -> edgesToAdd.add("solido_como_rocha")
+                "Ar" -> {
+                    racialTraits += listOf("AR INTERNO", "RESISTÊNCIA AMBIENTAL (Ar)")
+                }
+                "Água" -> {
+                    racialTraits += listOf("AQUÁTICO", "RESISTÊNCIA AMBIENTAL (Água)")
+                }
+                "Fogo" -> {
+                    edgesToAdd.add("rapido")
+                    racialTraits += listOf("RÁPIDO", "RESISTÊNCIA AMBIENTAL (Fogo)")
+                }
+                "Terra" -> {
+                    racialTraits += listOf("SÓLIDO COMO ROCHA", "RESISTÊNCIA AMBIENTAL (Terra)")
+                }
+            }
+
+            racialTraits.forEach { trait ->
+                if (vantagensRaciais.none { it.keyify() == trait.keyify() }) {
+                    vantagensRaciais.add(trait)
+                    habilidadesRaciaisDoElemento.add(trait)
+                }
             }
 
             edgesToAdd.forEach { edgeId ->
@@ -4070,6 +4234,28 @@ class CriadorState {
     }
 
     private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
+
+        listaAtributos.forEach { nomeAttr ->
+            val stack = paCostStackPorAtributo[nomeAttr] ?: return@forEach
+            var maxAllowed = atributoMaxRaw(nomeAttr)
+            var current = valoresAtributos[nomeAttr]?.intValue ?: return@forEach
+
+            while (current > maxAllowed && stack.isNotEmpty()) {
+                stack.removeAt(stack.lastIndex)
+                current = if (current > 12) current - 1 else current - 2
+                valoresAtributos[nomeAttr]?.intValue = current.coerceAtLeast(atributoBaseRacial(nomeAttr))
+                feedbackMessages.add("Atributo $nomeAttr reduzido para respeitar o limite racial.")
+                pontosAtributo = calcularPontosAtributoRestantes()
+                maxAllowed = atributoMaxRaw(nomeAttr)
+                current = valoresAtributos[nomeAttr]?.intValue ?: current
+            }
+
+            if (current > maxAllowed) {
+                valoresAtributos[nomeAttr]?.intValue = maxAllowed
+                feedbackMessages.add("Atributo $nomeAttr ajustado para o limite racial.")
+                pontosAtributo = calcularPontosAtributoRestantes()
+            }
+        }
 
         while (pontosAtributo < 0) {
             val entry = paCostStackPorAtributo
@@ -4446,6 +4632,7 @@ class CriadorState {
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
+                pacoteCulturalFantasiaSelecionado = pacoteCulturalFantasiaSelecionado,
                 artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
@@ -4571,6 +4758,7 @@ class CriadorState {
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
+        pacoteCulturalFantasiaSelecionado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado ?: "Humano padrão"
         artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
         artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
         artistaMarcialTecnicasSelecionadas.clear()
