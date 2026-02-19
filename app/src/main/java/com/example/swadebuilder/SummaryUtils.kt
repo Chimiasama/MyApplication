@@ -386,7 +386,25 @@ fun buildSummaryLines(
             }
         }
     }
-    val habilidadesRaciais = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val habilidadesRaciaisBase = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
+        val elem = personagem.descendenteElementalSelecionado?.keyify()
+        habilidadesRaciaisBase
+            .map { it.substringBefore("(").trim() }
+            .filter {
+                val key = it.keyify()
+                when {
+                    key == "AQUATICO" -> elem == "AGUA"
+                    key == "AR INTERNO" -> elem == "AR"
+                    key == "RAPIDO" -> elem == "FOGO"
+                    key == "SOLIDO COMO ROCHA" -> elem == "TERRA"
+                    key == "RESISTENCIA AMBIENTAL" || key == "FORASTEIRO" -> true
+                    else -> true
+                }
+            }
+    } else {
+        habilidadesRaciaisBase
+    }
     // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
     val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
         .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
