@@ -304,9 +304,34 @@ class CriadorState {
             resolveActiveAncestryCandidatesUseCase.isOriginActive(item.origem, ancestryFlags)
         }
 
-        if (activeCandidates.isEmpty()) return candidates.firstOrNull()
+        val selected = if (activeCandidates.isEmpty()) {
+            candidates.firstOrNull()
+        } else {
+            activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
+        } ?: return null
 
-        return activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
+        return withBaselineCounterpartMechanics(selected, key)
+    }
+
+    private fun withBaselineCounterpartMechanics(
+        selected: RacialModifier,
+        ancestryKey: String
+    ): RacialModifier {
+        val selectedOrigin = canonicalOriginKey(selected.origem)
+        val shouldNormalize = selectedOrigin in setOf("FANTASIA", "HORROR", "SCIFI", "SCI_FI", "FC", "SUPER")
+        if (!shouldNormalize) return selected
+
+        val baseline = listaAncestralidadesJson.firstOrNull {
+            canonicalOriginKey(it.origem) == "BASICO" && it.nome.keyify() == ancestryKey
+        } ?: return selected
+
+        return selected.copy(
+            atributos = baseline.atributos,
+            pericias = baseline.pericias,
+            vantagensGratis = baseline.vantagensGratis,
+            desvantagens = baseline.desvantagens,
+            habilidades = baseline.habilidades
+        )
     }
 
     fun isAttributeRankLimitReached(): Boolean {
@@ -803,7 +828,7 @@ class CriadorState {
         equipamentosComprados.sumOf { (it.mods_slots as? JsonPrimitive)?.content?.toIntOrNull() ?: 0 }
 
     fun isPersonagemRobotico(): Boolean {
-        val ancestral = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val ancestral = getAncestralidadeDef(ancestralidade)
         val nomeKey = (ancestral?.nome ?: ancestralidade).keyify()
         val robotByName = listOf("ANDROID", "CONSTRUTO", "CONSTRUCTO").any { nomeKey.contains(it) }
         val robotBySkill = ancestral?.habilidades?.any { it.nome.keyify() == "MODIFICACOES" } == true
@@ -869,7 +894,7 @@ class CriadorState {
         }
 
         // Check Claws (Garra)
-        val ancestry = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val ancestry = getAncestralidadeDef(ancestralidade)
         val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true ||
                 ancestry?.vantagensGratis?.any { it.keyify().contains("GARRA") } == true
 
@@ -901,7 +926,7 @@ class CriadorState {
 
     fun extrairArmasNaturais(): List<EquipamentoItem> {
         val weapons = mutableListOf<EquipamentoItem>()
-        val ancestralidadeObj = listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralidade }
+        val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
             ?: return emptyList()
 
         val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")

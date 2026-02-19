@@ -67,7 +67,7 @@ object ModifierEngine {
 
         // 2. Ancestralidade
         val ancestralName = state.ancestralidade
-        val ancestral = state.listaAncestralidadesJson.firstOrNull { it.nome.keyify() == ancestralName.keyify() }
+        val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
             val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
