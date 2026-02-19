@@ -86,8 +86,10 @@ fun ComplicacoesSection(
     // PROMPT 3: State for adding disorders
     var showAddTranstornoDialog by rememberSaveable { mutableStateOf(false) }
 
+    fun normalizeUIKey(s: String): String = s.keyify().replace("_", "").replace("-", "").replace(" ", "")
+
     val autoBaseKeys = state.desvantagensAutomaticas
-        .map { it.uppercase().semAcentos().substringBefore("(").trim() }
+        .map { normalizeUIKey(it.substringBefore("(").trim()) }
         .toSet()
 
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -186,7 +188,8 @@ fun ComplicacoesSection(
                         state.complicacoesSelecionadas
                             .filterValues { it != null }
                             .forEach { (comp, tipo) ->
-                                val isAuto = comp.id.keyify() in autoBaseKeys
+                                val isAuto = normalizeUIKey(comp.id) in autoBaseKeys ||
+                                        normalizeUIKey(comp.name) in autoBaseKeys
                                 val isYoungAuto = comp.id == "pequeno" && state.jovemAutoPequeno
                                 // val cost = if (tipo == "Maior") 2 else 1
                                 val isClickable = !locked && !isAuto && !isYoungAuto
@@ -498,7 +501,9 @@ fun ComplicacoesSection(
                     val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
                     val listaParaMostrar = uniqueComplications
                         .filter { comp ->
-                            comp.id.keyify() !in autoBaseKeys
+                            val keyId = normalizeUIKey(comp.id)
+                            val keyName = normalizeUIKey(comp.name)
+                            keyId !in autoBaseKeys && keyName !in autoBaseKeys
                         }
 
                     items(

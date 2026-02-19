@@ -403,6 +403,8 @@ fun VantagensContent(
 
             Spacer(Modifier.size(4.dp))
 
+            fun normalizeUIKey(s: String): String = s.keyify().replace("_", "").replace("-", "").replace(" ", "")
+
             // Sticky Header for Selected Advantages
             if (state.vantagensSelecionadas.isNotEmpty()) {
                 FlowRow(
@@ -422,10 +424,12 @@ fun VantagensContent(
                         )
                     }
 
+                    val autoKeys = state.vantagensAutomaticas.map { normalizeUIKey(it.substringBefore("(").trim()) }.toSet()
+
                     state.vantagensSelecionadas.forEachIndexed { index, vant ->
                         val isRacialFree =
-                            vant.nomeExibicao.keyify() in state.vantagensAutomaticas.map { it.keyify() } ||
-                                    vant.nome.keyify() in state.vantagensAutomaticas.map { it.keyify() }
+                            normalizeUIKey(vant.nomeExibicao.substringBefore("(")) in autoKeys ||
+                                    normalizeUIKey(vant.nome.substringBefore("(")) in autoKeys
                         val isTropoAutomatic = state.vantagensAutomaticasDoTropo.contains(vant.id)
                         val requiredByAnother = state.vantagensSelecionadas.any { other ->
                             other != vant && other.requisitos.vantagensPrevias.any { reqId ->
