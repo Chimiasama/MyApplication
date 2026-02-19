@@ -47,7 +47,6 @@ fun InformacoesSection(
     onUseProgress: () -> Unit
 ) {
 
-    var showProgressDialog by rememberSaveable { mutableStateOf(false) }
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
     var dinheiroInput by rememberSaveable { mutableStateOf(state.dinheiro.toString()) }
     val focusManager = LocalFocusManager.current
@@ -165,48 +164,6 @@ fun InformacoesSection(
                     StatItem("Reserva de Chi", state.reservaChi.toString())
                 }
             }
-
-            val spentOnCreation = state.progresso - state.progressosDisponiveis
-            var tempProgresso by rememberSaveable { mutableIntStateOf(state.progresso) }
-        if (showProgressDialog) {
-            AlertDialog(
-                onDismissRequest = { showProgressDialog = false },
-                title = { Text("Defina o Progresso (0–50)") },
-                text = {
-                        Column {
-                            Slider(
-                                value = tempProgresso.toFloat(),
-                                onValueChange = { new ->
-                                    tempProgresso = new.roundToInt()
-                                        .coerceIn(spentOnCreation, 50)
-                                },
-                                valueRange = spentOnCreation.toFloat()..50f,
-                                steps = 50,
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                "XP atual: $tempProgresso",
-                                Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = {
-                            state.progresso = tempProgresso
-                            state.progressosDisponiveis = tempProgresso - spentOnCreation
-                            state.emProgresso = true
-                            showProgressDialog = false
-                        }) { Text("OK") }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showProgressDialog = false }) {
-                            Text("Cancelar")
-                        }
-                }
-            )
-        }
 
         if (showMoneyDialog) {
             AlertDialog(

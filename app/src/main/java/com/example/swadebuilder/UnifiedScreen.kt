@@ -259,6 +259,8 @@ fun UnifiedScreen(
                             }
                         },
                         onUseProgress = { index ->
+                            state.progresso += 1
+                            state.recomputeAvailableProgress()
                             currentSlotIndex = index
                             showAllocDialog = true
                         },
@@ -484,6 +486,10 @@ fun UnifiedScreen(
             mapaPericias = viewModel.gameDataStore.getMapaPericias(),
             allEstagios = listaDeEstagios,
             onDismiss = {
+                if (state.progressosDisponiveis > 0) {
+                    state.progresso = (state.progresso - 1).coerceAtLeast(0)
+                    state.recomputeAvailableProgress()
+                }
                 showAllocDialog = false
                 activeSection = MainSection.XP
             }

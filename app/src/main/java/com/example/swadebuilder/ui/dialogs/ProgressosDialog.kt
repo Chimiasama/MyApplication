@@ -582,7 +582,6 @@ fun ProgressosDialog(
                                         return@TextButton
                                     }
 
-                                    state.progresso += 1
                                     state.spendProgressAtStage(est.nome, 1)
                                     state.reservasComplicacaoMaior[comp.id] = true
                                     state.advancementHistory.add(
@@ -609,7 +608,6 @@ fun ProgressosDialog(
                                     if (!ensureProgressAvailable()) return@TextButton
 
                                     val nivelAnterior = state.complicacoesSelecionadas[comp]
-                                    state.progresso += 1
                                     state.spendProgressAtStage(est.nome, 1)
                                     state.reservasComplicacaoMaior.remove(comp.id)
                                     state.complicacoesSelecionadas.remove(comp)
@@ -639,7 +637,6 @@ fun ProgressosDialog(
                                         return@TextButton
                                     }
 
-                                    state.progresso += 1
                                     state.spendProgressAtStage(est.nome, 1)
                                     state.reservasComplicacaoMaior.remove(comp.id)
                                     state.complicacoesSelecionadas[comp] = "Menor"
@@ -663,7 +660,6 @@ fun ProgressosDialog(
                                     if (!ensureProgressAvailable()) return@TextButton
 
                                     val nivelAnterior = state.complicacoesSelecionadas[comp]
-                                    state.progresso += 1
                                     state.spendProgressAtStage(est.nome, 1)
                                     state.reservasComplicacaoMaior.remove(comp.id)
                                     state.complicacoesSelecionadas.remove(comp)

@@ -942,7 +942,6 @@ class CriadorViewModel(
     fun startSkillAdvancement(slotIndex: Int, stageName: String) {
         if (state.progressosDisponiveis >= 1) {
             resetUiState()
-            state.progresso++
             state.spendProgressAtStage(stageName, 1)
             state.stageNameForCurrentAdvancement = stageName
             state.xpSlots[slotIndex] = true
@@ -1031,7 +1030,6 @@ class CriadorViewModel(
     fun startAdvantageAdvancement(slotIndex: Int, est: String) {
         if (state.progressosDisponiveis >= 1) {
             resetUiState()
-            state.progresso++
             state.spendProgressAtStage(est, 1)
             state.stageNameForCurrentAdvancement = est
             state.xpSlots[slotIndex] = true
@@ -1168,7 +1166,6 @@ class CriadorViewModel(
     ) {
         if (state.progressosDisponiveis >= 1) {
             resetUiState()
-            state.progresso++
             state.spendProgressAtStage(stageName, 1)
             state.stageNameForCurrentAdvancement = stageName
             state.attributeStageForCurrentAdvancement = stageName
@@ -1192,7 +1189,6 @@ class CriadorViewModel(
 
     fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
         if (state.progressosDisponiveis >= 1 && state.legendaryAttrReservations == 0) {
-            state.progresso++
             state.spendProgressAtStage(stageName, 1)
             state.xpSlots[slotIndex] = true
             state.legendaryAttrReservations += 1
@@ -1284,7 +1280,6 @@ class CriadorViewModel(
         val lastUsedIndex = state.xpSlots.indexOfLast { it }
         if (lastUsedIndex != -1) {
             state.xpSlots[lastUsedIndex] = false
-            state.progresso--
             state.refundProgressAtStage(stageName, 1)
         }
 

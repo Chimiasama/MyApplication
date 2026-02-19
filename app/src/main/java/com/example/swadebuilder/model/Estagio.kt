@@ -7,11 +7,11 @@ data class Estagio(
 )
 
 val listaDeEstagios = listOf(
-    Estagio("Novato", 0, 2),
-    Estagio("Experiente", 3, 6),
-    Estagio("Veterano", 7, 10),
-    Estagio("Heroico", 11, 14),
-    Estagio("Lendário", 15, Int.MAX_VALUE)
+    Estagio("Novato", 0, 3),
+    Estagio("Experiente", 4, 7),
+    Estagio("Veterano", 8, 11),
+    Estagio("Heroico", 12, 15),
+    Estagio("Lendário", 16, Int.MAX_VALUE)
 )
 
 val nivelParaEstagio = mapOf(
