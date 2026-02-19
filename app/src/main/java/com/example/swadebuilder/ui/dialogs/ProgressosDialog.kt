@@ -165,11 +165,13 @@ fun ProgressosDialog(
     val isLendarioStage = stageIndex == lendarioIndex
     val canUseReservation = isLendarioStage && state.legendaryAttrReservations > 0
     val needsReservation = isLendarioStage && remainingBaseAttrs <= 0 && !canUseReservation
-    val canBuyAttr = creditsLeft > 0 && state.progressosDisponiveis >= 1 &&
+    val hasReservedProgress = state.xpSlots.getOrNull(slotIndex) == true
+
+    val canBuyAttr = creditsLeft > 0 && hasReservedProgress &&
             (remainingBaseAttrs > 0 || canUseReservation || state.modoMonstroAtivo)
     val canReserveLegendary = isLendarioStage &&
             totalAttrPurchases >= lendarioIndex && creditsLeft > 0 &&
-            state.progressosDisponiveis >= 1 && state.legendaryAttrReservations == 0
+            hasReservedProgress && state.legendaryAttrReservations == 0
 
     // ── Requisitos de vantagens (mesma lógica, sem logs) ──────────────────────
     fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {
@@ -559,7 +561,7 @@ fun ProgressosDialog(
                         }
                         "Complicacao" -> {
                             fun ensureProgressAvailable(): Boolean {
-                                if (state.progressosDisponiveis < 1) {
+                                if (!hasReservedProgress) {
                                     showSnack("Você não tem progressos suficientes.")
                                     return false
                                 }
@@ -899,7 +901,7 @@ fun ProgressosDialog(
                 val requiresChoice = vant.requiresChoice
                 val validChoicesCount = if (requiresChoice) validChoiceOptionsFor(vant, state).size else 0
                 val choiceOk = !requiresChoice || validChoicesCount > 0
-                val temProgresso = state.progressosDisponiveis >= 1
+                val temProgresso = hasReservedProgress
 
                 podeAgora && strictOk && repeticaoOk && stageOk && choiceOk && temProgresso
             }
@@ -1005,7 +1007,7 @@ fun ProgressosDialog(
                                     if (bloquearExclusividadeClasse(vant)) {
                                         return@DialogVantagemItem
                                     }
-                                    if (state.progressosDisponiveis < 1) {
+                                    if (!hasReservedProgress) {
                                         showSnack("Você não tem progressos suficientes.")
                                         return@DialogVantagemItem
                                     }

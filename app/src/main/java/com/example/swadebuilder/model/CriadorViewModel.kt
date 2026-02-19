@@ -940,7 +940,7 @@ class CriadorViewModel(
     }
 
     fun startSkillAdvancement(slotIndex: Int, stageName: String) {
-        if (state.progressosDisponiveis >= 1 || state.xpSlots.getOrNull(slotIndex) == true) {
+        if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
             val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             if (state.xpSlots.getOrNull(slotIndex) != true) {
@@ -1032,7 +1032,7 @@ class CriadorViewModel(
     }
 
     fun startAdvantageAdvancement(slotIndex: Int, est: String) {
-        if (state.progressosDisponiveis >= 1 || state.xpSlots.getOrNull(slotIndex) == true) {
+        if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
             val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             if (state.xpSlots.getOrNull(slotIndex) != true) {
@@ -1172,7 +1172,7 @@ class CriadorViewModel(
         stageName: String,
         consumesLegendaryReservation: Boolean
     ) {
-        if (state.progressosDisponiveis >= 1 || state.xpSlots.getOrNull(slotIndex) == true) {
+        if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
             val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             if (state.xpSlots.getOrNull(slotIndex) != true) {
@@ -1200,7 +1200,7 @@ class CriadorViewModel(
     }
 
     fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
-        if ((state.progressosDisponiveis >= 1 || state.xpSlots.getOrNull(slotIndex) == true) && state.legendaryAttrReservations == 0) {
+        if (state.xpSlots.getOrNull(slotIndex) == true && state.legendaryAttrReservations == 0) {
             val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
             if (state.xpSlots.getOrNull(slotIndex) != true) {
                 state.progresso++
@@ -1217,7 +1217,7 @@ class CriadorViewModel(
 
     fun reserveProgressSlot(slotIndex: Int): Boolean {
         val slotFree = state.xpSlots.getOrNull(slotIndex) == false
-        if (!slotFree || state.progressosDisponiveis < 1 || state.emProgresso) return false
+        if (!slotFree || state.emProgresso) return false
 
         state.progresso++
         state.xpSlots[slotIndex] = true
