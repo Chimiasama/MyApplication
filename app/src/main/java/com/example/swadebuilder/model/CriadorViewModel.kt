@@ -1233,6 +1233,12 @@ class CriadorViewModel(
             state.attributeAdvancementInProgress
         ) return
 
+        // Só cancela uma RESERVA pendente aberta ao tocar no slot.
+        // Se o avanço já foi concluído, stageNameForCurrentAdvancement já foi limpo,
+        // então não devemos reverter slot/progresso no fechamento do diálogo.
+        val hasPendingReservation = !state.stageNameForCurrentAdvancement.isNullOrBlank()
+        if (!hasPendingReservation) return
+
         if (state.xpSlots.getOrNull(slotIndex) == true) {
             state.xpSlots[slotIndex] = false
             state.progresso = (state.progresso - 1).coerceAtLeast(0)
