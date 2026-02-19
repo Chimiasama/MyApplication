@@ -6,10 +6,13 @@ import com.example.swadebuilder.model.listaDeEstagios
 fun stageIndexForSlot(slotIndex: Int): Int {
     if (slotIndex < 0) return 0
 
-    val idx = slotIndex / 4
-    val maxIndex = (listaDeEstagios.size - 1).coerceAtLeast(0)
+    // O slot representa o XP que está sendo gasto agora.
+    // Ex.: slot 0 = XP 1, slot 1 = XP 2 ... slot 3 = XP 4 (já Experiente).
+    val progressAfterSpend = slotIndex + 1
 
-    return idx.coerceAtMost(maxIndex)
+    return listaDeEstagios.indexOfFirst { progressAfterSpend in it.minProgress..it.maxProgress }
+        .takeIf { it >= 0 }
+        ?: listaDeEstagios.lastIndex
 }
 
 fun stageForSlot(slotIndex: Int): Estagio = listaDeEstagios[stageIndexForSlot(slotIndex)]

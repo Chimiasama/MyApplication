@@ -7,11 +7,11 @@ data class Estagio(
 )
 
 val listaDeEstagios = listOf(
-    Estagio("Novato", 0, 2),
-    Estagio("Experiente", 3, 6),
-    Estagio("Veterano", 7, 10),
-    Estagio("Heroico", 11, 14),
-    Estagio("Lendário", 15, Int.MAX_VALUE)
+    Estagio("Novato", 0, 3),
+    Estagio("Experiente", 4, 7),
+    Estagio("Veterano", 8, 11),
+    Estagio("Heroico", 12, 15),
+    Estagio("Lendário", 16, Int.MAX_VALUE)
 )
 
 val nivelParaEstagio = mapOf(
@@ -24,9 +24,23 @@ val nivelParaEstagio = mapOf(
 
 const val TOTAL_PROGRESS_LIMIT = 20
 val dynamicStageCaps = listaDeEstagios.mapIndexed { idx, st ->
-    val prevMax = listaDeEstagios.getOrNull(idx - 1)?.maxProgress ?: -1
-    if (idx < listaDeEstagios.lastIndex)
-        st.maxProgress - prevMax
-    else
-        (TOTAL_PROGRESS_LIMIT - prevMax).coerceAtLeast(0)
+    if (idx < listaDeEstagios.lastIndex) {
+        if (idx == 0) {
+            // Novato cobre o XP 0 inicial + 3 avanços gastáveis (N1..N3).
+            (st.maxProgress - st.minProgress).coerceAtLeast(0)
+        } else {
+            // Demais estágios têm 4 avanços gastáveis cada.
+            (st.maxProgress - st.minProgress + 1).coerceAtLeast(0)
+        }
+    } else {
+        // Lendário ocupa o restante dos slots disponíveis da trilha total.
+        val capsUsados = listaDeEstagios.dropLast(1).mapIndexed { stageIdx, stage ->
+            if (stageIdx == 0) {
+                (stage.maxProgress - stage.minProgress).coerceAtLeast(0)
+            } else {
+                (stage.maxProgress - stage.minProgress + 1).coerceAtLeast(0)
+            }
+        }.sum()
+        (TOTAL_PROGRESS_LIMIT - capsUsados).coerceAtLeast(0)
+    }
 }
