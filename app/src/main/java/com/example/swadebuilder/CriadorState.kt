@@ -310,7 +310,7 @@ class CriadorState {
             activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
         } ?: return null
 
-        return withBaselineCounterpartMechanics(selected, key)
+        return withInferredAncestryMechanics(withBaselineCounterpartMechanics(selected, key))
     }
 
     private fun withBaselineCounterpartMechanics(
@@ -332,6 +332,22 @@ class CriadorState {
             desvantagens = baseline.desvantagens,
             habilidades = baseline.habilidades
         )
+    }
+
+    private fun withInferredAncestryMechanics(selected: RacialModifier): RacialModifier {
+        val hasFreeNoviceEdgeByText = selected.habilidades.any { hab ->
+            val text = "${hab.nome} ${hab.descricao}".keyify()
+            text.contains("VANTAGEM") &&
+                (text.contains("ESTAGIO NOVATO") || text.contains("NIVEL NOVATO")) &&
+                text.contains("A SUA ESCOLHA")
+        }
+
+        if (!hasFreeNoviceEdgeByText) return selected
+
+        val hasAdaptavel = selected.vantagensGratis.any { it.keyify() == "ADAPTAVEL" }
+        if (hasAdaptavel) return selected
+
+        return selected.copy(vantagensGratis = selected.vantagensGratis + "ADAPTÁVEL")
     }
 
     fun isAttributeRankLimitReached(): Boolean {

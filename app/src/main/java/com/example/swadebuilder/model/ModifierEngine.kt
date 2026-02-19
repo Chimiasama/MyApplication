@@ -71,6 +71,7 @@ object ModifierEngine {
 
         ancestral?.let { anc ->
             val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val abilityDescriptions = anc.habilidades.map { it.descricao }
 
             // Size from Ancestry (Tamanho X)
             // Fix: Exclude "DIMINUTO" entries to avoid double-counting if they contain "Tamanho" in text (e.g., "Diminuto (Tamanho -3)")
@@ -78,14 +79,31 @@ object ModifierEngine {
                 it.contains("TAMANHO", ignoreCase = true) && !it.keyify().startsWith("DIMINUTO")
             }
 
+            val racialSizeFromText = abilityDescriptions
+                .firstNotNullOfOrNull { desc ->
+                    val key = desc.keyify()
+                    val fromSize = Regex("""TAMANHO\s*([\+\-]\s*\d+)""").find(key)
+                        ?.groupValues
+                        ?.getOrNull(1)
+                        ?.replace(" ", "")
+                        ?.toIntOrNull()
+                    if (fromSize != null) return@firstNotNullOfOrNull fromSize
+
+                    if (key.contains("REDUZINDO SEU TAMANHO") && key.contains("EM 1")) return@firstNotNullOfOrNull -1
+                    if (key.contains("ADICIONE") && key.contains("A SUA RESISTENCIA") && key.contains("TAMANHO +1")) return@firstNotNullOfOrNull 1
+                    null
+                }
+
             val racialSize = if (sizeSource != null) {
                 sizeSource.substringAfter("TAMANHO", "") // Try uppercase first
                     .ifBlank { sizeSource.substringAfter("Tamanho", "") } // Try title case
                     .trim()
                     .toIntOrNull()
                     ?: 0
+            } else if (sources.any { it.keyify() == "PEQUENOS" || it.keyify() == "PEQUENO" }) {
+                -1
             } else {
-                0
+                racialSizeFromText ?: 0
             }
 
             if (racialSize != 0) {
