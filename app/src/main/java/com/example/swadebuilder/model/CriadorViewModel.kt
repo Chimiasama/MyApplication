@@ -940,12 +940,15 @@ class CriadorViewModel(
     }
 
     fun startSkillAdvancement(slotIndex: Int, stageName: String) {
-        if (state.progressosDisponiveis >= 1) {
+        if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
-            state.progresso++
-            state.spendProgressAtStage(stageName, 1)
-            state.stageNameForCurrentAdvancement = stageName
-            state.xpSlots[slotIndex] = true
+            val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            if (state.xpSlots.getOrNull(slotIndex) != true) {
+                state.progresso++
+                state.xpSlots[slotIndex] = true
+            }
+            state.spendProgressAtStage(stageForSpend, 1)
+            state.stageNameForCurrentAdvancement = stageForSpend
             state.skillAdvancementInProgress = true
             state.skillsForCurrentAdvancement.clear()
             state.grantSkillPointsFromXp()
@@ -1029,18 +1032,21 @@ class CriadorViewModel(
     }
 
     fun startAdvantageAdvancement(slotIndex: Int, est: String) {
-        if (state.progressosDisponiveis >= 1) {
+        if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
-            state.progresso++
-            state.spendProgressAtStage(est, 1)
-            state.stageNameForCurrentAdvancement = est
-            state.xpSlots[slotIndex] = true
+            val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            if (state.xpSlots.getOrNull(slotIndex) != true) {
+                state.progresso++
+                state.xpSlots[slotIndex] = true
+            }
+            state.spendProgressAtStage(stageForSpend, 1)
+            state.stageNameForCurrentAdvancement = stageForSpend
             state.advantageAdvancementInProgress = true
             state.advantageForCurrentAdvancement = null
             state.mostrandoPoderesProgresso = false
             state.arcanoEmCompraViaXpKey = null
             state.arcanoSnapshotAntesDaCompra = null
-            state.grantVantagemPointFromXp(est)
+            state.grantVantagemPointFromXp(stageForSpend)
             state.updateEmProgressoFlag()
         }
     }
@@ -1166,13 +1172,16 @@ class CriadorViewModel(
         stageName: String,
         consumesLegendaryReservation: Boolean
     ) {
-        if (state.progressosDisponiveis >= 1) {
+        if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
-            state.progresso++
-            state.spendProgressAtStage(stageName, 1)
-            state.stageNameForCurrentAdvancement = stageName
+            val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            if (state.xpSlots.getOrNull(slotIndex) != true) {
+                state.progresso++
+                state.xpSlots[slotIndex] = true
+            }
+            state.spendProgressAtStage(stageForSpend, 1)
+            state.stageNameForCurrentAdvancement = stageForSpend
             state.attributeStageForCurrentAdvancement = stageName
-            state.xpSlots[slotIndex] = true
 
             if (consumesLegendaryReservation) {
                 state.legendaryAttrReservations =
@@ -1191,15 +1200,51 @@ class CriadorViewModel(
     }
 
     fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
-        if (state.progressosDisponiveis >= 1 && state.legendaryAttrReservations == 0) {
-            state.progresso++
-            state.spendProgressAtStage(stageName, 1)
-            state.xpSlots[slotIndex] = true
+        if (state.xpSlots.getOrNull(slotIndex) == true && state.legendaryAttrReservations == 0) {
+            val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            if (state.xpSlots.getOrNull(slotIndex) != true) {
+                state.progresso++
+                state.xpSlots[slotIndex] = true
+            }
+            state.spendProgressAtStage(stageForSpend, 1)
             state.legendaryAttrReservations += 1
             state.advancementHistory.add(
-                AdvancementAction.ReserveLegendaryAttribute(stageName = stageName)
+                AdvancementAction.ReserveLegendaryAttribute(stageName = stageForSpend)
             )
             state.recomputeAvailableProgress()
+        }
+    }
+
+    fun reserveProgressSlot(slotIndex: Int): Boolean {
+        val slotFree = state.xpSlots.getOrNull(slotIndex) == false
+        if (!slotFree || state.emProgresso) return false
+
+        state.progresso++
+        state.xpSlots[slotIndex] = true
+        state.stageNameForCurrentAdvancement = state.estagioAtual().nome
+        state.recomputeAvailableProgress()
+        return true
+    }
+
+    fun cancelPendingProgressReservation(slotIndex: Int) {
+        if (
+            state.skillAdvancementInProgress ||
+            state.advantageAdvancementInProgress ||
+            state.attributeAdvancementInProgress
+        ) return
+
+        // Só cancela uma RESERVA pendente aberta ao tocar no slot.
+        // Se o avanço já foi concluído, stageNameForCurrentAdvancement já foi limpo,
+        // então não devemos reverter slot/progresso no fechamento do diálogo.
+        val hasPendingReservation = !state.stageNameForCurrentAdvancement.isNullOrBlank()
+        if (!hasPendingReservation) return
+
+        if (state.xpSlots.getOrNull(slotIndex) == true) {
+            state.xpSlots[slotIndex] = false
+            state.progresso = (state.progresso - 1).coerceAtLeast(0)
+            state.stageNameForCurrentAdvancement = null
+            state.recomputeAvailableProgress()
+            state.updateEmProgressoFlag()
         }
     }
 

@@ -259,8 +259,10 @@ fun UnifiedScreen(
                             }
                         },
                         onUseProgress = { index ->
-                            currentSlotIndex = index
-                            showAllocDialog = true
+                            if (viewModel.reserveProgressSlot(index)) {
+                                currentSlotIndex = index
+                                showAllocDialog = true
+                            }
                         },
                         onUserFeedback = onUserFeedback
                     )
@@ -333,8 +335,10 @@ fun UnifiedScreen(
                         }
                     },
                     onUseProgress = { index ->
-                        currentSlotIndex = index
-                        showAllocDialog = true
+                        if (viewModel.reserveProgressSlot(index)) {
+                            currentSlotIndex = index
+                            showAllocDialog = true
+                        }
                     },
                     onUserFeedback = onUserFeedback
                 )
@@ -484,6 +488,7 @@ fun UnifiedScreen(
             mapaPericias = viewModel.gameDataStore.getMapaPericias(),
             allEstagios = listaDeEstagios,
             onDismiss = {
+                viewModel.cancelPendingProgressReservation(currentSlotIndex)
                 showAllocDialog = false
                 activeSection = MainSection.XP
             }
