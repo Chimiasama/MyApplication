@@ -1244,18 +1244,24 @@ class CriadorState {
         }
     }
 
+    private fun normalizeAutoKey(value: String): String =
+        value.keyify()
+            .replace("_", "")
+            .replace("-", "")
+            .replace(" ", "")
+
     fun isVantagemAutomatica(v: Vantagem): Boolean {
-        val key = v.nome.substringBefore("(").trim().keyify()
+        val key = normalizeAutoKey(v.nome.substringBefore("(").trim())
         val autoKeys = (vantagensAutomaticas + vantagensRaciais)
-            .map { it.substringBefore("(").trim().keyify() }
+            .map { normalizeAutoKey(it.substringBefore("(").trim()) }
             .toSet()
 
         // Also check raw IDs in vantagensRaciais/Automaticas because some JSONs use IDs directly
         // like "aa_agente_syn" which doesn't match the name "ANTECEDENTE ARCANO"
-        val autoIds = (vantagensAutomaticas + vantagensRaciais).toSet()
+        val autoIds = (vantagensAutomaticas + vantagensRaciais).map { normalizeAutoKey(it) }.toSet()
 
         return key in autoKeys ||
-                v.id in autoIds ||
+                normalizeAutoKey(v.id) in autoIds ||
                 v.id in vantagensAutomaticasDoTropo ||
                 v.id in vantagensAutomaticasDoProtagonista ||
                 v.id in vantagensAutomaticasDoSigno ||
@@ -2267,14 +2273,14 @@ class CriadorState {
 
     private fun removerUltimaVantagemCompradaComPv(): Boolean {
         val autoKeys = (vantagensAutomaticas + vantagensRaciais)
-            .map { it.substringBefore("(").trim().keyify() }
+            .map { normalizeAutoKey(it.substringBefore("(").trim()) }
             .toSet()
         val autoIds = vantagensAutomaticasDoTropo.toSet()
 
         val candidate = vantagensSelecionadas
             .asReversed()
             .firstOrNull { vant ->
-                val key = vant.nome.substringBefore("(").trim().keyify()
+                val key = normalizeAutoKey(vant.nome.substringBefore("(").trim())
                 key !in autoKeys && vant.id !in autoIds
             }
             ?: return false
@@ -2764,14 +2770,14 @@ class CriadorState {
         get() {
             val ancestryAuto = getAncestralidadeDef(ancestralidade)?.desvantagens.orEmpty()
             val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
-                .map { it.substringBefore("(").trim().keyify() }
+                .map { normalizeAutoKey(it.substringBefore("(").trim()) }
                 .toSet()
 
             var total = 0
             var temMaior = false
 
             for ((comp, tipo) in complicacoesSelecionadas) {
-                if (comp.id.keyify() in autoKeys || comp.name.keyify() in autoKeys) continue
+                if (normalizeAutoKey(comp.id) in autoKeys || normalizeAutoKey(comp.name) in autoKeys) continue
                 // PROMPT 3: Ignora complicações (Transtornos) ganhos em progresso para cálculo de PC
                 if (transtornos.any { it.id == comp.id }) continue
 
@@ -2869,9 +2875,9 @@ class CriadorState {
         // Automatic checks
         val ancestryAuto = getAncestralidadeDef(ancestralidade)?.desvantagens.orEmpty()
         val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
-            .map { it.substringBefore("(").trim().keyify() }
+            .map { normalizeAutoKey(it.substringBefore("(").trim()) }
             .toSet()
-        if (comp.id.keyify() in autoKeys || comp.name.keyify() in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."
+        if (normalizeAutoKey(comp.id) in autoKeys || normalizeAutoKey(comp.name) in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."
 
         // Young check
         if (comp.id == "pequeno" && jovemAutoPequeno) return false to "Adicionado automaticamente por Jovem (Maior)."
@@ -2894,12 +2900,12 @@ class CriadorState {
     }
 
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
-        val keyId = vantagem.id.keyify()
-        val keyNome = vantagem.nome.keyify()
-        val automaticIds = vantagensAutomaticas.map { it.keyify() }.toSet()
-        val racialKeys = vantagensRaciais.map { it.keyify() }.toSet()
+        val keyId = normalizeAutoKey(vantagem.id)
+        val keyNome = normalizeAutoKey(vantagem.nome.substringBefore("("))
+        val automaticKeys = vantagensAutomaticas.map { normalizeAutoKey(it.substringBefore("(")) }.toSet()
+        val racialKeys = vantagensRaciais.map { normalizeAutoKey(it.substringBefore("(")) }.toSet()
 
-        if (keyId in automaticIds || keyId in racialKeys || keyNome in racialKeys) {
+        if (keyId in automaticKeys || keyId in racialKeys || keyNome in racialKeys || keyNome in automaticKeys) {
             return false to "Vantagem automática (Racial ou de Cenário)."
         }
 
