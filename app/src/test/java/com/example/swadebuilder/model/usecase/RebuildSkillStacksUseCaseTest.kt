@@ -88,4 +88,73 @@ class RebuildSkillStacksUseCaseTest {
         assertEquals(1, result.feedbackMessages.size)
         assertEquals("Perícia Lutar reduzida para d6 para compensar pontos.", result.feedbackMessages[0])
     }
+
+    @Test
+    fun `calculates cost correctly for skills above d12`() {
+        // Setup:
+        // Lutar (d12 base) -> Desired d12+2 (raw 14)
+        // Agilidade (d6 base) (raw 6)
+        // Cost: d12->d13 (2pts), d13->d14 (2pts). Total 4pts.
+        // Pool: 5 pts available.
+
+        val lutar = Pericia(nome = "Lutar", atributo = "AGILIDADE", basica = true)
+
+        val input = RebuildSkillStacksUseCase.Input(
+            pericias = listOf(lutar),
+            totalSpPool = 5,
+            currentRawValues = mapOf("Lutar" to 14), // Desired d12+2
+            startRawValues = mapOf("Lutar" to 12),
+            capRawValues = mapOf("Lutar" to 14),
+            minRawValues = mapOf("Lutar" to 4),
+            freeStepsMap = mapOf("Lutar" to 0),
+            effectiveAttributeValues = mapOf("AGILIDADE" to 6),
+            skillAttributeMap = mapOf("Lutar" to "AGILIDADE"),
+            enforcePoolLimit = true
+        )
+
+        val result = useCase.execute(input)
+
+        // Verify Lutar costs:
+        // d12 -> d13 (2 pts)
+        // d13 -> d14 (2 pts)
+        // Stack should be [2, 2]
+        assertEquals(listOf(2, 2), result.spCostStacks["Lutar"])
+        assertEquals(2, result.baseIncs["Lutar"]) // 2 increases
+        assertEquals(0, result.feedbackMessages.size)
+    }
+
+    @Test
+    fun `reduces skill correctly for ranks above d12 if limit exceeded`() {
+        // Setup:
+        // Lutar (d12 base) -> Desired d12+2 (raw 14)
+        // Agilidade (d6 base) (raw 6)
+        // Cost: d12->d13 (2pts), d13->d14 (2pts). Total 4pts.
+        // Pool: 2 pts available. (Should stop at d13)
+
+        val lutar = Pericia(nome = "Lutar", atributo = "AGILIDADE", basica = true)
+
+        val input = RebuildSkillStacksUseCase.Input(
+            pericias = listOf(lutar),
+            totalSpPool = 2, // Only 2 points available
+            currentRawValues = mapOf("Lutar" to 14), // Desired d14
+            startRawValues = mapOf("Lutar" to 12),
+            capRawValues = mapOf("Lutar" to 14),
+            minRawValues = mapOf("Lutar" to 4),
+            freeStepsMap = mapOf("Lutar" to 0),
+            effectiveAttributeValues = mapOf("AGILIDADE" to 6),
+            skillAttributeMap = mapOf("Lutar" to "AGILIDADE"),
+            enforcePoolLimit = true
+        )
+
+        val result = useCase.execute(input)
+
+        // Verify Lutar costs:
+        // d12 -> d13 (2 pts). Fits in 2.
+        // d13 -> d14 (2 pts). Exceeds pool.
+        // Should reduce to d13.
+        assertEquals(listOf(2), result.spCostStacks["Lutar"])
+        assertEquals(1, result.baseIncs["Lutar"])
+        assertEquals(1, result.feedbackMessages.size)
+        assertEquals("Perícia Lutar reduzida para d13 para compensar pontos.", result.feedbackMessages[0])
+    }
 }
