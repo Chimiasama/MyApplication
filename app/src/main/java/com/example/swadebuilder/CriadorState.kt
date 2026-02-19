@@ -2746,7 +2746,7 @@ class CriadorState {
 
     val pontosComplicacao: Int
         get() {
-            val autoKeys = desvantagensAutomaticas
+            val autoKeys = (desvantagensAutomaticas + desvantagensRaciais)
                 .map { it.substringBefore("(").trim().keyify() }
                 .toSet()
 
@@ -2850,7 +2850,9 @@ class CriadorState {
         if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
 
         // Automatic checks
-        val autoKeys = desvantagensAutomaticas.map { it.substringBefore("(").trim().keyify() }.toSet()
+        val autoKeys = (desvantagensAutomaticas + desvantagensRaciais)
+            .map { it.substringBefore("(").trim().keyify() }
+            .toSet()
         if (comp.id.keyify() in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."
 
         // Young check
@@ -2874,6 +2876,15 @@ class CriadorState {
     }
 
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
+        val keyId = vantagem.id.keyify()
+        val keyNome = vantagem.nome.keyify()
+        val automaticIds = vantagensAutomaticas.map { it.keyify() }.toSet()
+        val racialKeys = vantagensRaciais.map { it.keyify() }.toSet()
+
+        if (keyId in automaticIds || keyId in racialKeys || keyNome in racialKeys) {
+            return false to "Vantagem automática (Racial ou de Cenário)."
+        }
+
         if (vantagem.id in vantagensAutomaticasDoProtagonista) {
             return false to "Vantagem automática do Protagonista."
         }
@@ -4205,6 +4216,28 @@ class CriadorState {
     }
 
     private fun trimAttributeStacks(feedbackMessages: MutableList<String> = mutableListOf()) {
+
+        listaAtributos.forEach { nomeAttr ->
+            val stack = paCostStackPorAtributo[nomeAttr] ?: return@forEach
+            var maxAllowed = atributoMaxRaw(nomeAttr)
+            var current = valoresAtributos[nomeAttr]?.intValue ?: return@forEach
+
+            while (current > maxAllowed && stack.isNotEmpty()) {
+                stack.removeAt(stack.lastIndex)
+                current = if (current > 12) current - 1 else current - 2
+                valoresAtributos[nomeAttr]?.intValue = current.coerceAtLeast(atributoBaseRacial(nomeAttr))
+                feedbackMessages.add("Atributo $nomeAttr reduzido para respeitar o limite racial.")
+                pontosAtributo = calcularPontosAtributoRestantes()
+                maxAllowed = atributoMaxRaw(nomeAttr)
+                current = valoresAtributos[nomeAttr]?.intValue ?: current
+            }
+
+            if (current > maxAllowed) {
+                valoresAtributos[nomeAttr]?.intValue = maxAllowed
+                feedbackMessages.add("Atributo $nomeAttr ajustado para o limite racial.")
+                pontosAtributo = calcularPontosAtributoRestantes()
+            }
+        }
 
         while (pontosAtributo < 0) {
             val entry = paCostStackPorAtributo
