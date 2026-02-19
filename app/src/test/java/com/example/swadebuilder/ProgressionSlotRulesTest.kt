@@ -20,9 +20,9 @@ class ProgressionSlotRulesTest {
     fun `retorna estágio correspondente ao slot`() {
         val firstStage = listaDeEstagios.first()
         assertEquals(firstStage, stageForSlot(0))
-        assertEquals(firstStage, stageForSlot(3))
+        assertEquals(firstStage, stageForSlot(2))
 
         val expected = listaDeEstagios[1.coerceAtMost(listaDeEstagios.lastIndex)]
-        assertEquals(expected, stageForSlot(4))
+        assertEquals(expected, stageForSlot(3))
     }
 }
