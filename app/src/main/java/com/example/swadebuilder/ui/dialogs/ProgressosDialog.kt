@@ -152,7 +152,7 @@ fun ProgressosDialog(
     }
 
     // ── Cálculos de atributo via XP ────────────────────────────────────────────
-    val est = stageForSlot(slotIndex)
+    val est = allEstagios.firstOrNull { it.nome == state.stageNameForCurrentAdvancement } ?: stageForSlot(slotIndex)
     val stageCap = dynamicStageCaps.getOrElse(stageIndex) { 0 }
     val spentHere = state.stageXpSpent.getValue(est.nome)
     val creditsLeft = stageCap - spentHere
@@ -255,7 +255,6 @@ fun ProgressosDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                Text("XP neste estágio: $spentHere / $stageCap")
                 Spacer(Modifier.height(16.dp))
 
                 RadioButtonRow("Comprar Vantagem", escolheu == "Comprar Vantagem") {
