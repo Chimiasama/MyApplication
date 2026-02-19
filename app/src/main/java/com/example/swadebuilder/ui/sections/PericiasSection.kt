@@ -689,9 +689,7 @@ fun PericiasContent(
                                     val novas =
                                         (atual.lista + nomeEsp).distinct()
                                     atual.copy(lista = novas).also {
-                                        state.spCostStackPorPericia
-                                            .getValue(per)
-                                            .add(1)
+                                        state.spCostStackPorPericia[per]?.add(1)
                                     }
                                 }
                             state.especializacoesPorPericia[per.nome] = novo

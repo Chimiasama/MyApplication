@@ -1931,7 +1931,7 @@ class CriadorState {
         val desired = desiredSlots.coerceAtLeast(1)
         while (jutsuExtras.size > desired - 1) {
             val ultimo = jutsuExtras.maxByOrNull { jutsuSlotIndex(it) ?: 0 } ?: break
-            if (rawTotal(ultimo) > 0 || compIncsPorPericia.getValue(ultimo) > 0) break
+            if (rawTotal(ultimo) > 0 || (compIncsPorPericia[ultimo] ?: 0) > 0) break
             jutsuExtras.remove(ultimo)
             baseIncsPorPericia.remove(ultimo)
             compIncsPorPericia.remove(ultimo)
@@ -2100,7 +2100,7 @@ class CriadorState {
         slots.forEachIndexed { index, per ->
             if (index < linguistaCount) {
                 val totalSteps = stepsToReach(per, 6)
-                val baseSteps = baseIncsPorPericia.getValue(per)
+                val baseSteps = baseIncsPorPericia[per] ?: 0
                 val freeSteps = (totalSteps - baseSteps).coerceAtLeast(0)
                 compIncsPorPericia[per] = freeSteps
                 if (notasPericia[per.nome].isNullOrBlank()) {
