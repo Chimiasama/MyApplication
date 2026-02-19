@@ -712,7 +712,7 @@ fun PericiasContent(
                                         (atual.lista + nomeEsp).distinct()
                                     atual.copy(lista = novas).also {
                                         state.spCostStackPorPericia
-                                            .getValue(per)
+                                            .getOrPut(per) { androidx.compose.runtime.mutableStateListOf() }
                                             .add(1)
                                     }
                                 }
