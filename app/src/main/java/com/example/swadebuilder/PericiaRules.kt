@@ -38,8 +38,8 @@ fun CriadorState.calcularPericiaRules(
     }
     val costNormal = if (nextRaw <= atrRaw) 1 else 2
 
-    val compStack = compCostStackPorPericia.getValue(pericia)
-    val spStack = spCostStackPorPericia.getValue(pericia)
+    val compStack = compCostStackPorPericia[pericia] ?: emptyList()
+    val spStack = spCostStackPorPericia[pericia] ?: emptyList()
 
     val minimoBasico: Int = minPericiaPorVantagem[pericia] ?: 0
     val opcionalList: List<Int> = vantagensSelecionadas.flatMap { vant ->
@@ -58,7 +58,7 @@ fun CriadorState.calcularPericiaRules(
 
     val canDecrease = if (modoProgressaoAtivo) {
         val frozenIncs = frozenSkillIncrements[pericia.nome] ?: 0
-        baseIncsPorPericia.getValue(pericia) > frozenIncs
+        (baseIncsPorPericia[pericia] ?: 0) > frozenIncs
     } else {
         !locked &&
             (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
