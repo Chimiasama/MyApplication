@@ -371,6 +371,7 @@ class CriadorViewModel(
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.tropoSelecionado = null
         state.signoAdgSelecionado = null
+        state.pacoteCulturalFantasiaSelecionado = "Humano padrão"
         state.artistaMarcialJutsuOpcao = CriadorState.ARTISTA_MARCIAL_JUTSU_D6
         state.artistaMarcialPotencialFisico = null
         state.artistaMarcialTecnicasSelecionadas.clear()

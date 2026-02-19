@@ -227,6 +227,7 @@ class CriadorState {
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
+    var pacoteCulturalFantasiaSelecionado by mutableStateOf("Humano padrão")
     var protagonistaRollTecnicas by mutableStateOf<Int?>(null)
     var protagonistaRollPericia by mutableStateOf<Int?>(null)
     var protagonistaRollVantagem by mutableStateOf<Int?>(null)
@@ -381,6 +382,20 @@ class CriadorState {
         val SIGNOS_ADG = listOf(
             "Nenhum", "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
             "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
+        )
+        val PACOTES_CULTURAIS_FANTASIA = listOf(
+            "Humano padrão",
+            "Nômades do Deserto",
+            "Povo da Montanha",
+            "Povo do Mar",
+            "Senhores dos Cavalos"
+        )
+        val PACOTES_CULTURAIS_FANTASIA_DESC = mapOf(
+            "Humano padrão" to "Mantém o pacote padrão de humanos de Fantasia: Adaptável (uma Vantagem Novato à escolha).",
+            "Nômades do Deserto" to "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).",
+            "Povo da Montanha" to "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).",
+            "Povo do Mar" to "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.",
+            "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Cruel e Analfabeto, a critério do Mestre."
         )
         val SIGNOS_ADG_DESC = mapOf(
             "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e 1 PV).",
@@ -1713,6 +1728,23 @@ class CriadorState {
             }
         }
 
+        // Fantasia - Pacotes Culturais (only for Fantasy Humans)
+        if (isHumanoFantasiaSelecionado()) {
+            when (pacoteCulturalFantasiaSelecionado) {
+                "Nômades do Deserto" -> {
+                    if (perKey == "SOBREVIVENCIA") modifiedBase = maxOf(modifiedBase, 6)
+                }
+                "Povo do Mar" -> {
+                    if (perKey == "ATLETISMO" || perKey == "NAVEGAR") {
+                        modifiedBase = maxOf(modifiedBase, 6)
+                    }
+                }
+                "Senhores dos Cavalos" -> {
+                    if (perKey == "CAVALGAR") modifiedBase = maxOf(modifiedBase, 6)
+                }
+            }
+        }
+
         // Arte da Guerra - Protagonista
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
             val pericias = protagonistaPericiasDoTropo()
@@ -3034,7 +3066,21 @@ class CriadorState {
             }
         }
 
+        if (isHumanoFantasiaSelecionado() &&
+            pacoteCulturalFantasiaSelecionado == "Povo da Montanha" &&
+            a.keyify() == "VIGOR"
+        ) {
+            modifiedBase = maxOf(modifiedBase, 6)
+        }
+
         return modifiedBase
+    }
+
+    private fun isHumanoFantasiaSelecionado(): Boolean {
+        if (!compendioFantasiaAtivo) return false
+        if (!ancestralidade.keyify().contains("HUMANO")) return false
+        val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
+        return ancDef.origens.any { it == "FANTASIA" }
     }
 
     fun atributoMinRaw(a: String): Int =
@@ -3193,6 +3239,9 @@ class CriadorState {
             ApplyAncestryChangeCoordinatorUseCase.SignoAction.CLEAR -> selecionarSigno(null)
             ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP -> Unit
         }
+        if (!isHumanoFantasiaSelecionado()) {
+            pacoteCulturalFantasiaSelecionado = "Humano padrão"
+        }
         celestialAAMilagresDesabilitado = ancestryChangeCoordination.celestialAAMilagresDesabilitado
         if (ancestryChangeCoordination.resetMeioElfoAgil) {
             meioElfoAgil = false
@@ -3223,6 +3272,8 @@ class CriadorState {
 
         desvantagensRaciais.clear()
         desvantagensRaciais.addAll(racialPackage.desvantagensRaciais)
+
+        syncPacoteCulturalFantasia()
 
         naturalArmorFromRace = racialPackage.naturalArmorFromRace
         if (racialPackage.forceArmorZero) {
@@ -3606,6 +3657,43 @@ class CriadorState {
 
         recalcularPontosAtributo()
         rebuildAllPericiaStacks()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun selecionarPacoteCulturalFantasia(novoPacote: String) {
+        if (pacoteCulturalFantasiaSelecionado == novoPacote) return
+        pacoteCulturalFantasiaSelecionado = novoPacote
+        syncPacoteCulturalFantasia()
+        recalcularPontosAtributo()
+        rebuildAllPericiaStacks()
+    }
+
+    private fun syncPacoteCulturalFantasia() {
+        if (!isHumanoFantasiaSelecionado()) return
+
+        val ancDef = getAncestralidadeDef(ancestralidade)
+        val baseDesvantagens = ancDef?.desvantagens ?: emptyList()
+        val extras = when (pacoteCulturalFantasiaSelecionado) {
+            "Nômades do Deserto" -> listOf("Fraqueza Ambiental (Menor)")
+            "Povo da Montanha" -> listOf("Fraqueza Ambiental (Menor)")
+            else -> emptyList()
+        }
+
+        val oldAuto = desvantagensRaciais.toList()
+        desvantagensRaciais.clear()
+        desvantagensRaciais.addAll(baseDesvantagens + extras)
+
+        val snapshot = resolveAncestryComplicationsSnapshotUseCase.execute(
+            ResolveAncestryComplicationsSnapshotUseCase.Params(
+                previousAutomaticDisadvantages = oldAuto,
+                currentAutomaticDisadvantages = desvantagensRaciais.toList(),
+                availableComplications = listaComplicacoes,
+                selectedComplications = complicacoesSelecionadas,
+                originPriorityResolver = { getOriginPriority(it) }
+            )
+        )
+        complicacoesSelecionadas.clear()
+        complicacoesSelecionadas.putAll(snapshot.selectedComplications)
     }
 
     private fun syncArtistaMarcialPotencialFisico() {
@@ -4446,6 +4534,7 @@ class CriadorState {
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
+                pacoteCulturalFantasiaSelecionado = pacoteCulturalFantasiaSelecionado,
                 artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
@@ -4571,6 +4660,7 @@ class CriadorState {
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
+        pacoteCulturalFantasiaSelecionado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado ?: "Humano padrão"
         artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
         artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
         artistaMarcialTecnicasSelecionadas.clear()

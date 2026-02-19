@@ -135,6 +135,7 @@ data class SnapshotSelecoes(
     val portraitScaleType: String = "CROP",
     val portraitAlignment: String = "CENTER",
     val signoAdgSelecionado: String? = null,
+    val pacoteCulturalFantasiaSelecionado: String? = null,
     val artistaMarcialJutsuOpcao: String? = null,
     val artistaMarcialPotencialFisico: String? = null,
     val artistaMarcialTecnicasSelecionadas: List<String> = emptyList(),

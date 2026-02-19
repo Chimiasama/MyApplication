@@ -485,6 +485,41 @@ fun AncestralidadesSection(
                                 }
                             }
 
+
+                            if (isSelected && item.origens.contains("FANTASIA") && item.nome.contains("Humano", ignoreCase = true)) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Pacote Cultural:", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.pacoteCulturalFantasiaSelecionado)
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        CriadorState.PACOTES_CULTURAIS_FANTASIA.forEach { pacote ->
+                                            DropdownMenuItem(
+                                                text = { Text(pacote) },
+                                                onClick = {
+                                                    state.selecionarPacoteCulturalFantasia(pacote)
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+
+                                Spacer(Modifier.height(4.dp))
+                                val packageDesc = CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                if (packageDesc != null && EditionConfig.isFullEdition) {
+                                    Text(
+                                        text = packageDesc,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+
                             if (isSelected && item.nome.keyify().contains("GNOMO") && item.nome.keyify().contains("PATHFINDER")) {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Perícia Obsessiva (Astúcia):", style = MaterialTheme.typography.labelMedium)
