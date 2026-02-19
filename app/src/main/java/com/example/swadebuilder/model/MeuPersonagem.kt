@@ -9,6 +9,9 @@ data class MeuPersonagem(
     val atributos: Map<String, Int>,
     val pericias: Map<String, Int>,
     val ancestralidade: String,
+    val signoAdgSelecionado: String? = null,
+    val descendenteElementalSelecionado: String? = null,
+    val pacoteCulturalFantasiaSelecionado: String? = null,
     val celestialAAMilagresDesabilitado: Boolean,
     val tropoSelecionadoId: String? = null,
 

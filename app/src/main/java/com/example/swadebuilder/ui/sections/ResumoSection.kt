@@ -180,7 +180,6 @@ fun SummaryContent(
 
     val sections = rememberSummarySections(state, viewModel)
 
-    val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
     val attributesSection = sections.firstOrNull { it.title == "Atributos" }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
@@ -251,12 +250,7 @@ fun SummaryContent(
 
     val nome = state.nomePersonagem
 
-    val ancestralidadeValue = identitySection?.items
-        ?.firstOrNull { it.startsWith("Ancestralidade:") }
-        ?.substringAfter(":")
-        ?.trim()
-        .orEmpty()
-        .ifBlank { "–" }
+    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem())
 
     val heartValue = state.coracaoCrystalSelecionado?.nome
 
@@ -266,7 +260,7 @@ fun SummaryContent(
     } else ""
 
     val ancestralidadeDisplay = buildString {
-        append("Ancestralidade: $ancestralidadeValue$monstroInfo")
+        append("$ancestralidadeValue$monstroInfo")
         if (heartValue != null) {
             append("\nCoração: $heartValue")
         }
@@ -592,16 +586,10 @@ fun BasicCharacterInfo(
     showDerivedStats: Boolean = false
 ) {
     val sections = rememberSummarySections(state, viewModel())
-    val identitySection = sections.firstOrNull { it.title == "Identidade" }
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
 
     val nome = state.nomePersonagem
-    val ancestralidadeValue = identitySection?.items
-        ?.firstOrNull { it.startsWith("Ancestralidade:") }
-        ?.substringAfter(":")
-        ?.trim()
-        .orEmpty()
-        .ifBlank { "–" }
+    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem())
 
     val heartValue = state.coracaoCrystalSelecionado?.nome
 
@@ -616,7 +604,7 @@ fun BasicCharacterInfo(
     }
 
     val ancestralidadeDisplay = buildString {
-        append("Ancestralidade: $ancestralidadeValue$monstroInfo")
+        append("$ancestralidadeValue$monstroInfo")
         if (heartValue != null) {
             append("\nCoração: $heartValue")
         }

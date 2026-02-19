@@ -405,6 +405,7 @@ class CriadorViewModel(
         state.vantagensAutomaticasDoTropo.clear()
         state.vantagensAutomaticasDoSigno.clear()
         state.vantagensAutomaticasDoElemento.clear()
+        state.habilidadesRaciaisDoElemento.clear()
         state.vantagensAutomaticasDoPotencialFisico.clear()
         state.transtornos.clear()
         state.notasPericia.clear()

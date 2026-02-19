@@ -14,6 +14,27 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
 import kotlin.math.max
 
+fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
+    val base = (ancestralidadeNomeBase ?: personagem.ancestralidade).titleCase()
+
+    val sufixo = when {
+        base.keyify().contains("HUMANO") && !personagem.signoAdgSelecionado.isNullOrBlank() -> {
+            val sign = personagem.signoAdgSelecionado
+            if (sign.equals("Nenhum", ignoreCase = true)) "Humano Padrão" else "Signo do $sign"
+        }
+        base.keyify().contains("DESCENDENTE ELEMENTAL") && !personagem.descendenteElementalSelecionado.isNullOrBlank() -> {
+            personagem.descendenteElementalSelecionado
+        }
+        base.keyify().contains("HUMANO") && !personagem.pacoteCulturalFantasiaSelecionado.isNullOrBlank() -> {
+            val pack = personagem.pacoteCulturalFantasiaSelecionado
+            if (pack.equals("Humano padrão", ignoreCase = true)) null else pack
+        }
+        else -> null
+    }
+
+    return if (sufixo.isNullOrBlank()) base else "$base ($sufixo)"
+}
+
 // =================================================================================================
 // SHARED SUMMARY BUILDER (Used by ResumoSection.kt)
 // =================================================================================================
@@ -169,7 +190,8 @@ fun buildSummaryLines(
 
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
-    lines += "Ancestralidade: $ancestralidadeNome$monstroNome"
+    val ancestralidadeDisplay = buildAncestralidadeDisplay(personagem, ancestralidadeNome)
+    lines += "$ancestralidadeDisplay$monstroNome"
     if (personagem.coracaoCrystalSelecionado != null) {
         lines += "Coração de Cristal: ${personagem.coracaoCrystalSelecionado.nome}"
     }

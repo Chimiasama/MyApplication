@@ -43,6 +43,9 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         atributos = this.valoresAtributos.mapValues { it.value.intValue },
         pericias = periciasComIdiomas().associate { per -> per.nome to this.rawTotal(per) },
         ancestralidade = this.ancestralidade,
+        signoAdgSelecionado = this.signoAdgSelecionado,
+        descendenteElementalSelecionado = this.descendenteElementalSelecionado,
+        pacoteCulturalFantasiaSelecionado = this.pacoteCulturalFantasiaSelecionado,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         tropoSelecionadoId = this.tropoSelecionado?.id,
         vantagens = this.vantagensSelecionadas.map { it.id },
@@ -837,7 +840,8 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     }
 
     canvas.drawText(displayedName, rect.left + 10f, rect.top + 30f, titlePaint)
-    canvas.drawText("${p.ancestralidade.titleCase()} - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
+    val ancestralidadeTitulo = buildAncestralidadeDisplay(p)
+    canvas.drawText("$ancestralidadeTitulo - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
 
     if (p.coracaoCrystalSelecionado != null) {
         val heartText = "Coração: ${p.coracaoCrystalSelecionado.nome}"

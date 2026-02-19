@@ -352,6 +352,7 @@ class CriadorState {
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
     val vantagensAutomaticasDoElemento = mutableStateListOf<String>()
+    val habilidadesRaciaisDoElemento = mutableStateListOf<String>()
     val vantagensAutomaticasDoPotencialFisico = mutableStateListOf<String>()
 
     val fixedPowersByArcano = mapOf(
@@ -3992,17 +3993,38 @@ class CriadorState {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoElemento }
             vantagensAutomaticasDoElemento.clear()
         }
+        if (habilidadesRaciaisDoElemento.isNotEmpty()) {
+            vantagensRaciais.removeAll(habilidadesRaciaisDoElemento.toSet())
+            habilidadesRaciaisDoElemento.clear()
+        }
 
         descendenteElementalSelecionado = novoElemento
 
         // 2. Add new edges
         if (novoElemento != null) {
             val edgesToAdd = mutableListOf<String>()
+            val racialTraits = mutableListOf<String>()
             when (novoElemento) {
-                "Ar" -> edgesToAdd.add("ar_interno")
-                "Água" -> edgesToAdd.add("aquatico")
-                "Fogo" -> edgesToAdd.add("rapido")
-                "Terra" -> edgesToAdd.add("solido_como_rocha")
+                "Ar" -> {
+                    racialTraits += listOf("AR INTERNO", "RESISTÊNCIA AMBIENTAL (Ar)")
+                }
+                "Água" -> {
+                    racialTraits += listOf("AQUÁTICO", "RESISTÊNCIA AMBIENTAL (Água)")
+                }
+                "Fogo" -> {
+                    edgesToAdd.add("rapido")
+                    racialTraits += listOf("RÁPIDO", "RESISTÊNCIA AMBIENTAL (Fogo)")
+                }
+                "Terra" -> {
+                    racialTraits += listOf("SÓLIDO COMO ROCHA", "RESISTÊNCIA AMBIENTAL (Terra)")
+                }
+            }
+
+            racialTraits.forEach { trait ->
+                if (vantagensRaciais.none { it.keyify() == trait.keyify() }) {
+                    vantagensRaciais.add(trait)
+                    habilidadesRaciaisDoElemento.add(trait)
+                }
             }
 
             edgesToAdd.forEach { edgeId ->
