@@ -2771,7 +2771,7 @@ class CriadorState {
             var temMaior = false
 
             for ((comp, tipo) in complicacoesSelecionadas) {
-                if (comp.id.keyify() in autoKeys) continue
+                if (comp.id.keyify() in autoKeys || comp.name.keyify() in autoKeys) continue
                 // PROMPT 3: Ignora complicações (Transtornos) ganhos em progresso para cálculo de PC
                 if (transtornos.any { it.id == comp.id }) continue
 
@@ -2871,7 +2871,7 @@ class CriadorState {
         val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
-        if (comp.id.keyify() in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."
+        if (comp.id.keyify() in autoKeys || comp.name.keyify() in autoKeys) return false to "Complicação automática (Racial ou de Cenário)."
 
         // Young check
         if (comp.id == "pequeno" && jovemAutoPequeno) return false to "Adicionado automaticamente por Jovem (Maior)."
