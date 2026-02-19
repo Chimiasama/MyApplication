@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -33,6 +35,8 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
@@ -758,6 +762,9 @@ fun ProgressosDialog(
     if (showSkillSelection) {
         val spRemaining = state.spFromProgress
         val canCancelSkillAdvancement = state.skillsForCurrentAdvancement.isEmpty()
+        var showSkillNoteDialog by rememberSaveable { mutableStateOf(false) }
+        var skillNoteText by rememberSaveable { mutableStateOf("") }
+        var skillNoteTarget by remember { mutableStateOf<Pericia?>(null) }
 
         AlertDialog(
             onDismissRequest = {
@@ -812,7 +819,38 @@ fun ProgressosDialog(
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(per.nome)
+                                    val nota = state.notasPericia[per.nome]
+                                    if (!nota.isNullOrBlank()) {
+                                        Text(
+                                            text = "($nota)",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.tertiary
+                                        )
+                                    }
                                     Text("Atual: ${current.toDiceString()} | Custo: $cost SP", style = MaterialTheme.typography.bodySmall)
+                                }
+
+                                val canEditNote = current > 0 && (
+                                    state.isIdiomaPericia(per) ||
+                                        state.isJutsuPericia(per) ||
+                                        state.usarEspecializacoesDePericia
+                                    )
+
+                                if (canEditNote) {
+                                    IconButton(
+                                        onClick = {
+                                            skillNoteTarget = per
+                                            skillNoteText = state.notasPericia[per.nome] ?: ""
+                                            showSkillNoteDialog = true
+                                        },
+                                        modifier = Modifier.size(28.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Edit,
+                                            contentDescription = "Editar descrição da perícia",
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
 
                                 if (wasIncreased) {
@@ -851,6 +889,64 @@ fun ProgressosDialog(
                 }
             }
         )
+
+        if (showSkillNoteDialog && skillNoteTarget != null) {
+            val isIdiomaOuJutsu = state.isIdiomaPericia(skillNoteTarget!!) || state.isJutsuPericia(skillNoteTarget!!)
+            AlertDialog(
+                onDismissRequest = {
+                    showSkillNoteDialog = false
+                    skillNoteTarget = null
+                },
+                title = {
+                    Text(if (isIdiomaOuJutsu) "Editar idioma" else "Editar especialização")
+                },
+                text = {
+                    Column {
+                        Text("Perícia: ${skillNoteTarget!!.nome}")
+                        Spacer(Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = skillNoteText,
+                            onValueChange = { skillNoteText = it },
+                            label = {
+                                Text(
+                                    if (isIdiomaOuJutsu) {
+                                        "Ex: Élfico, Espada, Desarmado..."
+                                    } else {
+                                        "Ex: Pistolas, Investigação Forense..."
+                                    }
+                                )
+                            },
+                            singleLine = true
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            val per = skillNoteTarget!!
+                            val txt = skillNoteText.trim()
+                            if (txt.isNotBlank()) {
+                                state.notasPericia[per.nome] = txt
+                            } else if (isIdiomaOuJutsu) {
+                                state.notasPericia[per.nome] = state.idiomaDefaultLabel(per)
+                            } else {
+                                state.notasPericia.remove(per.nome)
+                            }
+                            showSkillNoteDialog = false
+                            skillNoteTarget = null
+                        }
+                    ) { Text("Salvar") }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showSkillNoteDialog = false
+                            skillNoteTarget = null
+                        }
+                    ) { Text("Cancelar") }
+                }
+            )
+        }
     }
 
     if (showAdvSelection) {

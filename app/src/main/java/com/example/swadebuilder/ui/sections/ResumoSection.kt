@@ -429,6 +429,9 @@ fun SummaryContent(
             Spacer(Modifier.height(12.dp))
         }
 
+        SkillNotesSummaryCard(state = state)
+        Spacer(Modifier.height(12.dp))
+
         val filteredSections = otherSections.filterNot { section ->
             when (section.title) {
                 "Vantagens", "Complicações" ->
@@ -464,6 +467,121 @@ fun SummaryContent(
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f),
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
             )
+        )
+    }
+}
+
+@Composable
+private fun SkillNotesSummaryCard(
+    state: CriadorState,
+    modifier: Modifier = Modifier
+) {
+    var showEditDialog by rememberSaveable { mutableStateOf(false) }
+    var editPerTarget by rememberSaveable { mutableStateOf<Pericia?>(null) }
+    var editText by rememberSaveable { mutableStateOf("") }
+
+    val editableSkills = state.periciasComIdiomas().filter { per ->
+        val hasPoints = state.rawTotal(per) > 0
+        if (!hasPoints) return@filter false
+
+        state.isIdiomaPericia(per) || state.isJutsuPericia(per) || state.usarEspecializacoesDePericia
+    }
+
+    if (editableSkills.isEmpty()) return
+
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Column(Modifier.padding(12.dp)) {
+            Text(
+                text = "Notas de Perícias",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.height(8.dp))
+
+            editableSkills.forEach { per ->
+                val note = state.notasPericia[per.nome].orEmpty()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = per.nome,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = if (note.isNotBlank()) note else "(sem descrição)",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    IconButton(
+                        onClick = {
+                            editPerTarget = per
+                            editText = note
+                            showEditDialog = true
+                        },
+                        modifier = Modifier.size(24.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Editar nota da perícia",
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+                Spacer(Modifier.height(6.dp))
+            }
+        }
+    }
+
+    if (showEditDialog && editPerTarget != null) {
+        val per = editPerTarget!!
+        val isIdiomaOuJutsu = state.isIdiomaPericia(per) || state.isJutsuPericia(per)
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = { Text(if (isIdiomaOuJutsu) "Editar idioma" else "Editar nota da perícia") },
+            text = {
+                Column {
+                    Text("Perícia: ${per.nome}")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = editText,
+                        onValueChange = { if (it.length <= 80) editText = it },
+                        label = { Text("Descrição") },
+                        supportingText = { Text("${editText.length}/80") },
+                        singleLine = true
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val newValue = editText.trim()
+                        if (newValue.isNotBlank()) {
+                            state.notasPericia[per.nome] = newValue
+                        } else if (isIdiomaOuJutsu) {
+                            state.notasPericia[per.nome] = state.idiomaDefaultLabel(per)
+                        } else {
+                            state.notasPericia.remove(per.nome)
+                        }
+                        showEditDialog = false
+                    }
+                ) { Text("Salvar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditDialog = false }) { Text("Cancelar") }
+            }
         )
     }
 }
