@@ -1280,6 +1280,7 @@ class CriadorViewModel(
         val lastUsedIndex = state.xpSlots.indexOfLast { it }
         if (lastUsedIndex != -1) {
             state.xpSlots[lastUsedIndex] = false
+            state.progresso--
             state.refundProgressAtStage(stageName, 1)
         }
 

@@ -255,9 +255,6 @@ fun ProgressosDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                Text("XP neste estágio: $spentHere / $stageCap")
-                Spacer(Modifier.height(16.dp))
-
                 RadioButtonRow("Comprar Vantagem", escolheu == "Comprar Vantagem") {
                     escolheu = "Comprar Vantagem"
                 }
