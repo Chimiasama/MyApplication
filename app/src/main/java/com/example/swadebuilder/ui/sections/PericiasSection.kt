@@ -121,7 +121,23 @@ fun PericiasContent(
         state.compendioFantasiaAtivo,
         state.compendioHorrorAtivo
     ) {
-        state.periciasComIdiomas().filter { per ->
+        val pericias = state.periciasComIdiomas()
+
+        val idiomaSlotsVisiveis = pericias
+            .filter { state.isIdiomaPericia(it) }
+            .let { slots ->
+                val ultimaVazia = slots.lastOrNull { state.rawTotal(it) == 0 }
+                slots.filter { per -> state.rawTotal(per) > 0 || per == ultimaVazia }.toSet()
+            }
+
+        val jutsuSlotsVisiveis = pericias
+            .filter { state.isJutsuPericia(it) }
+            .let { slots ->
+                val ultimaVazia = slots.lastOrNull { state.rawTotal(it) == 0 }
+                slots.filter { per -> state.rawTotal(per) > 0 || per == ultimaVazia }.toSet()
+            }
+
+        pericias.filter { per ->
             if (per.nome.equals("Jutsu", ignoreCase = true)) {
                 false
             } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
@@ -131,6 +147,12 @@ fun PericiasContent(
                 n != "FOCO" && n !in SAVAGE_PATHFINDER_BLOCKED_SKILLS
             } else {
                 true
+            }
+        }.filter { per ->
+            when {
+                state.isIdiomaPericia(per) -> per in idiomaSlotsVisiveis
+                state.isJutsuPericia(per) -> per in jutsuSlotsVisiveis
+                else -> true
             }
         }.filter {
             it.origem?.uppercase() != "SUPLEMENTO" || state.rawTotal(it) > 0

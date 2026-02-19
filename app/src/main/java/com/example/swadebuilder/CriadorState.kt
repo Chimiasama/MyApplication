@@ -3103,8 +3103,8 @@ class CriadorState {
 
     fun rawTotal(per: Pericia): Int {
         val startRaw     = periciaStartRaw(ancestralidade, per)
-        val normalIncs   = baseIncsPorPericia.getValue(per)
-        val complicsIncs = compIncsPorPericia.getValue(per)
+        val normalIncs   = baseIncsPorPericia[per] ?: 0
+        val complicsIncs = compIncsPorPericia[per] ?: 0
         val totalIncs    = normalIncs + complicsIncs
 
         if (startRaw == 0 && totalIncs == 0) return 0
