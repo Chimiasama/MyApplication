@@ -1453,7 +1453,7 @@ class CriadorState {
             }
 
             // Transmorfos (Changeling) Logic: Fixed 'Disfarce' power in the first slot
-            if (ancestralidade == "TRANSMORFOS" && arcKey == "DOM") {
+            if (ancestralidade.keyify() == "TRANSMORFOS" && arcKey.normAAKey() == "DOM") {
                 if (slots.size > 0) {
                     slots[0] = "disfarce"
                 }
@@ -2862,7 +2862,7 @@ class CriadorState {
     fun podeRemoverPoderDoSlot(poderId: String): Pair<Boolean, String?> {
         val normalizedId = poderId.replace('_', ' ').keyify()
 
-        if (ancestralidade == "TRANSMORFOS" && normalizedId == "DISFARCE") {
+        if (ancestralidade.keyify() == "TRANSMORFOS" && normalizedId == "DISFARCE") {
             return false to "Poder racial fixo."
         }
 

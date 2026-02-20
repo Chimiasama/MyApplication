@@ -21,7 +21,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
     )
 
     fun execute(anc: String, descendenteElementalSelecionado: String?): Result {
-        return when (anc) {
+        val ancKey = anc.keyify()
+
+        return when (ancKey) {
             "SAURIOS" -> Result(
                 naturalArmorFromRace = 2,
                 forceArmorZero = true,
@@ -92,7 +94,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                 elementalAction = ElementalAction.NONE
             )
 
-            "DESCENDENTE ELEMENTAL" -> Result(
+            "DESCENDENTE ELEMENTAL".keyify() -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
@@ -106,7 +108,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                 }
             )
 
-            "TRANSMORFOS" -> Result(
+            "TRANSMORFOS".keyify() -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
