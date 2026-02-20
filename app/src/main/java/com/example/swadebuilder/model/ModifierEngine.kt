@@ -301,6 +301,13 @@ object ModifierEngine {
             }
         }
 
+        // 4.5 Monster templates
+        state.getMonstroSelecionado()?.let { monstro ->
+            if (monstro.id == "lobisomem") {
+                modifiers.add(Modifier("monster_lobisomem_pace", SourceType.OUTRO, monstro.nome, ModifierTarget.PACE, 2))
+            }
+        }
+
         // 5. Powers / Other
         if (state.bonusResFromPower != 0) {
             modifiers.add(Modifier("power_bonus_res", SourceType.OUTRO, "Poderes", ModifierTarget.TOUGHNESS_FLAT, state.bonusResFromPower))
