@@ -391,7 +391,11 @@ class CriadorState {
         "MISTICO_PALADINO" to listOf("aumentar_reduzir_caracteristica", "cura", "ferir", "protecao", "santuario"),
         "MISTICO_PATRULHEIRO" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "visao_distante"),
         "MISTICO_ARAUTO" to listOf("adivinhacao", "aumentar_reduzir_caracteristica", "cura", "videncia"),
-        "MISTICO_MORTE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "protecao")
+        "MISTICO_MORTE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "protecao"),
+        "MISTICO_INVOCADOR" to listOf("conjurar_aliado", "conjurar_demonio", "protecao", "zumbi"),
+        "MISTICO_POSSESSOR" to listOf("aumentar_reduzir_caracteristica", "fantoche", "maldicao", "pesadelos"),
+        "MISTICO_SEDUTOR" to listOf("aumentar_reduzir_caracteristica", "disfarce", "empatia", "leitura_de_mente"),
+        "MISTICO_TRAPACEIRO" to listOf("disfarce", "deflexao", "horrores_ilusorios", "medo")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
@@ -1045,7 +1049,26 @@ class CriadorState {
                 val paRegex = Regex("""PA\s*\d+""", RegexOption.IGNORE_CASE)
 
                 var dmgMatch = dmgRegex.find(desc)?.value?.replace(" ", "") ?: "For+d4"
-                val paMatch = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
+                var paFinal = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
+
+                val garrasDemonioCount = vantagensSelecionadas.count { it.id == "garras_demonio" }
+                val mordidaDemonioCount = vantagensSelecionadas.count { it.id == "mordida_demonio" }
+
+                if (key.equals("Garras", ignoreCase = true) && garrasDemonioCount > 0) {
+                    if (garrasDemonioCount >= 2) {
+                        dmgMatch = "For+d6"
+                        paFinal = maxOf(paFinal, 2)
+                    } else {
+                        dmgMatch = "For+d4"
+                    }
+                }
+
+                if (key.equals("Mordida", ignoreCase = true) && mordidaDemonioCount > 0) {
+                    dmgMatch = "For+d6"
+                    if (mordidaDemonioCount >= 2) {
+                        paFinal = maxOf(paFinal, 2)
+                    }
+                }
 
                 // Apply scaling to "Garras" if Martial Artist or Brawler is present
                 if (key.equals("Garras", ignoreCase = true)) {
@@ -1067,7 +1090,7 @@ class CriadorState {
                         EquipamentoItem(
                             nome = finalName,
                             dano = JsonPrimitive(dmgMatch),
-                            pa = if (paMatch > 0) JsonPrimitive(paMatch) else null,
+                            pa = if (paFinal > 0) JsonPrimitive(paFinal) else null,
                             distancia = JsonPrimitive("Toque"),
                             peso = JsonPrimitive(0),
                             custo = JsonPrimitive(0)

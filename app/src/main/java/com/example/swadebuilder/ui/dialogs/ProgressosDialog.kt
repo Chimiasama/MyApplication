@@ -1108,7 +1108,7 @@ fun ProgressosDialog(
                                         return@DialogVantagemItem
                                     }
 
-                                    if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo") {
+                                    if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo" || vant.id == "poderes_misticos_demonio") {
                                         pendingMysticPowersAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showMysticPowersSelection = true
@@ -1203,20 +1203,30 @@ fun ProgressosDialog(
     if (showMysticPowersSelection && pendingMysticPowersAdv != null) {
         val vant = pendingMysticPowersAdv!!
         val isAnjoMysticPowers = vant.id == "poderes_misticos_anjo"
+        val isDemonioMysticPowers = vant.id == "poderes_misticos_demonio"
         val options = if (isAnjoMysticPowers) {
             listOf(
                 "Arauto" to "Adivinhação, Aumentar/Reduzir Característica, Cura, Vidência",
                 "Morte" to "Aumentar/Reduzir Característica (si mesmo), Deflexão, Ferir, Proteção (si mesmo)"
             )
         } else {
-            listOf(
-                "Bárbaro" to "Força d8+",
-                "Guerreiro" to "Lutar d8+",
-                "Ladrão" to "Ladinagem d8+",
-                "Monge" to "Atletismo d8+",
-                "Paladino" to "Espírito d8+",
-                "Patrulheiro" to "Sobrevivência d8+"
-            )
+            if (isDemonioMysticPowers) {
+                listOf(
+                    "Invocador" to "Conjurar aliado, conjurar demônio, proteção, zumbi",
+                    "Possessor" to "Aumentar/Reduzir Característica, fantoche, maldição, pesadelos",
+                    "Sedutor" to "Aumentar/Reduzir Característica, disfarce, empatia, leitura de mente",
+                    "Trapaceiro" to "Disfarce, deflexão (si mesmo), horrores ilusórios, medo"
+                )
+            } else {
+                listOf(
+                    "Bárbaro" to "Força d8+",
+                    "Guerreiro" to "Lutar d8+",
+                    "Ladrão" to "Ladinagem d8+",
+                    "Monge" to "Atletismo d8+",
+                    "Paladino" to "Espírito d8+",
+                    "Patrulheiro" to "Sobrevivência d8+"
+                )
+            }
         }
         var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
 
@@ -1225,10 +1235,10 @@ fun ProgressosDialog(
                 showMysticPowersSelection = false
                 pendingMysticPowersAdv = null
             },
-            title = { Text(if (isAnjoMysticPowers) "Poderes Místicos (Anjo): Escolha o Pacote" else "Poderes Místicos: Escolha a Classe") },
+            title = { Text(if (isAnjoMysticPowers) "Poderes Místicos (Anjo): Escolha o Pacote" else if (isDemonioMysticPowers) "Poderes Místicos (Demônio): Escolha o Pacote" else "Poderes Místicos: Escolha a Classe") },
             text = {
                 Column {
-                    Text(if (isAnjoMysticPowers) "Escolha o pacote de poderes para o anjo:" else "Escolha a classe para definir seus poderes e requisitos:")
+                    Text(if (isAnjoMysticPowers) "Escolha o pacote de poderes para o anjo:" else if (isDemonioMysticPowers) "Escolha o pacote de poderes para o demônio:" else "Escolha a classe para definir seus poderes e requisitos:")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { (opcao, requisito) ->
                         Row(
@@ -1298,7 +1308,7 @@ fun ProgressosDialog(
                                 if (sob >= 8) reqMet = true
                                 else failMsg = "Requer Sobrevivência d8+"
                             }
-                            else -> reqMet = isAnjoMysticPowers
+                            else -> reqMet = isAnjoMysticPowers || isDemonioMysticPowers
                         }
 
                         if (!reqMet) {
