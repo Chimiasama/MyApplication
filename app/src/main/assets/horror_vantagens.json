@@ -447,6 +447,10 @@
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
+    "choiceOptions": [
+      "Arauto",
+      "Morte"
+    ],
     "ganha_ao_comprar": [],
     "descricao": "Algumas criaturas angelicais possuem Antecedentes Arcanos completos, mas outras são abençoadas com habilidades limitadas, mas muito mais diretas garantidas por seu criador. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\nARAUTO: Adivinhação, aumentar/reduzir Característica, cura, vidência.\nMORTE: Aumentar Característica (apenas a si mesmo), deflexão, ferir, proteção (apenas a si mesmo)."
   },

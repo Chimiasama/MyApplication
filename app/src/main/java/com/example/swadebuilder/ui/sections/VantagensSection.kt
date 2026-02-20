@@ -747,6 +747,9 @@ fun VantagensContent(
                                             } else {
                                                 dialogMostrandoPoderFavorito = vant
                                             }
+                                        } else if (vant.requiresChoice || vant.id == "arma_predileta_aprimorada") {
+                                            pendingVantagem = vant
+                                            showChoiceDialog = true
                                         } else {
                                             attemptPurchase(vant) {}
                                         }
@@ -827,6 +830,9 @@ fun VantagensContent(
                                     } else {
                                         dialogMostrandoPoderFavorito = vant
                                     }
+                                } else if (vant.requiresChoice || vant.id == "arma_predileta_aprimorada") {
+                                    pendingVantagem = vant
+                                    showChoiceDialog = true
                                 } else {
                                     attemptPurchase(vant) {}
                                 }
