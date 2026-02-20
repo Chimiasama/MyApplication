@@ -948,7 +948,7 @@ class CriadorState {
 
         val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")
         val addedTypes = mutableSetOf<String>()
-        val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome }
+        val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome } + vantagensRaciais
 
         // Helper to find description for a keyword
         fun findDesc(keyword: String): String {

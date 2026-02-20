@@ -824,6 +824,7 @@
   {
     "nome": "POVO SERPENTE",
     "origem": "FANTASIA",
+    "movimentacao": 4,
     "descricao": "Vindos de grandes tocas ou ninhos isolados, há vários tipos de humanoides serpentinos. As espécies variam muito, indo desde constritores a uma variedade de víboras, mas compartilham a mesma fisiologia humanoide e as cabeças ofídicas.",
     "variantes": "Ideias Variantes: O povo serpente pode ter o corpo de uma cobra em vez de pernas humanoides. Essas nagas podem ter sua Movimentação aumentada ou a Vantagem Corredor equilibrada pela Forma Incomum (veja Centauros na página 14).\nVocê também pode melhorar o veneno do povo serpente para Nocaute, Letal ou Paralisante adquirindo 2 pontos adicionais em habilidades de ancestralidades negativas ou Complicações. Personagens relacionadas a cascavéis, por exemplo, podem ser Desagradáveis ou ter Inimigos Ancestrais, e aquelas que se assemelham a cobras podem ter a habilidade de cuspir seu veneno (veja a página 59).",
     "atributos": {},
