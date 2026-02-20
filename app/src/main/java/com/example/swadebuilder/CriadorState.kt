@@ -1081,6 +1081,7 @@ class CriadorState {
 
                 val garrasDemonioCount = vantagensSelecionadas.count { it.id == "garras_demonio" }
                 val mordidaDemonioCount = vantagensSelecionadas.count { it.id == "mordida_demonio" }
+                val hasGarrasVampiro = vantagensSelecionadas.any { it.id == "garras_vampiro" }
                 val hasLobisomemAprimorado = vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" }
 
                 if (key.equals("Toque Arrepiante", ignoreCase = true)) {
@@ -1103,6 +1104,11 @@ class CriadorState {
                     } else {
                         dmgMatch = "For+d4"
                     }
+                }
+
+                if (key.equals("Garras", ignoreCase = true) && hasGarrasVampiro) {
+                    dmgMatch = "For+d6"
+                    paFinal = maxOf(paFinal, 2)
                 }
 
                 if (key.equals("Mordida", ignoreCase = true) && mordidaDemonioCount > 0) {

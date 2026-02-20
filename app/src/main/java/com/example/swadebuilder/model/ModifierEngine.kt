@@ -319,6 +319,9 @@ object ModifierEngine {
             if (monstro.id == "revivido") {
                 modifiers.add(Modifier("monster_revivido_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
             }
+            if (monstro.id == "vampiro") {
+                modifiers.add(Modifier("monster_vampiro_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
         }
 
         // 5. Powers / Other
