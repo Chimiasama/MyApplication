@@ -276,10 +276,38 @@ class CriadorState {
         return listaMonstroTemplates.firstOrNull { it.id == tipoMonstroSelecionado }
     }
 
-    fun aplicarTipoMonstro(novoId: String?) {
+    fun aplicarTipoMonstro(novoId: String?): List<String> {
+        val feedback = mutableListOf<String>()
+
         tipoMonstroSelecionado = novoId
-        recalcularPontosAtributo()
-        rebuildAllPericiaStacks()
+
+        if (modoMonstroAtivo) {
+            val selectedTemplateKey = novoId?.keyify()
+            val toRemove = vantagensSelecionadas
+                .filter { it.categoria == Categoria.MONSTRUOSAS }
+                .filter { it.requisitos.templatesRequired.isNotEmpty() }
+                .filter { v ->
+                    val required = v.requisitos.templatesRequired.map { it.keyify() }
+                    selectedTemplateKey == null || selectedTemplateKey !in required
+                }
+                .toList()
+
+            toRemove.forEach { vantagem ->
+                var refundMessage: String? = null
+                venderVantagem(vantagem) { msg -> refundMessage = msg }
+                val suffix = refundMessage?.let { " $it" } ?: ""
+                feedback.add("Vantagem '${vantagem.nome}' removida automaticamente por incompatibilidade com o tipo de monstro selecionado.$suffix")
+            }
+        }
+
+        recalcularPontosAtributo(feedback)
+        rebuildAllPericiaStacks(feedback)
+
+        if (feedback.isNotEmpty()) {
+            anotacoes += "\n• " + feedback.joinToString("\n• ")
+        }
+
+        return feedback
     }
 
     fun getAncestralidadeDef(name: String): com.example.swadebuilder.model.RacialModifier? {

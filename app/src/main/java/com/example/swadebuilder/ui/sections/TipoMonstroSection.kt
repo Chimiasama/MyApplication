@@ -23,7 +23,8 @@ import com.example.swadebuilder.ui.components.SectionCard
 @Composable
 fun TipoMonstroSection(
     state: CriadorState,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onLogFeedback: (String) -> Unit
 ) {
     if (!state.modoMonstroAtivo) return
 
@@ -52,7 +53,7 @@ fun TipoMonstroSection(
                         .padding(vertical = 4.dp)
                         .clickable {
                             onUserFeedback()
-                            state.aplicarTipoMonstro(template.id)
+                            state.aplicarTipoMonstro(template.id).forEach(onLogFeedback)
                         },
                     colors = CardDefaults.cardColors(
                         containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
@@ -62,7 +63,7 @@ fun TipoMonstroSection(
                         RadioButtonRow(
                             selected = selected,
                             label = template.nome,
-                            onSelect = { state.aplicarTipoMonstro(template.id) }
+                            onSelect = { state.aplicarTipoMonstro(template.id).forEach(onLogFeedback) }
                         )
 
                         if (selected) {
