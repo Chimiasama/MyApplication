@@ -513,8 +513,8 @@
     "descricao": "Tribos desses párias podem ser encontradas em colinas distantes, abismos e montanhas imponentes. São fortes e imparáveis, adequados para abrir caminho nos ambientes mais selvagens.",
     "variantes": "Ideias Variantes: Se um meio-gigante descende de um tipo específico de gigante, como um gigante do fogo, conceda-lhe Resistência Ambiental (Fogo) e equilibre-o com seu oposto, como Fraqueza Ambiental (Frio). Para algo como o descendente de um gigante da tempestade, dê-lhe Resistência Ambiental (Raios) e equilibre-o com uma habilidade ou Complicação negativa de um ponto, como Teimoso ou o que fizer sentido em seu mundo de campanha.",
     "atributos": {
-      "Força": 3,
-      "Vigor": 3
+      "Força": 4,
+      "Vigor": 4
     },
     "pericias": {},
     "desvantagens": ["ANALFABETO", "FORASTEIRO (Maior)", "SEM NOÇÃO"],
@@ -582,7 +582,7 @@
     "descricao": "Minotauros possuem um corpo humano e cabeça e musculatura de um touro. Podem ser criaturas mitológicas, criadas por divindades como forma de punição, ou simplesmente uma espécie humanoide com sua própria cultura e costumes. Independentemente da origem, minotauros são conhecidos por sua força física, mau humor e chifres perversos. São temíveis em combates um contra um.",
     "variantes": "Ideias Variantes: Adapte os atributos de acordo para personagens que misturam corpos humanos com outros tipos de bovinos, como iaques, bisões ou búfalos. Aumente o dano e o PA dos chifres dos minotauros que descendem de espécies com chifres longos.",
     "atributos": {
-      "Força": 3,
+      "Força": 4,
       "Vigor": 2
     },
     "pericias": {},
@@ -628,8 +628,8 @@
     "descricao": "Orgulhosos e malignos, os ogros vivem em tribos que a maioria considera como selvagens e cruéis. Eles se orgulham de sua gula e de grandes feitos de bravura ou astúcia. Quer vaguem como nômades, governem uma passagem vital nas montanhas mais altas ou residam em enormes cavernas perto de seus “primos”, os orcs e goblins, seus banquetes turbulentos à fogueira e as histórias que os acompanham são lendários.",
     "variantes": "Ideias Variantes: Ogros mais selvagens podem ser ainda mais fortes em troca de uma penalidade em Astúcia. Ogros-dracônicos podem ter sopros flamejantes — úteis para ataques e também para assar suas refeições!",
     "atributos": {
-      "Força": 3,
-      "Vigor": 3
+      "Força": 4,
+      "Vigor": 4
     },
     "pericias": {},
     "desvantagens": ["ARROGANTE", "DESAJEITADO", "FORASTEIRO (Menor)", "SEM NOÇÃO"],
@@ -824,6 +824,7 @@
   {
     "nome": "POVO SERPENTE",
     "origem": "FANTASIA",
+    "movimentacao": 4,
     "descricao": "Vindos de grandes tocas ou ninhos isolados, há vários tipos de humanoides serpentinos. As espécies variam muito, indo desde constritores a uma variedade de víboras, mas compartilham a mesma fisiologia humanoide e as cabeças ofídicas.",
     "variantes": "Ideias Variantes: O povo serpente pode ter o corpo de uma cobra em vez de pernas humanoides. Essas nagas podem ter sua Movimentação aumentada ou a Vantagem Corredor equilibrada pela Forma Incomum (veja Centauros na página 14).\nVocê também pode melhorar o veneno do povo serpente para Nocaute, Letal ou Paralisante adquirindo 2 pontos adicionais em habilidades de ancestralidades negativas ou Complicações. Personagens relacionadas a cascavéis, por exemplo, podem ser Desagradáveis ou ter Inimigos Ancestrais, e aquelas que se assemelham a cobras podem ter a habilidade de cuspir seu veneno (veja a página 59).",
     "atributos": {},

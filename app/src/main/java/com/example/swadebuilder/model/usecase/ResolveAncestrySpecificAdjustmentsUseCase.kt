@@ -27,7 +27,37 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = listOf("PRONTIDÃO"),
+                ensureRacialDisadvantages = emptyList(),
+                elementalAction = ElementalAction.NONE
+            )
+
+            "GOLENS" -> Result(
+                naturalArmorFromRace = 2,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
+                ensureRacialDisadvantages = emptyList(),
+                elementalAction = ElementalAction.NONE
+            )
+
+            "DRACONIANOS" -> Result(
+                naturalArmorFromRace = 2,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = emptyList(),
+                ensureRacialDisadvantages = emptyList(),
+                elementalAction = ElementalAction.NONE
+            )
+
+            "INSETOIDES" -> Result(
+                naturalArmorFromRace = 2,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = listOf("GARRAS"),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )
