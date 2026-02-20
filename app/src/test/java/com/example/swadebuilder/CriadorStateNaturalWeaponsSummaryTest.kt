@@ -75,4 +75,25 @@ class CriadorStateNaturalWeaponsSummaryTest {
         assertEquals("2", (mordida?.pa as? JsonPrimitive)?.content)
     }
 
+    @Test
+    fun `toque arrepiante aparece como ataque natural proprio com for d4`() {
+        val state = CriadorState().apply { ancestralidade = "FANTASMA" }
+
+        state.adicionarVantagem(
+            Vantagem(
+                id = "toque_arrepiante",
+                nome = "TOQUE ARREPIANTE",
+                categoria = Categoria.MONSTRUOSAS,
+                requisitos = Requisito(estagio = "Experiente")
+            )
+        )
+
+        val naturais = state.extrairArmasNaturais()
+        val toque = naturais.firstOrNull { it.nome.equals("Toque Arrepiante", ignoreCase = true) }
+
+        assertTrue("Esperava ataque natural Toque Arrepiante no resumo", toque != null)
+        assertEquals("For+d4", (toque?.dano as? JsonPrimitive)?.content)
+        assertFalse("Não deve exibir Ataque Natural quando já há ataque natural específico", naturais.any { it.nome == "Ataque Natural" })
+    }
+
 }

@@ -976,7 +976,7 @@ class CriadorState {
         val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
             ?: return emptyList()
 
-        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")
+        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos", "Toque Arrepiante")
         val addedTypes = mutableSetOf<String>()
         val vantagensSelecionadasNomes = vantagensSelecionadas.map { it.nome }
         val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome } + vantagensRaciais + vantagensSelecionadasNomes
