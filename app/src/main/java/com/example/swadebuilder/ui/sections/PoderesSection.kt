@@ -92,8 +92,11 @@ fun PoderesSection(
     val locked = state.criacaoBasicaCongeladaComXp
 
     // Identify active Arcane Backgrounds
-    val arcanosAtivos = remember(state.vantagensSelecionadas, state.tropoSelecionado, state.compendioArteDaGuerraAtivo) {
+    val arcanosAtivos = remember(state.vantagensSelecionadas, state.tropoSelecionado, state.compendioArteDaGuerraAtivo, state.ancestralidade) {
         val ativos = state.vantagensSelecionadas.mapNotNull { it.toArcanoKey() }.toMutableList()
+        if (state.ancestralidade.keyify() == "TRANSMORFOS") {
+            ativos.add("DOM")
+        }
         if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_elementalista") {
             ativos.add("ELEMENTALISTA")
         }

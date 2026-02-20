@@ -394,6 +394,13 @@ class CriadorState {
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
         if (powerId == null) return false
+        if (
+            ancestralidade.keyify() == "TRANSMORFOS" &&
+            arcanoKey.normAAKey() == "DOM" &&
+            powerId.keyify() == "DISFARCE"
+        ) {
+            return true
+        }
         val fixedList = fixedPowersByArcano[arcanoKey.normAAKey()] ?: return false
         return fixedList.contains(powerId)
     }
@@ -1446,7 +1453,7 @@ class CriadorState {
             }
 
             // Transmorfos (Changeling) Logic: Fixed 'Disfarce' power in the first slot
-            if (ancestralidade == "TRANSMORFOS" && arcKey == "DOM") {
+            if (ancestralidade.keyify() == "TRANSMORFOS" && arcKey.normAAKey() == "DOM") {
                 if (slots.size > 0) {
                     slots[0] = "disfarce"
                 }
@@ -2521,9 +2528,27 @@ class CriadorState {
     }
 
     fun syncPoderesSelecionadosFromSlots() {
+        ensureTransmorfoFixedDisguisePower()
         poderesSelecionados.apply {
             clear()
             addAll(poderSlotsPorArcano.values.flatMap { it.filterNotNull() })
+        }
+    }
+
+    private fun ensureTransmorfoFixedDisguisePower() {
+        if (ancestralidade.keyify() != "TRANSMORFOS") return
+
+        val slots = poderSlotsPorArcano.getOrPut("DOM") { mutableStateListOf() }
+        val requiredSlots = getEffectiveSlotsCountForArcano("DOM")
+
+        while (slots.size < requiredSlots) {
+            slots.add(null)
+        }
+
+        if (slots.isEmpty()) {
+            slots.add("disfarce")
+        } else {
+            slots[0] = "disfarce"
         }
     }
 
@@ -2825,6 +2850,7 @@ class CriadorState {
 
     fun temAntecedenteArcano(): Boolean {
         return vantagensSelecionadas.any { it.toArcanoKey() != null } ||
+            ancestralidade.keyify() == "TRANSMORFOS" ||
             (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista")
     }
 
@@ -2837,7 +2863,7 @@ class CriadorState {
     fun podeRemoverPoderDoSlot(poderId: String): Pair<Boolean, String?> {
         val normalizedId = poderId.replace('_', ' ').keyify()
 
-        if (ancestralidade == "TRANSMORFOS" && normalizedId == "DISFARCE") {
+        if (ancestralidade.keyify() == "TRANSMORFOS" && normalizedId == "DISFARCE") {
             return false to "Poder racial fixo."
         }
 
@@ -3412,6 +3438,8 @@ class CriadorState {
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
         }
+
+        syncPoderesSelecionadosFromSlots()
     }
 
     private fun atendeRequisitosMantidos(v: Vantagem): Boolean {
