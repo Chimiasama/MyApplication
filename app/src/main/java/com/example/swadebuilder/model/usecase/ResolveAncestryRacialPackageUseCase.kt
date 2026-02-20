@@ -64,6 +64,16 @@ class ResolveAncestryRacialPackageUseCase(
             val edge = params.allAdvantages.firstOrNull { it.id == advantageId }
             if (edge != null && selected.none { it.id == edge.id }) {
                 selected.add(edge)
+                return@forEach
+            }
+
+            // Fallback for scenarios that hide/replace specific Arcane Background entries.
+            // Example: Transmorfos need AA (Dom) even when "antecedente_arcano_dom" is not present in loaded advantages.
+            if (advantageId == "antecedente_arcano_dom") {
+                val genericArcane = params.allAdvantages.firstOrNull { it.id == "antecedente_arcano" }
+                if (genericArcane != null && selected.none { it.id == genericArcane.id && (it.choice ?: "").keyify() == "DOM" }) {
+                    selected.add(genericArcane.copy(choice = "DOM"))
+                }
             }
         }
 
