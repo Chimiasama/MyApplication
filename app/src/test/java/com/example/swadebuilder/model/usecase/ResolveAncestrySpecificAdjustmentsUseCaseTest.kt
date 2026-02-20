@@ -15,6 +15,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertEquals(listOf("PRONTIDÃO"), result.ensureAutomaticAdvantages)
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
     }
 
@@ -25,6 +26,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
     }
 
@@ -35,6 +37,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
     }
 
@@ -45,6 +48,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertEquals(listOf("GARRAS"), result.ensureAutomaticAdvantages)
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
     }
 
