@@ -394,6 +394,13 @@ class CriadorState {
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
         if (powerId == null) return false
+        if (
+            ancestralidade.keyify() == "TRANSMORFOS" &&
+            arcanoKey.normAAKey() == "DOM" &&
+            powerId.keyify() == "DISFARCE"
+        ) {
+            return true
+        }
         val fixedList = fixedPowersByArcano[arcanoKey.normAAKey()] ?: return false
         return fixedList.contains(powerId)
     }
@@ -2521,9 +2528,27 @@ class CriadorState {
     }
 
     fun syncPoderesSelecionadosFromSlots() {
+        ensureTransmorfoFixedDisguisePower()
         poderesSelecionados.apply {
             clear()
             addAll(poderSlotsPorArcano.values.flatMap { it.filterNotNull() })
+        }
+    }
+
+    private fun ensureTransmorfoFixedDisguisePower() {
+        if (ancestralidade.keyify() != "TRANSMORFOS") return
+
+        val slots = poderSlotsPorArcano.getOrPut("DOM") { mutableStateListOf() }
+        val requiredSlots = getEffectiveSlotsCountForArcano("DOM")
+
+        while (slots.size < requiredSlots) {
+            slots.add(null)
+        }
+
+        if (slots.isEmpty()) {
+            slots.add("disfarce")
+        } else {
+            slots[0] = "disfarce"
         }
     }
 
