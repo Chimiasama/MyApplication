@@ -961,7 +961,7 @@ class CriadorState {
         val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
             ?: return emptyList()
 
-        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos", "Toque Arrepiante")
+        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos", "Toque Arrepiante", "Toque da Morte")
         val addedTypes = mutableSetOf<String>()
         val sources = ancestralidadeObj.vantagensGratis +
             ancestralidadeObj.habilidades.map { it.nome } +
@@ -1087,6 +1087,10 @@ class CriadorState {
                     dmgMatch = "For+d4"
                 }
 
+                if (key.equals("Toque da Morte", ignoreCase = true)) {
+                    dmgMatch = "For+d4/For+2d6"
+                }
+
                 if (hasLobisomemAprimorado && (key.equals("Garras", true) || key.equals("Mordida", true))) {
                     dmgMatch = "For+d8"
                     paFinal = maxOf(paFinal, 4)
@@ -1141,7 +1145,7 @@ class CriadorState {
         // Always add "Ataque Natural" (Unarmed) using central logic - Filter if specific natural weapons exist
         val hasSpecificNaturalWeapons = weapons.any { weapon ->
             val key = weapon.nome.keyify()
-            key.contains("GARRA") || key.contains("MORDIDA") || key.contains("CHIFRE") || key.contains("CASCO") || key.contains("TOQUE ARREPIANTE")
+            key.contains("GARRA") || key.contains("MORDIDA") || key.contains("CHIFRE") || key.contains("CASCO") || key.contains("TOQUE ARREPIANTE") || key.contains("TOQUE DA MORTE")
         }
         val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
 
