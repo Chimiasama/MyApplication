@@ -8,6 +8,7 @@ enum class ModifierTarget {
     SIZE_TOUGHNESS,
     TOUGHNESS_FLAT,
     ARMOR,
+    NATURAL_ARMOR,
     PACE,
     PARRY
 }
@@ -295,6 +296,9 @@ object ModifierEngine {
             }
             if (key == "BLOQUEAR APRIMORADO") {
                 modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+            }
+            if (key == "COURO BLINDADO") {
+                modifiers.add(Modifier("edge_couro_blindado", SourceType.VANTAGEM, vant.nome, ModifierTarget.NATURAL_ARMOR, 4))
             }
         }
 

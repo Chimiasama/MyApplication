@@ -1104,6 +1104,8 @@ class CriadorState {
         // Agora usa o Engine para somar armadura de equipamentos (filtrando Mechas)
         // A variável 'armadura' permanece como fallback ou armadura base manual se houver
         val armorFromEquipment = ModifierEngine.sum(this, ModifierTarget.ARMOR)
+        val armorNaturalMods = ModifierEngine.sum(this, ModifierTarget.NATURAL_ARMOR)
+
         kotlin.math.max(armorFromPower, armorFromEquipment)
         // 'armadura' variável de estado ainda pode ser usada se setada manualmente por raças (ex: Saurios)
         // Mas Saurios setam naturalArmorFromRace = 2 e armadura = 0 no código atual.
@@ -1117,7 +1119,7 @@ class CriadorState {
         val totalEquipmentArmor = armorFromEquipment + armadura
 
         val bestArmor = kotlin.math.max(armorFromPower, totalEquipmentArmor)
-        return (bestArmor + naturalArmorFromRace).coerceAtLeast(0)
+        return (bestArmor + naturalArmorFromRace + armorNaturalMods).coerceAtLeast(0)
     }
 
     fun valorTamanho(): Int = tamanhoExibido()
