@@ -277,6 +277,9 @@ object ModifierEngine {
         // 4. Advantages
         state.vantagensSelecionadas.forEach { vant ->
             val key = vant.nome.keyify()
+            if (vant.id == "couro_blindado") {
+                modifiers.add(Modifier("edge_couro_blindado_armor", SourceType.VANTAGEM, vant.nome, ModifierTarget.ARMOR, 4))
+            }
             if (key == "MUSCULOSO") {
                 modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))
