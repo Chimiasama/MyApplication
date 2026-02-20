@@ -279,6 +279,7 @@ fun VantagensContent(
     var showChoiceDialog by rememberSaveable { mutableStateOf(false) }
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoPoderesMisticos by remember { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoPoderesMisticosMumia by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoCavaleiro by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoMontaria by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoNovosPoderes by remember { mutableStateOf<Vantagem?>(null) }
@@ -726,6 +727,8 @@ fun VantagensContent(
                                             dialogMostrandoAntecedente = vant
                                         } else if (vant.id == "poderes_misticos") {
                                             dialogMostrandoPoderesMisticos = vant
+                                        } else if (vant.id == "poderes_misticos_mumia") {
+                                            dialogMostrandoPoderesMisticosMumia = vant
                                         } else if (vant.nome.keyify() == "CAVALEIRO") {
                                             dialogMostrandoCavaleiro = vant
                                         } else if (vant.nome.keyify() == "MONTARIA") {
@@ -806,6 +809,8 @@ fun VantagensContent(
                                     dialogMostrandoAntecedente = vant
                                 } else if (vant.id == "poderes_misticos") {
                                     dialogMostrandoPoderesMisticos = vant
+                                } else if (vant.id == "poderes_misticos_mumia") {
+                                    dialogMostrandoPoderesMisticosMumia = vant
                                 } else if (vant.nome.keyify() == "CAVALEIRO") {
                                     dialogMostrandoCavaleiro = vant
                                 } else if (vant.nome.keyify() == "MONTARIA") {
@@ -877,6 +882,68 @@ fun VantagensContent(
             current = filter,
             onChange = { state.vantFilter = it },
             onDismiss = { showFilterDialog = false }
+        )
+    }
+
+    if (dialogMostrandoPoderesMisticosMumia != null) {
+        val vantOriginal = dialogMostrandoPoderesMisticosMumia!!
+        val options = listOf(
+            "Arquiteto" to "Barreira, detectar/ocultar arcano, telecinese, trancar/destrancar.",
+            "Régio" to "Explosão, rajada, rancor."
+        )
+
+        AlertDialog(
+            onDismissRequest = {
+                dialogMostrandoPoderesMisticosMumia = null
+                subOpcaoSelecionada = null
+            },
+            title = { Text("Poderes Místicos (Múmia): Escolha o Pacote") },
+            text = {
+                Column {
+                    Text("Escolha um dos pacotes a seguir:")
+                    Spacer(Modifier.size(8.dp))
+                    options.forEach { (opcao, descricao) ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { subOpcaoSelecionada = opcao }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (subOpcaoSelecionada == opcao),
+                                onClick = { subOpcaoSelecionada = opcao }
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Column {
+                                Text(opcao, fontWeight = FontWeight.Bold)
+                                Text(descricao, style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = (subOpcaoSelecionada != null),
+                    onClick = {
+                        val choice = subOpcaoSelecionada!!
+                        val vantToAdd = vantOriginal.copy(choice = choice)
+                        attemptPurchase(vantToAdd) {
+                            dialogMostrandoPoderesMisticosMumia = null
+                            subOpcaoSelecionada = null
+                        }
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        dialogMostrandoPoderesMisticosMumia = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("Cancelar") }
+            }
         )
     }
 

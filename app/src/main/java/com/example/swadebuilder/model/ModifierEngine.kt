@@ -262,6 +262,16 @@ object ModifierEngine {
                 modifiers.add(Modifier("monster_werewolf_pace", SourceType.ANCESTRALIDADE, monstro.nome, ModifierTarget.PACE, 2))
             }
 
+            // Mummy Pace
+            if (monstro.id == "mumia") {
+                modifiers.add(Modifier("monster_mummy_pace", SourceType.ANCESTRALIDADE, monstro.nome, ModifierTarget.PACE, -1))
+            }
+
+            // Undead (Morto-Vivo) Toughness
+            if (sources.any { it.contains("Morto-Vivo", ignoreCase = true) }) {
+                modifiers.add(Modifier("monster_undead_toughness", SourceType.ANCESTRALIDADE, "Morto-Vivo", ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
+
             // Generic Parsing (similar to Ancestry)
             sources.forEach { str ->
                 val k = str.keyify()

@@ -389,7 +389,9 @@ class CriadorState {
         "MISTICO_LADRAO" to listOf("andar_nas_paredes", "aumentar_reduzir_caracteristica", "trancar_destrancar", "visao_sombria"),
         "MISTICO_MONGE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir"),
         "MISTICO_PALADINO" to listOf("aumentar_reduzir_caracteristica", "cura", "ferir", "protecao", "santuario"),
-        "MISTICO_PATRULHEIRO" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "visao_distante")
+        "MISTICO_PATRULHEIRO" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "visao_distante"),
+        "MISTICO_ARQUITETO" to listOf("barreira", "detectar_ocultar_arcano", "telecinese", "trancar_destrancar"),
+        "MISTICO_REGIO" to listOf("explosao", "rajada", "rancor")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
@@ -1000,6 +1002,19 @@ class CriadorState {
                 EquipamentoItem(
                     nome = "Toque Arrepiante",
                     dano = JsonPrimitive("For+d4"),
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0)
+                )
+            )
+        }
+
+        // Touch of Death (Revivido)
+        if (vantagensSelecionadas.any { it.id == "toque_da_morte" }) {
+            weapons.add(
+                EquipamentoItem(
+                    nome = "Toque da Morte",
+                    dano = JsonPrimitive("For+d4/For+2d6"),
                     distancia = JsonPrimitive("Toque"),
                     peso = JsonPrimitive(0),
                     custo = JsonPrimitive(0)

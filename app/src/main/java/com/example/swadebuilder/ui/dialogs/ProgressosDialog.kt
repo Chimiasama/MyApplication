@@ -143,6 +143,7 @@ fun ProgressosDialog(
     var pendingAdv by rememberSaveable { mutableStateOf<Vantagem?>(null) }
     var showPendingChoice by rememberSaveable { mutableStateOf(false) }
     var showMysticPowersSelection by rememberSaveable { mutableStateOf(false) }
+    var showMysticPowersMummySelection by rememberSaveable { mutableStateOf(false) }
     var pendingMysticPowersAdv by remember { mutableStateOf<Vantagem?>(null) }
     var advSelectedStageIndex by rememberSaveable { mutableIntStateOf(-1) }
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
@@ -1112,6 +1113,10 @@ fun ProgressosDialog(
                                         pendingMysticPowersAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showMysticPowersSelection = true
+                                    } else if (vant.id == "poderes_misticos_mumia") {
+                                        pendingMysticPowersAdv = vant
+                                        advSelectedStageIndex = estIndex
+                                        showMysticPowersMummySelection = true
                                     } else if (vant.requiresChoice || vant.vinculadoPericia || vant.id == "arma_predileta_aprimorada") {
                                         pendingAdv = vant
                                         advSelectedStageIndex = estIndex
@@ -1196,6 +1201,81 @@ fun ProgressosDialog(
                 }) {
                     Text("Cancelar")
                 }
+            }
+        )
+    }
+
+    if (showMysticPowersMummySelection && pendingMysticPowersAdv != null) {
+        val vant = pendingMysticPowersAdv!!
+        val options = listOf(
+            "Arquiteto" to "Barreira, detectar/ocultar arcano, telecinese, trancar/destrancar.",
+            "Régio" to "Explosão, rajada, rancor."
+        )
+        var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
+
+        AlertDialog(
+            onDismissRequest = {
+                showMysticPowersMummySelection = false
+                pendingMysticPowersAdv = null
+            },
+            title = { Text("Poderes Místicos (Múmia): Escolha o Pacote") },
+            text = {
+                Column {
+                    Text("Escolha um dos pacotes a seguir:")
+                    Spacer(Modifier.size(8.dp))
+                    options.forEach { (opcao, descricao) ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { selectedClass = opcao }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (selectedClass == opcao),
+                                onClick = { selectedClass = opcao }
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Column {
+                                Text(opcao, fontWeight = FontWeight.Bold)
+                                Text(descricao, style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = (selectedClass != null),
+                    onClick = {
+                        val choice = selectedClass!!
+                        val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
+                        val estSel = stages[estIndexFinal]
+
+                        if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndexFinal)) {
+                            showSnack("Você não cumpre os requisitos para ${vant.nome}.")
+                            return@TextButton
+                        }
+
+                        val vantChoice = vant.copy(choice = choice)
+                        viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
+                        viewModel.selectAdvantageForAdvancement(vantChoice)
+                        viewModel.finishAdvantageAdvancement()
+
+                        showMysticPowersMummySelection = false
+                        showAdvSelection = false
+                        pendingMysticPowersAdv = null
+                        onDismiss()
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showMysticPowersMummySelection = false
+                        pendingMysticPowersAdv = null
+                    }
+                ) { Text("Cancelar") }
             }
         )
     }
