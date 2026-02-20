@@ -302,6 +302,12 @@ object ModifierEngine {
             if (vant.id == "resistencia_lobo") {
                 modifiers.add(Modifier("edge_resistencia_lobo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
             }
+            if (vant.id == "resistencia_anjo") {
+                modifiers.add(Modifier("edge_resistencia_anjo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
+            if (vant.id == "resistencia_divina") {
+                modifiers.add(Modifier("edge_resistencia_divina", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
         }
 
         // 4.5 Monster templates
