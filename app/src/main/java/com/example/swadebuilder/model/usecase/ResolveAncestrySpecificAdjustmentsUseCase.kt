@@ -106,6 +106,16 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                 }
             )
 
+            "TRANSMORFOS" -> Result(
+                naturalArmorFromRace = 0,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = listOf("antecedente_arcano_dom"),
+                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (DOM)"),
+                ensureRacialDisadvantages = emptyList(),
+                elementalAction = ElementalAction.NONE
+            )
+
             else -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = true,
