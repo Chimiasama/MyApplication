@@ -253,6 +253,53 @@ object ModifierEngine {
             }
         }
 
+        // 2.1 Monster Template
+        state.getMonstroSelecionado()?.let { monstro ->
+            val sources = monstro.habilidades.map { it.nome }
+
+            // Werewolf Pace
+            if (monstro.id == "lobisomem") {
+                modifiers.add(Modifier("monster_werewolf_pace", SourceType.ANCESTRALIDADE, monstro.nome, ModifierTarget.PACE, 2))
+            }
+
+            // Generic Parsing (similar to Ancestry)
+            sources.forEach { str ->
+                val k = str.keyify()
+                if (k.contains("RESISTENCIA")) {
+                    val match = Regex("""RESISTENCIA\s*(\+|\-)\s*(\d+)""").find(k)
+                    if (match != null) {
+                        val sign = match.groupValues[1]
+                        val value = match.groupValues[2].toInt()
+                        val finalValue = if (sign == "-") -value else value
+                        modifiers.add(Modifier("monster_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, finalValue))
+                    }
+                }
+                if (k.contains("ARMADURA")) {
+                    val match = Regex("""ARMADURA(.*?)\+(\d+)""").find(k)
+                    if (match != null) {
+                        val valInt = match.groupValues[2].toInt()
+                        if (state.naturalArmorFromRace == 0) {
+                            modifiers.add(Modifier("monster_armor_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.ARMOR, valInt))
+                        }
+                    }
+                }
+                if (k.contains("MOVIMENTACAO") && monstro.id != "lobisomem") { // Avoid double dipping if hardcoded
+                    val bonusMatch = Regex("""MOVIMENTACAO\s*\+(\d+)""").find(k)
+                    if (bonusMatch != null) {
+                        modifiers.add(Modifier("monster_pace_generic_plus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, bonusMatch.groupValues[1].toInt()))
+                    }
+                }
+                if (k.contains("TAMANHO")) {
+                     val match = Regex("""TAMANHO\s*([\+\-]\s*\d+)""").find(k)
+                     if (match != null) {
+                         val valInt = match.groupValues[1].replace(" ", "").toIntOrNull() ?: 0
+                         modifiers.add(Modifier("monster_size_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.SIZE_DISPLAY, valInt))
+                         modifiers.add(Modifier("monster_size_toughness", SourceType.ANCESTRALIDADE, str, ModifierTarget.SIZE_TOUGHNESS, valInt))
+                     }
+                }
+            }
+        }
+
         // 3. Complications
         state.complicacoesSelecionadas.entries.forEach { (comp, nivel) ->
             val key = comp.id.keyify()
@@ -295,6 +342,9 @@ object ModifierEngine {
             }
             if (key == "BLOQUEAR APRIMORADO") {
                 modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+            }
+            if (vant.id == "resistencia_lobo") {
+                modifiers.add(Modifier("edge_resistencia_lobo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
             }
         }
 

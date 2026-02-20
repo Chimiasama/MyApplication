@@ -994,28 +994,71 @@ class CriadorState {
             return dmg
         }
 
+        // Ghost Touch
+        if (vantagensSelecionadas.any { it.id == "toque_arrepiante" }) {
+            weapons.add(
+                EquipamentoItem(
+                    nome = "Toque Arrepiante",
+                    dano = JsonPrimitive("For+d4"),
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0)
+                )
+            )
+        }
+
         // Monster Natural Weapons
         getMonstroSelecionado()?.let { monstro ->
-            monstro.habilidades.forEach { hab ->
-                val nomeKey = hab.nome.keyify()
-                if (nomeKey.contains("GARRA") || nomeKey.contains("MORDIDA") || nomeKey.contains("CHIFRE") || nomeKey.contains("CASCO")) {
-                    val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
-                    var dmgMatch = dmgRegex.find(hab.descricao)?.value?.replace(" ", "") ?: "For+d4"
+            if (monstro.id == "lobisomem") {
+                val hasImproved = vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" }
+                val baseDmg = if (hasImproved) "For+d8" else "For+d6"
+                val paVal = if (hasImproved) 4 else 2
 
-                    if (nomeKey.contains("GARRA") && (hasMartialArtist || hasBrawler)) {
-                        dmgMatch = upgradeDie(dmgMatch)
-                    }
+                // Claws (Scales with Martial Artist/Brawler)
+                var clawDmg = baseDmg
+                if (hasMartialArtist || hasBrawler) {
+                    clawDmg = upgradeDie(clawDmg)
+                }
 
-                    weapons.add(
-                        EquipamentoItem(
-                            nome = hab.nome,
-                            dano = JsonPrimitive(dmgMatch),
-                            distancia = JsonPrimitive("Toque"),
-                            peso = JsonPrimitive(0),
-                            custo = JsonPrimitive(0),
-                            observacoes = JsonPrimitive("Monstro")
+                weapons.add(EquipamentoItem(
+                    nome = "Garras (Lobisomem)",
+                    dano = JsonPrimitive(clawDmg),
+                    pa = JsonPrimitive(paVal),
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0)
+                ))
+
+                weapons.add(EquipamentoItem(
+                    nome = "Mordida (Lobisomem)",
+                    dano = JsonPrimitive(baseDmg),
+                    pa = JsonPrimitive(paVal),
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0)
+                ))
+            } else {
+                monstro.habilidades.forEach { hab ->
+                    val nomeKey = hab.nome.keyify()
+                    if (nomeKey.contains("GARRA") || nomeKey.contains("MORDIDA") || nomeKey.contains("CHIFRE") || nomeKey.contains("CASCO")) {
+                        val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
+                        var dmgMatch = dmgRegex.find(hab.descricao)?.value?.replace(" ", "") ?: "For+d4"
+
+                        if (nomeKey.contains("GARRA") && (hasMartialArtist || hasBrawler)) {
+                            dmgMatch = upgradeDie(dmgMatch)
+                        }
+
+                        weapons.add(
+                            EquipamentoItem(
+                                nome = hab.nome,
+                                dano = JsonPrimitive(dmgMatch),
+                                distancia = JsonPrimitive("Toque"),
+                                peso = JsonPrimitive(0),
+                                custo = JsonPrimitive(0),
+                                observacoes = JsonPrimitive("Monstro")
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
