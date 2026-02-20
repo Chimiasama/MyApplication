@@ -32,6 +32,36 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                 elementalAction = ElementalAction.NONE
             )
 
+            "GOLENS" -> Result(
+                naturalArmorFromRace = 2,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = emptyList(),
+                ensureRacialDisadvantages = emptyList(),
+                elementalAction = ElementalAction.NONE
+            )
+
+            "DRACONIANOS" -> Result(
+                naturalArmorFromRace = 2,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = emptyList(),
+                ensureRacialDisadvantages = emptyList(),
+                elementalAction = ElementalAction.NONE
+            )
+
+            "INSETOIDES" -> Result(
+                naturalArmorFromRace = 2,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = emptyList(),
+                ensureRacialDisadvantages = emptyList(),
+                elementalAction = ElementalAction.NONE
+            )
+
             "PEQUENINOS" -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = true,

@@ -19,6 +19,36 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
+    fun `returns golens adjustments`() {
+        val result = useCase.execute("GOLENS", null)
+
+        assertEquals(2, result.naturalArmorFromRace)
+        assertTrue(result.forceArmorZero)
+        assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
+    }
+
+    @Test
+    fun `returns draconianos adjustments`() {
+        val result = useCase.execute("DRACONIANOS", null)
+
+        assertEquals(2, result.naturalArmorFromRace)
+        assertTrue(result.forceArmorZero)
+        assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
+    }
+
+    @Test
+    fun `returns insetoides adjustments`() {
+        val result = useCase.execute("INSETOIDES", null)
+
+        assertEquals(2, result.naturalArmorFromRace)
+        assertTrue(result.forceArmorZero)
+        assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
+    }
+
+    @Test
     fun `returns pequeninos adjustments`() {
         val result = useCase.execute("PEQUENINOS", null)
 
