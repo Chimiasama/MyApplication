@@ -1108,7 +1108,7 @@ fun ProgressosDialog(
                                         return@DialogVantagemItem
                                     }
 
-                                    if (vant.id == "poderes_misticos") {
+                                    if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo") {
                                         pendingMysticPowersAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showMysticPowersSelection = true
@@ -1202,14 +1202,21 @@ fun ProgressosDialog(
 
     if (showMysticPowersSelection && pendingMysticPowersAdv != null) {
         val vant = pendingMysticPowersAdv!!
-        val options = listOf(
-            "Bárbaro" to "Força d8+",
-            "Guerreiro" to "Lutar d8+",
-            "Ladrão" to "Ladinagem d8+",
-            "Monge" to "Atletismo d8+",
-            "Paladino" to "Espírito d8+",
-            "Patrulheiro" to "Sobrevivência d8+"
-        )
+        val options = if (vant.id == "poderes_misticos_anjo") {
+            listOf(
+                "ARAUTO" to "Adivinhação, Aumentar/Reduzir Característica, Cura, Vidência",
+                "MORTE" to "Aumentar Característica (si mesmo), Deflexão, Ferir, Proteção"
+            )
+        } else {
+            listOf(
+                "Bárbaro" to "Força d8+",
+                "Guerreiro" to "Lutar d8+",
+                "Ladrão" to "Ladinagem d8+",
+                "Monge" to "Atletismo d8+",
+                "Paladino" to "Espírito d8+",
+                "Patrulheiro" to "Sobrevivência d8+"
+            )
+        }
         var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
 
         AlertDialog(
@@ -1217,10 +1224,10 @@ fun ProgressosDialog(
                 showMysticPowersSelection = false
                 pendingMysticPowersAdv = null
             },
-            title = { Text("Poderes Místicos: Escolha a Classe") },
+            title = { Text(if (vant.id == "poderes_misticos_anjo") "Poderes Místicos: Escolha o Caminho" else "Poderes Místicos: Escolha a Classe") },
             text = {
                 Column {
-                    Text("Escolha a classe para definir seus poderes e requisitos:")
+                    Text(if (vant.id == "poderes_misticos_anjo") "Escolha um dos pacotes:" else "Escolha a classe para definir seus poderes e requisitos:")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { (opcao, requisito) ->
                         Row(
@@ -1259,38 +1266,42 @@ fun ProgressosDialog(
                             return activePer?.let { state.rawTotal(it) } ?: 0
                         }
 
-                        when (choice) {
-                            "Bárbaro" -> {
-                                val str = state.valoresAtributos["FORCA"]?.intValue ?: 4
-                                if (str >= 8) reqMet = true
-                                else failMsg = "Requer Força d8+"
+                        if (vant.id == "poderes_misticos_anjo") {
+                            reqMet = true
+                        } else {
+                            when (choice) {
+                                "Bárbaro" -> {
+                                    val str = state.valoresAtributos["FORCA"]?.intValue ?: 4
+                                    if (str >= 8) reqMet = true
+                                    else failMsg = "Requer Força d8+"
+                                }
+                                "Guerreiro" -> {
+                                    val lut = getSkillTotal("LUTAR")
+                                    if (lut >= 8) reqMet = true
+                                    else failMsg = "Requer Lutar d8+"
+                                }
+                                "Ladrão" -> {
+                                    val lad = getSkillTotal("LADINAGEM")
+                                    if (lad >= 8) reqMet = true
+                                    else failMsg = "Requer Ladinagem d8+"
+                                }
+                                "Monge" -> {
+                                    val atl = getSkillTotal("ATLETISMO")
+                                    if (atl >= 8) reqMet = true
+                                    else failMsg = "Requer Atletismo d8+"
+                                }
+                                "Paladino" -> {
+                                    val esp = state.valoresAtributos["ESPIRITO"]?.intValue ?: 4
+                                    if (esp >= 8) reqMet = true
+                                    else failMsg = "Requer Espírito d8+"
+                                }
+                                "Patrulheiro" -> {
+                                    val sob = getSkillTotal("SOBREVIVENCIA")
+                                    if (sob >= 8) reqMet = true
+                                    else failMsg = "Requer Sobrevivência d8+"
+                                }
+                                else -> reqMet = true
                             }
-                            "Guerreiro" -> {
-                                val lut = getSkillTotal("LUTAR")
-                                if (lut >= 8) reqMet = true
-                                else failMsg = "Requer Lutar d8+"
-                            }
-                            "Ladrão" -> {
-                                val lad = getSkillTotal("LADINAGEM")
-                                if (lad >= 8) reqMet = true
-                                else failMsg = "Requer Ladinagem d8+"
-                            }
-                            "Monge" -> {
-                                val atl = getSkillTotal("ATLETISMO")
-                                if (atl >= 8) reqMet = true
-                                else failMsg = "Requer Atletismo d8+"
-                            }
-                            "Paladino" -> {
-                                val esp = state.valoresAtributos["ESPIRITO"]?.intValue ?: 4
-                                if (esp >= 8) reqMet = true
-                                else failMsg = "Requer Espírito d8+"
-                            }
-                            "Patrulheiro" -> {
-                                val sob = getSkillTotal("SOBREVIVENCIA")
-                                if (sob >= 8) reqMet = true
-                                else failMsg = "Requer Sobrevivência d8+"
-                            }
-                            else -> reqMet = true
                         }
 
                         if (!reqMet) {
