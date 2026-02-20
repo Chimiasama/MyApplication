@@ -724,7 +724,7 @@ fun VantagensContent(
                                             showChoiceDialog = true
                                         } else if (vant.id == "antecedente_arcano") {
                                             dialogMostrandoAntecedente = vant
-                                        } else if (vant.id == "poderes_misticos") {
+                                        } else if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo") {
                                             dialogMostrandoPoderesMisticos = vant
                                         } else if (vant.nome.keyify() == "CAVALEIRO") {
                                             dialogMostrandoCavaleiro = vant
@@ -804,7 +804,7 @@ fun VantagensContent(
                                     showChoiceDialog = true
                                 } else if (vant.id == "antecedente_arcano") {
                                     dialogMostrandoAntecedente = vant
-                                } else if (vant.id == "poderes_misticos") {
+                                } else if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo") {
                                     dialogMostrandoPoderesMisticos = vant
                                 } else if (vant.nome.keyify() == "CAVALEIRO") {
                                     dialogMostrandoCavaleiro = vant
@@ -882,24 +882,32 @@ fun VantagensContent(
 
     if (dialogMostrandoPoderesMisticos != null) {
         val vantOriginal = dialogMostrandoPoderesMisticos!!
-        val options = listOf(
-            "Bárbaro" to "Força d8+",
-            "Guerreiro" to "${applyJutsuSkinToSkillName("Lutar", state)} d8+",
-            "Ladrão" to "Ladinagem d8+",
-            "Monge" to "Atletismo d8+",
-            "Paladino" to "Espírito d8+",
-            "Patrulheiro" to "Sobrevivência d8+"
-        )
+        val isAnjoMysticPowers = vantOriginal.id == "poderes_misticos_anjo"
+        val options = if (isAnjoMysticPowers) {
+            listOf(
+                "Arauto" to "Adivinhação, Aumentar/Reduzir Característica, Cura, Vidência",
+                "Morte" to "Aumentar/Reduzir Característica (si mesmo), Deflexão, Ferir, Proteção (si mesmo)"
+            )
+        } else {
+            listOf(
+                "Bárbaro" to "Força d8+",
+                "Guerreiro" to "${applyJutsuSkinToSkillName("Lutar", state)} d8+",
+                "Ladrão" to "Ladinagem d8+",
+                "Monge" to "Atletismo d8+",
+                "Paladino" to "Espírito d8+",
+                "Patrulheiro" to "Sobrevivência d8+"
+            )
+        }
 
         AlertDialog(
             onDismissRequest = {
                 dialogMostrandoPoderesMisticos = null
                 subOpcaoSelecionada = null
             },
-            title = { Text("Poderes Místicos: Escolha a Classe") },
+            title = { Text(if (isAnjoMysticPowers) "Poderes Místicos (Anjo): Escolha o Pacote" else "Poderes Místicos: Escolha a Classe") },
             text = {
                 Column {
-                    Text("Escolha a classe para definir seus poderes e requisitos:")
+                    Text(if (isAnjoMysticPowers) "Escolha o pacote de poderes para o anjo:" else "Escolha a classe para definir seus poderes e requisitos:")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { (opcao, requisito) ->
                         Row(
@@ -969,7 +977,7 @@ fun VantagensContent(
                                 if (sob >= 8) reqMet = true
                                 else failMsg = "Requer Sobrevivência d8+"
                             }
-                            else -> reqMet = true
+                            else -> reqMet = isAnjoMysticPowers
                         }
 
                         if (!reqMet) {

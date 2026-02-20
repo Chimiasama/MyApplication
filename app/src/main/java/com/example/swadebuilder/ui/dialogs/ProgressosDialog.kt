@@ -1108,7 +1108,7 @@ fun ProgressosDialog(
                                         return@DialogVantagemItem
                                     }
 
-                                    if (vant.id == "poderes_misticos") {
+                                    if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo") {
                                         pendingMysticPowersAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showMysticPowersSelection = true
@@ -1202,14 +1202,22 @@ fun ProgressosDialog(
 
     if (showMysticPowersSelection && pendingMysticPowersAdv != null) {
         val vant = pendingMysticPowersAdv!!
-        val options = listOf(
-            "Bárbaro" to "Força d8+",
-            "Guerreiro" to "Lutar d8+",
-            "Ladrão" to "Ladinagem d8+",
-            "Monge" to "Atletismo d8+",
-            "Paladino" to "Espírito d8+",
-            "Patrulheiro" to "Sobrevivência d8+"
-        )
+        val isAnjoMysticPowers = vant.id == "poderes_misticos_anjo"
+        val options = if (isAnjoMysticPowers) {
+            listOf(
+                "Arauto" to "Adivinhação, Aumentar/Reduzir Característica, Cura, Vidência",
+                "Morte" to "Aumentar/Reduzir Característica (si mesmo), Deflexão, Ferir, Proteção (si mesmo)"
+            )
+        } else {
+            listOf(
+                "Bárbaro" to "Força d8+",
+                "Guerreiro" to "Lutar d8+",
+                "Ladrão" to "Ladinagem d8+",
+                "Monge" to "Atletismo d8+",
+                "Paladino" to "Espírito d8+",
+                "Patrulheiro" to "Sobrevivência d8+"
+            )
+        }
         var selectedClass by rememberSaveable { mutableStateOf<String?>(null) }
 
         AlertDialog(
@@ -1217,10 +1225,10 @@ fun ProgressosDialog(
                 showMysticPowersSelection = false
                 pendingMysticPowersAdv = null
             },
-            title = { Text("Poderes Místicos: Escolha a Classe") },
+            title = { Text(if (isAnjoMysticPowers) "Poderes Místicos (Anjo): Escolha o Pacote" else "Poderes Místicos: Escolha a Classe") },
             text = {
                 Column {
-                    Text("Escolha a classe para definir seus poderes e requisitos:")
+                    Text(if (isAnjoMysticPowers) "Escolha o pacote de poderes para o anjo:" else "Escolha a classe para definir seus poderes e requisitos:")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { (opcao, requisito) ->
                         Row(
@@ -1290,7 +1298,7 @@ fun ProgressosDialog(
                                 if (sob >= 8) reqMet = true
                                 else failMsg = "Requer Sobrevivência d8+"
                             }
-                            else -> reqMet = true
+                            else -> reqMet = isAnjoMysticPowers
                         }
 
                         if (!reqMet) {
