@@ -684,6 +684,11 @@
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
+    "choiceOptions": [
+      "Aparição",
+      "Poltergeist",
+      "Sombra"
+    ],
     "ganha_ao_comprar": [],
     "descricao": "O fantasma pode manipular energia espiritual para conjurar feitiços. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\n• APARIÇÃO: Atordoar, cegar, luz/escuridão, morosidade.\n• POLTERGEIST: Devastação, horrores ilusórios, som/silêncio, telecinese.\n• SOMBRA: Confusão, fantoche, manipulação elemental, medo."
   },

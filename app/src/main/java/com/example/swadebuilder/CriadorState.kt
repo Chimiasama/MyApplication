@@ -278,6 +278,20 @@ class CriadorState {
 
     fun aplicarTipoMonstro(novoId: String?) {
         tipoMonstroSelecionado = novoId
+
+        val vantagensInvalidasPorTemplate = vantagensSelecionadas
+            .filter { vant ->
+                val templates = vant.requisitos.templatesRequired
+                templates.isNotEmpty() && (novoId == null || novoId !in templates)
+            }
+
+        vantagensInvalidasPorTemplate.forEach { vantagemInvalida ->
+            removerVantagem(vantagemInvalida)
+            if (!isVantagemAutomatica(vantagemInvalida)) {
+                pontosVantagem++
+            }
+        }
+
         recalcularPontosAtributo()
         rebuildAllPericiaStacks()
     }
@@ -395,7 +409,10 @@ class CriadorState {
         "MISTICO_INVOCADOR" to listOf("conjurar_aliado", "conjurar_demonio", "protecao", "zumbi"),
         "MISTICO_POSSESSOR" to listOf("aumentar_reduzir_caracteristica", "fantoche", "maldicao", "pesadelos"),
         "MISTICO_SEDUTOR" to listOf("aumentar_reduzir_caracteristica", "disfarce", "empatia", "leitura_mental"),
-        "MISTICO_TRAPACEIRO" to listOf("disfarce", "deflexao", "horrores_ilusorios", "medo")
+        "MISTICO_TRAPACEIRO" to listOf("disfarce", "deflexao", "horrores_ilusorios", "medo"),
+        "MISTICO_APARICAO" to listOf("atordoar", "cegar", "iluminar_obscurecer", "morosidade_velocidade"),
+        "MISTICO_POLTERGEIST" to listOf("devastacao", "horrores_ilusorios", "som_silencio", "telecinese"),
+        "MISTICO_SOMBRA" to listOf("confusao", "fantoche", "manipulacao_elemental", "medo")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
