@@ -280,6 +280,7 @@ fun VantagensContent(
     var dialogMostrandoAntecedente by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoPoderesMisticos by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoPoderesMisticosAnjo by remember { mutableStateOf<Vantagem?>(null) }
+    var dialogMostrandoPoderesMisticosDemonio by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoCavaleiro by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoMontaria by remember { mutableStateOf<Vantagem?>(null) }
     var dialogMostrandoNovosPoderes by remember { mutableStateOf<Vantagem?>(null) }
@@ -729,6 +730,8 @@ fun VantagensContent(
                                             dialogMostrandoPoderesMisticos = vant
                                         } else if (vant.id == "poderes_misticos_anjo") {
                                             dialogMostrandoPoderesMisticosAnjo = vant
+                                        } else if (vant.id == "poderes_misticos_demonio") {
+                                            dialogMostrandoPoderesMisticosDemonio = vant
                                         } else if (vant.nome.keyify() == "CAVALEIRO") {
                                             dialogMostrandoCavaleiro = vant
                                         } else if (vant.nome.keyify() == "MONTARIA") {
@@ -938,6 +941,70 @@ fun VantagensContent(
                 TextButton(
                     onClick = {
                         dialogMostrandoPoderesMisticosAnjo = null
+                        subOpcaoSelecionada = null
+                    }
+                ) { Text("Cancelar") }
+            }
+        )
+    }
+
+    if (dialogMostrandoPoderesMisticosDemonio != null) {
+        val vantOriginal = dialogMostrandoPoderesMisticosDemonio!!
+        val options = listOf(
+            "INVOCADOR" to "Conjurar aliado, conjurar demônio, proteção, zumbi.",
+            "POSSESSOR" to "Aumentar/reduzir Característica, fantoche, maldição, pesadelos.",
+            "SEDUTOR" to "Aumentar/reduzir Característica, disfarce, empatia, leitura de mente.",
+            "TRAPACEIRO" to "Disfarce, deflexão (apenas a si mesmo), horrores ilusórios, medo."
+        )
+
+        AlertDialog(
+            onDismissRequest = {
+                dialogMostrandoPoderesMisticosDemonio = null
+                subOpcaoSelecionada = null
+            },
+            title = { Text("Poderes Místicos (Demônio): Escolha o Caminho") },
+            text = {
+                Column {
+                    Text("Escolha um dos pacotes:")
+                    Spacer(Modifier.size(8.dp))
+                    options.forEach { (opcao, descricao) ->
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable { subOpcaoSelecionada = opcao }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = (subOpcaoSelecionada == opcao),
+                                onClick = { subOpcaoSelecionada = opcao }
+                            )
+                            Spacer(Modifier.size(8.dp))
+                            Column {
+                                Text(opcao, fontWeight = FontWeight.Bold)
+                                Text(descricao, style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = (subOpcaoSelecionada != null),
+                    onClick = {
+                        val choice = subOpcaoSelecionada!!
+                        val vantToAdd = vantOriginal.copy(choice = choice)
+                        attemptPurchase(vantToAdd) {
+                            dialogMostrandoPoderesMisticosDemonio = null
+                            subOpcaoSelecionada = null
+                        }
+                    }
+                ) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        dialogMostrandoPoderesMisticosDemonio = null
                         subOpcaoSelecionada = null
                     }
                 ) { Text("Cancelar") }

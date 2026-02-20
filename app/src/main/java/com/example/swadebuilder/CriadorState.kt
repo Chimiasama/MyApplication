@@ -391,7 +391,11 @@ class CriadorState {
         "MISTICO_PALADINO" to listOf("aumentar_reduzir_caracteristica", "cura", "ferir", "protecao", "santuario"),
         "MISTICO_PATRULHEIRO" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "visao_distante"),
         "MISTICO_ARAUTO" to listOf("adivinhacao", "aumentar_reduzir_caracteristica", "cura", "videncia"),
-        "MISTICO_MORTE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "protecao")
+        "MISTICO_MORTE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "protecao"),
+        "MISTICO_INVOCADOR" to listOf("conjurar_aliado", "conjurar_demonio", "protecao", "zumbi"),
+        "MISTICO_POSSESSOR" to listOf("aumentar_reduzir_caracteristica", "fantoche", "maldicao", "pesadelos"),
+        "MISTICO_SEDUTOR" to listOf("aumentar_reduzir_caracteristica", "disfarce", "empatia", "leitura_mental"),
+        "MISTICO_TRAPACEIRO" to listOf("disfarce", "deflexao", "horrores_ilusorios", "medo")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
@@ -1024,6 +1028,46 @@ class CriadorState {
 
         // Parse logic
         keywords.forEach { key ->
+            // Horror Demon Claws Special Logic
+            if (key.equals("Garras", ignoreCase = true) && vantagensSelecionadas.any { it.id == "garras_demonio" }) {
+                val count = vantagensSelecionadas.count { it.id == "garras_demonio" }
+                val dmg = if (count >= 2) "For+d6" else "For+d4"
+                val pa = if (count >= 2) 2 else 0
+                if (addedTypes.add("GARRAS")) {
+                    weapons.add(
+                        EquipamentoItem(
+                            nome = "Garras (Demônio)",
+                            dano = JsonPrimitive(dmg),
+                            pa = if (pa > 0) JsonPrimitive(pa) else null,
+                            distancia = JsonPrimitive("Toque"),
+                            peso = JsonPrimitive(0),
+                            custo = JsonPrimitive(0)
+                        )
+                    )
+                }
+                return@forEach
+            }
+
+            // Horror Demon Bite Special Logic
+            if (key.equals("Mordida", ignoreCase = true) && vantagensSelecionadas.any { it.id == "mordida_demonio" }) {
+                val count = vantagensSelecionadas.count { it.id == "mordida_demonio" }
+                val dmg = "For+d6"
+                val pa = if (count >= 2) 2 else 0
+                if (addedTypes.add("MORDIDA")) {
+                    weapons.add(
+                        EquipamentoItem(
+                            nome = "Mordida (Demônio)",
+                            dano = JsonPrimitive(dmg),
+                            pa = if (pa > 0) JsonPrimitive(pa) else null,
+                            distancia = JsonPrimitive("Toque"),
+                            peso = JsonPrimitive(0),
+                            custo = JsonPrimitive(0)
+                        )
+                    )
+                }
+                return@forEach
+            }
+
             val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
 
             if (matchedSource != null) {
