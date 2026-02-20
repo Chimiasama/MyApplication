@@ -71,6 +71,9 @@ class ResolveAncestryRacialPackageUseCase(
             if (vantagensAutomaticas.none { it.equals(automaticAdvantage, ignoreCase = true) }) {
                 vantagensAutomaticas.add(automaticAdvantage)
             }
+            if (vantagensRaciais.none { it.equals(automaticAdvantage, ignoreCase = true) }) {
+                vantagensRaciais.add(automaticAdvantage)
+            }
         }
 
         ancestrySpecificAdjustments.ensureRacialDisadvantages.forEach { racialDisadvantage ->

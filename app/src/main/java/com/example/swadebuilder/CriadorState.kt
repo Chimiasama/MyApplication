@@ -2850,6 +2850,7 @@ class CriadorState {
 
     fun temAntecedenteArcano(): Boolean {
         return vantagensSelecionadas.any { it.toArcanoKey() != null } ||
+            ancestralidade.keyify() == "TRANSMORFOS" ||
             (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista")
     }
 
@@ -3437,6 +3438,8 @@ class CriadorState {
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
         }
+
+        syncPoderesSelecionadosFromSlots()
     }
 
     private fun atendeRequisitosMantidos(v: Vantagem): Boolean {
