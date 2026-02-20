@@ -957,7 +957,8 @@ class CriadorState {
 
         val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")
         val addedTypes = mutableSetOf<String>()
-        val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome } + vantagensRaciais
+        val vantagensSelecionadasNomes = vantagensSelecionadas.map { it.nome }
+        val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome } + vantagensRaciais + vantagensSelecionadasNomes
 
         // Helper to find description for a keyword
         fun findDesc(keyword: String): String {
@@ -967,10 +968,9 @@ class CriadorState {
 
             // 2. Try Free Edge (Vantagem Grátis)
             // If the keyword is in vantagensGratis, we try to look up the edge definition in the global list
-            if (ancestralidadeObj.vantagensGratis.any { it.contains(keyword, ignoreCase = true) }) {
-                val edge = listaVantagens.firstOrNull {
-                    it.nome.contains(keyword, ignoreCase = true)
-                }
+            if (sources.any { it.contains(keyword, ignoreCase = true) }) {
+                val edge = vantagensSelecionadas.firstOrNull { it.nome.contains(keyword, ignoreCase = true) }
+                    ?: listaVantagens.firstOrNull { it.nome.contains(keyword, ignoreCase = true) }
                 if (edge != null) return edge.descricao
             }
             return ""
@@ -1070,7 +1070,9 @@ class CriadorState {
         }
 
         // Always add "Ataque Natural" (Unarmed) using central logic - Filter if specific natural weapons exist
-        val hasSpecificNaturalWeapons = weapons.any { it.nome.equals("Garras", ignoreCase = true) }
+        val hasSpecificNaturalWeapons = weapons.any { weapon ->
+            keywords.any { keyword -> weapon.nome.contains(keyword, ignoreCase = true) }
+        }
         val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
 
         if (!hasSpecificNaturalWeapons && !isInsectoid) {
