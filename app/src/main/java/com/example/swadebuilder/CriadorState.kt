@@ -1101,23 +1101,9 @@ class CriadorState {
     }
 
     fun valorArmaduraEfetiva(): Int {
-        // Agora usa o Engine para somar armadura de equipamentos (filtrando Mechas)
-        // A variável 'armadura' permanece como fallback ou armadura base manual se houver
-        val armorFromEquipment = ModifierEngine.sum(this, ModifierTarget.ARMOR)
-        kotlin.math.max(armorFromPower, armorFromEquipment)
-        // 'armadura' variável de estado ainda pode ser usada se setada manualmente por raças (ex: Saurios)
-        // Mas Saurios setam naturalArmorFromRace = 2 e armadura = 0 no código atual.
-        // Se houver algum caso de uso para 'armadura' (variável), ela deveria ser somada?
-        // No código original: val armorFromEquipment = armadura.
-        // Assumimos que 'armadura' state var era SÓ para equipamento ou manual override.
-        // Se o Engine já pega equipment, e 'armadura' é 0 na maioria dos casos, ok.
-        // Se 'armadura' for usada para outra coisa, precisamos somar ou max.
-        // Vamos somar 'armadura' (state var) com o do Engine por segurança,
-        // caso algum sistema legado use 'armadura' para "Armadura Mágica Permanente" não listada em itens.
-        val totalEquipmentArmor = armorFromEquipment + armadura
-
-        val bestArmor = kotlin.math.max(armorFromPower, totalEquipmentArmor)
-        return (bestArmor + naturalArmorFromRace).coerceAtLeast(0)
+        val armorFromModifiers = ModifierEngine.sum(this, ModifierTarget.ARMOR)
+        val totalArmor = armorFromModifiers + armadura + armorFromPower + naturalArmorFromRace
+        return totalArmor.coerceAtLeast(0)
     }
 
     fun valorTamanho(): Int = tamanhoExibido()

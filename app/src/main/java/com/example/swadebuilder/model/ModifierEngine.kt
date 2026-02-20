@@ -296,6 +296,9 @@ object ModifierEngine {
             if (key == "BLOQUEAR APRIMORADO") {
                 modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
             }
+            if (vant.id == "couro_blindado") {
+                modifiers.add(Modifier("edge_couro_blindado_armor", SourceType.VANTAGEM, vant.nome, ModifierTarget.ARMOR, 4))
+            }
         }
 
         // 5. Powers / Other
