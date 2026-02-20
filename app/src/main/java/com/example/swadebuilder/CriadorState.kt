@@ -391,7 +391,11 @@ class CriadorState {
         "MISTICO_PALADINO" to listOf("aumentar_reduzir_caracteristica", "cura", "ferir", "protecao", "santuario"),
         "MISTICO_PATRULHEIRO" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "visao_distante"),
         "MISTICO_ARAUTO" to listOf("adivinhacao", "aumentar_reduzir_caracteristica", "cura", "visao_distante"),
-        "MISTICO_MORTE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "protecao")
+        "MISTICO_MORTE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "protecao"),
+        "MISTICO_INVOCADOR" to listOf("conjurar_aliado", "conjurar_demonio", "protecao", "zumbi"),
+        "MISTICO_POSSESSOR" to listOf("aumentar_reduzir_caracteristica", "fantoche", "maldicao", "pesadelos"),
+        "MISTICO_SEDUTOR" to listOf("aumentar_reduzir_caracteristica", "disfarce", "empatia", "leitura_mental"),
+        "MISTICO_TRAPACEIRO" to listOf("disfarce", "deflexao", "horrores_ilusorios", "medo")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {

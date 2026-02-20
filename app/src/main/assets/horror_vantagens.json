@@ -642,6 +642,12 @@
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
+    "choiceOptions": [
+      "Invocador",
+      "Possessor",
+      "Sedutor",
+      "Trapaceiro"
+    ],
     "ganha_ao_comprar": [],
     "descricao": "Demônios são seres mágicos e, às vezes, ampliam suas habilidades naturais com poderes variados. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\nINVOCADOR: Conjurar aliado, conjurar demônio, proteção, zumbi.\nPOSSESSOR: Aumentar/reduzir Característica, fantoche, maldição, pesadelos.\nSEDUTOR: Aumentar/reduzir Característica, disfarce, empatia, leitura de mente.\nTRAPACEIRO: Disfarce, deflexão (apenas a si mesmo), horrores ilusórios, medo."
   },
