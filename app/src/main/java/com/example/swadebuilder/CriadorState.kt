@@ -1087,6 +1087,17 @@ class CriadorState {
 
         // Parse logic
         keywords.forEach { key ->
+            val keyToken = key.keyify()
+            val alreadyPresent = weapons.any { weapon ->
+                val nameKey = weapon.nome.keyify()
+                when (keyToken) {
+                    "TOQUE ARREPIANTE" -> nameKey.contains("TOQUE ARREPIANTE")
+                    "TOQUE DA MORTE" -> nameKey.contains("TOQUE DA MORTE")
+                    else -> nameKey.contains(keyToken)
+                }
+            }
+            if (alreadyPresent) return@forEach
+
             val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
 
             if (matchedSource != null) {
