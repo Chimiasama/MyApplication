@@ -628,8 +628,8 @@
     "descricao": "Orgulhosos e malignos, os ogros vivem em tribos que a maioria considera como selvagens e cruéis. Eles se orgulham de sua gula e de grandes feitos de bravura ou astúcia. Quer vaguem como nômades, governem uma passagem vital nas montanhas mais altas ou residam em enormes cavernas perto de seus “primos”, os orcs e goblins, seus banquetes turbulentos à fogueira e as histórias que os acompanham são lendários.",
     "variantes": "Ideias Variantes: Ogros mais selvagens podem ser ainda mais fortes em troca de uma penalidade em Astúcia. Ogros-dracônicos podem ter sopros flamejantes — úteis para ataques e também para assar suas refeições!",
     "atributos": {
-      "Força": 3,
-      "Vigor": 3
+      "Força": 4,
+      "Vigor": 4
     },
     "pericias": {},
     "desvantagens": ["ARROGANTE", "DESAJEITADO", "FORASTEIRO (Menor)", "SEM NOÇÃO"],
