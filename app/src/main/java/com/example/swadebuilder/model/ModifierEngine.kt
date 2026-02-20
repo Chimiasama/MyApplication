@@ -309,6 +309,9 @@ object ModifierEngine {
             if (monstro.id == "lobisomem") {
                 modifiers.add(Modifier("monster_lobisomem_pace", SourceType.OUTRO, monstro.nome, ModifierTarget.PACE, 2))
             }
+            if (monstro.id == "monstro_retalhos") {
+                modifiers.add(Modifier("monster_retalhos_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
         }
 
         // 5. Powers / Other
