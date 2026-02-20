@@ -582,7 +582,7 @@
     "descricao": "Minotauros possuem um corpo humano e cabeça e musculatura de um touro. Podem ser criaturas mitológicas, criadas por divindades como forma de punição, ou simplesmente uma espécie humanoide com sua própria cultura e costumes. Independentemente da origem, minotauros são conhecidos por sua força física, mau humor e chifres perversos. São temíveis em combates um contra um.",
     "variantes": "Ideias Variantes: Adapte os atributos de acordo para personagens que misturam corpos humanos com outros tipos de bovinos, como iaques, bisões ou búfalos. Aumente o dano e o PA dos chifres dos minotauros que descendem de espécies com chifres longos.",
     "atributos": {
-      "Força": 3,
+      "Força": 4,
       "Vigor": 2
     },
     "pericias": {},
