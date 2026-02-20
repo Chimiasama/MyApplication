@@ -1022,6 +1022,26 @@ class CriadorState {
             )
         }
 
+        // Vampire Claws
+        if (vantagensSelecionadas.any { it.id == "garras_vampiro" }) {
+            val count = vantagensSelecionadas.count { it.id == "garras_vampiro" }
+            val paVal = if (count >= 2) 2 else 0
+            val dmg = "For+d6"
+
+            addedTypes.add("GARRAS") // Suppress generic claws
+
+            weapons.add(
+                EquipamentoItem(
+                    nome = "Garras (Vampiro)",
+                    dano = JsonPrimitive(dmg),
+                    pa = if (paVal > 0) JsonPrimitive(paVal) else null,
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0)
+                )
+            )
+        }
+
         // Monster Natural Weapons
         getMonstroSelecionado()?.let { monstro ->
             if (monstro.id == "lobisomem") {
