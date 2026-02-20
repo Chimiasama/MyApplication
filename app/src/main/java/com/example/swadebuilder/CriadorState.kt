@@ -1038,8 +1038,7 @@ class CriadorState {
                             dano = JsonPrimitive(dmgMatch),
                             distancia = JsonPrimitive("Toque"),
                             peso = JsonPrimitive(0),
-                            custo = JsonPrimitive(0),
-                            observacoes = JsonPrimitive("Monstro")
+                            custo = JsonPrimitive(0)
                         )
                     )
                 }
