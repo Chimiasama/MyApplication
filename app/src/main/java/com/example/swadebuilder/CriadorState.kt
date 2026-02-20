@@ -1062,8 +1062,9 @@ class CriadorState {
 
         // Always add "Ataque Natural" (Unarmed) using central logic - Filter if specific natural weapons exist
         val hasSpecificNaturalWeapons = weapons.any { it.nome.equals("Garras", ignoreCase = true) }
+        val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
 
-        if (!hasSpecificNaturalWeapons) {
+        if (!hasSpecificNaturalWeapons && !isInsectoid) {
             val (unarmedDmg, unarmedNotes) = calculaAtaqueDesarmado()
             weapons.add(
                 EquipamentoItem(
