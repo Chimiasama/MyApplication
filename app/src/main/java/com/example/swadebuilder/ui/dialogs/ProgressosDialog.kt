@@ -1108,7 +1108,7 @@ fun ProgressosDialog(
                                         return@DialogVantagemItem
                                     }
 
-                                    if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo" || vant.id == "poderes_misticos_demonio") {
+                                    if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo" || vant.id == "poderes_misticos_demonio" || vant.id == "poderes_misticos_mumia") {
                                         pendingMysticPowersAdv = vant
                                         advSelectedStageIndex = estIndex
                                         showMysticPowersSelection = true
@@ -1204,6 +1204,7 @@ fun ProgressosDialog(
         val vant = pendingMysticPowersAdv!!
         val isAnjoMysticPowers = vant.id == "poderes_misticos_anjo"
         val isDemonioMysticPowers = vant.id == "poderes_misticos_demonio"
+        val isMumiaMysticPowers = vant.id == "poderes_misticos_mumia"
         val options = if (isAnjoMysticPowers) {
             listOf(
                 "Arauto" to "Adivinhação, Aumentar/Reduzir Característica, Cura, Vidência",
@@ -1216,6 +1217,11 @@ fun ProgressosDialog(
                     "Possessor" to "Aumentar/Reduzir Característica, fantoche, maldição, pesadelos",
                     "Sedutor" to "Aumentar/Reduzir Característica, disfarce, empatia, leitura de mente",
                     "Trapaceiro" to "Disfarce, deflexão (si mesmo), horrores ilusórios, medo"
+                )
+            } else if (isMumiaMysticPowers) {
+                listOf(
+                    "Arquiteto" to "Barreira, Detectar/Ocultar Arcano, Telecinese, Trancar/Destrancar",
+                    "Régio" to "Explosão, Rajada, Rancor"
                 )
             } else {
                 listOf(
@@ -1235,10 +1241,10 @@ fun ProgressosDialog(
                 showMysticPowersSelection = false
                 pendingMysticPowersAdv = null
             },
-            title = { Text(if (isAnjoMysticPowers) "Poderes Místicos (Anjo): Escolha o Pacote" else if (isDemonioMysticPowers) "Poderes Místicos (Demônio): Escolha o Pacote" else "Poderes Místicos: Escolha a Classe") },
+            title = { Text(if (isAnjoMysticPowers) "Poderes Místicos (Anjo): Escolha o Pacote" else if (isDemonioMysticPowers) "Poderes Místicos (Demônio): Escolha o Pacote" else if (isMumiaMysticPowers) "Poderes Místicos (Múmia): Escolha o Pacote" else "Poderes Místicos: Escolha a Classe") },
             text = {
                 Column {
-                    Text(if (isAnjoMysticPowers) "Escolha o pacote de poderes para o anjo:" else if (isDemonioMysticPowers) "Escolha o pacote de poderes para o demônio:" else "Escolha a classe para definir seus poderes e requisitos:")
+                    Text(if (isAnjoMysticPowers) "Escolha o pacote de poderes para o anjo:" else if (isDemonioMysticPowers) "Escolha o pacote de poderes para o demônio:" else if (isMumiaMysticPowers) "Escolha o pacote de poderes para a múmia:" else "Escolha a classe para definir seus poderes e requisitos:")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { (opcao, requisito) ->
                         Row(
@@ -1308,7 +1314,7 @@ fun ProgressosDialog(
                                 if (sob >= 8) reqMet = true
                                 else failMsg = "Requer Sobrevivência d8+"
                             }
-                            else -> reqMet = isAnjoMysticPowers || isDemonioMysticPowers
+                            else -> reqMet = isAnjoMysticPowers || isDemonioMysticPowers || isMumiaMysticPowers
                         }
 
                         if (!reqMet) {
