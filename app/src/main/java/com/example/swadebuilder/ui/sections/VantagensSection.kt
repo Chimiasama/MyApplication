@@ -319,8 +319,25 @@ fun VantagensContent(
     // --- PERFORMANCE OPTIMIZATION: Calculations moved up ---
     val hasProfissional = state.vantagensSelecionadas.any { it.id == "profissional" }
 
-    val filteredListGlobal = remember(listaVantagensAtivas, state.modoSupers, hasProfissional, filter, multiplosAAHabilitados) {
+    val filteredListGlobal = remember(
+        listaVantagensAtivas,
+        state.modoSupers,
+        state.modoMonstroAtivo,
+        state.tipoMonstroSelecionado,
+        hasProfissional,
+        filter,
+        multiplosAAHabilitados
+    ) {
         listaVantagensAtivas.filter { vant ->
+            // Monster mode: for MONSTRUOSAS, only show matching template edges + generic ones (without template)
+            if (state.modoMonstroAtivo && vant.categoria == Categoria.MONSTRUOSAS) {
+                val requiredTemplates = vant.requisitos.templatesRequired.map { it.keyify() }
+                if (requiredTemplates.isNotEmpty()) {
+                    val selectedTemplate = state.tipoMonstroSelecionado?.keyify()
+                    if (selectedTemplate == null || selectedTemplate !in requiredTemplates) return@filter false
+                }
+            }
+
             // Professional/Specialist Dependency
             if (vant.id == "especialista" && !hasProfissional) return@filter false
 
