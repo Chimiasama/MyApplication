@@ -980,6 +980,9 @@ class CriadorState {
         val hasMartialArtist = vantagensSelecionadas.any { it.id == "artista_marcial" }
         val hasBrawler = vantagensSelecionadas.any { it.id == "brigao" }
 
+        val garrasDemonioCompras = vantagensSelecionadas.count { it.id == "garras_demonio" }
+        val mordidaDemonioCompras = vantagensSelecionadas.count { it.id == "mordida_demonio" }
+
         // Helper to upgrade die type string (e.g. "For+d4" -> "For+d6")
         fun upgradeDie(dmg: String): String {
             val dieMap = listOf("d4", "d6", "d8", "d10", "d12")
@@ -1037,11 +1040,21 @@ class CriadorState {
                 val paRegex = Regex("""PA\s*\d+""", RegexOption.IGNORE_CASE)
 
                 var dmgMatch = dmgRegex.find(desc)?.value?.replace(" ", "") ?: "For+d4"
-                val paMatch = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
+                var paMatch = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
 
-                // Apply scaling to "Garras" if Martial Artist or Brawler is present
+                // Regras específicas de Horror (Demônio): segunda compra melhora ataque natural
+                if (key.equals("Garras", ignoreCase = true) && garrasDemonioCompras >= 2) {
+                    dmgMatch = "For+d6"
+                    paMatch = 2
+                }
+                if (key.equals("Mordida", ignoreCase = true) && mordidaDemonioCompras >= 2) {
+                    dmgMatch = "For+d6"
+                    paMatch = 2
+                }
+
+                // Apply scaling to "Garras" if Martial Artist or Brawler
                 if (key.equals("Garras", ignoreCase = true)) {
-                    if (hasMartialArtist || hasBrawler) {
+                    if ((hasMartialArtist || hasBrawler) && garrasDemonioCompras < 2) {
                         dmgMatch = upgradeDie(dmgMatch)
                     }
                 }
