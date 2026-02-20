@@ -513,8 +513,8 @@
     "descricao": "Tribos desses párias podem ser encontradas em colinas distantes, abismos e montanhas imponentes. São fortes e imparáveis, adequados para abrir caminho nos ambientes mais selvagens.",
     "variantes": "Ideias Variantes: Se um meio-gigante descende de um tipo específico de gigante, como um gigante do fogo, conceda-lhe Resistência Ambiental (Fogo) e equilibre-o com seu oposto, como Fraqueza Ambiental (Frio). Para algo como o descendente de um gigante da tempestade, dê-lhe Resistência Ambiental (Raios) e equilibre-o com uma habilidade ou Complicação negativa de um ponto, como Teimoso ou o que fizer sentido em seu mundo de campanha.",
     "atributos": {
-      "Força": 3,
-      "Vigor": 3
+      "Força": 4,
+      "Vigor": 4
     },
     "pericias": {},
     "desvantagens": ["ANALFABETO", "FORASTEIRO (Maior)", "SEM NOÇÃO"],
