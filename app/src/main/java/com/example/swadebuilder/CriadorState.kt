@@ -957,7 +957,10 @@ class CriadorState {
 
         val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")
         val addedTypes = mutableSetOf<String>()
-        val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome } + vantagensRaciais
+        val sources = ancestralidadeObj.vantagensGratis +
+            ancestralidadeObj.habilidades.map { it.nome } +
+            vantagensRaciais +
+            vantagensSelecionadas.map { it.nome }
 
         // Helper to find description for a keyword
         fun findDesc(keyword: String): String {
@@ -1027,7 +1030,12 @@ class CriadorState {
             val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
 
             if (matchedSource != null) {
-                var desc = findDesc(key)
+                val selectedAdvDesc = vantagensSelecionadas
+                    .firstOrNull { it.nome.equals(matchedSource, ignoreCase = true) }
+                    ?.descricao
+                    .orEmpty()
+
+                var desc = selectedAdvDesc.ifBlank { findDesc(key) }
                 if (desc.isBlank()) {
                     desc = matchedSource
                 }
@@ -1070,7 +1078,10 @@ class CriadorState {
         }
 
         // Always add "Ataque Natural" (Unarmed) using central logic - Filter if specific natural weapons exist
-        val hasSpecificNaturalWeapons = weapons.any { it.nome.equals("Garras", ignoreCase = true) }
+        val hasSpecificNaturalWeapons = weapons.any { weapon ->
+            val key = weapon.nome.keyify()
+            key.contains("GARRA") || key.contains("MORDIDA") || key.contains("CHIFRE") || key.contains("CASCO")
+        }
         val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
 
         if (!hasSpecificNaturalWeapons && !isInsectoid) {
