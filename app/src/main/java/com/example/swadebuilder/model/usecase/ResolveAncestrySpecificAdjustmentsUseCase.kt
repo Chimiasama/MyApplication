@@ -17,11 +17,43 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
         val ensureAdvantageIds: List<String>,
         val ensureAutomaticAdvantages: List<String>,
         val ensureRacialDisadvantages: List<String>,
-        val elementalAction: ElementalAction
+        val elementalAction: ElementalAction,
+        val anotacoesToAdd: List<String> = emptyList()
     )
 
-    fun execute(anc: String, descendenteElementalSelecionado: String?): Result {
+    fun execute(
+        anc: String,
+        descendenteElementalSelecionado: String?,
+        anoesScifiSelecionado: String? = null,
+        isSciFiActive: Boolean = false
+    ): Result {
         val ancKey = anc.keyify()
+
+        if (ancKey == "ANOES" && isSciFiActive) {
+            return if (anoesScifiSelecionado == "Cyber") {
+                Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE,
+                    anotacoesToAdd = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário.")
+                )
+            } else {
+                // Default / Básico
+                Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = emptyList(),
+                    ensureRacialDisadvantages = listOf("GANANCIOSO"),
+                    elementalAction = ElementalAction.NONE
+                )
+            }
+        }
 
         return when (ancKey) {
             "SAURIOS" -> Result(

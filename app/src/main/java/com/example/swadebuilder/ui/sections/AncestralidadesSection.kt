@@ -485,6 +485,31 @@ fun AncestralidadesSection(
                                 }
                             }
 
+                            if (isSelected && item.nome.keyify() == "ANOES" && compendioSciFiAtivo) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Variante:", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+                                val options = listOf("Básico", "Cyber")
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.anoesScifiSelecionado ?: "Básico")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        options.forEach { opt ->
+                                            DropdownMenuItem(
+                                                text = { Text(opt) },
+                                                onClick = {
+                                                    state.selecionarAnoesScifi(opt)
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
 
                             if (isSelected && item.origens.contains("FANTASIA") && item.nome.contains("Humano", ignoreCase = true)) {
                                 Spacer(Modifier.height(8.dp))

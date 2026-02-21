@@ -121,6 +121,7 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             ),
             paCostStacks = mapOf("Força" to listOf(1, 1)),
             descendenteElementalSelecionado = null,
+            anoesScifiSelecionado = null,
             allAdvantages = selectedAdvantages + ResolveAncestryRacialPackageUseCaseTestFixtures.sampleAdvantages(), // Ensure Sorte is also known if needed
             availableComplications = listOf(complicacao),
             selectedComplications = mapOf(complicacao to "Menor"),
@@ -128,6 +129,7 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             meetsRequirements = meetsRequirements,
             originPriorityResolver = { 0 },
             compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+            compendioSciFiAtivo = false,
             signoAdgSelecionado = signoAdgSelecionado,
             modoSupers = false,
             meioElfoAgil = false

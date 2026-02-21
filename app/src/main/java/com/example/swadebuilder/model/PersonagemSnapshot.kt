@@ -160,7 +160,8 @@ data class SnapshotSelecoes(
     val protagonistaSlotAdvantageIds: List<String> = emptyList(),
     val gnomoPericiaEscolhida: String? = null,
     val dominioClerigoSelecionado: String? = null,
-    val dominioClerigoPathfinderSelecionado: String? = null
+    val dominioClerigoPathfinderSelecionado: String? = null,
+    val anoesScifiSelecionado: String? = null
 )
 
 @Serializable

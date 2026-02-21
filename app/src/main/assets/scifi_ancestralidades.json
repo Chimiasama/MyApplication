@@ -8,15 +8,14 @@
       "Vigor": 2
     },
     "pericias": {},
+    "opcoes": [
+      "Básico",
+      "Cyber"
+    ],
     "desvantagens": [
-      "MOVIMENTAÇÃO REDUZIDA",
-      "GANANCIOSO"
+      "MOVIMENTAÇÃO REDUZIDA"
     ],
     "habilidades": [
-      {
-        "nome": "CIBERTOLERÂNCIA",
-        "descricao": "Capacidade natural de aceitar implantes cibernéticos (descrição completa não fornecida no texto base)."
-      },
       {
         "nome": "RESISTENTE",
         "descricao": "Anões são robustos e resistentes."

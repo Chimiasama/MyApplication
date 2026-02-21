@@ -251,6 +251,7 @@ class CriadorState {
     var youxiaJutsuSelecionado by mutableStateOf<String?>(null)
     var youxiaHistoricoSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
+    var anoesScifiSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     var dominioClerigoSelecionado by mutableStateOf<String?>(null)
@@ -3427,9 +3428,11 @@ class CriadorState {
                 meetsRequirements = { atendeRequisitosMantidos(it) },
                 originPriorityResolver = { getOriginPriority(it) },
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                compendioSciFiAtivo = compendioSciFiAtivo,
                 signoAdgSelecionado = signoAdgSelecionado,
                 modoSupers = modoSupers,
-                meioElfoAgil = meioElfoAgil
+                meioElfoAgil = meioElfoAgil,
+                anoesScifiSelecionado = anoesScifiSelecionado
             )
         )
 
@@ -3476,6 +3479,9 @@ class CriadorState {
         if (ancestryChangeCoordination.clearDescendenteElemental) {
             selecionarDescendenteElemental(null)
         }
+        if (ancestryChangeCoordination.resetAnoesScifi) {
+            selecionarAnoesScifi(null)
+        }
         if (ancestryChangeCoordination.clearPericiaGnomo) {
             selecionarPericiaGnomo(null)
         }
@@ -3506,7 +3512,11 @@ class CriadorState {
 
         when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {
-                selecionarDescendenteElemental("Água")
+                if (anc.keyify() == "DESCENDENTE ELEMENTAL") selecionarDescendenteElemental("Água")
+                // Se for ANÕES, o default é "Básico" (null) mas podemos setar explícito se o UI precisar
+                if (anc.keyify() == "ANOES" && compendioSciFiAtivo && anoesScifiSelecionado == null) {
+                    selecionarAnoesScifi("Básico")
+                }
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {
                 val current = descendenteElementalSelecionado
@@ -3514,6 +3524,13 @@ class CriadorState {
                 selecionarDescendenteElemental(current)
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE -> Unit
+        }
+
+        if (racialPackage.anotacoesToAdd.isNotEmpty()) {
+            val newNotes = racialPackage.anotacoesToAdd.filter { !anotacoes.contains(it) }
+            if (newNotes.isNotEmpty()) {
+                anotacoes += "\n" + newNotes.joinToString("\n") { "• $it" }
+            }
         }
 
         complicacoesSelecionadas.clear()
@@ -3883,6 +3900,18 @@ class CriadorState {
 
         recalcularPontosAtributo()
         rebuildAllPericiaStacks()
+    }
+
+    fun selecionarAnoesScifi(opcao: String?) {
+        if (anoesScifiSelecionado == opcao) return
+        anoesScifiSelecionado = opcao
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade("ANÕES", msgs)
+        if (msgs.isNotEmpty()) {
+            // Se houver feedback, poderia mostrar ao usuário, mas esta função geralmente
+            // é chamada pela UI que não espera retorno.
+            // O feedback já é processado em aplicarAncestralidade (e.g. adicionar notas).
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -4838,7 +4867,8 @@ class CriadorState {
                 protagonistaSlotAdvantageIds = vantagensSlotProtagonista.toList(),
                 gnomoPericiaEscolhida = gnomoPericiaEscolhida,
                 dominioClerigoSelecionado = dominioClerigoSelecionado,
-                dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado
+                dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado,
+                anoesScifiSelecionado = anoesScifiSelecionado
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -4969,6 +4999,7 @@ class CriadorState {
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
         dominioClerigoSelecionado = snapshot.selecoes.dominioClerigoSelecionado
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
+        anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
 
         dinheiro = snapshot.recursos.dinheiro
         requisicao = snapshot.recursos.requisicao
