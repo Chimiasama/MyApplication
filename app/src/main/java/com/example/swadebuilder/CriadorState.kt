@@ -4599,7 +4599,17 @@ class CriadorState {
     }
 
     val criacaoBasicaCongelada: Boolean
-        get() = creationComplete() && modoProgressaoAtivo
+        get() {
+            val supersEmDistribuicao =
+                !modoProgressaoAtivo &&
+                    faseSupersAtiva &&
+                    superNivelCampanha != null &&
+                    superPontosTotais > 0
+
+            if (supersEmDistribuicao) return true
+
+            return creationComplete() && modoProgressaoAtivo
+        }
 
     val criacaoBasicaCongeladaComXp: Boolean
         get() = criacaoBasicaCongelada && !emProgresso
