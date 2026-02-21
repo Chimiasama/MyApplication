@@ -771,10 +771,6 @@ class MainActivity : ComponentActivity() {
 
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(entry.nome)
-                                            Text(
-                                                DateFormat.getDateTimeInstance().format(entry.timestamp),
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
                                         }
                                         Row {
                                             TextButton(onClick = { entryToDelete = entry }) {
