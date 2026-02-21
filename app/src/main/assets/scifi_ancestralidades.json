@@ -762,10 +762,7 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "FRAQUEZA AMBIENTAL (Calor)",
-      "GRANDE"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FORTE",
