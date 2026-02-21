@@ -68,9 +68,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
-                        ensureAdvantageNames = listOf("CURIOSO"), // Injected as Edge/Ability name
+                        ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("CURIOSO"), // Injected as Edge/Ability name (text only if no definition)
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -93,9 +93,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                     Result(
                         naturalArmorFromRace = 2, // Keeps Armor
                         forceArmorZero = true,
-                        ensureAdvantageNames = listOf("TOQUE VENENOSO (Cuspidor)"),
+                        ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("TOQUE VENENOSO (Cuspidor)"), // Text only trait
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )

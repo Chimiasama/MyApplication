@@ -3099,15 +3099,5 @@
       "estagio": "Lendário"
     },
     "descricao": "Pode converter dois Benes em um ponto de Convicção a qualquer momento. Convicção pode ser dada a outros."
-  },
-  {
-    "id": "toque_venenoso_cuspidor",
-    "nome": "TOQUE VENENOSO (Cuspidor)",
-    "categoria": "ANTECEDENTE",
-    "origem": "SCI_FI",
-    "requisitos": {
-      "estagio": "Novato"
-    },
-    "descricao": "Veneno Moderado, faça uma rolagem de Atletismo como ação limitada para atingir um alvo a até 6 quadros (12 metros) de distância. A personagem pode administrar uma dose concentrada do veneno, forçando o alvo a sofrer uma penalidade de -2 em sua rolagem de Vigor, mas isso causa Fadiga ao envenenador."
   }
 ]
