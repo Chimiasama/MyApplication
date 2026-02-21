@@ -180,6 +180,10 @@
     "origem": "FC",
     "descricao": "Centaux combinam a parte inferior do corpo de um animal de quatro patas com a parte superior do corpo de um humanoide. Suas pernas poderosas os impulsionam para frente a velocidades impressionantes e os impedem de serem atrapalhados por terrenos que desacelerariam outras espécies. No entanto, seu tamanho grande e sua propensão natural a se exibir facilitam sua identificação no meio da multidão.",
     "variantes": "Ideias Variantes: Uma espécie de centaux pode ser rápida, semelhante a gazelas. Reduza o Tamanho para 0 e aumente a Movimentação para +4 e o dado de corrida para d10.",
+    "opcoes": [
+      "Padrão",
+      "Gazela"
+    ],
     "atributos": {},
     "pericias": {},
     "desvantagens": [
@@ -196,16 +200,8 @@
         "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado."
       },
       {
-        "nome": "MOVIMENTAÇÃO +2",
-        "descricao": "A Movimentação dos centaux aumenta em +2 e seu dado de corrida aumenta em um tipo."
-      },
-      {
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade."
-      },
-      {
-        "nome": "TAMANHO +2",
-        "descricao": "A parte humanoide de um centaux é um humano robusto e musculoso, enquanto a parte traseira do corpo é do tamanho de um grande mamífero de quatro patas. Adicionam +2 à sua Resistência."
       }
     ],
     "tags": [
@@ -218,9 +214,11 @@
     "origem": "FC",
     "descricao": "Drakens são seres fortes e intimidadores que lembram vagamente dragões, basiliscos e similares. A maioria tem pele dura e temperamento explosivo, como o exemplo listado a seguir.",
     "variantes": "Ideias Variantes: Você pode se aprofundar mais na ideia de “dragão”, substituindo Forte por Arma de Sopro (Fogo).",
-    "atributos": {
-      "Força": 2
-    },
+    "opcoes": [
+      "Padrão",
+      "Dragão"
+    ],
+    "atributos": {},
     "pericias": {},
     "desvantagens": [
       "LENTO",
@@ -230,10 +228,6 @@
       {
         "nome": "CABEÇA DURA",
         "descricao": "A crista da cabeça desses drakens permite que deem cabeçadas com força extrema. Isso conta como Chifres e causa For+d4 de dano. Veja Armas Naturais em Savage Worlds Edição Aventura."
-      },
-      {
-        "nome": "FORTE",
-        "descricao": "Drakens são mais fortes que a maioria das espécies do seu tamanho. Começam com um d6 em Força em vez de um d4, aumentando o limite para d12+1."
       },
       {
         "nome": "LENTO",
@@ -257,9 +251,11 @@
     "origem": "FC",
     "descricao": "Qualquer espécie intimamente ligada a um elemento natural é chamada de elemental. O exemplo a seguir é baseado em terra e pedra. Elementais de pedra possuem raciocínio mais lento, mas compensam isso com sua força bruta e determinação.",
     "variantes": "Ideias Variantes: Elementais do ar, fogo e água têm Forma de Energia em vez de Forte e Resistência.",
-    "atributos": {
-      "Força": 3
-    },
+    "opcoes": [
+      "Padrão",
+      "Ar, Fogo ou Água"
+    ],
+    "atributos": {},
     "pericias": {},
     "desvantagens": [
       "CABEÇA-DURA",
@@ -272,20 +268,12 @@
         "descricao": "Elementais de pedra não processam pensamentos tão rapidamente quanto outros seres. Rolagens de Astúcia são feitas com -1."
       },
       {
-        "nome": "FORTE",
-        "descricao": "Elementais de pedra são muito fortes e colocam seu peso em cada golpe. Começam com um d8 em Força, aumentando o limite para d12+2."
-      },
-      {
         "nome": "GRANDE",
         "descricao": "Elementais de pedra subtraem 2 das rolagens de Característica quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado."
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
         "descricao": "Elementais se movem com passos lentos e metódicos. Reduzem a Movimentação em 1 e o dado de corrida em um tipo."
-      },
-      {
-        "nome": "RESISTÊNCIA +2",
-        "descricao": "O corpo de pedra destes elementais consegue repelir os golpes da maioria das armas modernas."
       },
       {
         "nome": "TAMANHO +1",
@@ -302,14 +290,14 @@
     "origem": "FC",
     "descricao": "Ferais são mamíferos astutos e determinados, semelhantes às versões humanoides dos guaxinins, furões, texugos e similares da Terra. Sociedades de ferais geralmente compensam sua baixa estatura com tecnologia avançada e são bem conhecidas por sua tenacidade contra adversidades.",
     "variantes": "Ideias Variantes: Como muitas vezes são dominados e superados por outras espécies, alguns ferais dependem de grandes números para sobreviver. Esta versão ainda menor de feral troca Espirituoso e Alta Tecnologia por Transtorno de Separação e aumenta seu Diminuto para Minúsculo.",
-    "atributos": {
-      "Espírito": 2
-    },
+    "opcoes": [
+      "Padrão",
+      "Menor"
+    ],
+    "atributos": {},
     "pericias": {},
     "desvantagens": [
       "INIMIGO ANCESTRAL (Insetoide)",
-      "DIMINUTO (Tamanho -3)",
-      "ALTA TECNOLOGIA (Maior)",
       "MOVIMENTAÇÃO REDUZIDA"
     ],
     "habilidades": [
@@ -318,20 +306,8 @@
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação."
       },
       {
-        "nome": "DIMINUTO (Tamanho -3)",
-        "descricao": "A maioria dos ferais tem cerca de 50 centímetros de altura. Possuem tamanho -3 (Muito Pequeno). Subtraem 3 de sua Resistência e têm d6 como Força Máxima. Veja Diminuto na p. 9 para mais informações."
-      },
-      {
-        "nome": "ALTA TECNOLOGIA (Maior)",
-        "descricao": "Ferais não estão familiarizados com a tecnologia “rústica” de outros seres. Eles possuem a Complicação Alta Tecnologia, subtraindo 4 de rolagens de Eletrônica ou Hackear feitas ao usar dispositivos de qualquer outra cultura."
-      },
-      {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
         "descricao": "Ferais têm pernas e estatura curtas. Reduzem a Movimentação em 1 e o dado de corrida em um tipo."
-      },
-      {
-        "nome": "ESPIRITUOSO",
-        "descricao": "Ferais permanecem imperturbáveis diante do perigo. Começam com um d6 em Espírito em vez de um d4, aumentando o limite para d12+1."
       }
     ],
     "tags": [
@@ -343,6 +319,10 @@
     "origem": "FC",
     "descricao": "Em alguns mundos, as espécies dominantes não evoluíram de animais, mas de plantas. Esse povo planta é conhecido como floran e existem dezenas de espécies oriundas de diferentes planetas e biomas pela galáxia. Sua cor e forma diferem muito dependendo do local de origem, embora todos os florans tendam a ter algumas características principais em comum.",
     "variantes": "Ideias Variantes: Alguns florans podem ter características especiais de defesa para protegê-los de herbívoros agressivos. Substitua Robusto por Toque Venenoso (Paralisante).",
+    "opcoes": [
+      "Padrão",
+      "Defensivo"
+    ],
     "atributos": {},
     "pericias": {},
     "desvantagens": [
@@ -363,10 +343,6 @@
         "descricao": "Florans precisam de metade da quantidade habitual de sono."
       },
       {
-        "nome": "ROBUSTO",
-        "descricao": "Um segundo resultado Abalado não causa Ferimento."
-      },
-      {
         "nome": "SEM SANGUE",
         "descricao": "Florans se estabilizam automaticamente sempre que ficarem Sangrando."
       },
@@ -384,6 +360,10 @@
     "origem": "FC",
     "descricao": "Gelatinoides são qualquer forma de vida semelhante a uma gosma, geralmente translúcida, que possa alterar sua forma. Absorvem alimentos e oxigênio e até “ouvem” vibrações sonoras através de sua membrana semipermeável. Eles “falam” emitindo feromônios sutis, mas somente outros de sua espécie conseguem entendê-los sem um tradutor de idiomas (p. 43).",
     "variantes": "Ideias Variantes: Criar uma personagem parecida com uma ameba que pode mudar de cor para combinar com o ambiente pode ser feito trocando Regeneração por Camuflagem.",
+    "opcoes": [
+      "Padrão",
+      "Ameba"
+    ],
     "atributos": {},
     "pericias": {},
     "desvantagens": [
@@ -402,10 +382,6 @@
       {
         "nome": "GELATINOSO",
         "descricao": "Gelatinoides têm um corpo amorfo, quase líquido, sem órgãos vitais. Sofrem apenas metade do dano causado por quedas ou colisões, e Ataques Localizados não causam dano extra contra eles. Podem fazer uma rolagem de Atletismo como uma ação para atravessar grades ou grandes aberturas como se fossem Terreno Difícil. Eles podem atravessar rachaduras tão pequenas quanto 3 centímetros de largura em 1d6 rodadas, deixando-os Vulneráveis até que se recomponham."
-      },
-      {
-        "nome": "REGENERAÇÃO",
-        "descricao": "Recompõem-se a uma velocidade surpreendente. Podem fazer uma rolagem de cura natural uma vez por dia."
       }
     ],
     "tags": [

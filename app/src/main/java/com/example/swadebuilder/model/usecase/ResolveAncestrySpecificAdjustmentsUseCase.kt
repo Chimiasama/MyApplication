@@ -214,7 +214,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                                 elementalAction = ElementalAction.NONE
                             )
                         }
-                        else -> { // Básico
+                        else -> { // Padrão
                             Result(
                                 naturalArmorFromRace = 0,
                                 forceArmorZero = true,
@@ -228,10 +228,161 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                     }
                 }
             }
+
+            if (ancKey == "CENTAUX") {
+                return if (effectiveVariant == "Gazela") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("MOVIMENTAÇÃO +4"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "DRAKENS") {
+                return if (effectiveVariant == "Dragão") {
+                    Result(
+                        naturalArmorFromRace = 2, // Default armor
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("ARMA DE SOPRO (Fogo)"), // Text trait
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 2,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("FORTE"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "ELEMENTAIS") {
+                return if (effectiveVariant == "Ar, Fogo ou Água") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("FORMA DE ENERGIA"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("FORTE", "RESISTÊNCIA +2"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "FERAIS") {
+                return if (effectiveVariant == "Menor") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -4)"),
+                        ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -3)", "ESPIRITUOSO"),
+                        ensureRacialDisadvantages = listOf("ALTA TECNOLOGIA (Maior)"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "FLORANS") {
+                return if (effectiveVariant == "Defensivo") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("TOQUE VENENOSO (Paralisante)"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("ROBUSTO"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "GELATINOIDES") {
+                return if (effectiveVariant == "Ameba") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("CAMUFLAGEM"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("REGENERAÇÃO"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
         }
 
         return when (ancKey) {
             "SAURIOS" -> Result(
+                naturalArmorFromRace = 2,
                 naturalArmorFromRace = 2,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),

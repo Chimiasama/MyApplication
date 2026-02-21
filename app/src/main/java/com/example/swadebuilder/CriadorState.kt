@@ -3269,6 +3269,65 @@ class CriadorState {
             }
         }
 
+        // Sci-Fi Attribute Variants (Padrão vs Variant)
+        if (compendioSciFiAtivo) {
+            val ancKey = ancestralidade.keyify()
+
+            // Drakens: Padrão (Forte - Str d6), Dragão (No Forte - Str d4)
+            if (ancKey == "DRAKENS") {
+                if (a.keyify() == "FORCA") {
+                    // JSON was cleared to d4. Padrão grants "Forte" (Start d6). Variant grants "Arma de Sopro".
+                    // If Padrão (or default), start d6 (6). If Dragão, start d4 (4).
+                    val variant = scifiVariant ?: "Padrão"
+                    if (variant == "Padrão") {
+                        modifiedBase = maxOf(modifiedBase, 6)
+                    }
+                }
+            }
+
+            // Elementais: JSON fixed to d8 (4 -> d8).
+            // Padrão: "Forte" (Usually d6 start + Max d12+1, but here base is d8, so Forte effectively just boosts Max?)
+            // Wait, JSON update sets Str to 4 (d8).
+            // User: "Ajuste a força deles pra ser d8 inicial".
+            // Variant: "Forma de Energia em vez de Forte".
+            // If JSON is d8, Variant gets d8. Padrão gets d8 + Forte (d12+1 -> d12+2?).
+            // BUT user said "Forma de Energia em vez de Forte".
+            // If "Forte" is what gives the d8 (according to standard rules: d6 start), then Variant should be d4 or d6?
+            // "Elementais... Ajuste a força deles pra ser d8 inicial".
+            // "A variante... tem Forma de Energia em vez de Forte".
+            // If I set JSON to d8, both have d8.
+            // If Variant loses "Forte", does it lose d8?
+            // If user explicitly said "Ajuste a força deles pra ser d8 inicial", likely means the base race.
+            // If Variant is "Energy Form", it likely doesn't have physical strength focus.
+            // I will assume JSON d8 applies to Padrão (via this logic or JSON) and Variant reverts to d4?
+            // Or does JSON d8 apply to ALL?
+            // Let's assume JSON d8 is the base for Padrão.
+            // If I changed JSON to d8, then I need to *undo* it for Variant if needed.
+            // Logic: "Padrão" -> d8. "Ar, Fogo ou Água" -> d4?
+            // "Forma de Energia ... não sofre dano de armas físicas ... não pode usar armas".
+            // Energy beings might not need Str.
+            // I will set Str to d4 for Variant if JSON is d8.
+            if (ancKey == "ELEMENTAIS") {
+                if (a.keyify() == "FORCA") {
+                    val variant = scifiVariant ?: "Padrão"
+                    if (variant != "Padrão") {
+                        modifiedBase = 4 // Reset to d4
+                    }
+                }
+            }
+
+            // Ferais: Padrão (Espirituoso - Spi d6). Menor (No Espirituoso - Spi d4).
+            // JSON cleared to d4.
+            if (ancKey == "FERAIS") {
+                if (a.keyify() == "ESPIRITO") {
+                    val variant = scifiVariant ?: "Padrão"
+                    if (variant == "Padrão") {
+                        modifiedBase = maxOf(modifiedBase, 6)
+                    }
+                }
+            }
+        }
+
         // Descendente Elemental (Terra)
         if (ancestralidade.keyify() == "DESCENDENTE ELEMENTAL" || ancestralidade.keyify() == "DESC_ELEMENTAL") {
             if (descendenteElementalSelecionado.equals("Terra", ignoreCase = true) && a.keyify() == "VIGOR") {
