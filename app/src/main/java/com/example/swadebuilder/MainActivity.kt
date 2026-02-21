@@ -33,13 +33,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -73,6 +86,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -85,6 +99,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.usecase.BuildUsageInstructionsUseCase
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -112,6 +127,23 @@ enum class PendingNavigationAction {
 class MainActivity : ComponentActivity() {
 
     private val isDataLoaded = MutableStateFlow<LoadingState>(LoadingState.Loading)
+
+    private fun getModuleIcon(flags: SnapshotFlags?): ImageVector {
+        if (flags == null) return Icons.AutoMirrored.Filled.MenuBook
+        return when {
+            flags.modoSupers -> Icons.Default.Bolt
+            flags.compendioPathfinderAtivo -> Icons.Default.Map
+            flags.compendioDeadlandsAtivo -> Icons.Default.Shield
+            flags.compendioCrystalHeartAtivo -> Icons.Default.Favorite
+            flags.compendioArteDaGuerraAtivo -> Icons.Filled.SportsMartialArts
+            flags.compendioCidadeSolVaporAtivo -> Icons.Default.Build
+            flags.compendioWiseguysAtivo -> Icons.Default.Groups
+            flags.compendioFantasiaAtivo -> Icons.Default.AutoAwesome
+            flags.compendioHorrorAtivo -> Icons.Default.MoodBad
+            flags.compendioSciFiAtivo -> Icons.Default.RocketLaunch
+            else -> Icons.AutoMirrored.Filled.MenuBook
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
@@ -711,6 +743,8 @@ class MainActivity : ComponentActivity() {
             }
 
             if (showLoadDialog) {
+                var selectedEntry by remember { mutableStateOf<CharacterStorage.SaveEntry?>(null) }
+
                 AlertDialog(
                     onDismissRequest = { showLoadDialog = false },
                     title = { Text("Carregar personagem") },
@@ -725,48 +759,27 @@ class MainActivity : ComponentActivity() {
                                 Text("Nenhum personagem salvo.")
                             } else {
                                 savedEntries.forEach { entry ->
+                                    val isSelected = selectedEntry?.id == entry.id
                                     Row(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(vertical = 4.dp),
-                                        horizontalArrangement = Arrangement.SpaceBetween
+                                            .background(if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent)
+                                            .clickable { selectedEntry = if (isSelected) null else entry }
+                                            .padding(vertical = 8.dp, horizontal = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Column(modifier = Modifier.weight(1f)) {
-                                            Text(entry.nome)
-                                            Text(
-                                                DateFormat.getDateTimeInstance().format(entry.timestamp),
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        }
-                                        Row {
-                                            TextButton(onClick = { entryToDelete = entry }) {
-                                                Icon(Icons.Default.Delete, contentDescription = "Apagar personagem")
-                                                Spacer(Modifier.width(4.dp))
-                                                Text("Apagar")
-                                            }
-                                            TextButton(onClick = {
-                                                triggerFeedback()
-                                                scope.launch {
-                                                    val result = criadorViewModel.carregarPersonagem(
-                                                        context,
-                                                        entry.id
-                                                    )
-                                                    if (result.success) {
-                                                        creationSession++
-                                                        mostrouTelaInicial = false
-                                                        showLoadDialog = false
-                                                        snackHost.showSnackbar("Carregado: ${entry.nome}")
-                                                    } else {
-                                                        snackHost.showSnackbar(
-                                                            result.message
-                                                                ?: "Falha ao carregar o personagem"
-                                                        )
-                                                    }
-                                                }
-                                            }) {
-                                                Text("Carregar")
-                                            }
-                                        }
+                                        Icon(
+                                            imageVector = getModuleIcon(entry.flags),
+                                            contentDescription = null,
+                                            tint = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.padding(end = 16.dp)
+                                        )
+
+                                        Text(
+                                            text = entry.nome,
+                                            modifier = Modifier.weight(1f),
+                                            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                                        )
                                     }
                                     HorizontalDivider()
                                 }
@@ -774,10 +787,66 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     confirmButton = {
-                        TextButton(onClick = { showLoadDialog = false }) {
-                            Text(stringResource(R.string.cancel))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TextButton(onClick = { showLoadDialog = false }) {
+                                if (state.estiloAbas == TabStyle.ICONES) {
+                                    Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Fechar")
+                                } else {
+                                    Text("Fechar", style = MaterialTheme.typography.bodySmall)
+                                }
+                            }
+
+                            Row {
+                                TextButton(
+                                    onClick = { entryToDelete = selectedEntry },
+                                    enabled = selectedEntry != null
+                                ) {
+                                    if (state.estiloAbas == TabStyle.ICONES) {
+                                        Icon(Icons.Default.Delete, contentDescription = "Apagar")
+                                    } else {
+                                        Text("Apagar", style = MaterialTheme.typography.bodySmall)
+                                    }
+                                }
+                                Spacer(Modifier.width(8.dp))
+                                TextButton(
+                                    onClick = {
+                                        selectedEntry?.let { entry ->
+                                            triggerFeedback()
+                                            scope.launch {
+                                                val result = criadorViewModel.carregarPersonagem(
+                                                    context,
+                                                    entry.id
+                                                )
+                                                if (result.success) {
+                                                    creationSession++
+                                                    mostrouTelaInicial = false
+                                                    showLoadDialog = false
+                                                    snackHost.showSnackbar("Carregado: ${entry.nome}")
+                                                } else {
+                                                    snackHost.showSnackbar(
+                                                        result.message
+                                                            ?: "Falha ao carregar o personagem"
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    },
+                                    enabled = selectedEntry != null
+                                ) {
+                                    if (state.estiloAbas == TabStyle.ICONES) {
+                                        Icon(Icons.Default.Upload, contentDescription = "Carregar")
+                                    } else {
+                                        Text("Carregar", style = MaterialTheme.typography.bodySmall)
+                                    }
+                                }
+                            }
                         }
-                    }
+                    },
+                    dismissButton = null
                 )
             }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.security.crypto.EncryptedFile
 import androidx.security.crypto.MasterKey
 import com.example.swadebuilder.model.PersonagemSnapshot
+import com.example.swadebuilder.model.SnapshotFlags
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -29,7 +30,8 @@ object CharacterStorage {
     data class SaveEntry(
         val id: String,
         val nome: String,
-        val timestamp: Long
+        val timestamp: Long,
+        val flags: SnapshotFlags? = null
     )
 
     @Serializable
@@ -38,6 +40,7 @@ object CharacterStorage {
         val id: String,
         val nome: String,
         val timestamp: Long,
+        val flags: SnapshotFlags? = null,
         val checksum: String? = null
     )
 
@@ -97,12 +100,13 @@ object CharacterStorage {
                             id = it.id,
                             nome = it.nome,
                             timestamp = it.timestamp,
+                            flags = it.flags,
                             checksum = it.checksum
                         )
                     }
                 ?: return@mapNotNull null
 
-            SaveEntry(file.nameWithoutExtension, metadata.nome, metadata.timestamp)
+            SaveEntry(file.nameWithoutExtension, metadata.nome, metadata.timestamp, metadata.flags)
         }?.sortedByDescending { it.timestamp } ?: emptyList()
     }
 
@@ -250,7 +254,7 @@ object CharacterStorage {
             }
         }
 
-        SaveEntry(saveId, snapshot.nome, snapshot.timestamp)
+        SaveEntry(saveId, snapshot.nome, snapshot.timestamp, snapshot.flags)
     }
 
     suspend fun delete(context: Context, id: String) = withContext(Dispatchers.IO) {
