@@ -26,11 +26,12 @@ data class VantFilter(
 data class EquipFilter(
     val somenteAcessiveis: Boolean = false,
     val origens: Set<String> = emptySet(),
-    val superTipos: Set<EquipSuperType> = emptySet()
+    val superTipos: Set<EquipSuperType> = emptySet(),
+    val subSections: Set<String> = emptySet()
 ) {
     fun totalSelections() =
         (if (somenteAcessiveis) 1 else 0) +
-                origens.size + superTipos.size
+                origens.size + superTipos.size + subSections.size
 
     fun isEmpty() = totalSelections() == 0
 }
