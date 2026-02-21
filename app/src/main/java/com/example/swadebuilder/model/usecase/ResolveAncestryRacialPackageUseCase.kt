@@ -11,6 +11,10 @@ class ResolveAncestryRacialPackageUseCase(
     data class Params(
         val anc: String,
         val descendenteElementalSelecionado: String?,
+        val anoesScifiSelecionado: String? = null,
+        val scifiVariant: String? = null,
+        val humanoMineradorAtributo: String? = null,
+        val isSciFiActive: Boolean = false,
         val allAdvantages: List<Vantagem>,
         val selectedAdvantages: List<Vantagem>,
         val previousFreeAdvantageKeys: Set<String>,
@@ -25,7 +29,8 @@ class ResolveAncestryRacialPackageUseCase(
         val desvantagensRaciais: List<String>,
         val naturalArmorFromRace: Int,
         val forceArmorZero: Boolean,
-        val elementalAction: ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction
+        val elementalAction: ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction,
+        val anotacoesToAdd: List<String> = emptyList()
     )
 
     fun execute(params: Params): Result {
@@ -48,7 +53,11 @@ class ResolveAncestryRacialPackageUseCase(
 
         val ancestrySpecificAdjustments = resolveAncestrySpecificAdjustmentsUseCase.execute(
             anc = params.anc,
-            descendenteElementalSelecionado = params.descendenteElementalSelecionado
+            descendenteElementalSelecionado = params.descendenteElementalSelecionado,
+            anoesScifiSelecionado = params.anoesScifiSelecionado,
+            scifiVariant = params.scifiVariant,
+            humanoMineradorAtributo = params.humanoMineradorAtributo,
+            isSciFiActive = params.isSciFiActive
         )
 
         ancestrySpecificAdjustments.ensureAdvantageNames.forEach { advantageName ->
@@ -99,7 +108,8 @@ class ResolveAncestryRacialPackageUseCase(
             desvantagensRaciais = desvantagensRaciais,
             naturalArmorFromRace = ancestrySpecificAdjustments.naturalArmorFromRace,
             forceArmorZero = ancestrySpecificAdjustments.forceArmorZero,
-            elementalAction = ancestrySpecificAdjustments.elementalAction
+            elementalAction = ancestrySpecificAdjustments.elementalAction,
+            anotacoesToAdd = ancestrySpecificAdjustments.anotacoesToAdd
         )
     }
 }
