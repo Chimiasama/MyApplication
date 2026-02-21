@@ -43,10 +43,6 @@
     ],
     "habilidades": [
       {
-        "nome": "RESISTÊNCIA",
-        "descricao": "A vida nas profundezas de seus mundos aquáticos fez com que a pele dos aquarianos se tornasse dura e resistente. Adicione +1 a sua Resistência."
-      },
-      {
         "nome": "VISÃO NO ESCURO",
         "descricao": "Ignoram penalidades por iluminação fraca ou escuridão."
       }
@@ -529,6 +525,10 @@
     "variantes": "Ideias Variantes: Seres de energia podem ser capazes de assumir uma forma física. Adicione Forma de Energia e equilibre com 4 pontos de habilidades negativas que façam sentido no seu cenário, como Curioso e Sem Noção, se tiverem pouca experiência em um mundo orgânico.",
     "atributos": {},
     "pericias": {},
+    "opcoes": [
+      "Padrão",
+      "Energia"
+    ],
     "desvantagens": [
       "FORASTEIRO (Menor)"
     ],
@@ -557,6 +557,10 @@
     "variantes": "Ideias Variantes: Para criar um Quadrioide que ignore 2 pontos de quaisquer penalidades por Ações Múltiplas (físicas ou mentais), equilibre-o com uma habilidade -1, como Dependência Atmosférica.",
     "atributos": {},
     "pericias": {},
+    "opcoes": [
+      "Padrão",
+      "Habilidoso"
+    ],
     "desvantagens": [
       "FRÁGIL",
       "INIMIGO ANCESTRAL",
@@ -595,9 +599,13 @@
     "variantes": "Ideias Variantes: Troque a Complicação Pacifista por Sem Escrúpulos (Maior) e ganhe um guerreiro robótico ou um droide de segurança. Para robôs dedicados com experiência limitada além de seu propósito, considere Perícias Básicas Reduzidas para refletir o fato de que não conhecem os conceitos básicos de Atletismo, Conhecimento Geral, Perceber, Persuadir ou Furtividade.",
     "atributos": {},
     "pericias": {},
+    "opcoes": [
+      "Padrão",
+      "Guerreiro",
+      "Limitado"
+    ],
     "desvantagens": [
-      "CIRCUITOS DE ASIMOV",
-      "PROGRAMADO"
+      "CIRCUITOS DE ASIMOV"
     ],
     "habilidades": [
       {
@@ -625,9 +633,13 @@
     "variantes": "Ideias Variantes: Troque a Complicação Programado por Procurado (Maior) ou Forasteiro (Maior) para um ser que se tornou renegado em uma sociedade em que sintéticos são tratados mais como máquinas do que como pessoas.",
     "atributos": {},
     "pericias": {},
+    "opcoes": [
+      "Padrão",
+      "Máquina (Procurado)",
+      "Máquina (Forasteiro)"
+    ],
     "desvantagens": [
-      "NÃO PODE CURAR",
-      "PROGRAMADO"
+      "NÃO PODE CURAR"
     ],
     "habilidades": [
       {
@@ -658,6 +670,10 @@
     "variantes": "Ideias Variantes: Soldados geneticamente modificados podem ser projetados para uso geral, como apresentado, ou para propósitos muito específicos, como fuzileiros de gravidade zero. Troque Nervos de Aço pela Vantagem Adaptação Gravitacional.",
     "atributos": {},
     "pericias": {},
+    "opcoes": [
+      "Padrão",
+      "Fuzileiro Zero G"
+    ],
     "desvantagens": [
       "SEM ESCRÚPULOS (Maior)",
       "TREINADOS PARA A GUERRA"

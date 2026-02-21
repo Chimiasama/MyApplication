@@ -131,7 +131,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("AQUÁTICO"),
+                        ensureAutomaticAdvantages = listOf("AQUÁTICO", "RESISTÊNCIA"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -463,8 +463,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
-                        ensureAdvantageNames = listOf("PODERES MÍSTICOS (Telepata)"), // Requires custom handling in State to grant without reqs
-                        ensureAdvantageIds = emptyList(),
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = listOf("poderes_misticos"), // Handled in CriadorState to set choice to Telepata
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
@@ -475,6 +475,148 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("NOÇÃO DO PERIGO"),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "POSSESSORES") {
+                return if (effectiveVariant == "Energia") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("FORMA DE ENERGIA"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE,
+                        anotacoesToAdd = listOf("Possessores Energia: Combinar com o Mestre e equilibrar com 4 pontos de habilidades negativas.")
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "QUADROIDES") {
+                return if (effectiveVariant == "Habilidoso") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE,
+                        anotacoesToAdd = listOf("Quadroides Habilidoso: Equilibre com uma habilidade -1, combine com o mestre de jogo.")
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Física)"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "ROBOS" || ancKey == "ROBÔS") {
+                return when (effectiveVariant) {
+                    "Guerreiro" -> Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("SEM ESCRÚPULOS (Maior)", "PROGRAMADO (Maior)"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                    "Limitado" -> Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"),
+                        elementalAction = ElementalAction.NONE,
+                        anotacoesToAdd = listOf("Robôs Limitado: Combine com o mestre compensação de Perícias Reduzidas.")
+                    )
+                    else -> Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "SERES SINTETICOS" || ancKey == "SERES SINTÉTICOS") {
+                return when (effectiveVariant) {
+                    "Máquina (Procurado)" -> Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("PROCURADO (Maior)"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                    "Máquina (Forasteiro)" -> Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("FORASTEIRO (Maior)"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                    else -> Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("PROGRAMADO"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "SOLDADOS GENETICOS" || ancKey == "SOLDADOS GENÉTICOS") {
+                return if (effectiveVariant == "Fuzileiro Zero G") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = emptyList(),

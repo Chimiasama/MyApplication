@@ -354,12 +354,13 @@ class CriadorState {
         val variant = scifiVariant ?: return base
         val newHabilidades = base.habilidades.toMutableList()
 
-        if (key == "AQUARIANOS" && variant == "Semi-aquáticos") {
-            newHabilidades.removeAll { it.nome.keyify().contains("RESISTENCIA") }
-        }
         // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
         // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
         // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
+
+        if (key == "QUADROIDES" && variant == "Habilidoso") {
+            newHabilidades.removeAll { it.nome.keyify().contains("ACAO ADICIONAL") }
+        }
 
         return base.copy(habilidades = newHabilidades)
     }
@@ -1912,6 +1913,9 @@ class CriadorState {
                 return false
             }
         }
+        if (compendioSciFiAtivo && ancestralidade.keyify() == "ROBOS" && scifiVariant == "Limitado") {
+            return false // Removes d4 from all basic skills
+        }
         return true
     }
 
@@ -1919,10 +1923,15 @@ class CriadorState {
         val ancKey = anc.keyify()
         val perKey = per.nome.keyify()
 
-        val defaultBase = if (per.basica) {
-            if (compendioFantasiaAtivo && ancKey == "GOLENS" && (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")) 0 else 4
-        } else {
-            0
+        var defaultBase = 0
+        if (per.basica) {
+            val isGolemRestricted = compendioFantasiaAtivo && ancKey == "GOLENS" &&
+                    (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")
+            val isRobotLimited = compendioSciFiAtivo && ancKey == "ROBOS" && scifiVariant == "Limitado"
+
+            if (!isGolemRestricted && !isRobotLimited) {
+                defaultBase = 4
+            }
         }
 
         val base = racialSkillStartMap[ancKey]?.get(perKey) ?: defaultBase
@@ -3700,6 +3709,8 @@ class CriadorState {
             }
         }
 
+        syncOraculoVariant()
+
         rebuildAllPericiaStacks(feedbackMessages)
         if (autoRefund) {
             while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
@@ -4078,6 +4089,27 @@ class CriadorState {
         val msgs = mutableListOf<String>()
         aplicarAncestralidade("HUMANOS", msgs)
         recalcularPontosAtributo(msgs) // Ensure re-calc happens as attribute base changes
+    }
+
+    private fun syncOraculoVariant() {
+        if (ancestralidade.keyify() != "ORACULOS") return
+        if (scifiVariant == "Aterrorizado") {
+            val idx = vantagensSelecionadas.indexOfFirst { it.id == "poderes_misticos" }
+            if (idx >= 0) {
+                val current = vantagensSelecionadas[idx]
+                if (current.choice != "Telepata") {
+                    vantagensSelecionadas[idx] = current.copy(choice = "Telepata")
+                    // Force refresh of Mystic Powers slots
+                    val arcKey = "MISTICO"
+                    if (poderSlotsPorArcano.containsKey(arcKey)) {
+                        poderSlotsPorArcano.remove(arcKey)
+                        // Trigger re-add logic if needed, or simply clearing slots forces refresh on next sync
+                    }
+                    // Re-trigger add logic to populate slots
+                    adicionarVantagem(vantagensSelecionadas[idx])
+                }
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
