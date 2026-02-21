@@ -854,7 +854,6 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier.fillMaxWidth(),
                                                 contentAlignment = Alignment.Center
                                             ) {
-                                            if (state.estiloAbas == TabStyle.ICONES) {
                                                 IconButton(onClick = {
                                                     triggerFeedback()
                                                     showHelpDialog = true
@@ -863,18 +862,6 @@ class MainActivity : ComponentActivity() {
                                                         imageVector = Icons.AutoMirrored.Filled.Help,
                                                         contentDescription = "Como usar"
                                                     )
-                                                }
-                                            } else {
-                                                TextButton(onClick = {
-                                                    triggerFeedback()
-                                                    showHelpDialog = true
-                                                }) {
-                                                    Text(
-                                                        text = "Como usar",
-                                                        style = MaterialTheme.typography.titleMedium,
-                                                        textAlign = TextAlign.Center
-                                                    )
-                                                }
                                                 }
                                             }
                                         },
