@@ -122,6 +122,8 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             paCostStacks = mapOf("Força" to listOf(1, 1)),
             descendenteElementalSelecionado = null,
             anoesScifiSelecionado = null,
+            scifiVariant = null,
+            humanoMineradorAtributo = null,
             allAdvantages = selectedAdvantages + ResolveAncestryRacialPackageUseCaseTestFixtures.sampleAdvantages(), // Ensure Sorte is also known if needed
             availableComplications = listOf(complicacao),
             selectedComplications = mapOf(complicacao to "Menor"),

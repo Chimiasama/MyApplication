@@ -25,33 +25,158 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
         anc: String,
         descendenteElementalSelecionado: String?,
         anoesScifiSelecionado: String? = null,
+        scifiVariant: String? = null,
+        humanoMineradorAtributo: String? = null,
         isSciFiActive: Boolean = false
     ): Result {
         val ancKey = anc.keyify()
 
-        if (ancKey == "ANOES" && isSciFiActive) {
-            return if (anoesScifiSelecionado == "Cyber") {
-                Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = emptyList(),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE,
-                    anotacoesToAdd = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário.")
-                )
-            } else {
-                // Default / Básico
-                Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = emptyList(),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = emptyList(),
-                    ensureRacialDisadvantages = listOf("GANANCIOSO"),
-                    elementalAction = ElementalAction.NONE
-                )
+        if (isSciFiActive) {
+            // Anões Logic (using unified scifiVariant or fallback to anoesScifiSelecionado for compatibility)
+            // Ideally anoesScifiSelecionado should be migrated to scifiVariant in State, but handling both here for now or just checking variant.
+            // Assuming State manages to set scifiVariant for new selections.
+            val effectiveVariant = scifiVariant ?: anoesScifiSelecionado
+
+            if (ancKey == "ANOES") {
+                return if (effectiveVariant == "Cyber") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE,
+                        anotacoesToAdd = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário.")
+                    )
+                } else {
+                    // Default / Básico
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("GANANCIOSO"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "AQUARIANOS") {
+                return if (effectiveVariant == "Semi-aquáticos") {
+                    Result(
+                        naturalArmorFromRace = 0, // Assume no Natural Armor change unless stated
+                        forceArmorZero = true, // To avoid stacking issues if any
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("SEMIAQUÁTICO", "TOQUE VENENOSO"),
+                        ensureRacialDisadvantages = emptyList(), // Dependency is in JSON
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Básico
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("AQUÁTICO"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "AVIANOS") {
+                return if (effectiveVariant == "Ave de rapina") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("SENTIDOS AGUÇADOS (Olhos de Águia)"),
+                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA", "FORMA ALIENÍGENA"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Básico
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("FRÁGIL", "NÃO SABE NADAR"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "ELFOS") {
+                return if (effectiveVariant == "Comunitário") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("COMUNITÁRIO"),
+                        ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Básico
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("DESASTRADO"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey.contains("HUMANO")) {
+                // Check if it's the specific SciFi Human entry or generic.
+                // Assuming "HUMANOS" key.
+                if (ancKey == "HUMANOS") {
+                    return when (effectiveVariant) {
+                        "Baixa Gravidade" -> Result(
+                            naturalArmorFromRace = 0,
+                            forceArmorZero = true,
+                            ensureAdvantageNames = emptyList(),
+                            ensureAdvantageIds = emptyList(),
+                            ensureAutomaticAdvantages = emptyList(), // Agility d6 handled in Attribute Logic
+                            ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA"),
+                            elementalAction = ElementalAction.NONE
+                        )
+                        "Minerador" -> {
+                            val choice = humanoMineradorAtributo ?: "Força"
+                            Result(
+                                naturalArmorFromRace = 0,
+                                forceArmorZero = true,
+                                ensureAdvantageNames = emptyList(),
+                                ensureAdvantageIds = emptyList(),
+                                ensureAutomaticAdvantages = emptyList(), // Attribute handled logic
+                                ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
+                                elementalAction = ElementalAction.NONE
+                            )
+                        }
+                        else -> { // Básico
+                            Result(
+                                naturalArmorFromRace = 0,
+                                forceArmorZero = true,
+                                ensureAdvantageNames = emptyList(),
+                                ensureAdvantageIds = emptyList(),
+                                ensureAutomaticAdvantages = listOf("ADAPTÁVEL"),
+                                ensureRacialDisadvantages = emptyList(),
+                                elementalAction = ElementalAction.NONE
+                            )
+                        }
+                    }
+                }
             }
         }
 

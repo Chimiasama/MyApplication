@@ -252,6 +252,8 @@ class CriadorState {
     var youxiaHistoricoSelecionado by mutableStateOf<String?>(null)
     var descendenteElementalSelecionado by mutableStateOf<String?>(null)
     var anoesScifiSelecionado by mutableStateOf<String?>(null)
+    var scifiVariant by mutableStateOf<String?>(null)
+    var humanoMineradorAtributo by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     var dominioClerigoSelecionado by mutableStateOf<String?>(null)
@@ -3242,6 +3244,21 @@ class CriadorState {
             modifiedBase = maxOf(modifiedBase, 6)
         }
 
+        // Human Sci-Fi Variants
+        if (ancestralidade.keyify().contains("HUMANO") && compendioSciFiAtivo) {
+            // "Habitantes de Gravidade Baixa começam com d6 em Agilidade"
+            if (scifiVariant == "Baixa Gravidade" && a.keyify() == "AGILIDADE") {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+            // "podem escolher entre d6 inicial em Força ou Vigor" (Minerador)
+            if (scifiVariant == "Minerador") {
+                val chosen = humanoMineradorAtributo ?: "Força"
+                if (a.keyify() == chosen.keyify()) {
+                    modifiedBase = maxOf(modifiedBase, 6)
+                }
+            }
+        }
+
         // Meio-Orc: Escolha entre Vigor d6 ou Força d6
         if (ancestralidade.equals("MEIO-ORCS", ignoreCase = true)) {
             if (a.keyify() == "VIGOR") {
@@ -3432,7 +3449,9 @@ class CriadorState {
                 signoAdgSelecionado = signoAdgSelecionado,
                 modoSupers = modoSupers,
                 meioElfoAgil = meioElfoAgil,
-                anoesScifiSelecionado = anoesScifiSelecionado
+                anoesScifiSelecionado = anoesScifiSelecionado,
+                scifiVariant = scifiVariant,
+                humanoMineradorAtributo = humanoMineradorAtributo
             )
         )
 
@@ -3482,6 +3501,10 @@ class CriadorState {
         if (ancestryChangeCoordination.resetAnoesScifi) {
             selecionarAnoesScifi(null)
         }
+        if (ancestryChangeCoordination.resetScifiVariant) {
+            selecionarScifiVariant(null)
+            selecionarHumanoMineradorAtributo(null)
+        }
         if (ancestryChangeCoordination.clearPericiaGnomo) {
             selecionarPericiaGnomo(null)
         }
@@ -3513,9 +3536,15 @@ class CriadorState {
         when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {
                 if (anc.keyify() == "DESCENDENTE ELEMENTAL") selecionarDescendenteElemental("Água")
-                // Se for ANÕES, o default é "Básico" (null) mas podemos setar explícito se o UI precisar
-                if (anc.keyify() == "ANOES" && compendioSciFiAtivo && anoesScifiSelecionado == null) {
-                    selecionarAnoesScifi("Básico")
+                // Sci-Fi Default Logic
+                if (compendioSciFiAtivo) {
+                    val ancKey = anc.keyify()
+                    val hasOptions = ancKey == "ANOES" || ancKey == "AQUARIANOS" || ancKey == "AVIANOS" || ancKey == "ELFOS" || ancKey == "HUMANOS"
+                    if (hasOptions) {
+                        if (ancKey == "ANOES" && anoesScifiSelecionado == null) selecionarAnoesScifi("Básico")
+                        if (scifiVariant == null) selecionarScifiVariant("Básico")
+                        if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) selecionarHumanoMineradorAtributo("Força")
+                    }
                 }
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {
@@ -3907,11 +3936,21 @@ class CriadorState {
         anoesScifiSelecionado = opcao
         val msgs = mutableListOf<String>()
         aplicarAncestralidade("ANÕES", msgs)
-        if (msgs.isNotEmpty()) {
-            // Se houver feedback, poderia mostrar ao usuário, mas esta função geralmente
-            // é chamada pela UI que não espera retorno.
-            // O feedback já é processado em aplicarAncestralidade (e.g. adicionar notas).
-        }
+    }
+
+    fun selecionarScifiVariant(opcao: String?) {
+        if (scifiVariant == opcao) return
+        scifiVariant = opcao
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+    }
+
+    fun selecionarHumanoMineradorAtributo(atributo: String?) {
+        if (humanoMineradorAtributo == atributo) return
+        humanoMineradorAtributo = atributo
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade("HUMANOS", msgs)
+        recalcularPontosAtributo(msgs) // Ensure re-calc happens as attribute base changes
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -4868,7 +4907,9 @@ class CriadorState {
                 gnomoPericiaEscolhida = gnomoPericiaEscolhida,
                 dominioClerigoSelecionado = dominioClerigoSelecionado,
                 dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado,
-                anoesScifiSelecionado = anoesScifiSelecionado
+                anoesScifiSelecionado = anoesScifiSelecionado,
+                scifiVariant = scifiVariant,
+                humanoMineradorAtributo = humanoMineradorAtributo
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -5000,6 +5041,8 @@ class CriadorState {
         dominioClerigoSelecionado = snapshot.selecoes.dominioClerigoSelecionado
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
+        scifiVariant = snapshot.selecoes.scifiVariant
+        humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
 
         dinheiro = snapshot.recursos.dinheiro
         requisicao = snapshot.recursos.requisicao

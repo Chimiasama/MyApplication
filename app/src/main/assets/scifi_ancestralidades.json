@@ -37,14 +37,14 @@
     "desvantagens": [
       "DEPENDÊNCIA (Água)"
     ],
+    "opcoes": [
+      "Básico",
+      "Semi-aquáticos"
+    ],
     "habilidades": [
       {
-        "nome": "SEMIAQUÁTICO",
-        "descricao": "Opera bem tanto na água quanto na terra."
-      },
-      {
-        "nome": "TOQUE VENENOSO",
-        "descricao": "Capacidade de injetar toxinas ou veneno."
+        "nome": "RESISTÊNCIA",
+        "descricao": "A vida nas profundezas de seus mundos aquáticos fez com que a pele dos aquarianos se tornasse dura e resistente. Adicione +1 a sua Resistência."
       },
       {
         "nome": "VISÃO NO ESCURO",
@@ -59,19 +59,15 @@
     "descricao": "Mais próximos de aves de rapina alienígenas, possuem cabeças avícolas e muitas vezes asas no lugar dos braços, adaptados para mundos de baixa gravidade.",
     "variantes": null,
     "atributos": {},
-    "pericias": {
-      "Perceber": 2
-    },
+    "opcoes": [
+      "Básico",
+      "Ave de rapina"
+    ],
+    "pericias": {},
     "desvantagens": [
-      "HABITANTE DE GRAVIDADE BAIXA",
-      "FORMA ALIENÍGENA",
       "MOVIMENTAÇÃO REDUZIDA"
     ],
     "habilidades": [
-      {
-        "nome": "SENTIDOS AGUÇADOS (Olhos de Águia)",
-        "descricao": "Visão extremamente precisa."
-      },
       {
         "nome": "VOO",
         "descricao": "Capacidade de voar em ambientes com atmosfera."
@@ -90,17 +86,15 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "TRANSTORNO DE SEPARAÇÃO"
+    "opcoes": [
+      "Básico",
+      "Comunitário"
     ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ÁGIL",
         "descricao": "Começam com Agilidade d6."
-      },
-      {
-        "nome": "COMUNITÁRIO",
-        "descricao": "Forte ligação com seu grupo."
       },
       {
         "nome": "VISÃO NO ESCURO",
@@ -114,15 +108,15 @@
     "origem": "FC",
     "descricao": "Versáteis por natureza, humanos no futuro se adaptam cultural e biologicamente aos seus lares planetários ou estações espaciais.",
     "variantes": "Estação Espacial (Habitante de Gravidade Baixa + Agilidade d6); Planeta de Mineração (Dependência Atmosférica Maior + Força ou Vigor d6).",
+    "opcoes": [
+      "Básico",
+      "Baixa Gravidade",
+      "Minerador"
+    ],
     "atributos": {},
     "pericias": {},
     "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "ADAPTÁVEL",
-        "descricao": "Humanos começam com uma Vantagem de Estágio Novato à sua escolha."
-      }
-    ],
+    "habilidades": [],
     "tags": []
   },
   {

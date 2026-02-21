@@ -76,7 +76,8 @@ data class RacialModifierLite(
     val atributos: Map<String, Int> = emptyMap(),
     val pericias: Map<String, Int> = emptyMap(),
     val vantagensGratis: List<String> = emptyList(),
-    val desvantagens: List<String> = emptyList()
+    val desvantagens: List<String> = emptyList(),
+    val opcoes: List<String> = emptyList()
 )
 
 private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
@@ -282,7 +283,8 @@ fun AncestralidadesSection(
                     atributos = representative.atributos,
                     pericias = representative.pericias,
                     vantagensGratis = representative.vantagensGratis,
-                    desvantagens = representative.desvantagens
+                    desvantagens = representative.desvantagens,
+                    opcoes = representative.opcoes
                 )
             }.sortedBy { it.nome }
 
@@ -485,25 +487,56 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            if (isSelected && item.nome.keyify() == "ANOES" && compendioSciFiAtivo) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Variante:", style = MaterialTheme.typography.labelMedium)
+                            if (isSelected && compendioSciFiAtivo) {
+                                val itemKeyNorm = item.nome.keyify()
+                                // Handle specific Anões legacy state or unified scifiVariant if options exist
+                                if (item.opcoes.isNotEmpty()) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Variante:", style = MaterialTheme.typography.labelMedium)
 
-                                var expanded by remember { mutableStateOf(false) }
-                                val options = listOf("Básico", "Cyber")
+                                    var expanded by remember { mutableStateOf(false) }
 
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.anoesScifiSelecionado ?: "Básico")
+                                    val currentSelection = if (itemKeyNorm == "ANOES") {
+                                        state.anoesScifiSelecionado ?: "Básico"
+                                    } else {
+                                        state.scifiVariant ?: "Básico"
                                     }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        options.forEach { opt ->
-                                            DropdownMenuItem(
-                                                text = { Text(opt) },
-                                                onClick = {
-                                                    state.selecionarAnoesScifi(opt)
-                                                    expanded = false
-                                                }
+
+                                    Box {
+                                        OutlinedButton(onClick = { expanded = true }) {
+                                            Text(currentSelection)
+                                        }
+                                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                            item.opcoes.forEach { opt ->
+                                                DropdownMenuItem(
+                                                    text = { Text(opt) },
+                                                    onClick = {
+                                                        if (itemKeyNorm == "ANOES") {
+                                                            state.selecionarAnoesScifi(opt)
+                                                        } else {
+                                                            state.selecionarScifiVariant(opt)
+                                                        }
+                                                        expanded = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    // Human Miner Attribute Choice
+                                    if (itemKeyNorm == "HUMANOS" && currentSelection == "Minerador") {
+                                        Spacer(Modifier.height(8.dp))
+                                        Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
+                                        Column {
+                                            com.example.swadebuilder.ui.components.RadioButtonRow(
+                                                label = "Força",
+                                                selected = state.humanoMineradorAtributo == "Força" || state.humanoMineradorAtributo == null, // default
+                                                onSelect = { state.selecionarHumanoMineradorAtributo("Força") }
+                                            )
+                                            com.example.swadebuilder.ui.components.RadioButtonRow(
+                                                label = "Vigor",
+                                                selected = state.humanoMineradorAtributo == "Vigor",
+                                                onSelect = { state.selecionarHumanoMineradorAtributo("Vigor") }
                                             )
                                         }
                                     }
