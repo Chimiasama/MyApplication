@@ -397,7 +397,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("GARRAS"), // For+d4 will be handled in extrairArmasNaturais logic update or default if needed
+                        ensureAutomaticAdvantages = listOf("ARMADURA +2", "GARRAS"), // For+d4 will be handled in extrairArmasNaturais logic update or default if needed
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -486,7 +486,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
 
         return when (ancKey) {
             "SAURIOS" -> Result(
-                naturalArmorFromRace = 2,
                 naturalArmorFromRace = 2,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),

@@ -357,15 +357,9 @@ class CriadorState {
         if (key == "AQUARIANOS" && variant == "Semi-aquáticos") {
             newHabilidades.removeAll { it.nome.keyify().contains("RESISTENCIA") }
         }
-        if (key == "INSETOIDES" && variant == "Vespa") {
-            newHabilidades.removeAll { it.nome.keyify().contains("ARMADURA") }
-        }
-        if (key.contains("MINERADOR") && key.contains("GENETICO") && variant == "Zero G") {
-             // Retain 'EM FORMA' (Fit) per feedback, even if losing 'FORTE' (Str d6 attribute logic handled elsewhere)
-        }
-        if (key == "SAURIOS" && variant == "Cuspidor") {
-             newHabilidades.removeAll { it.nome.keyify().contains("MORDIDA") }
-        }
+        // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
+        // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
+        // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
 
         return base.copy(habilidades = newHabilidades)
     }
@@ -1661,24 +1655,6 @@ class CriadorState {
                 }
             }
 
-            // Mineradores Genéticos: Padrão (Forte - Str d6). Zero G (No Forte - Str d4).
-            // JSON Str is 2 (d6).
-            // If I remove Forte from JSON via logic or trait, I must manage attribute here.
-            // Currently JSON has 'Força': 2.
-            // If Zero G variant selected, we must LOWER Str to d4.
-            if (ancKey.contains("MINERADOR") && ancKey.contains("GENETICO")) {
-                if (a.keyify() == "FORCA") {
-                    val variant = scifiVariant ?: "Padrão"
-                    if (variant == "Zero G") {
-                        // Assuming base is d6 from JSON, we force d4?
-                        // Or if base is d4 and trait gave d6.
-                        // Standard Minerador Genético has "Forte" (Start d6).
-                        // If JSON has Força: 2, that IS d6.
-                        // So for Zero G, we must override to d4 (4).
-                        modifiedBase = 4
-                    }
-                }
-            }
         }
     }
 
@@ -3394,6 +3370,16 @@ class CriadorState {
                     val variant = scifiVariant ?: "Padrão"
                     if (variant != "Padrão") {
                         modifiedBase = 4 // Reset to d4
+                    }
+                }
+            }
+
+            // Mineradores Genéticos: Padrão (Forte - Str d6). Zero G (No Forte - Str d4).
+            if (ancKey.contains("MINERADOR") && ancKey.contains("GENETICO")) {
+                if (a.keyify() == "FORCA") {
+                    val variant = scifiVariant ?: "Padrão"
+                    if (variant == "Zero G") {
+                        modifiedBase = 4
                     }
                 }
             }
