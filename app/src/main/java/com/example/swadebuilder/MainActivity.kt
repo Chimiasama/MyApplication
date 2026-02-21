@@ -34,12 +34,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -73,6 +84,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -85,6 +97,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.usecase.BuildUsageInstructionsUseCase
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -112,6 +125,23 @@ enum class PendingNavigationAction {
 class MainActivity : ComponentActivity() {
 
     private val isDataLoaded = MutableStateFlow<LoadingState>(LoadingState.Loading)
+
+    private fun getModuleIcon(flags: SnapshotFlags?): ImageVector {
+        if (flags == null) return Icons.AutoMirrored.Filled.MenuBook
+        return when {
+            flags.modoSupers -> Icons.Default.Bolt
+            flags.compendioPathfinderAtivo -> Icons.Default.Map
+            flags.compendioDeadlandsAtivo -> Icons.Default.Shield
+            flags.compendioCrystalHeartAtivo -> Icons.Default.Favorite
+            flags.compendioArteDaGuerraAtivo -> Icons.Filled.SportsMartialArts
+            flags.compendioCidadeSolVaporAtivo -> Icons.Default.Build
+            flags.compendioWiseguysAtivo -> Icons.Default.Groups
+            flags.compendioFantasiaAtivo -> Icons.Default.AutoAwesome
+            flags.compendioHorrorAtivo -> Icons.Default.MoodBad
+            flags.compendioSciFiAtivo -> Icons.Default.RocketLaunch
+            else -> Icons.AutoMirrored.Filled.MenuBook
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     @OptIn(ExperimentalMaterial3Api::class)
@@ -729,8 +759,16 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(vertical = 4.dp),
-                                        horizontalArrangement = Arrangement.SpaceBetween
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
+                                        Icon(
+                                            imageVector = getModuleIcon(entry.flags),
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.padding(end = 16.dp)
+                                        )
+
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(entry.nome)
                                             Text(
