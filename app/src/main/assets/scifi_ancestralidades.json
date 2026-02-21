@@ -218,7 +218,9 @@
       "Padrão",
       "Dragão"
     ],
-    "atributos": {},
+    "atributos": {
+      "Força": 2
+    },
     "pericias": {},
     "desvantagens": [
       "LENTO",
@@ -255,7 +257,9 @@
       "Padrão",
       "Ar, Fogo ou Água"
     ],
-    "atributos": {},
+    "atributos": {
+      "Força": 4
+    },
     "pericias": {},
     "desvantagens": [
       "CABEÇA-DURA",
@@ -294,7 +298,9 @@
       "Padrão",
       "Menor"
     ],
-    "atributos": {},
+    "atributos": {
+      "Espírito": 2
+    },
     "pericias": {},
     "desvantagens": [
       "INIMIGO ANCESTRAL (Insetoide)",
@@ -393,6 +399,10 @@
     "origem": "FC",
     "descricao": "Insetoides superam em número a maioria das outras espécies na galáxia e provavelmente poderiam dominá-la, se conseguissem organizar suas colmeias separadas em uma única força. A espécie aqui apresentada é baseada em criaturas que lembram formigas e louva-a-deus.",
     "variantes": "Ideias Variantes: Uma variante insetoide baseada em vespas troca Armadura +2 e Garras por um ferrão (trate como Mordida (For+d4)), Voo (Movimentação 6) e Toque Venenoso (Moderado).",
+    "opcoes": [
+      "Padrão",
+      "Vespa"
+    ],
     "atributos": {},
     "pericias": {},
     "desvantagens": [
@@ -402,20 +412,12 @@
     ],
     "habilidades": [
       {
-        "nome": "ARMADURA +2",
-        "descricao": "Estes seres têm um exoesqueleto semelhante ao de um besouro, feito de quitina espessa."
-      },
-      {
         "nome": "COMUNITÁRIO",
         "descricao": "Eles evoluíram de criaturas coletivas. Adicionam +2 às rolagens de Espírito quando estiverem a até 12 quadros (24 metros) de outros da mesma espécie."
       },
       {
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Tudo, desde os hábitos alimentares dos insetoides até sua mentalidade de colmeia, é estranho e alienígena para a maioria dos outros seres. Possuem a Complicação Forasteiro (Menor)."
-      },
-      {
-        "nome": "GARRAS",
-        "descricao": "Este tipo de insetoide tem garras que causam For+d4, PA 2."
       },
       {
         "nome": "INCAPAZ DE FALAR",
@@ -439,6 +441,10 @@
     "origem": "FC",
     "descricao": "O termo se refere a uma espécie que pode transformar sua forma física em outra, geralmente a de um ser vivo. Alguns mímicos duplicam outros seres sencientes, enquanto outros simplesmente assumem a forma de animais. Seja qual for o nível de mimetismo que possuam, tendem a ser o bode expiatório preferido nas sociedades em que são predominantes. Embora a maioria dos sistemas legais não aceite a “defesa de mimetismo”, isso não impede que criminosos aleguem que foi um mímico quem feriu a lei.",
     "variantes": "Ideias Variantes: Alguns mímicos não conseguem duplicar alvos de Tamanho maior ou menor, mas são feitos de materiais mais resistentes, aumentando sua Resistência em +1.",
+    "opcoes": [
+      "Padrão",
+      "Resistente"
+    ],
     "atributos": {},
     "pericias": {},
     "desvantagens": [
@@ -455,10 +461,6 @@
         "descricao": "Sociedades por toda a galáxia desconfiam de mímicos. Possuem a Complicação Forasteiro (Menor)."
       },
       {
-        "nome": "MUDANÇA DE FORMA",
-        "descricao": "Como uma ação limitada, mímicos podem assumir a aparência de outro ser com uma variação de 2 pontos de Tamanho. Não ganham ou perdem Ferimentos ao mudar de Escala. Para duplicar um indivíduo específico, devem tocar o alvo e fazer uma rolagem resistida de Astúcia. Com sucesso, imitam a aparência do alvo. Com uma ampliação, também ganham memórias imediatas, voz, impressões digitais, padrões de retina etc."
-      },
-      {
         "nome": "SEM ÓRGÃOS VITAIS",
         "descricao": "Mímicos podem alterar a localização de seus órgãos vitais, tornando-os difíceis de serem atingidos. Ataques Localizados não provocam dano extra contra eles."
       }
@@ -472,26 +474,20 @@
     "origem": "FC",
     "descricao": "Mineração e projetos de construção no espaço profundo são atividades perigosas, principalmente para seres comuns. Colônias que mantêm gerações de mineiros, trabalhadores da construção civil ou outros tipos podem introduzir modificações genéticas em seus habitantes. Alguns veem isso como um incentivo à servidão contratada; outros, como uma necessidade para a vida difícil exigida pelo trabalho e pela vida em um ambiente hostil.",
     "variantes": "Ideias Variantes: Mineradores genéticos podem ser projetados para outros tipos de trabalho. Para trabalhadores da construção civil em gravidade zero, dê a eles a Vantagem Adaptação Gravitacional no lugar de Forte e troque Dependência Atmosférica pela Complicação Habitante de Gravidade Baixa/Zero.",
+    "opcoes": [
+      "Padrão",
+      "Zero G"
+    ],
     "atributos": {
       "Vigor": 2,
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "DEPENDÊNCIA ATMOSFÉRICA"
-    ],
+    "desvantagens": [],
     "habilidades": [
-      {
-        "nome": "DEPENDÊNCIA ATMOSFÉRICA",
-        "descricao": "Mineradores genéticos são projetados para trabalhar em uma atmosfera específica (veja Atmosfera na p. 91). Escolha uma. Em outras atmosferas, devem usar um respirador ou fazer uma rolagem de Vigor a cada minuto para evitar Fadiga que pode levar à morte."
-      },
       {
         "nome": "EM FORMA",
         "descricao": "Mineradores genéticos trabalham longas horas em condições difíceis. Começam com um d6 em Vigor, aumentando o limite para d12+1."
-      },
-      {
-        "nome": "FORTE",
-        "descricao": "Mineradores genéticos passam por trabalho físico constante e, portanto, começam com um d6 em Força, aumentando o limite para d12+1."
       }
     ],
     "tags": [
@@ -503,6 +499,10 @@
     "origem": "FC",
     "descricao": "Qualquer espécie com poderes mentais, espirituais ou sobrenaturais inatos é chamada de oráculo.",
     "variantes": "Ideias Variantes: Alguns oráculos podem estar sintonizados com presenças aterrorizantes que ameaçam toda a galáxia. Troque Noção do Perigo pela Vantagem Poderes Místicos (Telepata), p. 29, para combater melhor os horrores cósmicos que sentem — e melhorar os poderes que canalizam contra seus inimigos.",
+    "opcoes": [
+      "Padrão",
+      "Aterrorizado"
+    ],
     "atributos": {},
     "pericias": {},
     "desvantagens": [
@@ -512,10 +512,6 @@
       {
         "nome": "FRÁGIL",
         "descricao": "A maioria dos oráculos tem constituição frágil. Subtraem 1 de sua Resistência."
-      },
-      {
-        "nome": "NOÇÃO DO PERIGO",
-        "descricao": "Todos os oráculos têm a Vantagem Noção do Perigo."
       },
       {
         "nome": "TELEPATIA",

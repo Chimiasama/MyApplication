@@ -341,7 +341,33 @@ class CriadorState {
             activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
         } ?: return null
 
-        return withInferredAncestryMechanics(withBaselineCounterpartMechanics(selected, key))
+        val withVariant = if (compendioSciFiAtivo && (selected.origem == "FC" || selected.origem == "SCI_FI")) {
+            applySciFiVariantAdjustments(selected, key)
+        } else {
+            selected
+        }
+
+        return withInferredAncestryMechanics(withBaselineCounterpartMechanics(withVariant, key))
+    }
+
+    private fun applySciFiVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
+        val variant = scifiVariant ?: return base
+        val newHabilidades = base.habilidades.toMutableList()
+
+        if (key == "AQUARIANOS" && variant == "Semi-aquáticos") {
+            newHabilidades.removeAll { it.nome.keyify().contains("RESISTENCIA") }
+        }
+        if (key == "INSETOIDES" && variant == "Vespa") {
+            newHabilidades.removeAll { it.nome.keyify().contains("ARMADURA") }
+        }
+        if (key.contains("MINERADOR") && key.contains("GENETICO") && variant == "Zero G") {
+             // Retain 'EM FORMA' (Fit) per feedback, even if losing 'FORTE' (Str d6 attribute logic handled elsewhere)
+        }
+        if (key == "SAURIOS" && variant == "Cuspidor") {
+             newHabilidades.removeAll { it.nome.keyify().contains("MORDIDA") }
+        }
+
+        return base.copy(habilidades = newHabilidades)
     }
 
     private fun withBaselineCounterpartMechanics(
@@ -428,7 +454,9 @@ class CriadorState {
         "MISTICO_SEDUTOR" to listOf("aumentar_reduzir_caracteristica", "disfarce", "empatia", "leitura_de_mente"),
         "MISTICO_TRAPACEIRO" to listOf("disfarce", "deflexao", "horrores_ilusorios", "medo"),
         "MISTICO_ARQUITETO" to listOf("barreira", "detectar_ocultar_arcano", "telecinese", "trancar_destrancar"),
-        "MISTICO_REGIO" to listOf("explosao", "rajada", "rancor")
+        "MISTICO_REGIO" to listOf("explosao", "rajada", "rancor"),
+        "MISTICO_GUERREIRO_ESTELAR" to listOf("aumentar_reduzir_caracteristica", "deflexao", "devastacao", "protecao", "telecinese"),
+        "MISTICO_TELEPATA" to listOf("ajuda", "atordoar", "confusao", "empatia", "leitura_de_mente")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
@@ -992,7 +1020,7 @@ class CriadorState {
         val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
             ?: return emptyList()
 
-        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos", "Toque Arrepiante", "Toque da Morte")
+        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos", "Toque Arrepiante", "Toque da Morte", "Ferrão", "Toque Venenoso")
         val addedTypes = mutableSetOf<String>()
         val sources = ancestralidadeObj.vantagensGratis +
             ancestralidadeObj.habilidades.map { it.nome } +
@@ -1096,10 +1124,18 @@ class CriadorState {
                 when (keyToken) {
                     "TOQUE ARREPIANTE" -> nameKey.contains("TOQUE ARREPIANTE")
                     "TOQUE DA MORTE" -> nameKey.contains("TOQUE DA MORTE")
+                    "FERRAO" -> nameKey.contains("FERRAO")
+                    "TOQUE VENENOSO" -> nameKey.contains("TOQUE VENENOSO")
                     else -> nameKey.contains(keyToken)
                 }
             }
             if (alreadyPresent) return@forEach
+
+            // Variant-specific exclusions
+            if (compendioSciFiAtivo) {
+                if (ancestralidade.keyify() == "SAURIOS" && scifiVariant == "Cuspidor" && keyToken == "MORDIDA") return@forEach
+                if (ancestralidade.keyify() == "INSETOIDES" && scifiVariant == "Vespa" && keyToken == "GARRAS") return@forEach
+            }
 
             val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
 
@@ -1134,6 +1170,26 @@ class CriadorState {
                     dmgMatch = "For+d4/For+2d6"
                 }
 
+                if (key.equals("Ferrão", ignoreCase = true)) {
+                    dmgMatch = "For+d4"
+                }
+
+                if (key.equals("Toque Venenoso", ignoreCase = true)) {
+                    // Usually just an effect, but if treated as weapon
+                    dmgMatch = "-" // Or specific damage if described
+                    // Vespa text says "trate como Mordida (For+d4)" for Ferrão. Toque Venenoso separate.
+                    // If Toque Venenoso is just effect, maybe dist "Toque" is enough.
+                    // If matchedSource has description "Cuspidor", it might be Ranged?
+                    // "Cuspidor (Toque Venenoso...)" - Name implies Spitter but effect is Poison Touch?
+                    // Actually prompt says "Cuspidor (Cuspidor)". Maybe trait is called "Cuspidor"?
+                    // If source is "TOQUE VENENOSO (Cuspidor)", description might say "Alcance Cone" or something.
+                    // But here we just default.
+                    if (matchedSource.contains("Cuspidor", ignoreCase = true)) {
+                        // Might be ranged
+                        // We leave dmgMatch as regex found (likely none)
+                    }
+                }
+
                 if (hasLobisomemAprimorado && (key.equals("Garras", true) || key.equals("Mordida", true))) {
                     dmgMatch = "For+d8"
                     paFinal = maxOf(paFinal, 4)
@@ -1146,6 +1202,11 @@ class CriadorState {
                     } else {
                         dmgMatch = "For+d4"
                     }
+                }
+
+                // Insetoides Padrão: For+d4
+                if (key.equals("Garras", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
+                    dmgMatch = "For+d4"
                 }
 
                 if (key.equals("Garras", ignoreCase = true) && hasGarrasVampiro) {
@@ -1596,6 +1657,25 @@ class CriadorState {
                     desvantagensAutomaticas.add(inimigo.name)
                     if (!anotacoes.contains("Inimigo (Maior) adicionado por Escolhido")) {
                         anotacoes += "\n• Inimigo (Maior) adicionado automaticamente pela Vantagem Escolhido."
+                    }
+                }
+            }
+
+            // Mineradores Genéticos: Padrão (Forte - Str d6). Zero G (No Forte - Str d4).
+            // JSON Str is 2 (d6).
+            // If I remove Forte from JSON via logic or trait, I must manage attribute here.
+            // Currently JSON has 'Força': 2.
+            // If Zero G variant selected, we must LOWER Str to d4.
+            if (ancKey.contains("MINERADOR") && ancKey.contains("GENETICO")) {
+                if (a.keyify() == "FORCA") {
+                    val variant = scifiVariant ?: "Padrão"
+                    if (variant == "Zero G") {
+                        // Assuming base is d6 from JSON, we force d4?
+                        // Or if base is d4 and trait gave d6.
+                        // Standard Minerador Genético has "Forte" (Start d6).
+                        // If JSON has Força: 2, that IS d6.
+                        // So for Zero G, we must override to d4 (4).
+                        modifiedBase = 4
                     }
                 }
             }
@@ -3281,6 +3361,8 @@ class CriadorState {
                     val variant = scifiVariant ?: "Padrão"
                     if (variant == "Padrão") {
                         modifiedBase = maxOf(modifiedBase, 6)
+                    } else {
+                        modifiedBase = 4 // Reset to d4
                     }
                 }
             }

@@ -2896,7 +2896,11 @@
     "requisitos": {
       "estagio": "Experiente"
     },
-    "descricao": "Ganha 10 Pontos de Poder e poderes limitados (Guerreiro Estelar ou Telepata). Ativa como ação livre limitada (sucesso automático pelo custo normal ou ampliação por +2 PP). Não acumula com Antecedente Arcano."
+    "choiceOptions": [
+      "Guerreiro Estelar",
+      "Telepata"
+    ],
+    "descricao": "Por toda a galáxia, existem indivíduos especiais que desenvolveram habilidades psíquicas ou espirituais limitadas para ajudá-los na profissão que escolheram. Não são tão poderosos ou versáteis quanto aqueles com Antecedentes Arcanos, mas seus poderes limitados são mais confiáveis.\n\nPersonagens com Poderes Místicos têm os poderes listados a seguir e 10 Pontos de Poder que recarregam normalmente. Como ação livre limitada, ativam o poder automaticamente com um sucesso por seu custo normal, ou com uma ampliação por 2 Pontos de Poder adicionais. É possível usar Modificadores de Poder aplicáveis se desejar (ao custo normal).\n\nPoderes Místicos não garantem acesso a Vantagens que requeiram um Antecedente Arcano, mas é possível adquirir as Vantagens Pontos de Poder ou Drenar Alma (substituindo o requisito de perícia arcana por Espírito). Se também tiver um Antecedente Arcano, nenhuma de suas Vantagens ou habilidades poderá ser usada com Poderes Místicos e vice-versa.\n\nPoderes com “Pessoal” ou “Alcance” não recebem nenhum benefício dessas Limitações.\n\n„ GUERREIRO ESTELAR (Lutar d8+): Aumentar Característica (apenas Lutar, Força e Vigor), deflexão, devastação, proteção, telecinese. Todos, exceto telecinese, têm a Limitação Pessoal.\n\n„ TELEPATA (Astúcia d8+): Ajuda, atordoar, confusão, empatia, leitura mental. Todos têm Limitação Alcance."
   },
   {
     "id": "adaptacao_atmosferica",

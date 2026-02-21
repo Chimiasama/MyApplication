@@ -378,6 +378,110 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                     )
                 }
             }
+
+            if (ancKey == "INSETOIDES") {
+                return if (effectiveVariant == "Vespa") {
+                    Result(
+                        naturalArmorFromRace = 0, // No Armor +2
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("FERRÃO (Mordida For+d4)", "VOO (Movimentação 6)", "TOQUE VENENOSO (Moderado)"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 2,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("GARRAS"), // For+d4 will be handled in extrairArmasNaturais logic update or default if needed
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "MIMICOS" || ancKey == "MÍMICOS") {
+                return if (effectiveVariant == "Resistente") {
+                    Result(
+                        naturalArmorFromRace = 0, // No specific Armor trait mentioned, but Resistance +1. Usually handled via TOUGHNESS modifier or manually.
+                        // "aumentando sua Resistência em +1". If not via Armor, maybe via Toughness bonus logic in State or just a trait "RESISTENTE".
+                        // Assuming "RESISTÊNCIA +1" trait string handles it via ModifierEngine if mapped, or just textual.
+                        // Standard Mimics have nothing special? They have "Mudança de Forma".
+                        // Variant text: "MUDANÇA DE FORMA: ... sem variação de Tamanho."
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("RESISTÊNCIA +1", "MUDANÇA DE FORMA (Sem variação de tamanho)"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("MUDANÇA DE FORMA"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "MINERADORES GENETICOS" || ancKey == "MINERADORES GENÉTICOS") {
+                return if (effectiveVariant == "Zero G") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL"),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA/ZERO"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("FORTE"),
+                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "ORACULOS" || ancKey == "ORÁCULOS") {
+                return if (effectiveVariant == "Aterrorizado") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = listOf("PODERES MÍSTICOS (Telepata)"), // Requires custom handling in State to grant without reqs
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = listOf("NOÇÃO DO PERIGO"),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
         }
 
         return when (ancKey) {
