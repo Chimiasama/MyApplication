@@ -83,9 +83,11 @@ fun ModuleCard(
                 shadowElevation = if (isSelected) 2.dp else 0.dp
             ) {
                 // Content
-                Box(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
+                Box(modifier = Modifier.fillMaxWidth()) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -123,7 +125,9 @@ fun ModuleCard(
                         val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
 
                         Box(
-                            modifier = Modifier.align(Alignment.TopEnd)
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(4.dp)
                         ) {
                             if (tabStyle == TabStyle.ICONES) {
                                 IconButton(

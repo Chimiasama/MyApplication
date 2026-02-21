@@ -177,6 +177,7 @@ private data class EquipamentoListEntry(
 @Composable
 fun EquipFilterDialog(
     availableSuperTypes: List<EquipSuperType>,
+    availableSubSections: Map<EquipSuperType, Set<String>>,
     current: EquipFilter,
     onChange: (EquipFilter) -> Unit,
     onDismiss: () -> Unit
@@ -188,7 +189,7 @@ fun EquipFilterDialog(
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 300.dp)
+                    .heightIn(max = 400.dp)
                     .verticalScroll(rememberScrollState())
                     .padding(end = 8.dp)
             ) {
@@ -204,8 +205,9 @@ fun EquipFilterDialog(
                 }
                 Spacer(Modifier.size(8.dp))
 
-                Text("Categoria", fontWeight = FontWeight.Bold)
+                Text("Categorias e Subseções", fontWeight = FontWeight.Bold)
                 availableSuperTypes.forEach { t ->
+                    // SuperType Header/Checkbox
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Checkbox(
                             checked = t in current.superTipos,
@@ -216,7 +218,28 @@ fun EquipFilterDialog(
                             }
                         )
                         Spacer(Modifier.size(4.dp))
-                        Text(t.label)
+                        Text(t.label, fontWeight = FontWeight.SemiBold)
+                    }
+
+                    // SubSections List (only if SuperType has subsections)
+                    val subSecs = availableSubSections[t]?.sorted() ?: emptyList()
+                    if (subSecs.isNotEmpty()) {
+                        Column(modifier = Modifier.padding(start = 32.dp)) {
+                            subSecs.forEach { sub ->
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Checkbox(
+                                        checked = sub in current.subSections,
+                                        onCheckedChange = {
+                                            val s = current.subSections.toMutableSet()
+                                            if (it) s += sub else s -= sub
+                                            onChange(current.copy(subSections = s))
+                                        }
+                                    )
+                                    Spacer(Modifier.size(4.dp))
+                                    Text(sub, style = MaterialTheme.typography.bodySmall)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -376,6 +399,15 @@ fun EquipamentoSection(
                     .map { it.superType }
                     .distinct()
                     .sortedBy { it.order }
+            }
+
+            // Available SubSections Map for Dialog
+            val availableSubSectionsMap = remember(mappedCategories) {
+                mappedCategories
+                    .groupBy { it.superType }
+                    .mapValues { (_, categories) ->
+                        categories.map { it.subGroup }.filter { it.isNotBlank() }.toSet()
+                    }
             }
 
 
@@ -607,6 +639,10 @@ fun EquipamentoSection(
                         // Filter Check (removed Origin logic)
                         if (filter.superTipos.isNotEmpty() && mapped.superType !in filter.superTipos) return@filter false
                         if (selectedSuperTypes.isNotEmpty() && mapped.superType !in selectedSuperTypes) return@filter false
+
+                        // SubSection Filter
+                        if (filter.subSections.isNotEmpty() && mapped.subGroup !in filter.subSections) return@filter false
+
                         true
                     }.flatMap { mapped ->
                         mapped.original.itens.filter { item ->
@@ -661,8 +697,15 @@ fun EquipamentoSection(
                 val visibleContentData = remember(groupsBySuperType, filter, usaRiqueza, usaRequisicao, dinheiro, compendioPathfinderAtivo, state.compendioScifiMechasCiberneticosAtivo) {
                     // Mapeia cada SuperType para seus dados filtrados
                     groupsBySuperType.mapValues { (_, categoriesInSuper) ->
+                        // Apply SubSection Filter at Category Level
+                        val filteredCategories = if (filter.subSections.isNotEmpty()) {
+                            categoriesInSuper.filter { it.subGroup in filter.subSections }
+                        } else {
+                            categoriesInSuper
+                        }
+
                         // Process the subgroups directly to check for content
-                        val groups = categoriesInSuper.groupBy { it.group }.mapValues { (_, catsInGroup) ->
+                        val groups = filteredCategories.groupBy { it.group }.mapValues { (_, catsInGroup) ->
                             catsInGroup.groupBy { it.subGroup }.mapValues { (_, catsInSub) ->
                                 // Filtra os itens dentro do subgrupo
                                 catsInSub.flatMap { cat ->
@@ -953,6 +996,7 @@ fun EquipamentoSection(
             if (showFilterDialog) {
                 EquipFilterDialog(
                     availableSuperTypes = availableSuperTypes,
+                    availableSubSections = availableSubSectionsMap,
                     current = filter,
                     onChange = { state.equipFilter = it },
                     onDismiss = { showFilterDialog = false }
