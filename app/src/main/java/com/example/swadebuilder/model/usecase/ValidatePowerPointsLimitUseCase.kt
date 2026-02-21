@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.util.keyify
 
 class ValidatePowerPointsLimitUseCase {
 

@@ -41,7 +41,6 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -88,7 +87,6 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)

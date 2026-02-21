@@ -1,7 +1,7 @@
 package com.example.swadebuilder.model.usecase
 
-import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.EspecializacoesDto
+import com.example.swadebuilder.model.Pericia
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

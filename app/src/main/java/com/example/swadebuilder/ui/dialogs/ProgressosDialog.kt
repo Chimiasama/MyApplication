@@ -77,6 +77,7 @@ import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.stageForSlot
@@ -91,7 +92,6 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
-import com.example.swadebuilder.model.dynamicStageCaps
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

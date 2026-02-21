@@ -5,9 +5,6 @@ import android.content.res.AssetManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.swadebuilder.model.ArcanoInfo
-import com.example.swadebuilder.model.Pericia
-import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos

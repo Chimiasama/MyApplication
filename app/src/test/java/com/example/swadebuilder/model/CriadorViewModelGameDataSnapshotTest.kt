@@ -2,9 +2,6 @@ package com.example.swadebuilder.model
 
 import android.content.Context
 import android.content.ContextWrapper
-import com.example.swadebuilder.model.ArcanoInfo
-import com.example.swadebuilder.model.Pericia
-import com.example.swadebuilder.model.SuperPoder
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

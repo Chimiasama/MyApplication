@@ -1,8 +1,6 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.model.listaDeEstagios
-import com.example.swadebuilder.model.nivelParaEstagio
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 

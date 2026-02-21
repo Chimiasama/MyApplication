@@ -1,6 +1,5 @@
 package com.example.swadebuilder.model
 
-import com.example.swadebuilder.model.Pericia
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test

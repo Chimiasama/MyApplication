@@ -39,7 +39,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
-import com.example.swadebuilder.criacaoBasicaCongelada
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos

@@ -60,11 +60,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.Categoria
-import com.example.swadebuilder.model.Pericia
-import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.SuperInvestment
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.SectionCard

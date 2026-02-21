@@ -1,7 +1,7 @@
 package com.example.swadebuilder.model.usecase
 
-import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.EspecializacoesDto
+import com.example.swadebuilder.model.Pericia
 
 /**
  * Fase 2 (início): regra de domínio extraída do ViewModel.

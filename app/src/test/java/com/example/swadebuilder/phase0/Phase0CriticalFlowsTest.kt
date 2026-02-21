@@ -1,13 +1,13 @@
 package com.example.swadebuilder.phase0
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.GameDataSnapshot
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.GameDataSnapshot
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

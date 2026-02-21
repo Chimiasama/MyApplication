@@ -1,10 +1,10 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.RacialModifier
-import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Requisito
+import com.example.swadebuilder.model.Vantagem
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

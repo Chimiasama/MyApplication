@@ -1,7 +1,5 @@
 package com.example.swadebuilder.ui.sections
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
@@ -30,7 +29,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.MoodBad
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Remove
@@ -73,18 +71,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.buildAncestralidadeDisplay
-import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.buildSummaryLines
-import com.example.swadebuilder.toMeuPersonagem
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.keyify
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import kotlin.math.max
 
 @Composable
 private fun getCompendiumIcons(state: CriadorState): List<Pair<ImageVector, Color>> {

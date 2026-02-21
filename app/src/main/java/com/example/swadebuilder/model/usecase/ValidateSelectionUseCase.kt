@@ -6,7 +6,6 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.util.keyify
 
 class ValidateSelectionUseCase(
     private val validateScenarioRulesUseCase: ValidateScenarioRulesUseCase = ValidateScenarioRulesUseCase(),

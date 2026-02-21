@@ -6,12 +6,12 @@ import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.GameDataSnapshot
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
-import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.Pericia
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

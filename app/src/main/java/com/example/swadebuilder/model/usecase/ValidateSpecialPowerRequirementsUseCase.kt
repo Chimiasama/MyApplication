@@ -1,7 +1,7 @@
 package com.example.swadebuilder.model.usecase
 
-import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.model.ids.PowerIds
+import com.example.swadebuilder.toDiceString
 
 class ValidateSpecialPowerRequirementsUseCase {
 

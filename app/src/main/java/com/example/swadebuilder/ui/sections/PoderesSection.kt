@@ -50,7 +50,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
-import com.example.swadebuilder.criacaoBasicaCongeladaComXp
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.getActiveOrigins
