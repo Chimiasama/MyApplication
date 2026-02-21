@@ -239,6 +239,7 @@ class MainActivity : ComponentActivity() {
                 state.mostrarIdentificadorLivro = prefs.showBookIcon
                 state.mostrarDescricaoHome = prefs.showDescHome
                 state.showSystemMessages = prefs.showSystemMessages
+                state.appTheme = prefs.appTheme
             }
             val persistPrefs: () -> Unit = remember {
                 {
@@ -249,7 +250,8 @@ class MainActivity : ComponentActivity() {
                         state.estiloAbas,
                         state.mostrarIdentificadorLivro,
                         state.mostrarDescricaoHome,
-                        state.showSystemMessages
+                        state.showSystemMessages,
+                        state.appTheme
                     )
                 }
             }

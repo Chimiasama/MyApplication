@@ -164,6 +164,7 @@ fun SettingsDialog(
                             onItemSelected = { theme ->
                                 if (state.appTheme != theme) {
                                     onThemeSelected(theme)
+                                    persistPrefs()
                                     feedbackController.play(state.hapticStrength, state.soundVolume)
                                 }
                             },

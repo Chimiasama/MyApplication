@@ -2,6 +2,7 @@ package com.example.swadebuilder.util
 
 import android.content.Context
 import com.example.swadebuilder.TabStyle
+import com.example.swadebuilder.ui.theme.AppTheme
 
 object AppPreferences {
     private const val PREF_FILE = "swadebuilder_prefs"
@@ -11,6 +12,7 @@ object AppPreferences {
     private const val KEY_SHOW_BOOK_ICON = "show_book_icon"
     private const val KEY_SHOW_DESC_HOME = "show_desc_home_v2"
     private const val KEY_SYSTEM_MESSAGES = "show_system_messages"
+    private const val KEY_APP_THEME = "app_theme"
 
     data class GlobalPrefs(
         val hapticStrength: Int,
@@ -18,7 +20,8 @@ object AppPreferences {
         val tabStyle: TabStyle,
         val showBookIcon: Boolean,
         val showDescHome: Boolean,
-        val showSystemMessages: Boolean
+        val showSystemMessages: Boolean,
+        val appTheme: AppTheme
     )
 
     fun loadPrefs(context: Context, defaultHaptics: Int, defaultSound: Int): GlobalPrefs {
@@ -37,7 +40,14 @@ object AppPreferences {
         val showDescHome = prefs.getBoolean(KEY_SHOW_DESC_HOME, true)
         val showSystemMessages = prefs.getBoolean(KEY_SYSTEM_MESSAGES, true)
 
-        return GlobalPrefs(haptics, sound, tabStyle, showBookIcon, showDescHome, showSystemMessages)
+        val themeStr = prefs.getString(KEY_APP_THEME, AppTheme.DEFAULT.name) ?: AppTheme.DEFAULT.name
+        val appTheme = try {
+            AppTheme.valueOf(themeStr)
+        } catch (e: IllegalArgumentException) {
+            AppTheme.DEFAULT
+        }
+
+        return GlobalPrefs(haptics, sound, tabStyle, showBookIcon, showDescHome, showSystemMessages, appTheme)
     }
 
     fun savePrefs(
@@ -47,7 +57,8 @@ object AppPreferences {
         tabStyle: TabStyle,
         showBookIcon: Boolean,
         showDescHome: Boolean,
-        showSystemMessages: Boolean
+        showSystemMessages: Boolean,
+        appTheme: AppTheme
     ) {
         context
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
@@ -58,6 +69,7 @@ object AppPreferences {
             .putBoolean(KEY_SHOW_BOOK_ICON, showBookIcon)
             .putBoolean(KEY_SHOW_DESC_HOME, showDescHome)
             .putBoolean(KEY_SYSTEM_MESSAGES, showSystemMessages)
+            .putString(KEY_APP_THEME, appTheme.name)
             .apply()
     }
 

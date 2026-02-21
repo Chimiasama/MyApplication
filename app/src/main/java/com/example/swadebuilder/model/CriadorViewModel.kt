@@ -336,8 +336,6 @@ class CriadorViewModel(
         optRegraCosaNostra: Boolean = false
     ) {
 
-        state.appTheme = com.example.swadebuilder.ui.theme.AppTheme.DEFAULT
-
         state.modoSupers = modoSupers
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
