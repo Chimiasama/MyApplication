@@ -764,7 +764,7 @@ class MainActivity : ComponentActivity() {
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .background(if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent)
-                                            .clickable { selectedEntry = entry }
+                                            .clickable { selectedEntry = if (isSelected) null else entry }
                                             .padding(vertical = 8.dp, horizontal = 4.dp),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
@@ -787,60 +787,66 @@ class MainActivity : ComponentActivity() {
                         }
                     },
                     confirmButton = {
-                        Row {
-                            TextButton(
-                                onClick = { entryToDelete = selectedEntry },
-                                enabled = selectedEntry != null
-                            ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TextButton(onClick = { showLoadDialog = false }) {
                                 if (state.estiloAbas == TabStyle.ICONES) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Apagar")
+                                    Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Fechar")
                                 } else {
-                                    Text("Apagar")
+                                    Text("Fechar", style = MaterialTheme.typography.bodySmall)
                                 }
                             }
-                            Spacer(Modifier.width(8.dp))
-                            TextButton(
-                                onClick = {
-                                    selectedEntry?.let { entry ->
-                                        triggerFeedback()
-                                        scope.launch {
-                                            val result = criadorViewModel.carregarPersonagem(
-                                                context,
-                                                entry.id
-                                            )
-                                            if (result.success) {
-                                                creationSession++
-                                                mostrouTelaInicial = false
-                                                showLoadDialog = false
-                                                snackHost.showSnackbar("Carregado: ${entry.nome}")
-                                            } else {
-                                                snackHost.showSnackbar(
-                                                    result.message
-                                                        ?: "Falha ao carregar o personagem"
+
+                            Row {
+                                TextButton(
+                                    onClick = { entryToDelete = selectedEntry },
+                                    enabled = selectedEntry != null
+                                ) {
+                                    if (state.estiloAbas == TabStyle.ICONES) {
+                                        Icon(Icons.Default.Delete, contentDescription = "Apagar")
+                                    } else {
+                                        Text("Apagar", style = MaterialTheme.typography.bodySmall)
+                                    }
+                                }
+                                Spacer(Modifier.width(8.dp))
+                                TextButton(
+                                    onClick = {
+                                        selectedEntry?.let { entry ->
+                                            triggerFeedback()
+                                            scope.launch {
+                                                val result = criadorViewModel.carregarPersonagem(
+                                                    context,
+                                                    entry.id
                                                 )
+                                                if (result.success) {
+                                                    creationSession++
+                                                    mostrouTelaInicial = false
+                                                    showLoadDialog = false
+                                                    snackHost.showSnackbar("Carregado: ${entry.nome}")
+                                                } else {
+                                                    snackHost.showSnackbar(
+                                                        result.message
+                                                            ?: "Falha ao carregar o personagem"
+                                                    )
+                                                }
                                             }
                                         }
+                                    },
+                                    enabled = selectedEntry != null
+                                ) {
+                                    if (state.estiloAbas == TabStyle.ICONES) {
+                                        Icon(Icons.Default.Upload, contentDescription = "Carregar")
+                                    } else {
+                                        Text("Carregar", style = MaterialTheme.typography.bodySmall)
                                     }
-                                },
-                                enabled = selectedEntry != null
-                            ) {
-                                if (state.estiloAbas == TabStyle.ICONES) {
-                                    Icon(Icons.Default.Upload, contentDescription = "Carregar")
-                                } else {
-                                    Text("Carregar")
                                 }
                             }
                         }
                     },
-                    dismissButton = {
-                        TextButton(onClick = { showLoadDialog = false }) {
-                            if (state.estiloAbas == TabStyle.ICONES) {
-                                Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Fechar")
-                            } else {
-                                Text("Fechar")
-                            }
-                        }
-                    }
+                    dismissButton = null
                 )
             }
 
