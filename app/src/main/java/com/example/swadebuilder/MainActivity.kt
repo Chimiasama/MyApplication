@@ -102,6 +102,7 @@ import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.usecase.BuildUsageInstructionsUseCase
 import com.example.swadebuilder.security.SecurityHardening
+import com.example.swadebuilder.ui.components.SettingsDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterPortraitStorage
@@ -348,151 +349,12 @@ class MainActivity : ComponentActivity() {
 
             // -- Settings Dialog --
             if (showSettingsDialog) {
-                AlertDialog(
-                    onDismissRequest = { showSettingsDialog = false },
-                    title = { Text("Configurações") },
-                    text = {
-                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                            // --- GERAL ---
-                            Text("Geral", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Descrições na tela inicial")
-                                androidx.compose.material3.Switch(
-                                    checked = state.mostrarDescricaoHome,
-                                    onCheckedChange = {
-                                        state.mostrarDescricaoHome = it
-                                        persistPrefs()
-                                    }
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Mensagens do Sistema")
-                                androidx.compose.material3.Switch(
-                                    checked = state.showSystemMessages,
-                                    onCheckedChange = {
-                                        state.showSystemMessages = it
-                                        persistPrefs()
-                                    }
-                                )
-                            }
-
-                            HorizontalDivider(Modifier.padding(vertical = 8.dp))
-
-                            // --- APARÊNCIA ---
-                            Text("Aparência", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Ícone do livro na ficha")
-                                androidx.compose.material3.Switch(
-                                    checked = state.mostrarIdentificadorLivro,
-                                    onCheckedChange = {
-                                        state.mostrarIdentificadorLivro = it
-                                        persistPrefs()
-                                    }
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Text("Expandir retrato no resumo")
-                                androidx.compose.material3.Switch(
-                                    checked = state.expandirRetrato,
-                                    onCheckedChange = { state.expandirRetrato = it }
-                                )
-                            }
-
-                            Text("Estilo das Abas / Opções", style = MaterialTheme.typography.bodyMedium)
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                androidx.compose.material3.RadioButton(
-                                    selected = state.estiloAbas == TabStyle.ICONES,
-                                    onClick = {
-                                        state.estiloAbas = TabStyle.ICONES
-                                        persistPrefs()
-                                    }
-                                )
-                                Text("Ícones")
-                                Spacer(Modifier.width(16.dp))
-                                androidx.compose.material3.RadioButton(
-                                    selected = state.estiloAbas == TabStyle.TEXTO,
-                                    onClick = {
-                                        state.estiloAbas = TabStyle.TEXTO
-                                        persistPrefs()
-                                    }
-                                )
-                                Text("Texto")
-                            }
-
-                            Spacer(Modifier.height(8.dp))
-
-                            TextButton(
-                                onClick = {
-                                    triggerFeedback()
-                                    showThemeSelectionDialog = true
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(Icons.Default.Palette, contentDescription = null)
-                                Spacer(Modifier.width(8.dp))
-                                Text("Mudar Tema do App")
-                            }
-
-                            HorizontalDivider(Modifier.padding(vertical = 8.dp))
-
-                            // --- FEEDBACK ---
-                            Text("Feedback", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
-                            Text("Resposta háptica: ${state.hapticStrength}%")
-                            Slider(
-                                value = state.hapticStrength.toFloat(),
-                                onValueChange = { state.hapticStrength = it.roundToInt() },
-                                onValueChangeFinished = {
-                                    persistFeedbackPrefs()
-                                    feedbackController.play(state.hapticStrength, 0)
-                                },
-                                valueRange = 0f..100f,
-                                steps = 4
-                            )
-
-                            Text("Sons do app: ${state.soundVolume}%")
-                            Slider(
-                                value = state.soundVolume.toFloat(),
-                                onValueChange = { state.soundVolume = it.roundToInt() },
-                                onValueChangeFinished = {
-                                    persistFeedbackPrefs()
-                                    feedbackController.play(0, state.soundVolume)
-                                },
-                                valueRange = 0f..100f,
-                                steps = 4,
-                                colors = SliderDefaults.colors(
-                                    thumbColor = MaterialTheme.colorScheme.secondary,
-                                    activeTrackColor = MaterialTheme.colorScheme.secondary,
-                                    inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-                                )
-                            )
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showSettingsDialog = false }) {
-                            Text("Fechar")
-                        }
-                    }
+                SettingsDialog(
+                    state = state,
+                    onDismiss = { showSettingsDialog = false },
+                    persistPrefs = persistPrefs,
+                    feedbackController = feedbackController,
+                    onThemeChangeRequest = { showThemeSelectionDialog = true }
                 )
             }
 
