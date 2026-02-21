@@ -127,6 +127,10 @@
     "atributos": {
       "Agilidade": 2
     },
+    "opcoes": [
+      "Básico",
+      "Brincalhão"
+    ],
     "pericias": {},
     "desvantagens": [
       "INIMIGO RACIAL",
@@ -136,10 +140,6 @@
       {
         "nome": "ÁGIL",
         "descricao": "Começam com Agilidade d6."
-      },
-      {
-        "nome": "CURIOSO",
-        "descricao": "Desejo intenso de explorar e descobrir."
       },
       {
         "nome": "MORDIDA/GARRAS",
@@ -158,6 +158,10 @@
     "descricao": "Uma linhagem de reptilianos que desenvolveu capacidades defensivas químicas em vez de força na mandíbula.",
     "variantes": null,
     "atributos": {},
+    "opcoes": [
+      "Básico",
+      "Cuspidor"
+    ],
     "pericias": {},
     "desvantagens": [
       "FORASTEIRO (Menor)",
@@ -167,10 +171,6 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Pele escamosa ou placas naturais."
-      },
-      {
-        "nome": "TOQUE VENENOSO",
-        "descricao": "Opção de cuspir veneno."
       }
     ],
     "tags": []

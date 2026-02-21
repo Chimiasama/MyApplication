@@ -63,6 +63,56 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                 }
             }
 
+            if (ancKey == "RAKASHANOS") {
+                return if (effectiveVariant == "Brincalhão") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = listOf("CURIOSO"), // Injected as Edge/Ability name
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Básico
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("SANGUINÁRIO"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "SAURIOS") {
+                return if (effectiveVariant == "Cuspidor") {
+                    Result(
+                        naturalArmorFromRace = 2, // Keeps Armor
+                        forceArmorZero = true,
+                        ensureAdvantageNames = listOf("TOQUE VENENOSO (Cuspidor)"),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Básico
+                    Result(
+                        naturalArmorFromRace = 2, // Keeps Armor
+                        forceArmorZero = true,
+                        ensureAdvantageNames = listOf("PRONTIDÃO"),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("MORDIDA"), // Natural Weapon
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
             if (ancKey == "AQUARIANOS") {
                 return if (effectiveVariant == "Semi-aquáticos") {
                     Result(
