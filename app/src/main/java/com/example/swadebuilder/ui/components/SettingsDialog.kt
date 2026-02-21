@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
@@ -79,7 +80,8 @@ fun SettingsDialog(
                                 onCheckedChange = {
                                     state.mostrarDescricaoHome = it
                                     persistPrefs()
-                                }
+                                },
+                                modifier = Modifier.scale(0.8f)
                             )
                         }
                         Row(
@@ -93,7 +95,8 @@ fun SettingsDialog(
                                 onCheckedChange = {
                                     state.showSystemMessages = it
                                     persistPrefs()
-                                }
+                                },
+                                modifier = Modifier.scale(0.8f)
                             )
                         }
                     }
@@ -126,7 +129,8 @@ fun SettingsDialog(
                                 onCheckedChange = {
                                     state.mostrarIdentificadorLivro = it
                                     persistPrefs()
-                                }
+                                },
+                                modifier = Modifier.scale(0.8f)
                             )
                         }
 
