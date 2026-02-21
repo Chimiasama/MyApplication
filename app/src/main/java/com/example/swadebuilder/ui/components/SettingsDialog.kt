@@ -202,7 +202,7 @@ fun SettingsDialog(
                                         feedbackController.play(state.hapticStrength, 0)
                                     },
                                     valueRange = 0f..100f,
-                                    steps = 4
+                                    // Removed steps for smoother feel
                                 )
                             }
                         }
@@ -234,7 +234,7 @@ fun SettingsDialog(
                                         feedbackController.play(0, state.soundVolume)
                                     },
                                     valueRange = 0f..100f,
-                                    steps = 4,
+                                    // Removed steps for smoother feel
                                     colors = SliderDefaults.colors(
                                         thumbColor = MaterialTheme.colorScheme.secondary,
                                         activeTrackColor = MaterialTheme.colorScheme.secondary,
