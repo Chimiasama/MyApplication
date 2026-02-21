@@ -1,17 +1,18 @@
 package com.example.swadebuilder.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.FeedbackController
@@ -40,8 +41,6 @@ fun SettingsDialog(
             AppTheme.HALLOWEEN to "Halloween"
         )
     }
-
-    var themeMenuExpanded by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -155,54 +154,22 @@ fun SettingsDialog(
 
                         Spacer(Modifier.height(4.dp))
 
-                        // Theme Selection (ExposedDropdownMenuBox style interaction)
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            OutlinedTextField(
-                                value = themeNames[state.appTheme] ?: state.appTheme.name,
-                                onValueChange = {},
-                                label = { Text("Tema do App") },
-                                readOnly = true,
-                                trailingIcon = {
-                                    Icon(Icons.Filled.ArrowDropDown, "Expandir")
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { themeMenuExpanded = true },
-                                enabled = false, // Disable typing, handle click on Box
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                                    disabledBorderColor = MaterialTheme.colorScheme.outline,
-                                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            )
+                        // Theme Selection (Wheel Picker)
+                        Text("Tema do App", style = MaterialTheme.typography.bodyMedium)
+                        Spacer(Modifier.height(8.dp))
 
-                            // Overlay clickable box to capture clicks since TextField is disabled/readOnly
-                            Box(
-                                modifier = Modifier
-                                    .matchParentSize()
-                                    .clickable { themeMenuExpanded = true }
-                            )
-
-                            DropdownMenu(
-                                expanded = themeMenuExpanded,
-                                onDismissRequest = { themeMenuExpanded = false }
-                            ) {
-                                AppTheme.entries.forEach { theme ->
-                                    DropdownMenuItem(
-                                        text = { Text(themeNames[theme] ?: theme.name) },
-                                        onClick = {
-                                            onThemeSelected(theme)
-                                            themeMenuExpanded = false
-                                            feedbackController.play(state.hapticStrength, state.soundVolume)
-                                        }
-                                    )
+                        WheelPicker(
+                            items = AppTheme.entries,
+                            selectedItem = state.appTheme,
+                            onItemSelected = { theme ->
+                                if (state.appTheme != theme) {
+                                    onThemeSelected(theme)
+                                    feedbackController.play(state.hapticStrength, state.soundVolume)
                                 }
-                            }
-                        }
+                            },
+                            itemLabel = { themeNames[it] ?: it.name },
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                 }
 
@@ -244,8 +211,23 @@ fun SettingsDialog(
                                         feedbackController.play(state.hapticStrength, 0)
                                     },
                                     valueRange = 0f..100f,
-                                    // Removed steps for smoother feel
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
+                                    track = { sliderState ->
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(2.dp)
+                                                .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                                        ) {
+                                            val fraction = (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(fraction)
+                                                    .fillMaxHeight()
+                                                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                                            )
+                                        }
+                                    }
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("${state.hapticStrength}%", style = MaterialTheme.typography.bodySmall)
@@ -273,13 +255,28 @@ fun SettingsDialog(
                                         feedbackController.play(0, state.soundVolume)
                                     },
                                     valueRange = 0f..100f,
-                                    // Removed steps for smoother feel
                                     colors = SliderDefaults.colors(
                                         thumbColor = MaterialTheme.colorScheme.secondary,
                                         activeTrackColor = MaterialTheme.colorScheme.secondary,
                                         inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
                                     ),
-                                    modifier = Modifier.weight(1f)
+                                    modifier = Modifier.weight(1f),
+                                    track = { sliderState ->
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(2.dp)
+                                                .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f), CircleShape)
+                                        ) {
+                                            val fraction = (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(fraction)
+                                                    .fillMaxHeight()
+                                                    .background(MaterialTheme.colorScheme.secondary, CircleShape)
+                                            )
+                                        }
+                                    }
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text("${state.soundVolume}%", style = MaterialTheme.typography.bodySmall)
