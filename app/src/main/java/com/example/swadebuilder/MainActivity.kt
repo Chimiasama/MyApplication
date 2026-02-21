@@ -348,13 +348,15 @@ class MainActivity : ComponentActivity() {
 
             // -- Settings Dialog --
             if (showSettingsDialog) {
-                SettingsDialog(
-                    state = state,
-                    onDismiss = { showSettingsDialog = false },
-                    persistPrefs = persistPrefs,
-                    feedbackController = feedbackController,
-                    onThemeSelected = { theme -> criadorViewModel.setAppTheme(theme) }
-                )
+                SWADEbuilderTheme(appTheme = state.appTheme) {
+                    SettingsDialog(
+                        state = state,
+                        onDismiss = { showSettingsDialog = false },
+                        persistPrefs = { persistPrefs() },
+                        feedbackController = feedbackController,
+                        onThemeSelected = { theme -> criadorViewModel.setAppTheme(theme) }
+                    )
+                }
             }
 
             if (showHelpDialog) {

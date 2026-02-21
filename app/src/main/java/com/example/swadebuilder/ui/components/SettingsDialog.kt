@@ -212,6 +212,13 @@ fun SettingsDialog(
                                     },
                                     valueRange = 0f..100f,
                                     modifier = Modifier.weight(1f),
+                                    thumb = {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(12.dp)
+                                                .background(MaterialTheme.colorScheme.primary, CircleShape)
+                                        )
+                                    },
                                     track = { sliderState ->
                                         Box(
                                             modifier = Modifier
@@ -255,12 +262,14 @@ fun SettingsDialog(
                                         feedbackController.play(0, state.soundVolume)
                                     },
                                     valueRange = 0f..100f,
-                                    colors = SliderDefaults.colors(
-                                        thumbColor = MaterialTheme.colorScheme.secondary,
-                                        activeTrackColor = MaterialTheme.colorScheme.secondary,
-                                        inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-                                    ),
                                     modifier = Modifier.weight(1f),
+                                    thumb = {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(12.dp)
+                                                .background(MaterialTheme.colorScheme.secondary, CircleShape)
+                                        )
+                                    },
                                     track = { sliderState ->
                                         Box(
                                             modifier = Modifier
