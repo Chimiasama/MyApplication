@@ -13,6 +13,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,6 +38,26 @@ fun <T> WheelPicker(
     val listState = rememberLazyListState()
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
     val itemHeight = 40.dp
+
+    // Consome o scroll excedente para impedir que o pai (SettingsDialog) scrolle
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                return available
+            }
+
+            override suspend fun onPostFling(
+                consumed: Velocity,
+                available: Velocity
+            ): Velocity {
+                return available
+            }
+        }
+    }
 
     // Initial scroll to selected item
     LaunchedEffect(items, selectedItem) {
@@ -65,7 +90,8 @@ fun <T> WheelPicker(
     Box(
         modifier = modifier
             .height(itemHeight * visibleItemsCount)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .nestedScroll(nestedScrollConnection),
         contentAlignment = Alignment.Center
     ) {
         // Selected indicator background (optional, maybe just text highlight)

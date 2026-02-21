@@ -43,6 +43,10 @@ fun SettingsDialog(
         )
     }
 
+    val sortedThemes = remember(themeNames) {
+        AppTheme.entries.sortedBy { themeNames[it] ?: it.name }
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Configurações", style = MaterialTheme.typography.headlineSmall) },
@@ -163,7 +167,7 @@ fun SettingsDialog(
                         Spacer(Modifier.height(8.dp))
 
                         WheelPicker(
-                            items = AppTheme.entries,
+                            items = sortedThemes,
                             selectedItem = state.appTheme,
                             onItemSelected = { theme ->
                                 if (state.appTheme != theme) {
