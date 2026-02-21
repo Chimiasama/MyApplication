@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.*
@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.FeedbackController
 import com.example.swadebuilder.TabStyle
+import com.example.swadebuilder.ui.theme.AppTheme
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,8 +26,23 @@ fun SettingsDialog(
     onDismiss: () -> Unit,
     persistPrefs: () -> Unit,
     feedbackController: FeedbackController,
-    onThemeChangeRequest: () -> Unit
+    onThemeSelected: (AppTheme) -> Unit
 ) {
+    val themeNames = remember {
+        mapOf(
+            AppTheme.DEFAULT   to "Padrão",
+            AppTheme.MEDIEVAL  to "Medieval",
+            AppTheme.CYBERPUNK to "Cyberpunk",
+            AppTheme.WW2       to "Segunda Guerra",
+            AppTheme.HORROR    to "Horror",
+            AppTheme.SCIFI     to "Sci-Fi",
+            AppTheme.MINIMALIST to "Minimalista",
+            AppTheme.HALLOWEEN to "Halloween"
+        )
+    }
+
+    var themeMenuExpanded by remember { mutableStateOf(false) }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Configurações", style = MaterialTheme.typography.headlineSmall) },
@@ -137,23 +153,55 @@ fun SettingsDialog(
                             }
                         }
 
-                        Row(
+                        Spacer(Modifier.height(4.dp))
+
+                        // Theme Selection (ExposedDropdownMenuBox style interaction)
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable {
-                                    feedbackController.play(state.hapticStrength, state.soundVolume)
-                                    onThemeChangeRequest()
-                                }
-                                .padding(vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Mudar Tema do App", style = MaterialTheme.typography.bodyMedium)
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            OutlinedTextField(
+                                value = themeNames[state.appTheme] ?: state.appTheme.name,
+                                onValueChange = {},
+                                label = { Text("Tema do App") },
+                                readOnly = true,
+                                trailingIcon = {
+                                    Icon(Icons.Filled.ArrowDropDown, "Expandir")
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { themeMenuExpanded = true },
+                                enabled = false, // Disable typing, handle click on Box
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                                    disabledBorderColor = MaterialTheme.colorScheme.outline,
+                                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             )
+
+                            // Overlay clickable box to capture clicks since TextField is disabled/readOnly
+                            Box(
+                                modifier = Modifier
+                                    .matchParentSize()
+                                    .clickable { themeMenuExpanded = true }
+                            )
+
+                            DropdownMenu(
+                                expanded = themeMenuExpanded,
+                                onDismissRequest = { themeMenuExpanded = false }
+                            ) {
+                                AppTheme.entries.forEach { theme ->
+                                    DropdownMenuItem(
+                                        text = { Text(themeNames[theme] ?: theme.name) },
+                                        onClick = {
+                                            onThemeSelected(theme)
+                                            themeMenuExpanded = false
+                                            feedbackController.play(state.hapticStrength, state.soundVolume)
+                                        }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -167,7 +215,7 @@ fun SettingsDialog(
                 ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(16.dp) // Increased spacing for cleaner look
                     ) {
                         Text(
                             text = "Sons e Vibração",
@@ -176,24 +224,18 @@ fun SettingsDialog(
                         )
 
                         // Haptic Feedback
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Vibration,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text("Resposta háptica", style = MaterialTheme.typography.bodyMedium)
-                                    Text("${state.hapticStrength}%", style = MaterialTheme.typography.bodySmall)
-                                }
+                        Column {
+                            Text("Intensidade da Vibração", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Vibration,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
                                 Slider(
                                     value = state.hapticStrength.toFloat(),
                                     onValueChange = { state.hapticStrength = it.roundToInt() },
@@ -203,29 +245,26 @@ fun SettingsDialog(
                                     },
                                     valueRange = 0f..100f,
                                     // Removed steps for smoother feel
+                                    modifier = Modifier.weight(1f)
                                 )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("${state.hapticStrength}%", style = MaterialTheme.typography.bodySmall)
                             }
                         }
 
                         // App Sounds
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.VolumeUp,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Column(modifier = Modifier.weight(1f)) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text("Sons do app", style = MaterialTheme.typography.bodyMedium)
-                                    Text("${state.soundVolume}%", style = MaterialTheme.typography.bodySmall)
-                                }
+                        Column {
+                            Text("Volume", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.VolumeUp,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
                                 Slider(
                                     value = state.soundVolume.toFloat(),
                                     onValueChange = { state.soundVolume = it.roundToInt() },
@@ -239,8 +278,11 @@ fun SettingsDialog(
                                         thumbColor = MaterialTheme.colorScheme.secondary,
                                         activeTrackColor = MaterialTheme.colorScheme.secondary,
                                         inactiveTrackColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
-                                    )
+                                    ),
+                                    modifier = Modifier.weight(1f)
                                 )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("${state.soundVolume}%", style = MaterialTheme.typography.bodySmall)
                             }
                         }
                     }

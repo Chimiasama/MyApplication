@@ -261,7 +261,6 @@ class MainActivity : ComponentActivity() {
 
             var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
             var showHelpDialog by rememberSaveable { mutableStateOf(false) }
-            var showThemeSelectionDialog by rememberSaveable { mutableStateOf(false) }
 
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
             var showLoadDialog by rememberSaveable { mutableStateOf(false) }
@@ -354,7 +353,7 @@ class MainActivity : ComponentActivity() {
                     onDismiss = { showSettingsDialog = false },
                     persistPrefs = persistPrefs,
                     feedbackController = feedbackController,
-                    onThemeChangeRequest = { showThemeSelectionDialog = true }
+                    onThemeSelected = { theme -> criadorViewModel.setAppTheme(theme) }
                 )
             }
 
@@ -400,47 +399,6 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            // -- Nested Theme Selection Dialog --
-            if (showThemeSelectionDialog) {
-                val themeNames = remember {
-                    mapOf(
-                        com.example.swadebuilder.ui.theme.AppTheme.DEFAULT   to "Padrão",
-                        com.example.swadebuilder.ui.theme.AppTheme.MEDIEVAL  to "Medieval",
-                        com.example.swadebuilder.ui.theme.AppTheme.CYBERPUNK to "Cyberpunk",
-                        com.example.swadebuilder.ui.theme.AppTheme.WW2       to "Segunda Guerra",
-                        com.example.swadebuilder.ui.theme.AppTheme.HORROR    to "Horror",
-                        com.example.swadebuilder.ui.theme.AppTheme.SCIFI     to "Sci-Fi",
-                        com.example.swadebuilder.ui.theme.AppTheme.MINIMALIST to "Minimalista",
-                        com.example.swadebuilder.ui.theme.AppTheme.HALLOWEEN to "Halloween"
-                    )
-                }
-
-                AlertDialog(
-                    onDismissRequest = { showThemeSelectionDialog = false },
-                    title = { Text(stringResource(R.string.select_theme)) },
-                    text = {
-                        LazyColumn {
-                            items(com.example.swadebuilder.ui.theme.AppTheme.entries) { theme ->
-                                TextButton(
-                                    onClick = {
-                                        criadorViewModel.setAppTheme(theme)
-                                        showThemeSelectionDialog = false
-                                        // Also close main settings if desired? keeping open for now.
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Text(themeNames[theme] ?: theme.name)
-                                }
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showThemeSelectionDialog = false }) {
-                            Text(stringResource(R.string.cancel))
-                        }
-                    }
-                )
-            }
 
             if (entryToDelete != null) {
                 AlertDialog(
