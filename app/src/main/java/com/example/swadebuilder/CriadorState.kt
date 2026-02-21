@@ -276,10 +276,38 @@ class CriadorState {
         return listaMonstroTemplates.firstOrNull { it.id == tipoMonstroSelecionado }
     }
 
-    fun aplicarTipoMonstro(novoId: String?) {
+    fun aplicarTipoMonstro(novoId: String?): List<String> {
+        val feedback = mutableListOf<String>()
+
         tipoMonstroSelecionado = novoId
-        recalcularPontosAtributo()
-        rebuildAllPericiaStacks()
+
+        if (modoMonstroAtivo) {
+            val selectedTemplateKey = novoId?.keyify()
+            val toRemove = vantagensSelecionadas
+                .filter { it.categoria == Categoria.MONSTRUOSAS }
+                .filter { it.requisitos.templatesRequired.isNotEmpty() }
+                .filter { v ->
+                    val required = v.requisitos.templatesRequired.map { it.keyify() }
+                    selectedTemplateKey == null || selectedTemplateKey !in required
+                }
+                .toList()
+
+            toRemove.forEach { vantagem ->
+                var refundMessage: String? = null
+                venderVantagem(vantagem) { msg -> refundMessage = msg }
+                val suffix = refundMessage?.let { " $it" } ?: ""
+                feedback.add("Vantagem '${vantagem.nome}' removida automaticamente por incompatibilidade com o tipo de monstro selecionado.$suffix")
+            }
+        }
+
+        recalcularPontosAtributo(feedback)
+        rebuildAllPericiaStacks(feedback)
+
+        if (feedback.isNotEmpty()) {
+            anotacoes += "\n• " + feedback.joinToString("\n• ")
+        }
+
+        return feedback
     }
 
     fun getAncestralidadeDef(name: String): com.example.swadebuilder.model.RacialModifier? {
@@ -389,7 +417,15 @@ class CriadorState {
         "MISTICO_LADRAO" to listOf("andar_nas_paredes", "aumentar_reduzir_caracteristica", "trancar_destrancar", "visao_sombria"),
         "MISTICO_MONGE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir"),
         "MISTICO_PALADINO" to listOf("aumentar_reduzir_caracteristica", "cura", "ferir", "protecao", "santuario"),
-        "MISTICO_PATRULHEIRO" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "visao_distante")
+        "MISTICO_PATRULHEIRO" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "visao_distante"),
+        "MISTICO_ARAUTO" to listOf("adivinhacao", "aumentar_reduzir_caracteristica", "cura", "videncia"),
+        "MISTICO_MORTE" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "protecao"),
+        "MISTICO_INVOCADOR" to listOf("conjurar_aliado", "conjurar_demonio", "protecao", "zumbi"),
+        "MISTICO_POSSESSOR" to listOf("aumentar_reduzir_caracteristica", "fantoche", "maldicao", "pesadelos"),
+        "MISTICO_SEDUTOR" to listOf("aumentar_reduzir_caracteristica", "disfarce", "empatia", "leitura_de_mente"),
+        "MISTICO_TRAPACEIRO" to listOf("disfarce", "deflexao", "horrores_ilusorios", "medo"),
+        "MISTICO_ARQUITETO" to listOf("barreira", "detectar_ocultar_arcano", "telecinese", "trancar_destrancar"),
+        "MISTICO_REGIO" to listOf("explosao", "rajada", "rancor")
     )
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
@@ -953,9 +989,12 @@ class CriadorState {
         val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
             ?: return emptyList()
 
-        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos")
+        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos", "Toque Arrepiante", "Toque da Morte")
         val addedTypes = mutableSetOf<String>()
-        val sources = ancestralidadeObj.vantagensGratis + ancestralidadeObj.habilidades.map { it.nome } + vantagensRaciais
+        val sources = ancestralidadeObj.vantagensGratis +
+            ancestralidadeObj.habilidades.map { it.nome } +
+            vantagensRaciais +
+            vantagensSelecionadas.map { it.nome }
 
         // Helper to find description for a keyword
         fun findDesc(keyword: String): String {
@@ -976,7 +1015,7 @@ class CriadorState {
 
         // Check for Martial Artist / Brawler (used for upgrading damage)
         val hasMartialArtist = vantagensSelecionadas.any { it.id == "artista_marcial" }
-        val hasBrawler = vantagensSelecionadas.any { it.id == "brigao" }
+        val hasBrawler = vantagensSelecionadas.any { it.id == "brigao" || it.id == "guerreiro_marcial" }
 
         // Helper to upgrade die type string (e.g. "For+d4" -> "For+d6")
         fun upgradeDie(dmg: String): String {
@@ -998,34 +1037,76 @@ class CriadorState {
         getMonstroSelecionado()?.let { monstro ->
             monstro.habilidades.forEach { hab ->
                 val nomeKey = hab.nome.keyify()
-                if (nomeKey.contains("GARRA") || nomeKey.contains("MORDIDA") || nomeKey.contains("CHIFRE") || nomeKey.contains("CASCO")) {
-                    val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
-                    var dmgMatch = dmgRegex.find(hab.descricao)?.value?.replace(" ", "") ?: "For+d4"
+                val hasNaturalAttack = nomeKey.contains("GARRA") || nomeKey.contains("MORDIDA") || nomeKey.contains("CHIFRE") || nomeKey.contains("CASCO")
+                if (!hasNaturalAttack) return@forEach
 
-                    if (nomeKey.contains("GARRA") && (hasMartialArtist || hasBrawler)) {
+                val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
+                val paRegex = Regex("""PA\s*\d+""", RegexOption.IGNORE_CASE)
+                val baseDamage = dmgRegex.find(hab.descricao)?.value?.replace(" ", "") ?: "For+d4"
+                val basePa = paRegex.find(hab.descricao)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
+
+                fun addNaturalWeapon(name: String, canScaleClaws: Boolean) {
+                    var dmgMatch = baseDamage
+                    var paValue = basePa
+
+                    if (vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" } && (name.equals("Garras", true) || name.equals("Mordida", true))) {
+                        dmgMatch = "For+d8"
+                        paValue = maxOf(paValue, 4)
+                    }
+
+                    if (canScaleClaws && (hasMartialArtist || hasBrawler)) {
                         dmgMatch = upgradeDie(dmgMatch)
                     }
 
                     weapons.add(
                         EquipamentoItem(
-                            nome = hab.nome,
+                            nome = name,
                             dano = JsonPrimitive(dmgMatch),
+                            pa = if (paValue > 0) JsonPrimitive(paValue) else null,
                             distancia = JsonPrimitive("Toque"),
                             peso = JsonPrimitive(0),
-                            custo = JsonPrimitive(0),
-                            observacoes = JsonPrimitive("Monstro")
+                            custo = JsonPrimitive(0)
                         )
                     )
+                }
+
+                if (nomeKey.contains("MORDIDA") && nomeKey.contains("GARRA")) {
+                    addNaturalWeapon("Mordida", canScaleClaws = false)
+                    addNaturalWeapon("Garras", canScaleClaws = true)
+                } else if (nomeKey.contains("GARRA")) {
+                    addNaturalWeapon("Garras", canScaleClaws = true)
+                } else if (nomeKey.contains("MORDIDA")) {
+                    addNaturalWeapon("Mordida", canScaleClaws = false)
+                } else if (nomeKey.contains("CHIFRE")) {
+                    addNaturalWeapon("Chifres", canScaleClaws = false)
+                } else if (nomeKey.contains("CASCO")) {
+                    addNaturalWeapon("Cascos", canScaleClaws = false)
                 }
             }
         }
 
         // Parse logic
         keywords.forEach { key ->
+            val keyToken = key.keyify()
+            val alreadyPresent = weapons.any { weapon ->
+                val nameKey = weapon.nome.keyify()
+                when (keyToken) {
+                    "TOQUE ARREPIANTE" -> nameKey.contains("TOQUE ARREPIANTE")
+                    "TOQUE DA MORTE" -> nameKey.contains("TOQUE DA MORTE")
+                    else -> nameKey.contains(keyToken)
+                }
+            }
+            if (alreadyPresent) return@forEach
+
             val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
 
             if (matchedSource != null) {
-                var desc = findDesc(key)
+                val selectedAdvDesc = vantagensSelecionadas
+                    .firstOrNull { it.nome.equals(matchedSource, ignoreCase = true) }
+                    ?.descricao
+                    .orEmpty()
+
+                var desc = selectedAdvDesc.ifBlank { findDesc(key) }
                 if (desc.isBlank()) {
                     desc = matchedSource
                 }
@@ -1035,7 +1116,46 @@ class CriadorState {
                 val paRegex = Regex("""PA\s*\d+""", RegexOption.IGNORE_CASE)
 
                 var dmgMatch = dmgRegex.find(desc)?.value?.replace(" ", "") ?: "For+d4"
-                val paMatch = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
+                var paFinal = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
+
+                val garrasDemonioCount = vantagensSelecionadas.count { it.id == "garras_demonio" }
+                val mordidaDemonioCount = vantagensSelecionadas.count { it.id == "mordida_demonio" }
+                val hasGarrasVampiro = vantagensSelecionadas.any { it.id == "garras_vampiro" }
+                val hasLobisomemAprimorado = vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" }
+
+                if (key.equals("Toque Arrepiante", ignoreCase = true)) {
+                    dmgMatch = "For+d4"
+                }
+
+                if (key.equals("Toque da Morte", ignoreCase = true)) {
+                    dmgMatch = "For+d4/For+2d6"
+                }
+
+                if (hasLobisomemAprimorado && (key.equals("Garras", true) || key.equals("Mordida", true))) {
+                    dmgMatch = "For+d8"
+                    paFinal = maxOf(paFinal, 4)
+                }
+
+                if (key.equals("Garras", ignoreCase = true) && garrasDemonioCount > 0) {
+                    if (garrasDemonioCount >= 2) {
+                        dmgMatch = "For+d6"
+                        paFinal = maxOf(paFinal, 2)
+                    } else {
+                        dmgMatch = "For+d4"
+                    }
+                }
+
+                if (key.equals("Garras", ignoreCase = true) && hasGarrasVampiro) {
+                    dmgMatch = "For+d6"
+                    paFinal = maxOf(paFinal, 2)
+                }
+
+                if (key.equals("Mordida", ignoreCase = true) && mordidaDemonioCount > 0) {
+                    dmgMatch = "For+d6"
+                    if (mordidaDemonioCount >= 2) {
+                        paFinal = maxOf(paFinal, 2)
+                    }
+                }
 
                 // Apply scaling to "Garras" if Martial Artist or Brawler is present
                 if (key.equals("Garras", ignoreCase = true)) {
@@ -1057,7 +1177,7 @@ class CriadorState {
                         EquipamentoItem(
                             nome = finalName,
                             dano = JsonPrimitive(dmgMatch),
-                            pa = if (paMatch > 0) JsonPrimitive(paMatch) else null,
+                            pa = if (paFinal > 0) JsonPrimitive(paFinal) else null,
                             distancia = JsonPrimitive("Toque"),
                             peso = JsonPrimitive(0),
                             custo = JsonPrimitive(0)
@@ -1068,7 +1188,10 @@ class CriadorState {
         }
 
         // Always add "Ataque Natural" (Unarmed) using central logic - Filter if specific natural weapons exist
-        val hasSpecificNaturalWeapons = weapons.any { it.nome.equals("Garras", ignoreCase = true) }
+        val hasSpecificNaturalWeapons = weapons.any { weapon ->
+            val key = weapon.nome.keyify()
+            key.contains("GARRA") || key.contains("MORDIDA") || key.contains("CHIFRE") || key.contains("CASCO") || key.contains("TOQUE ARREPIANTE") || key.contains("TOQUE DA MORTE")
+        }
         val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
 
         if (!hasSpecificNaturalWeapons && !isInsectoid) {

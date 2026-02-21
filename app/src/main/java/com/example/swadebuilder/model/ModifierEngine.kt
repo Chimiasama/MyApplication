@@ -277,6 +277,9 @@ object ModifierEngine {
         // 4. Advantages
         state.vantagensSelecionadas.forEach { vant ->
             val key = vant.nome.keyify()
+            if (vant.id == "couro_blindado") {
+                modifiers.add(Modifier("edge_couro_blindado_armor", SourceType.VANTAGEM, vant.nome, ModifierTarget.ARMOR, 4))
+            }
             if (key == "MUSCULOSO") {
                 modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))
@@ -295,6 +298,35 @@ object ModifierEngine {
             }
             if (key == "BLOQUEAR APRIMORADO") {
                 modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+            }
+            if (vant.id == "resistencia_lobo") {
+                modifiers.add(Modifier("edge_resistencia_lobo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
+            if (vant.id == "resistencia_anjo") {
+                modifiers.add(Modifier("edge_resistencia_anjo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
+            if (vant.id == "resistencia_divina") {
+                modifiers.add(Modifier("edge_resistencia_divina", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
+        }
+
+        // 4.5 Monster templates
+        state.getMonstroSelecionado()?.let { monstro ->
+            if (monstro.id == "lobisomem") {
+                modifiers.add(Modifier("monster_lobisomem_pace", SourceType.OUTRO, monstro.nome, ModifierTarget.PACE, 2))
+            }
+            if (monstro.id == "monstro_retalhos") {
+                modifiers.add(Modifier("monster_retalhos_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
+            if (monstro.id == "mumia") {
+                modifiers.add(Modifier("monster_mumia_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+                modifiers.add(Modifier("monster_mumia_pace", SourceType.OUTRO, monstro.nome, ModifierTarget.PACE, -1))
+            }
+            if (monstro.id == "revivido") {
+                modifiers.add(Modifier("monster_revivido_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
+            if (monstro.id == "vampiro") {
+                modifiers.add(Modifier("monster_vampiro_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
             }
         }
 

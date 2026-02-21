@@ -953,7 +953,8 @@ private fun CreationDetailContent(
         )
         MainSection.MONSTRO -> TipoMonstroSection(
             state = state,
-            onUserFeedback = onUserFeedback
+            onUserFeedback = onUserFeedback,
+            onLogFeedback = viewModel::logFeedback
         )
         MainSection.COMPLICACOES -> ComplicacoesSection(
             state = state,
