@@ -54,7 +54,7 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.titleCase
+import com.example.swadebuilder.util.toFancyTitleCase
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.Serializable
 
@@ -269,12 +269,12 @@ fun AncestralidadesSection(
                     .toSet()
 
                 val habilidadesLite = representative.habilidades.map {
-                    RacialAbilityLite(it.nome, it.descricao)
+                    RacialAbilityLite(it.nome.toFancyTitleCase(), it.descricao)
                 }
 
                 RacialModifierLite(
                     nome = representative.nome,
-                    displayName = displayName.toEditionDisplayName(),
+                    displayName = displayName.toEditionDisplayName().toFancyTitleCase(),
                     originalName = originalName,
                     descricao = representative.descricao,
                     aliases = aliasKeys,
@@ -325,7 +325,7 @@ fun AncestralidadesSection(
     val selectedDisplayName =
         ancestralidadesState.value.firstOrNull { item ->
             item.nome.uppercase().semAcentos() == selectedKey.value
-        }?.displayName(showOfficialNames)?.titleCase() ?: "Humanos"
+        }?.displayName(showOfficialNames)?.toFancyTitleCase() ?: "Humanos"
 
     val focoKey = ancestralidadeEmFoco
         ?.uppercase()
@@ -409,7 +409,7 @@ fun AncestralidadesSection(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column(Modifier.weight(1f)) {
-                                    val displayName = item.displayName(showOfficialNames).titleCase()
+                                    val displayName = item.displayName(showOfficialNames).toFancyTitleCase()
 
                                     Text(
                                         text = displayName,
@@ -711,7 +711,7 @@ fun AncestralidadesSection(
                                             it.keyify() == Constants.ID_AA_AGENT_SYN.keyify()
                                         }
                                         if (vantagensGratisVisiveis.isNotEmpty()) {
-                                            val advsText = vantagensGratisVisiveis.joinToString(", ") { it.titleCase() }
+                                            val advsText = vantagensGratisVisiveis.joinToString(", ") { it.toFancyTitleCase() }
                                             Text(
                                                 text = "Vantagens: $advsText",
                                                 style = MaterialTheme.typography.bodySmall,
@@ -722,7 +722,7 @@ fun AncestralidadesSection(
 
                                         // Hindrances
                                         if (item.desvantagens.isNotEmpty()) {
-                                            val hindsText = item.desvantagens.joinToString(", ") { it.titleCase() }
+                                            val hindsText = item.desvantagens.joinToString(", ") { it.toFancyTitleCase() }
                                             Text(
                                                 text = "Complicações: $hindsText",
                                                 style = MaterialTheme.typography.bodySmall,

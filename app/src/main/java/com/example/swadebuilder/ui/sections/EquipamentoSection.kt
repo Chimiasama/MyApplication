@@ -63,6 +63,7 @@ import com.example.swadebuilder.ui.components.StandardEquipamentoItem
 import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toFancyTitleCase
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -93,8 +94,8 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
     }
 
     // 2. Identify Groups and SubGroups
-    var group = t.toSentenceCase()
-    var subGroup = st.toSentenceCase()
+    var group = t.toFancyTitleCase()
+    var subGroup = st.toFancyTitleCase()
 
     when (superType) {
         EquipSuperType.ARMAS -> {
@@ -113,7 +114,7 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
                 }
                 t == "ARMAS DE AR" || t == "ARMAS A VAPOR" -> {
                     group = "Ataque a Distância"
-                    subGroup = st.toSentenceCase()
+                    subGroup = st.toFancyTitleCase()
                 }
                 t == "ARMAS DE ENERGIA" -> {
                     group = "Ataque a Distância"
@@ -541,7 +542,7 @@ fun EquipamentoSection(
 
                         AssistChip(
                             onClick = { onRemoveEquipamentoClick(eq) },
-                            label = { Text(eq.nome) },
+                            label = { Text(eq.nome.toFancyTitleCase()) },
                             leadingIcon = {
                                 Icon(
                                     if (isLocked) Icons.Default.Close else Icons.Default.Close,

@@ -79,7 +79,9 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.ptBrCollator
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toFancyTitleCase
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -234,7 +236,10 @@ fun VantagensContent(
             .map { (_, duplicates) ->
                 duplicates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
             }
-            .sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
+            .sortedWith(
+                compareBy<Vantagem> { it.categoria }
+                    .thenBy(ptBrCollator) { it.nomeExibicao }
+            )
     }
 
     LaunchedEffect(
@@ -265,7 +270,7 @@ fun VantagensContent(
     }
 
     val idParaNome = remember(allAdvantages) {
-        allAdvantages.associate { it.id to it.nomeExibicao.toSentenceCase() }
+        allAdvantages.associate { it.id to it.nomeExibicao.toFancyTitleCase() }
     }
 
     // --- Search & Filter State ---
@@ -667,7 +672,7 @@ fun VantagensContent(
                                 else selectedCategories.add(cat)
                             },
                             label = {
-                                val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase()
+                                val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toFancyTitleCase()
                                 Text(label)
                             }
                         )
@@ -709,7 +714,7 @@ fun VantagensContent(
                     item(key = "header_${cat.name}") {
                         Column {
                             CollapsibleSection(
-                                title = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase(),
+                                title = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toFancyTitleCase(),
                                 expanded = expanded,
                                 onToggle = { expandedMap[cat] = !expanded },
                                 onToggleFeedback = onUserFeedback
@@ -1062,9 +1067,9 @@ fun VantagensContent(
                 }
                 .map { vant ->
                     val nameInParens = Regex("\\((.*?)\\)").find(vant.nome)?.groupValues?.get(1)
-                    val baseName = nameInParens?.toSentenceCase()
-                        ?: vant.subtipoArcano?.toSentenceCase()
-                        ?: vant.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
+                    val baseName = nameInParens?.toFancyTitleCase()
+                        ?: vant.subtipoArcano?.toFancyTitleCase()
+                        ?: vant.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toFancyTitleCase()
 
                     val reqs = formatarRequisitos(vant)
                     "$baseName$reqs" to vant
@@ -1321,7 +1326,7 @@ fun VantagensContent(
         val options = remember(ownedIds, powerCache, alreadyFavored) {
             ownedIds.mapNotNull { id ->
                 val p = powerCache.values.flatten().find { it.id == id }
-                p?.let { it.nome.toSentenceCase() }
+                p?.let { it.nome.toFancyTitleCase() }
             }
             .distinct()
             .filter { it !in alreadyFavored }
@@ -1462,12 +1467,12 @@ fun VantagensContent(
 
         val options = mutableListOf<Pair<String, String>>()
         activeABs.forEach { abKey ->
-            val label = "2 poderes para ${abKey.toSentenceCase()}"
+            val label = "2 poderes para ${abKey.toFancyTitleCase()}"
             options.add(label to abKey)
         }
         if (activeABs.size == 2) {
             val keyCombined = "${activeABs[0]} & ${activeABs[1]}"
-            val label = "1 poder para ${activeABs[0].toSentenceCase()} e 1 para ${activeABs[1].toSentenceCase()}"
+            val label = "1 poder para ${activeABs[0].toFancyTitleCase()} e 1 para ${activeABs[1].toFancyTitleCase()}"
             options.add(label to keyCombined)
         }
 
@@ -1784,7 +1789,7 @@ private fun VantagemItem(
 
         vant.requisitos.vantagensPrevias.forEach { prevId ->
             val legivel = idParaNome[prevId]
-                ?: prevId.replace('_', ' ').replace('-', ' ').toSentenceCase()
+                ?: prevId.replace('_', ' ').replace('-', ' ').toFancyTitleCase()
             add("Pré-requisito: $legivel")
         }
 
@@ -1859,7 +1864,7 @@ private fun VantagemItem(
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase(),
                         style = MaterialTheme.typography.titleSmall
                     )
 

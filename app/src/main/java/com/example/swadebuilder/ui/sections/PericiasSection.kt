@@ -66,6 +66,7 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toFancyTitleCase
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
@@ -241,7 +242,8 @@ fun PericiasContent(
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = buildAnnotatedString {
-                                        val displayName = if (isIdioma) "Idiomas" else if (isJutsu) "Jutsu" else per.nome
+                                        val rawName = if (isIdioma) "Idiomas" else if (isJutsu) "Jutsu" else per.nome
+                                        val displayName = rawName.toFancyTitleCase()
                                         if (state.isPericiaBasicaEfetiva(per)) {
                                             withStyle(
                                                 SpanStyle(
