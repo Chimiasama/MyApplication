@@ -61,6 +61,61 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
         assertEquals("corajoso", result.invalidAdvantagesResolution.removedAdvantages[0].id)
     }
 
+
+
+    @Test
+    fun `uses previous automatic disadvantages to remove stale racial complications`() {
+        val naoSabeNadar = Complicacao(
+            id = "nao_sabe_nadar",
+            name = "NÃO SABE NADAR",
+            severity = "menor",
+            description = "desc",
+            origem = "BASICO"
+        )
+        val habitante = Complicacao(
+            id = "habitante_de_gravidade_baixa",
+            name = "HABITANTE DE GRAVIDADE ZERO/BAIXA",
+            severity = "menor",
+            description = "desc",
+            origem = "SCIFI"
+        )
+
+        val params = baseParams(
+            previousAncestry = "AVIANOS",
+            targetAncestry = "AVIANOS"
+        ).copy(
+            availableComplications = listOf(naoSabeNadar, habitante),
+            selectedComplications = mapOf(naoSabeNadar to "Menor"),
+            previousAutomaticDisadvantages = listOf("NÃO SABE NADAR"),
+            compendioSciFiAtivo = true,
+            scifiVariant = "Ave de rapina",
+            previousAncestryDef = RacialModifier(
+                nome = "AVIANOS",
+                vantagensGratis = emptyList(),
+                desvantagens = listOf("NÃO SABE NADAR"),
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                habilidades = emptyList(),
+                origem = "SCIFI"
+            ),
+            targetAncestryDef = RacialModifier(
+                nome = "AVIANOS",
+                vantagensGratis = emptyList(),
+                desvantagens = emptyList(),
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                habilidades = emptyList(),
+                origem = "SCIFI"
+            )
+        )
+
+        val result = useCase.execute(params)
+        val selectedNames = result.complicationsSnapshot.selectedComplications.keys.map { it.name }
+
+        assertFalse(selectedNames.contains("NÃO SABE NADAR"))
+        assertTrue(selectedNames.contains("HABITANTE DE GRAVIDADE ZERO/BAIXA"))
+    }
+
     private fun baseParams(
         previousAncestry: String = "ELFOS",
         targetAncestry: String = "HUMANOS",
@@ -113,6 +168,7 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             previousAncestryDef = previousDef,
             targetAncestryDef = targetDef,
             currentAutomaticAdvantages = emptyList(),
+            previousAutomaticDisadvantages = emptyList(),
             pontosVantagemAtuais = 2,
             vantagensSelecionadas = selectedAdvantages,
             attributeNames = listOf("Força"),

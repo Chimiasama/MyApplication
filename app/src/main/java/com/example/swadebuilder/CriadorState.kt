@@ -345,7 +345,7 @@ class CriadorState {
             selected
         }
 
-        return withInferredAncestryMechanics(withBaselineCounterpartMechanics(withVariant, key))
+        return withInferredAncestryMechanics(withVariant)
     }
 
     private fun applySciFiVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
@@ -358,6 +358,31 @@ class CriadorState {
 
         if (key == "QUADROIDES" && variant == "Habilidoso") {
             newHabilidades.removeAll { it.nome.keyify().contains("ACAO ADICIONAL") }
+        }
+
+        if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
+            newHabilidades.removeAll { hab ->
+                val habKey = hab.nome.keyify()
+                habKey == "FRAGIL" || habKey == "NAO SABE NADAR"
+            }
+
+            if (newHabilidades.none { it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Habitante de Gravidade Baixa",
+                        descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado."
+                    )
+                )
+            }
+
+            if (newHabilidades.none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Forma Alienígena",
+                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
+                    )
+                )
+            }
         }
 
         return base.copy(habilidades = newHabilidades)
@@ -3559,6 +3584,7 @@ class CriadorState {
                 previousAncestryDef = prevAncDef,
                 targetAncestryDef = ancDef,
                 currentAutomaticAdvantages = vantagensAutomaticas.toList(),
+                previousAutomaticDisadvantages = desvantagensRaciais.toList(),
                 pontosVantagemAtuais = pontosVantagem,
                 vantagensSelecionadas = vantagensSelecionadas.toList(),
                 attributeNames = listaAtributos,
@@ -3687,6 +3713,13 @@ class CriadorState {
                 selecionarDescendenteElemental(current)
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE -> Unit
+        }
+
+        if (compendioSciFiAtivo && anc.keyify() == "AVIANOS" && scifiVariant.equals("Ave de rapina", ignoreCase = true)) {
+            anotacoes = anotacoes
+                .replace("\n• Forma Alienígena.", "")
+                .replace("• Forma Alienígena.\n", "")
+                .replace("• Forma Alienígena.", "")
         }
 
         if (racialPackage.anotacoesToAdd.isNotEmpty()) {
