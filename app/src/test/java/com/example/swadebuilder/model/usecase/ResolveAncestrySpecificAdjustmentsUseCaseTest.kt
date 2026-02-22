@@ -76,6 +76,37 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
     }
 
+
+
+    @Test
+    fun `returns avianos ave de rapina adjustments for scifi`() {
+        val result = useCase.execute(
+            anc = "AVIANOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Ave de rapina",
+            isSciFiActive = true
+        )
+
+        assertEquals(
+            listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
+            result.ensureRacialDisadvantages
+        )
+        assertEquals(listOf("NÃO SABE NADAR"), result.racialDisadvantagesToRemove)
+        assertEquals(listOf("Forma Alienígena."), result.anotacoesToAdd)
+    }
+
+    @Test
+    fun `returns avianos basico adjustments for scifi`() {
+        val result = useCase.execute(
+            anc = "AVIANOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Básico",
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("FRÁGIL", "NÃO SABE NADAR"), result.ensureRacialDisadvantages)
+    }
+
     @Test
     fun `returns fallback for unknown ancestry`() {
         val result = useCase.execute("QUALQUER", null)

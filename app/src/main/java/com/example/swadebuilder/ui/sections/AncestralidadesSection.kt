@@ -725,9 +725,25 @@ fun AncestralidadesSection(
                                         }
 
                                         // Abilities
-                                        if (item.habilidades.isNotEmpty()) {
+                                        val habilidadesExibidas = buildList {
+                                            addAll(item.habilidades)
+                                            if (
+                                                isSelected &&
+                                                compendioSciFiAtivo &&
+                                                item.nome.keyify() == "AVIANOS" &&
+                                                state.scifiVariant.equals("Ave de rapina", ignoreCase = true)
+                                            ) {
+                                                add(
+                                                    RacialAbilityLite(
+                                                        nome = "FORMA ALIENÍGENA",
+                                                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
+                                                    )
+                                                )
+                                            }
+                                        }
+                                        if (habilidadesExibidas.isNotEmpty()) {
                                             Spacer(Modifier.height(4.dp))
-                                            item.habilidades.forEach { ability ->
+                                            habilidadesExibidas.forEach { ability ->
                                                 Column(modifier = Modifier.padding(bottom = 4.dp)) {
                                                     Text(
                                                         text = ability.nome,

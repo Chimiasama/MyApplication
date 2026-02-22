@@ -149,6 +149,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
                         elementalAction = ElementalAction.NONE,
+                        anotacoesToAdd = listOf("Forma Alienígena."),
                         racialDisadvantagesToRemove = listOf("NÃO SABE NADAR")
                     )
                 } else {
