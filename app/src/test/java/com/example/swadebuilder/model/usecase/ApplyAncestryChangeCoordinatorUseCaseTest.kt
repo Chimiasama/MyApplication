@@ -105,7 +105,8 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
                 atributos = emptyMap(),
                 pericias = emptyMap(),
                 habilidades = emptyList(),
-                origem = "SCIFI"
+                origem = "SCIFI",
+                opcoes = listOf("Básico", "Ave de rapina")
             )
         )
 

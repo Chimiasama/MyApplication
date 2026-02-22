@@ -84,7 +84,8 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             anc = "AVIANOS",
             descendenteElementalSelecionado = null,
             scifiVariant = "Ave de rapina",
-            isSciFiActive = true
+            isSciFiActive = true,
+            ancestryOptions = listOf("Básico", "Ave de rapina")
         )
 
         assertEquals(

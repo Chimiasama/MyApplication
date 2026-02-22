@@ -91,6 +91,48 @@ fun String.toFancyTitleCase(): String {
 
     fun isWordChar(c: Char): Boolean = c.isLetterOrDigit() || c == '\''
 
+    // Recursive helper to process individual segments (handles slashes/hyphens if they appear inside a token)
+    fun processSegment(segment: String, isFirstWordOfSentence: Boolean): String {
+        // If segment contains '/', split and process parts
+        if (segment.contains('/')) {
+            return segment.split('/').joinToString("/") { part ->
+                processSegment(part, isFirstWordOfSentence && part == segment.substringBefore('/')) // Only first part considers sentence start if applicable
+            }
+        }
+
+        val lowerSegment = segment.lowercase()
+
+        return when {
+            // 1. Acronyms & Roman Numerals (Check case-insensitive)
+            upperCaseWords.any { it.equals(segment, ignoreCase = true) } -> {
+                upperCaseWords.find { it.equals(segment, ignoreCase = true) }!!
+            }
+            romanNumerals.any { it.equals(segment, ignoreCase = true) } -> {
+                romanNumerals.find { it.equals(segment, ignoreCase = true) }!!
+            }
+            // 2. Special Prefixes (d'Arc)
+            specialPrefixes.any { lowerSegment.startsWith(it) } -> {
+                val p = specialPrefixes.find { lowerSegment.startsWith(it) }!!
+                if (lowerSegment.length > p.length) {
+                    val rest = lowerSegment.substring(p.length)
+                    p + rest.replaceFirstChar { it.titlecase(Locale.getDefault()) }
+                } else {
+                    if (isFirstWordOfSentence) lowerSegment.replaceFirstChar { it.titlecase(Locale.getDefault()) } else lowerSegment
+                }
+            }
+            // 3. General Rules
+            isFirstWordOfSentence -> {
+                lowerSegment.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            }
+            lowerCaseWords.contains(lowerSegment) -> {
+                lowerSegment
+            }
+            else -> {
+                lowerSegment.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            }
+        }
+    }
+
     return words.mapIndexed { index, rawToken ->
         // Separate punctuation wrapper
         val prefix = rawToken.takeWhile { !isWordChar(it) }
@@ -98,45 +140,13 @@ fun String.toFancyTitleCase(): String {
 
         // Handle case where token is just punctuation (e.g. "-")
         if (prefix.length + suffix.length >= rawToken.length) {
-             // If token is all punctuation but not empty (e.g. "..."),
-             // takeWhile/takeLastWhile might overlap.
-             // If prefix covers whole string, suffix is basically same or empty.
              return@mapIndexed rawToken
         }
 
         val core = rawToken.substring(prefix.length, rawToken.length - suffix.length)
-        val lowerCore = core.lowercase()
 
-        val transformedCore = when {
-            // 1. Acronyms & Roman Numerals (Check case-insensitive)
-            upperCaseWords.any { it.equals(core, ignoreCase = true) } -> {
-                upperCaseWords.find { it.equals(core, ignoreCase = true) }!!
-            }
-            romanNumerals.any { it.equals(core, ignoreCase = true) } -> {
-                romanNumerals.find { it.equals(core, ignoreCase = true) }!!
-            }
-            // 2. Special Prefixes (d'Arc)
-            specialPrefixes.any { lowerCore.startsWith(it) } -> {
-                val p = specialPrefixes.find { lowerCore.startsWith(it) }!!
-                if (lowerCore.length > p.length) {
-                     val rest = lowerCore.substring(p.length)
-                     p + rest.replaceFirstChar { it.titlecase(Locale.getDefault()) }
-                } else {
-                    // Just the prefix itself? e.g. "D'"
-                    if (index == 0) lowerCore.replaceFirstChar { it.titlecase(Locale.getDefault()) } else lowerCore
-                }
-            }
-            // 3. General Rules
-            index == 0 -> {
-                lowerCore.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-            }
-            lowerCaseWords.contains(lowerCore) -> {
-                lowerCore
-            }
-            else -> {
-                lowerCore.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-            }
-        }
+        // Process the core part
+        val transformedCore = processSegment(core, index == 0)
 
         prefix + transformedCore + suffix
     }.joinToString(" ")
