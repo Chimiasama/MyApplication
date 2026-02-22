@@ -221,7 +221,7 @@ fun ComplicacoesSection(
                                         performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
                                     },
                                     enabled = isClickable,
-                                    label = { Text("${comp.name.toFancyTitleCase()} (${tipo!!.toFancyTitleCase()})", style = MaterialTheme.typography.labelSmall) },
+                                    label = { Text("${comp.name.toFancyTitleCase()} (${tipo?.toFancyTitleCase().orEmpty()})", style = MaterialTheme.typography.labelSmall) },
                                     leadingIcon = {
                                         Icon(
                                             Icons.Default.Close,
