@@ -252,6 +252,14 @@
         "descricao": "Centaux têm quatro pernas fortes e pés largos ou cascos resistentes. Sua Movimentação não é reduzida por Terreno Difícil."
       },
       {
+        "nome": "MOVIMENTAÇÃO +2",
+        "descricao": "Centaux tem passadas largas. +2 em Movimentação e +1d no dado de corrida."
+      },
+      {
+        "nome": "TAMANHO +2",
+        "descricao": "Centaux são criaturas grandes. Adicionam +2 ao Tamanho e Resistência."
+      },
+      {
         "nome": "GRANDE",
         "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado."
       },

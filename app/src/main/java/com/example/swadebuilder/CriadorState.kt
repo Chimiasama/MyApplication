@@ -387,6 +387,22 @@ class CriadorState {
             }
         }
 
+        if (key == "CENTAUX" && variant.equals("Gazela", ignoreCase = true)) {
+            newHabilidades.removeAll { hab ->
+                val habKey = hab.nome.keyify()
+                habKey == "GRANDE" || habKey == "TAMANHO +2" || habKey == "MOVIMENTACAO +2"
+            }
+
+            if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +4" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "MOVIMENTAÇÃO +4",
+                        descricao = "Gazelas são extremamente rápidas. +4 em Movimentação e d10 no dado de corrida."
+                    )
+                )
+            }
+        }
+
         return base.copy(habilidades = newHabilidades)
     }
 
