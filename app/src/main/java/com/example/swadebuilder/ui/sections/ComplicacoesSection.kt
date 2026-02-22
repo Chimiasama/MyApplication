@@ -63,8 +63,10 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.ptBrCollator
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
+import com.example.swadebuilder.util.toFancyTitleCase
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -135,7 +137,9 @@ fun ComplicacoesSection(
     val uniqueComplications = remember(groupedComplications) {
         groupedComplications.values.mapNotNull { group ->
             group.sortedBy { if (it.origem == "BASICO") 0 else 1 }.firstOrNull()
-        }.sortedBy { it.name }
+        }.sortedWith { a, b ->
+            ptBrCollator.compare(a.name.toFancyTitleCase(), b.name.toFancyTitleCase())
+        }
     }
 
     SectionCard(
@@ -217,7 +221,7 @@ fun ComplicacoesSection(
                                         performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
                                     },
                                     enabled = isClickable,
-                                    label = { Text("${comp.name} ($tipo)", style = MaterialTheme.typography.labelSmall) },
+                                    label = { Text("${comp.name.toFancyTitleCase()} ($tipo)", style = MaterialTheme.typography.labelSmall) },
                                     leadingIcon = {
                                         Icon(
                                             Icons.Default.Close,
@@ -240,7 +244,7 @@ fun ComplicacoesSection(
                                     state.transtornos.remove(transtorno)
                                     onUserFeedback()
                                 },
-                                label = { Text("${transtorno.name} (T.)", style = MaterialTheme.typography.labelSmall) },
+                                label = { Text("${transtorno.name.toFancyTitleCase()} (T.)", style = MaterialTheme.typography.labelSmall) },
                                 leadingIcon = {
                                     Icon(
                                         Icons.Default.Close,
@@ -477,13 +481,13 @@ fun ComplicacoesSection(
                             !state.complicacoesSelecionadas.containsKey(it) && !state.transtornos.contains(
                                 it
                             )
-                        }.map { it.name.toSentenceCase() }.sorted()
+                        }.map { it.name.toFancyTitleCase() }.sortedWith(ptBrCollator)
 
                         ChoiceDialog(
                             options = available,
                             onConfirm = { choice ->
                                 val selected =
-                                    uniqueComplications.firstOrNull { it.name.toSentenceCase() == choice }
+                                    uniqueComplications.firstOrNull { it.name.toFancyTitleCase() == choice }
                                 if (selected != null) {
                                     state.transtornos.add(selected)
                                     onUserFeedback()
@@ -651,7 +655,7 @@ private fun ComplicacaoItem(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName.toSentenceCase() else comp.name.toSentenceCase(),
+                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName!!.toFancyTitleCase() else comp.name.toFancyTitleCase(),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )

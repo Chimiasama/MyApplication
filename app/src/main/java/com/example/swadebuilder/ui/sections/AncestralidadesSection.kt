@@ -682,7 +682,7 @@ fun AncestralidadesSection(
                                                 } else {
                                                     "d$dieVal"
                                                 }
-                                                "$k $dieStr"
+                                                "${k.toFancyTitleCase()} $dieStr"
                                             }
                                             Text(
                                                 text = "Atributos: $attrsText",
@@ -696,7 +696,7 @@ fun AncestralidadesSection(
                                         if (item.pericias.isNotEmpty()) {
                                             val skillsText = item.pericias.entries.joinToString(", ") { (k, v) ->
                                                 val die = if (v == 0) "d4-2" else "d${(4 + (v - 1) * 2).coerceAtMost(12)}"
-                                                "$k $die"
+                                                "${k.toFancyTitleCase()} $die"
                                             }
                                             Text(
                                                 text = "Perícias: $skillsText",
@@ -743,7 +743,7 @@ fun AncestralidadesSection(
                                                 if (none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
                                                     add(
                                                         RacialAbilityLite(
-                                                            nome = "FORMA ALIENÍGENA",
+                                                            nome = "Forma Alienígena",
                                                             descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
                                                         )
                                                     )

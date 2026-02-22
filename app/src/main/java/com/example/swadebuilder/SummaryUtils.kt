@@ -318,7 +318,7 @@ fun buildSummaryLines(
             lines += "Características de Classe"
             classEdges.forEach { vant ->
                 val tags = vant.requisitos.tags
-                lines += "• ${vant.nome}"
+                lines += "• ${vant.nome.toFancyTitleCase()}"
 
                 // Armor Restrictions/Interference
                 if (tags.contains("INTERFERENCIA_ARMADURA_LEVE")) {
@@ -529,7 +529,7 @@ fun buildSummaryLines(
             lines += "– Nenhum superpoder registrado"
         } else {
             personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                lines += "• $poderId: $custo SP"
+                lines += "• ${poderId.toFancyTitleCase()}: $custo SP"
             }
         }
 
