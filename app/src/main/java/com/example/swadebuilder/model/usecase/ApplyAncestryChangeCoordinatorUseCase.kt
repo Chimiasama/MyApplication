@@ -108,7 +108,8 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 allAdvantages = params.allAdvantages,
                 selectedAdvantages = filteredAdvantages,
                 previousFreeAdvantageKeys = transitionBootstrap.ancestryTransitionContext.previousFreeAdvantageKeys,
-                ancestryGrantedAdvantages = params.targetAncestryDef?.vantagensGratis ?: emptyList(),
+                ancestryGrantedAdvantages = (params.targetAncestryDef?.vantagensGratis ?: emptyList()) +
+                        (params.targetAncestryDef?.habilidades?.map { it.nome } ?: emptyList()),
                 ancestryAutomaticDisadvantages = params.targetAncestryDef?.desvantagens ?: emptyList()
             )
         )

@@ -4165,6 +4165,8 @@ class CriadorState {
         )
         if (anoesScifiSelecionado == normalized) return
         anoesScifiSelecionado = normalized
+        // Update generic state to prevent sticky legacy behavior when switching back
+        if (scifiVariant != normalized) scifiVariant = normalized
         val msgs = mutableListOf<String>()
         aplicarAncestralidade("ANÕES", msgs)
     }
@@ -4178,6 +4180,10 @@ class CriadorState {
         )
         if (scifiVariant == normalized) return
         scifiVariant = normalized
+        // Also sync legacy state if applicable to avoid mismatches
+        if (ancestralidade.keyify() == "ANOES" && anoesScifiSelecionado != normalized) {
+            anoesScifiSelecionado = normalized
+        }
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
     }
