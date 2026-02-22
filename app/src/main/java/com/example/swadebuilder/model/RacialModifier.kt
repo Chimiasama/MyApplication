@@ -9,6 +9,22 @@ data class RacialAbility(
 )
 
 @Serializable
+data class AncestryVariant(
+    val id: String,
+    val nome: String,
+    val isDefault: Boolean = false,
+    val removeHabilidades: List<String> = emptyList(),
+    val removeDesvantagens: List<String> = emptyList(),
+    val removeVantagens: List<String> = emptyList(),
+    val addHabilidades: List<RacialAbility> = emptyList(),
+    val addDesvantagens: List<String> = emptyList(),
+    val addVantagens: List<String> = emptyList(),
+    val naturalArmorBonus: Int? = null,
+    val forceArmorZero: Boolean? = null,
+    val anotacoes: List<String> = emptyList()
+)
+
+@Serializable
 data class RacialModifier(
     val id: String? = null,
     val nome: String,
@@ -23,7 +39,10 @@ data class RacialModifier(
     val origem: String = "BASICO",
     val movimentacao: Int = 0,
     val tags: List<String> = emptyList(),
-    val opcoes: List<String> = emptyList()
+    val opcoes: List<String> = emptyList(),
+    val variantes: List<AncestryVariant> = emptyList(),
+    val naturalArmorBonus: Int = 0,
+    val forceArmorZero: Boolean = false
 )
 
 @Serializable

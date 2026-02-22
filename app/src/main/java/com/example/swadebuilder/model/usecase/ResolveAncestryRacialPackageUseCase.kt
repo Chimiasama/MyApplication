@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 
@@ -10,6 +11,7 @@ class ResolveAncestryRacialPackageUseCase(
 
     data class Params(
         val anc: String,
+        val ancestryDef: RacialModifier? = null,
         val descendenteElementalSelecionado: String?,
         val anoesScifiSelecionado: String? = null,
         val scifiVariant: String? = null,
@@ -53,6 +55,7 @@ class ResolveAncestryRacialPackageUseCase(
 
         val ancestrySpecificAdjustments = resolveAncestrySpecificAdjustmentsUseCase.execute(
             anc = params.anc,
+            ancestralidadeDef = params.ancestryDef,
             descendenteElementalSelecionado = params.descendenteElementalSelecionado,
             anoesScifiSelecionado = params.anoesScifiSelecionado,
             scifiVariant = params.scifiVariant,

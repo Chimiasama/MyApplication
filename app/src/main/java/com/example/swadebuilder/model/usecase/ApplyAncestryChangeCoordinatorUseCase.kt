@@ -99,6 +99,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val racialPackage = resolveAncestryRacialPackageUseCase.execute(
             ResolveAncestryRacialPackageUseCase.Params(
                 anc = params.targetAncestry,
+                ancestryDef = params.targetAncestryDef,
                 descendenteElementalSelecionado = params.descendenteElementalSelecionado,
                 anoesScifiSelecionado = params.anoesScifiSelecionado,
                 scifiVariant = params.scifiVariant,

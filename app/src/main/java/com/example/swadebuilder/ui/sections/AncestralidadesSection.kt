@@ -284,7 +284,11 @@ fun AncestralidadesSection(
                     pericias = representative.pericias,
                     vantagensGratis = representative.vantagensGratis,
                     desvantagens = representative.desvantagens,
-                    opcoes = representative.opcoes
+                    opcoes = if (representative.variantes.isNotEmpty()) {
+                        representative.variantes.map { it.nome }
+                    } else {
+                        representative.opcoes
+                    }
                 )
             }.sortedBy { it.nome }
 

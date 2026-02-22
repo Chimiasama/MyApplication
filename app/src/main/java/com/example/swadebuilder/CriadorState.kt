@@ -349,43 +349,52 @@ class CriadorState {
     }
 
     private fun applySciFiVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
-        val variant = scifiVariant ?: return base
+        val effectiveVariantName = if (key == "ANOES") {
+            anoesScifiSelecionado ?: scifiVariant
+        } else {
+            scifiVariant
+        } ?: return base
+
+        val variantObj = base.variantes.find { it.nome == effectiveVariantName } ?: return base
+
         val newHabilidades = base.habilidades.toMutableList()
+        val newDesvantagens = base.desvantagens.toMutableList()
+        val newVantagensGratis = base.vantagensGratis.toMutableList()
 
-        // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
-        // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
-        // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
-
-        if (key == "QUADROIDES" && variant == "Habilidoso") {
-            newHabilidades.removeAll { it.nome.keyify().contains("ACAO ADICIONAL") }
-        }
-
-        if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
+        if (variantObj.removeHabilidades.isNotEmpty()) {
             newHabilidades.removeAll { hab ->
-                val habKey = hab.nome.keyify()
-                habKey == "FRAGIL" || habKey == "NAO SABE NADAR"
-            }
-
-            if (newHabilidades.none { it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Habitante de Gravidade Baixa",
-                        descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado."
-                    )
-                )
-            }
-
-            if (newHabilidades.none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Forma Alienígena",
-                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
-                    )
-                )
+                variantObj.removeHabilidades.any { it.keyify() == hab.nome.keyify() }
             }
         }
 
-        return base.copy(habilidades = newHabilidades)
+        newHabilidades.addAll(variantObj.addHabilidades)
+
+        if (variantObj.removeDesvantagens.isNotEmpty()) {
+            newDesvantagens.removeAll { des ->
+                variantObj.removeDesvantagens.any { it.keyify() == des.keyify() }
+            }
+        }
+
+        newDesvantagens.addAll(variantObj.addDesvantagens)
+
+        if (variantObj.removeVantagens.isNotEmpty()) {
+            newVantagensGratis.removeAll { vant ->
+                variantObj.removeVantagens.any { it.keyify() == vant.keyify() }
+            }
+        }
+
+        newVantagensGratis.addAll(variantObj.addVantagens)
+
+        val newArmorBonus = variantObj.naturalArmorBonus ?: base.naturalArmorBonus
+        val newForceZero = variantObj.forceArmorZero ?: base.forceArmorZero
+
+        return base.copy(
+            habilidades = newHabilidades,
+            desvantagens = newDesvantagens,
+            vantagensGratis = newVantagensGratis,
+            naturalArmorBonus = newArmorBonus,
+            forceArmorZero = newForceZero
+        )
     }
 
     private fun withBaselineCounterpartMechanics(

@@ -3,15 +3,10 @@
     "nome": "ANÕES",
     "origem": "FC",
     "descricao": "Nesta ambientação, o amor dos anões por artesanato se traduz em afinidade tecnológica. Muitos utilizam aprimoramentos cibernéticos para melhorar sua eficiência em mineração e engenharia espacial.",
-    "variantes": null,
     "atributos": {
       "Vigor": 2
     },
     "pericias": {},
-    "opcoes": [
-      "Básico",
-      "Cyber"
-    ],
     "desvantagens": [],
     "habilidades": [
       {
@@ -27,22 +22,34 @@
         "descricao": "Acostumados ao escuro do subterrâneo, ignoram penalidades por Penumbra e Escuridão."
       }
     ],
-    "tags": [],
-    "vantagensGratis": []
+    "variantes": [
+      {
+        "id": "basico",
+        "nome": "Básico",
+        "isDefault": true
+      },
+      {
+        "id": "cyber",
+        "nome": "Cyber",
+        "addHabilidades": [
+          {
+            "nome": "Cibertolerância",
+            "descricao": "Anões Cyber começam com a Vantagem Cibertolerância."
+          }
+        ],
+        "addVantagens": ["CIBERTOLERÂNCIA"],
+        "anotacoes": ["Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."]
+      }
+    ]
   },
   {
     "nome": "AQUARIANOS",
     "origem": "FC",
     "descricao": "Diferente dos atlantes clássicos, esta variante evoluiu de seres semelhantes a ouriços-do-mar em planetas oceânicos.",
-    "variantes": null,
     "atributos": {},
     "pericias": {},
     "desvantagens": [
       "DEPENDÊNCIA"
-    ],
-    "opcoes": [
-      "Básico",
-      "Semi-aquáticos"
     ],
     "habilidades": [
       {
@@ -62,19 +69,33 @@
         "descricao": "Habituados a escuridão das profundezas, Aquarianos ignoram penalidades por Penumbra e Escuridão."
       }
     ],
-    "tags": [],
-    "vantagensGratis": []
+    "variantes": [
+      {
+        "id": "basico",
+        "nome": "Básico",
+        "isDefault": true
+      },
+      {
+        "id": "semiaquaticos",
+        "nome": "Semi-aquáticos",
+        "removeHabilidades": ["Aquático", "Resistência"],
+        "addHabilidades": [
+          {
+            "nome": "Semiaquático",
+            "descricao": "Podem prender a respiração por 15 minutos e não sofrem penalidades por movimento em água."
+          },
+          {
+            "nome": "Toque Venenoso",
+            "descricao": "Possuem espinhos ou secreções venenosas. Um ataque de toque bem sucedido (ou ataque natural) obriga a vítima a fazer um teste de Vigor ou sofrer um nível de Fadiga."
+          }
+        ]
+      }
+    ]
   },
   {
     "nome": "AVIANOS",
     "origem": "FC",
     "descricao": "Mais próximos de aves de rapina alienígenas, possuem cabeças avícolas e muitas vezes asas no lugar dos braços, adaptados para mundos de baixa gravidade.",
-    "variantes": null,
-    "atributos": {},
-    "opcoes": [
-      "Básico",
-      "Ave de rapina"
-    ],
     "pericias": {
       "Perceber": 2
     },
@@ -104,21 +125,38 @@
     "tags": [
       "asas"
     ],
-    "vantagensGratis": []
+    "variantes": [
+      {
+        "id": "basico",
+        "nome": "Básico",
+        "isDefault": true
+      },
+      {
+        "id": "ave_rapina",
+        "nome": "Ave de rapina",
+        "removeHabilidades": ["Frágil", "Não Sabe Nadar"],
+        "addHabilidades": [
+          {
+            "nome": "Habitante de Gravidade Baixa",
+            "descricao": "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado."
+          },
+          {
+            "nome": "Forma Alienígena",
+            "descricao": "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas."
+          }
+        ],
+        "addVantagens": ["SENTIDOS AGUÇADOS (OLHOS DE ÁGUIA)"]
+      }
+    ]
   },
   {
     "nome": "ELFOS",
     "origem": "FC",
     "descricao": "Um povo enigmático e moribundo. Os poucos restantes têm milênios de idade e vivem em 'mundos de criação' tentando curar a infertilidade de sua espécie enquanto pilham rotas espaciais.",
-    "variantes": null,
     "atributos": {
       "Agilidade": 2
     },
     "pericias": {},
-    "opcoes": [
-      "Básico",
-      "Comunitário"
-    ],
     "desvantagens": [
       "DESASTRADO"
     ],
@@ -136,19 +174,31 @@
         "descricao": "Seus olhos são capazes de ampliar a luz de tal forma que afirmam poder ver estrelas nos olhos élficos. Ignoram penalidades por Penumbra e Escuridão."
       }
     ],
-    "tags": [],
-    "vantagensGratis": []
+    "variantes": [
+      {
+        "id": "basico",
+        "nome": "Básico",
+        "isDefault": true
+      },
+      {
+        "id": "comunitario",
+        "nome": "Comunitário",
+        "removeDesvantagens": ["DESASTRADO"],
+        "removeHabilidades": ["Desastrado"],
+        "addHabilidades": [
+          {
+            "nome": "Comunitário",
+            "descricao": "Ganham +2 em rolagens de Espírito quando próximos de outros de sua espécie."
+          }
+        ],
+        "addDesvantagens": ["TRANSTORNO DE SEPARAÇÃO"]
+      }
+    ]
   },
   {
     "nome": "HUMANOS",
     "origem": "FC",
     "descricao": "Versáteis por natureza, humanos no futuro se adaptam cultural e biologicamente aos seus lares planetários ou estações espaciais.",
-    "variantes": "Estação Espacial (Habitante de Gravidade Baixa + Agilidade d6); Planeta de Mineração (Dependência Atmosférica Maior + Força ou Vigor d6).",
-    "opcoes": [
-      "Básico",
-      "Baixa Gravidade",
-      "Minerador"
-    ],
     "atributos": {},
     "pericias": {},
     "desvantagens": [],
@@ -158,23 +208,41 @@
         "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente."
       }
     ],
-    "tags": [],
     "vantagensGratis": [
       "ADAPTÁVEL"
+    ],
+    "variantes": [
+      {
+        "id": "basico",
+        "nome": "Básico",
+        "isDefault": true
+      },
+      {
+        "id": "baixa_gravidade",
+        "nome": "Baixa Gravidade",
+        "addHabilidades": [
+          {
+            "nome": "Habitante de Gravidade Baixa",
+            "descricao": "Adaptados à gravidade zero. Agilidade d6 inicial. Penalidade em gravidade normal."
+          }
+        ],
+        "anotacoes": ["Bônus: Agilidade d6"]
+      },
+      {
+        "id": "minerador",
+        "nome": "Minerador",
+        "addDesvantagens": ["DEPENDÊNCIA ATMOSFÉRICA (Maior)"],
+        "anotacoes": ["Escolha: Força d6 ou Vigor d6"]
+      }
     ]
   },
   {
     "nome": "RAKASHANOS",
     "origem": "FC",
     "descricao": "Variante mais brincalhona e curiosa dos humanoides felinos, menos focada na crueldade predatória e mais na exploração.",
-    "variantes": null,
     "atributos": {
       "Agilidade": 2
     },
-    "opcoes": [
-      "Básico",
-      "Brincalhão"
-    ],
     "pericias": {},
     "desvantagens": [
       "INIMIGO RACIAL"
@@ -205,19 +273,30 @@
         "descricao": "Seus olhos captam melhor a luminosidade, ignorando penalidades por Penumbra e Escuridão."
       }
     ],
-    "tags": [],
-    "vantagensGratis": []
+    "variantes": [
+      {
+        "id": "basico",
+        "nome": "Básico",
+        "isDefault": true
+      },
+      {
+        "id": "brincalhao",
+        "nome": "Brincalhão",
+        "removeHabilidades": ["Sanguinário"],
+        "addHabilidades": [
+          {
+            "nome": "Curioso",
+            "descricao": "São naturalmente curiosos sobre tudo."
+          }
+        ],
+        "addDesvantagens": ["CURIOSO"]
+      }
+    ]
   },
   {
     "nome": "SAÚRIOS",
     "origem": "FC",
     "descricao": "Uma linhagem de reptilianos que desenvolveu capacidades defensivas químicas em vez de força na mandíbula.",
-    "variantes": null,
-    "atributos": {},
-    "opcoes": [
-      "Básico",
-      "Cuspidor"
-    ],
     "pericias": {},
     "desvantagens": [
       "FORASTEIRO (Menor)",
@@ -227,20 +306,38 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Pele escamosa ou placas naturais."
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "Dentes afiados causam Força+d4."
       }
     ],
-    "tags": []
+    "naturalArmorBonus": 2,
+    "variantes": [
+      {
+        "id": "basico",
+        "nome": "Básico",
+        "isDefault": true,
+        "addVantagens": ["PRONTIDÃO"]
+      },
+      {
+        "id": "cuspidor",
+        "nome": "Cuspidor",
+        "removeHabilidades": ["Mordida"],
+        "removeVantagens": ["PRONTIDÃO"],
+        "addHabilidades": [
+          {
+            "nome": "Toque Venenoso (Cuspidor)",
+            "descricao": "Pode cuspir veneno ou usar em toque."
+          }
+        ]
+      }
+    ]
   },
   {
     "nome": "CENTAUX",
     "origem": "FC",
-    "descricao": "Centaux combinam a parte inferior do corpo de um animal de quatro patas com a parte superior do corpo de um humanoide. Suas pernas poderosas os impulsionam para frente a velocidades impressionantes e os impedem de serem atrapalhados por terrenos que desacelerariam outras espécies. No entanto, seu tamanho grande e sua propensão natural a se exibir facilitam sua identificação no meio da multidão.",
-    "variantes": "Ideias Variantes: Uma espécie de centaux pode ser rápida, semelhante a gazelas. Reduza o Tamanho para 0 e aumente a Movimentação para +4 e o dado de corrida para d10.",
-    "opcoes": [
-      "Padrão",
-      "Gazela"
-    ],
-    "atributos": {},
+    "descricao": "Centaux combinam a parte inferior do corpo de um animal de quatro patas com a parte superior do corpo de um humanoide.",
     "pericias": {},
     "desvantagens": [
       "GRANDE",
@@ -253,27 +350,49 @@
       },
       {
         "nome": "GRANDE",
-        "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado."
+        "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles."
       },
       {
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade."
+      },
+      {
+        "nome": "MOVIMENTAÇÃO +2",
+        "descricao": "A Movimentação dos centaux aumenta em +2 e seu dado de corrida aumenta em um tipo."
+      },
+      {
+        "nome": "TAMANHO +2",
+        "descricao": "Adicionam +2 à sua Resistência."
       }
     ],
-    "tags": [
-      "tamanho_grande",
-      "multiplas_pernas"
+    "tags": ["tamanho_grande", "multiplas_pernas"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "gazela",
+        "nome": "Gazela",
+        "removeHabilidades": ["TAMANHO +2", "MOVIMENTAÇÃO +2"],
+        "addHabilidades": [
+          {
+            "nome": "MOVIMENTAÇÃO +4",
+            "descricao": "Muito rápidos. +4 Movimentação, dado de corrida d10."
+          },
+          {
+            "nome": "TAMANHO 0",
+            "descricao": "Tamanho normal humano."
+          }
+        ]
+      }
     ]
   },
   {
     "nome": "DRAKENS",
     "origem": "FC",
-    "descricao": "Drakens são seres fortes e intimidadores que lembram vagamente dragões, basiliscos e similares. A maioria tem pele dura e temperamento explosivo, como o exemplo listado a seguir.",
-    "variantes": "Ideias Variantes: Você pode se aprofundar mais na ideia de “dragão”, substituindo Forte por Arma de Sopro (Fogo).",
-    "opcoes": [
-      "Padrão",
-      "Dragão"
-    ],
+    "descricao": "Drakens são seres fortes e intimidadores que lembram vagamente dragões.",
     "atributos": {
       "Força": 2
     },
@@ -285,7 +404,7 @@
     "habilidades": [
       {
         "nome": "CABEÇA DURA",
-        "descricao": "A crista da cabeça desses drakens permite que deem cabeçadas com força extrema. Isso conta como Chifres e causa For+d4 de dano. Veja Armas Naturais em Savage Worlds Edição Aventura."
+        "descricao": "A crista da cabeça desses drakens permite que deem cabeçadas com força extrema. Isso conta como Chifres e causa For+d4 de dano."
       },
       {
         "nome": "LENTO",
@@ -298,21 +417,37 @@
       {
         "nome": "RUDE",
         "descricao": "Drakens são mais rápidos em ameaçar do que em argumentar. Subtraem 2 das rolagens de Persuadir."
+      },
+      {
+        "nome": "FORTE",
+        "descricao": "Drakens são mais fortes que a maioria das espécies do seu tamanho. Começam com um d6 em Força."
       }
     ],
-    "tags": [
-      "arma_natural"
+    "naturalArmorBonus": 2,
+    "tags": ["arma_natural"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "dragao",
+        "nome": "Dragão",
+        "removeHabilidades": ["FORTE"],
+        "addHabilidades": [
+          {
+            "nome": "ARMA DE SOPRO (FOGO)",
+            "descricao": "Pode cuspir fogo (Modelo de Cone, 2d6 dano)."
+          }
+        ]
+      }
     ]
   },
   {
     "nome": "ELEMENTAIS",
     "origem": "FC",
-    "descricao": "Qualquer espécie intimamente ligada a um elemento natural é chamada de elemental. O exemplo a seguir é baseado em terra e pedra. Elementais de pedra possuem raciocínio mais lento, mas compensam isso com sua força bruta e determinação.",
-    "variantes": "Ideias Variantes: Elementais do ar, fogo e água têm Forma de Energia em vez de Forte e Resistência.",
-    "opcoes": [
-      "Padrão",
-      "Ar, Fogo ou Água"
-    ],
+    "descricao": "Qualquer espécie intimamente ligada a um elemento natural é chamada de elemental.",
     "atributos": {
       "Força": 3
     },
@@ -329,31 +464,49 @@
       },
       {
         "nome": "GRANDE",
-        "descricao": "Elementais de pedra subtraem 2 das rolagens de Característica quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado."
+        "descricao": "Subtraem 2 das rolagens de Característica quando usam equipamento que não foi projetado especificamente para eles."
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
-        "descricao": "Elementais se movem com passos lentos e metódicos. Reduzem a Movimentação em 1 e o dado de corrida em um tipo."
+        "descricao": "Elementais se movem com passos lentos e metódicos."
       },
       {
         "nome": "TAMANHO +1",
-        "descricao": "Elementais medem 2,1 metros de altura. Adicionam +1 à sua Resistência."
+        "descricao": "Adicionam +1 à sua Resistência."
+      },
+      {
+        "nome": "FORTE",
+        "descricao": "Começam com um d8 em Força."
+      },
+      {
+        "nome": "RESISTÊNCIA +2",
+        "descricao": "Corpo de pedra."
       }
     ],
-    "tags": [
-      "tamanho_grande",
-      "elemental"
+    "tags": ["tamanho_grande", "elemental"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "energia",
+        "nome": "Ar, Fogo ou Água",
+        "removeHabilidades": ["FORTE", "RESISTÊNCIA +2"],
+        "addHabilidades": [
+          {
+            "nome": "FORMA DE ENERGIA",
+            "descricao": "Corpo feito de energia pura."
+          }
+        ]
+      }
     ]
   },
   {
     "nome": "FERAIS",
     "origem": "FC",
-    "descricao": "Ferais são mamíferos astutos e determinados, semelhantes às versões humanoides dos guaxinins, furões, texugos e similares da Terra. Sociedades de ferais geralmente compensam sua baixa estatura com tecnologia avançada e são bem conhecidas por sua tenacidade contra adversidades.",
-    "variantes": "Ideias Variantes: Como muitas vezes são dominados e superados por outras espécies, alguns ferais dependem de grandes números para sobreviver. Esta versão ainda menor de feral troca Espirituoso e Alta Tecnologia por Transtorno de Separação e aumenta seu Diminuto para Minúsculo.",
-    "opcoes": [
-      "Padrão",
-      "Menor"
-    ],
+    "descricao": "Ferais são mamíferos astutos e determinados, semelhantes às versões humanoides dos guaxinins.",
     "atributos": {
       "Espírito": 2
     },
@@ -365,27 +518,50 @@
     "habilidades": [
       {
         "nome": "INIMIGO ANCESTRAL (Insetoide)",
-        "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação."
+        "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos."
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
-        "descricao": "Ferais têm pernas e estatura curtas. Reduzem a Movimentação em 1 e o dado de corrida em um tipo."
+        "descricao": "Ferais têm pernas e estatura curtas."
+      },
+      {
+        "nome": "DIMINUTO",
+        "descricao": "Tamanho -3 (Muito Pequeno)."
+      },
+      {
+        "nome": "ALTA TECNOLOGIA (Maior)",
+        "descricao": "Complicação Alta Tecnologia."
+      },
+      {
+        "nome": "ESPIRITUOSO",
+        "descricao": "Começam com um d6 em Espírito."
       }
     ],
-    "tags": [
-      "pequeno"
+    "tags": ["pequeno"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "menor",
+        "nome": "Menor",
+        "removeHabilidades": ["ESPIRITUOSO", "ALTA TECNOLOGIA (Maior)", "DIMINUTO"],
+        "addHabilidades": [
+          {
+            "nome": "DIMINUTO (Minúsculo)",
+            "descricao": "Tamanho -4."
+          }
+        ],
+        "addDesvantagens": ["TRANSTORNO DE SEPARAÇÃO"]
+      }
     ]
   },
   {
     "nome": "FLORANS",
     "origem": "FC",
-    "descricao": "Em alguns mundos, as espécies dominantes não evoluíram de animais, mas de plantas. Esse povo planta é conhecido como floran e existem dezenas de espécies oriundas de diferentes planetas e biomas pela galáxia. Sua cor e forma diferem muito dependendo do local de origem, embora todos os florans tendam a ter algumas características principais em comum.",
-    "variantes": "Ideias Variantes: Alguns florans podem ter características especiais de defesa para protegê-los de herbívoros agressivos. Substitua Robusto por Toque Venenoso (Paralisante).",
-    "opcoes": [
-      "Padrão",
-      "Defensivo"
-    ],
-    "atributos": {},
+    "descricao": "Em alguns mundos, as espécies dominantes não evoluíram de animais, mas de plantas.",
     "pericias": {},
     "desvantagens": [
       "DEPENDÊNCIA",
@@ -394,39 +570,53 @@
     "habilidades": [
       {
         "nome": "DEPENDÊNCIA",
-        "descricao": "Este tipo de forma de vida baseada em plantas precisa tomar sol (artificial ou não) uma vez por dia ou recebe Fadiga. Isso pode levar à morte. A Fadiga é recuperada na taxa de um nível por hora de luz solar."
+        "descricao": "Precisa tomar sol."
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Calor/Fogo)",
-        "descricao": "Florans subtraem 4 de testes de Fadiga feitos para resistir aos efeitos do calor e sofrem 4 pontos adicionais de dano de ataques baseados em calor e fogo."
+        "descricao": "Subtraem 4 de testes de Fadiga e dano."
       },
       {
         "nome": "REDUÇÃO DE SONO",
-        "descricao": "Florans precisam de metade da quantidade habitual de sono."
+        "descricao": "Precisam de metade da quantidade habitual de sono."
       },
       {
         "nome": "SEM SANGUE",
-        "descricao": "Florans se estabilizam automaticamente sempre que ficarem Sangrando."
+        "descricao": "Estabilizam automaticamente."
       },
       {
         "nome": "SEM ÓRGÃOS VITAIS",
-        "descricao": "Os órgãos dos florans estão espalhados ao longo de seus estranhos sistemas vasculares; não sofrem dano adicional de Ataques Localizados."
+        "descricao": "Não sofrem dano adicional de Ataques Localizados."
+      },
+      {
+        "nome": "ROBUSTO",
+        "descricao": "Um segundo resultado Abalado não causa Ferimento."
       }
     ],
-    "tags": [
-      "planta"
+    "tags": ["planta"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "defensivo",
+        "nome": "Defensivo",
+        "removeHabilidades": ["ROBUSTO"],
+        "addHabilidades": [
+          {
+            "nome": "TOQUE VENENOSO (Paralisante)",
+            "descricao": "Defesa natural contra herbívoros."
+          }
+        ]
+      }
     ]
   },
   {
     "nome": "GELATINOIDES",
     "origem": "FC",
-    "descricao": "Gelatinoides são qualquer forma de vida semelhante a uma gosma, geralmente translúcida, que possa alterar sua forma. Absorvem alimentos e oxigênio e até “ouvem” vibrações sonoras através de sua membrana semipermeável. Eles “falam” emitindo feromônios sutis, mas somente outros de sua espécie conseguem entendê-los sem um tradutor de idiomas (p. 43).",
-    "variantes": "Ideias Variantes: Criar uma personagem parecida com uma ameba que pode mudar de cor para combinar com o ambiente pode ser feito trocando Regeneração por Camuflagem.",
-    "opcoes": [
-      "Padrão",
-      "Ameba"
-    ],
-    "atributos": {},
+    "descricao": "Gelatinoides são qualquer forma de vida semelhante a uma gosma.",
     "pericias": {},
     "desvantagens": [
       "CIBER-RESISTÊNCIA",
@@ -435,31 +625,45 @@
     "habilidades": [
       {
         "nome": "CIBER-RESISTÊNCIA",
-        "descricao": "É difícil implantar ciberequipamentos em criaturas feitas de gosma. Gelatinoides têm a Complicação Ciber-Resistência (p. 129)."
+        "descricao": "É difícil implantar ciberequipamentos."
       },
       {
         "nome": "FRACO",
-        "descricao": "Devido à falta de ossos e músculos, gelatinoides têm dificuldade em exercer força física. Eles subtraem 1 de rolagens de Força e dano corpo a corpo."
+        "descricao": "-1 de Força e dano corpo a corpo."
       },
       {
         "nome": "GELATINOSO",
-        "descricao": "Gelatinoides têm um corpo amorfo, quase líquido, sem órgãos vitais. Sofrem apenas metade do dano causado por quedas ou colisões, e Ataques Localizados não causam dano extra contra eles. Podem fazer uma rolagem de Atletismo como uma ação para atravessar grades ou grandes aberturas como se fossem Terreno Difícil. Eles podem atravessar rachaduras tão pequenas quanto 3 centímetros de largura em 1d6 rodadas, deixando-os Vulneráveis até que se recomponham."
+        "descricao": "Corpo amorfo, ignora dano extra de Ataques Localizados."
+      },
+      {
+        "nome": "REGENERAÇÃO",
+        "descricao": "Cura natural uma vez por dia."
       }
     ],
-    "tags": [
-      "amorfo"
+    "tags": ["amorfo"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "ameba",
+        "nome": "Ameba",
+        "removeHabilidades": ["REGENERAÇÃO"],
+        "addHabilidades": [
+          {
+            "nome": "CAMUFLAGEM",
+            "descricao": "Muda de cor para combinar com ambiente."
+          }
+        ]
+      }
     ]
   },
   {
     "nome": "INSETOIDES",
     "origem": "FC",
-    "descricao": "Insetoides superam em número a maioria das outras espécies na galáxia e provavelmente poderiam dominá-la, se conseguissem organizar suas colmeias separadas em uma única força. A espécie aqui apresentada é baseada em criaturas que lembram formigas e louva-a-deus.",
-    "variantes": "Ideias Variantes: Uma variante insetoide baseada em vespas troca Armadura +2 e Garras por um ferrão (trate como Mordida (For+d4)), Voo (Movimentação 6) e Toque Venenoso (Moderado).",
-    "opcoes": [
-      "Padrão",
-      "Vespa"
-    ],
-    "atributos": {},
+    "descricao": "Insetoides superam em número a maioria das outras espécies na galáxia.",
     "pericias": {},
     "desvantagens": [
       "FORASTEIRO (Menor)",
@@ -469,39 +673,67 @@
     "habilidades": [
       {
         "nome": "COMUNITÁRIO",
-        "descricao": "Eles evoluíram de criaturas coletivas. Adicionam +2 às rolagens de Espírito quando estiverem a até 12 quadros (24 metros) de outros da mesma espécie."
+        "descricao": "+2 em Espírito quando próximos."
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Tudo, desde os hábitos alimentares dos insetoides até sua mentalidade de colmeia, é estranho e alienígena para a maioria dos outros seres. Possuem a Complicação Forasteiro (Menor)."
+        "descricao": "Estranho e alienígena."
       },
       {
         "nome": "INCAPAZ DE FALAR",
-        "descricao": "Insetoides não têm cordas vocais e normalmente só conseguem se comunicar com membros de sua própria espécie. Eles ainda podem ouvir e entender outros idiomas típicos e podem se comunicar por meio de dispositivos eletrônicos, como o tradutor de idiomas encontrado na p. 43."
+        "descricao": "Sem cordas vocais."
       },
       {
         "nome": "TRANSTORNO DE SEPARAÇÃO",
-        "descricao": "Insetoides são criaturas coletivas e geralmente não se dão bem sozinhos. Quando nenhum outro insetoide estiver na linha de visão, a personagem sofre -2 nas rolagens de Espírito."
+        "descricao": "-2 Espírito se sozinho."
       },
       {
         "nome": "VISÃO DE 360°",
-        "descricao": "Os olhos compostos dos insetoides lhes garantem um campo de visão livre. Ignoram 1 ponto de bônus de Agrupar."
+        "descricao": "Ignora 1 ponto de Agrupar."
+      },
+      {
+        "nome": "ARMADURA +2",
+        "descricao": "Exoesqueleto."
+      },
+      {
+        "nome": "GARRAS",
+        "descricao": "For+d4, PA 2."
       }
     ],
-    "tags": [
-      "inseto"
+    "naturalArmorBonus": 2,
+    "tags": ["inseto"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "vespa",
+        "nome": "Vespa",
+        "naturalArmorBonus": 0,
+        "removeHabilidades": ["ARMADURA +2", "GARRAS"],
+        "addHabilidades": [
+          {
+            "nome": "FERRÃO",
+            "descricao": "Trate como Mordida (For+d4)."
+          },
+          {
+            "nome": "VOO",
+            "descricao": "Movimentação 6."
+          },
+          {
+            "nome": "TOQUE VENENOSO",
+            "descricao": "Veneno Moderado."
+          }
+        ]
+      }
     ]
   },
   {
     "nome": "MÍMICOS",
     "origem": "FC",
-    "descricao": "O termo se refere a uma espécie que pode transformar sua forma física em outra, geralmente a de um ser vivo. Alguns mímicos duplicam outros seres sencientes, enquanto outros simplesmente assumem a forma de animais. Seja qual for o nível de mimetismo que possuam, tendem a ser o bode expiatório preferido nas sociedades em que são predominantes. Embora a maioria dos sistemas legais não aceite a “defesa de mimetismo”, isso não impede que criminosos aleguem que foi um mímico quem feriu a lei.",
-    "variantes": "Ideias Variantes: Alguns mímicos não conseguem duplicar alvos de Tamanho maior ou menor, mas são feitos de materiais mais resistentes, aumentando sua Resistência em +1.",
-    "opcoes": [
-      "Padrão",
-      "Resistente"
-    ],
-    "atributos": {},
+    "descricao": "O termo se refere a uma espécie que pode transformar sua forma física em outra.",
     "pericias": {},
     "desvantagens": [
       "CIBER-RESISTÊNCIA",
@@ -510,56 +742,97 @@
     "habilidades": [
       {
         "nome": "CIBER-RESISTÊNCIA",
-        "descricao": "A fisiologia de um mímico não se adapta bem a ciberequipamentos. Possuem a Complicação Ciber-Resistência (p. 129)."
+        "descricao": "Fisiologia não adapta bem."
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Sociedades por toda a galáxia desconfiam de mímicos. Possuem a Complicação Forasteiro (Menor)."
+        "descricao": "Desconfiança."
       },
       {
         "nome": "SEM ÓRGÃOS VITAIS",
-        "descricao": "Mímicos podem alterar a localização de seus órgãos vitais, tornando-os difíceis de serem atingidos. Ataques Localizados não provocam dano extra contra eles."
+        "descricao": "Ignora dano extra de Ataques Localizados."
+      },
+      {
+        "nome": "MUDANÇA DE FORMA",
+        "descricao": "Assume aparência com variação de 2 pontos de Tamanho."
       }
     ],
-    "tags": [
-      "metamorfo"
+    "tags": ["metamorfo"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "resistente",
+        "nome": "Resistente",
+        "removeHabilidades": ["MUDANÇA DE FORMA"],
+        "addHabilidades": [
+          {
+            "nome": "RESISTÊNCIA +1",
+            "descricao": "Feitos de material mais resistente."
+          },
+          {
+            "nome": "MUDANÇA DE FORMA (Restrita)",
+            "descricao": "Não consegue duplicar alvos de Tamanho diferente."
+          }
+        ]
+      }
     ]
   },
   {
     "nome": "MINERADORES GENÉTICOS",
     "origem": "FC",
-    "descricao": "Mineração e projetos de construção no espaço profundo são atividades perigosas, principalmente para seres comuns. Colônias que mantêm gerações de mineiros, trabalhadores da construção civil ou outros tipos podem introduzir modificações genéticas em seus habitantes. Alguns veem isso como um incentivo à servidão contratada; outros, como uma necessidade para a vida difícil exigida pelo trabalho e pela vida em um ambiente hostil.",
-    "variantes": "Ideias Variantes: Mineradores genéticos podem ser projetados para outros tipos de trabalho. Para trabalhadores da construção civil em gravidade zero, dê a eles a Vantagem Adaptação Gravitacional no lugar de Forte e troque Dependência Atmosférica pela Complicação Habitante de Gravidade Baixa/Zero.",
-    "opcoes": [
-      "Padrão",
-      "Zero G"
-    ],
+    "descricao": "Mineração e projetos de construção no espaço profundo.",
     "atributos": {
       "Vigor": 2,
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [],
+    "desvantagens": [
+      "DEPENDÊNCIA ATMOSFÉRICA"
+    ],
     "habilidades": [
       {
         "nome": "EM FORMA",
-        "descricao": "Mineradores genéticos trabalham longas horas em condições difíceis. Começam com um d6 em Vigor, aumentando o limite para d12+1."
+        "descricao": "Começam com d6 em Vigor."
+      },
+      {
+        "nome": "FORTE",
+        "descricao": "Começam com d6 em Força."
+      },
+      {
+        "nome": "DEPENDÊNCIA ATMOSFÉRICA",
+        "descricao": "Projetados para atmosfera específica."
       }
     ],
-    "tags": [
-      "humano_modificado"
+    "tags": ["humano_modificado"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "zerog",
+        "nome": "Zero G",
+        "removeHabilidades": ["FORTE", "DEPENDÊNCIA ATMOSFÉRICA"],
+        "addHabilidades": [
+          {
+            "nome": "Adaptação Gravitacional",
+            "descricao": "Começam com a Vantagem Adaptação Gravitacional."
+          }
+        ],
+        "addVantagens": ["ADAPTAÇÃO GRAVITACIONAL"],
+        "addDesvantagens": ["HABITANTE DE GRAVIDADE BAIXA/ZERO"]
+      }
     ]
   },
   {
     "nome": "ORÁCULOS",
     "origem": "FC",
-    "descricao": "Qualquer espécie com poderes mentais, espirituais ou sobrenaturais inatos é chamada de oráculo.",
-    "variantes": "Ideias Variantes: Alguns oráculos podem estar sintonizados com presenças aterrorizantes que ameaçam toda a galáxia. Troque Noção do Perigo pela Vantagem Poderes Místicos (Telepata), p. 29, para combater melhor os horrores cósmicos que sentem — e melhorar os poderes que canalizam contra seus inimigos.",
-    "opcoes": [
-      "Padrão",
-      "Aterrorizado"
-    ],
-    "atributos": {},
+    "descricao": "Qualquer espécie com poderes mentais, espirituais ou sobrenaturais inatos.",
     "pericias": {},
     "desvantagens": [
       "FRÁGIL"
@@ -567,60 +840,87 @@
     "habilidades": [
       {
         "nome": "FRÁGIL",
-        "descricao": "A maioria dos oráculos tem constituição frágil. Subtraem 1 de sua Resistência."
+        "descricao": "Resistência -1."
       },
       {
         "nome": "TELEPATIA",
-        "descricao": "Oráculos podem se comunicar mentalmente com qualquer forma de vida inteligente em um raio de 12 quadros (24 metros), independentemente do idioma."
+        "descricao": "Comunicação mental raio 12 quadros."
+      },
+      {
+        "nome": "NOÇÃO DO PERIGO",
+        "descricao": "Vantagem Noção do Perigo."
       }
     ],
-    "tags": [
-      "psiquico"
+    "vantagensGratis": ["NOÇÃO DO PERIGO"],
+    "tags": ["psiquico"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "aterrorizado",
+        "nome": "Aterrorizado",
+        "removeHabilidades": ["NOÇÃO DO PERIGO"],
+        "removeVantagens": ["NOÇÃO DO PERIGO"],
+        "addHabilidades": [
+          {
+            "nome": "Poderes Místicos (Telepata)",
+            "descricao": "Vantagem Poderes Místicos (Telepata)."
+          }
+        ],
+        "addVantagens": ["poderes_misticos"]
+      }
     ]
   },
   {
     "nome": "POSSESSORES",
     "origem": "FC",
-    "descricao": "Possessores são parasitas, seres de energia ou até mesmo IAs que, de alguma forma, habitaram ou interagiram com um hospedeiro orgânico. Esta versão se integra perfeitamente à casca e pode sobreviver à sua destruição e habitar uma nova forma. Possessores podem ser combinados com outras ancestralidades, como sáurios ou centaux. Como o pacote tem 2 pontos de habilidades, você precisará equilibrá-lo com 2 pontos de habilidades negativas antes de adicioná-lo a outra ancestralidade predefinida. Uma penalidade -1 em Agilidade é comum, refletindo o delay entre a mente da personagem e o corpo que ocupa.",
-    "variantes": "Ideias Variantes: Seres de energia podem ser capazes de assumir uma forma física. Adicione Forma de Energia e equilibre com 4 pontos de habilidades negativas que façam sentido no seu cenário, como Curioso e Sem Noção, se tiverem pouca experiência em um mundo orgânico.",
-    "atributos": {},
+    "descricao": "Parasitas que habitam hospedeiros.",
     "pericias": {},
-    "opcoes": [
-      "Padrão",
-      "Energia"
-    ],
     "desvantagens": [
       "FORASTEIRO (Menor)"
     ],
     "habilidades": [
       {
         "nome": "CASCA",
-        "descricao": "O parasita pode se enxertar em outro corpo se sobreviver à destruição da casca e se houver uma nova disponível em 24 horas."
+        "descricao": "Pode se enxertar em outro corpo."
       },
       {
         "nome": "COMUNITÁRIO",
-        "descricao": "Possessores fazem parte de uma construção social altamente integrada. Ganham um bônus de +2 em rolagens de Espírito quando outros de sua espécie estiverem a até 12 quadros (24 metros)."
+        "descricao": "+2 Espírito com outros da espécie."
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Possessores são frequentemente menosprezados, e outros podem ser hostis se os parasitas “vestirem” alguém que conhecem. Possuem a Complicação Forasteiro (Menor)."
+        "descricao": "Menosprezados."
       }
     ],
-    "tags": [
-      "parasita"
+    "tags": ["parasita"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "energia",
+        "nome": "Energia",
+        "addHabilidades": [
+          {
+            "nome": "FORMA DE ENERGIA",
+            "descricao": "Ser de energia pura."
+          }
+        ],
+        "anotacoes": ["Equilibrar com 4 pontos de habilidades negativas (ex: Curioso, Sem Noção)."]
+      }
     ]
   },
   {
     "nome": "QUADROIDES",
     "origem": "FC",
-    "descricao": "Qualquer espécie que tenha desenvolvido membros superiores funcionais adicionais é conhecida como quadroide. São frequentemente contratados como guarda-costas ou soldados graças à eficiência em combate garantida por seus braços adicionais.",
-    "variantes": "Ideias Variantes: Para criar um Quadrioide que ignore 2 pontos de quaisquer penalidades por Ações Múltiplas (físicas ou mentais), equilibre-o com uma habilidade -1, como Dependência Atmosférica.",
-    "atributos": {},
+    "descricao": "Quatro braços.",
     "pericias": {},
-    "opcoes": [
-      "Padrão",
-      "Habilidoso"
-    ],
     "desvantagens": [
       "FRÁGIL",
       "INIMIGO ANCESTRAL",
@@ -629,111 +929,151 @@
     "habilidades": [
       {
         "nome": "AÇÃO ADICIONAL",
-        "descricao": "Quadroides têm quatro braços e ignoram 2 pontos de penalidades físicas por Ações Múltiplas a cada rodada."
+        "descricao": "Ignoram 2 pontos de penalidades físicas por Ações Múltiplas."
       },
       {
         "nome": "FRÁGIL",
-        "descricao": "Quadroides geralmente são magros, diminuindo em 1 sua Resistência."
+        "descricao": "Resistência -1."
       },
       {
         "nome": "INIMIGO ANCESTRAL",
-        "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente."
+        "descricao": "Conflito constante."
       },
       {
         "nome": "MEMBROS EXTRAS",
-        "descricao": "Quadroides possuem um conjunto adicional de braços (incluindo uma segunda mão hábil) que pode ser usado para ações sustentadas, deixando outros membros livres para outras coisas. Ao empunharem várias armas, ganham um bônus de +1 em Agrupar e adicionam +1 às rolagens de Atletismo envolvendo membros adicionais (como escalada e luta corpo a corpo)."
+        "descricao": "Conjunto adicional de braços."
       },
       {
         "nome": "SENSÍVEL",
-        "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar."
+        "descricao": "-4 ao resistir a Provocar."
       }
     ],
-    "tags": [
-      "multiplos_bracos"
+    "tags": ["multiplos_bracos"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "habilidoso",
+        "nome": "Habilidoso",
+        "removeHabilidades": ["AÇÃO ADICIONAL"],
+        "addHabilidades": [
+          {
+            "nome": "AÇÃO ADICIONAL (Qualquer)",
+            "descricao": "Ignora 2 pontos de quaisquer penalidades por Ações Múltiplas (físicas ou mentais)."
+          }
+        ],
+        "anotacoes": ["Equilibrar com uma habilidade -1 (ex: Dependência Atmosférica)."]
+      }
     ]
   },
   {
     "nome": "ROBÔS",
     "origem": "FC",
-    "descricao": "Sejam companheiros fiéis, instrumentos de guerra ou simplesmente máquinas projetadas para um propósito específico, robôs são onipresentes no universo da ficção científica. Este pacote foi projetado para acompanhar companheiros vivos e ajudá-los em suas tarefas.",
-    "variantes": "Ideias Variantes: Troque a Complicação Pacifista por Sem Escrúpulos (Maior) e ganhe um guerreiro robótico ou um droide de segurança. Para robôs dedicados com experiência limitada além de seu propósito, considere Perícias Básicas Reduzidas para refletir o fato de que não conhecem os conceitos básicos de Atletismo, Conhecimento Geral, Perceber, Persuadir ou Furtividade.",
-    "atributos": {},
+    "descricao": "Robôs e androides.",
     "pericias": {},
-    "opcoes": [
-      "Padrão",
-      "Guerreiro",
-      "Limitado"
-    ],
     "desvantagens": [
-      "CIRCUITOS DE ASIMOV"
+      "CIRCUITOS DE ASIMOV",
+      "PROGRAMADO"
     ],
     "habilidades": [
       {
         "nome": "CIRCUITOS DE ASIMOV",
-        "descricao": "O robô não pode causar dano a seres inteligentes. Isso lhes dá a Complicação Pacifista (Maior)."
+        "descricao": "Pacifista (Maior)."
       },
       {
         "nome": "PROGRAMADO",
-        "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado (Maior)."
+        "descricao": "Programado (Maior)."
       },
       {
         "nome": "ROBÔ",
-        "descricao": "Robôs não respiram, são imunes a doenças e venenos, ignoram descompressão e radiação de fundo, têm um número de espaços de Modificações Robóticas com base em seu Tamanho (mas ainda devem pagar por eles normalmente; veja a p. 150), não podem fazer testes de cura natural, ignoram a Hora de Ouro e devem ser consertados em vez de curados. Veja Jogando com um Robô na p. 147 para mais informações."
+        "descricao": "Construto."
       }
     ],
-    "tags": [
-      "construto",
-      "robo"
+    "tags": ["construto", "robo"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "guerreiro",
+        "nome": "Guerreiro",
+        "removeHabilidades": ["CIRCUITOS DE ASIMOV"],
+        "removeDesvantagens": ["CIRCUITOS DE ASIMOV"],
+        "addHabilidades": [
+          {
+            "nome": "SEM ESCRÚPULOS",
+            "descricao": "Sem Escrúpulos (Maior)."
+          }
+        ],
+        "addDesvantagens": ["SEM ESCRÚPULOS (Maior)"]
+      },
+      {
+        "id": "limitado",
+        "nome": "Limitado",
+        "anotacoes": ["Perícias Básicas Reduzidas (não conhecem conceitos básicos)."]
+      }
     ]
   },
   {
     "nome": "SERES SINTÉTICOS",
     "origem": "FC",
-    "descricao": "A tecnologia avançada pode criar seres realistas de matéria quase biológica. Estes indivíduos têm vontade e consciência, mas podem ter diretrizes e parâmetros que devem seguir (refletidos em sua Complicação Programado). Geralmente são criados para trabalhar em condições perigosas, como no espaço profundo, mineração de asteroides ou selvas tóxicas.",
-    "variantes": "Ideias Variantes: Troque a Complicação Programado por Procurado (Maior) ou Forasteiro (Maior) para um ser que se tornou renegado em uma sociedade em que sintéticos são tratados mais como máquinas do que como pessoas.",
-    "atributos": {},
+    "descricao": "Matéria quase biológica.",
     "pericias": {},
-    "opcoes": [
-      "Padrão",
-      "Máquina (Procurado)",
-      "Máquina (Forasteiro)"
-    ],
     "desvantagens": [
-      "NÃO PODE CURAR"
+      "NÃO PODE CURAR",
+      "PROGRAMADO"
     ],
     "habilidades": [
       {
         "nome": "ESPACIAL",
-        "descricao": "Sintéticos não respiram (embora pareça, o que os torna mais realistas) e ignoram os efeitos da descompressão e da radiação."
+        "descricao": "Não respiram."
       },
       {
         "nome": "IMUNE A DOENÇAS E VENENOS",
-        "descricao": "O sistema quase biológico dos sintéticos é imune a toxinas e patógenos"
+        "descricao": "Imune."
       },
       {
         "nome": "NÃO PODE CURAR",
-        "descricao": "Sintéticos não podem fazer testes de cura natural, mas podem ser curados normalmente."
+        "descricao": "Sem cura natural."
       },
       {
         "nome": "PROGRAMADO",
-        "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado."
+        "descricao": "Complicação Programado."
       }
     ],
-    "tags": [
-      "androide"
+    "tags": ["androide"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "procurado",
+        "nome": "Máquina (Procurado)",
+        "removeHabilidades": ["PROGRAMADO"],
+        "removeDesvantagens": ["PROGRAMADO"],
+        "addDesvantagens": ["PROCURADO (Maior)"]
+      },
+      {
+        "id": "forasteiro",
+        "nome": "Máquina (Forasteiro)",
+        "removeHabilidades": ["PROGRAMADO"],
+        "removeDesvantagens": ["PROGRAMADO"],
+        "addDesvantagens": ["FORASTEIRO (Maior)"]
+      }
     ]
   },
   {
     "nome": "SOLDADOS GENÉTICOS",
     "origem": "FC",
-    "descricao": "Eles criaram as máquinas de matar perfeitas… e esperavam não ter que lutar contra elas! Soldados genéticos são guerreiros geneticamente modificados, projetados para um combate mortal e eficiente.",
-    "variantes": "Ideias Variantes: Soldados geneticamente modificados podem ser projetados para uso geral, como apresentado, ou para propósitos muito específicos, como fuzileiros de gravidade zero. Troque Nervos de Aço pela Vantagem Adaptação Gravitacional.",
-    "atributos": {},
+    "descricao": "Guerreiros geneticamente modificados.",
     "pericias": {},
-    "opcoes": [
-      "Padrão",
-      "Fuzileiro Zero G"
-    ],
     "desvantagens": [
       "SEM ESCRÚPULOS (Maior)",
       "TREINADOS PARA A GUERRA"
@@ -741,36 +1081,52 @@
     "habilidades": [
       {
         "nome": "NERVOS DE AÇO",
-        "descricao": "Bloqueadores de nervos permitem que o soldado registre dor, mas diminuem seus efeitos, conferindo-lhes a Vantagem Nervos de Aço; isso ignora 1 ponto de penalidades por Ferimentos."
+        "descricao": "Vantagem Nervos de Aço."
       },
       {
         "nome": "REFLEXOS DE COMBATE",
-        "descricao": "O reflexo de lutar ou fugir destes soldados foi programado em seus sistemas nervosos, dando a eles a Vantagem Reflexos de Combate. Adicionam +2 em Espírito para se recuperar do Estado Abalado."
+        "descricao": "Vantagem Reflexos de Combate."
       },
       {
         "nome": "RESISTÊNCIA +1",
-        "descricao": "Soldados genéticos foram criados para aguentar o tranco."
+        "descricao": "Aguentam o tranco."
       },
       {
         "nome": "SEM ESCRÚPULOS (Maior)",
-        "descricao": "Soldados genéticos são treinados para obedecer ordens e completar suas missões a qualquer custo. Caso tenha se libertado de seu condicionamento, substitua isto por Procurado se seu empregador quiser vingança, ou Inimigo para alguém prejudicado no passado que queira o herói morto."
+        "descricao": "Obedecer ordens."
       },
       {
         "nome": "TREINADOS PARA A GUERRA",
-        "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 4 das rolagens de Conhecimento Geral."
+        "descricao": "-4 Conhecimento Geral."
       }
     ],
-    "tags": [
-      "humano_modificado",
-      "soldado"
+    "vantagensGratis": ["NERVOS DE AÇO", "REFLEXOS DE COMBATE"],
+    "tags": ["humano_modificado", "soldado"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "fuzileiro",
+        "nome": "Fuzileiro Zero G",
+        "removeHabilidades": ["NERVOS DE AÇO"],
+        "removeVantagens": ["NERVOS DE AÇO"],
+        "addHabilidades": [
+          {
+            "nome": "Adaptação Gravitacional",
+            "descricao": "Vantagem Adaptação Gravitacional."
+          }
+        ],
+        "addVantagens": ["ADAPTAÇÃO GRAVITACIONAL"]
+      }
     ]
   },
   {
     "nome": "VAZIOS",
     "origem": "FC",
-    "descricao": "Vazios são criaturas de energia que evoluíram na vastidão do espaço. São seres solitários devido ao vazio de seu ambiente, mas ganham vida quando o acaso os reúne com outros de sua espécie. Acham os seres orgânicos curiosos e ocasionalmente viajam com eles por um tempo para tentar entender seus costumes alienígenas.",
-    "variantes": "Ideias variantes: A criatura aqui foi projetada para usar um traje de contenção (veja a p. 49). Para um ser de energia muito mais poderoso, dê a ele superpoderes (veja Savage Worlds Edição Aventura e o Compêndio de Superpoderes), como ataques de longa distância e campo de dano.",
-    "atributos": {},
+    "descricao": "Criaturas de energia.",
     "pericias": {},
     "desvantagens": [
       "CURIOSO",
@@ -781,47 +1137,39 @@
     "habilidades": [
       {
         "nome": "CURIOSO",
-        "descricao": "Vazios que viajam com outros seres são incrivelmente curiosos, especialmente sobre as muitas facetas da vida orgânica que são completamente desconhecidas para eles."
+        "descricao": "Incrivelmente curiosos."
       },
       {
         "nome": "ESPACIAL",
-        "descricao": "Vazios não respiram e podem sobreviver no vácuo do espaço."
+        "descricao": "Sobrevivem no vácuo."
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Seres corpóreos não tendem a confiar em tais formas de vida alienígenas. Vazios possuem a Complicação Forasteiro (Menor)."
+        "descricao": "Desconfiança."
       },
       {
         "nome": "FORMA DE ENERGIA",
-        "descricao": "Vazios são feitos de energia escura. Não possuem órgãos vitais, ignoram Ataques Localizados e não sofrem dano de quedas, colisões ou armas físicas e projéteis (sofrem dano total de armas de energia, explosões, ataques arcanos etc.). Não têm massa significativa, mas podem passar por todas as aberturas, exceto as filtradas (a critério do Mestre), como se fossem Terreno Difícil. Vazios não podem usar armaduras, armas ou manipular matéria, a menos que usem um traje de contenção (veja a p. 49)."
+        "descricao": "Energia escura."
       },
       {
         "nome": "INCAPAZ DE FALAR",
-        "descricao": "Vazios nunca desenvolveram a capacidade de se comunicar verbalmente uns com os outros. A maioria usa telas de tradução portáteis para traduzir sua fala para outros seres."
+        "descricao": "Sem fala verbal."
       },
       {
         "nome": "SEM SANGUE",
-        "descricao": "Vazios se estabilizam automaticamente sempre que ficarem Sangrando."
+        "descricao": "Estabilizam."
       },
       {
         "nome": "TRANSTORNO DE SEPARAÇÃO",
-        "descricao": "Estas criaturas são entidades solitárias, subtraindo 2 das rolagens de Espírito quando não houver outros vazios presentes."
+        "descricao": "Solitários."
       }
     ],
-    "tags": [
-      "energia",
-      "incorporeo"
-    ]
+    "tags": ["energia", "incorporeo"]
   },
   {
     "nome": "YETIS",
     "origem": "FC",
-    "descricao": "Qualquer espécie mamífera coberta de pelos inevitavelmente acaba sendo rotulada como yeti pelos terráqueos e aqueles que adotaram os costumes da Terra. Estes seres aqui são altos, peludos e ferozes quando ameaçados. Sua grande estatura e volume fora do comum exigem equipamentos especiais adaptados aos seus tamanhos.",
-    "variantes": "Ideias Variantes: Alguns Yetis podem estar mais ligados ao seu ambiente do que outros, o que lhes garante a capacidade de emitir uma rajada de ar frio de suas entranhas. Dê a essa variante Arma de Sopro (Frio) e Dependência (deve estar em temperaturas abaixo de zero por pelo menos uma hora por dia).",
-    "opcoes": [
-      "Padrão",
-      "Sopro"
-    ],
+    "descricao": "Mamíferos altos e peludos.",
     "atributos": {
       "Força": 2
     },
@@ -830,34 +1178,54 @@
     "habilidades": [
       {
         "nome": "FORTE",
-        "descricao": "Yetis são grandes e ferozmente fortes. Começam com um d6 em Força, aumentando o limite para d12+1."
+        "descricao": "Começam com d6 em Força."
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Calor)",
-        "descricao": "Seus pelos grossos são um problema em condições extremas de calor e umidade. Yetis subtraem 4 de testes de Fadiga feitos para resistir aos efeitos do calor e sofrem 4 pontos adicionais de dano de ataques baseados em calor e fogo."
+        "descricao": "Sofrem no calor."
       },
       {
         "nome": "GRANDE",
-        "descricao": "Yetis subtraem 2 de rolagens de Características quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado."
+        "descricao": "Desajeitados com equipamentos."
       },
       {
         "nome": "RESISTÊNCIA AMBIENTAL (Frio)",
-        "descricao": "Yetis adicionam +4 para resistir aos efeitos do frio e reduzem o dano de ataques baseados em frio e gelo em 4."
+        "descricao": "+4 resistir frio."
       },
       {
         "nome": "TAMANHO +2",
-        "descricao": "Geralmente têm cerca de 2,1 metros de altura, são muito grandes e densos. Adicionam +2 ao Tamanho e Resistência."
+        "descricao": "+2 Tamanho e Resistência."
       }
     ],
-    "tags": [
-      "tamanho_grande"
+    "tags": ["tamanho_grande"],
+    "variantes": [
+      {
+        "id": "padrao",
+        "nome": "Padrão",
+        "isDefault": true
+      },
+      {
+        "id": "sopro",
+        "nome": "Sopro",
+        "addHabilidades": [
+          {
+            "nome": "ARMA DE SOPRO (Frio)",
+            "descricao": "Rajada de ar frio."
+          },
+          {
+            "nome": "DEPENDÊNCIA (Frio)",
+            "descricao": "Deve estar em temperaturas abaixo de zero uma hora por dia."
+          }
+        ],
+        "addVantagens": ["ARMA DE SOPRO (Frio)"],
+        "addDesvantagens": ["DEPENDÊNCIA"]
+      }
     ]
   },
   {
     "nome": "AURAX",
     "origem": "FC",
-    "descricao": "Os aurax vêm de um mundo primitivo de planícies ondulantes e feras hostis. Eles combinam a parte inferior do corpo de um pequeno hipopótamo com a parte superior do corpo de um humanoide de pele cinza. Eles são centaux com estas habilidades adicionais.",
-    "variantes": null,
+    "descricao": "Centaux hipopótamo.",
     "atributos": {
       "Força": 2
     },
@@ -870,44 +1238,39 @@
     "habilidades": [
       {
         "nome": "BAIXA TECNOLOGIA (Maior)",
-        "descricao": "O mundo natal dos aurax é de baixa tecnologia em comparação à maioria dos mundos desenvolvidos. Eles possuem a Complicação Baixa Tecnologia (Maior)."
+        "descricao": "Mundo primitivo."
       },
       {
         "nome": "ESTÁVEL",
-        "descricao": "Centaux têm quatro pernas fortes e pés largos ou cascos resistentes. Sua Movimentação não é reduzida por Terreno Difícil."
+        "descricao": "Quatro pernas."
       },
       {
         "nome": "FORTE",
-        "descricao": "Aurax começam com um d6 em Força, aumentando o limite para d12+1."
+        "descricao": "Força d6."
       },
       {
         "nome": "GRANDE",
-        "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado."
+        "descricao": "Tamanho."
       },
       {
         "nome": "MOVIMENTAÇÃO +2",
-        "descricao": "A Movimentação dos centaux aumenta em +2 e seu dado de corrida aumenta em um tipo."
+        "descricao": "Pace +2."
       },
       {
         "nome": "ÓBVIO",
-        "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade."
+        "descricao": "Furtividade -1."
       },
       {
         "nome": "TAMANHO +2",
-        "descricao": "A parte humanoide de um centaux é um humano robusto e musculoso, enquanto a parte traseira do corpo é do tamanho de um grande mamífero de quatro patas. Adicionam +2 à sua Resistência."
+        "descricao": "+2 Resistência."
       }
     ],
-    "tags": [
-      "tamanho_grande",
-      "multiplas_pernas"
-    ]
+    "tags": ["tamanho_grande", "multiplas_pernas"]
   },
   {
     "nome": "DEADERS (PARASTEEN)",
     "origem": "FC",
-    "descricao": "Os parasteen são parasitas semelhantes a lesmas que se enxertam nos troncos cerebrais de cadáveres humanoides e preservam os corpos em trajes especiais. O enxerto da criatura em seu hospedeiro é permanente, então a personagem geralmente é tratada normalmente e morre quando seu hospedeiro morre.",
-    "variantes": null,
-    "atributos": {},
+    "descricao": "Parasitas em cadáveres.",
     "pericias": {},
     "desvantagens": [
       "APARAR BAIXO",
@@ -919,44 +1282,40 @@
     "habilidades": [
       {
         "nome": "APARAR BAIXO",
-        "descricao": "Os movimentos lentos e deliberados dos deaders os tornam alvos fáceis em combate corpo a corpo. Aparar -2."
+        "descricao": "Aparar -2."
       },
       {
         "nome": "CALCULISTA",
-        "descricao": "Parasteens são pensadores astutos. Possuem a Vantagem Calculista, o que lhes permite ignorar até 2 pontos de penalidades quando sua Carta de Ação for Cinco ou menor."
+        "descricao": "Vantagem Calculista."
       },
       {
         "nome": "DESAJEITADO",
-        "descricao": "Os parasitas têm dificuldades em manobrar o cadáver do hospedeiro. Sofrem uma penalidade de -1 nas rolagens de Agilidade."
+        "descricao": "-1 Agilidade."
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "A maioria das pessoas se sente desconfortável perto de cadáveres animados."
+        "descricao": "Desconforto."
       },
       {
         "nome": "FRACO",
-        "descricao": "Deaders têm dificuldade em usar todo o potencial dos músculos do hospedeiro. Subtraem 1 das rolagens de Força, incluindo dano."
+        "descricao": "-1 Força."
       },
       {
         "nome": "LENTO",
-        "descricao": "Deaders se arrastam conforme se movem, reduzindo a Movimentação para 5 quadros (10 metros) e seu dado de corrida para d4."
+        "descricao": "Movimentação 5."
       },
       {
         "nome": "MORTO-VIVO",
-        "descricao": "Resistência +2; +2 para se recuperar de Abalado; sem dano adicional por Ataques Localizados; ignoram 1 ponto de Penalidades por Ferimentos; não respiram; imunes a doenças e venenos."
+        "descricao": "Resistência +2, etc."
       }
     ],
-    "tags": [
-      "morto_vivo",
-      "parasita"
-    ]
+    "vantagensGratis": ["CALCULISTA"],
+    "tags": ["morto_vivo", "parasita"]
   },
   {
     "nome": "KALIANOS",
     "origem": "FC",
-    "descricao": "Uma espécie de humanoide altamente ágil com quatro braços, os kalianos são conhecidos por suas reações rápidas, inteligência afiada, pontaria e esgrima. São quadroides de cabeça-quente, assim como os listados na p. 20.",
-    "variantes": null,
-    "atributos": {},
+    "descricao": "Humanoide ágil com quatro braços.",
     "pericias": {},
     "desvantagens": [
       "FRÁGIL",
@@ -966,35 +1325,31 @@
     "habilidades": [
       {
         "nome": "AÇÃO ADICIONAL",
-        "descricao": "Quadroides têm quatro braços e ignoram 2 pontos de penalidades físicas por Ações Múltiplas a cada rodada."
+        "descricao": "Ignoram 2 pontos penalidade multi-ação."
       },
       {
         "nome": "FRÁGIL",
-        "descricao": "Quadroides geralmente são magros, diminuindo em 1 sua Resistência."
+        "descricao": "Resistência -1."
       },
       {
         "nome": "INIMIGO ANCESTRAL",
-        "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente."
+        "descricao": "Conflito."
       },
       {
         "nome": "MEMBROS EXTRAS",
-        "descricao": "Quadroides possuem um conjunto adicional de braços (incluindo uma segunda mão hábil) que pode ser usado para ações sustentadas, deixando outros membros livres para outras coisas. Ao empunharem várias armas, ganham um bônus de +1 em Agrupar e adicionam +1 às rolagens de Atletismo envolvendo membros adicionais (como escalada e luta corpo a corpo)."
+        "descricao": "Quatro braços."
       },
       {
         "nome": "SENSÍVEL",
-        "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar."
+        "descricao": "-4 Provocar."
       }
     ],
-    "tags": [
-      "multiplos_bracos"
-    ]
+    "tags": ["multiplos_bracos"]
   },
   {
     "nome": "SERRANOS",
     "origem": "FC",
-    "descricao": "Serranos são uma espécie frágil que depende de suas habilidades precognitivas para evitar o perigo. São seres pensativos e cautelosos, cuja capacidade de sentir o perigo os torna excelentes assassinos, guias, batedores, espiões e navegadores.",
-    "variantes": null,
-    "atributos": {},
+    "descricao": "Espécie frágil precognitiva.",
     "pericias": {},
     "desvantagens": [
       "FRACO"
@@ -1002,19 +1357,18 @@
     "habilidades": [
       {
         "nome": "APARAR",
-        "descricao": "As habilidades extrassensoriais dos serranos aumentam seu Aparar em +2."
+        "descricao": "Aparar +2."
       },
       {
         "nome": "FRACO",
-        "descricao": "Serranos subtraem 1 das rolagens de Força, incluindo dano."
+        "descricao": "-1 Força."
       },
       {
         "nome": "NOÇÃO DE PERIGO",
-        "descricao": "Serranos são intuitivos e têm percepção extrassensorial limitada. Possuem a Vantagem Noção do Perigo (veja Savage Worlds Edição Aventura)."
+        "descricao": "Vantagem Noção do Perigo."
       }
     ],
-    "tags": [
-      "psiquico"
-    ]
+    "vantagensGratis": ["NOÇÃO DO PERIGO"],
+    "tags": ["psiquico"]
   }
 ]
