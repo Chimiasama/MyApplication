@@ -46,6 +46,32 @@ class ResolveAncestryVariantUseCaseTest {
     }
 
     @Test
+    fun `uses legacy selection when current is null`() {
+        val result = useCase.execute(
+            ResolveAncestryVariantUseCase.Input(
+                selectedVariant = null,
+                legacySelectedVariant = "Cyber",
+                availableOptions = listOf("Básico", "Cyber")
+            )
+        )
+
+        assertEquals("Cyber", result.normalizedSelection)
+    }
+
+    @Test
+    fun `does not accept legacy when not present in available options`() {
+        val result = useCase.execute(
+            ResolveAncestryVariantUseCase.Input(
+                selectedVariant = null,
+                legacySelectedVariant = "Opção Inválida",
+                availableOptions = listOf("Padrão", "Gazela")
+            )
+        )
+
+        assertEquals("Padrão", result.normalizedSelection)
+    }
+
+    @Test
     fun `returns null when ancestry has no options`() {
         val result = useCase.execute(
             ResolveAncestryVariantUseCase.Input(

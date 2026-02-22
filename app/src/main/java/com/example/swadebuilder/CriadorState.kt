@@ -3603,6 +3603,9 @@ class CriadorState {
             ancestryName = anc,
             availableOptions = ancDef?.opcoes ?: emptyList()
         )
+        if (compendioSciFiAtivo && !ancDef?.opcoes.isNullOrEmpty() && scifiVariant != effectiveScifiVariant) {
+            scifiVariant = effectiveScifiVariant
+        }
 
         val paAntes = pontosAtributo
         val spAntes = pontosPericia
@@ -3732,18 +3735,16 @@ class CriadorState {
                 // Sci-Fi Default Logic
                 if (compendioSciFiAtivo) {
                     val ancKey = anc.keyify()
-                    val hasOptions = ancKey == "ANOES" || ancKey == "AQUARIANOS" || ancKey == "AVIANOS" || ancKey == "ELFOS" || ancKey == "HUMANOS"
-                    if (hasOptions) {
+                    val defaultOption = ancDef?.opcoes?.firstOrNull()
+                    if (!defaultOption.isNullOrBlank()) {
                         if (ancKey == "ANOES" && anoesScifiSelecionado == null) {
-                            val defaultOption = ancDef?.opcoes?.firstOrNull() ?: "Básico"
                             selecionarAnoesScifi(defaultOption)
                         }
                         if (scifiVariant == null) {
-                            val defaultOption = ancDef?.opcoes?.firstOrNull() ?: "Básico"
                             selecionarScifiVariant(defaultOption)
                         }
-                        if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) selecionarHumanoMineradorAtributo("Força")
                     }
+                    if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) selecionarHumanoMineradorAtributo("Força")
                 }
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {
