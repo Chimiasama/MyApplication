@@ -475,7 +475,7 @@ fun buildSummaryLines(
         .ifBlank { "– Nenhuma" }
     lines += complicacoesText
     if (desvantagensRaciaisAnotacoes.isNotEmpty()) {
-        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ")}"
+        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ") { it.toFancyTitleCase() }}"
     }
     lines += ""
 
