@@ -103,6 +103,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 anoesScifiSelecionado = params.anoesScifiSelecionado,
                 scifiVariant = params.scifiVariant,
                 humanoMineradorAtributo = params.humanoMineradorAtributo,
+                ancestryOptions = params.targetAncestryDef?.opcoes ?: emptyList(),
                 isSciFiActive = params.compendioSciFiAtivo,
                 allAdvantages = params.allAdvantages,
                 selectedAdvantages = filteredAdvantages,

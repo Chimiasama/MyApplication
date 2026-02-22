@@ -497,9 +497,16 @@ fun AncestralidadesSection(
                                     var expanded by remember { mutableStateOf(false) }
 
                                     val currentSelection = if (itemKeyNorm == "ANOES") {
-                                        state.anoesScifiSelecionado ?: "Básico"
+                                        state.resolveSciFiVariantSelectionFor(
+                                            ancestryName = item.nome,
+                                            availableOptions = item.opcoes,
+                                            overrideSelection = state.anoesScifiSelecionado
+                                        ) ?: item.opcoes.firstOrNull().orEmpty()
                                     } else {
-                                        state.scifiVariant ?: "Básico"
+                                        state.resolveSciFiVariantSelectionFor(
+                                            ancestryName = item.nome,
+                                            availableOptions = item.opcoes
+                                        ) ?: item.opcoes.firstOrNull().orEmpty()
                                     }
 
                                     Box {
@@ -731,7 +738,7 @@ fun AncestralidadesSection(
                                                 isSelected &&
                                                 compendioSciFiAtivo &&
                                                 item.nome.keyify() == "AVIANOS" &&
-                                                state.scifiVariant.equals("Ave de rapina", ignoreCase = true)
+                                                state.resolveSciFiVariantSelectionFor(item.nome, item.opcoes).equals("Ave de rapina", ignoreCase = true)
                                             ) {
                                                 if (none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
                                                     add(
