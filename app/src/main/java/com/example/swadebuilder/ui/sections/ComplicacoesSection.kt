@@ -218,11 +218,11 @@ fun ComplicacoesSection(
                                         performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
                                     },
                                     enabled = isClickable,
-                                    label = { Text("${comp.name} ($tipo)", style = MaterialTheme.typography.labelSmall) },
+                                    label = { Text("${comp.name.toSentenceCase()} (${tipo.toSentenceCase()})", style = MaterialTheme.typography.labelSmall) },
                                     leadingIcon = {
                                         Icon(
                                             Icons.Default.Close,
-                                            contentDescription = "Remover ${comp.name}",
+                                            contentDescription = "Remover ${comp.name.toSentenceCase()}",
                                             modifier = Modifier.size(12.dp)
                                         )
                                     },
@@ -241,7 +241,7 @@ fun ComplicacoesSection(
                                     state.transtornos.remove(transtorno)
                                     onUserFeedback()
                                 },
-                                label = { Text("${transtorno.name} (T.)", style = MaterialTheme.typography.labelSmall) },
+                                label = { Text("${transtorno.name.toSentenceCase()} (T.)", style = MaterialTheme.typography.labelSmall) },
                                 leadingIcon = {
                                     Icon(
                                         Icons.Default.Close,

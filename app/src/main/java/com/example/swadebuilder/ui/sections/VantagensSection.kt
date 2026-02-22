@@ -531,8 +531,8 @@ fun VantagensContent(
                                         state.compendioArteDaGuerraAtivo &&
                                         state.tropoSelecionado?.id == "tropo_youxia" &&
                                         !state.youxiaJutsuSelecionado.isNullOrBlank() ->
-                                        "${vant.nomeExibicao} (${state.youxiaJutsuSelecionado})"
-                                    else -> vant.choice?.let { "${vant.nomeExibicao} ($it)" } ?: vant.nomeExibicao
+                                        "${vant.nomeExibicao.toSentenceCase()} (${state.youxiaJutsuSelecionado.orEmpty().toSentenceCase()})"
+                                    else -> vant.choice?.let { "${vant.nomeExibicao.toSentenceCase()} (${it.toSentenceCase()})" } ?: vant.nomeExibicao.toSentenceCase()
                                 }
                                 val finalText = if (isCelestialAAMilagresDesabilitado) {
                                     "$labelText (DESABILITADO)"
@@ -1862,7 +1862,7 @@ private fun VantagemItem(
             ) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
                         style = MaterialTheme.typography.titleSmall
                     )
 
@@ -1943,7 +1943,7 @@ private fun VantagemItem(
 
                 AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
                     val rawDescription = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) {
-                        vant.originalDescription!!.trim()
+                        vant.originalDescription.trim()
                     } else {
                         vant.descricao.trim()
                     }

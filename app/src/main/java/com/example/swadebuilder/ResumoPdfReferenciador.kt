@@ -459,7 +459,7 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
         weapons.forEach { w ->
             cx = x
             val data = listOf(
-                w.nome,
+                w.nome.toDisplayTitleCase(),
                 w.distancia?.toString()?.replace("\"", "") ?: "-",
                 w.dano?.toString()?.replace("\"", "") ?: "-",
                 w.pa?.toString()?.replace("\"", "") ?: "0",
@@ -544,7 +544,7 @@ fun gerarFichaEmPdf(
     if (personagem.poderes.isNotEmpty()) {
         val powerLines = mutableListOf<String>()
         personagem.poderes.forEach { (arc, list) ->
-            powerLines.add("Arcano: $arc")
+            powerLines.add("Arcano: ${arc.toDisplayTitleCase()}")
             val namedList = list.map { id ->
                 (listaPoderes.firstOrNull { it.id == id }?.nome ?: id).toDisplayTitleCase()
             }
@@ -845,7 +845,7 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     canvas.drawText("$ancestralidadeTitulo - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
 
     if (p.coracaoCrystalSelecionado != null) {
-        val heartText = "Coração: ${p.coracaoCrystalSelecionado.nome}"
+        val heartText = "Coração: ${p.coracaoCrystalSelecionado.nome.toDisplayTitleCase()}"
         canvas.drawText(heartText, rect.left + 10f, rect.top + 70f, subtitlePaint)
     }
 
