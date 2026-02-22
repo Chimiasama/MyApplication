@@ -45,9 +45,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
-                        ensureRacialDisadvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
                         elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário.")
+                        anotacoesToAdd = emptyList()
                     )
                 } else {
                     // Default / Básico
