@@ -26,6 +26,7 @@ import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
+import com.example.swadebuilder.util.toFancyTitleCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -520,10 +521,10 @@ fun gerarFichaEmPdf(
     personagem.complicacoes.forEach { id ->
         val comp = mapPorId[id.keyify()]
         if (comp != null) {
-            val name = if (personagem.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name
-            hindranceNames.add(name)
+            val name = if (personagem.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName!! else comp.name
+            hindranceNames.add(name.toFancyTitleCase())
         } else {
-            hindranceNames.add(id.replace('_', ' ').titleCase())
+            hindranceNames.add(id.replace('_', ' ').toFancyTitleCase())
         }
     }
     leftQueue.add(object : TextListBlock("Complicações", hindranceNames) {})
@@ -533,8 +534,20 @@ fun gerarFichaEmPdf(
     // Edges
     val edgeNames = personagem.vantagens.map { id ->
         try {
-            listaVantagens.firstOrNull { it.id == id }?.nome ?: id
-        } catch(e: Exception) { id }
+            val v = listaVantagens.firstOrNull { it.id == id }
+            val baseName = if (v != null) {
+                if (personagem.modoOficialAtivo && !v.originalName.isNullOrBlank()) v.originalName!! else v.nomeExibicao
+            } else {
+                id
+            }
+            // Check for choice
+            val choice = personagem.advantageChoices[id]?.firstOrNull()
+            if (choice != null) {
+                "${baseName.toFancyTitleCase()} (${choice.trim()})"
+            } else {
+                baseName.toFancyTitleCase()
+            }
+        } catch(e: Exception) { id.toFancyTitleCase() }
     }
     rightQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
 
@@ -542,9 +555,10 @@ fun gerarFichaEmPdf(
     if (personagem.poderes.isNotEmpty()) {
         val powerLines = mutableListOf<String>()
         personagem.poderes.forEach { (arc, list) ->
-            powerLines.add("Arcano: $arc")
+            powerLines.add("Arcano: ${arc.toFancyTitleCase()}")
             val namedList = list.map { id ->
-                listaPoderes.firstOrNull { it.id == id }?.nome ?: id
+                val pName = listaPoderes.firstOrNull { it.id == id }?.nome ?: id
+                pName.toFancyTitleCase()
             }
             powerLines.add(namedList.joinToString(", "))
         }
@@ -555,7 +569,7 @@ fun gerarFichaEmPdf(
     rightQueue.add(WeaponTableBlock(personagem))
 
     // Gear
-    val gear = personagem.equipamentos.filterNot { it.dano != null }.map { it.nome }
+    val gear = personagem.equipamentos.filterNot { it.dano != null }.map { it.nome.toFancyTitleCase() }
     if (gear.isNotEmpty()) {
         rightQueue.add(object : TextListBlock("Outros Equipamentos", gear) {})
     }

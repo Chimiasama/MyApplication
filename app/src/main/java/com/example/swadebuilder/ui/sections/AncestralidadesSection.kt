@@ -54,7 +54,7 @@ import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.titleCase
+import com.example.swadebuilder.util.toFancyTitleCase
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.Serializable
 
@@ -269,12 +269,12 @@ fun AncestralidadesSection(
                     .toSet()
 
                 val habilidadesLite = representative.habilidades.map {
-                    RacialAbilityLite(it.nome, it.descricao)
+                    RacialAbilityLite(it.nome.toFancyTitleCase(), it.descricao)
                 }
 
                 RacialModifierLite(
                     nome = representative.nome,
-                    displayName = displayName.toEditionDisplayName(),
+                    displayName = displayName.toEditionDisplayName().toFancyTitleCase(),
                     originalName = originalName,
                     descricao = representative.descricao,
                     aliases = aliasKeys,
@@ -325,7 +325,7 @@ fun AncestralidadesSection(
     val selectedDisplayName =
         ancestralidadesState.value.firstOrNull { item ->
             item.nome.uppercase().semAcentos() == selectedKey.value
-        }?.displayName(showOfficialNames)?.titleCase() ?: "Humanos"
+        }?.displayName(showOfficialNames)?.toFancyTitleCase() ?: "Humanos"
 
     val focoKey = ancestralidadeEmFoco
         ?.uppercase()
@@ -409,7 +409,7 @@ fun AncestralidadesSection(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Column(Modifier.weight(1f)) {
-                                    val displayName = item.displayName(showOfficialNames).titleCase()
+                                    val displayName = item.displayName(showOfficialNames).toFancyTitleCase()
 
                                     Text(
                                         text = displayName,
@@ -511,12 +511,12 @@ fun AncestralidadesSection(
 
                                     Box {
                                         OutlinedButton(onClick = { expanded = true }) {
-                                            Text(currentSelection)
+                                            Text(currentSelection.toFancyTitleCase())
                                         }
                                         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                                             item.opcoes.forEach { opt ->
                                                 DropdownMenuItem(
-                                                    text = { Text(opt) },
+                                                    text = { Text(opt.toFancyTitleCase()) },
                                                     onClick = {
                                                         if (itemKeyNorm == "ANOES") {
                                                             state.selecionarAnoesScifi(opt)
@@ -682,7 +682,7 @@ fun AncestralidadesSection(
                                                 } else {
                                                     "d$dieVal"
                                                 }
-                                                "$k $dieStr"
+                                                "${k.toFancyTitleCase()} $dieStr"
                                             }
                                             Text(
                                                 text = "Atributos: $attrsText",
@@ -696,7 +696,7 @@ fun AncestralidadesSection(
                                         if (item.pericias.isNotEmpty()) {
                                             val skillsText = item.pericias.entries.joinToString(", ") { (k, v) ->
                                                 val die = if (v == 0) "d4-2" else "d${(4 + (v - 1) * 2).coerceAtMost(12)}"
-                                                "$k $die"
+                                                "${k.toFancyTitleCase()} $die"
                                             }
                                             Text(
                                                 text = "Perícias: $skillsText",
@@ -711,7 +711,7 @@ fun AncestralidadesSection(
                                             it.keyify() == Constants.ID_AA_AGENT_SYN.keyify()
                                         }
                                         if (vantagensGratisVisiveis.isNotEmpty()) {
-                                            val advsText = vantagensGratisVisiveis.joinToString(", ") { it.titleCase() }
+                                            val advsText = vantagensGratisVisiveis.joinToString(", ") { it.toFancyTitleCase() }
                                             Text(
                                                 text = "Vantagens: $advsText",
                                                 style = MaterialTheme.typography.bodySmall,
@@ -722,7 +722,7 @@ fun AncestralidadesSection(
 
                                         // Hindrances
                                         if (item.desvantagens.isNotEmpty()) {
-                                            val hindsText = item.desvantagens.joinToString(", ") { it.titleCase() }
+                                            val hindsText = item.desvantagens.joinToString(", ") { it.toFancyTitleCase() }
                                             Text(
                                                 text = "Complicações: $hindsText",
                                                 style = MaterialTheme.typography.bodySmall,
@@ -743,7 +743,7 @@ fun AncestralidadesSection(
                                                 if (none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
                                                     add(
                                                         RacialAbilityLite(
-                                                            nome = "FORMA ALIENÍGENA",
+                                                            nome = "Forma Alienígena",
                                                             descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
                                                         )
                                                     )

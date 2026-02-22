@@ -80,6 +80,7 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.toFancyTitleCase
 
 @Composable
 private fun getCompendiumIcons(state: CriadorState): List<Pair<ImageVector, Color>> {
@@ -847,7 +848,7 @@ private fun CombatAndEquipmentCard(
 
                 // Map "Ataque Natural" -> "Desarmado" for better display
                 val displayName = if (w.nome == "Ataque Natural") "Desarmado" else w.nome
-                CombatRow(name = displayName, stats = dmg, notes = notes)
+                CombatRow(name = displayName.toFancyTitleCase(), stats = dmg, notes = notes)
             }
 
             // Weapons
@@ -859,7 +860,7 @@ private fun CombatAndEquipmentCard(
                 val range = (weapon.distancia as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
                 val stats = listOf(dmg, ap, range).filter { it.isNotBlank() && it != "-" }.joinToString(", ")
                 val notes = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
-                CombatRow(name = weapon.nome, stats = stats.ifBlank { dmg }, notes = notes)
+                CombatRow(name = weapon.nome.toFancyTitleCase(), stats = stats.ifBlank { dmg }, notes = notes)
             }
 
             Spacer(Modifier.height(12.dp))
@@ -884,7 +885,7 @@ private fun CombatAndEquipmentCard(
                     if (parryVal != null && parryVal != 0) parts.add("Aparar +$parryVal")
 
                     val notes = (item.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
-                    CombatRow(name = item.nome, stats = parts.joinToString(", "), notes = notes)
+                    CombatRow(name = item.nome.toFancyTitleCase(), stats = parts.joinToString(", "), notes = notes)
                 }
             }
 
@@ -902,7 +903,7 @@ private fun CombatAndEquipmentCard(
                 )
             } else {
                 others.forEach { item ->
-                    Text("• ${item.nome}", style = MaterialTheme.typography.bodySmall)
+                    Text("• ${item.nome.toFancyTitleCase()}", style = MaterialTheme.typography.bodySmall)
                 }
             }
         }

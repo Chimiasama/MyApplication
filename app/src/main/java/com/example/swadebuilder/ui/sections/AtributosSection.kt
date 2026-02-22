@@ -42,6 +42,7 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toFancyTitleCase
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -132,8 +133,9 @@ fun AtributosContent(
             }
 
 
-            val displayName = mapaAtributosDisplay[nome] ?: nome
-            val descKey = displayName.uppercase().semAcentos()
+            val rawDisplayName = mapaAtributosDisplay[nome] ?: nome
+            val displayName = rawDisplayName.toFancyTitleCase()
+            val descKey = rawDisplayName.uppercase().semAcentos()
             val descricao = mapaAtributosDescricao[descKey].orEmpty()
 
             Column(

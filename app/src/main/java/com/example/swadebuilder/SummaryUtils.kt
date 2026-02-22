@@ -11,11 +11,11 @@ import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.titleCase
+import com.example.swadebuilder.util.toFancyTitleCase
 import kotlin.math.max
 
 fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
-    val base = (ancestralidadeNomeBase ?: personagem.ancestralidade).titleCase()
+    val base = (ancestralidadeNomeBase ?: personagem.ancestralidade).toFancyTitleCase()
 
     val sufixo = when {
         base.keyify().contains("HUMANO") && !personagem.signoAdgSelecionado.isNullOrBlank() -> {
@@ -87,7 +87,7 @@ fun buildSummaryLines(
     val ancestralidadeNome: String = rawAncestralidadeNome
         .replace(Regex("\\s*\\((Pathfinder|Buscatrilha|Trilhador|Mundo Ancestral)\\)"), "")
         .trim()
-        .titleCase()
+        .toFancyTitleCase()
 
     val monstroNome = if (personagem.modoMonstroAtivo) {
         val tipoNome = listaMonstros.find { it.id == personagem.tipoMonstroSelecionado }?.nome ?: "Desconhecido"
@@ -100,12 +100,12 @@ fun buildSummaryLines(
             val comp = mapPorId[compId.keyify()]
             if (comp != null) {
                 if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
-                    comp.originalName
+                    comp.originalName!!.toFancyTitleCase()
                 } else {
-                    comp.name
+                    comp.name.toFancyTitleCase()
                 }
             } else {
-                compId.replace('_', ' ').titleCase()
+                compId.replace('_', ' ').toFancyTitleCase()
             }
         }
     }
@@ -256,7 +256,7 @@ fun buildSummaryLines(
         periciasParaMostrar.forEach { (nome, raw) ->
             val note = personagem.notasPericia[nome]
             val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
-            val displayNome = if (idiomaRegex.matches(nome)) "Idiomas" else nome
+            val displayNome = if (idiomaRegex.matches(nome)) "Idiomas" else nome.toFancyTitleCase()
             lines += "$displayNome: d$raw$noteStr"
         }
     }
@@ -275,7 +275,7 @@ fun buildSummaryLines(
     } else {
         lines += "Equipamentos:"
         personagem.equipamentos.forEach { eq ->
-            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
+            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName!!.toFancyTitleCase() else eq.nome.toFancyTitleCase()
             lines += "• $nomeEq"
         }
     }
@@ -297,7 +297,7 @@ fun buildSummaryLines(
 
             val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
                 ?.takeIf { it.isNotBlank() }
-            val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
+            val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nome.toFancyTitleCase()
 
             val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
                 "$rawName (DESABILITADO)"
@@ -318,7 +318,7 @@ fun buildSummaryLines(
             lines += "Características de Classe"
             classEdges.forEach { vant ->
                 val tags = vant.requisitos.tags
-                lines += "• ${vant.nome}"
+                lines += "• ${vant.nome.toFancyTitleCase()}"
 
                 // Armor Restrictions/Interference
                 if (tags.contains("INTERFERENCIA_ARMADURA_LEVE")) {
@@ -431,9 +431,9 @@ fun buildSummaryLines(
             } else {
                 val vant = definitionMap[key]
                 if (vant != null) {
-                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!! else vant.nome
+                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nome.toFancyTitleCase()
                 } else {
-                    trait
+                    trait.toFancyTitleCase()
                 }
             }
         }
@@ -475,7 +475,7 @@ fun buildSummaryLines(
         .ifBlank { "– Nenhuma" }
     lines += complicacoesText
     if (desvantagensRaciaisAnotacoes.isNotEmpty()) {
-        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ")}"
+        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ") { it.toFancyTitleCase() }}"
     }
     lines += ""
 
@@ -497,7 +497,7 @@ fun buildSummaryLines(
             val labelBase = arcanoKey
                 .lowercase()
                 .replace('_', ' ')
-                .replaceFirstChar { it.titlecase() }
+                .toFancyTitleCase()
 
             val label = if (details.isNotBlank()) "$labelBase $details" else labelBase
 
@@ -506,16 +506,8 @@ fun buildSummaryLines(
             } else {
                 val poderesComManifestacao = lista.map { poderId ->
                     val poderDef = listaPoderes.firstOrNull { it.id == poderId }
-                    val displayNome = if (showOfficialNames && !poderDef?.id.isNullOrBlank()) {
-                        // Logic for official names usually implies using a different property,
-                        // but here we just have 'nome'. If we had 'originalName' in Poder, we'd use it.
-                        // Poder struct only has 'nome'. Assuming 'nome' is what we want.
-                        // If we wanted original names we'd need to update Poder model.
-                        // For now, let's just use 'nome' if found, else ID.
-                        poderDef?.nome ?: poderId
-                    } else {
-                        poderDef?.nome ?: poderId
-                    }
+                    val baseNome = poderDef?.nome ?: poderId
+                    val displayNome = baseNome.toFancyTitleCase()
 
                     val manifestacao = personagem.manifestacoesPoderes[poderId]
                         ?.trim()
@@ -537,7 +529,7 @@ fun buildSummaryLines(
             lines += "– Nenhum superpoder registrado"
         } else {
             personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                lines += "• $poderId: $custo SP"
+                lines += "• ${poderId.toFancyTitleCase()}: $custo SP"
             }
         }
 
