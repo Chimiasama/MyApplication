@@ -387,6 +387,22 @@ class CriadorState {
             }
         }
 
+        if (key == "CENTAUX" && variant.equals("Gazela", ignoreCase = true)) {
+            newHabilidades.removeAll { hab ->
+                val habKey = hab.nome.keyify()
+                habKey == "GRANDE" || habKey == "TAMANHO +2" || habKey == "MOVIMENTACAO +2"
+            }
+
+            if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +4" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "MOVIMENTAÇÃO +4",
+                        descricao = "Gazelas são extremamente rápidas. +4 em Movimentação e d10 no dado de corrida."
+                    )
+                )
+            }
+        }
+
         return base.copy(habilidades = newHabilidades)
     }
 
@@ -4149,6 +4165,8 @@ class CriadorState {
         )
         if (anoesScifiSelecionado == normalized) return
         anoesScifiSelecionado = normalized
+        // Update generic state to prevent sticky legacy behavior when switching back
+        if (scifiVariant != normalized) scifiVariant = normalized
         val msgs = mutableListOf<String>()
         aplicarAncestralidade("ANÕES", msgs)
     }
@@ -4162,6 +4180,10 @@ class CriadorState {
         )
         if (scifiVariant == normalized) return
         scifiVariant = normalized
+        // Also sync legacy state if applicable to avoid mismatches
+        if (ancestralidade.keyify() == "ANOES" && anoesScifiSelecionado != normalized) {
+            anoesScifiSelecionado = normalized
+        }
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
     }
