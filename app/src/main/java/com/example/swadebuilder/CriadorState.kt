@@ -368,7 +368,7 @@ class CriadorState {
 
             if (newHabilidades.none { it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
                 newHabilidades.add(
-                    com.example.swadebuilder.model.HabilidadeRacial(
+                    com.example.swadebuilder.model.RacialAbility(
                         nome = "Habitante de Gravidade Baixa",
                         descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado."
                     )
@@ -377,7 +377,7 @@ class CriadorState {
 
             if (newHabilidades.none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
                 newHabilidades.add(
-                    com.example.swadebuilder.model.HabilidadeRacial(
+                    com.example.swadebuilder.model.RacialAbility(
                         nome = "Forma Alienígena",
                         descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
                     )
