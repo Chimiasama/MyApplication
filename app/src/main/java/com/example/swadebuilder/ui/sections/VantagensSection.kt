@@ -528,13 +528,20 @@ fun VantagensContent(
                             },
                             enabled = canRemove,
                             label = {
+                                val baseName = vant.nomeExibicao.toFancyTitleCase()
+                                val adjustedName = if (vant.id == "antecedente_arcano_milagres" && !baseName.contains("Milagres", ignoreCase = true)) {
+                                    "$baseName (Milagres)"
+                                } else {
+                                    baseName
+                                }
+
                                 val labelText = when {
                                     vant.id == "arma_predileta" &&
                                         state.compendioArteDaGuerraAtivo &&
                                         state.tropoSelecionado?.id == "tropo_youxia" &&
                                         !state.youxiaJutsuSelecionado.isNullOrBlank() ->
-                                        "${vant.nomeExibicao.toFancyTitleCase()} (${state.youxiaJutsuSelecionado})"
-                                    else -> vant.choice?.let { "${vant.nomeExibicao.toFancyTitleCase()} ($it)" } ?: vant.nomeExibicao.toFancyTitleCase()
+                                        "$adjustedName (${state.youxiaJutsuSelecionado})"
+                                    else -> vant.choice?.let { "$adjustedName ($it)" } ?: adjustedName
                                 }
                                 val finalText = if (isCelestialAAMilagresDesabilitado) {
                                     "$labelText (DESABILITADO)"
