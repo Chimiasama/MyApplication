@@ -26,6 +26,8 @@ import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
+import com.example.swadebuilder.util.toDisplayTitleCase
+import com.example.swadebuilder.util.comparePtBrDisplay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -521,7 +523,7 @@ fun gerarFichaEmPdf(
         val comp = mapPorId[id.keyify()]
         if (comp != null) {
             val name = if (personagem.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName else comp.name
-            hindranceNames.add(name)
+            hindranceNames.add(name.toDisplayTitleCase())
         } else {
             hindranceNames.add(id.replace('_', ' ').titleCase())
         }
@@ -533,7 +535,7 @@ fun gerarFichaEmPdf(
     // Edges
     val edgeNames = personagem.vantagens.map { id ->
         try {
-            listaVantagens.firstOrNull { it.id == id }?.nome ?: id
+            (listaVantagens.firstOrNull { it.id == id }?.nome ?: id).toDisplayTitleCase()
         } catch(e: Exception) { id }
     }
     rightQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
@@ -544,7 +546,7 @@ fun gerarFichaEmPdf(
         personagem.poderes.forEach { (arc, list) ->
             powerLines.add("Arcano: $arc")
             val namedList = list.map { id ->
-                listaPoderes.firstOrNull { it.id == id }?.nome ?: id
+                (listaPoderes.firstOrNull { it.id == id }?.nome ?: id).toDisplayTitleCase()
             }
             powerLines.add(namedList.joinToString(", "))
         }
@@ -555,7 +557,7 @@ fun gerarFichaEmPdf(
     rightQueue.add(WeaponTableBlock(personagem))
 
     // Gear
-    val gear = personagem.equipamentos.filterNot { it.dano != null }.map { it.nome }
+    val gear = personagem.equipamentos.filterNot { it.dano != null }.map { it.nome.toDisplayTitleCase() }.sortedWith(::comparePtBrDisplay)
     if (gear.isNotEmpty()) {
         rightQueue.add(object : TextListBlock("Outros Equipamentos", gear) {})
     }

@@ -55,6 +55,8 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.titleCase
+import com.example.swadebuilder.util.toSentenceCase
+import com.example.swadebuilder.util.comparePtBrDisplay
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.serialization.Serializable
 
@@ -103,7 +105,7 @@ private data class RacialSignature(
 
 private fun RacialModifier.signature(): RacialSignature {
     fun normalizeList(values: List<String>): List<String> {
-        return values.sortedBy { it.uppercase().semAcentos() }
+        return values.sortedWith(::comparePtBrDisplay)
     }
 
     return RacialSignature(
@@ -113,7 +115,7 @@ private fun RacialModifier.signature(): RacialSignature {
         desvantagens = normalizeList(desvantagens),
         habilidades = habilidades
             .map { RacialAbilitySignature(it.nome, it.descricao) }
-            .sortedWith(compareBy({ it.nome.uppercase().semAcentos() }, { it.descricao.uppercase().semAcentos() }))
+            .sortedWith(compareBy<RacialAbilitySignature> { it.nome.toSentenceCase() }.thenComparator { a, b -> comparePtBrDisplay(a.descricao, b.descricao) })
     )
 }
 
@@ -286,7 +288,7 @@ fun AncestralidadesSection(
                     desvantagens = representative.desvantagens,
                     opcoes = representative.opcoes
                 )
-            }.sortedBy { it.nome }
+            }.sortedWith { a, b -> comparePtBrDisplay(a.nome.toSentenceCase(), b.nome.toSentenceCase()) }
 
         value = deduped
     }
@@ -597,7 +599,7 @@ fun AncestralidadesSection(
                                         !key.contains("IDIOMAS") &&
                                         (!compendioPathfinderAtivo || (key != "ALQUIMIA" && key != "CIENCIA ESTRANHA"))
                                     }
-                                    .sortedBy { it.nome }
+                                    .sortedWith { a, b -> comparePtBrDisplay(a.nome.toSentenceCase(), b.nome.toSentenceCase()) }
 
                                 Box {
                                     OutlinedButton(onClick = { expanded = true }) {

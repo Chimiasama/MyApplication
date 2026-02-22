@@ -66,6 +66,7 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
+import com.example.swadebuilder.util.comparePtBrDisplay
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -135,7 +136,7 @@ fun ComplicacoesSection(
     val uniqueComplications = remember(groupedComplications) {
         groupedComplications.values.mapNotNull { group ->
             group.sortedBy { if (it.origem == "BASICO") 0 else 1 }.firstOrNull()
-        }.sortedBy { it.name }
+        }.sortedWith { a, b -> comparePtBrDisplay(a.name.toSentenceCase(), b.name.toSentenceCase()) }
     }
 
     SectionCard(
@@ -477,7 +478,7 @@ fun ComplicacoesSection(
                             !state.complicacoesSelecionadas.containsKey(it) && !state.transtornos.contains(
                                 it
                             )
-                        }.map { it.name.toSentenceCase() }.sorted()
+                        }.map { it.name.toSentenceCase() }.sortedWith(::comparePtBrDisplay)
 
                         ChoiceDialog(
                             options = available,

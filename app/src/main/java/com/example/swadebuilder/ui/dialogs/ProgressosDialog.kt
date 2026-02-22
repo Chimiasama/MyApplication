@@ -92,6 +92,7 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
+import com.example.swadebuilder.util.comparePtBrDisplay
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -795,7 +796,7 @@ fun ProgressosDialog(
                         }
                         val existing = state.periciasComIdiomas()
                         // Prioritize existing instances to ensure correct point lookup
-                        (existing + available).distinctBy { it.nome.keyify() }.sortedBy { it.nome }
+                        (existing + available).distinctBy { it.nome.keyify() }.sortedWith { a, b -> comparePtBrDisplay(a.nome.toSentenceCase(), b.nome.toSentenceCase()) }
                     }
 
                     LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
@@ -1469,7 +1470,7 @@ fun ProgressosDialog(
 
                                 "$baseName$reqs" to v
                             }
-                            .sortedBy { it.first }
+                            .sortedWith { a, b -> comparePtBrDisplay(a.first, b.first) }
                     }
 
                     if (opcoesArcano.isNotEmpty()) {

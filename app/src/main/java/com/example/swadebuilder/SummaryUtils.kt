@@ -12,6 +12,8 @@ import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
+import com.example.swadebuilder.util.toDisplayTitleCase
+import com.example.swadebuilder.util.comparePtBrDisplay
 import kotlin.math.max
 
 fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
@@ -276,7 +278,7 @@ fun buildSummaryLines(
         lines += "Equipamentos:"
         personagem.equipamentos.forEach { eq ->
             val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nome
-            lines += "• $nomeEq"
+            lines += "• ${nomeEq.toDisplayTitleCase()}"
         }
     }
     lines += ""
@@ -306,7 +308,7 @@ fun buildSummaryLines(
             }
             if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
         }
-        lines += nomesVantagens.joinToString(", ")
+        lines += nomesVantagens.map { it.toDisplayTitleCase() }.sortedWith(::comparePtBrDisplay).joinToString(", ")
     }
 
     // Annotations for Armor Interference/Restrictions & Class Features (Pathfinder)
@@ -318,7 +320,7 @@ fun buildSummaryLines(
             lines += "Características de Classe"
             classEdges.forEach { vant ->
                 val tags = vant.requisitos.tags
-                lines += "• ${vant.nome}"
+                lines += "• ${vant.nome.toDisplayTitleCase()}"
 
                 // Armor Restrictions/Interference
                 if (tags.contains("INTERFERENCIA_ARMADURA_LEVE")) {

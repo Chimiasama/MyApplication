@@ -64,6 +64,7 @@ import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
+import com.example.swadebuilder.util.comparePtBrDisplay
 import kotlinx.serialization.json.JsonPrimitive
 
 // --- Data Structures for Refactoring ---
@@ -731,7 +732,7 @@ fun EquipamentoSection(
                                     val isAllowedByPathfinder = isItemAllowedByPathfinderRule(entry.item, entry.origemKey)
 
                                     isAcessivel && isAllowedByPathfinder
-                                }.sortedBy { it.item.nome }
+                                }.sortedWith { a, b -> comparePtBrDisplay(a.item.nome.toSentenceCase(), b.item.nome.toSentenceCase()) }
                             }.filter { it.value.isNotEmpty() } // Remove subgrupos vazios
                         }.filter { it.value.isNotEmpty() } // Remove grupos vazios
 

@@ -79,6 +79,7 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.comparePtBrDisplay
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.Dispatchers
@@ -234,7 +235,9 @@ fun VantagensContent(
             .map { (_, duplicates) ->
                 duplicates.maxByOrNull { CriadorState.getOriginPriority(it.origem) }!!
             }
-            .sortedWith(compareBy({ it.categoria }, { it.nomeExibicao }))
+            .sortedWith(compareBy<Vantagem> { it.categoria }.thenComparator { a, b ->
+                comparePtBrDisplay(a.nomeExibicao.toSentenceCase(), b.nomeExibicao.toSentenceCase())
+            })
     }
 
     LaunchedEffect(
@@ -1069,7 +1072,7 @@ fun VantagensContent(
                     val reqs = formatarRequisitos(vant)
                     "$baseName$reqs" to vant
                 }
-                .sortedBy { it.first }
+                .sortedWith { a, b -> comparePtBrDisplay(a.first, b.first) }
         } else {
             emptyList()
         }

@@ -60,6 +60,7 @@ import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
+import com.example.swadebuilder.util.comparePtBrDisplay
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -352,7 +353,7 @@ fun PoderesSection(
                 }
 
                 matchSearch && matchRank
-            }.sortedBy { it.nome }
+            }.sortedWith { a, b -> comparePtBrDisplay(a.nome.toSentenceCase(), b.nome.toSentenceCase()) }
         }
     }
 
