@@ -58,7 +58,9 @@ import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.ptBrCollator
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toFancyTitleCase
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.Serializable
 
@@ -179,7 +181,7 @@ fun PoderesSection(
     val sectionStates = remember { mutableStateMapOf<String, Boolean>() }
 
     val idToName = remember(allPoderes) {
-        allPoderes.associate { it.id to it.nome.toSentenceCase() }
+        allPoderes.associate { it.id to it.nome.toFancyTitleCase() }
     }
 
     // Determine which ABs to display
@@ -352,7 +354,7 @@ fun PoderesSection(
                 }
 
                 matchSearch && matchRank
-            }.sortedBy { it.nome }
+            }.sortedWith(compareBy(ptBrCollator) { it.nome.toFancyTitleCase() })
         }
     }
 
@@ -557,7 +559,7 @@ fun PoderesSection(
                             Spacer(Modifier.height(4.dp))
                             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                 slots.forEachIndexed { idx, poderId ->
-                                    val label = if (poderId == null) "— vazio —" else (idToName[poderId] ?: poderId.toSentenceCase())
+                                    val label = if (poderId == null) "— vazio —" else (idToName[poderId] ?: poderId.toFancyTitleCase())
                                     val isFixed = state.isFixedPower(arcKey, poderId)
                                     val isSlotLocked = locked || idx < lockedCount || isFixed
                                     AssistChip(
@@ -668,7 +670,7 @@ fun PoderesSection(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text(poder.nome.toSentenceCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+                                    Text(poder.nome.toFancyTitleCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
                                     Text("PP: $ppExibicao", style = MaterialTheme.typography.bodySmall)
                                 }
 
