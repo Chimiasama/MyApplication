@@ -758,6 +758,10 @@
     "origem": "FC",
     "descricao": "Qualquer espécie mamífera coberta de pelos inevitavelmente acaba sendo rotulada como yeti pelos terráqueos e aqueles que adotaram os costumes da Terra. Estes seres aqui são altos, peludos e ferozes quando ameaçados. Sua grande estatura e volume fora do comum exigem equipamentos especiais adaptados aos seus tamanhos.",
     "variantes": "Ideias Variantes: Alguns Yetis podem estar mais ligados ao seu ambiente do que outros, o que lhes garante a capacidade de emitir uma rajada de ar frio de suas entranhas. Dê a essa variante Arma de Sopro (Frio) e Dependência (deve estar em temperaturas abaixo de zero por pelo menos uma hora por dia).",
+    "opcoes": [
+      "Padrão",
+      "Sopro"
+    ],
     "atributos": {
       "Força": 2
     },

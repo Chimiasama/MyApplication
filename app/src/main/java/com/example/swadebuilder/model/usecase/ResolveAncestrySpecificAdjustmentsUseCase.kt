@@ -624,6 +624,31 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                     )
                 }
             }
+
+            if (ancKey == "YETIS") {
+                return if (effectiveVariant == "Sopro") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("ARMA DE SOPRO (Frio)"),
+                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA (deve estar em temperaturas abaixo de zero por pelo menos uma hora por dia)"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
         }
 
         return when (ancKey) {
