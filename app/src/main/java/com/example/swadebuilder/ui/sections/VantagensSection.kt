@@ -533,8 +533,8 @@ fun VantagensContent(
                                         state.compendioArteDaGuerraAtivo &&
                                         state.tropoSelecionado?.id == "tropo_youxia" &&
                                         !state.youxiaJutsuSelecionado.isNullOrBlank() ->
-                                        "${vant.nomeExibicao} (${state.youxiaJutsuSelecionado})"
-                                    else -> vant.choice?.let { "${vant.nomeExibicao} ($it)" } ?: vant.nomeExibicao
+                                        "${vant.nomeExibicao.toFancyTitleCase()} (${state.youxiaJutsuSelecionado})"
+                                    else -> vant.choice?.let { "${vant.nomeExibicao.toFancyTitleCase()} ($it)" } ?: vant.nomeExibicao.toFancyTitleCase()
                                 }
                                 val finalText = if (isCelestialAAMilagresDesabilitado) {
                                     "$labelText (DESABILITADO)"

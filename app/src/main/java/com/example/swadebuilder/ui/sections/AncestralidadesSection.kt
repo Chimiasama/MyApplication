@@ -511,12 +511,12 @@ fun AncestralidadesSection(
 
                                     Box {
                                         OutlinedButton(onClick = { expanded = true }) {
-                                            Text(currentSelection)
+                                            Text(currentSelection.toFancyTitleCase())
                                         }
                                         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                                             item.opcoes.forEach { opt ->
                                                 DropdownMenuItem(
-                                                    text = { Text(opt) },
+                                                    text = { Text(opt.toFancyTitleCase()) },
                                                     onClick = {
                                                         if (itemKeyNorm == "ANOES") {
                                                             state.selecionarAnoesScifi(opt)
