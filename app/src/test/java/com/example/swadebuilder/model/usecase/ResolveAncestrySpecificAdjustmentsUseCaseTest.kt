@@ -107,6 +107,20 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(listOf("FRÁGIL", "NÃO SABE NADAR"), result.ensureRacialDisadvantages)
     }
 
+
+    @Test
+    fun `normalizes basico to padrao for scifi ancestries that define padrao`() {
+        val result = useCase.execute(
+            anc = "DRAKENS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Básico",
+            ancestryOptions = listOf("Padrão", "Dragão"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("FORTE"), result.ensureAutomaticAdvantages)
+    }
+
     @Test
     fun `returns fallback for unknown ancestry`() {
         val result = useCase.execute("QUALQUER", null)

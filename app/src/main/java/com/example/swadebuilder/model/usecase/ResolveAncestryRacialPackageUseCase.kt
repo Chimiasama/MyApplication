@@ -14,6 +14,7 @@ class ResolveAncestryRacialPackageUseCase(
         val anoesScifiSelecionado: String? = null,
         val scifiVariant: String? = null,
         val humanoMineradorAtributo: String? = null,
+        val ancestryOptions: List<String> = emptyList(),
         val isSciFiActive: Boolean = false,
         val allAdvantages: List<Vantagem>,
         val selectedAdvantages: List<Vantagem>,
@@ -57,6 +58,7 @@ class ResolveAncestryRacialPackageUseCase(
             anoesScifiSelecionado = params.anoesScifiSelecionado,
             scifiVariant = params.scifiVariant,
             humanoMineradorAtributo = params.humanoMineradorAtributo,
+            ancestryOptions = params.ancestryOptions,
             isSciFiActive = params.isSciFiActive
         )
 

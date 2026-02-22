@@ -62,6 +62,7 @@ import com.example.swadebuilder.model.usecase.ResolveAncestryRacialPackageUseCas
 import com.example.swadebuilder.model.usecase.ResolveAncestrySpecificAdjustmentsUseCase
 import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionBootstrapUseCase
 import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUseCase
+import com.example.swadebuilder.model.usecase.ResolveAncestryVariantUseCase
 import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
@@ -102,6 +103,7 @@ class CriadorState {
     )
     private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val validateSelectionUseCase = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase()
+    private val resolveAncestryVariantUseCase = ResolveAncestryVariantUseCase()
 
     // --- Game Data Properties (Replaces Globals) ---
     var listaAtributos: List<String> = emptyList()
@@ -349,7 +351,7 @@ class CriadorState {
     }
 
     private fun applySciFiVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
-        val variant = scifiVariant ?: return base
+        val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
         val newHabilidades = base.habilidades.toMutableList()
 
         // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
@@ -386,6 +388,31 @@ class CriadorState {
         }
 
         return base.copy(habilidades = newHabilidades)
+    }
+
+
+    fun resolveSciFiVariantSelectionFor(
+        ancestryName: String,
+        availableOptions: List<String>,
+        overrideSelection: String? = null
+    ): String? {
+        if (availableOptions.isEmpty()) return null
+        val selected = overrideSelection ?: scifiVariant
+        return resolveAncestryVariantUseCase.execute(
+            ResolveAncestryVariantUseCase.Input(
+                selectedVariant = selected,
+                legacySelectedVariant = anoesScifiSelecionado,
+                availableOptions = availableOptions
+            )
+        ).normalizedSelection
+    }
+
+    private fun resolveCurrentSciFiVariantSelection(ancestryName: String = ancestralidade): String? {
+        val ancDef = getAncestralidadeDef(ancestryName) ?: return scifiVariant
+        return resolveSciFiVariantSelectionFor(
+            ancestryName = ancestryName,
+            availableOptions = ancDef.opcoes
+        )
     }
 
     private fun withBaselineCounterpartMechanics(
@@ -1151,8 +1178,8 @@ class CriadorState {
 
             // Variant-specific exclusions
             if (compendioSciFiAtivo) {
-                if (ancestralidade.keyify() == "SAURIOS" && scifiVariant == "Cuspidor" && keyToken == "MORDIDA") return@forEach
-                if (ancestralidade.keyify() == "INSETOIDES" && scifiVariant == "Vespa" && keyToken == "GARRAS") return@forEach
+                if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor" && keyToken == "MORDIDA") return@forEach
+                if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa" && keyToken == "GARRAS") return@forEach
             }
 
             val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
@@ -1936,7 +1963,7 @@ class CriadorState {
                 return false
             }
         }
-        if (compendioSciFiAtivo && ancestralidade.keyify() == "ROBOS" && scifiVariant == "Limitado") {
+        if (compendioSciFiAtivo && ancestralidade.keyify() == "ROBOS" && resolveCurrentSciFiVariantSelection() == "Limitado") {
             return false // Removes d4 from all basic skills
         }
         return true
@@ -1950,7 +1977,7 @@ class CriadorState {
         if (per.basica) {
             val isGolemRestricted = compendioFantasiaAtivo && ancKey == "GOLENS" &&
                     (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")
-            val isRobotLimited = compendioSciFiAtivo && ancKey == "ROBOS" && scifiVariant == "Limitado"
+            val isRobotLimited = compendioSciFiAtivo && ancKey == "ROBOS" && resolveCurrentSciFiVariantSelection() == "Limitado"
 
             if (!isGolemRestricted && !isRobotLimited) {
                 defaultBase = 4
@@ -3332,14 +3359,16 @@ class CriadorState {
             modifiedBase = maxOf(modifiedBase, 6)
         }
 
+        val currentSciFiVariant = if (compendioSciFiAtivo) resolveCurrentSciFiVariantSelection() else scifiVariant
+
         // Human Sci-Fi Variants
         if (ancestralidade.keyify().contains("HUMANO") && compendioSciFiAtivo) {
             // "Habitantes de Gravidade Baixa começam com d6 em Agilidade"
-            if (scifiVariant == "Baixa Gravidade" && a.keyify() == "AGILIDADE") {
+            if (currentSciFiVariant == "Baixa Gravidade" && a.keyify() == "AGILIDADE") {
                 modifiedBase = maxOf(modifiedBase, 6)
             }
             // "podem escolher entre d6 inicial em Força ou Vigor" (Minerador)
-            if (scifiVariant == "Minerador") {
+            if (currentSciFiVariant == "Minerador") {
                 val chosen = humanoMineradorAtributo ?: "Força"
                 if (a.keyify() == chosen.keyify()) {
                     modifiedBase = maxOf(modifiedBase, 6)
@@ -3366,7 +3395,7 @@ class CriadorState {
                 if (a.keyify() == "FORCA") {
                     // JSON was cleared to d4. Padrão grants "Forte" (Start d6). Variant grants "Arma de Sopro".
                     // If Padrão (or default), start d6 (6). If Dragão, start d4 (4).
-                    val variant = scifiVariant ?: "Padrão"
+                    val variant = currentSciFiVariant ?: "Padrão"
                     if (variant == "Padrão") {
                         modifiedBase = maxOf(modifiedBase, 6)
                     } else {
@@ -3399,7 +3428,7 @@ class CriadorState {
             // I will set Str to d4 for Variant if JSON is d8.
             if (ancKey == "ELEMENTAIS") {
                 if (a.keyify() == "FORCA") {
-                    val variant = scifiVariant ?: "Padrão"
+                    val variant = currentSciFiVariant ?: "Padrão"
                     if (variant != "Padrão") {
                         modifiedBase = 4 // Reset to d4
                     }
@@ -3409,7 +3438,7 @@ class CriadorState {
             // Mineradores Genéticos: Padrão (Forte - Str d6). Zero G (No Forte - Str d4).
             if (ancKey.contains("MINERADOR") && ancKey.contains("GENETICO")) {
                 if (a.keyify() == "FORCA") {
-                    val variant = scifiVariant ?: "Padrão"
+                    val variant = currentSciFiVariant ?: "Padrão"
                     if (variant == "Zero G") {
                         modifiedBase = 4
                     }
@@ -3420,7 +3449,7 @@ class CriadorState {
             // JSON cleared to d4.
             if (ancKey == "FERAIS") {
                 if (a.keyify() == "ESPIRITO") {
-                    val variant = scifiVariant ?: "Padrão"
+                    val variant = currentSciFiVariant ?: "Padrão"
                     if (variant == "Padrão") {
                         modifiedBase = maxOf(modifiedBase, 6)
                     }
@@ -3570,6 +3599,13 @@ class CriadorState {
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
         val ancDef = getAncestralidadeDef(anc)
+        val effectiveScifiVariant = resolveSciFiVariantSelectionFor(
+            ancestryName = anc,
+            availableOptions = ancDef?.opcoes ?: emptyList()
+        )
+        if (compendioSciFiAtivo && !ancDef?.opcoes.isNullOrEmpty() && scifiVariant != effectiveScifiVariant) {
+            scifiVariant = effectiveScifiVariant
+        }
 
         val paAntes = pontosAtributo
         val spAntes = pontosPericia
@@ -3610,7 +3646,7 @@ class CriadorState {
                 modoSupers = modoSupers,
                 meioElfoAgil = meioElfoAgil,
                 anoesScifiSelecionado = anoesScifiSelecionado,
-                scifiVariant = scifiVariant,
+                scifiVariant = effectiveScifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo
             )
         )
@@ -3699,12 +3735,16 @@ class CriadorState {
                 // Sci-Fi Default Logic
                 if (compendioSciFiAtivo) {
                     val ancKey = anc.keyify()
-                    val hasOptions = ancKey == "ANOES" || ancKey == "AQUARIANOS" || ancKey == "AVIANOS" || ancKey == "ELFOS" || ancKey == "HUMANOS"
-                    if (hasOptions) {
-                        if (ancKey == "ANOES" && anoesScifiSelecionado == null) selecionarAnoesScifi("Básico")
-                        if (scifiVariant == null) selecionarScifiVariant("Básico")
-                        if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) selecionarHumanoMineradorAtributo("Força")
+                    val defaultOption = ancDef?.opcoes?.firstOrNull()
+                    if (!defaultOption.isNullOrBlank()) {
+                        if (ancKey == "ANOES" && anoesScifiSelecionado == null) {
+                            selecionarAnoesScifi(defaultOption)
+                        }
+                        if (scifiVariant == null) {
+                            selecionarScifiVariant(defaultOption)
+                        }
                     }
+                    if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) selecionarHumanoMineradorAtributo("Força")
                 }
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {
@@ -3715,7 +3755,7 @@ class CriadorState {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE -> Unit
         }
 
-        if (compendioSciFiAtivo && anc.keyify() == "AVIANOS" && scifiVariant.equals("Ave de rapina", ignoreCase = true)) {
+        if (compendioSciFiAtivo && anc.keyify() == "AVIANOS" && resolveCurrentSciFiVariantSelection(anc).equals("Ave de rapina", ignoreCase = true)) {
             anotacoes = anotacoes
                 .replace("\n• Forma Alienígena.", "")
                 .replace("• Forma Alienígena.\n", "")
@@ -4101,15 +4141,27 @@ class CriadorState {
     }
 
     fun selecionarAnoesScifi(opcao: String?) {
-        if (anoesScifiSelecionado == opcao) return
-        anoesScifiSelecionado = opcao
+        val ancDef = getAncestralidadeDef("ANÕES")
+        val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
+            ancestryName = "ANÕES",
+            availableOptions = ancDef?.opcoes ?: emptyList(),
+            overrideSelection = opcao
+        )
+        if (anoesScifiSelecionado == normalized) return
+        anoesScifiSelecionado = normalized
         val msgs = mutableListOf<String>()
         aplicarAncestralidade("ANÕES", msgs)
     }
 
     fun selecionarScifiVariant(opcao: String?) {
-        if (scifiVariant == opcao) return
-        scifiVariant = opcao
+        val ancDef = getAncestralidadeDef(ancestralidade)
+        val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
+            ancestryName = ancestralidade,
+            availableOptions = ancDef?.opcoes ?: emptyList(),
+            overrideSelection = opcao
+        )
+        if (scifiVariant == normalized) return
+        scifiVariant = normalized
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
     }
@@ -4124,7 +4176,7 @@ class CriadorState {
 
     private fun syncOraculoVariant() {
         if (ancestralidade.keyify() != "ORACULOS") return
-        if (scifiVariant == "Aterrorizado") {
+        if (resolveCurrentSciFiVariantSelection() == "Aterrorizado") {
             val idx = vantagensSelecionadas.indexOfFirst { it.id == "poderes_misticos" }
             if (idx >= 0) {
                 val current = vantagensSelecionadas[idx]

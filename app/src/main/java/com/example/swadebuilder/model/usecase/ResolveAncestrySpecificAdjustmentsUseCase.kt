@@ -2,7 +2,9 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.util.keyify
 
-class ResolveAncestrySpecificAdjustmentsUseCase {
+class ResolveAncestrySpecificAdjustmentsUseCase(
+    private val resolveAncestryVariantUseCase: ResolveAncestryVariantUseCase = ResolveAncestryVariantUseCase()
+) {
 
     enum class ElementalAction {
         NONE,
@@ -28,6 +30,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
         anoesScifiSelecionado: String? = null,
         scifiVariant: String? = null,
         humanoMineradorAtributo: String? = null,
+        ancestryOptions: List<String> = emptyList(),
         isSciFiActive: Boolean = false
     ): Result {
         val ancKey = anc.keyify()
@@ -36,7 +39,13 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
             // Anões Logic (using unified scifiVariant or fallback to anoesScifiSelecionado for compatibility)
             // Ideally anoesScifiSelecionado should be migrated to scifiVariant in State, but handling both here for now or just checking variant.
             // Assuming State manages to set scifiVariant for new selections.
-            val effectiveVariant = scifiVariant ?: anoesScifiSelecionado
+            val effectiveVariant = resolveAncestryVariantUseCase.execute(
+                ResolveAncestryVariantUseCase.Input(
+                    selectedVariant = scifiVariant,
+                    legacySelectedVariant = anoesScifiSelecionado,
+                    availableOptions = ancestryOptions
+                )
+            ).normalizedSelection
 
             if (ancKey == "ANOES") {
                 return if (effectiveVariant == "Cyber") {
