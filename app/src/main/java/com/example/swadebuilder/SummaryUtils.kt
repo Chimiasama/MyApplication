@@ -387,6 +387,11 @@ fun buildSummaryLines(
         }
     }
     val habilidadesRaciaisBase = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
+        personagem.ancestralidade.keyify() == "AVIANOS" &&
+        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
+        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "HABITANTE DE GRAVIDADE ZERO/BAIXA" }
+
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
         val elem = personagem.descendenteElementalSelecionado?.keyify()
         habilidadesRaciaisBase
@@ -404,6 +409,16 @@ fun buildSummaryLines(
             }
     } else {
         habilidadesRaciaisBase
+    }.toMutableList().apply {
+        if (isAvianosAveRapina) {
+            removeAll { it.keyify() == "FRAGIL" || it.keyify() == "NAO SABE NADAR" }
+            if (none { it.keyify() == "HABITANTE DE GRAVIDADE ZERO/BAIXA" }) {
+                add("Habitante de Gravidade Zero/Baixa")
+            }
+            if (none { it.keyify() == "FORMA ALIENIGENA" }) {
+                add("Forma Alienígena")
+            }
+        }
     }
     // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
     val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
@@ -432,9 +447,15 @@ fun buildSummaryLines(
     val desvantagensRaciaisComplicacoes = personagem.desvantagensRaciais.filter { desvantagem ->
         desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
     }
-    val desvantagensRaciaisAnotacoes = personagem.desvantagensRaciais.filterNot { desvantagem ->
-        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
-    }
+    val desvantagensRaciaisAnotacoes = personagem.desvantagensRaciais
+        .filterNot { desvantagem ->
+            desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+        }
+        .filterNot { desvantagem ->
+            if (!isAvianosAveRapina) return@filterNot false
+            val key = desvantagem.substringBefore("(").trim().keyify()
+            key == "FORMA ALIENIGENA" || key.startsWith("SENTIDOS AGUCADOS")
+        }
 
     lines += "Complicações"
     val complicationKeys = complicacoesNomeadas.map { it.keyify() }.toMutableSet()
