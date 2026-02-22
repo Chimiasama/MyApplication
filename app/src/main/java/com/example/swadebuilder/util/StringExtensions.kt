@@ -21,7 +21,7 @@ private val KNOWN_ACRONYMS = setOf(
 )
 
 private val ptBrCollator: Collator by lazy {
-    Collator.getInstance(Locale("pt", "BR")).apply {
+    Collator.getInstance(Locale.forLanguageTag("pt-BR")).apply {
         strength = Collator.PRIMARY
         decomposition = Collator.CANONICAL_DECOMPOSITION
     }
@@ -60,7 +60,7 @@ fun String.toDisplayTitleCase(): String {
     if (isBlank()) return this
 
     val cleaned = replace('_', ' ').replace(Regex("\\s+"), " ").trim()
-    val locale = Locale("pt", "BR")
+    val locale = Locale.forLanguageTag("pt-BR")
 
     return cleaned.split(" ").mapIndexed { index, word ->
         formatDisplayWord(word, index == 0, locale)
@@ -71,6 +71,13 @@ fun comparePtBrDisplay(a: String, b: String): Int = ptBrCollator.compare(a, b)
 
 private fun formatDisplayWord(word: String, isFirst: Boolean, locale: Locale): String {
     if (word.isBlank()) return word
+    if (word.contains('/')) {
+        return word.split('/').joinToString("/") { segment -> formatDisplayWord(segment, isFirst, locale) }
+    }
+    if (word.contains('-')) {
+        return word.split('-').joinToString("-") { segment -> formatDisplayWord(segment, isFirst, locale) }
+    }
+
     val uppercaseWord = word.uppercase(locale)
     if (uppercaseWord in KNOWN_ACRONYMS) return uppercaseWord
     if (ROMAN_NUMERAL_REGEX.matches(uppercaseWord)) return uppercaseWord

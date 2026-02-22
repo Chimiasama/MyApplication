@@ -433,7 +433,7 @@ fun buildSummaryLines(
             } else {
                 val vant = definitionMap[key]
                 if (vant != null) {
-                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!! else vant.nome
+                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome
                 } else {
                     trait
                 }
@@ -506,16 +506,7 @@ fun buildSummaryLines(
             } else {
                 val poderesComManifestacao = lista.map { poderId ->
                     val poderDef = listaPoderes.firstOrNull { it.id == poderId }
-                    val displayNome = if (showOfficialNames && !poderDef?.id.isNullOrBlank()) {
-                        // Logic for official names usually implies using a different property,
-                        // but here we just have 'nome'. If we had 'originalName' in Poder, we'd use it.
-                        // Poder struct only has 'nome'. Assuming 'nome' is what we want.
-                        // If we wanted original names we'd need to update Poder model.
-                        // For now, let's just use 'nome' if found, else ID.
-                        (poderDef?.nome ?: poderId).toDisplayTitleCase()
-                    } else {
-                        (poderDef?.nome ?: poderId).toDisplayTitleCase()
-                    }
+                    val displayNome = (poderDef?.nome ?: poderId).toDisplayTitleCase()
 
                     val manifestacao = personagem.manifestacoesPoderes[poderId]
                         ?.trim()

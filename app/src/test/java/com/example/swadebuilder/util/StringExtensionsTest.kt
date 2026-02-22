@@ -38,6 +38,7 @@ class StringExtensionsTest {
         assertEquals("Nível III", "NÍVEL iii".toDisplayTitleCase())
         assertEquals("Ganha XP e PA", "ganha xp e pa".toDisplayTitleCase())
         assertEquals("Voto de Guerra nas Trevas no Abismo", "VOTO DE GUERRA NAS TREVAS NO ABISMO".toDisplayTitleCase())
+        assertEquals("Habitante de Gravidade Zero/Baixa", "HABITANTE DE GRAVIDADE ZERO/BAIXA".toDisplayTitleCase())
         assertEquals("d'Arc", "d'ARC".toDisplayTitleCase())
     }
 

@@ -21,7 +21,13 @@ class ResolveAncestryVariantUseCase {
             .filter { it.isNotBlank() }
 
         if (options.isEmpty()) {
-            return Result(normalizedSelection = null, defaultOption = null)
+            val fallback = input.selectedVariant
+                ?.trim()
+                ?.takeIf { it.isNotBlank() }
+                ?: input.legacySelectedVariant
+                    ?.trim()
+                    ?.takeIf { it.isNotBlank() }
+            return Result(normalizedSelection = fallback, defaultOption = null)
         }
 
         val defaultOption = options.first()

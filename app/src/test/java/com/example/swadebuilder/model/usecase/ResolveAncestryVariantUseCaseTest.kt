@@ -72,15 +72,15 @@ class ResolveAncestryVariantUseCaseTest {
     }
 
     @Test
-    fun `returns null when ancestry has no options`() {
+    fun `preserves provided selection when ancestry has no options`() {
         val result = useCase.execute(
             ResolveAncestryVariantUseCase.Input(
-                selectedVariant = "Básico",
+                selectedVariant = "Ave de rapina",
                 availableOptions = emptyList()
             )
         )
 
-        assertNull(result.normalizedSelection)
+        assertEquals("Ave de rapina", result.normalizedSelection)
         assertNull(result.defaultOption)
     }
 }
