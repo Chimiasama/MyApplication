@@ -57,7 +57,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("GANANCIOSO"),
+                        ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
                 }
