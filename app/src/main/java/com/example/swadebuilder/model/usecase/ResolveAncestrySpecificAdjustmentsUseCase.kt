@@ -18,7 +18,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
         val ensureAutomaticAdvantages: List<String>,
         val ensureRacialDisadvantages: List<String>,
         val elementalAction: ElementalAction,
-        val anotacoesToAdd: List<String> = emptyList()
+        val anotacoesToAdd: List<String> = emptyList(),
+        val racialDisadvantagesToRemove: List<String> = emptyList()
     )
 
     fun execute(
@@ -139,7 +140,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
             }
 
             if (ancKey == "AVIANOS") {
-                return if (effectiveVariant == "Ave de rapina") {
+                return if (effectiveVariant.equals("Ave de rapina", ignoreCase = true)) {
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
@@ -147,7 +148,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR")
                     )
                 } else {
                     // Básico
