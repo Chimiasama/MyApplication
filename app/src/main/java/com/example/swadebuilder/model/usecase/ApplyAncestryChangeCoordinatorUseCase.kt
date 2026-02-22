@@ -21,6 +21,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val previousAncestryDef: RacialModifier?,
         val targetAncestryDef: RacialModifier?,
         val currentAutomaticAdvantages: List<String>,
+        val previousAutomaticDisadvantages: List<String>,
         val pontosVantagemAtuais: Int,
         val vantagensSelecionadas: List<Vantagem>,
         val attributeNames: List<String>,
@@ -113,7 +114,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
 
         val complicationsSnapshot = resolveAncestryComplicationsSnapshotUseCase.execute(
             ResolveAncestryComplicationsSnapshotUseCase.Params(
-                previousAutomaticDisadvantages = params.previousAncestryDef?.desvantagens ?: emptyList(),
+                previousAutomaticDisadvantages = params.previousAutomaticDisadvantages,
                 currentAutomaticDisadvantages = racialPackage.desvantagensRaciais,
                 availableComplications = params.availableComplications,
                 selectedComplications = params.selectedComplications,

@@ -3559,6 +3559,7 @@ class CriadorState {
                 previousAncestryDef = prevAncDef,
                 targetAncestryDef = ancDef,
                 currentAutomaticAdvantages = vantagensAutomaticas.toList(),
+                previousAutomaticDisadvantages = desvantagensRaciais.toList(),
                 pontosVantagemAtuais = pontosVantagem,
                 vantagensSelecionadas = vantagensSelecionadas.toList(),
                 attributeNames = listaAtributos,
