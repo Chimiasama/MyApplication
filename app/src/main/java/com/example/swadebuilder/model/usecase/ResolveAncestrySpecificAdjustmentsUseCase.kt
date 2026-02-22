@@ -145,8 +145,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("SENTIDOS AGUÇADOS (Olhos de Águia)"),
-                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA", "FORMA ALIENÍGENA"),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
                         elementalAction = ElementalAction.NONE
                     )
                 } else {
