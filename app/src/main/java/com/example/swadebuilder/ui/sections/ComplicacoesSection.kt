@@ -218,7 +218,7 @@ fun ComplicacoesSection(
                                         performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
                                     },
                                     enabled = isClickable,
-                                    label = { Text("${comp.name.toSentenceCase()} (${tipo.toSentenceCase()})", style = MaterialTheme.typography.labelSmall) },
+                                    label = { Text("${comp.name.toSentenceCase()} (${(tipo ?: "").toSentenceCase()})", style = MaterialTheme.typography.labelSmall) },
                                     leadingIcon = {
                                         Icon(
                                             Icons.Default.Close,
