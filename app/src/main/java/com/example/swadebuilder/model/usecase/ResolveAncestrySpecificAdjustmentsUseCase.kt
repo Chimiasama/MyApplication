@@ -18,7 +18,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
         val ensureAutomaticAdvantages: List<String>,
         val ensureRacialDisadvantages: List<String>,
         val elementalAction: ElementalAction,
-        val anotacoesToAdd: List<String> = emptyList()
+        val anotacoesToAdd: List<String> = emptyList(),
+        val racialDisadvantagesToRemove: List<String> = emptyList()
     )
 
     fun execute(
@@ -45,9 +46,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
-                        ensureRacialDisadvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
                         elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário.")
+                        anotacoesToAdd = emptyList()
                     )
                 } else {
                     // Default / Básico
@@ -57,7 +58,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("GANANCIOSO"),
+                        ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
                 }
@@ -139,15 +140,16 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
             }
 
             if (ancKey == "AVIANOS") {
-                return if (effectiveVariant == "Ave de rapina") {
+                return if (effectiveVariant.equals("Ave de rapina", ignoreCase = true)) {
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("SENTIDOS AGUÇADOS (Olhos de Águia)"),
-                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA", "FORMA ALIENÍGENA"),
-                        elementalAction = ElementalAction.NONE
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR")
                     )
                 } else {
                     // Básico
@@ -617,6 +619,31 @@ class ResolveAncestrySpecificAdjustmentsUseCase {
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
+
+            if (ancKey == "YETIS") {
+                return if (effectiveVariant == "Sopro") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = listOf("ARMA DE SOPRO (Frio)"),
+                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA (deve estar em temperaturas abaixo de zero por pelo menos uma hora por dia)"),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    // Padrão
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = emptyList(),

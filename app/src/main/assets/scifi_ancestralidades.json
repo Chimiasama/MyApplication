@@ -12,20 +12,23 @@
       "Básico",
       "Cyber"
     ],
-    "desvantagens": [
-      "MOVIMENTAÇÃO REDUZIDA"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
-        "nome": "RESISTENTE",
-        "descricao": "Anões são robustos e resistentes."
+        "nome": "Movimentação Reduzida",
+        "descricao": "Por terem pernas mais curtas em comparação a maioria, reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo."
       },
       {
-        "nome": "VISÃO NO ESCURO",
-        "descricao": "Ignoram penalidades por iluminação fraca ou escuridão."
+        "nome": "Resistente",
+        "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1"
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Acostumados ao escuro do subterrâneo, ignoram penalidades por Penumbra e Escuridão."
       }
     ],
-    "tags": []
+    "tags": [],
+    "vantagensGratis": []
   },
   {
     "nome": "AQUARIANOS",
@@ -35,7 +38,7 @@
     "atributos": {},
     "pericias": {},
     "desvantagens": [
-      "DEPENDÊNCIA (Água)"
+      "DEPENDÊNCIA"
     ],
     "opcoes": [
       "Básico",
@@ -43,11 +46,24 @@
     ],
     "habilidades": [
       {
-        "nome": "VISÃO NO ESCURO",
-        "descricao": "Ignoram penalidades por iluminação fraca ou escuridão."
+        "nome": "Aquático",
+        "descricao": "Este povo não se afoga na água e pode usar sua Movimentação completa ao nadar. Veja Movimento na pág. 107 para velocidades normais de natação."
+      },
+      {
+        "nome": "Dependência",
+        "descricao": "Devem permanecer imersos em água por uma hora a cada 24 ou recebem um nível de Fadiga por dia até que fiquem Incapacitados. No dia seguinte à Incapacitação por desidratação, morrem. A cada hora dentro d’água um nível de Fadiga é restaurado."
+      },
+      {
+        "nome": "Resistência",
+        "descricao": "A vida nas profundezas de seus mundos aquáticos fez com que sua pele se tornasse dura e resistente. Adicione +1 a sua Resistência."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Habituados a escuridão das profundezas, Aquarianos ignoram penalidades por Penumbra e Escuridão."
       }
     ],
-    "tags": []
+    "tags": [],
+    "vantagensGratis": []
   },
   {
     "nome": "AVIANOS",
@@ -59,19 +75,36 @@
       "Básico",
       "Ave de rapina"
     ],
-    "pericias": {},
-    "desvantagens": [
-      "MOVIMENTAÇÃO REDUZIDA"
-    ],
+    "pericias": {
+      "Perceber": 2
+    },
+    "desvantagens": [],
     "habilidades": [
       {
-        "nome": "VOO",
-        "descricao": "Capacidade de voar em ambientes com atmosfera."
+        "nome": "Frágil",
+        "descricao": "Têm Resistência -1 devido a seus ossos ocos."
+      },
+      {
+        "nome": "Movimentação Reduzida",
+        "descricao": "Dependência de voo e asas pesadas tornam esse povo um pouco mais lento ao andar. Reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo."
+      },
+      {
+        "nome": "Não Sabe Nadar",
+        "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água."
+      },
+      {
+        "nome": "Sentidos Aguçados",
+        "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1."
+      },
+      {
+        "nome": "Voo",
+        "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras."
       }
     ],
     "tags": [
       "asas"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "ELFOS",
@@ -86,18 +119,25 @@
       "Básico",
       "Comunitário"
     ],
-    "desvantagens": [],
+    "desvantagens": [
+      "DESASTRADO"
+    ],
     "habilidades": [
       {
-        "nome": "ÁGIL",
-        "descricao": "Começam com Agilidade d6."
+        "nome": "Ágil",
+        "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1."
       },
       {
-        "nome": "VISÃO NO ESCURO",
-        "descricao": "Ignoram penalidades por iluminação fraca ou escuridão."
+        "nome": "Desastrado",
+        "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Seus olhos são capazes de ampliar a luz de tal forma que afirmam poder ver estrelas nos olhos élficos. Ignoram penalidades por Penumbra e Escuridão."
       }
     ],
-    "tags": []
+    "tags": [],
+    "vantagensGratis": []
   },
   {
     "nome": "HUMANOS",
@@ -112,8 +152,16 @@
     "atributos": {},
     "pericias": {},
     "desvantagens": [],
-    "habilidades": [],
-    "tags": []
+    "habilidades": [
+      {
+        "nome": "Adaptável",
+        "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente."
+      }
+    ],
+    "tags": [],
+    "vantagensGratis": [
+      "ADAPTÁVEL"
+    ]
   },
   {
     "nome": "RAKASHANOS",
@@ -129,24 +177,36 @@
     ],
     "pericias": {},
     "desvantagens": [
-      "INIMIGO RACIAL",
-      "NÃO SABE NADAR"
+      "INIMIGO RACIAL"
     ],
     "habilidades": [
       {
-        "nome": "ÁGIL",
-        "descricao": "Começam com Agilidade d6."
+        "nome": "Ágil",
+        "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1."
       },
       {
-        "nome": "MORDIDA/GARRAS",
-        "descricao": "Armas naturais."
+        "nome": "Inimigo Racial",
+        "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista."
       },
       {
-        "nome": "VISÃO NO ESCURO",
-        "descricao": "Ignoram penalidades por iluminação fraca ou escuridão."
+        "nome": "Mordida/Garras",
+        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano."
+      },
+      {
+        "nome": "Não Sabe Nadar",
+        "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação."
+      },
+      {
+        "nome": "Sanguinário",
+        "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso."
+      },
+      {
+        "nome": "Visão no Escuro",
+        "descricao": "Seus olhos captam melhor a luminosidade, ignorando penalidades por Penumbra e Escuridão."
       }
     ],
-    "tags": []
+    "tags": [],
+    "vantagensGratis": []
   },
   {
     "nome": "SAÚRIOS",
@@ -758,14 +818,15 @@
     "origem": "FC",
     "descricao": "Qualquer espécie mamífera coberta de pelos inevitavelmente acaba sendo rotulada como yeti pelos terráqueos e aqueles que adotaram os costumes da Terra. Estes seres aqui são altos, peludos e ferozes quando ameaçados. Sua grande estatura e volume fora do comum exigem equipamentos especiais adaptados aos seus tamanhos.",
     "variantes": "Ideias Variantes: Alguns Yetis podem estar mais ligados ao seu ambiente do que outros, o que lhes garante a capacidade de emitir uma rajada de ar frio de suas entranhas. Dê a essa variante Arma de Sopro (Frio) e Dependência (deve estar em temperaturas abaixo de zero por pelo menos uma hora por dia).",
+    "opcoes": [
+      "Padrão",
+      "Sopro"
+    ],
     "atributos": {
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "FRAQUEZA AMBIENTAL (Calor)",
-      "GRANDE"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FORTE",
