@@ -345,7 +345,7 @@ class CriadorState {
             selected
         }
 
-        return withInferredAncestryMechanics(withBaselineCounterpartMechanics(withVariant, key))
+        return withInferredAncestryMechanics(withVariant)
     }
 
     private fun applySciFiVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
@@ -3713,6 +3713,13 @@ class CriadorState {
                 selecionarDescendenteElemental(current)
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE -> Unit
+        }
+
+        if (compendioSciFiAtivo && anc.keyify() == "AVIANOS" && scifiVariant.equals("Ave de rapina", ignoreCase = true)) {
+            anotacoes = anotacoes
+                .replace("\n• Forma Alienígena.", "")
+                .replace("• Forma Alienígena.\n", "")
+                .replace("• Forma Alienígena.", "")
         }
 
         if (racialPackage.anotacoesToAdd.isNotEmpty()) {

@@ -92,7 +92,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             result.ensureRacialDisadvantages
         )
         assertEquals(listOf("NÃO SABE NADAR"), result.racialDisadvantagesToRemove)
-        assertEquals(listOf("Forma Alienígena."), result.anotacoesToAdd)
+        assertTrue(result.anotacoesToAdd.isEmpty())
     }
 
     @Test
