@@ -72,7 +72,7 @@ fun comparePtBrDisplay(a: String, b: String): Int = ptBrCollator.compare(a, b)
 private fun formatDisplayWord(word: String, isFirst: Boolean, locale: Locale): String {
     if (word.isBlank()) return word
     val uppercaseWord = word.uppercase(locale)
-    if (uppercaseWord in KNOWN_ACRONYMS || (uppercaseWord.length <= 3 && word == uppercaseWord)) return uppercaseWord
+    if (uppercaseWord in KNOWN_ACRONYMS) return uppercaseWord
     if (ROMAN_NUMERAL_REGEX.matches(uppercaseWord)) return uppercaseWord
 
     val lower = word.lowercase(locale)
@@ -82,7 +82,7 @@ private fun formatDisplayWord(word: String, isFirst: Boolean, locale: Locale): S
     if (apostropheMatch != null) {
         val prefix = apostropheMatch.groupValues[1]
         val remainder = apostropheMatch.groupValues[2]
-        val transformedPrefix = if (isFirst) prefix.replaceFirstChar { it.titlecase(locale) } else prefix
+        val transformedPrefix = prefix.lowercase(locale)
         return "$transformedPrefix'${remainder.replaceFirstChar { it.titlecase(locale) }}"
     }
 

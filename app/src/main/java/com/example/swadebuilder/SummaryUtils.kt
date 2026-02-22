@@ -102,12 +102,12 @@ fun buildSummaryLines(
             val comp = mapPorId[compId.keyify()]
             if (comp != null) {
                 if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
-                    comp.originalName
+                    comp.originalName.toDisplayTitleCase()
                 } else {
-                    comp.name
+                    comp.name.toDisplayTitleCase()
                 }
             } else {
-                compId.replace('_', ' ').titleCase()
+                compId.replace('_', ' ').toDisplayTitleCase()
             }
         }
     }
@@ -439,6 +439,7 @@ fun buildSummaryLines(
                 }
             }
         }
+        .map { it.toDisplayTitleCase() }
         .distinctBy { it.keyify() } // Deduplicate BY resolved name
 
     if (allRacialTraits.isNotEmpty()) {
@@ -462,12 +463,12 @@ fun buildSummaryLines(
     lines += "Complicações"
     val complicationKeys = complicacoesNomeadas.map { it.keyify() }.toMutableSet()
     val allComplicationsList = buildList {
-        addAll(complicacoesNomeadas)
-        addAll(transtornosNomeados.map { "$it (Transtorno)" })
+        addAll(complicacoesNomeadas.map { it.toDisplayTitleCase() })
+        addAll(transtornosNomeados.map { "${it.toDisplayTitleCase()} (Transtorno)" })
         desvantagensRaciaisComplicacoes.forEach { comp ->
             val compKey = comp.substringBefore("(").trim().keyify()
             if (compKey !in complicationKeys) {
-                add(comp)
+                add(comp.toDisplayTitleCase())
                 complicationKeys.add(compKey)
             }
         }
@@ -477,7 +478,7 @@ fun buildSummaryLines(
         .ifBlank { "– Nenhuma" }
     lines += complicacoesText
     if (desvantagensRaciaisAnotacoes.isNotEmpty()) {
-        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ")}"
+        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.map { it.toDisplayTitleCase() }.joinToString(", ")}"
     }
     lines += ""
 
@@ -496,10 +497,7 @@ fun buildSummaryLines(
                 ""
             }
 
-            val labelBase = arcanoKey
-                .lowercase()
-                .replace('_', ' ')
-                .replaceFirstChar { it.titlecase() }
+            val labelBase = arcanoKey.toDisplayTitleCase()
 
             val label = if (details.isNotBlank()) "$labelBase $details" else labelBase
 
@@ -514,9 +512,9 @@ fun buildSummaryLines(
                         // Poder struct only has 'nome'. Assuming 'nome' is what we want.
                         // If we wanted original names we'd need to update Poder model.
                         // For now, let's just use 'nome' if found, else ID.
-                        poderDef?.nome ?: poderId
+                        (poderDef?.nome ?: poderId).toDisplayTitleCase()
                     } else {
-                        poderDef?.nome ?: poderId
+                        (poderDef?.nome ?: poderId).toDisplayTitleCase()
                     }
 
                     val manifestacao = personagem.manifestacoesPoderes[poderId]
