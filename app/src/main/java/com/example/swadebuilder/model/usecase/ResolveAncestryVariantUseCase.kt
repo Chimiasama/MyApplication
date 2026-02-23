@@ -55,7 +55,19 @@ class ResolveAncestryVariantUseCase {
         val direct = options.firstOrNull { it.keyify() == key }
         if (direct != null) return direct
 
+        val normalizedCandidate = normalizeVariantKey(key)
+        val normalizedDirect = options.firstOrNull { normalizeVariantKey(it.keyify()) == normalizedCandidate }
+        if (normalizedDirect != null) return normalizedDirect
+
         return aliasesByOption.entries.firstOrNull { (_, aliases) -> key in aliases }?.key
+    }
+
+    private fun normalizeVariantKey(raw: String): String {
+        val compact = raw
+            .replace("[^A-Z0-9]".toRegex(), "")
+            .removeSuffix("S")
+
+        return compact
     }
 
     private fun optionAliases(option: String): Set<String> {
