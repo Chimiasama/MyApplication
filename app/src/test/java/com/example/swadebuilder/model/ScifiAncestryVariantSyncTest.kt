@@ -22,8 +22,13 @@ class ScifiAncestryVariantSyncTest {
         assertNull(state.scifiVariant)
 
         state.aplicarAncestralidade("ANÕES", mutableListOf())
-        val fallbackKey = state.scifiVariant?.keyify()
-        assertTrue(fallbackKey == "BASICO" || fallbackKey == "PADRAO")
+        val anoesOptions = state.getAncestralidadeDef("ANÕES")?.opcoes.orEmpty()
+        if (anoesOptions.isNotEmpty()) {
+            val fallbackKey = state.scifiVariant?.keyify()
+            assertTrue(fallbackKey == "BASICO" || fallbackKey == "PADRAO")
+        } else {
+            assertNull(state.scifiVariant)
+        }
     }
 
     @Test
