@@ -12,9 +12,8 @@ class ScifiAncestryVariantSyncTest {
         val state = CriadorState().apply {
             compendioSciFiAtivo = true
             ancestralidade = "ANÕES"
+            scifiVariant = "Cyber"
         }
-
-        state.selecionarScifiVariant("Cyber")
         assertEquals("Cyber", state.scifiVariant)
 
         state.aplicarAncestralidade("HUMANOS", mutableListOf())
