@@ -105,4 +105,18 @@ class ScifiAncestryVariantSyncTest {
         assertFalse(mods.any { it.id == "racial_resistencia" })
     }
 
+    @Test
+    fun `avianos ave de rapina nao aplica penalidade de fragil`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = false
+            ancestralidade = "AVIANOS"
+            desvantagensRaciais.clear()
+            desvantagensRaciais.add("FORMA ALIENÍGENA")
+            desvantagensRaciais.add("HABITANTE DE GRAVIDADE ZERO/BAIXA")
+        }
+
+        val mods = ModifierEngine.collect(state)
+        assertFalse(mods.any { it.id == "racial_fragil" })
+    }
+
 }

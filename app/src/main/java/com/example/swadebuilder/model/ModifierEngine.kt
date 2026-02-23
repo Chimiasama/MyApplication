@@ -90,6 +90,17 @@ object ModifierEngine {
                         key == "AQUATICO" || key == "RESISTENCIA"
                     }
                 }
+
+                val isAvianosAveRapina = ancestryKey == "AVIANOS" &&
+                    allTraitKeys.any { it.contains("FORMA ALIENIGENA") } &&
+                    allTraitKeys.any { it.contains("HABITANTE DE GRAVIDADE") }
+
+                if (isAvianosAveRapina) {
+                    removeAll { trait ->
+                        val key = trait.keyify()
+                        key == "FRAGIL" || key == "NAO SABE NADAR"
+                    }
+                }
             }
             val abilityDescriptions = anc.habilidades.map { it.descricao }
 

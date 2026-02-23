@@ -97,4 +97,27 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertFalse(result.vantagensRaciais.any { it.equals("Aquático", ignoreCase = true) })
         assertFalse(result.vantagensRaciais.any { it.equals("Resistência", ignoreCase = true) })
     }
+
+    @Test
+    fun `removes replaced automatic traits for avianos ave de rapina`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "AVIANOS",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Ave de rapina",
+                ancestryOptions = listOf("Básico", "Ave de rapina"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = listOf("Frágil", "Movimentação Reduzida", "Não Sabe Nadar", "Sentidos Aguçados", "Voo"),
+                ancestryAutomaticDisadvantages = emptyList()
+            )
+        )
+
+        assertFalse(result.vantagensRaciais.any { it.equals("Frágil", ignoreCase = true) })
+        assertFalse(result.vantagensRaciais.any { it.equals("Não Sabe Nadar", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.contains("FORMA ALIEN", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.contains("HABITANTE DE GRAVIDADE", ignoreCase = true) })
+    }
 }
