@@ -414,10 +414,12 @@ class CriadorState {
     ): String? {
         if (availableOptions.isEmpty()) return null
         val selected = overrideSelection ?: scifiVariant
+        val ancestryKey = ancestryName.keyify()
+        val legacySelection = if (ancestryKey == "ANOES") anoesScifiSelecionado else null
         return resolveAncestryVariantUseCase.execute(
             ResolveAncestryVariantUseCase.Input(
                 selectedVariant = selected,
-                legacySelectedVariant = anoesScifiSelecionado,
+                legacySelectedVariant = legacySelection,
                 availableOptions = availableOptions
             )
         ).normalizedSelection
@@ -3617,8 +3619,7 @@ class CriadorState {
         val ancDef = getAncestralidadeDef(anc)
         val effectiveScifiVariant = resolveSciFiVariantSelectionFor(
             ancestryName = anc,
-            availableOptions = ancDef?.opcoes ?: emptyList(),
-            overrideSelection = if (anc.keyify() == "ANOES") anoesScifiSelecionado else null
+            availableOptions = ancDef?.opcoes ?: emptyList()
         )
         if (compendioSciFiAtivo && !ancDef?.opcoes.isNullOrEmpty() && scifiVariant != effectiveScifiVariant) {
             scifiVariant = effectiveScifiVariant
@@ -3712,11 +3713,11 @@ class CriadorState {
             selecionarDescendenteElemental(null)
         }
         if (ancestryChangeCoordination.resetAnoesScifi) {
-            selecionarAnoesScifi(null)
+            anoesScifiSelecionado = null
         }
         if (ancestryChangeCoordination.resetScifiVariant) {
-            selecionarScifiVariant(null)
-            selecionarHumanoMineradorAtributo(null)
+            scifiVariant = null
+            humanoMineradorAtributo = null
         }
         if (ancestryChangeCoordination.clearPericiaGnomo) {
             selecionarPericiaGnomo(null)
@@ -3754,14 +3755,19 @@ class CriadorState {
                     val ancKey = anc.keyify()
                     val defaultOption = ancDef?.opcoes?.firstOrNull()
                     if (!defaultOption.isNullOrBlank()) {
-                        if (ancKey == "ANOES" && anoesScifiSelecionado == null) {
-                            selecionarAnoesScifi(defaultOption)
-                        }
-                        if (scifiVariant == null) {
-                            selecionarScifiVariant(defaultOption)
+                        val normalizedDefault = resolveSciFiVariantSelectionFor(
+                            ancestryName = anc,
+                            availableOptions = ancDef?.opcoes ?: emptyList(),
+                            overrideSelection = defaultOption
+                        )
+                        scifiVariant = normalizedDefault
+                        if (ancKey == "ANOES") {
+                            anoesScifiSelecionado = normalizedDefault
                         }
                     }
-                    if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) selecionarHumanoMineradorAtributo("Força")
+                    if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) {
+                        humanoMineradorAtributo = "Força"
+                    }
                 }
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {
@@ -4164,12 +4170,13 @@ class CriadorState {
             availableOptions = ancDef?.opcoes ?: emptyList(),
             overrideSelection = opcao
         )
-        if (anoesScifiSelecionado == normalized) return
+        if (anoesScifiSelecionado == normalized && scifiVariant == normalized) return
         anoesScifiSelecionado = normalized
-        // Update generic state to prevent sticky legacy behavior when switching back
         if (scifiVariant != normalized) scifiVariant = normalized
-        val msgs = mutableListOf<String>()
-        aplicarAncestralidade("ANÕES", msgs)
+        if (ancestralidade.keyify() == "ANOES") {
+            val msgs = mutableListOf<String>()
+            aplicarAncestralidade(ancestralidade, msgs)
+        }
     }
 
     fun selecionarScifiVariant(opcao: String?) {
