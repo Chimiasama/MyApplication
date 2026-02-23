@@ -392,6 +392,10 @@ fun buildSummaryLines(
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "HABITANTE DE GRAVIDADE ZERO/BAIXA" }
 
+    val isAquarianosSemiaquaticos = personagem.compendioSciFiAtivo &&
+        personagem.ancestralidade.keyify() == "AQUARIANOS" &&
+        personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "SEMIAQUATICO" }
+
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
         val elem = personagem.descendenteElementalSelecionado?.keyify()
         habilidadesRaciaisBase
@@ -417,6 +421,16 @@ fun buildSummaryLines(
             }
             if (none { it.keyify() == "FORMA ALIENIGENA" }) {
                 add("Forma Alienígena")
+            }
+        }
+
+        if (isAquarianosSemiaquaticos) {
+            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
+            if (none { it.keyify() == "SEMIAQUATICO" }) {
+                add("Semiaquático")
+            }
+            if (none { it.keyify() == "TOQUE VENENOSO" }) {
+                add("Toque Venenoso")
             }
         }
     }

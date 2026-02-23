@@ -182,8 +182,7 @@ object ModifierEngine {
 
             // Resistência (Auto advantage or racial trait)
             // Checks for FRAGIL/ESGUIOS (-1)
-            val hasFragil = state.desvantagensRaciais.any { it.keyify().contains("FRAGIL") } ||
-                sources.any { it.keyify() == "FRAGIL" }
+            val hasFragil = sources.any { it.keyify() == "FRAGIL" }
             val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
 
             if (hasFragil) {
@@ -195,8 +194,7 @@ object ModifierEngine {
 
             // Checks for RESISTENCIA/FEROCIDADE (+1)
             // NOTE: exact token "RESISTENCIA" to avoid matching "RESISTENCIA AMBIENTAL"
-            val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" } ||
-                sources.any { it.keyify() == "RESISTENCIA" }
+            val hasResistencia = sources.any { it.keyify() == "RESISTENCIA" }
             val hasFerocidade = anc.habilidades.any { it.nome.contains("Ferocidade", ignoreCase = true) }
 
             if (hasResistencia) {

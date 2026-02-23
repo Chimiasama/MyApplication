@@ -122,6 +122,20 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(listOf("FORTE"), result.ensureAutomaticAdvantages)
     }
 
+
+    @Test
+    fun `aquarianos basico nao injeta resistencia por hardcode`() {
+        val result = useCase.execute(
+            anc = "AQUARIANOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Básico",
+            ancestryOptions = listOf("Básico", "Semi-aquáticos"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
+    }
+
     @Test
     fun `returns fallback for unknown ancestry`() {
         val result = useCase.execute("QUALQUER", null)
