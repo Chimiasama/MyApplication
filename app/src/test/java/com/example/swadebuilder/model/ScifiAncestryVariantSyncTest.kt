@@ -66,9 +66,10 @@ class ScifiAncestryVariantSyncTest {
     fun `aquarianos semi aquaticos substituem aquatico e resistencia`() {
         val state = CriadorState().apply {
             compendioSciFiAtivo = true
-            ancestralidade = "AQUARIANOS"
             scifiVariant = "Semi-aquáticos"
         }
+
+        state.aplicarAncestralidade("AQUARIANOS", mutableListOf())
 
         val habilidades = state.getAncestralidadeDef("AQUARIANOS")?.habilidades?.map { it.nome.keyify() }.orEmpty()
 
