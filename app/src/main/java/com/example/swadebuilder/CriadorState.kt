@@ -369,10 +369,27 @@ class CriadorState {
             }
         }
 
+        if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
+            newHabilidades.removeAll { hab ->
+                val habKey = hab.nome.keyify()
+                // "NÃO SABE NADAR" is defined as an ability in JSON, so remove it here too for consistency,
+                // although ModifierEngine doesn't seem to derive stats from it directly.
+                habKey == "FRAGIL" || habKey == "NAO SABE NADAR"
+            }
+            // ... existing Avianos logic follows ...
+        }
+
         if (key == "ELEMENTAIS" && variant == "Ar, Fogo ou Água") {
             newHabilidades.removeAll { hab ->
                 val habKey = hab.nome.keyify()
                 habKey == "CABECA-DURA" || habKey == "GRANDE" || habKey == "MOVIMENTACAO REDUZIDA" || habKey == "TAMANHO +1"
+            }
+        }
+
+        if (key == "FLORANS" && variant == "Defensivo") {
+            newHabilidades.removeAll { hab ->
+                val habKey = hab.nome.keyify()
+                habKey == "ROBUSTO"
             }
         }
 
@@ -381,11 +398,7 @@ class CriadorState {
         }
 
         if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                val habKey = hab.nome.keyify()
-                habKey == "FRAGIL" || habKey == "NAO SABE NADAR"
-            }
-
+            // Already handled above in new block
             if (newHabilidades.none { it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(

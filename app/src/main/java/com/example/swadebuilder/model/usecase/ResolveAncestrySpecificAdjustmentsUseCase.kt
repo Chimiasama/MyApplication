@@ -353,7 +353,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("TOQUE VENENOSO (Paralisante)"),
                         ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialAbilitiesToRemove = listOf("ROBUSTO")
                     )
                 } else {
                     // Padrão
