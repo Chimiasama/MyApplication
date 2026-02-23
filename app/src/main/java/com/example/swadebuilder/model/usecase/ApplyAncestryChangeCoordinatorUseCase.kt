@@ -143,8 +143,8 @@ class ApplyAncestryChangeCoordinatorUseCase(
             resetMeioElfoAgil = params.targetAncestry != "MEIO-ELFOS",
             resetMeioOrcForca = params.targetAncestry != "MEIO-ORCS",
             clearDescendenteElemental = targetKey != "DESCENDENTE ELEMENTAL" && targetKey != "DESC_ELEMENTAL",
-            resetAnoesScifi = targetKey != "ANOES",
-            resetScifiVariant = !params.compendioSciFiAtivo || params.previousAncestry != params.targetAncestry, // Simple reset logic: if ancestry changes or SciFi disabled
+            resetAnoesScifi = !targetKey.contains("ANOES"),
+            resetScifiVariant = params.previousAncestry != params.targetAncestry,
             clearPericiaGnomo = !targetKey.contains("GNOMO"),
             racialPackage = racialPackage,
             complicationsSnapshot = complicationsSnapshot,

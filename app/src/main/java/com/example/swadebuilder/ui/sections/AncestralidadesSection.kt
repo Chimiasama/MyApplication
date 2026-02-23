@@ -487,27 +487,18 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            if (isSelected && compendioSciFiAtivo) {
+                            if (isSelected) {
                                 val itemKeyNorm = item.nome.keyify()
-                                // Handle specific Anões legacy state or unified scifiVariant if options exist
                                 if (item.opcoes.isNotEmpty()) {
                                     Spacer(Modifier.height(8.dp))
                                     Text("Variante:", style = MaterialTheme.typography.labelMedium)
 
                                     var expanded by remember { mutableStateOf(false) }
 
-                                    val currentSelection = if (itemKeyNorm == "ANOES") {
-                                        state.resolveSciFiVariantSelectionFor(
-                                            ancestryName = item.nome,
-                                            availableOptions = item.opcoes,
-                                            overrideSelection = state.anoesScifiSelecionado
-                                        ) ?: item.opcoes.firstOrNull().orEmpty()
-                                    } else {
-                                        state.resolveSciFiVariantSelectionFor(
-                                            ancestryName = item.nome,
-                                            availableOptions = item.opcoes
-                                        ) ?: item.opcoes.firstOrNull().orEmpty()
-                                    }
+                                    val currentSelection = state.resolveSciFiVariantSelectionFor(
+                                        ancestryName = item.nome,
+                                        availableOptions = item.opcoes
+                                    ) ?: item.opcoes.firstOrNull().orEmpty()
 
                                     Box {
                                         OutlinedButton(onClick = { expanded = true }) {
@@ -518,11 +509,7 @@ fun AncestralidadesSection(
                                                 DropdownMenuItem(
                                                     text = { Text(opt.toFancyTitleCase()) },
                                                     onClick = {
-                                                        if (itemKeyNorm == "ANOES") {
-                                                            state.selecionarAnoesScifi(opt)
-                                                        } else {
-                                                            state.selecionarScifiVariant(opt)
-                                                        }
+                                                        state.selecionarScifiVariant(opt)
                                                         expanded = false
                                                     }
                                                 )

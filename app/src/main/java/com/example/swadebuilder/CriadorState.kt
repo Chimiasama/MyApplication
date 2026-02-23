@@ -414,10 +414,11 @@ class CriadorState {
     ): String? {
         if (availableOptions.isEmpty()) return null
         val selected = overrideSelection ?: scifiVariant
+        val legacySelection: String? = null
         return resolveAncestryVariantUseCase.execute(
             ResolveAncestryVariantUseCase.Input(
                 selectedVariant = selected,
-                legacySelectedVariant = anoesScifiSelecionado,
+                legacySelectedVariant = legacySelection,
                 availableOptions = availableOptions
             )
         ).normalizedSelection
@@ -3711,11 +3712,11 @@ class CriadorState {
             selecionarDescendenteElemental(null)
         }
         if (ancestryChangeCoordination.resetAnoesScifi) {
-            selecionarAnoesScifi(null)
+            anoesScifiSelecionado = null
         }
         if (ancestryChangeCoordination.resetScifiVariant) {
-            selecionarScifiVariant(null)
-            selecionarHumanoMineradorAtributo(null)
+            scifiVariant = null
+            humanoMineradorAtributo = null
         }
         if (ancestryChangeCoordination.clearPericiaGnomo) {
             selecionarPericiaGnomo(null)
@@ -3748,19 +3749,21 @@ class CriadorState {
         when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {
                 if (anc.keyify() == "DESCENDENTE ELEMENTAL") selecionarDescendenteElemental("Água")
-                // Sci-Fi Default Logic
-                if (compendioSciFiAtivo) {
-                    val ancKey = anc.keyify()
-                    val defaultOption = ancDef?.opcoes?.firstOrNull()
-                    if (!defaultOption.isNullOrBlank()) {
-                        if (ancKey == "ANOES" && anoesScifiSelecionado == null) {
-                            selecionarAnoesScifi(defaultOption)
-                        }
-                        if (scifiVariant == null) {
-                            selecionarScifiVariant(defaultOption)
-                        }
+                val ancKey = anc.keyify()
+                val defaultOption = ancDef?.opcoes?.firstOrNull()
+                if (!defaultOption.isNullOrBlank()) {
+                    val normalizedDefault = resolveSciFiVariantSelectionFor(
+                        ancestryName = anc,
+                        availableOptions = ancDef?.opcoes ?: emptyList(),
+                        overrideSelection = defaultOption
+                    )
+                    scifiVariant = normalizedDefault
+                    if (ancKey.contains("ANOES")) {
+                        anoesScifiSelecionado = normalizedDefault
                     }
-                    if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) selecionarHumanoMineradorAtributo("Força")
+                }
+                if (compendioSciFiAtivo && ancKey == "HUMANOS" && humanoMineradorAtributo == null) {
+                    humanoMineradorAtributo = "Força"
                 }
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {
@@ -4163,12 +4166,13 @@ class CriadorState {
             availableOptions = ancDef?.opcoes ?: emptyList(),
             overrideSelection = opcao
         )
-        if (anoesScifiSelecionado == normalized) return
+        if (anoesScifiSelecionado == normalized && scifiVariant == normalized) return
         anoesScifiSelecionado = normalized
-        // Update generic state to prevent sticky legacy behavior when switching back
         if (scifiVariant != normalized) scifiVariant = normalized
-        val msgs = mutableListOf<String>()
-        aplicarAncestralidade("ANÕES", msgs)
+        if (ancestralidade.keyify().contains("ANOES")) {
+            val msgs = mutableListOf<String>()
+            aplicarAncestralidade(ancestralidade, msgs)
+        }
     }
 
     fun selecionarScifiVariant(opcao: String?) {
@@ -4181,7 +4185,7 @@ class CriadorState {
         if (scifiVariant == normalized) return
         scifiVariant = normalized
         // Also sync legacy state if applicable to avoid mismatches
-        if (ancestralidade.keyify() == "ANOES" && anoesScifiSelecionado != normalized) {
+        if (ancestralidade.keyify().contains("ANOES") && anoesScifiSelecionado != normalized) {
             anoesScifiSelecionado = normalized
         }
         val msgs = mutableListOf<String>()

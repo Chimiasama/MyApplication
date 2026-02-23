@@ -24,7 +24,7 @@ class ResolveAncestryVariantUseCase {
             return Result(normalizedSelection = null, defaultOption = null)
         }
 
-        val defaultOption = options.first()
+        val defaultOption = options.firstOrNull { it.keyify() == "BASICO" || it.keyify() == "PADRAO" } ?: options.first()
         val aliasesByOption = options.associateWith { option -> optionAliases(option) }
 
         val selected = normalizeCandidate(
