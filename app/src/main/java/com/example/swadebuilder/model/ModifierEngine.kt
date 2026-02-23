@@ -73,7 +73,13 @@ object ModifierEngine {
             val rawSources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
             val sources = rawSources.toMutableList().apply {
                 val ancestryKey = anc.nome.keyify()
-                val allTraitKeys = (this + state.vantagensRaciais + state.vantagensAutomaticas)
+                val allTraitKeys = (
+                    this +
+                        state.vantagensRaciais +
+                        state.vantagensAutomaticas +
+                        state.desvantagensRaciais +
+                        state.desvantagensAutomaticas
+                    )
                     .map { it.keyify() }
                     .toSet()
 

@@ -108,7 +108,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `avianos ave de rapina nao aplica penalidade de fragil`() {
         val state = CriadorState().apply {
-            compendioSciFiAtivo = false
+            compendioSciFiAtivo = true
             ancestralidade = "AVIANOS"
             desvantagensRaciais.clear()
             desvantagensRaciais.add("FORMA ALIENÍGENA")
