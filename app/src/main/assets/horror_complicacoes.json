@@ -414,7 +414,7 @@
   },
   {
     "id": "amaldicoado_horror",
-    "name": "AMALDIÇOADO (HORROR)",
+    "name": "AMALDIÇOADO",
     "origem": "HORROR",
     "severity": "maior",
     "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nA morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
@@ -442,21 +442,21 @@
   },
   {
     "id": "componentes_materiais_horror",
-    "name": "COMPONENTES MATERIAIS (HORROR)",
+    "name": "COMPONENTES MATERIAIS",
     "origem": "HORROR",
     "severity": "maior",
     "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano. Os poderes do conjurador consomem componentes materiais. Talvez um mago precise de um pouco de enxofre para lançar uma bola de fogo (explosão com manifestação de fogo) ou uma sacerdotisa precise de um pouco de água benta para sua deusa conceder ferir.\nPresume-se que tais itens estejam à mão — geralmente em um bolso ou bolsa para componentes. Se o conjurador for despojado de seus pertences e não conseguir os materiais de que precisa, ele subtrai 4 de todas as rolagens de perícias arcanas até que sejam restaurados (50 PO × o Estágio do conjurador em uma loja ou um dia de coleta ou forrageamento em um ambiente apropriado com uma rolagem de Sobrevivência por Estágio).\nConjuradores também ficam sem componentes materiais se obtiverem uma Falha Crítica. Podem se reabastecer como acima."
   },
   {
     "id": "condenado_horror",
-    "name": "CONDENADO (HORROR)",
+    "name": "CONDENADO",
     "origem": "HORROR",
     "severity": "maior",
     "description": "A morte está ansiosa por seu herói ou heroína. Talvez tenha fugido dela em algum momento da vida, ou voltado dos mortos e deixado uma dívida com o Barqueiro. Seja qual for o motivo, você subtrai 2 das rolagens de Absorção."
   },
   {
     "id": "corrupcao_horror",
-    "name": "CORRUPÇÃO (HORROR)",
+    "name": "CORRUPÇÃO",
     "origem": "HORROR",
     "severity": "maior",
     "description": "OBS.: Esta Complicação só pode ser adquirida em um cenário que permita a Vantagem Antecedente Arcano (Milagres).\nEsta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nA magia do conjurador recorre a alguma fonte abominável, maligna ou corrompida. Sempre que obtiver uma Falha Crítica em sua rolagem de perícia arcana, recebe uma nova Complicação Menor, ou troca/atualiza uma Complicação Menor obtida por Corrupção por uma Complicação Maior, que reflita a degradação da sua mente e corpo. Por exemplo, um mago pode receber Invejoso (Menor) ao perceber como é difícil aumentar seu poder. Então Sanguinário (Maior) quando sua raiva se transforma em pensamentos violentos.\nEssas Complicações duram até o próximo Progresso do conjurador, momento em que pode remover uma Complicação Menor, ou reduzir/trocar uma Complicação Maior por uma Complicação Menor. Isso é um acréscimo ao seu Progresso."
