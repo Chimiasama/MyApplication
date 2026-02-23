@@ -3617,7 +3617,8 @@ class CriadorState {
         val ancDef = getAncestralidadeDef(anc)
         val effectiveScifiVariant = resolveSciFiVariantSelectionFor(
             ancestryName = anc,
-            availableOptions = ancDef?.opcoes ?: emptyList()
+            availableOptions = ancDef?.opcoes ?: emptyList(),
+            overrideSelection = if (anc.keyify() == "ANOES") anoesScifiSelecionado else null
         )
         if (compendioSciFiAtivo && !ancDef?.opcoes.isNullOrEmpty() && scifiVariant != effectiveScifiVariant) {
             scifiVariant = effectiveScifiVariant

@@ -489,6 +489,7 @@ fun AncestralidadesSection(
 
                             if (isSelected && compendioSciFiAtivo) {
                                 val itemKeyNorm = item.nome.keyify()
+                                val isAnoesOption = itemKeyNorm.contains("ANOES")
                                 // Handle specific Anões legacy state or unified scifiVariant if options exist
                                 if (item.opcoes.isNotEmpty()) {
                                     Spacer(Modifier.height(8.dp))
@@ -496,7 +497,7 @@ fun AncestralidadesSection(
 
                                     var expanded by remember { mutableStateOf(false) }
 
-                                    val currentSelection = if (itemKeyNorm == "ANOES") {
+                                    val currentSelection = if (isAnoesOption) {
                                         state.resolveSciFiVariantSelectionFor(
                                             ancestryName = item.nome,
                                             availableOptions = item.opcoes,
@@ -518,7 +519,7 @@ fun AncestralidadesSection(
                                                 DropdownMenuItem(
                                                     text = { Text(opt.toFancyTitleCase()) },
                                                     onClick = {
-                                                        if (itemKeyNorm == "ANOES") {
+                                                        if (isAnoesOption) {
                                                             state.selecionarAnoesScifi(opt)
                                                         } else {
                                                             state.selecionarScifiVariant(opt)
