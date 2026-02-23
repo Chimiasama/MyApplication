@@ -413,10 +413,8 @@ class CriadorState {
         overrideSelection: String? = null
     ): String? {
         if (availableOptions.isEmpty()) return null
-        val ancestryKey = ancestryName.keyify()
-        val isAnoes = ancestryKey.contains("ANOES")
-        val selected = overrideSelection ?: if (isAnoes) (anoesScifiSelecionado ?: scifiVariant) else scifiVariant
-        val legacySelection = if (isAnoes) anoesScifiSelecionado else null
+        val selected = overrideSelection ?: scifiVariant
+        val legacySelection: String? = null
         return resolveAncestryVariantUseCase.execute(
             ResolveAncestryVariantUseCase.Input(
                 selectedVariant = selected,
@@ -3751,24 +3749,21 @@ class CriadorState {
         when (racialPackage.elementalAction) {
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.SELECT_DEFAULT -> {
                 if (anc.keyify() == "DESCENDENTE ELEMENTAL") selecionarDescendenteElemental("Água")
-                // Sci-Fi Default Logic
-                if (compendioSciFiAtivo) {
-                    val ancKey = anc.keyify()
-                    val defaultOption = ancDef?.opcoes?.firstOrNull()
-                    if (!defaultOption.isNullOrBlank()) {
-                        val normalizedDefault = resolveSciFiVariantSelectionFor(
-                            ancestryName = anc,
-                            availableOptions = ancDef?.opcoes ?: emptyList(),
-                            overrideSelection = defaultOption
-                        )
-                        scifiVariant = normalizedDefault
-                        if (ancKey.contains("ANOES")) {
-                            anoesScifiSelecionado = normalizedDefault
-                        }
+                val ancKey = anc.keyify()
+                val defaultOption = ancDef?.opcoes?.firstOrNull()
+                if (!defaultOption.isNullOrBlank()) {
+                    val normalizedDefault = resolveSciFiVariantSelectionFor(
+                        ancestryName = anc,
+                        availableOptions = ancDef?.opcoes ?: emptyList(),
+                        overrideSelection = defaultOption
+                    )
+                    scifiVariant = normalizedDefault
+                    if (ancKey.contains("ANOES")) {
+                        anoesScifiSelecionado = normalizedDefault
                     }
-                    if (ancKey == "HUMANOS" && humanoMineradorAtributo == null) {
-                        humanoMineradorAtributo = "Força"
-                    }
+                }
+                if (compendioSciFiAtivo && ancKey == "HUMANOS" && humanoMineradorAtributo == null) {
+                    humanoMineradorAtributo = "Força"
                 }
             }
             ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.REAPPLY_CURRENT -> {

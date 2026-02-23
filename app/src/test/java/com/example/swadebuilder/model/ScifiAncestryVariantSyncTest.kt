@@ -27,12 +27,11 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `resolve variante usa basico ou padrao como fallback preferencial`() {
         val state = CriadorState().apply {
-            compendioSciFiAtivo = true
             scifiVariant = null
         }
 
         val selecionada = state.resolveSciFiVariantSelectionFor(
-            ancestryName = "ANÕES",
+            ancestryName = "Qualquer",
             availableOptions = listOf("Cyber", "Básico")
         )
 
@@ -40,19 +39,17 @@ class ScifiAncestryVariantSyncTest {
     }
 
     @Test
-    fun `anões prioriza estado legado quando estado genérico diverge`() {
+    fun `resolve variante usa estado atual para qualquer ancestralidade com opcoes`() {
         val state = CriadorState().apply {
-            compendioSciFiAtivo = true
-            ancestralidade = "ANÕES"
-            scifiVariant = "Básico"
+            scifiVariant = "Gazela"
             anoesScifiSelecionado = "Cyber"
         }
 
         val selecionada = state.resolveSciFiVariantSelectionFor(
-            ancestryName = "Anões (FC)",
-            availableOptions = listOf("Básico", "Cyber")
+            ancestryName = "Centaux",
+            availableOptions = listOf("Básico", "Gazela")
         )
 
-        assertEquals("Cyber", selecionada)
+        assertEquals("Gazela", selecionada)
     }
 }

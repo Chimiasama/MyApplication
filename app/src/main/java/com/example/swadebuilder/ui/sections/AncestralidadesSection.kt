@@ -487,7 +487,7 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            if (isSelected && compendioSciFiAtivo) {
+                            if (isSelected) {
                                 val itemKeyNorm = item.nome.keyify()
                                 if (item.opcoes.isNotEmpty()) {
                                     Spacer(Modifier.height(8.dp))
