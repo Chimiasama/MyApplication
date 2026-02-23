@@ -186,7 +186,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("COMUNITÁRIO"),
                         ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("DESASTRADO")
                     )
                 } else {
                     // Básico

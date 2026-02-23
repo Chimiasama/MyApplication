@@ -108,6 +108,21 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(listOf("FRÁGIL", "NÃO SABE NADAR"), result.ensureRacialDisadvantages)
     }
 
+    @Test
+    fun `elfos comunitario remove desastrado e adiciona transtorno`() {
+        val result = useCase.execute(
+            anc = "ELFOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Comunitário",
+            ancestryOptions = listOf("Básico", "Comunitário"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("COMUNITÁRIO"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf("TRANSTORNO DE SEPARAÇÃO"), result.ensureRacialDisadvantages)
+        assertEquals(listOf("DESASTRADO"), result.racialDisadvantagesToRemove)
+    }
+
 
     @Test
     fun `normalizes basico to padrao for scifi ancestries that define padrao`() {

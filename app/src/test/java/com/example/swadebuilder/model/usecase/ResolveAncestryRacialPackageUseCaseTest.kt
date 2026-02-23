@@ -120,4 +120,26 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertTrue(result.desvantagensRaciais.any { it.contains("FORMA ALIEN", ignoreCase = true) })
         assertTrue(result.desvantagensRaciais.any { it.contains("HABITANTE DE GRAVIDADE", ignoreCase = true) })
     }
+
+    @Test
+    fun `elfos comunitario substitui desastrado por transtorno de separacao`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "ELFOS",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Comunitário",
+                ancestryOptions = listOf("Básico", "Comunitário"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = listOf("Desastrado", "Visão no Escuro"),
+                ancestryAutomaticDisadvantages = listOf("DESASTRADO")
+            )
+        )
+
+        assertFalse(result.desvantagensRaciais.any { it.equals("DESASTRADO", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.equals("TRANSTORNO DE SEPARAÇÃO", ignoreCase = true) })
+        assertTrue(result.vantagensRaciais.any { it.equals("COMUNITÁRIO", ignoreCase = true) })
+    }
 }
