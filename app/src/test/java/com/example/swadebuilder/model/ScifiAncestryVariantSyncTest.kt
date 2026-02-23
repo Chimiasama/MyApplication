@@ -38,4 +38,21 @@ class ScifiAncestryVariantSyncTest {
 
         assertEquals("Básico", selecionada)
     }
+
+    @Test
+    fun `anões prioriza estado legado quando estado genérico diverge`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "ANÕES"
+            scifiVariant = "Básico"
+            anoesScifiSelecionado = "Cyber"
+        }
+
+        val selecionada = state.resolveSciFiVariantSelectionFor(
+            ancestryName = "Anões (FC)",
+            availableOptions = listOf("Básico", "Cyber")
+        )
+
+        assertEquals("Cyber", selecionada)
+    }
 }

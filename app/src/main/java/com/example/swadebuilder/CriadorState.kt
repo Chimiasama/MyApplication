@@ -413,9 +413,10 @@ class CriadorState {
         overrideSelection: String? = null
     ): String? {
         if (availableOptions.isEmpty()) return null
-        val selected = overrideSelection ?: scifiVariant
         val ancestryKey = ancestryName.keyify()
-        val legacySelection = if (ancestryKey == "ANOES") anoesScifiSelecionado else null
+        val isAnoes = ancestryKey.contains("ANOES")
+        val selected = overrideSelection ?: if (isAnoes) (anoesScifiSelecionado ?: scifiVariant) else scifiVariant
+        val legacySelection = if (isAnoes) anoesScifiSelecionado else null
         return resolveAncestryVariantUseCase.execute(
             ResolveAncestryVariantUseCase.Input(
                 selectedVariant = selected,
@@ -3761,7 +3762,7 @@ class CriadorState {
                             overrideSelection = defaultOption
                         )
                         scifiVariant = normalizedDefault
-                        if (ancKey == "ANOES") {
+                        if (ancKey.contains("ANOES")) {
                             anoesScifiSelecionado = normalizedDefault
                         }
                     }
@@ -4173,7 +4174,7 @@ class CriadorState {
         if (anoesScifiSelecionado == normalized && scifiVariant == normalized) return
         anoesScifiSelecionado = normalized
         if (scifiVariant != normalized) scifiVariant = normalized
-        if (ancestralidade.keyify() == "ANOES") {
+        if (ancestralidade.keyify().contains("ANOES")) {
             val msgs = mutableListOf<String>()
             aplicarAncestralidade(ancestralidade, msgs)
         }
@@ -4189,7 +4190,7 @@ class CriadorState {
         if (scifiVariant == normalized) return
         scifiVariant = normalized
         // Also sync legacy state if applicable to avoid mismatches
-        if (ancestralidade.keyify() == "ANOES" && anoesScifiSelecionado != normalized) {
+        if (ancestralidade.keyify().contains("ANOES") && anoesScifiSelecionado != normalized) {
             anoesScifiSelecionado = normalized
         }
         val msgs = mutableListOf<String>()
