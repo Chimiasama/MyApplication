@@ -394,7 +394,10 @@ fun buildSummaryLines(
 
     val isAquarianosSemiaquaticos = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AQUARIANOS" &&
-        personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "SEMIAQUATICO" }
+        personagem.vantagensRaciais.any {
+            val key = it.substringBefore("(").trim().keyify()
+            key.contains("SEMI") && key.contains("AQUATIC")
+        }
 
     val habilidadesRaciaisBase = habilidadesRaciaisBaseRaw.toMutableList().apply {
         // Defensive normalization for variant substitution when base ancestry definition is used.
@@ -402,7 +405,9 @@ fun buildSummaryLines(
         val racialTraitKeys = personagem.vantagensRaciais
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
-        if (personagem.ancestralidade.keyify() == "AQUARIANOS" && racialTraitKeys.contains("SEMIAQUATICO")) {
+        if (personagem.ancestralidade.keyify() == "AQUARIANOS" &&
+            racialTraitKeys.any { it.contains("SEMI") && it.contains("AQUATIC") }
+        ) {
             removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
         }
     }

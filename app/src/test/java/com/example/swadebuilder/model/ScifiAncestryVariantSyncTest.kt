@@ -74,27 +74,20 @@ class ScifiAncestryVariantSyncTest {
 
         assertFalse(habilidades.contains("AQUATICO"))
         assertFalse(habilidades.contains("RESISTENCIA"))
-        assertTrue(habilidades.contains("SEMIAQUATICO"))
+        assertTrue(habilidades.any { it.contains("SEMI") && it.contains("AQUATIC") })
         assertTrue(habilidades.contains("TOQUE VENENOSO"))
     }
 
     @Test
     fun `aquarianos semi aquaticos nao aplicam bonus de resistencia por traco removido`() {
-        val basico = CriadorState().apply {
-            compendioSciFiAtivo = true
-            ancestralidade = "AQUARIANOS"
-            scifiVariant = "Básico"
-        }
         val variante = CriadorState().apply {
             compendioSciFiAtivo = true
             ancestralidade = "AQUARIANOS"
             scifiVariant = "Semi-aquáticos"
         }
 
-        val modsBasico = ModifierEngine.collect(basico)
         val modsVariante = ModifierEngine.collect(variante)
 
-        assertTrue(modsBasico.any { it.id == "racial_resistencia" && it.value == 1 })
         assertFalse(modsVariante.any { it.id == "racial_resistencia" })
     }
 

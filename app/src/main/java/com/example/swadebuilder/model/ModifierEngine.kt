@@ -80,7 +80,11 @@ object ModifierEngine {
                 // Sci-Fi Aquarianos (Semi-aquáticos) replace "Aquático" and "Resistência" traits.
                 // Defensive normalization to avoid stale base traits leaking into mechanics,
                 // even when ancestry base data is still present for display/back-compat paths.
-                if (ancestryKey == "AQUARIANOS" && allTraitKeys.contains("SEMIAQUATICO")) {
+                val hasSemiAquatico = allTraitKeys.any { key ->
+                    key.contains("SEMI") && key.contains("AQUATIC")
+                }
+
+                if (ancestryKey == "AQUARIANOS" && hasSemiAquatico) {
                     removeAll { trait ->
                         val key = trait.keyify()
                         key == "AQUATICO" || key == "RESISTENCIA"
