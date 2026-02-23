@@ -107,6 +107,12 @@ class ResolveAncestryRacialPackageUseCase(
             desvantagensRaciais.removeAll { it.keyify() == toRemove.keyify() }
         }
 
+        ancestrySpecificAdjustments.racialAbilitiesToRemove.forEach { toRemove ->
+            val key = toRemove.keyify()
+            vantagensAutomaticas.removeAll { it.keyify() == key }
+            vantagensRaciais.removeAll { it.keyify() == key }
+        }
+
         return Result(
             selectedAdvantages = selected,
             vantagensAutomaticas = vantagensAutomaticas,

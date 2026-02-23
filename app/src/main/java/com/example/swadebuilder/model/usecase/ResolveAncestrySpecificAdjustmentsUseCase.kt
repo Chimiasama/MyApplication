@@ -21,7 +21,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         val ensureRacialDisadvantages: List<String>,
         val elementalAction: ElementalAction,
         val anotacoesToAdd: List<String> = emptyList(),
-        val racialDisadvantagesToRemove: List<String> = emptyList()
+        val racialDisadvantagesToRemove: List<String> = emptyList(),
+        val racialAbilitiesToRemove: List<String> = emptyList()
     )
 
     fun execute(
@@ -132,7 +133,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("SEMIAQUÁTICO", "TOQUE VENENOSO"),
                         ensureRacialDisadvantages = emptyList(), // Dependency is in JSON
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialAbilitiesToRemove = listOf("AQUÁTICO", "RESISTÊNCIA")
                     )
                 } else {
                     // Básico
@@ -158,7 +160,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
                         elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR")
+                        racialAbilitiesToRemove = listOf("NÃO SABE NADAR")
                     )
                 } else {
                     // Básico
@@ -249,7 +251,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("MOVIMENTAÇÃO +4"),
                         ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialAbilitiesToRemove = listOf("TAMANHO +2", "GRANDE", "MOVIMENTAÇÃO +2")
                     )
                 } else {
                     // Padrão
@@ -299,7 +302,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("FORMA DE ENERGIA"),
                         ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialAbilitiesToRemove = listOf("CABEÇA-DURA", "GRANDE", "MOVIMENTAÇÃO REDUZIDA", "TAMANHO +1")
                     )
                 } else {
                     // Padrão

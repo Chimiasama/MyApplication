@@ -358,6 +358,24 @@ class CriadorState {
         // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
         // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
 
+        // Note: Explicit removals here are required because ModifierEngine uses getAncestralidadeDef (which calls this)
+        // to calculate stats. If we don't remove them here, ModifierEngine will see the base traits (like "Resistência")
+        // and apply bonuses even if they are removed from the character's list in ResolveAncestryRacialPackageUseCase.
+
+        if (key == "AQUARIANOS" && variant == "Semi-aquáticos") {
+            newHabilidades.removeAll { hab ->
+                val habKey = hab.nome.keyify()
+                habKey == "AQUATICO" || habKey == "RESISTENCIA"
+            }
+        }
+
+        if (key == "ELEMENTAIS" && variant == "Ar, Fogo ou Água") {
+            newHabilidades.removeAll { hab ->
+                val habKey = hab.nome.keyify()
+                habKey == "CABECA-DURA" || habKey == "GRANDE" || habKey == "MOVIMENTACAO REDUZIDA" || habKey == "TAMANHO +1"
+            }
+        }
+
         if (key == "QUADROIDES" && variant == "Habilidoso") {
             newHabilidades.removeAll { it.nome.keyify().contains("ACAO ADICIONAL") }
         }
