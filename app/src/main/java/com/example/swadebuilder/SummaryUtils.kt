@@ -475,6 +475,9 @@ fun buildSummaryLines(
     }
     // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
     val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
+        .filterNot { trait ->
+            isElfosComunitario && trait.keyify() == "DESASTRADO"
+        }
         .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
         .map { trait ->
             // Resolve Name FIRST

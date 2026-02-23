@@ -119,6 +119,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(listOf("COMUNITÁRIO"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf("DESASTRADO"), result.automaticAdvantagesToRemove)
         assertEquals(listOf("TRANSTORNO DE SEPARAÇÃO"), result.ensureRacialDisadvantages)
         assertEquals(listOf("DESASTRADO"), result.racialDisadvantagesToRemove)
     }
