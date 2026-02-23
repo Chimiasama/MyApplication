@@ -386,7 +386,7 @@ fun buildSummaryLines(
             }
         }
     }
-    val habilidadesRaciaisBase = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val habilidadesRaciaisBaseRaw = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
     val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AVIANOS" &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
@@ -395,6 +395,17 @@ fun buildSummaryLines(
     val isAquarianosSemiaquaticos = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AQUARIANOS" &&
         personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "SEMIAQUATICO" }
+
+    val habilidadesRaciaisBase = habilidadesRaciaisBaseRaw.toMutableList().apply {
+        // Defensive normalization for variant substitution when base ancestry definition is used.
+        // If variant traits are present in character snapshot, hide replaced base traits.
+        val racialTraitKeys = personagem.vantagensRaciais
+            .map { it.substringBefore("(").trim().keyify() }
+            .toSet()
+        if (personagem.ancestralidade.keyify() == "AQUARIANOS" && racialTraitKeys.contains("SEMIAQUATICO")) {
+            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
+        }
+    }
 
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
         val elem = personagem.descendenteElementalSelecionado?.keyify()

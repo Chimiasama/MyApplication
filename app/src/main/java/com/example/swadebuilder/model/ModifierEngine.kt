@@ -70,7 +70,20 @@ object ModifierEngine {
         val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
-            val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val rawSources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val sources = rawSources.toMutableList().apply {
+                val ancestryKey = anc.nome.keyify()
+                val sourceKeys = map { it.keyify() }.toSet()
+
+                // Sci-Fi Aquarianos (Semi-aquáticos) replace "Aquático" and "Resistência" traits.
+                // Defensive normalization to avoid stale base traits leaking into mechanics.
+                if (ancestryKey == "AQUARIANOS" && sourceKeys.contains("SEMIAQUATICO")) {
+                    removeAll { trait ->
+                        val key = trait.keyify()
+                        key == "AQUATICO" || key == "RESISTENCIA"
+                    }
+                }
+            }
             val abilityDescriptions = anc.habilidades.map { it.descricao }
 
             // Size from Ancestry (Tamanho X)
