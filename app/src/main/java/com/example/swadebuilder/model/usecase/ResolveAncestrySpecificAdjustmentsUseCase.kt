@@ -212,6 +212,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                             ensureAdvantageNames = emptyList(),
                             ensureAdvantageIds = emptyList(),
                             ensureAutomaticAdvantages = emptyList(), // Agility d6 handled in Attribute Logic
+                            automaticAdvantagesToRemove = listOf("ADAPTÁVEL", "ADAPTAVEL"),
                             ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA"),
                             elementalAction = ElementalAction.NONE
                         )

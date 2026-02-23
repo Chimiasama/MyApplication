@@ -11,6 +11,7 @@ class ResolveAncestryTransitionBootstrapUseCase(
     data class Params(
         val previousAncestry: String,
         val targetAncestry: String,
+        val forceLoseHumanBonus: Boolean = false,
         val previousAncestryDef: RacialModifier?,
         val targetAncestryDef: RacialModifier?,
         val currentAutomaticAdvantages: List<String>,
@@ -40,6 +41,7 @@ class ResolveAncestryTransitionBootstrapUseCase(
             ApplyHumanAncestryTransitionUseCase.Params(
                 wasHumano = transitionContext.wasHumano,
                 vaiSerHumano = transitionContext.willBeHumano,
+                forceLoseHumanBonus = params.forceLoseHumanBonus,
                 pontosVantagemAtuais = params.pontosVantagemAtuais,
                 vantagensSelecionadas = params.vantagensSelecionadas,
                 prevFreeKeys = transitionContext.previousFreeAdvantageKeys

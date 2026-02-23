@@ -84,6 +84,25 @@ class ApplyHumanAncestryTransitionUseCaseTest {
         assertNull(result.vantagemRemovida)
     }
 
+    @Test
+    fun `forces humano bonus loss for variant that removes adaptavel`() {
+        val eligible = vantagem(id = "eligible", nome = "Lutador")
+
+        val result = useCase.execute(
+            ApplyHumanAncestryTransitionUseCase.Params(
+                wasHumano = true,
+                vaiSerHumano = true,
+                forceLoseHumanBonus = true,
+                pontosVantagemAtuais = 2,
+                vantagensSelecionadas = listOf(eligible),
+                prevFreeKeys = setOf("ADAPTAVEL")
+            )
+        )
+
+        assertEquals(2, result.novosPontosVantagem)
+        assertEquals("eligible", result.vantagemRemovida?.id)
+    }
+
     private fun vantagem(
         id: String,
         nome: String = id,

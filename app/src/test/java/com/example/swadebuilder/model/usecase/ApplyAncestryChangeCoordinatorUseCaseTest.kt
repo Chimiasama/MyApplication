@@ -117,6 +117,59 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
         assertTrue(selectedNames.contains("HABITANTE DE GRAVIDADE ZERO/BAIXA"))
     }
 
+    @Test
+    fun `forces loss of human free edge on scifi baixa gravidade variant`() {
+        val adaptavel = Vantagem(
+            id = "adaptavel",
+            nome = "Adaptável",
+            categoria = Categoria.SOCIAIS,
+            origem = "BASICO",
+            requisitos = Requisito()
+        )
+        val lutador = Vantagem(
+            id = "lutador",
+            nome = "Lutador",
+            categoria = Categoria.COMBATE,
+            origem = "BASICO",
+            requisitos = Requisito()
+        )
+
+        val params = baseParams(
+            previousAncestry = "HUMANOS",
+            targetAncestry = "HUMANOS"
+        ).copy(
+            currentAutomaticAdvantages = listOf("ADAPTÁVEL"),
+            compendioSciFiAtivo = true,
+            scifiVariant = "Baixa Gravidade",
+            previousAncestryDef = RacialModifier(
+                nome = "HUMANOS",
+                vantagensGratis = listOf("ADAPTÁVEL"),
+                desvantagens = emptyList(),
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                habilidades = emptyList(),
+                origem = "SCIFI",
+                opcoes = listOf("Básico", "Baixa Gravidade")
+            ),
+            targetAncestryDef = RacialModifier(
+                nome = "HUMANOS",
+                vantagensGratis = listOf("ADAPTÁVEL"),
+                desvantagens = emptyList(),
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                habilidades = emptyList(),
+                origem = "SCIFI",
+                opcoes = listOf("Básico", "Baixa Gravidade")
+            ),
+            vantagensSelecionadas = listOf(adaptavel, lutador),
+            allAdvantages = listOf(adaptavel, lutador)
+        )
+
+        val result = useCase.execute(params)
+
+        assertEquals("lutador", result.humanTransition.vantagemRemovida?.id)
+    }
+
     private fun baseParams(
         previousAncestry: String = "ELFOS",
         targetAncestry: String = "HUMANOS",

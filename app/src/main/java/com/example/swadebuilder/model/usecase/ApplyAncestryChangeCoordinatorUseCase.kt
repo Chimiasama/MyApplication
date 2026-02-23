@@ -66,6 +66,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
             ResolveAncestryTransitionBootstrapUseCase.Params(
                 previousAncestry = params.previousAncestry,
                 targetAncestry = params.targetAncestry,
+                forceLoseHumanBonus = shouldForceHumanBonusLoss(params),
                 previousAncestryDef = params.previousAncestryDef,
                 targetAncestryDef = params.targetAncestryDef,
                 currentAutomaticAdvantages = params.currentAutomaticAdvantages,
@@ -150,5 +151,14 @@ class ApplyAncestryChangeCoordinatorUseCase(
             complicationsSnapshot = complicationsSnapshot,
             invalidAdvantagesResolution = invalidAdvantagesResolution
         )
+    }
+
+    private fun shouldForceHumanBonusLoss(params: Params): Boolean {
+        if (!params.compendioSciFiAtivo) return false
+        if (params.previousAncestry.keyify() != "HUMANOS") return false
+        if (params.targetAncestry.keyify() != "HUMANOS") return false
+
+        val variantKey = params.scifiVariant?.keyify() ?: return false
+        return variantKey.contains("BAIXA") && variantKey.contains("GRAVIDADE")
     }
 }

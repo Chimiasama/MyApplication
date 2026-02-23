@@ -150,6 +150,19 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
+    fun `humanos baixa gravidade remove adaptavel`() {
+        val result = useCase.execute(
+            anc = "HUMANOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Baixa Gravidade",
+            ancestryOptions = listOf("Básico", "Baixa Gravidade", "Minerador"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("ADAPTÁVEL", "ADAPTAVEL"), result.automaticAdvantagesToRemove)
+    }
+
+    @Test
     fun `returns fallback for unknown ancestry`() {
         val result = useCase.execute("QUALQUER", null)
 
