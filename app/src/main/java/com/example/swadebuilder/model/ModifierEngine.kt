@@ -73,11 +73,14 @@ object ModifierEngine {
             val rawSources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
             val sources = rawSources.toMutableList().apply {
                 val ancestryKey = anc.nome.keyify()
-                val sourceKeys = map { it.keyify() }.toSet()
+                val allTraitKeys = (this + state.vantagensRaciais + state.vantagensAutomaticas)
+                    .map { it.keyify() }
+                    .toSet()
 
                 // Sci-Fi Aquarianos (Semi-aquáticos) replace "Aquático" and "Resistência" traits.
-                // Defensive normalization to avoid stale base traits leaking into mechanics.
-                if (ancestryKey == "AQUARIANOS" && sourceKeys.contains("SEMIAQUATICO")) {
+                // Defensive normalization to avoid stale base traits leaking into mechanics,
+                // even when ancestry base data is still present for display/back-compat paths.
+                if (ancestryKey == "AQUARIANOS" && allTraitKeys.contains("SEMIAQUATICO")) {
                     removeAll { trait ->
                         val key = trait.keyify()
                         key == "AQUATICO" || key == "RESISTENCIA"

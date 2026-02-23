@@ -98,4 +98,18 @@ class ScifiAncestryVariantSyncTest {
         assertFalse(modsVariante.any { it.id == "racial_resistencia" })
     }
 
+    @Test
+    fun `aquarianos semiaquatico nao recebe bonus mesmo com ancestralidade base`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = false
+            ancestralidade = "AQUARIANOS"
+            vantagensRaciais.clear()
+            vantagensRaciais.add("SEMIAQUÁTICO")
+            vantagensRaciais.add("TOQUE VENENOSO")
+        }
+
+        val mods = ModifierEngine.collect(state)
+        assertFalse(mods.any { it.id == "racial_resistencia" })
+    }
+
 }
