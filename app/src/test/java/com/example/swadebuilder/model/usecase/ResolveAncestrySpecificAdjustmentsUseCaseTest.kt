@@ -137,6 +137,19 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
+    fun `aquarianos semi aquaticos remove tracos substituidos`() {
+        val result = useCase.execute(
+            anc = "AQUARIANOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Semi-aquáticos",
+            ancestryOptions = listOf("Básico", "Semi-aquáticos"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("AQUÁTICO", "RESISTÊNCIA"), result.automaticAdvantagesToRemove)
+    }
+
+    @Test
     fun `returns fallback for unknown ancestry`() {
         val result = useCase.execute("QUALQUER", null)
 

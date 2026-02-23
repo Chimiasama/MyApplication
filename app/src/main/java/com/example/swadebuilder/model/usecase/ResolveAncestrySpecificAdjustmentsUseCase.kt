@@ -18,6 +18,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         val ensureAdvantageNames: List<String>,
         val ensureAdvantageIds: List<String>,
         val ensureAutomaticAdvantages: List<String>,
+        val automaticAdvantagesToRemove: List<String> = emptyList(),
         val ensureRacialDisadvantages: List<String>,
         val elementalAction: ElementalAction,
         val anotacoesToAdd: List<String> = emptyList(),
@@ -131,6 +132,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("SEMIAQUÁTICO", "TOQUE VENENOSO"),
+                        automaticAdvantagesToRemove = listOf("AQUÁTICO", "RESISTÊNCIA"),
                         ensureRacialDisadvantages = emptyList(), // Dependency is in JSON
                         elementalAction = ElementalAction.NONE
                     )

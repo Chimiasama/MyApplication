@@ -74,4 +74,27 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertTrue(result.forceArmorZero)
         assertTrue(result.selectedAdvantages.isEmpty())
     }
+
+    @Test
+    fun `removes replaced automatic traits for aquarianos semi aquaticos`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "AQUARIANOS",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Semi-aquáticos",
+                ancestryOptions = listOf("Básico", "Semi-aquáticos"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = listOf("Dependência", "Visão no Escuro", "Aquático", "Resistência"),
+                ancestryAutomaticDisadvantages = listOf("Dependência")
+            )
+        )
+
+        assertTrue(result.vantagensRaciais.any { it.equals("Semiaquático", ignoreCase = true) })
+        assertTrue(result.vantagensRaciais.any { it.equals("Toque Venenoso", ignoreCase = true) })
+        assertFalse(result.vantagensRaciais.any { it.equals("Aquático", ignoreCase = true) })
+        assertFalse(result.vantagensRaciais.any { it.equals("Resistência", ignoreCase = true) })
+    }
 }
