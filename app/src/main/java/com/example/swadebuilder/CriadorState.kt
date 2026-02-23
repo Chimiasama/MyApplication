@@ -387,6 +387,21 @@ class CriadorState {
             }
         }
 
+        if (key == "ELFOS" && variant.equals("Comunitário", ignoreCase = true)) {
+            newHabilidades.removeAll { hab ->
+                hab.nome.keyify() == "DESASTRADO"
+            }
+
+            if (newHabilidades.none { it.nome.keyify() == "COMUNITARIO" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Comunitário",
+                        descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m)."
+                    )
+                )
+            }
+        }
+
         if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
             newHabilidades.removeAll { hab ->
                 val habKey = hab.nome.keyify()

@@ -407,6 +407,10 @@ fun buildSummaryLines(
             key.contains("SEMI") && key.contains("AQUATIC")
         }
 
+    val isElfosComunitario = personagem.compendioSciFiAtivo &&
+        personagem.ancestralidade.keyify() == "ELFOS" &&
+        personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "COMUNITARIO" }
+
     val habilidadesRaciaisBase = habilidadesRaciaisBaseRaw.toMutableList().apply {
         // Defensive normalization for variant substitution when base ancestry definition is used.
         // If variant traits are present in character snapshot, hide replaced base traits.
@@ -417,6 +421,10 @@ fun buildSummaryLines(
             racialTraitKeys.any { it.contains("SEMI") && it.contains("AQUATIC") }
         ) {
             removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
+        }
+
+        if (personagem.ancestralidade.keyify() == "ELFOS" && racialTraitKeys.contains("COMUNITARIO")) {
+            removeAll { it.keyify() == "DESASTRADO" }
         }
     }
 
@@ -455,6 +463,13 @@ fun buildSummaryLines(
             }
             if (none { it.keyify() == "TOQUE VENENOSO" }) {
                 add("Toque Venenoso")
+            }
+        }
+
+        if (isElfosComunitario) {
+            removeAll { it.keyify() == "DESASTRADO" }
+            if (none { it.keyify() == "COMUNITARIO" }) {
+                add("Comunitário")
             }
         }
     }
