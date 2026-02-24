@@ -485,6 +485,54 @@
       ]
     },
     {
+      "id": "ROBO",
+      "name": "Robô",
+      "category": "racial_trait_positive",
+      "cost_reference": [
+        "6"
+      ]
+    },
+    {
+      "id": "NERVOS_DE_ACO",
+      "name": "Nervos de Aço",
+      "category": "racial_trait_positive",
+      "cost_reference": [
+        "2"
+      ]
+    },
+    {
+      "id": "REFLEXOS_DE_COMBATE",
+      "name": "Reflexos de Combate",
+      "category": "racial_trait_positive",
+      "cost_reference": [
+        "2"
+      ]
+    },
+    {
+      "id": "EM_FORMA",
+      "name": "Em Forma",
+      "category": "racial_trait_positive",
+      "cost_reference": [
+        "2"
+      ]
+    },
+    {
+      "id": "CALCULISTA",
+      "name": "Calculista",
+      "category": "racial_trait_positive",
+      "cost_reference": [
+        "2"
+      ]
+    },
+    {
+      "id": "NOCAO_DE_PERIGO",
+      "name": "Noção de Perigo",
+      "category": "racial_trait_positive",
+      "cost_reference": [
+        "2"
+      ]
+    },
+    {
       "id": "APARAR_BAIXO",
       "name": "Aparar Baixo",
       "category": "racial_trait_negative",
@@ -666,6 +714,134 @@
       "category": "racial_trait_negative",
       "cost_reference": [
         "-1/-2 (Complicação)"
+      ]
+    },
+    {
+      "id": "BAIXA_TECNOLOGIA",
+      "name": "Baixa Tecnologia",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "CIBER_RESISTENCIA",
+      "name": "Ciber-Resistência",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-1"
+      ]
+    },
+    {
+      "id": "CIRCUITOS_DE_ASIMOV",
+      "name": "Circuitos de Asimov",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "PROGRAMADO",
+      "name": "Programado",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "TREINADOS_PARA_A_GUERRA",
+      "name": "Treinados para a Guerra",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "HABITANTE_DE_GRAVIDADE_BAIXA",
+      "name": "Habitante de Gravidade Baixa",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-1"
+      ]
+    },
+    {
+      "id": "CABECA_DURA",
+      "name": "Cabeça Dura",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-1"
+      ]
+    },
+    {
+      "id": "GRANDE",
+      "name": "Grande",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "LENTO",
+      "name": "Lento",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "RUDE",
+      "name": "Rude",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "SEM_ESCRUPULOS",
+      "name": "Sem Escrúpulos",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "INCAPAZ_DE_FALAR",
+      "name": "Incapaz de Falar",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-1"
+      ]
+    },
+    {
+      "id": "OBVIO",
+      "name": "Óbvio",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-1"
+      ]
+    },
+    {
+      "id": "SENSIVEL",
+      "name": "Sensível",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-2"
+      ]
+    },
+    {
+      "id": "DESAJEITADO",
+      "name": "Desajeitado",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-1"
+      ]
+    },
+    {
+      "id": "FRACO",
+      "name": "Fraco",
+      "category": "racial_trait_negative",
+      "cost_reference": [
+        "-1"
       ]
     }
   ]

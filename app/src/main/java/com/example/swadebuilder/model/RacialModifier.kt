@@ -5,7 +5,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RacialAbility(
     val nome: String,
-    val descricao: String
+    val descricao: String,
+    val id: String? = null,
+    val category: String? = null
 )
 
 @Serializable

@@ -354,90 +354,103 @@ class CriadorState {
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
         val newHabilidades = base.habilidades.toMutableList()
 
+        fun removeByIdOrName(id: String, nameKey: String) {
+            newHabilidades.removeAll {
+                it.id == id || it.nome.keyify() == nameKey.keyify()
+            }
+        }
+
         // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
         // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
         // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
 
         if (key == "QUADROIDES" && variant == "Habilidoso") {
-            newHabilidades.removeAll { it.nome.keyify().contains("ACAO ADICIONAL") }
+            newHabilidades.removeAll {
+                it.id == "ACAO_ADICIONAL" || it.nome.keyify().contains("ACAO ADICIONAL")
+            }
         }
 
         if (key == "AQUARIANOS" && variant.equals("Semi-aquáticos", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                val habKey = hab.nome.keyify()
-                habKey == "AQUATICO" || habKey == "RESISTENCIA"
-            }
+            removeByIdOrName("AQUATICO", "AQUATICO")
+            removeByIdOrName("RESISTENCIA", "RESISTENCIA")
 
-            if (newHabilidades.none { it.nome.keyify() == "SEMIAQUATICO" }) {
+            if (newHabilidades.none { it.id == "SEMIAQUATICO" || it.nome.keyify() == "SEMIAQUATICO" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Semiaquático",
-                        descricao = "Podem respirar na água e no ar. Seus deslocamentos na água usam a Movimentação normal."
+                        descricao = "Podem respirar na água e no ar. Seus deslocamentos na água usam a Movimentação normal.",
+                        id = "SEMIAQUATICO",
+                        category = "racial_trait_positive"
                     )
                 )
             }
 
-            if (newHabilidades.none { it.nome.keyify() == "TOQUE VENENOSO" }) {
+            if (newHabilidades.none { it.id == "TOQUE_VENENOSO" || it.nome.keyify() == "TOQUE VENENOSO" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Toque Venenoso",
-                        descricao = "Possuem secreções urticantes ou venenosas para contato próximo."
+                        descricao = "Possuem secreções urticantes ou venenosas para contato próximo.",
+                        id = "TOQUE_VENENOSO",
+                        category = "racial_trait_positive"
                     )
                 )
             }
         }
 
         if (key == "ELFOS" && variant.equals("Comunitário", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                hab.nome.keyify() == "DESASTRADO"
-            }
+            removeByIdOrName("DESASTRADO", "DESASTRADO")
 
-            if (newHabilidades.none { it.nome.keyify() == "COMUNITARIO" }) {
+            if (newHabilidades.none { it.id == "COMUNITARIO" || it.nome.keyify() == "COMUNITARIO" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Comunitário",
-                        descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m)."
+                        descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m).",
+                        id = "COMUNITARIO",
+                        category = "racial_trait_positive"
                     )
                 )
             }
         }
 
         if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                val habKey = hab.nome.keyify()
-                habKey == "FRAGIL" || habKey == "NAO SABE NADAR"
-            }
+            removeByIdOrName("FRAGIL", "FRAGIL")
+            removeByIdOrName("NAO_SABE_NADAR", "NAO SABE NADAR")
 
-            if (newHabilidades.none { it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
+            if (newHabilidades.none { it.id == "HABITANTE_DE_GRAVIDADE_BAIXA" || it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Habitante de Gravidade Baixa",
-                        descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado."
+                        descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado.",
+                        id = "HABITANTE_DE_GRAVIDADE_BAIXA",
+                        category = "racial_trait_negative"
                     )
                 )
             }
 
-            if (newHabilidades.none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
+            if (newHabilidades.none { it.id == "FORMA_ALIENIGENA" || it.nome.keyify() == "FORMA ALIENIGENA" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Forma Alienígena",
-                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
+                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade.",
+                        id = "FORMA_ALIENIGENA",
+                        category = "racial_trait_negative"
                     )
                 )
             }
         }
 
         if (key == "CENTAUX" && variant.equals("Gazela", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                val habKey = hab.nome.keyify()
-                habKey == "GRANDE" || habKey == "TAMANHO +2" || habKey == "MOVIMENTACAO +2"
-            }
+            removeByIdOrName("GRANDE", "GRANDE")
+            removeByIdOrName("TAMANHO_MAIS_2", "TAMANHO +2")
+            removeByIdOrName("MOVIMENTACAO", "MOVIMENTACAO +2")
 
             if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +4" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "MOVIMENTAÇÃO +4",
-                        descricao = "Gazelas são extremamente rápidas. +4 em Movimentação e d10 no dado de corrida."
+                        descricao = "Gazelas são extremamente rápidas. +4 em Movimentação e d10 no dado de corrida.",
+                        id = "MOVIMENTACAO",
+                        category = "racial_trait_positive"
                     )
                 )
             }
