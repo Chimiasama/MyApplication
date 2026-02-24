@@ -1037,8 +1037,14 @@ class CriadorState {
         val ancestral = getAncestralidadeDef(ancestralidade)
         val nomeKey = (ancestral?.nome ?: ancestralidade).keyify()
         val robotByName = listOf("ANDROID", "CONSTRUTO", "CONSTRUCTO").any { nomeKey.contains(it) }
-        val robotBySkill = ancestral?.habilidades?.any { it.nome.keyify() == "MODIFICACOES" } == true
-        val robotByAdvantage = ancestral?.vantagensGratis?.any { it.keyify() == "CONSTRUTO" } == true
+        val robotBySkill = ancestral?.habilidades?.any {
+            val k = it.nome.keyify()
+            k == "MODIFICACOES" || it.id == "ROBO" || it.id == "CONSTRUTO"
+        } == true
+        val robotByAdvantage = ancestral?.vantagensGratis?.any {
+            val k = it.keyify()
+            k == "CONSTRUTO" || k == "ROBO"
+        } == true
 
         return robotByName || robotBySkill || robotByAdvantage
     }
@@ -1135,27 +1141,53 @@ class CriadorState {
         val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
             ?: return emptyList()
 
-        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos", "Toque Arrepiante", "Toque da Morte", "Ferrão", "Toque Venenoso")
+        // Map keyword to expected ID for robust lookup
+        val keywordToIdMap = mapOf(
+            "Garras" to "GARRAS",
+            "Mordida" to "MORDIDA",
+            "Chifres" to "CHIFRES",
+            "Cascos" to "CASCOS",
+            "Toque Arrepiante" to "TOQUE_ARREPIANTE",
+            "Toque da Morte" to "TOQUE_DA_MORTE",
+            "Ferrão" to "FERRAO",
+            "Toque Venenoso" to "TOQUE_VENENOSO"
+        )
+
+        val keywords = keywordToIdMap.keys.toList()
         val addedTypes = mutableSetOf<String>()
+
+        // Sources for name-based fallback
         val sources = ancestralidadeObj.vantagensGratis +
             ancestralidadeObj.habilidades.map { it.nome } +
             vantagensRaciais +
             vantagensSelecionadas.map { it.nome }
 
-        // Helper to find description for a keyword
-        fun findDesc(keyword: String): String {
-            // 1. Try Ability (Habilidade Racial)
-            val hab = ancestralidadeObj.habilidades.find { it.nome.contains(keyword, ignoreCase = true) }
-            if (hab != null) return hab.descricao
+        // Helper to find description for a keyword or ID
+        fun findDesc(keyword: String, targetId: String?): String {
+            // 1. Try Ability (Habilidade Racial) by ID first, then Name
+            val habById = if (targetId != null) ancestralidadeObj.habilidades.find { it.id == targetId } else null
+            if (habById != null) return habById.descricao
 
-            // 2. Try Free Edge (Vantagem Grátis)
-            // If the keyword is in vantagensGratis, we try to look up the edge definition in the global list
-            if (ancestralidadeObj.vantagensGratis.any { it.contains(keyword, ignoreCase = true) }) {
+            val habByName = ancestralidadeObj.habilidades.find { it.nome.contains(keyword, ignoreCase = true) }
+            if (habByName != null) return habByName.descricao
+
+            // 2. Try Free Edge / Racial Advs (Vantagem Grátis / Raciais)
+            // These are strings (names or IDs). Check if any matches ID or Keyword.
+            val allGrantStrings = ancestralidadeObj.vantagensGratis + vantagensRaciais
+            val matchedString = allGrantStrings.firstOrNull { s ->
+                val sKey = s.keyify()
+                (targetId != null && sKey == targetId.keyify()) || s.contains(keyword, ignoreCase = true)
+            }
+
+            if (matchedString != null) {
+                // Try to resolve as Edge description from global list
                 val edge = listaVantagens.firstOrNull {
-                    it.nome.contains(keyword, ignoreCase = true)
+                    it.id == matchedString || it.nome.keyify() == matchedString.keyify() || it.nome.contains(keyword, ignoreCase = true)
                 }
                 if (edge != null) return edge.descricao
+                // Fallback: use the string itself if it looks like a description (unlikely for IDs) but rare
             }
+
             return ""
         }
 
@@ -1234,6 +1266,9 @@ class CriadorState {
         // Parse logic
         keywords.forEach { key ->
             val keyToken = key.keyify()
+            val targetId = keywordToIdMap[key]
+
+            // Check if weapon is already added
             val alreadyPresent = weapons.any { weapon ->
                 val nameKey = weapon.nome.keyify()
                 when (keyToken) {
@@ -1246,23 +1281,37 @@ class CriadorState {
             }
             if (alreadyPresent) return@forEach
 
-            // Variant-specific exclusions
+            // Variant-specific exclusions (Legacy checks + ID checks)
+            // Note: Since we use IDs now, we could check IDs directly, but let's keep robust logic
             if (compendioSciFiAtivo) {
+                // Sáurios Cuspidor removes MORDIDA (via ID or name)
                 if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor" && keyToken == "MORDIDA") return@forEach
+                // Insetoides Vespa removes GARRAS
                 if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa" && keyToken == "GARRAS") return@forEach
             }
 
-            val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
+            // Check presence via ID (Strong match) or Name (Legacy/Fallback)
+            val hasIdMatch = targetId != null && (
+                ancestralidadeObj.habilidades.any { it.id == targetId } ||
+                ancestralidadeObj.vantagensGratis.any { it.keyify() == targetId.keyify() } ||
+                vantagensRaciais.any { it.keyify() == targetId.keyify() } ||
+                vantagensSelecionadas.any { it.id == targetId }
+            )
+
+            val matchedSource = if (hasIdMatch) key else sources.firstOrNull { it.contains(key, ignoreCase = true) }
 
             if (matchedSource != null) {
-                val selectedAdvDesc = vantagensSelecionadas
-                    .firstOrNull { it.nome.equals(matchedSource, ignoreCase = true) }
-                    ?.descricao
-                    .orEmpty()
+                // Try to get description from Selected Edge first (if applicable)
+                val selectedAdvDesc = if (targetId != null) {
+                    vantagensSelecionadas.firstOrNull { it.id == targetId }?.descricao
+                } else {
+                    vantagensSelecionadas.firstOrNull { it.nome.equals(matchedSource, ignoreCase = true) }?.descricao
+                }.orEmpty()
 
-                var desc = selectedAdvDesc.ifBlank { findDesc(key) }
+                var desc = selectedAdvDesc.ifBlank { findDesc(key, targetId) }
                 if (desc.isBlank()) {
-                    desc = matchedSource
+                    // Fallback to source string if it was a name match and description is missing
+                    desc = if (!hasIdMatch) matchedSource else ""
                 }
 
                 // Regex to find damage like "For+d4", "Str+d4", "For+d6", allowing for spaces
