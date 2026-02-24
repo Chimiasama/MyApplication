@@ -1863,12 +1863,17 @@ private fun VantagemItem(
 
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
                     val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
+                    val isSamuraiFree = state.samuraiCombatSlotAvailable && vant.categoria == Categoria.COMBATE
+
+                    val isAdaptavelFree = state.adaptavelSlotAvailable &&
+                            (vant.requisitos.estagio.isBlank() || vant.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+                            !state.isVantagemAutomatica(vant)
 
                     val hasBP = pcLivres >= 2
                     val canAfford = state.pontosVantagem > 0 || hasBP
 
                     when {
-                        !isPathfinderFree && !isProtagonistaFree && !canAfford -> onError("Sem PV disponível")
+                        !isPathfinderFree && !isProtagonistaFree && !isSamuraiFree && !isAdaptavelFree && !canAfford -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         conflitoMsg != null -> onError(conflitoMsg)
