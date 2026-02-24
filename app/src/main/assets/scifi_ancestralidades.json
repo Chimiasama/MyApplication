@@ -108,7 +108,8 @@
         "nome": "Não Sabe Nadar",
         "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.",
         "id": "NAO_SABE_NADAR",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Sentidos Aguçados",
@@ -153,7 +154,8 @@
         "nome": "Desastrado",
         "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.",
         "id": "DESASTRADO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Visão no Escuro",
@@ -214,7 +216,8 @@
         "nome": "Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Mordida/Garras",
@@ -226,13 +229,15 @@
         "nome": "Não Sabe Nadar",
         "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.",
         "id": "NAO_SABE_NADAR",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Sanguinário",
         "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.",
         "id": "SANGUINARIO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "Visão no Escuro",
@@ -267,7 +272,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "FORASTEIRO (Menor)",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Frio)",
@@ -307,7 +313,7 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "Centaux são criaturas grandes. Adicionam +2 ao Tamanho e Resistência.",
-        "id": "TAMANHO_2",
+        "id": "TAMANHO_MAIS_2",
         "category": "racial_trait_positive"
       },
       {
@@ -320,7 +326,8 @@
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       }
     ],
     "tags": [
@@ -366,7 +373,8 @@
         "nome": "RUDE",
         "descricao": "Drakens são mais rápidos em ameaçar do que em argumentar. Subtraem 2 das rolagens de Persuadir.",
         "id": "RUDE",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       }
     ],
     "tags": [
@@ -439,7 +447,8 @@
         "nome": "INIMIGO ANCESTRAL (Insetoide)",
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação.",
         "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
@@ -519,7 +528,8 @@
         "nome": "CIBER-RESISTÊNCIA",
         "descricao": "É difícil implantar ciberequipamentos em criaturas feitas de gosma. Gelatinoides têm a Complicação Ciber-Resistência (p. 129).",
         "id": "CIBER_RESISTENCIA",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FRACO",
@@ -562,19 +572,22 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Tudo, desde os hábitos alimentares dos insetoides até sua mentalidade de colmeia, é estranho e alienígena para a maioria dos outros seres. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "INCAPAZ DE FALAR",
         "descricao": "Insetoides não têm cordas vocais e normalmente só conseguem se comunicar com membros de sua própria espécie. Eles ainda podem ouvir e entender outros idiomas típicos e podem se comunicar por meio de dispositivos eletrônicos, como o tradutor de idiomas encontrado na p. 43.",
         "id": "INCAPAZ_DE_FALAR",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "TRANSTORNO DE SEPARAÇÃO",
         "descricao": "Insetoides são criaturas coletivas e geralmente não se dão bem sozinhos. Quando nenhum outro insetoide estiver na linha de visão, a personagem sofre -2 nas rolagens de Espírito.",
         "id": "TRANSTORNO_DE_SEPARACAO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "VISÃO DE 360°",
@@ -605,13 +618,15 @@
         "nome": "CIBER-RESISTÊNCIA",
         "descricao": "A fisiologia de um mímico não se adapta bem a ciberequipamentos. Possuem a Complicação Ciber-Resistência (p. 129).",
         "id": "CIBER_RESISTENCIA",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Sociedades por toda a galáxia desconfiam de mímicos. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "SEM ÓRGÃOS VITAIS",
@@ -713,7 +728,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Possessores são frequentemente menosprezados, e outros podem ser hostis se os parasitas “vestirem” alguém que conhecem. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       }
     ],
     "tags": [
@@ -750,7 +766,8 @@
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
         "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "MEMBROS EXTRAS",
@@ -762,7 +779,8 @@
         "nome": "SENSÍVEL",
         "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
         "id": "SENSIVEL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ],
     "tags": [
@@ -788,13 +806,15 @@
         "nome": "CIRCUITOS DE ASIMOV",
         "descricao": "O robô não pode causar dano a seres inteligentes. Isso lhes dá a Complicação Pacifista (Maior).",
         "id": "CIRCUITOS_DE_ASIMOV",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "PROGRAMADO",
         "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado (Maior).",
         "id": "PROGRAMADO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "ROBÔ",
@@ -845,7 +865,8 @@
         "nome": "PROGRAMADO",
         "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado.",
         "id": "PROGRAMADO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ],
     "tags": [
@@ -888,13 +909,15 @@
         "nome": "SEM ESCRÚPULOS (Maior)",
         "descricao": "Soldados genéticos são treinados para obedecer ordens e completar suas missões a qualquer custo. Caso tenha se libertado de seu condicionamento, substitua isto por Procurado se seu empregador quiser vingança, ou Inimigo para alguém prejudicado no passado que queira o herói morto.",
         "id": "SEM_ESCRUPULOS",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "TREINADOS PARA A GUERRA",
         "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 4 das rolagens de Conhecimento Geral.",
         "id": "TREINADOS_PARA_A_GUERRA",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       }
     ],
     "tags": [
@@ -916,7 +939,8 @@
         "nome": "CURIOSO",
         "descricao": "Vazios que viajam com outros seres são incrivelmente curiosos, especialmente sobre as muitas facetas da vida orgânica que são completamente desconhecidas para eles.",
         "id": "CURIOSO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "ESPACIAL",
@@ -928,7 +952,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Seres corpóreos não tendem a confiar em tais formas de vida alienígenas. Vazios possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FORMA DE ENERGIA",
@@ -940,7 +965,8 @@
         "nome": "INCAPAZ DE FALAR",
         "descricao": "Vazios nunca desenvolveram a capacidade de se comunicar verbalmente uns com os outros. A maioria usa telas de tradução portáteis para traduzir sua fala para outros seres.",
         "id": "INCAPAZ_DE_FALAR",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "SEM SANGUE",
@@ -952,7 +978,8 @@
         "nome": "TRANSTORNO DE SEPARAÇÃO",
         "descricao": "Estas criaturas são entidades solitárias, subtraindo 2 das rolagens de Espírito quando não houver outros vazios presentes.",
         "id": "TRANSTORNO_DE_SEPARACAO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ],
     "tags": [
@@ -1003,7 +1030,7 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "Geralmente têm cerca de 2,1 metros de altura, são muito grandes e densos. Adicionam +2 ao Tamanho e Resistência.",
-        "id": "TAMANHO_2",
+        "id": "TAMANHO_MAIS_2",
         "category": "racial_trait_positive"
       }
     ],
@@ -1027,7 +1054,8 @@
         "nome": "BAIXA TECNOLOGIA (Maior)",
         "descricao": "O mundo natal dos aurax é de baixa tecnologia em comparação à maioria dos mundos desenvolvidos. Eles possuem a Complicação Baixa Tecnologia (Maior).",
         "id": "BAIXA_TECNOLOGIA",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "ESTÁVEL",
@@ -1057,12 +1085,13 @@
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "TAMANHO +2",
         "descricao": "A parte humanoide de um centaux é um humano robusto e musculoso, enquanto a parte traseira do corpo é do tamanho de um grande mamífero de quatro patas. Adicionam +2 à sua Resistência.",
-        "id": "TAMANHO_2",
+        "id": "TAMANHO_MAIS_2",
         "category": "racial_trait_positive"
       }
     ],
@@ -1103,7 +1132,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "A maioria das pessoas se sente desconfortável perto de cadáveres animados.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FRACO",
@@ -1155,7 +1185,8 @@
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
         "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "MEMBROS EXTRAS",
@@ -1167,7 +1198,8 @@
         "nome": "SENSÍVEL",
         "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
         "id": "SENSIVEL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ],
     "tags": [

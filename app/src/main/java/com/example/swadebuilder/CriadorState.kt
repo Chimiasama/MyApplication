@@ -3172,7 +3172,14 @@ class CriadorState {
         val fromList = rm.desvantagens
         val fromHabilidades = rm.habilidades
             .filter { it.category == "racial_hindrance" }
-            .map { it.nome }
+            .map {
+                val sev = it.severity
+                if (sev != null && !it.nome.contains("($sev)", ignoreCase = true)) {
+                    "${it.nome} ($sev)"
+                } else {
+                    it.nome
+                }
+            }
         return fromList + fromHabilidades
     }
 

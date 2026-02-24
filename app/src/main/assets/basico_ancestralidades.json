@@ -18,19 +18,22 @@
         "nome": "Forasteiro (Maior)",
         "descricao": "FORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "Pacifista (Maior)",
         "descricao": "PACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.",
         "id": "PACIFISTA",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "Voto (Maior)",
         "descricao": "VOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo",
         "id": "VOTO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ]
   },
@@ -92,7 +95,8 @@
         "nome": "Não Sabe Nadar",
         "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.",
         "id": "NAO_SABE_NADAR",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Sentidos Aguçados",
@@ -164,7 +168,8 @@
         "nome": "Desastrado",
         "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.",
         "id": "DESASTRADO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Visão no Escuro",
@@ -187,7 +192,8 @@
         "nome": "Forasteiro (Menor)",
         "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Herança",
@@ -278,7 +284,8 @@
         "nome": "Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Mordida/Garras",
@@ -290,13 +297,15 @@
         "nome": "Não Sabe Nadar",
         "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.",
         "id": "NAO_SABE_NADAR",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Sanguinário",
         "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.",
         "id": "SANGUINARIO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "Visão no Escuro",
@@ -325,7 +334,8 @@
         "nome": "Forasteiro (Menor)",
         "descricao": "A maioria das pessoas desconfia de sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo antigo subconsciente de ancestrais reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todas as demais ancestralidades.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Fraqueza Ambiental",
@@ -368,7 +378,8 @@
         "nome": "Desastrado",
         "descricao": "Celestiais não têm o costume de lidar com tecnologia ou máquinas.",
         "id": "DESASTRADO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Antecedente Arcano (Milagres)",
@@ -392,13 +403,15 @@
         "nome": "Inimigo Racial (Demônios e Diabos)",
         "descricao": "Celestiais não toleram facilmente os saídos do abismo.",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "Voto (Maior: Proteger a humanidade)",
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
         "id": "VOTO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       }
     ]
   },
@@ -435,7 +448,8 @@
         "nome": "Voto (Maior: Proteger a humanidade)",
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
         "id": "VOTO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "CAMPEÃO",

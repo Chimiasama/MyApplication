@@ -94,7 +94,8 @@
         "nome": "NÃO SABE NADAR",
         "descricao": "Colocar as asas debaixo d'água é um risco para os Avianos. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro movido na água custa 3 quadros de Movimentação.",
         "id": "NAO_SABE_NADAR",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "SENTIDOS AGUÇADOS",
@@ -145,7 +146,8 @@
         "nome": "VOTO (Maior)",
         "descricao": "Servir à divindade que os criou.",
         "id": "VOTO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ],
     "tags": [
@@ -220,7 +222,8 @@
         "nome": "FORASTEIRO",
         "descricao": "A maioria das pessoas acha difícil se relacionar com descendentes dos elementais. Possuem a Complicação Forasteiro (Menor), subtraindo 2 das rolagens de Persuadir com todos, exceto outros de sua própria espécie.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "RESISTÊNCIA AMBIENTAL",
@@ -298,7 +301,8 @@
         "nome": "ARROGANTE",
         "descricao": "ARROGANTE",
         "id": "ARROGANTE",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ],
     "tags": [
@@ -322,7 +326,8 @@
         "nome": "DESASTRADO",
         "descricao": "Elfos têm uma aversão inerente a objetos mecânicos em cenários de fantasia tradicionais, o que lhes confere a Complicação Desastrado.",
         "id": "DESASTRADO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "VISÃO NO ESCURO",
@@ -352,19 +357,22 @@
         "nome": "BOCA GRANDE",
         "descricao": "Embora sejam cheias de segredos, raramente os guardam para si.",
         "id": "BOCA_GRANDE",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "CURIOSO",
         "descricao": "Fadas têm inúmeras perguntas e curiosidades sobre a vida, especialmente sobre assuntos fora de sua terra natal.",
         "id": "CURIOSO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "DESASTRADO",
         "descricao": "Fadas tradicionais têm grande desdém por objetos mecânicos. Possuem a Complicação Desastrado.",
         "id": "DESASTRADO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "DIMINUTO (Tamanho -4)",
@@ -376,7 +384,8 @@
         "nome": "IMPULSIVO",
         "descricao": "Moderação não é uma qualidade frequentemente encontrada nas fadas.",
         "id": "IMPULSIVO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "VOO",
@@ -451,7 +460,8 @@
         "nome": "DESAGRADÁVEL",
         "descricao": "“Maligno” e “cruel” são dois adjetivos comumente usados para descrever goblins. Eles subtraem 1 dos testes de Persuadir.",
         "id": "DESAGRADAVEL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "INFRAVISÃO",
@@ -540,7 +550,7 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "Golems são criaturas densas e grandes, pesando cerca de 450 kg. Isso confere Resistência +2.",
-        "id": "TAMANHO_2",
+        "id": "TAMANHO_MAIS_2",
         "category": "racial_trait_positive"
       }
     ],
@@ -583,7 +593,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Ninguém realmente confia em alguém de herança diabólica, mesmo em um cenário de alta fantasia. A personagem tem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Frio)",
@@ -643,7 +654,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Outras raças consideram o povo inseto perturbador e estranho. A personagem tem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FORMATO CORPORAL INCOMUM",
@@ -691,7 +703,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Meio-elfos nunca ficam confortáveis na sociedade humana ou na élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com todos menos os seus iguais.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "HERANÇA",
@@ -724,7 +737,8 @@
         "nome": "ANALFABETO",
         "descricao": "Meio-gigantes não sabem ler nem escrever. Podem recomprar essa Complicação com um Progresso.",
         "id": "ANALFABETO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "CABEÇAS-DURAS",
@@ -736,7 +750,8 @@
         "nome": "FORASTEIRO (Maior)",
         "descricao": "Meio-gigantes são aterrorizantes para a maioria das raças humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seus próprios clãs.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "GRANDE",
@@ -790,7 +805,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Meio-orcs não são confiáveis para a maioria dos povos “civilizados”. Subtraem 2 das rolagens de Persuadir ao interagir com seres além de meio-orcs.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "INFRAVISÃO",
@@ -823,7 +839,8 @@
         "nome": "DESAGRADÁVEL",
         "descricao": "Ensinados que o mais forte está sempre certo, minotauros lutam contra a diplomacia e o tato. Possuem a Complicação Desagradável.",
         "id": "DESAGRADAVEL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "DURÃO",
@@ -853,7 +870,8 @@
         "nome": "SENSÍVEL",
         "descricao": "Minotauros perdem a paciência rapidamente quando provocados. Possuem a Complicação Sensível (Maior).",
         "id": "SENSIVEL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "TAMANHO +1",
@@ -880,7 +898,8 @@
         "nome": "ARROGANTE",
         "descricao": "A cultura dos ogros é repleta de grandes orgulhos e feitos. Outros os veem como arrogantes e distantes, o que lhes dá a Complicação Arrogante.",
         "id": "ARROGANTE",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "DESAJEITADO",
@@ -892,7 +911,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Seu tamanho estranho e imponente deixa outros seres nervosos. Subtraem 2 das rolagens de Persuadir.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "GRANDE",
@@ -955,7 +975,8 @@
         "nome": "FORASTEIRO (Maior)",
         "descricao": "Orcs subtraem 2 das rolagens de Persuadir e podem ser tratados como monstros fora de seus próprios clãs.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "FORTE",
@@ -1035,19 +1056,22 @@
         "nome": "COVARDE",
         "descricao": "O povo ratazana aprende cedo que a discrição é a melhor parte da valentia. Possuem a Complicação Covarde.",
         "id": "COVARDE",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "FORASTEIRO (Maior)",
         "descricao": "O povo ratazana normalmente é desprezado por outros povos. Subtraem 2 das rolagens de Persuadir e são tratados como pragas monstruosas fora de seus próprios bandos.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "GANANCIOSO (Menor)",
         "descricao": "Adquirir novos tesouros é a obsessão do povo ratazana. Possuem a Complicação Ganancioso (Menor).",
         "id": "GANANCIOSO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "GARRAS",
@@ -1113,7 +1137,8 @@
         "nome": "FORASTEIRO (Maior)",
         "descricao": "Membros do povo rato são novidades fofas para a maioria das ancestralidades humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seu próprio povo.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
@@ -1162,7 +1187,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "A maioria dos povos não confia no povo serpente. Subtraem 2 das rolagens de Persuadir fora de seus próprios clãs familiares.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FRAQUEZA AMBIENTAL",
@@ -1224,7 +1250,8 @@
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "A sociedade rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam uns com os outros e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "MORDIDA",
@@ -1236,13 +1263,15 @@
         "nome": "NÃO SABE NADAR",
         "descricao": "Rakashanos até podem nadar, eles apenas evitam e não são particularmente bons nisso. Eles subtraem 2 das rolagens de Atletismo (natação) e cada quadro que se movem na água custa 3 quadros de Movimentação.",
         "id": "NAO_SABE_NADAR",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "SANGUINÁRIO",
         "descricao": "Rakashanos podem ser cruéis com seus inimigos, muitas vezes brincando com eles por pura diversão. Eles raramente fazem prisioneiros e sentem pouco remorso a respeito de inimigos capturados.",
         "id": "SANGUINARIO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "VISÃO NO ESCURO",
@@ -1260,7 +1289,8 @@
         "nome": "INIMIGO RACIAL",
         "descricao": "INIMIGO RACIAL",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       }
     ],
     "vantagensGratis": []
@@ -1292,7 +1322,8 @@
         "nome": "FORASTEIRO (Maior)",
         "descricao": "Renascidos emitem uma aura desconfortável até mesmo para seus aliados. Outras pessoas podem confundi-los com verdadeiros vampiros — temendo-os ou caçando-os conforme sua natureza.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "FORÇA SOBRENATURAL",
@@ -1346,7 +1377,8 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "A maioria dos povos desconfia dos sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo subconsciente antigo dos ancestrais dos reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todos menos os seus iguais.",
         "id": "FORASTEIRO",
-        "category": "racial_hindrance"
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Frio)",
