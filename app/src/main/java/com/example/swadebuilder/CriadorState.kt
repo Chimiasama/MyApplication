@@ -3828,12 +3828,15 @@ class CriadorState {
 
         // Check if Adaptavel was lost
         val lostAdaptavel = !temAdaptavel() && vantagemAdaptavelSelecionadaId != null
+        var removedAdaptavelId: String? = null
+
         if (lostAdaptavel) {
             val toRemove = vantagensSelecionadas.find { it.id == vantagemAdaptavelSelecionadaId }
             if (toRemove != null) {
                 removeVantagemDinheiro(toRemove)
                 removerVantagem(toRemove)
                 feedbackMessages.add("Vantagem '${toRemove.nome}' (Vantagem bônus de Adaptável) removida.")
+                removedAdaptavelId = toRemove.id
             }
             vantagemAdaptavelSelecionadaId = null
         }
@@ -3886,7 +3889,12 @@ class CriadorState {
         val racialPackage = ancestryChangeCoordination.racialPackage
 
         vantagensSelecionadas.clear()
-        vantagensSelecionadas.addAll(racialPackage.selectedAdvantages)
+        val advantagesToRestore = if (removedAdaptavelId != null) {
+            racialPackage.selectedAdvantages.filter { it.id != removedAdaptavelId }
+        } else {
+            racialPackage.selectedAdvantages
+        }
+        vantagensSelecionadas.addAll(advantagesToRestore)
 
         desvantagensAutomaticas.clear()
         desvantagensAutomaticas.addAll(ancDef?.desvantagens ?: emptyList())
@@ -3982,6 +3990,7 @@ class CriadorState {
 
         invalidAdvantagesResolution.removedAdvantages.forEach { removed ->
             removeVantagemDinheiro(removed)
+            removerVantagem(removed)
             pontosVantagem++
             feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
         }
