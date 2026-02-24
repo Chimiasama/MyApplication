@@ -383,7 +383,7 @@
       {
         "nome": "Antecedente Arcano (Milagres)",
         "descricao": "Celestiais podem invocar uma grande variedade de milagres.",
-        "id": "ANTECEDENTE_ARCANO",
+        "id": "ANTECEDENTE_ARCANO_MILAGRES",
         "category": "racial_trait_positive"
       },
       {
