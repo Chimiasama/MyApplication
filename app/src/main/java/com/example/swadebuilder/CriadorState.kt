@@ -342,7 +342,9 @@ class CriadorState {
         } ?: return null
 
         val withVariant = if (compendioSciFiAtivo && (selected.origem == "FC" || selected.origem == "SCI_FI")) {
-            applySciFiVariantAdjustments(selected, key)
+            applyAncestryVariantAdjustments(selected, key)
+        } else if (key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) {
+            applyAncestryVariantAdjustments(selected, key)
         } else {
             selected
         }
@@ -350,7 +352,37 @@ class CriadorState {
         return withVariant
     }
 
-    private fun applySciFiVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
+    private fun applyAncestryVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
+        if (key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) {
+            val newHabilidades = base.habilidades.toMutableList()
+            newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
+
+            if (meioElfoAgil) {
+                if (newHabilidades.none { it.id == "AGIL" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Ágil",
+                            descricao = "Meio-elfos ágeis começam com d6 em Agilidade em vez de d4. Isso aumenta a Agilidade máxima para d12+1.",
+                            id = "AGIL",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+            } else {
+                if (newHabilidades.none { it.id == "ADAPTAVEL" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Adaptável",
+                            descricao = "Meio-elfos adaptáveis começam com uma Vantagem de Estágio Novato à sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).",
+                            id = "ADAPTAVEL",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+            }
+            return base.copy(habilidades = newHabilidades)
+        }
+
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
         val newHabilidades = base.habilidades.toMutableList()
 
