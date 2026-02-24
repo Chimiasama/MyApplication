@@ -274,7 +274,7 @@ class CriadorState {
         return keys
     }
 
-    fun getMonstroSelecionado(): com.example.swadebuilder.model.MonstroTemplate? {
+    fun getMonstroSelecionado(): MonstroTemplate? {
         if (!modoMonstroAtivo || tipoMonstroSelecionado == null) return null
         return listaMonstroTemplates.firstOrNull { it.id == tipoMonstroSelecionado }
     }
@@ -1684,15 +1684,15 @@ class CriadorState {
 
         if (isFreeAdaptavel) {
             vantagemAdaptavelSelecionadaId = v.id
-            onFeedback("Vantagem ${v.nome} adicionada (Slot de Humano/Adaptável).")
+            onFeedback("Vantagem ${v.nome} adicionada (Vantagem bônus de Adaptável).")
         } else if (isFreePathfinder) {
-            onFeedback("Vantagem ${v.nome} adicionada (Slot de Classe Gratuito).")
+            onFeedback("Vantagem ${v.nome} adicionada (Vantagem gratuita de Classe).")
         } else if (isFreeProtagonista) {
             vantagensSlotProtagonista.add(v.id)
-            onFeedback("Vantagem ${v.nome} adicionada (Slot de Protagonista Gratuito).")
+            onFeedback("Vantagem ${v.nome} adicionada (Vantagem gratuita de Protagonista).")
         } else if (isFreeSamuraiCombat) {
             samuraiCombatSlotIds.add(v.id)
-            onFeedback("Vantagem ${v.nome} adicionada (Slot de Combate do Samurai).")
+            onFeedback("Vantagem ${v.nome} adicionada (Vantagem de Combate gratuita de Samurai).")
         } else {
             pontosVantagem--
             onFeedback("Vantagem ${v.nome} adicionada.")
@@ -3759,6 +3759,7 @@ class CriadorState {
         return applySuperStepsFrom(startForSteps, steps)
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {
         val prevAnc = ancestralidade
 
@@ -3832,7 +3833,7 @@ class CriadorState {
             if (toRemove != null) {
                 removeVantagemDinheiro(toRemove)
                 removerVantagem(toRemove)
-                feedbackMessages.add("Vantagem '${toRemove.nome}' (Slot de Humano) removida.")
+                feedbackMessages.add("Vantagem '${toRemove.nome}' (Vantagem bônus de Adaptável) removida.")
             }
             vantagemAdaptavelSelecionadaId = null
         }
@@ -4319,6 +4320,7 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarAnoesScifi(opcao: String?) {
         val ancDef = getAncestralidadeDef("ANÕES")
         val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
@@ -4335,6 +4337,7 @@ class CriadorState {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarScifiVariant(opcao: String?) {
         val ancDef = getAncestralidadeDef(ancestralidade)
         val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
@@ -4352,6 +4355,7 @@ class CriadorState {
         aplicarAncestralidade(ancestralidade, msgs)
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarHumanoMineradorAtributo(atributo: String?) {
         if (humanoMineradorAtributo == atributo) return
         humanoMineradorAtributo = atributo
@@ -4548,6 +4552,7 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun updateProtagonistaRollTecnicas(value: Int?) {
         if (protagonistaRollTecnicas == value) return
         protagonistaRollTecnicas = value?.coerceIn(1, 4)
@@ -4669,6 +4674,7 @@ class CriadorState {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     private fun syncMestreDoChiSlots() {
         rebuildAllPericiaStacks()
         poderSlotsPorArcano["MESTRE DO CHI"]?.let { slots ->
@@ -5395,6 +5401,7 @@ class CriadorState {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun restoreFromSnapshot(snapshot: PersonagemSnapshot, feedbackMessages: MutableList<String>) {
         val flags = snapshot.flags
 

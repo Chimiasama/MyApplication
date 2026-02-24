@@ -82,7 +82,6 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.ptBrCollator
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
-import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
@@ -1922,20 +1921,20 @@ private fun VantagemItem(
                 if (state.vantagemAdaptavelSelecionadaId == vant.id) {
                     AssistChip(
                         onClick = {},
-                        label = { Text("Slot de Humano/Adaptável") }
+                        label = { Text("Vantagem bônus de Adaptável") }
                     )
                 }
 
                 if (state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)) {
                     AssistChip(
                         onClick = {},
-                        label = { Text("Slot de Classe/Profissional/Antecedente") }
+                        label = { Text("Vantagem de Classe/Profissional/Antecedente") }
                     )
                 } else if (state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)) {
                     val slotSuffix = protagonistaSlotCategoria?.let { " ($it)" } ?: ""
                     AssistChip(
                         onClick = {},
-                        label = { Text("Slot de Protagonista$slotSuffix") }
+                        label = { Text("Vantagem bônus de Protagonista$slotSuffix") }
                     )
                 }
                 if (vant.descricao.isNotBlank() && vant.vinculadoPericia &&
