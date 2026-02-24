@@ -2,7 +2,7 @@
   {
     "nome": "ANÕES",
     "origem": "FANTASIA",
-    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins.\nAnões geralmente vivem mais de 200 anos. Na maioria das campanhas de fantasia, são conhecidos por seu amor pela cerveja, conhecimento em trabalho com pedra e barbas impressionantes.",
+    "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins.",
     "variantes": "Ideias Variantes: Os anões sombrios, ou duergar, são uma ramificação dos anões que migraram ainda mais para as profundezas, perdendo toda a conexão com o mundo da superfície e os povos que nele habitam. Podem não ser malignos, mas vivem em isolamento, são rígidos e muitas vezes brigam com seus primos. Substitua Visão no Escuro por Visão Total no Escuro.\nA maioria dos indivíduos tem Complicações negativas de personalidade, como Ganancioso, Teimoso e Vingativo, características que sua sociedade isolada considera necessárias para sua sobrevivência.\nAnões do fogo abraçam o caos e a destruição. São os inimigos da maioria das outras civilizações, que consideram, na melhor das hipóteses, como um incômodo e, na pior, como ameaças existenciais. São mestres em canhões, fogo e armas de fogo e se deleitam com a destruição em massa que essas armas causam a seus inimigos.\nSuas habilidades permanecem as mesmas, mas em sua maioria são artesãos experientes (começam com um d4 em Consertar) e carregam várias armas de pólvora negra e talvez até algumas granadas.",
     "atributos": {
       "Vigor": 2
@@ -12,15 +12,21 @@
     "habilidades": [
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
-        "descricao": "Anões têm pernas mais curtas em comparação com as outras ancestralidades. Reduza 1 de sua Movimentação andando e seu dado de corrida em um tipo."
+        "descricao": "Anões têm pernas mais curtas em comparação com as outras ancestralidades. Reduza 1 de sua Movimentação andando e seu dado de corrida em um tipo.",
+        "id": "MOVIMENTACAO_REDUZIDA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "ROBUSTO",
-        "descricao": "Anões são fortes e resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1."
+        "descricao": "Anões são fortes e resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
+        "id": "ROBUSTO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "Anões estão acostumados com a escuridão do subterrâneo. Ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Anões estão acostumados com a escuridão do subterrâneo. Ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -35,19 +41,27 @@
     "habilidades": [
       {
         "nome": "AQUÁTICO",
-        "descricao": "Aquarianos não podem se afogar na água e se movem com sua Movimentação completa quando estão nadando."
+        "descricao": "Aquarianos não podem se afogar na água e se movem com sua Movimentação completa quando estão nadando.",
+        "id": "AQUATICO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "DEPENDÊNCIA",
-        "descricao": "Aquarianos devem permanecer imersos em água por uma hora a cada 24 ou recebem um nível de Fadiga a cada dia até que fiquem Incapacitados. No dia seguinte à Incapacitação por desidratação, eles morrem. A cada hora dentro d’água um nível de Fadiga é restaurado."
+        "descricao": "Aquarianos devem permanecer imersos em água por uma hora a cada 24 ou recebem um nível de Fadiga a cada dia até que fiquem Incapacitados. No dia seguinte à Incapacitação por desidratação, eles morrem. A cada hora dentro d’água um nível de Fadiga é restaurado.",
+        "id": "DEPENDENCIA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "RESISTÊNCIA",
-        "descricao": "A vida nas profundezas de seus mundos aquáticos fez com que a pele dos aquarianos se tornasse dura e resistente. Adicione +1 a sua Resistência."
+        "descricao": "A vida nas profundezas de seus mundos aquáticos fez com que a pele dos aquarianos se tornasse dura e resistente. Adicione +1 a sua Resistência.",
+        "id": "RESISTENCIA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "Aquarianos estão acostumados com a escuridão das profundezas. Eles ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Aquarianos estão acostumados com a escuridão das profundezas. Eles ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -64,23 +78,33 @@
     "habilidades": [
       {
         "nome": "FRÁGIL",
-        "descricao": "Avianos têm Resistência -1 devido a seus ossos ocos."
+        "descricao": "Avianos têm Resistência -1 devido a seus ossos ocos.",
+        "id": "FRAGIL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
-        "descricao": "Dependência de voo e asas pesadas tornam os avianos um pouco mais lentos ao andar. Reduza 1 quadro da sua Movimentação andando e seu dado de corrida em um tipo."
+        "descricao": "Dependência de voo e asas pesadas tornam os avianos um pouco mais lentos ao andar. Reduza 1 quadro da sua Movimentação andando e seu dado de corrida em um tipo.",
+        "id": "MOVIMENTACAO_REDUZIDA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "NÃO SABE NADAR",
-        "descricao": "Colocar as asas debaixo d'água é um risco para os Avianos. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro movido na água custa 3 quadros de Movimentação."
+        "descricao": "Colocar as asas debaixo d'água é um risco para os Avianos. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro movido na água custa 3 quadros de Movimentação.",
+        "id": "NAO_SABE_NADAR",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "SENTIDOS AGUÇADOS",
-        "descricao": "Avianos são mais perspicazes do que a maioria das ancestralidades. Começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12+1."
+        "descricao": "Avianos são mais perspicazes do que a maioria das ancestralidades. Começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12+1.",
+        "id": "SENTIDOS_AGUCADOS",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "VOO",
-        "descricao": "Avianos voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras."
+        "descricao": "Avianos voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
+        "id": "VOO",
+        "category": "racial_trait_positive"
       }
     ],
     "tags": ["asas"]
@@ -96,19 +120,27 @@
     "habilidades": [
       {
         "nome": "ATRAENTE",
-        "descricao": "Celestiais têm uma beleza sobrenatural, o que lhes confere a Vantagem Atraente."
+        "descricao": "Celestiais têm uma beleza sobrenatural, o que lhes confere a Vantagem Atraente.",
+        "id": "ATRAENTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "CÓDIGO DE HONRA",
-        "descricao": "Celestiais seguem naturalmente uma moral boa. Abominam mentiras, protegem os fracos e buscam por justiça."
+        "descricao": "Celestiais seguem naturalmente uma moral boa. Abominam mentiras, protegem os fracos e buscam por justiça.",
+        "id": "CODIGO_DE_HONRA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VOO",
-        "descricao": "Celestiais voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras."
+        "descricao": "Celestiais voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
+        "id": "VOO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "VOTO (Maior)",
-        "descricao": "Servir à divindade que os criou."
+        "descricao": "Servir à divindade que os criou.",
+        "id": "VOTO",
+        "category": "racial_trait_negative"
       }
     ],
     "tags": ["asas"]
@@ -124,23 +156,33 @@
     "habilidades": [
       {
         "nome": "CASCOS",
-        "descricao": "Os cascos de um centauro causam For+d4 de dano, e Vantagens que aumentam o dano de armas naturais, como Artista Marcial, aplicam-se a seus coices, bem como a outros ataques naturais."
+        "descricao": "Os cascos de um centauro causam For+d4 de dano, e Vantagens que aumentam o dano de armas naturais, como Artista Marcial, aplicam-se a seus coices, bem como a outros ataques naturais.",
+        "id": "CASCOS",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "DEPENDÊNCIA",
-        "descricao": "Centauros precisam galopar sob o céu aberto pelo menos uma hora a cada 24. Se não o fizerem, recebem um nível de Fadiga a cada dia, mas recuperam um nível por hora passada em locais abertos, uma vez livres para fazê-lo. Isso não pode causar Incapacitação."
+        "descricao": "Centauros precisam galopar sob o céu aberto pelo menos uma hora a cada 24. Se não o fizerem, recebem um nível de Fadiga a cada dia, mas recuperam um nível por hora passada em locais abertos, uma vez livres para fazê-lo. Isso não pode causar Incapacitação.",
+        "id": "DEPENDENCIA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORMA INCOMUM",
-        "descricao": "Centauros não podem montar montarias ou usar certos tipos de armaduras, itens ou outros equipamentos que não se ajustem a sua forma (a critério do Mestre)."
+        "descricao": "Centauros não podem montar montarias ou usar certos tipos de armaduras, itens ou outros equipamentos que não se ajustem a sua forma (a critério do Mestre).",
+        "id": "FORMA_INCOMUM",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MOVIMENTAÇÃO +4",
-        "descricao": "Centauros são corredores rápidos. Possuem Movimentação 10 e dado de corrida d10."
+        "descricao": "Centauros são corredores rápidos. Possuem Movimentação 10 e dado de corrida d10.",
+        "id": "MOVIMENTACAO_MAIS_4",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "TAMANHO +1",
-        "descricao": "Centauros normalmente têm o tamanho humano com os quartos traseiros adicionais de um cavalo. Adicione +1 a sua Resistência."
+        "descricao": "Centauros normalmente têm o tamanho humano com os quartos traseiros adicionais de um cavalo. Adicione +1 a sua Resistência.",
+        "id": "TAMANHO_MAIS_1",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -155,27 +197,39 @@
     "habilidades": [
       {
         "nome": "AQUÁTICO (Apenas Descendentes da Água)",
-        "descricao": "Descendentes da água não podem se afogar na água e se movem com sua Movimentação completa quando estão nadando."
+        "descricao": "Descendentes da água não podem se afogar na água e se movem com sua Movimentação completa quando estão nadando.",
+        "id": "AQUATICO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "AR INTERNO (Somente Descendentes do Ar)",
-        "descricao": "Descendentes do ar não precisam respirar. Não são afetados por toxinas inaladas, não se afogam e não sufocam no vácuo."
+        "descricao": "Descendentes do ar não precisam respirar. Não são afetados por toxinas inaladas, não se afogam e não sufocam no vácuo.",
+        "id": "AR_INTERNO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "FORASTEIRO",
-        "descricao": "A maioria das pessoas acha difícil se relacionar com descendentes dos elementais. Possuem a Complicação Forasteiro (Menor), subtraindo 2 das rolagens de Persuadir com todos, exceto outros de sua própria espécie."
+        "descricao": "A maioria das pessoas acha difícil se relacionar com descendentes dos elementais. Possuem a Complicação Forasteiro (Menor), subtraindo 2 das rolagens de Persuadir com todos, exceto outros de sua própria espécie.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "RESISTÊNCIA AMBIENTAL",
-        "descricao": "Descendentes dos elementais recebem um bônus de +4 para resistir aos efeitos negativos de seu elemento ancestral e o dano desse elemento também é reduzido em 4."
+        "descricao": "Descendentes dos elementais recebem um bônus de +4 para resistir aos efeitos negativos de seu elemento ancestral e o dano desse elemento também é reduzido em 4.",
+        "id": "RESISTENCIA_AMBIENTAL",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "RÁPIDO (Apenas Descendentes do Fogo)",
-        "descricao": "Descendentes do fogo são frenéticos e estão sempre em movimento. Possuem a Vantagem Rápido."
+        "descricao": "Descendentes do fogo são frenéticos e estão sempre em movimento. Possuem a Vantagem Rápido.",
+        "id": "RAPIDO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SÓLIDO COMO ROCHA (Somente Descendentes da Terra)",
-        "descricao": "Descendentes da terra são resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1."
+        "descricao": "Descendentes da terra são resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
+        "id": "SOLIDO_COMO_ROCHA",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -190,31 +244,45 @@
     "habilidades": [
       {
         "nome": "ARMA DE SOPRO",
-        "descricao": "Draconianos podem expelir uma torrente de fogo impressionante. Isso requer um teste de Atletismo, pode ser Evadido e causa 2d6 de dano em um Modelo de Cone ou em uma linha de 12 quadros (escolha durante a criação de personagem). Uma Falha Crítica no ataque causa Fadiga."
+        "descricao": "Draconianos podem expelir uma torrente de fogo impressionante. Isso requer um teste de Atletismo, pode ser Evadido e causa 2d6 de dano em um Modelo de Cone ou em uma linha de 12 quadros (escolha durante a criação de personagem). Uma Falha Crítica no ataque causa Fadiga.",
+        "id": "ARMA_DE_SOPRO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "ARMADURA +2",
-        "descricao": "Draconianos têm pele espessa e escamosa."
+        "descricao": "Draconianos têm pele espessa e escamosa.",
+        "id": "ARMADURA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Frio)",
-        "descricao": "Draconianos não se ajustam bem em condições frias. Subtraem 4 dos testes feitos para resistir a efeitos de frio ou baseados e recebem +4 de dano de tais ataques."
+        "descricao": "Draconianos não se ajustam bem em condições frias. Subtraem 4 dos testes feitos para resistir a efeitos de frio ou baseados e recebem +4 de dano de tais ataques.",
+        "id": "FRAQUEZA_AMBIENTAL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MAL-HUMORADO",
-        "descricao": "Draconianos têm orgulho dos poderosos dragões dos quais são parentes. Isso lhes dá a Complicação Arrogante. Se os draconianos do seu cenário não tiverem essa característica, escolha dois pontos de penalidades de ancestralidade negativas que melhor se adaptem a sua origem ou sociedade."
+        "descricao": "Draconianos têm orgulho dos poderosos dragões dos quais são parentes. Isso lhes dá a Complicação Arrogante. Se os draconianos do seu cenário não tiverem essa característica, escolha dois pontos de penalidades de ancestralidade negativas que melhor se adaptem a sua origem ou sociedade.",
+        "id": "MAL_HUMORADO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MORDIDA/GARRAS",
-        "descricao": "For+d4, PA 2. Observe que Mordida permite que uma personagem morda uma presa agarrada em vez de apenas a esmagar; e Garras adicionam +2 em Atletismo ao escalar a maioria das superfícies."
+        "descricao": "For+d4, PA 2. Observe que Mordida permite que uma personagem morda uma presa agarrada em vez de apenas a esmagar; e Garras adicionam +2 em Atletismo ao escalar a maioria das superfícies.",
+        "id": "GARRAS",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "RESISTÊNCIA AMBIENTAL (Calor)",
-        "descricao": "Draconianos recebem um bônus de +4 para resistir a efeitos baseados em calor ou fogo e reduzem o dano de tais fontes na mesma quantidade."
+        "descricao": "Draconianos recebem um bônus de +4 para resistir a efeitos baseados em calor ou fogo e reduzem o dano de tais fontes na mesma quantidade.",
+        "id": "RESISTENCIA_AMBIENTAL",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SANGUE FRIO",
-        "descricao": "Draconianos subtraem 1 dos testes de Agilidade, Força e Vigor depois de passar mais de dez minutos em temperaturas abaixo de 18 °Celsius."
+        "descricao": "Draconianos subtraem 1 dos testes de Agilidade, Força e Vigor depois de passar mais de dez minutos em temperaturas abaixo de 18 °Celsius.",
+        "id": "SANGUE_FRIO",
+        "category": "racial_trait_negative"
       }
     ],
     "tags": ["arma_de_sopro", "asas"]
@@ -232,15 +300,21 @@
     "habilidades": [
       {
         "nome": "DESASTRADO",
-        "descricao": "Elfos têm uma aversão inerente a objetos mecânicos em cenários de fantasia tradicionais, o que lhes confere a Complicação Desastrado."
+        "descricao": "Elfos têm uma aversão inerente a objetos mecânicos em cenários de fantasia tradicionais, o que lhes confere a Complicação Desastrado.",
+        "id": "DESASTRADO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "Os olhos dos elfos ampliam a luz. Outras ancestralidades alegam que podem ver estrelas nos olhos dos elfos. Ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Os olhos dos elfos ampliam a luz. Outras ancestralidades alegam que podem ver estrelas nos olhos dos elfos. Ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "ÁGIL",
-        "descricao": "Elfos são graciosos e ágeis. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12+1."
+        "descricao": "Elfos são graciosos e ágeis. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12+1.",
+        "id": "AGIL",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -255,27 +329,39 @@
     "habilidades": [
       {
         "nome": "BOCA GRANDE",
-        "descricao": "Embora sejam cheias de segredos, raramente os guardam para si."
+        "descricao": "Embora sejam cheias de segredos, raramente os guardam para si.",
+        "id": "BOCA_GRANDE",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "CURIOSO",
-        "descricao": "Fadas têm inúmeras perguntas e curiosidades sobre a vida, especialmente sobre assuntos fora de sua terra natal."
+        "descricao": "Fadas têm inúmeras perguntas e curiosidades sobre a vida, especialmente sobre assuntos fora de sua terra natal.",
+        "id": "CURIOSO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "DESASTRADO",
-        "descricao": "Fadas tradicionais têm grande desdém por objetos mecânicos. Possuem a Complicação Desastrado."
+        "descricao": "Fadas tradicionais têm grande desdém por objetos mecânicos. Possuem a Complicação Desastrado.",
+        "id": "DESASTRADO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "DIMINUTO (Tamanho -4)",
-        "descricao": "Fadas são Minúsculas (veja a descrição da habilidade na página 10). Beneficiam-se de Modificadores de Escala, subtraem 4 de suas jogadas de Resistência e dano e têm Força máxima igual a d4."
+        "descricao": "Fadas são Minúsculas (veja a descrição da habilidade na página 10). Beneficiam-se de Modificadores de Escala, subtraem 4 de suas jogadas de Resistência e dano e têm Força máxima igual a d4.",
+        "id": "DIMINUTO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "IMPULSIVO",
-        "descricao": "Moderação não é uma qualidade frequentemente encontrada nas fadas."
+        "descricao": "Moderação não é uma qualidade frequentemente encontrada nas fadas.",
+        "id": "IMPULSIVO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VOO",
-        "descricao": "Fadas voam com Movimentação 6."
+        "descricao": "Fadas voam com Movimentação 6.",
+        "id": "VOO",
+        "category": "racial_trait_positive"
       }
     ],
     "tags": ["asas"]
@@ -295,23 +381,33 @@
     "habilidades": [
       {
         "nome": "ASTÚCIA",
-        "descricao": "Gnomos começam com um d6 em Astúcia em vez de um d4. Isso aumenta a Astúcia máxima para d12+1."
+        "descricao": "Gnomos começam com um d6 em Astúcia em vez de um d4. Isso aumenta a Astúcia máxima para d12+1.",
+        "id": "ASTUCIA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
-        "descricao": "Reduza 1 quadro da sua Movimentação andando e seu dado de corrida em um tipo."
+        "descricao": "Reduza 1 quadro da sua Movimentação andando e seu dado de corrida em um tipo.",
+        "id": "MOVIMENTACAO_REDUZIDA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "SENTIDOS APRIMORADOS",
-        "descricao": "Gomos começam com um d6 em Perceber em vez de um d4. Isso aumenta seu máximo para d12+1."
+        "descricao": "Gomos começam com um d6 em Perceber em vez de um d4. Isso aumenta seu máximo para d12+1.",
+        "id": "SENTIDOS_APRIMORADOS",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "TAMANHO -1",
-        "descricao": "Gnomos adultos medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1."
+        "descricao": "Gnomos adultos medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
+        "id": "TAMANHO_MENOS_1",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "Olhos gnômicos podem ver bem mesmo sem luz. Ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Olhos gnômicos podem ver bem mesmo sem luz. Ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -328,23 +424,33 @@
     "habilidades": [
       {
         "nome": "DESAGRADÁVEL",
-        "descricao": "“Maligno” e “cruel” são dois adjetivos comumente usados para descrever goblins. Eles subtraem 1 dos testes de Persuadir."
+        "descricao": "“Maligno” e “cruel” são dois adjetivos comumente usados para descrever goblins. Eles subtraem 1 dos testes de Persuadir.",
+        "id": "DESAGRADAVEL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "INFRAVISÃO",
-        "descricao": "Goblins podem ver no espectro infravermelho, reduzindo pela metade as penalidades por baixa luminosidade ao atacar alvos que irradiam calor ou frio."
+        "descricao": "Goblins podem ver no espectro infravermelho, reduzindo pela metade as penalidades por baixa luminosidade ao atacar alvos que irradiam calor ou frio.",
+        "id": "INFRAVISAO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "PEQUENOS",
-        "descricao": "Goblins medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1."
+        "descricao": "Goblins medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
+        "id": "PEQUENOS",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "SOBREVIVENTE",
-        "descricao": "Goblins desenvolvem inúmeras táticas para sobreviver em ambientes selvagens e violentos. Começam com uma Vantagem de Estágio Novato à sua escolha (devem atender a todos os requisitos normalmente)."
+        "descricao": "Goblins desenvolvem inúmeras táticas para sobreviver em ambientes selvagens e violentos. Começam com uma Vantagem de Estágio Novato à sua escolha (devem atender a todos os requisitos normalmente).",
+        "id": "SOBREVIVENTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SORRATEIRO",
-        "descricao": "Goblins aprendem rapidamente como se esgueirar de seres mais ferozes que querem matá-los ou feri-los. Começam com um d6 em Furtividade, o que aumenta seu máximo para d12+1."
+        "descricao": "Goblins aprendem rapidamente como se esgueirar de seres mais ferozes que querem matá-los ou feri-los. Começam com um d6 em Furtividade, o que aumenta seu máximo para d12+1.",
+        "id": "SORRATEIRO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -359,39 +465,57 @@
     "habilidades": [
       {
         "nome": "ARMADURA +2",
-        "descricao": "Golens de pedra são feitos de rocha."
+        "descricao": "Golens de pedra são feitos de rocha.",
+        "id": "ARMADURA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "CONSTRUTO",
-        "descricao": "+2 quando tentam se recuperar do Estado Abalado, ignoram 1 ponto da penalidade por Ferimento, não respiram ou comem, são imunes a doenças e veneno, não ficam Sangrando e Ferimentos são removidos com Consertar em vez de Curar, sem a “Hora de Ouro”."
+        "descricao": "+2 quando tentam se recuperar do Estado Abalado, ignoram 1 ponto da penalidade por Ferimento, não respiram ou comem, são imunes a doenças e veneno, não ficam Sangrando e Ferimentos são removidos com Consertar em vez de Curar, sem a “Hora de Ouro”.",
+        "id": "CONSTRUTO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "DESAJEITADO",
-        "descricao": "Golens subtraem 2 das rolagens de Atletismo e Furtividade."
+        "descricao": "Golens subtraem 2 das rolagens de Atletismo e Furtividade.",
+        "id": "DESAJEITADO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "GRANDE",
-        "descricao": "Golens subtraem 2 das rolagens de Característica ao usar equipamentos feitos para humanoides de Tamanho 0."
+        "descricao": "Golens subtraem 2 das rolagens de Característica ao usar equipamentos feitos para humanoides de Tamanho 0.",
+        "id": "GRANDE",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
-        "descricao": "Golens são lentos e desajeitados. Possuem Movimentação 5 e seu dado de corrida é um d4."
+        "descricao": "Golens são lentos e desajeitados. Possuem Movimentação 5 e seu dado de corrida é um d4.",
+        "id": "MOVIMENTACAO_REDUZIDA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "PERÍCIAS BÁSICAS REDUZIDAS",
-        "descricao": "Golens não são criados como seres biológicos e, portanto, não começam com Conhecimento Geral, Persuadir ou Furtividade."
+        "descricao": "Golens não são criados como seres biológicos e, portanto, não começam com Conhecimento Geral, Persuadir ou Furtividade.",
+        "id": "PERICIAS_BASICAS_REDUZIDAS",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "SEM NOÇÃO",
-        "descricao": "Sem experiência de vida, golens subtraem 1 das rolagens de Conhecimento Geral e Perceber."
+        "descricao": "Sem experiência de vida, golens subtraem 1 das rolagens de Conhecimento Geral e Perceber.",
+        "id": "SEM_NOCAO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "SEM ÓRGÃOS VITAIS",
-        "descricao": "Ataques Localizados não causam dano extra aos golens."
+        "descricao": "Ataques Localizados não causam dano extra aos golens.",
+        "id": "SEM_ORGAOS_VITAIS",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "TAMANHO +2",
-        "descricao": "Golems são criaturas densas e grandes, pesando cerca de 450 kg. Isso confere Resistência +2."
+        "descricao": "Golems são criaturas densas e grandes, pesando cerca de 450 kg. Isso confere Resistência +2.",
+        "id": "TAMANHO_MAIS_2",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -406,7 +530,9 @@
     "habilidades": [
       {
         "nome": "ADAPTÁVEL",
-        "descricao": "Humanos começam com uma Vantagem de Estágio Novato à sua escolha. Devem atender aos requisitos da Vantagem normalmente."
+        "descricao": "Humanos começam com uma Vantagem de Estágio Novato à sua escolha. Devem atender aos requisitos da Vantagem normalmente.",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -421,27 +547,39 @@
     "habilidades": [
       {
         "nome": "CHIFRES",
-        "descricao": "Os chifres do infernal causam For+d4 de dano, e causam +4 de dano se a personagem correr pelo menos 5 quadros (10 metros) e acertar com eles."
+        "descricao": "Os chifres do infernal causam For+d4 de dano, e causam +4 de dano se a personagem correr pelo menos 5 quadros (10 metros) e acertar com eles.",
+        "id": "CHIFRES",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Ninguém realmente confia em alguém de herança diabólica, mesmo em um cenário de alta fantasia. A personagem tem a Complicação Forasteiro (Menor)."
+        "descricao": "Ninguém realmente confia em alguém de herança diabólica, mesmo em um cenário de alta fantasia. A personagem tem a Complicação Forasteiro (Menor).",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Frio)",
-        "descricao": "Infernais detestam climas gelados. Subtraem 4 de rolagens feitas para resistir ao frio ou efeitos baseados em frio e recebem +4 de dano de tais ataques."
+        "descricao": "Infernais detestam climas gelados. Subtraem 4 de rolagens feitas para resistir ao frio ou efeitos baseados em frio e recebem +4 de dano de tais ataques.",
+        "id": "FRAQUEZA_AMBIENTAL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "NATUREZA DIABÓLICA",
-        "descricao": "A verdadeira natureza de um infernal está sempre logo abaixo da superfície e ele pode revelá-la quando desejar. Adiciona +1 às rolagens de Intimidar."
+        "descricao": "A verdadeira natureza de um infernal está sempre logo abaixo da superfície e ele pode revelá-la quando desejar. Adiciona +1 às rolagens de Intimidar.",
+        "id": "NATUREZA_DIABOLICA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "RESISTÊNCIA AMBIENTAL (Calor)",
-        "descricao": "Infernais recebem um bônus de +4 para resistir a efeitos baseados em calor ou fogo e reduz o dano de tais fontes na mesma quantidade."
+        "descricao": "Infernais recebem um bônus de +4 para resistir a efeitos baseados em calor ou fogo e reduz o dano de tais fontes na mesma quantidade.",
+        "id": "RESISTENCIA_AMBIENTAL",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "VISÃO TOTAL NO ESCURO",
-        "descricao": "Os ancestrais dos Infernais vêm do abismo mais sombrio. Ignoram penalidades de Iluminação a até 10 quadros (20 metros)."
+        "descricao": "Os ancestrais dos Infernais vêm do abismo mais sombrio. Ignoram penalidades de Iluminação a até 10 quadros (20 metros).",
+        "id": "VISAO_TOTAL_NO_ESCURO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -456,31 +594,45 @@
     "habilidades": [
       {
         "nome": "ANDAR NAS PAREDES",
-        "descricao": "O povo inseto pode andar em superfícies verticais normalmente, ou em superfícies invertidas com metade da Movimentação."
+        "descricao": "O povo inseto pode andar em superfícies verticais normalmente, ou em superfícies invertidas com metade da Movimentação.",
+        "id": "ANDAR_NAS_PAREDES",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "ARMADURA +2",
-        "descricao": "Insetoides possuem exoesqueletos grossos."
+        "descricao": "Insetoides possuem exoesqueletos grossos.",
+        "id": "ARMADURA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "AÇÕES ADICIONAIS",
-        "descricao": "A personagem possui quatro braços utilizáveis. Isso reduz a penalidade total de ações múltiplas em 2, desde que pelo menos uma das ações use seus membros (normalmente Agilidade, Força ou perícias associadas)."
+        "descricao": "A personagem possui quatro braços utilizáveis. Isso reduz a penalidade total de ações múltiplas em 2, desde que pelo menos uma das ações use seus membros (normalmente Agilidade, Força ou perícias associadas).",
+        "id": "ACOES_ADICIONAIS",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Outras raças consideram o povo inseto perturbador e estranho. A personagem tem a Complicação Forasteiro (Menor)."
+        "descricao": "Outras raças consideram o povo inseto perturbador e estranho. A personagem tem a Complicação Forasteiro (Menor).",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORMATO CORPORAL INCOMUM",
-        "descricao": "Graças à sua fisiologia única, os insetoides não podem usar a maioria das roupas, armaduras ou móveis adequados para humanoides. Podem usar armas e outros equipamentos portáteis normalmente."
+        "descricao": "Graças à sua fisiologia única, os insetoides não podem usar a maioria das roupas, armaduras ou móveis adequados para humanoides. Podem usar armas e outros equipamentos portáteis normalmente.",
+        "id": "FORMATO_CORPORAL_INCOMUM",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MENTE DE COLMEIA",
-        "descricao": "Insetoides têm as Complicações Guiado (Maior) e Leal quando se trata de servir sua “colônia” (sua comunidade, grupo de aventureiros etc.). Uma vez definido um caminho, permanecem nele até que a tarefa seja concluída. Isso lhes causa grande estresse quando seu objetivo contradiz sua lealdade inerente."
+        "descricao": "Insetoides têm as Complicações Guiado (Maior) e Leal quando se trata de servir sua “colônia” (sua comunidade, grupo de aventureiros etc.). Uma vez definido um caminho, permanecem nele até que a tarefa seja concluída. Isso lhes causa grande estresse quando seu objetivo contradiz sua lealdade inerente.",
+        "id": "MENTE_DE_COLMEIA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MORDIDA OU GARRA",
-        "descricao": "As mandíbulas ou pinças do povo inseto causam For+d4 de dano."
+        "descricao": "As mandíbulas ou pinças do povo inseto causam For+d4 de dano.",
+        "id": "GARRAS",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -495,15 +647,21 @@
     "habilidades": [
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Meio-elfos nunca ficam confortáveis na sociedade humana ou na élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com todos menos os seus iguais."
+        "descricao": "Meio-elfos nunca ficam confortáveis na sociedade humana ou na élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com todos menos os seus iguais.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "HERANÇA",
-        "descricao": "Meio-elfos retêm a graça dos elfos ou a adaptabilidade dos humanos. Meio-elfos podem começar com uma Vantagem de Estágio Novato gratuita a sua escolha ou um d6 em Agilidade em vez de um d4 (o que também aumenta sua Agilidade máxima para d12+1)."
+        "descricao": "Meio-elfos retêm a graça dos elfos ou a adaptabilidade dos humanos. Meio-elfos podem começar com uma Vantagem de Estágio Novato gratuita a sua escolha ou um d6 em Agilidade em vez de um d4 (o que também aumenta sua Agilidade máxima para d12+1).",
+        "id": "HERANCA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "Meio-elfos ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Meio-elfos ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -521,35 +679,51 @@
     "habilidades": [
       {
         "nome": "ANALFABETO",
-        "descricao": "Meio-gigantes não sabem ler nem escrever. Podem recomprar essa Complicação com um Progresso."
+        "descricao": "Meio-gigantes não sabem ler nem escrever. Podem recomprar essa Complicação com um Progresso.",
+        "id": "ANALFABETO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "CABEÇAS-DURAS",
-        "descricao": "O crânio grosso dos meio-gigantes significa que tendem a ser pensadores relativamente simples. Rolagens de Astúcia são feitas com -1."
+        "descricao": "O crânio grosso dos meio-gigantes significa que tendem a ser pensadores relativamente simples. Rolagens de Astúcia são feitas com -1.",
+        "id": "CABECAS_DURAS",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORASTEIRO (Maior)",
-        "descricao": "Meio-gigantes são aterrorizantes para a maioria das raças humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seus próprios clãs."
+        "descricao": "Meio-gigantes são aterrorizantes para a maioria das raças humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seus próprios clãs.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "GRANDE",
-        "descricao": "Meio-gigantes possuem -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras ou roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado."
+        "descricao": "Meio-gigantes possuem -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras ou roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
+        "id": "GRANDE",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MUITO FORTE",
-        "descricao": "O tamanho dos meio-gigantes aumenta sua Força inicial para d8 e sua Força máxima para d12+2."
+        "descricao": "O tamanho dos meio-gigantes aumenta sua Força inicial para d8 e sua Força máxima para d12+2.",
+        "id": "MUITO_FORTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MUITO RESISTENTE",
-        "descricao": "Meio-gigantes são seres resistentes. Seu Vigor inicial é d8 e seu limite é aumentado para d12+2."
+        "descricao": "Meio-gigantes são seres resistentes. Seu Vigor inicial é d8 e seu limite é aumentado para d12+2.",
+        "id": "MUITO_RESISTENTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SEM NOÇÃO",
-        "descricao": "Meio-gigantes possuem Conhecimento Geral e Perceber -1."
+        "descricao": "Meio-gigantes possuem Conhecimento Geral e Perceber -1.",
+        "id": "SEM_NOCAO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "TAMANHO +3",
-        "descricao": "Meio-gigantes têm 3 metros de altura, elevando-se sobre a maioria dos humanoides. Isso confere Resistência +3."
+        "descricao": "Meio-gigantes têm 3 metros de altura, elevando-se sobre a maioria dos humanoides. Isso confere Resistência +3.",
+        "id": "TAMANHO_MAIS_3",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -564,15 +738,21 @@
     "habilidades": [
       {
         "nome": "ENDURECIDO",
-        "descricao": "Meio-orcs herdam algumas das proezas físicas de seus ancestrais orcs. Começam com um d6 em Força ou Vigor em vez de um d4. Isso também aumenta o limite do atributo escolhido para d12+1."
+        "descricao": "Meio-orcs herdam algumas das proezas físicas de seus ancestrais orcs. Começam com um d6 em Força ou Vigor em vez de um d4. Isso também aumenta o limite do atributo escolhido para d12+1.",
+        "id": "ENDURECIDO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Meio-orcs não são confiáveis para a maioria dos povos “civilizados”. Subtraem 2 das rolagens de Persuadir ao interagir com seres além de meio-orcs."
+        "descricao": "Meio-orcs não são confiáveis para a maioria dos povos “civilizados”. Subtraem 2 das rolagens de Persuadir ao interagir com seres além de meio-orcs.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "INFRAVISÃO",
-        "descricao": "Meio-orcs podem ver no espectro infravermelho, reduzindo pela metade as penalidades por baixa luminosidade ao atacar alvos que irradiam calor ou frio."
+        "descricao": "Meio-orcs podem ver no espectro infravermelho, reduzindo pela metade as penalidades por baixa luminosidade ao atacar alvos que irradiam calor ou frio.",
+        "id": "INFRAVISAO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -590,35 +770,51 @@
     "habilidades": [
       {
         "nome": "CHIFRES",
-        "descricao": "Os chifres do minotauro causam For+d6 de dano, e causam +4 de dano se a personagem correr pelo menos 5 quadros (10 metros) e acertar com eles."
+        "descricao": "Os chifres do minotauro causam For+d6 de dano, e causam +4 de dano se a personagem correr pelo menos 5 quadros (10 metros) e acertar com eles.",
+        "id": "CHIFRES",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "DESAGRADÁVEL",
-        "descricao": "Ensinados que o mais forte está sempre certo, minotauros lutam contra a diplomacia e o tato. Possuem a Complicação Desagradável."
+        "descricao": "Ensinados que o mais forte está sempre certo, minotauros lutam contra a diplomacia e o tato. Possuem a Complicação Desagradável.",
+        "id": "DESAGRADAVEL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "DURÃO",
-        "descricao": "O Vigor inicial dos Minotauros é d6, aumentando o limite para d12+1."
+        "descricao": "O Vigor inicial dos Minotauros é d6, aumentando o limite para d12+1.",
+        "id": "DURAO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "GRANDE",
-        "descricao": "Sua estrutura muscular faz com que minotauros possuam -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras e roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado."
+        "descricao": "Sua estrutura muscular faz com que minotauros possuam -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras e roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
+        "id": "GRANDE",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MUITO FORTE",
-        "descricao": "Minotauros começam com Força d8, aumentando sua Força máxima para d12+2."
+        "descricao": "Minotauros começam com Força d8, aumentando sua Força máxima para d12+2.",
+        "id": "MUITO_FORTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SEM INSTRUÇÃO",
-        "descricao": "A sociedade dos minotauros favorece a habilidade física em detrimento da capacidade intelectual. Rolagens de Astúcia são feitas com -1."
+        "descricao": "A sociedade dos minotauros favorece a habilidade física em detrimento da capacidade intelectual. Rolagens de Astúcia são feitas com -1.",
+        "id": "SEM_INSTRUCAO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "SENSÍVEL",
-        "descricao": "Minotauros perdem a paciência rapidamente quando provocados. Possuem a Complicação Sensível (Maior)."
+        "descricao": "Minotauros perdem a paciência rapidamente quando provocados. Possuem a Complicação Sensível (Maior).",
+        "id": "SENSIVEL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "TAMANHO +1",
-        "descricao": "Minotauros são altos e largos, adicionando +1 à sua Resistência."
+        "descricao": "Minotauros são altos e largos, adicionando +1 à sua Resistência.",
+        "id": "TAMANHO_MAIS_1",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -636,39 +832,57 @@
     "habilidades": [
       {
         "nome": "ARROGANTE",
-        "descricao": "A cultura dos ogros é repleta de grandes orgulhos e feitos. Outros os veem como arrogantes e distantes, o que lhes dá a Complicação Arrogante."
+        "descricao": "A cultura dos ogros é repleta de grandes orgulhos e feitos. Outros os veem como arrogantes e distantes, o que lhes dá a Complicação Arrogante.",
+        "id": "ARROGANTE",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "DESAJEITADO",
-        "descricao": "Subtraem 2 das rolagens de Atletismo e Furtividade."
+        "descricao": "Subtraem 2 das rolagens de Atletismo e Furtividade.",
+        "id": "DESAJEITADO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "Seu tamanho estranho e imponente deixa outros seres nervosos. Subtraem 2 das rolagens de Persuadir."
+        "descricao": "Seu tamanho estranho e imponente deixa outros seres nervosos. Subtraem 2 das rolagens de Persuadir.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "GRANDE",
-        "descricao": "Ogros são criaturas grandes e corpulentas, com ombros largos e grandes barrigas das quais se orgulham imensamente. Possuem -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras ou roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado."
+        "descricao": "Ogros são criaturas grandes e corpulentas, com ombros largos e grandes barrigas das quais se orgulham imensamente. Possuem -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras ou roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
+        "id": "GRANDE",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MUITO FORTE",
-        "descricao": "Ogros têm Força inicial d8 e Força máxima d12+2."
+        "descricao": "Ogros têm Força inicial d8 e Força máxima d12+2.",
+        "id": "MUITO_FORTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MUITO RESISTENTE",
-        "descricao": "Seu Vigor inicial é d8 e o limite é aumentado para d12+2."
+        "descricao": "Seu Vigor inicial é d8 e o limite é aumentado para d12+2.",
+        "id": "MUITO_RESISTENTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "ROBUSTO",
-        "descricao": "Ogros são excepcionalmente durões. Um segundo resultado Abalado não causa Ferimento."
+        "descricao": "Ogros são excepcionalmente durões. Um segundo resultado Abalado não causa Ferimento.",
+        "id": "ROBUSTO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SEM NOÇÃO",
-        "descricao": "Ogros subtraem 1 das rolagens de Conhecimento Geral e Perceber."
+        "descricao": "Ogros subtraem 1 das rolagens de Conhecimento Geral e Perceber.",
+        "id": "SEM_NOCAO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "TAMANHO +1",
-        "descricao": "Ogros medem cerca de 2,70 metros de altura. Isso confere Resistência +1."
+        "descricao": "Ogros medem cerca de 2,70 metros de altura. Isso confere Resistência +1.",
+        "id": "TAMANHO_MAIS_1",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -686,27 +900,39 @@
     "habilidades": [
       {
         "nome": "BRUTAL",
-        "descricao": "Orcs pensam com os punhos e machados. Subtraem 1 das rolagens de Persuadir."
+        "descricao": "Orcs pensam com os punhos e machados. Subtraem 1 das rolagens de Persuadir.",
+        "id": "BRUTAL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORASTEIRO (Maior)",
-        "descricao": "Orcs subtraem 2 das rolagens de Persuadir e podem ser tratados como monstros fora de seus próprios clãs."
+        "descricao": "Orcs subtraem 2 das rolagens de Persuadir e podem ser tratados como monstros fora de seus próprios clãs.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORTE",
-        "descricao": "Orcs começam com Força d6 em vez de d4. Isso aumenta seu máximo para d12+1."
+        "descricao": "Orcs começam com Força d6 em vez de d4. Isso aumenta seu máximo para d12+1.",
+        "id": "FORTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "INFRAVISÃO",
-        "descricao": "Orcs podem ver no espectro infravermelho, reduzindo pela metade as penalidades por baixa luminosidade ao atacar alvos que irradiam calor ou frio."
+        "descricao": "Orcs podem ver no espectro infravermelho, reduzindo pela metade as penalidades por baixa luminosidade ao atacar alvos que irradiam calor ou frio.",
+        "id": "INFRAVISAO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "RESISTENTE",
-        "descricao": "A Força de um orc é igualada pela sua resistência. Começam com um d6 em Vigor em vez de um d4. Isso aumenta seu máximo para d12+1."
+        "descricao": "A Força de um orc é igualada pela sua resistência. Começam com um d6 em Vigor em vez de um d4. Isso aumenta seu máximo para d12+1.",
+        "id": "RESISTENTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "TAMANHO +1",
-        "descricao": "Orcs medem cerca de 2,40 metros de altura. Isso confere Resistência +1."
+        "descricao": "Orcs medem cerca de 2,40 metros de altura. Isso confere Resistência +1.",
+        "id": "TAMANHO_MAIS_1",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -723,19 +949,27 @@
     "habilidades": [
       {
         "nome": "ESPIRITUOSO",
-        "descricao": "Pequeninos normalmente são seres otimistas. Começam com um d6 em Espírito em vez de um d4. Isso aumenta seu máximo para d12+1."
+        "descricao": "Pequeninos normalmente são seres otimistas. Começam com um d6 em Espírito em vez de um d4. Isso aumenta seu máximo para d12+1.",
+        "id": "ESPIRITUOSO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
-        "descricao": "Reduza 1 quadro da sua Movimentação andando e seu dado de corrida em um tipo."
+        "descricao": "Reduza 1 quadro da sua Movimentação andando e seu dado de corrida em um tipo.",
+        "id": "MOVIMENTACAO_REDUZIDA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "SORTE",
-        "descricao": "Pequeninos sacam um Bene adicional por sessão de jogo."
+        "descricao": "Pequeninos sacam um Bene adicional por sessão de jogo.",
+        "id": "SORTE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "TAMANHO -1",
-        "descricao": "Pequeninos medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1."
+        "descricao": "Pequeninos medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
+        "id": "TAMANHO_MENOS_1",
+        "category": "racial_trait_negative"
       }
     ]
   },
@@ -750,39 +984,57 @@
     "habilidades": [
       {
         "nome": "COVARDE",
-        "descricao": "O povo ratazana aprende cedo que a discrição é a melhor parte da valentia. Possuem a Complicação Covarde."
+        "descricao": "O povo ratazana aprende cedo que a discrição é a melhor parte da valentia. Possuem a Complicação Covarde.",
+        "id": "COVARDE",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORASTEIRO (Maior)",
-        "descricao": "O povo ratazana normalmente é desprezado por outros povos. Subtraem 2 das rolagens de Persuadir e são tratados como pragas monstruosas fora de seus próprios bandos."
+        "descricao": "O povo ratazana normalmente é desprezado por outros povos. Subtraem 2 das rolagens de Persuadir e são tratados como pragas monstruosas fora de seus próprios bandos.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "GANANCIOSO (Menor)",
-        "descricao": "Adquirir novos tesouros é a obsessão do povo ratazana. Possuem a Complicação Ganancioso (Menor)."
+        "descricao": "Adquirir novos tesouros é a obsessão do povo ratazana. Possuem a Complicação Ganancioso (Menor).",
+        "id": "GANANCIOSO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "GARRAS",
-        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (escalar)."
+        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (escalar).",
+        "id": "GARRAS",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MORDIDA",
-        "descricao": "Os dentes do povo ratazana causam For+d4 de dano e podem ser usados contra inimigos agarrados."
+        "descricao": "Os dentes do povo ratazana causam For+d4 de dano e podem ser usados contra inimigos agarrados.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "RESISTÊNCIA NATURAL",
-        "descricao": "O povo ratazana passa a vida vasculhando a sujeira. São imunes a venenos e doenças."
+        "descricao": "O povo ratazana passa a vida vasculhando a sujeira. São imunes a venenos e doenças.",
+        "id": "RESISTENCIA_NATURAL",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SUCATEIRO",
-        "descricao": "Membros do povo ratazana colecionam itens obsessivamente onde quer que vão, carregando-os em seus corpos e em suas tocas. Possuem a Vantagem Sucateiro."
+        "descricao": "Membros do povo ratazana colecionam itens obsessivamente onde quer que vão, carregando-os em seus corpos e em suas tocas. Possuem a Vantagem Sucateiro.",
+        "id": "SUCATEIRO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "TAMANHO -1",
-        "descricao": "Membros do povo ratazana medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1."
+        "descricao": "Membros do povo ratazana medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
+        "id": "TAMANHO_MENOS_1",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "Membros do povo ratazana ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Membros do povo ratazana ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -797,27 +1049,39 @@
     "habilidades": [
       {
         "nome": "DIMINUTO (Tamanho -4)",
-        "descricao": "Membros do povo rato medem cerca de 18 centímetros de altura. Isso lhes confere Tamanho -4 e concede os benefícios de Minúsculo (veja modificadores de Escala em Savage Worlds Edição Aventura). Subtraem 4 de sua Resistência e têm Força d4. Consulte Diminuto na página 10 para obter mais informações."
+        "descricao": "Membros do povo rato medem cerca de 18 centímetros de altura. Isso lhes confere Tamanho -4 e concede os benefícios de Minúsculo (veja modificadores de Escala em Savage Worlds Edição Aventura). Subtraem 4 de sua Resistência e têm Força d4. Consulte Diminuto na página 10 para obter mais informações.",
+        "id": "DIMINUTO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "FOBIA – GATOS (Menor)",
-        "descricao": "Os gatos provocam um medo instintivo no povo rato."
+        "descricao": "Os gatos provocam um medo instintivo no povo rato.",
+        "id": "FOBIA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORASTEIRO (Maior)",
-        "descricao": "Membros do povo rato são novidades fofas para a maioria das ancestralidades humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seu próprio povo."
+        "descricao": "Membros do povo rato são novidades fofas para a maioria das ancestralidades humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seu próprio povo.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
-        "descricao": "Pernas curtas e estatura reduzida diminuem a Movimentação em 1 e o dado de Corrida para d4."
+        "descricao": "Pernas curtas e estatura reduzida diminuem a Movimentação em 1 e o dado de Corrida para d4.",
+        "id": "MOVIMENTACAO_REDUZIDA",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "POUCO IMPONENTE",
-        "descricao": "A maioria dos inimigos não considera o povo rato uma ameaça. Possuem a Complicação Almofadinha."
+        "descricao": "A maioria dos inimigos não considera o povo rato uma ameaça. Possuem a Complicação Almofadinha.",
+        "id": "POUCO_IMPONENTE",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "O povo rato está acostumado a viver em pequenos espaços escuros ou tocas. Ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "O povo rato está acostumado a viver em pequenos espaços escuros ou tocas. Ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -833,31 +1097,45 @@
     "habilidades": [
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "A maioria dos povos não confia no povo serpente. Subtraem 2 das rolagens de Persuadir fora de seus próprios clãs familiares."
+        "descricao": "A maioria dos povos não confia no povo serpente. Subtraem 2 das rolagens de Persuadir fora de seus próprios clãs familiares.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FRAQUEZA AMBIENTAL",
-        "descricao": "Sofrem uma penalidade de -4 para resistir aos efeitos ambientais de frio e recebem +4 de dano por ataques baseados em frio."
+        "descricao": "Sofrem uma penalidade de -4 para resistir aos efeitos ambientais de frio e recebem +4 de dano por ataques baseados em frio.",
+        "id": "FRAQUEZA_AMBIENTAL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "INFRAVISÃO",
-        "descricao": "O povo serpente pode detectar calor graças à fosseta loreal, reduzindo pela metade as penalidades por baixa luminosidade ao atacar alvos que irradiam calor."
+        "descricao": "O povo serpente pode detectar calor graças à fosseta loreal, reduzindo pela metade as penalidades por baixa luminosidade ao atacar alvos que irradiam calor.",
+        "id": "INFRAVISAO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MORDIDA",
-        "descricao": "O povo serpente possui presas, causando For+d4 de dano."
+        "descricao": "O povo serpente possui presas, causando For+d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MORDIDA VENENOSA",
-        "descricao": "Vítimas Abaladas ou Feridas pela Mordida do povo serpente devem fazer uma rolagem de Vigor ou sofrem os efeitos de um veneno Moderado."
+        "descricao": "Vítimas Abaladas ou Feridas pela Mordida do povo serpente devem fazer uma rolagem de Vigor ou sofrem os efeitos de um veneno Moderado.",
+        "id": "MORDIDA_VENENOSA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MOVIMENTAÇÃO",
-        "descricao": "10, dado de corrida d10. O povo serpente se move tão rapidamente quanto as cobras das quais descendem."
+        "descricao": "10, dado de corrida d10. O povo serpente se move tão rapidamente quanto as cobras das quais descendem.",
+        "id": "MOVIMENTACAO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SANGUE FRIO",
-        "descricao": "O povo serpente subtrai 1 dos testes de Agilidade, Força e Vigor depois de passar mais de dez minutos em temperaturas abaixo de 18 °Celsius."
+        "descricao": "O povo serpente subtrai 1 dos testes de Agilidade, Força e Vigor depois de passar mais de dez minutos em temperaturas abaixo de 18 °Celsius.",
+        "id": "SANGUE_FRIO",
+        "category": "racial_trait_negative"
       }
     ]
   },
@@ -874,31 +1152,45 @@
     "habilidades": [
       {
         "nome": "GARRAS",
-        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (Escalar)."
+        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (Escalar).",
+        "id": "GARRAS",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "INIMIGO ANCESTRAL",
-        "descricao": "A sociedade rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam uns com os outros e geralmente se atacam à primeira vista."
+        "descricao": "A sociedade rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam uns com os outros e geralmente se atacam à primeira vista.",
+        "id": "INIMIGO_RACIAL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MORDIDA",
-        "descricao": "As presas de rakashanos causam For+d4 de dano e podem ser usadas contra inimigos agarrados."
+        "descricao": "As presas de rakashanos causam For+d4 de dano e podem ser usadas contra inimigos agarrados.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "NÃO SABE NADAR",
-        "descricao": "Rakashanos até podem nadar, eles apenas evitam e não são particularmente bons nisso. Eles subtraem 2 das rolagens de Atletismo (natação) e cada quadro que se movem na água custa 3 quadros de Movimentação."
+        "descricao": "Rakashanos até podem nadar, eles apenas evitam e não são particularmente bons nisso. Eles subtraem 2 das rolagens de Atletismo (natação) e cada quadro que se movem na água custa 3 quadros de Movimentação.",
+        "id": "NAO_SABE_NADAR",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "SANGUINÁRIO",
-        "descricao": "Rakashanos podem ser cruéis com seus inimigos, muitas vezes brincando com eles por pura diversão. Eles raramente fazem prisioneiros e sentem pouco remorso a respeito de inimigos capturados."
+        "descricao": "Rakashanos podem ser cruéis com seus inimigos, muitas vezes brincando com eles por pura diversão. Eles raramente fazem prisioneiros e sentem pouco remorso a respeito de inimigos capturados.",
+        "id": "SANGUINARIO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "Os olhos dos rakashanos ampliam a luz. Ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Os olhos dos rakashanos ampliam a luz. Ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "ÁGIL",
-        "descricao": "A graça felina concede aos rakashanos um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12+1."
+        "descricao": "A graça felina concede aos rakashanos um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12+1.",
+        "id": "AGIL",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -915,35 +1207,51 @@
     "habilidades": [
       {
         "nome": "AVERSÃO ANIMAL",
-        "descricao": "Os animais acham os renascidos enervantes. Eles não se aproximarão voluntariamente a menos de 5 quadros (10 metros). Além disso, renascidos subtraem 2 das rolagens para controlar ou montar animais, exceto lobos, ratos, corvos e outros animais comumente associados aos mortos-vivos no cenário (a critério do Mestre)."
+        "descricao": "Os animais acham os renascidos enervantes. Eles não se aproximarão voluntariamente a menos de 5 quadros (10 metros). Além disso, renascidos subtraem 2 das rolagens para controlar ou montar animais, exceto lobos, ratos, corvos e outros animais comumente associados aos mortos-vivos no cenário (a critério do Mestre).",
+        "id": "AVERSAO_ANIMAL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "BEBEDOR DE SANGUE",
-        "descricao": "Uma vez por sessão de jogo, um renascido pode beber sangue humanoide para fazer uma rolagem de cura natural. Causar um Ferimento com sua mordida fornece sangue suficiente para a tentativa, assim como beber de um inimigo abatido (ainda vivo). Nesse último caso, a vítima faz uma rolagem de Vigor para ver se sobrevive."
+        "descricao": "Uma vez por sessão de jogo, um renascido pode beber sangue humanoide para fazer uma rolagem de cura natural. Causar um Ferimento com sua mordida fornece sangue suficiente para a tentativa, assim como beber de um inimigo abatido (ainda vivo). Nesse último caso, a vítima faz uma rolagem de Vigor para ver se sobrevive.",
+        "id": "BEBEDOR_DE_SANGUE",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "FORASTEIRO (Maior)",
-        "descricao": "Renascidos emitem uma aura desconfortável até mesmo para seus aliados. Outras pessoas podem confundi-los com verdadeiros vampiros — temendo-os ou caçando-os conforme sua natureza."
+        "descricao": "Renascidos emitem uma aura desconfortável até mesmo para seus aliados. Outras pessoas podem confundi-los com verdadeiros vampiros — temendo-os ou caçando-os conforme sua natureza.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FORÇA SOBRENATURAL",
-        "descricao": "Renascidos são mais fortes que humanos. Sua Força inicial é d6 e seu limite é aumentado para d12+1."
+        "descricao": "Renascidos são mais fortes que humanos. Sua Força inicial é d6 e seu limite é aumentado para d12+1.",
+        "id": "FORCA_SOBRENATURAL",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MORDIDA",
-        "descricao": "Renascidos têm presas que causam For+d4 de dano."
+        "descricao": "Renascidos têm presas que causam For+d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "RESISTÊNCIA AO FRIO",
-        "descricao": "Renascidos são frios ao toque e dificilmente percebem temperaturas frias. Possuem bônus de +4 para resistir aos efeitos negativos do frio e reduzem dano baseado em frio em 4."
+        "descricao": "Renascidos são frios ao toque e dificilmente percebem temperaturas frias. Possuem bônus de +4 para resistir aos efeitos negativos do frio e reduzem dano baseado em frio em 4.",
+        "id": "RESISTENCIA_AO_FRIO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SENSIBILIDADE À LUZ SOLAR",
-        "descricao": "Renascidos devem se cobrir completamente ou ficam em Estado Distraído enquanto estiverem expostos à luz solar ou equivalente mágico/artificial."
+        "descricao": "Renascidos devem se cobrir completamente ou ficam em Estado Distraído enquanto estiverem expostos à luz solar ou equivalente mágico/artificial.",
+        "id": "SENSIBILIDADE_A_LUZ_SOLAR",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VISÃO NO ESCURO",
-        "descricao": "Renascidos se sentem mais à vontade à noite. Ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Renascidos se sentem mais à vontade à noite. Ignoram penalidades por Penumbra e Escuridão.",
+        "id": "VISAO_NO_ESCURO",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -958,23 +1266,33 @@
     "habilidades": [
       {
         "nome": "ARMADURA +2",
-        "descricao": "Sáurios têm uma pele escamosa que funciona como uma armadura de couro."
+        "descricao": "Sáurios têm uma pele escamosa que funciona como uma armadura de couro.",
+        "id": "ARMADURA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "FORASTEIRO (Menor)",
-        "descricao": "A maioria dos povos desconfia dos sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo subconsciente antigo dos ancestrais dos reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todos menos os seus iguais."
+        "descricao": "A maioria dos povos desconfia dos sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo subconsciente antigo dos ancestrais dos reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todos menos os seus iguais.",
+        "id": "FORASTEIRO",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "FRAQUEZA AMBIENTAL (Frio)",
-        "descricao": "Embora não sejam verdadeiramente de sangue frio, sáurios não se adaptam às condições de clima frio. Sofrem uma penalidade de -4 para resistir aos efeitos ambientais do frio e recebem +4 de dano por ataques baseados em frio."
+        "descricao": "Embora não sejam verdadeiramente de sangue frio, sáurios não se adaptam às condições de clima frio. Sofrem uma penalidade de -4 para resistir aos efeitos ambientais do frio e recebem +4 de dano por ataques baseados em frio.",
+        "id": "FRAQUEZA_AMBIENTAL",
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MORDIDA",
-        "descricao": "As presas dos sáurios causam For+d4 de dano e podem ser usadas contra inimigos agarrados."
+        "descricao": "As presas dos sáurios causam For+d4 de dano e podem ser usadas contra inimigos agarrados.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SENTIDOS APRIMORADOS",
-        "descricao": "Sáurios têm sentidos aguçados, ganhando a Vantagem Prontidão."
+        "descricao": "Sáurios têm sentidos aguçados, ganhando a Vantagem Prontidão.",
+        "id": "SENTIDOS_APRIMORADOS",
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -989,15 +1307,21 @@
     "habilidades": [
       {
         "nome": "CARISMÁTICO",
-        "descricao": "Transmorfos aprendem rapidamente a navegar em conversas complicadas para se adaptarem a diferentes grupos sociais. Começam gratuitamente com a Vantagem Carismático."
+        "descricao": "Transmorfos aprendem rapidamente a navegar em conversas complicadas para se adaptarem a diferentes grupos sociais. Começam gratuitamente com a Vantagem Carismático.",
+        "id": "CARISMATICO",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "MUDAR DE FORMA",
-        "descricao": "Transmorfos têm Antecedente Arcano (Dom). Como ação livre limitada, podem mudar sua aparência física da mesma forma que o poder disfarce com a Limitação Pessoal."
+        "descricao": "Transmorfos têm Antecedente Arcano (Dom). Como ação livre limitada, podem mudar sua aparência física da mesma forma que o poder disfarce com a Limitação Pessoal.",
+        "id": "MUDAR_DE_FORMA",
+        "category": "racial_trait_positive"
       },
       {
         "nome": "SEGREDO (Maior)",
-        "descricao": "A verdadeira natureza de um transmorfo raramente é conhecida — até mesmo por outros transmorfos. Eles mantêm sua habilidade em segredo, o que lhes concede a Complicação Segredo (Maior). Caso sejam descobertos por alguém que não seja um aliado próximo, esta Complicação é trocada por Inimigo, Vergonha, Procurado, Forasteiro ou outra Complicação apropriada."
+        "descricao": "A verdadeira natureza de um transmorfo raramente é conhecida — até mesmo por outros transmorfos. Eles mantêm sua habilidade em segredo, o que lhes concede a Complicação Segredo (Maior). Caso sejam descobertos por alguém que não seja um aliado próximo, esta Complicação é trocada por Inimigo, Vergonha, Procurado, Forasteiro ou outra Complicação apropriada.",
+        "id": "SEGREDO",
+        "category": "racial_trait_negative"
       }
     ]
   }
