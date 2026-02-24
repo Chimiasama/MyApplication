@@ -284,8 +284,7 @@
         "nome": "Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "Mordida/Garras",
@@ -403,8 +402,7 @@
         "nome": "Inimigo Racial (Demônios e Diabos)",
         "descricao": "Celestiais não toleram facilmente os saídos do abismo.",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "Voto (Maior: Proteger a humanidade)",

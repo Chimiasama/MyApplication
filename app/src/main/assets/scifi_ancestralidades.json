@@ -216,8 +216,7 @@
         "nome": "Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "Mordida/Garras",
@@ -447,8 +446,7 @@
         "nome": "INIMIGO ANCESTRAL (Insetoide)",
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação.",
         "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
@@ -766,8 +764,7 @@
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
         "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MEMBROS EXTRAS",
@@ -1185,8 +1182,7 @@
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
         "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MEMBROS EXTRAS",

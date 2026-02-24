@@ -1250,8 +1250,7 @@
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "A sociedade rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam uns com os outros e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "MORDIDA",
@@ -1289,8 +1288,7 @@
         "nome": "INIMIGO RACIAL",
         "descricao": "INIMIGO RACIAL",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       }
     ],
     "vantagensGratis": []

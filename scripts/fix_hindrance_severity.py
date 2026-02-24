@@ -17,8 +17,8 @@ STANDARD_SEVERITY = {
     "VOTO": "Menor",
     "SEMESCRUPULOS": "Menor",
     "INIMIGO": "Menor",
-    "INIMIGORACIAL": "Menor",
-    "INIMIGOANCESTRAL": "Menor",
+    # "INIMIGORACIAL": "Menor", -> REMOVED (Trait)
+    # "INIMIGOANCESTRAL": "Menor", -> REMOVED (Trait)
     "PROCURADO": "Menor",
     "POBREZA": "Menor",
     "ANALFABETO": "Menor",
@@ -49,6 +49,11 @@ STANDARD_SEVERITY = {
     "GANANCIOSO": "Menor"
 }
 
+NEGATIVE_TRAITS_EXPLICIT = {
+    "INIMIGORACIAL",
+    "INIMIGOANCESTRAL"
+}
+
 def process_file(filepath):
     print(f"Fixing severity in {filepath}...")
     with open(filepath, 'r', encoding='utf-8') as f:
@@ -59,17 +64,22 @@ def process_file(filepath):
             hid = normalize_key(hab.get("id", ""))
 
             # Correct ID if needed (TAMANHO_2 -> TAMANHO_MAIS_2)
-            if hid == "TAMANHO2": # Normalized ID for "TAMANHO_2" or "Tamanho +2"
-                 # Check if description or name implies +2
+            if hid == "TAMANHO2":
                  if "+2" in hab["nome"] or "+2" in hab["descricao"]:
                      hab["id"] = "TAMANHO_MAIS_2"
                      hid = "TAMANHOMAIS2"
 
             name = hab["nome"]
-            cat = hab.get("category", "")
 
-            # Identify if it is a hindrance
-            # Re-check traits marked as negative traits to see if they are actually hindrances
+            # 1. Check for Negative Traits that shouldn't be Hindrances
+            if hid in NEGATIVE_TRAITS_EXPLICIT:
+                hab["category"] = "racial_trait_negative"
+                if "severity" in hab:
+                    del hab["severity"]
+                continue
+
+            # 2. Check for Hindrances
+            cat = hab.get("category", "")
             is_hindrance = cat == "racial_hindrance" or hid in STANDARD_SEVERITY
 
             if is_hindrance:
@@ -78,13 +88,13 @@ def process_file(filepath):
                 # Determine Severity
                 severity = None
 
-                # 1. Explicit in Name
+                # Explicit in Name
                 if "(MAIOR)" in name.upper() or " MAIOR" in name.upper():
                     severity = "Maior"
                 elif "(MENOR)" in name.upper() or " MENOR" in name.upper():
                     severity = "Menor"
 
-                # 2. Default map
+                # Default map
                 if not severity:
                     severity = STANDARD_SEVERITY.get(hid, "Menor")
 
