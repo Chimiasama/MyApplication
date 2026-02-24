@@ -3227,7 +3227,8 @@ class CriadorState {
     fun temAdaptavel(): Boolean {
         val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
         val free = effectiveVantagensGratis(ancDef)
-        return free.any { it.keyify() == "ADAPTAVEL" }
+        if (free.any { it.keyify() == "ADAPTAVEL" }) return true
+        return ancDef.habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }
     }
 
     val adaptavelSlotAvailable: Boolean by derivedStateOf {
