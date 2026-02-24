@@ -385,11 +385,7 @@ fun VantagensContent(
         val isFreeProtagonista = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vantToBuy)
         val isFreeSamurai = state.samuraiCombatSlotAvailable && vantToBuy.categoria == Categoria.COMBATE
 
-        val isFreeAdaptavel = state.adaptavelSlotAvailable &&
-                (vantToBuy.requisitos.estagio.isBlank() || vantToBuy.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
-                !state.isVantagemAutomatica(vantToBuy)
-
-        val needsPoints = !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai && !isFreeAdaptavel
+        val needsPoints = !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai
 
         var failed = false
         if (needsPoints && state.pontosVantagem <= 0) {
@@ -1867,19 +1863,12 @@ private fun VantagemItem(
 
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
                     val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
-                    val isSamuraiFree = state.samuraiCombatSlotAvailable && vant.categoria == Categoria.COMBATE
-
-                    val isAdaptavelFree = state.adaptavelSlotAvailable &&
-                            (vant.requisitos.estagio.isBlank() || vant.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
-                            !state.isVantagemAutomatica(vant)
 
                     val hasBP = pcLivres >= 2
                     val canAfford = state.pontosVantagem > 0 || hasBP
 
-                    android.util.Log.d("SWADE_DEBUG", "Clicking ${vant.nome}. FreePath=$isPathfinderFree, FreeProt=$isProtagonistaFree, FreeSam=$isSamuraiFree, FreeAdap=$isAdaptavelFree, CanAfford=$canAfford (PV=${state.pontosVantagem}, BP=$pcLivres)")
-
                     when {
-                        !isPathfinderFree && !isProtagonistaFree && !isSamuraiFree && !isAdaptavelFree && !canAfford -> onError("Sem PV disponível")
+                        !isPathfinderFree && !isProtagonistaFree && !canAfford -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         conflitoMsg != null -> onError(conflitoMsg)
