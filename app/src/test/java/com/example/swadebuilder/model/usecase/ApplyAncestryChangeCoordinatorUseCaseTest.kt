@@ -54,11 +54,15 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
         val result = useCase.execute(params)
 
         assertEquals(ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP, result.signoAction)
-        // One advantage removed by Human transition (Frenesi), one remains (Corajoso).
-        // Corajoso fails validation, so it should be in removedAdvantages.
+        // No advantage removed by Human transition (Legacy PV logic disabled).
+        // Both "Frenesi" and "Corajoso" remain and fail validation (meetsRequirements = { false }).
+        // So both should be in removedAdvantages.
         assertFalse(result.invalidAdvantagesResolution.removedAdvantages.isEmpty())
-        assertEquals(1, result.invalidAdvantagesResolution.removedAdvantages.size)
-        assertEquals("corajoso", result.invalidAdvantagesResolution.removedAdvantages[0].id)
+        assertEquals(2, result.invalidAdvantagesResolution.removedAdvantages.size)
+        // Since list order depends on input, we check presence
+        val removedIds = result.invalidAdvantagesResolution.removedAdvantages.map { it.id }
+        assertTrue(removedIds.contains("corajoso"))
+        assertTrue(removedIds.contains("frenesi"))
     }
 
 
