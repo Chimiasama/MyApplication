@@ -185,7 +185,7 @@
         "nome": "Adaptável",
         "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente.",
         "id": "ADAPTAVEL",
-        "category": "racial_edge"
+        "category": "racial_trait_positive"
       }
     ],
     "tags": [],

@@ -569,7 +569,7 @@
         "nome": "ADAPTÁVEL",
         "descricao": "Humanos começam com uma Vantagem de Estágio Novato à sua escolha. Devem atender aos requisitos da Vantagem normalmente.",
         "id": "ADAPTAVEL",
-        "category": "racial_edge"
+        "category": "racial_trait_positive"
       }
     ],
     "vantagensGratis": []

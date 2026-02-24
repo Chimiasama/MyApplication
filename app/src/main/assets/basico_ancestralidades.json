@@ -222,7 +222,7 @@
         "nome": "Adaptável",
         "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente.",
         "id": "ADAPTAVEL",
-        "category": "racial_edge"
+        "category": "racial_trait_positive"
       }
     ]
   },
@@ -428,7 +428,7 @@
         "nome": "Adaptável",
         "descricao": "Começam o jogo com uma Vantagem Novato de sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).",
         "id": "ADAPTAVEL",
-        "category": "racial_edge"
+        "category": "racial_trait_positive"
       },
       {
         "nome": "Campeões",

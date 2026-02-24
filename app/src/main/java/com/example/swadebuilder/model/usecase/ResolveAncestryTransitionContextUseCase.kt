@@ -26,11 +26,11 @@ class ResolveAncestryTransitionContextUseCase {
         val targetAncestryKey = params.targetAncestry.keyify()
 
         val wasHumano = previousAncestryKey == "HUMANOS" ||
-            params.previousAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true ||
+            params.previousAncestryDef?.hasAdaptable() == true ||
             (previousAncestryKey == "MEIO-ELFOS" && !params.meioElfoAgil) // Half-Elf without Agile = Adaptable
 
         val willBeHumano = targetAncestryKey == "HUMANOS" ||
-            params.targetAncestryDef?.vantagensGratis?.any { it.keyify() == "ADAPTAVEL" } == true
+            params.targetAncestryDef?.hasAdaptable() == true
 
         val previousFreeAdvantageKeys = (
             params.currentAutomaticAdvantages.toSet() +
@@ -59,4 +59,10 @@ class ResolveAncestryTransitionContextUseCase {
             .replace("(", "")
             .replace(")", "")
             .replace(Regex("\\s+"), "_")
+
+    private fun RacialModifier.hasAdaptable(): Boolean {
+        // Check new structure (habilidades ID/Name) or legacy (vantagensGratis)
+        return habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" } ||
+            vantagensGratis.any { it.keyify() == "ADAPTAVEL" }
+    }
 }
