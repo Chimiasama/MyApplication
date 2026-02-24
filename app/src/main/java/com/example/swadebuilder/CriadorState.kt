@@ -1644,9 +1644,21 @@ class CriadorState {
     val pathfinderSlotAvailable: Boolean by derivedStateOf {
         if (!compendioPathfinderAtivo) false
         else {
-            vantagensSelecionadas.none { vant ->
-                isPathfinderEligible(vant) && !isVantagemAutomatica(vant)
+            val eligible = vantagensSelecionadas.filter {
+                isPathfinderEligible(it) && !isVantagemAutomatica(it)
             }
+            var covered = 0
+            if (vantagemAdaptavelSelecionadaId != null) {
+                val match = eligible.firstOrNull { it.id == vantagemAdaptavelSelecionadaId }
+                if (match != null) covered++
+            }
+            vantagensSlotProtagonista.forEach { id ->
+                if (eligible.any { it.id == id }) covered++
+            }
+            samuraiCombatSlotIds.forEach { id ->
+                if (eligible.any { it.id == id }) covered++
+            }
+            eligible.size <= covered
         }
     }
 
@@ -1682,10 +1694,7 @@ class CriadorState {
         checkAndRefundResourcePb()
         adicionarVantagem(v)
 
-        if (isFreeAdaptavel) {
-            vantagemAdaptavelSelecionadaId = v.id
-            onFeedback("Vantagem ${v.nome} adicionada (Slot de Humano/Adaptável).")
-        } else if (isFreePathfinder) {
+        if (isFreePathfinder) {
             onFeedback("Vantagem ${v.nome} adicionada (Slot de Classe Gratuito).")
         } else if (isFreeProtagonista) {
             vantagensSlotProtagonista.add(v.id)
@@ -1693,6 +1702,9 @@ class CriadorState {
         } else if (isFreeSamuraiCombat) {
             samuraiCombatSlotIds.add(v.id)
             onFeedback("Vantagem ${v.nome} adicionada (Slot de Combate do Samurai).")
+        } else if (isFreeAdaptavel) {
+            vantagemAdaptavelSelecionadaId = v.id
+            onFeedback("Vantagem ${v.nome} adicionada (Slot de Humano/Adaptável).")
         } else {
             pontosVantagem--
             onFeedback("Vantagem ${v.nome} adicionada.")
