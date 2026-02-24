@@ -1,6 +1,7 @@
 package com.example.swadebuilder
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -3221,28 +3222,43 @@ class CriadorState {
     var vantagemAdaptavelSelecionadaId: String? by mutableStateOf(null)
 
     fun temAdaptavel(): Boolean {
-        val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
+        val ancDef = getAncestralidadeDef(ancestralidade)
+        if (ancDef == null) {
+            Log.d("SWADE_DEBUG", "temAdaptavel: Ancestralidade definition not found for $ancestralidade")
+            return false
+        }
         val free = effectiveVantagensGratis(ancDef)
         // 1. Explicitly in Free Edges (legacy list or racial_edge)
-        if (free.any { it.keyify() == "ADAPTAVEL" }) return true
+        if (free.any { it.keyify() == "ADAPTAVEL" }) {
+            Log.d("SWADE_DEBUG", "temAdaptavel: Found ADAPTAVEL in effectiveVantagensGratis")
+            return true
+        }
 
         // 2. Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
-        if (ancDef.habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) return true
+        if (ancDef.habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) {
+            Log.d("SWADE_DEBUG", "temAdaptavel: Found ADAPTAVEL in habilidades")
+            return true
+        }
 
         // 3. Half-Elves Special Logic: "Herança" acts as Adaptable if Agility d6 is NOT selected
         val isMeioElfo = ancestralidade.keyify().contains("MEIO-ELFO") ||
                 ancDef.habilidades.any { it.id == "HERANCA" }
 
         if (isMeioElfo && !meioElfoAgil) {
+            Log.d("SWADE_DEBUG", "temAdaptavel: Half-Elf Logic (Heranca present, Agil not selected)")
             return true
         }
 
+        Log.d("SWADE_DEBUG", "temAdaptavel: False. Ancestralidade=$ancestralidade")
         return false
     }
 
     val adaptavelSlotAvailable: Boolean by derivedStateOf {
-        if (!temAdaptavel()) false
-        else vantagemAdaptavelSelecionadaId == null
+        val tem = temAdaptavel()
+        val slotEmpty = vantagemAdaptavelSelecionadaId == null
+        Log.d("SWADE_DEBUG", "adaptavelSlotAvailable: tem=$tem, slotEmpty=$slotEmpty (currentId=$vantagemAdaptavelSelecionadaId)")
+        if (!tem) false
+        else slotEmpty
     }
 
     // controla quais categorias da seção de Vantagens estão expandidas

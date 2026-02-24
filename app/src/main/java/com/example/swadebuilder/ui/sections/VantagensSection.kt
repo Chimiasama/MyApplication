@@ -1872,6 +1872,8 @@ private fun VantagemItem(
                     val hasBP = pcLivres >= 2
                     val canAfford = state.pontosVantagem > 0 || hasBP
 
+                    android.util.Log.d("SWADE_DEBUG", "Clicking ${vant.nome}. FreePath=$isPathfinderFree, FreeProt=$isProtagonistaFree, FreeSam=$isSamuraiFree, FreeAdap=$isAdaptavelFree, CanAfford=$canAfford (PV=${state.pontosVantagem}, BP=$pcLivres)")
+
                     when {
                         !isPathfinderFree && !isProtagonistaFree && !isSamuraiFree && !isAdaptavelFree && !canAfford -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
