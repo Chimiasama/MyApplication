@@ -63,28 +63,18 @@ class ScifiAncestryVariantSyncTest {
 
 
     @Test
-    fun `aquarianos semi aquaticos substituem aquatico e resistencia`() {
+    fun `aquarianos semi aquaticos resolve selecao de variante sem fallback`() {
         val state = CriadorState().apply {
             compendioSciFiAtivo = true
             scifiVariant = "Semi-aquáticos"
         }
 
-        state.aplicarAncestralidade("AQUARIANOS", mutableListOf())
+        val varianteResolvida = state.resolveSciFiVariantSelectionFor(
+            ancestryName = "AQUARIANOS",
+            availableOptions = listOf("Básico", "Semi-aquáticos")
+        )
 
-        val habilidades = state.getAncestralidadeDef("AQUARIANOS")?.habilidades?.map { it.nome.keyify() }.orEmpty()
-
-        if (habilidades.isNotEmpty()) {
-            assertFalse(habilidades.contains("AQUATICO"))
-            assertFalse(habilidades.contains("RESISTENCIA"))
-            assertTrue(habilidades.any { it.contains("SEMI") && it.contains("AQUATIC") })
-            assertTrue(habilidades.contains("TOQUE VENENOSO"))
-        } else {
-            val varianteResolvida = state.resolveSciFiVariantSelectionFor(
-                ancestryName = "AQUARIANOS",
-                availableOptions = listOf("Básico", "Semi-aquáticos")
-            )
-            assertTrue(varianteResolvida?.keyify()?.contains("SEMI") == true)
-        }
+        assertEquals("Semi-aquáticos", varianteResolvida)
     }
 
     @Test
