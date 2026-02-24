@@ -384,8 +384,11 @@ fun VantagensContent(
         val isFreePathfinder = state.pathfinderSlotAvailable && state.isPathfinderEligible(vantToBuy)
         val isFreeProtagonista = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vantToBuy)
         val isFreeSamurai = state.samuraiCombatSlotAvailable && vantToBuy.categoria == Categoria.COMBATE
+        val isFreeAdaptavel = state.adaptavelSlotAvailable &&
+                (vantToBuy.requisitos.estagio.isBlank() || vantToBuy.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+                !state.isVantagemAutomatica(vantToBuy)
 
-        val needsPoints = !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai
+        val needsPoints = !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai && !isFreeAdaptavel
 
         var failed = false
         if (needsPoints && state.pontosVantagem <= 0) {
@@ -1863,12 +1866,15 @@ private fun VantagemItem(
 
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
                     val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
+                    val isFreeAdaptavel = state.adaptavelSlotAvailable &&
+                            (vant.requisitos.estagio.isBlank() || vant.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+                            !state.isVantagemAutomatica(vant)
 
                     val hasBP = pcLivres >= 2
                     val canAfford = state.pontosVantagem > 0 || hasBP
 
                     when {
-                        !isPathfinderFree && !isProtagonistaFree && !canAfford -> onError("Sem PV disponível")
+                        !isPathfinderFree && !isProtagonistaFree && !isFreeAdaptavel && !canAfford -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
                         state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         conflitoMsg != null -> onError(conflitoMsg)
