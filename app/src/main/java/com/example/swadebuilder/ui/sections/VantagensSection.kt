@@ -385,7 +385,11 @@ fun VantagensContent(
         val isFreeProtagonista = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vantToBuy)
         val isFreeSamurai = state.samuraiCombatSlotAvailable && vantToBuy.categoria == Categoria.COMBATE
 
-        val needsPoints = !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai
+        val isFreeAdaptavel = state.adaptavelSlotAvailable &&
+                (vantToBuy.requisitos.estagio.isBlank() || vantToBuy.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+                !state.isVantagemAutomatica(vantToBuy)
+
+        val needsPoints = !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai && !isFreeAdaptavel
 
         var failed = false
         if (needsPoints && state.pontosVantagem <= 0) {
