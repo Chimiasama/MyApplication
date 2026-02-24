@@ -18,9 +18,13 @@ class ResolveRacialAutomaticComplicationsUseCase {
     )
 
     fun execute(params: Params): Result {
-        val oldAutoKeys = params.previousAutomaticDisadvantages
-            .map { normalizeToken(it.substringBefore("(").trim()) }
-            .toSet()
+        // Build map of ID/Key -> Severity from the current list strings
+        // Strings might be "Forasteiro (Maior)" or "FORASTEIRO|Maior" or just name
+        // We need a robust parser for the new enriched strings coming from CriadorState
+        val currentSpecs = parseDisadvantages(params.currentAutomaticDisadvantages)
+        val oldSpecs = parseDisadvantages(params.previousAutomaticDisadvantages)
+
+        val oldAutoKeys = oldSpecs.keys
 
         val withoutOld = params.selectedComplications
             .filterKeys { complication ->
@@ -32,9 +36,7 @@ class ResolveRacialAutomaticComplicationsUseCase {
             }
             .toMutableMap()
 
-        val autoBaseKeys = params.currentAutomaticDisadvantages
-            .map { normalizeToken(it.substringBefore("(").trim()) }
-            .toSet()
+        val autoBaseKeys = currentSpecs.keys
 
         params.availableComplications
             .filter { complication ->
@@ -45,35 +47,37 @@ class ResolveRacialAutomaticComplicationsUseCase {
                 complicationTokens.any { it in autoBaseKeys }
             }
             .groupBy { normalizeToken(it.id) }
-            .forEach { (_, variants) ->
+            .forEach { (normId, variants) ->
                 val selected = variants.maxByOrNull { params.originPriorityResolver(it.origem) }
                     ?: variants.first()
 
-                val severity = when {
-                    hasSeverity(params.currentAutomaticDisadvantages, selected, "Maior") -> "Maior"
-                    hasSeverity(params.currentAutomaticDisadvantages, selected, "Menor") -> "Menor"
-                    else -> "Menor"
-                }
-
-                withoutOld[selected] = severity
+                // Determine severity from the parsed spec, defaulting to "Menor"
+                val specSeverity = currentSpecs[normId] ?: "Menor"
+                withoutOld[selected] = specSeverity
             }
 
         return Result(selectedComplications = withoutOld)
     }
 
-    private fun hasSeverity(
-        automaticDisadvantages: List<String>,
-        complication: Complicacao,
-        severity: String
-    ): Boolean {
-        val tokens = setOf(
-            normalizeToken(complication.id),
-            normalizeToken(complication.name)
-        )
-        return automaticDisadvantages.any {
-            normalizeToken(it.substringBefore("(").trim()) in tokens &&
-                it.contains(severity, ignoreCase = true)
+    private fun parseDisadvantages(list: List<String>): Map<String, String> {
+        val map = mutableMapOf<String, String>()
+        list.forEach { item ->
+            // item format might be "Name (Severity)" or "Name|Severity" if we change upstream
+            // For now assume standard "Name (Severity)" or just "Name"
+            // But we need to handle the new explicit severity if we passed it down?
+            // Actually, CriadorState passes strings. We need CriadorState to pass "Name|Severity" or use the (Parens) convention.
+            // Our script updated names to include (Maior)/(Menor)? No, script added `severity` field to JSON.
+            // We need CriadorState to construct the string properly from that JSON field.
+
+            val normKey = normalizeToken(item.substringBefore("(").trim())
+            val severity = when {
+                item.contains("(Maior)", ignoreCase = true) || item.contains("|Maior", ignoreCase = true) -> "Maior"
+                item.contains("(Menor)", ignoreCase = true) || item.contains("|Menor", ignoreCase = true) -> "Menor"
+                else -> "Menor" // Default if unspecified
+            }
+            map[normKey] = severity
         }
+        return map
     }
 
     private fun normalizeToken(value: String): String =

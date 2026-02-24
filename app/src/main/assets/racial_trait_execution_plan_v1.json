@@ -53,6 +53,19 @@
         "Schema e seed parseáveis",
         "Plano de execução marcado como concluído"
       ]
+    },
+    {
+      "id": "P5",
+      "name": "Migração de Código (Lógica)",
+      "status": "completed",
+      "deliverables": [
+        "app/src/main/java/com/example/swadebuilder/CriadorState.kt"
+      ],
+      "checks": [
+        "extrairArmasNaturais usa IDs",
+        "isPersonagemRobotico usa IDs",
+        "applySciFiVariantAdjustments usa IDs"
+      ]
     }
   ],
   "critical_trait_ids": [

@@ -354,90 +354,103 @@ class CriadorState {
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
         val newHabilidades = base.habilidades.toMutableList()
 
+        fun removeByIdOrName(id: String, nameKey: String) {
+            newHabilidades.removeAll {
+                it.id == id || it.nome.keyify() == nameKey.keyify()
+            }
+        }
+
         // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
         // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
         // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
 
         if (key == "QUADROIDES" && variant == "Habilidoso") {
-            newHabilidades.removeAll { it.nome.keyify().contains("ACAO ADICIONAL") }
+            newHabilidades.removeAll {
+                it.id == "ACAO_ADICIONAL" || it.nome.keyify().contains("ACAO ADICIONAL")
+            }
         }
 
         if (key == "AQUARIANOS" && variant.equals("Semi-aquáticos", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                val habKey = hab.nome.keyify()
-                habKey == "AQUATICO" || habKey == "RESISTENCIA"
-            }
+            removeByIdOrName("AQUATICO", "AQUATICO")
+            removeByIdOrName("RESISTENCIA", "RESISTENCIA")
 
-            if (newHabilidades.none { it.nome.keyify() == "SEMIAQUATICO" }) {
+            if (newHabilidades.none { it.id == "SEMIAQUATICO" || it.nome.keyify() == "SEMIAQUATICO" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Semiaquático",
-                        descricao = "Podem respirar na água e no ar. Seus deslocamentos na água usam a Movimentação normal."
+                        descricao = "Podem respirar na água e no ar. Seus deslocamentos na água usam a Movimentação normal.",
+                        id = "SEMIAQUATICO",
+                        category = "racial_trait_positive"
                     )
                 )
             }
 
-            if (newHabilidades.none { it.nome.keyify() == "TOQUE VENENOSO" }) {
+            if (newHabilidades.none { it.id == "TOQUE_VENENOSO" || it.nome.keyify() == "TOQUE VENENOSO" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Toque Venenoso",
-                        descricao = "Possuem secreções urticantes ou venenosas para contato próximo."
+                        descricao = "Possuem secreções urticantes ou venenosas para contato próximo.",
+                        id = "TOQUE_VENENOSO",
+                        category = "racial_trait_positive"
                     )
                 )
             }
         }
 
         if (key == "ELFOS" && variant.equals("Comunitário", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                hab.nome.keyify() == "DESASTRADO"
-            }
+            removeByIdOrName("DESASTRADO", "DESASTRADO")
 
-            if (newHabilidades.none { it.nome.keyify() == "COMUNITARIO" }) {
+            if (newHabilidades.none { it.id == "COMUNITARIO" || it.nome.keyify() == "COMUNITARIO" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Comunitário",
-                        descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m)."
+                        descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m).",
+                        id = "COMUNITARIO",
+                        category = "racial_trait_positive"
                     )
                 )
             }
         }
 
         if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                val habKey = hab.nome.keyify()
-                habKey == "FRAGIL" || habKey == "NAO SABE NADAR"
-            }
+            removeByIdOrName("FRAGIL", "FRAGIL")
+            removeByIdOrName("NAO_SABE_NADAR", "NAO SABE NADAR")
 
-            if (newHabilidades.none { it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
+            if (newHabilidades.none { it.id == "HABITANTE_DE_GRAVIDADE_BAIXA" || it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Habitante de Gravidade Baixa",
-                        descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado."
+                        descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado.",
+                        id = "HABITANTE_DE_GRAVIDADE_BAIXA",
+                        category = "racial_trait_negative"
                     )
                 )
             }
 
-            if (newHabilidades.none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
+            if (newHabilidades.none { it.id == "FORMA_ALIENIGENA" || it.nome.keyify() == "FORMA ALIENIGENA" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "Forma Alienígena",
-                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
+                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade.",
+                        id = "FORMA_ALIENIGENA",
+                        category = "racial_trait_negative"
                     )
                 )
             }
         }
 
         if (key == "CENTAUX" && variant.equals("Gazela", ignoreCase = true)) {
-            newHabilidades.removeAll { hab ->
-                val habKey = hab.nome.keyify()
-                habKey == "GRANDE" || habKey == "TAMANHO +2" || habKey == "MOVIMENTACAO +2"
-            }
+            removeByIdOrName("GRANDE", "GRANDE")
+            removeByIdOrName("TAMANHO_MAIS_2", "TAMANHO +2")
+            removeByIdOrName("MOVIMENTACAO", "MOVIMENTACAO +2")
 
             if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +4" }) {
                 newHabilidades.add(
                     com.example.swadebuilder.model.RacialAbility(
                         nome = "MOVIMENTAÇÃO +4",
-                        descricao = "Gazelas são extremamente rápidas. +4 em Movimentação e d10 no dado de corrida."
+                        descricao = "Gazelas são extremamente rápidas. +4 em Movimentação e d10 no dado de corrida.",
+                        id = "MOVIMENTACAO",
+                        category = "racial_trait_positive"
                     )
                 )
             }
@@ -1024,8 +1037,14 @@ class CriadorState {
         val ancestral = getAncestralidadeDef(ancestralidade)
         val nomeKey = (ancestral?.nome ?: ancestralidade).keyify()
         val robotByName = listOf("ANDROID", "CONSTRUTO", "CONSTRUCTO").any { nomeKey.contains(it) }
-        val robotBySkill = ancestral?.habilidades?.any { it.nome.keyify() == "MODIFICACOES" } == true
-        val robotByAdvantage = ancestral?.vantagensGratis?.any { it.keyify() == "CONSTRUTO" } == true
+        val robotBySkill = ancestral?.habilidades?.any {
+            val k = it.nome.keyify()
+            k == "MODIFICACOES" || it.id == "ROBO" || it.id == "CONSTRUTO"
+        } == true
+        val robotByAdvantage = ancestral?.let { effectiveVantagensGratis(it) }?.any {
+            val k = it.keyify()
+            k == "CONSTRUTO" || k == "ROBO"
+        } == true
 
         return robotByName || robotBySkill || robotByAdvantage
     }
@@ -1122,27 +1141,53 @@ class CriadorState {
         val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
             ?: return emptyList()
 
-        val keywords = listOf("Garras", "Mordida", "Chifres", "Cascos", "Toque Arrepiante", "Toque da Morte", "Ferrão", "Toque Venenoso")
+        // Map keyword to expected ID for robust lookup
+        val keywordToIdMap = mapOf(
+            "Garras" to "GARRAS",
+            "Mordida" to "MORDIDA",
+            "Chifres" to "CHIFRES",
+            "Cascos" to "CASCOS",
+            "Toque Arrepiante" to "TOQUE_ARREPIANTE",
+            "Toque da Morte" to "TOQUE_DA_MORTE",
+            "Ferrão" to "FERRAO",
+            "Toque Venenoso" to "TOQUE_VENENOSO"
+        )
+
+        val keywords = keywordToIdMap.keys.toList()
         val addedTypes = mutableSetOf<String>()
-        val sources = ancestralidadeObj.vantagensGratis +
+
+        // Sources for name-based fallback
+        val sources = effectiveVantagensGratis(ancestralidadeObj) +
             ancestralidadeObj.habilidades.map { it.nome } +
             vantagensRaciais +
             vantagensSelecionadas.map { it.nome }
 
-        // Helper to find description for a keyword
-        fun findDesc(keyword: String): String {
-            // 1. Try Ability (Habilidade Racial)
-            val hab = ancestralidadeObj.habilidades.find { it.nome.contains(keyword, ignoreCase = true) }
-            if (hab != null) return hab.descricao
+        // Helper to find description for a keyword or ID
+        fun findDesc(keyword: String, targetId: String?): String {
+            // 1. Try Ability (Habilidade Racial) by ID first, then Name
+            val habById = if (targetId != null) ancestralidadeObj.habilidades.find { it.id == targetId } else null
+            if (habById != null) return habById.descricao
 
-            // 2. Try Free Edge (Vantagem Grátis)
-            // If the keyword is in vantagensGratis, we try to look up the edge definition in the global list
-            if (ancestralidadeObj.vantagensGratis.any { it.contains(keyword, ignoreCase = true) }) {
+            val habByName = ancestralidadeObj.habilidades.find { it.nome.contains(keyword, ignoreCase = true) }
+            if (habByName != null) return habByName.descricao
+
+            // 2. Try Free Edge / Racial Advs (Vantagem Grátis / Raciais)
+            // These are strings (names or IDs). Check if any matches ID or Keyword.
+            val allGrantStrings = effectiveVantagensGratis(ancestralidadeObj) + vantagensRaciais
+            val matchedString = allGrantStrings.firstOrNull { s ->
+                val sKey = s.keyify()
+                (targetId != null && sKey == targetId.keyify()) || s.contains(keyword, ignoreCase = true)
+            }
+
+            if (matchedString != null) {
+                // Try to resolve as Edge description from global list
                 val edge = listaVantagens.firstOrNull {
-                    it.nome.contains(keyword, ignoreCase = true)
+                    it.id == matchedString || it.nome.keyify() == matchedString.keyify() || it.nome.contains(keyword, ignoreCase = true)
                 }
                 if (edge != null) return edge.descricao
+                // Fallback: use the string itself if it looks like a description (unlikely for IDs) but rare
             }
+
             return ""
         }
 
@@ -1221,6 +1266,9 @@ class CriadorState {
         // Parse logic
         keywords.forEach { key ->
             val keyToken = key.keyify()
+            val targetId = keywordToIdMap[key]
+
+            // Check if weapon is already added
             val alreadyPresent = weapons.any { weapon ->
                 val nameKey = weapon.nome.keyify()
                 when (keyToken) {
@@ -1233,23 +1281,37 @@ class CriadorState {
             }
             if (alreadyPresent) return@forEach
 
-            // Variant-specific exclusions
+            // Variant-specific exclusions (Legacy checks + ID checks)
+            // Note: Since we use IDs now, we could check IDs directly, but let's keep robust logic
             if (compendioSciFiAtivo) {
+                // Sáurios Cuspidor removes MORDIDA (via ID or name)
                 if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor" && keyToken == "MORDIDA") return@forEach
+                // Insetoides Vespa removes GARRAS
                 if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa" && keyToken == "GARRAS") return@forEach
             }
 
-            val matchedSource = sources.firstOrNull { it.contains(key, ignoreCase = true) }
+            // Check presence via ID (Strong match) or Name (Legacy/Fallback)
+            val hasIdMatch = targetId != null && (
+                ancestralidadeObj.habilidades.any { it.id == targetId } ||
+            effectiveVantagensGratis(ancestralidadeObj).any { it.keyify() == targetId.keyify() } ||
+                vantagensRaciais.any { it.keyify() == targetId.keyify() } ||
+                vantagensSelecionadas.any { it.id == targetId }
+            )
+
+            val matchedSource = if (hasIdMatch) key else sources.firstOrNull { it.contains(key, ignoreCase = true) }
 
             if (matchedSource != null) {
-                val selectedAdvDesc = vantagensSelecionadas
-                    .firstOrNull { it.nome.equals(matchedSource, ignoreCase = true) }
-                    ?.descricao
-                    .orEmpty()
+                // Try to get description from Selected Edge first (if applicable)
+                val selectedAdvDesc = if (targetId != null) {
+                    vantagensSelecionadas.firstOrNull { it.id == targetId }?.descricao
+                } else {
+                    vantagensSelecionadas.firstOrNull { it.nome.equals(matchedSource, ignoreCase = true) }?.descricao
+                }.orEmpty()
 
-                var desc = selectedAdvDesc.ifBlank { findDesc(key) }
+                var desc = selectedAdvDesc.ifBlank { findDesc(key, targetId) }
                 if (desc.isBlank()) {
-                    desc = matchedSource
+                    // Fallback to source string if it was a name match and description is missing
+                    desc = if (!hasIdMatch) matchedSource else ""
                 }
 
                 // Regex to find damage like "For+d4", "Str+d4", "For+d6", allowing for spaces
@@ -3098,9 +3160,33 @@ class CriadorState {
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
+    private fun effectiveVantagensGratis(rm: com.example.swadebuilder.model.RacialModifier): List<String> {
+        val fromList = rm.vantagensGratis
+        val fromHabilidades = rm.habilidades
+            .filter { it.category == "racial_edge" }
+            .map { it.id ?: it.nome }
+        return fromList + fromHabilidades
+    }
+
+    private fun effectiveDesvantagens(rm: com.example.swadebuilder.model.RacialModifier): List<String> {
+        val fromList = rm.desvantagens
+        val fromHabilidades = rm.habilidades
+            .filter { it.category == "racial_hindrance" }
+            .map {
+                val sev = it.severity
+                if (sev != null && !it.nome.contains("($sev)", ignoreCase = true)) {
+                    "${it.nome} ($sev)"
+                } else {
+                    it.nome
+                }
+            }
+        return fromList + fromHabilidades
+    }
+
     val pontosComplicacao: Int
         get() {
-            val ancestryAuto = getAncestralidadeDef(ancestralidade)?.desvantagens.orEmpty()
+            val ancestryDef = getAncestralidadeDef(ancestralidade)
+            val ancestryAuto = ancestryDef?.let { effectiveDesvantagens(it) }.orEmpty()
             val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
                 .map { normalizeAutoKey(it.substringBefore("(").trim()) }
                 .toSet()
@@ -3211,7 +3297,7 @@ class CriadorState {
         if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
 
         // Automatic checks
-        val ancestryAuto = getAncestralidadeDef(ancestralidade)?.desvantagens.orEmpty()
+        val ancestryAuto = getAncestralidadeDef(ancestralidade)?.let { effectiveDesvantagens(it) }.orEmpty()
         val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
             .map { normalizeAutoKey(it.substringBefore("(").trim()) }
             .toSet()
@@ -4274,7 +4360,7 @@ class CriadorState {
         if (!isHumanoFantasiaSelecionado()) return
 
         val ancDef = getAncestralidadeDef(ancestralidade)
-        val baseDesvantagens = ancDef?.desvantagens ?: emptyList()
+        val baseDesvantagens = ancDef?.let { effectiveDesvantagens(it) } ?: emptyList()
         val extras = when (pacoteCulturalFantasiaSelecionado) {
             "Nômades do Deserto" -> listOf("Fraqueza Ambiental (Menor)")
             "Povo da Montanha" -> listOf("Fraqueza Ambiental (Menor)")
