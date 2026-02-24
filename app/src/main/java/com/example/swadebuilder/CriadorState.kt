@@ -347,7 +347,7 @@ class CriadorState {
             selected
         }
 
-        return withInferredAncestryMechanics(withVariant)
+        return withVariant
     }
 
     private fun applySciFiVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
@@ -504,22 +504,6 @@ class CriadorState {
             desvantagens = baseline.desvantagens,
             habilidades = baseline.habilidades
         )
-    }
-
-    private fun withInferredAncestryMechanics(selected: RacialModifier): RacialModifier {
-        val hasFreeNoviceEdgeByText = selected.habilidades.any { hab ->
-            val text = "${hab.nome} ${hab.descricao}".keyify()
-            text.contains("VANTAGEM") &&
-                (text.contains("ESTAGIO NOVATO") || text.contains("NIVEL NOVATO")) &&
-                text.contains("A SUA ESCOLHA")
-        }
-
-        if (!hasFreeNoviceEdgeByText) return selected
-
-        val hasAdaptavel = selected.vantagensGratis.any { it.keyify() == "ADAPTAVEL" }
-        if (hasAdaptavel) return selected
-
-        return selected.copy(vantagensGratis = selected.vantagensGratis + "ADAPTÁVEL")
     }
 
     fun isAttributeRankLimitReached(): Boolean {
@@ -1688,13 +1672,20 @@ class CriadorState {
         val isFreeProtagonista = protagonistaSlotAvailable && isProtagonistaEligible(v)
         val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
-        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) return false // No points
+        val isFreeAdaptavel = adaptavelSlotAvailable &&
+            (v.requisitos.estagio.isBlank() || v.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
+            !isVantagemAutomatica(v)
+
+        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
 
         applyVantagemDinheiro(v)
         checkAndRefundResourcePb()
         adicionarVantagem(v)
 
-        if (isFreePathfinder) {
+        if (isFreeAdaptavel) {
+            vantagemAdaptavelSelecionadaId = v.id
+            onFeedback("Vantagem ${v.nome} adicionada (Slot de Humano/Adaptável).")
+        } else if (isFreePathfinder) {
             onFeedback("Vantagem ${v.nome} adicionada (Slot de Classe Gratuito).")
         } else if (isFreeProtagonista) {
             vantagensSlotProtagonista.add(v.id)
@@ -1733,13 +1724,17 @@ class CriadorState {
         val wasEligible = isPathfinderEligible(v)
         val wasProtagonistaEligible = v.id in vantagensSlotProtagonista
         val wasSamuraiEligible = v.id in samuraiCombatSlotIds
+        val wasAdaptavelSlot = v.id == vantagemAdaptavelSelecionadaId
 
         removeVantagemDinheiro(v)
         removerVantagem(v)
 
         var shouldRefund = true
 
-        if (wasEligible && compendioPathfinderAtivo) {
+        if (wasAdaptavelSlot) {
+            vantagemAdaptavelSelecionadaId = null
+            shouldRefund = false
+        } else if (wasEligible && compendioPathfinderAtivo) {
             // Count remaining eligible edges that are NOT automatic
             val remainingEligiblePurchased = vantagensSelecionadas.count {
                 isPathfinderEligible(it) && !isVantagemAutomatica(it)
@@ -1750,6 +1745,7 @@ class CriadorState {
                 shouldRefund = false
             }
         }
+
         if (wasProtagonistaEligible && compendioArteDaGuerraAtivo) {
             vantagensSlotProtagonista.remove(v.id)
             shouldRefund = false
@@ -3210,6 +3206,32 @@ class CriadorState {
         }
 
     val vantagensSelecionadas      = mutableStateListOf<Vantagem>()
+    var vantagemAdaptavelSelecionadaId: String? by mutableStateOf(null)
+
+    fun temAdaptavel(): Boolean {
+        val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
+        val free = effectiveVantagensGratis(ancDef)
+        // 1. Explicitly in Free Edges (legacy list or racial_edge)
+        if (free.any { it.keyify() == "ADAPTAVEL" }) return true
+
+        // 2. Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
+        if (ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) return true
+
+        // 3. Half-Elves Special Logic: "Herança" acts as Adaptable if Agility d6 is NOT selected
+        val isMeioElfo = ancestralidade.keyify().contains("MEIO-ELFO") ||
+                ancDef.habilidades.any { it.id?.keyify() == "HERANCA" }
+
+        if (isMeioElfo && !meioElfoAgil) {
+            return true
+        }
+
+        return false
+    }
+
+    val adaptavelSlotAvailable: Boolean by derivedStateOf {
+        if (!temAdaptavel()) false
+        else vantagemAdaptavelSelecionadaId == null
+    }
 
     // controla quais categorias da seção de Vantagens estão expandidas
     val categoriasVantagensExpandidas: SnapshotStateMap<Categoria, Boolean> =
@@ -3802,6 +3824,18 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
+
+        // Check if Adaptavel was lost
+        val lostAdaptavel = !temAdaptavel() && vantagemAdaptavelSelecionadaId != null
+        if (lostAdaptavel) {
+            val toRemove = vantagensSelecionadas.find { it.id == vantagemAdaptavelSelecionadaId }
+            if (toRemove != null) {
+                removeVantagemDinheiro(toRemove)
+                removerVantagem(toRemove)
+                feedbackMessages.add("Vantagem '${toRemove.nome}' (Slot de Humano) removida.")
+            }
+            vantagemAdaptavelSelecionadaId = null
+        }
 
         val attributeAdjustmentResult = ancestryChangeCoordination.attributeAdjustmentResult
 
@@ -5046,6 +5080,11 @@ class CriadorState {
              if (pending) return false
         }
 
+        // Check Adaptavel Slot
+        if (temAdaptavel() && vantagemAdaptavelSelecionadaId == null) {
+            return false
+        }
+
         // Check Idoso constraint
         val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
         if (hasIdoso) {
@@ -5303,7 +5342,8 @@ class CriadorState {
                 dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado,
                 anoesScifiSelecionado = anoesScifiSelecionado,
                 scifiVariant = scifiVariant,
-                humanoMineradorAtributo = humanoMineradorAtributo
+                humanoMineradorAtributo = humanoMineradorAtributo,
+                vantagemAdaptavelSelecionadaId = vantagemAdaptavelSelecionadaId
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -5437,6 +5477,7 @@ class CriadorState {
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
         humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
+        vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
 
         dinheiro = snapshot.recursos.dinheiro
         requisicao = snapshot.recursos.requisicao
