@@ -1673,7 +1673,7 @@ class CriadorState {
         val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
         val isFreeAdaptavel = adaptavelSlotAvailable &&
-            v.requisitos.estagio.equals("Novato", ignoreCase = true) &&
+            (v.requisitos.estagio.isBlank() || v.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
             !isVantagemAutomatica(v)
 
         if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
