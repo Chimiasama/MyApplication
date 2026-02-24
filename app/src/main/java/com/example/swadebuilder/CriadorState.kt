@@ -1041,7 +1041,7 @@ class CriadorState {
             val k = it.nome.keyify()
             k == "MODIFICACOES" || it.id == "ROBO" || it.id == "CONSTRUTO"
         } == true
-        val robotByAdvantage = ancestral?.vantagensGratis?.any {
+        val robotByAdvantage = ancestral?.let { effectiveVantagensGratis(it) }?.any {
             val k = it.keyify()
             k == "CONSTRUTO" || k == "ROBO"
         } == true
@@ -1157,7 +1157,7 @@ class CriadorState {
         val addedTypes = mutableSetOf<String>()
 
         // Sources for name-based fallback
-        val sources = ancestralidadeObj.vantagensGratis +
+        val sources = effectiveVantagensGratis(ancestralidadeObj) +
             ancestralidadeObj.habilidades.map { it.nome } +
             vantagensRaciais +
             vantagensSelecionadas.map { it.nome }
@@ -1173,7 +1173,7 @@ class CriadorState {
 
             // 2. Try Free Edge / Racial Advs (Vantagem Grátis / Raciais)
             // These are strings (names or IDs). Check if any matches ID or Keyword.
-            val allGrantStrings = ancestralidadeObj.vantagensGratis + vantagensRaciais
+            val allGrantStrings = effectiveVantagensGratis(ancestralidadeObj) + vantagensRaciais
             val matchedString = allGrantStrings.firstOrNull { s ->
                 val sKey = s.keyify()
                 (targetId != null && sKey == targetId.keyify()) || s.contains(keyword, ignoreCase = true)
@@ -1293,7 +1293,7 @@ class CriadorState {
             // Check presence via ID (Strong match) or Name (Legacy/Fallback)
             val hasIdMatch = targetId != null && (
                 ancestralidadeObj.habilidades.any { it.id == targetId } ||
-                ancestralidadeObj.vantagensGratis.any { it.keyify() == targetId.keyify() } ||
+            effectiveVantagensGratis(ancestralidadeObj).any { it.keyify() == targetId.keyify() } ||
                 vantagensRaciais.any { it.keyify() == targetId.keyify() } ||
                 vantagensSelecionadas.any { it.id == targetId }
             )
@@ -3160,9 +3160,26 @@ class CriadorState {
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
+    private fun effectiveVantagensGratis(rm: com.example.swadebuilder.model.RacialModifier): List<String> {
+        val fromList = rm.vantagensGratis
+        val fromHabilidades = rm.habilidades
+            .filter { it.category == "racial_edge" }
+            .map { it.id ?: it.nome }
+        return fromList + fromHabilidades
+    }
+
+    private fun effectiveDesvantagens(rm: com.example.swadebuilder.model.RacialModifier): List<String> {
+        val fromList = rm.desvantagens
+        val fromHabilidades = rm.habilidades
+            .filter { it.category == "racial_hindrance" }
+            .map { it.nome }
+        return fromList + fromHabilidades
+    }
+
     val pontosComplicacao: Int
         get() {
-            val ancestryAuto = getAncestralidadeDef(ancestralidade)?.desvantagens.orEmpty()
+            val ancestryDef = getAncestralidadeDef(ancestralidade)
+            val ancestryAuto = ancestryDef?.let { effectiveDesvantagens(it) }.orEmpty()
             val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
                 .map { normalizeAutoKey(it.substringBefore("(").trim()) }
                 .toSet()
@@ -3273,7 +3290,7 @@ class CriadorState {
         if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
 
         // Automatic checks
-        val ancestryAuto = getAncestralidadeDef(ancestralidade)?.desvantagens.orEmpty()
+        val ancestryAuto = getAncestralidadeDef(ancestralidade)?.let { effectiveDesvantagens(it) }.orEmpty()
         val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
             .map { normalizeAutoKey(it.substringBefore("(").trim()) }
             .toSet()
@@ -4336,7 +4353,7 @@ class CriadorState {
         if (!isHumanoFantasiaSelecionado()) return
 
         val ancDef = getAncestralidadeDef(ancestralidade)
-        val baseDesvantagens = ancDef?.desvantagens ?: emptyList()
+        val baseDesvantagens = ancDef?.let { effectiveDesvantagens(it) } ?: emptyList()
         val extras = when (pacoteCulturalFantasiaSelecionado) {
             "Nômades do Deserto" -> listOf("Fraqueza Ambiental (Menor)")
             "Povo da Montanha" -> listOf("Fraqueza Ambiental (Menor)")

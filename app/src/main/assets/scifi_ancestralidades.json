@@ -23,7 +23,7 @@
       {
         "nome": "Resistente",
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
-        "id": "ROBUSTO",
+        "id": "RESISTENTE",
         "category": "racial_trait_positive"
       },
       {
@@ -43,9 +43,7 @@
     "variantes": null,
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "DEPENDÊNCIA"
-    ],
+    "desvantagens": [],
     "opcoes": [
       "Básico",
       "Semi-aquáticos"
@@ -143,9 +141,7 @@
       "Básico",
       "Comunitário"
     ],
-    "desvantagens": [
-      "DESASTRADO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -157,7 +153,7 @@
         "nome": "Desastrado",
         "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.",
         "id": "DESASTRADO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "Visão no Escuro",
@@ -187,13 +183,11 @@
         "nome": "Adaptável",
         "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente.",
         "id": "ADAPTAVEL",
-        "category": "racial_trait_positive"
+        "category": "racial_edge"
       }
     ],
     "tags": [],
-    "vantagensGratis": [
-      "ADAPTÁVEL"
-    ]
+    "vantagensGratis": []
   },
   {
     "nome": "RAKASHANOS",
@@ -208,9 +202,7 @@
       "Brincalhão"
     ],
     "pericias": {},
-    "desvantagens": [
-      "INIMIGO RACIAL"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -222,12 +214,12 @@
         "nome": "Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_RACIAL",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "Mordida/Garras",
         "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "GARRAS",
+        "id": "MORDIDA_GARRAS",
         "category": "racial_trait_positive"
       },
       {
@@ -240,7 +232,7 @@
         "nome": "Sanguinário",
         "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.",
         "id": "SANGUINARIO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "Visão no Escuro",
@@ -263,19 +255,29 @@
       "Cuspidor"
     ],
     "pericias": {},
-    "desvantagens": [
-      "FORASTEIRO (Menor)",
-      "FRAQUEZA AMBIENTAL (Frio)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ARMADURA +2",
         "descricao": "Pele escamosa ou placas naturais.",
-        "id": "ARMADURA",
+        "id": "ARMADURA_2",
         "category": "racial_trait_positive"
+      },
+      {
+        "nome": "FORASTEIRO (Menor)",
+        "descricao": "FORASTEIRO (Menor)",
+        "id": "FORASTEIRO",
+        "category": "racial_hindrance"
+      },
+      {
+        "nome": "FRAQUEZA AMBIENTAL (Frio)",
+        "descricao": "FRAQUEZA AMBIENTAL (Frio)",
+        "id": "FRAQUEZA_AMBIENTAL",
+        "category": "racial_trait_negative"
       }
     ],
-    "tags": []
+    "tags": [],
+    "vantagensGratis": []
   },
   {
     "nome": "CENTAUX",
@@ -288,10 +290,7 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "GRANDE",
-      "ÓBVIO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ESTÁVEL",
@@ -302,13 +301,13 @@
       {
         "nome": "MOVIMENTAÇÃO +2",
         "descricao": "Centaux tem passadas largas. +2 em Movimentação e +1d no dado de corrida.",
-        "id": "MOVIMENTACAO",
+        "id": "MOVIMENTACAO_2",
         "category": "racial_trait_positive"
       },
       {
         "nome": "TAMANHO +2",
         "descricao": "Centaux são criaturas grandes. Adicionam +2 ao Tamanho e Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_2",
         "category": "racial_trait_positive"
       },
       {
@@ -321,13 +320,14 @@
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       }
     ],
     "tags": [
       "tamanho_grande",
       "multiplas_pernas"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "DRAKENS",
@@ -342,15 +342,12 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "LENTO",
-      "RUDE"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CABEÇA DURA",
         "descricao": "A crista da cabeça desses drakens permite que deem cabeçadas com força extrema. Isso conta como Chifres e causa For+d4 de dano. Veja Armas Naturais em Savage Worlds Edição Aventura.",
-        "id": "CHIFRES",
+        "id": "CABECA_DURA",
         "category": "racial_trait_positive"
       },
       {
@@ -362,19 +359,20 @@
       {
         "nome": "RESISTÊNCIA +2",
         "descricao": "Drakens são fortes e resilientes.",
-        "id": "RESISTENCIA",
+        "id": "RESISTENCIA_2",
         "category": "racial_trait_positive"
       },
       {
         "nome": "RUDE",
         "descricao": "Drakens são mais rápidos em ameaçar do que em argumentar. Subtraem 2 das rolagens de Persuadir.",
         "id": "RUDE",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       }
     ],
     "tags": [
       "arma_natural"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "ELEMENTAIS",
@@ -389,11 +387,7 @@
       "Força": 3
     },
     "pericias": {},
-    "desvantagens": [
-      "CABEÇA-DURA",
-      "GRANDE",
-      "MOVIMENTAÇÃO REDUZIDA"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CABEÇA-DURA",
@@ -416,14 +410,15 @@
       {
         "nome": "TAMANHO +1",
         "descricao": "Elementais medem 2,1 metros de altura. Adicionam +1 à sua Resistência.",
-        "id": "TAMANHO_MAIS_1",
+        "id": "TAMANHO_1",
         "category": "racial_trait_positive"
       }
     ],
     "tags": [
       "tamanho_grande",
       "elemental"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "FERAIS",
@@ -438,15 +433,12 @@
       "Espírito": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "INIMIGO ANCESTRAL (Insetoide)",
-      "MOVIMENTAÇÃO REDUZIDA"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "INIMIGO ANCESTRAL (Insetoide)",
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação.",
-        "id": "INIMIGO_RACIAL",
+        "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative"
       },
       {
@@ -458,7 +450,8 @@
     ],
     "tags": [
       "pequeno"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "FLORANS",
@@ -471,10 +464,7 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "DEPENDÊNCIA",
-      "FRAQUEZA AMBIENTAL (Calor/Fogo)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "DEPENDÊNCIA",
@@ -509,7 +499,8 @@
     ],
     "tags": [
       "planta"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "GELATINOIDES",
@@ -522,16 +513,13 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "CIBER-RESISTÊNCIA",
-      "FRACO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CIBER-RESISTÊNCIA",
         "descricao": "É difícil implantar ciberequipamentos em criaturas feitas de gosma. Gelatinoides têm a Complicação Ciber-Resistência (p. 129).",
         "id": "CIBER_RESISTENCIA",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "FRACO",
@@ -548,7 +536,8 @@
     ],
     "tags": [
       "amorfo"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "INSETOIDES",
@@ -561,11 +550,7 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "FORASTEIRO (Menor)",
-      "INCAPAZ DE FALAR",
-      "TRANSTORNO DE SEPARAÇÃO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "COMUNITÁRIO",
@@ -577,30 +562,31 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Tudo, desde os hábitos alimentares dos insetoides até sua mentalidade de colmeia, é estranho e alienígena para a maioria dos outros seres. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "INCAPAZ DE FALAR",
         "descricao": "Insetoides não têm cordas vocais e normalmente só conseguem se comunicar com membros de sua própria espécie. Eles ainda podem ouvir e entender outros idiomas típicos e podem se comunicar por meio de dispositivos eletrônicos, como o tradutor de idiomas encontrado na p. 43.",
         "id": "INCAPAZ_DE_FALAR",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "TRANSTORNO DE SEPARAÇÃO",
         "descricao": "Insetoides são criaturas coletivas e geralmente não se dão bem sozinhos. Quando nenhum outro insetoide estiver na linha de visão, a personagem sofre -2 nas rolagens de Espírito.",
         "id": "TRANSTORNO_DE_SEPARACAO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "VISÃO DE 360°",
         "descricao": "Os olhos compostos dos insetoides lhes garantem um campo de visão livre. Ignoram 1 ponto de bônus de Agrupar.",
-        "id": "VISAO_360",
+        "id": "VISAO_DE_360",
         "category": "racial_trait_positive"
       }
     ],
     "tags": [
       "inseto"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "MÍMICOS",
@@ -613,22 +599,19 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "CIBER-RESISTÊNCIA",
-      "FORASTEIRO (Menor)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CIBER-RESISTÊNCIA",
         "descricao": "A fisiologia de um mímico não se adapta bem a ciberequipamentos. Possuem a Complicação Ciber-Resistência (p. 129).",
         "id": "CIBER_RESISTENCIA",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Sociedades por toda a galáxia desconfiam de mímicos. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "SEM ÓRGÃOS VITAIS",
@@ -639,7 +622,8 @@
     ],
     "tags": [
       "metamorfo"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "MINERADORES GENÉTICOS",
@@ -666,7 +650,8 @@
     ],
     "tags": [
       "humano_modificado"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "ORÁCULOS",
@@ -679,9 +664,7 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "FRÁGIL"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FRÁGIL",
@@ -698,7 +681,8 @@
     ],
     "tags": [
       "psiquico"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "POSSESSORES",
@@ -711,9 +695,7 @@
       "Padrão",
       "Energia"
     ],
-    "desvantagens": [
-      "FORASTEIRO (Menor)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CASCA",
@@ -731,12 +713,13 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Possessores são frequentemente menosprezados, e outros podem ser hostis se os parasitas “vestirem” alguém que conhecem. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       }
     ],
     "tags": [
       "parasita"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "QUADROIDES",
@@ -749,11 +732,7 @@
       "Padrão",
       "Habilidoso"
     ],
-    "desvantagens": [
-      "FRÁGIL",
-      "INIMIGO ANCESTRAL",
-      "SENSÍVEL"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "AÇÃO ADICIONAL",
@@ -770,7 +749,7 @@
       {
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
-        "id": "INIMIGO_RACIAL",
+        "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative"
       },
       {
@@ -783,12 +762,13 @@
         "nome": "SENSÍVEL",
         "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
         "id": "SENSIVEL",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       }
     ],
     "tags": [
       "multiplos_bracos"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "ROBÔS",
@@ -802,21 +782,19 @@
       "Guerreiro",
       "Limitado"
     ],
-    "desvantagens": [
-      "CIRCUITOS DE ASIMOV"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CIRCUITOS DE ASIMOV",
         "descricao": "O robô não pode causar dano a seres inteligentes. Isso lhes dá a Complicação Pacifista (Maior).",
         "id": "CIRCUITOS_DE_ASIMOV",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "PROGRAMADO",
         "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado (Maior).",
         "id": "PROGRAMADO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "ROBÔ",
@@ -828,7 +806,8 @@
     "tags": [
       "construto",
       "robo"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "SERES SINTÉTICOS",
@@ -842,9 +821,7 @@
       "Máquina (Procurado)",
       "Máquina (Forasteiro)"
     ],
-    "desvantagens": [
-      "NÃO PODE CURAR"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ESPACIAL",
@@ -868,12 +845,13 @@
         "nome": "PROGRAMADO",
         "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado.",
         "id": "PROGRAMADO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       }
     ],
     "tags": [
       "androide"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "SOLDADOS GENÉTICOS",
@@ -886,10 +864,7 @@
       "Padrão",
       "Fuzileiro Zero G"
     ],
-    "desvantagens": [
-      "SEM ESCRÚPULOS (Maior)",
-      "TREINADOS PARA A GUERRA"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "NERVOS DE AÇO",
@@ -906,26 +881,27 @@
       {
         "nome": "RESISTÊNCIA +1",
         "descricao": "Soldados genéticos foram criados para aguentar o tranco.",
-        "id": "RESISTENCIA",
+        "id": "RESISTENCIA_1",
         "category": "racial_trait_positive"
       },
       {
         "nome": "SEM ESCRÚPULOS (Maior)",
         "descricao": "Soldados genéticos são treinados para obedecer ordens e completar suas missões a qualquer custo. Caso tenha se libertado de seu condicionamento, substitua isto por Procurado se seu empregador quiser vingança, ou Inimigo para alguém prejudicado no passado que queira o herói morto.",
         "id": "SEM_ESCRUPULOS",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "TREINADOS PARA A GUERRA",
         "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 4 das rolagens de Conhecimento Geral.",
         "id": "TREINADOS_PARA_A_GUERRA",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       }
     ],
     "tags": [
       "humano_modificado",
       "soldado"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "VAZIOS",
@@ -934,18 +910,13 @@
     "variantes": "Ideias variantes: A criatura aqui foi projetada para usar um traje de contenção (veja a p. 49). Para um ser de energia muito mais poderoso, dê a ele superpoderes (veja Savage Worlds Edição Aventura e o Compêndio de Superpoderes), como ataques de longa distância e campo de dano.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "CURIOSO",
-      "FORASTEIRO (Menor)",
-      "INCAPAZ DE FALAR",
-      "TRANSTORNO DE SEPARAÇÃO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CURIOSO",
         "descricao": "Vazios que viajam com outros seres são incrivelmente curiosos, especialmente sobre as muitas facetas da vida orgânica que são completamente desconhecidas para eles.",
         "id": "CURIOSO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "ESPACIAL",
@@ -957,7 +928,7 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "Seres corpóreos não tendem a confiar em tais formas de vida alienígenas. Vazios possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "FORMA DE ENERGIA",
@@ -969,7 +940,7 @@
         "nome": "INCAPAZ DE FALAR",
         "descricao": "Vazios nunca desenvolveram a capacidade de se comunicar verbalmente uns com os outros. A maioria usa telas de tradução portáteis para traduzir sua fala para outros seres.",
         "id": "INCAPAZ_DE_FALAR",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "SEM SANGUE",
@@ -981,13 +952,14 @@
         "nome": "TRANSTORNO DE SEPARAÇÃO",
         "descricao": "Estas criaturas são entidades solitárias, subtraindo 2 das rolagens de Espírito quando não houver outros vazios presentes.",
         "id": "TRANSTORNO_DE_SEPARACAO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       }
     ],
     "tags": [
       "energia",
       "incorporeo"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "YETIS",
@@ -1031,13 +1003,14 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "Geralmente têm cerca de 2,1 metros de altura, são muito grandes e densos. Adicionam +2 ao Tamanho e Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_2",
         "category": "racial_trait_positive"
       }
     ],
     "tags": [
       "tamanho_grande"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "AURAX",
@@ -1048,17 +1021,13 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "BAIXA TECNOLOGIA (Maior)",
-      "GRANDE",
-      "ÓBVIO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "BAIXA TECNOLOGIA (Maior)",
         "descricao": "O mundo natal dos aurax é de baixa tecnologia em comparação à maioria dos mundos desenvolvidos. Eles possuem a Complicação Baixa Tecnologia (Maior).",
         "id": "BAIXA_TECNOLOGIA",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "ESTÁVEL",
@@ -1081,26 +1050,27 @@
       {
         "nome": "MOVIMENTAÇÃO +2",
         "descricao": "A Movimentação dos centaux aumenta em +2 e seu dado de corrida aumenta em um tipo.",
-        "id": "MOVIMENTACAO",
+        "id": "MOVIMENTACAO_2",
         "category": "racial_trait_positive"
       },
       {
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "TAMANHO +2",
         "descricao": "A parte humanoide de um centaux é um humano robusto e musculoso, enquanto a parte traseira do corpo é do tamanho de um grande mamífero de quatro patas. Adicionam +2 à sua Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_2",
         "category": "racial_trait_positive"
       }
     ],
     "tags": [
       "tamanho_grande",
       "multiplas_pernas"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "DEADERS (PARASTEEN)",
@@ -1109,13 +1079,7 @@
     "variantes": null,
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "APARAR BAIXO",
-      "DESAJEITADO",
-      "FORASTEIRO (Menor)",
-      "FRACO",
-      "LENTO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "APARAR BAIXO",
@@ -1139,7 +1103,7 @@
         "nome": "FORASTEIRO (Menor)",
         "descricao": "A maioria das pessoas se sente desconfortável perto de cadáveres animados.",
         "id": "FORASTEIRO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       },
       {
         "nome": "FRACO",
@@ -1163,7 +1127,8 @@
     "tags": [
       "morto_vivo",
       "parasita"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "KALIANOS",
@@ -1172,11 +1137,7 @@
     "variantes": null,
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "FRÁGIL",
-      "INIMIGO ANCESTRAL",
-      "SENSÍVEL"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "AÇÃO ADICIONAL",
@@ -1193,7 +1154,7 @@
       {
         "nome": "INIMIGO ANCESTRAL",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
-        "id": "INIMIGO_RACIAL",
+        "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative"
       },
       {
@@ -1206,12 +1167,13 @@
         "nome": "SENSÍVEL",
         "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
         "id": "SENSIVEL",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance"
       }
     ],
     "tags": [
       "multiplos_bracos"
-    ]
+    ],
+    "vantagensGratis": []
   },
   {
     "nome": "SERRANOS",
@@ -1220,9 +1182,7 @@
     "variantes": null,
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "FRACO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "APARAR",
@@ -1245,6 +1205,7 @@
     ],
     "tags": [
       "psiquico"
-    ]
+    ],
+    "vantagensGratis": []
   }
 ]
