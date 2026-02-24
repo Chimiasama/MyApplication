@@ -5303,7 +5303,8 @@ class CriadorState {
                 dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado,
                 anoesScifiSelecionado = anoesScifiSelecionado,
                 scifiVariant = scifiVariant,
-                humanoMineradorAtributo = humanoMineradorAtributo
+                humanoMineradorAtributo = humanoMineradorAtributo,
+                vantagemAdaptavelSelecionadaId = vantagemAdaptavelSelecionadaId
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -5437,6 +5438,7 @@ class CriadorState {
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
         humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
+        vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
 
         dinheiro = snapshot.recursos.dinheiro
         requisicao = snapshot.recursos.requisicao

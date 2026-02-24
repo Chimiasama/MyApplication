@@ -569,6 +569,28 @@ fun VantagensContent(
             }
 
             if (!state.emProgresso) {
+                if (state.temAdaptavel()) {
+                    val slotAvailable = state.vantagemAdaptavelSelecionadaId == null
+                    val (color, text) = if (slotAvailable) {
+                        MaterialTheme.colorScheme.primaryContainer to "Vantagem Novato de Humano disponível"
+                    } else {
+                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem Novato de Humano utilizada"
+                    }
+
+                    Card(
+                        colors = CardDefaults.cardColors(containerColor = color),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = text,
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                    Spacer(Modifier.size(8.dp))
+                }
+
                 if (state.compendioPathfinderAtivo) {
                     val slotAvailable = state.pathfinderSlotAvailable
                     val (color, text) = if (slotAvailable) {
@@ -1891,6 +1913,13 @@ private fun VantagemItem(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
+                if (state.vantagemAdaptavelSelecionadaId == vant.id) {
+                    AssistChip(
+                        onClick = {},
+                        label = { Text("Slot de Humano/Adaptável") }
+                    )
+                }
+
                 if (state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)) {
                     AssistChip(
                         onClick = {},
