@@ -1688,13 +1688,20 @@ class CriadorState {
         val isFreeProtagonista = protagonistaSlotAvailable && isProtagonistaEligible(v)
         val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
-        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && pontosVantagem <= 0) return false // No points
+        val isFreeAdaptavel = adaptavelSlotAvailable &&
+            v.requisitos.estagio.equals("Novato", ignoreCase = true) &&
+            !isVantagemAutomatica(v)
+
+        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
 
         applyVantagemDinheiro(v)
         checkAndRefundResourcePb()
         adicionarVantagem(v)
 
-        if (isFreePathfinder) {
+        if (isFreeAdaptavel) {
+            vantagemAdaptavelSelecionadaId = v.id
+            onFeedback("Vantagem ${v.nome} adicionada (Slot de Humano/Adaptável).")
+        } else if (isFreePathfinder) {
             onFeedback("Vantagem ${v.nome} adicionada (Slot de Classe Gratuito).")
         } else if (isFreeProtagonista) {
             vantagensSlotProtagonista.add(v.id)
@@ -1733,13 +1740,17 @@ class CriadorState {
         val wasEligible = isPathfinderEligible(v)
         val wasProtagonistaEligible = v.id in vantagensSlotProtagonista
         val wasSamuraiEligible = v.id in samuraiCombatSlotIds
+        val wasAdaptavelSlot = v.id == vantagemAdaptavelSelecionadaId
 
         removeVantagemDinheiro(v)
         removerVantagem(v)
 
         var shouldRefund = true
 
-        if (wasEligible && compendioPathfinderAtivo) {
+        if (wasAdaptavelSlot) {
+            vantagemAdaptavelSelecionadaId = null
+            shouldRefund = false
+        } else if (wasEligible && compendioPathfinderAtivo) {
             // Count remaining eligible edges that are NOT automatic
             val remainingEligiblePurchased = vantagensSelecionadas.count {
                 isPathfinderEligible(it) && !isVantagemAutomatica(it)
@@ -1750,6 +1761,7 @@ class CriadorState {
                 shouldRefund = false
             }
         }
+
         if (wasProtagonistaEligible && compendioArteDaGuerraAtivo) {
             vantagensSlotProtagonista.remove(v.id)
             shouldRefund = false
@@ -3210,6 +3222,18 @@ class CriadorState {
         }
 
     val vantagensSelecionadas      = mutableStateListOf<Vantagem>()
+    var vantagemAdaptavelSelecionadaId: String? by mutableStateOf(null)
+
+    fun temAdaptavel(): Boolean {
+        val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
+        val free = effectiveVantagensGratis(ancDef)
+        return free.any { it.keyify() == "ADAPTAVEL" }
+    }
+
+    val adaptavelSlotAvailable: Boolean by derivedStateOf {
+        if (!temAdaptavel()) false
+        else vantagemAdaptavelSelecionadaId == null
+    }
 
     // controla quais categorias da seção de Vantagens estão expandidas
     val categoriasVantagensExpandidas: SnapshotStateMap<Categoria, Boolean> =
@@ -3802,6 +3826,18 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
+
+        // Check if Adaptavel was lost
+        val lostAdaptavel = !temAdaptavel() && vantagemAdaptavelSelecionadaId != null
+        if (lostAdaptavel) {
+            val toRemove = vantagensSelecionadas.find { it.id == vantagemAdaptavelSelecionadaId }
+            if (toRemove != null) {
+                removeVantagemDinheiro(toRemove)
+                removerVantagem(toRemove)
+                feedbackMessages.add("Vantagem '${toRemove.nome}' (Slot de Humano) removida.")
+            }
+            vantagemAdaptavelSelecionadaId = null
+        }
 
         val attributeAdjustmentResult = ancestryChangeCoordination.attributeAdjustmentResult
 
@@ -5044,6 +5080,11 @@ class CriadorState {
              // Check if powers are selected for each AB
              val pending = poderSlotsPorArcano.any { (_, slots) -> slots.any { it == null } }
              if (pending) return false
+        }
+
+        // Check Adaptavel Slot
+        if (temAdaptavel() && vantagemAdaptavelSelecionadaId == null) {
+            return false
         }
 
         // Check Idoso constraint

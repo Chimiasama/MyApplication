@@ -163,7 +163,8 @@ data class SnapshotSelecoes(
     val dominioClerigoPathfinderSelecionado: String? = null,
     val anoesScifiSelecionado: String? = null,
     val scifiVariant: String? = null,
-    val humanoMineradorAtributo: String? = null
+    val humanoMineradorAtributo: String? = null,
+    val vantagemAdaptavelSelecionadaId: String? = null
 )
 
 @Serializable

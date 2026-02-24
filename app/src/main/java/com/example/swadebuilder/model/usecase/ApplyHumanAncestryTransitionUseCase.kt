@@ -20,33 +20,7 @@ class ApplyHumanAncestryTransitionUseCase {
     )
 
     fun execute(params: Params): Result {
-        val shouldLoseHumanBonus = params.wasHumano && (!params.vaiSerHumano || params.forceLoseHumanBonus)
-
-        if (shouldLoseHumanBonus) {
-            val candidatos = params.vantagensSelecionadas.filter { vantagem ->
-                !isRacialFree(vantagem, params.prevFreeKeys) &&
-                    !isUsedAsPrereq(vantagem, params.vantagensSelecionadas) &&
-                    !isScenarioEdge(vantagem) &&
-                    !vantagem.categoria.name.equals("PODER", ignoreCase = true)
-            }
-
-            val removida = candidatos.lastOrNull()
-            if (removida != null) {
-                return Result(
-                    novosPontosVantagem = params.pontosVantagemAtuais,
-                    vantagemRemovida = removida
-                )
-            }
-
-            return Result(
-                novosPontosVantagem = (params.pontosVantagemAtuais - 1).coerceAtLeast(0)
-            )
-        }
-
-        if (!params.wasHumano && params.vaiSerHumano) {
-            return Result(novosPontosVantagem = params.pontosVantagemAtuais + 1)
-        }
-
+        // Legacy +1 PV logic for Humans disabled in favor of Adaptable Slot logic in CriadorState.
         return Result(novosPontosVantagem = params.pontosVantagemAtuais)
     }
 
