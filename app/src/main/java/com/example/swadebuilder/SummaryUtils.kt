@@ -14,6 +14,14 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toFancyTitleCase
 import kotlin.math.max
 
+private fun formatRacialAnnotationDisplay(raw: String): String {
+    val trimmed = raw.trim()
+    if (trimmed.isBlank()) return trimmed
+
+    val hasNarrativePunctuation = trimmed.any { it == ':' || it == ';' || it == '.' || it == '!' || it == '?' }
+    return if (hasNarrativePunctuation) trimmed else trimmed.toFancyTitleCase()
+}
+
 fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
     val base = (ancestralidadeNomeBase ?: personagem.ancestralidade).toFancyTitleCase()
 
@@ -386,11 +394,39 @@ fun buildSummaryLines(
             }
         }
     }
-    val habilidadesRaciaisBase = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val habilidadesRaciaisBaseRaw = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
     val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AVIANOS" &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "HABITANTE DE GRAVIDADE ZERO/BAIXA" }
+
+    val isAquarianosSemiaquaticos = personagem.compendioSciFiAtivo &&
+        personagem.ancestralidade.keyify() == "AQUARIANOS" &&
+        personagem.vantagensRaciais.any {
+            val key = it.substringBefore("(").trim().keyify()
+            key.contains("SEMI") && key.contains("AQUATIC")
+        }
+
+    val isElfosComunitario = personagem.compendioSciFiAtivo &&
+        personagem.ancestralidade.keyify() == "ELFOS" &&
+        personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "COMUNITARIO" }
+
+    val habilidadesRaciaisBase = habilidadesRaciaisBaseRaw.toMutableList().apply {
+        // Defensive normalization for variant substitution when base ancestry definition is used.
+        // If variant traits are present in character snapshot, hide replaced base traits.
+        val racialTraitKeys = personagem.vantagensRaciais
+            .map { it.substringBefore("(").trim().keyify() }
+            .toSet()
+        if (personagem.ancestralidade.keyify() == "AQUARIANOS" &&
+            racialTraitKeys.any { it.contains("SEMI") && it.contains("AQUATIC") }
+        ) {
+            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
+        }
+
+        if (personagem.ancestralidade.keyify() == "ELFOS" && racialTraitKeys.contains("COMUNITARIO")) {
+            removeAll { it.keyify() == "DESASTRADO" }
+        }
+    }
 
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
         val elem = personagem.descendenteElementalSelecionado?.keyify()
@@ -419,9 +455,29 @@ fun buildSummaryLines(
                 add("Forma Alienígena")
             }
         }
+
+        if (isAquarianosSemiaquaticos) {
+            removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
+            if (none { it.keyify() == "SEMIAQUATICO" }) {
+                add("Semiaquático")
+            }
+            if (none { it.keyify() == "TOQUE VENENOSO" }) {
+                add("Toque Venenoso")
+            }
+        }
+
+        if (isElfosComunitario) {
+            removeAll { it.keyify() == "DESASTRADO" }
+            if (none { it.keyify() == "COMUNITARIO" }) {
+                add("Comunitário")
+            }
+        }
     }
     // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
     val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
+        .filterNot { trait ->
+            isElfosComunitario && trait.keyify() == "DESASTRADO"
+        }
         .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
         .map { trait ->
             // Resolve Name FIRST
@@ -475,7 +531,7 @@ fun buildSummaryLines(
         .ifBlank { "– Nenhuma" }
     lines += complicacoesText
     if (desvantagensRaciaisAnotacoes.isNotEmpty()) {
-        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ") { it.toFancyTitleCase() }}"
+        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ") { formatRacialAnnotationDisplay(it) }}"
     }
     lines += ""
 

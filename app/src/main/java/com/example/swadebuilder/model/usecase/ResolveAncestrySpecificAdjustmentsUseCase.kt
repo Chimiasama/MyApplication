@@ -18,6 +18,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         val ensureAdvantageNames: List<String>,
         val ensureAdvantageIds: List<String>,
         val ensureAutomaticAdvantages: List<String>,
+        val automaticAdvantagesToRemove: List<String> = emptyList(),
         val ensureRacialDisadvantages: List<String>,
         val elementalAction: ElementalAction,
         val anotacoesToAdd: List<String> = emptyList(),
@@ -131,6 +132,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("SEMIAQUÁTICO", "TOQUE VENENOSO"),
+                        automaticAdvantagesToRemove = listOf("AQUÁTICO", "RESISTÊNCIA"),
                         ensureRacialDisadvantages = emptyList(), // Dependency is in JSON
                         elementalAction = ElementalAction.NONE
                     )
@@ -141,7 +143,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("AQUÁTICO", "RESISTÊNCIA"),
+                        ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -156,9 +158,10 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
+                        automaticAdvantagesToRemove = listOf("FRÁGIL", "FRAGIL", "NÃO SABE NADAR", "NAO SABE NADAR"),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
                         elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR")
+                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR", "FRÁGIL")
                     )
                 } else {
                     // Básico
@@ -182,8 +185,10 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("COMUNITÁRIO"),
+                        automaticAdvantagesToRemove = listOf("DESASTRADO"),
                         ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("DESASTRADO")
                     )
                 } else {
                     // Básico
@@ -210,6 +215,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                             ensureAdvantageNames = emptyList(),
                             ensureAdvantageIds = emptyList(),
                             ensureAutomaticAdvantages = emptyList(), // Agility d6 handled in Attribute Logic
+                            automaticAdvantagesToRemove = listOf("ADAPTÁVEL", "ADAPTAVEL"),
                             ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA"),
                             elementalAction = ElementalAction.NONE
                         )

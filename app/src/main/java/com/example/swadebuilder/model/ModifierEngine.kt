@@ -70,7 +70,44 @@ object ModifierEngine {
         val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
-            val sources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val rawSources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val sources = rawSources.toMutableList().apply {
+                val ancestryKey = anc.nome.keyify()
+                val allTraitKeys = (
+                    this +
+                        state.vantagensRaciais +
+                        state.vantagensAutomaticas +
+                        state.desvantagensRaciais +
+                        state.desvantagensAutomaticas
+                    )
+                    .map { it.keyify() }
+                    .toSet()
+
+                // Sci-Fi Aquarianos (Semi-aquáticos) replace "Aquático" and "Resistência" traits.
+                // Defensive normalization to avoid stale base traits leaking into mechanics,
+                // even when ancestry base data is still present for display/back-compat paths.
+                val hasSemiAquatico = allTraitKeys.any { key ->
+                    key.contains("SEMI") && key.contains("AQUATIC")
+                }
+
+                if (ancestryKey == "AQUARIANOS" && hasSemiAquatico) {
+                    removeAll { trait ->
+                        val key = trait.keyify()
+                        key == "AQUATICO" || key == "RESISTENCIA"
+                    }
+                }
+
+                val isAvianosAveRapina = ancestryKey == "AVIANOS" &&
+                    allTraitKeys.any { it.contains("FORMA ALIENIGENA") } &&
+                    allTraitKeys.any { it.contains("HABITANTE DE GRAVIDADE") }
+
+                if (isAvianosAveRapina) {
+                    removeAll { trait ->
+                        val key = trait.keyify()
+                        key == "FRAGIL" || key == "NAO SABE NADAR"
+                    }
+                }
+            }
             val abilityDescriptions = anc.habilidades.map { it.descricao }
 
             // Size from Ancestry (Tamanho X)
@@ -182,8 +219,7 @@ object ModifierEngine {
 
             // Resistência (Auto advantage or racial trait)
             // Checks for FRAGIL/ESGUIOS (-1)
-            val hasFragil = state.desvantagensRaciais.any { it.keyify().contains("FRAGIL") } ||
-                sources.any { it.keyify() == "FRAGIL" }
+            val hasFragil = sources.any { it.keyify() == "FRAGIL" }
             val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
 
             if (hasFragil) {
@@ -195,8 +231,7 @@ object ModifierEngine {
 
             // Checks for RESISTENCIA/FEROCIDADE (+1)
             // NOTE: exact token "RESISTENCIA" to avoid matching "RESISTENCIA AMBIENTAL"
-            val hasResistencia = state.vantagensAutomaticas.any { it.keyify() == "RESISTENCIA" } ||
-                sources.any { it.keyify() == "RESISTENCIA" }
+            val hasResistencia = sources.any { it.keyify() == "RESISTENCIA" }
             val hasFerocidade = anc.habilidades.any { it.nome.contains("Ferocidade", ignoreCase = true) }
 
             if (hasResistencia) {

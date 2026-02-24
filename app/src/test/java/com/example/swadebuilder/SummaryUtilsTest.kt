@@ -137,4 +137,102 @@ class SummaryUtilsTest {
         assertFalse(lines.any { it.startsWith("Anotações Raciais:") && it.contains("FORMA ALIEN") })
     }
 
+    @Test
+    fun `buildSummaryLines preserves raw casing for narrative racial notes`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Dwarf",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "ANÕES",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioSciFiAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val annotations = lines.firstOrNull { it.startsWith("Anotações Raciais:") }
+        assertEquals(
+            "Anotações Raciais: Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário.",
+            annotations
+        )
+    }
+
+    @Test
+    fun `buildSummaryLines omits desastrado from elfos comunitario racial traits`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Elf",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "ELFOS",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf("TRANSTORNO DE SEPARAÇÃO"),
+                vantagensRaciais = listOf("COMUNITÁRIO"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioSciFiAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "ELFOS",
+                    origem = "FC",
+                    atributos = emptyMap(),
+                    pericias = emptyMap(),
+                    desvantagens = listOf("DESASTRADO"),
+                    opcoes = listOf("Básico", "Comunitário"),
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility("Ágil", ""),
+                        com.example.swadebuilder.model.RacialAbility("Desastrado", ""),
+                        com.example.swadebuilder.model.RacialAbility("Visão no Escuro", "")
+                    )
+                )
+            ),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+        assertNotNull(racialLine)
+        assertFalse(racialLine!!.contains("Desastrado"))
+        assertTrue(racialLine.contains("Comunitário"))
+    }
+
 }

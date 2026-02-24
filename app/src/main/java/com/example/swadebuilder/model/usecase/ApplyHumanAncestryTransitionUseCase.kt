@@ -8,6 +8,7 @@ class ApplyHumanAncestryTransitionUseCase {
     data class Params(
         val wasHumano: Boolean,
         val vaiSerHumano: Boolean,
+        val forceLoseHumanBonus: Boolean = false,
         val pontosVantagemAtuais: Int,
         val vantagensSelecionadas: List<Vantagem>,
         val prevFreeKeys: Set<String>
@@ -19,7 +20,9 @@ class ApplyHumanAncestryTransitionUseCase {
     )
 
     fun execute(params: Params): Result {
-        if (params.wasHumano && !params.vaiSerHumano) {
+        val shouldLoseHumanBonus = params.wasHumano && (!params.vaiSerHumano || params.forceLoseHumanBonus)
+
+        if (shouldLoseHumanBonus) {
             val candidatos = params.vantagensSelecionadas.filter { vantagem ->
                 !isRacialFree(vantagem, params.prevFreeKeys) &&
                     !isUsedAsPrereq(vantagem, params.vantagensSelecionadas) &&

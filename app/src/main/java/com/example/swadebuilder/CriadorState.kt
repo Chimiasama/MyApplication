@@ -362,6 +362,46 @@ class CriadorState {
             newHabilidades.removeAll { it.nome.keyify().contains("ACAO ADICIONAL") }
         }
 
+        if (key == "AQUARIANOS" && variant.equals("Semi-aquáticos", ignoreCase = true)) {
+            newHabilidades.removeAll { hab ->
+                val habKey = hab.nome.keyify()
+                habKey == "AQUATICO" || habKey == "RESISTENCIA"
+            }
+
+            if (newHabilidades.none { it.nome.keyify() == "SEMIAQUATICO" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Semiaquático",
+                        descricao = "Podem respirar na água e no ar. Seus deslocamentos na água usam a Movimentação normal."
+                    )
+                )
+            }
+
+            if (newHabilidades.none { it.nome.keyify() == "TOQUE VENENOSO" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Toque Venenoso",
+                        descricao = "Possuem secreções urticantes ou venenosas para contato próximo."
+                    )
+                )
+            }
+        }
+
+        if (key == "ELFOS" && variant.equals("Comunitário", ignoreCase = true)) {
+            newHabilidades.removeAll { hab ->
+                hab.nome.keyify() == "DESASTRADO"
+            }
+
+            if (newHabilidades.none { it.nome.keyify() == "COMUNITARIO" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Comunitário",
+                        descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m)."
+                    )
+                )
+            }
+        }
+
         if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
             newHabilidades.removeAll { hab ->
                 val habKey = hab.nome.keyify()

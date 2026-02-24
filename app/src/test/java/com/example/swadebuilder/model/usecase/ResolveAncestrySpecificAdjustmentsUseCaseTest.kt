@@ -92,7 +92,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
             result.ensureRacialDisadvantages
         )
-        assertEquals(listOf("NÃO SABE NADAR"), result.racialDisadvantagesToRemove)
+        assertEquals(listOf("NÃO SABE NADAR", "FRÁGIL"), result.racialDisadvantagesToRemove)
         assertTrue(result.anotacoesToAdd.isEmpty())
     }
 
@@ -108,6 +108,22 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(listOf("FRÁGIL", "NÃO SABE NADAR"), result.ensureRacialDisadvantages)
     }
 
+    @Test
+    fun `elfos comunitario remove desastrado e adiciona transtorno`() {
+        val result = useCase.execute(
+            anc = "ELFOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Comunitário",
+            ancestryOptions = listOf("Básico", "Comunitário"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("COMUNITÁRIO"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf("DESASTRADO"), result.automaticAdvantagesToRemove)
+        assertEquals(listOf("TRANSTORNO DE SEPARAÇÃO"), result.ensureRacialDisadvantages)
+        assertEquals(listOf("DESASTRADO"), result.racialDisadvantagesToRemove)
+    }
+
 
     @Test
     fun `normalizes basico to padrao for scifi ancestries that define padrao`() {
@@ -120,6 +136,46 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(listOf("FORTE"), result.ensureAutomaticAdvantages)
+    }
+
+
+    @Test
+    fun `aquarianos basico nao injeta resistencia por hardcode`() {
+        val result = useCase.execute(
+            anc = "AQUARIANOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Básico",
+            ancestryOptions = listOf("Básico", "Semi-aquáticos"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
+    }
+
+    @Test
+    fun `aquarianos semi aquaticos remove tracos substituidos`() {
+        val result = useCase.execute(
+            anc = "AQUARIANOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Semi-aquáticos",
+            ancestryOptions = listOf("Básico", "Semi-aquáticos"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("AQUÁTICO", "RESISTÊNCIA"), result.automaticAdvantagesToRemove)
+    }
+
+    @Test
+    fun `humanos baixa gravidade remove adaptavel`() {
+        val result = useCase.execute(
+            anc = "HUMANOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Baixa Gravidade",
+            ancestryOptions = listOf("Básico", "Baixa Gravidade", "Minerador"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("ADAPTÁVEL", "ADAPTAVEL"), result.automaticAdvantagesToRemove)
     }
 
     @Test

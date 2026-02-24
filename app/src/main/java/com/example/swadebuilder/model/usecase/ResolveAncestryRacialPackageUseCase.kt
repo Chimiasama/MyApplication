@@ -97,6 +97,12 @@ class ResolveAncestryRacialPackageUseCase(
             }
         }
 
+        ancestrySpecificAdjustments.automaticAdvantagesToRemove.forEach { toRemove ->
+            val key = toRemove.keyify()
+            vantagensAutomaticas.removeAll { it.keyify() == key }
+            vantagensRaciais.removeAll { it.keyify() == key }
+        }
+
         ancestrySpecificAdjustments.ensureRacialDisadvantages.forEach { racialDisadvantage ->
             if (desvantagensRaciais.none { it.equals(racialDisadvantage, ignoreCase = true) }) {
                 desvantagensRaciais.add(racialDisadvantage)

@@ -4,6 +4,7 @@ import com.example.swadebuilder.CriadorState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
 import org.junit.Test
 import com.example.swadebuilder.util.keyify
 
@@ -59,4 +60,62 @@ class ScifiAncestryVariantSyncTest {
 
         assertEquals("Gazela", selecionada)
     }
+
+
+    @Test
+    fun `aquarianos semi aquaticos resolve selecao de variante sem fallback`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            scifiVariant = "Semi-aquáticos"
+        }
+
+        val varianteResolvida = state.resolveSciFiVariantSelectionFor(
+            ancestryName = "AQUARIANOS",
+            availableOptions = listOf("Básico", "Semi-aquáticos")
+        )
+
+        assertEquals("Semi-aquáticos", varianteResolvida)
+    }
+
+    @Test
+    fun `aquarianos semi aquaticos nao aplicam bonus de resistencia por traco removido`() {
+        val variante = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "AQUARIANOS"
+            scifiVariant = "Semi-aquáticos"
+        }
+
+        val modsVariante = ModifierEngine.collect(variante)
+
+        assertFalse(modsVariante.any { it.id == "racial_resistencia" })
+    }
+
+    @Test
+    fun `aquarianos semiaquatico nao recebe bonus mesmo com ancestralidade base`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = false
+            ancestralidade = "AQUARIANOS"
+            vantagensRaciais.clear()
+            vantagensRaciais.add("SEMIAQUÁTICO")
+            vantagensRaciais.add("TOQUE VENENOSO")
+        }
+
+        val mods = ModifierEngine.collect(state)
+        assertFalse(mods.any { it.id == "racial_resistencia" })
+    }
+
+    @Test
+    fun `avianos ave de rapina nao aplica penalidade de fragil`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "AVIANOS"
+            desvantagensRaciais.clear()
+            desvantagensRaciais.add("FORMA ALIENÍGENA")
+            desvantagensRaciais.add("HABITANTE DE GRAVIDADE ZERO/BAIXA")
+        }
+
+        val mods = ModifierEngine.collect(state)
+        assertFalse(mods.any { it.id == "racial_fragil" })
+    }
+
 }
