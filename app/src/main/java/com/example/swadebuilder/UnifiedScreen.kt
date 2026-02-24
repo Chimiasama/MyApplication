@@ -1011,7 +1011,7 @@ private fun CreationDetailContent(
             SuperPoderesSection(
                 state = state,
                 listaSuperPoderes = listaSuperPoderes,
-                allAdvantages = allAdvantages,
+                allAdvantages = viewModel.gameDataStore.getVantagens(),
                 onShowMessage = onShowMessage
             )
         }
