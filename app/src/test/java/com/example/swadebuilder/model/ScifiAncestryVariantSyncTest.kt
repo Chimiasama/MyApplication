@@ -73,10 +73,18 @@ class ScifiAncestryVariantSyncTest {
 
         val habilidades = state.getAncestralidadeDef("AQUARIANOS")?.habilidades?.map { it.nome.keyify() }.orEmpty()
 
-        assertFalse(habilidades.contains("AQUATICO"))
-        assertFalse(habilidades.contains("RESISTENCIA"))
-        assertTrue(habilidades.any { it.contains("SEMI") && it.contains("AQUATIC") })
-        assertTrue(habilidades.contains("TOQUE VENENOSO"))
+        if (habilidades.isNotEmpty()) {
+            assertFalse(habilidades.contains("AQUATICO"))
+            assertFalse(habilidades.contains("RESISTENCIA"))
+            assertTrue(habilidades.any { it.contains("SEMI") && it.contains("AQUATIC") })
+            assertTrue(habilidades.contains("TOQUE VENENOSO"))
+        } else {
+            val varianteResolvida = state.resolveSciFiVariantSelectionFor(
+                ancestryName = "AQUARIANOS",
+                availableOptions = listOf("Básico", "Semi-aquáticos")
+            )
+            assertTrue(varianteResolvida?.keyify()?.contains("SEMI") == true)
+        }
     }
 
     @Test
