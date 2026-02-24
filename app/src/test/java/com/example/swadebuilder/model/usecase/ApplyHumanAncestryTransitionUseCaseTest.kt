@@ -12,10 +12,8 @@ class ApplyHumanAncestryTransitionUseCaseTest {
     private val useCase = ApplyHumanAncestryTransitionUseCase()
 
     @Test
-    fun `removes last eligible edge when leaving humano ancestry`() {
+    fun `does not remove eligible edge when leaving humano ancestry (legacy logic disabled)`() {
         val racialFree = vantagem(id = "racial", nome = "Adaptável")
-        val keptByPrereq = vantagem(id = "base")
-        val dependsOnBase = vantagem(id = "dep", requisitos = Requisito(vantagensPrevias = listOf("base")))
         val eligible = vantagem(id = "eligible", nome = "Lutador")
 
         val result = useCase.execute(
@@ -23,37 +21,35 @@ class ApplyHumanAncestryTransitionUseCaseTest {
                 wasHumano = true,
                 vaiSerHumano = false,
                 pontosVantagemAtuais = 3,
-                vantagensSelecionadas = listOf(racialFree, keptByPrereq, dependsOnBase, eligible),
+                vantagensSelecionadas = listOf(racialFree, eligible),
                 prevFreeKeys = setOf("ADAPTAVEL")
             )
         )
 
         assertEquals(3, result.novosPontosVantagem)
-        assertEquals("eligible", result.vantagemRemovida?.id)
+        assertNull(result.vantagemRemovida)
     }
 
     @Test
-    fun `decrements edge points when leaving humano ancestry and no eligible edge exists`() {
+    fun `does not decrement edge points when leaving humano ancestry (legacy logic disabled)`() {
         val racialFree = vantagem(id = "racial", nome = "Adaptável")
-        val powerEdge = vantagem(id = "power", categoria = Categoria.PODER)
-        val scenarioEdge = vantagem(id = "superpoderes")
 
         val result = useCase.execute(
             ApplyHumanAncestryTransitionUseCase.Params(
                 wasHumano = true,
                 vaiSerHumano = false,
                 pontosVantagemAtuais = 1,
-                vantagensSelecionadas = listOf(racialFree, powerEdge, scenarioEdge),
+                vantagensSelecionadas = listOf(racialFree),
                 prevFreeKeys = setOf("ADAPTAVEL")
             )
         )
 
-        assertEquals(0, result.novosPontosVantagem)
+        assertEquals(1, result.novosPontosVantagem)
         assertNull(result.vantagemRemovida)
     }
 
     @Test
-    fun `increments edge points when entering humano ancestry`() {
+    fun `does not increment edge points when entering humano ancestry (legacy logic disabled)`() {
         val result = useCase.execute(
             ApplyHumanAncestryTransitionUseCase.Params(
                 wasHumano = false,
@@ -64,7 +60,7 @@ class ApplyHumanAncestryTransitionUseCaseTest {
             )
         )
 
-        assertEquals(3, result.novosPontosVantagem)
+        assertEquals(2, result.novosPontosVantagem)
         assertNull(result.vantagemRemovida)
     }
 
@@ -85,7 +81,7 @@ class ApplyHumanAncestryTransitionUseCaseTest {
     }
 
     @Test
-    fun `forces humano bonus loss for variant that removes adaptavel`() {
+    fun `does not force humano bonus loss for variant (legacy logic disabled)`() {
         val eligible = vantagem(id = "eligible", nome = "Lutador")
 
         val result = useCase.execute(
@@ -100,7 +96,7 @@ class ApplyHumanAncestryTransitionUseCaseTest {
         )
 
         assertEquals(2, result.novosPontosVantagem)
-        assertEquals("eligible", result.vantagemRemovida?.id)
+        assertNull(result.vantagemRemovida)
     }
 
     private fun vantagem(

@@ -11,7 +11,7 @@ class ResolveAncestryTransitionBootstrapUseCaseTest {
     private val useCase = ResolveAncestryTransitionBootstrapUseCase()
 
     @Test
-    fun `increments vantagem points when transitioning into humanos`() {
+    fun `does not increment vantagem points when transitioning into humanos (legacy logic disabled)`() {
         val result = useCase.execute(
             ResolveAncestryTransitionBootstrapUseCase.Params(
                 previousAncestry = "ELFOS",
@@ -27,11 +27,11 @@ class ResolveAncestryTransitionBootstrapUseCaseTest {
 
         assertFalse(result.ancestryTransitionContext.wasHumano)
         assertTrue(result.ancestryTransitionContext.willBeHumano)
-        assertEquals(2, result.humanTransition.novosPontosVantagem)
+        assertEquals(1, result.humanTransition.novosPontosVantagem)
     }
 
     @Test
-    fun `uses transition context free keys when leaving humano via adaptavel ancestry`() {
+    fun `uses transition context free keys but does not change points when leaving humano via adaptavel ancestry (legacy logic disabled)`() {
         val previousDef = RacialModifier(
             nome = "Povo Adaptado",
             vantagensGratis = listOf("Adaptável"),
@@ -58,6 +58,6 @@ class ResolveAncestryTransitionBootstrapUseCaseTest {
         assertTrue(result.ancestryTransitionContext.wasHumano)
         assertFalse(result.ancestryTransitionContext.willBeHumano)
         assertTrue("sorte" in result.ancestryTransitionContext.previousFreeAdvantageKeys)
-        assertEquals(1, result.humanTransition.novosPontosVantagem)
+        assertEquals(2, result.humanTransition.novosPontosVantagem)
     }
 }

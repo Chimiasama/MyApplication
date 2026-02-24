@@ -118,7 +118,11 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
     }
 
     @Test
-    fun `forces loss of human free edge on scifi baixa gravidade variant`() {
+    fun `does not force loss of human free edge via legacy logic on scifi baixa gravidade variant`() {
+        // The responsibility for removing the edge now lies with CriadorState,
+        // which checks if "Adaptável" is present.
+        // ApplyHumanAncestryTransitionUseCase should simply return unchanged state.
+
         val adaptavel = Vantagem(
             id = "adaptavel",
             nome = "Adaptável",
@@ -167,7 +171,9 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
 
         val result = useCase.execute(params)
 
-        assertEquals("lutador", result.humanTransition.vantagemRemovida?.id)
+        // Legacy logic disabled, so no removal here.
+        // CriadorState will handle removal based on slot ID.
+        assertEquals(null, result.humanTransition.vantagemRemovida)
     }
 
     private fun baseParams(
