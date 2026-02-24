@@ -343,7 +343,7 @@ class CriadorState {
 
         val withVariant = if (compendioSciFiAtivo && (selected.origem == "FC" || selected.origem == "SCI_FI")) {
             applyAncestryVariantAdjustments(selected, key)
-        } else if (key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) {
+        } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             applyAncestryVariantAdjustments(selected, key)
         } else {
             selected
@@ -353,7 +353,7 @@ class CriadorState {
     }
 
     private fun applyAncestryVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
-        if (key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) {
+        if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
 

@@ -92,6 +92,10 @@ fun XpSection(
                             Text(label, fontWeight = FontWeight.SemiBold)
                         }
 
+                        // Surface weight logic: if Undo button is present, share space or ensure button visibility?
+                        // Using weight(1f) for surface pushes button to the end.
+                        // If button text is long or screen narrow, surface shrinks.
+                        // "Desfazer" is short enough.
                         Surface(
                             modifier = Modifier
                                 .weight(1f)
@@ -118,9 +122,16 @@ fun XpSection(
                         }
 
                         if (slotUsed && isLastUsed) {
-                            TextButton(onClick = onUndo) {
+                            // Ensure button is distinct and clickable
+                            TextButton(
+                                onClick = onUndo,
+                                modifier = Modifier.padding(start = 4.dp)
+                            ) {
                                 Text("Desfazer")
                             }
+                        } else {
+                            // Spacer to keep alignment consistent if needed, or just let empty space be
+                            Box(Modifier.width(0.dp)) // Placeholder if we wanted fixed width column
                         }
                     }
                 }
