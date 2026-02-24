@@ -574,9 +574,9 @@ fun VantagensContent(
                 if (state.temAdaptavel()) {
                     val slotAvailable = state.vantagemAdaptavelSelecionadaId == null
                     val (color, text) = if (slotAvailable) {
-                        MaterialTheme.colorScheme.primaryContainer to "Vantagem Novato de Humano disponível"
+                        MaterialTheme.colorScheme.primaryContainer to "Vantagem de Adaptável disponível"
                     } else {
-                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem Novato de Humano utilizada"
+                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem de Adaptável utilizada"
                     }
 
                     Card(
