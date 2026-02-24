@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://myapplication.local/schema/racial-trait-schema-v1.json",
+  "title": "Racial Trait Typed Model v1",
+  "type": "object",
+  "required": ["version", "trait_catalog", "ancestry_packages"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "trait_catalog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "category"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Z0-9_]+$" },
+          "name": { "type": "string", "minLength": 1 },
+          "category": {
+            "type": "string",
+            "enum": [
+              "racial_trait_positive",
+              "racial_trait_negative",
+              "racial_edge",
+              "racial_hindrance",
+              "racial_note"
+            ]
+          },
+          "cost_reference": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": []
+          },
+          "effects": {
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "object",
+              "required": ["type"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "attribute_step_up",
+                    "attribute_step_down",
+                    "skill_bonus",
+                    "skill_penalty",
+                    "toughness_bonus",
+                    "toughness_penalty",
+                    "pace_bonus",
+                    "pace_penalty",
+                    "size_delta",
+                    "free_edge",
+                    "free_hindrance",
+                    "tag"
+                  ]
+                },
+                "attribute": { "type": "string" },
+                "skill": { "type": "string" },
+                "edge_id": { "type": "string" },
+                "hindrance_id": { "type": "string" },
+                "value": { "type": "number" },
+                "tag": { "type": "string" }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "ancestry_packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ancestry_id", "base"],
+        "properties": {
+          "ancestry_id": { "type": "string" },
+          "book": { "type": "string" },
+          "base": {
+            "type": "object",
+            "required": ["trait_ids"],
+            "properties": {
+              "trait_ids": {
+                "type": "array",
+                "items": { "type": "string", "pattern": "^[A-Z0-9_]+$" }
+              }
+            },
+            "additionalProperties": false
+          },
+          "variants": {
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "object",
+              "required": ["id", "name", "replace_trait_ids", "add_trait_ids"],
+              "properties": {
+                "id": { "type": "string", "pattern": "^[A-Z0-9_]+$" },
+                "name": { "type": "string", "minLength": 1 },
+                "replace_trait_ids": {
+                  "type": "array",
+                  "items": { "type": "string", "pattern": "^[A-Z0-9_]+$" }
+                },
+                "add_trait_ids": {
+                  "type": "array",
+                  "items": { "type": "string", "pattern": "^[A-Z0-9_]+$" }
+                },
+                "notes": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "default": []
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
