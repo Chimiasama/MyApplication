@@ -347,7 +347,7 @@ class CriadorState {
             selected
         }
 
-        return withInferredAncestryMechanics(withVariant)
+        return withVariant
     }
 
     private fun applySciFiVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
@@ -504,22 +504,6 @@ class CriadorState {
             desvantagens = baseline.desvantagens,
             habilidades = baseline.habilidades
         )
-    }
-
-    private fun withInferredAncestryMechanics(selected: RacialModifier): RacialModifier {
-        val hasFreeNoviceEdgeByText = selected.habilidades.any { hab ->
-            val text = "${hab.nome} ${hab.descricao}".keyify()
-            text.contains("VANTAGEM") &&
-                (text.contains("ESTAGIO NOVATO") || text.contains("NIVEL NOVATO")) &&
-                text.contains("A SUA ESCOLHA")
-        }
-
-        if (!hasFreeNoviceEdgeByText) return selected
-
-        val hasAdaptavel = selected.vantagensGratis.any { it.keyify() == "ADAPTAVEL" }
-        if (hasAdaptavel) return selected
-
-        return selected.copy(vantagensGratis = selected.vantagensGratis + "ADAPTÁVEL")
     }
 
     fun isAttributeRankLimitReached(): Boolean {
@@ -3227,8 +3211,21 @@ class CriadorState {
     fun temAdaptavel(): Boolean {
         val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
         val free = effectiveVantagensGratis(ancDef)
+        // 1. Explicitly in Free Edges (legacy list or racial_edge)
         if (free.any { it.keyify() == "ADAPTAVEL" }) return true
-        return ancDef.habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }
+
+        // 2. Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
+        if (ancDef.habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) return true
+
+        // 3. Half-Elves Special Logic: "Herança" acts as Adaptable if Agility d6 is NOT selected
+        val isMeioElfo = ancestralidade.keyify().contains("MEIO-ELFO") ||
+                ancDef.habilidades.any { it.id == "HERANCA" }
+
+        if (isMeioElfo && !meioElfoAgil) {
+            return true
+        }
+
+        return false
     }
 
     val adaptavelSlotAvailable: Boolean by derivedStateOf {
