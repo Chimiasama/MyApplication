@@ -838,7 +838,7 @@ class CriadorState {
 
     var anotacoes by mutableStateOf("")
     var portraitFileName by mutableStateOf<String?>(null)
-    // expandirRetrato mantido para compatibilidade, mas o UI deve usar portraitScaleType
+    // expandirRetrato: Se true, ocupa 50% da largura no Resumo. Se false, ocupa menos espaço (default).
     var expandirRetrato by mutableStateOf(false)
     var portraitScaleType by mutableStateOf("CROP") // CROP, FIT
     var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM
@@ -3254,6 +3254,10 @@ class CriadorState {
     var vantagemAdaptavelSelecionadaId: String? by mutableStateOf(null)
 
     fun temAdaptavel(): Boolean {
+        if (isHumanoFantasiaSelecionado() && pacoteCulturalFantasiaSelecionado != "Humano padrão") {
+            return false
+        }
+
         val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
         val free = effectiveVantagensGratis(ancDef)
         // 1. Explicitly in Free Edges (legacy list or racial_edge)
@@ -4472,6 +4476,15 @@ class CriadorState {
     fun selecionarPacoteCulturalFantasia(novoPacote: String) {
         if (pacoteCulturalFantasiaSelecionado == novoPacote) return
         pacoteCulturalFantasiaSelecionado = novoPacote
+
+        if (!temAdaptavel() && vantagemAdaptavelSelecionadaId != null) {
+            val toRemove = vantagensSelecionadas.find { it.id == vantagemAdaptavelSelecionadaId }
+            if (toRemove != null) {
+                removerVantagem(toRemove)
+            }
+            vantagemAdaptavelSelecionadaId = null
+        }
+
         syncPacoteCulturalFantasia()
         recalcularPontosAtributo()
         rebuildAllPericiaStacks()
@@ -4481,16 +4494,38 @@ class CriadorState {
         if (!isHumanoFantasiaSelecionado()) return
 
         val ancDef = getAncestralidadeDef(ancestralidade)
+
+        // --- Atualiza Vantagens Raciais ---
+        val baseVantagens = ancDef?.let { effectiveVantagensGratis(it) } ?: emptyList()
+        val extrasVantagens = when (pacoteCulturalFantasiaSelecionado) {
+            "Nômades do Deserto" -> listOf("RESISTÊNCIA AMBIENTAL (Calor)")
+            "Povo da Montanha" -> listOf("RESISTÊNCIA AMBIENTAL (Frio)")
+            "Senhores dos Cavalos" -> listOf("nascido_na_sela") // ID: nascido_na_sela
+            else -> emptyList()
+        }
+
+        // Remove "ADAPTAVEL" se não for Humano Padrão (embora temAdaptavel() já trate a lógica,
+        // é bom limpar a lista visual se estiver sendo usada para display)
+        val filteredBaseVantagens = if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
+            baseVantagens.filter { it.keyify() != "ADAPTAVEL" }
+        } else {
+            baseVantagens
+        }
+
+        vantagensRaciais.clear()
+        vantagensRaciais.addAll(filteredBaseVantagens + extrasVantagens)
+
+        // --- Atualiza Desvantagens Raciais ---
         val baseDesvantagens = ancDef?.let { effectiveDesvantagens(it) } ?: emptyList()
-        val extras = when (pacoteCulturalFantasiaSelecionado) {
-            "Nômades do Deserto" -> listOf("Fraqueza Ambiental (Menor)")
-            "Povo da Montanha" -> listOf("Fraqueza Ambiental (Menor)")
+        val extrasDesvantagens = when (pacoteCulturalFantasiaSelecionado) {
+            "Nômades do Deserto" -> listOf("FRAQUEZA AMBIENTAL (Frio)")
+            "Povo da Montanha" -> listOf("FRAQUEZA AMBIENTAL (Calor)")
             else -> emptyList()
         }
 
         val oldAuto = desvantagensRaciais.toList()
         desvantagensRaciais.clear()
-        desvantagensRaciais.addAll(baseDesvantagens + extras)
+        desvantagensRaciais.addAll(baseDesvantagens + extrasDesvantagens)
 
         val snapshot = resolveAncestryComplicationsSnapshotUseCase.execute(
             ResolveAncestryComplicationsSnapshotUseCase.Params(
