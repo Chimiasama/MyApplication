@@ -365,36 +365,19 @@ class CriadorState {
         return withVariant
     }
 
-    private fun safeLog(tag: String, msg: String) {
-        try {
-            Log.d(tag, msg)
-        } catch (e: RuntimeException) {
-            println("$tag: $msg")
-        }
-    }
-
     private fun applyAncestryVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
-            safeLog("SWADE_DEBUG", "applyAncestryVariantAdjustments: Entering Fantasy Human logic. Pacote: '$pacoteCulturalFantasiaSelecionado'")
             if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
                 val newHabilidades = base.habilidades.toMutableList()
-                val countBefore = newHabilidades.size
 
                 newHabilidades.removeAll {
                     val idKey = (it.id ?: "").keyify()
                     val nameKey = it.nome.keyify()
-                    val match = idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
-                    if (match) safeLog("SWADE_DEBUG", "applyAncestryVariantAdjustments: Removing ability '${it.nome}' (ID: ${it.id})")
-                    match
+                    idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
                 }
 
-                val countAfter = newHabilidades.size
-                safeLog("SWADE_DEBUG", "applyAncestryVariantAdjustments: Abilities count change: $countBefore -> $countAfter")
-
                 val newVantagensGratis = base.vantagensGratis.filter {
-                    val keep = it.keyify() != "ADAPTAVEL"
-                    if (!keep) safeLog("SWADE_DEBUG", "applyAncestryVariantAdjustments: Removing free edge '$it'")
-                    keep
+                    it.keyify() != "ADAPTAVEL"
                 }
 
                 return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
@@ -3296,28 +3279,23 @@ class CriadorState {
     var vantagemAdaptavelSelecionadaId: String? by mutableStateOf(null)
 
     fun temAdaptavel(): Boolean {
-        safeLog("SWADE_DEBUG", "temAdaptavel: Checking for '$ancestralidade'...")
         if (isHumanoFantasiaSelecionado() && pacoteCulturalFantasiaSelecionado != "Humano padrão") {
-            safeLog("SWADE_DEBUG", "temAdaptavel: FALSE (Fantasy Human with non-standard package: '$pacoteCulturalFantasiaSelecionado')")
             return false
         }
 
         val ancDef = getAncestralidadeDef(ancestralidade)
         if (ancDef == null) {
-            safeLog("SWADE_DEBUG", "temAdaptavel: FALSE (Ancestry definition not found)")
             return false
         }
 
         val free = effectiveVantagensGratis(ancDef)
         // 1. Explicitly in Free Edges (legacy list or racial_edge)
         if (free.any { it.keyify() == "ADAPTAVEL" }) {
-            safeLog("SWADE_DEBUG", "temAdaptavel: TRUE (Found in Free Edges/Racial Edges)")
             return true
         }
 
         // 2. Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
         if (ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) {
-            safeLog("SWADE_DEBUG", "temAdaptavel: TRUE (Found in Abilities list)")
             return true
         }
 
@@ -3326,11 +3304,9 @@ class CriadorState {
                 ancDef.habilidades.any { it.id?.keyify() == "HERANCA" }
 
         if (isMeioElfo && !meioElfoAgil) {
-            safeLog("SWADE_DEBUG", "temAdaptavel: TRUE (Half-Elf Herança logic)")
             return true
         }
 
-        safeLog("SWADE_DEBUG", "temAdaptavel: FALSE (No criteria met)")
         return false
     }
 
@@ -3943,8 +3919,6 @@ class CriadorState {
         // Check if Adaptavel was lost
         val hasAdaptavel = temAdaptavel()
         val lostAdaptavel = !hasAdaptavel && vantagemAdaptavelSelecionadaId != null
-
-        safeLog("SWADE_DEBUG", "aplicarAncestralidade: Check Lost Adaptavel. HasAdaptavel=$hasAdaptavel, CurrentSelectedID=$vantagemAdaptavelSelecionadaId -> Lost=$lostAdaptavel")
 
         var removedAdaptavelId: String? = null
 
@@ -4638,11 +4612,7 @@ class CriadorState {
         // Remove "ADAPTAVEL" se não for Humano Padrão (embora temAdaptavel() já trate a lógica,
         // é bom limpar a lista visual se estiver sendo usada para display)
         val filteredBaseVantagens = if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
-            val filtered = baseVantagens.filter { it.keyify() != "ADAPTAVEL" }
-            if (filtered.size != baseVantagens.size) {
-                safeLog("SWADE_DEBUG", "syncPacoteCulturalFantasia: Filtered out 'ADAPTAVEL' for display.")
-            }
-            filtered
+            baseVantagens.filter { it.keyify() != "ADAPTAVEL" }
         } else {
             baseVantagens
         }
