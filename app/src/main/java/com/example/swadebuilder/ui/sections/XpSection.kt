@@ -187,7 +187,7 @@ private fun describeAction(
     }
 
     is AdvancementAction.SpendOnSkills -> {
-        val skills = action.skillsIncreased.distinct().mapNotNull { skillName ->
+        val skills = action.skillsIncreased.distinct().map { skillName ->
             val per = state.periciasComIdiomas().firstOrNull { it.nome == skillName }
             per?.let {
                 val dieValue = action.recordedSkillValues?.get(skillName) ?: state.rawTotal(it)
