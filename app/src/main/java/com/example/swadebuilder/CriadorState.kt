@@ -357,6 +357,9 @@ class CriadorState {
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
 
+            // Ensure explicit removal from legacy list
+            val newVantagensGratis = base.vantagensGratis.filter { it.keyify() != "HERANCA" }
+
             if (meioElfoAgil) {
                 if (newHabilidades.none { it.id == "AGIL" }) {
                     newHabilidades.add(
@@ -380,7 +383,7 @@ class CriadorState {
                     )
                 }
             }
-            return base.copy(habilidades = newHabilidades)
+            return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
         }
 
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
@@ -3857,6 +3860,14 @@ class CriadorState {
 
         // Troca efetiva da ancestralidade
         ancestralidade = anc
+
+        // SAFETY: Force removal of "Herança" edge for Fantasy Half-Elves if it slipped through
+        if ((anc.keyify().contains("MEIO-ELFO") || anc.keyify().contains("MEIO-ELFOS")) && !anc.keyify().contains("PATHFINDER")) {
+            val herancaEdge = vantagensSelecionadas.find { it.id == "heranca" || it.nome.keyify() == "HERANCA" }
+            if (herancaEdge != null) {
+                removerVantagem(herancaEdge)
+            }
+        }
 
         // Check if Adaptavel was lost
         val lostAdaptavel = !temAdaptavel() && vantagemAdaptavelSelecionadaId != null
