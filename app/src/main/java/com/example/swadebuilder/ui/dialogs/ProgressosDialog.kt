@@ -691,6 +691,7 @@ fun ProgressosDialog(
 
                             state.xpSlots[slotIndex] = true
                             state.recomputeAvailableProgress()
+                            state.stageNameForCurrentAdvancement = null
                             onDismiss()
                         }
                     }
