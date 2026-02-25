@@ -426,6 +426,13 @@ fun buildSummaryLines(
         if (personagem.ancestralidade.keyify() == "ELFOS" && racialTraitKeys.contains("COMUNITARIO")) {
             removeAll { it.keyify() == "DESASTRADO" }
         }
+
+        if (personagem.ancestralidade.keyify().contains("HUMANO")) {
+            val pack = personagem.pacoteCulturalFantasiaSelecionado
+            if (!pack.isNullOrBlank() && !pack.equals("Humano padrão", ignoreCase = true)) {
+                removeAll { it.keyify() == "ADAPTAVEL" }
+            }
+        }
     }
 
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
