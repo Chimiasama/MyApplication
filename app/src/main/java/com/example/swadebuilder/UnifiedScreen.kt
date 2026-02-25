@@ -356,7 +356,7 @@ fun UnifiedScreen(
                 Text(
                     "Defina como a herança meio-élfica se manifesta:\n\n" +
                             "• Herança Élfica: começa com Agilidade em d6.\n" +
-                            "• Herança Humana: ganha +1 Ponto de Vantagem na criação."
+                            "• Herança Humana: ganha a habilidade Adaptável (uma Vantagem Novato extra)."
                 )
             },
             confirmButton = {
@@ -387,7 +387,7 @@ fun UnifiedScreen(
                 }
             },
             dismissButton = {
-                // Herança Humana (+1 PV)
+                // Herança Humana (Adaptável)
                 TextButton(
                     onClick = {
                         val key = pendingAncestryKey ?: return@TextButton
@@ -400,8 +400,10 @@ fun UnifiedScreen(
                             viewModel.feedbackMessages as MutableList<String>
                         )
 
-                        // Dá 1 ponto de vantagem extra
-                        state.pontosVantagem += 1
+                        // Grants Adaptable trait (free Novice Edge slot). Does NOT add raw PV.
+                        // The 'Adaptável' trait is injected via CriadorState.applyAncestryVariantAdjustments
+                        // and detected by temAdaptavel().
+
                         if (hadMeioElfoAgil) {
                             val agilityKey = "AGILIDADE"
                             val agiState = state.valoresAtributos[agilityKey]
@@ -415,7 +417,7 @@ fun UnifiedScreen(
                         showMeioElfoDialog = false
                     }
                 ) {
-                    Text("Herança Humana (+1 PV)")
+                    Text("Herança Humana (Adaptável)")
                 }
             }
         )

@@ -474,22 +474,32 @@ fun buildSummaryLines(
         }
     }
     // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
+    // Fix: Normalize IDs to Names using Ancestry Definition to prevent duplicates (e.g. "Armadura +2" vs "Armadura 2") and fix formatting (e.g. "Mordida/Garras")
+    val racialAbilityMap = ancestralidadeNomeObj?.habilidades?.associateBy { it.id?.keyify() ?: it.nome.keyify() } ?: emptyMap()
+
     val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
         .filterNot { trait ->
             isElfosComunitario && trait.keyify() == "DESASTRADO"
         }
         .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
         .map { trait ->
-            // Resolve Name FIRST
             val key = trait.keyify()
             if (personagem.ancestralidade.keyify() == "SAURIOS" && key == "PRONTIDAO") {
                 "Sentidos Aguçados"
             } else {
+                // 1. Check Advantages (Grantable Edges)
                 val vant = definitionMap[key]
                 if (vant != null) {
                     if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nome.toFancyTitleCase()
                 } else {
-                    trait.toFancyTitleCase()
+                    // 2. Check Racial Abilities (Definition Name)
+                    val ability = racialAbilityMap[key]
+                    if (ability != null) {
+                        ability.nome // Use the display name from JSON (preserves symbols like '/')
+                    } else {
+                        // 3. Fallback
+                        trait.toFancyTitleCase()
+                    }
                 }
             }
         }

@@ -19,7 +19,12 @@ class ResolveGrantedAncestryAdvantagesUseCase {
         val selectedIds = params.selectedAdvantages.map { it.id }.toSet()
 
         val toAdd = params.grantedAdvantageNamesOrIds.mapNotNull { featString ->
+            // Explicitly ignore "HERANCA" to prevent confusion with Fantasy Edge "Herança" (Item Grant)
+            // when processing the Racial Trait "Herança" (Half-Elf Adaptability/Agility choice).
             val featKey = featString.keyify()
+            if (featKey == "HERANCA") {
+                return@mapNotNull null
+            }
             params.allAdvantages.firstOrNull { advantage ->
                 advantage.nome.keyify() == featKey ||
                     advantage.id == featString ||
