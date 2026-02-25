@@ -234,6 +234,9 @@ class CriadorState {
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
     var pacoteCulturalFantasiaSelecionado by mutableStateOf("Humano padrão")
+    var povoDoMarOpcao by mutableStateOf<String?>(null)
+    var senhoresCavalosExtra by mutableStateOf(false)
+    var senhoresCavalosCompensacao by mutableStateOf<String?>(null)
     var protagonistaRollTecnicas by mutableStateOf<Int?>(null)
     var protagonistaRollPericia by mutableStateOf<Int?>(null)
     var protagonistaRollVantagem by mutableStateOf<Int?>(null)
@@ -352,6 +355,8 @@ class CriadorState {
             applyAncestryVariantAdjustments(selected, key)
         } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             applyAncestryVariantAdjustments(selected, key)
+        } else if (canonicalOriginKey(selected.origem) == "FANTASIA" && key.contains("HUMANO")) {
+            applyAncestryVariantAdjustments(selected, key)
         } else {
             selected
         }
@@ -360,6 +365,18 @@ class CriadorState {
     }
 
     private fun applyAncestryVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
+        if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
+            if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
+                val newHabilidades = base.habilidades.toMutableList()
+                newHabilidades.removeAll { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }
+
+                val newVantagensGratis = base.vantagensGratis.filter { it.keyify() != "ADAPTAVEL" }
+
+                return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
+            }
+            return base
+        }
+
         if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
@@ -642,7 +659,6 @@ class CriadorState {
         )
         val PACOTES_CULTURAIS_FANTASIA = listOf(
             "Humano padrão",
-            "Nômade",
             "Nômades do Deserto",
             "Povo da Montanha",
             "Povo do Mar",
@@ -650,11 +666,10 @@ class CriadorState {
         )
         val PACOTES_CULTURAIS_FANTASIA_DESC = mapOf(
             "Humano padrão" to "Mantém o pacote padrão de humanos de Fantasia: Adaptável (uma Vantagem Novato à escolha).",
-            "Nômade" to "Variante nômade. Perde a habilidade Adaptável.",
             "Nômades do Deserto" to "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).",
             "Povo da Montanha" to "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).",
             "Povo do Mar" to "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.",
-            "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Cruel e Analfabeto, a critério do Mestre."
+            "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Sem Escrúpulos e Analfabeto, a critério do Mestre."
         )
         val SIGNOS_ADG_DESC = mapOf(
             "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e 1 PV).",
@@ -4479,6 +4494,11 @@ class CriadorState {
         if (pacoteCulturalFantasiaSelecionado == novoPacote) return
         pacoteCulturalFantasiaSelecionado = novoPacote
 
+        // Reset sub-options when changing package
+        povoDoMarOpcao = null
+        senhoresCavalosExtra = false
+        senhoresCavalosCompensacao = null
+
         if (!temAdaptavel() && vantagemAdaptavelSelecionadaId != null) {
             val toRemove = vantagensSelecionadas.find { it.id == vantagemAdaptavelSelecionadaId }
             if (toRemove != null) {
@@ -4492,6 +4512,66 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    fun selecionarPovoDoMarOpcao(opcao: String?): String? {
+        if (povoDoMarOpcao == opcao) return null
+
+        if (opcao == "Procurado (Maior)") {
+            val temManual = complicacoesSelecionadas.keys.any {
+                it.id.keyify() == "PROCURADO" && complicacoesSelecionadas[it] == "Maior" && !desvantagensRaciais.contains(it.name)
+            }
+            if (temManual) {
+                return "Remova 'Procurado (Maior)' das complicações manuais antes de escolher esta opção."
+            }
+        }
+
+        povoDoMarOpcao = opcao
+        syncPacoteCulturalFantasia()
+        rebuildAllPericiaStacks()
+        return null
+    }
+
+    fun toggleSenhoresCavalosExtra(checked: Boolean): String? {
+        if (senhoresCavalosExtra == checked) return null
+
+        if (checked) {
+            val jaTemNascido = vantagensSelecionadas.any { it.id == "nascido_na_sela" && !vantagensRaciais.contains("nascido_na_sela") }
+            if (jaTemNascido) {
+                return "Remova a Vantagem 'Nascido na Sela' manual antes de escolher esta opção."
+            }
+        }
+
+        senhoresCavalosExtra = checked
+        if (!checked) senhoresCavalosCompensacao = null
+        syncPacoteCulturalFantasia()
+        rebuildAllPericiaStacks()
+        return null
+    }
+
+    fun selecionarSenhoresCavalosCompensacao(opcao: String?): String? {
+        if (senhoresCavalosCompensacao == opcao) return null
+
+        if (opcao == "Código de Honra") {
+            val temManual = complicacoesSelecionadas.keys.any {
+                it.id.keyify() == "CODIGO DE HONRA" && !desvantagensRaciais.contains(it.name)
+            }
+            if (temManual) {
+                return "Remova 'Código de Honra' das complicações manuais antes de escolher esta opção."
+            }
+        } else if (opcao == "Sem Escrúpulos e Analfabeto") {
+             val temSemEscrupulos = complicacoesSelecionadas.keys.any { it.id.keyify() == "SEM_ESCRUPULOS" && !desvantagensRaciais.contains(it.name) }
+             val temAnalfabeto = complicacoesSelecionadas.keys.any { it.id.keyify() == "ANALFABETO" && !desvantagensRaciais.contains(it.name) }
+
+             if (temSemEscrupulos && temAnalfabeto) return "Remova 'Sem Escrúpulos' e 'Analfabeto' das complicações manuais antes de escolher esta opção."
+             if (temSemEscrupulos) return "Remova 'Sem Escrúpulos' das complicações manuais antes de escolher esta opção."
+             if (temAnalfabeto) return "Remova 'Analfabeto' das complicações manuais antes de escolher esta opção."
+        }
+
+        senhoresCavalosCompensacao = opcao
+        syncPacoteCulturalFantasia()
+        rebuildAllPericiaStacks()
+        return null
+    }
+
     private fun syncPacoteCulturalFantasia() {
         if (!isHumanoFantasiaSelecionado()) return
 
@@ -4499,11 +4579,16 @@ class CriadorState {
 
         // --- Atualiza Vantagens Raciais ---
         val baseVantagens = ancDef?.let { effectiveVantagensGratis(it) } ?: emptyList()
-        val extrasVantagens = when (pacoteCulturalFantasiaSelecionado) {
-            "Nômades do Deserto" -> listOf("RESISTÊNCIA AMBIENTAL (Calor)")
-            "Povo da Montanha" -> listOf("RESISTÊNCIA AMBIENTAL (Frio)")
-            "Senhores dos Cavalos" -> listOf("nascido_na_sela") // ID: nascido_na_sela
-            else -> emptyList()
+        val extrasVantagens = mutableListOf<String>()
+
+        when (pacoteCulturalFantasiaSelecionado) {
+            "Nômades do Deserto" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Calor)")
+            "Povo da Montanha" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Frio)")
+            "Senhores dos Cavalos" -> {
+                if (senhoresCavalosExtra) {
+                    extrasVantagens.add("nascido_na_sela")
+                }
+            }
         }
 
         // Remove "ADAPTAVEL" se não for Humano Padrão (embora temAdaptavel() já trate a lógica,
@@ -4519,10 +4604,28 @@ class CriadorState {
 
         // --- Atualiza Desvantagens Raciais ---
         val baseDesvantagens = ancDef?.let { effectiveDesvantagens(it) } ?: emptyList()
-        val extrasDesvantagens = when (pacoteCulturalFantasiaSelecionado) {
-            "Nômades do Deserto" -> listOf("FRAQUEZA AMBIENTAL (Frio)")
-            "Povo da Montanha" -> listOf("FRAQUEZA AMBIENTAL (Calor)")
-            else -> emptyList()
+        val extrasDesvantagens = mutableListOf<String>()
+
+        when (pacoteCulturalFantasiaSelecionado) {
+            "Nômades do Deserto" -> extrasDesvantagens.add("FRAQUEZA AMBIENTAL (Frio)")
+            "Povo da Montanha" -> extrasDesvantagens.add("FRAQUEZA AMBIENTAL (Calor)")
+            "Povo do Mar" -> {
+                if (povoDoMarOpcao == "Penalidade em Cavalgar") {
+                    extrasDesvantagens.add("PENALIDADE: CAVALGAR -1")
+                } else if (povoDoMarOpcao == "Procurado (Maior)") {
+                    extrasDesvantagens.add("PROCURADO (Maior)")
+                }
+            }
+            "Senhores dos Cavalos" -> {
+                if (senhoresCavalosExtra) {
+                    if (senhoresCavalosCompensacao == "Código de Honra") {
+                        extrasDesvantagens.add("CODIGO DE HONRA")
+                    } else if (senhoresCavalosCompensacao == "Sem Escrúpulos e Analfabeto") {
+                        extrasDesvantagens.add("SEM ESCRÚPULOS (Menor)")
+                        extrasDesvantagens.add("ANALFABETO")
+                    }
+                }
+            }
         }
 
         val oldAuto = desvantagensRaciais.toList()
@@ -5441,6 +5544,9 @@ class CriadorState {
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
                 pacoteCulturalFantasiaSelecionado = pacoteCulturalFantasiaSelecionado,
+                povoDoMarOpcao = povoDoMarOpcao,
+                senhoresCavalosExtra = senhoresCavalosExtra,
+                senhoresCavalosCompensacao = senhoresCavalosCompensacao,
                 artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
@@ -5572,6 +5678,9 @@ class CriadorState {
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
         pacoteCulturalFantasiaSelecionado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado ?: "Humano padrão"
+        povoDoMarOpcao = snapshot.selecoes.povoDoMarOpcao
+        senhoresCavalosExtra = snapshot.selecoes.senhoresCavalosExtra ?: false
+        senhoresCavalosCompensacao = snapshot.selecoes.senhoresCavalosCompensacao
         artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
         artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
         artistaMarcialTecnicasSelecionadas.clear()

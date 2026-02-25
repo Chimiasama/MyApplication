@@ -570,6 +570,64 @@ fun AncestralidadesSection(
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
+
+                                if (state.pacoteCulturalFantasiaSelecionado == "Povo do Mar") {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Compensação:", style = MaterialTheme.typography.labelMedium)
+                                    Column {
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Penalidade em Cavalgar (-1)",
+                                            selected = state.povoDoMarOpcao == "Penalidade em Cavalgar",
+                                            onSelect = {
+                                                val error = state.selecionarPovoDoMarOpcao("Penalidade em Cavalgar")
+                                                if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
+                                            }
+                                        )
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Procurado (Maior)",
+                                            selected = state.povoDoMarOpcao == "Procurado (Maior)",
+                                            onSelect = {
+                                                val error = state.selecionarPovoDoMarOpcao("Procurado (Maior)")
+                                                if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
+                                            }
+                                        )
+                                    }
+                                }
+
+                                if (state.pacoteCulturalFantasiaSelecionado == "Senhores dos Cavalos") {
+                                    Spacer(Modifier.height(8.dp))
+                                    com.example.swadebuilder.ui.components.CheckboxRow(
+                                        label = "Receber Vantagem 'Nascido na Sela'?",
+                                        checked = state.senhoresCavalosExtra,
+                                        onCheckedChange = {
+                                            val error = state.toggleSenhoresCavalosExtra(it)
+                                            if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
+                                        }
+                                    )
+
+                                    if (state.senhoresCavalosExtra) {
+                                        Spacer(Modifier.height(4.dp))
+                                        Text("Compensação:", style = MaterialTheme.typography.labelMedium)
+                                        Column {
+                                            com.example.swadebuilder.ui.components.RadioButtonRow(
+                                                label = "Código de Honra (Maior)",
+                                                selected = state.senhoresCavalosCompensacao == "Código de Honra",
+                                                onSelect = {
+                                                    val error = state.selecionarSenhoresCavalosCompensacao("Código de Honra")
+                                                    if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
+                                                }
+                                            )
+                                            com.example.swadebuilder.ui.components.RadioButtonRow(
+                                                label = "Sem Escrúpulos (Menor) e Analfabeto (Menor)",
+                                                selected = state.senhoresCavalosCompensacao == "Sem Escrúpulos e Analfabeto",
+                                                onSelect = {
+                                                    val error = state.selecionarSenhoresCavalosCompensacao("Sem Escrúpulos e Analfabeto")
+                                                    if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
                             }
 
                             if (isSelected && item.nome.keyify().contains("GNOMO") && item.nome.keyify().contains("PATHFINDER")) {
