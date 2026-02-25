@@ -546,44 +546,51 @@ fun buildSummaryLines(
     lines += ""
 
     if (personagem.poderes.isNotEmpty()) {
-        lines += "Poderes arcanos"
-        personagem.poderes.forEach { (arcanoKey, lista) ->
-            val cleanKey = arcanoKey.uppercase().trim()
-            val info = arcanoInfo[cleanKey]
-
-            val details = if (cleanKey == "MISTICO") {
-                "(10 PP)"
-            } else if (info != null) {
-                val (_, pp, foco) = info
-                "($pp PP, $foco)"
-            } else {
-                ""
-            }
-
-            val labelBase = arcanoKey
-                .lowercase()
-                .replace('_', ' ')
-                .toFancyTitleCase()
-
-            val label = if (details.isNotBlank()) "$labelBase $details" else labelBase
-
-            lines += if (lista.isEmpty()) {
-                "• $label: – nenhum poder escolhido"
-            } else {
-                val poderesComManifestacao = lista.map { poderId ->
-                    val poderDef = listaPoderes.firstOrNull { it.id == poderId }
-                    val baseNome = poderDef?.nome ?: poderId
-                    val displayNome = baseNome.toFancyTitleCase()
-
-                    val manifestacao = personagem.manifestacoesPoderes[poderId]
-                        ?.trim()
-                        ?.takeIf { it.isNotBlank() }
-                    if (manifestacao != null) "$displayNome (${manifestacao})" else displayNome
-                }
-                "• $label: ${poderesComManifestacao.joinToString(", ")}"
-            }
+        val filteredPowers = personagem.poderes.filterKeys { key ->
+            val cleanKey = key.uppercase().trim()
+            cleanKey != "CANALIZAR CRISTAL"
         }
-        lines += ""
+
+        if (filteredPowers.isNotEmpty()) {
+            lines += "Poderes arcanos"
+            filteredPowers.forEach { (arcanoKey, lista) ->
+                val cleanKey = arcanoKey.uppercase().trim()
+                val info = arcanoInfo[cleanKey]
+
+                val details = if (cleanKey == "MISTICO") {
+                    "(10 PP)"
+                } else if (info != null) {
+                    val (_, pp, foco) = info
+                    "($pp PP, $foco)"
+                } else {
+                    ""
+                }
+
+                val labelBase = arcanoKey
+                    .lowercase()
+                    .replace('_', ' ')
+                    .toFancyTitleCase()
+
+                val label = if (details.isNotBlank()) "$labelBase $details" else labelBase
+
+                lines += if (lista.isEmpty()) {
+                    "• $label: – nenhum poder escolhido"
+                } else {
+                    val poderesComManifestacao = lista.map { poderId ->
+                        val poderDef = listaPoderes.firstOrNull { it.id == poderId }
+                        val baseNome = poderDef?.nome ?: poderId
+                        val displayNome = baseNome.toFancyTitleCase()
+
+                        val manifestacao = personagem.manifestacoesPoderes[poderId]
+                            ?.trim()
+                            ?.takeIf { it.isNotBlank() }
+                        if (manifestacao != null) "$displayNome (${manifestacao})" else displayNome
+                    }
+                    "• $label: ${poderesComManifestacao.joinToString(", ")}"
+                }
+            }
+            lines += ""
+        }
     }
 
     if (personagem.modoSupers &&
