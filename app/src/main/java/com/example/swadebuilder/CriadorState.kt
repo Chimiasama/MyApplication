@@ -1783,7 +1783,7 @@ class CriadorState {
 
         if (isFreeAdaptavel) {
             vantagemAdaptavelSelecionadaId = v.id
-            onFeedback("Vantagem ${v.nome} adicionada (Vantagem bônus de Adaptável).")
+            onFeedback("Vantagem ${v.nome} adicionada (Vantagem bônus de ${getAdaptavelLabel()}).")
         } else if (isFreePathfinder) {
             onFeedback("Vantagem ${v.nome} adicionada (Vantagem gratuita de Classe).")
         } else if (isFreeProtagonista) {
@@ -3310,6 +3310,10 @@ class CriadorState {
     val vantagensSelecionadas      = mutableStateListOf<Vantagem>()
     var vantagemAdaptavelSelecionadaId: String? by mutableStateOf(null)
 
+    fun getAdaptavelLabel(): String {
+        return if (ancestralidade.keyify() == "GOBLINS" && compendioFantasiaAtivo) "Sobrevivente" else "Adaptável"
+    }
+
     fun temAdaptavel(): Boolean {
         if (isHumanoFantasiaSelecionado() && pacoteCulturalFantasiaSelecionado != "Humano padrão") {
             return false
@@ -3959,7 +3963,8 @@ class CriadorState {
             if (toRemove != null) {
                 removeVantagemDinheiro(toRemove)
                 removerVantagem(toRemove)
-                feedbackMessages.add("Vantagem '${toRemove.nome}' (Vantagem bônus de Adaptável) removida.")
+                val label = if (prevAnc.keyify() == "GOBLINS" && compendioFantasiaAtivo) "Sobrevivente" else "Adaptável"
+                feedbackMessages.add("Vantagem '${toRemove.nome}' (Vantagem bônus de $label) removida.")
                 removedAdaptavelId = toRemove.id
             }
             vantagemAdaptavelSelecionadaId = null
