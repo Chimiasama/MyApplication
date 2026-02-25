@@ -560,7 +560,7 @@
     "nome": "HUMANOS",
     "origem": "FANTASIA",
     "descricao": "Humanos são adaptáveis e onipresentes na maioria dos cenários de fantasia, com características comuns à sua cultura natal e não à sua espécie.",
-    "variantes": "Pacotes Culturais: Humano padrão (Adaptável), Nômades do Deserto (Sobrevivência d6 e Fraqueza Ambiental), Povo da Montanha (Vigor d6 e Fraqueza Ambiental), Povo do Mar (Atletismo d6 e Navegar d6), Senhores dos Cavalos (Cavalgar d6).",
+    "variantes": "Pacotes Culturais: Humano padrão (Adaptável), Nômade (Sem Adaptável), Nômades do Deserto (Sobrevivência d6 e Fraqueza Ambiental), Povo da Montanha (Vigor d6 e Fraqueza Ambiental), Povo do Mar (Atletismo d6 e Navegar d6), Senhores dos Cavalos (Cavalgar d6).",
     "atributos": {},
     "pericias": {},
     "desvantagens": [],

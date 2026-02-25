@@ -642,6 +642,7 @@ class CriadorState {
         )
         val PACOTES_CULTURAIS_FANTASIA = listOf(
             "Humano padrão",
+            "Nômade",
             "Nômades do Deserto",
             "Povo da Montanha",
             "Povo do Mar",
@@ -649,6 +650,7 @@ class CriadorState {
         )
         val PACOTES_CULTURAIS_FANTASIA_DESC = mapOf(
             "Humano padrão" to "Mantém o pacote padrão de humanos de Fantasia: Adaptável (uma Vantagem Novato à escolha).",
+            "Nômade" to "Variante nômade. Perde a habilidade Adaptável.",
             "Nômades do Deserto" to "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).",
             "Povo da Montanha" to "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).",
             "Povo do Mar" to "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.",
