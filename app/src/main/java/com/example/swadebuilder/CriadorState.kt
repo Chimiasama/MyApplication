@@ -352,6 +352,8 @@ class CriadorState {
             applyAncestryVariantAdjustments(selected, key)
         } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             applyAncestryVariantAdjustments(selected, key)
+        } else if (canonicalOriginKey(selected.origem) == "FANTASIA" && key.contains("HUMANO")) {
+            applyAncestryVariantAdjustments(selected, key)
         } else {
             selected
         }
@@ -360,6 +362,18 @@ class CriadorState {
     }
 
     private fun applyAncestryVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
+        if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
+            if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
+                val newHabilidades = base.habilidades.toMutableList()
+                newHabilidades.removeAll { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }
+
+                val newVantagensGratis = base.vantagensGratis.filter { it.keyify() != "ADAPTAVEL" }
+
+                return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
+            }
+            return base
+        }
+
         if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
