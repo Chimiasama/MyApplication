@@ -207,13 +207,13 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "AQUÁTICO (Apenas Descendentes da Água)",
+        "nome": "AQUÁTICO",
         "descricao": "Descendentes da água não podem se afogar na água e se movem com sua Movimentação completa quando estão nadando.",
         "id": "AQUATICO",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "AR INTERNO (Somente Descendentes do Ar)",
+        "nome": "AR INTERNO",
         "descricao": "Descendentes do ar não precisam respirar. Não são afetados por toxinas inaladas, não se afogam e não sufocam no vácuo.",
         "id": "AR_INTERNO",
         "category": "racial_trait_positive"
@@ -232,13 +232,13 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "RÁPIDO (Apenas Descendentes do Fogo)",
+        "nome": "RÁPIDO",
         "descricao": "Descendentes do fogo são frenéticos e estão sempre em movimento. Possuem a Vantagem Rápido.",
         "id": "RAPIDO",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "SÓLIDO COMO ROCHA (Somente Descendentes da Terra)",
+        "nome": "SÓLIDO COMO ROCHA",
         "descricao": "Descendentes da terra são resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
         "id": "SOLIDO_COMO_ROCHA",
         "category": "racial_trait_positive"

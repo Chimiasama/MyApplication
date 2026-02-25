@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.util.keyify
 
 class ResolveAncestrySpecificAdjustmentsUseCase(
@@ -32,7 +33,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         scifiVariant: String? = null,
         humanoMineradorAtributo: String? = null,
         ancestryOptions: List<String> = emptyList(),
-        isSciFiActive: Boolean = false
+        isSciFiActive: Boolean = false,
+        ancestryOrigin: String = "BASICO"
     ): Result {
         val ancKey = anc.keyify()
 
@@ -719,15 +721,29 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 elementalAction = ElementalAction.NONE
             )
 
-            "CELESTIAIS" -> Result(
-                naturalArmorFromRace = 0,
-                forceArmorZero = true,
-                ensureAdvantageNames = emptyList(),
-                ensureAdvantageIds = listOf("antecedente_arcano_milagres"),
-                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (MILAGRES)"),
-                ensureRacialDisadvantages = emptyList(),
-                elementalAction = ElementalAction.NONE
-            )
+            "CELESTIAIS" -> {
+                if (canonicalOriginKey(ancestryOrigin) == "BASICO") {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = listOf("antecedente_arcano_milagres"),
+                        ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (MILAGRES)"),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                } else {
+                    Result(
+                        naturalArmorFromRace = 0,
+                        forceArmorZero = true,
+                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageIds = emptyList(),
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = emptyList(),
+                        elementalAction = ElementalAction.NONE
+                    )
+                }
+            }
 
             "HUMANO (WISEGUYS)".keyify() -> Result(
                 naturalArmorFromRace = 0,

@@ -20,7 +20,8 @@ class ResolveAncestryRacialPackageUseCase(
         val selectedAdvantages: List<Vantagem>,
         val previousFreeAdvantageKeys: Set<String>,
         val ancestryGrantedAdvantages: List<String>,
-        val ancestryAutomaticDisadvantages: List<String>
+        val ancestryAutomaticDisadvantages: List<String>,
+        val ancestryOrigin: String = "BASICO"
     )
 
     data class Result(
@@ -59,7 +60,8 @@ class ResolveAncestryRacialPackageUseCase(
             scifiVariant = params.scifiVariant,
             humanoMineradorAtributo = params.humanoMineradorAtributo,
             ancestryOptions = params.ancestryOptions,
-            isSciFiActive = params.isSciFiActive
+            isSciFiActive = params.isSciFiActive,
+            ancestryOrigin = params.ancestryOrigin
         )
 
         ancestrySpecificAdjustments.ensureAdvantageNames.forEach { advantageName ->
