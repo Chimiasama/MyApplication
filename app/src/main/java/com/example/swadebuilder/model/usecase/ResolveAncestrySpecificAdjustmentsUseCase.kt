@@ -237,7 +237,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                                 forceArmorZero = true,
                                 ensureAdvantageNames = emptyList(),
                                 ensureAdvantageIds = emptyList(),
-                                ensureAutomaticAdvantages = listOf("ADAPTÁVEL"),
+                                ensureAutomaticAdvantages = emptyList(),
                                 ensureRacialDisadvantages = emptyList(),
                                 elementalAction = ElementalAction.NONE
                             )
