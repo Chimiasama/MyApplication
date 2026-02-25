@@ -433,6 +433,10 @@ fun buildSummaryLines(
                 removeAll { it.keyify() == "ADAPTAVEL" }
             }
         }
+
+        if (personagem.ancestralidade.keyify() == "DRACONIANOS") {
+            removeAll { it.keyify() == "ARROGANTE" }
+        }
     }
 
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {

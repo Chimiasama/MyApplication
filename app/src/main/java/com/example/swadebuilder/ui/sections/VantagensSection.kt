@@ -573,10 +573,11 @@ fun VantagensContent(
             if (!state.emProgresso) {
                 if (state.temAdaptavel()) {
                     val slotAvailable = state.vantagemAdaptavelSelecionadaId == null
+                    val label = state.getAdaptavelLabel()
                     val (color, text) = if (slotAvailable) {
-                        MaterialTheme.colorScheme.primaryContainer to "Vantagem de Adaptável disponível"
+                        MaterialTheme.colorScheme.primaryContainer to "Vantagem de $label disponível"
                     } else {
-                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem de Adaptável utilizada"
+                        MaterialTheme.colorScheme.surfaceVariant to "Vantagem de $label utilizada"
                     }
 
                     Card(
@@ -1921,7 +1922,7 @@ private fun VantagemItem(
                 if (state.vantagemAdaptavelSelecionadaId == vant.id) {
                     AssistChip(
                         onClick = {},
-                        label = { Text("Vantagem bônus de Adaptável") }
+                        label = { Text("Vantagem bônus de ${state.getAdaptavelLabel()}") }
                     )
                 }
 

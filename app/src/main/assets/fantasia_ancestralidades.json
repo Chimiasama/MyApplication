@@ -478,7 +478,7 @@
       {
         "nome": "SOBREVIVENTE",
         "descricao": "Goblins desenvolvem inúmeras táticas para sobreviver em ambientes selvagens e violentos. Começam com uma Vantagem de Estágio Novato à sua escolha (devem atender a todos os requisitos normalmente).",
-        "id": "SOBREVIVENTE",
+        "id": "ADAPTAVEL",
         "category": "racial_trait_positive"
       },
       {
