@@ -1805,7 +1805,24 @@ class CriadorState {
 
     fun adicionarVantagem(v: Vantagem) {
         vantagensSelecionadas.add(v)
+        ensurePowerSlotsFor(v)
 
+        if (v.id == "escolhido") {
+            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
+            if (inimigo != null) {
+                if (complicacoesSelecionadas.keys.none { it.id == "inimigo" }) {
+                    complicacoesSelecionadas[inimigo] = "Maior"
+                    desvantagensAutomaticas.add(inimigo.name)
+                    if (!anotacoes.contains("Inimigo (Maior) adicionado por Escolhido")) {
+                        anotacoes += "\n• Inimigo (Maior) adicionado automaticamente pela Vantagem Escolhido."
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun ensurePowerSlotsFor(v: Vantagem) {
         v.toArcanoKey()?.let { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
 
@@ -1842,20 +1859,6 @@ class CriadorState {
             }
 
             syncPoderesSelecionadosFromSlots()
-        }
-
-        if (v.id == "escolhido") {
-            val inimigo = listaComplicacoes.firstOrNull { it.id == "inimigo" }
-            if (inimigo != null) {
-                if (complicacoesSelecionadas.keys.none { it.id == "inimigo" }) {
-                    complicacoesSelecionadas[inimigo] = "Maior"
-                    desvantagensAutomaticas.add(inimigo.name)
-                    if (!anotacoes.contains("Inimigo (Maior) adicionado por Escolhido")) {
-                        anotacoes += "\n• Inimigo (Maior) adicionado automaticamente pela Vantagem Escolhido."
-                    }
-                }
-            }
-
         }
     }
 
@@ -4047,6 +4050,27 @@ class CriadorState {
 
         if (pontosVantagem != pvDepois) {
             rebuildAllPericiaStacks(feedbackMessages)
+        }
+
+        val activeArcaneKeys = vantagensSelecionadas.mapNotNull { it.toArcanoKey()?.normAAKey() }.toMutableSet()
+        if (ancestralidade.keyify() == "TRANSMORFOS") activeArcaneKeys.add("DOM")
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_elementalista") activeArcaneKeys.add("ELEMENTALISTA")
+        if (compendioArteDaGuerraAtivo && (tropoSelecionado?.tecnicasIniciais ?: 0) > 0) activeArcaneKeys.add("MESTRE DO CHI")
+
+        val keysToRemove = poderSlotsPorArcano.keys.filter { it !in activeArcaneKeys }
+        keysToRemove.forEach {
+            poderSlotsPorArcano.remove(it)
+            novosPoderesStacksPorArcano.remove(it)
+        }
+
+        vantagensSelecionadas.forEach { ensurePowerSlotsFor(it) }
+
+        if (ancestralidade.keyify() == "TRANSMORFOS") {
+            val arcKey = "DOM"
+            if (!poderSlotsPorArcano.containsKey(arcKey)) {
+                val count = getSlotsCountForArcano(arcKey)
+                poderSlotsPorArcano[arcKey] = mutableStateListOf<String?>().apply { repeat(count) { add(null) } }
+            }
         }
 
         syncPoderesSelecionadosFromSlots()
