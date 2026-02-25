@@ -368,7 +368,11 @@ class CriadorState {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
             if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
                 val newHabilidades = base.habilidades.toMutableList()
-                newHabilidades.removeAll { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }
+                newHabilidades.removeAll {
+                    val idKey = (it.id ?: "").keyify()
+                    val nameKey = it.nome.keyify()
+                    idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
+                }
 
                 val newVantagensGratis = base.vantagensGratis.filter { it.keyify() != "ADAPTAVEL" }
 
