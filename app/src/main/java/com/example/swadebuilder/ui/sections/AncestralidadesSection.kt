@@ -618,10 +618,10 @@ fun AncestralidadesSection(
                                                 }
                                             )
                                             com.example.swadebuilder.ui.components.RadioButtonRow(
-                                                label = "Cruel (Menor) e Analfabeto (Menor)",
-                                                selected = state.senhoresCavalosCompensacao == "Cruel e Analfabeto",
+                                                label = "Sem Escrúpulos (Menor) e Analfabeto (Menor)",
+                                                selected = state.senhoresCavalosCompensacao == "Sem Escrúpulos e Analfabeto",
                                                 onSelect = {
-                                                    val error = state.selecionarSenhoresCavalosCompensacao("Cruel e Analfabeto")
+                                                    val error = state.selecionarSenhoresCavalosCompensacao("Sem Escrúpulos e Analfabeto")
                                                     if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
                                                 }
                                             )

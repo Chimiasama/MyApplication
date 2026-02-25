@@ -669,7 +669,7 @@ class CriadorState {
             "Nômades do Deserto" to "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).",
             "Povo da Montanha" to "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).",
             "Povo do Mar" to "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.",
-            "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Cruel e Analfabeto, a critério do Mestre."
+            "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Sem Escrúpulos e Analfabeto, a critério do Mestre."
         )
         val SIGNOS_ADG_DESC = mapOf(
             "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e 1 PV).",
@@ -4557,12 +4557,12 @@ class CriadorState {
             if (temManual) {
                 return "Remova 'Código de Honra' das complicações manuais antes de escolher esta opção."
             }
-        } else if (opcao == "Cruel e Analfabeto") {
-             val temCruel = complicacoesSelecionadas.keys.any { it.id.keyify() == "CRUEL" && !desvantagensRaciais.contains(it.name) }
+        } else if (opcao == "Sem Escrúpulos e Analfabeto") {
+             val temSemEscrupulos = complicacoesSelecionadas.keys.any { it.id.keyify() == "SEM_ESCRUPULOS" && !desvantagensRaciais.contains(it.name) }
              val temAnalfabeto = complicacoesSelecionadas.keys.any { it.id.keyify() == "ANALFABETO" && !desvantagensRaciais.contains(it.name) }
 
-             if (temCruel && temAnalfabeto) return "Remova 'Cruel' e 'Analfabeto' das complicações manuais antes de escolher esta opção."
-             if (temCruel) return "Remova 'Cruel' das complicações manuais antes de escolher esta opção."
+             if (temSemEscrupulos && temAnalfabeto) return "Remova 'Sem Escrúpulos' e 'Analfabeto' das complicações manuais antes de escolher esta opção."
+             if (temSemEscrupulos) return "Remova 'Sem Escrúpulos' das complicações manuais antes de escolher esta opção."
              if (temAnalfabeto) return "Remova 'Analfabeto' das complicações manuais antes de escolher esta opção."
         }
 
@@ -4620,8 +4620,8 @@ class CriadorState {
                 if (senhoresCavalosExtra) {
                     if (senhoresCavalosCompensacao == "Código de Honra") {
                         extrasDesvantagens.add("CODIGO DE HONRA")
-                    } else if (senhoresCavalosCompensacao == "Cruel e Analfabeto") {
-                        extrasDesvantagens.add("CRUEL (Menor)")
+                    } else if (senhoresCavalosCompensacao == "Sem Escrúpulos e Analfabeto") {
+                        extrasDesvantagens.add("SEM ESCRÚPULOS (Menor)")
                         extrasDesvantagens.add("ANALFABETO")
                     }
                 }
