@@ -355,7 +355,7 @@ class CriadorState {
             applyAncestryVariantAdjustments(selected, key)
         } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             applyAncestryVariantAdjustments(selected, key)
-        } else if (canonicalOriginKey(selected.origem) == "FANTASIA" && key.contains("HUMANO")) {
+        } else if (canonicalOriginKey(selected.origem) == "FANTASIA" && (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")) {
             applyAncestryVariantAdjustments(selected, key)
         } else {
             selected
@@ -429,6 +429,39 @@ class CriadorState {
         // Insetoides "Vespa" variant: "ARMADURA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
         // Mineradores "Zero G" variant: "EM FORMA" retained per feedback.
         // Sáurios "Cuspidor" variant: "MORDIDA" is not in JSON base (injected via UseCase for Padrão), so no need to remove here.
+
+        if (key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL") {
+            // Always remove generic resistance, as it will be replaced by specific one from selection
+            removeByIdOrName("RESISTENCIA_AMBIENTAL", "RESISTÊNCIA AMBIENTAL")
+
+            when (descendenteElementalSelecionado) {
+                "Água" -> {
+                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
+                    removeByIdOrName("RAPIDO", "RÁPIDO")
+                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
+                }
+                "Ar" -> {
+                    removeByIdOrName("AQUATICO", "AQUÁTICO")
+                    removeByIdOrName("RAPIDO", "RÁPIDO")
+                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
+                }
+                "Fogo" -> {
+                    removeByIdOrName("AQUATICO", "AQUÁTICO")
+                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
+                    removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
+                }
+                "Terra" -> {
+                    removeByIdOrName("AQUATICO", "AQUÁTICO")
+                    removeByIdOrName("AR_INTERNO", "AR INTERNO")
+                    removeByIdOrName("RAPIDO", "RÁPIDO")
+                }
+                // If null (not selected yet), arguably show all or none. Showing all lets user see options.
+                // But removing generic resistance avoids duplication if logic adds it elsewhere?
+                // Logic in selecionarDescendenteElemental adds specific one. If none selected, none added.
+                // So removing generic here is correct if we want to enforce selection.
+                // But if selection is null, we show filtered list (all - generic).
+            }
+        }
 
         if (key == "QUADROIDES" && variant == "Habilidoso") {
             newHabilidades.removeAll {
@@ -4948,17 +4981,21 @@ class CriadorState {
             val racialTraits = mutableListOf<String>()
             when (novoElemento) {
                 "Ar" -> {
-                    racialTraits += listOf("AR INTERNO", "RESISTÊNCIA AMBIENTAL (Ar)")
+                    // AR INTERNO is preserved in base list, so we don't need to add it again
+                    racialTraits += listOf("RESISTÊNCIA AMBIENTAL (Ar)")
                 }
                 "Água" -> {
-                    racialTraits += listOf("AQUÁTICO", "RESISTÊNCIA AMBIENTAL (Água)")
+                    // AQUÁTICO is preserved in base list
+                    racialTraits += listOf("RESISTÊNCIA AMBIENTAL (Água)")
                 }
                 "Fogo" -> {
                     edgesToAdd.add("rapido")
-                    racialTraits += listOf("RÁPIDO", "RESISTÊNCIA AMBIENTAL (Fogo)")
+                    // RÁPIDO (trait text) is preserved in base list
+                    racialTraits += listOf("RESISTÊNCIA AMBIENTAL (Fogo)")
                 }
                 "Terra" -> {
-                    racialTraits += listOf("SÓLIDO COMO ROCHA", "RESISTÊNCIA AMBIENTAL (Terra)")
+                    // SÓLIDO COMO ROCHA is preserved in base list
+                    racialTraits += listOf("RESISTÊNCIA AMBIENTAL (Terra)")
                 }
             }
 
