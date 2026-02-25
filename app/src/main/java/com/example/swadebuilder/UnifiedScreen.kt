@@ -400,9 +400,9 @@ fun UnifiedScreen(
                             viewModel.feedbackMessages as MutableList<String>
                         )
 
-                        // NOTA: A lógica 'pontosVantagem += 1' foi removida.
-                        // Agora o sistema garante a habilidade racial 'Adaptável', que libera um slot
-                        // gratuito para Vantagem Novato, em vez de dar 1 PV bruto.
+                        // Grants Adaptable trait (free Novice Edge slot). Does NOT add raw PV.
+                        // The 'Adaptável' trait is injected via CriadorState.applyAncestryVariantAdjustments
+                        // and detected by temAdaptavel().
 
                         if (hadMeioElfoAgil) {
                             val agilityKey = "AGILIDADE"
