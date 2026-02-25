@@ -322,6 +322,15 @@ class CriadorState {
         return feedback
     }
 
+    /**
+     * Optimized: Memoize the ancestry definition for the currently selected ancestry.
+     * This avoids re-running filters and variant application logic (which creates object copies)
+     * every time a UI element needs to check racial traits (e.g. for complications, edges, attributes).
+     */
+    val currentAncestryDef: com.example.swadebuilder.model.RacialModifier? by derivedStateOf {
+        getAncestralidadeDef(ancestralidade)
+    }
+
     fun getAncestralidadeDef(name: String): com.example.swadebuilder.model.RacialModifier? {
         val key = name.keyify()
         // Optimized O(1) lookup using cached map
@@ -577,7 +586,8 @@ class CriadorState {
     }
 
     private fun resolveCurrentSciFiVariantSelection(ancestryName: String = ancestralidade): String? {
-        val ancDef = getAncestralidadeDef(ancestryName) ?: return scifiVariant
+        val ancDef = if (ancestryName == ancestralidade) currentAncestryDef else getAncestralidadeDef(ancestryName)
+        if (ancDef == null) return scifiVariant
         return resolveSciFiVariantSelectionFor(
             ancestryName = ancestryName,
             availableOptions = ancDef.opcoes
@@ -1117,7 +1127,7 @@ class CriadorState {
         equipamentosComprados.sumOf { (it.mods_slots as? JsonPrimitive)?.content?.toIntOrNull() ?: 0 }
 
     fun isPersonagemRobotico(): Boolean {
-        val ancestral = getAncestralidadeDef(ancestralidade)
+        val ancestral = currentAncestryDef
         val nomeKey = (ancestral?.nome ?: ancestralidade).keyify()
         val robotByName = listOf("ANDROID", "CONSTRUTO", "CONSTRUCTO").any { nomeKey.contains(it) }
         val robotBySkill = ancestral?.habilidades?.any {
@@ -1189,7 +1199,7 @@ class CriadorState {
         }
 
         // Check Claws (Garra)
-        val ancestry = getAncestralidadeDef(ancestralidade)
+        val ancestry = currentAncestryDef
         val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true ||
                 ancestry?.vantagensGratis?.any { it.keyify().contains("GARRA") } == true
 
@@ -1221,7 +1231,7 @@ class CriadorState {
 
     fun extrairArmasNaturais(): List<EquipamentoItem> {
         val weapons = mutableListOf<EquipamentoItem>()
-        val ancestralidadeObj = getAncestralidadeDef(ancestralidade)
+        val ancestralidadeObj = currentAncestryDef
             ?: return emptyList()
 
         // Map keyword to expected ID for robust lookup
@@ -3283,7 +3293,7 @@ class CriadorState {
 
     val pontosComplicacao: Int
         get() {
-            val ancestryDef = getAncestralidadeDef(ancestralidade)
+            val ancestryDef = currentAncestryDef
             val ancestryAuto = ancestryDef?.let { effectiveDesvantagens(it) }.orEmpty()
             val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
                 .map { normalizeAutoKey(it.substringBefore("(").trim()) }
@@ -3319,7 +3329,7 @@ class CriadorState {
             return false
         }
 
-        val ancDef = getAncestralidadeDef(ancestralidade)
+        val ancDef = currentAncestryDef
         if (ancDef == null) {
             return false
         }
@@ -3437,7 +3447,7 @@ class CriadorState {
         if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
 
         // Automatic checks
-        val ancestryAuto = getAncestralidadeDef(ancestralidade)?.let { effectiveDesvantagens(it) }.orEmpty()
+        val ancestryAuto = currentAncestryDef?.let { effectiveDesvantagens(it) }.orEmpty()
         val autoKeys = (desvantagensAutomaticas + desvantagensRaciais + ancestryAuto)
             .map { normalizeAutoKey(it.substringBefore("(").trim()) }
             .toSet()
@@ -3491,7 +3501,7 @@ class CriadorState {
     fun podeSelecionar(v: Vantagem): Boolean {
         val context = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase.Context(
             ancestralidade = ancestralidade,
-            ancestralidadeDef = getAncestralidadeDef(ancestralidade),
+            ancestralidadeDef = currentAncestryDef,
             compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
             compendioFantasiaAtivo = compendioFantasiaAtivo,
             compendioPathfinderAtivo = compendioPathfinderAtivo,
@@ -3792,7 +3802,7 @@ class CriadorState {
     private fun isHumanoFantasiaSelecionado(): Boolean {
         if (!compendioFantasiaAtivo) return false
         if (!ancestralidade.keyify().contains("HUMANO")) return false
-        val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
+        val ancDef = currentAncestryDef ?: return false
         return canonicalOriginKey(ancDef.origem) == "FANTASIA"
     }
 
@@ -4214,7 +4224,7 @@ class CriadorState {
 
         // Tags
         if (v.requisitos.tags.isNotEmpty()) {
-            val ancDef = getAncestralidadeDef(ancestralidade)
+            val ancDef = currentAncestryDef
             if (ancDef == null || !ancDef.tags.containsAll(v.requisitos.tags)) return false
         }
 
@@ -4498,7 +4508,7 @@ class CriadorState {
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarScifiVariant(opcao: String?) {
-        val ancDef = getAncestralidadeDef(ancestralidade)
+        val ancDef = currentAncestryDef
         val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
             ancestryName = ancestralidade,
             availableOptions = ancDef?.opcoes ?: emptyList(),
@@ -4630,7 +4640,7 @@ class CriadorState {
     private fun syncPacoteCulturalFantasia() {
         if (!isHumanoFantasiaSelecionado()) return
 
-        val ancDef = getAncestralidadeDef(ancestralidade)
+        val ancDef = currentAncestryDef
 
         // --- Atualiza Vantagens Raciais ---
         val baseVantagens = ancDef?.let { effectiveVantagensGratis(it) } ?: emptyList()
