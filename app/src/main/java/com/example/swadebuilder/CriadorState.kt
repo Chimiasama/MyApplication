@@ -368,9 +368,16 @@ class CriadorState {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
             if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
                 val newHabilidades = base.habilidades.toMutableList()
-                newHabilidades.removeAll { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }
 
-                val newVantagensGratis = base.vantagensGratis.filter { it.keyify() != "ADAPTAVEL" }
+                newHabilidades.removeAll {
+                    val idKey = (it.id ?: "").keyify()
+                    val nameKey = it.nome.keyify()
+                    idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
+                }
+
+                val newVantagensGratis = base.vantagensGratis.filter {
+                    it.keyify() != "ADAPTAVEL"
+                }
 
                 return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
             }
@@ -3275,13 +3282,21 @@ class CriadorState {
             return false
         }
 
-        val ancDef = getAncestralidadeDef(ancestralidade) ?: return false
+        val ancDef = getAncestralidadeDef(ancestralidade)
+        if (ancDef == null) {
+            return false
+        }
+
         val free = effectiveVantagensGratis(ancDef)
         // 1. Explicitly in Free Edges (legacy list or racial_edge)
-        if (free.any { it.keyify() == "ADAPTAVEL" }) return true
+        if (free.any { it.keyify() == "ADAPTAVEL" }) {
+            return true
+        }
 
         // 2. Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
-        if (ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) return true
+        if (ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) {
+            return true
+        }
 
         // 3. Half-Elves Special Logic: "Herança" acts as Adaptable if Agility d6 is NOT selected
         val isMeioElfo = ancestralidade.keyify().contains("MEIO-ELFO") ||
@@ -3901,7 +3916,9 @@ class CriadorState {
         }
 
         // Check if Adaptavel was lost
-        val lostAdaptavel = !temAdaptavel() && vantagemAdaptavelSelecionadaId != null
+        val hasAdaptavel = temAdaptavel()
+        val lostAdaptavel = !hasAdaptavel && vantagemAdaptavelSelecionadaId != null
+
         var removedAdaptavelId: String? = null
 
         if (lostAdaptavel) {

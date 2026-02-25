@@ -426,6 +426,13 @@ fun buildSummaryLines(
         if (personagem.ancestralidade.keyify() == "ELFOS" && racialTraitKeys.contains("COMUNITARIO")) {
             removeAll { it.keyify() == "DESASTRADO" }
         }
+
+        if (personagem.ancestralidade.keyify().contains("HUMANO")) {
+            val pack = personagem.pacoteCulturalFantasiaSelecionado
+            if (!pack.isNullOrBlank() && !pack.equals("Humano padrão", ignoreCase = true)) {
+                removeAll { it.keyify() == "ADAPTAVEL" }
+            }
+        }
     }
 
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
@@ -495,7 +502,9 @@ fun buildSummaryLines(
                     // 2. Check Racial Abilities (Definition Name)
                     val ability = racialAbilityMap[key]
                     if (ability != null) {
-                        ability.nome // Use the display name from JSON (preserves symbols like '/')
+                        // Use the display name from JSON (preserves symbols like '/')
+                        // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
+                        formatRacialAnnotationDisplay(ability.nome)
                     } else {
                         // 3. Fallback
                         trait.toFancyTitleCase()
