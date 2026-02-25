@@ -381,6 +381,14 @@ class CriadorViewModel(
         state.descendenteElementalSelecionado = null
         state.gnomoPericiaEscolhida = null
         state.dominioClerigoSelecionado = null
+        state.dominioClerigoPathfinderSelecionado = null
+        state.signoSerpentePericiaEscolhida = "Jogar"
+        state.protagonistaPericiasEscolhidas = emptyList()
+        state.protagonistaPericiasPaixao = emptyList()
+        state.anoesScifiSelecionado = null
+        state.scifiVariant = null
+        state.humanoMineradorAtributo = null
+        state.vantagemAdaptavelSelecionadaId = null
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
