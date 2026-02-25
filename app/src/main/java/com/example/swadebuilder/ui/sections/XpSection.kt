@@ -46,7 +46,7 @@ fun XpSection(
     onUndo: () -> Unit
 ) {
     SectionCard(
-        title = "XP",
+        title = "Progressos",
         icon = Icons.Default.Star,
         showHeader = false
     ) {
