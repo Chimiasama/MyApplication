@@ -1,7 +1,6 @@
 package com.example.swadebuilder
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -365,26 +364,10 @@ class CriadorState {
         return withVariant
     }
 
-    private fun safeLog(tag: String, msg: String) {
-        try {
-            Log.d(tag, msg)
-        } catch (e: RuntimeException) {
-            println("$tag: $msg")
-        }
-    }
-
     private fun applyAncestryVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
-            safeLog("SWADE_DEBUG", "applyAncestryVariantAdjustments: Fantasy Human Logic. Pacote='${pacoteCulturalFantasiaSelecionado}'")
             if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
                 val newHabilidades = base.habilidades.toMutableList()
-
-                val removedCount = newHabilidades.count {
-                    val idKey = (it.id ?: "").keyify()
-                    val nameKey = it.nome.keyify()
-                    idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
-                }
-                safeLog("SWADE_DEBUG", "applyAncestryVariantAdjustments: Removing $removedCount 'Adaptável' traits from Habilidades.")
 
                 newHabilidades.removeAll {
                     val idKey = (it.id ?: "").keyify()
