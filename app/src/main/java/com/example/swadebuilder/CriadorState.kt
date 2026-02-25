@@ -234,6 +234,9 @@ class CriadorState {
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
     var pacoteCulturalFantasiaSelecionado by mutableStateOf("Humano padrão")
+    var povoDoMarOpcao by mutableStateOf<String?>(null)
+    var senhoresCavalosExtra by mutableStateOf(false)
+    var senhoresCavalosCompensacao by mutableStateOf<String?>(null)
     var protagonistaRollTecnicas by mutableStateOf<Int?>(null)
     var protagonistaRollPericia by mutableStateOf<Int?>(null)
     var protagonistaRollVantagem by mutableStateOf<Int?>(null)
@@ -4491,6 +4494,11 @@ class CriadorState {
         if (pacoteCulturalFantasiaSelecionado == novoPacote) return
         pacoteCulturalFantasiaSelecionado = novoPacote
 
+        // Reset sub-options when changing package
+        povoDoMarOpcao = null
+        senhoresCavalosExtra = false
+        senhoresCavalosCompensacao = null
+
         if (!temAdaptavel() && vantagemAdaptavelSelecionadaId != null) {
             val toRemove = vantagensSelecionadas.find { it.id == vantagemAdaptavelSelecionadaId }
             if (toRemove != null) {
@@ -4504,6 +4512,66 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    fun selecionarPovoDoMarOpcao(opcao: String?): String? {
+        if (povoDoMarOpcao == opcao) return null
+
+        if (opcao == "Procurado (Maior)") {
+            val temManual = complicacoesSelecionadas.keys.any {
+                it.id.keyify() == "PROCURADO" && complicacoesSelecionadas[it] == "Maior" && !desvantagensRaciais.contains(it.name)
+            }
+            if (temManual) {
+                return "Remova 'Procurado (Maior)' das complicações manuais antes de escolher esta opção."
+            }
+        }
+
+        povoDoMarOpcao = opcao
+        syncPacoteCulturalFantasia()
+        rebuildAllPericiaStacks()
+        return null
+    }
+
+    fun toggleSenhoresCavalosExtra(checked: Boolean): String? {
+        if (senhoresCavalosExtra == checked) return null
+
+        if (checked) {
+            val jaTemNascido = vantagensSelecionadas.any { it.id == "nascido_na_sela" && !vantagensRaciais.contains("nascido_na_sela") }
+            if (jaTemNascido) {
+                return "Remova a Vantagem 'Nascido na Sela' manual antes de escolher esta opção."
+            }
+        }
+
+        senhoresCavalosExtra = checked
+        if (!checked) senhoresCavalosCompensacao = null
+        syncPacoteCulturalFantasia()
+        rebuildAllPericiaStacks()
+        return null
+    }
+
+    fun selecionarSenhoresCavalosCompensacao(opcao: String?): String? {
+        if (senhoresCavalosCompensacao == opcao) return null
+
+        if (opcao == "Código de Honra") {
+            val temManual = complicacoesSelecionadas.keys.any {
+                it.id.keyify() == "CODIGO DE HONRA" && !desvantagensRaciais.contains(it.name)
+            }
+            if (temManual) {
+                return "Remova 'Código de Honra' das complicações manuais antes de escolher esta opção."
+            }
+        } else if (opcao == "Cruel e Analfabeto") {
+             val temCruel = complicacoesSelecionadas.keys.any { it.id.keyify() == "CRUEL" && !desvantagensRaciais.contains(it.name) }
+             val temAnalfabeto = complicacoesSelecionadas.keys.any { it.id.keyify() == "ANALFABETO" && !desvantagensRaciais.contains(it.name) }
+
+             if (temCruel && temAnalfabeto) return "Remova 'Cruel' e 'Analfabeto' das complicações manuais antes de escolher esta opção."
+             if (temCruel) return "Remova 'Cruel' das complicações manuais antes de escolher esta opção."
+             if (temAnalfabeto) return "Remova 'Analfabeto' das complicações manuais antes de escolher esta opção."
+        }
+
+        senhoresCavalosCompensacao = opcao
+        syncPacoteCulturalFantasia()
+        rebuildAllPericiaStacks()
+        return null
+    }
+
     private fun syncPacoteCulturalFantasia() {
         if (!isHumanoFantasiaSelecionado()) return
 
@@ -4511,11 +4579,16 @@ class CriadorState {
 
         // --- Atualiza Vantagens Raciais ---
         val baseVantagens = ancDef?.let { effectiveVantagensGratis(it) } ?: emptyList()
-        val extrasVantagens = when (pacoteCulturalFantasiaSelecionado) {
-            "Nômades do Deserto" -> listOf("RESISTÊNCIA AMBIENTAL (Calor)")
-            "Povo da Montanha" -> listOf("RESISTÊNCIA AMBIENTAL (Frio)")
-            "Senhores dos Cavalos" -> listOf("nascido_na_sela") // ID: nascido_na_sela
-            else -> emptyList()
+        val extrasVantagens = mutableListOf<String>()
+
+        when (pacoteCulturalFantasiaSelecionado) {
+            "Nômades do Deserto" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Calor)")
+            "Povo da Montanha" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Frio)")
+            "Senhores dos Cavalos" -> {
+                if (senhoresCavalosExtra) {
+                    extrasVantagens.add("nascido_na_sela")
+                }
+            }
         }
 
         // Remove "ADAPTAVEL" se não for Humano Padrão (embora temAdaptavel() já trate a lógica,
@@ -4531,10 +4604,28 @@ class CriadorState {
 
         // --- Atualiza Desvantagens Raciais ---
         val baseDesvantagens = ancDef?.let { effectiveDesvantagens(it) } ?: emptyList()
-        val extrasDesvantagens = when (pacoteCulturalFantasiaSelecionado) {
-            "Nômades do Deserto" -> listOf("FRAQUEZA AMBIENTAL (Frio)")
-            "Povo da Montanha" -> listOf("FRAQUEZA AMBIENTAL (Calor)")
-            else -> emptyList()
+        val extrasDesvantagens = mutableListOf<String>()
+
+        when (pacoteCulturalFantasiaSelecionado) {
+            "Nômades do Deserto" -> extrasDesvantagens.add("FRAQUEZA AMBIENTAL (Frio)")
+            "Povo da Montanha" -> extrasDesvantagens.add("FRAQUEZA AMBIENTAL (Calor)")
+            "Povo do Mar" -> {
+                if (povoDoMarOpcao == "Penalidade em Cavalgar") {
+                    extrasDesvantagens.add("PENALIDADE: CAVALGAR -1")
+                } else if (povoDoMarOpcao == "Procurado (Maior)") {
+                    extrasDesvantagens.add("PROCURADO (Maior)")
+                }
+            }
+            "Senhores dos Cavalos" -> {
+                if (senhoresCavalosExtra) {
+                    if (senhoresCavalosCompensacao == "Código de Honra") {
+                        extrasDesvantagens.add("CODIGO DE HONRA")
+                    } else if (senhoresCavalosCompensacao == "Cruel e Analfabeto") {
+                        extrasDesvantagens.add("CRUEL (Menor)")
+                        extrasDesvantagens.add("ANALFABETO")
+                    }
+                }
+            }
         }
 
         val oldAuto = desvantagensRaciais.toList()
@@ -5453,6 +5544,9 @@ class CriadorState {
                 portraitAlignment = portraitAlignment,
                 signoAdgSelecionado = signoAdgSelecionado,
                 pacoteCulturalFantasiaSelecionado = pacoteCulturalFantasiaSelecionado,
+                povoDoMarOpcao = povoDoMarOpcao,
+                senhoresCavalosExtra = senhoresCavalosExtra,
+                senhoresCavalosCompensacao = senhoresCavalosCompensacao,
                 artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
@@ -5584,6 +5678,9 @@ class CriadorState {
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
         pacoteCulturalFantasiaSelecionado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado ?: "Humano padrão"
+        povoDoMarOpcao = snapshot.selecoes.povoDoMarOpcao
+        senhoresCavalosExtra = snapshot.selecoes.senhoresCavalosExtra ?: false
+        senhoresCavalosCompensacao = snapshot.selecoes.senhoresCavalosCompensacao
         artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
         artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
         artistaMarcialTecnicasSelecionadas.clear()
