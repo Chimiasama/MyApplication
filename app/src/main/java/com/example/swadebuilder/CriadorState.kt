@@ -127,6 +127,10 @@ class CriadorState {
     var racialSkillStartMap: Map<String, Map<String, Int>> = emptyMap()
     var arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
 
+    // Optimization: Cache ancestry lookup to avoid O(N) filtering on every access.
+    // Maps keyify(name) -> List of candidates.
+    private var ancestryMap: Map<String, List<RacialModifier>> = emptyMap()
+
     // listaDeEstagios is imported from model (static rules)
 
     fun updateGameData(snapshot: GameDataSnapshot) {
@@ -139,6 +143,8 @@ class CriadorState {
         this.listaPoderes = snapshot.listaPoderes
         this.listaSuperPoderes = snapshot.listaSuperPoderes
         this.listaAncestralidadesJson = snapshot.listaAncestralidadesJson
+        // Build the cache once when data loads.
+        this.ancestryMap = this.listaAncestralidadesJson.groupBy { it.nome.keyify() }
         this.listaMonstroTemplates = snapshot.listaMonstroTemplates
         this.listaCoracoesCrystal = snapshot.listaCoracoesCrystal
         this.equipamentoCategorias = snapshot.equipamentoCategorias
@@ -315,8 +321,9 @@ class CriadorState {
 
     fun getAncestralidadeDef(name: String): com.example.swadebuilder.model.RacialModifier? {
         val key = name.keyify()
-        val candidates = listaAncestralidadesJson.filter { it.nome.keyify() == key }
-        if (candidates.isEmpty()) return null
+        // Optimized O(1) lookup using cached map
+        val candidates = ancestryMap[key]
+        if (candidates.isNullOrEmpty()) return null
         if (candidates.size == 1) return candidates.first()
 
         val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
