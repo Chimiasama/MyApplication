@@ -115,7 +115,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
                             ?.map { it.id ?: it.nome } ?: emptyList()),
                 ancestryAutomaticDisadvantages = (params.targetAncestryDef?.desvantagens ?: emptyList()) +
                         (params.targetAncestryDef?.habilidades
-                            ?.filter { it.category == "racial_hindrance" || it.category == "racial_trait_negative" }
+                            ?.filter { it.category == "racial_hindrance" }
                             ?.map { it.nome } ?: emptyList()),
                 ancestryOrigin = params.targetAncestryDef?.origem ?: "BASICO"
             )

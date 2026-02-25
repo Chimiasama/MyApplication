@@ -296,13 +296,6 @@
         "descricao": "Draconianos subtraem 1 dos testes de Agilidade, Força e Vigor depois de passar mais de dez minutos em temperaturas abaixo de 18 °Celsius.",
         "id": "SANGUE_FRIO",
         "category": "racial_trait_negative"
-      },
-      {
-        "nome": "ARROGANTE",
-        "descricao": "ARROGANTE",
-        "id": "ARROGANTE",
-        "category": "racial_hindrance",
-        "severity": "Maior"
       }
     ],
     "tags": [
