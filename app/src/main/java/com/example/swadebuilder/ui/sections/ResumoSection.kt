@@ -314,7 +314,7 @@ fun SummaryContent(
 
                 Card(
                     modifier = Modifier
-                        .weight(1f)
+                        .weight(if (state.expandirRetrato) 1f else 0.6f)
                         .aspectRatio(0.8f) // Fixed aspect ratio
                         .clickable(onClick = onSelectImage),
                     colors = CardDefaults.cardColors(
@@ -1359,6 +1359,24 @@ private fun ImageSettingsDialog(
                     Text(
                         "Ajustar (Inteiro)",
                         modifier = Modifier.clickable { state.portraitScaleType = "FIT" },
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Spacer(Modifier.height(16.dp))
+                Text("Tamanho", style = MaterialTheme.typography.labelLarge)
+                Spacer(Modifier.height(4.dp))
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    androidx.compose.material3.Checkbox(
+                        checked = state.expandirRetrato,
+                        onCheckedChange = { state.expandirRetrato = it }
+                    )
+                    Text(
+                        "Expandir (Ocupar 50% da largura)",
+                        modifier = Modifier.clickable { state.expandirRetrato = !state.expandirRetrato },
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }

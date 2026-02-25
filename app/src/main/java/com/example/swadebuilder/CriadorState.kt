@@ -838,7 +838,7 @@ class CriadorState {
 
     var anotacoes by mutableStateOf("")
     var portraitFileName by mutableStateOf<String?>(null)
-    // expandirRetrato mantido para compatibilidade, mas o UI deve usar portraitScaleType
+    // expandirRetrato: Se true, ocupa 50% da largura no Resumo. Se false, ocupa menos espaço (default).
     var expandirRetrato by mutableStateOf(false)
     var portraitScaleType by mutableStateOf("CROP") // CROP, FIT
     var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM
