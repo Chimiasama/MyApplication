@@ -1214,6 +1214,7 @@ class CriadorViewModel(
                 AdvancementAction.ReserveLegendaryAttribute(stageName = stageForSpend)
             )
             state.recomputeAvailableProgress()
+            state.stageNameForCurrentAdvancement = null
         }
     }
 

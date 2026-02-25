@@ -36,6 +36,7 @@ import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.util.toFancyTitleCase
 
 @Composable
 fun XpSection(
@@ -199,7 +200,7 @@ private fun describeAction(
 
     is AdvancementAction.RemoveHindrance -> {
         val compName = state.listaComplicacoes.firstOrNull { it.id == action.hindranceId }
-        val baseLabel = compName?.id ?: action.hindranceId
+        val baseLabel = (compName?.name ?: action.hindranceId).toFancyTitleCase()
         when (action.changeType) {
             HindranceChangeType.RESERVATION -> "Reserva de Complicação: $baseLabel"
             HindranceChangeType.REDUCE_TO_MINOR -> "Reduzir Complicação: $baseLabel"
