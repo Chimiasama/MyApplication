@@ -250,6 +250,8 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
         assertTrue(result.ensureRacialDisadvantages.contains("HABITANTE DE GRAVIDADE BAIXA/ZERO"))
         assertTrue(result.racialDisadvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
+        assertTrue(result.ensureAdvantageIds.contains("adaptacao_gravitacional"))
+        assertTrue(result.automaticAdvantagesToRemove.contains("FORTE"))
     }
 
     @Test

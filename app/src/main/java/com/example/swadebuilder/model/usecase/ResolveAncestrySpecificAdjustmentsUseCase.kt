@@ -460,8 +460,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL"),
-                        ensureAdvantageIds = emptyList(),
+                        ensureAdvantageIds = listOf("adaptacao_gravitacional"),
                         ensureAutomaticAdvantages = emptyList(),
+                        automaticAdvantagesToRemove = listOf("FORTE"),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA/ZERO"),
                         racialDisadvantagesToRemove = listOf("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         elementalAction = ElementalAction.NONE

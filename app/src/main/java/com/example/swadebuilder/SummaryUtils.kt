@@ -523,9 +523,21 @@ fun buildSummaryLines(
     }
     lines += ""
 
-    val desvantagensRaciaisComplicacoes = personagem.desvantagensRaciais.filter { desvantagem ->
-        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+    fun complicationWithSeverity(raw: String): String {
+        if (raw.contains("(")) return raw
+        val compKey = raw.substringBefore("(").trim().keyify()
+        val def = listaComplicacoes.firstOrNull { comp ->
+            comp.name.keyify() == compKey || (comp.originalName?.keyify() == compKey)
+        } ?: return raw
+        val sev = def.severity.trim().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        return "$raw ($sev)"
     }
+
+    val desvantagensRaciaisComplicacoes = personagem.desvantagensRaciais
+        .filter { desvantagem ->
+            desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+        }
+        .map { complicationWithSeverity(it) }
     val desvantagensRaciaisAnotacoes = personagem.desvantagensRaciais
         .filterNot { desvantagem ->
             desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
