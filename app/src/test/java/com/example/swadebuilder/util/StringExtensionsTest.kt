@@ -44,4 +44,12 @@ class StringExtensionsTest {
         assertEquals("Mordida ou Garra", "mordida ou garra".toFancyTitleCase())
         assertEquals("Um ou Outro", "UM OU OUTRO".toFancyTitleCase())
     }
+
+    @Test
+    fun toFancyTitleCase_handlesAcronymsRomanNumeralsAndSpecialPrefixes() {
+        assertEquals("Cura XP", "cura xp".toFancyTitleCase())
+        assertEquals("Capitulo IV", "capitulo iv".toFancyTitleCase())
+        assertEquals("d'Arc", "d'arc".toFancyTitleCase())
+        assertEquals("\"A Lenda de XP\"", "\"a lenda de xp\"".toFancyTitleCase())
+    }
 }
