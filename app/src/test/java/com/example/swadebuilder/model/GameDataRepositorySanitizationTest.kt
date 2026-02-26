@@ -37,6 +37,22 @@ class GameDataRepositorySanitizationTest {
         assertEquals("ESPIRITO", sanitized.mapaPericias.getValue("ATIRAR").atributo)
     }
 
+
+    @Test
+    fun `sanitizeSnapshotForRuntime preserva ordem baseada na ultima ocorrencia`() {
+        val snapshot = fixtureSnapshot(
+            pericias = listOf(
+                Pericia(nome = "Atirar", atributo = "AGILIDADE", basica = true, origem = "BASICO"),
+                Pericia(nome = "Lutar", atributo = "AGILIDADE", basica = true, origem = "BASICO"),
+                Pericia(nome = "ATIRAR", atributo = "ESPIRITO", basica = false, origem = "SUPER")
+            )
+        )
+
+        val sanitized = sanitizeSnapshotForRuntime(snapshot)
+
+        assertEquals(listOf("Lutar", "ATIRAR"), sanitized.listaPericias.map { it.nome })
+        assertEquals("ESPIRITO", sanitized.listaPericias.last().atributo)
+    }
     private fun fixtureSnapshot(
         pericias: List<Pericia> = listOf(Pericia(nome = "Atirar", atributo = "AGILIDADE", basica = true)),
         vantagens: List<Vantagem> = listOf(Vantagem(id = "alerta", nome = "Alerta", categoria = Categoria.COMBATE, requisitos = Requisito())),

@@ -35,6 +35,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -116,48 +117,56 @@ fun PericiasContent(
 
     val leiDesc = "Esta perícia é usada para descobrir o que pode ser feito sem consequências jurídicas, proteger seus interesses legais e defender a si ou a outra pessoa num tribunal."
 
-    val periciasVisiveis = remember(
-        state.periciasComIdiomas(),
+    val periciasBase = state.periciasComIdiomas()
+    val periciaNomeKeys = remember(periciasBase) {
+        periciasBase.associateWith { it.nome.keyify() }
+    }
+    val periciasVisiveis by remember(
+        periciasBase,
         state.compendioArteDaGuerraAtivo,
         state.compendioFantasiaAtivo,
-        state.compendioHorrorAtivo
+        state.compendioHorrorAtivo,
+        state.compendioPathfinderAtivo
     ) {
-        val pericias = state.periciasComIdiomas()
+        derivedStateOf {
+            val rawTotals = periciasBase.associateWith { per -> state.rawTotal(per) }
 
-        val idiomaSlotsVisiveis = pericias
-            .filter { state.isIdiomaPericia(it) }
-            .let { slots ->
-                val ultimaVazia = slots.lastOrNull { state.rawTotal(it) == 0 }
-                slots.filter { per -> state.rawTotal(per) > 0 || per == ultimaVazia }.toSet()
-            }
+            val idiomaSlotsVisiveis = periciasBase
+                .filter { state.isIdiomaPericia(it) }
+                .let { slots ->
+                    val ultimaVazia = slots.lastOrNull { (rawTotals[it] ?: 0) == 0 }
+                    slots.filter { per -> (rawTotals[per] ?: 0) > 0 || per == ultimaVazia }.toSet()
+                }
 
-        val jutsuSlotsVisiveis = pericias
-            .filter { state.isJutsuPericia(it) }
-            .let { slots ->
-                val ultimaVazia = slots.lastOrNull { state.rawTotal(it) == 0 }
-                slots.filter { per -> state.rawTotal(per) > 0 || per == ultimaVazia }.toSet()
-            }
+            val jutsuSlotsVisiveis = periciasBase
+                .filter { state.isJutsuPericia(it) }
+                .let { slots ->
+                    val ultimaVazia = slots.lastOrNull { (rawTotals[it] ?: 0) == 0 }
+                    slots.filter { per -> (rawTotals[per] ?: 0) > 0 || per == ultimaVazia }.toSet()
+                }
 
-        pericias.filter { per ->
-            if (per.nome.equals("Jutsu", ignoreCase = true)) {
-                false
-            } else if (per.nome.equals("Alquimia", ignoreCase = true)) {
-                state.compendioFantasiaAtivo || state.compendioHorrorAtivo
-            } else if (state.compendioPathfinderAtivo) {
-                val n = per.nome.keyify()
-                n != "FOCO" && n !in SAVAGE_PATHFINDER_BLOCKED_SKILLS
-            } else {
-                true
-            }
-        }.filter { per ->
-            when {
-                state.isIdiomaPericia(per) -> per in idiomaSlotsVisiveis
-                state.isJutsuPericia(per) -> per in jutsuSlotsVisiveis
-                else -> true
-            }
-        }.filter {
-            it.origem?.uppercase() != "SUPLEMENTO" || state.rawTotal(it) > 0
-        }.distinctBy { it.nome.keyify() }
+            periciasBase.filter { per ->
+                when {
+                    per.nome.equals("Jutsu", ignoreCase = true) -> false
+                    per.nome.equals("Alquimia", ignoreCase = true) -> {
+                        state.compendioFantasiaAtivo || state.compendioHorrorAtivo
+                    }
+                    state.compendioPathfinderAtivo -> {
+                        val nomeKey = periciaNomeKeys[per] ?: per.nome.keyify()
+                        nomeKey != "FOCO" && nomeKey !in SAVAGE_PATHFINDER_BLOCKED_SKILLS
+                    }
+                    else -> true
+                }
+            }.filter { per ->
+                when {
+                    state.isIdiomaPericia(per) -> per in idiomaSlotsVisiveis
+                    state.isJutsuPericia(per) -> per in jutsuSlotsVisiveis
+                    else -> true
+                }
+            }.filter {
+                it.origem?.uppercase() != "SUPLEMENTO" || (rawTotals[it] ?: 0) > 0
+            }.distinctBy { periciaNomeKeys[it] ?: it.nome.keyify() }
+        }
     }
 
     SectionCard(
