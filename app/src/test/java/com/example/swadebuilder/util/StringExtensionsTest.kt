@@ -37,4 +37,11 @@ class StringExtensionsTest {
         assertEquals("AVO", "Avô".keyify())
         assertEquals("", "".keyify())
     }
+
+    @Test
+    fun toFancyTitleCase_handlesConjunctions() {
+        assertEquals("Mordida ou Garra", "MORDIDA OU GARRA".toFancyTitleCase())
+        assertEquals("Mordida ou Garra", "mordida ou garra".toFancyTitleCase())
+        assertEquals("Um ou Outro", "UM OU OUTRO".toFancyTitleCase())
+    }
 }
