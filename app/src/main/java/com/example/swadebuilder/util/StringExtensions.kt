@@ -104,7 +104,7 @@ fun String.toFancyTitleCase(): String {
         "de", "da", "do", "das", "dos",
         "e", "em", "no", "na", "nos", "nas",
         "por", "para", "com", "sem", "sob", "sobre",
-        "a", "o", "as", "os", "à", "às"
+        "a", "o", "as", "os", "à", "às", "ou"
     )
 
     // Lista de siglas que devem ficar em maiúsculo
