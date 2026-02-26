@@ -71,6 +71,18 @@ internal fun normalizeModuleKeys(activeModules: Set<String>): Set<String> =
  */
 private const val GAME_DATA_REPO_TAG = "GameDataRepositoryPerf"
 
+private inline fun perfLogD(message: () -> String) {
+    if (Log.isLoggable(GAME_DATA_REPO_TAG, Log.DEBUG)) {
+        Log.d(GAME_DATA_REPO_TAG, message())
+    }
+}
+
+private fun perfLogW(message: String, throwable: Throwable) {
+    if (Log.isLoggable(GAME_DATA_REPO_TAG, Log.WARN)) {
+        Log.w(GAME_DATA_REPO_TAG, message, throwable)
+    }
+}
+
 class AssetGameDataRepository : GameDataRepository {
     private val validateGameDataSnapshotIntegrityUseCase = ValidateGameDataSnapshotIntegrityUseCase()
     private val cache = ModuleSnapshotCache(maxSize = 4)
@@ -106,18 +118,16 @@ class AssetGameDataRepository : GameDataRepository {
 
             when (loadAccess) {
                 is LoadAccess.CacheHit -> {
-                    Log.d(
-                        GAME_DATA_REPO_TAG,
+                    perfLogD {
                         "cache_hit modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
-                    )
+                    }
                     return@withContext loadAccess.snapshot
                 }
                 is LoadAccess.JoinInFlight -> {
                     val awaited = loadAccess.deferred.await()
-                    Log.d(
-                        GAME_DATA_REPO_TAG,
+                    perfLogD {
                         "cache_join_inflight modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
-                    )
+                    }
                     return@withContext awaited
                 }
                 is LoadAccess.StartLoad -> {
@@ -140,10 +150,9 @@ class AssetGameDataRepository : GameDataRepository {
                             inFlightLoads.remove(cacheKey)
                         }
                         loadAccess.deferred.complete(sanitizedSnapshot)
-                        Log.d(
-                            GAME_DATA_REPO_TAG,
+                        perfLogD {
                             "cache_load_complete modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
-                        )
+                        }
 
                         return@withContext sanitizedSnapshot
                     } catch (error: Throwable) {
@@ -151,8 +160,7 @@ class AssetGameDataRepository : GameDataRepository {
                             inFlightLoads.remove(cacheKey)
                         }
                         loadAccess.deferred.completeExceptionally(error)
-                        Log.w(
-                            GAME_DATA_REPO_TAG,
+                        perfLogW(
                             "cache_load_failed modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}",
                             error
                         )
