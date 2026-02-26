@@ -111,6 +111,17 @@ class CriadorViewModel(
         }
     }
 
+    suspend fun prewarmLikelyModuleTransitions(context: Context, activeModules: Set<String>) {
+        val normalized = normalizeModuleKeys(activeModules)
+        if (normalized.size <= 1) return
+
+        normalized.forEach { moduleKey ->
+            runCatching {
+                gameDataRepository.load(context, setOf(moduleKey))
+            }
+        }
+    }
+
     internal fun aplicarGameDataSnapshot(snapshot: GameDataSnapshot) {
         gameDataStore.updateSnapshot(snapshot)
         state.updateGameData(snapshot)

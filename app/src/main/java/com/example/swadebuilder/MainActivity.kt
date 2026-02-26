@@ -170,6 +170,7 @@ class MainActivity : ComponentActivity() {
 
                 launch {
                     viewModel.prewarmBaselineData(this@MainActivity)
+                    viewModel.prewarmLikelyModuleTransitions(this@MainActivity, activeKeys)
                 }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao carregar dados: ${e.message}")
