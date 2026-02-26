@@ -256,7 +256,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("MOVIMENTAÇÃO +4"),
+                        automaticAdvantagesToRemove = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
                         ensureRacialDisadvantages = emptyList(),
+                        racialDisadvantagesToRemove = listOf("GRANDE"),
                         elementalAction = ElementalAction.NONE
                     )
                 } else {

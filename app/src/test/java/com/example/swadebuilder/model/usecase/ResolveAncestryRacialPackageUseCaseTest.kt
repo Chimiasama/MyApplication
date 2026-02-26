@@ -121,6 +121,30 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertTrue(result.desvantagensRaciais.any { it.contains("HABITANTE DE GRAVIDADE", ignoreCase = true) })
     }
 
+
+    @Test
+    fun `centaux gazela remove tamanho grande e usa movimentacao mais quatro`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "CENTAUX",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Gazela",
+                ancestryOptions = listOf("Padrão", "Gazela"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
+                ancestryAutomaticDisadvantages = listOf("GRANDE")
+            )
+        )
+
+        assertTrue(result.vantagensRaciais.any { it.equals("MOVIMENTAÇÃO +4", ignoreCase = true) })
+        assertFalse(result.vantagensRaciais.any { it.equals("TAMANHO +2", ignoreCase = true) })
+        assertFalse(result.vantagensRaciais.any { it.equals("MOVIMENTAÇÃO +2", ignoreCase = true) })
+        assertFalse(result.desvantagensRaciais.any { it.equals("GRANDE", ignoreCase = true) })
+    }
+
     @Test
     fun `elfos comunitario substitui desastrado por transtorno de separacao`() {
         val result = useCase.execute(

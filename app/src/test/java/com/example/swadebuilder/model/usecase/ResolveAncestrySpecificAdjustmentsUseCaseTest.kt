@@ -178,6 +178,22 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(listOf("ADAPTÁVEL", "ADAPTAVEL"), result.automaticAdvantagesToRemove)
     }
 
+
+    @Test
+    fun `centaux gazela troca bonus de tamanho e movimento no scifi`() {
+        val result = useCase.execute(
+            anc = "CENTAUX",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Gazela",
+            ancestryOptions = listOf("Padrão", "Gazela"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("MOVIMENTAÇÃO +4"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"), result.automaticAdvantagesToRemove)
+        assertEquals(listOf("GRANDE"), result.racialDisadvantagesToRemove)
+    }
+
     @Test
     fun `returns fallback for unknown ancestry`() {
         val result = useCase.execute("QUALQUER", null)
