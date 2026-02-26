@@ -2,24 +2,56 @@ package com.example.swadebuilder.util
 
 import java.text.Collator
 import java.text.Normalizer
+import java.util.Collections
+import java.util.LinkedHashMap
 import java.util.Locale
 
 private val DIACRITICS_REGEX = "\\p{M}".toRegex()
 
+private const val MAX_CACHE_SIZE = 2000
+
+private val semAcentosCache: MutableMap<String, String> = Collections.synchronizedMap(
+    object : LinkedHashMap<String, String>(MAX_CACHE_SIZE + 1, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, String>?): Boolean {
+            return size > MAX_CACHE_SIZE
+        }
+    }
+)
+
+private val keyifyCache: MutableMap<String, String> = Collections.synchronizedMap(
+    object : LinkedHashMap<String, String>(MAX_CACHE_SIZE + 1, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, String>?): Boolean {
+            return size > MAX_CACHE_SIZE
+        }
+    }
+)
+
 /**
  * Remove acentos de uma string, normalizando para Form NFD e filtrando marcas de combinação.
+ * Optimized: Memoized with bounded LRU cache.
  */
-fun String.semAcentos(): String =
-    Normalizer.normalize(this, Normalizer.Form.NFD)
-        .replace(DIACRITICS_REGEX, "")
+fun String.semAcentos(): String {
+    if (this.isEmpty()) return ""
+    // Note: getOrPut is not atomic on synchronizedMap for computation, but map structure is safe.
+    // Re-computation is acceptable for pure functions.
+    return semAcentosCache.getOrPut(this) {
+        Normalizer.normalize(this, Normalizer.Form.NFD)
+            .replace(DIACRITICS_REGEX, "")
+    }
+}
 
 /**
  * Transforma texto em chave: trim, uppercase e sem acentos.
+ * Optimized: Memoized with bounded LRU cache.
  */
-fun String.keyify(): String =
-    trim()
-        .uppercase()
-        .semAcentos()
+fun String.keyify(): String {
+    if (this.isBlank()) return ""
+    return keyifyCache.getOrPut(this) {
+        trim()
+            .uppercase()
+            .semAcentos()
+    }
+}
 
 /**
  * Transforma texto para Title Case simples: cada palavra começa com maiúscula.
