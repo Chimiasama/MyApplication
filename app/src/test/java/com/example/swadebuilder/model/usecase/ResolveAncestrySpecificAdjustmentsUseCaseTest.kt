@@ -224,6 +224,34 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(listOf("GRANDE"), result.racialDisadvantagesToRemove)
     }
 
+
+    @Test
+    fun `mineradores geneticos padrao usa dependencia atmosferica maior`() {
+        val result = useCase.execute(
+            anc = "MINERADORES GENÉTICOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Zero G"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
+    }
+
+    @Test
+    fun `mineradores geneticos zero g remove dependencia atmosferica`() {
+        val result = useCase.execute(
+            anc = "MINERADORES GENÉTICOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Zero G",
+            ancestryOptions = listOf("Padrão", "Zero G"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.contains("HABITANTE DE GRAVIDADE BAIXA/ZERO"))
+        assertTrue(result.racialDisadvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
+    }
+
     @Test
     fun `returns fallback for unknown ancestry`() {
         val result = useCase.execute("QUALQUER", null)

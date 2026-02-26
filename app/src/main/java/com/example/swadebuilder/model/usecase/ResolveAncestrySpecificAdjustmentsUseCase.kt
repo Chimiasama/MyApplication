@@ -463,6 +463,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA/ZERO"),
+                        racialDisadvantagesToRemove = listOf("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
                 } else {
@@ -473,7 +474,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("FORTE"),
-                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA"),
+                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
                 }

@@ -145,6 +145,28 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertFalse(result.desvantagensRaciais.any { it.equals("GRANDE", ignoreCase = true) })
     }
 
+
+    @Test
+    fun `mineradores geneticos zero g substitui dependencia atmosferica por habitante gravidade baixa zero`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "MINERADORES GENÉTICOS",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Zero G",
+                ancestryOptions = listOf("Padrão", "Zero G"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = listOf("FORTE"),
+                ancestryAutomaticDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)")
+            )
+        )
+
+        assertFalse(result.desvantagensRaciais.any { it.equals("DEPENDÊNCIA ATMOSFÉRICA (Maior)", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.equals("HABITANTE DE GRAVIDADE BAIXA/ZERO", ignoreCase = true) })
+    }
+
     @Test
     fun `elfos comunitario substitui desastrado por transtorno de separacao`() {
         val result = useCase.execute(

@@ -652,7 +652,9 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [],
+    "desvantagens": [
+      "DEPENDÊNCIA ATMOSFÉRICA (Maior)"
+    ],
     "habilidades": [
       {
         "nome": "EM FORMA",
