@@ -206,6 +206,23 @@ object ModifierEngine {
             // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica penalidade de Tamanho
             val diminutoSource = sources.firstOrNull { it.keyify().startsWith("DIMINUTO") }
 
+            fun addDiminuto(sizeVal: Int, sourceLabel: String) {
+                modifiers.add(Modifier(
+                    id = "racial_diminuto",
+                    sourceType = SourceType.ANCESTRALIDADE,
+                    sourceName = sourceLabel,
+                    target = ModifierTarget.SIZE_DISPLAY,
+                    value = sizeVal
+                ))
+                modifiers.add(Modifier(
+                    id = "racial_diminuto_tough",
+                    sourceType = SourceType.ANCESTRALIDADE,
+                    sourceName = sourceLabel,
+                    target = ModifierTarget.SIZE_TOUGHNESS,
+                    value = sizeVal
+                ))
+            }
+
             if (diminutoSource != null) {
                 val k = diminutoSource.keyify()
                 // Default is -4 (Tiny) as per Fantasy/Horror standard if not specified
@@ -215,21 +232,14 @@ object ModifierEngine {
                     k.contains("TAMANHO -4") -> -4
                     else -> -4
                 }
-
-                 modifiers.add(Modifier(
-                    id = "racial_diminuto",
-                    sourceType = SourceType.ANCESTRALIDADE,
-                    sourceName = "Diminuto",
-                    target = ModifierTarget.SIZE_DISPLAY,
-                    value = sizeVal
-                ))
-                modifiers.add(Modifier(
-                    id = "racial_diminuto_tough",
-                    sourceType = SourceType.ANCESTRALIDADE,
-                    sourceName = "Diminuto",
-                    target = ModifierTarget.SIZE_TOUGHNESS,
-                    value = sizeVal
-                ))
+                addDiminuto(sizeVal, "Diminuto")
+            } else if (state.compendioSciFiAtivo && anc.nome.keyify() == "FERAIS") {
+                val variant = state.resolveSciFiVariantSelectionFor(
+                    ancestryName = anc.nome,
+                    availableOptions = anc.opcoes
+                )
+                val feralSize = if (variant == "Menor") -4 else -3
+                addDiminuto(feralSize, "Diminuto (Feral)")
             }
 
             // Resistência (Auto advantage or racial trait)

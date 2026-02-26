@@ -156,6 +156,31 @@ class ScifiAncestryVariantSyncTest {
         assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
     }
 
+
+    @Test
+    fun `ferais padrao aplicam diminuto tamanho menos tres e limite de forca d6`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "FERAIS"
+            scifiVariant = "Padrão"
+        }
+
+        assertEquals(-3, state.valorTamanho())
+        assertEquals(6, state.atributoMaxRaw("FORCA"))
+    }
+
+    @Test
+    fun `ferais menor aplicam diminuto tamanho menos quatro e limite de forca d4`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "FERAIS"
+            scifiVariant = "Menor"
+        }
+
+        assertEquals(-4, state.valorTamanho())
+        assertEquals(4, state.atributoMaxRaw("FORCA"))
+    }
+
     @Test
     fun `avianos ave de rapina nao aplica penalidade de fragil`() {
         val state = CriadorState().apply {
