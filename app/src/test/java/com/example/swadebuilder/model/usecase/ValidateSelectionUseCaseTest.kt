@@ -13,7 +13,8 @@ class ValidateSelectionUseCaseTest {
 
     private val useCase = ValidateSelectionUseCase()
 
-    private fun baseContext(): ValidateSelectionUseCase.Context {
+    private fun createBaseContext(): ValidateSelectionUseCase.Context {
+        // currentSelectionCount removed from Context
         return ValidateSelectionUseCase.Context(
             ancestralidade = "HUMANOS",
             ancestralidadeDef = null,
@@ -52,14 +53,14 @@ class ValidateSelectionUseCaseTest {
     @Test
     fun `accepts valid advantage`() {
         val v = Vantagem(id = "sorte", nome = "Sorte", categoria = Categoria.SOCIAIS, origem = "BASICO", requisitos = Requisito())
-        val context = baseContext()
+        val context = createBaseContext()
         assertTrue(useCase.execute(v, context))
     }
 
     @Test
     fun `rejects blocked scenario advantage (Fantasy Mage)`() {
         val v = Vantagem(id = "mago", nome = "Mago", categoria = Categoria.PROFISSIONAL, origem = "BASICO", requisitos = Requisito())
-        val context = baseContext().copy(compendioFantasiaAtivo = true)
+        val context = createBaseContext().copy(compendioFantasiaAtivo = true)
         assertFalse(useCase.execute(v, context))
     }
 
@@ -69,7 +70,7 @@ class ValidateSelectionUseCaseTest {
             id = "forte", nome = "Forte", categoria = Categoria.COMBATE, origem = "BASICO",
             requisitos = Requisito(atributoMin = mapOf("FORCA" to 8))
         )
-        val context = baseContext().copy(valoresAtributos = mapOf("FORCA" to 6)) // Have d6, need d8
+        val context = createBaseContext().copy(valoresAtributos = mapOf("FORCA" to 6)) // Have d6, need d8
         assertFalse(useCase.execute(v, context))
     }
 
@@ -79,7 +80,7 @@ class ValidateSelectionUseCaseTest {
             id = "forte", nome = "Forte", categoria = Categoria.COMBATE, origem = "BASICO",
             requisitos = Requisito(atributoMin = mapOf("FORCA" to 8))
         )
-        val context = baseContext().copy(valoresAtributos = mapOf("FORCA" to 8)) // Have d8
+        val context = createBaseContext().copy(valoresAtributos = mapOf("FORCA" to 8)) // Have d8
         assertTrue(useCase.execute(v, context))
     }
 
@@ -88,7 +89,7 @@ class ValidateSelectionUseCaseTest {
         val ligeiro = Vantagem(id = "ligeiro", nome = "Ligeiro", categoria = Categoria.ANTECEDENTE, origem = "BASICO", requisitos = Requisito())
         val lento = Complicacao(id = "lento", name = "Lento", severity = "Maior", description = "", origem = "BASICO")
 
-        val context = baseContext().copy(
+        val context = createBaseContext().copy(
             complicacoesSelecionadas = mapOf(lento to "Maior")
         )
 
