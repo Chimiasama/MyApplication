@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
+import android.os.SystemClock
 import android.util.Log
 import com.example.swadebuilder.model.usecase.ValidateGameDataSnapshotIntegrityUseCase
 import com.example.swadebuilder.util.keyify
@@ -102,7 +103,7 @@ class AssetGameDataRepository : GameDataRepository {
             val cacheKey = normalizedModules
                 .sorted()
                 .joinToString("|")
-            val startMs = System.currentTimeMillis()
+            val startMs = SystemClock.elapsedRealtime()
 
             val loadAccess = cacheMutex.withLock {
                 cache.get(cacheKey)?.let { return@withLock LoadAccess.CacheHit(it) }
@@ -119,14 +120,14 @@ class AssetGameDataRepository : GameDataRepository {
             when (loadAccess) {
                 is LoadAccess.CacheHit -> {
                     perfLogD {
-                        "cache_hit modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
+                        "cache_hit modules=${normalizedModules.size} key=$cacheKey elapsedMs=${SystemClock.elapsedRealtime() - startMs}"
                     }
                     return@withContext loadAccess.snapshot
                 }
                 is LoadAccess.JoinInFlight -> {
                     val awaited = loadAccess.deferred.await()
                     perfLogD {
-                        "cache_join_inflight modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
+                        "cache_join_inflight modules=${normalizedModules.size} key=$cacheKey elapsedMs=${SystemClock.elapsedRealtime() - startMs}"
                     }
                     return@withContext awaited
                 }
@@ -151,7 +152,7 @@ class AssetGameDataRepository : GameDataRepository {
                         }
                         loadAccess.deferred.complete(sanitizedSnapshot)
                         perfLogD {
-                            "cache_load_complete modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
+                            "cache_load_complete modules=${normalizedModules.size} key=$cacheKey elapsedMs=${SystemClock.elapsedRealtime() - startMs}"
                         }
 
                         return@withContext sanitizedSnapshot
@@ -161,7 +162,7 @@ class AssetGameDataRepository : GameDataRepository {
                         }
                         loadAccess.deferred.completeExceptionally(error)
                         perfLogW(
-                            "cache_load_failed modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}",
+                            "cache_load_failed modules=${normalizedModules.size} key=$cacheKey elapsedMs=${SystemClock.elapsedRealtime() - startMs}",
                             error
                         )
                         throw error
