@@ -262,20 +262,20 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ARMADURA +2",
+        "nome": "Armadura +2",
         "descricao": "Pele escamosa ou placas naturais.",
         "id": "ARMADURA_2",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "Forasteiro (Menor)",
         "descricao": "FORASTEIRO (Menor)",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "FRAQUEZA AMBIENTAL (Frio)",
+        "nome": "Fraqueza Ambiental (Frio)",
         "descricao": "FRAQUEZA AMBIENTAL (Frio)",
         "id": "FRAQUEZA_AMBIENTAL",
         "category": "racial_trait_negative"
@@ -298,31 +298,31 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ESTÁVEL",
+        "nome": "Estável",
         "descricao": "Centaux têm quatro pernas fortes e pés largos ou cascos resistentes. Sua Movimentação não é reduzida por Terreno Difícil.",
         "id": "ESTAVEL",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "MOVIMENTAÇÃO +2",
+        "nome": "Movimentação +2",
         "descricao": "Centaux tem passadas largas. +2 em Movimentação e +1d no dado de corrida.",
         "id": "MOVIMENTACAO_2",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "TAMANHO +2",
+        "nome": "Tamanho +2",
         "descricao": "Centaux são criaturas grandes. Adicionam +2 ao Tamanho e Resistência.",
         "id": "TAMANHO_MAIS_2",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "GRANDE",
+        "nome": "Grande",
         "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
         "id": "GRANDE",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "ÓBVIO",
+        "nome": "Óbvio",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
         "category": "racial_hindrance",
@@ -351,25 +351,25 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CABEÇA DURA",
+        "nome": "Cabeça Dura",
         "descricao": "A crista da cabeça desses drakens permite que deem cabeçadas com força extrema. Isso conta como Chifres e causa For+d4 de dano. Veja Armas Naturais em Savage Worlds Edição Aventura.",
         "id": "CABECA_DURA",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "LENTO",
+        "nome": "Lento",
         "descricao": "Drakens são corredores lentos. Reduzem 1 de sua Movimentação e seu dado de corrida para d4.",
         "id": "LENTO",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "RESISTÊNCIA +2",
+        "nome": "Resistência +2",
         "descricao": "Drakens são fortes e resilientes.",
         "id": "RESISTENCIA_2",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "RUDE",
+        "nome": "Rude",
         "descricao": "Drakens são mais rápidos em ameaçar do que em argumentar. Subtraem 2 das rolagens de Persuadir.",
         "id": "RUDE",
         "category": "racial_hindrance",
@@ -397,25 +397,25 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CABEÇA-DURA",
+        "nome": "Cabeça-dura",
         "descricao": "Elementais de pedra não processam pensamentos tão rapidamente quanto outros seres. Rolagens de Astúcia são feitas com -1.",
         "id": "CABECA_DURA",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "GRANDE",
+        "nome": "Grande",
         "descricao": "Elementais de pedra subtraem 2 das rolagens de Característica quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
         "id": "GRANDE",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "MOVIMENTAÇÃO REDUZIDA",
+        "nome": "Movimentação Reduzida",
         "descricao": "Elementais se movem com passos lentos e metódicos. Reduzem a Movimentação em 1 e o dado de corrida em um tipo.",
         "id": "MOVIMENTACAO_REDUZIDA",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "TAMANHO +1",
+        "nome": "Tamanho +1",
         "descricao": "Elementais medem 2,1 metros de altura. Adicionam +1 à sua Resistência.",
         "id": "TAMANHO_1",
         "category": "racial_trait_positive"
@@ -443,13 +443,13 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "INIMIGO ANCESTRAL (Insetoide)",
+        "nome": "Inimigo Ancestral (Insetoide)",
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação.",
         "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "MOVIMENTAÇÃO REDUZIDA",
+        "nome": "Movimentação Reduzida",
         "descricao": "Ferais têm pernas e estatura curtas. Reduzem a Movimentação em 1 e o dado de corrida em um tipo.",
         "id": "MOVIMENTACAO_REDUZIDA",
         "category": "racial_trait_negative"
@@ -474,31 +474,31 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "DEPENDÊNCIA",
+        "nome": "Dependência",
         "descricao": "Este tipo de forma de vida baseada em plantas precisa tomar sol (artificial ou não) uma vez por dia ou recebe Fadiga. Isso pode levar à morte. A Fadiga é recuperada na taxa de um nível por hora de luz solar.",
         "id": "DEPENDENCIA",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "FRAQUEZA AMBIENTAL (Calor/Fogo)",
+        "nome": "Fraqueza Ambiental (Calor/Fogo)",
         "descricao": "Florans subtraem 4 de testes de Fadiga feitos para resistir aos efeitos do calor e sofrem 4 pontos adicionais de dano de ataques baseados em calor e fogo.",
         "id": "FRAQUEZA_AMBIENTAL",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "REDUÇÃO DE SONO",
+        "nome": "Redução de Sono",
         "descricao": "Florans precisam de metade da quantidade habitual de sono.",
         "id": "REDUCAO_DE_SONO",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "SEM SANGUE",
+        "nome": "Sem Sangue",
         "descricao": "Florans se estabilizam automaticamente sempre que ficarem Sangrando.",
         "id": "SEM_SANGUE",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "SEM ÓRGÃOS VITAIS",
+        "nome": "Sem Órgãos Vitais",
         "descricao": "Os órgãos dos florans estão espalhados ao longo de seus estranhos sistemas vasculares; não sofrem dano adicional de Ataques Localizados.",
         "id": "SEM_ORGAOS_VITAIS",
         "category": "racial_trait_positive"
@@ -523,20 +523,20 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CIBER-RESISTÊNCIA",
+        "nome": "Ciber-resistência",
         "descricao": "É difícil implantar ciberequipamentos em criaturas feitas de gosma. Gelatinoides têm a Complicação Ciber-Resistência (p. 129).",
         "id": "CIBER_RESISTENCIA",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "FRACO",
+        "nome": "Fraco",
         "descricao": "Devido à falta de ossos e músculos, gelatinoides têm dificuldade em exercer força física. Eles subtraem 1 de rolagens de Força e dano corpo a corpo.",
         "id": "FRACO",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "GELATINOSO",
+        "nome": "Gelatinoso",
         "descricao": "Gelatinoides têm um corpo amorfo, quase líquido, sem órgãos vitais. Sofrem apenas metade do dano causado por quedas ou colisões, e Ataques Localizados não causam dano extra contra eles. Podem fazer uma rolagem de Atletismo como uma ação para atravessar grades ou grandes aberturas como se fossem Terreno Difícil. Eles podem atravessar rachaduras tão pequenas quanto 3 centímetros de largura em 1d6 rodadas, deixando-os Vulneráveis até que se recomponham.",
         "id": "GELATINOSO",
         "category": "racial_trait_positive"
@@ -561,34 +561,34 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "COMUNITÁRIO",
+        "nome": "Comunitário",
         "descricao": "Eles evoluíram de criaturas coletivas. Adicionam +2 às rolagens de Espírito quando estiverem a até 12 quadros (24 metros) de outros da mesma espécie.",
         "id": "COMUNITARIO",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "Forasteiro (Menor)",
         "descricao": "Tudo, desde os hábitos alimentares dos insetoides até sua mentalidade de colmeia, é estranho e alienígena para a maioria dos outros seres. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "INCAPAZ DE FALAR",
+        "nome": "Incapaz de Falar",
         "descricao": "Insetoides não têm cordas vocais e normalmente só conseguem se comunicar com membros de sua própria espécie. Eles ainda podem ouvir e entender outros idiomas típicos e podem se comunicar por meio de dispositivos eletrônicos, como o tradutor de idiomas encontrado na p. 43.",
         "id": "INCAPAZ_DE_FALAR",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "TRANSTORNO DE SEPARAÇÃO",
+        "nome": "Transtorno de Separação",
         "descricao": "Insetoides são criaturas coletivas e geralmente não se dão bem sozinhos. Quando nenhum outro insetoide estiver na linha de visão, a personagem sofre -2 nas rolagens de Espírito.",
         "id": "TRANSTORNO_DE_SEPARACAO",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "VISÃO DE 360°",
+        "nome": "Visão de 360°",
         "descricao": "Os olhos compostos dos insetoides lhes garantem um campo de visão livre. Ignoram 1 ponto de bônus de Agrupar.",
         "id": "VISAO_DE_360",
         "category": "racial_trait_positive"
@@ -613,21 +613,21 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CIBER-RESISTÊNCIA",
+        "nome": "Ciber-resistência",
         "descricao": "A fisiologia de um mímico não se adapta bem a ciberequipamentos. Possuem a Complicação Ciber-Resistência (p. 129).",
         "id": "CIBER_RESISTENCIA",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "Forasteiro (Menor)",
         "descricao": "Sociedades por toda a galáxia desconfiam de mímicos. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "SEM ÓRGÃOS VITAIS",
+        "nome": "Sem Órgãos Vitais",
         "descricao": "Mímicos podem alterar a localização de seus órgãos vitais, tornando-os difíceis de serem atingidos. Ataques Localizados não provocam dano extra contra eles.",
         "id": "SEM_ORGAOS_VITAIS",
         "category": "racial_trait_positive"
@@ -655,7 +655,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "EM FORMA",
+        "nome": "Em Forma",
         "descricao": "Mineradores genéticos trabalham longas horas em condições difíceis. Começam com um d6 em Vigor, aumentando o limite para d12+1.",
         "id": "EM_FORMA",
         "category": "racial_trait_positive"
@@ -680,13 +680,13 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "FRÁGIL",
+        "nome": "Frágil",
         "descricao": "A maioria dos oráculos tem constituição frágil. Subtraem 1 de sua Resistência.",
         "id": "FRAGIL",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "TELEPATIA",
+        "nome": "Telepatia",
         "descricao": "Oráculos podem se comunicar mentalmente com qualquer forma de vida inteligente em um raio de 12 quadros (24 metros), independentemente do idioma.",
         "id": "TELEPATIA",
         "category": "racial_trait_positive"
@@ -711,19 +711,19 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CASCA",
+        "nome": "Casca",
         "descricao": "O parasita pode se enxertar em outro corpo se sobreviver à destruição da casca e se houver uma nova disponível em 24 horas.",
         "id": "CASCA",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "COMUNITÁRIO",
+        "nome": "Comunitário",
         "descricao": "Possessores fazem parte de uma construção social altamente integrada. Ganham um bônus de +2 em rolagens de Espírito quando outros de sua espécie estiverem a até 12 quadros (24 metros).",
         "id": "COMUNITARIO",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "Forasteiro (Menor)",
         "descricao": "Possessores são frequentemente menosprezados, e outros podem ser hostis se os parasitas “vestirem” alguém que conhecem. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -749,31 +749,31 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "AÇÃO ADICIONAL",
+        "nome": "Ação Adicional",
         "descricao": "Quadroides têm quatro braços e ignoram 2 pontos de penalidades físicas por Ações Múltiplas a cada rodada.",
         "id": "ACAO_ADICIONAL",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FRÁGIL",
+        "nome": "Frágil",
         "descricao": "Quadroides geralmente são magros, diminuindo em 1 sua Resistência.",
         "id": "FRAGIL",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "INIMIGO ANCESTRAL",
+        "nome": "Inimigo Ancestral",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
         "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "MEMBROS EXTRAS",
+        "nome": "Membros Extras",
         "descricao": "Quadroides possuem um conjunto adicional de braços (incluindo uma segunda mão hábil) que pode ser usado para ações sustentadas, deixando outros membros livres para outras coisas. Ao empunharem várias armas, ganham um bônus de +1 em Agrupar e adicionam +1 às rolagens de Atletismo envolvendo membros adicionais (como escalada e luta corpo a corpo).",
         "id": "MEMBROS_EXTRAS",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "SENSÍVEL",
+        "nome": "Sensível",
         "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
         "id": "SENSIVEL",
         "category": "racial_hindrance",
@@ -800,21 +800,21 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CIRCUITOS DE ASIMOV",
+        "nome": "Circuitos de Asimov",
         "descricao": "O robô não pode causar dano a seres inteligentes. Isso lhes dá a Complicação Pacifista (Maior).",
         "id": "CIRCUITOS_DE_ASIMOV",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "PROGRAMADO",
+        "nome": "Programado",
         "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado (Maior).",
         "id": "PROGRAMADO",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "ROBÔ",
+        "nome": "Robô",
         "descricao": "Robôs não respiram, são imunes a doenças e venenos, ignoram descompressão e radiação de fundo, têm um número de espaços de Modificações Robóticas com base em seu Tamanho (mas ainda devem pagar por eles normalmente; veja a p. 150), não podem fazer testes de cura natural, ignoram a Hora de Ouro e devem ser consertados em vez de curados. Veja Jogando com um Robô na p. 147 para mais informações.",
         "id": "ROBO",
         "category": "racial_trait_positive"
@@ -841,25 +841,25 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ESPACIAL",
+        "nome": "Espacial",
         "descricao": "Sintéticos não respiram (embora pareça, o que os torna mais realistas) e ignoram os efeitos da descompressão e da radiação.",
         "id": "ESPACIAL",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "IMUNE A DOENÇAS E VENENOS",
+        "nome": "Imune a Doenças e Venenos",
         "descricao": "O sistema quase biológico dos sintéticos é imune a toxinas e patógenos",
         "id": "IMUNE_A_DOENCAS_E_VENENOS",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "NÃO PODE CURAR",
+        "nome": "Não Pode Curar",
         "descricao": "Sintéticos não podem fazer testes de cura natural, mas podem ser curados normalmente.",
         "id": "NAO_PODE_CURAR",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "PROGRAMADO",
+        "nome": "Programado",
         "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado.",
         "id": "PROGRAMADO",
         "category": "racial_hindrance",
@@ -885,32 +885,32 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "NERVOS DE AÇO",
+        "nome": "Nervos de Aço",
         "descricao": "Bloqueadores de nervos permitem que o soldado registre dor, mas diminuem seus efeitos, conferindo-lhes a Vantagem Nervos de Aço; isso ignora 1 ponto de penalidades por Ferimentos.",
         "id": "NERVOS_DE_ACO",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "REFLEXOS DE COMBATE",
+        "nome": "Reflexos de Combate",
         "descricao": "O reflexo de lutar ou fugir destes soldados foi programado em seus sistemas nervosos, dando a eles a Vantagem Reflexos de Combate. Adicionam +2 em Espírito para se recuperar do Estado Abalado.",
         "id": "REFLEXOS_DE_COMBATE",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "RESISTÊNCIA +1",
+        "nome": "Resistência +1",
         "descricao": "Soldados genéticos foram criados para aguentar o tranco.",
         "id": "RESISTENCIA_1",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "SEM ESCRÚPULOS (Maior)",
+        "nome": "Sem Escrúpulos (Maior)",
         "descricao": "Soldados genéticos são treinados para obedecer ordens e completar suas missões a qualquer custo. Caso tenha se libertado de seu condicionamento, substitua isto por Procurado se seu empregador quiser vingança, ou Inimigo para alguém prejudicado no passado que queira o herói morto.",
         "id": "SEM_ESCRUPULOS",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "TREINADOS PARA A GUERRA",
+        "nome": "Treinados para a Guerra",
         "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 4 das rolagens de Conhecimento Geral.",
         "id": "TREINADOS_PARA_A_GUERRA",
         "category": "racial_hindrance",
@@ -933,46 +933,46 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CURIOSO",
+        "nome": "Curioso",
         "descricao": "Vazios que viajam com outros seres são incrivelmente curiosos, especialmente sobre as muitas facetas da vida orgânica que são completamente desconhecidas para eles.",
         "id": "CURIOSO",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "ESPACIAL",
+        "nome": "Espacial",
         "descricao": "Vazios não respiram e podem sobreviver no vácuo do espaço.",
         "id": "ESPACIAL",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "Forasteiro (Menor)",
         "descricao": "Seres corpóreos não tendem a confiar em tais formas de vida alienígenas. Vazios possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "FORMA DE ENERGIA",
+        "nome": "Forma de Energia",
         "descricao": "Vazios são feitos de energia escura. Não possuem órgãos vitais, ignoram Ataques Localizados e não sofrem dano de quedas, colisões ou armas físicas e projéteis (sofrem dano total de armas de energia, explosões, ataques arcanos etc.). Não têm massa significativa, mas podem passar por todas as aberturas, exceto as filtradas (a critério do Mestre), como se fossem Terreno Difícil. Vazios não podem usar armaduras, armas ou manipular matéria, a menos que usem um traje de contenção (veja a p. 49).",
         "id": "FORMA_DE_ENERGIA",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "INCAPAZ DE FALAR",
+        "nome": "Incapaz de Falar",
         "descricao": "Vazios nunca desenvolveram a capacidade de se comunicar verbalmente uns com os outros. A maioria usa telas de tradução portáteis para traduzir sua fala para outros seres.",
         "id": "INCAPAZ_DE_FALAR",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "SEM SANGUE",
+        "nome": "Sem Sangue",
         "descricao": "Vazios se estabilizam automaticamente sempre que ficarem Sangrando.",
         "id": "SEM_SANGUE",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "TRANSTORNO DE SEPARAÇÃO",
+        "nome": "Transtorno de Separação",
         "descricao": "Estas criaturas são entidades solitárias, subtraindo 2 das rolagens de Espírito quando não houver outros vazios presentes.",
         "id": "TRANSTORNO_DE_SEPARACAO",
         "category": "racial_hindrance",
@@ -1001,31 +1001,31 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "FORTE",
+        "nome": "Forte",
         "descricao": "Yetis são grandes e ferozmente fortes. Começam com um d6 em Força, aumentando o limite para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FRAQUEZA AMBIENTAL (Calor)",
+        "nome": "Fraqueza Ambiental (Calor)",
         "descricao": "Seus pelos grossos são um problema em condições extremas de calor e umidade. Yetis subtraem 4 de testes de Fadiga feitos para resistir aos efeitos do calor e sofrem 4 pontos adicionais de dano de ataques baseados em calor e fogo.",
         "id": "FRAQUEZA_AMBIENTAL",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "GRANDE",
+        "nome": "Grande",
         "descricao": "Yetis subtraem 2 de rolagens de Características quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
         "id": "GRANDE",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "RESISTÊNCIA AMBIENTAL (Frio)",
+        "nome": "Resistência Ambiental (Frio)",
         "descricao": "Yetis adicionam +4 para resistir aos efeitos do frio e reduzem o dano de ataques baseados em frio e gelo em 4.",
         "id": "RESISTENCIA_AMBIENTAL",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "TAMANHO +2",
+        "nome": "Tamanho +2",
         "descricao": "Geralmente têm cerca de 2,1 metros de altura, são muito grandes e densos. Adicionam +2 ao Tamanho e Resistência.",
         "id": "TAMANHO_MAIS_2",
         "category": "racial_trait_positive"
@@ -1048,45 +1048,45 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "BAIXA TECNOLOGIA (Maior)",
+        "nome": "Baixa Tecnologia (Maior)",
         "descricao": "O mundo natal dos aurax é de baixa tecnologia em comparação à maioria dos mundos desenvolvidos. Eles possuem a Complicação Baixa Tecnologia (Maior).",
         "id": "BAIXA_TECNOLOGIA",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "ESTÁVEL",
+        "nome": "Estável",
         "descricao": "Centaux têm quatro pernas fortes e pés largos ou cascos resistentes. Sua Movimentação não é reduzida por Terreno Difícil.",
         "id": "ESTAVEL",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORTE",
+        "nome": "Forte",
         "descricao": "Aurax começam com um d6 em Força, aumentando o limite para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "GRANDE",
+        "nome": "Grande",
         "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
         "id": "GRANDE",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "MOVIMENTAÇÃO +2",
+        "nome": "Movimentação +2",
         "descricao": "A Movimentação dos centaux aumenta em +2 e seu dado de corrida aumenta em um tipo.",
         "id": "MOVIMENTACAO_2",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "ÓBVIO",
+        "nome": "Óbvio",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "TAMANHO +2",
+        "nome": "Tamanho +2",
         "descricao": "A parte humanoide de um centaux é um humano robusto e musculoso, enquanto a parte traseira do corpo é do tamanho de um grande mamífero de quatro patas. Adicionam +2 à sua Resistência.",
         "id": "TAMANHO_MAIS_2",
         "category": "racial_trait_positive"
@@ -1108,44 +1108,44 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "APARAR BAIXO",
+        "nome": "Aparar Baixo",
         "descricao": "Os movimentos lentos e deliberados dos deaders os tornam alvos fáceis em combate corpo a corpo. Aparar -2.",
         "id": "APARAR_BAIXO",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "CALCULISTA",
+        "nome": "Calculista",
         "descricao": "Parasteens são pensadores astutos. Possuem a Vantagem Calculista, o que lhes permite ignorar até 2 pontos de penalidades quando sua Carta de Ação for Cinco ou menor.",
         "id": "CALCULISTA",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "DESAJEITADO",
+        "nome": "Desajeitado",
         "descricao": "Os parasitas têm dificuldades em manobrar o cadáver do hospedeiro. Sofrem uma penalidade de -1 nas rolagens de Agilidade.",
         "id": "DESAJEITADO",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "Forasteiro (Menor)",
         "descricao": "A maioria das pessoas se sente desconfortável perto de cadáveres animados.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "FRACO",
+        "nome": "Fraco",
         "descricao": "Deaders têm dificuldade em usar todo o potencial dos músculos do hospedeiro. Subtraem 1 das rolagens de Força, incluindo dano.",
         "id": "FRACO",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "LENTO",
+        "nome": "Lento",
         "descricao": "Deaders se arrastam conforme se movem, reduzindo a Movimentação para 5 quadros (10 metros) e seu dado de corrida para d4.",
         "id": "LENTO",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "MORTO-VIVO",
+        "nome": "Morto-vivo",
         "descricao": "Resistência +2; +2 para se recuperar de Abalado; sem dano adicional por Ataques Localizados; ignoram 1 ponto de Penalidades por Ferimentos; não respiram; imunes a doenças e venenos.",
         "id": "MORTO_VIVO",
         "category": "racial_trait_positive"
@@ -1167,31 +1167,31 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "AÇÃO ADICIONAL",
+        "nome": "Ação Adicional",
         "descricao": "Quadroides têm quatro braços e ignoram 2 pontos de penalidades físicas por Ações Múltiplas a cada rodada.",
         "id": "ACAO_ADICIONAL",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FRÁGIL",
+        "nome": "Frágil",
         "descricao": "Quadroides geralmente são magros, diminuindo em 1 sua Resistência.",
         "id": "FRAGIL",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "INIMIGO ANCESTRAL",
+        "nome": "Inimigo Ancestral",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
         "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "MEMBROS EXTRAS",
+        "nome": "Membros Extras",
         "descricao": "Quadroides possuem um conjunto adicional de braços (incluindo uma segunda mão hábil) que pode ser usado para ações sustentadas, deixando outros membros livres para outras coisas. Ao empunharem várias armas, ganham um bônus de +1 em Agrupar e adicionam +1 às rolagens de Atletismo envolvendo membros adicionais (como escalada e luta corpo a corpo).",
         "id": "MEMBROS_EXTRAS",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "SENSÍVEL",
+        "nome": "Sensível",
         "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
         "id": "SENSIVEL",
         "category": "racial_hindrance",
@@ -1213,19 +1213,19 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "APARAR",
+        "nome": "Aparar",
         "descricao": "As habilidades extrassensoriais dos serranos aumentam seu Aparar em +2.",
         "id": "APARAR",
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FRACO",
+        "nome": "Fraco",
         "descricao": "Serranos subtraem 1 das rolagens de Força, incluindo dano.",
         "id": "FRACO",
         "category": "racial_trait_negative"
       },
       {
-        "nome": "NOÇÃO DE PERIGO",
+        "nome": "Noção de Perigo",
         "descricao": "Serranos são intuitivos e têm percepção extrassensorial limitada. Possuem a Vantagem Noção do Perigo (veja Savage Worlds Edição Aventura).",
         "id": "NOCAO_DE_PERIGO",
         "category": "racial_trait_positive"

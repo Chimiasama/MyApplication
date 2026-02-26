@@ -355,7 +355,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "PRONTIDÃO",
+        "nome": "Prontidão",
         "descricao": "PRONTIDÃO",
         "id": "PRONTIDAO",
         "category": "racial_edge"
@@ -405,7 +405,7 @@
         "category": "racial_trait_negative"
       },
       {
-        "nome": "Voto (Maior: Proteger a humanidade)",
+        "nome": "Voto (Maior: Proteger a Humanidade)",
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
         "id": "VOTO",
         "category": "racial_hindrance",
@@ -443,14 +443,14 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "Voto (Maior: Proteger a humanidade)",
+        "nome": "Voto (Maior: Proteger a Humanidade)",
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
         "id": "VOTO",
         "category": "racial_hindrance",
         "severity": "Menor"
       },
       {
-        "nome": "CAMPEÃO",
+        "nome": "Campeão",
         "descricao": "CAMPEÃO",
         "id": "CAMPEAO",
         "category": "racial_edge"

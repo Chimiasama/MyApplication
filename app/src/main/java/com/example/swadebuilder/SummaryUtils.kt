@@ -14,14 +14,6 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toFancyTitleCase
 import kotlin.math.max
 
-private fun formatRacialAnnotationDisplay(raw: String): String {
-    val trimmed = raw.trim()
-    if (trimmed.isBlank()) return trimmed
-
-    val hasNarrativePunctuation = trimmed.any { it == ':' || it == ';' || it == '.' || it == '!' || it == '?' }
-    return if (hasNarrativePunctuation) trimmed else trimmed.toFancyTitleCase()
-}
-
 fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
     val base = (ancestralidadeNomeBase ?: personagem.ancestralidade).toFancyTitleCase()
 
@@ -507,8 +499,7 @@ fun buildSummaryLines(
                     val ability = racialAbilityMap[key]
                     if (ability != null) {
                         // Use the display name from JSON (preserves symbols like '/')
-                        // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
-                        formatRacialAnnotationDisplay(ability.nome)
+                        ability.nome
                     } else {
                         // 3. Fallback
                         trait.toFancyTitleCase()
@@ -554,7 +545,7 @@ fun buildSummaryLines(
         .ifBlank { "– Nenhuma" }
     lines += complicacoesText
     if (desvantagensRaciaisAnotacoes.isNotEmpty()) {
-        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ") { formatRacialAnnotationDisplay(it) }}"
+        lines += "Anotações Raciais: ${desvantagensRaciaisAnotacoes.joinToString(", ") { it.toFancyTitleCase() }}"
     }
     lines += ""
 
