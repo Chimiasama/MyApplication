@@ -118,6 +118,9 @@ fun PericiasContent(
     val leiDesc = "Esta perícia é usada para descobrir o que pode ser feito sem consequências jurídicas, proteger seus interesses legais e defender a si ou a outra pessoa num tribunal."
 
     val periciasBase = state.periciasComIdiomas()
+    val periciaNomeKeys = remember(periciasBase) {
+        periciasBase.associateWith { it.nome.keyify() }
+    }
     val periciasVisiveis by remember(
         periciasBase,
         state.compendioArteDaGuerraAtivo,
@@ -147,7 +150,7 @@ fun PericiasContent(
                         state.compendioFantasiaAtivo || state.compendioHorrorAtivo
                     }
                     state.compendioPathfinderAtivo -> {
-                        val nomeKey = per.nome.keyify()
+                        val nomeKey = periciaNomeKeys[per] ?: per.nome.keyify()
                         nomeKey != "FOCO" && nomeKey !in SAVAGE_PATHFINDER_BLOCKED_SKILLS
                     }
                     else -> true
@@ -160,7 +163,7 @@ fun PericiasContent(
                 }
             }.filter {
                 it.origem?.uppercase() != "SUPLEMENTO" || state.rawTotal(it) > 0
-            }.distinctBy { it.nome.keyify() }
+            }.distinctBy { periciaNomeKeys[it] ?: it.nome.keyify() }
         }
     }
 
