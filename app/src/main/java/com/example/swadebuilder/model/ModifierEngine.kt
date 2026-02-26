@@ -187,6 +187,14 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_pace_reduced", SourceType.ANCESTRALIDADE, "Movimentação Reduzida", ModifierTarget.PACE, -1))
             }
 
+            val hasLentoRacial = sources.any {
+                val key = it.keyify()
+                key == "LENTO" || key.endsWith("LENTO")
+            }
+            if (hasLentoRacial) {
+                modifiers.add(Modifier("racial_pace_lento", SourceType.ANCESTRALIDADE, "Lento", ModifierTarget.PACE, -1))
+            }
+
             // Diminuto (Ancestralidade)
             // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica penalidade de Tamanho
             val diminutoSource = sources.firstOrNull { it.keyify().startsWith("DIMINUTO") }

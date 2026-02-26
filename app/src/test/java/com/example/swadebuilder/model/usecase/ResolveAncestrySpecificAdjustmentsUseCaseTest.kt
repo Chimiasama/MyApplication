@@ -139,6 +139,21 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
 
+
+    @Test
+    fun `drakens nao recebem armadura racial e mantem resistencia dois`() {
+        val result = useCase.execute(
+            anc = "DRAKENS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Dragão"),
+            isSciFiActive = true
+        )
+
+        assertEquals(0, result.naturalArmorFromRace)
+        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
+    }
+
     @Test
     fun `aquarianos basico nao injeta resistencia por hardcode`() {
         val result = useCase.execute(

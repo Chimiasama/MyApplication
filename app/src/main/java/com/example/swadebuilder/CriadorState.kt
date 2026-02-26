@@ -1239,6 +1239,7 @@ class CriadorState {
             "Garras" to "GARRAS",
             "Mordida" to "MORDIDA",
             "Chifres" to "CHIFRES",
+            "Cabeça Dura" to "CABECA_DURA",
             "Cascos" to "CASCOS",
             "Toque Arrepiante" to "TOQUE_ARREPIANTE",
             "Toque da Morte" to "TOQUE_DA_MORTE",
@@ -1511,7 +1512,13 @@ class CriadorState {
         // Always add "Ataque Natural" (Unarmed) using central logic - Filter if specific natural weapons exist
         val hasSpecificNaturalWeapons = weapons.any { weapon ->
             val key = weapon.nome.keyify()
-            key.contains("GARRA") || key.contains("MORDIDA") || key.contains("CHIFRE") || key.contains("CASCO") || key.contains("TOQUE ARREPIANTE") || key.contains("TOQUE DA MORTE")
+            key.contains("GARRA") ||
+                key.contains("MORDIDA") ||
+                key.contains("CHIFRE") ||
+                key.contains("CASCO") ||
+                key.contains("TOQUE ARREPIANTE") ||
+                key.contains("TOQUE DA MORTE") ||
+                key.contains("CABECA DURA")
         }
         val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
 

@@ -104,6 +104,34 @@ class ScifiAncestryVariantSyncTest {
         assertFalse(mods.any { it.id == "racial_resistencia" })
     }
 
+
+    @Test
+    fun `drakens aplicam lento e resistencia mais dois sem armadura racial`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "DRAKENS"
+            naturalArmorFromRace = 0
+        }
+
+        val mods = ModifierEngine.collect(state)
+
+        assertTrue(mods.any { it.id == "racial_pace_lento" && it.value == -1 })
+        assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
+        assertFalse(mods.any { it.id == "racial_armor_generic" })
+    }
+
+    @Test
+    fun `drakens expoem ataque natural cabeca dura`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "DRAKENS"
+        }
+
+        val armas = state.extrairArmasNaturais()
+
+        assertTrue(armas.any { it.nome.equals("Cabeça Dura", ignoreCase = true) })
+    }
+
     @Test
     fun `avianos ave de rapina nao aplica penalidade de fragil`() {
         val state = CriadorState().apply {

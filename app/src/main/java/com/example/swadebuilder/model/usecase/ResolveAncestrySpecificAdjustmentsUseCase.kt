@@ -278,7 +278,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             if (ancKey == "DRAKENS") {
                 return if (effectiveVariant == "Dragão") {
                     Result(
-                        naturalArmorFromRace = 2, // Default armor
+                        naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
@@ -289,7 +289,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 } else {
                     // Padrão
                     Result(
-                        naturalArmorFromRace = 2,
+                        naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
