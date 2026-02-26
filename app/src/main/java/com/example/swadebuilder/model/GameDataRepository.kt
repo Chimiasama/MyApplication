@@ -56,6 +56,12 @@ internal class ModuleSnapshotCache(private val maxSize: Int = 3) {
     }
 }
 
+internal fun normalizeModuleKeys(activeModules: Set<String>): Set<String> =
+    activeModules
+        .map { it.trim().uppercase() }
+        .filter { it.isNotBlank() }
+        .toSet()
+
 /**
  * Implementação inicial de Fase 1.
  *
@@ -70,10 +76,7 @@ class AssetGameDataRepository : GameDataRepository {
 
     override suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot =
         withContext(Dispatchers.IO) {
-            val normalizedModules = activeModules
-                .map { it.trim().uppercase() }
-                .filter { it.isNotBlank() }
-                .toSet()
+            val normalizedModules = normalizeModuleKeys(activeModules)
 
             val cacheKey = normalizedModules
                 .sorted()
