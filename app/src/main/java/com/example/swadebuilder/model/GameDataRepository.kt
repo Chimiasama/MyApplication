@@ -68,8 +68,12 @@ class AssetGameDataRepository : GameDataRepository {
 
     override suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot =
         withContext(Dispatchers.IO) {
-            val cacheKey = activeModules
+            val normalizedModules = activeModules
                 .map { it.trim().uppercase() }
+                .filter { it.isNotBlank() }
+                .toSet()
+
+            val cacheKey = normalizedModules
                 .sorted()
                 .joinToString("|")
 
@@ -77,10 +81,10 @@ class AssetGameDataRepository : GameDataRepository {
                 cache.get(cacheKey)
             }?.let { return@withContext it }
 
-            val snapshot = if (activeModules.isEmpty()) {
+            val snapshot = if (normalizedModules.isEmpty()) {
                 DataLoader.loadCore(context)
             } else {
-                DataLoader.updateActiveModules(context, activeModules)
+                DataLoader.updateActiveModules(context, normalizedModules)
             }
 
             val sanitizedSnapshot = sanitizeSnapshotForRuntime(snapshot)
