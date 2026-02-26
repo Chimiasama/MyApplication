@@ -30,7 +30,6 @@ class ValidateSelectionUseCaseTest {
             complicacoesSelecionadas = emptyMap(),
             ppPurchasesThisRank = 0,
             maxPpPurchasesAllowed = 1,
-            currentSelectionCount = 0,
             vantagensSelecionadas = emptyList(),
             emProgresso = false,
             superInvestments = emptyList(),
