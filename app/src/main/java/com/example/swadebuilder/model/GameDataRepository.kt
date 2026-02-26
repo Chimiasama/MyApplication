@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
+import android.util.Log
 import com.example.swadebuilder.model.usecase.ValidateGameDataSnapshotIntegrityUseCase
 import com.example.swadebuilder.util.keyify
 import kotlinx.coroutines.CompletableDeferred
@@ -68,6 +69,8 @@ internal fun normalizeModuleKeys(activeModules: Set<String>): Set<String> =
  * Mantém compatibilidade com o legado (globais) usando o DataLoader atual,
  * mas passa a expor os dados por um contrato explícito de repositório.
  */
+private const val GAME_DATA_REPO_TAG = "GameDataRepositoryPerf"
+
 class AssetGameDataRepository : GameDataRepository {
     private val validateGameDataSnapshotIntegrityUseCase = ValidateGameDataSnapshotIntegrityUseCase()
     private val cache = ModuleSnapshotCache(maxSize = 4)
@@ -81,6 +84,7 @@ class AssetGameDataRepository : GameDataRepository {
             val cacheKey = normalizedModules
                 .sorted()
                 .joinToString("|")
+            val startMs = System.currentTimeMillis()
 
             sealed interface LoadAccess {
                 data class CacheHit(val snapshot: GameDataSnapshot) : LoadAccess
@@ -101,8 +105,21 @@ class AssetGameDataRepository : GameDataRepository {
             }
 
             when (loadAccess) {
-                is LoadAccess.CacheHit -> return@withContext loadAccess.snapshot
-                is LoadAccess.JoinInFlight -> return@withContext loadAccess.deferred.await()
+                is LoadAccess.CacheHit -> {
+                    Log.d(
+                        GAME_DATA_REPO_TAG,
+                        "cache_hit modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
+                    )
+                    return@withContext loadAccess.snapshot
+                }
+                is LoadAccess.JoinInFlight -> {
+                    val awaited = loadAccess.deferred.await()
+                    Log.d(
+                        GAME_DATA_REPO_TAG,
+                        "cache_join_inflight modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
+                    )
+                    return@withContext awaited
+                }
                 is LoadAccess.StartLoad -> {
                     try {
                         val snapshot = if (normalizedModules.isEmpty()) {
@@ -123,6 +140,10 @@ class AssetGameDataRepository : GameDataRepository {
                             inFlightLoads.remove(cacheKey)
                         }
                         loadAccess.deferred.complete(sanitizedSnapshot)
+                        Log.d(
+                            GAME_DATA_REPO_TAG,
+                            "cache_load_complete modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}"
+                        )
 
                         return@withContext sanitizedSnapshot
                     } catch (error: Throwable) {
@@ -130,6 +151,11 @@ class AssetGameDataRepository : GameDataRepository {
                             inFlightLoads.remove(cacheKey)
                         }
                         loadAccess.deferred.completeExceptionally(error)
+                        Log.w(
+                            GAME_DATA_REPO_TAG,
+                            "cache_load_failed modules=${normalizedModules.size} key=$cacheKey elapsedMs=${System.currentTimeMillis() - startMs}",
+                            error
+                        )
                         throw error
                     }
                 }
