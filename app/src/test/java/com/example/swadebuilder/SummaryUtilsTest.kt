@@ -281,8 +281,7 @@ class SummaryUtilsTest {
             ),
             listaPericias = emptyList(),
             listaPoderes = emptyList(),
-            arcanoInfo = emptyMap(),
-            showOfficialNames = false
+            arcanoInfo = emptyMap()
         )
 
         val joined = lines.joinToString("\n")
