@@ -266,6 +266,28 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
             }
 
+            if (state.compendioSciFiAtivo && anc.nome.keyify() == "MIMICOS") {
+                val variant = state.resolveSciFiVariantSelectionFor(
+                    ancestryName = anc.nome,
+                    availableOptions = anc.opcoes
+                )
+                val hasResistenciaMaisUm = sources.any { src ->
+                    val key = src.keyify()
+                    key.contains("RESISTENCIA") && key.contains("+1")
+                }
+                if (variant == "Resistente" && !hasResistenciaMaisUm) {
+                    modifiers.add(
+                        Modifier(
+                            id = "racial_mimicos_resistente",
+                            sourceType = SourceType.ANCESTRALIDADE,
+                            sourceName = "Resistente",
+                            target = ModifierTarget.TOUGHNESS_FLAT,
+                            value = 1
+                        )
+                    )
+                }
+            }
+
             // Generic Parsing
             sources.forEach { str ->
                 val k = str.keyify()

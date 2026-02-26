@@ -181,6 +181,19 @@ class ScifiAncestryVariantSyncTest {
         assertEquals(4, state.atributoMaxRaw("FORCA"))
     }
 
+
+    @Test
+    fun `mimicos resistente aplicam bonus de resistencia mais um`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "MÍMICOS"
+            scifiVariant = "Resistente"
+        }
+
+        val mods = ModifierEngine.collect(state)
+        assertTrue(mods.any { it.target == ModifierTarget.TOUGHNESS_FLAT && it.value == 1 })
+    }
+
     @Test
     fun `avianos ave de rapina nao aplica penalidade de fragil`() {
         val state = CriadorState().apply {
