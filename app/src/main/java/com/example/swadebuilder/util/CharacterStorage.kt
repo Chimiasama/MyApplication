@@ -173,7 +173,7 @@ object CharacterStorage {
                 }
 
             if (sanitized != indexed) {
-                saveIndexEntries(context, sanitized)
+                runCatching { saveIndexEntries(context, sanitized) }
             }
             return@withContext sanitized
         }
@@ -329,7 +329,7 @@ object CharacterStorage {
             .filterNot { it.id == entry.id }
             .plus(entry)
             .sortedByDescending { it.timestamp }
-        saveIndexEntries(context, mergedEntries)
+        runCatching { saveIndexEntries(context, mergedEntries) }
         entry
     }
 
@@ -340,7 +340,7 @@ object CharacterStorage {
                 file.delete()
             }
             val filteredEntries = listSaves(context).filterNot { it.id == id }
-            saveIndexEntries(context, filteredEntries)
+            runCatching { saveIndexEntries(context, filteredEntries) }
         } catch (e: Exception) {
             // Ignora erro se ID for inválido (nada a deletar)
         }
