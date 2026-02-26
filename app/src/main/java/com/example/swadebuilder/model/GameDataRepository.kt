@@ -100,10 +100,17 @@ class AssetGameDataRepository : GameDataRepository {
 
 internal fun sanitizeSnapshotForRuntime(snapshot: GameDataSnapshot): GameDataSnapshot {
     fun <T> dedupePreferLast(items: List<T>, keySelector: (T) -> String): List<T> {
-        return items
-            .asReversed()
-            .distinctBy { keySelector(it).trim().lowercase() }
-            .asReversed()
+        if (items.isEmpty()) return emptyList()
+
+        val lastIndexByKey = HashMap<String, Int>(items.size)
+        items.forEachIndexed { index, item ->
+            lastIndexByKey[keySelector(item).trim().lowercase()] = index
+        }
+
+        return items.filterIndexed { index, item ->
+            val normalizedKey = keySelector(item).trim().lowercase()
+            lastIndexByKey[normalizedKey] == index
+        }
     }
 
     val sanitizedPericias = dedupePreferLast(snapshot.listaPericias) { it.nome.keyify() }
