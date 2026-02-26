@@ -167,6 +167,10 @@ class MainActivity : ComponentActivity() {
             try {
                 viewModel.carregarDadosDeJogo(this@MainActivity, activeKeys)
                 isDataLoaded.value = LoadingState.Success
+
+                launch {
+                    viewModel.prewarmBaselineData(this@MainActivity)
+                }
             } catch (e: Exception) {
                 Log.e("MainActivity", "Erro ao carregar dados: ${e.message}")
                 isDataLoaded.value = LoadingState.Error(e.message ?: "Erro desconhecido")

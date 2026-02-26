@@ -105,6 +105,12 @@ class CriadorViewModel(
         }
     }
 
+    suspend fun prewarmBaselineData(context: Context) {
+        runCatching {
+            gameDataRepository.load(context, emptySet())
+        }
+    }
+
     internal fun aplicarGameDataSnapshot(snapshot: GameDataSnapshot) {
         gameDataStore.updateSnapshot(snapshot)
         state.updateGameData(snapshot)
