@@ -124,6 +124,12 @@ fun PericiasContent(
     val periciaOrigensUpper = remember(periciasBase) {
         periciasBase.associateWith { it.origem?.uppercase() }
     }
+    val periciaIsIdioma = remember(periciasBase) {
+        periciasBase.associateWith { state.isIdiomaPericia(it) }
+    }
+    val periciaIsJutsu = remember(periciasBase) {
+        periciasBase.associateWith { state.isJutsuPericia(it) }
+    }
     val periciasVisiveis by remember(
         periciasBase,
         state.compendioArteDaGuerraAtivo,
@@ -135,14 +141,14 @@ fun PericiasContent(
             val rawTotals = periciasBase.associateWith { per -> state.rawTotal(per) }
 
             val idiomaSlotsVisiveis = periciasBase
-                .filter { state.isIdiomaPericia(it) }
+                .filter { periciaIsIdioma[it] == true }
                 .let { slots ->
                     val ultimaVazia = slots.lastOrNull { (rawTotals[it] ?: 0) == 0 }
                     slots.filter { per -> (rawTotals[per] ?: 0) > 0 || per == ultimaVazia }.toSet()
                 }
 
             val jutsuSlotsVisiveis = periciasBase
-                .filter { state.isJutsuPericia(it) }
+                .filter { periciaIsJutsu[it] == true }
                 .let { slots ->
                     val ultimaVazia = slots.lastOrNull { (rawTotals[it] ?: 0) == 0 }
                     slots.filter { per -> (rawTotals[per] ?: 0) > 0 || per == ultimaVazia }.toSet()
@@ -162,8 +168,8 @@ fun PericiasContent(
                 }
             }.filter { per ->
                 when {
-                    state.isIdiomaPericia(per) -> per in idiomaSlotsVisiveis
-                    state.isJutsuPericia(per) -> per in jutsuSlotsVisiveis
+                    periciaIsIdioma[per] == true -> per in idiomaSlotsVisiveis
+                    periciaIsJutsu[per] == true -> per in jutsuSlotsVisiveis
                     else -> true
                 }
             }.filter {
