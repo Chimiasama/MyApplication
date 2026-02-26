@@ -83,6 +83,12 @@ private fun perfLogW(message: String, throwable: Throwable) {
     }
 }
 
+private sealed interface LoadAccess {
+    data class CacheHit(val snapshot: GameDataSnapshot) : LoadAccess
+    data class JoinInFlight(val deferred: CompletableDeferred<GameDataSnapshot>) : LoadAccess
+    data class StartLoad(val deferred: CompletableDeferred<GameDataSnapshot>) : LoadAccess
+}
+
 class AssetGameDataRepository : GameDataRepository {
     private val validateGameDataSnapshotIntegrityUseCase = ValidateGameDataSnapshotIntegrityUseCase()
     private val cache = ModuleSnapshotCache(maxSize = 4)
@@ -97,12 +103,6 @@ class AssetGameDataRepository : GameDataRepository {
                 .sorted()
                 .joinToString("|")
             val startMs = System.currentTimeMillis()
-
-            sealed interface LoadAccess {
-                data class CacheHit(val snapshot: GameDataSnapshot) : LoadAccess
-                data class JoinInFlight(val deferred: CompletableDeferred<GameDataSnapshot>) : LoadAccess
-                data class StartLoad(val deferred: CompletableDeferred<GameDataSnapshot>) : LoadAccess
-            }
 
             val loadAccess = cacheMutex.withLock {
                 cache.get(cacheKey)?.let { return@withLock LoadAccess.CacheHit(it) }
