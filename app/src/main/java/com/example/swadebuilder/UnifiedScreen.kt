@@ -86,8 +86,10 @@ import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
+import java.security.MessageDigest
 
 @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 // @Preview(showBackground = true) // Commented out to avoid build errors with ViewModel
@@ -180,15 +182,32 @@ fun UnifiedScreen(
         }
     }
 
+    var lastAutoSavedDigest by remember { mutableStateOf<String?>(null) }
+
     LaunchedEffect(activeSection) {
         val previousSection = lastAutoSaveSection
         lastAutoSaveSection = activeSection
-        if (previousSection != null && previousSection != activeSection && state.idAtual != null) {
-            try {
-                viewModel.salvarPersonagem(context, state.nomePersonagem, silent = true)
-            } catch (e: Exception) {
-                // Auto-save falhou silenciosamente para evitar interrupção do fluxo.
+
+        if (previousSection == null || previousSection == activeSection || state.idAtual == null) {
+            return@LaunchedEffect
+        }
+
+        delay(1800)
+
+        val snapshotDigest = runCatching {
+            with(MessageDigest.getInstance("SHA-256")) {
+                val payload = state.toSnapshot().copy(checksum = null).toString()
+                digest(payload.toByteArray()).joinToString("") { "%02x".format(it) }
             }
+        }.getOrNull() ?: return@LaunchedEffect
+
+        if (snapshotDigest == lastAutoSavedDigest) return@LaunchedEffect
+
+        try {
+            viewModel.salvarPersonagem(context, state.nomePersonagem, silent = true)
+            lastAutoSavedDigest = snapshotDigest
+        } catch (e: Exception) {
+            // Auto-save falhou silenciosamente para evitar interrupção do fluxo.
         }
     }
 

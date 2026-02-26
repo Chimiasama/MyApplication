@@ -18,6 +18,7 @@ import java.util.UUID
 object CharacterStorage {
     private const val SAVE_DIR = "personagens"
     private const val MAX_FILE_SIZE = 5 * 1024 * 1024L // 5 MB
+    private const val INDEX_FILE_NAME = "index.json"
 
     private val json = Json {
         encodeDefaults = true
@@ -82,31 +83,78 @@ object CharacterStorage {
         return expected == checksumFor(snapshot)
     }
 
+    private fun indexFile(context: Context): File = File(savesDirectory(context), INDEX_FILE_NAME)
+
+    private fun loadIndexEntries(context: Context): List<SaveEntry>? {
+        val file = indexFile(context)
+        if (!file.exists()) return null
+        return runCatching {
+            file.inputStream().use { input ->
+                json.decodeFromStream<List<MetadataSnapshot>>(input)
+            }.map { SaveEntry(it.id, it.nome, it.timestamp, it.flags) }
+        }.getOrNull()
+    }
+
+    private fun saveIndexEntries(context: Context, entries: List<SaveEntry>) {
+        val file = indexFile(context)
+        val payload = entries
+            .sortedByDescending { it.timestamp }
+            .map {
+                MetadataSnapshot(
+                    id = it.id,
+                    nome = it.nome,
+                    timestamp = it.timestamp,
+                    flags = it.flags
+                )
+            }
+        file.outputStream().use { output ->
+            output.write(json.encodeToString(payload).toByteArray(Charsets.UTF_8))
+        }
+    }
+
+    private fun rebuildIndexFromSaveFiles(context: Context, masterKey: MasterKey): List<SaveEntry> {
+        val dir = savesDirectory(context)
+        val entries = dir.listFiles()
+            ?.filter { it.isFile && it.extension.equals("json", ignoreCase = true) && it.name != INDEX_FILE_NAME }
+            ?.mapNotNull { file ->
+                if (file.length() > MAX_FILE_SIZE) return@mapNotNull null
+
+                val metadata = decodeMetadataSafely(context, file, masterKey)
+                    ?: decodeSnapshotSafely(context, file, masterKey)
+                        ?.takeIf { validateChecksum(it) }
+                        ?.let {
+                            MetadataSnapshot(
+                                version = it.version,
+                                id = it.id,
+                                nome = it.nome,
+                                timestamp = it.timestamp,
+                                flags = it.flags,
+                                checksum = it.checksum
+                            )
+                        }
+                    ?: return@mapNotNull null
+
+                SaveEntry(file.nameWithoutExtension, metadata.nome, metadata.timestamp, metadata.flags)
+            }
+            ?.sortedByDescending { it.timestamp }
+            ?: emptyList()
+
+        saveIndexEntries(context, entries)
+        return entries
+    }
+
     @OptIn(ExperimentalSerializationApi::class)
     suspend fun listSaves(context: Context): List<SaveEntry> = withContext(Dispatchers.IO) {
-        val dir = savesDirectory(context)
-        val masterKey = getMasterKey(context)
-
-        dir.listFiles()?.mapNotNull { file ->
-            if (file.length() > MAX_FILE_SIZE) return@mapNotNull null
-
-            val metadata = decodeMetadataSafely(context, file, masterKey)
-                ?: decodeSnapshotSafely(context, file, masterKey)
-                    ?.takeIf { validateChecksum(it) }
-                    ?.let {
-                        MetadataSnapshot(
-                            version = it.version,
-                            id = it.id,
-                            nome = it.nome,
-                            timestamp = it.timestamp,
-                            flags = it.flags,
-                            checksum = it.checksum
-                        )
-                    }
-                ?: return@mapNotNull null
-
-            SaveEntry(file.nameWithoutExtension, metadata.nome, metadata.timestamp, metadata.flags)
-        }?.sortedByDescending { it.timestamp } ?: emptyList()
+        val indexed = loadIndexEntries(context)
+        if (indexed != null) {
+            val dir = savesDirectory(context)
+            val pruned = indexed.filter { File(dir, "${it.id}.json").exists() }
+            if (pruned.size != indexed.size) {
+                saveIndexEntries(context, pruned)
+            }
+            return@withContext pruned
+        }
+        rebuildIndexFromSaveFiles(context, getMasterKey(context))
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -253,7 +301,13 @@ object CharacterStorage {
             }
         }
 
-        SaveEntry(saveId, snapshot.nome, snapshot.timestamp, snapshot.flags)
+        val entry = SaveEntry(saveId, snapshotToSave.nome, snapshotToSave.timestamp, snapshotToSave.flags)
+        val mergedEntries = listSaves(context)
+            .filterNot { it.id == entry.id }
+            .plus(entry)
+            .sortedByDescending { it.timestamp }
+        saveIndexEntries(context, mergedEntries)
+        entry
     }
 
     suspend fun delete(context: Context, id: String) = withContext(Dispatchers.IO) {
@@ -262,6 +316,8 @@ object CharacterStorage {
             if (file.exists()) {
                 file.delete()
             }
+            val filteredEntries = listSaves(context).filterNot { it.id == id }
+            saveIndexEntries(context, filteredEntries)
         } catch (e: Exception) {
             // Ignora erro se ID for inválido (nada a deletar)
         }
