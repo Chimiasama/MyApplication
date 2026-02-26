@@ -29,4 +29,12 @@ class StringExtensionsTest {
     fun semAcentos_handlesEmptyString() {
         assertEquals("", "".semAcentos())
     }
+
+    @Test
+    fun keyify_worksCorrectly() {
+        assertEquals("CORACAO", "Coração".keyify())
+        assertEquals("TESTE", "  Teste  ".keyify())
+        assertEquals("AVO", "Avô".keyify())
+        assertEquals("", "".keyify())
+    }
 }
