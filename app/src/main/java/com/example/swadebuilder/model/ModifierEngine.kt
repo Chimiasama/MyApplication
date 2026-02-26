@@ -70,7 +70,14 @@ object ModifierEngine {
         val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
-            val rawSources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val rawSources =
+                anc.vantagensGratis +
+                    anc.habilidades.map { it.nome } +
+                    anc.desvantagens +
+                    state.vantagensRaciais +
+                    state.vantagensAutomaticas +
+                    state.desvantagensRaciais +
+                    state.desvantagensAutomaticas
             val sources = rawSources.toMutableList().apply {
                 val ancestryKey = anc.nome.keyify()
                 val allTraitKeys = (

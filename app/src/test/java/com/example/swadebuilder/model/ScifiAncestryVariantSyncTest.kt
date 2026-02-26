@@ -132,6 +132,30 @@ class ScifiAncestryVariantSyncTest {
         assertTrue(armas.any { it.nome.equals("Cabeça Dura", ignoreCase = true) })
     }
 
+
+    @Test
+    fun `elementais scifi comecam com forca d8`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "ELEMENTAIS"
+        }
+
+        assertEquals(8, state.atributoMinRaw("FORCA"))
+    }
+
+    @Test
+    fun `elementais scifi aplicam resistencia mais dois via traco racial`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "ELEMENTAIS"
+            vantagensRaciais.clear()
+            vantagensRaciais.add("RESISTÊNCIA +2")
+        }
+
+        val mods = ModifierEngine.collect(state)
+        assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
+    }
+
     @Test
     fun `avianos ave de rapina nao aplica penalidade de fragil`() {
         val state = CriadorState().apply {

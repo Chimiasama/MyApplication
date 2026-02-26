@@ -154,6 +154,21 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
     }
 
+
+    @Test
+    fun `elementais scifi padrao mantem forte e resistencia mais dois`() {
+        val result = useCase.execute(
+            anc = "ELEMENTAIS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Ar, Fogo ou Água"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
+        assertEquals(0, result.naturalArmorFromRace)
+    }
+
     @Test
     fun `aquarianos basico nao injeta resistencia por hardcode`() {
         val result = useCase.execute(
