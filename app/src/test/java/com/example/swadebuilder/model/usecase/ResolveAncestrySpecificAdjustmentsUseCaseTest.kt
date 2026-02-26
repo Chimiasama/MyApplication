@@ -225,6 +225,21 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
 
+
+    @Test
+    fun `oraculos variante aterrorizado ou alias aerrorizados usa poderes misticos sem nocao do perigo`() {
+        val resultAlias = useCase.execute(
+            anc = "ORÁCULOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Aerrorizados",
+            ancestryOptions = listOf("Padrão", "Aterrorizado"),
+            isSciFiActive = true
+        )
+
+        assertTrue(resultAlias.ensureAdvantageIds.contains("poderes_misticos"))
+        assertTrue(resultAlias.ensureAdvantageNames.isEmpty())
+    }
+
     @Test
     fun `mineradores geneticos padrao usa dependencia atmosferica maior`() {
         val result = useCase.execute(

@@ -2,6 +2,9 @@ package com.example.swadebuilder
 
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.Requisito
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -235,4 +238,55 @@ class SummaryUtilsTest {
         assertTrue(racialLine.contains("Comunitário"))
     }
 
+
+    @Test
+    fun `summary deduplica vantagens com mesmo nome exibido`() {
+        val personagem = MeuPersonagem(
+            nome = "Oracle",
+            atributos = emptyMap(),
+            pericias = emptyMap(),
+            ancestralidade = "ORÁCULOS",
+            celestialAAMilagresDesabilitado = false,
+            vantagens = listOf("poderes_misticos", "poderes_misticos"),
+            complicacoes = emptyList(),
+            desvantagensRaciais = emptyList(),
+            equipamentos = emptyList(),
+            poderes = emptyMap(),
+            dinheiro = 0,
+            pontosRestantes = 0,
+            compendioSciFiAtivo = true
+        )
+
+        val lines = buildSummaryLines(
+            personagem = personagem,
+            allAdvantages = listOf(
+                Vantagem(
+                    id = "poderes_misticos",
+                    nome = "Poderes Místicos",
+                    categoria = Categoria.ANTECEDENTE,
+                    origem = "SCI_FI",
+                    requisitos = Requisito()
+                )
+            ),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap(),
+            showOfficialNames = false
+        )
+
+        val joined = lines.joinToString("\n")
+        val count = "Poderes Místicos".toRegex().findAll(joined).count()
+        assertEquals(1, count)
+    }
 }

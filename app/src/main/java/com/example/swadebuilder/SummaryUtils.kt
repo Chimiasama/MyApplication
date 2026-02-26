@@ -313,7 +313,7 @@ fun buildSummaryLines(
                 rawName
             }
             if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
-        }
+        }.distinct()
         lines += nomesVantagens.joinToString(", ")
     }
 

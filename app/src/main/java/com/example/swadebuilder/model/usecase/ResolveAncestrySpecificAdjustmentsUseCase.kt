@@ -482,7 +482,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
 
             if (ancKey == "ORACULOS" || ancKey == "ORÁCULOS") {
-                return if (effectiveVariant == "Aterrorizado") {
+                val isAterrorizadoVariant = effectiveVariant.keyify() in setOf("ATERRORIZADO", "AERRORIZADOS", "AERRORIZADO")
+                return if (isAterrorizadoVariant) {
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
