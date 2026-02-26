@@ -4,6 +4,8 @@ import android.content.Context
 import com.example.swadebuilder.model.usecase.ValidateGameDataSnapshotIntegrityUseCase
 import com.example.swadebuilder.util.keyify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 /**
@@ -35,6 +37,24 @@ interface GameDataRepository {
     suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot
 }
 
+internal class ModuleSnapshotCache(private val maxSize: Int = 3) {
+    private val cache = LinkedHashMap<String, GameDataSnapshot>(maxSize, 0.75f, true)
+
+    fun get(key: String): GameDataSnapshot? = cache[key]
+
+    fun put(key: String, snapshot: GameDataSnapshot) {
+        cache[key] = snapshot
+        if (cache.size > maxSize) {
+            val oldestKey = cache.entries.iterator().next().key
+            cache.remove(oldestKey)
+        }
+    }
+
+    fun clear() {
+        cache.clear()
+    }
+}
+
 /**
  * Implementação inicial de Fase 1.
  *
@@ -43,9 +63,20 @@ interface GameDataRepository {
  */
 class AssetGameDataRepository : GameDataRepository {
     private val validateGameDataSnapshotIntegrityUseCase = ValidateGameDataSnapshotIntegrityUseCase()
+    private val cache = ModuleSnapshotCache(maxSize = 4)
+    private val cacheMutex = Mutex()
 
     override suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot =
         withContext(Dispatchers.IO) {
+            val cacheKey = activeModules
+                .map { it.trim().uppercase() }
+                .sorted()
+                .joinToString("|")
+
+            cacheMutex.withLock {
+                cache.get(cacheKey)
+            }?.let { return@withContext it }
+
             val snapshot = if (activeModules.isEmpty()) {
                 DataLoader.loadCore(context)
             } else {
@@ -57,6 +88,10 @@ class AssetGameDataRepository : GameDataRepository {
             val integrity = validateGameDataSnapshotIntegrityUseCase.execute(sanitizedSnapshot)
             check(integrity.ok) {
                 "Falha de integridade no carregamento de dados: ${integrity.issues.joinToString(" | ")}" 
+            }
+
+            cacheMutex.withLock {
+                cache.put(cacheKey, sanitizedSnapshot)
             }
 
             sanitizedSnapshot
