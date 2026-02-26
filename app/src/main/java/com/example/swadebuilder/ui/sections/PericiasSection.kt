@@ -121,6 +121,9 @@ fun PericiasContent(
     val periciaNomeKeys = remember(periciasBase) {
         periciasBase.associateWith { it.nome.keyify() }
     }
+    val periciaOrigensUpper = remember(periciasBase) {
+        periciasBase.associateWith { it.origem?.uppercase() }
+    }
     val periciasVisiveis by remember(
         periciasBase,
         state.compendioArteDaGuerraAtivo,
@@ -164,7 +167,7 @@ fun PericiasContent(
                     else -> true
                 }
             }.filter {
-                it.origem?.uppercase() != "SUPLEMENTO" || (rawTotals[it] ?: 0) > 0
+                periciaOrigensUpper[it] != "SUPLEMENTO" || (rawTotals[it] ?: 0) > 0
             }.distinctBy { periciaNomeKeys[it] ?: it.nome.keyify() }
         }
     }
