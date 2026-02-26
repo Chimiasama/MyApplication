@@ -164,11 +164,18 @@ object CharacterStorage {
         val indexed = loadIndexEntries(context)
         if (indexed != null) {
             val dir = savesDirectory(context)
-            val pruned = indexed.filter { File(dir, "${it.id}.json").exists() }
-            if (pruned.size != indexed.size) {
-                saveIndexEntries(context, pruned)
+            val sanitized = indexed
+                .sortedByDescending { it.timestamp }
+                .distinctBy { it.id }
+                .filter { entry ->
+                    val file = File(dir, "${entry.id}.json")
+                    file.exists() && file.length() <= MAX_FILE_SIZE
+                }
+
+            if (sanitized != indexed) {
+                saveIndexEntries(context, sanitized)
             }
-            return@withContext pruned
+            return@withContext sanitized
         }
         rebuildIndexFromSaveFiles(context, getMasterKey(context))
     }
