@@ -1874,7 +1874,7 @@ class CriadorState {
 
         val enforcePoolLimit = !v.isBrutamontes()
         rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
-        onFeedback(if (shouldRefund) "Vantagem removida (+1 PV)." else "Vantagem gratuita removida (Slot liberado).")
+        onFeedback(if (shouldRefund) "Vantagem removida (+1 PV)." else "Vantagem gratuita removida.")
     }
 
     fun adicionarVantagem(v: Vantagem) {
