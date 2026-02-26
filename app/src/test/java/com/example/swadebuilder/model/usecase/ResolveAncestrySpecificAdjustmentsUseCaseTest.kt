@@ -227,17 +227,40 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
 
     @Test
-    fun `oraculos variante aterrorizado ou alias aerrorizados usa poderes misticos sem nocao do perigo`() {
-        val resultAlias = useCase.execute(
+    fun `oraculos variante aterrorizado usa poderes misticos sem nocao do perigo`() {
+        val result = useCase.execute(
             anc = "ORÁCULOS",
             descendenteElementalSelecionado = null,
-            scifiVariant = "Aerrorizados",
+            scifiVariant = "Aterrorizado",
             ancestryOptions = listOf("Padrão", "Aterrorizado"),
             isSciFiActive = true
         )
 
-        assertTrue(resultAlias.ensureAdvantageIds.contains("poderes_misticos"))
-        assertTrue(resultAlias.ensureAdvantageNames.isEmpty())
+        assertTrue(result.ensureAdvantageIds.contains("poderes_misticos"))
+        assertTrue(result.ensureAdvantageNames.isEmpty())
+    }
+
+
+    @Test
+    fun `possessores nao devem injetar nocao do perigo em nenhuma variante`() {
+        val padrao = useCase.execute(
+            anc = "POSSESSORES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Energia"),
+            isSciFiActive = true
+        )
+        val energia = useCase.execute(
+            anc = "POSSESSORES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Energia",
+            ancestryOptions = listOf("Padrão", "Energia"),
+            isSciFiActive = true
+        )
+
+        assertTrue(padrao.automaticAdvantagesToRemove.any { it.contains("NOÇÃO", ignoreCase = true) })
+        assertTrue(energia.automaticAdvantagesToRemove.any { it.contains("NOÇÃO", ignoreCase = true) })
+        assertTrue(energia.anotacoesToAdd.any { it.contains("4 pontos", ignoreCase = true) })
     }
 
     @Test

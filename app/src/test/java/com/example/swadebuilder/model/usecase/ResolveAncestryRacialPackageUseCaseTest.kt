@@ -204,6 +204,27 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertFalse(result.vantagensRaciais.any { it.equals("FORTE", ignoreCase = true) })
     }
 
+
+    @Test
+    fun `possessores energia adiciona anotacao de compensacao de quatro pontos`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "POSSESSORES",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Energia",
+                ancestryOptions = listOf("Padrão", "Energia"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = emptyList(),
+                ancestryAutomaticDisadvantages = emptyList()
+            )
+        )
+
+        assertTrue(result.anotacoesToAdd.any { it.contains("4 pontos", ignoreCase = true) })
+    }
+
     @Test
     fun `elfos comunitario substitui desastrado por transtorno de separacao`() {
         val result = useCase.execute(

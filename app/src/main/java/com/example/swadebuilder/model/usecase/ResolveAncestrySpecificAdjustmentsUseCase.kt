@@ -482,8 +482,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
 
             if (ancKey == "ORACULOS" || ancKey == "ORÁCULOS") {
-                val isAterrorizadoVariant = effectiveVariant.keyify() in setOf("ATERRORIZADO", "AERRORIZADOS", "AERRORIZADO")
-                return if (isAterrorizadoVariant) {
+                return if (effectiveVariant == "Aterrorizado") {
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
@@ -515,6 +514,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("FORMA DE ENERGIA"),
+                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE,
                         anotacoesToAdd = listOf("Possessores Energia: Combinar com o Mestre e equilibrar com 4 pontos de habilidades negativas.")
@@ -527,6 +527,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
+                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
