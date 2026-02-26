@@ -129,18 +129,20 @@ fun PericiasContent(
         state.compendioPathfinderAtivo
     ) {
         derivedStateOf {
+            val rawTotals = periciasBase.associateWith { per -> state.rawTotal(per) }
+
             val idiomaSlotsVisiveis = periciasBase
                 .filter { state.isIdiomaPericia(it) }
                 .let { slots ->
-                    val ultimaVazia = slots.lastOrNull { state.rawTotal(it) == 0 }
-                    slots.filter { per -> state.rawTotal(per) > 0 || per == ultimaVazia }.toSet()
+                    val ultimaVazia = slots.lastOrNull { (rawTotals[it] ?: 0) == 0 }
+                    slots.filter { per -> (rawTotals[per] ?: 0) > 0 || per == ultimaVazia }.toSet()
                 }
 
             val jutsuSlotsVisiveis = periciasBase
                 .filter { state.isJutsuPericia(it) }
                 .let { slots ->
-                    val ultimaVazia = slots.lastOrNull { state.rawTotal(it) == 0 }
-                    slots.filter { per -> state.rawTotal(per) > 0 || per == ultimaVazia }.toSet()
+                    val ultimaVazia = slots.lastOrNull { (rawTotals[it] ?: 0) == 0 }
+                    slots.filter { per -> (rawTotals[per] ?: 0) > 0 || per == ultimaVazia }.toSet()
                 }
 
             periciasBase.filter { per ->
@@ -162,7 +164,7 @@ fun PericiasContent(
                     else -> true
                 }
             }.filter {
-                it.origem?.uppercase() != "SUPLEMENTO" || state.rawTotal(it) > 0
+                it.origem?.uppercase() != "SUPLEMENTO" || (rawTotals[it] ?: 0) > 0
             }.distinctBy { periciaNomeKeys[it] ?: it.nome.keyify() }
         }
     }
