@@ -274,6 +274,13 @@ fun VantagensContent(
 
     // --- Search & Filter State ---
     val searchQuery = state.vantSearchQuery
+    var debouncedSearchQuery by remember { mutableStateOf(searchQuery) }
+
+    LaunchedEffect(searchQuery) {
+        kotlinx.coroutines.delay(300)
+        debouncedSearchQuery = searchQuery
+    }
+
     val selectedCategories = state.vantSelectedCategories
     val filter = state.vantFilter
     var showFilterDialog by rememberSaveable { mutableStateOf(false) }
@@ -817,11 +824,12 @@ fun VantagensContent(
             }
         } else {
             // Search Mode (Flat List)
-            val flatList = remember(filteredListGlobal, selectedCategories, searchQuery) {
+            val isDebouncedSearching = debouncedSearchQuery.isNotBlank()
+            val flatList = remember(filteredListGlobal, selectedCategories, debouncedSearchQuery) {
+                val q = if (isDebouncedSearching) debouncedSearchQuery.semAcentos().lowercase() else ""
                 filteredListGlobal.filter { vant ->
                     if (selectedCategories.isNotEmpty() && vant.categoria !in selectedCategories) return@filter false
-                    if (isSearching) {
-                        val q = searchQuery.semAcentos().lowercase()
+                    if (isDebouncedSearching) {
                         val n = vant.nomeExibicao.semAcentos().lowercase()
                         val d = vant.descricao.semAcentos().lowercase()
                         val original = vant.nome.semAcentos().lowercase()

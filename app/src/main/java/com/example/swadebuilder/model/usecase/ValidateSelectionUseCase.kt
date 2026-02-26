@@ -6,6 +6,7 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.util.keyify
 
 class ValidateSelectionUseCase(
     private val validateScenarioRulesUseCase: ValidateScenarioRulesUseCase = ValidateScenarioRulesUseCase(),
@@ -32,7 +33,6 @@ class ValidateSelectionUseCase(
         val complicacoesSelecionadas: Map<Complicacao, String?>,
         val ppPurchasesThisRank: Int,
         val maxPpPurchasesAllowed: Int,
-        val currentSelectionCount: Int,
         val vantagensSelecionadas: List<Vantagem>,
         val emProgresso: Boolean,
         val superInvestments: List<SuperInvestment>,
@@ -95,12 +95,13 @@ class ValidateSelectionUseCase(
             )) return false
 
         // 5. Purchase Limits
+        val currentSelectionCount = context.vantagensSelecionadas.count { it.id.keyify() == vantagem.id.keyify() }
         if (!validatePowerPointsLimitUseCase.execute(
                 ValidatePowerPointsLimitUseCase.Input(
                     vantagem,
                     context.ppPurchasesThisRank,
                     context.maxPpPurchasesAllowed,
-                    context.currentSelectionCount
+                    currentSelectionCount
                 )
             )) return false
 

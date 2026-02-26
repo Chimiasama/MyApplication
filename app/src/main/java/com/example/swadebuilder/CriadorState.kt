@@ -3498,8 +3498,8 @@ class CriadorState {
         return true to null
     }
 
-    fun podeSelecionar(v: Vantagem): Boolean {
-        val context = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase.Context(
+    val validationContext: com.example.swadebuilder.model.usecase.ValidateSelectionUseCase.Context by derivedStateOf {
+        com.example.swadebuilder.model.usecase.ValidateSelectionUseCase.Context(
             ancestralidade = ancestralidade,
             ancestralidadeDef = currentAncestryDef,
             compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
@@ -3512,13 +3512,12 @@ class CriadorState {
             rawTotalPericia = { rawTotal(it) },
             tipoMonstroSelecionado = tipoMonstroSelecionado,
             cartaSelvagem = cartaSelvagem,
-            complicacoesSelecionadas = complicacoesSelecionadas,
+            complicacoesSelecionadas = complicacoesSelecionadas.toMap(),
             ppPurchasesThisRank = comprasPpPorEstagio[estagioAtual().nome] ?: 0,
             maxPpPurchasesAllowed = maxComprasPpAteAgora(),
-            currentSelectionCount = vantagensSelecionadas.count { it.id.keyify() == v.id.keyify() },
-            vantagensSelecionadas = vantagensSelecionadas,
+            vantagensSelecionadas = vantagensSelecionadas.toList(),
             emProgresso = emProgresso,
-            superInvestments = superInvestments,
+            superInvestments = superInvestments.toList(),
             listaAtributos = listaAtributos,
             atributoMaxRaw = { atributoMaxRaw(it) },
             periciaCapRaw = { periciaCapRaw(it) },
@@ -3533,8 +3532,10 @@ class CriadorState {
             tropoSelecionadoId = tropoSelecionado?.id,
             getBestPericia = { getBestPericia(it) }
         )
+    }
 
-        return validateSelectionUseCase.execute(v, context)
+    fun podeSelecionar(v: Vantagem): Boolean {
+        return validateSelectionUseCase.execute(v, validationContext)
     }
 
     private fun shouldIgnoreLeadershipStage(v: Vantagem): Boolean {
