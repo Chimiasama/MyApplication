@@ -88,6 +88,7 @@ import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.MessageDigest
 
@@ -182,6 +183,14 @@ fun UnifiedScreen(
         }
     }
 
+    val autoSaveJson = remember {
+        Json {
+            encodeDefaults = true
+            prettyPrint = false
+            ignoreUnknownKeys = true
+            classDiscriminator = "type"
+        }
+    }
     var lastAutoSavedDigest by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(activeSection) {
@@ -196,7 +205,7 @@ fun UnifiedScreen(
 
         val snapshotDigest = runCatching {
             with(MessageDigest.getInstance("SHA-256")) {
-                val payload = state.toSnapshot().copy(checksum = null).toString()
+                val payload = autoSaveJson.encodeToString(state.toSnapshot().copy(checksum = null))
                 digest(payload.toByteArray()).joinToString("") { "%02x".format(it) }
             }
         }.getOrNull() ?: return@LaunchedEffect

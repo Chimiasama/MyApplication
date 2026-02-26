@@ -107,8 +107,24 @@ object CharacterStorage {
                     flags = it.flags
                 )
             }
-        file.outputStream().use { output ->
+
+        val tempFile = File(file.parentFile, "${file.nameWithoutExtension}_temp.json")
+        if (tempFile.exists()) tempFile.delete()
+
+        tempFile.outputStream().use { output ->
             output.write(json.encodeToString(payload).toByteArray(Charsets.UTF_8))
+        }
+
+        if (file.exists()) {
+            file.delete()
+        }
+        if (!tempFile.renameTo(file)) {
+            try {
+                tempFile.copyTo(file, overwrite = true)
+                tempFile.delete()
+            } catch (e: Exception) {
+                throw IllegalStateException("Falha ao atualizar índice de salvamentos.")
+            }
         }
     }
 
