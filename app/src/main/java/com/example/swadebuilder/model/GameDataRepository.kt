@@ -3,6 +3,7 @@ package com.example.swadebuilder.model
 import android.content.Context
 import com.example.swadebuilder.model.usecase.ValidateGameDataSnapshotIntegrityUseCase
 import com.example.swadebuilder.util.keyify
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -65,6 +66,7 @@ class AssetGameDataRepository : GameDataRepository {
     private val validateGameDataSnapshotIntegrityUseCase = ValidateGameDataSnapshotIntegrityUseCase()
     private val cache = ModuleSnapshotCache(maxSize = 4)
     private val cacheMutex = Mutex()
+    private val inFlightLoads = mutableMapOf<String, CompletableDeferred<GameDataSnapshot>>()
 
     override suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot =
         withContext(Dispatchers.IO) {
@@ -77,28 +79,58 @@ class AssetGameDataRepository : GameDataRepository {
                 .sorted()
                 .joinToString("|")
 
-            cacheMutex.withLock {
-                cache.get(cacheKey)
-            }?.let { return@withContext it }
-
-            val snapshot = if (normalizedModules.isEmpty()) {
-                DataLoader.loadCore(context)
-            } else {
-                DataLoader.updateActiveModules(context, normalizedModules)
+            sealed interface LoadAccess {
+                data class CacheHit(val snapshot: GameDataSnapshot) : LoadAccess
+                data class JoinInFlight(val deferred: CompletableDeferred<GameDataSnapshot>) : LoadAccess
+                data class StartLoad(val deferred: CompletableDeferred<GameDataSnapshot>) : LoadAccess
             }
 
-            val sanitizedSnapshot = sanitizeSnapshotForRuntime(snapshot)
+            val loadAccess = cacheMutex.withLock {
+                cache.get(cacheKey)?.let { return@withLock LoadAccess.CacheHit(it) }
 
-            val integrity = validateGameDataSnapshotIntegrityUseCase.execute(sanitizedSnapshot)
-            check(integrity.ok) {
-                "Falha de integridade no carregamento de dados: ${integrity.issues.joinToString(" | ")}" 
+                inFlightLoads[cacheKey]?.let { deferred ->
+                    return@withLock LoadAccess.JoinInFlight(deferred)
+                }
+
+                val deferred = CompletableDeferred<GameDataSnapshot>()
+                inFlightLoads[cacheKey] = deferred
+                LoadAccess.StartLoad(deferred)
             }
 
-            cacheMutex.withLock {
-                cache.put(cacheKey, sanitizedSnapshot)
-            }
+            when (loadAccess) {
+                is LoadAccess.CacheHit -> return@withContext loadAccess.snapshot
+                is LoadAccess.JoinInFlight -> return@withContext loadAccess.deferred.await()
+                is LoadAccess.StartLoad -> {
+                    try {
+                        val snapshot = if (normalizedModules.isEmpty()) {
+                            DataLoader.loadCore(context)
+                        } else {
+                            DataLoader.updateActiveModules(context, normalizedModules)
+                        }
 
-            sanitizedSnapshot
+                        val sanitizedSnapshot = sanitizeSnapshotForRuntime(snapshot)
+
+                        val integrity = validateGameDataSnapshotIntegrityUseCase.execute(sanitizedSnapshot)
+                        check(integrity.ok) {
+                            "Falha de integridade no carregamento de dados: ${integrity.issues.joinToString(" | ")}" 
+                        }
+
+                        cacheMutex.withLock {
+                            cache.put(cacheKey, sanitizedSnapshot)
+                            inFlightLoads.remove(cacheKey)
+                        }
+                        loadAccess.deferred.complete(sanitizedSnapshot)
+
+                        return@withContext sanitizedSnapshot
+                    } catch (error: Throwable) {
+                        cacheMutex.withLock {
+                            inFlightLoads.remove(cacheKey)
+                        }
+                        loadAccess.deferred.completeExceptionally(error)
+                        throw error
+                    }
+                }
+            }
         }
 }
 
