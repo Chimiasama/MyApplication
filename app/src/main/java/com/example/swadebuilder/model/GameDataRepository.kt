@@ -121,12 +121,13 @@ internal fun sanitizeSnapshotForRuntime(snapshot: GameDataSnapshot): GameDataSna
     }
 
     val sanitizedPericias = dedupePreferLast(snapshot.listaPericias) { it.nome.keyify() }
+    val sanitizedPericiaKeys = sanitizedPericias.associateWith { it.nome.keyify() }
     val sanitizedVantagens = dedupePreferLast(snapshot.listaVantagens) { it.id.keyify() }
     val sanitizedPoderes = dedupePreferLast(snapshot.listaPoderes) { it.id.keyify() }
 
     return snapshot.copy(
         listaPericias = sanitizedPericias,
-        mapaPericias = sanitizedPericias.associateBy { it.nome.keyify() },
+        mapaPericias = sanitizedPericias.associateBy { sanitizedPericiaKeys.getValue(it) },
         listaVantagens = sanitizedVantagens,
         listaPoderes = sanitizedPoderes
     )
