@@ -50,6 +50,18 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 )
             ).normalizedSelection
 
+            if (ancKey == "DEADERS (PARASTEEN)" || ancKey == "DEADERS") {
+                return Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = listOf("CALCULISTA"),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("CALCULISTA"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
+            }
+
             if (ancKey == "ANOES") {
                 return if (effectiveVariant == "Cyber") {
                     Result(

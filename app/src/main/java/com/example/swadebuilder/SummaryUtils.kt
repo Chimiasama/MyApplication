@@ -171,7 +171,12 @@ fun buildSummaryLines(
         val bloquearAprimoradoBonus =
             if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
 
-        return base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower
+        val isDeaders = personagem.ancestralidade.keyify().contains("DEADERS")
+        val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
+        val apararBaixoMod = if (hasApararBaixo) -2 else 0
+
+        val total = base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower + apararBaixoMod
+        return total.coerceAtLeast(0)
     }
 
     fun calcChi(): Int {

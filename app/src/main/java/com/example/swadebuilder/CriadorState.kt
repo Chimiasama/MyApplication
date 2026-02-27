@@ -1207,7 +1207,8 @@ class CriadorState {
 
         val mods = ModifierEngine.sum(this, ModifierTarget.PARRY)
 
-        return base + mods
+        val finalValue = base + mods
+        return finalValue.coerceAtLeast(0)
     }
 
     // Engine Delegation
