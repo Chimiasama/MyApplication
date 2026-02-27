@@ -447,6 +447,16 @@ fun buildSummaryLines(
         if (personagem.ancestralidade.keyify() == "DRACONIANOS") {
             removeAll { it.keyify() == "ARROGANTE" }
         }
+
+        if (personagem.ancestralidade.keyify() == "SERES SINTETICOS" || personagem.ancestralidade.keyify() == "SERES_SINTETICOS") {
+            val hasVariantComplication = personagem.desvantagensRaciais.any {
+                val key = it.keyify()
+                key.contains("PROCURADO") || key.contains("FORASTEIRO")
+            }
+            if (hasVariantComplication) {
+                removeAll { it.keyify() == "PROGRAMADO" }
+            }
+        }
     }
 
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
