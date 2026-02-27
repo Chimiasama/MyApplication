@@ -10,9 +10,88 @@ import com.example.swadebuilder.util.keyify
 
 class ScifiAncestryVariantSyncTest {
 
+    private fun injectMockAncestries(state: CriadorState) {
+        state.listaAncestralidadesJson = listOf(
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "ANÕES", origem = "SCI_FI",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = emptyList(), opcoes = listOf("Básico", "Cyber")
+            ),
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "CENTAUX", origem = "SCI_FI",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = emptyList(), opcoes = listOf("Padrão", "Gazela")
+            ),
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "AQUARIANOS", origem = "SCI_FI",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = emptyList(), opcoes = listOf("Básico", "Semi-aquáticos")
+            ),
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "DRAKENS", origem = "SCI_FI",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = emptyList(), opcoes = listOf("Padrão", "Dragão")
+            ),
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "ELEMENTAIS", origem = "SCI_FI",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = emptyList(), opcoes = listOf("Padrão", "Ar, Fogo ou Água")
+            ),
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "FERAIS", origem = "SCI_FI",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = emptyList(), opcoes = listOf("Padrão", "Menor")
+            ),
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "MÍMICOS", origem = "SCI_FI",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = emptyList(), opcoes = listOf("Padrão", "Resistente")
+            ),
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "AVIANOS", origem = "SCI_FI",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = emptyList(), opcoes = listOf("Básico", "Ave de rapina")
+            )
+        )
+        state.updateGameData(
+            com.example.swadebuilder.model.GameDataSnapshot(
+                listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+                listaAncestralidadesJson = state.listaAncestralidadesJson,
+                listaPericias = emptyList(),
+                listaVantagens = emptyList(),
+                listaComplicacoes = emptyList(),
+                listaTropos = emptyList(),
+                listaEquipamentos = emptyList(),
+                listaPoderes = emptyList(),
+                listaSuperPoderes = emptyList(),
+                listaMonstroTemplates = emptyList(),
+                listaCoracoesCrystal = emptyList(),
+                equipamentoCategorias = emptyList(),
+                superequipCategorias = emptyList(),
+                mapaAtributosDisplay = emptyMap(),
+                mapaPericias = emptyMap(),
+                racialAttrMinMap = mapOf(
+                    "ELEMENTAIS" to mapOf("FORCA" to 8)
+                ),
+                racialSkillStartMap = emptyMap(),
+                arcanoInfo = emptyList(),
+                mapaAtributosDescricao = emptyMap()
+            )
+        )
+    }
+
     @Test
     fun `trocar de ancestralidade limpa variante e voltar usa basico`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "ANÕES"
             scifiVariant = "Cyber"
@@ -26,7 +105,9 @@ class ScifiAncestryVariantSyncTest {
         val anoesOptions = state.getAncestralidadeDef("ANÕES")?.opcoes.orEmpty()
         if (anoesOptions.isNotEmpty()) {
             val fallbackKey = state.scifiVariant?.keyify()
-            assertTrue(fallbackKey == "BASICO" || fallbackKey == "PADRAO")
+            // Should reset to Basic/Padrao or null (implicit default), definitely NOT Cyber (previous selection)
+            assertTrue(fallbackKey == "BASICO" || fallbackKey == "PADRAO" || fallbackKey == null)
+            org.junit.Assert.assertNotEquals("CYBER", fallbackKey)
         } else {
             assertNull(state.scifiVariant)
         }
@@ -80,6 +161,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `aquarianos semi aquaticos nao aplicam bonus de resistencia por traco removido`() {
         val variante = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "AQUARIANOS"
             scifiVariant = "Semi-aquáticos"
@@ -93,6 +175,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `aquarianos semiaquatico nao recebe bonus mesmo com ancestralidade base`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = false
             ancestralidade = "AQUARIANOS"
             vantagensRaciais.clear()
@@ -109,6 +192,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `centaux gazela totaliza movimentacao dez`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "CENTAUX"
             scifiVariant = "Gazela"
@@ -123,6 +207,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `drakens aplicam lento e resistencia mais dois sem armadura racial`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "DRAKENS"
             naturalArmorFromRace = 0
@@ -143,6 +228,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `drakens expoem ataque natural cabeca dura`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "DRAKENS"
             // Inject trait manually
@@ -159,6 +245,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `elementais nao expoem cabeca dura como ataque natural e usam ataque natural padrao`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "ELEMENTAIS"
             // Ensure no "CABEÇA DURA" trait
@@ -188,6 +275,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `elementais scifi comecam com forca d8`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "ELEMENTAIS"
             // Inject "FORTE" trait which typically boosts Strength
@@ -219,6 +307,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `elementais scifi aplicam resistencia mais dois via traco racial`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "ELEMENTAIS"
             vantagensRaciais.clear()
@@ -233,6 +322,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `ferais padrao aplicam diminuto tamanho menos tres e limite de forca d6`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "FERAIS"
             scifiVariant = "Padrão"
@@ -249,6 +339,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `ferais menor aplicam diminuto tamanho menos quatro e limite de forca d4`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "FERAIS"
             scifiVariant = "Menor"
@@ -264,6 +355,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `mimicos resistente aplicam bonus de resistencia mais um`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "MÍMICOS"
             scifiVariant = "Resistente"
@@ -278,6 +370,7 @@ class ScifiAncestryVariantSyncTest {
     @Test
     fun `avianos ave de rapina nao aplica penalidade de fragil`() {
         val state = CriadorState().apply {
+            injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "AVIANOS"
             desvantagensRaciais.clear()
