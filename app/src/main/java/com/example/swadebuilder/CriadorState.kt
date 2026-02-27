@@ -550,7 +550,7 @@ class CriadorState {
         if (key == "CENTAUX" && variant.equals("Gazela", ignoreCase = true)) {
             removeByIdOrName("GRANDE", "GRANDE")
             removeByIdOrName("TAMANHO_MAIS_2", "TAMANHO +2")
-            removeByIdOrName("MOVIMENTACAO", "MOVIMENTACAO +2")
+            removeByIdOrName("MOVIMENTACAO_2", "MOVIMENTACAO +2")
 
             if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +4" }) {
                 newHabilidades.add(

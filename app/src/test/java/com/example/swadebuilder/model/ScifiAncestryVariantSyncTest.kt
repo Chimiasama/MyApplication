@@ -105,6 +105,18 @@ class ScifiAncestryVariantSyncTest {
     }
 
 
+
+    @Test
+    fun `centaux gazela totaliza movimentacao dez`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "CENTAUX"
+            scifiVariant = "Gazela"
+        }
+
+        assertEquals(10, state.valorMovimentacao())
+    }
+
     @Test
     fun `drakens aplicam lento e resistencia mais dois sem armadura racial`() {
         val state = CriadorState().apply {

@@ -114,7 +114,7 @@ object ModifierEngine {
                         key == "FRAGIL" || key == "NAO SABE NADAR"
                     }
                 }
-            }
+            }.distinctBy { it.keyify() }
             val abilityDescriptions = anc.habilidades.map { it.descricao }
 
             // Size from Ancestry (Tamanho X)
