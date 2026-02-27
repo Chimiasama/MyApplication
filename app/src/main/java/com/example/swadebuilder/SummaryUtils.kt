@@ -457,6 +457,13 @@ fun buildSummaryLines(
                 removeAll { it.keyify() == "PROGRAMADO" }
             }
         }
+
+        if (personagem.ancestralidade.keyify().contains("SOLDADOS GENETICOS") || personagem.ancestralidade.keyify().contains("SOLDADO GENETICO")) {
+            val hasZeroG = personagem.vantagensRaciais.any { it.keyify().contains("ADAPTACAO GRAVITACIONAL") }
+            if (hasZeroG) {
+                removeAll { it.keyify() == "NERVOS DE ACO" }
+            }
+        }
     }
 
     val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
