@@ -636,7 +636,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -647,7 +647,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
