@@ -317,7 +317,17 @@ object ModifierEngine {
                         // Avoid duplicates if caught by hardcoded check above (e.g. Frágil might say "Resistência -1")
                         // But Fragil logic above relies on name "FRAGIL". This regex handles explicit "+1" or "-1".
                         // Aquarianos: "Resistência +1".
-                        modifiers.add(Modifier("racial_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, finalValue))
+                        // Duplicate check: Don't add if already added by explicit logic (like "racial_resistencia")
+                        val alreadyAdded = modifiers.any {
+                            (it.id == "racial_resistencia" && finalValue == 1) ||
+                            (it.id == "racial_fragil" && finalValue == -1) ||
+                            (it.id == "racial_esguios" && finalValue == -1) ||
+                            (it.id == "racial_ferocidade" && finalValue == 1)
+                        }
+
+                        if (!alreadyAdded) {
+                            modifiers.add(Modifier("racial_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, finalValue))
+                        }
                     }
                 }
                 if (k.contains("ARMADURA")) {

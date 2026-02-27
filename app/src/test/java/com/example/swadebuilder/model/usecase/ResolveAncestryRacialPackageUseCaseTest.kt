@@ -221,8 +221,10 @@ class ResolveAncestryRacialPackageUseCaseTest {
                 ancestryAutomaticDisadvantages = emptyList()
             )
         )
-
-        assertTrue(result.anotacoesToAdd.any { it.contains("4 pontos", ignoreCase = true) })
+        // The implementation in ResolveAncestrySpecificAdjustmentsUseCase adds the text to `ensureRacialDisadvantages`,
+        // NOT `anotacoesToAdd` for Possessores Energia.
+        // It's a text string, so it ends up in desvantagensRaciais in the final package.
+        assertTrue(result.desvantagensRaciais.any { it.contains("4 pontos", ignoreCase = true) })
     }
 
     @Test
