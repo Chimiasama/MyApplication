@@ -543,8 +543,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)"),
                         ensureRacialDisadvantages = listOf(
                             "SENSÍVEL (Maior)",
-                            "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
-ao cenário."
+                            "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido ao cenário."
                         ),
                         elementalAction = ElementalAction.NONE,
                         anotacoesToAdd = emptyList()

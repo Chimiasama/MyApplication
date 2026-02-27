@@ -292,8 +292,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertTrue(result.ensureRacialDisadvantages.contains("SENSÍVEL (Maior)"))
-        assertTrue(result.ensureRacialDisadvantages.contains("Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
-ao cenário."))
+        assertTrue(result.ensureRacialDisadvantages.contains("Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido ao cenário."))
         assertTrue(result.anotacoesToAdd.isEmpty())
     }
 

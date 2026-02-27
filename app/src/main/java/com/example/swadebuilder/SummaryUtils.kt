@@ -398,7 +398,7 @@ fun buildSummaryLines(
     val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AVIANOS" &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
-        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "HABITANTE DE GRAVIDADE ZERO/BAIXA" }
+        personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify().startsWith("HABITANTE DE GRAVIDADE") }
 
     val isAquarianosSemiaquaticos = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AQUARIANOS" &&
