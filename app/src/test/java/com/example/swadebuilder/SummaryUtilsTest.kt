@@ -240,6 +240,47 @@ class SummaryUtilsTest {
 
 
 
+
+    @Test
+    fun `buildSummaryLines preserva texto exato da anotacao de possessores energia`() {
+        val texto = "Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Possessor",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "POSSESSORES",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf(texto),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioSciFiAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val annotations = lines.firstOrNull { it.startsWith("Anotações Raciais:") }
+        assertEquals("Anotações Raciais: $texto", annotations)
+    }
+
     @Test
     fun `buildSummaryLines remove tamanho e movimento mais dois na gazela e mantem grande`() {
         val lines = buildSummaryLines(

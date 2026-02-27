@@ -517,7 +517,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = listOf("Possessores Energia: Combinar com o Mestre e equilibrar com 4 pontos de habilidades negativas.")
+                        anotacoesToAdd = listOf("Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário.")
                     )
                 } else {
                     // Padrão
