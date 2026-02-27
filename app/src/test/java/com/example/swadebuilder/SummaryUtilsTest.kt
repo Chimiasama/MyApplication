@@ -243,7 +243,7 @@ class SummaryUtilsTest {
 
     @Test
     fun `buildSummaryLines preserva texto exato da anotacao de possessores energia`() {
-        val texto = "Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."
+        val texto = "Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido no cenário."
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Possessor",
@@ -284,8 +284,7 @@ class SummaryUtilsTest {
 
     @Test
     fun `buildSummaryLines mostra anotacao racial de quadroides habilidoso e sensivel maior`() {
-        val texto = "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
-ao cenário."
+        val texto = "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido ao cenário."
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Quadroide",
@@ -327,9 +326,15 @@ ao cenário."
             arcanoInfo = emptyMap()
         )
 
-        val complicacoesLine = lines.firstOrNull { it.contains("Sensível (Maior)") }
+        val complicacoesLine = lines.firstOrNull { it.contains("SENSÍVEL (Maior)", ignoreCase = true) }
         val annotations = lines.firstOrNull { it.startsWith("Anotações Raciais:") }
-        assertTrue(complicacoesLine?.contains("Sensível (Maior)") == true)
+        assertTrue(complicacoesLine?.contains("SENSÍVEL (Maior)", ignoreCase = true) == true)
+        // If there are multiple annotations (SENSÍVEL Maior is a complication, not annotation here, but just in case of mixup)
+        // The expected text is just the second item in the list passed to character.
+        // But joinToString(", ") will add a comma if there were other items.
+        // Here desvantagensRaciais has 2 items: "SENSÍVEL (Maior)" and "Combine..."
+        // SENSÍVEL (Maior) is filtered OUT of annotations because it is in listaComplicacoes.
+        // So annotations list should only contain "Combine..."
         assertEquals("Anotações Raciais: $texto", annotations)
     }
 

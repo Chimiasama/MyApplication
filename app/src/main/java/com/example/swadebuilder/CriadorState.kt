@@ -4436,11 +4436,23 @@ class CriadorState {
             }
         }
 
+        // Apply automatic super steps (e.g. from Edges/Powers) BEFORE calculating cost and trimming
+        // We need to apply super modifiers to Attributes if relevant (though usually Attributes are modified by Race/Points).
+        // If there are Super Attribute modifiers (e.g. Super Strength), they should be layered on top?
+        // Current logic: `valoresAtributos` stores the purchased value (base + points).
+        // Supers are usually handled via `atributoRawComSupers` for checks, but `valoresAtributos` is the source of truth for cost.
+        // So no changes needed here unless `valoresAtributos` is expected to include Super bonuses directly (which would break cost calc).
+
         pontosAtributo = calcularPontosAtributoRestantes()
 
         trimAttributeStacks(feedbackMessages)
 
-        rebuildAllPericiaStacks(feedbackMessages)
+        // Pass 'enforcePoolLimit = false' during creation/race change to avoid aggressive clamping
+        // of skills that might temporarily exceed limits due to attribute changes or trait swaps.
+        // The UI/User will resolve points.
+        // Actually, rebuildAllPericiaStacks calculates costs and sets values based on affordability.
+        // We WANT to enforce the pool limit to keep points valid.
+        rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit = true)
 
         // Auto-refund surplus Skill Points (e.g. from PB) if attributes made skills cheaper
         while (pontosPericia > 0 && cpSpStack.isNotEmpty()) {
