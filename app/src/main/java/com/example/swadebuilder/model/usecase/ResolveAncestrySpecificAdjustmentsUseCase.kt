@@ -604,7 +604,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = listOf("PROCURADO (Maior)"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("PROGRAMADO")
                     )
                     "Máquina (Forasteiro)" -> Result(
                         naturalArmorFromRace = 0,
@@ -613,7 +614,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = listOf("FORASTEIRO (Maior)"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("PROGRAMADO")
                     )
                     else -> Result(
                         naturalArmorFromRace = 0,
