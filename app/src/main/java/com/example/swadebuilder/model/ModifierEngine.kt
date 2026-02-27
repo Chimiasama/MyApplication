@@ -114,6 +114,22 @@ object ModifierEngine {
                         key == "FRAGIL" || key == "NAO SABE NADAR"
                     }
                 }
+
+                val isCentauxGazela = state.compendioSciFiAtivo &&
+                    ancestryKey == "CENTAUX" &&
+                    state.resolveSciFiVariantSelectionFor(
+                        ancestryName = anc.nome,
+                        availableOptions = anc.opcoes
+                    ).equals("Gazela", ignoreCase = true)
+
+                if (isCentauxGazela) {
+                    removeAll { trait ->
+                        when (trait.keyify()) {
+                            "MOVIMENTACAO +2", "TAMANHO +2", "GRANDE", "TAMANHO_MAIS_2", "MOVIMENTACAO_2" -> true
+                            else -> false
+                        }
+                    }
+                }
             }.distinctBy { it.keyify() }
             val abilityDescriptions = anc.habilidades.map { it.descricao }
 

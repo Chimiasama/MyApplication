@@ -115,6 +115,7 @@ class ScifiAncestryVariantSyncTest {
         }
 
         assertEquals(10, state.valorMovimentacao())
+        assertEquals(0, state.valorTamanho())
     }
 
     @Test
