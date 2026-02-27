@@ -564,6 +564,52 @@ class CriadorState {
             }
         }
 
+        if (key == "SERES SINTETICOS" || key == "SERES_SINTETICOS") {
+            if (variant.equals("Máquina (Procurado)", ignoreCase = true)) {
+                removeByIdOrName("PROGRAMADO", "PROGRAMADO")
+                if (newHabilidades.none { it.id == "PROCURADO" || it.nome.keyify().contains("PROCURADO") }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Procurado (Maior)",
+                            descricao = "A personagem é procurada pelas autoridades ou por uma facção poderosa.",
+                            id = "PROCURADO",
+                            category = "racial_hindrance",
+                            severity = "Maior"
+                        )
+                    )
+                }
+            } else if (variant.equals("Máquina (Forasteiro)", ignoreCase = true)) {
+                removeByIdOrName("PROGRAMADO", "PROGRAMADO")
+                if (newHabilidades.none { it.id == "FORASTEIRO" || it.nome.keyify().contains("FORASTEIRO") }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Forasteiro (Maior)",
+                            descricao = "A personagem não tem direitos ou é perseguida em quase toda parte.",
+                            id = "FORASTEIRO",
+                            category = "racial_hindrance",
+                            severity = "Maior"
+                        )
+                    )
+                }
+            }
+        }
+
+        if (key.contains("SOLDADOS GENETICOS") || key.contains("SOLDADO GENETICO")) {
+            if (variant.equals("Fuzileiro Zero G", ignoreCase = true)) {
+                removeByIdOrName("NERVOS_DE_ACO", "NERVOS DE AÇO")
+                if (newHabilidades.none { it.id == "adaptacao_gravitacional" || it.nome.keyify() == "ADAPTACAO GRAVITACIONAL" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Adaptação Gravitacional",
+                            descricao = "Ignora a penalidade de -2 para Agilidade e perícias baseadas em Agilidade ao agir em gravidade diferente da sua.",
+                            id = "adaptacao_gravitacional",
+                            category = "racial_edge"
+                        )
+                    )
+                }
+            }
+        }
+
         return base.copy(habilidades = newHabilidades)
     }
 

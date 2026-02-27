@@ -604,7 +604,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = listOf("PROCURADO (Maior)"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("PROGRAMADO")
                     )
                     "Máquina (Forasteiro)" -> Result(
                         naturalArmorFromRace = 0,
@@ -613,7 +614,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
                         ensureRacialDisadvantages = listOf("FORASTEIRO (Maior)"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("PROGRAMADO")
                     )
                     else -> Result(
                         naturalArmorFromRace = 0,
@@ -634,7 +636,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -645,7 +647,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
