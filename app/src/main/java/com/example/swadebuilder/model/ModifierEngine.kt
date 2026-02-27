@@ -282,12 +282,12 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
             }
 
-            val hasApararBaixo = anc.nome.keyify().contains("DEADERS") || anc.habilidades.any { it.id.keyify() == "APARAR_BAIXO" } || sources.any { it.keyify() == "APARAR_BAIXO" || it.keyify() == "APARAR BAIXO" }
+            val hasApararBaixo = anc.nome.keyify().contains("DEADERS") || anc.habilidades.any { it.id?.keyify() == "APARAR_BAIXO" } || sources.any { it.keyify() == "APARAR_BAIXO" || it.keyify() == "APARAR BAIXO" }
             if (hasApararBaixo) {
                 modifiers.add(Modifier("racial_parry_deaders", SourceType.ANCESTRALIDADE, "Aparar Baixo", ModifierTarget.PARRY, -2))
             }
 
-            val hasMortoVivo = anc.nome.keyify().contains("DEADERS") || anc.habilidades.any { it.id.keyify() == "MORTO_VIVO" } || sources.any { it.keyify() == "MORTO_VIVO" || it.keyify() == "MORTO VIVO" || it.keyify() == "MORTO-VIVO" }
+            val hasMortoVivo = anc.nome.keyify().contains("DEADERS") || anc.habilidades.any { it.id?.keyify() == "MORTO_VIVO" } || sources.any { it.keyify() == "MORTO_VIVO" || it.keyify() == "MORTO VIVO" || it.keyify() == "MORTO-VIVO" }
             if (hasMortoVivo) {
                 modifiers.add(Modifier("racial_morto_vivo_toughness", SourceType.ANCESTRALIDADE, "Morto-Vivo", ModifierTarget.TOUGHNESS_FLAT, 2))
             }
