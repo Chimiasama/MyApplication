@@ -262,8 +262,9 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertTrue(energia.automaticAdvantagesToRemove.any { it.contains("NOÇÃO", ignoreCase = true) })
         assertEquals(
             listOf("Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."),
-            energia.anotacoesToAdd
+            energia.ensureRacialDisadvantages
         )
+        assertTrue(energia.anotacoesToAdd.isEmpty())
     }
 
     @Test
