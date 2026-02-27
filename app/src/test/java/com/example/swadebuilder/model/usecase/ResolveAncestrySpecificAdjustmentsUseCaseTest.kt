@@ -135,7 +135,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("FORTE"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
     }
 
 
