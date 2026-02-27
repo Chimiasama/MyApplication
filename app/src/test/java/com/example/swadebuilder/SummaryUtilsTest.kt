@@ -239,6 +239,67 @@ class SummaryUtilsTest {
     }
 
 
+
+    @Test
+    fun `buildSummaryLines remove tamanho e movimento mais dois na gazela e mantem grande`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Gazela",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "CENTAUX",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                vantagensRaciais = listOf("MOVIMENTAÇÃO +2", "TAMANHO +2", "GRANDE", "ÓBVIO", "MOVIMENTAÇÃO +4"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioSciFiAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "CENTAUX",
+                    origem = "FC",
+                    atributos = emptyMap(),
+                    pericias = emptyMap(),
+                    desvantagens = emptyList(),
+                    opcoes = listOf("Padrão", "Gazela"),
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility("Estável", ""),
+                        com.example.swadebuilder.model.RacialAbility("Movimentação +2", ""),
+                        com.example.swadebuilder.model.RacialAbility("Tamanho +2", ""),
+                        com.example.swadebuilder.model.RacialAbility("Grande", ""),
+                        com.example.swadebuilder.model.RacialAbility("Óbvio", "")
+                    )
+                )
+            ),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+        assertNotNull(racialLine)
+        assertFalse(racialLine!!.contains("Movimentação +2"))
+        assertFalse(racialLine.contains("Tamanho +2"))
+        assertTrue(racialLine.contains("Movimentação +4"))
+        assertTrue(racialLine.contains("Grande"))
+    }
+
     @Test
     fun `summary deduplica vantagens com mesmo nome exibido`() {
         val personagem = MeuPersonagem(

@@ -411,6 +411,12 @@ fun buildSummaryLines(
         personagem.ancestralidade.keyify() == "ELFOS" &&
         personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "COMUNITARIO" }
 
+    val isCentauxGazela = personagem.compendioSciFiAtivo &&
+        personagem.ancestralidade.keyify() == "CENTAUX" &&
+        personagem.vantagensRaciais.any {
+            it.substringBefore("(").trim().keyify() == "MOVIMENTACAO +4"
+        }
+
     val habilidadesRaciaisBase = habilidadesRaciaisBaseRaw.toMutableList().apply {
         // Defensive normalization for variant substitution when base ancestry definition is used.
         // If variant traits are present in character snapshot, hide replaced base traits.
@@ -432,6 +438,10 @@ fun buildSummaryLines(
             if (!pack.isNullOrBlank() && !pack.equals("Humano padrão", ignoreCase = true)) {
                 removeAll { it.keyify() == "ADAPTAVEL" }
             }
+        }
+
+        if (isCentauxGazela) {
+            removeAll { it.keyify() == "MOVIMENTACAO +2" || it.keyify() == "TAMANHO +2" }
         }
 
         if (personagem.ancestralidade.keyify() == "DRACONIANOS") {
@@ -491,6 +501,9 @@ fun buildSummaryLines(
     val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
         .filterNot { trait ->
             isElfosComunitario && trait.keyify() == "DESASTRADO"
+        }
+        .filterNot { trait ->
+            isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
         }
         .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
         .map { trait ->
