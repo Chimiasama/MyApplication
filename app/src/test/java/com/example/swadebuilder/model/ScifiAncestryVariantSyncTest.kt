@@ -146,6 +146,20 @@ class ScifiAncestryVariantSyncTest {
     }
 
 
+
+    @Test
+    fun `elementais nao expoem cabeca dura como ataque natural e usam ataque natural padrao`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "ELEMENTAIS"
+        }
+
+        val armas = state.extrairArmasNaturais()
+
+        assertFalse(armas.any { it.nome.equals("Cabeça Dura", ignoreCase = true) })
+        assertTrue(armas.any { it.nome.equals("Ataque Natural", ignoreCase = true) })
+    }
+
     @Test
     fun `elementais scifi comecam com forca d8`() {
         val state = CriadorState().apply {

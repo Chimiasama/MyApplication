@@ -1382,6 +1382,8 @@ class CriadorState {
                 if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor" && keyToken == "MORDIDA") return@forEach
                 // Insetoides Vespa removes GARRAS
                 if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa" && keyToken == "GARRAS") return@forEach
+                // Elementais possuem o traço "Cabeça Dura" como desvantagem cognitiva, não como arma natural
+                if (ancestralidade.keyify() != "DRAKENS" && keyToken == "CABECA DURA") return@forEach
             }
 
             // Check presence via ID (Strong match) or Name (Legacy/Fallback)
