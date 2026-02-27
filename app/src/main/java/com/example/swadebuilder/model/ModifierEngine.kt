@@ -282,6 +282,16 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
             }
 
+            val hasApararBaixo = sources.any { it.keyify() == "APARAR_BAIXO" || it.keyify() == "APARAR BAIXO" }
+            if (hasApararBaixo) {
+                modifiers.add(Modifier("racial_parry_deaders", SourceType.ANCESTRALIDADE, "Aparar Baixo", ModifierTarget.PARRY, -2))
+            }
+
+            val hasMortoVivo = sources.any { it.keyify() == "MORTO_VIVO" || it.keyify() == "MORTO VIVO" }
+            if (hasMortoVivo) {
+                modifiers.add(Modifier("racial_morto_vivo_toughness", SourceType.ANCESTRALIDADE, "Morto-Vivo", ModifierTarget.TOUGHNESS_FLAT, 2))
+            }
+
             if (state.compendioSciFiAtivo && anc.nome.keyify() == "MIMICOS") {
                 val variant = state.resolveSciFiVariantSelectionFor(
                     ancestryName = anc.nome,
