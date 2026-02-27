@@ -564,6 +564,36 @@ class CriadorState {
             }
         }
 
+        if (key == "SERES SINTETICOS" || key == "SERES_SINTETICOS") {
+            if (variant.equals("Máquina (Procurado)", ignoreCase = true)) {
+                removeByIdOrName("PROGRAMADO", "PROGRAMADO")
+                if (newHabilidades.none { it.id == "PROCURADO" || it.nome.keyify().contains("PROCURADO") }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Procurado (Maior)",
+                            descricao = "A personagem é procurada pelas autoridades ou por uma facção poderosa.",
+                            id = "PROCURADO",
+                            category = "racial_hindrance",
+                            severity = "Maior"
+                        )
+                    )
+                }
+            } else if (variant.equals("Máquina (Forasteiro)", ignoreCase = true)) {
+                removeByIdOrName("PROGRAMADO", "PROGRAMADO")
+                if (newHabilidades.none { it.id == "FORASTEIRO" || it.nome.keyify().contains("FORASTEIRO") }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Forasteiro (Maior)",
+                            descricao = "A personagem não tem direitos ou é perseguida em quase toda parte.",
+                            id = "FORASTEIRO",
+                            category = "racial_hindrance",
+                            severity = "Maior"
+                        )
+                    )
+                }
+            }
+        }
+
         return base.copy(habilidades = newHabilidades)
     }
 
