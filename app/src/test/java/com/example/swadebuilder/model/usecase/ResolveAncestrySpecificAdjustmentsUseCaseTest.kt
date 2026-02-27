@@ -267,6 +267,36 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertTrue(energia.anotacoesToAdd.isEmpty())
     }
 
+
+    @Test
+    fun `quadroides padrao inclui sensivel maior`() {
+        val result = useCase.execute(
+            anc = "QUADROIDES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Habilidoso"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.contains("SENSÍVEL (Maior)"))
+    }
+
+    @Test
+    fun `quadroides habilidoso inclui anotacao racial e sensivel maior`() {
+        val result = useCase.execute(
+            anc = "QUADROIDES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Habilidoso",
+            ancestryOptions = listOf("Padrão", "Habilidoso"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.contains("SENSÍVEL (Maior)"))
+        assertTrue(result.ensureRacialDisadvantages.contains("Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
+ao cenário."))
+        assertTrue(result.anotacoesToAdd.isEmpty())
+    }
+
     @Test
     fun `mineradores geneticos padrao usa dependencia atmosferica maior`() {
         val result = useCase.execute(

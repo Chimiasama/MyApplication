@@ -281,6 +281,58 @@ class SummaryUtilsTest {
         assertEquals("Anotações Raciais: $texto", annotations)
     }
 
+
+    @Test
+    fun `buildSummaryLines mostra anotacao racial de quadroides habilidoso e sensivel maior`() {
+        val texto = "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
+ao cenário."
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Quadroide",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "QUADROIDES",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf("SENSÍVEL (Maior)", texto),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioSciFiAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = listOf(
+                com.example.swadebuilder.model.Complicacao(
+                    id = "sensivel",
+                    name = "SENSÍVEL",
+                    severity = "Maior",
+                    description = "",
+                    origem = "SCI_FI"
+                )
+            ),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val complicacoesLine = lines.firstOrNull { it.contains("Sensível (Maior)") }
+        val annotations = lines.firstOrNull { it.startsWith("Anotações Raciais:") }
+        assertTrue(complicacoesLine?.contains("Sensível (Maior)") == true)
+        assertEquals("Anotações Raciais: $texto", annotations)
+    }
+
     @Test
     fun `buildSummaryLines remove tamanho e movimento mais dois na gazela e mantem grande`() {
         val lines = buildSummaryLines(

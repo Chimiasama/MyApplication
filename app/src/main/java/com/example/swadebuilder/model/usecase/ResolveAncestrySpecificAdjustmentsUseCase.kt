@@ -541,9 +541,13 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)"),
-                        ensureRacialDisadvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf(
+                            "SENSÍVEL (Maior)",
+                            "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
+ao cenário."
+                        ),
                         elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = listOf("Quadroides Habilidoso: Equilibre com uma habilidade -1, combine com o mestre de jogo.")
+                        anotacoesToAdd = emptyList()
                     )
                 } else {
                     // Padrão
@@ -553,7 +557,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Física)"),
-                        ensureRacialDisadvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("SENSÍVEL (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
                 }
