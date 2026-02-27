@@ -7,6 +7,7 @@ import java.util.LinkedHashMap
 import java.util.Locale
 
 private val DIACRITICS_REGEX = "\\p{M}".toRegex()
+private val WHITESPACE_REGEX = "\\s+".toRegex()
 
 private const val MAX_CACHE_SIZE = 2000
 
@@ -25,6 +26,34 @@ private val keyifyCache: MutableMap<String, String> = Collections.synchronizedMa
         }
     }
 )
+
+private val fancyTitleCaseCache: MutableMap<String, String> = Collections.synchronizedMap(
+    object : LinkedHashMap<String, String>(MAX_CACHE_SIZE + 1, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, String>?): Boolean {
+            return size > MAX_CACHE_SIZE
+        }
+    }
+)
+
+private val fancyLowerCaseWords = setOf(
+    "de", "da", "do", "das", "dos",
+    "e", "em", "no", "na", "nos", "nas",
+    "por", "para", "com", "sem", "sob", "sobre",
+    "a", "o", "as", "os", "à", "às", "ou"
+)
+
+private val fancyUpperCaseWords = setOf(
+    "XP", "PA", "PB", "PP", "PV", "PC", "PE", "SP", "GM", "MJ", "CD", "ME", "VE", "NV"
+)
+private val fancyUpperCaseMap = fancyUpperCaseWords.associateBy { it.lowercase(Locale.ROOT) }
+
+private val fancyRomanNumerals = setOf(
+    "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+    "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"
+)
+private val fancyRomanNumeralsMap = fancyRomanNumerals.associateBy { it.lowercase(Locale.ROOT) }
+
+private val fancySpecialPrefixes = listOf("d'", "l'")
 
 /**
  * Remove acentos de uma string, normalizando para Form NFD e filtrando marcas de combinação.
@@ -96,30 +125,16 @@ val ptBrCollator: Collator by lazy {
 fun String.toFancyTitleCase(): String {
     if (this.isBlank()) return this
 
+    return fancyTitleCaseCache.getOrPut(this) {
+        this.toFancyTitleCaseUncached()
+    }
+}
+
+private fun String.toFancyTitleCaseUncached(): String {
+    if (this.isBlank()) return this
+
     val normalized = this.replace('_', ' ').trim()
-    val words = normalized.split("\\s+".toRegex())
-
-    // Lista de preposições/artigos que devem ficar em minúsculo (exceto se for a 1ª palavra)
-    val lowerCaseWords = setOf(
-        "de", "da", "do", "das", "dos",
-        "e", "em", "no", "na", "nos", "nas",
-        "por", "para", "com", "sem", "sob", "sobre",
-        "a", "o", "as", "os", "à", "às", "ou"
-    )
-
-    // Lista de siglas que devem ficar em maiúsculo
-    val upperCaseWords = setOf(
-        "XP", "PA", "PB", "PP", "PV", "PC", "PE", "SP", "GM", "MJ", "CD", "ME", "VE", "NV"
-    )
-
-    // Lista de numerais romanos comuns (até 20)
-    val romanNumerals = setOf(
-        "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
-        "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"
-    )
-
-    // Prefixos especiais que ficam minúsculos seguidos de maiúscula (ex: d'Arc)
-    val specialPrefixes = listOf("d'", "l'")
+    val words = normalized.split(WHITESPACE_REGEX)
 
     fun isWordChar(c: Char): Boolean = c.isLetterOrDigit() || c == '\''
 
@@ -133,18 +148,19 @@ fun String.toFancyTitleCase(): String {
         }
 
         val lowerSegment = segment.lowercase()
+        val lowerRoot = lowerSegment.lowercase(Locale.ROOT)
 
         return when {
-            // 1. Acronyms & Roman Numerals (Check case-insensitive)
-            upperCaseWords.any { it.equals(segment, ignoreCase = true) } -> {
-                upperCaseWords.find { it.equals(segment, ignoreCase = true) }!!
+            // 1. Acronyms & Roman Numerals
+            fancyUpperCaseMap.containsKey(lowerRoot) -> {
+                fancyUpperCaseMap.getValue(lowerRoot)
             }
-            romanNumerals.any { it.equals(segment, ignoreCase = true) } -> {
-                romanNumerals.find { it.equals(segment, ignoreCase = true) }!!
+            fancyRomanNumeralsMap.containsKey(lowerRoot) -> {
+                fancyRomanNumeralsMap.getValue(lowerRoot)
             }
             // 2. Special Prefixes (d'Arc)
-            specialPrefixes.any { lowerSegment.startsWith(it) } -> {
-                val p = specialPrefixes.find { lowerSegment.startsWith(it) }!!
+            fancySpecialPrefixes.any { lowerSegment.startsWith(it) } -> {
+                val p = fancySpecialPrefixes.first { lowerSegment.startsWith(it) }
                 if (lowerSegment.length > p.length) {
                     val rest = lowerSegment.substring(p.length)
                     p + rest.replaceFirstChar { it.titlecase(Locale.getDefault()) }
@@ -156,7 +172,7 @@ fun String.toFancyTitleCase(): String {
             isFirstWordOfSentence -> {
                 lowerSegment.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
             }
-            lowerCaseWords.contains(lowerSegment) -> {
+            fancyLowerCaseWords.contains(lowerSegment) -> {
                 lowerSegment
             }
             else -> {

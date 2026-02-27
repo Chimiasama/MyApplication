@@ -256,7 +256,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("MOVIMENTAÇÃO +4"),
+                        automaticAdvantagesToRemove = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
                         ensureRacialDisadvantages = emptyList(),
+                        racialDisadvantagesToRemove = listOf("GRANDE"),
                         elementalAction = ElementalAction.NONE
                     )
                 } else {
@@ -276,7 +278,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             if (ancKey == "DRAKENS") {
                 return if (effectiveVariant == "Dragão") {
                     Result(
-                        naturalArmorFromRace = 2, // Default armor
+                        naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
@@ -287,11 +289,11 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 } else {
                     // Padrão
                     Result(
-                        naturalArmorFromRace = 2,
+                        naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FORTE"),
+                        ensureAutomaticAdvantages = listOf("FORTE", "RESISTÊNCIA +2"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -458,9 +460,11 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL"),
-                        ensureAdvantageIds = emptyList(),
+                        ensureAdvantageIds = listOf("adaptacao_gravitacional"),
                         ensureAutomaticAdvantages = emptyList(),
+                        automaticAdvantagesToRemove = listOf("FORTE"),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA/ZERO"),
+                        racialDisadvantagesToRemove = listOf("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
                 } else {
@@ -471,7 +475,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("FORTE"),
-                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA"),
+                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
                 }
@@ -510,9 +514,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("FORMA DE ENERGIA"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = listOf("Possessores Energia: Combinar com o Mestre e equilibrar com 4 pontos de habilidades negativas.")
+                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
+                        ensureRacialDisadvantages = listOf("Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."),
+                        elementalAction = ElementalAction.NONE
                     )
                 } else {
                     // Padrão
@@ -522,6 +526,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
+                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -536,9 +541,13 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)"),
-                        ensureRacialDisadvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf(
+                            "SENSÍVEL (Maior)",
+                            "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
+ao cenário."
+                        ),
                         elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = listOf("Quadroides Habilidoso: Equilibre com uma habilidade -1, combine com o mestre de jogo.")
+                        anotacoesToAdd = emptyList()
                     )
                 } else {
                     // Padrão
@@ -548,7 +557,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Física)"),
-                        ensureRacialDisadvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("SENSÍVEL (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
                 }

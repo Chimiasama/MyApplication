@@ -313,7 +313,7 @@ fun buildSummaryLines(
                 rawName
             }
             if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
-        }
+        }.distinct()
         lines += nomesVantagens.joinToString(", ")
     }
 
@@ -411,6 +411,12 @@ fun buildSummaryLines(
         personagem.ancestralidade.keyify() == "ELFOS" &&
         personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "COMUNITARIO" }
 
+    val isCentauxGazela = personagem.compendioSciFiAtivo &&
+        personagem.ancestralidade.keyify() == "CENTAUX" &&
+        personagem.vantagensRaciais.any {
+            it.substringBefore("(").trim().keyify() == "MOVIMENTACAO +4"
+        }
+
     val habilidadesRaciaisBase = habilidadesRaciaisBaseRaw.toMutableList().apply {
         // Defensive normalization for variant substitution when base ancestry definition is used.
         // If variant traits are present in character snapshot, hide replaced base traits.
@@ -432,6 +438,10 @@ fun buildSummaryLines(
             if (!pack.isNullOrBlank() && !pack.equals("Humano padrão", ignoreCase = true)) {
                 removeAll { it.keyify() == "ADAPTAVEL" }
             }
+        }
+
+        if (isCentauxGazela) {
+            removeAll { it.keyify() == "MOVIMENTACAO +2" || it.keyify() == "TAMANHO +2" }
         }
 
         if (personagem.ancestralidade.keyify() == "DRACONIANOS") {
@@ -492,6 +502,9 @@ fun buildSummaryLines(
         .filterNot { trait ->
             isElfosComunitario && trait.keyify() == "DESASTRADO"
         }
+        .filterNot { trait ->
+            isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
+        }
         .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
         .map { trait ->
             val key = trait.keyify()
@@ -523,9 +536,21 @@ fun buildSummaryLines(
     }
     lines += ""
 
-    val desvantagensRaciaisComplicacoes = personagem.desvantagensRaciais.filter { desvantagem ->
-        desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+    fun complicationWithSeverity(raw: String): String {
+        if (raw.contains("(")) return raw
+        val compKey = raw.substringBefore("(").trim().keyify()
+        val def = listaComplicacoes.firstOrNull { comp ->
+            comp.name.keyify() == compKey || (comp.originalName?.keyify() == compKey)
+        } ?: return raw
+        val sev = def.severity.trim().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+        return "$raw ($sev)"
     }
+
+    val desvantagensRaciaisComplicacoes = personagem.desvantagensRaciais
+        .filter { desvantagem ->
+            desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset
+        }
+        .map { complicationWithSeverity(it) }
     val desvantagensRaciaisAnotacoes = personagem.desvantagensRaciais
         .filterNot { desvantagem ->
             desvantagem.substringBefore("(").trim().keyify() in complicacoesNomeKeyset

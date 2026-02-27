@@ -135,9 +135,39 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("FORTE"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
     }
 
+
+
+    @Test
+    fun `drakens nao recebem armadura racial e mantem resistencia dois`() {
+        val result = useCase.execute(
+            anc = "DRAKENS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Dragão"),
+            isSciFiActive = true
+        )
+
+        assertEquals(0, result.naturalArmorFromRace)
+        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
+    }
+
+
+    @Test
+    fun `elementais scifi padrao mantem forte e resistencia mais dois`() {
+        val result = useCase.execute(
+            anc = "ELEMENTAIS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Ar, Fogo ou Água"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
+        assertEquals(0, result.naturalArmorFromRace)
+    }
 
     @Test
     fun `aquarianos basico nao injeta resistencia por hardcode`() {
@@ -176,6 +206,124 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(listOf("ADAPTÁVEL", "ADAPTAVEL"), result.automaticAdvantagesToRemove)
+    }
+
+
+    @Test
+    fun `centaux gazela troca bonus de tamanho e movimento no scifi`() {
+        val result = useCase.execute(
+            anc = "CENTAUX",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Gazela",
+            ancestryOptions = listOf("Padrão", "Gazela"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("MOVIMENTAÇÃO +4"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"), result.automaticAdvantagesToRemove)
+        assertEquals(listOf("GRANDE"), result.racialDisadvantagesToRemove)
+    }
+
+
+
+    @Test
+    fun `oraculos variante aterrorizado usa poderes misticos sem nocao do perigo`() {
+        val result = useCase.execute(
+            anc = "ORÁCULOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Aterrorizado",
+            ancestryOptions = listOf("Padrão", "Aterrorizado"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureAdvantageIds.contains("poderes_misticos"))
+        assertTrue(result.ensureAdvantageNames.isEmpty())
+    }
+
+
+    @Test
+    fun `possessores nao devem injetar nocao do perigo em nenhuma variante`() {
+        val padrao = useCase.execute(
+            anc = "POSSESSORES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Energia"),
+            isSciFiActive = true
+        )
+        val energia = useCase.execute(
+            anc = "POSSESSORES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Energia",
+            ancestryOptions = listOf("Padrão", "Energia"),
+            isSciFiActive = true
+        )
+
+        assertTrue(padrao.automaticAdvantagesToRemove.any { it.contains("NOÇÃO", ignoreCase = true) })
+        assertTrue(energia.automaticAdvantagesToRemove.any { it.contains("NOÇÃO", ignoreCase = true) })
+        assertEquals(
+            listOf("Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."),
+            energia.ensureRacialDisadvantages
+        )
+        assertTrue(energia.anotacoesToAdd.isEmpty())
+    }
+
+
+    @Test
+    fun `quadroides padrao inclui sensivel maior`() {
+        val result = useCase.execute(
+            anc = "QUADROIDES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Habilidoso"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.contains("SENSÍVEL (Maior)"))
+    }
+
+    @Test
+    fun `quadroides habilidoso inclui anotacao racial e sensivel maior`() {
+        val result = useCase.execute(
+            anc = "QUADROIDES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Habilidoso",
+            ancestryOptions = listOf("Padrão", "Habilidoso"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.contains("SENSÍVEL (Maior)"))
+        assertTrue(result.ensureRacialDisadvantages.contains("Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
+ao cenário."))
+        assertTrue(result.anotacoesToAdd.isEmpty())
+    }
+
+    @Test
+    fun `mineradores geneticos padrao usa dependencia atmosferica maior`() {
+        val result = useCase.execute(
+            anc = "MINERADORES GENÉTICOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Padrão",
+            ancestryOptions = listOf("Padrão", "Zero G"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
+    }
+
+    @Test
+    fun `mineradores geneticos zero g remove dependencia atmosferica`() {
+        val result = useCase.execute(
+            anc = "MINERADORES GENÉTICOS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Zero G",
+            ancestryOptions = listOf("Padrão", "Zero G"),
+            isSciFiActive = true
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.contains("HABITANTE DE GRAVIDADE BAIXA/ZERO"))
+        assertTrue(result.racialDisadvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
+        assertTrue(result.ensureAdvantageIds.contains("adaptacao_gravitacional"))
+        assertTrue(result.automaticAdvantagesToRemove.contains("FORTE"))
     }
 
     @Test

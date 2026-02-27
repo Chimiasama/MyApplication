@@ -121,6 +121,110 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertTrue(result.desvantagensRaciais.any { it.contains("HABITANTE DE GRAVIDADE", ignoreCase = true) })
     }
 
+
+    @Test
+    fun `centaux gazela remove tamanho grande e usa movimentacao mais quatro`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "CENTAUX",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Gazela",
+                ancestryOptions = listOf("Padrão", "Gazela"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
+                ancestryAutomaticDisadvantages = listOf("GRANDE")
+            )
+        )
+
+        assertTrue(result.vantagensRaciais.any { it.equals("MOVIMENTAÇÃO +4", ignoreCase = true) })
+        assertFalse(result.vantagensRaciais.any { it.equals("TAMANHO +2", ignoreCase = true) })
+        assertFalse(result.vantagensRaciais.any { it.equals("MOVIMENTAÇÃO +2", ignoreCase = true) })
+        assertFalse(result.desvantagensRaciais.any { it.equals("GRANDE", ignoreCase = true) })
+    }
+
+
+    @Test
+    fun `mineradores geneticos zero g substitui dependencia atmosferica por habitante gravidade baixa zero`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "MINERADORES GENÉTICOS",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Zero G",
+                ancestryOptions = listOf("Padrão", "Zero G"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = listOf("FORTE"),
+                ancestryAutomaticDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)")
+            )
+        )
+
+        assertFalse(result.desvantagensRaciais.any { it.equals("DEPENDÊNCIA ATMOSFÉRICA (Maior)", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.equals("HABITANTE DE GRAVIDADE BAIXA/ZERO", ignoreCase = true) })
+    }
+
+
+    @Test
+    fun `mineradores geneticos zero g adiciona adaptacao gravitacional e remove forte`() {
+        val adaptacaoGravitacional = Vantagem(
+            id = "adaptacao_gravitacional",
+            nome = "Adaptação Gravitacional",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "SCI_FI",
+            requisitos = Requisito()
+        )
+        val forte = Vantagem(
+            id = "forte",
+            nome = "Forte",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "SCI_FI",
+            requisitos = Requisito()
+        )
+
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "MINERADORES GENÉTICOS",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Zero G",
+                ancestryOptions = listOf("Padrão", "Zero G"),
+                isSciFiActive = true,
+                allAdvantages = listOf(adaptacaoGravitacional, forte),
+                selectedAdvantages = listOf(forte),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = listOf("FORTE"),
+                ancestryAutomaticDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)")
+            )
+        )
+
+        assertTrue(result.selectedAdvantages.any { it.id == "adaptacao_gravitacional" })
+        assertFalse(result.vantagensRaciais.any { it.equals("FORTE", ignoreCase = true) })
+    }
+
+
+    @Test
+    fun `possessores energia adiciona anotacao de compensacao de quatro pontos`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "POSSESSORES",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Energia",
+                ancestryOptions = listOf("Padrão", "Energia"),
+                isSciFiActive = true,
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = emptyList(),
+                ancestryAutomaticDisadvantages = emptyList()
+            )
+        )
+
+        assertTrue(result.anotacoesToAdd.any { it.contains("4 pontos", ignoreCase = true) })
+    }
+
     @Test
     fun `elfos comunitario substitui desastrado por transtorno de separacao`() {
         val result = useCase.execute(

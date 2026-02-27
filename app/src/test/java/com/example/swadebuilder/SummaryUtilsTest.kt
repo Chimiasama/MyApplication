@@ -2,6 +2,9 @@ package com.example.swadebuilder
 
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.Requisito
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -235,4 +238,208 @@ class SummaryUtilsTest {
         assertTrue(racialLine.contains("Comunitário"))
     }
 
+
+
+
+    @Test
+    fun `buildSummaryLines preserva texto exato da anotacao de possessores energia`() {
+        val texto = "Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Possessor",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "POSSESSORES",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf(texto),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioSciFiAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val annotations = lines.firstOrNull { it.startsWith("Anotações Raciais:") }
+        assertEquals("Anotações Raciais: $texto", annotations)
+    }
+
+
+    @Test
+    fun `buildSummaryLines mostra anotacao racial de quadroides habilidoso e sensivel maior`() {
+        val texto = "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido  
+ao cenário."
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Quadroide",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "QUADROIDES",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf("SENSÍVEL (Maior)", texto),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioSciFiAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = listOf(
+                com.example.swadebuilder.model.Complicacao(
+                    id = "sensivel",
+                    name = "SENSÍVEL",
+                    severity = "Maior",
+                    description = "",
+                    origem = "SCI_FI"
+                )
+            ),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val complicacoesLine = lines.firstOrNull { it.contains("Sensível (Maior)") }
+        val annotations = lines.firstOrNull { it.startsWith("Anotações Raciais:") }
+        assertTrue(complicacoesLine?.contains("Sensível (Maior)") == true)
+        assertEquals("Anotações Raciais: $texto", annotations)
+    }
+
+    @Test
+    fun `buildSummaryLines remove tamanho e movimento mais dois na gazela e mantem grande`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Gazela",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "CENTAUX",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                vantagensRaciais = listOf("MOVIMENTAÇÃO +2", "TAMANHO +2", "GRANDE", "ÓBVIO", "MOVIMENTAÇÃO +4"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioSciFiAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "CENTAUX",
+                    origem = "FC",
+                    atributos = emptyMap(),
+                    pericias = emptyMap(),
+                    desvantagens = emptyList(),
+                    opcoes = listOf("Padrão", "Gazela"),
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility("Estável", ""),
+                        com.example.swadebuilder.model.RacialAbility("Movimentação +2", ""),
+                        com.example.swadebuilder.model.RacialAbility("Tamanho +2", ""),
+                        com.example.swadebuilder.model.RacialAbility("Grande", ""),
+                        com.example.swadebuilder.model.RacialAbility("Óbvio", "")
+                    )
+                )
+            ),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+        assertNotNull(racialLine)
+        assertFalse(racialLine!!.contains("Movimentação +2"))
+        assertFalse(racialLine.contains("Tamanho +2"))
+        assertTrue(racialLine.contains("Movimentação +4"))
+        assertTrue(racialLine.contains("Grande"))
+    }
+
+    @Test
+    fun `summary deduplica vantagens com mesmo nome exibido`() {
+        val personagem = MeuPersonagem(
+            nome = "Oracle",
+            atributos = emptyMap(),
+            pericias = emptyMap(),
+            ancestralidade = "ORÁCULOS",
+            celestialAAMilagresDesabilitado = false,
+            vantagens = listOf("poderes_misticos", "poderes_misticos"),
+            complicacoes = emptyList(),
+            desvantagensRaciais = emptyList(),
+            equipamentos = emptyList(),
+            poderes = emptyMap(),
+            dinheiro = 0,
+            pontosRestantes = 0,
+            compendioSciFiAtivo = true
+        )
+
+        val lines = buildSummaryLines(
+            personagem = personagem,
+            allAdvantages = listOf(
+                Vantagem(
+                    id = "poderes_misticos",
+                    nome = "Poderes Místicos",
+                    categoria = Categoria.ANTECEDENTE,
+                    origem = "SCI_FI",
+                    requisitos = Requisito()
+                )
+            ),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(
+                "AGILIDADE" to "Agilidade",
+                "ASTUCIA" to "Astúcia",
+                "ESPIRITO" to "Espírito",
+                "FORCA" to "Força",
+                "VIGOR" to "Vigor"
+            ),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val joined = lines.joinToString("\n")
+        val count = "Poderes Místicos".toRegex().findAll(joined).count()
+        assertEquals(1, count)
+    }
 }

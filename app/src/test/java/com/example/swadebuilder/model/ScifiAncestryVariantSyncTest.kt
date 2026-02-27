@@ -104,6 +104,123 @@ class ScifiAncestryVariantSyncTest {
         assertFalse(mods.any { it.id == "racial_resistencia" })
     }
 
+
+
+    @Test
+    fun `centaux gazela totaliza movimentacao dez`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "CENTAUX"
+            scifiVariant = "Gazela"
+        }
+
+        assertEquals(10, state.valorMovimentacao())
+        assertEquals(0, state.valorTamanho())
+    }
+
+    @Test
+    fun `drakens aplicam lento e resistencia mais dois sem armadura racial`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "DRAKENS"
+            naturalArmorFromRace = 0
+        }
+
+        val mods = ModifierEngine.collect(state)
+
+        assertTrue(mods.any { it.id == "racial_pace_lento" && it.value == -1 })
+        assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
+        assertFalse(mods.any { it.id == "racial_armor_generic" })
+    }
+
+    @Test
+    fun `drakens expoem ataque natural cabeca dura`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "DRAKENS"
+        }
+
+        val armas = state.extrairArmasNaturais()
+
+        assertTrue(armas.any { it.nome.equals("Cabeça Dura", ignoreCase = true) })
+    }
+
+
+
+    @Test
+    fun `elementais nao expoem cabeca dura como ataque natural e usam ataque natural padrao`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "ELEMENTAIS"
+        }
+
+        val armas = state.extrairArmasNaturais()
+
+        assertFalse(armas.any { it.nome.equals("Cabeça Dura", ignoreCase = true) })
+        assertTrue(armas.any { it.nome.equals("Ataque Natural", ignoreCase = true) })
+    }
+
+    @Test
+    fun `elementais scifi comecam com forca d8`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "ELEMENTAIS"
+        }
+
+        assertEquals(8, state.atributoMinRaw("FORCA"))
+    }
+
+    @Test
+    fun `elementais scifi aplicam resistencia mais dois via traco racial`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "ELEMENTAIS"
+            vantagensRaciais.clear()
+            vantagensRaciais.add("RESISTÊNCIA +2")
+        }
+
+        val mods = ModifierEngine.collect(state)
+        assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
+    }
+
+
+    @Test
+    fun `ferais padrao aplicam diminuto tamanho menos tres e limite de forca d6`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "FERAIS"
+            scifiVariant = "Padrão"
+        }
+
+        assertEquals(-3, state.valorTamanho())
+        assertEquals(6, state.atributoMaxRaw("FORCA"))
+    }
+
+    @Test
+    fun `ferais menor aplicam diminuto tamanho menos quatro e limite de forca d4`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "FERAIS"
+            scifiVariant = "Menor"
+        }
+
+        assertEquals(-4, state.valorTamanho())
+        assertEquals(4, state.atributoMaxRaw("FORCA"))
+    }
+
+
+    @Test
+    fun `mimicos resistente aplicam bonus de resistencia mais um`() {
+        val state = CriadorState().apply {
+            compendioSciFiAtivo = true
+            ancestralidade = "MÍMICOS"
+            scifiVariant = "Resistente"
+        }
+
+        val mods = ModifierEngine.collect(state)
+        assertTrue(mods.any { it.target == ModifierTarget.TOUGHNESS_FLAT && it.value == 1 })
+    }
+
     @Test
     fun `avianos ave de rapina nao aplica penalidade de fragil`() {
         val state = CriadorState().apply {

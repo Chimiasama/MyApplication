@@ -550,7 +550,7 @@ class CriadorState {
         if (key == "CENTAUX" && variant.equals("Gazela", ignoreCase = true)) {
             removeByIdOrName("GRANDE", "GRANDE")
             removeByIdOrName("TAMANHO_MAIS_2", "TAMANHO +2")
-            removeByIdOrName("MOVIMENTACAO", "MOVIMENTACAO +2")
+            removeByIdOrName("MOVIMENTACAO_2", "MOVIMENTACAO +2")
 
             if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +4" }) {
                 newHabilidades.add(
@@ -1239,6 +1239,7 @@ class CriadorState {
             "Garras" to "GARRAS",
             "Mordida" to "MORDIDA",
             "Chifres" to "CHIFRES",
+            "Cabeça Dura" to "CABECA_DURA",
             "Cascos" to "CASCOS",
             "Toque Arrepiante" to "TOQUE_ARREPIANTE",
             "Toque da Morte" to "TOQUE_DA_MORTE",
@@ -1381,6 +1382,8 @@ class CriadorState {
                 if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor" && keyToken == "MORDIDA") return@forEach
                 // Insetoides Vespa removes GARRAS
                 if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa" && keyToken == "GARRAS") return@forEach
+                // Elementais possuem o traço "Cabeça Dura" como desvantagem cognitiva, não como arma natural
+                if (ancestralidade.keyify() != "DRAKENS" && keyToken == "CABECA DURA") return@forEach
             }
 
             // Check presence via ID (Strong match) or Name (Legacy/Fallback)
@@ -1511,7 +1514,13 @@ class CriadorState {
         // Always add "Ataque Natural" (Unarmed) using central logic - Filter if specific natural weapons exist
         val hasSpecificNaturalWeapons = weapons.any { weapon ->
             val key = weapon.nome.keyify()
-            key.contains("GARRA") || key.contains("MORDIDA") || key.contains("CHIFRE") || key.contains("CASCO") || key.contains("TOQUE ARREPIANTE") || key.contains("TOQUE DA MORTE")
+            key.contains("GARRA") ||
+                key.contains("MORDIDA") ||
+                key.contains("CHIFRE") ||
+                key.contains("CASCO") ||
+                key.contains("TOQUE ARREPIANTE") ||
+                key.contains("TOQUE DA MORTE") ||
+                key.contains("CABECA DURA")
         }
         val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
 

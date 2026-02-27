@@ -70,7 +70,14 @@ object ModifierEngine {
         val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
-            val rawSources = anc.vantagensGratis + anc.habilidades.map { it.nome } + anc.desvantagens
+            val rawSources =
+                anc.vantagensGratis +
+                    anc.habilidades.map { it.nome } +
+                    anc.desvantagens +
+                    state.vantagensRaciais +
+                    state.vantagensAutomaticas +
+                    state.desvantagensRaciais +
+                    state.desvantagensAutomaticas
             val sources = rawSources.toMutableList().apply {
                 val ancestryKey = anc.nome.keyify()
                 val allTraitKeys = (
@@ -107,7 +114,23 @@ object ModifierEngine {
                         key == "FRAGIL" || key == "NAO SABE NADAR"
                     }
                 }
-            }
+
+                val isCentauxGazela = state.compendioSciFiAtivo &&
+                    ancestryKey == "CENTAUX" &&
+                    state.resolveSciFiVariantSelectionFor(
+                        ancestryName = anc.nome,
+                        availableOptions = anc.opcoes
+                    ).equals("Gazela", ignoreCase = true)
+
+                if (isCentauxGazela) {
+                    removeAll { trait ->
+                        when (trait.keyify()) {
+                            "MOVIMENTACAO +2", "TAMANHO +2", "GRANDE", "TAMANHO_MAIS_2", "MOVIMENTACAO_2" -> true
+                            else -> false
+                        }
+                    }
+                }
+            }.distinctBy { it.keyify() }
             val abilityDescriptions = anc.habilidades.map { it.descricao }
 
             // Size from Ancestry (Tamanho X)
@@ -187,9 +210,34 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_pace_reduced", SourceType.ANCESTRALIDADE, "Movimentação Reduzida", ModifierTarget.PACE, -1))
             }
 
+            val hasLentoRacial = sources.any {
+                val key = it.keyify()
+                key == "LENTO" || key.endsWith("LENTO")
+            }
+            if (hasLentoRacial) {
+                modifiers.add(Modifier("racial_pace_lento", SourceType.ANCESTRALIDADE, "Lento", ModifierTarget.PACE, -1))
+            }
+
             // Diminuto (Ancestralidade)
             // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica penalidade de Tamanho
             val diminutoSource = sources.firstOrNull { it.keyify().startsWith("DIMINUTO") }
+
+            fun addDiminuto(sizeVal: Int, sourceLabel: String) {
+                modifiers.add(Modifier(
+                    id = "racial_diminuto",
+                    sourceType = SourceType.ANCESTRALIDADE,
+                    sourceName = sourceLabel,
+                    target = ModifierTarget.SIZE_DISPLAY,
+                    value = sizeVal
+                ))
+                modifiers.add(Modifier(
+                    id = "racial_diminuto_tough",
+                    sourceType = SourceType.ANCESTRALIDADE,
+                    sourceName = sourceLabel,
+                    target = ModifierTarget.SIZE_TOUGHNESS,
+                    value = sizeVal
+                ))
+            }
 
             if (diminutoSource != null) {
                 val k = diminutoSource.keyify()
@@ -200,21 +248,14 @@ object ModifierEngine {
                     k.contains("TAMANHO -4") -> -4
                     else -> -4
                 }
-
-                 modifiers.add(Modifier(
-                    id = "racial_diminuto",
-                    sourceType = SourceType.ANCESTRALIDADE,
-                    sourceName = "Diminuto",
-                    target = ModifierTarget.SIZE_DISPLAY,
-                    value = sizeVal
-                ))
-                modifiers.add(Modifier(
-                    id = "racial_diminuto_tough",
-                    sourceType = SourceType.ANCESTRALIDADE,
-                    sourceName = "Diminuto",
-                    target = ModifierTarget.SIZE_TOUGHNESS,
-                    value = sizeVal
-                ))
+                addDiminuto(sizeVal, "Diminuto")
+            } else if (state.compendioSciFiAtivo && anc.nome.keyify() == "FERAIS") {
+                val variant = state.resolveSciFiVariantSelectionFor(
+                    ancestryName = anc.nome,
+                    availableOptions = anc.opcoes
+                )
+                val feralSize = if (variant == "Menor") -4 else -3
+                addDiminuto(feralSize, "Diminuto (Feral)")
             }
 
             // Resistência (Auto advantage or racial trait)
@@ -239,6 +280,28 @@ object ModifierEngine {
             }
             if (hasFerocidade) {
                 modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
+            }
+
+            if (state.compendioSciFiAtivo && anc.nome.keyify() == "MIMICOS") {
+                val variant = state.resolveSciFiVariantSelectionFor(
+                    ancestryName = anc.nome,
+                    availableOptions = anc.opcoes
+                )
+                val hasResistenciaMaisUm = sources.any { src ->
+                    val key = src.keyify()
+                    key.contains("RESISTENCIA") && key.contains("+1")
+                }
+                if (variant == "Resistente" && !hasResistenciaMaisUm) {
+                    modifiers.add(
+                        Modifier(
+                            id = "racial_mimicos_resistente",
+                            sourceType = SourceType.ANCESTRALIDADE,
+                            sourceName = "Resistente",
+                            target = ModifierTarget.TOUGHNESS_FLAT,
+                            value = 1
+                        )
+                    )
+                }
             }
 
             // Generic Parsing
