@@ -53,6 +53,14 @@ class ResolveAncestryRacialPackageUseCase(
         )
         selected.addAll(grantedAdvantagesResult.advantagesToAdd)
 
+        // Ensure granted racial advantages are marked as automatic/racial to prevent removal during validation
+        grantedAdvantagesResult.advantagesToAdd.forEach { adv ->
+            val key = adv.nome.keyify()
+            if (vantagensRaciais.none { it.keyify() == key }) {
+                vantagensRaciais.add(adv.nome) // Add name or ID to list for validation exclusion
+            }
+        }
+
         val ancestrySpecificAdjustments = resolveAncestrySpecificAdjustmentsUseCase.execute(
             anc = params.anc,
             descendenteElementalSelecionado = params.descendenteElementalSelecionado,

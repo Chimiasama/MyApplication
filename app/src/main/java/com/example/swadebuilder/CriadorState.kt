@@ -594,6 +594,22 @@ class CriadorState {
             }
         }
 
+        if (key.contains("SOLDADOS GENETICOS") || key.contains("SOLDADO GENETICO")) {
+            if (variant.equals("Fuzileiro Zero G", ignoreCase = true)) {
+                removeByIdOrName("NERVOS_DE_ACO", "NERVOS DE AÇO")
+                if (newHabilidades.none { it.id == "adaptacao_gravitacional" || it.nome.keyify() == "ADAPTACAO GRAVITACIONAL" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Adaptação Gravitacional",
+                            descricao = "Ignora a penalidade de -2 para Agilidade e perícias baseadas em Agilidade ao agir em gravidade diferente da sua.",
+                            id = "adaptacao_gravitacional",
+                            category = "racial_edge"
+                        )
+                    )
+                }
+            }
+        }
+
         return base.copy(habilidades = newHabilidades)
     }
 
