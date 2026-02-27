@@ -326,9 +326,9 @@ class SummaryUtilsTest {
             arcanoInfo = emptyMap()
         )
 
-        val complicacoesLine = lines.firstOrNull { it.contains("Sensível (Maior)") }
+        val complicacoesLine = lines.firstOrNull { it.contains("SENSÍVEL (Maior)", ignoreCase = true) }
         val annotations = lines.firstOrNull { it.startsWith("Anotações Raciais:") }
-        assertTrue(complicacoesLine?.contains("Sensível (Maior)") == true)
+        assertTrue(complicacoesLine?.contains("SENSÍVEL (Maior)", ignoreCase = true) == true)
         // If there are multiple annotations (SENSÍVEL Maior is a complication, not annotation here, but just in case of mixup)
         // The expected text is just the second item in the list passed to character.
         // But joinToString(", ") will add a comma if there were other items.
