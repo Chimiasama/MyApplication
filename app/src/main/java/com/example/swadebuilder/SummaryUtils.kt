@@ -530,6 +530,9 @@ fun buildSummaryLines(
         .filterNot { trait ->
             isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
         }
+        .filterNot { trait ->
+            personagem.ancestralidade.keyify() == "SERRANOS" && trait.keyify() == "NOCAO DE PERIGO"
+        }
         .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
         .map { trait ->
             val key = trait.keyify()
