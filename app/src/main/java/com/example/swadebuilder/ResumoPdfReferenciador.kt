@@ -552,8 +552,27 @@ fun gerarFichaEmPdf(
     rightQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
 
     // Powers
-    if (personagem.poderes.isNotEmpty()) {
+    val isPathfinderGnome = personagem.compendioPathfinderAtivo && personagem.ancestralidade.uppercase().contains("GNOMO")
+    if (personagem.poderes.isNotEmpty() || isPathfinderGnome) {
         val powerLines = mutableListOf<String>()
+
+        if (isPathfinderGnome) {
+            val astucia = personagem.atributos["Astúcia"] ?: 4
+            val fe = personagem.pericias["Fé"] ?: 0
+            val conjurar = personagem.pericias["Conjurar"] ?: 0
+            val focoMax = maxOf(astucia, fe, conjurar)
+            val astuciaName = mapaAtributosDisplay["Astúcia"] ?: "Astúcia"
+            val focoNome = when {
+                focoMax == astucia -> astuciaName
+                focoMax == fe -> "Fé"
+                else -> "Conjurar"
+            }
+            val abCount = personagem.poderes.size
+            val ppText = if (abCount == 0) " (1 PP)" else ""
+            powerLines.add("Arcano: Truques")
+            powerLines.add("$focoNome$ppText - Iluminar, Som, Telecinese, Amigo das Feras")
+        }
+
         personagem.poderes.forEach { (arc, list) ->
             powerLines.add("Arcano: ${arc.toFancyTitleCase()}")
             val namedList = list.map { id ->

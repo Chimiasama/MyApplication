@@ -611,14 +611,36 @@ fun buildSummaryLines(
     }
     lines += ""
 
-    if (personagem.poderes.isNotEmpty()) {
+    val isPathfinderGnome = personagem.compendioPathfinderAtivo &&
+            personagem.ancestralidade.uppercase().contains("GNOMO")
+
+    if (personagem.poderes.isNotEmpty() || isPathfinderGnome) {
         val filteredPowers = personagem.poderes.filterKeys { key ->
             val cleanKey = key.uppercase().trim()
             cleanKey != "CANALIZAR CRISTAL"
         }
 
-        if (filteredPowers.isNotEmpty()) {
+        if (filteredPowers.isNotEmpty() || isPathfinderGnome) {
             lines += "Poderes arcanos"
+
+            if (isPathfinderGnome) {
+                val astucia = personagem.atributos["Astúcia"] ?: 4
+                val fe = personagem.pericias["Fé"] ?: 0
+                val conjurar = personagem.pericias["Conjurar"] ?: 0
+                val focoMax = maxOf(astucia, fe, conjurar)
+                val astuciaName = mapaAtributosDisplay["Astúcia"] ?: "Astúcia"
+                val focoNome = when {
+                    focoMax == astucia -> astuciaName
+                    focoMax == fe -> "Fé"
+                    else -> "Conjurar"
+                }
+
+                // If they have other powers, their PP adds up elsewhere, but the trait gives 1 PP specifically for these if no other AB
+                val abCount = filteredPowers.size
+                val ppText = if (abCount == 0) " (1 PP)" else ""
+                lines += "• Truques: $focoNome$ppText - Iluminar, Som, Telecinese, Amigo das Feras"
+            }
+
             filteredPowers.forEach { (arcanoKey, lista) ->
                 val cleanKey = arcanoKey.uppercase().trim()
                 val info = arcanoInfo[cleanKey]

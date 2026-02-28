@@ -191,10 +191,11 @@ fun PoderesSection(
         arcanosAtivos
     }
 
-    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap) {
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap) {
         if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo) 0 else {
             val maxBase = arcanosAtivos.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
-            maxBase + state.bonusPoderExtra
+            val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO")) 1 else 0
+            maxBase + state.bonusPoderExtra + gnomeBonus
         }
     }
 
@@ -412,7 +413,11 @@ fun PoderesSection(
             val centerText = if (state.usarSemPontosDePoder) {
                 "Teste $foco = -(custo/2)"
             } else {
-                val ppDisplay = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo) sharedTotalPP else ppTotal
+                val ppDisplay = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo) {
+                    sharedTotalPP
+                } else {
+                    ppTotal
+                }
                 "PP: $ppDisplay  •  $foco"
             }
 

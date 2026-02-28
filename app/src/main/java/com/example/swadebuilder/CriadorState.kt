@@ -2399,7 +2399,7 @@ class CriadorState {
         }
 
         // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
-        if (compendioPathfinderAtivo && ancKey.contains("GNOMO") && ancKey.contains("PATHFINDER")) {
+        if (compendioPathfinderAtivo && ancKey.contains("GNOMO")) {
             val chosen = gnomoPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 4)
