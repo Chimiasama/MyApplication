@@ -1229,8 +1229,8 @@
       {
         "nome": "NOÇÃO DE PERIGO",
         "descricao": "Serranos são intuitivos e têm percepção extrassensorial limitada. Possuem a Vantagem Noção do Perigo (veja Savage Worlds Edição Aventura).",
-        "id": "NOCAO_DE_PERIGO",
-        "category": "racial_trait_positive"
+        "id": "nocao_do_perigo",
+        "category": "racial_edge"
       }
     ],
     "tags": [

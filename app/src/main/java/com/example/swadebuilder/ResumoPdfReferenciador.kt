@@ -929,7 +929,15 @@ fun calcAparar(personagem: MeuPersonagem): Int {
     val base = 2 + (max(lutar, jutsu) / 2)
     val bloq = if (personagem.vantagens.any { it.keyify() == "BLOQUEAR" }) 1 else 0
     val bloqImp = if (personagem.vantagens.any { it.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
-    return base + bloq + bloqImp + personagem.bonusApararFromPower
+
+    val isDeaders = personagem.ancestralidade.keyify().contains("DEADERS")
+    val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
+    val apararBaixoMod = if (hasApararBaixo) -2 else 0
+
+    val isSerranos = personagem.ancestralidade.keyify().contains("SERRANOS")
+    val serranosApararMod = if (isSerranos) 2 else 0
+
+    return (base + bloq + bloqImp + personagem.bonusApararFromPower + apararBaixoMod + serranosApararMod).coerceAtLeast(0)
 }
 
 fun calcResistencia(personagem: MeuPersonagem): String {
