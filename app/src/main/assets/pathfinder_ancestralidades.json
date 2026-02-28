@@ -1,7 +1,7 @@
 [
   {
     "id": "anc_anaopathfinder",
-    "nome": "Anão (Pathfinder)",
+    "nome": "Anão",
     "categoria": "ANCESTRALIDADE",
     "origem": "PATHFINDER",
     "atributos": {
@@ -37,7 +37,7 @@
   },
   {
     "id": "anc_elfopathfinder",
-    "nome": "Elfo (Pathfinder)",
+    "nome": "Elfo",
     "categoria": "ANCESTRALIDADE",
     "origem": "PATHFINDER",
     "atributos": {
@@ -79,7 +79,7 @@
   },
   {
     "id": "anc_gnomopathfinder",
-    "nome": "Gnomo (Pathfinder)",
+    "nome": "Gnomo",
     "categoria": "ANCESTRALIDADE",
     "origem": "PATHFINDER",
     "atributos": {
@@ -124,7 +124,7 @@
   },
   {
     "id": "anc_halflingpathfinder",
-    "nome": "Halfling (Pathfinder)",
+    "nome": "Halfling",
     "categoria": "ANCESTRALIDADE",
     "origem": "PATHFINDER",
     "atributos": {
@@ -168,7 +168,7 @@
   },
   {
     "id": "anc_humanopathfinder",
-    "nome": "Humano (Pathfinder)",
+    "nome": "Humano",
     "categoria": "ANCESTRALIDADE",
     "origem": "PATHFINDER",
     "atributos": {},
@@ -187,7 +187,7 @@
   },
   {
     "id": "anc_meio_elfopathfinder",
-    "nome": "Meio-Elfo (Pathfinder)",
+    "nome": "Meio-Elfo",
     "categoria": "ANCESTRALIDADE",
     "origem": "PATHFINDER",
     "atributos": {},
@@ -212,7 +212,7 @@
   },
   {
     "id": "anc_meio_orcpathfinder",
-    "nome": "Meio-Orc (Pathfinder)",
+    "nome": "Meio-Orc",
     "categoria": "ANCESTRALIDADE",
     "origem": "PATHFINDER",
     "atributos": {
