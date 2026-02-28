@@ -4428,10 +4428,9 @@ class CriadorState {
         }
 
         val isPathfinderHuman = compendioPathfinderAtivo &&
-                (ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true) ||
-                        ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
+                (ancestralidade.equals("Humano", ignoreCase = true) || ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
         val isPathfinderHalfElf = compendioPathfinderAtivo &&
-                (ancestralidade.keyify().contains("MEIO-ELFO") && ancestralidade.keyify().contains("PATHFINDER"))
+                ancestralidade.keyify().contains("MEIO-ELFO")
 
         val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
 
