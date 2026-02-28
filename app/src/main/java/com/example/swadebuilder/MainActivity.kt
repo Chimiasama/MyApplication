@@ -253,7 +253,6 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-            val persistFeedbackPrefs: () -> Unit = { persistPrefs() } // Alias for cleaner diff
 
             val triggerFeedback = remember(state.hapticStrength, state.soundVolume) {
                 { feedbackController.play(state.hapticStrength, state.soundVolume) }
