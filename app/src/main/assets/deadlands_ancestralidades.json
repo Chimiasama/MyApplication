@@ -15,23 +15,5 @@
         "descricao": "Começa com uma Vantagem Novato extra de graça (deve atender aos requisitos)."
       }
     ]
-  },
-  {
-    "id": "anc_territorial",
-    "nome": "Nativo dos Territórios",
-    "categoria": "ANCESTRALIDADE",
-    "origem": "DEADLANDS",
-    "atributos": {},
-    "pericias": {},
-    "habilidades": [
-      {
-        "nome": "Conhecimento do Terreno",
-        "descricao": "Começa com d6 em Sobrevivência e Conhecimento Geral sobre a região."
-      },
-      {
-        "nome": "Espírito do Oeste",
-        "descricao": "Começa com um Bene extra por sessão."
-      }
-    ]
   }
 ]

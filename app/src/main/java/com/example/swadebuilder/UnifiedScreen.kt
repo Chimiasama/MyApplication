@@ -733,7 +733,7 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
         return sections
     }
 
-    if (!state.compendioWiseguysAtivo) {
+    if (!state.compendioWiseguysAtivo && !state.compendioDeadlandsAtivo) {
         sections += MainSection.ANCESTRALIDADES
     }
     if (state.compendioArteDaGuerraAtivo) {
