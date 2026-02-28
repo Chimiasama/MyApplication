@@ -14,7 +14,9 @@
     "habilidades": [
       {
         "nome": "Construto",
-        "descricao": "CONSTRUTO: Androides adicionam +2 para se recuperar do Estado Abalado, não respiram, ignoram um nível de modificadores de Ferimentos e são imunes a venenos e doenças. Construtos não podem se curar naturalmente. Curar Androides requer a perícia Consertar, tal ação durará, a cada tentativa, uma hora por nível de Ferimento atual do alvo e não é limitada pela “Hora de Ouro” (veja pág. 112). \nFORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.\nPACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.\nVOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo"
+        "descricao": "CONSTRUTO: Androides adicionam +2 para se recuperar do Estado Abalado, não respiram, ignoram um nível de modificadores de Ferimentos e são imunes a venenos e doenças. Construtos não podem se curar naturalmente. Curar Androides requer a perícia Consertar, tal ação durará, a cada tentativa, uma hora por nível de Ferimento atual do alvo e não é limitada pela “Hora de Ouro” (veja pág. 112). \nFORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.\nPACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.\nVOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo",
+        "category": "racial_trait_negative",
+        "id": "CONSTRUTO"
       }
     ]
   },
@@ -31,15 +33,21 @@
     "habilidades": [
       {
         "nome": "Movimentação Reduzida",
-        "descricao": "Por terem pernas mais curtas em comparação a maioria, reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo."
+        "descricao": "Por terem pernas mais curtas em comparação a maioria, reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.",
+        "category": "racial_trait_negative",
+        "id": "MOVIMENTACAO_REDUZIDA"
       },
       {
         "nome": "Resistente",
-        "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1"
+        "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
+        "category": "racial_trait_positive",
+        "id": "RESISTENTE"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Acostumados ao escuro do subterrâneo, ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Acostumados ao escuro do subterrâneo, ignoram penalidades por Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       }
     ]
   },
@@ -56,23 +64,33 @@
     "habilidades": [
       {
         "nome": "Frágil",
-        "descricao": "Têm Resistência -1 devido a seus ossos ocos."
+        "descricao": "Têm Resistência -1 devido a seus ossos ocos.",
+        "category": "racial_trait_negative",
+        "id": "FRAGIL"
       },
       {
         "nome": "Movimentação Reduzida",
-        "descricao": "Dependência de voo e asas pesadas tornam esse povo um pouco mais lento ao andar. Reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo."
+        "descricao": "Dependência de voo e asas pesadas tornam esse povo um pouco mais lento ao andar. Reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.",
+        "category": "racial_trait_negative",
+        "id": "MOVIMENTACAO_REDUZIDA"
       },
       {
         "nome": "Não Sabe Nadar",
-        "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água."
+        "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.",
+        "category": "racial_trait_negative",
+        "id": "NAO_SABE_NADAR"
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1."
+        "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
+        "category": "racial_trait_positive",
+        "id": "SENTIDOS_AGUCADOS"
       },
       {
         "nome": "Voo",
-        "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras."
+        "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
+        "category": "racial_trait_positive",
+        "id": "VOO"
       }
     ]
   },
@@ -89,19 +107,27 @@
     "habilidades": [
       {
         "nome": "Aquático",
-        "descricao": "Este povo não se afoga na água e pode usar sua Movimentação completa ao nadar. Veja Movimento na pág. 107 para velocidades normais de natação."
+        "descricao": "Este povo não se afoga na água e pode usar sua Movimentação completa ao nadar. Veja Movimento na pág. 107 para velocidades normais de natação.",
+        "category": "racial_trait_positive",
+        "id": "AQUATICO"
       },
       {
         "nome": "Dependência",
-        "descricao": "Devem permanecer imersos em água por uma hora a cada 24 ou recebem um nível de Fadiga por dia até que fiquem Incapacitados. No dia seguinte à Incapacitação por desidratação, morrem. A cada hora dentro d’água um nível de Fadiga é restaurado."
+        "descricao": "Devem permanecer imersos em água por uma hora a cada 24 ou recebem um nível de Fadiga por dia até que fiquem Incapacitados. No dia seguinte à Incapacitação por desidratação, morrem. A cada hora dentro d’água um nível de Fadiga é restaurado.",
+        "category": "racial_trait_negative",
+        "id": "DEPENDENCIA"
       },
       {
         "nome": "Resistência",
-        "descricao": "A vida nas profundezas de seus mundos aquáticos fez com que sua pele se tornasse dura e resistente. Adicione +1 a sua Resistência."
+        "descricao": "A vida nas profundezas de seus mundos aquáticos fez com que sua pele se tornasse dura e resistente. Adicione +1 a sua Resistência.",
+        "category": "racial_trait_positive",
+        "id": "RESISTENCIA"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Habituados a escuridão das profundezas, Aquarianos ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Habituados a escuridão das profundezas, Aquarianos ignoram penalidades por Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       }
     ]
   },
@@ -120,15 +146,22 @@
     "habilidades": [
       {
         "nome": "Ágil",
-        "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1."
+        "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
+        "category": "racial_trait_positive",
+        "id": "AGIL"
       },
       {
         "nome": "Desastrado",
-        "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos."
+        "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "DESASTRADO"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Seus olhos são capazes de ampliar a luz de tal forma que afirmam poder ver estrelas nos olhos élficos. Ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Seus olhos são capazes de ampliar a luz de tal forma que afirmam poder ver estrelas nos olhos élficos. Ignoram penalidades por Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       }
     ]
   },
@@ -144,16 +177,23 @@
     ],
     "habilidades": [
       {
-        "nome": "Forasteiro (Menor)",
-        "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria."
+        "nome": "Forasteiro",
+        "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "FORASTEIRO"
       },
       {
         "nome": "Herança",
-        "descricao": "Possuem a graça de parentes élficos ou a adaptabilidade por sua parte humana. Podem começar com uma Vantagem em Estágio Novato gratuita de sua escolha ou um d6 em Agilidade em vez de um d4 (o que também aumenta sua Agilidade máxima para d12+1)."
+        "descricao": "Possuem a graça de parentes élficos ou a adaptabilidade por sua parte humana. Podem começar com uma Vantagem em Estágio Novato gratuita de sua escolha ou um d6 em Agilidade em vez de um d4 (o que também aumenta sua Agilidade máxima para d12+1).",
+        "category": "racial_trait_positive",
+        "id": "HERANCA"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Ignoram penalidades por Penumbra e Escuridão."
+        "descricao": "Ignoram penalidades por Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       }
     ]
   },
@@ -170,7 +210,9 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente."
+        "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente.",
+        "category": "racial_trait_positive",
+        "id": "ADAPTAVEL"
       }
     ]
   },
@@ -187,19 +229,27 @@
     "habilidades": [
       {
         "nome": "Espirituoso",
-        "descricao": "Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1."
+        "descricao": "Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1.",
+        "category": "racial_trait_positive",
+        "id": "ESPIRITUOSO"
       },
       {
         "nome": "Movimentação Reduzida",
-        "descricao": "Reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo."
+        "descricao": "Reduza sua Movimentação em 1 quadro e seu dado de corrida em um tipo.",
+        "category": "racial_trait_negative",
+        "id": "MOVIMENTACAO_REDUZIDA"
       },
       {
         "nome": "Sorte",
-        "descricao": "Sacam um Bene adicional por sessão de jogo."
+        "descricao": "Sacam um Bene adicional por sessão de jogo.",
+        "category": "racial_edge",
+        "id": "SORTE"
       },
       {
         "nome": "Tamanho -1",
-        "descricao": "Medem cerca de um metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1."
+        "descricao": "Medem cerca de um metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
+        "category": "racial_trait_negative",
+        "id": "TAMANHO_1"
       }
     ]
   },
@@ -218,27 +268,40 @@
     "habilidades": [
       {
         "nome": "Ágil",
-        "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1."
+        "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
+        "category": "racial_trait_positive",
+        "id": "AGIL"
       },
       {
         "nome": "Inimigo Racial",
-        "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista."
+        "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
+        "category": "racial_trait_negative",
+        "id": "INIMIGO_RACIAL"
       },
       {
         "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano."
+        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "category": "racial_trait_positive",
+        "id": "MORDIDAGARRAS"
       },
       {
         "nome": "Não Sabe Nadar",
-        "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação."
+        "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.",
+        "category": "racial_trait_negative",
+        "id": "NAO_SABE_NADAR"
       },
       {
         "nome": "Sanguinário",
-        "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso."
+        "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.",
+        "category": "racial_hindrance",
+        "severity": "Maior",
+        "id": "SANGUINARIO"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Seus olhos captam melhor a luminosidade, ignorando penalidades por Penumbra e Escuridão."
+        "descricao": "Seus olhos captam melhor a luminosidade, ignorando penalidades por Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       }
     ]
   },
@@ -258,23 +321,34 @@
     "habilidades": [
       {
         "nome": "Armadura +2",
-        "descricao": "Sua pele escamosa funciona como uma armadura de couro."
+        "descricao": "Sua pele escamosa funciona como uma armadura de couro.",
+        "category": "racial_trait_positive",
+        "id": "ARMADURA_2"
       },
       {
-        "nome": "Forasteiro (Menor)",
-        "descricao": "A maioria das pessoas desconfia de sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo antigo subconsciente de ancestrais reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todas as demais ancestralidades."
+        "nome": "Forasteiro",
+        "descricao": "A maioria das pessoas desconfia de sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo antigo subconsciente de ancestrais reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todas as demais ancestralidades.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "FORASTEIRO"
       },
       {
         "nome": "Fraqueza Ambiental",
-        "descricao": "Embora não sejam verdadeiramente de sangue frio não são bem adaptados às condições de clima frio. Sofrem uma penalidade de -4 para resistir aos efeitos ambientais do frio e recebem +4 de dano por ataques baseados em frio."
+        "descricao": "Embora não sejam verdadeiramente de sangue frio não são bem adaptados às condições de clima frio. Sofrem uma penalidade de -4 para resistir aos efeitos ambientais do frio e recebem +4 de dano por ataques baseados em frio.",
+        "category": "racial_trait_negative",
+        "id": "FRAQUEZA_AMBIENTAL"
       },
       {
         "nome": "Mordida",
-        "descricao": "As presas de personagens são Armas Naturais (pág. 114) e causam Força + d4 de dano."
+        "descricao": "As presas de personagens são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "category": "racial_trait_positive",
+        "id": "MORDIDA"
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão."
+        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
+        "category": "racial_trait_positive",
+        "id": "SENTIDOS_AGUCADOS"
       }
     ]
   },
@@ -297,27 +371,40 @@
     "habilidades": [
       {
         "nome": "Desastrado",
-        "descricao": "Celestiais não têm o costume de lidar com tecnologia ou máquinas."
+        "descricao": "Celestiais não têm o costume de lidar com tecnologia ou máquinas.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "DESASTRADO"
       },
       {
         "nome": "Antecedente Arcano (Milagres)",
-        "descricao": "Celestiais podem invocar uma grande variedade de milagres."
+        "descricao": "Celestiais podem invocar uma grande variedade de milagres.",
+        "category": "racial_trait_positive",
+        "id": "ANTECEDENTE_ARCANO_MILAGRES"
       },
       {
         "nome": "Fé",
-        "descricao": "Celestiais começam com um d6 em Fé. Isso aumenta seu máximo para d12 + 1."
+        "descricao": "Celestiais começam com um d6 em Fé. Isso aumenta seu máximo para d12 + 1.",
+        "category": "racial_trait_positive",
+        "id": "FE"
       },
       {
         "nome": "Voo",
-        "descricao": "Anjos voam com Movimentação 12."
+        "descricao": "Anjos voam com Movimentação 12.",
+        "category": "racial_trait_positive",
+        "id": "VOO"
       },
       {
         "nome": "Inimigo Racial (Demônios e Diabos)",
-        "descricao": "Celestiais não toleram facilmente os saídos do abismo."
+        "descricao": "Celestiais não toleram facilmente os saídos do abismo.",
+        "category": "racial_trait_negative",
+        "id": "INIMIGO_RACIAL_DEMONIOS_E_DIABOS"
       },
       {
         "nome": "Voto (Maior: Proteger a humanidade)",
-        "descricao": "Devem proteger o rebanho que resta na Terra devastada."
+        "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
+        "category": "racial_trait_positive",
+        "id": "VOTO_MAIOR_PROTEGER_A_HUMANIDADE"
       }
     ]
   },
@@ -339,19 +426,27 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Começam o jogo com uma Vantagem Novato de sua escolha (os requisitos da Vantagem devem ser atendidos normalmente)."
+        "descricao": "Começam o jogo com uma Vantagem Novato de sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).",
+        "category": "racial_trait_positive",
+        "id": "ADAPTAVEL"
       },
       {
         "nome": "Campeões",
-        "descricao": "Possuem a Vantagem Campeão dando a eles um bônus de +2 em dano contra forças malignas sobrenaturais como demônios e diabos."
+        "descricao": "Possuem a Vantagem Campeão dando a eles um bônus de +2 em dano contra forças malignas sobrenaturais como demônios e diabos.",
+        "category": "racial_trait_positive",
+        "id": "CAMPEOES"
       },
       {
         "nome": "Vigoroso",
-        "descricao": "As pessoas que herdaram esta Terra devastada começam o jogo com um d6 em Vigor em vez de um d4. Isso aumenta seu Vigor máximo para d12 + 1."
+        "descricao": "As pessoas que herdaram esta Terra devastada começam o jogo com um d6 em Vigor em vez de um d4. Isso aumenta seu Vigor máximo para d12 + 1.",
+        "category": "racial_trait_positive",
+        "id": "VIGOROSO"
       },
       {
         "nome": "Voto (Maior: Proteger a humanidade)",
-        "descricao": "Devem proteger o rebanho que resta na Terra devastada."
+        "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
+        "category": "racial_trait_positive",
+        "id": "VOTO_MAIOR_PROTEGER_A_HUMANIDADE"
       }
     ]
   }

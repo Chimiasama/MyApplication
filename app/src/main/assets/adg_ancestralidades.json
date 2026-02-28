@@ -12,15 +12,21 @@
     "habilidades": [
       {
         "nome": "Pontos de Perícia",
-        "descricao": "Humanos que escolhem o signo Nenhum começam com 15 pontos de perícia, em vez dos 12 padrão."
+        "descricao": "Humanos que escolhem o signo Nenhum começam com 15 pontos de perícia, em vez dos 12 padrão.",
+        "category": "racial_trait_positive",
+        "id": "PONTOS_DE_PERICIA"
       },
       {
         "nome": "Adaptável ou Signo",
-        "descricao": "Você pode optar por não escolher um signo de nascença. Em vez disso, você pode começar como um humano padrão com Adaptável (ganha 1 PV)."
+        "descricao": "Você pode optar por não escolher um signo de nascença. Em vez disso, você pode começar como um humano padrão com Adaptável (ganha 1 PV).",
+        "category": "racial_trait_positive",
+        "id": "ADAPTAVEL_OU_SIGNO"
       },
       {
         "nome": "Signos de Nascença",
-        "descricao": "Mês 1 - Basabasa: Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói. Mês 2 - Boi: Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir esforço físico (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1. Mês 3 - Tigre: A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso). Mês 4 - Lebre: Heróis nascidos sob o signo da Lebre exibem qualidades gentis, amáveis e compassivas, com um toque de modéstia. Lebres podem demonstrar características comportamentais de sonhar acordado, escapismo, falta de perspectiva ou timidez em interações sociais. Uma Lebre tem um toque natural (Cura d6) e, com os suprimentos médicos adequados, pode gastar um Bene para tratar um Ferimento com horas ou dias (até 4 dias), como se estivesse sendo tratada dentro da Hora de Ouro. Um personagem pode se beneficiar desse tratamento uma única vez por aventura. Mês 5 - Garça: Nascidos com o signo da Garça, os indivíduos buscam uma vida de perfeito equilíbrio entre os altos e baixos que ela oferece. Uma Garça é agraciada com graça em seus movimentos e se destaca contra adversários em todas as formas. A Garça possui a fraqueza da insegurança e depende muito dos outros em momentos de dúvida. As garças recebem +1 em Aparar, d4 em Acrobacia e aumentam Atletismo em um tipo de dado. Mês 6 - Serpente: Muitos veem a serpente como astuta e sorrateira, no entanto, o signo da Serpente é um símbolo de sabedoria e mantém um alto nível de astúcia. Serpentes são consideradas sensíveis e emotivas, a maioria é talentosa nas artes. Com essa sensibilidade vem a hesitação e pequenos surtos de leve paranoia. Uma Serpente começa com Jogar d6 ou Performance d6. Usando Jogar, uma Serpente adiciona +1 ao total da diferença se vencer e -1 ao total da diferença se perder. Usando Performance para captação de recursos, altera a porcentagem para 30% e 40% com um sucesso. Mês 7 - Dragão: Nascidos sob o signo do Dragão, os indivíduos são respeitados por serem animados, pacientes e sábios em sua experiência. Muitos dos melhores estrategistas da história são do signo do Dragão. Os dragões tendem a odiar hipocrisia, fofocas e calúnias, e desprezam ser usados ou controlados pelos outros. O Dragão aumenta seu Espírito em um tipo de dado e aumenta seu máximo neste atributo para d12+1. Dragões se beneficiam de +1 em rolagens de Conhecimento Geral quando estão em situações desconhecidas. Mês 8 - Kirin: O nascimento de um Kirin coincide com o final da estação de verão à medida que se aproxima o outono, representando um tempo de coleta e colheita. Um Kirin é proativo e percebe a malícia dos outros por meio de ações independentes. No entanto, um Kirin tende a fazer o que é necessário por conta própria, desconfiando que os outros cumpram suas obrigações. Um Kirin precisa de um incentivo a mais para prosseguir, começando com +1 em sua Reserva de Chi e uma Bene adicional em cada sessão. Mês 9 - Macaco: O signo do Macaco está associado ao ser cheio de vida, de raciocínio rápido e versátil. Um Macaco é conhecido por tirar o máximo de qualquer situação, mas muitas vezes olha com menosprezo àqueles que não aprendem rapidamente. Geralmente, um temperamento impetuoso será a causa das ações de um Macaco. Com este signo de nascença, a Astúcia de um Macaco aumenta em um tipo de dado e seu máximo em aumenta d12+1. Um Macaco rola d4+1 nas perícias não treinadas baseadas em Astúcia, este bônus não se aplica ao dado selvagem. Mês 10 - Raposa: Dizem que a Raposa possui uma intuição incrível. Capaz de ler situações sociais e saber exatamente o que as outras pessoas precisam ouvir. Isso não quer dizer que a Raposa seja falsa, é uma demonstração de habilidade e grande cuidado em aspectos de \"Manter as Aparências\". Traição e confiança são preocupações comuns de uma Raposa, levando-a a questionar a lealdade e a amizade de outros. Uma Raposa começa com a Vantagem Elevar a Moral e recebe +1 em Persuadir e nas rolagens da Tabela de Reação. Mês 11 - Lobo: Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial. Mês 12 - Tartaruga: Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa. Mês 13 - Urso: Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2."
+        "descricao": "Mês 1 - Basabasa: Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói. Mês 2 - Boi: Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir esforço físico (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1. Mês 3 - Tigre: A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso). Mês 4 - Lebre: Heróis nascidos sob o signo da Lebre exibem qualidades gentis, amáveis e compassivas, com um toque de modéstia. Lebres podem demonstrar características comportamentais de sonhar acordado, escapismo, falta de perspectiva ou timidez em interações sociais. Uma Lebre tem um toque natural (Cura d6) e, com os suprimentos médicos adequados, pode gastar um Bene para tratar um Ferimento com horas ou dias (até 4 dias), como se estivesse sendo tratada dentro da Hora de Ouro. Um personagem pode se beneficiar desse tratamento uma única vez por aventura. Mês 5 - Garça: Nascidos com o signo da Garça, os indivíduos buscam uma vida de perfeito equilíbrio entre os altos e baixos que ela oferece. Uma Garça é agraciada com graça em seus movimentos e se destaca contra adversários em todas as formas. A Garça possui a fraqueza da insegurança e depende muito dos outros em momentos de dúvida. As garças recebem +1 em Aparar, d4 em Acrobacia e aumentam Atletismo em um tipo de dado. Mês 6 - Serpente: Muitos veem a serpente como astuta e sorrateira, no entanto, o signo da Serpente é um símbolo de sabedoria e mantém um alto nível de astúcia. Serpentes são consideradas sensíveis e emotivas, a maioria é talentosa nas artes. Com essa sensibilidade vem a hesitação e pequenos surtos de leve paranoia. Uma Serpente começa com Jogar d6 ou Performance d6. Usando Jogar, uma Serpente adiciona +1 ao total da diferença se vencer e -1 ao total da diferença se perder. Usando Performance para captação de recursos, altera a porcentagem para 30% e 40% com um sucesso. Mês 7 - Dragão: Nascidos sob o signo do Dragão, os indivíduos são respeitados por serem animados, pacientes e sábios em sua experiência. Muitos dos melhores estrategistas da história são do signo do Dragão. Os dragões tendem a odiar hipocrisia, fofocas e calúnias, e desprezam ser usados ou controlados pelos outros. O Dragão aumenta seu Espírito em um tipo de dado e aumenta seu máximo neste atributo para d12+1. Dragões se beneficiam de +1 em rolagens de Conhecimento Geral quando estão em situações desconhecidas. Mês 8 - Kirin: O nascimento de um Kirin coincide com o final da estação de verão à medida que se aproxima o outono, representando um tempo de coleta e colheita. Um Kirin é proativo e percebe a malícia dos outros por meio de ações independentes. No entanto, um Kirin tende a fazer o que é necessário por conta própria, desconfiando que os outros cumpram suas obrigações. Um Kirin precisa de um incentivo a mais para prosseguir, começando com +1 em sua Reserva de Chi e uma Bene adicional em cada sessão. Mês 9 - Macaco: O signo do Macaco está associado ao ser cheio de vida, de raciocínio rápido e versátil. Um Macaco é conhecido por tirar o máximo de qualquer situação, mas muitas vezes olha com menosprezo àqueles que não aprendem rapidamente. Geralmente, um temperamento impetuoso será a causa das ações de um Macaco. Com este signo de nascença, a Astúcia de um Macaco aumenta em um tipo de dado e seu máximo em aumenta d12+1. Um Macaco rola d4+1 nas perícias não treinadas baseadas em Astúcia, este bônus não se aplica ao dado selvagem. Mês 10 - Raposa: Dizem que a Raposa possui uma intuição incrível. Capaz de ler situações sociais e saber exatamente o que as outras pessoas precisam ouvir. Isso não quer dizer que a Raposa seja falsa, é uma demonstração de habilidade e grande cuidado em aspectos de \"Manter as Aparências\". Traição e confiança são preocupações comuns de uma Raposa, levando-a a questionar a lealdade e a amizade de outros. Uma Raposa começa com a Vantagem Elevar a Moral e recebe +1 em Persuadir e nas rolagens da Tabela de Reação. Mês 11 - Lobo: Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial. Mês 12 - Tartaruga: Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa. Mês 13 - Urso: Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2.",
+        "category": "racial_trait_negative",
+        "id": "SIGNOS_DE_NASCENCA"
       }
     ]
   },
@@ -33,19 +39,27 @@
     "habilidades": [
       {
         "nome": "Bom Conselheiro",
-        "descricao": "Os Akaimimi são os mais sábios dos espíritos e sempre têm algo a compartilhar (mesmo que ninguém tenha pedido). Isso se manifesta como a Complicação Peculiaridade (Pedância)."
+        "descricao": "Os Akaimimi são os mais sábios dos espíritos e sempre têm algo a compartilhar (mesmo que ninguém tenha pedido). Isso se manifesta como a Complicação Peculiaridade (Pedância).",
+        "category": "racial_trait_positive",
+        "id": "BOM_CONSELHEIRO"
       },
       {
         "nome": "Dicas Culturais",
-        "descricao": "Os Akaimimi estão naturalmente cientes dos estigmas sociais e dos costumes alheios, começando com um d6 em Convenção e o máximo da perícia aumenta para d12+1."
+        "descricao": "Os Akaimimi estão naturalmente cientes dos estigmas sociais e dos costumes alheios, começando com um d6 em Convenção e o máximo da perícia aumenta para d12+1.",
+        "category": "racial_trait_positive",
+        "id": "DICAS_CULTURAIS"
       },
       {
         "nome": "Conhecimento Geral",
-        "descricao": "Akaimimi começa com Conhecimento Geral d6 (1)."
+        "descricao": "Akaimimi começa com Conhecimento Geral d6 (1).",
+        "category": "racial_trait_positive",
+        "id": "CONHECIMENTO_GERAL"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão."
+        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       }
     ],
     "atributos": {},
@@ -62,23 +76,33 @@
     "habilidades": [
       {
         "nome": "Brincalhão",
-        "descricao": "O Araiguma recebe Provocar d4 (1)."
+        "descricao": "O Araiguma recebe Provocar d4 (1).",
+        "category": "racial_trait_positive",
+        "id": "BRINCALHAO"
       },
       {
         "nome": "Digestão Gloriosa",
-        "descricao": "O amor de um Araiguma por comida é incomum, mesmo aquelas não tão saborosas. Os Araiguma não sofrem de náuseas ou outras condições por ingerir coisas duvidosas, enquanto são imunes a venenos e doenças."
+        "descricao": "O amor de um Araiguma por comida é incomum, mesmo aquelas não tão saborosas. Os Araiguma não sofrem de náuseas ou outras condições por ingerir coisas duvidosas, enquanto são imunes a venenos e doenças.",
+        "category": "racial_trait_positive",
+        "id": "DIGESTAO_GLORIOSA"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão."
+        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       },
       {
         "nome": "Trapalhões Travessos",
-        "descricao": "Os Araiguma sentem um certo encanto na confusão, começando com d6 em Furtividade."
+        "descricao": "Os Araiguma sentem um certo encanto na confusão, começando com d6 em Furtividade.",
+        "category": "racial_trait_positive",
+        "id": "TRAPALHOES_TRAVESSOS"
       },
       {
         "nome": "Esquisitices",
-        "descricao": "Os Araiguma foram criados como criaturas excêntricas e desenvolveram personalidades que refletem nisso. Não importa a idade, todos possuem as complicações menores Hábito e Peculiaridade."
+        "descricao": "Os Araiguma foram criados como criaturas excêntricas e desenvolveram personalidades que refletem nisso. Não importa a idade, todos possuem as complicações menores Hábito e Peculiaridade.",
+        "category": "racial_trait_positive",
+        "id": "ESQUISITICES"
       }
     ],
     "atributos": {},
@@ -95,23 +119,33 @@
     "habilidades": [
       {
         "nome": "Vigorosos",
-        "descricao": "Os Inumimi não são apenas maiores do que outros Kemonomimi, eles têm músculos mais robustos, adicionando +1 à sua Resistência base."
+        "descricao": "Os Inumimi não são apenas maiores do que outros Kemonomimi, eles têm músculos mais robustos, adicionando +1 à sua Resistência base.",
+        "category": "racial_trait_positive",
+        "id": "VIGOROSOS"
       },
       {
         "nome": "Caninos",
-        "descricao": "Um cão que ladra e morde: A mordida do Inumimi causa For+d4 de dano e pode ser usada para Prender e Enredar um inimigo."
+        "descricao": "Um cão que ladra e morde: A mordida do Inumimi causa For+d4 de dano e pode ser usada para Prender e Enredar um inimigo.",
+        "category": "racial_trait_positive",
+        "id": "CANINOS"
       },
       {
         "nome": "Cães de Guarda",
-        "descricao": "Os Inumimi começam com d6 em Perceber."
+        "descricao": "Os Inumimi começam com d6 em Perceber.",
+        "category": "racial_trait_positive",
+        "id": "CAES_DE_GUARDA"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão."
+        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       },
       {
         "nome": "Matilha",
-        "descricao": "Os Inumimi formam uma matilha. Membros dessa matilha estão sujeitos a Complicação Leal do Inumimi."
+        "descricao": "Os Inumimi formam uma matilha. Membros dessa matilha estão sujeitos a Complicação Leal do Inumimi.",
+        "category": "racial_trait_positive",
+        "id": "MATILHA"
       }
     ],
     "atributos": {},
@@ -128,19 +162,27 @@
     "habilidades": [
       {
         "nome": "Visão no Escuro",
-        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão."
+        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       },
       {
         "nome": "Excessivamente Detalhistas",
-        "descricao": "Planejar esquemas e metáforas extravagantes leva tempo, e às vezes um kitsunemimi superestima esse tempo. Todos sofrem com a Complicação Cauteloso."
+        "descricao": "Planejar esquemas e metáforas extravagantes leva tempo, e às vezes um kitsunemimi superestima esse tempo. Todos sofrem com a Complicação Cauteloso.",
+        "category": "racial_trait_positive",
+        "id": "EXCESSIVAMENTE_DETALHISTAS"
       },
       {
         "nome": "Preparado",
-        "descricao": "Para realizar esquemas, um kitsunemimi deve ter o conhecimento prévio para explorá-lo. Escolha uma das opções da lista para começar com d4: Conhecimento Acadêmico, Convenção, Intimidar, Pesquisar ou Provocar."
+        "descricao": "Para realizar esquemas, um kitsunemimi deve ter o conhecimento prévio para explorá-lo. Escolha uma das opções da lista para começar com d4: Conhecimento Acadêmico, Convenção, Intimidar, Pesquisar ou Provocar.",
+        "category": "racial_trait_positive",
+        "id": "PREPARADO"
       },
       {
         "nome": "Socialmente Sofisticados",
-        "descricao": "Os kitsunemimi direcionam outras pessoas para esquemas complexos. Eles começam com a Vantagem Cativar o Ambiente."
+        "descricao": "Os kitsunemimi direcionam outras pessoas para esquemas complexos. Eles começam com a Vantagem Cativar o Ambiente.",
+        "category": "racial_trait_positive",
+        "id": "SOCIALMENTE_SOFISTICADOS"
       }
     ],
     "atributos": {},
@@ -157,19 +199,27 @@
     "habilidades": [
       {
         "nome": "Visão no Escuro",
-        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão."
+        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       },
       {
         "nome": "Brincando com o Destino",
-        "descricao": "Os nekomimi têm um talento natural para jogos de azar. Começam com d6 em Jogar."
+        "descricao": "Os nekomimi têm um talento natural para jogos de azar. Começam com d6 em Jogar.",
+        "category": "racial_trait_positive",
+        "id": "BRINCANDO_COM_O_DESTINO"
       },
       {
         "nome": "Sorte",
-        "descricao": "A Fortuna dá. Os nekomimi começam um Bene adicional por sessão de jogo. Isso pode ser combinado com as Vantagens Sorte e Sorte Grande."
+        "descricao": "A Fortuna dá. Os nekomimi começam um Bene adicional por sessão de jogo. Isso pode ser combinado com as Vantagens Sorte e Sorte Grande.",
+        "category": "racial_edge",
+        "id": "SORTE"
       },
       {
         "nome": "Azarado",
-        "descricao": "A Fortuna tira. Eles têm a Complicação Azarado."
+        "descricao": "A Fortuna tira. Eles têm a Complicação Azarado.",
+        "category": "racial_trait_positive",
+        "id": "AZARADO"
       }
     ],
     "atributos": {},
@@ -186,19 +236,27 @@
     "habilidades": [
       {
         "nome": "Felizes por Natureza",
-        "descricao": "Pessoas resilientes e simples, os tanukimimi são felizes e começam com d6 em Espírito."
+        "descricao": "Pessoas resilientes e simples, os tanukimimi são felizes e começam com d6 em Espírito.",
+        "category": "racial_trait_positive",
+        "id": "FELIZES_POR_NATUREZA"
       },
       {
         "nome": "Despretensiosos e Barrigudos",
-        "descricao": "Lentos para agir e se mover. Os tanukimimi têm -1 em Aparar, a Movimentação é reduzida em 1 e seu dado de corrida é d4."
+        "descricao": "Lentos para agir e se mover. Os tanukimimi têm -1 em Aparar, a Movimentação é reduzida em 1 e seu dado de corrida é d4.",
+        "category": "racial_trait_negative",
+        "id": "DESPRETENSIOSOS_E_BARRIGUDOS"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão."
+        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       },
       {
         "nome": "Pensamentos Positivos",
-        "descricao": "Seus espíritos os impulsionam para seguir em frente. Os tanukimimi têm a Vantagem Impulso."
+        "descricao": "Seus espíritos os impulsionam para seguir em frente. Os tanukimimi têm a Vantagem Impulso.",
+        "category": "racial_trait_positive",
+        "id": "PENSAMENTOS_POSITIVOS"
       }
     ],
     "atributos": {},
@@ -215,19 +273,27 @@
     "habilidades": [
       {
         "nome": "Definido pelo Ofício",
-        "descricao": "Os Usagimimi respeitam e apreciam o trabalho árduo realizado pelos outros. Eles se esforçam para ter sucesso em uma perícia própria. Os Usagimimi começam com uma perícia (de sua escolha) em d6."
+        "descricao": "Os Usagimimi respeitam e apreciam o trabalho árduo realizado pelos outros. Eles se esforçam para ter sucesso em uma perícia própria. Os Usagimimi começam com uma perícia (de sua escolha) em d6.",
+        "category": "racial_trait_positive",
+        "id": "DEFINIDO_PELO_OFICIO"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão."
+        "descricao": "Os Kemonomimi nascem com a herança ótica de seus ancestrais animais. Eles ignoram penalidades de Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       },
       {
         "nome": "Velocidade da Lebre",
-        "descricao": "Eles têm +2 de Movimentação e seu dado de corrida aumenta em um passo."
+        "descricao": "Eles têm +2 de Movimentação e seu dado de corrida aumenta em um passo.",
+        "category": "racial_trait_positive",
+        "id": "VELOCIDADE_DA_LEBRE"
       },
       {
         "nome": "Ariscos",
-        "descricao": "Os Usagimimi subtraem 2 das rolagens resistidas de Provocar e ao fazer rolagens de Intimidar."
+        "descricao": "Os Usagimimi subtraem 2 das rolagens resistidas de Provocar e ao fazer rolagens de Intimidar.",
+        "category": "racial_trait_negative",
+        "id": "ARISCOS"
       }
     ],
     "atributos": {},
@@ -244,27 +310,41 @@
     "habilidades": [
       {
         "nome": "Metade Construto",
-        "descricao": "Terracotas são um equilíbrio entre carne e pedra, recebem +3 em Resistência. Terracotas não respiram, portanto não são afetadas por toxinas inaláveis, não podem se afogar ou sufocar. São imunes a venenos e doenças, e não sofrem dano extra de Ataques Localizados devido à resiliência biológica. Terracotas podem ser tratadas durante a “Hora de Ouro” como outros, mas após esse período, não conseguem se curar naturalmente. O sangue seca e os ferimentos endurecem, exigindo o uso de Consertar com materiais de barro e água, que leva uma hora por nível de Ferimento atual por tentativa. A rolagem de Consertar não está limitada à regra da “Hora de Ouro”."
+        "descricao": "Terracotas são um equilíbrio entre carne e pedra, recebem +3 em Resistência. Terracotas não respiram, portanto não são afetadas por toxinas inaláveis, não podem se afogar ou sufocar. São imunes a venenos e doenças, e não sofrem dano extra de Ataques Localizados devido à resiliência biológica. Terracotas podem ser tratadas durante a “Hora de Ouro” como outros, mas após esse período, não conseguem se curar naturalmente. O sangue seca e os ferimentos endurecem, exigindo o uso de Consertar com materiais de barro e água, que leva uma hora por nível de Ferimento atual por tentativa. A rolagem de Consertar não está limitada à regra da “Hora de Ouro”.",
+        "category": "racial_trait_positive",
+        "id": "METADE_CONSTRUTO"
       },
       {
         "nome": "Metade Carne",
-        "descricao": "Terracotas requerem os mesmos serviços básicos que qualquer outro humanoide, como alimentação e meditação para recuperar Chi, etc."
+        "descricao": "Terracotas requerem os mesmos serviços básicos que qualquer outro humanoide, como alimentação e meditação para recuperar Chi, etc.",
+        "category": "racial_trait_positive",
+        "id": "METADE_CARNE"
       },
       {
-        "nome": "Forasteiro (Menor)",
-        "descricao": "Terracotas são raros o suficiente no mundo que, quando encontrados, são frequentemente alvo de preconceitos, suspeitas e vistos como seres não-naturais."
+        "nome": "Forasteiro",
+        "descricao": "Terracotas são raros o suficiente no mundo que, quando encontrados, são frequentemente alvo de preconceitos, suspeitas e vistos como seres não-naturais.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "FORASTEIRO"
       },
       {
         "nome": "Chi Reduzido",
-        "descricao": "Terracota deve sacrificar Chi para ancorar o espírito à massa de argila e manipular seus Movimentos. Começa com uma penalidade de -1 em sua Reserva de Chi inicial."
+        "descricao": "Terracota deve sacrificar Chi para ancorar o espírito à massa de argila e manipular seus Movimentos. Começa com uma penalidade de -1 em sua Reserva de Chi inicial.",
+        "category": "racial_trait_negative",
+        "id": "CHI_REDUZIDO"
       },
       {
         "nome": "Articulações Limitadas",
-        "descricao": "A metade construto é feita de grandes pilhas de minerais, tornando-os pesados. A Movimentação inicial é 5 e seu dado de corrida é d4."
+        "descricao": "A metade construto é feita de grandes pilhas de minerais, tornando-os pesados. A Movimentação inicial é 5 e seu dado de corrida é d4.",
+        "category": "racial_trait_negative",
+        "id": "ARTICULACOES_LIMITADAS"
       },
       {
-        "nome": "Voto ou Obrigação (Maior)",
-        "descricao": "Toda a existência de um Terracota está atada à ideia de que foi trazido de volta para cumprir uma ação ou tarefa específica que concordou em realizar. Ir contra o pacto acordado pode resultar em repercussões graves e rápidas (mortais) para o personagem e aqueles ao seu redor. Caso um momento ou conflito de interesse vá contra o Voto ou provoque uma Obrigação não cumprida, o Narrador e o Herói devem descobrir se uma solução alternativa pode ser alcançada para evitar uma morte final."
+        "nome": "Voto ou Obrigação",
+        "descricao": "Toda a existência de um Terracota está atada à ideia de que foi trazido de volta para cumprir uma ação ou tarefa específica que concordou em realizar. Ir contra o pacto acordado pode resultar em repercussões graves e rápidas (mortais) para o personagem e aqueles ao seu redor. Caso um momento ou conflito de interesse vá contra o Voto ou provoque uma Obrigação não cumprida, o Narrador e o Herói devem descobrir se uma solução alternativa pode ser alcançada para evitar uma morte final.",
+        "category": "racial_hindrance",
+        "severity": "Maior",
+        "id": "VOTO_OU_OBRIGACAO"
       }
     ],
     "atributos": {},
@@ -281,15 +361,22 @@
     "habilidades": [
       {
         "nome": "Dons da Natureza",
-        "descricao": "Os Umvee são filhos da lua e filhos da natureza. Eles podem começar com um dos seguintes dons da natureza: Ápice (ganham um ataque de Garras (For+d4) para caçar); Vínculo Bestial (começam com a Vantagem Senhor das Feras); Pele Iluminada pela Lua (+1 de Aparar e pode emitir um suave brilho em Modelo Médio de Explosão com luz tênue); Gatoruja (Visão no Escuro e Perceber inicial de d6 com máximo de d12+1); Correnteza (Movimentação inicial de 8 e dado de corrida d8); Pedregoso (+1 de Resistência e +2 de Armadura); Ligado à Natureza (começam com d4 em Sobrevivência)."
+        "descricao": "Os Umvee são filhos da lua e filhos da natureza. Eles podem começar com um dos seguintes dons da natureza: Ápice (ganham um ataque de Garras (For+d4) para caçar); Vínculo Bestial (começam com a Vantagem Senhor das Feras); Pele Iluminada pela Lua (+1 de Aparar e pode emitir um suave brilho em Modelo Médio de Explosão com luz tênue); Gatoruja (Visão no Escuro e Perceber inicial de d6 com máximo de d12+1); Correnteza (Movimentação inicial de 8 e dado de corrida d8); Pedregoso (+1 de Resistência e +2 de Armadura); Ligado à Natureza (começam com d4 em Sobrevivência).",
+        "category": "racial_trait_positive",
+        "id": "DONS_DA_NATUREZA"
       },
       {
         "nome": "Naturalmente Sobrenatural",
-        "descricao": "Os Umvee estão ligados ao mundo espiritual e possuem um conhecimento inato dele, começando com Ocultismo d4."
+        "descricao": "Os Umvee estão ligados ao mundo espiritual e possuem um conhecimento inato dele, começando com Ocultismo d4.",
+        "category": "racial_trait_positive",
+        "id": "NATURALMENTE_SOBRENATURAL"
       },
       {
-        "nome": "Forasteiro (Menor)",
-        "descricao": "Por natureza, os Umvee são diferentes e são vistos como seres alienígenas, de natureza não-humana. Isso impacta algumas interações sociais, todos têm a versão menor da Complicação Forasteiro."
+        "nome": "Forasteiro",
+        "descricao": "Por natureza, os Umvee são diferentes e são vistos como seres alienígenas, de natureza não-humana. Isso impacta algumas interações sociais, todos têm a versão menor da Complicação Forasteiro.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "FORASTEIRO"
       }
     ],
     "atributos": {},
@@ -306,31 +393,46 @@
     "habilidades": [
       {
         "nome": "Integrado à Natureza",
-        "descricao": "Ferais tem uma ligação mais forte com a natureza que os Umvee, eles começam com Sobrevivência d6."
+        "descricao": "Ferais tem uma ligação mais forte com a natureza que os Umvee, eles começam com Sobrevivência d6.",
+        "category": "racial_trait_positive",
+        "id": "INTEGRADO_A_NATUREZA"
       },
       {
         "nome": "Insanidade",
-        "descricao": "Quando a raiva animalística se manifesta, ela é incontrolável, mesmo quando branda. Feral possui a Vantagem Furioso e a Complicação Sanguinário."
+        "descricao": "Quando a raiva animalística se manifesta, ela é incontrolável, mesmo quando branda. Feral possui a Vantagem Furioso e a Complicação Sanguinário.",
+        "category": "racial_trait_positive",
+        "id": "INSANIDADE"
       },
       {
         "nome": "Ápice",
-        "descricao": "Feral possui os Dons da Natureza de mesmo nome de um Umvee."
+        "descricao": "Feral possui os Dons da Natureza de mesmo nome de um Umvee.",
+        "category": "racial_trait_positive",
+        "id": "APICE"
       },
       {
         "nome": "Primitivo",
-        "descricao": "Feral começa com d6 em Agilidade, Força ou Vigor."
+        "descricao": "Feral começa com d6 em Agilidade, Força ou Vigor.",
+        "category": "racial_trait_positive",
+        "id": "PRIMITIVO"
       },
       {
         "nome": "Mente Primitiva",
-        "descricao": "Feral tem mentes simples e não pode avançar a Astúcia além do d6 na criação do personagem."
+        "descricao": "Feral tem mentes simples e não pode avançar a Astúcia além do d6 na criação do personagem.",
+        "category": "racial_trait_positive",
+        "id": "MENTE_PRIMITIVA"
       },
       {
         "nome": "Limitações Técnicas",
-        "descricao": "O espírito animal dentro do Feral interfere na possibilidade de entender seu potencial completo de Chi. Um Feral pode usar habilidades alimentadas por Chi de Tropos, Vantagens e afins, mas não pode aprender ou canalizar Técnicas Chi."
+        "descricao": "O espírito animal dentro do Feral interfere na possibilidade de entender seu potencial completo de Chi. Um Feral pode usar habilidades alimentadas por Chi de Tropos, Vantagens e afins, mas não pode aprender ou canalizar Técnicas Chi.",
+        "category": "racial_trait_positive",
+        "id": "LIMITACOES_TECNICAS"
       },
       {
-        "nome": "Forasteiro (Menor)",
-        "descricao": "Por natureza, os Umvee são diferentes e são vistos como seres alienígenas, de natureza não-humana. Isso impacta algumas interações sociais, todos têm a versão menor da Complicação Forasteiro."
+        "nome": "Forasteiro",
+        "descricao": "Por natureza, os Umvee são diferentes e são vistos como seres alienígenas, de natureza não-humana. Isso impacta algumas interações sociais, todos têm a versão menor da Complicação Forasteiro.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "FORASTEIRO"
       }
     ],
     "atributos": {},
@@ -347,19 +449,28 @@
     "habilidades": [
       {
         "nome": "Tripas Resistente",
-        "descricao": "Nem o mais forte ferro fundido, mesmo de origem incomum, faz os Onigem sofrerem dano, fraquejar na maioria das situações assustadoras ou sofrer um “piriri” ao ingerir algo. Os Onigem recebem +1 em rolagens de Medo, Absorção, resistir a venenos e condições que podem causar náuseas não baseadas em Medo (como efeitos colaterais de álcool, comer carne crua, etc)."
+        "descricao": "Nem o mais forte ferro fundido, mesmo de origem incomum, faz os Onigem sofrerem dano, fraquejar na maioria das situações assustadoras ou sofrer um “piriri” ao ingerir algo. Os Onigem recebem +1 em rolagens de Medo, Absorção, resistir a venenos e condições que podem causar náuseas não baseadas em Medo (como efeitos colaterais de álcool, comer carne crua, etc).",
+        "category": "racial_trait_positive",
+        "id": "TRIPAS_RESISTENTE"
       },
       {
         "nome": "Ancestralidade Infame",
-        "descricao": "Os Onigem possuem características visíveis de Oni para a maioria dos humanóides e isso não fornece boa confiabilidade. Todas as reações iniciais com um Onigem são tratadas como Não Cooperativas e subtraem 2 nas rolagens de Persuadir contra quem não for familiarizados com o personagem."
+        "descricao": "Os Onigem possuem características visíveis de Oni para a maioria dos humanóides e isso não fornece boa confiabilidade. Todas as reações iniciais com um Onigem são tratadas como Não Cooperativas e subtraem 2 nas rolagens de Persuadir contra quem não for familiarizados com o personagem.",
+        "category": "racial_trait_positive",
+        "id": "ANCESTRALIDADE_INFAME"
       },
       {
         "nome": "Forte",
-        "descricao": "O sangue dos Oni corre nas veias de um Onigem, tornando sua Força inicial em d6 e sua Força máxima em d12+1."
+        "descricao": "O sangue dos Oni corre nas veias de um Onigem, tornando sua Força inicial em d6 e sua Força máxima em d12+1.",
+        "category": "racial_trait_positive",
+        "id": "FORTE"
       },
       {
-        "nome": "Suspeitoso (Menor)",
-        "descricao": "Há um preconceito contra os Onigem, não importa onde eles vão."
+        "nome": "Suspeitoso",
+        "descricao": "Há um preconceito contra os Onigem, não importa onde eles vão.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "SUSPEITOSO"
       }
     ],
     "atributos": {},

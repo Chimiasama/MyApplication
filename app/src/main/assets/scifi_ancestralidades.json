@@ -268,7 +268,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "FORASTEIRO (Menor)",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -567,7 +567,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Tudo, desde os hábitos alimentares dos insetoides até sua mentalidade de colmeia, é estranho e alienígena para a maioria dos outros seres. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -620,7 +620,7 @@
         "severity": "Menor"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Sociedades por toda a galáxia desconfiam de mímicos. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -725,7 +725,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Possessores são frequentemente menosprezados, e outros podem ser hostis se os parasitas “vestirem” alguém que conhecem. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -905,7 +905,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "SEM ESCRÚPULOS (Maior)",
+        "nome": "SEM ESCRÚPULOS",
         "descricao": "Soldados genéticos são treinados para obedecer ordens e completar suas missões a qualquer custo. Caso tenha se libertado de seu condicionamento, substitua isto por Procurado se seu empregador quiser vingança, ou Inimigo para alguém prejudicado no passado que queira o herói morto.",
         "id": "SEM_ESCRUPULOS",
         "category": "racial_hindrance",
@@ -948,7 +948,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Seres corpóreos não tendem a confiar em tais formas de vida alienígenas. Vazios possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1050,7 +1050,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "BAIXA TECNOLOGIA (Maior)",
+        "nome": "BAIXA TECNOLOGIA",
         "descricao": "O mundo natal dos aurax é de baixa tecnologia em comparação à maioria dos mundos desenvolvidos. Eles possuem a Complicação Baixa Tecnologia (Maior).",
         "id": "BAIXA_TECNOLOGIA",
         "category": "racial_hindrance",
@@ -1128,7 +1128,7 @@
         "category": "racial_trait_negative"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "A maioria das pessoas se sente desconfortável perto de cadáveres animados.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",

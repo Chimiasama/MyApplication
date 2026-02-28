@@ -12,7 +12,9 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Começa com uma Vantagem Novato extra de graça."
+        "descricao": "Começa com uma Vantagem Novato extra de graça.",
+        "category": "racial_trait_positive",
+        "id": "ADAPTAVEL"
       }
     ]
   },
@@ -29,11 +31,15 @@
     "habilidades": [
       {
         "nome": "Antecedente Arcano (Demônio)",
-        "descricao": "Começa com AA (Demônio), Perícia Conjurar d4 e os poderes Disfarce Demoníaco + 3 outros. 10 PP."
+        "descricao": "Começa com AA (Demônio), Perícia Conjurar d4 e os poderes Disfarce Demoníaco + 3 outros. 10 PP.",
+        "category": "racial_trait_positive",
+        "id": "ANTECEDENTE_ARCANO_DEMONIO"
       },
       {
         "nome": "Frágil",
-        "descricao": "-2 na Resistência devido à degeneração física secular."
+        "descricao": "-2 na Resistência devido à degeneração física secular.",
+        "category": "racial_trait_negative",
+        "id": "FRAGIL"
       }
     ]
   },
@@ -47,11 +53,15 @@
     "habilidades": [
       {
         "nome": "Herança Mista",
-        "descricao": "Recebe uma Vantagem Novato extra (como humanos)."
+        "descricao": "Recebe uma Vantagem Novato extra (como humanos).",
+        "category": "racial_trait_positive",
+        "id": "HERANCA_MISTA"
       },
       {
         "nome": "Opção Mágica",
-        "descricao": "Pode escolher AA (Demônio) como uma Vantagem normal (requisito Novato). Se o fizer, Disfarce Demoníaco custa 2 PP e é de estágio Experiente."
+        "descricao": "Pode escolher AA (Demônio) como uma Vantagem normal (requisito Novato). Se o fizer, Disfarce Demoníaco custa 2 PP e é de estágio Experiente.",
+        "category": "racial_trait_positive",
+        "id": "OPCAO_MAGICA"
       }
     ]
   }
