@@ -175,7 +175,10 @@ fun buildSummaryLines(
         val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
         val apararBaixoMod = if (hasApararBaixo) -2 else 0
 
-        val total = base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower + apararBaixoMod
+        val isSerranos = personagem.ancestralidade.keyify().contains("SERRANOS")
+        val serranosApararMod = if (isSerranos) 2 else 0
+
+        val total = base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower + apararBaixoMod + serranosApararMod
         return total.coerceAtLeast(0)
     }
 
