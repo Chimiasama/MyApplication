@@ -14,23 +14,33 @@
     "habilidades": [
       {
         "nome": "Aptidão com Pedras",
-        "descricao": "Perceber +2 (ação livre) para encontrar armadilhas e portas de pedra a 3m."
+        "descricao": "Perceber +2 (ação livre) para encontrar armadilhas e portas de pedra a 3m.",
+        "category": "racial_trait_positive",
+        "id": "APTIDAO_COM_PEDRAS"
       },
       {
         "nome": "Constituição de Ferro",
-        "descricao": "+1 para resistir a venenos e se recuperar de poderes."
+        "descricao": "+1 para resistir a venenos e se recuperar de poderes.",
+        "category": "racial_trait_positive",
+        "id": "CONSTITUICAO_DE_FERRO"
       },
       {
         "nome": "Movimentação Reduzida",
-        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo.",
+        "category": "racial_trait_negative",
+        "id": "MOVIMENTACAO_REDUZIDA"
       },
       {
         "nome": "Resistente",
-        "descricao": "Começa com Vigor d6. Vigor máximo d12+1. Força conta um dado maior para Sobrecarga e Força Mínima de armaduras."
+        "descricao": "Começa com Vigor d6. Vigor máximo d12+1. Força conta um dado maior para Sobrecarga e Força Mínima de armaduras.",
+        "category": "racial_trait_positive",
+        "id": "RESISTENTE"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Ignora penalidades de iluminação até 10 quadros."
+        "descricao": "Ignora penalidades de iluminação até 10 quadros.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       }
     ],
     "originalName": "Anão (Mundo Ancestral)"
@@ -52,27 +62,39 @@
     "habilidades": [
       {
         "nome": "Ágil",
-        "descricao": "Começa com Agilidade d6. Máximo d12+1."
+        "descricao": "Começa com Agilidade d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "AGIL"
       },
       {
         "nome": "Esguios",
-        "descricao": "-1 na Resistência e -1 nas rolagens de Vigor."
+        "descricao": "-1 na Resistência e -1 nas rolagens de Vigor.",
+        "category": "racial_trait_negative",
+        "id": "ESGUIOS"
       },
       {
         "nome": "Inteligência",
-        "descricao": "Começa com Astúcia d6. Máximo d12+1."
+        "descricao": "Começa com Astúcia d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "INTELIGENCIA"
       },
       {
         "nome": "Magia Élfica",
-        "descricao": "Rerrolagem para resistir a poderes oponentes."
+        "descricao": "Rerrolagem para resistir a poderes oponentes.",
+        "category": "racial_trait_positive",
+        "id": "MAGIA_ELFICA"
       },
       {
         "nome": "Sentidos Apurados",
-        "descricao": "Começa com Perceber d6. Máximo d12+1."
+        "descricao": "Começa com Perceber d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "SENTIDOS_APURADOS"
       },
       {
         "nome": "Visão na Penumbra",
-        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+        "descricao": "Ignora penalidades por Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NA_PENUMBRA"
       }
     ],
     "originalName": "Elfo (Mundo Ancestral)"
@@ -93,31 +115,45 @@
     "habilidades": [
       {
         "nome": "Magia Gnômica",
-        "descricao": "Pode conjurar Truques (iluminar, som, telecinese, amigo das feras) com 1 PP próprio."
+        "descricao": "Pode conjurar Truques (iluminar, som, telecinese, amigo das feras) com 1 PP próprio.",
+        "category": "racial_trait_positive",
+        "id": "MAGIA_GNOMICA"
       },
       {
         "nome": "Movimentação Reduzida",
-        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo.",
+        "category": "racial_trait_negative",
+        "id": "MOVIMENTACAO_REDUZIDA"
       },
       {
         "nome": "Obsessivos",
-        "descricao": "Começam com d4 em uma Perícia baseada em Astúcia à escolha."
+        "descricao": "Começam com d4 em uma Perícia baseada em Astúcia à escolha.",
+        "category": "racial_trait_positive",
+        "id": "OBSESSIVOS"
       },
       {
         "nome": "Resistente",
-        "descricao": "Começam com Vigor d6. Máximo d12+1."
+        "descricao": "Começam com Vigor d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "RESISTENTE"
       },
       {
         "nome": "Sentidos Apurados",
-        "descricao": "Começam com Perceber d6. Máximo d12+1."
+        "descricao": "Começam com Perceber d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "SENTIDOS_APURADOS"
       },
       {
         "nome": "Tamanho -1",
-        "descricao": "Reduz Tamanho e Resistência em 1."
+        "descricao": "Reduz Tamanho e Resistência em 1.",
+        "category": "racial_trait_negative",
+        "id": "TAMANHO_1"
       },
       {
         "nome": "Visão na Penumbra",
-        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+        "descricao": "Ignora penalidades por Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NA_PENUMBRA"
       }
     ],
     "originalName": "Gnomo (Mundo Ancestral)"
@@ -141,27 +177,39 @@
     "habilidades": [
       {
         "nome": "Ágil",
-        "descricao": "Começa com Agilidade d6. Máximo d12+1."
+        "descricao": "Começa com Agilidade d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "AGIL"
       },
       {
         "nome": "Movimentação Reduzida",
-        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo."
+        "descricao": "Movimentação -1 e dado de corrida reduzido em um tipo.",
+        "category": "racial_trait_negative",
+        "id": "MOVIMENTACAO_REDUZIDA"
       },
       {
         "nome": "Pés-Firmes",
-        "descricao": "Começa com Atletismo d6. Máximo d12+1."
+        "descricao": "Começa com Atletismo d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "PESFIRMES"
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Começa com Perceber d6. Máximo d12+1."
+        "descricao": "Começa com Perceber d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "SENTIDOS_AGUCADOS"
       },
       {
         "nome": "Sorte",
-        "descricao": "Começa com a Vantagem Sorte."
+        "descricao": "Começa com a Vantagem Sorte.",
+        "category": "racial_edge",
+        "id": "SORTE"
       },
       {
         "nome": "Tamanho -1",
-        "descricao": "Reduz Tamanho e Resistência em 1."
+        "descricao": "Reduz Tamanho e Resistência em 1.",
+        "category": "racial_trait_negative",
+        "id": "TAMANHO_1"
       }
     ],
     "originalName": "Halfling (Mundo Ancestral)"
@@ -180,7 +228,9 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Começa com uma Vantagem Novato extra e um d6 em um Atributo à escolha (em vez de d4)."
+        "descricao": "Começa com uma Vantagem Novato extra e um d6 em um Atributo à escolha (em vez de d4).",
+        "category": "racial_trait_positive",
+        "id": "ADAPTAVEL"
       }
     ],
     "originalName": "Humano (Mundo Ancestral)"
@@ -197,15 +247,21 @@
     "habilidades": [
       {
         "nome": "Flexibilidade",
-        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4."
+        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4.",
+        "category": "racial_trait_positive",
+        "id": "FLEXIBILIDADE"
       },
       {
         "nome": "Magia Élfica",
-        "descricao": "Rerrolagem para resistir a poderes oponentes."
+        "descricao": "Rerrolagem para resistir a poderes oponentes.",
+        "category": "racial_trait_positive",
+        "id": "MAGIA_ELFICA"
       },
       {
         "nome": "Visão na Penumbra",
-        "descricao": "Ignora penalidades por Penumbra e Escuridão."
+        "descricao": "Ignora penalidades por Penumbra e Escuridão.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NA_PENUMBRA"
       }
     ],
     "originalName": "Meio-Elfo (Mundo Ancestral)"
@@ -226,23 +282,34 @@
     "habilidades": [
       {
         "nome": "Ferocidade Orc",
-        "descricao": "Recebem Resistência +1."
+        "descricao": "Recebem Resistência +1.",
+        "category": "racial_trait_positive",
+        "id": "FEROCIDADE_ORC"
       },
       {
-        "nome": "Forasteiro (Menor)",
-        "descricao": "-2 em Persuadir e desconfiança social."
+        "nome": "Forasteiro",
+        "descricao": "-2 em Persuadir e desconfiança social.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "FORASTEIRO"
       },
       {
         "nome": "Forte",
-        "descricao": "Começam com Força d6. Máximo d12+1."
+        "descricao": "Começam com Força d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "FORTE"
       },
       {
         "nome": "Intimidante",
-        "descricao": "Começam com Intimidar d4. Máximo d12+1."
+        "descricao": "Começam com Intimidar d4. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "INTIMIDANTE"
       },
       {
         "nome": "Visão no Escuro",
-        "descricao": "Ignora penalidades de iluminação até 10 quadros."
+        "descricao": "Ignora penalidades de iluminação até 10 quadros.",
+        "category": "racial_trait_positive",
+        "id": "VISAO_NO_ESCURO"
       }
     ],
     "originalName": "Meio-Orc (Mundo Ancestral)"

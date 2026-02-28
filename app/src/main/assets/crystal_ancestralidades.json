@@ -4,7 +4,9 @@
     "nome": "Bogovia",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
-    "tags": ["BOGOVIANO"],
+    "tags": [
+      "BOGOVIANO"
+    ],
     "atributos": {
       "Vigor": 2
     },
@@ -15,7 +17,9 @@
     "habilidades": [
       {
         "nome": "Vigoroso",
-        "descricao": "Começa com Vigor d6. Máximo d12+1."
+        "descricao": "Começa com Vigor d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "VIGOROSO"
       }
     ]
   },
@@ -24,7 +28,9 @@
     "nome": "Fjordstad",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
-    "tags": ["FJORDSTADIANO"],
+    "tags": [
+      "FJORDSTADIANO"
+    ],
     "atributos": {
       "Astúcia": 2
     },
@@ -35,7 +41,9 @@
     "habilidades": [
       {
         "nome": "Astuto",
-        "descricao": "Começa com Astúcia d6. Máximo d12+1."
+        "descricao": "Começa com Astúcia d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "ASTUTO"
       }
     ]
   },
@@ -44,7 +52,9 @@
     "nome": "As Ilhas",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
-    "tags": ["ILHEU"],
+    "tags": [
+      "ILHEU"
+    ],
     "atributos": {
       "Vigor": 2
     },
@@ -56,11 +66,15 @@
     "habilidades": [
       {
         "nome": "Vigoroso",
-        "descricao": "Começa com Vigor d6. Máximo d12+1."
+        "descricao": "Começa com Vigor d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "VIGOROSO"
       },
       {
         "nome": "Adaptável",
-        "descricao": "Começam com qualquer Vantagem de nível Novato a sua escolha (devem atender aos Requisitos)."
+        "descricao": "Começam com qualquer Vantagem de nível Novato a sua escolha (devem atender aos Requisitos).",
+        "category": "racial_trait_positive",
+        "id": "ADAPTAVEL"
       }
     ]
   },
@@ -69,7 +83,9 @@
     "nome": "Maseia",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
-    "tags": ["MASEIANO"],
+    "tags": [
+      "MASEIANO"
+    ],
     "atributos": {
       "Agilidade": 2
     },
@@ -80,7 +96,9 @@
     "habilidades": [
       {
         "nome": "Ágil",
-        "descricao": "Começa com Agilidade d6. Máximo d12+1."
+        "descricao": "Começa com Agilidade d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "AGIL"
       }
     ]
   },
@@ -89,7 +107,9 @@
     "nome": "Zingama",
     "categoria": "ANCESTRALIDADE",
     "origem": "CRYSTAL_HEART",
-    "tags": ["ZINGAMAIANO"],
+    "tags": [
+      "ZINGAMAIANO"
+    ],
     "atributos": {
       "Espírito": 2
     },
@@ -100,7 +120,9 @@
     "habilidades": [
       {
         "nome": "Espiritual",
-        "descricao": "Começa com Espírito d6. Máximo d12+1."
+        "descricao": "Começa com Espírito d6. Máximo d12+1.",
+        "category": "racial_trait_positive",
+        "id": "ESPIRITUAL"
       }
     ]
   }

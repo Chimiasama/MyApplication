@@ -12,7 +12,9 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente."
+        "descricao": "Seres humanos começam com qualquer Vantagem de nível Novato a sua escolha. Devem atender aos Requisitos da Vantagem normalmente.",
+        "category": "racial_trait_positive",
+        "id": "ADAPTAVEL"
       }
     ]
   }

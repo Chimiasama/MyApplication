@@ -12,7 +12,9 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Começa com uma Vantagem Novato extra de graça (deve atender aos requisitos)."
+        "descricao": "Começa com uma Vantagem Novato extra de graça (deve atender aos requisitos).",
+        "category": "racial_trait_positive",
+        "id": "ADAPTAVEL"
       }
     ]
   }

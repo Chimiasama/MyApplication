@@ -143,7 +143,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "VOTO (Maior)",
+        "nome": "VOTO",
         "descricao": "Servir à divindade que os criou.",
         "id": "VOTO",
         "category": "racial_hindrance",
@@ -590,7 +590,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Ninguém realmente confia em alguém de herança diabólica, mesmo em um cenário de alta fantasia. A personagem tem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -651,7 +651,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Outras raças consideram o povo inseto perturbador e estranho. A personagem tem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -700,7 +700,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Meio-elfos nunca ficam confortáveis na sociedade humana ou na élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com todos menos os seus iguais.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -747,7 +747,7 @@
         "category": "racial_trait_negative"
       },
       {
-        "nome": "FORASTEIRO (Maior)",
+        "nome": "FORASTEIRO",
         "descricao": "Meio-gigantes são aterrorizantes para a maioria das raças humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seus próprios clãs.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -802,7 +802,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Meio-orcs não são confiáveis para a maioria dos povos “civilizados”. Subtraem 2 das rolagens de Persuadir ao interagir com seres além de meio-orcs.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -908,7 +908,7 @@
         "category": "racial_trait_negative"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "Seu tamanho estranho e imponente deixa outros seres nervosos. Subtraem 2 das rolagens de Persuadir.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -972,7 +972,7 @@
         "category": "racial_trait_negative"
       },
       {
-        "nome": "FORASTEIRO (Maior)",
+        "nome": "FORASTEIRO",
         "descricao": "Orcs subtraem 2 das rolagens de Persuadir e podem ser tratados como monstros fora de seus próprios clãs.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1060,14 +1060,14 @@
         "severity": "Maior"
       },
       {
-        "nome": "FORASTEIRO (Maior)",
+        "nome": "FORASTEIRO",
         "descricao": "O povo ratazana normalmente é desprezado por outros povos. Subtraem 2 das rolagens de Persuadir e são tratados como pragas monstruosas fora de seus próprios bandos.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "GANANCIOSO (Menor)",
+        "nome": "GANANCIOSO",
         "descricao": "Adquirir novos tesouros é a obsessão do povo ratazana. Possuem a Complicação Ganancioso (Menor).",
         "id": "GANANCIOSO",
         "category": "racial_hindrance",
@@ -1134,7 +1134,7 @@
         "category": "racial_trait_negative"
       },
       {
-        "nome": "FORASTEIRO (Maior)",
+        "nome": "FORASTEIRO",
         "descricao": "Membros do povo rato são novidades fofas para a maioria das ancestralidades humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seu próprio povo.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1184,7 +1184,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "A maioria dos povos não confia no povo serpente. Subtraem 2 das rolagens de Persuadir fora de seus próprios clãs familiares.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1317,7 +1317,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Maior)",
+        "nome": "FORASTEIRO",
         "descricao": "Renascidos emitem uma aura desconfortável até mesmo para seus aliados. Outras pessoas podem confundi-los com verdadeiros vampiros — temendo-os ou caçando-os conforme sua natureza.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1372,7 +1372,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FORASTEIRO (Menor)",
+        "nome": "FORASTEIRO",
         "descricao": "A maioria dos povos desconfia dos sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo subconsciente antigo dos ancestrais dos reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todos menos os seus iguais.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",

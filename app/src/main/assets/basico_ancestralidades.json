@@ -15,21 +15,21 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "Forasteiro (Maior)",
+        "nome": "Forasteiro",
         "descricao": "FORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "Pacifista (Maior)",
+        "nome": "Pacifista",
         "descricao": "PACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.",
         "id": "PACIFISTA",
         "category": "racial_hindrance",
         "severity": "Maior"
       },
       {
-        "nome": "Voto (Maior)",
+        "nome": "Voto",
         "descricao": "VOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo",
         "id": "VOTO",
         "category": "racial_hindrance",
@@ -189,7 +189,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Forasteiro (Menor)",
+        "nome": "Forasteiro",
         "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -330,7 +330,7 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "Forasteiro (Menor)",
+        "nome": "Forasteiro",
         "descricao": "A maioria das pessoas desconfia de sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo antigo subconsciente de ancestrais reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todas as demais ancestralidades.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
