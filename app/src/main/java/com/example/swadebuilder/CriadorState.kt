@@ -710,19 +710,51 @@ class CriadorState {
         "MISTICO_ARQUITETO" to listOf("barreira", "detectar_ocultar_arcano", "telecinese", "trancar_destrancar"),
         "MISTICO_REGIO" to listOf("explosao", "rajada", "rancor"),
         "MISTICO_GUERREIRO_ESTELAR" to listOf("aumentar_reduzir_caracteristica", "deflexao", "devastacao", "protecao", "telecinese"),
-        "MISTICO_TELEPATA" to listOf("ajuda", "atordoar", "confusao", "empatia", "leitura_de_mente")
+        "MISTICO_TELEPATA" to listOf("ajuda", "atordoar", "confusao", "empatia", "leitura_de_mente"),
+        // Pathfinder specifics
+        "MISTICO_MONGE_PF" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "morosidade_velocidade"),
+        "MISTICO_MONGE_GRANDE_KI_PF" to listOf("aumentar_reduzir_caracteristica", "deflexao", "ferir", "morosidade_velocidade", "andar_nas_paredes", "dadiva_do_guerreiro", "protecao"),
+        "MISTICO_PALADINO_PF" to listOf("ajuda", "aumentar_reduzir_caracteristica", "cura", "ferir"),
+        "MISTICO_PATRULHEIRO_PF" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "enredar", "dadiva_do_guerreiro"),
+        "MISTICO_FORCA_SOMBRIA_PF" to listOf("rajada", "ilusao", "conjurar_aliado", "teleporte")
     )
+
+    private fun getEffectiveKeyForMistico(vant: com.example.swadebuilder.model.Vantagem): String {
+        if (!vant.choice.isNullOrBlank()) {
+            return "MISTICO_${vant.choice!!.normAAKey()}"
+        }
+        val n = vant.nome.normAAKey()
+        if (compendioPathfinderAtivo) {
+            if ("MONGE" in n) {
+                val hasGrandeKi = vantagensSelecionadas.any { it.id == "grande_ki" }
+                return if (hasGrandeKi) "MISTICO_MONGE_GRANDE_KI_PF" else "MISTICO_MONGE_PF"
+            }
+            if ("PALADINO" in n) return "MISTICO_PALADINO_PF"
+            if ("PATRULHEIRO" in n) return "MISTICO_PATRULHEIRO_PF"
+            if ("FORCA SOMBRIA" in n || "DANCARINO DAS SOMBRAS" in n) return "MISTICO_FORCA_SOMBRIA_PF"
+        }
+        return "MISTICO"
+    }
 
     fun isFixedPower(arcanoKey: String, powerId: String?): Boolean {
         if (powerId == null) return false
+        val arcKeyNorm = arcanoKey.normAAKey()
         if (
             ancestralidade.keyify() == "TRANSMORFOS" &&
-            arcanoKey.normAAKey() == "DOM" &&
+            arcKeyNorm == "DOM" &&
             powerId.keyify() == "DISFARCE"
         ) {
             return true
         }
-        val fixedList = fixedPowersByArcano[arcanoKey.normAAKey()] ?: return false
+
+        val effectiveKey = if (arcKeyNorm == "MISTICO") {
+            val vant = vantagensSelecionadas.find { it.toArcanoKey()?.normAAKey() == "MISTICO" }
+            if (vant != null) getEffectiveKeyForMistico(vant) else arcKeyNorm
+        } else {
+            arcKeyNorm
+        }
+
+        val fixedList = fixedPowersByArcano[effectiveKey] ?: return false
         return fixedList.contains(powerId)
     }
 
@@ -1962,8 +1994,8 @@ class CriadorState {
                 mutableStateListOf<String?>().apply { repeat(count) { add(null) } }
             }
 
-            val effectiveKey = if (arcKey == "MISTICO" && !v.choice.isNullOrBlank()) {
-                "MISTICO_${v.choice!!.normAAKey()}"
+            val effectiveKey = if (arcKey == "MISTICO") {
+                getEffectiveKeyForMistico(v)
             } else {
                 arcKey
             }
@@ -3158,8 +3190,8 @@ class CriadorState {
 
         val vant = vantagensSelecionadas.find { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
 
-        if (vant != null && arcKeyNorm == "MISTICO" && !vant.choice.isNullOrBlank()) {
-            val effectiveKey = "MISTICO_${vant.choice!!.normAAKey()}"
+        if (vant != null && arcKeyNorm == "MISTICO") {
+            val effectiveKey = getEffectiveKeyForMistico(vant)
             val fixedList = fixedPowersByArcano[effectiveKey]
             if (fixedList != null) {
                 return maxOf(baseCount, fixedList.size)
