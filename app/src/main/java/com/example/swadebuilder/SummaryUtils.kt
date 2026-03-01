@@ -646,10 +646,13 @@ fun buildSummaryLines(
                 val info = arcanoInfo[cleanKey]
 
                 val details = if (cleanKey == "MISTICO") {
-                    "(10 PP)"
+                    val finalPp = if (isPathfinderGnome) 11 else 10
+                    "($finalPp PP)"
                 } else if (info != null) {
                     val (_, pp, foco) = info
-                    "($pp PP, $foco)"
+                    val gnomeBonus = if (isPathfinderGnome) 1 else 0
+                    val basePP = pp + personagem.bonusPoderExtra + gnomeBonus
+                    "($basePP PP, $foco)"
                 } else {
                     ""
                 }
