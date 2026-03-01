@@ -64,6 +64,9 @@ data class MeuPersonagem(
     val vantagensDePoder: Set<String> = emptySet(),         // ids de vantagens “compradas” por super
     val gastosPorPoder: Map<String, Int> = emptyMap(),      // PoderId -> custo gasto (para auditoria)
 
+    // PP bônus extras
+    val bonusPoderExtra: Int = 0,
+
     // Para conferência de teto de mitigação definido pela campanha:
     val limiteDePoderDaCampanha: Int = Int.MAX_VALUE,
 

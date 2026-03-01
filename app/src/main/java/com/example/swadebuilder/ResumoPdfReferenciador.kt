@@ -64,6 +64,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         equipamentos = this.equipamentosComprados.toList() + this.extrairArmasNaturais(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
         manifestacoesPoderes = this.manifestacoesPoderes.toMap(),
+        bonusPoderExtra = this.bonusPoderExtra,
         dinheiro = this.dinheiro,
         requisicao = this.requisicao,
         dadoRiqueza = if (this.usaRiqueza) this.dadoRiqueza else null,
