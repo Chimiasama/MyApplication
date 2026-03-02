@@ -406,6 +406,7 @@ class CriadorViewModel(
         state.scifiVariant = null
         state.humanoMineradorAtributo = null
         state.vantagemAdaptavelSelecionadaId = null
+        state.pathfinderFreeSlotId = null
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
