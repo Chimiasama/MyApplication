@@ -578,7 +578,15 @@ fun gerarFichaEmPdf(
             powerLines.add("Arcano: ${arc.toFancyTitleCase()}")
             val namedList = list.map { id ->
                 val pName = listaPoderes.firstOrNull { it.id == id }?.nome ?: id
-                pName.toFancyTitleCase()
+                var displayNome = pName.toFancyTitleCase()
+
+                if (personagem.compendioPathfinderAtivo && arc.uppercase().trim() == "MISTICO") {
+                    displayNome = displayNome
+                        .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
+                        .replace("Morosidade/Velocidade", "Velocidade")
+                }
+
+                displayNome
             }
             powerLines.add(namedList.joinToString(", "))
         }

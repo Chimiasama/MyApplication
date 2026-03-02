@@ -641,12 +641,15 @@ fun buildSummaryLines(
                 lines += "• Truques: $focoNome$ppText - Iluminar, Som, Telecinese, Amigo das Feras"
             }
 
+            val hasStandardAB = filteredPowers.keys.any { it.uppercase().trim() != "MISTICO" }
+
             filteredPowers.forEach { (arcanoKey, lista) ->
                 val cleanKey = arcanoKey.uppercase().trim()
                 val info = arcanoInfo[cleanKey]
 
                 val details = if (cleanKey == "MISTICO") {
-                    val finalPp = if (isPathfinderGnome) 11 else 10
+                    val gnomeBonus = if (isPathfinderGnome && !hasStandardAB) 1 else 0
+                    val finalPp = 10 + gnomeBonus
                     "($finalPp PP)"
                 } else if (info != null) {
                     val (_, pp, foco) = info
@@ -670,7 +673,14 @@ fun buildSummaryLines(
                     val poderesComManifestacao = lista.map { poderId ->
                         val poderDef = listaPoderes.firstOrNull { it.id == poderId }
                         val baseNome = poderDef?.nome ?: poderId
-                        val displayNome = baseNome.toFancyTitleCase()
+                        var displayNome = baseNome.toFancyTitleCase()
+
+                        // Text replacements for Pathfinder Místico (positive aspects only)
+                        if (personagem.compendioPathfinderAtivo && cleanKey == "MISTICO") {
+                            displayNome = displayNome
+                                .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
+                                .replace("Morosidade/Velocidade", "Velocidade")
+                        }
 
                         val manifestacao = personagem.manifestacoesPoderes[poderId]
                             ?.trim()
