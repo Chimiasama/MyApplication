@@ -189,15 +189,6 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_pace_explicit", SourceType.ANCESTRALIDADE, anc.nome, ModifierTarget.PACE, anc.movimentacao))
             }
 
-            // 2. Pathfinder Slow Races
-            val isPathfinderSlowRace = state.compendioPathfinderAtivo &&
-                    (anc.id == "anc_anaopathfinder" ||
-                            anc.id == "anc_gnomopathfinder" ||
-                            anc.id == "anc_halflingpathfinder")
-            if (isPathfinderSlowRace) {
-                modifiers.add(Modifier("racial_pace_pathfinder", SourceType.ANCESTRALIDADE, "Raça Lenta (Pathfinder)", ModifierTarget.PACE, -1))
-            }
-
             // 3. Keyword Checks (Movimentação Reduzida)
             val hasMovReduzida = anc.desvantagens.any {
                 val k = it.keyify()
@@ -358,7 +349,11 @@ object ModifierEngine {
                         }
                         val malusMatch = Regex("""MOVIMENTACAO\s*\-(\d+)""").find(k)
                         if (malusMatch != null) {
-                             modifiers.add(Modifier("racial_pace_generic_minus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, -malusMatch.groupValues[1].toInt()))
+                            // Do not apply generic minus if "Movimentação Reduzida" was already added by explicit logic to prevent double penalty
+                            val alreadyReduced = modifiers.any { it.id == "racial_pace_reduced" && it.value == -1 }
+                            if (!alreadyReduced) {
+                                modifiers.add(Modifier("racial_pace_generic_minus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, -malusMatch.groupValues[1].toInt()))
+                            }
                         }
                     }
                 }

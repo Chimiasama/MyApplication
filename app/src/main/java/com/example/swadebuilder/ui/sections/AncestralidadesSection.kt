@@ -630,7 +630,7 @@ fun AncestralidadesSection(
                                 }
                             }
 
-                            if (isSelected && item.nome.keyify().contains("GNOMO") && item.nome.keyify().contains("PATHFINDER")) {
+                            if (isSelected && item.nome.keyify().contains("GNOMO")) {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Perícia Obsessiva (Astúcia):", style = MaterialTheme.typography.labelMedium)
 

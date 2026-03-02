@@ -611,23 +611,51 @@ fun buildSummaryLines(
     }
     lines += ""
 
-    if (personagem.poderes.isNotEmpty()) {
+    val isPathfinderGnome = personagem.compendioPathfinderAtivo &&
+            personagem.ancestralidade.uppercase().contains("GNOMO")
+
+    if (personagem.poderes.isNotEmpty() || isPathfinderGnome) {
         val filteredPowers = personagem.poderes.filterKeys { key ->
             val cleanKey = key.uppercase().trim()
             cleanKey != "CANALIZAR CRISTAL"
         }
 
-        if (filteredPowers.isNotEmpty()) {
+        if (filteredPowers.isNotEmpty() || isPathfinderGnome) {
             lines += "Poderes arcanos"
+
+            if (isPathfinderGnome) {
+                val astucia = personagem.atributos["Astúcia"] ?: 4
+                val fe = personagem.pericias["Fé"] ?: 0
+                val conjurar = personagem.pericias["Conjurar"] ?: 0
+                val focoMax = maxOf(astucia, fe, conjurar)
+                val astuciaName = mapaAtributosDisplay["Astúcia"] ?: "Astúcia"
+                val focoNome = when {
+                    focoMax == astucia -> astuciaName
+                    focoMax == fe -> "Fé"
+                    else -> "Conjurar"
+                }
+
+                // If they have other powers, their PP adds up elsewhere, but the trait gives 1 PP specifically for these if no other AB
+                val abCount = filteredPowers.size
+                val ppText = if (abCount == 0) " (1 PP)" else ""
+                lines += "• Truques: $focoNome$ppText - Iluminar, Som, Telecinese, Amigo das Feras"
+            }
+
+            val hasStandardAB = filteredPowers.keys.any { it.uppercase().trim() != "MISTICO" }
+
             filteredPowers.forEach { (arcanoKey, lista) ->
                 val cleanKey = arcanoKey.uppercase().trim()
                 val info = arcanoInfo[cleanKey]
 
                 val details = if (cleanKey == "MISTICO") {
-                    "(10 PP)"
+                    val gnomeBonus = if (isPathfinderGnome && !hasStandardAB) 1 else 0
+                    val finalPp = 10 + gnomeBonus
+                    "($finalPp PP)"
                 } else if (info != null) {
                     val (_, pp, foco) = info
-                    "($pp PP, $foco)"
+                    val gnomeBonus = if (isPathfinderGnome) 1 else 0
+                    val basePP = pp + personagem.bonusPoderExtra + gnomeBonus
+                    "($basePP PP, $foco)"
                 } else {
                     ""
                 }
@@ -645,7 +673,14 @@ fun buildSummaryLines(
                     val poderesComManifestacao = lista.map { poderId ->
                         val poderDef = listaPoderes.firstOrNull { it.id == poderId }
                         val baseNome = poderDef?.nome ?: poderId
-                        val displayNome = baseNome.toFancyTitleCase()
+                        var displayNome = baseNome.toFancyTitleCase()
+
+                        // Text replacements for Pathfinder Místico (positive aspects only)
+                        if (personagem.compendioPathfinderAtivo && cleanKey == "MISTICO") {
+                            displayNome = displayNome
+                                .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
+                                .replace("Morosidade/Velocidade", "Velocidade")
+                        }
 
                         val manifestacao = personagem.manifestacoesPoderes[poderId]
                             ?.trim()

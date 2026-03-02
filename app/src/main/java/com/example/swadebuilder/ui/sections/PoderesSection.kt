@@ -191,10 +191,13 @@ fun PoderesSection(
         arcanosAtivos
     }
 
-    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap) {
+    val hasStandardAB = arcanosAtivos.any { it.normAAKey() != "MISTICO" }
+
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap, hasStandardAB) {
         if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo) 0 else {
-            val maxBase = arcanosAtivos.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
-            maxBase + state.bonusPoderExtra
+            val maxBase = arcanosAtivos.filter { it.normAAKey() != "MISTICO" }.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
+            val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && hasStandardAB) 1 else 0
+            maxBase + state.bonusPoderExtra + gnomeBonus
         }
     }
 
@@ -412,7 +415,14 @@ fun PoderesSection(
             val centerText = if (state.usarSemPontosDePoder) {
                 "Teste $foco = -(custo/2)"
             } else {
-                val ppDisplay = if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo) sharedTotalPP else ppTotal
+                val ppDisplay = if (arcKey == "MISTICO") {
+                    val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && !hasStandardAB) 1 else 0
+                    ppTotal + gnomeBonus
+                } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo) {
+                    sharedTotalPP
+                } else {
+                    ppTotal
+                }
                 "PP: $ppDisplay  •  $foco"
             }
 
@@ -670,7 +680,13 @@ fun PoderesSection(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Text(poder.nome.toFancyTitleCase(), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+                                    var displayNome = poder.nome.toFancyTitleCase()
+                                    if (state.compendioPathfinderAtivo && arcKey == "MISTICO") {
+                                        displayNome = displayNome
+                                            .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
+                                            .replace("Morosidade/Velocidade", "Velocidade")
+                                    }
+                                    Text(displayNome, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
                                     Text("PP: $ppExibicao", style = MaterialTheme.typography.bodySmall)
                                 }
 

@@ -13,7 +13,7 @@ fun Vantagem.toArcanoKey(): String? {
 
     // Fix for "Poderes Místicos": force MISTICO key even if choice (class) is present
     // to ensure fixed power lookup works correctly in CriadorState.
-    if ("PODERES MISTICOS" in n) return "MISTICO"
+    if ("PODERES MISTICOS" in n || "FORCA SOMBRIA" in n) return "MISTICO"
 
     // Only use choice if this is actually the generic "Antecedente Arcano" edge.
     // Other edges like "Arma Predileta" use 'choice' for other purposes (e.g. Skill Name),
