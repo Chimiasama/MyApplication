@@ -5478,8 +5478,23 @@ class CriadorState {
              if (pending) return false
         }
 
-        // Check Adaptavel Slot
+        // Check Adaptavel Slot (includes Sobrevivente)
         if (temAdaptavel() && vantagemAdaptavelSelecionadaId == null) {
+            return false
+        }
+
+        // Check Pathfinder Free Slot
+        if (compendioPathfinderAtivo && vantagensSelecionadas.none { isPathfinderEligible(it) && !isVantagemAutomatica(it) }) {
+            return false
+        }
+
+        // Check Protagonista Free Slot
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista" && vantagensSlotProtagonista.isEmpty()) {
+            return false
+        }
+
+        // Check Samurai Free Combat Slot
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_samurai" && samuraiVantagemEscolhida == "Combate" && samuraiCombatSlotIds.isEmpty()) {
             return false
         }
 
