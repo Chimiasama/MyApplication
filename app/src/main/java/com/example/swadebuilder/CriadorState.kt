@@ -1838,13 +1838,10 @@ class CriadorState {
         }
     }
 
+    var pathfinderFreeSlotId: String? by mutableStateOf(null)
+
     val pathfinderSlotAvailable: Boolean by derivedStateOf {
-        if (!compendioPathfinderAtivo) false
-        else {
-            vantagensSelecionadas.none { vant ->
-                isPathfinderEligible(vant) && !isVantagemAutomatica(vant)
-            }
-        }
+        compendioPathfinderAtivo && pathfinderFreeSlotId == null
     }
 
     private fun Vantagem.isBrutamontes(): Boolean {
@@ -1883,6 +1880,7 @@ class CriadorState {
             vantagemAdaptavelSelecionadaId = v.id
             onFeedback("Vantagem ${v.nome} adicionada (Vantagem bônus de ${getAdaptavelLabel()}).")
         } else if (isFreePathfinder) {
+            pathfinderFreeSlotId = v.id
             onFeedback("Vantagem ${v.nome} adicionada (Vantagem gratuita de Classe).")
         } else if (isFreeProtagonista) {
             vantagensSlotProtagonista.add(v.id)
@@ -1918,7 +1916,7 @@ class CriadorState {
         }
 
         // Standard Advantage
-        val wasEligible = isPathfinderEligible(v)
+        val wasPathfinderSlot = v.id == pathfinderFreeSlotId
         val wasProtagonistaEligible = v.id in vantagensSlotProtagonista
         val wasSamuraiEligible = v.id in samuraiCombatSlotIds
         val wasAdaptavelSlot = v.id == vantagemAdaptavelSelecionadaId
@@ -1931,16 +1929,9 @@ class CriadorState {
         if (wasAdaptavelSlot) {
             vantagemAdaptavelSelecionadaId = null
             shouldRefund = false
-        } else if (wasEligible && compendioPathfinderAtivo) {
-            // Count remaining eligible edges that are NOT automatic
-            val remainingEligiblePurchased = vantagensSelecionadas.count {
-                isPathfinderEligible(it) && !isVantagemAutomatica(it)
-            }
-            // If we have ZERO purchased eligible edges left, then we removed the one that was occupying the free slot.
-            // No refund.
-            if (remainingEligiblePurchased == 0) {
-                shouldRefund = false
-            }
+        } else if (wasPathfinderSlot) {
+            pathfinderFreeSlotId = null
+            shouldRefund = false
         }
 
         if (wasProtagonistaEligible && compendioArteDaGuerraAtivo) {
@@ -5484,7 +5475,7 @@ class CriadorState {
         }
 
         // Check Pathfinder Free Slot
-        if (compendioPathfinderAtivo && vantagensSelecionadas.none { isPathfinderEligible(it) && !isVantagemAutomatica(it) }) {
+        if (pathfinderSlotAvailable) {
             return false
         }
 
