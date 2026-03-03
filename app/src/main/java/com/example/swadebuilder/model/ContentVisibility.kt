@@ -153,16 +153,8 @@ private fun CriadorState.evaluateVantagemVisibility(
     // Rule-driven generic selector policy
     // Em cenários que usam seletor genérico, ele deve ser forçado apenas quando múltiplos AA estão desabilitados.
     if (selectedRules.allowsGenericArcaneSelector() && !multiplosAAHabilitados) {
-        val isPathfinderArcaneSelectorOption =
-            compendioPathfinderAtivo &&
-                (vant.id == "antecedente_arcano_magia_pf" || vant.id == "antecedente_arcano_milagres_pf")
-
-        if (isSpecificAB && !isPathfinderArcaneSelectorOption) {
-            return VantagemVisibilityDecision(false, "blocked_specific_ab_generic_selector_rule")
-        }
-        if (isGenericAB || isPathfinderArcaneSelectorOption) {
-            return VantagemVisibilityDecision(true, "visible_generic_ab_generic_selector_rule")
-        }
+        if (isSpecificAB) return VantagemVisibilityDecision(false, "blocked_specific_ab_generic_selector_rule")
+        if (isGenericAB) return VantagemVisibilityDecision(true, "visible_generic_ab_generic_selector_rule")
     }
 
     if (!multiplosAAHabilitados) {
