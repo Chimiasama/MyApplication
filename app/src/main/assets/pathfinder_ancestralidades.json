@@ -43,7 +43,7 @@
         "id": "VISAO_NO_ESCURO"
       }
     ],
-    "originalName": "Anão (Mundo Ancestral)"
+    "originalName": "Anão"
   },
   {
     "id": "anc_elfopathfinder",
@@ -97,7 +97,7 @@
         "id": "VISAO_NA_PENUMBRA"
       }
     ],
-    "originalName": "Elfo (Mundo Ancestral)"
+    "originalName": "Elfo"
   },
   {
     "id": "anc_gnomopathfinder",
@@ -156,7 +156,7 @@
         "id": "VISAO_NA_PENUMBRA"
       }
     ],
-    "originalName": "Gnomo (Mundo Ancestral)"
+    "originalName": "Gnomo"
   },
   {
     "id": "anc_halflingpathfinder",
@@ -212,7 +212,7 @@
         "id": "TAMANHO_1"
       }
     ],
-    "originalName": "Halfling (Mundo Ancestral)"
+    "originalName": "Halfling"
   },
   {
     "id": "anc_humanopathfinder",
@@ -233,7 +233,7 @@
         "id": "ADAPTAVEL"
       }
     ],
-    "originalName": "Humano (Mundo Ancestral)"
+    "originalName": "Humano"
   },
   {
     "id": "anc_meio_elfopathfinder",
@@ -264,7 +264,7 @@
         "id": "VISAO_NA_PENUMBRA"
       }
     ],
-    "originalName": "Meio-Elfo (Mundo Ancestral)"
+    "originalName": "Meio-Elfo"
   },
   {
     "id": "anc_meio_orcpathfinder",
@@ -312,6 +312,6 @@
         "id": "VISAO_NO_ESCURO"
       }
     ],
-    "originalName": "Meio-Orc (Mundo Ancestral)"
+    "originalName": "Meio-Orc"
   }
 ]
