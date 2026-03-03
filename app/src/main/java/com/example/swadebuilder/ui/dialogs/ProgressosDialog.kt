@@ -1448,36 +1448,84 @@ fun ProgressosDialog(
             }
 
             "ANTECEDENTE ARCANO" -> {
-                if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
-                    val opcoesArcano = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo) {
-                        allAdvantages
-                            .filter {
-                                val isAb = it.id.startsWith("antecedente_arcano_")
-                                val isSrc = (state.compendioFantasiaAtivo && (it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true))) ||
-                                        (state.compendioHorrorAtivo && it.origem.equals("HORROR", ignoreCase = true))
-                                isAb && isSrc
-                            }
-                            .map { v ->
-                                val nameInParens = Regex("\\((.*?)\\)").find(v.nome)?.groupValues?.get(1)
-                                val baseName = nameInParens?.toSentenceCase()
-                                    ?: v.subtipoArcano?.toSentenceCase()
-                                    ?: v.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
+                val formatarRequisitos = { v: Vantagem ->
+                    val attrs = v.requisitos.atributoMin.entries.map { "${it.key} d${it.value}" }
+                    val skills = v.requisitos.periciaMin.entries.map { "${it.key} d${it.value}" }
+                    val all = attrs + skills
+                    if (all.isNotEmpty()) " (${all.joinToString(", ")})" else ""
+                }
 
-                                val reqs = if (v.requisitos.atributoMin.isNotEmpty()) {
-                                    val r = v.requisitos.atributoMin.entries.joinToString(", ") { "${it.key} d${it.value}" }
-                                    " ($r)"
-                                } else ""
-
-                                "$baseName$reqs" to v
+                if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo || state.compendioDeadlandsAtivo || state.compendioCidadeSolVaporAtivo) {
+                    val opcoesEspeciais = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.compendioDeadlandsAtivo, state.compendioCidadeSolVaporAtivo) {
+                        when {
+                            state.compendioPathfinderAtivo -> {
+                                val map = mapOf(
+                                    "Magia" to "antecedente_arcano_magia_pf",
+                                    "Milagres" to "antecedente_arcano_milagres_pf"
+                                )
+                                map.mapNotNull { (label, id) ->
+                                    val v = allAdvantages.firstOrNull { it.id == id }
+                                    if (v != null) {
+                                        "$label${formatarRequisitos(v)}" to v
+                                    } else null
+                                }
                             }
-                            .sortedBy { it.first }
+                            state.compendioDeadlandsAtivo -> {
+                                val map = mapOf(
+                                    "Abençoado" to "antecedente_arcano_abencoado",
+                                    "Bruxa" to "antecedente_arcano_bruxa",
+                                    "Cientista Louco" to "antecedente_arcano_cientista_louco",
+                                    "Mascate" to "antecedente_arcano_mascate",
+                                    "Mestre do Chi" to "antecedente_arcano_mestre_do_chi",
+                                    "Voduísta" to "antecedente_arcano_vuduismo",
+                                    "Xamã" to "antecedente_arcano_xama"
+                                )
+                                map.mapNotNull { (label, id) ->
+                                    val v = allAdvantages.firstOrNull { it.id == id }
+                                    if (v != null) {
+                                        "$label${formatarRequisitos(v)}" to v
+                                    } else null
+                                }
+                            }
+                            state.compendioCidadeSolVaporAtivo -> {
+                                val map = mapOf(
+                                    "Magia Negra" to "aa_magia_negra",
+                                    "Milagres" to "aa_milagres",
+                                    "Tecnomagia" to "aa_tecnomagia"
+                                )
+                                map.mapNotNull { (label, id) ->
+                                    val v = allAdvantages.firstOrNull { it.id == id }
+                                    if (v != null) {
+                                        "$label${formatarRequisitos(v)}" to v
+                                    } else null
+                                }
+                            }
+                            else -> {
+                                allAdvantages
+                                    .filter {
+                                        val isAb = it.id.startsWith("antecedente_arcano_")
+                                        val isSrc = (state.compendioFantasiaAtivo && (it.origem.equals("FANTASIA", ignoreCase = true) || it.origem.equals("BASICO", ignoreCase = true))) ||
+                                                (state.compendioHorrorAtivo && it.origem.equals("HORROR", ignoreCase = true))
+                                        isAb && isSrc
+                                    }
+                                    .map { v ->
+                                        val nameInParens = Regex("\\((.*?)\\)").find(v.nome)?.groupValues?.get(1)
+                                        val baseName = nameInParens?.toSentenceCase()
+                                            ?: v.subtipoArcano?.toSentenceCase()
+                                            ?: v.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
+
+                                        "$baseName${formatarRequisitos(v)}" to v
+                                    }
+                                    .sortedBy { it.first }
+                            }
+                        }
                     }
 
-                    if (opcoesArcano.isNotEmpty()) {
+                    if (opcoesEspeciais.isNotEmpty()) {
                         ChoiceDialog(
-                            options = opcoesArcano.map { it.first },
+                            options = opcoesEspeciais.map { it.first },
                             onConfirm = { choiceLabel ->
-                                val specificEdge = opcoesArcano.firstOrNull { it.first == choiceLabel }?.second
+                                val specificEdge = opcoesEspeciais.firstOrNull { it.first == choiceLabel }?.second
                                 if (specificEdge != null) {
                                     val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
                                     val estSel = stages[estIndexFinal]
