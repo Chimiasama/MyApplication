@@ -1631,7 +1631,18 @@ private fun normalizePathfinderArcaneEntriesForProgress(
     }
 
     val genericArcane = allAdvantages.firstOrNull { it.id == "antecedente_arcano" }
-    return if (genericArcane != null) withoutPfSpecific + genericArcane else withoutPfSpecific
+    if (genericArcane == null) return withoutPfSpecific
+
+    // Mantém a ordenação original da fonte (allAdvantages) para não empurrar
+    // "Antecedente Arcano" para o fim da lista ao normalizar as entradas PF.
+    val normalized = withoutPfSpecific + genericArcane
+    return allAdvantages.filter { sourceItem ->
+        normalized.any { normalizedItem ->
+            normalizedItem.id == sourceItem.id &&
+                normalizedItem.nome == sourceItem.nome &&
+                normalizedItem.origem == sourceItem.origem
+        }
+    }
 }
 
 private fun validChoiceOptionsFor(v: Vantagem, state: CriadorState): List<String> {
