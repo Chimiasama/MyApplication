@@ -22,6 +22,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -90,7 +92,6 @@ import com.example.swadebuilder.ui.sections.VantFilterDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -958,7 +959,8 @@ fun ProgressosDialog(
 
         val candidatas = remember(allAdvantages, advSearchQuery, advSelectedCategories, advFilter, estIndex, hasProfissional) {
             // First, filter visibility (which accounts for module rules)
-            val visible = allAdvantages.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
+            val visibleRaw = allAdvantages.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
+            val visible = normalizePathfinderArcaneEntriesForProgress(visibleRaw, allAdvantages, state)
 
             visible.filter { vant ->
                 // Filters
@@ -1004,6 +1006,18 @@ fun ProgressosDialog(
             }
         }
 
+        val candidatasPorCategoria = remember(candidatas) {
+            candidatas.groupBy { it.categoria }
+        }
+        val expandedAdvCategories = remember { mutableStateMapOf<Categoria, Boolean>() }
+        LaunchedEffect(candidatasPorCategoria.keys) {
+            candidatasPorCategoria.keys.forEach { cat ->
+                if (expandedAdvCategories[cat] == null) {
+                    expandedAdvCategories[cat] = true
+                }
+            }
+        }
+
         AlertDialog(
             onDismissRequest = {
                 state.stageXpSpent[estSel.nome] = prevStageSpent
@@ -1033,8 +1047,11 @@ fun ProgressosDialog(
 
                         // Calculate active categories based on visible items - moved outside LazyRow
                         val activeCategories = remember(allAdvantages) {
-                            allAdvantages
-                                .filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
+                            normalizePathfinderArcaneEntriesForProgress(
+                                allAdvantages.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) },
+                                allAdvantages,
+                                state
+                            )
                                 .map { it.categoria }
                                 .toSet()
                         }
@@ -1076,67 +1093,98 @@ fun ProgressosDialog(
                     Spacer(Modifier.height(8.dp))
 
                     LazyColumn {
-                        items(candidatas) { vant ->
-                            DialogVantagemItem(
-                                vant = vant,
-                                state = state,
-                                locked = false,
-                                allowLongTexts = true,
-                                showOfficialNames = state.modoOficialAtivo,
-                                idParaNome = idParaNome,
-                                detalhesExpandidos = detalhesExpandidos,
-                                stages = stages, // Pass stages to avoid using global list
-                                onSelect = {
-                                    val qtdJaTemClick = state.vantagensSelecionadas.count {
-                                        it.nome.equals(vant.nome, ignoreCase = true)
-                                    }
-                                    when (val maxEff = maxEffectiveSelections(vant)) {
-                                        null -> {}
-                                        else -> if (qtdJaTemClick >= maxEff) {
-                                            showSnack("Você já atingiu o limite para ${vant.nome}.")
-                                            return@DialogVantagemItem
-                                        }
-                                    }
-                                    if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
-                                        showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
-                                        return@DialogVantagemItem
-                                    }
-                                    if (bloquearExclusividadeClasse(vant)) {
-                                        return@DialogVantagemItem
-                                    }
-                                    if (!hasReservedProgress) {
-                                        showSnack("Você não tem progressos suficientes.")
-                                        return@DialogVantagemItem
-                                    }
+                        Categoria.entries.forEach { cat ->
+                            val listaCategoria = candidatasPorCategoria[cat] ?: return@forEach
+                            val expanded = expandedAdvCategories[cat] ?: true
 
-                                    if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo" || vant.id == "poderes_misticos_demonio" || vant.id == "poderes_misticos_mumia") {
-                                        pendingMysticPowersAdv = vant
-                                        advSelectedStageIndex = estIndex
-                                        showMysticPowersSelection = true
-                                    } else if (vant.requiresChoice || vant.vinculadoPericia || vant.id == "arma_predileta_aprimorada") {
-                                        pendingAdv = vant
-                                        advSelectedStageIndex = estIndex
-                                        showPendingChoice = true
-                                    } else {
-                                        // Standard purchase flow with Arcane check
-                                        viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
-                                        viewModel.selectAdvantageForAdvancement(vant)
-
-                                        val requiresPowerFlow =
-                                            vant.id == "novos_poderes" || vant.id.startsWith("antecedente_arcano")
-
-                                        if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
-                                            // Transition to Power Selection
-                                            showAdvSelection = false
-                                            showPowerSelection = true
-                                        } else {
-                                            viewModel.finishAdvantageAdvancement()
-                                            onDismiss()
-                                        }
+                            item(key = "adv_cat_header_${cat.name}") {
+                                TextButton(
+                                    onClick = { expandedAdvCategories[cat] = !expanded },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase(),
+                                            style = MaterialTheme.typography.titleSmall,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                        Icon(
+                                            imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                                            contentDescription = if (expanded) "Recolher ${cat.name}" else "Expandir ${cat.name}"
+                                        )
                                     }
-                                },
-                                onError = { showSnack(it) }
-                            )
+                                }
+                            }
+
+                            if (expanded) {
+                                items(
+                                    items = listaCategoria,
+                                    key = { vant -> "${vant.id}_${vant.nome}_${vant.origem}" }
+                                ) { vant ->
+                                    DialogVantagemItem(
+                                        vant = vant,
+                                        state = state,
+                                        locked = false,
+                                        allowLongTexts = true,
+                                        showOfficialNames = state.modoOficialAtivo,
+                                        idParaNome = idParaNome,
+                                        detalhesExpandidos = detalhesExpandidos,
+                                        stages = stages,
+                                        onSelect = {
+                                            val qtdJaTemClick = state.vantagensSelecionadas.count {
+                                                it.nome.equals(vant.nome, ignoreCase = true)
+                                            }
+                                            when (val maxEff = maxEffectiveSelections(vant)) {
+                                                null -> {}
+                                                else -> if (qtdJaTemClick >= maxEff) {
+                                                    showSnack("Você já atingiu o limite para ${vant.nome}.")
+                                                    return@DialogVantagemItem
+                                                }
+                                            }
+                                            if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
+                                                showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
+                                                return@DialogVantagemItem
+                                            }
+                                            if (bloquearExclusividadeClasse(vant)) {
+                                                return@DialogVantagemItem
+                                            }
+                                            if (!hasReservedProgress) {
+                                                showSnack("Você não tem progressos suficientes.")
+                                                return@DialogVantagemItem
+                                            }
+
+                                            if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo" || vant.id == "poderes_misticos_demonio" || vant.id == "poderes_misticos_mumia") {
+                                                pendingMysticPowersAdv = vant
+                                                advSelectedStageIndex = estIndex
+                                                showMysticPowersSelection = true
+                                            } else if (vant.requiresChoice || vant.vinculadoPericia || vant.id == "arma_predileta_aprimorada") {
+                                                pendingAdv = vant
+                                                advSelectedStageIndex = estIndex
+                                                showPendingChoice = true
+                                            } else {
+                                                viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
+                                                viewModel.selectAdvantageForAdvancement(vant)
+
+                                                val requiresPowerFlow =
+                                                    vant.id == "novos_poderes" || vant.id.startsWith("antecedente_arcano")
+
+                                                if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
+                                                    showAdvSelection = false
+                                                    showPowerSelection = true
+                                                } else {
+                                                    viewModel.finishAdvantageAdvancement()
+                                                    onDismiss()
+                                                }
+                                            }
+                                        },
+                                        onError = { showSnack(it) }
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -1448,7 +1496,68 @@ fun ProgressosDialog(
             }
 
             "ANTECEDENTE ARCANO" -> {
-                if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
+                if (state.compendioPathfinderAtivo) {
+                    val opcoesPathfinder = remember(state.compendioPathfinderAtivo) {
+                        val map = mapOf(
+                            "Magia" to "antecedente_arcano_magia_pf",
+                            "Milagres" to "antecedente_arcano_milagres_pf"
+                        )
+                        map.mapNotNull { (label, id) ->
+                            val v = allAdvantages.firstOrNull { it.id == id }
+                            if (v != null) label to v else null
+                        }
+                    }
+
+                    if (opcoesPathfinder.isNotEmpty()) {
+                        ChoiceDialog(
+                            options = opcoesPathfinder.map { it.first },
+                            onConfirm = { choiceLabel ->
+                                val specificEdge = opcoesPathfinder.firstOrNull { it.first == choiceLabel }?.second
+                                if (specificEdge != null) {
+                                    val estIndexFinal = advSelectedStageIndex.takeIf { it >= 0 } ?: selectedTab
+                                    val estSel = stages[estIndexFinal]
+
+                                    if (!state.podeSelecionar(specificEdge) || !strictRequirementsOk(specificEdge, estIndexFinal)) {
+                                        showSnack("Você não cumpre os requisitos para ${specificEdge.nome}.")
+                                        return@ChoiceDialog
+                                    }
+                                    if (bloquearExclusividadeClasse(specificEdge)) {
+                                        return@ChoiceDialog
+                                    }
+
+                                    viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
+                                    viewModel.selectAdvantageForAdvancement(specificEdge)
+
+                                    if (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso) {
+                                        showPendingChoice = false
+                                        showAdvSelection = false
+                                        pendingAdv = null
+                                        showPowerSelection = true
+                                    } else {
+                                        viewModel.finishAdvantageAdvancement()
+                                        showPendingChoice = false
+                                        showAdvSelection = false
+                                        pendingAdv = null
+                                        onDismiss()
+                                    }
+                                }
+                            },
+                            onDismiss = {
+                                showPendingChoice = false
+                                pendingAdv = null
+                            }
+                        )
+                    } else {
+                        ChoiceDialog(
+                            options = validChoiceOptionsFor(vant, state),
+                            onConfirm = { finishWithChoice(it) },
+                            onDismiss = {
+                                showPendingChoice = false
+                                pendingAdv = null
+                            }
+                        )
+                    }
+                } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
                     val opcoesArcano = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo) {
                         allAdvantages
                             .filter {
@@ -1551,6 +1660,35 @@ fun ProgressosDialog(
 // Helpers usados acima
 private fun maxEffectiveSelections(v: Vantagem): Int? =
     if (v.maxSelections > 0) v.maxSelections else null
+
+private fun normalizePathfinderArcaneEntriesForProgress(
+    visible: List<Vantagem>,
+    allAdvantages: List<Vantagem>,
+    state: CriadorState
+): List<Vantagem> {
+    if (!state.compendioPathfinderAtivo || state.permiteMultiAntecedenteArcano) return visible
+
+    val pfSpecificIds = setOf("antecedente_arcano_magia_pf", "antecedente_arcano_milagres_pf")
+    val withoutPfSpecific = visible.filterNot { it.id in pfSpecificIds }
+
+    if (withoutPfSpecific.any { it.id == "antecedente_arcano" }) {
+        return withoutPfSpecific
+    }
+
+    val genericArcane = allAdvantages.firstOrNull { it.id == "antecedente_arcano" }
+    if (genericArcane == null) return withoutPfSpecific
+
+    // Mantém a ordenação original da fonte (allAdvantages) para não empurrar
+    // "Antecedente Arcano" para o fim da lista ao normalizar as entradas PF.
+    val normalized = withoutPfSpecific + genericArcane
+    return allAdvantages.filter { sourceItem ->
+        normalized.any { normalizedItem ->
+            normalizedItem.id == sourceItem.id &&
+                normalizedItem.nome == sourceItem.nome &&
+                normalizedItem.origem == sourceItem.origem
+        }
+    }
+}
 
 private fun validChoiceOptionsFor(v: Vantagem, state: CriadorState): List<String> {
     return when (v.id) {
@@ -1705,14 +1843,6 @@ private fun DialogVantagemItem(
                         style = MaterialTheme.typography.titleSmall
                     )
 
-                    val origemLabel = vant.origem
-                    if (origemLabel.isNotBlank() && origemLabel != "BASICO") {
-                         Text(
-                             text = origemLabel.toEditionDisplayName(),
-                             style = MaterialTheme.typography.labelSmall,
-                             color = MaterialTheme.colorScheme.onSurfaceVariant
-                         )
-                    }
                 }
 
                 Text(

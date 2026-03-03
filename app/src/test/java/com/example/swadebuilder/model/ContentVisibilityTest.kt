@@ -95,4 +95,73 @@ class ContentVisibilityTest {
         assertTrue(visible)
     }
 
+    @Test
+    fun `pathfinder esconde AA específico de magia quando multi antecedentes está desabilitado`() {
+        val state = CriadorState().apply {
+            compendioPathfinderAtivo = true
+            permiteMultiAntecedenteArcano = false
+        }
+
+        val pfMagicArcane = Vantagem(
+            id = "antecedente_arcano_magia_pf",
+            nome = "ANTECEDENTE ARCANO (Magia)",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "PATHFINDER",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = pfMagicArcane,
+            multiplosAAHabilitados = false
+        )
+
+        assertFalse(visible)
+    }
+
+    @Test
+    fun `pathfinder esconde AA específico de milagres quando multi antecedentes está desabilitado`() {
+        val state = CriadorState().apply {
+            compendioPathfinderAtivo = true
+            permiteMultiAntecedenteArcano = false
+        }
+
+        val pfMiraclesArcane = Vantagem(
+            id = "antecedente_arcano_milagres_pf",
+            nome = "ANTECEDENTE ARCANO (Milagres)",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "PATHFINDER",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = pfMiraclesArcane,
+            multiplosAAHabilitados = false
+        )
+
+        assertFalse(visible)
+    }
+
+    @Test
+    fun `pathfinder mantém AA genérico visível quando multi antecedentes está desabilitado`() {
+        val state = CriadorState().apply {
+            compendioPathfinderAtivo = true
+            permiteMultiAntecedenteArcano = false
+        }
+
+        val genericArcane = Vantagem(
+            id = "antecedente_arcano",
+            nome = "ANTECEDENTE ARCANO",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "BASICO",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = genericArcane,
+            multiplosAAHabilitados = false
+        )
+
+        assertTrue(visible)
+    }
+
 }
