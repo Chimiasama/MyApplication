@@ -95,4 +95,50 @@ class ContentVisibilityTest {
         assertTrue(visible)
     }
 
+    @Test
+    fun `pathfinder mantém AA de magia visível quando multi antecedentes está desabilitado`() {
+        val state = CriadorState().apply {
+            compendioPathfinderAtivo = true
+            permiteMultiAntecedenteArcano = false
+        }
+
+        val pfMagicArcane = Vantagem(
+            id = "antecedente_arcano_magia_pf",
+            nome = "ANTECEDENTE ARCANO (Magia)",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "PATHFINDER",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = pfMagicArcane,
+            multiplosAAHabilitados = false
+        )
+
+        assertTrue(visible)
+    }
+
+    @Test
+    fun `pathfinder mantém AA de milagres visível quando multi antecedentes está desabilitado`() {
+        val state = CriadorState().apply {
+            compendioPathfinderAtivo = true
+            permiteMultiAntecedenteArcano = false
+        }
+
+        val pfMiraclesArcane = Vantagem(
+            id = "antecedente_arcano_milagres_pf",
+            nome = "ANTECEDENTE ARCANO (Milagres)",
+            categoria = Categoria.ANTECEDENTE,
+            origem = "PATHFINDER",
+            requisitos = Requisito()
+        )
+
+        val visible = state.isVantagemVisible(
+            vant = pfMiraclesArcane,
+            multiplosAAHabilitados = false
+        )
+
+        assertTrue(visible)
+    }
+
 }
