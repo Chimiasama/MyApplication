@@ -956,8 +956,19 @@ fun ProgressosDialog(
         val estSel   = stages[estIndex]
         val prevStageSpent = state.stageXpSpent.getValue(estSel.nome)
         val hasProfissional = state.vantagensSelecionadas.any { it.id == "profissional" }
+        val vantagensSnapshotKey = remember(state.vantagensSelecionadas) {
+            state.vantagensSelecionadas.joinToString("|") { "${it.id}:${it.choice.orEmpty()}" }
+        }
+        val advancementSnapshotKey = remember(state.advancementHistory) {
+            state.advancementHistory.joinToString("|") { acao ->
+                when (acao) {
+                    is AdvancementAction.SpendOnAdvantage -> "A:${acao.stageName}:${acao.advantageId}"
+                    else -> "${acao::class.simpleName}:${acao.stageName}"
+                }
+            }
+        }
 
-        val candidatas = remember(allAdvantages, advSearchQuery, advSelectedCategories, advFilter, estIndex, hasProfissional) {
+        val candidatas = remember(allAdvantages, advSearchQuery, advSelectedCategories, advFilter, estIndex, hasProfissional, vantagensSnapshotKey, advancementSnapshotKey, hasReservedProgress) {
             // First, filter visibility (which accounts for module rules)
             val visibleRaw = allAdvantages.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) }
             val visible = normalizePathfinderArcaneEntriesForProgress(visibleRaw, allAdvantages, state)
@@ -1015,7 +1026,7 @@ fun ProgressosDialog(
         LaunchedEffect(candidatasPorCategoria.keys) {
             candidatasPorCategoria.keys.forEach { cat ->
                 if (expandedAdvCategories[cat] == null) {
-                    expandedAdvCategories[cat] = true
+                    expandedAdvCategories[cat] = false
                 }
             }
         }
@@ -1048,7 +1059,7 @@ fun ProgressosDialog(
                          Spacer(Modifier.height(8.dp))
 
                         // Calculate active categories based on visible items - moved outside LazyRow
-                        val activeCategories = remember(allAdvantages) {
+                        val activeCategories = remember(allAdvantages, vantagensSnapshotKey, advancementSnapshotKey, estSel.nome) {
                             normalizePathfinderArcaneEntriesForProgress(
                                 allAdvantages.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) },
                                 allAdvantages,

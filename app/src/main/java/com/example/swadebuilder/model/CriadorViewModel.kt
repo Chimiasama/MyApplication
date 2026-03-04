@@ -962,7 +962,7 @@ class CriadorViewModel(
     fun startSkillAdvancement(slotIndex: Int, stageName: String) {
         if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
-            val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            val stageForSpend = state.stageNameForCurrentAdvancement ?: stageName
             if (state.xpSlots.getOrNull(slotIndex) != true) {
                 state.progresso++
                 state.xpSlots[slotIndex] = true
@@ -1051,10 +1051,10 @@ class CriadorViewModel(
         return true
     }
 
-    fun startAdvantageAdvancement(slotIndex: Int, est: String) {
+    fun startAdvantageAdvancement(slotIndex: Int, stageName: String) {
         if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
-            val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            val stageForSpend = state.stageNameForCurrentAdvancement ?: stageName
             if (state.xpSlots.getOrNull(slotIndex) != true) {
                 state.progresso++
                 state.xpSlots[slotIndex] = true
@@ -1194,7 +1194,7 @@ class CriadorViewModel(
     ) {
         if (state.xpSlots.getOrNull(slotIndex) == true) {
             resetUiState()
-            val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            val stageForSpend = state.stageNameForCurrentAdvancement ?: stageName
             if (state.xpSlots.getOrNull(slotIndex) != true) {
                 state.progresso++
                 state.xpSlots[slotIndex] = true
@@ -1221,7 +1221,7 @@ class CriadorViewModel(
 
     fun reserveLegendaryAttribute(slotIndex: Int, stageName: String) {
         if (state.xpSlots.getOrNull(slotIndex) == true && state.legendaryAttrReservations == 0) {
-            val stageForSpend = state.stageNameForCurrentAdvancement ?: state.estagioAtual().nome
+            val stageForSpend = state.stageNameForCurrentAdvancement ?: stageName
             if (state.xpSlots.getOrNull(slotIndex) != true) {
                 state.progresso++
                 state.xpSlots[slotIndex] = true
