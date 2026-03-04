@@ -22,6 +22,15 @@ class ClassPrestigeStageLimitTest {
         requisitos = Requisito()
     )
 
+
+    private val vantagemDeClasse = Vantagem(
+        id = "poderes_misticos_monge",
+        nome = "Poderes Místicos: Monge",
+        categoria = Categoria.VANTAGEM_DE_CLASSE,
+        origem = "PATHFINDER",
+        requisitos = Requisito(estagio = "Experiente")
+    )
+
     private val combate = Vantagem(
         id = "bloqueio",
         nome = "Bloqueio",
@@ -35,7 +44,7 @@ class ClassPrestigeStageLimitTest {
         val history = listOf(
             AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Experiente")
         )
-        val catalogo = listOf(classeMonge, prestigio, combate)
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
 
         assertTrue(history.atingiuLimiteClasseOuPrestigioNoEstagio("Experiente", prestigio, catalogo))
         assertFalse(history.atingiuLimiteClasseOuPrestigioNoEstagio("Veterano", prestigio, catalogo))
@@ -46,7 +55,7 @@ class ClassPrestigeStageLimitTest {
         val history = listOf(
             AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Experiente")
         )
-        val catalogo = listOf(classeMonge, prestigio, combate)
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
 
         assertFalse(history.atingiuLimiteClasseOuPrestigioNoEstagio("Experiente", combate, catalogo))
     }
@@ -54,7 +63,7 @@ class ClassPrestigeStageLimitTest {
     @Test
     fun `bloqueia compra em novato quando classe foi adquirida na criacao`() {
         val history = emptyList<AdvancementAction>()
-        val catalogo = listOf(classeMonge, prestigio, combate)
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
         val selecionadas = listOf(classeMonge)
 
         assertTrue(
@@ -66,4 +75,16 @@ class ClassPrestigeStageLimitTest {
             )
         )
     }
+    @Test
+    fun `compra de vantagem de classe tambem consome limite do estágio`() {
+        val history = listOf(
+            AdvancementAction.SpendOnAdvantage(advantageId = "poderes_misticos_monge", stageName = "Experiente")
+        )
+        val catalogo = listOf(classeMonge, prestigio, vantagemDeClasse, combate)
+
+        assertTrue(history.atingiuLimiteClasseOuPrestigioNoEstagio("Experiente", classeMonge, catalogo))
+        assertTrue(history.atingiuLimiteClasseOuPrestigioNoEstagio("Experiente", prestigio, catalogo))
+        assertFalse(history.atingiuLimiteClasseOuPrestigioNoEstagio("Veterano", classeMonge, catalogo))
+    }
+
 }

@@ -151,6 +151,11 @@ private fun parseStageFromLegacyRequirement(raw: String): String {
 fun Vantagem.isClasseOuPrestigio(): Boolean =
     categoria == Categoria.CLASSE || categoria == Categoria.PRESTIGIO
 
+fun Vantagem.isFamiliaClassePathfinder(): Boolean =
+    categoria == Categoria.CLASSE ||
+        categoria == Categoria.VANTAGEM_DE_CLASSE ||
+        categoria == Categoria.PRESTIGIO
+
 fun List<Vantagem>.classeExclusivaBloqueada(@Suppress("UNUSED_PARAMETER") nova: Vantagem): Boolean =
     false
 
@@ -160,18 +165,18 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     vantagensCatalogo: List<Vantagem>,
     vantagensSelecionadas: List<Vantagem> = emptyList()
 ): Boolean {
-    if (!nova.isClasseOuPrestigio()) return false
+    if (!nova.isFamiliaClassePathfinder()) return false
 
-    val idsClasseOuPrestigio = vantagensCatalogo
+    val idsFamiliaClasse = vantagensCatalogo
         .asSequence()
-        .filter { it.isClasseOuPrestigio() }
+        .filter { it.isFamiliaClassePathfinder() }
         .map { it.id }
         .toSet()
 
     val hasCompraViaXpNoEstagio = any { acao ->
         acao is AdvancementAction.SpendOnAdvantage &&
             acao.stageName.equals(stageName, ignoreCase = true) &&
-            acao.advantageId in idsClasseOuPrestigio
+            acao.advantageId in idsFamiliaClasse
     }
 
     if (hasCompraViaXpNoEstagio) return true
@@ -180,17 +185,17 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     // fora do histórico de avanço por XP.
     if (!stageName.equals("Novato", ignoreCase = true)) return false
 
-    val idsClasseOuPrestigioViaXp = asSequence()
+    val idsFamiliaClasseViaXp = asSequence()
         .filterIsInstance<AdvancementAction.SpendOnAdvantage>()
         .map { it.advantageId }
-        .filter { it in idsClasseOuPrestigio }
+        .filter { it in idsFamiliaClasse }
         .toSet()
 
-    val temClasseOuPrestigioDeCriacao = vantagensSelecionadas
+    val temCompraFamiliaClasseDeCriacao = vantagensSelecionadas
         .asSequence()
-        .filter { it.isClasseOuPrestigio() }
+        .filter { it.isFamiliaClassePathfinder() }
         .map { it.id }
-        .any { it !in idsClasseOuPrestigioViaXp }
+        .any { it !in idsFamiliaClasseViaXp }
 
-    return temClasseOuPrestigioDeCriacao
+    return temCompraFamiliaClasseDeCriacao
 }

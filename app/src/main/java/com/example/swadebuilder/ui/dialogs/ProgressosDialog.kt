@@ -82,6 +82,7 @@ import com.example.swadebuilder.model.atingiuLimiteClasseOuPrestigioNoEstagio
 import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.isVantagemVisible
+import com.example.swadebuilder.model.isFamiliaClassePathfinder
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.toDiceString
@@ -227,6 +228,7 @@ fun ProgressosDialog(
     }
 
     fun bloquearExclusividadeClasse(vant: Vantagem, stageName: String): Boolean {
+        if (!vant.isFamiliaClassePathfinder()) return false
         return if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas)) {
             showSnack(MENSAGEM_EXCLUSIVIDADE_CLASSE)
             true
@@ -967,6 +969,20 @@ fun ProgressosDialog(
                 }
             }
         }
+        val bloqueioFamiliaClasseNoEstagio = remember(allAdvantages, estSel.nome, vantagensSnapshotKey, advancementSnapshotKey) {
+            state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(
+                stageName = estSel.nome,
+                nova = Vantagem(
+                    id = "_probe_familia_classe_",
+                    nome = "_probe_familia_classe_",
+                    categoria = Categoria.CLASSE,
+                    origem = "",
+                    requisitos = com.example.swadebuilder.model.Requisito()
+                ),
+                vantagensCatalogo = allAdvantages,
+                vantagensSelecionadas = state.vantagensSelecionadas
+            )
+        }
 
         val candidatas = remember(allAdvantages, advSearchQuery, advSelectedCategories, advFilter, estIndex, hasProfissional, vantagensSnapshotKey, advancementSnapshotKey, hasReservedProgress) {
             // First, filter visibility (which accounts for module rules)
@@ -1011,8 +1027,7 @@ fun ProgressosDialog(
                 val requiresChoice = vant.requiresChoice
                 val validChoicesCount = if (requiresChoice) validChoiceOptionsFor(vant, state).size else 0
                 val choiceOk = !requiresChoice || validChoicesCount > 0
-                val limiteClassePorEstagioOk = !state.advancementHistory
-                    .atingiuLimiteClasseOuPrestigioNoEstagio(estSel.nome, vant, allAdvantages, state.vantagensSelecionadas)
+                val limiteClassePorEstagioOk = !(bloqueioFamiliaClasseNoEstagio && vant.isFamiliaClassePathfinder())
                 val temProgresso = hasReservedProgress
 
                 podeAgora && strictOk && repeticaoOk && stageOk && choiceOk && limiteClassePorEstagioOk && temProgresso
@@ -1058,15 +1073,9 @@ fun ProgressosDialog(
                     ) {
                          Spacer(Modifier.height(8.dp))
 
-                        // Calculate active categories based on visible items - moved outside LazyRow
-                        val activeCategories = remember(allAdvantages, vantagensSnapshotKey, advancementSnapshotKey, estSel.nome) {
-                            normalizePathfinderArcaneEntriesForProgress(
-                                allAdvantages.filter { state.isVantagemVisible(it, state.permiteMultiAntecedenteArcano) },
-                                allAdvantages,
-                                state
-                            )
-                                .map { it.categoria }
-                                .toSet()
+                        // Calcula categorias ativas com base nas candidatas filtradas
+                        val activeCategories = remember(candidatasPorCategoria) {
+                            candidatasPorCategoria.keys.toSet()
                         }
 
                         LazyRow(
@@ -1806,7 +1815,7 @@ private fun DialogVantagemItem(
 
     val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
     val requisitosOk = state.podeSelecionar(vant)
-    val bloqueioClasse = if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas)) {
+    val bloqueioClasse = if (vant.isFamiliaClassePathfinder() && state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas)) {
         "Limite por estágio atingido"
     } else null
 
@@ -1833,7 +1842,7 @@ private fun DialogVantagemItem(
 
                     when {
                         // Check class blocking specifically for error message
-                        state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas) -> onError(MENSAGEM_EXCLUSIVIDADE_CLASSE)
+                        vant.isFamiliaClassePathfinder() && state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas) -> onError(MENSAGEM_EXCLUSIVIDADE_CLASSE)
                         conflitoMsg != null -> onError(conflitoMsg)
                         !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
                         else -> onSelect()
