@@ -50,4 +50,20 @@ class ClassPrestigeStageLimitTest {
 
         assertFalse(history.atingiuLimiteClasseOuPrestigioNoEstagio("Experiente", combate, catalogo))
     }
+
+    @Test
+    fun `bloqueia compra em novato quando classe foi adquirida na criacao`() {
+        val history = emptyList<AdvancementAction>()
+        val catalogo = listOf(classeMonge, prestigio, combate)
+        val selecionadas = listOf(classeMonge)
+
+        assertTrue(
+            history.atingiuLimiteClasseOuPrestigioNoEstagio(
+                stageName = "Novato",
+                nova = prestigio,
+                vantagensCatalogo = catalogo,
+                vantagensSelecionadas = selecionadas
+            )
+        )
+    }
 }

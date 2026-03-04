@@ -157,7 +157,8 @@ fun List<Vantagem>.classeExclusivaBloqueada(@Suppress("UNUSED_PARAMETER") nova: 
 fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     stageName: String,
     nova: Vantagem,
-    vantagensCatalogo: List<Vantagem>
+    vantagensCatalogo: List<Vantagem>,
+    vantagensSelecionadas: List<Vantagem> = emptyList()
 ): Boolean {
     if (!nova.isClasseOuPrestigio()) return false
 
@@ -167,9 +168,29 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
         .map { it.id }
         .toSet()
 
-    return any { acao ->
+    val hasCompraViaXpNoEstagio = any { acao ->
         acao is AdvancementAction.SpendOnAdvantage &&
             acao.stageName.equals(stageName, ignoreCase = true) &&
             acao.advantageId in idsClasseOuPrestigio
     }
+
+    if (hasCompraViaXpNoEstagio) return true
+
+    // Criação de personagem acontece em Novato e pode conceder Classe/Prestígio
+    // fora do histórico de avanço por XP.
+    if (!stageName.equals("Novato", ignoreCase = true)) return false
+
+    val idsClasseOuPrestigioViaXp = asSequence()
+        .filterIsInstance<AdvancementAction.SpendOnAdvantage>()
+        .map { it.advantageId }
+        .filter { it in idsClasseOuPrestigio }
+        .toSet()
+
+    val temClasseOuPrestigioDeCriacao = vantagensSelecionadas
+        .asSequence()
+        .filter { it.isClasseOuPrestigio() }
+        .map { it.id }
+        .any { it !in idsClasseOuPrestigioViaXp }
+
+    return temClasseOuPrestigioDeCriacao
 }

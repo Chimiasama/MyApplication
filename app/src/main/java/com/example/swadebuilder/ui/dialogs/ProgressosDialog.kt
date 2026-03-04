@@ -227,7 +227,7 @@ fun ProgressosDialog(
     }
 
     fun bloquearExclusividadeClasse(vant: Vantagem, stageName: String): Boolean {
-        return if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages)) {
+        return if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas)) {
             showSnack(MENSAGEM_EXCLUSIVIDADE_CLASSE)
             true
         } else {
@@ -1001,7 +1001,7 @@ fun ProgressosDialog(
                 val validChoicesCount = if (requiresChoice) validChoiceOptionsFor(vant, state).size else 0
                 val choiceOk = !requiresChoice || validChoicesCount > 0
                 val limiteClassePorEstagioOk = !state.advancementHistory
-                    .atingiuLimiteClasseOuPrestigioNoEstagio(estSel.nome, vant, allAdvantages)
+                    .atingiuLimiteClasseOuPrestigioNoEstagio(estSel.nome, vant, allAdvantages, state.vantagensSelecionadas)
                 val temProgresso = hasReservedProgress
 
                 podeAgora && strictOk && repeticaoOk && stageOk && choiceOk && limiteClassePorEstagioOk && temProgresso
@@ -1795,7 +1795,7 @@ private fun DialogVantagemItem(
 
     val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
     val requisitosOk = state.podeSelecionar(vant)
-    val bloqueioClasse = if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages)) {
+    val bloqueioClasse = if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas)) {
         "Limite por estágio atingido"
     } else null
 
@@ -1822,7 +1822,7 @@ private fun DialogVantagemItem(
 
                     when {
                         // Check class blocking specifically for error message
-                        state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages) -> onError(MENSAGEM_EXCLUSIVIDADE_CLASSE)
+                        state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas) -> onError(MENSAGEM_EXCLUSIVIDADE_CLASSE)
                         conflitoMsg != null -> onError(conflitoMsg)
                         !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
                         else -> onSelect()
