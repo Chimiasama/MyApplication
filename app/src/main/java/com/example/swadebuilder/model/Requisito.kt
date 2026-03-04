@@ -1,6 +1,6 @@
 package com.example.swadebuilder.model
 
-import android.util.Log
+import com.example.swadebuilder.util.debugLog
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -171,7 +171,7 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     if (!nova.isFamiliaClassePathfinder()) return false
 
     fun debug(msg: String) {
-        Log.d("RequisitoClasse", msg)
+        debugLog("RequisitoClasse", msg)
     }
 
     val idsFamiliaClasse = vantagensCatalogo

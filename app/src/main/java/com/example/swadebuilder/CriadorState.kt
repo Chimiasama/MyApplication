@@ -1,7 +1,6 @@
 package com.example.swadebuilder
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -69,6 +68,7 @@ import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplication
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 import java.util.UUID
@@ -347,12 +347,12 @@ class CriadorState {
         // Optimized O(1) lookup using cached map (with resilient fallbacks for aliases/suffixes)
         val candidates = lookupKeys.firstNotNullOfOrNull { ancestryMap[it] }
         if (candidates.isNullOrEmpty()) {
-            Log.d("AdaptavelDebug", "[getAncestralidadeDef] não encontrada para '$name' keys=$lookupKeys")
+            debugLog("AdaptavelDebug", "[getAncestralidadeDef] não encontrada para '$name' keys=$lookupKeys")
             return null
         }
 
         if (lookupKeys.first() != lookupKeys.firstOrNull { ancestryMap[it] != null }) {
-            Log.d("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
+            debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
         if (candidates.size == 1) return candidates.first()
 
@@ -1897,7 +1897,7 @@ class CriadorState {
 
         if (isFreeAdaptavel) {
             vantagemAdaptavelSelecionadaId = v.id
-            Log.d("AdaptavelDebug", "[comprarVantagem:${v.id}] slot consumido por ${v.nome}")
+            debugLog("AdaptavelDebug", "[comprarVantagem:${v.id}] slot consumido por ${v.nome}")
             onFeedback("Vantagem ${v.nome} adicionada (Vantagem bônus de ${getAdaptavelLabel()}).")
         } else if (isFreePathfinder) {
             pathfinderFreeSlotId = v.id
@@ -3466,7 +3466,7 @@ class CriadorState {
         if (debugSource != null) {
             val anc = ancestralidade
             val ancDef = currentAncestryDef
-            Log.d(
+            debugLog(
                 "AdaptavelDebug",
                 "[$debugSource] hasAdaptavel=$hasAdaptavel slotAvailable=$slotAvailable selectedId=$vantagemAdaptavelSelecionadaId ancestralidade=$anc origem=${ancDef?.origem}"
             )
@@ -4003,7 +4003,7 @@ class CriadorState {
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {
-        Log.d(
+        debugLog(
             "AdaptavelDebug",
             "[aplicarAncestralidade:start] ancAtual=$ancestralidade ancNovo=$anc selectedId=$vantagemAdaptavelSelecionadaId"
         )
@@ -4180,7 +4180,7 @@ class CriadorState {
                 if (!defaultOption.isNullOrBlank()) {
                     val normalizedDefault = resolveSciFiVariantSelectionFor(
                         ancestryName = anc,
-                        availableOptions = ancDef?.opcoes ?: emptyList(),
+                        availableOptions = ancDef.opcoes,
                         overrideSelection = defaultOption
                     )
                     scifiVariant = normalizedDefault

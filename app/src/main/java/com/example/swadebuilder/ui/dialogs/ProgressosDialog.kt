@@ -1,7 +1,6 @@
 package com.example.swadebuilder.ui.dialogs
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -93,6 +92,7 @@ import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.VantFilterDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
@@ -245,7 +245,7 @@ fun ProgressosDialog(
                 state.stageNameForCurrentAdvancement.equals(stageName, ignoreCase = true)
 
         return if (bloqueioPorHistorico || bloqueioPorPendente) {
-            Log.d(
+            debugLog(
                 debugTag,
                 "Bloqueando ${vant.id} em $stageName (historico=$bloqueioPorHistorico, pendente=${vantagemPendente?.id})"
             )
@@ -1018,7 +1018,7 @@ fun ProgressosDialog(
 
             (bloqueioPorHistorico || bloqueioPorPendente).also { bloqueio ->
                 if (bloqueio) {
-                    Log.d(
+                    debugLog(
                         debugTag,
                         "Filtro ocultando família de classe em ${estSel.nome} (historico=$bloqueioPorHistorico, pendente=${vantagemPendente?.id})"
                     )
@@ -1239,7 +1239,7 @@ fun ProgressosDialog(
                                                         state.arcanoCompraPendente()
 
                                                 if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
-                                                    Log.d(
+                                                    debugLog(
                                                         debugTag,
                                                         "Abrindo fluxo de poderes para ${vant.id} (stage=${estSel.nome}, arcanoPendente=${state.arcanoCompraPendente()})"
                                                     )
@@ -1501,7 +1501,7 @@ fun ProgressosDialog(
                     state.arcanoCompraPendente()
 
             if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
-                Log.d(
+                debugLog(
                     debugTag,
                     "Abrindo fluxo de poderes com escolha para ${vantChoice.id} (stage=${estSel.nome}, arcanoPendente=${state.arcanoCompraPendente()})"
                 )

@@ -4,7 +4,6 @@ package com.example.swadebuilder.model
 import android.content.Context
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
@@ -39,6 +38,7 @@ import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
+import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 
 // ---- OBJETOS DE RETORNO ----
@@ -1077,7 +1077,7 @@ class CriadorViewModel(
     fun finishAdvantageAdvancement() {
         if (state.advantageAdvancementInProgress) {
             if (state.arcanoCompraPendente()) {
-                Log.d("CriadorViewModel", "finishAdvantageAdvancement adiado: arcano pendente para ${state.advantageForCurrentAdvancement} no estágio ${state.stageNameForCurrentAdvancement}")
+                debugLog("CriadorViewModel", "finishAdvantageAdvancement adiado: arcano pendente para ${state.advantageForCurrentAdvancement} no estágio ${state.stageNameForCurrentAdvancement}")
                 return
             }
             val advantageId = state.advantageForCurrentAdvancement
@@ -1249,7 +1249,7 @@ class CriadorViewModel(
         state.xpSlots[slotIndex] = true
         val stageFromSlot = stageForSlot(slotIndex).nome
         state.stageNameForCurrentAdvancement = stageFromSlot
-        Log.d("CriadorViewModel", "Reserva de progresso no slot=$slotIndex atribuída ao estágio=$stageFromSlot (progressoAtual=${state.progresso})")
+        debugLog("CriadorViewModel", "Reserva de progresso no slot=$slotIndex atribuída ao estágio=$stageFromSlot (progressoAtual=${state.progresso})")
         state.recomputeAvailableProgress()
         return true
     }
@@ -1432,7 +1432,7 @@ class CriadorViewModel(
                 !state.stageNameForCurrentAdvancement.isNullOrBlank()
 
         if (hasPendingProgress) {
-            Log.d(
+            debugLog(
                 "CriadorViewModel",
                 "undoLastProgressAction cancelando pendência (slot atual=${state.stageNameForCurrentAdvancement}, vantagem=${state.advantageForCurrentAdvancement})"
             )
