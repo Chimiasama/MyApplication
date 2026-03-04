@@ -32,11 +32,13 @@ import com.example.swadebuilder.model.usecase.ValidateSpecialPowerRequirementsUs
 import com.example.swadebuilder.model.usecase.ValidateSuperAdvantageInvestmentUseCase
 import com.example.swadebuilder.model.usecase.ValidateSuperAttributeInvestmentUseCase
 import com.example.swadebuilder.normAAKey
+import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
+import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 
 // ---- OBJETOS DE RETORNO ----
@@ -1074,7 +1076,10 @@ class CriadorViewModel(
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun finishAdvantageAdvancement() {
         if (state.advantageAdvancementInProgress) {
-            if (state.arcanoCompraPendente()) return
+            if (state.arcanoCompraPendente()) {
+                debugLog("CriadorViewModel", "finishAdvantageAdvancement adiado: arcano pendente para ${state.advantageForCurrentAdvancement} no estágio ${state.stageNameForCurrentAdvancement}")
+                return
+            }
             val advantageId = state.advantageForCurrentAdvancement
             if (advantageId == null) {
                 // If nothing selected, revert
@@ -1242,7 +1247,9 @@ class CriadorViewModel(
 
         state.progresso++
         state.xpSlots[slotIndex] = true
-        state.stageNameForCurrentAdvancement = state.estagioAtual().nome
+        val stageFromSlot = stageForSlot(slotIndex).nome
+        state.stageNameForCurrentAdvancement = stageFromSlot
+        debugLog("CriadorViewModel", "Reserva de progresso no slot=$slotIndex atribuída ao estágio=$stageFromSlot (progressoAtual=${state.progresso})")
         state.recomputeAvailableProgress()
         return true
     }
@@ -1414,6 +1421,26 @@ class CriadorViewModel(
         state.mostrandoVantagensProgresso = false
         state.mostrandoPoderesProgresso = false
         state.updateEmProgressoFlag()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun undoLastProgressAction() {
+        val hasPendingProgress =
+            state.skillAdvancementInProgress ||
+                state.advantageAdvancementInProgress ||
+                state.attributeAdvancementInProgress ||
+                !state.stageNameForCurrentAdvancement.isNullOrBlank()
+
+        if (hasPendingProgress) {
+            debugLog(
+                "CriadorViewModel",
+                "undoLastProgressAction cancelando pendência (slot atual=${state.stageNameForCurrentAdvancement}, vantagem=${state.advantageForCurrentAdvancement})"
+            )
+            cancelAdvancementInProgress()
+            return
+        }
+
+        revertLastAdvancement()
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)

@@ -1,7 +1,6 @@
 package com.example.swadebuilder.ui.sections
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -79,6 +78,7 @@ import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.ptBrCollator
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
@@ -253,14 +253,14 @@ fun VantagensContent(
         val steamVisible = listaVantagensAtivas.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }
         val hiddenSteam = steamAll.filterNot { state.isVantagemVisible(it, multiplosAAHabilitados) }
 
-        Log.d(
+        debugLog(
             "SWADE_DEBUG",
             "[SolVapor] vantagens totais=${listaVantagens.size}, sol_vapor_total=${steamAll.size}, " +
                 "sol_vapor_visiveis=${steamVisible.size}, multiAA=$multiplosAAHabilitados"
         )
 
         hiddenSteam.take(30).forEach { vant ->
-            Log.d(
+            debugLog(
                 "SWADE_DEBUG",
                 "[SolVapor] hidden id=${vant.id}, nome=${vant.nomeExibicao}, origem=${vant.origem}, " +
                     "reason=${state.explainVantagemVisibility(vant, multiplosAAHabilitados)}"
@@ -376,6 +376,14 @@ fun VantagensContent(
 
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
 
+    LaunchedEffect(state.ancestralidade, state.vantagemAdaptavelSelecionadaId, state.vantagensSelecionadas.size) {
+        state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:LaunchedEffect")
+        debugLog(
+            "AdaptavelDebug",
+            "[VantagensSection:LaunchedEffect] pontosVantagem=${state.pontosVantagem} vantagensSelecionadas=${state.vantagensSelecionadas.size}"
+        )
+    }
+
     val protagonistaSlotCategoria = when (state.protagonistaRollVantagem) {
         1 -> "Chi"
         2 -> "Estranhas"
@@ -390,7 +398,7 @@ fun VantagensContent(
         val isFreePathfinder = state.pathfinderSlotAvailable && state.isPathfinderEligible(vantToBuy)
         val isFreeProtagonista = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vantToBuy)
         val isFreeSamurai = state.samuraiCombatSlotAvailable && vantToBuy.categoria == Categoria.COMBATE
-        val isFreeAdaptavel = state.adaptavelSlotAvailable &&
+        val isFreeAdaptavel = state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:attemptPurchase:${vantToBuy.id}") &&
                 (vantToBuy.requisitos.estagio.isBlank() || vantToBuy.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
                 !state.isVantagemAutomatica(vantToBuy)
 
@@ -1874,7 +1882,7 @@ private fun VantagemItem(
 
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
                     val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
-                    val isFreeAdaptavel = state.adaptavelSlotAvailable &&
+                    val isFreeAdaptavel = state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:itemClick:${vant.id}") &&
                             (vant.requisitos.estagio.isBlank() || vant.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
                             !state.isVantagemAutomatica(vant)
 

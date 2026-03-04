@@ -68,6 +68,7 @@ import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplication
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 import java.util.UUID
@@ -162,6 +163,8 @@ class CriadorState {
 
         ensureAllAtributosRegistered()
         ensureAllPericiasRegistered()
+
+        hasFreeAdaptavelSlotNow(debugSource = "updateGameData")
     }
 
     private val ameacadorComplicacoesLiberadoras = setOf(
@@ -335,9 +338,22 @@ class CriadorState {
 
     fun getAncestralidadeDef(name: String): com.example.swadebuilder.model.RacialModifier? {
         val key = name.keyify()
-        // Optimized O(1) lookup using cached map
-        val candidates = ancestryMap[key]
-        if (candidates.isNullOrEmpty()) return null
+        val baseNoSuffix = name.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "").keyify()
+        val lookupKeys = linkedSetOf(key, baseNoSuffix).apply {
+            if (baseNoSuffix.endsWith("S")) add(baseNoSuffix.removeSuffix("S")) else if (baseNoSuffix.isNotBlank()) add("${baseNoSuffix}S")
+            if (key.endsWith("S")) add(key.removeSuffix("S")) else if (key.isNotBlank()) add("${key}S")
+        }
+
+        // Optimized O(1) lookup using cached map (with resilient fallbacks for aliases/suffixes)
+        val candidates = lookupKeys.firstNotNullOfOrNull { ancestryMap[it] }
+        if (candidates.isNullOrEmpty()) {
+            debugLog("AdaptavelDebug", "[getAncestralidadeDef] não encontrada para '$name' keys=$lookupKeys")
+            return null
+        }
+
+        if (lookupKeys.first() != lookupKeys.firstOrNull { ancestryMap[it] != null }) {
+            debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
+        }
         if (candidates.size == 1) return candidates.first()
 
         val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
@@ -1868,7 +1884,8 @@ class CriadorState {
         val isFreeProtagonista = protagonistaSlotAvailable && isProtagonistaEligible(v)
         val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
-        val isFreeAdaptavel = adaptavelSlotAvailable &&
+        val adaptavelFreeSlot = hasFreeAdaptavelSlotNow(debugSource = "comprarVantagem:${v.id}")
+        val isFreeAdaptavel = adaptavelFreeSlot &&
             (v.requisitos.estagio.isBlank() || v.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
             !isVantagemAutomatica(v)
 
@@ -1880,6 +1897,7 @@ class CriadorState {
 
         if (isFreeAdaptavel) {
             vantagemAdaptavelSelecionadaId = v.id
+            debugLog("AdaptavelDebug", "[comprarVantagem:${v.id}] slot consumido por ${v.nome}")
             onFeedback("Vantagem ${v.nome} adicionada (Vantagem bônus de ${getAdaptavelLabel()}).")
         } else if (isFreePathfinder) {
             pathfinderFreeSlotId = v.id
@@ -3442,6 +3460,20 @@ class CriadorState {
         else vantagemAdaptavelSelecionadaId == null
     }
 
+    fun hasFreeAdaptavelSlotNow(debugSource: String? = null): Boolean {
+        val hasAdaptavel = temAdaptavel()
+        val slotAvailable = hasAdaptavel && vantagemAdaptavelSelecionadaId == null
+        if (debugSource != null) {
+            val anc = ancestralidade
+            val ancDef = currentAncestryDef
+            debugLog(
+                "AdaptavelDebug",
+                "[$debugSource] hasAdaptavel=$hasAdaptavel slotAvailable=$slotAvailable selectedId=$vantagemAdaptavelSelecionadaId ancestralidade=$anc origem=${ancDef?.origem}"
+            )
+        }
+        return slotAvailable
+    }
+
     // controla quais categorias da seção de Vantagens estão expandidas
     val categoriasVantagensExpandidas: SnapshotStateMap<Categoria, Boolean> =
         mutableStateMapOf<Categoria, Boolean>().apply {
@@ -3971,6 +4003,10 @@ class CriadorState {
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {
+        debugLog(
+            "AdaptavelDebug",
+            "[aplicarAncestralidade:start] ancAtual=$ancestralidade ancNovo=$anc selectedId=$vantagemAdaptavelSelecionadaId"
+        )
         val prevAnc = ancestralidade
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
@@ -4144,7 +4180,7 @@ class CriadorState {
                 if (!defaultOption.isNullOrBlank()) {
                     val normalizedDefault = resolveSciFiVariantSelectionFor(
                         ancestryName = anc,
-                        availableOptions = ancDef?.opcoes ?: emptyList(),
+                        availableOptions = ancDef.opcoes,
                         overrideSelection = defaultOption
                     )
                     scifiVariant = normalizedDefault
@@ -4170,6 +4206,8 @@ class CriadorState {
                 .replace("• Forma Alienígena.\n", "")
                 .replace("• Forma Alienígena.", "")
         }
+
+        hasFreeAdaptavelSlotNow(debugSource = "aplicarAncestralidade:end")
 
         if (racialPackage.anotacoesToAdd.isNotEmpty()) {
             val newNotes = racialPackage.anotacoesToAdd.filter { !anotacoes.contains(it) }

@@ -92,6 +92,7 @@ import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.VantFilterDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay
@@ -113,6 +114,7 @@ fun ProgressosDialog(
     allEstagios: List<Estagio>,
     onDismiss: () -> Unit
 ) {
+    val debugTag = "ProgressosDialog"
     // Snackbar para mensagens temporárias (substitui showTempError/tempErrorMsg)
     val snackHost = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -229,7 +231,24 @@ fun ProgressosDialog(
 
     fun bloquearExclusividadeClasse(vant: Vantagem, stageName: String): Boolean {
         if (!vant.isFamiliaClassePathfinder()) return false
-        return if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages, state.vantagensSelecionadas)) {
+        val bloqueioPorHistorico = state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(
+            stageName,
+            vant,
+            allAdvantages,
+            state.vantagensSelecionadas
+        )
+        val vantagemPendente = state.advantageForCurrentAdvancement
+            ?.let { pendingId -> allAdvantages.firstOrNull { it.id == pendingId } }
+        val bloqueioPorPendente =
+            state.advantageAdvancementInProgress &&
+                vantagemPendente?.isFamiliaClassePathfinder() == true &&
+                state.stageNameForCurrentAdvancement.equals(stageName, ignoreCase = true)
+
+        return if (bloqueioPorHistorico || bloqueioPorPendente) {
+            debugLog(
+                debugTag,
+                "Bloqueando ${vant.id} em $stageName (historico=$bloqueioPorHistorico, pendente=${vantagemPendente?.id})"
+            )
             showSnack(MENSAGEM_EXCLUSIVIDADE_CLASSE)
             true
         } else {
@@ -969,8 +988,16 @@ fun ProgressosDialog(
                 }
             }
         }
-        val bloqueioFamiliaClasseNoEstagio = remember(allAdvantages, estSel.nome, vantagensSnapshotKey, advancementSnapshotKey) {
-            state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(
+        val bloqueioFamiliaClasseNoEstagio = remember(
+            allAdvantages,
+            estSel.nome,
+            vantagensSnapshotKey,
+            advancementSnapshotKey,
+            state.advantageAdvancementInProgress,
+            state.advantageForCurrentAdvancement,
+            state.stageNameForCurrentAdvancement
+        ) {
+            val bloqueioPorHistorico = state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(
                 stageName = estSel.nome,
                 nova = Vantagem(
                     id = "_probe_familia_classe_",
@@ -982,6 +1009,21 @@ fun ProgressosDialog(
                 vantagensCatalogo = allAdvantages,
                 vantagensSelecionadas = state.vantagensSelecionadas
             )
+            val vantagemPendente = state.advantageForCurrentAdvancement
+                ?.let { pendingId -> allAdvantages.firstOrNull { it.id == pendingId } }
+            val bloqueioPorPendente =
+                state.advantageAdvancementInProgress &&
+                    vantagemPendente?.isFamiliaClassePathfinder() == true &&
+                    state.stageNameForCurrentAdvancement.equals(estSel.nome, ignoreCase = true)
+
+            (bloqueioPorHistorico || bloqueioPorPendente).also { bloqueio ->
+                if (bloqueio) {
+                    debugLog(
+                        debugTag,
+                        "Filtro ocultando família de classe em ${estSel.nome} (historico=$bloqueioPorHistorico, pendente=${vantagemPendente?.id})"
+                    )
+                }
+            }
         }
 
         val candidatas = remember(allAdvantages, advSearchQuery, advSelectedCategories, advFilter, estIndex, hasProfissional, vantagensSnapshotKey, advancementSnapshotKey, hasReservedProgress) {
@@ -1192,9 +1234,15 @@ fun ProgressosDialog(
                                                 viewModel.selectAdvantageForAdvancement(vant)
 
                                                 val requiresPowerFlow =
-                                                    vant.id == "novos_poderes" || vant.id.startsWith("antecedente_arcano")
+                                                    vant.id == "novos_poderes" ||
+                                                        vant.id.startsWith("antecedente_arcano") ||
+                                                        state.arcanoCompraPendente()
 
                                                 if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
+                                                    debugLog(
+                                                        debugTag,
+                                                        "Abrindo fluxo de poderes para ${vant.id} (stage=${estSel.nome}, arcanoPendente=${state.arcanoCompraPendente()})"
+                                                    )
                                                     showAdvSelection = false
                                                     showPowerSelection = true
                                                 } else {
@@ -1448,9 +1496,15 @@ fun ProgressosDialog(
             viewModel.selectAdvantageForAdvancement(vantChoice)
 
             val requiresPowerFlow =
-                vantChoice.id == "novos_poderes" || vantChoice.id.startsWith("antecedente_arcano")
+                vantChoice.id == "novos_poderes" ||
+                    vantChoice.id.startsWith("antecedente_arcano") ||
+                    state.arcanoCompraPendente()
 
             if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
+                debugLog(
+                    debugTag,
+                    "Abrindo fluxo de poderes com escolha para ${vantChoice.id} (stage=${estSel.nome}, arcanoPendente=${state.arcanoCompraPendente()})"
+                )
                 showPendingChoice = false
                 showAdvSelection = false
                 pendingAdv = null

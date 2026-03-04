@@ -927,7 +927,7 @@ private fun ProgressionDetailContent(
             allAdvantages = viewModel.gameDataStore.getVantagens(),
             onUseProgress = onUseProgress,
             onUndo = {
-                viewModel.revertLastAdvancement()
+                viewModel.undoLastProgressAction()
             }
         )
         else -> SummaryTabContent(

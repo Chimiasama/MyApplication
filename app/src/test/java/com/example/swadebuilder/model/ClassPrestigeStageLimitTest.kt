@@ -87,4 +87,13 @@ class ClassPrestigeStageLimitTest {
         assertFalse(history.atingiuLimiteClasseOuPrestigioNoEstagio("Veterano", classeMonge, catalogo))
     }
 
+    @Test
+    fun `bloqueia segunda classe na criacao quando ja existe familia classe selecionada`() {
+        val selecionadas = listOf(classeMonge)
+
+        assertTrue(selecionadas.classeExclusivaBloqueada(prestigio))
+        assertTrue(selecionadas.classeExclusivaBloqueada(vantagemDeClasse))
+        assertFalse(selecionadas.classeExclusivaBloqueada(combate))
+    }
+
 }

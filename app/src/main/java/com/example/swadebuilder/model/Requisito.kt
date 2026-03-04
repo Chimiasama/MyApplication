@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.util.debugLog
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -156,8 +157,10 @@ fun Vantagem.isFamiliaClassePathfinder(): Boolean =
         categoria == Categoria.VANTAGEM_DE_CLASSE ||
         categoria == Categoria.PRESTIGIO
 
-fun List<Vantagem>.classeExclusivaBloqueada(@Suppress("UNUSED_PARAMETER") nova: Vantagem): Boolean =
-    false
+fun List<Vantagem>.classeExclusivaBloqueada(nova: Vantagem): Boolean {
+    if (!nova.isFamiliaClassePathfinder()) return false
+    return any { it.isFamiliaClassePathfinder() }
+}
 
 fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     stageName: String,
@@ -166,6 +169,10 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     vantagensSelecionadas: List<Vantagem> = emptyList()
 ): Boolean {
     if (!nova.isFamiliaClassePathfinder()) return false
+
+    fun debug(msg: String) {
+        debugLog("RequisitoClasse", msg)
+    }
 
     val idsFamiliaClasse = vantagensCatalogo
         .asSequence()
@@ -179,7 +186,10 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
             acao.advantageId in idsFamiliaClasse
     }
 
-    if (hasCompraViaXpNoEstagio) return true
+    if (hasCompraViaXpNoEstagio) {
+        debug("Bloqueio por histórico: stage=$stageName nova=${nova.id}")
+        return true
+    }
 
     // Criação de personagem acontece em Novato e pode conceder Classe/Prestígio
     // fora do histórico de avanço por XP.
@@ -196,6 +206,10 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
         .filter { it.isFamiliaClassePathfinder() }
         .map { it.id }
         .any { it !in idsFamiliaClasseViaXp }
+
+    if (temCompraFamiliaClasseDeCriacao) {
+        debug("Bloqueio por criação em Novato: stage=$stageName nova=${nova.id}")
+    }
 
     return temCompraFamiliaClasseDeCriacao
 }
