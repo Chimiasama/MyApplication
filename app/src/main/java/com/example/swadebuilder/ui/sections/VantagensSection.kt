@@ -376,6 +376,14 @@ fun VantagensContent(
 
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
 
+    LaunchedEffect(state.ancestralidade, state.vantagemAdaptavelSelecionadaId, state.vantagensSelecionadas.size) {
+        state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:LaunchedEffect")
+        Log.d(
+            "AdaptavelDebug",
+            "[VantagensSection:LaunchedEffect] pontosVantagem=${state.pontosVantagem} vantagensSelecionadas=${state.vantagensSelecionadas.size}"
+        )
+    }
+
     val protagonistaSlotCategoria = when (state.protagonistaRollVantagem) {
         1 -> "Chi"
         2 -> "Estranhas"
@@ -390,7 +398,7 @@ fun VantagensContent(
         val isFreePathfinder = state.pathfinderSlotAvailable && state.isPathfinderEligible(vantToBuy)
         val isFreeProtagonista = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vantToBuy)
         val isFreeSamurai = state.samuraiCombatSlotAvailable && vantToBuy.categoria == Categoria.COMBATE
-        val isFreeAdaptavel = state.adaptavelSlotAvailable &&
+        val isFreeAdaptavel = state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:attemptPurchase:${vantToBuy.id}") &&
                 (vantToBuy.requisitos.estagio.isBlank() || vantToBuy.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
                 !state.isVantagemAutomatica(vantToBuy)
 
@@ -1874,7 +1882,7 @@ private fun VantagemItem(
 
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
                     val isProtagonistaFree = state.protagonistaSlotAvailable && state.isProtagonistaEligible(vant)
-                    val isFreeAdaptavel = state.adaptavelSlotAvailable &&
+                    val isFreeAdaptavel = state.hasFreeAdaptavelSlotNow(debugSource = "VantagensSection:itemClick:${vant.id}") &&
                             (vant.requisitos.estagio.isBlank() || vant.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
                             !state.isVantagemAutomatica(vant)
 

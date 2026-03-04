@@ -1,6 +1,7 @@
 package com.example.swadebuilder
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -162,6 +163,8 @@ class CriadorState {
 
         ensureAllAtributosRegistered()
         ensureAllPericiasRegistered()
+
+        hasFreeAdaptavelSlotNow(debugSource = "updateGameData")
     }
 
     private val ameacadorComplicacoesLiberadoras = setOf(
@@ -1868,7 +1871,8 @@ class CriadorState {
         val isFreeProtagonista = protagonistaSlotAvailable && isProtagonistaEligible(v)
         val isFreeSamuraiCombat = samuraiCombatSlotAvailable && v.categoria == Categoria.COMBATE
 
-        val isFreeAdaptavel = adaptavelSlotAvailable &&
+        val adaptavelFreeSlot = hasFreeAdaptavelSlotNow(debugSource = "comprarVantagem:${v.id}")
+        val isFreeAdaptavel = adaptavelFreeSlot &&
             (v.requisitos.estagio.isBlank() || v.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
             !isVantagemAutomatica(v)
 
@@ -1880,6 +1884,7 @@ class CriadorState {
 
         if (isFreeAdaptavel) {
             vantagemAdaptavelSelecionadaId = v.id
+            Log.d("AdaptavelDebug", "[comprarVantagem:${v.id}] slot consumido por ${v.nome}")
             onFeedback("Vantagem ${v.nome} adicionada (Vantagem bônus de ${getAdaptavelLabel()}).")
         } else if (isFreePathfinder) {
             pathfinderFreeSlotId = v.id
@@ -3442,6 +3447,20 @@ class CriadorState {
         else vantagemAdaptavelSelecionadaId == null
     }
 
+    fun hasFreeAdaptavelSlotNow(debugSource: String? = null): Boolean {
+        val hasAdaptavel = temAdaptavel()
+        val slotAvailable = hasAdaptavel && vantagemAdaptavelSelecionadaId == null
+        if (debugSource != null) {
+            val anc = ancestralidade
+            val ancDef = currentAncestryDef
+            Log.d(
+                "AdaptavelDebug",
+                "[$debugSource] hasAdaptavel=$hasAdaptavel slotAvailable=$slotAvailable selectedId=$vantagemAdaptavelSelecionadaId ancestralidade=$anc origem=${ancDef?.origem}"
+            )
+        }
+        return slotAvailable
+    }
+
     // controla quais categorias da seção de Vantagens estão expandidas
     val categoriasVantagensExpandidas: SnapshotStateMap<Categoria, Boolean> =
         mutableStateMapOf<Categoria, Boolean>().apply {
@@ -3971,6 +3990,10 @@ class CriadorState {
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {
+        Log.d(
+            "AdaptavelDebug",
+            "[aplicarAncestralidade:start] ancAtual=$ancestralidade ancNovo=$anc selectedId=$vantagemAdaptavelSelecionadaId"
+        )
         val prevAnc = ancestralidade
 
         val prevAncDef = getAncestralidadeDef(prevAnc)
@@ -4170,6 +4193,8 @@ class CriadorState {
                 .replace("• Forma Alienígena.\n", "")
                 .replace("• Forma Alienígena.", "")
         }
+
+        hasFreeAdaptavelSlotNow(debugSource = "aplicarAncestralidade:end")
 
         if (racialPackage.anotacoesToAdd.isNotEmpty()) {
             val newNotes = racialPackage.anotacoesToAdd.filter { !anotacoes.contains(it) }
