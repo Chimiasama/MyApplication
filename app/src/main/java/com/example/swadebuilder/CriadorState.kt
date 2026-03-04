@@ -129,7 +129,9 @@ class CriadorState {
 
     // Optimization: Cache ancestry lookup to avoid O(N) filtering on every access.
     // Maps keyify(name) -> List of candidates.
-    private var ancestryMap: Map<String, List<RacialModifier>> = emptyMap()
+    // Keep as snapshot state so derived computations depending on ancestry definitions
+    // (e.g. Adaptável slot availability) are invalidated immediately after game data load.
+    private var ancestryMap by mutableStateOf<Map<String, List<RacialModifier>>>(emptyMap())
 
     // listaDeEstagios is imported from model (static rules)
 
