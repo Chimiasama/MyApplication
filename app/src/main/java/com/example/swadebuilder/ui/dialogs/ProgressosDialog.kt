@@ -78,7 +78,7 @@ import com.example.swadebuilder.model.RequirementValidator
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.canonicalOriginKey
-import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.model.atingiuLimiteClasseOuPrestigioNoEstagio
 import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.isVantagemVisible
@@ -226,8 +226,8 @@ fun ProgressosDialog(
         return true
     }
 
-    fun bloquearExclusividadeClasse(vant: Vantagem): Boolean {
-        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+    fun bloquearExclusividadeClasse(vant: Vantagem, stageName: String): Boolean {
+        return if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages)) {
             showSnack(MENSAGEM_EXCLUSIVIDADE_CLASSE)
             true
         } else {
@@ -1000,9 +1000,11 @@ fun ProgressosDialog(
                 val requiresChoice = vant.requiresChoice
                 val validChoicesCount = if (requiresChoice) validChoiceOptionsFor(vant, state).size else 0
                 val choiceOk = !requiresChoice || validChoicesCount > 0
+                val limiteClassePorEstagioOk = !state.advancementHistory
+                    .atingiuLimiteClasseOuPrestigioNoEstagio(estSel.nome, vant, allAdvantages)
                 val temProgresso = hasReservedProgress
 
-                podeAgora && strictOk && repeticaoOk && stageOk && choiceOk && temProgresso
+                podeAgora && strictOk && repeticaoOk && stageOk && choiceOk && limiteClassePorEstagioOk && temProgresso
             }
         }
 
@@ -1149,7 +1151,7 @@ fun ProgressosDialog(
                                                 showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                                                 return@DialogVantagemItem
                                             }
-                                            if (bloquearExclusividadeClasse(vant)) {
+                                            if (bloquearExclusividadeClasse(vant, estSel.nome)) {
                                                 return@DialogVantagemItem
                                             }
                                             if (!hasReservedProgress) {
@@ -1181,7 +1183,9 @@ fun ProgressosDialog(
                                                 }
                                             }
                                         },
-                                        onError = { showSnack(it) }
+                                        onError = { showSnack(it) },
+                                        stageName = estSel.nome,
+                                        allAdvantages = allAdvantages
                                     )
                                 }
                             }
@@ -1415,7 +1419,7 @@ fun ProgressosDialog(
                 showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
                 return
             }
-            if (bloquearExclusividadeClasse(vant)) {
+            if (bloquearExclusividadeClasse(vant, estSel.nome)) {
                 return
             }
 
@@ -1521,7 +1525,7 @@ fun ProgressosDialog(
                                         showSnack("Você não cumpre os requisitos para ${specificEdge.nome}.")
                                         return@ChoiceDialog
                                     }
-                                    if (bloquearExclusividadeClasse(specificEdge)) {
+                                    if (bloquearExclusividadeClasse(specificEdge, estSel.nome)) {
                                         return@ChoiceDialog
                                     }
 
@@ -1595,7 +1599,7 @@ fun ProgressosDialog(
                                         showSnack("Você não cumpre os requisitos para ${specificEdge.nome}.")
                                         return@ChoiceDialog
                                     }
-                                    if (bloquearExclusividadeClasse(specificEdge)) {
+                                    if (bloquearExclusividadeClasse(specificEdge, estSel.nome)) {
                                         return@ChoiceDialog
                                     }
 
@@ -1746,7 +1750,9 @@ private fun DialogVantagemItem(
     detalhesExpandidos: MutableMap<String, Boolean>,
     stages: List<Estagio>,
     onSelect: () -> Unit,
-    onError: (String) -> Unit
+    onError: (String) -> Unit,
+    stageName: String,
+    allAdvantages: List<Vantagem>
 ) {
     val themeData = LocalAppThemeData.current
 
@@ -1789,8 +1795,8 @@ private fun DialogVantagemItem(
 
     val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
     val requisitosOk = state.podeSelecionar(vant)
-    val bloqueioClasse = if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
-        "Requer Multiclasse"
+    val bloqueioClasse = if (state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages)) {
+        "Limite por estágio atingido"
     } else null
 
     val statusText = when {
@@ -1816,7 +1822,7 @@ private fun DialogVantagemItem(
 
                     when {
                         // Check class blocking specifically for error message
-                        state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
+                        state.advancementHistory.atingiuLimiteClasseOuPrestigioNoEstagio(stageName, vant, allAdvantages) -> onError(MENSAGEM_EXCLUSIVIDADE_CLASSE)
                         conflitoMsg != null -> onError(conflitoMsg)
                         !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
                         else -> onSelect()

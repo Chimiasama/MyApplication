@@ -1,0 +1,53 @@
+package com.example.swadebuilder.model
+
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class ClassPrestigeStageLimitTest {
+
+    private val classeMonge = Vantagem(
+        id = "classe_monge",
+        nome = "Monge",
+        categoria = Categoria.CLASSE,
+        origem = "PATHFINDER",
+        requisitos = Requisito()
+    )
+
+    private val prestigio = Vantagem(
+        id = "prestigio_test",
+        nome = "Prestígio Teste",
+        categoria = Categoria.PRESTIGIO,
+        origem = "PATHFINDER",
+        requisitos = Requisito()
+    )
+
+    private val combate = Vantagem(
+        id = "bloqueio",
+        nome = "Bloqueio",
+        categoria = Categoria.COMBATE,
+        origem = "PATHFINDER",
+        requisitos = Requisito()
+    )
+
+    @Test
+    fun `bloqueia nova classe no mesmo estágio quando já houve compra de classe`() {
+        val history = listOf(
+            AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Experiente")
+        )
+        val catalogo = listOf(classeMonge, prestigio, combate)
+
+        assertTrue(history.atingiuLimiteClasseOuPrestigioNoEstagio("Experiente", prestigio, catalogo))
+        assertFalse(history.atingiuLimiteClasseOuPrestigioNoEstagio("Veterano", prestigio, catalogo))
+    }
+
+    @Test
+    fun `nao bloqueia vantagens que nao sejam classe ou prestigio`() {
+        val history = listOf(
+            AdvancementAction.SpendOnAdvantage(advantageId = "classe_monge", stageName = "Experiente")
+        )
+        val catalogo = listOf(classeMonge, prestigio, combate)
+
+        assertFalse(history.atingiuLimiteClasseOuPrestigioNoEstagio("Experiente", combate, catalogo))
+    }
+}

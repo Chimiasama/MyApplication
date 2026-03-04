@@ -17,9 +17,8 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
 
-const val MULTICLASSE_VANTAGEM_ID = "multiclasse"
 const val MENSAGEM_EXCLUSIVIDADE_CLASSE =
-    "Você já possui uma Classe. Requer a vantagem Multiclasse para adicionar outra."
+    "Você já adquiriu uma Classe ou Prestígio neste Estágio. Aguarde o próximo Estágio para adquirir outra."
 
 @Serializable(with = RequisitoSerializer::class)
 data class Requisito(
@@ -152,7 +151,25 @@ private fun parseStageFromLegacyRequirement(raw: String): String {
 fun Vantagem.isClasseOuPrestigio(): Boolean =
     categoria == Categoria.CLASSE || categoria == Categoria.PRESTIGIO
 
-fun List<Vantagem>.temMulticlasse(): Boolean = any { it.id == MULTICLASSE_VANTAGEM_ID }
+fun List<Vantagem>.classeExclusivaBloqueada(@Suppress("UNUSED_PARAMETER") nova: Vantagem): Boolean =
+    false
 
-fun List<Vantagem>.classeExclusivaBloqueada(nova: Vantagem): Boolean =
-    nova.isClasseOuPrestigio() && !temMulticlasse() && any { it.isClasseOuPrestigio() }
+fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
+    stageName: String,
+    nova: Vantagem,
+    vantagensCatalogo: List<Vantagem>
+): Boolean {
+    if (!nova.isClasseOuPrestigio()) return false
+
+    val idsClasseOuPrestigio = vantagensCatalogo
+        .asSequence()
+        .filter { it.isClasseOuPrestigio() }
+        .map { it.id }
+        .toSet()
+
+    return any { acao ->
+        acao is AdvancementAction.SpendOnAdvantage &&
+            acao.stageName.equals(stageName, ignoreCase = true) &&
+            acao.advantageId in idsClasseOuPrestigio
+    }
+}
