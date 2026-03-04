@@ -3,6 +3,7 @@ package com.example.swadebuilder.model
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CriadorViewModelProgressUndoTest {
@@ -27,4 +28,17 @@ class CriadorViewModelProgressUndoTest {
         assertNull(vm.state.stageNameForCurrentAdvancement)
         assertFalse(vm.state.emProgresso)
     }
+
+    @Test
+    fun `reserveProgressSlot usa estágio do slot e não estagio atual`() {
+        val vm = CriadorViewModel()
+
+        vm.state.progresso = 3 // limiar entre Novato e Experiente
+
+        val reservado = vm.reserveProgressSlot(slotIndex = 3) // E1
+
+        assertTrue(reservado)
+        assertEquals("Experiente", vm.state.stageNameForCurrentAdvancement)
+    }
+
 }

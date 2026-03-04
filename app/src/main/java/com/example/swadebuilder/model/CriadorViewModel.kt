@@ -33,6 +33,7 @@ import com.example.swadebuilder.model.usecase.ValidateSpecialPowerRequirementsUs
 import com.example.swadebuilder.model.usecase.ValidateSuperAdvantageInvestmentUseCase
 import com.example.swadebuilder.model.usecase.ValidateSuperAttributeInvestmentUseCase
 import com.example.swadebuilder.normAAKey
+import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.CharacterPortraitStorage
@@ -1246,7 +1247,9 @@ class CriadorViewModel(
 
         state.progresso++
         state.xpSlots[slotIndex] = true
-        state.stageNameForCurrentAdvancement = state.estagioAtual().nome
+        val stageFromSlot = stageForSlot(slotIndex).nome
+        state.stageNameForCurrentAdvancement = stageFromSlot
+        Log.d("CriadorViewModel", "Reserva de progresso no slot=$slotIndex atribuída ao estágio=$stageFromSlot (progressoAtual=${state.progresso})")
         state.recomputeAvailableProgress()
         return true
     }
