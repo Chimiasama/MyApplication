@@ -338,9 +338,22 @@ class CriadorState {
 
     fun getAncestralidadeDef(name: String): com.example.swadebuilder.model.RacialModifier? {
         val key = name.keyify()
-        // Optimized O(1) lookup using cached map
-        val candidates = ancestryMap[key]
-        if (candidates.isNullOrEmpty()) return null
+        val baseNoSuffix = name.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "").keyify()
+        val lookupKeys = linkedSetOf(key, baseNoSuffix).apply {
+            if (baseNoSuffix.endsWith("S")) add(baseNoSuffix.removeSuffix("S")) else if (baseNoSuffix.isNotBlank()) add("${baseNoSuffix}S")
+            if (key.endsWith("S")) add(key.removeSuffix("S")) else if (key.isNotBlank()) add("${key}S")
+        }
+
+        // Optimized O(1) lookup using cached map (with resilient fallbacks for aliases/suffixes)
+        val candidates = lookupKeys.firstNotNullOfOrNull { ancestryMap[it] }
+        if (candidates.isNullOrEmpty()) {
+            Log.d("AdaptavelDebug", "[getAncestralidadeDef] não encontrada para '$name' keys=$lookupKeys")
+            return null
+        }
+
+        if (lookupKeys.first() != lookupKeys.firstOrNull { ancestryMap[it] != null }) {
+            Log.d("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
+        }
         if (candidates.size == 1) return candidates.first()
 
         val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(

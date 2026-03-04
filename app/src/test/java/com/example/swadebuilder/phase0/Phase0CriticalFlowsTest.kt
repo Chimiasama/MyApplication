@@ -165,6 +165,19 @@ class Phase0CriticalFlowsTest {
     }
 
     @Test
+    fun getAncestralidadeDef_resolveHumanoSingularQuandoMapaTemHumanos() {
+        val state = createStateWithSnapshot()
+
+        val fromPlural = state.getAncestralidadeDef("HUMANOS")
+        val fromSingular = state.getAncestralidadeDef("HUMANO")
+        val withSuffix = state.getAncestralidadeDef("Humano (Pathfinder)")
+
+        assertEquals("HUMANOS", fromPlural?.nome)
+        assertEquals("HUMANOS", fromSingular?.nome)
+        assertEquals("HUMANOS", withSuffix?.nome)
+    }
+
+    @Test
     fun periciasFiltradasPorCompendio_consideraLivrosAtivosAlemDoBasico() {
         val pilotarBasico = Pericia(nome = "PILOTAR", atributo = "AGILIDADE", basica = false, origem = "BASICO")
         val pilotarSciFi = Pericia(nome = "PILOTAR", atributo = "AGILIDADE", basica = false, origem = "SCI_FI")

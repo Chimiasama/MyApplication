@@ -157,8 +157,10 @@ fun Vantagem.isFamiliaClassePathfinder(): Boolean =
         categoria == Categoria.VANTAGEM_DE_CLASSE ||
         categoria == Categoria.PRESTIGIO
 
-fun List<Vantagem>.classeExclusivaBloqueada(@Suppress("UNUSED_PARAMETER") nova: Vantagem): Boolean =
-    false
+fun List<Vantagem>.classeExclusivaBloqueada(nova: Vantagem): Boolean {
+    if (!nova.isFamiliaClassePathfinder()) return false
+    return any { it.isFamiliaClassePathfinder() }
+}
 
 fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
     stageName: String,
