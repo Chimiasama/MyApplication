@@ -6,7 +6,6 @@ import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.util.keyify
 
 class ValidateSpecialRulesUseCase {
@@ -43,9 +42,6 @@ class ValidateSpecialRulesUseCase {
     fun execute(input: Input): Boolean {
         val v = input.vantagem
         val key = v.nome.keyify()
-
-        // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
-        if (input.vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {
