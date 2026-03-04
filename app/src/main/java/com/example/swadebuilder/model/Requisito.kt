@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model
 
+import android.util.Log
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -167,6 +168,10 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
 ): Boolean {
     if (!nova.isFamiliaClassePathfinder()) return false
 
+    fun debug(msg: String) {
+        Log.d("RequisitoClasse", msg)
+    }
+
     val idsFamiliaClasse = vantagensCatalogo
         .asSequence()
         .filter { it.isFamiliaClassePathfinder() }
@@ -179,7 +184,10 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
             acao.advantageId in idsFamiliaClasse
     }
 
-    if (hasCompraViaXpNoEstagio) return true
+    if (hasCompraViaXpNoEstagio) {
+        debug("Bloqueio por histórico: stage=$stageName nova=${nova.id}")
+        return true
+    }
 
     // Criação de personagem acontece em Novato e pode conceder Classe/Prestígio
     // fora do histórico de avanço por XP.
@@ -196,6 +204,10 @@ fun List<AdvancementAction>.atingiuLimiteClasseOuPrestigioNoEstagio(
         .filter { it.isFamiliaClassePathfinder() }
         .map { it.id }
         .any { it !in idsFamiliaClasseViaXp }
+
+    if (temCompraFamiliaClasseDeCriacao) {
+        debug("Bloqueio por criação em Novato: stage=$stageName nova=${nova.id}")
+    }
 
     return temCompraFamiliaClasseDeCriacao
 }

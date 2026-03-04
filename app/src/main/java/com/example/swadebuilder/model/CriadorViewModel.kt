@@ -4,6 +4,7 @@ package com.example.swadebuilder.model
 import android.content.Context
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
@@ -1074,7 +1075,10 @@ class CriadorViewModel(
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun finishAdvantageAdvancement() {
         if (state.advantageAdvancementInProgress) {
-            if (state.arcanoCompraPendente()) return
+            if (state.arcanoCompraPendente()) {
+                Log.d("CriadorViewModel", "finishAdvantageAdvancement adiado: arcano pendente para ${state.advantageForCurrentAdvancement} no estágio ${state.stageNameForCurrentAdvancement}")
+                return
+            }
             val advantageId = state.advantageForCurrentAdvancement
             if (advantageId == null) {
                 // If nothing selected, revert
@@ -1414,6 +1418,26 @@ class CriadorViewModel(
         state.mostrandoVantagensProgresso = false
         state.mostrandoPoderesProgresso = false
         state.updateEmProgressoFlag()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun undoLastProgressAction() {
+        val hasPendingProgress =
+            state.skillAdvancementInProgress ||
+                state.advantageAdvancementInProgress ||
+                state.attributeAdvancementInProgress ||
+                !state.stageNameForCurrentAdvancement.isNullOrBlank()
+
+        if (hasPendingProgress) {
+            Log.d(
+                "CriadorViewModel",
+                "undoLastProgressAction cancelando pendência (slot atual=${state.stageNameForCurrentAdvancement}, vantagem=${state.advantageForCurrentAdvancement})"
+            )
+            cancelAdvancementInProgress()
+            return
+        }
+
+        revertLastAdvancement()
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
