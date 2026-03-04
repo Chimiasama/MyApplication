@@ -154,5 +154,7 @@ fun Vantagem.isClasseOuPrestigio(): Boolean =
 
 fun List<Vantagem>.temMulticlasse(): Boolean = any { it.id == MULTICLASSE_VANTAGEM_ID }
 
-fun List<Vantagem>.classeExclusivaBloqueada(nova: Vantagem): Boolean =
-    nova.isClasseOuPrestigio() && !temMulticlasse() && any { it.isClasseOuPrestigio() }
+fun List<Vantagem>.classeExclusivaBloqueada(nova: Vantagem, isPathfinderActive: Boolean): Boolean {
+    if (isPathfinderActive) return false
+    return nova.isClasseOuPrestigio() && !temMulticlasse() && any { it.isClasseOuPrestigio() }
+}

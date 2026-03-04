@@ -624,7 +624,7 @@ class CriadorViewModel(
     }
 
     private fun bloqueioClasseExclusiva(vant: Vantagem): String? {
-        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant, state.compendioPathfinderAtivo)) {
             MENSAGEM_EXCLUSIVIDADE_CLASSE
         } else {
             null

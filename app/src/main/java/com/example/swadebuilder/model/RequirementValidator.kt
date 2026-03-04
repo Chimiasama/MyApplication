@@ -25,7 +25,7 @@ object RequirementValidator {
         val key = v.nome.keyify()
 
         // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
-        if (state.vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
+        if (state.vantagensSelecionadas.classeExclusivaBloqueada(v, state.compendioPathfinderAtivo)) return false
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == Constants.ID_THE_BEST_THERE_IS) {

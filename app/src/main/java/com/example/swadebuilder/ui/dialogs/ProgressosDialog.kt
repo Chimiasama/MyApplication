@@ -227,7 +227,7 @@ fun ProgressosDialog(
     }
 
     fun bloquearExclusividadeClasse(vant: Vantagem): Boolean {
-        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+        return if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant, state.compendioPathfinderAtivo)) {
             showSnack(MENSAGEM_EXCLUSIVIDADE_CLASSE)
             true
         } else {
@@ -1789,7 +1789,7 @@ private fun DialogVantagemItem(
 
     val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
     val requisitosOk = state.podeSelecionar(vant)
-    val bloqueioClasse = if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
+    val bloqueioClasse = if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant, state.compendioPathfinderAtivo)) {
         "Requer Multiclasse"
     } else null
 
@@ -1816,7 +1816,7 @@ private fun DialogVantagemItem(
 
                     when {
                         // Check class blocking specifically for error message
-                        state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
+                        state.vantagensSelecionadas.classeExclusivaBloqueada(vant, state.compendioPathfinderAtivo) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
                         conflitoMsg != null -> onError(conflitoMsg)
                         !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
                         else -> onSelect()

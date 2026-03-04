@@ -45,7 +45,7 @@ class ValidateSpecialRulesUseCase {
         val key = v.nome.keyify()
 
         // 0) Exclusividade de Classe/Prestígio (Buscatrilha)
-        if (input.vantagensSelecionadas.classeExclusivaBloqueada(v)) return false
+        if (input.vantagensSelecionadas.classeExclusivaBloqueada(v, input.compendioPathfinderAtivo)) return false
 
         // 1) Regra especial: O MELHOR QUE HÁ
         if (key == "o_melhor_que_ha") {

@@ -148,7 +148,7 @@ fun AdvantageSelectionDialog(
         enabled = { _ -> true },
         onValidateSelection = { selection ->
             val vantagem = selection.firstOrNull() ?: return@SelectDialog null
-            if (state.vantagensSelecionadas.classeExclusivaBloqueada(vantagem)) {
+            if (state.vantagensSelecionadas.classeExclusivaBloqueada(vantagem, state.compendioPathfinderAtivo)) {
                 MENSAGEM_EXCLUSIVIDADE_CLASSE
             } else {
                 null
