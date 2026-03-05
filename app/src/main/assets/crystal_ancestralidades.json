@@ -8,7 +8,7 @@
       "BOGOVIANO"
     ],
     "atributos": {
-      "Vigor": 2
+      "Força": 2
     },
     "pericias": {},
     "vantagensGratis": [
@@ -16,10 +16,10 @@
     ],
     "habilidades": [
       {
-        "nome": "Vigoroso",
-        "descricao": "Começa com Vigor d6. Máximo d12+1.",
+        "nome": "Forte",
+        "descricao": "Começa com Força d6. Máximo d12+1.",
         "category": "racial_trait_positive",
-        "id": "VIGOROSO"
+        "id": "FORTE"
       }
     ]
   },
