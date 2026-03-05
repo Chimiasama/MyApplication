@@ -3452,6 +3452,13 @@ class CriadorState {
             return true
         }
 
+        // 4. Arte da Guerra Human: "Nenhum" sign grants Adaptável
+        if (compendioArteDaGuerraAtivo && ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }) {
+            if (signoAdgSelecionado == null || signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) {
+                return true
+            }
+        }
+
         return false
     }
 
