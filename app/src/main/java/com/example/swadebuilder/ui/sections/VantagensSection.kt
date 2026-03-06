@@ -1853,6 +1853,7 @@ private fun VantagemItem(
     }
 
     val jaTem = state.vantagensSelecionadas.any { it.id == vant.id }
+    val isAuto = jaTem && state.isVantagemAutomatica(vant)
     val requisitosOk = state.podeSelecionar(vant)
     // PROMPT 4: Specific logic for fantasy class validation
     val bloqueioClasse = if (state.vantagensSelecionadas.classeExclusivaBloqueada(vant)) {
@@ -1860,12 +1861,14 @@ private fun VantagemItem(
     } else null
 
     val statusText = when {
+        isAuto -> "Automática / Racial"
         jaTem -> "Já selecionada"
         bloqueioClasse != null -> bloqueioClasse
         requisitosOk -> "Requisitos OK"
         else -> "Requisitos pendentes"
     }
     val statusColor = when {
+        isAuto -> MaterialTheme.colorScheme.onSurfaceVariant
         jaTem -> MaterialTheme.colorScheme.tertiary
         bloqueioClasse != null -> MaterialTheme.colorScheme.error
         requisitosOk -> MaterialTheme.colorScheme.primary
@@ -1876,8 +1879,8 @@ private fun VantagemItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
-            .clickable(enabled = !locked) {
-                if (!locked) {
+            .clickable(enabled = !locked && !isAuto) {
+                if (!locked && !isAuto) {
                     val conflitoMsg = state.mensagemConflitoParaVantagem(vant)
 
                     val isPathfinderFree = state.pathfinderSlotAvailable && state.isPathfinderEligible(vant)
@@ -1901,6 +1904,7 @@ private fun VantagemItem(
             },
         colors = CardDefaults.cardColors(
             containerColor = when {
+                isAuto -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                 jaTem -> MaterialTheme.colorScheme.tertiaryContainer
                 requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
                 else -> MaterialTheme.colorScheme.errorContainer
