@@ -1818,13 +1818,19 @@ class CriadorState {
         // like "aa_agente_syn" which doesn't match the name "ANTECEDENTE ARCANO"
         val autoIds = (vantagensAutomaticas + vantagensRaciais).map { normalizeAutoKey(it) }.toSet()
 
+        val autoTropoIds = vantagensAutomaticasDoTropo.map { normalizeAutoKey(it) }.toSet()
+        val autoProtagonistaIds = vantagensAutomaticasDoProtagonista.map { normalizeAutoKey(it) }.toSet()
+        val autoSignoIds = vantagensAutomaticasDoSigno.map { normalizeAutoKey(it) }.toSet()
+        val autoElementoIds = vantagensAutomaticasDoElemento.map { normalizeAutoKey(it) }.toSet()
+        val autoPotFisIds = vantagensAutomaticasDoPotencialFisico.map { normalizeAutoKey(it) }.toSet()
+
         return key in autoKeys ||
                 normalizeAutoKey(v.id) in autoIds ||
-                v.id in vantagensAutomaticasDoTropo ||
-                v.id in vantagensAutomaticasDoProtagonista ||
-                v.id in vantagensAutomaticasDoSigno ||
-                v.id in vantagensAutomaticasDoElemento ||
-                v.id in vantagensAutomaticasDoPotencialFisico ||
+                normalizeAutoKey(v.id) in autoTropoIds ||
+                normalizeAutoKey(v.id) in autoProtagonistaIds ||
+                normalizeAutoKey(v.id) in autoSignoIds ||
+                normalizeAutoKey(v.id) in autoElementoIds ||
+                normalizeAutoKey(v.id) in autoPotFisIds ||
                 (v.id == "conexoes" && v.choice?.equals("Máfia", ignoreCase = true) == true)
     }
 
@@ -3452,6 +3458,13 @@ class CriadorState {
             return true
         }
 
+        // 4. Arte da Guerra Human: "Nenhum" sign grants Adaptável
+        if (compendioArteDaGuerraAtivo && ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }) {
+            if (signoAdgSelecionado == null || signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) {
+                return true
+            }
+        }
+
         return false
     }
 
@@ -3598,6 +3611,10 @@ class CriadorState {
 
         if (vantagem.id in vantagensAutomaticasDoProtagonista) {
             return false to "Vantagem automática do Protagonista."
+        }
+
+        if (vantagem.id in vantagensAutomaticasDoSigno) {
+            return false to "Vantagem automática do Signo."
         }
         if (vantagem.toArcanoKey() != null) {
             val temOutro = vantagensSelecionadas.any { it != vantagem && it.toArcanoKey() != null }
@@ -5892,6 +5909,17 @@ class CriadorState {
         bonusPoderExtra = flags.bonusPoderExtra
         tipoMonstroSelecionado = flags.tipoMonstroSelecionado
         signoAdgSelecionado = snapshot.selecoes.signoAdgSelecionado
+
+        // Restore sign automatic advantages logic
+        vantagensAutomaticasDoSigno.clear()
+        if (signoAdgSelecionado != null) {
+            when (signoAdgSelecionado) {
+                "Basabasa" -> vantagensAutomaticasDoSigno.add("atraente")
+                "Raposa" -> vantagensAutomaticasDoSigno.add("elevar_a_moral")
+                "Lobo" -> vantagensAutomaticasDoSigno.add("elo_comum")
+            }
+        }
+
         pacoteCulturalFantasiaSelecionado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado ?: "Humano padrão"
         povoDoMarOpcao = snapshot.selecoes.povoDoMarOpcao
         senhoresCavalosExtra = snapshot.selecoes.senhoresCavalosExtra ?: false
