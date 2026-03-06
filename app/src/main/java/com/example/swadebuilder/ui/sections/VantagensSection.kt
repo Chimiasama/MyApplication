@@ -463,13 +463,9 @@ fun VantagensContent(
                         )
                     }
 
-                    val autoKeys = state.vantagensAutomaticas.map { normalizeUIKey(it.substringBefore("(").trim()) }.toSet()
-
                     state.vantagensSelecionadas.forEachIndexed { index, vant ->
-                        val isRacialFree =
-                            normalizeUIKey(vant.nomeExibicao.substringBefore("(")) in autoKeys ||
-                                    normalizeUIKey(vant.nome.substringBefore("(")) in autoKeys
-                        val isTropoAutomatic = state.vantagensAutomaticasDoTropo.contains(vant.id)
+                        val isAutomatic = state.isVantagemAutomatica(vant)
+
                         val requiredByAnother = state.vantagensSelecionadas.any { other ->
                             other != vant && other.requisitos.vantagensPrevias.any { reqId ->
                                 reqId == vant.id
@@ -479,12 +475,6 @@ fun VantagensContent(
                         val isFromSuperPoder = state.vantagensDePoder.contains(vant.id)
                         val isSuperpoderesLocked = state.modoSupers && vant.id == "superpoderes"
                         val isCrystalHeartLocked = state.compendioCrystalHeartAtivo && vant.id == "aa_agente_syn"
-                        val isCelestialAAMilagres = state.ancestralidade == "CELESTIAIS" &&
-                                vant.id == "antecedente_arcano_milagres"
-                        val isProtagonistaAutomatic = state.vantagensAutomaticasDoProtagonista.contains(vant.id)
-
-                        // Fix: Check for Pequeninos Luck
-                        val isPequeninosLuck = state.ancestralidade.keyify() == "PEQUENINOS" && vant.id == "sorte"
 
                         val baseRemovable = !locked &&
                                 when (vant.id) {
@@ -497,18 +487,14 @@ fun VantagensContent(
                                 } &&
                                 index >= initialCount &&
                                 index >= state.frozenAdvantageCount &&
-                                !isRacialFree &&
-                                !isTropoAutomatic &&
-                                !isProtagonistaAutomatic &&
+                                !isAutomatic &&
                                 !requiredByAnother &&
                                 !isFromSuperPoder &&
                                 !isSuperpoderesLocked &&
-                                !isCrystalHeartLocked &&
-                                !isPequeninosLuck
+                                !isCrystalHeartLocked
 
                         val canRemove =
                             baseRemovable && !(state.emProgresso && vant.id == "novos_poderes")
-                                    && !isCelestialAAMilagres
 
                         val isCelestialAAMilagresDesabilitado = state.celestialAAMilagresDesabilitado &&
                                 vant.id == "antecedente_arcano_milagres"
