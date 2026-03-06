@@ -3606,6 +3606,10 @@ class CriadorState {
         if (vantagem.id in vantagensAutomaticasDoProtagonista) {
             return false to "Vantagem automática do Protagonista."
         }
+
+        if (vantagem.id in vantagensAutomaticasDoSigno) {
+            return false to "Vantagem automática do Signo."
+        }
         if (vantagem.toArcanoKey() != null) {
             val temOutro = vantagensSelecionadas.any { it != vantagem && it.toArcanoKey() != null }
             if (!temOutro) {
