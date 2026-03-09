@@ -63,7 +63,10 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Convenção": 6,
+      "Conhecimento Geral": 6
+    },
     "vantagensGratis": [],
     "desvantagens": []
   },
