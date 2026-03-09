@@ -5,6 +5,7 @@ import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class CriadorStateKirinSignTest {
@@ -50,6 +51,27 @@ class CriadorStateKirinSignTest {
 
         assertTrue(state.vantagensSelecionadas.any { it.id == "elevar_o_moral" })
         assertTrue("elevar_o_moral" in state.vantagensAutomaticasDoSigno)
+    }
+
+
+    @Test
+    fun `adg nao ignora cap de pericia por valor inicial racial`() {
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "Akaimimi (Panda Vermelho)"
+            racialSkillStartMap = mapOf(
+                "AKAIMIMI (PANDA VERMELHO)" to mapOf(
+                    "CONVENCAO" to 2,
+                    "CONHECIMENTO GERAL" to 4
+                )
+            )
+        }
+
+        val convencao = com.example.swadebuilder.model.Pericia("Convenção", "ASTUCIA", true)
+        val conhecimento = com.example.swadebuilder.model.Pericia("Conhecimento Geral", "ASTUCIA", true)
+
+        assertEquals(13, state.periciaCapRaw(convencao))
+        assertEquals(14, state.periciaCapRaw(conhecimento))
     }
 
 }

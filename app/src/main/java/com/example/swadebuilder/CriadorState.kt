@@ -3993,9 +3993,6 @@ class CriadorState {
     }
 
     fun periciaCapRaw(per: Pericia): Int {
-        // PROMPT: AdG allows exceeding d12 during creation
-        if (compendioArteDaGuerraAtivo) return 20 // Effectively high cap for creation
-
         val startRaw = periciaStartRaw(ancestralidade, per)
 
         // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
