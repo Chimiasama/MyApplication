@@ -447,4 +447,69 @@ class SummaryUtilsTest {
         val count = "Poderes Místicos".toRegex().findAll(joined).count()
         assertEquals(1, count)
     }
+
+    @Test
+    fun `buildSummaryLines aplica aparar mais um do signo garca para humanos adg`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Garca",
+                atributos = emptyMap(),
+                pericias = mapOf("Lutar" to 4),
+                ancestralidade = "HUMANOS",
+                signoAdgSelecionado = "Garça",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioArteDaGuerraAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        assertTrue(lines.contains("Aparar: 5"))
+    }
+
+    @Test
+    fun `buildSummaryLines aplica modificador generico aparar da ancestralidade`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Parry",
+                atributos = emptyMap(),
+                pericias = mapOf("Lutar" to 4),
+                ancestralidade = "HUMANOS",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf("APARAR +1"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        assertTrue(lines.contains("Aparar: 5"))
+    }
+
 }

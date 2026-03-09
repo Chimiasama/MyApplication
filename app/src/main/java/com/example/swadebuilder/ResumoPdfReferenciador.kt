@@ -965,7 +965,26 @@ fun calcAparar(personagem: MeuPersonagem): Int {
     val isSerranos = personagem.ancestralidade.keyify().contains("SERRANOS")
     val serranosApararMod = if (isSerranos) 2 else 0
 
-    return (base + bloq + bloqImp + personagem.bonusApararFromPower + apararBaixoMod + serranosApararMod).coerceAtLeast(0)
+    val racialParryBonus = (personagem.vantagensRaciais + personagem.desvantagensRaciais)
+        .sumOf { raw ->
+            val normalized = raw.keyify().replace('_', ' ')
+            Regex("""APARAR\s*([+-])\s*(\d+)""")
+                .find(normalized)
+                ?.let { match ->
+                    val value = match.groupValues[2].toInt()
+                    if (match.groupValues[1] == "-") -value else value
+                }
+                ?: 0
+        }
+
+    val garcaParryBonus =
+        if (
+            personagem.compendioArteDaGuerraAtivo &&
+            personagem.ancestralidade.keyify().contains("HUMANO") &&
+            personagem.signoAdgSelecionado.equals("Garça", ignoreCase = true)
+        ) 1 else 0
+
+    return (base + bloq + bloqImp + personagem.bonusApararFromPower + apararBaixoMod + serranosApararMod + racialParryBonus + garcaParryBonus).coerceAtLeast(0)
 }
 
 fun calcResistencia(personagem: MeuPersonagem): String {
