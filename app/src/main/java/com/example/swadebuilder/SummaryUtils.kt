@@ -23,24 +23,31 @@ private fun formatRacialAnnotationDisplay(raw: String): String {
 }
 
 fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
-    val base = (ancestralidadeNomeBase ?: personagem.ancestralidade).toFancyTitleCase()
+    val baseOriginal = (ancestralidadeNomeBase ?: personagem.ancestralidade).toFancyTitleCase()
+    val isHuman = baseOriginal.keyify().contains("HUMANO")
+
+    if (personagem.compendioArteDaGuerraAtivo && isHuman) {
+        val sign = personagem.signoAdgSelecionado
+        val signLabel = if (sign.isNullOrBlank() || sign.equals("Nenhum", ignoreCase = true)) {
+            "Sem Signo"
+        } else {
+            "Signo ${sign.toFancyTitleCase()}"
+        }
+        return "Humano $signLabel"
+    }
 
     val sufixo = when {
-        base.keyify().contains("HUMANO") && !personagem.signoAdgSelecionado.isNullOrBlank() -> {
-            val sign = personagem.signoAdgSelecionado
-            if (sign.equals("Nenhum", ignoreCase = true)) "Humano Padrão" else "Signo do $sign"
-        }
-        base.keyify().contains("DESCENDENTE ELEMENTAL") && !personagem.descendenteElementalSelecionado.isNullOrBlank() -> {
-            personagem.descendenteElementalSelecionado
-        }
-        base.keyify().contains("HUMANO") && !personagem.pacoteCulturalFantasiaSelecionado.isNullOrBlank() -> {
+        isHuman && !personagem.pacoteCulturalFantasiaSelecionado.isNullOrBlank() -> {
             val pack = personagem.pacoteCulturalFantasiaSelecionado
             if (pack.equals("Humano padrão", ignoreCase = true)) null else pack
+        }
+        baseOriginal.keyify().contains("DESCENDENTE ELEMENTAL") && !personagem.descendenteElementalSelecionado.isNullOrBlank() -> {
+            personagem.descendenteElementalSelecionado
         }
         else -> null
     }
 
-    return if (sufixo.isNullOrBlank()) base else "$base ($sufixo)"
+    return if (sufixo.isNullOrBlank()) baseOriginal else "$baseOriginal ($sufixo)"
 }
 
 // =================================================================================================
@@ -544,41 +551,57 @@ fun buildSummaryLines(
     // Fix: Normalize IDs to Names using Ancestry Definition to prevent duplicates (e.g. "Armadura +2" vs "Armadura 2") and fix formatting (e.g. "Mordida/Garras")
     val racialAbilityMap = ancestralidadeNomeObj?.habilidades?.associateBy { it.id?.keyify() ?: it.nome.keyify() } ?: emptyMap()
 
-    val allRacialTraits = (habilidadesRaciais + personagem.vantagensRaciais)
-        .filterNot { trait ->
-            isElfosComunitario && trait.keyify() == "DESASTRADO"
+    val isAdgHuman = personagem.compendioArteDaGuerraAtivo && personagem.ancestralidade.keyify().contains("HUMANO")
+    val adgHumanSignTrait = if (isAdgHuman) {
+        val sign = personagem.signoAdgSelecionado
+        if (sign.isNullOrBlank() || sign.equals("Nenhum", ignoreCase = true)) {
+            listOf("Sem Signo")
+        } else {
+            listOf("Signo ${sign.toFancyTitleCase()}")
         }
-        .filterNot { trait ->
-            isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
-        }
-        .filterNot { trait ->
-            personagem.ancestralidade.keyify() == "SERRANOS" && trait.keyify() == "NOCAO DE PERIGO"
-        }
-        .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
-        .map { trait ->
-            val key = trait.keyify()
-            if (personagem.ancestralidade.keyify() == "SAURIOS" && key == "PRONTIDAO") {
-                "Sentidos Aguçados"
-            } else {
-                // 1. Check Advantages (Grantable Edges)
-                val vant = definitionMap[key]
-                if (vant != null) {
-                    if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nome.toFancyTitleCase()
+    } else {
+        emptyList()
+    }
+
+    val allRacialTraits = if (isAdgHuman) {
+        adgHumanSignTrait
+    } else {
+        (habilidadesRaciais + personagem.vantagensRaciais)
+            .filterNot { trait ->
+                isElfosComunitario && trait.keyify() == "DESASTRADO"
+            }
+            .filterNot { trait ->
+                isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
+            }
+            .filterNot { trait ->
+                personagem.ancestralidade.keyify() == "SERRANOS" && trait.keyify() == "NOCAO DE PERIGO"
+            }
+            .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
+            .map { trait ->
+                val key = trait.keyify()
+                if (personagem.ancestralidade.keyify() == "SAURIOS" && key == "PRONTIDAO") {
+                    "Sentidos Aguçados"
                 } else {
-                    // 2. Check Racial Abilities (Definition Name)
-                    val ability = racialAbilityMap[key]
-                    if (ability != null) {
-                        // Use the display name from JSON (preserves symbols like '/')
-                        // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
-                        formatRacialAnnotationDisplay(ability.nome)
+                    // 1. Check Advantages (Grantable Edges)
+                    val vant = definitionMap[key]
+                    if (vant != null) {
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nome.toFancyTitleCase()
                     } else {
-                        // 3. Fallback
-                        trait.toFancyTitleCase()
+                        // 2. Check Racial Abilities (Definition Name)
+                        val ability = racialAbilityMap[key]
+                        if (ability != null) {
+                            // Use the display name from JSON (preserves symbols like '/')
+                            // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
+                            formatRacialAnnotationDisplay(ability.nome)
+                        } else {
+                            // 3. Fallback
+                            trait.toFancyTitleCase()
+                        }
                     }
                 }
             }
-        }
-        .distinctBy { it.keyify() } // Deduplicate BY resolved name
+            .distinctBy { it.keyify() } // Deduplicate BY resolved name
+    }
 
     if (allRacialTraits.isNotEmpty()) {
         lines += "Características Raciais: ${allRacialTraits.joinToString(", ")}"
