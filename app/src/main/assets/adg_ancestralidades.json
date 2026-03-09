@@ -230,10 +230,10 @@
         "id": "BRINCANDO_COM_O_DESTINO"
       },
       {
-        "nome": "Sorte",
-        "descricao": "A Fortuna dá. Os nekomimi começam um Bene adicional por sessão de jogo. Isso pode ser combinado com as Vantagens Sorte e Sorte Grande.",
-        "category": "racial_edge",
-        "id": "SORTE"
+        "nome": "Fortuna Dá",
+        "descricao": "A Fortuna dá. Os nekomimi começam cada sessão com um Bene adicional. Esse benefício racial não é a Vantagem Sorte, mas acumula com Sorte e Sorte Grande.",
+        "category": "racial_trait_positive",
+        "id": "FORTUNA_DA"
       },
       {
         "nome": "Azarado",
@@ -243,9 +243,14 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Jogar": 2
+    },
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [
+      "AZARADO",
+      "Bene adicional por sessão (benefício racial; acumula com Sorte e Sorte Grande)."
+    ]
   },
   {
     "id": "anc_tanukimimi",
