@@ -590,9 +590,15 @@ fun buildSummaryLines(
                         // 2. Check Racial Abilities (Definition Name)
                         val ability = racialAbilityMap[key]
                         if (ability != null) {
-                            // Use the display name from JSON (preserves symbols like '/')
-                            // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
-                            formatRacialAnnotationDisplay(ability.nome)
+                            // Skin: Nekomimi "Fortuna Dá" should display as "Sorte" (book label),
+                            // while keeping behavior textual (not a free Edge).
+                            if (ability.id?.keyify() == "FORTUNA_DA" || ability.nome.keyify() == "FORTUNA DA") {
+                                "Sorte"
+                            } else {
+                                // Use the display name from JSON (preserves symbols like '/')
+                                // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
+                                formatRacialAnnotationDisplay(ability.nome)
+                            }
                         } else {
                             // 3. Fallback
                             trait.toFancyTitleCase()

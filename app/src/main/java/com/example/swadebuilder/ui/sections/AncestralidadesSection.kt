@@ -832,8 +832,10 @@ fun AncestralidadesSection(
                                             Spacer(Modifier.height(4.dp))
                                             habilidadesExibidas.forEach { ability ->
                                                 Column(modifier = Modifier.padding(bottom = 4.dp)) {
+                                                    val abilityDisplayName =
+                                                        if (ability.nome.keyify() == "FORTUNA DA") "Sorte" else ability.nome
                                                     Text(
-                                                        text = ability.nome,
+                                                        text = abilityDisplayName,
                                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                                         color = MaterialTheme.colorScheme.primary
                                                     )
