@@ -159,13 +159,14 @@
     ],
     "atributos": {},
     "pericias": {
-      "Provocar": 0,
-      "Furtividade": 2
+      "Perceber": 2
     },
-    "vantagensGratis": [],
+    "vantagensGratis": [
+      "RESISTÊNCIA",
+      "MORDIDA"
+    ],
     "desvantagens": [
-      "HÁBITO",
-      "PECULIARIDADE"
+      "LEAL"
     ]
   },
   {
