@@ -1824,7 +1824,14 @@ class CriadorState {
         val autoElementoIds = vantagensAutomaticasDoElemento.map { normalizeAutoKey(it) }.toSet()
         val autoPotFisIds = vantagensAutomaticasDoPotencialFisico.map { normalizeAutoKey(it) }.toSet()
 
-        return key in autoKeys ||
+        val kirinSorteAutomatica =
+            compendioArteDaGuerraAtivo &&
+            ancestralidade.keyify().contains("HUMANO") &&
+            signoAdgSelecionado.equals("Kirin", ignoreCase = true) &&
+            v.id == "sorte"
+
+        return kirinSorteAutomatica ||
+                key in autoKeys ||
                 normalizeAutoKey(v.id) in autoIds ||
                 normalizeAutoKey(v.id) in autoTropoIds ||
                 normalizeAutoKey(v.id) in autoProtagonistaIds ||
@@ -3613,6 +3620,15 @@ class CriadorState {
             return false to "Vantagem automática do Protagonista."
         }
 
+        val kirinSorteAutomatica =
+            compendioArteDaGuerraAtivo &&
+            ancestralidade.keyify().contains("HUMANO") &&
+            signoAdgSelecionado.equals("Kirin", ignoreCase = true) &&
+            vantagem.id == "sorte"
+        if (kirinSorteAutomatica) {
+            return false to "Vantagem automática do Signo."
+        }
+
         if (vantagem.id in vantagensAutomaticasDoSigno) {
             return false to "Vantagem automática do Signo."
         }
@@ -4618,6 +4634,7 @@ class CriadorState {
                 "Basabasa" -> edgesToAdd.add("atraente")
                 "Raposa" -> edgesToAdd.add("elevar_a_moral")
                 "Lobo" -> edgesToAdd.add("elo_comum")
+                "Kirin" -> edgesToAdd.add("sorte")
             }
 
             edgesToAdd.forEach { edgeId ->
@@ -5917,6 +5934,7 @@ class CriadorState {
                 "Basabasa" -> vantagensAutomaticasDoSigno.add("atraente")
                 "Raposa" -> vantagensAutomaticasDoSigno.add("elevar_a_moral")
                 "Lobo" -> vantagensAutomaticasDoSigno.add("elo_comum")
+                "Kirin" -> vantagensAutomaticasDoSigno.add("sorte")
             }
         }
 
