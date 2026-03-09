@@ -152,13 +152,15 @@ fun TroposSection(
 
             tropos.forEach { tropo ->
                 val selecionado = state.tropoSelecionado?.id == tropo.id
+                val bloqueadoPorTransicao = !state.podeSelecionarTropoPorRestricoesAtuais(tropo)
                 val vantagensNomeadas = tropo.ganhaAoComprar.map { idParaNome[it] ?: it }
 
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
-                        .clickable(enabled = !state.criacaoBasicaCongelada) {
+                        .alpha(if (bloqueadoPorTransicao) 0.6f else 1f)
+                        .clickable(enabled = !state.criacaoBasicaCongelada && !bloqueadoPorTransicao) {
                             state.selecionarTropo(tropo)
                             onUserFeedback()
                         },
@@ -171,11 +173,21 @@ fun TroposSection(
                             selected = selecionado,
                             label = if (showOfficialNames && tropo.nome.isNotBlank()) tropo.nome else tropo.nome,
                             onSelect = {
+                                if (bloqueadoPorTransicao) return@RadioButtonRow
                                 if (state.criacaoBasicaCongelada) return@RadioButtonRow
                                 state.selecionarTropo(tropo)
                                 onUserFeedback()
                             }
                         )
+
+                        if (bloqueadoPorTransicao) {
+                            Text(
+                                text = "Bloqueado: Transição restringe a seleção para Elementalista (ou Sem Tropo).",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp),
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
 
                         if (tropo.tecnicasIniciais > 0) {
                             Text(

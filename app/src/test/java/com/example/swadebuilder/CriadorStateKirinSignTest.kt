@@ -1,7 +1,9 @@
 package com.example.swadebuilder
 
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Requisito
+import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -88,6 +90,44 @@ class CriadorStateKirinSignTest {
 
         assertEquals(4, state.periciaStartRaw(state.ancestralidade, pesquisar))
         assertEquals(0, state.periciaStartRaw(state.ancestralidade, intimidar))
+    }
+
+    @Test
+    fun `usagimimi permite escolher pericia da adg para iniciar em d6`() {
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "Usagimimi (Coelho)"
+            usagimimiPericiaEscolhida = "Provocar"
+        }
+
+        val provocar = Pericia("Provocar", "ESPIRITO", false, origem = "ARTE_DA_GUERRA")
+
+        assertEquals(6, state.periciaStartRaw(state.ancestralidade, provocar))
+    }
+
+    @Test
+    fun `transicao escolhida por usagimimi bloqueia tropos nao elementalistas`() {
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "Usagimimi (Coelho)"
+            usagimimiPericiaEscolhida = "Transição"
+        }
+
+        val samurai = Tropo(
+            id = "tropo_samurai",
+            nome = "Samurai",
+            categoria = "TROPO",
+            origem = "ARTE_DA_GUERRA",
+            descricao = "",
+            ganhaAoComprar = emptyList(),
+            periciasGratuitas = emptyMap()
+        )
+
+        val elementalista = samurai.copy(id = "tropo_elementalista", nome = "Elementalista")
+
+        assertFalse(state.podeSelecionarTropoPorRestricoesAtuais(samurai))
+        assertTrue(state.podeSelecionarTropoPorRestricoesAtuais(elementalista))
+        assertTrue(state.podeSelecionarTropoPorRestricoesAtuais(null))
     }
 
 }

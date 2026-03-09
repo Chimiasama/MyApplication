@@ -695,6 +695,40 @@ fun AncestralidadesSection(
                                 }
                             }
 
+                            if (isSelected && item.nome.keyify().contains("USAGIMIMI")) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Perícia Definida pelo Ofício (d6):", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+                                val adgSkills = state.listaPericias
+                                    .filter {
+                                        val key = it.nome.keyify()
+                                        it.origem == "ARTE_DA_GUERRA" &&
+                                            !key.startsWith("IDIOMAS") &&
+                                            !key.startsWith("JUTSU")
+                                    }
+                                    .map { it.nome }
+                                    .distinctBy { it.keyify() }
+                                    .sortedBy { it }
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.usagimimiPericiaEscolhida ?: "Selecionar Perícia")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        adgSkills.forEach { skillName ->
+                                            DropdownMenuItem(
+                                                text = { Text(skillName) },
+                                                onClick = {
+                                                    state.selecionarPericiaUsagimimi(skillName)
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
                             if (isSelected && item.nome.keyify() == "DESCENDENTE ELEMENTAL") {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Herança Elemental:", style = MaterialTheme.typography.labelMedium)

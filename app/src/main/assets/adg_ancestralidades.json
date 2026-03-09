@@ -331,7 +331,8 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [],
+    "movimentacao": 2
   },
   {
     "id": "anc_terracota_adg",

@@ -270,6 +270,7 @@ class CriadorState {
     var humanoMineradorAtributo by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var kitsunemimiPericiaEscolhida by mutableStateOf<String?>(null)
+    var usagimimiPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     var dominioClerigoSelecionado by mutableStateOf<String?>(null)
     var dominioClerigoPathfinderSelecionado by mutableStateOf<String?>(null)
@@ -2468,6 +2469,14 @@ class CriadorState {
             val chosen = kitsunemimiPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
+        // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
+        if (compendioArteDaGuerraAtivo && ancKey.contains("USAGIMIMI")) {
+            val chosen = usagimimiPericiaEscolhida?.keyify()
+            if (chosen != null && perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 6)
             }
         }
 
@@ -5018,6 +5027,28 @@ class CriadorState {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun selecionarPericiaUsagimimi(pericia: String?) {
+        if (usagimimiPericiaEscolhida == pericia) return
+        usagimimiPericiaEscolhida = pericia
+        if (isUsagimimiTransicaoRestrictionActive() && tropoSelecionado?.id != "tropo_elementalista") {
+            selecionarTropo(null)
+            return
+        }
+        rebuildAllPericiaStacks()
+    }
+
+    fun isUsagimimiTransicaoRestrictionActive(): Boolean {
+        return compendioArteDaGuerraAtivo &&
+            ancestralidade.keyify().contains("USAGIMIMI") &&
+            usagimimiPericiaEscolhida?.keyify() == "TRANSICAO"
+    }
+
+    fun podeSelecionarTropoPorRestricoesAtuais(tropo: Tropo?): Boolean {
+        if (!isUsagimimiTransicaoRestrictionActive()) return true
+        return tropo == null || tropo.id == "tropo_elementalista"
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun updateProtagonistaRollTecnicas(value: Int?) {
         if (protagonistaRollTecnicas == value) return
         protagonistaRollTecnicas = value?.coerceIn(1, 4)
@@ -5214,6 +5245,7 @@ class CriadorState {
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarTropo(novoTropo: Tropo?) {
         if (tropoSelecionado?.id == novoTropo?.id) return
+        if (!podeSelecionarTropoPorRestricoesAtuais(novoTropo)) return
 
         if (vantagensAutomaticasDoTropo.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
@@ -5832,6 +5864,7 @@ class CriadorState {
                 protagonistaSlotAdvantageIds = vantagensSlotProtagonista.toList(),
                 gnomoPericiaEscolhida = gnomoPericiaEscolhida,
                 kitsunemimiPericiaEscolhida = kitsunemimiPericiaEscolhida,
+                usagimimiPericiaEscolhida = usagimimiPericiaEscolhida,
                 dominioClerigoSelecionado = dominioClerigoSelecionado,
                 dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado,
                 anoesScifiSelecionado = anoesScifiSelecionado,
@@ -5983,6 +6016,7 @@ class CriadorState {
         vantagensSlotProtagonista.addAll(snapshot.selecoes.protagonistaSlotAdvantageIds)
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
         kitsunemimiPericiaEscolhida = snapshot.selecoes.kitsunemimiPericiaEscolhida
+        usagimimiPericiaEscolhida = snapshot.selecoes.usagimimiPericiaEscolhida
         dominioClerigoSelecionado = snapshot.selecoes.dominioClerigoSelecionado
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado

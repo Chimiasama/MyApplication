@@ -27,4 +27,27 @@ class ModifierEngineAdgAncestryTest {
 
         assertTrue(modifiers.any { it.id == "racial_parry_generic" && it.value == -1 })
     }
+
+    @Test
+    fun `explicit racial movement bonus applies to pace`() {
+        val state = CriadorState().apply {
+            ancestralidade = "Usagimimi (Coelho)"
+            listaAncestralidadesJson = listOf(
+                RacialModifier(
+                    nome = "Usagimimi (Coelho)",
+                    origem = "ARTE_DA_GUERRA",
+                    atributos = emptyMap(),
+                    pericias = emptyMap(),
+                    vantagensGratis = emptyList(),
+                    desvantagens = emptyList(),
+                    habilidades = emptyList(),
+                    movimentacao = 2
+                )
+            )
+        }
+
+        val modifiers = ModifierEngine.collect(state)
+
+        assertTrue(modifiers.any { it.id == "racial_pace_explicit" && it.value == 2 })
+    }
 }
