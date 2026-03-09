@@ -334,4 +334,13 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertTrue(result.ensureAdvantageNames.isEmpty())
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
     }
+
+    @Test
+    fun `akaimimi recebe peculiaridade como desvantagem racial`() {
+        val result = useCase.execute("Akaimimi (Panda Vermelho)", null)
+
+        assertEquals(listOf("PECULIARIDADE"), result.ensureRacialDisadvantages)
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
+    }
+
 }

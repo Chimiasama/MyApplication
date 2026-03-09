@@ -692,6 +692,20 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
         }
 
+
+
+        if (ancKey.contains("AKAIMIMI")) {
+            return Result(
+                naturalArmorFromRace = 0,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = emptyList(),
+                ensureRacialDisadvantages = listOf("PECULIARIDADE"),
+                elementalAction = ElementalAction.NONE
+            )
+        }
+
         return when (ancKey) {
             "SAURIOS" -> Result(
                 naturalArmorFromRace = 2,
