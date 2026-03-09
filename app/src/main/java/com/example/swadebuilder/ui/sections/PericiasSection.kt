@@ -172,9 +172,8 @@ fun PericiasContent(
                     periciaIsJutsu[per] == true -> per in jutsuSlotsVisiveis
                     else -> true
                 }
-            }.filter {
-                periciaOrigensUpper[it] != "SUPLEMENTO" || (rawTotals[it] ?: 0) > 0
             }.distinctBy { periciaNomeKeys[it] ?: it.nome.keyify() }
+             .sortedBy { it.nome.semAcentos().lowercase() }
         }
     }
 
