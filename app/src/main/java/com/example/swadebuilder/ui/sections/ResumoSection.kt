@@ -497,13 +497,16 @@ private fun SkillNotesSummaryCard(
 
             editableSkills.forEach { per ->
                 val note = state.notasPericia[per.nome].orEmpty()
+                val displayName =
+                    if (state.compendioArteDaGuerraAtivo && per.nome.equals("Lutar", ignoreCase = true)) "Jutsu"
+                    else per.nome
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = per.nome,
+                            text = displayName,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.SemiBold,
                             color = MaterialTheme.colorScheme.primary
@@ -544,7 +547,7 @@ private fun SkillNotesSummaryCard(
             title = { Text(if (isIdiomaOuJutsu) "Editar idioma" else "Editar nota da perícia") },
             text = {
                 Column {
-                    Text("Perícia: ${per.nome}")
+                    Text("Perícia: ${if (state.compendioArteDaGuerraAtivo && per.nome.equals("Lutar", ignoreCase = true)) "Jutsu" else per.nome}")
                     Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = editText,
@@ -1208,7 +1211,7 @@ private fun SpecializationsSummaryCard(
 
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = per.nome,
+                        text = displayName,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
