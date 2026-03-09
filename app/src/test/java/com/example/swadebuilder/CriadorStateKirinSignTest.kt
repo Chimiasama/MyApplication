@@ -74,4 +74,20 @@ class CriadorStateKirinSignTest {
         assertEquals(14, state.periciaCapRaw(conhecimento))
     }
 
+
+    @Test
+    fun `kitsunemimi permite escolher uma pericia para iniciar em d4`() {
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "Kitsunemimi (Raposa)"
+            kitsunemimiPericiaEscolhida = "Pesquisar"
+        }
+
+        val pesquisar = com.example.swadebuilder.model.Pericia("Pesquisar", "ASTUCIA", false)
+        val intimidar = com.example.swadebuilder.model.Pericia("Intimidar", "ESPIRITO", false)
+
+        assertEquals(4, state.periciaStartRaw(state.ancestralidade, pesquisar))
+        assertEquals(0, state.periciaStartRaw(state.ancestralidade, intimidar))
+    }
+
 }

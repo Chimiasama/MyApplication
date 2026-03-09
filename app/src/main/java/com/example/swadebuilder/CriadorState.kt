@@ -269,6 +269,7 @@ class CriadorState {
     var scifiVariant by mutableStateOf<String?>(null)
     var humanoMineradorAtributo by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
+    var kitsunemimiPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     var dominioClerigoSelecionado by mutableStateOf<String?>(null)
     var dominioClerigoPathfinderSelecionado by mutableStateOf<String?>(null)
@@ -2457,6 +2458,14 @@ class CriadorState {
         // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
         if (compendioPathfinderAtivo && ancKey.contains("GNOMO")) {
             val chosen = gnomoPericiaEscolhida?.keyify()
+            if (chosen != null && perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
+        // Kitsunemimi (ADG) - Preparado (d4 em 1 perícia à escolha)
+        if (compendioArteDaGuerraAtivo && ancKey.contains("KITSUNEMIMI")) {
+            val chosen = kitsunemimiPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 4)
             }
@@ -5002,6 +5011,12 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    fun selecionarPericiaKitsunemimi(pericia: String?) {
+        if (kitsunemimiPericiaEscolhida == pericia) return
+        kitsunemimiPericiaEscolhida = pericia
+        rebuildAllPericiaStacks()
+    }
+
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun updateProtagonistaRollTecnicas(value: Int?) {
         if (protagonistaRollTecnicas == value) return
@@ -5816,6 +5831,7 @@ class CriadorState {
                 protagonistaPericiasPaixao = protagonistaPericiasPaixao,
                 protagonistaSlotAdvantageIds = vantagensSlotProtagonista.toList(),
                 gnomoPericiaEscolhida = gnomoPericiaEscolhida,
+                kitsunemimiPericiaEscolhida = kitsunemimiPericiaEscolhida,
                 dominioClerigoSelecionado = dominioClerigoSelecionado,
                 dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado,
                 anoesScifiSelecionado = anoesScifiSelecionado,
@@ -5966,6 +5982,7 @@ class CriadorState {
         vantagensSlotProtagonista.clear()
         vantagensSlotProtagonista.addAll(snapshot.selecoes.protagonistaSlotAdvantageIds)
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
+        kitsunemimiPericiaEscolhida = snapshot.selecoes.kitsunemimiPericiaEscolhida
         dominioClerigoSelecionado = snapshot.selecoes.dominioClerigoSelecionado
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado

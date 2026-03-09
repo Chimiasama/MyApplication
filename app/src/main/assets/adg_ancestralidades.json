@@ -203,8 +203,12 @@
     ],
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": []
+    "vantagensGratis": [
+      "CATIVAR O AMBIENTE"
+    ],
+    "desvantagens": [
+      "CAUTELOSO"
+    ]
   },
   {
     "id": "anc_nekomimi",

@@ -399,6 +399,7 @@ class CriadorViewModel(
         state.youxiaHistoricoSelecionado = null
         state.descendenteElementalSelecionado = null
         state.gnomoPericiaEscolhida = null
+        state.kitsunemimiPericiaEscolhida = null
         state.dominioClerigoSelecionado = null
         state.dominioClerigoPathfinderSelecionado = null
         state.signoSerpentePericiaEscolhida = "Jogar"

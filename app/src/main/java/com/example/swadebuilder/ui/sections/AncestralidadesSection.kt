@@ -662,6 +662,39 @@ fun AncestralidadesSection(
                                 }
                             }
 
+
+
+                            if (isSelected && item.nome.keyify().contains("KITSUNEMIMI")) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Perícia Preparada:", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+                                val allowedSkills = listOf(
+                                    "Conhecimento Acadêmico",
+                                    "Convenção",
+                                    "Intimidar",
+                                    "Pesquisar",
+                                    "Provocar"
+                                )
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.kitsunemimiPericiaEscolhida ?: "Selecionar Perícia")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        allowedSkills.forEach { skillName ->
+                                            DropdownMenuItem(
+                                                text = { Text(skillName) },
+                                                onClick = {
+                                                    state.selecionarPericiaKitsunemimi(skillName)
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
                             if (isSelected && item.nome.keyify() == "DESCENDENTE ELEMENTAL") {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Herança Elemental:", style = MaterialTheme.typography.labelMedium)
