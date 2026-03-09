@@ -109,9 +109,15 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Provocar": 0,
+      "Furtividade": 2
+    },
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [
+      "HÁBITO",
+      "PECULIARIDADE"
+    ]
   },
   {
     "id": "anc_inumimi",
@@ -152,9 +158,15 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Provocar": 0,
+      "Furtividade": 2
+    },
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [
+      "HÁBITO",
+      "PECULIARIDADE"
+    ]
   },
   {
     "id": "anc_kitsunemimi",
