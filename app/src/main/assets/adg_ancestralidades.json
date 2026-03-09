@@ -505,9 +505,13 @@
         "id": "SUSPEITOSO"
       }
     ],
-    "atributos": {},
+    "atributos": {
+      "Força": 2
+    },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [
+      "Ancestralidade Infame"
+    ]
   }
 ]
