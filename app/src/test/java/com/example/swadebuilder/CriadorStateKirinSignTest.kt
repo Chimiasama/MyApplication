@@ -30,4 +30,26 @@ class CriadorStateKirinSignTest {
         assertTrue(state.isVantagemAutomatica(sorte))
         assertFalse(state.podeRemoverVantagem(sorte).first)
     }
+
+    private fun elevarOMoral() = Vantagem(
+        id = "elevar_o_moral",
+        nome = "Elevar o Moral",
+        categoria = Categoria.SOCIAIS,
+        requisitos = Requisito()
+    )
+
+    @Test
+    fun `raposa usa id correto elevar o moral`() {
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "HUMANOS"
+            listaVantagens.add(elevarOMoral())
+        }
+
+        state.selecionarSigno("Raposa")
+
+        assertTrue(state.vantagensSelecionadas.any { it.id == "elevar_o_moral" })
+        assertTrue("elevar_o_moral" in state.vantagensAutomaticasDoSigno)
+    }
+
 }

@@ -4632,7 +4632,7 @@ class CriadorState {
             val edgesToAdd = mutableListOf<String>()
             when (novoSigno) {
                 "Basabasa" -> edgesToAdd.add("atraente")
-                "Raposa" -> edgesToAdd.add("elevar_a_moral")
+                "Raposa" -> edgesToAdd.add("elevar_o_moral")
                 "Lobo" -> edgesToAdd.add("elo_comum")
                 "Kirin" -> edgesToAdd.add("sorte")
             }
@@ -5095,7 +5095,7 @@ class CriadorState {
 
         val qualidade = protagonistaRollQualidade ?: return
         val edgesToAdd = when (qualidade) {
-            1 -> listOf("corajoso", "elevar_a_moral")
+            1 -> listOf("corajoso", "elevar_o_moral")
             3 -> listOf("confiavel", "comando")
             else -> emptyList()
         }
@@ -5932,7 +5932,7 @@ class CriadorState {
         if (signoAdgSelecionado != null) {
             when (signoAdgSelecionado) {
                 "Basabasa" -> vantagensAutomaticasDoSigno.add("atraente")
-                "Raposa" -> vantagensAutomaticasDoSigno.add("elevar_a_moral")
+                "Raposa" -> vantagensAutomaticasDoSigno.add("elevar_o_moral")
                 "Lobo" -> vantagensAutomaticasDoSigno.add("elo_comum")
                 "Kirin" -> vantagensAutomaticasDoSigno.add("sorte")
             }
