@@ -1210,6 +1210,9 @@ private fun SpecializationsSummaryCard(
                 specDto.lista.filter { it != specDto.principal }.forEach { list.add(it to false) }
 
                 Column(modifier = Modifier.fillMaxWidth()) {
+                    val displayName =
+                        if (state.compendioArteDaGuerraAtivo && per.nome.equals("Lutar", ignoreCase = true)) "Jutsu"
+                        else per.nome
                     Text(
                         text = displayName,
                         style = MaterialTheme.typography.bodyMedium,
