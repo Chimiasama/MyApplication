@@ -284,10 +284,17 @@
         "id": "PENSAMENTOS_POSITIVOS"
       }
     ],
-    "atributos": {},
+    "atributos": {
+      "Espírito": 2
+    },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": []
+    "vantagensGratis": [
+      "IMPULSO"
+    ],
+    "desvantagens": [
+      "APARAR -1",
+      "MOVIMENTAÇÃO -1"
+    ]
   },
   {
     "id": "anc_usagimimi",

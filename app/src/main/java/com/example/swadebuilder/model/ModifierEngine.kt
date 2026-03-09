@@ -358,9 +358,12 @@ object ModifierEngine {
                     }
                 }
                 if (k.contains("APARAR")) {
-                    val bonusMatch = Regex("""APARAR\s*\+(\d+)""").find(k)
-                    if (bonusMatch != null) {
-                        modifiers.add(Modifier("racial_parry_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.PARRY, bonusMatch.groupValues[1].toInt()))
+                    val match = Regex("""APARAR\s*(\+|\-)\s*(\d+)""").find(k)
+                    if (match != null) {
+                        val sign = match.groupValues[1]
+                        val value = match.groupValues[2].toInt()
+                        val finalValue = if (sign == "-") -value else value
+                        modifiers.add(Modifier("racial_parry_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.PARRY, finalValue))
                     }
                 }
             }
