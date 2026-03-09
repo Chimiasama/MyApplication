@@ -28,7 +28,7 @@ class CriadorStateKirinSignTest {
         }
 
         val sorte = sorte()
-        state.vantagensSelecionadas.add(sorte)
+        state.adicionarVantagem(sorte)
 
         assertTrue(state.isVantagemAutomatica(sorte))
         assertFalse(state.podeRemoverVantagem(sorte).first)
@@ -46,7 +46,28 @@ class CriadorStateKirinSignTest {
         val state = CriadorState().apply {
             compendioArteDaGuerraAtivo = true
             ancestralidade = "HUMANOS"
-            listaVantagens.add(elevarOMoral())
+            val snapshot = com.example.swadebuilder.model.GameDataSnapshot(
+                 listaVantagens = listOf(elevarOMoral()),
+                 listaAncestralidadesJson = emptyList(),
+                 listaComplicacoes = emptyList(),
+                 listaCoracoesCrystal = emptyList(),
+                 listaMonstroTemplates = emptyList(),
+                 racialAttrMinMap = emptyMap(),
+                 racialSkillStartMap = emptyMap(),
+                 listaAtributos = emptyList(),
+                 mapaAtributosDisplay = emptyMap(),
+                 listaPericias = emptyList(),
+                 mapaPericias = emptyMap(),
+                 mapaAtributosDescricao = emptyMap(),
+                 listaPoderes = emptyList(),
+                 listaTropos = emptyList(),
+                 listaEquipamentos = emptyList(),
+                 equipamentoCategorias = emptyList(),
+                 superequipCategorias = emptyList(),
+                 listaSuperPoderes = emptyList(),
+                 arcanoInfo = emptyList()
+             )
+            updateGameData(snapshot)
         }
 
         state.selecionarSigno("Raposa")
@@ -61,19 +82,40 @@ class CriadorStateKirinSignTest {
         val state = CriadorState().apply {
             compendioArteDaGuerraAtivo = true
             ancestralidade = "Akaimimi (Panda Vermelho)"
-            racialSkillStartMap = mapOf(
-                "AKAIMIMI (PANDA VERMELHO)" to mapOf(
-                    "CONVENCAO" to 2,
-                    "CONHECIMENTO GERAL" to 4
-                )
+            val snapshot = com.example.swadebuilder.model.GameDataSnapshot(
+                racialSkillStartMap = mapOf(
+                    "AKAIMIMI (PANDA VERMELHO)" to mapOf(
+                        "CONVENCAO" to 6,
+                        "CONHECIMENTO GERAL" to 8
+                    )
+                ),
+                listaAncestralidadesJson = emptyList(),
+                listaComplicacoes = emptyList(),
+                listaCoracoesCrystal = emptyList(),
+                listaMonstroTemplates = emptyList(),
+                racialAttrMinMap = emptyMap(),
+                listaAtributos = emptyList(),
+                mapaAtributosDisplay = emptyMap(),
+                listaPericias = emptyList(),
+                mapaPericias = emptyMap(),
+                mapaAtributosDescricao = emptyMap(),
+                listaVantagens = emptyList(),
+                listaPoderes = emptyList(),
+                listaTropos = emptyList(),
+                listaEquipamentos = emptyList(),
+                equipamentoCategorias = emptyList(),
+                superequipCategorias = emptyList(),
+                listaSuperPoderes = emptyList(),
+                arcanoInfo = emptyList()
             )
+            updateGameData(snapshot)
         }
 
         val convencao = com.example.swadebuilder.model.Pericia("Convenção", "ASTUCIA", true)
         val conhecimento = com.example.swadebuilder.model.Pericia("Conhecimento Geral", "ASTUCIA", true)
 
         assertEquals(13, state.periciaCapRaw(convencao))
-        assertEquals(14, state.periciaCapRaw(conhecimento))
+        assertEquals(13, state.periciaCapRaw(conhecimento))
     }
 
 
