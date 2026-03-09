@@ -130,4 +130,37 @@ class CriadorStateKirinSignTest {
         assertTrue(state.podeSelecionarTropoPorRestricoesAtuais(null))
     }
 
+    @Test
+    fun `trocar de elementalista remove transicao e devolve sp mesmo fora de usagimimi`() {
+        val transicao = Pericia("Transição", "ASTUCIA", false, origem = "ARTE_DA_GUERRA")
+        val elementalista = Tropo(
+            id = "tropo_elementalista",
+            nome = "Elementalista",
+            categoria = "TROPO",
+            origem = "ARTE_DA_GUERRA",
+            descricao = "",
+            ganhaAoComprar = emptyList(),
+            periciasGratuitas = emptyMap()
+        )
+
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "Humano (Império San)"
+            listaPericias = listOf(transicao)
+            listaAtributos = listOf("ASTUCIA")
+            valoresAtributos.clear()
+            valoresAtributos["ASTUCIA"] = androidx.compose.runtime.mutableIntStateOf(6)
+            ensurePericiasRegistered(listaPericias)
+            tropoSelecionado = elementalista
+            baseIncsPorPericia[transicao] = 1
+            spCostStackPorPericia.getValue(transicao).add(2)
+        }
+
+        state.selecionarTropo(null)
+
+        assertEquals(0, state.baseIncsPorPericia[transicao])
+        assertTrue(state.spCostStackPorPericia.getValue(transicao).isEmpty())
+        assertEquals(0, state.rawTotal(transicao))
+    }
+
 }

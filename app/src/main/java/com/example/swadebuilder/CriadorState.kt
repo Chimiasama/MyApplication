@@ -5693,6 +5693,19 @@ class CriadorState {
         syncJutsuSlots()
 
         val pericias = periciasComIdiomas()
+        val activeSkills = pericias.toSet()
+
+        // Reset hidden/filtered skills so points invested in unavailable skills
+        // (e.g. Transição without Elementalista) are refunded on rebuild.
+        val hiddenSkills = spCostStackPorPericia.keys.filter { it !in activeSkills }
+        hiddenSkills.forEach { per ->
+            spCostStackPorPericia.getValue(per).clear()
+            compCostStackPorPericia[per]?.clear()
+            baseIncsPorPericia[per] = 0
+            compIncsPorPericia[per] = 0
+            especializacoesPorPericia.remove(per.nome)
+            notasPericia.remove(per.nome)
+        }
 
         val input = RebuildSkillStacksUseCase.Input(
             pericias = pericias,
