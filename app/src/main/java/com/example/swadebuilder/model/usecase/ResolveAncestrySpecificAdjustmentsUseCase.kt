@@ -712,7 +712,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
-                ensureRacialDisadvantages = listOf("FORASTEIRO (Menor)", comp),
+                ensureRacialDisadvantages = listOf(comp),
                 racialDisadvantagesToRemove = listOf("Voto ou Obrigação", "VOTO_OU_OBRIGACAO", "VOTO OU OBRIGACAO"),
                 elementalAction = ElementalAction.NONE
             )
