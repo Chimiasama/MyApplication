@@ -63,7 +63,10 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Convenção": 2,
+      "Conhecimento Geral": 2
+    },
     "vantagensGratis": [],
     "desvantagens": []
   },
@@ -106,9 +109,15 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Provocar": 0,
+      "Furtividade": 2
+    },
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [
+      "HÁBITO",
+      "PECULIARIDADE"
+    ]
   },
   {
     "id": "anc_inumimi",
@@ -149,9 +158,16 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": []
+    "pericias": {
+      "Perceber": 2
+    },
+    "vantagensGratis": [
+      "RESISTÊNCIA",
+      "MORDIDA"
+    ],
+    "desvantagens": [
+      "LEAL"
+    ]
   },
   {
     "id": "anc_kitsunemimi",
@@ -187,8 +203,12 @@
     ],
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": []
+    "vantagensGratis": [
+      "CATIVAR O AMBIENTE"
+    ],
+    "desvantagens": [
+      "CAUTELOSO"
+    ]
   },
   {
     "id": "anc_nekomimi",
@@ -210,10 +230,10 @@
         "id": "BRINCANDO_COM_O_DESTINO"
       },
       {
-        "nome": "Sorte",
-        "descricao": "A Fortuna dá. Os nekomimi começam um Bene adicional por sessão de jogo. Isso pode ser combinado com as Vantagens Sorte e Sorte Grande.",
-        "category": "racial_edge",
-        "id": "SORTE"
+        "nome": "Fortuna Dá",
+        "descricao": "A Fortuna dá. Os nekomimi começam cada sessão com um Bene adicional. Esse benefício racial não é a Vantagem Sorte, mas acumula com Sorte e Sorte Grande.",
+        "category": "racial_trait_positive",
+        "id": "FORTUNA_DA"
       },
       {
         "nome": "Azarado",
@@ -223,9 +243,14 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Jogar": 2
+    },
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [
+      "AZARADO",
+      "Bene adicional por sessão (benefício racial; acumula com Sorte e Sorte Grande)."
+    ]
   },
   {
     "id": "anc_tanukimimi",
@@ -259,10 +284,17 @@
         "id": "PENSAMENTOS_POSITIVOS"
       }
     ],
-    "atributos": {},
+    "atributos": {
+      "Espírito": 2
+    },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": []
+    "vantagensGratis": [
+      "IMPULSO"
+    ],
+    "desvantagens": [
+      "APARAR -1",
+      "MOVIMENTAÇÃO -1"
+    ]
   },
   {
     "id": "anc_usagimimi",
@@ -299,7 +331,8 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [],
+    "movimentacao": 2
   },
   {
     "id": "anc_terracota_adg",
@@ -473,9 +506,13 @@
         "id": "SUSPEITOSO"
       }
     ],
-    "atributos": {},
+    "atributos": {
+      "Força": 2
+    },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [
+      "Ancestralidade Infame"
+    ]
   }
 ]

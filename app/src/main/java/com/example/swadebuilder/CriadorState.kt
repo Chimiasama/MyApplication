@@ -269,6 +269,8 @@ class CriadorState {
     var scifiVariant by mutableStateOf<String?>(null)
     var humanoMineradorAtributo by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
+    var kitsunemimiPericiaEscolhida by mutableStateOf<String?>(null)
+    var usagimimiPericiaEscolhida by mutableStateOf<String?>(null)
     var signoSerpentePericiaEscolhida by mutableStateOf("Jogar")
     var dominioClerigoSelecionado by mutableStateOf<String?>(null)
     var dominioClerigoPathfinderSelecionado by mutableStateOf<String?>(null)
@@ -1824,7 +1826,14 @@ class CriadorState {
         val autoElementoIds = vantagensAutomaticasDoElemento.map { normalizeAutoKey(it) }.toSet()
         val autoPotFisIds = vantagensAutomaticasDoPotencialFisico.map { normalizeAutoKey(it) }.toSet()
 
-        return key in autoKeys ||
+        val kirinSorteAutomatica =
+            compendioArteDaGuerraAtivo &&
+            ancestralidade.keyify().contains("HUMANO") &&
+            signoAdgSelecionado.equals("Kirin", ignoreCase = true) &&
+            v.id == "sorte"
+
+        return kirinSorteAutomatica ||
+                key in autoKeys ||
                 normalizeAutoKey(v.id) in autoIds ||
                 normalizeAutoKey(v.id) in autoTropoIds ||
                 normalizeAutoKey(v.id) in autoProtagonistaIds ||
@@ -2452,6 +2461,22 @@ class CriadorState {
             val chosen = gnomoPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
+        // Kitsunemimi (ADG) - Preparado (d4 em 1 perícia à escolha)
+        if (compendioArteDaGuerraAtivo && ancKey.contains("KITSUNEMIMI")) {
+            val chosen = kitsunemimiPericiaEscolhida?.keyify()
+            if (chosen != null && perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
+        // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
+        if (compendioArteDaGuerraAtivo && ancKey.contains("USAGIMIMI")) {
+            val chosen = usagimimiPericiaEscolhida?.keyify()
+            if (chosen != null && perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 6)
             }
         }
 
@@ -3613,6 +3638,15 @@ class CriadorState {
             return false to "Vantagem automática do Protagonista."
         }
 
+        val kirinSorteAutomatica =
+            compendioArteDaGuerraAtivo &&
+            ancestralidade.keyify().contains("HUMANO") &&
+            signoAdgSelecionado.equals("Kirin", ignoreCase = true) &&
+            vantagem.id == "sorte"
+        if (kirinSorteAutomatica) {
+            return false to "Vantagem automática do Signo."
+        }
+
         if (vantagem.id in vantagensAutomaticasDoSigno) {
             return false to "Vantagem automática do Signo."
         }
@@ -3977,9 +4011,6 @@ class CriadorState {
     }
 
     fun periciaCapRaw(per: Pericia): Int {
-        // PROMPT: AdG allows exceeding d12 during creation
-        if (compendioArteDaGuerraAtivo) return 20 // Effectively high cap for creation
-
         val startRaw = periciaStartRaw(ancestralidade, per)
 
         // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
@@ -4616,8 +4647,9 @@ class CriadorState {
             val edgesToAdd = mutableListOf<String>()
             when (novoSigno) {
                 "Basabasa" -> edgesToAdd.add("atraente")
-                "Raposa" -> edgesToAdd.add("elevar_a_moral")
+                "Raposa" -> edgesToAdd.add("elevar_o_moral")
                 "Lobo" -> edgesToAdd.add("elo_comum")
+                "Kirin" -> edgesToAdd.add("sorte")
             }
 
             edgesToAdd.forEach { edgeId ->
@@ -4988,6 +5020,41 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
+    fun selecionarPericiaKitsunemimi(pericia: String?) {
+        if (kitsunemimiPericiaEscolhida == pericia) return
+        kitsunemimiPericiaEscolhida = pericia
+        rebuildAllPericiaStacks()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun selecionarPericiaUsagimimi(
+        pericia: String?,
+        feedbackMessages: MutableList<String> = mutableListOf()
+    ) {
+        if (usagimimiPericiaEscolhida == pericia) return
+        usagimimiPericiaEscolhida = pericia
+        if (usagimimiPericiaEscolhida?.keyify() == "TRANSICAO") {
+            feedbackMessages.add("Perícia favorita Transição selecionada: apenas Elementalista (ou Sem Tropo) fica disponível.")
+        }
+        if (isUsagimimiTransicaoRestrictionActive() && tropoSelecionado?.id != "tropo_elementalista") {
+            feedbackMessages.add("Tropo atual removido por incompatibilidade com Transição. As perícias foram recalculadas.")
+            selecionarTropo(null, feedbackMessages)
+            return
+        }
+        rebuildAllPericiaStacks(feedbackMessages)
+    }
+
+    fun isUsagimimiTransicaoRestrictionActive(): Boolean {
+        return compendioArteDaGuerraAtivo &&
+            ancestralidade.keyify().contains("USAGIMIMI") &&
+            usagimimiPericiaEscolhida?.keyify() == "TRANSICAO"
+    }
+
+    fun podeSelecionarTropoPorRestricoesAtuais(tropo: Tropo?): Boolean {
+        if (!isUsagimimiTransicaoRestrictionActive()) return true
+        return tropo == null || tropo.id == "tropo_elementalista"
+    }
+
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun updateProtagonistaRollTecnicas(value: Int?) {
         if (protagonistaRollTecnicas == value) return
@@ -5078,7 +5145,7 @@ class CriadorState {
 
         val qualidade = protagonistaRollQualidade ?: return
         val edgesToAdd = when (qualidade) {
-            1 -> listOf("corajoso", "elevar_a_moral")
+            1 -> listOf("corajoso", "elevar_o_moral")
             3 -> listOf("confiavel", "comando")
             else -> emptyList()
         }
@@ -5183,8 +5250,15 @@ class CriadorState {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun selecionarTropo(novoTropo: Tropo?) {
+    fun selecionarTropo(
+        novoTropo: Tropo?,
+        feedbackMessages: MutableList<String> = mutableListOf()
+    ) {
         if (tropoSelecionado?.id == novoTropo?.id) return
+        if (!podeSelecionarTropoPorRestricoesAtuais(novoTropo)) {
+            feedbackMessages.add("Tropo bloqueado: com Transição favorita, apenas Elementalista (ou Sem Tropo) pode ser selecionado.")
+            return
+        }
 
         if (vantagensAutomaticasDoTropo.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
@@ -5342,7 +5416,7 @@ class CriadorState {
 
         syncMestreDoChiSlots()
         recalcularPontosAtributo()
-        rebuildAllPericiaStacks()
+        rebuildAllPericiaStacks(feedbackMessages)
         syncJutsuSlots()
     }
 
@@ -5632,6 +5706,29 @@ class CriadorState {
         syncJutsuSlots()
 
         val pericias = periciasComIdiomas()
+        val activeSkills = pericias.toSet()
+
+        // Reset hidden/filtered skills so points invested in unavailable skills
+        // (e.g. Transição without Elementalista) are refunded on rebuild.
+        val hiddenSkills = spCostStackPorPericia.keys.filter { it !in activeSkills }
+        val hiddenWithInvestments = hiddenSkills.filter { per ->
+            (spCostStackPorPericia[per]?.sum() ?: 0) > 0 ||
+                (compCostStackPorPericia[per]?.sum() ?: 0) > 0 ||
+                (baseIncsPorPericia[per] ?: 0) > 0 ||
+                (compIncsPorPericia[per] ?: 0) > 0
+        }
+        hiddenSkills.forEach { per ->
+            spCostStackPorPericia.getValue(per).clear()
+            compCostStackPorPericia[per]?.clear()
+            baseIncsPorPericia[per] = 0
+            compIncsPorPericia[per] = 0
+            especializacoesPorPericia.remove(per.nome)
+            notasPericia.remove(per.nome)
+        }
+        if (hiddenWithInvestments.isNotEmpty()) {
+            val nomes = hiddenWithInvestments.joinToString { it.nome }
+            feedbackMessages.add("Rebuild de perícias aplicado: investimentos removidos de perícias indisponíveis ($nomes) e pontos devolvidos.")
+        }
 
         val input = RebuildSkillStacksUseCase.Input(
             pericias = pericias,
@@ -5802,6 +5899,8 @@ class CriadorState {
                 protagonistaPericiasPaixao = protagonistaPericiasPaixao,
                 protagonistaSlotAdvantageIds = vantagensSlotProtagonista.toList(),
                 gnomoPericiaEscolhida = gnomoPericiaEscolhida,
+                kitsunemimiPericiaEscolhida = kitsunemimiPericiaEscolhida,
+                usagimimiPericiaEscolhida = usagimimiPericiaEscolhida,
                 dominioClerigoSelecionado = dominioClerigoSelecionado,
                 dominioClerigoPathfinderSelecionado = dominioClerigoPathfinderSelecionado,
                 anoesScifiSelecionado = anoesScifiSelecionado,
@@ -5915,8 +6014,9 @@ class CriadorState {
         if (signoAdgSelecionado != null) {
             when (signoAdgSelecionado) {
                 "Basabasa" -> vantagensAutomaticasDoSigno.add("atraente")
-                "Raposa" -> vantagensAutomaticasDoSigno.add("elevar_a_moral")
+                "Raposa" -> vantagensAutomaticasDoSigno.add("elevar_o_moral")
                 "Lobo" -> vantagensAutomaticasDoSigno.add("elo_comum")
+                "Kirin" -> vantagensAutomaticasDoSigno.add("sorte")
             }
         }
 
@@ -5951,6 +6051,8 @@ class CriadorState {
         vantagensSlotProtagonista.clear()
         vantagensSlotProtagonista.addAll(snapshot.selecoes.protagonistaSlotAdvantageIds)
         gnomoPericiaEscolhida = snapshot.selecoes.gnomoPericiaEscolhida
+        kitsunemimiPericiaEscolhida = snapshot.selecoes.kitsunemimiPericiaEscolhida
+        usagimimiPericiaEscolhida = snapshot.selecoes.usagimimiPericiaEscolhida
         dominioClerigoSelecionado = snapshot.selecoes.dominioClerigoSelecionado
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado

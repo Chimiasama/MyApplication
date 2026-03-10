@@ -173,7 +173,25 @@ fun PericiasContent(
                     else -> true
                 }
             }.distinctBy { periciaNomeKeys[it] ?: it.nome.keyify() }
-             .sortedBy { it.nome.semAcentos().lowercase() }
+             .sortedWith(
+                 compareBy<Pericia>(
+                     { per ->
+                         when {
+                             periciaIsJutsu[per] == true -> 0
+                             periciaIsIdioma[per] == true -> 1
+                             else -> 2
+                         }
+                     },
+                     { per ->
+                         when {
+                             periciaIsJutsu[per] == true -> state.jutsuSlotIndex(per) ?: Int.MAX_VALUE
+                             periciaIsIdioma[per] == true -> state.idiomaSlotIndex(per) ?: Int.MAX_VALUE
+                             else -> Int.MAX_VALUE
+                         }
+                     },
+                     { per -> per.nome.semAcentos().lowercase() }
+                 )
+             )
         }
     }
 

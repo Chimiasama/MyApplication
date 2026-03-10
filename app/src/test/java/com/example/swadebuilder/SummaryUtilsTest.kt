@@ -447,4 +447,166 @@ class SummaryUtilsTest {
         val count = "Poderes Místicos".toRegex().findAll(joined).count()
         assertEquals(1, count)
     }
+
+    @Test
+    fun `buildSummaryLines aplica aparar mais um do signo garca para humanos adg`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Garca",
+                atributos = emptyMap(),
+                pericias = mapOf("Lutar" to 4),
+                ancestralidade = "HUMANOS",
+                signoAdgSelecionado = "Garça",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioArteDaGuerraAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        assertTrue(lines.contains("Aparar: 5"))
+    }
+
+    @Test
+    fun `buildSummaryLines aplica modificador generico aparar da ancestralidade`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Parry",
+                atributos = emptyMap(),
+                pericias = mapOf("Lutar" to 4),
+                ancestralidade = "HUMANOS",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf("APARAR +1"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        assertTrue(lines.contains("Aparar: 5"))
+    }
+
+
+    @Test
+    fun `buildAncestralidadeDisplay humano adg usa formato sem signo ou signo sem do`() {
+        val semSigno = buildAncestralidadeDisplay(
+            MeuPersonagem(
+                nome = "Hum",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "HUMANOS",
+                signoAdgSelecionado = "Nenhum",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioArteDaGuerraAtivo = true
+            ),
+            ancestralidadeNomeBase = "Humano (Império San)"
+        )
+
+        val comSigno = buildAncestralidadeDisplay(
+            MeuPersonagem(
+                nome = "Hum",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "HUMANOS",
+                signoAdgSelecionado = "Garça",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioArteDaGuerraAtivo = true
+            ),
+            ancestralidadeNomeBase = "Humano (Império San)"
+        )
+
+        assertEquals("Humano Sem Signo", semSigno)
+        assertEquals("Humano Signo Garça", comSigno)
+    }
+
+    @Test
+    fun `buildSummaryLines humano adg mostra caracteristicas raciais apenas com signo dinamico`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Hum",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "HUMANO (IMPÉRIO SAN)",
+                signoAdgSelecionado = "Garça",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioArteDaGuerraAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "Humano (Império San)",
+                    origem = "ARTE_DA_GUERRA",
+                    atributos = emptyMap(),
+                    pericias = emptyMap(),
+                    desvantagens = emptyList(),
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility("Pontos de Perícia", ""),
+                        com.example.swadebuilder.model.RacialAbility("Adaptável ou Signo", ""),
+                        com.example.swadebuilder.model.RacialAbility("Signos de Nascença", "")
+                    )
+                )
+            ),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val identidade = lines.firstOrNull { it.startsWith("Humano ") }
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+
+        assertEquals("Humano Signo Garça", identidade)
+        assertEquals("Características Raciais: Signo Garça", racialLine)
+    }
+
 }

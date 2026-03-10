@@ -162,6 +162,8 @@ data class SnapshotSelecoes(
     val protagonistaPericiasPaixao: List<String> = emptyList(),
     val protagonistaSlotAdvantageIds: List<String> = emptyList(),
     val gnomoPericiaEscolhida: String? = null,
+    val kitsunemimiPericiaEscolhida: String? = null,
+    val usagimimiPericiaEscolhida: String? = null,
     val dominioClerigoSelecionado: String? = null,
     val dominioClerigoPathfinderSelecionado: String? = null,
     val anoesScifiSelecionado: String? = null,

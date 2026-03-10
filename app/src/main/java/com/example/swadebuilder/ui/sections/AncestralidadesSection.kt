@@ -129,6 +129,7 @@ fun AncestralidadesSection(
     currentAncestralidade: String,
     supersLocked: Boolean,
     ancestralidadeEmFoco: String?,
+    feedbackMessages: MutableList<String>,
     onSelectAncestralidade: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
@@ -662,6 +663,74 @@ fun AncestralidadesSection(
                                 }
                             }
 
+
+
+                            if (isSelected && item.nome.keyify().contains("KITSUNEMIMI")) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Perícia Preparada:", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+                                val allowedSkills = listOf(
+                                    "Conhecimento Acadêmico",
+                                    "Convenção",
+                                    "Intimidar",
+                                    "Pesquisar",
+                                    "Provocar"
+                                )
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.kitsunemimiPericiaEscolhida ?: "Selecionar Perícia")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        allowedSkills.forEach { skillName ->
+                                            DropdownMenuItem(
+                                                text = { Text(skillName) },
+                                                onClick = {
+                                                    state.selecionarPericiaKitsunemimi(skillName)
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (isSelected && item.nome.keyify().contains("USAGIMIMI")) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("Perícia Definida pelo Ofício (d6):", style = MaterialTheme.typography.labelMedium)
+
+                                var expanded by remember { mutableStateOf(false) }
+                                val adgSkills = state.listaPericias
+                                    .filter {
+                                        val key = it.nome.keyify()
+                                        it.origem == "ARTE_DA_GUERRA" &&
+                                            !key.startsWith("IDIOMAS") &&
+                                            !key.startsWith("JUTSU")
+                                    }
+                                    .map { it.nome }
+                                    .distinctBy { it.keyify() }
+                                    .sortedBy { it }
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.usagimimiPericiaEscolhida ?: "Selecionar Perícia")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        adgSkills.forEach { skillName ->
+                                            DropdownMenuItem(
+                                                text = { Text(skillName) },
+                                                onClick = {
+                                                    state.selecionarPericiaUsagimimi(skillName, feedbackMessages)
+                                                    expanded = false
+                                                    onUserFeedback()
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
                             if (isSelected && item.nome.keyify() == "DESCENDENTE ELEMENTAL") {
                                 Spacer(Modifier.height(8.dp))
                                 Text("Herança Elemental:", style = MaterialTheme.typography.labelMedium)
@@ -799,8 +868,10 @@ fun AncestralidadesSection(
                                             Spacer(Modifier.height(4.dp))
                                             habilidadesExibidas.forEach { ability ->
                                                 Column(modifier = Modifier.padding(bottom = 4.dp)) {
+                                                    val abilityDisplayName =
+                                                        if (ability.nome.keyify() == "FORTUNA DA") "Sorte" else ability.nome
                                                     Text(
-                                                        text = ability.nome,
+                                                        text = abilityDisplayName,
                                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                                         color = MaterialTheme.colorScheme.primary
                                                     )
