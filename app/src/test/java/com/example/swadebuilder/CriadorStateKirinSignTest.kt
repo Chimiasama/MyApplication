@@ -46,7 +46,7 @@ class CriadorStateKirinSignTest {
         val state = CriadorState().apply {
             compendioArteDaGuerraAtivo = true
             ancestralidade = "HUMANOS"
-            listaVantagens.add(elevarOMoral())
+            listaVantagens = listOf(elevarOMoral())
         }
 
         state.selecionarSigno("Raposa")
