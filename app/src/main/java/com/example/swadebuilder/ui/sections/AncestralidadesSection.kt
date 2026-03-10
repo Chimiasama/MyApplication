@@ -129,6 +129,7 @@ fun AncestralidadesSection(
     currentAncestralidade: String,
     supersLocked: Boolean,
     ancestralidadeEmFoco: String?,
+    feedbackMessages: MutableList<String>,
     onSelectAncestralidade: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
@@ -720,8 +721,9 @@ fun AncestralidadesSection(
                                             DropdownMenuItem(
                                                 text = { Text(skillName) },
                                                 onClick = {
-                                                    state.selecionarPericiaUsagimimi(skillName)
+                                                    state.selecionarPericiaUsagimimi(skillName, feedbackMessages)
                                                     expanded = false
+                                                    onUserFeedback()
                                                 }
                                             )
                                         }

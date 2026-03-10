@@ -5027,14 +5027,21 @@ class CriadorState {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun selecionarPericiaUsagimimi(pericia: String?) {
+    fun selecionarPericiaUsagimimi(
+        pericia: String?,
+        feedbackMessages: MutableList<String> = mutableListOf()
+    ) {
         if (usagimimiPericiaEscolhida == pericia) return
         usagimimiPericiaEscolhida = pericia
+        if (usagimimiPericiaEscolhida?.keyify() == "TRANSICAO") {
+            feedbackMessages.add("Perícia favorita Transição selecionada: apenas Elementalista (ou Sem Tropo) fica disponível.")
+        }
         if (isUsagimimiTransicaoRestrictionActive() && tropoSelecionado?.id != "tropo_elementalista") {
-            selecionarTropo(null)
+            feedbackMessages.add("Tropo atual removido por incompatibilidade com Transição. As perícias foram recalculadas.")
+            selecionarTropo(null, feedbackMessages)
             return
         }
-        rebuildAllPericiaStacks()
+        rebuildAllPericiaStacks(feedbackMessages)
     }
 
     fun isUsagimimiTransicaoRestrictionActive(): Boolean {
@@ -5243,9 +5250,15 @@ class CriadorState {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun selecionarTropo(novoTropo: Tropo?) {
+    fun selecionarTropo(
+        novoTropo: Tropo?,
+        feedbackMessages: MutableList<String> = mutableListOf()
+    ) {
         if (tropoSelecionado?.id == novoTropo?.id) return
-        if (!podeSelecionarTropoPorRestricoesAtuais(novoTropo)) return
+        if (!podeSelecionarTropoPorRestricoesAtuais(novoTropo)) {
+            feedbackMessages.add("Tropo bloqueado: com Transição favorita, apenas Elementalista (ou Sem Tropo) pode ser selecionado.")
+            return
+        }
 
         if (vantagensAutomaticasDoTropo.isNotEmpty()) {
             vantagensSelecionadas.removeAll { it.id in vantagensAutomaticasDoTropo }
@@ -5403,7 +5416,7 @@ class CriadorState {
 
         syncMestreDoChiSlots()
         recalcularPontosAtributo()
-        rebuildAllPericiaStacks()
+        rebuildAllPericiaStacks(feedbackMessages)
         syncJutsuSlots()
     }
 
@@ -5698,6 +5711,12 @@ class CriadorState {
         // Reset hidden/filtered skills so points invested in unavailable skills
         // (e.g. Transição without Elementalista) are refunded on rebuild.
         val hiddenSkills = spCostStackPorPericia.keys.filter { it !in activeSkills }
+        val hiddenWithInvestments = hiddenSkills.filter { per ->
+            (spCostStackPorPericia[per]?.sum() ?: 0) > 0 ||
+                (compCostStackPorPericia[per]?.sum() ?: 0) > 0 ||
+                (baseIncsPorPericia[per] ?: 0) > 0 ||
+                (compIncsPorPericia[per] ?: 0) > 0
+        }
         hiddenSkills.forEach { per ->
             spCostStackPorPericia.getValue(per).clear()
             compCostStackPorPericia[per]?.clear()
@@ -5705,6 +5724,10 @@ class CriadorState {
             compIncsPorPericia[per] = 0
             especializacoesPorPericia.remove(per.nome)
             notasPericia.remove(per.nome)
+        }
+        if (hiddenWithInvestments.isNotEmpty()) {
+            val nomes = hiddenWithInvestments.joinToString { it.nome }
+            feedbackMessages.add("Rebuild de perícias aplicado: investimentos removidos de perícias indisponíveis ($nomes) e pontos devolvidos.")
         }
 
         val input = RebuildSkillStacksUseCase.Input(

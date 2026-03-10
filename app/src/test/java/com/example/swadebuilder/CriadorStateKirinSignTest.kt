@@ -131,6 +131,20 @@ class CriadorStateKirinSignTest {
     }
 
     @Test
+    fun `selecionar transicao favorita emite mensagens de restricao e rebuild`() {
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "Usagimimi (Coelho)"
+        }
+        val feedback = mutableListOf<String>()
+
+        state.selecionarPericiaUsagimimi("Transição", feedback)
+
+        assertTrue(feedback.any { it.contains("Transição", ignoreCase = true) })
+        assertTrue(feedback.any { it.contains("Elementalista", ignoreCase = true) })
+    }
+
+    @Test
     fun `trocar de elementalista remove transicao e devolve sp mesmo fora de usagimimi`() {
         val transicao = Pericia("Transição", "ASTUCIA", false, origem = "ARTE_DA_GUERRA")
         val elementalista = Tropo(

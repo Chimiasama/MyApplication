@@ -970,6 +970,7 @@ private fun CreationDetailContent(
             currentAncestralidade = state.ancestralidade,
             supersLocked = creationLocked || !state.isSectionEnabled(MainSection.ANCESTRALIDADES),
             ancestralidadeEmFoco = state.ancestralidadeEmFoco,
+            feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
             onSelectAncestralidade = onSelectAncestralidade,
             onUserFeedback = onUserFeedback
         )
@@ -977,6 +978,7 @@ private fun CreationDetailContent(
             state = state,
             listaTropos = viewModel.gameDataStore.getTropos(),
             listaVantagens = viewModel.gameDataStore.getVantagens(),
+            feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
             onUserFeedback = onUserFeedback
         )
         MainSection.MONSTRO -> TipoMonstroSection(

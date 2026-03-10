@@ -89,6 +89,7 @@ fun TroposSection(
     state: CriadorState,
     listaTropos: List<Tropo>,
     listaVantagens: List<Vantagem>,
+    feedbackMessages: MutableList<String>,
     onUserFeedback: () -> Unit
 ) {
     if (!state.compendioArteDaGuerraAtivo) return
@@ -127,7 +128,7 @@ fun TroposSection(
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
                     .clickable {
-                        state.selecionarTropo(null)
+                        state.selecionarTropo(null, feedbackMessages)
                         onUserFeedback()
                     },
                 colors = CardDefaults.cardColors(
@@ -161,8 +162,8 @@ fun TroposSection(
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
                         .alpha(if (bloqueadoPorTransicao) 0.6f else 1f)
-                        .clickable(enabled = !state.criacaoBasicaCongelada && !bloqueadoPorTransicao) {
-                            state.selecionarTropo(tropo)
+                        .clickable(enabled = !state.criacaoBasicaCongelada) {
+                            state.selecionarTropo(tropo, feedbackMessages)
                             onUserFeedback()
                         },
                     colors = CardDefaults.cardColors(
@@ -174,9 +175,8 @@ fun TroposSection(
                             selected = selecionado,
                             label = if (showOfficialNames && tropo.nome.isNotBlank()) tropo.nome else tropo.nome,
                             onSelect = {
-                                if (bloqueadoPorTransicao) return@RadioButtonRow
                                 if (state.criacaoBasicaCongelada) return@RadioButtonRow
-                                state.selecionarTropo(tropo)
+                                state.selecionarTropo(tropo, feedbackMessages)
                                 onUserFeedback()
                             }
                         )
