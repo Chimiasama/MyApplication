@@ -63,8 +63,8 @@ class CriadorStateKirinSignTest {
             ancestralidade = "Akaimimi (Panda Vermelho)"
             racialSkillStartMap = mapOf(
                 "AKAIMIMI (PANDA VERMELHO)" to mapOf(
-                    "CONVENCAO" to 2,
-                    "CONHECIMENTO GERAL" to 4
+                    "CONVENCAO" to 6,
+                    "CONHECIMENTO GERAL" to 8
                 )
             )
         }
@@ -73,7 +73,7 @@ class CriadorStateKirinSignTest {
         val conhecimento = com.example.swadebuilder.model.Pericia("Conhecimento Geral", "ASTUCIA", true)
 
         assertEquals(13, state.periciaCapRaw(convencao))
-        assertEquals(14, state.periciaCapRaw(conhecimento))
+        assertEquals(13, state.periciaCapRaw(conhecimento))
     }
 
 
