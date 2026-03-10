@@ -694,6 +694,30 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
 
 
+
+        if (ancKey.contains("TERRACOTA")) {
+            val effectiveVariant = resolveAncestryVariantUseCase.execute(
+                ResolveAncestryVariantUseCase.Input(
+                    selectedVariant = scifiVariant,
+                    legacySelectedVariant = anoesScifiSelecionado,
+                    availableOptions = ancestryOptions
+                )
+            ).normalizedSelection
+
+            val comp = if (effectiveVariant?.contains("Obriga", ignoreCase = true) == true) "OBRIGAÇÃO (Maior)" else "VOTO (Maior)"
+
+            return Result(
+                naturalArmorFromRace = 0,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = emptyList(),
+                ensureRacialDisadvantages = listOf("FORASTEIRO (Menor)", comp),
+                racialDisadvantagesToRemove = listOf("Voto ou Obrigação", "VOTO_OU_OBRIGACAO", "VOTO OU OBRIGACAO"),
+                elementalAction = ElementalAction.NONE
+            )
+        }
+
         if (ancKey.contains("AKAIMIMI")) {
             return Result(
                 naturalArmorFromRace = 0,

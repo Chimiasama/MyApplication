@@ -383,7 +383,12 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [],
+    "opcoes": [
+      "Voto (Maior)",
+      "Obrigação (Maior)"
+    ],
+    "movimentacao": 5
   },
   {
     "id": "anc_umvee",
