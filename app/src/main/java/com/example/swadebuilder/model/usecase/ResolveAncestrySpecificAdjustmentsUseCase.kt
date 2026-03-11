@@ -694,12 +694,10 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
 
 
-
         if (ancKey.contains("TERRACOTA")) {
             val effectiveVariant = resolveAncestryVariantUseCase.execute(
                 ResolveAncestryVariantUseCase.Input(
                     selectedVariant = scifiVariant,
-                    legacySelectedVariant = anoesScifiSelecionado,
                     availableOptions = ancestryOptions
                 )
             ).normalizedSelection
@@ -708,7 +706,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             return Result(
                 naturalArmorFromRace = 0,
-                forceArmorZero = true,
+                forceArmorZero = false,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
