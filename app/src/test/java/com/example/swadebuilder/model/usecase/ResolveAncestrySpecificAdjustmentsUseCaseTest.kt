@@ -77,6 +77,15 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
+    fun `demonio abismo recebe aa demonio automaticamente`() {
+        val result = useCase.execute("Demônio (Abismo)", null)
+
+        assertEquals(listOf("aa_demonio"), result.ensureAdvantageIds)
+        assertEquals(listOf("ANTECEDENTE ARCANO (DEMÔNIO)"), result.ensureAutomaticAdvantages)
+        assertTrue(result.forceArmorZero)
+    }
+
+    @Test
     fun `umvee pedregoso aplica resistencia e armadura raciais`() {
         val result = useCase.execute(
             anc = "Umvee (Filhos da Lua)",

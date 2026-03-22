@@ -798,6 +798,7 @@ class CriadorState {
         "MESTRE DO CHI" to listOf("deflexao"),
         "BARDO" to listOf("aumentar_reduzir_caracteristica", "som_silencio"),
         "CLERIGO" to listOf("cura", "santuario"),
+        "DEMONIO" to listOf("disfarce_demoniaco"),
         "DIABOLISTA" to listOf("banir", "devastacao", "conjurar_aliado"),
         "DRUIDA" to listOf("amigo_das_feras", "protecao_ambiental", "mudanca_de_forma"),
         "ELEMENTALISTA" to listOf("manipulacao_elemental", "protecao_ambiental"),

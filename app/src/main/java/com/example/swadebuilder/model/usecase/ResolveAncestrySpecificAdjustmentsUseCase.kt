@@ -927,6 +927,16 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 elementalAction = ElementalAction.NONE
             )
 
+            "DEMÔNIO (ABISMO)".keyify() -> Result(
+                naturalArmorFromRace = 0,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = listOf("aa_demonio"),
+                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (DEMÔNIO)"),
+                ensureRacialDisadvantages = emptyList(),
+                elementalAction = ElementalAction.NONE
+            )
+
             else -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = true,
