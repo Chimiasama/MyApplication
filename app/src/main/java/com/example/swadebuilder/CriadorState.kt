@@ -3463,11 +3463,17 @@ class CriadorState {
         return requeridoIdx >= 0 && atualIdx >= requeridoIdx
     }
 
-    fun poderesDisponiveisPorEstagioParaArcano(arcKey: String): Map<String, String> =
-        ArcaneConfig.getStageBasedPowersByStage(arcKey.normAAKey())
+    fun poderesDisponiveisPorEstagioParaArcano(arcKey: String): Map<String, String> {
+        val key = arcKey.normAAKey()
+        if (!usaPoderesDisponiveisPorEstagio(key)) return emptyMap()
+        return ArcaneConfig.getStageBasedPowersByStage(key)
+    }
 
-    fun requisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): String? =
-        ArcaneConfig.getStageBasedPowerRequirement(arcKey.normAAKey(), powerId)
+    fun requisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): String? {
+        val key = arcKey.normAAKey()
+        if (!usaPoderesDisponiveisPorEstagio(key)) return null
+        return ArcaneConfig.getStageBasedPowerRequirement(key, powerId)
+    }
 
     fun atendeRequisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): Boolean {
         val requiredAdvantageId = requisitoEspecialDePoderPorArcano(arcKey, powerId) ?: return true

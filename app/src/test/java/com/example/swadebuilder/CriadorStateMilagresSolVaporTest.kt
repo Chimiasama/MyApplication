@@ -69,4 +69,22 @@ class CriadorStateMilagresSolVaporTest {
         )
         assertTrue(state.atendeRequisitoEspecialDePoderPorArcano("MILAGRES", "rajada"))
     }
+
+    @Test
+    fun `milagres generico fora de sol e vapor nao vira stage based`() {
+        val state = CriadorState().apply {
+            vantagensSelecionadas.add(
+                Vantagem(
+                    id = "antecedente_arcano_milagres",
+                    nome = "ANTECEDENTE ARCANO (Milagres)",
+                    categoria = Categoria.PODER,
+                    origem = "BASICO",
+                    requisitos = Requisito()
+                )
+            )
+        }
+
+        assertFalse(state.usaPoderesDisponiveisPorEstagio("MILAGRES"))
+        assertTrue(state.poderesDisponiveisPorEstagioParaArcano("MILAGRES").isEmpty())
+    }
 }
