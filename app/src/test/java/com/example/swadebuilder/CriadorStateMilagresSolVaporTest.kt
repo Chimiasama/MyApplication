@@ -87,4 +87,22 @@ class CriadorStateMilagresSolVaporTest {
         assertFalse(state.usaPoderesDisponiveisPorEstagio("MILAGRES"))
         assertTrue(state.poderesDisponiveisPorEstagioParaArcano("MILAGRES").isEmpty())
     }
+
+    @Test
+    fun `feiticeiro de fantasia nao vira stage based de sol e vapor`() {
+        val state = CriadorState().apply {
+            vantagensSelecionadas.add(
+                Vantagem(
+                    id = "antecedente_arcano_feiticeiro",
+                    nome = "ANTECEDENTE ARCANO (Feiticeiro)",
+                    categoria = Categoria.PODER,
+                    origem = "FANTASIA",
+                    requisitos = Requisito()
+                )
+            )
+        }
+
+        assertFalse(state.usaPoderesDisponiveisPorEstagio("FEITICEIRO"))
+        assertTrue(state.poderesDisponiveisPorEstagioParaArcano("FEITICEIRO").isEmpty())
+    }
 }

@@ -3444,15 +3444,33 @@ class CriadorState {
 
     fun usaPoderesDisponiveisPorEstagio(arcKey: String): Boolean {
         val key = arcKey.normAAKey()
-        if (key == "FEITICEIRO" || key == "DEMONIO") return true
-        return key == "MILAGRES" && vantagensSelecionadas.any { it.id == "aa_milagres" }
+        return vantagensSelecionadas.any { vantagem ->
+            if (vantagem.toArcanoKey()?.normAAKey() != key) return@any false
+
+            when (key) {
+                "FEITICEIRO" -> {
+                    vantagem.id == "aa_magia_negra" ||
+                        canonicalOriginKey(vantagem.origem) in setOf("SOL_VAPOR", "CIDADE_SOL_VAPOR")
+                }
+                "DEMONIO" -> {
+                    vantagem.id == "aa_demonio" ||
+                        canonicalOriginKey(vantagem.origem) in setOf("SOL_VAPOR", "CIDADE_SOL_VAPOR")
+                }
+                "MILAGRES" -> {
+                    vantagem.id == "aa_milagres" ||
+                        canonicalOriginKey(vantagem.origem) in setOf("SOL_VAPOR", "CIDADE_SOL_VAPOR")
+                }
+                else -> false
+            }
+        }
     }
 
     fun bloqueiaNovosPoderesPorAntecedente(): Boolean =
         vantagensSelecionadas.any {
             when (it.toArcanoKey()?.normAAKey()) {
-                "FEITICEIRO", "DEMONIO" -> true
-                "MILAGRES" -> it.id == "aa_milagres"
+                "FEITICEIRO" -> usaPoderesDisponiveisPorEstagio("FEITICEIRO")
+                "DEMONIO" -> usaPoderesDisponiveisPorEstagio("DEMONIO")
+                "MILAGRES" -> usaPoderesDisponiveisPorEstagio("MILAGRES")
                 else -> false
             }
         }
