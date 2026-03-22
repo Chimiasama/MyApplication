@@ -44,6 +44,52 @@ object ArcaneConfig {
         "drenar_pontos_de_poder_demonio" to "Heroico"
     )
 
+    val SOL_VAPOR_MILAGRES_POWERS_BY_STAGE = linkedMapOf(
+        "ajuda" to "Novato",
+        "aumentar_reduzir_caracteristica" to "Novato",
+        "cura" to "Novato",
+        "deflexao" to "Novato",
+        "detectar_ocultar_arcano" to "Novato",
+        "enredar" to "Novato",
+        "iluminar_obscurecer" to "Novato",
+        "protecao_ambiental" to "Novato",
+        "protecao_arcana" to "Novato",
+        "protecao" to "Novato",
+        "som_silencio" to "Novato",
+        "visao_sombria" to "Novato",
+        "atordoar" to "Experiente",
+        "campo_de_dano" to "Experiente",
+        "cegar" to "Experiente",
+        "confusao" to "Experiente",
+        "devastacao" to "Experiente",
+        "dissipar" to "Experiente",
+        "invisibilidade" to "Experiente",
+        "morosidade_velocidade" to "Experiente",
+        "raio" to "Experiente",
+        "sono" to "Experiente",
+        "dadiva_do_guerreiro" to "Veterano",
+        "explosao" to "Veterano",
+        "ferir" to "Veterano",
+        "medo" to "Veterano",
+        "rajada" to "Veterano",
+        "adivinhacao" to "Heroico",
+        "ressurreicao" to "Heroico"
+    )
+
+    val SOL_VAPOR_MILAGRES_POWER_REQUIREMENTS = mapOf(
+        "atordoar" to "guerreiro_do_senhor",
+        "campo_de_dano" to "guerreiro_do_senhor",
+        "cegar" to "guerreiro_do_senhor",
+        "confusao" to "guerreiro_do_senhor",
+        "devastacao" to "guerreiro_do_senhor",
+        "raio" to "guerreiro_do_senhor",
+        "dadiva_do_guerreiro" to "ira_do_senhor",
+        "explosao" to "ira_do_senhor",
+        "ferir" to "ira_do_senhor",
+        "medo" to "ira_do_senhor",
+        "rajada" to "ira_do_senhor"
+    )
+
 
     // Deadlands
     val DEADLANDS_ABENCOADO = setOf(
@@ -176,9 +222,17 @@ object ArcaneConfig {
 
     fun getStageBasedPowersByStage(arcaneKey: String): Map<String, String> {
         return when (arcaneKey) {
+            "MILAGRES" -> SOL_VAPOR_MILAGRES_POWERS_BY_STAGE
             "FEITICEIRO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE
             "DEMONIO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE + SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE
             else -> emptyMap()
+        }
+    }
+
+    fun getStageBasedPowerRequirement(arcaneKey: String, powerId: String): String? {
+        return when (arcaneKey) {
+            "MILAGRES" -> SOL_VAPOR_MILAGRES_POWER_REQUIREMENTS[powerId]
+            else -> null
         }
     }
 }

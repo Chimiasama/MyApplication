@@ -3444,13 +3444,15 @@ class CriadorState {
 
     fun usaPoderesDisponiveisPorEstagio(arcKey: String): Boolean {
         val key = arcKey.normAAKey()
-        return key == "FEITICEIRO" || key == "DEMONIO"
+        if (key == "FEITICEIRO" || key == "DEMONIO") return true
+        return key == "MILAGRES" && vantagensSelecionadas.any { it.id == "aa_milagres" }
     }
 
     fun bloqueiaNovosPoderesPorAntecedente(): Boolean =
         vantagensSelecionadas.any {
             when (it.toArcanoKey()?.normAAKey()) {
                 "FEITICEIRO", "DEMONIO" -> true
+                "MILAGRES" -> it.id == "aa_milagres"
                 else -> false
             }
         }
@@ -3463,6 +3465,14 @@ class CriadorState {
 
     fun poderesDisponiveisPorEstagioParaArcano(arcKey: String): Map<String, String> =
         ArcaneConfig.getStageBasedPowersByStage(arcKey.normAAKey())
+
+    fun requisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): String? =
+        ArcaneConfig.getStageBasedPowerRequirement(arcKey.normAAKey(), powerId)
+
+    fun atendeRequisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): Boolean {
+        val requiredAdvantageId = requisitoEspecialDePoderPorArcano(arcKey, powerId) ?: return true
+        return vantagensSelecionadas.any { it.id == requiredAdvantageId }
+    }
 
     private fun effectiveProgressoParaVantagens(): Int {
         val stName = overrideStageForVantagem ?: return progresso

@@ -354,6 +354,7 @@ fun PoderesSection(
                 if (usaPoderesPorEstagio) {
                     val requiredStage = stageBasedPowers[power.id] ?: return@filter false
                     if (!state.estagioAtinge(requiredStage)) return@filter false
+                    if (!state.atendeRequisitoEspecialDePoderPorArcano(arcKey, power.id)) return@filter false
                 }
 
                 // 2. Check Search

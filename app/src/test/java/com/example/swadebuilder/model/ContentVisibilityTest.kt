@@ -216,4 +216,30 @@ class ContentVisibilityTest {
         assertFalse(state.isVantagemVisible(novosPoderes, multiplosAAHabilitados = true))
     }
 
+    @Test
+    fun `novos poderes fica invisivel para aa milagres de sol e vapor`() {
+        val state = CriadorState().apply {
+            compendioCidadeSolVaporAtivo = true
+            vantagensSelecionadas.add(
+                Vantagem(
+                    id = "aa_milagres",
+                    nome = "ANTECEDENTE ARCANO (Milagres)",
+                    categoria = Categoria.PODER,
+                    origem = "SOL_VAPOR",
+                    requisitos = Requisito()
+                )
+            )
+        }
+
+        val novosPoderes = Vantagem(
+            id = "novos_poderes",
+            nome = "NOVOS PODERES",
+            categoria = Categoria.PODER,
+            origem = "CIDADE_SOL_VAPOR",
+            requisitos = Requisito()
+        )
+
+        assertFalse(state.isVantagemVisible(novosPoderes, multiplosAAHabilitados = true))
+    }
+
 }
