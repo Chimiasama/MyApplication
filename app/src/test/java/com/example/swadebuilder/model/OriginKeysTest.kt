@@ -6,16 +6,14 @@ import org.junit.Test
 class OriginKeysTest {
 
     @Test
-    fun `normalizes cidade do sol a vapor aliases to canonical key`() {
-        val aliases = listOf(
-            "SOL_VAPOR",
-            "sol e vapor",
-            "Cidade do Sol a Vapor",
-            "CIDADE_DO_SOL_A_VAPOR"
-        )
+    fun `cidade do sol e vapor aponta para asset de sol vapor`() {
+        assertEquals("SOL_VAPOR", powerAssetOriginKey("CIDADE_SOL_VAPOR"))
+        assertEquals("SOL_VAPOR", powerAssetOriginKey("CIDADE DO SOL A VAPOR"))
+    }
 
-        aliases.forEach { raw ->
-            assertEquals("CIDADE_SOL_VAPOR", canonicalOriginKey(raw))
-        }
+    @Test
+    fun `origens legadas de sol vapor continuam normalizadas`() {
+        assertEquals("SOL_VAPOR", powerAssetOriginKey("SOL_VAPOR"))
+        assertEquals("SOL_VAPOR", powerAssetOriginKey("SOL E VAPOR"))
     }
 }

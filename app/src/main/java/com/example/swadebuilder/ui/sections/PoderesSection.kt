@@ -52,9 +52,9 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
-import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.model.powerAssetOriginKey
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
@@ -80,15 +80,6 @@ private fun custoParaPenalidadeTexto(custo: String): String {
     if (clean.startsWith("+")) clean.removePrefix("+").toIntOrNull()?.let { return "-${(it + 1) / 2}" }
     return "—"
 }
-
-internal fun normalizePowerOriginKey(originRaw: String): String =
-    when (originRaw) {
-        "SCI_FI", "SCIFI" -> "SCIFI"
-        "SOL E VAPOR", "SOL_VAPOR", "CIDADE_SOL_VAPOR", "CIDADE_SOL_A_VAPOR" -> "SOL_VAPOR"
-        "CRYSTAL HEARTS", "CRYSTAL" -> "CRYSTAL"
-        "ARTE DA GUERRA", "ADG" -> "ADG"
-        else -> originRaw
-    }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -261,10 +252,10 @@ fun PoderesSection(
             val usaPoderesPorEstagio = stageBasedPowers.isNotEmpty()
             val originRaw = when {
                 usaListaChi -> "ARTE DA GUERRA"
-                else -> advantage?.origem?.let(::canonicalOriginKey)
+                else -> advantage?.origem
                     ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
             }
-            val normalizedOrigin = normalizePowerOriginKey(originRaw)
+            val normalizedOrigin = powerAssetOriginKey(originRaw)
 
             val specificList = powerCache[normalizedOrigin] ?: emptyList()
             val basicList = powerCache["BASICO"] ?: emptyList()
