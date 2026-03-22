@@ -104,6 +104,22 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAutomaticAdvantages)
     }
 
+    @Test
+    fun `feral recebe furioso sanguinario e bloqueio de chi`() {
+        val result = useCase.execute(
+            anc = "Feral",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Correnteza",
+            ancestryOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso"),
+            ancestryOrigin = "ARTE_DA_GUERRA"
+        )
+
+        assertTrue(result.ensureAdvantageNames.contains("FURIOSO"))
+        assertTrue(result.ensureAutomaticAdvantages.contains("MOVIMENTAÇÃO +2"))
+        assertEquals(listOf("SANGUINÁRIO"), result.ensureRacialDisadvantages)
+        assertTrue(result.anotacoesToAdd.any { it.contains("Técnicas de Chi") })
+    }
+
 
 
     @Test

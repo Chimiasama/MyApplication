@@ -498,7 +498,7 @@ class CriadorState {
             }
         }
 
-        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" && key.contains("UMVEE")) {
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" && (key.contains("UMVEE") || key == "FERAL")) {
             removeByIdOrName("DONS_DA_NATUREZA", "DONS DA NATUREZA")
 
             when (variant) {
@@ -3942,6 +3942,13 @@ class CriadorState {
             }
         }
 
+        if (compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL") {
+            val chosen = humanoMineradorAtributo ?: "Força"
+            if (a.keyify() == chosen.keyify()) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
         // Sci-Fi Attribute Variants (Padrão vs Variant)
         if (compendioSciFiAtivo) {
             val ancKey = ancestralidade.keyify()
@@ -4060,6 +4067,15 @@ class CriadorState {
         }
 
         return modifiedBase
+    }
+
+    fun atributoMaxRawNaCriacao(a: String): Int {
+        val baseCap = atributoMaxRaw(a)
+        if (modoProgressaoAtivo) return baseCap
+        if (compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL" && a.keyify() == "ASTUCIA") {
+            return minOf(baseCap, 6)
+        }
+        return baseCap
     }
 
     private fun isHumanoFantasiaSelecionado(): Boolean {
@@ -4185,7 +4201,7 @@ class CriadorState {
                 attributeCaps = listaAtributos.associateWith { nome ->
                     AdjustAttributesForAncestryChangeUseCase.AttributeCap(
                         minRaw = atributoMinRaw(nome),
-                        maxRaw = atributoMaxRaw(nome)
+                        maxRaw = atributoMaxRawNaCriacao(nome)
                     )
                 },
                 paCostStacks = listaAtributos.associateWith { nome ->
@@ -4335,6 +4351,9 @@ class CriadorState {
                     }
                 }
                 if (compendioSciFiAtivo && ancKey == "HUMANOS" && humanoMineradorAtributo == null) {
+                    humanoMineradorAtributo = "Força"
+                }
+                if (compendioArteDaGuerraAtivo && ancKey == "FERAL" && humanoMineradorAtributo == null) {
                     humanoMineradorAtributo = "Força"
                 }
             }
@@ -4807,9 +4826,12 @@ class CriadorState {
         if (humanoMineradorAtributo == atributo) return
         humanoMineradorAtributo = atributo
         val msgs = mutableListOf<String>()
-        aplicarAncestralidade("HUMANOS", msgs)
+        aplicarAncestralidade(ancestralidade, msgs)
         recalcularPontosAtributo(msgs) // Ensure re-calc happens as attribute base changes
     }
+
+    fun isFeralAdgSelecionado(): Boolean =
+        compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL"
 
     private fun syncOraculoVariant() {
         if (ancestralidade.keyify() != "ORACULOS") return

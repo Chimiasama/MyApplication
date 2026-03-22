@@ -518,10 +518,14 @@ fun AncestralidadesSection(
                                         }
                                     }
 
-                                    // Human Miner Attribute Choice
-                                    if (itemKeyNorm == "HUMANOS" && currentSelection == "Minerador") {
+                                    // Human Miner / Feral Primitive Attribute Choice
+                                    if ((itemKeyNorm == "HUMANOS" && currentSelection == "Minerador") || itemKeyNorm == "FERAL") {
                                         Spacer(Modifier.height(8.dp))
-                                        Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
+                                        val feralSelected = itemKeyNorm == "FERAL"
+                                        Text(
+                                            if (feralSelected) "Atributo Primitivo (d6 inicial):" else "Bônus de Atributo (d6 inicial):",
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
                                         Column {
                                             com.example.swadebuilder.ui.components.RadioButtonRow(
                                                 label = "Força",
@@ -533,6 +537,13 @@ fun AncestralidadesSection(
                                                 selected = state.humanoMineradorAtributo == "Vigor",
                                                 onSelect = { state.selecionarHumanoMineradorAtributo("Vigor") }
                                             )
+                                            if (feralSelected) {
+                                                com.example.swadebuilder.ui.components.RadioButtonRow(
+                                                    label = "Agilidade",
+                                                    selected = state.humanoMineradorAtributo == "Agilidade",
+                                                    onSelect = { state.selecionarHumanoMineradorAtributo("Agilidade") }
+                                                )
+                                            }
                                         }
                                     }
                                 }

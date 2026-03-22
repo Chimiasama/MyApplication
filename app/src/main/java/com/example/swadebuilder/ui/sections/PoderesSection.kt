@@ -101,7 +101,7 @@ fun PoderesSection(
         if (state.compendioArteDaGuerraAtivo && state.tropoSelecionado?.id == "tropo_elementalista") {
             ativos.add("ELEMENTALISTA")
         }
-        if (state.compendioArteDaGuerraAtivo && (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0) {
+        if (state.compendioArteDaGuerraAtivo && !state.isFeralAdgSelecionado() && (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0) {
             ativos.add("MESTRE DO CHI")
         }
         ativos.distinct()
