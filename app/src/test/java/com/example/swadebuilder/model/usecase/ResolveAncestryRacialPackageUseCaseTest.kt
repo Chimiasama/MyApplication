@@ -249,4 +249,25 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertTrue(result.desvantagensRaciais.any { it.equals("TRANSTORNO DE SEPARAÇÃO", ignoreCase = true) })
         assertTrue(result.vantagensRaciais.any { it.equals("COMUNITÁRIO", ignoreCase = true) })
     }
+
+    @Test
+    fun `umvee gatoruja adiciona visao no escuro sem mexer em forasteiro`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "Umvee (Filhos da Lua)",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Gatoruja",
+                ancestryOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso"),
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = emptyList(),
+                ancestryAutomaticDisadvantages = listOf("Forasteiro (Menor)"),
+                ancestryOrigin = "ARTE_DA_GUERRA"
+            )
+        )
+
+        assertTrue(result.vantagensRaciais.any { it.equals("VISÃO NO ESCURO", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.equals("Forasteiro (Menor)", ignoreCase = true) })
+    }
 }

@@ -59,6 +59,17 @@ class ScifiAncestryVariantSyncTest {
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ave de rapina")
+            ),
+            com.example.swadebuilder.model.RacialModifier(
+                nome = "Umvee (Filhos da Lua)", origem = "ARTE_DA_GUERRA",
+                atributos = emptyMap(), pericias = mapOf("Ocultismo" to 0),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = listOf(
+                    com.example.swadebuilder.model.RacialAbility("Dons da Natureza", "", id = "DONS_DA_NATUREZA"),
+                    com.example.swadebuilder.model.RacialAbility("Naturalmente Sobrenatural", "", id = "NATURALMENTE_SOBRENATURAL"),
+                    com.example.swadebuilder.model.RacialAbility("Forasteiro", "", id = "FORASTEIRO", category = "racial_hindrance", severity = "Menor")
+                ),
+                opcoes = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso")
             )
         )
         state.updateGameData(
@@ -380,6 +391,25 @@ class ScifiAncestryVariantSyncTest {
 
         val mods = ModifierEngine.collect(state)
         assertFalse(mods.any { it.id == "racial_fragil" })
+    }
+
+    @Test
+    fun `umvee usa variante selecionada fora do compendio scifi`() {
+        val state = CriadorState().apply {
+            injectMockAncestries(this)
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "Umvee (Filhos da Lua)"
+            scifiVariant = "Gatoruja"
+        }
+
+        val selecionada = state.resolveSciFiVariantSelectionFor(
+            ancestryName = "Umvee (Filhos da Lua)",
+            availableOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso")
+        )
+
+        assertEquals("Gatoruja", selecionada)
+        assertEquals(4, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Ocultismo", atributo = "Astúcia", basica = false)))
+        assertEquals(6, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Perceber", atributo = "Astúcia", basica = true)))
     }
 
 }

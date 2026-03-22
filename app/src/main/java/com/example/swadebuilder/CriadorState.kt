@@ -498,6 +498,97 @@ class CriadorState {
             }
         }
 
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" && key.contains("UMVEE")) {
+            removeByIdOrName("DONS_DA_NATUREZA", "DONS DA NATUREZA")
+
+            when (variant) {
+                "Ápice" -> if (newHabilidades.none { it.id == "GARRAS" || it.nome.keyify() == "GARRAS" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Garras",
+                            descricao = "Ápice concede garras naturais que causam For+d4 de dano.",
+                            id = "GARRAS",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+                "Vínculo Bestial" -> if (newHabilidades.none { it.id == "SENHOR_DAS_FERAS" || it.nome.keyify() == "SENHOR DAS FERAS" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Senhor das Feras",
+                            descricao = "Vínculo Bestial concede a vantagem Senhor das Feras.",
+                            id = "SENHOR_DAS_FERAS",
+                            category = "racial_edge"
+                        )
+                    )
+                }
+                "Pele Iluminada pela Lua" -> if (newHabilidades.none { it.nome.keyify() == "APARAR +1" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Aparar +1",
+                            descricao = "Pele iluminada pela lua concede +1 de Aparar.",
+                            id = "APARAR_1",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+                "Gatoruja" -> {
+                    if (newHabilidades.none { it.id == "VISAO_NO_ESCURO" || it.nome.keyify() == "VISAO NO ESCURO" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Visão no Escuro",
+                                descricao = "Gatoruja concede visão no escuro.",
+                                id = "VISAO_NO_ESCURO",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
+                    if (newHabilidades.none { it.nome.keyify() == "PERCEBER D6" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Perceber d6",
+                                descricao = "Gatoruja aumenta o valor inicial de Perceber para d6.",
+                                id = "PERCEBER_D6",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
+                }
+                "Correnteza" -> if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +2" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "MOVIMENTAÇÃO +2",
+                            descricao = "Correnteza concede +2 em Movimentação.",
+                            id = "MOVIMENTACAO_2",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+                "Pedregoso" -> {
+                    if (newHabilidades.none { it.nome.keyify() == "RESISTENCIA +1" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Resistência +1",
+                                descricao = "Pedregoso concede +1 de Resistência.",
+                                id = "RESISTENCIA",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
+                    if (newHabilidades.none { it.nome.keyify() == "ARMADURA +2" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Armadura +2",
+                                descricao = "Pedregoso concede +2 de Armadura.",
+                                id = "ARMADURA",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
         if (key == "AQUARIANOS" && variant.equals("Semi-aquáticos", ignoreCase = true)) {
             removeByIdOrName("AQUATICO", "AQUATICO")
             removeByIdOrName("RESISTENCIA", "RESISTENCIA")
@@ -2469,6 +2560,13 @@ class CriadorState {
             val chosen = kitsunemimiPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
+        if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
+            val variant = resolveCurrentSciFiVariantSelection(anc)
+            if (perKey == "PERCEBER" && variant.equals("Gatoruja", ignoreCase = true)) {
+                modifiedBase = maxOf(modifiedBase, 6)
             }
         }
 

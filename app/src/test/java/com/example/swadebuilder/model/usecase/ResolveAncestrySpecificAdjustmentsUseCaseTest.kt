@@ -76,6 +76,34 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
     }
 
+    @Test
+    fun `umvee pedregoso aplica resistencia e armadura raciais`() {
+        val result = useCase.execute(
+            anc = "Umvee (Filhos da Lua)",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Pedregoso",
+            ancestryOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso"),
+            ancestryOrigin = "ARTE_DA_GUERRA"
+        )
+
+        assertEquals(2, result.naturalArmorFromRace)
+        assertEquals(listOf("RESISTÊNCIA +1"), result.ensureAutomaticAdvantages)
+    }
+
+    @Test
+    fun `umvee vinculo bestial concede senhor das feras`() {
+        val result = useCase.execute(
+            anc = "Umvee (Filhos da Lua)",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Vínculo Bestial",
+            ancestryOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso"),
+            ancestryOrigin = "ARTE_DA_GUERRA"
+        )
+
+        assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAdvantageNames)
+        assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAutomaticAdvantages)
+    }
+
 
 
     @Test

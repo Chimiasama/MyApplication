@@ -37,19 +37,19 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         ancestryOrigin: String = "BASICO"
     ): Result {
         val ancKey = anc.keyify()
-
-        if (isSciFiActive) {
-            // Anões Logic (using unified scifiVariant or fallback to anoesScifiSelecionado for compatibility)
-            // Ideally anoesScifiSelecionado should be migrated to scifiVariant in State, but handling both here for now or just checking variant.
-            // Assuming State manages to set scifiVariant for new selections.
-            val effectiveVariant = resolveAncestryVariantUseCase.execute(
+        val effectiveVariant = if (ancestryOptions.isNotEmpty()) {
+            resolveAncestryVariantUseCase.execute(
                 ResolveAncestryVariantUseCase.Input(
                     selectedVariant = scifiVariant,
                     legacySelectedVariant = anoesScifiSelecionado,
                     availableOptions = ancestryOptions
                 )
             ).normalizedSelection
+        } else {
+            null
+        }
 
+        if (isSciFiActive) {
             if (ancKey == "DEADERS (PARASTEEN)" || ancKey == "DEADERS") {
                 return Result(
                     naturalArmorFromRace = 0,
@@ -692,6 +692,73 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
         }
 
+        if (canonicalOriginKey(ancestryOrigin) == "ARTE_DA_GUERRA" && ancKey.contains("UMVEE")) {
+            return when (effectiveVariant) {
+                "Ápice" -> Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("GARRAS"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
+                "Vínculo Bestial" -> Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = listOf("SENHOR DAS FERAS"),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("SENHOR DAS FERAS"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
+                "Pele Iluminada pela Lua" -> Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("APARAR +1"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
+                "Gatoruja" -> Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("VISÃO NO ESCURO"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
+                "Correnteza" -> Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("MOVIMENTAÇÃO +2"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
+                "Pedregoso" -> Result(
+                    naturalArmorFromRace = 2,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("RESISTÊNCIA +1"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
+                else -> Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = listOf("GARRAS"),
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
+            }
+        }
 
 
         if (ancKey.contains("TERRACOTA")) {
