@@ -61,8 +61,21 @@ class ResolveAncestryTransitionContextUseCaseTest {
             )
         )
 
+        val demonio = useCase.execute(
+            ResolveAncestryTransitionContextUseCase.Params(
+                previousAncestry = "Demônio (Abismo)",
+                targetAncestry = "HUMANOS",
+                previousAncestryDef = null,
+                targetAncestryDef = null,
+                currentAutomaticAdvantages = emptyList(),
+                meioElfoAgil = false
+            )
+        )
+
         assertTrue("antecedente_arcano_milagres" in celestial.previousFreeAdvantageKeys)
         assertTrue("sentidos_agucados" in saurios.previousFreeAdvantageKeys)
         assertTrue("prontidao" in saurios.previousFreeAdvantageKeys)
+        assertTrue("aa_demonio" in demonio.previousFreeAdvantageKeys)
+        assertTrue("antecedente_arcano_demonio" in demonio.previousFreeAdvantageKeys)
     }
 }

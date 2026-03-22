@@ -394,7 +394,7 @@
     "habilidades": [
       {
         "nome": "Dons da Natureza",
-        "descricao": "Os Umvee são filhos da lua e filhos da natureza. Eles podem começar com um dos seguintes dons da natureza: Ápice (ganham um ataque de Garras (For+d4) para caçar); Vínculo Bestial (começam com a Vantagem Senhor das Feras); Pele Iluminada pela Lua (+1 de Aparar e pode emitir um suave brilho em Modelo Médio de Explosão com luz tênue); Gatoruja (Visão no Escuro e Perceber inicial de d6 com máximo de d12+1); Correnteza (Movimentação inicial de 8 e dado de corrida d8); Pedregoso (+1 de Resistência e +2 de Armadura); Ligado à Natureza (começam com d4 em Sobrevivência).",
+        "descricao": "Os Umvee são filhos da lua e filhos da natureza. Eles começam com um dos seguintes dons da natureza: Ápice (ganham um ataque de Garras (For+d4)); Vínculo Bestial (começam com a Vantagem Senhor das Feras); Pele Iluminada pela Lua (+1 de Aparar); Gatoruja (Visão no Escuro e Perceber inicial d6, aumentando seu máximo para d12+1); Correnteza (+2 em Movimentação); Pedregoso (+1 de Resistência e +2 de Armadura).",
         "category": "racial_trait_positive",
         "id": "DONS_DA_NATUREZA"
       },
@@ -413,9 +413,19 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Ocultismo": 0
+    },
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [],
+    "opcoes": [
+      "Ápice",
+      "Vínculo Bestial",
+      "Pele Iluminada pela Lua",
+      "Gatoruja",
+      "Correnteza",
+      "Pedregoso"
+    ]
   },
   {
     "id": "anc_feral",
@@ -426,7 +436,7 @@
     "habilidades": [
       {
         "nome": "Integrado à Natureza",
-        "descricao": "Ferais tem uma ligação mais forte com a natureza que os Umvee, eles começam com Sobrevivência d6.",
+        "descricao": "Ferais têm uma ligação mais forte com a natureza que os Umvee e começam com Sobrevivência d6, aumentando seu máximo para d12+1.",
         "category": "racial_trait_positive",
         "id": "INTEGRADO_A_NATUREZA"
       },
@@ -437,14 +447,14 @@
         "id": "INSANIDADE"
       },
       {
-        "nome": "Ápice",
-        "descricao": "Feral possui os Dons da Natureza de mesmo nome de um Umvee.",
+        "nome": "Dons da Natureza",
+        "descricao": "Feral escolhe exatamente um dos mesmos dons da natureza disponíveis para os Umvee: Ápice, Vínculo Bestial, Pele Iluminada pela Lua, Gatoruja, Correnteza ou Pedregoso.",
         "category": "racial_trait_positive",
-        "id": "APICE"
+        "id": "DONS_DA_NATUREZA"
       },
       {
         "nome": "Primitivo",
-        "descricao": "Feral começa com d6 em Agilidade, Força ou Vigor.",
+        "descricao": "Feral começa com d6 em Agilidade, Força ou Vigor, aumentando o máximo do atributo escolhido para d12+1.",
         "category": "racial_trait_positive",
         "id": "PRIMITIVO"
       },
@@ -469,9 +479,19 @@
       }
     ],
     "atributos": {},
-    "pericias": {},
+    "pericias": {
+      "Sobrevivência": 2
+    },
     "vantagensGratis": [],
-    "desvantagens": []
+    "desvantagens": [],
+    "opcoes": [
+      "Ápice",
+      "Vínculo Bestial",
+      "Pele Iluminada pela Lua",
+      "Gatoruja",
+      "Correnteza",
+      "Pedregoso"
+    ]
   },
   {
     "id": "anc_onigem_adg",

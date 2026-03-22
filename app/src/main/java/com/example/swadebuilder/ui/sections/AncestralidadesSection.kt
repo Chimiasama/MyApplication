@@ -518,21 +518,38 @@ fun AncestralidadesSection(
                                         }
                                     }
 
-                                    // Human Miner Attribute Choice
-                                    if (itemKeyNorm == "HUMANOS" && currentSelection == "Minerador") {
+                                    // Human Miner / Feral Primitive Attribute Choice
+                                    if ((itemKeyNorm == "HUMANOS" && currentSelection == "Minerador") || itemKeyNorm == "FERAL") {
                                         Spacer(Modifier.height(8.dp))
-                                        Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
-                                        Column {
-                                            com.example.swadebuilder.ui.components.RadioButtonRow(
-                                                label = "Força",
-                                                selected = state.humanoMineradorAtributo == "Força" || state.humanoMineradorAtributo == null, // default
-                                                onSelect = { state.selecionarHumanoMineradorAtributo("Força") }
-                                            )
-                                            com.example.swadebuilder.ui.components.RadioButtonRow(
-                                                label = "Vigor",
-                                                selected = state.humanoMineradorAtributo == "Vigor",
-                                                onSelect = { state.selecionarHumanoMineradorAtributo("Vigor") }
-                                            )
+                                        val feralSelected = itemKeyNorm == "FERAL"
+                                        val attributeOptions = if (feralSelected) {
+                                            listOf("Força", "Vigor", "Agilidade")
+                                        } else {
+                                            listOf("Força", "Vigor")
+                                        }
+                                        var attributeExpanded by remember { mutableStateOf(false) }
+                                        val currentAttributeSelection = state.humanoMineradorAtributo
+                                            ?.takeIf { it in attributeOptions }
+                                            ?: "Força"
+                                        Text(
+                                            if (feralSelected) "Atributo Primitivo (d6 inicial):" else "Bônus de Atributo (d6 inicial):",
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                        Box {
+                                            OutlinedButton(onClick = { attributeExpanded = true }) {
+                                                Text(currentAttributeSelection.toFancyTitleCase())
+                                            }
+                                            DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
+                                                attributeOptions.forEach { option ->
+                                                    DropdownMenuItem(
+                                                        text = { Text(option.toFancyTitleCase()) },
+                                                        onClick = {
+                                                            state.selecionarHumanoMineradorAtributo(option)
+                                                            attributeExpanded = false
+                                                        }
+                                                    )
+                                                }
+                                            }
                                         }
                                     }
                                 }

@@ -252,10 +252,27 @@ object ModifierEngine {
             // Resistência (Auto advantage or racial trait)
             // Checks for FRAGIL/ESGUIOS (-1)
             val hasFragil = sources.any { it.keyify() == "FRAGIL" }
+            val fragilPenalty = anc.habilidades.firstOrNull {
+                it.id?.keyify() == "FRAGIL" || it.nome.equals("Frágil", ignoreCase = true)
+            }?.descricao
+                ?.let { descricao ->
+                    Regex("""(?:RESISTENCIA|RESISTÊNCIA)\s*(\+|\-)\s*(\d+)""", RegexOption.IGNORE_CASE).find(descricao)
+                        ?.let { match ->
+                            val sign = match.groupValues[1]
+                            val value = match.groupValues[2].toInt()
+                            if (sign == "-") -value else value
+                        }
+                        ?: Regex("""(\-|\+)\s*(\d+)\s+na\s+Resist[êe]ncia""", RegexOption.IGNORE_CASE).find(descricao)
+                            ?.let { match ->
+                                val sign = match.groupValues[1]
+                                val value = match.groupValues[2].toInt()
+                                if (sign == "-") -value else value
+                            }
+                } ?: -1
             val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
 
             if (hasFragil) {
-                modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil", ModifierTarget.TOUGHNESS_FLAT, -1))
+                modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil", ModifierTarget.TOUGHNESS_FLAT, fragilPenalty))
             }
             if (hasEsguios) {
                 modifiers.add(Modifier("racial_esguios", SourceType.ANCESTRALIDADE, "Esguios", ModifierTarget.TOUGHNESS_FLAT, -1))
@@ -325,7 +342,7 @@ object ModifierEngine {
                         // Duplicate check: Don't add if already added by explicit logic (like "racial_resistencia")
                         val alreadyAdded = modifiers.any {
                             (it.id == "racial_resistencia" && finalValue == 1) ||
-                            (it.id == "racial_fragil" && finalValue == -1) ||
+                            (it.id == "racial_fragil" && finalValue == fragilPenalty) ||
                             (it.id == "racial_esguios" && finalValue == -1) ||
                             (it.id == "racial_ferocidade" && finalValue == 1)
                         }

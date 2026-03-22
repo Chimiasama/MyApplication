@@ -38,6 +38,7 @@ class ResolveAncestryTransitionContextUseCase {
                     "SAURIOS" -> setOf("Sentidos Aguçados", "Prontidão")
                     "PEQUENINOS" -> setOf("Sorte")
                     "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
+                    "DEMONIO ABISMO" -> setOf("AA_DEMONIO", "ANTECEDENTE ARCANO DEMONIO", "ANTECEDENTE ARCANO (DEMONIO)")
                     else -> emptySet()
                 }
             ).flatMap { advantageName ->

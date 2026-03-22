@@ -128,6 +128,10 @@ private fun CriadorState.evaluateVantagemVisibility(
         return VantagemVisibilityDecision(false, "blocked_forbidden_id_by_rules:${vant.id}")
     }
 
+    if (vant.id == "novos_poderes" && bloqueiaNovosPoderesPorAntecedente()) {
+        return VantagemVisibilityDecision(false, "blocked_new_powers_for_stage_based_arcane")
+    }
+
 
     // Supers Logic
     if (modoSupers) {

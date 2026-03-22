@@ -56,6 +56,7 @@ fun Vantagem.toArcanoKey(): String? {
         "DRUIDA" in n -> "DRUIDA"
         "ELEMENTALISTA" in n -> "ELEMENTALISTA"
         "FEITICEIRO" in n -> "FEITICEIRO"
+        "MAGIA NEGRA" in n || "MAGIA DAS TREVAS" in n -> "FEITICEIRO"
         "MAGO" in n -> "MAGO"
         "NECROMANTE" in n -> "NECROMANTE"
         "RITUALISTA" in n -> "RITUALISTA"

@@ -111,7 +111,11 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 previousFreeAdvantageKeys = transitionBootstrap.ancestryTransitionContext.previousFreeAdvantageKeys,
                 ancestryGrantedAdvantages = (params.targetAncestryDef?.vantagensGratis ?: emptyList()) +
                         (params.targetAncestryDef?.habilidades
-                            ?.filter { it.category == "racial_edge" }
+                            ?.filter {
+                                it.category == "racial_edge" ||
+                                    it.id?.contains("ANTECEDENTE_ARCANO", ignoreCase = true) == true ||
+                                    it.nome.contains("Antecedente Arcano", ignoreCase = true)
+                            }
                             ?.map { it.id ?: it.nome } ?: emptyList()),
                 ancestryAutomaticDisadvantages = (params.targetAncestryDef?.desvantagens ?: emptyList()) +
                         (params.targetAncestryDef?.habilidades

@@ -76,6 +76,59 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
     }
 
+    @Test
+    fun `demonio abismo recebe aa demonio automaticamente`() {
+        val result = useCase.execute("Demônio (Abismo)", null)
+
+        assertEquals(listOf("aa_demonio"), result.ensureAdvantageIds)
+        assertEquals(listOf("ANTECEDENTE ARCANO (DEMÔNIO)"), result.ensureAutomaticAdvantages)
+        assertTrue(result.forceArmorZero)
+    }
+
+    @Test
+    fun `umvee pedregoso aplica resistencia e armadura raciais`() {
+        val result = useCase.execute(
+            anc = "Umvee (Filhos da Lua)",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Pedregoso",
+            ancestryOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso"),
+            ancestryOrigin = "ARTE_DA_GUERRA"
+        )
+
+        assertEquals(2, result.naturalArmorFromRace)
+        assertEquals(listOf("RESISTÊNCIA +1"), result.ensureAutomaticAdvantages)
+    }
+
+    @Test
+    fun `umvee vinculo bestial concede senhor das feras`() {
+        val result = useCase.execute(
+            anc = "Umvee (Filhos da Lua)",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Vínculo Bestial",
+            ancestryOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso"),
+            ancestryOrigin = "ARTE_DA_GUERRA"
+        )
+
+        assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAdvantageNames)
+        assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAutomaticAdvantages)
+    }
+
+    @Test
+    fun `feral recebe furioso sanguinario e bloqueio de chi`() {
+        val result = useCase.execute(
+            anc = "Feral",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Correnteza",
+            ancestryOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso"),
+            ancestryOrigin = "ARTE_DA_GUERRA"
+        )
+
+        assertTrue(result.ensureAdvantageNames.contains("FURIOSO"))
+        assertTrue(result.ensureAutomaticAdvantages.contains("MOVIMENTAÇÃO +2"))
+        assertEquals(listOf("SANGUINÁRIO"), result.ensureRacialDisadvantages)
+        assertTrue(result.anotacoesToAdd.any { it.contains("Técnicas de Chi") })
+    }
+
 
 
     @Test

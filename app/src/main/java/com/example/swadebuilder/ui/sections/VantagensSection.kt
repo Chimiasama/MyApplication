@@ -35,7 +35,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -74,6 +73,7 @@ import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
@@ -982,22 +982,12 @@ fun VantagensContent(
                     Text(if (isAnjoMysticPowers) "Escolha o pacote de poderes para o anjo:" else if (isDemonioMysticPowers) "Escolha o pacote de poderes para o demônio:" else if (isMumiaMysticPowers) "Escolha o pacote de poderes para a múmia:" else "Escolha a classe para definir seus poderes e requisitos:")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { (opcao, requisito) ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable { subOpcaoSelecionada = opcao }
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        ChoiceButtonRow(
+                            label = opcao,
+                            subtitle = requisito,
+                            selected = (subOpcaoSelecionada == opcao)
                         ) {
-                            RadioButton(
-                                selected = (subOpcaoSelecionada == opcao),
-                                onClick = { subOpcaoSelecionada = opcao }
-                            )
-                            Spacer(Modifier.size(8.dp))
-                            Column {
-                                Text(opcao, fontWeight = FontWeight.Bold)
-                                Text(requisito, style = MaterialTheme.typography.bodySmall)
-                            }
+                            subOpcaoSelecionada = opcao
                         }
                     }
                 }
@@ -1174,88 +1164,23 @@ fun VantagensContent(
                 Column(Modifier.verticalScroll(rememberScrollState())) {
                     if (state.compendioPathfinderAtivo) {
                         opcoesPathfinder.forEach { (label, _) ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable { subOpcaoSelecionada = label }
-                                    .padding(vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = (subOpcaoSelecionada == label),
-                                    onClick = { subOpcaoSelecionada = label }
-                                )
-                                Spacer(Modifier.size(8.dp))
-                                Text(label)
-                            }
+                            ChoiceButtonRow(label, subOpcaoSelecionada == label) { subOpcaoSelecionada = label }
                         }
                     } else if (state.compendioDeadlandsAtivo) {
                         opcoesDeadlands.forEach { (label, _) ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable { subOpcaoSelecionada = label }
-                                    .padding(vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = (subOpcaoSelecionada == label),
-                                    onClick = { subOpcaoSelecionada = label }
-                                )
-                                Spacer(Modifier.size(8.dp))
-                                Text(label)
-                            }
+                            ChoiceButtonRow(label, subOpcaoSelecionada == label) { subOpcaoSelecionada = label }
                         }
                     } else if (state.compendioCidadeSolVaporAtivo) {
                         opcoesCidadeSolVapor.forEach { (label, _) ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable { subOpcaoSelecionada = label }
-                                    .padding(vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = (subOpcaoSelecionada == label),
-                                    onClick = { subOpcaoSelecionada = label }
-                                )
-                                Spacer(Modifier.size(8.dp))
-                                Text(label)
-                            }
+                            ChoiceButtonRow(label, subOpcaoSelecionada == label) { subOpcaoSelecionada = label }
                         }
                     } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo) {
                         opcoesArcano.forEach { (label, _) ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable { subOpcaoSelecionada = label }
-                                    .padding(vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = (subOpcaoSelecionada == label),
-                                    onClick = { subOpcaoSelecionada = label }
-                                )
-                                Spacer(Modifier.size(8.dp))
-                                Text(label)
-                            }
+                            ChoiceButtonRow(label, subOpcaoSelecionada == label) { subOpcaoSelecionada = label }
                         }
                     } else {
                         vantOriginal.choiceOptions.forEach { opcao ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable { subOpcaoSelecionada = opcao }
-                                    .padding(vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = (subOpcaoSelecionada == opcao),
-                                    onClick = { subOpcaoSelecionada = opcao }
-                                )
-                                Spacer(Modifier.size(8.dp))
-                                Text(opcao)
-                            }
+                            ChoiceButtonRow(opcao, subOpcaoSelecionada == opcao) { subOpcaoSelecionada = opcao }
                         }
                     }
                 }
@@ -1381,19 +1306,8 @@ fun VantagensContent(
                         Text("Escolha um dos seus poderes para se tornar Favorito:")
                         Spacer(Modifier.size(8.dp))
                         options.forEach { nomePoder ->
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .clickable { subOpcaoSelecionada = nomePoder }
-                                    .padding(vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = (subOpcaoSelecionada == nomePoder),
-                                    onClick = { subOpcaoSelecionada = nomePoder }
-                                )
-                                Spacer(Modifier.size(8.dp))
-                                Text(nomePoder)
+                            ChoiceButtonRow(nomePoder, subOpcaoSelecionada == nomePoder) {
+                                subOpcaoSelecionada = nomePoder
                             }
                         }
                     }
@@ -1444,19 +1358,8 @@ fun VantagensContent(
                     Text("Com base no seu tamanho ($charSize), escolha uma montaria:")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { opcao ->
-                        Row(
-                            Modifier
-                            .fillMaxWidth()
-                            .clickable { subOpcaoSelecionada = opcao }
-                            .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = (subOpcaoSelecionada == opcao),
-                                onClick = { subOpcaoSelecionada = opcao }
-                            )
-                            Spacer(Modifier.size(8.dp))
-                            Text(opcao)
+                        ChoiceButtonRow(opcao, subOpcaoSelecionada == opcao) {
+                            subOpcaoSelecionada = opcao
                         }
                     }
                 }
@@ -1521,19 +1424,8 @@ fun VantagensContent(
                     Text("Você tem múltiplos Antecedentes Arcanos. Como deseja distribuir os 2 novos poderes?")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { (label, value) ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable { subOpcaoSelecionada = value }
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = (subOpcaoSelecionada == value),
-                                onClick = { subOpcaoSelecionada = value }
-                            )
-                            Spacer(Modifier.size(8.dp))
-                            Text(label, style = MaterialTheme.typography.bodyMedium)
+                        ChoiceButtonRow(label, subOpcaoSelecionada == value) {
+                            subOpcaoSelecionada = value
                         }
                     }
                 }
@@ -1575,19 +1467,8 @@ fun VantagensContent(
                     Text("Você ganha uma armadura gratuitamente. Escolha qual:")
                     Spacer(Modifier.size(8.dp))
                     listOf("Armadura Completa", "Armadura Média").forEach { opcao ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable { subOpcaoSelecionada = opcao }
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            RadioButton(
-                                selected = (subOpcaoSelecionada == opcao),
-                                onClick = { subOpcaoSelecionada = opcao }
-                            )
-                            Spacer(Modifier.size(8.dp))
-                            Text(opcao)
+                        ChoiceButtonRow(opcao, subOpcaoSelecionada == opcao) {
+                            subOpcaoSelecionada = opcao
                         }
                     }
                 }

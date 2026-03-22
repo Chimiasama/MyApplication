@@ -42,7 +42,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
@@ -86,6 +85,7 @@ import com.example.swadebuilder.model.isFamiliaClassePathfinder
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.sections.PoderesSection
@@ -300,33 +300,16 @@ fun ProgressosDialog(
 
                     else -> "Aumentar atributo"
                 }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .alpha(if (canBuyAttr) 1f else 0.3f)
-                        .clickable(
-                            enabled = canBuyAttr
-                        ) {
-                            when {
-                                canBuyAttr -> escolheu = "Atributo"
-                                needsReservation -> showSnack("Reserve um atributo lendário primeiro.")
-                                else -> showSnack("Sem créditos suficientes para atributo.")
-                            }
-                        }
-                        .padding(vertical = 4.dp)
+                ChoiceButtonRow(
+                    label = attrLabel,
+                    selected = (escolheu == "Atributo"),
+                    enabled = canBuyAttr
                 ) {
-                    RadioButton(
-                        selected = (escolheu == "Atributo"),
-                        onClick  = {
-                            if (canBuyAttr) {
-                                escolheu = "Atributo"
-                            }
-                        },
-                        enabled  = canBuyAttr
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(attrLabel)
+                    when {
+                        canBuyAttr -> escolheu = "Atributo"
+                        needsReservation -> showSnack("Reserve um atributo lendário primeiro.")
+                        else -> showSnack("Sem créditos suficientes para atributo.")
+                    }
                 }
 
                 if (canReserveLegendary) {
@@ -1368,22 +1351,12 @@ fun ProgressosDialog(
                     Text(if (isAnjoMysticPowers) "Escolha o pacote de poderes para o anjo:" else if (isDemonioMysticPowers) "Escolha o pacote de poderes para o demônio:" else if (isMumiaMysticPowers) "Escolha o pacote de poderes para a múmia:" else "Escolha a classe para definir seus poderes e requisitos:")
                     Spacer(Modifier.size(8.dp))
                     options.forEach { (opcao, requisito) ->
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .clickable { selectedClass = opcao }
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                        ChoiceButtonRow(
+                            label = opcao,
+                            subtitle = requisito,
+                            selected = (selectedClass == opcao)
                         ) {
-                            RadioButton(
-                                selected = (selectedClass == opcao),
-                                onClick = { selectedClass = opcao }
-                            )
-                            Spacer(Modifier.size(8.dp))
-                            Column {
-                                Text(opcao, fontWeight = FontWeight.Bold)
-                                Text(requisito, style = MaterialTheme.typography.bodySmall)
-                            }
+                            selectedClass = opcao
                         }
                     }
                 }

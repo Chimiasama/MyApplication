@@ -77,6 +77,7 @@ import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.keyify
@@ -1340,33 +1341,11 @@ private fun ImageSettingsDialog(
             Column {
                 Text("Modo de Exibição", style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(8.dp))
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    androidx.compose.material3.RadioButton(
-                        selected = state.portraitScaleType == "CROP",
-                        onClick = { state.portraitScaleType = "CROP" }
-                    )
-                    Text(
-                        "Preencher (Corte)",
-                        modifier = Modifier.clickable { state.portraitScaleType = "CROP" },
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                ChoiceButtonRow("Preencher (Corte)", state.portraitScaleType == "CROP") {
+                    state.portraitScaleType = "CROP"
                 }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    androidx.compose.material3.RadioButton(
-                        selected = state.portraitScaleType == "FIT",
-                        onClick = { state.portraitScaleType = "FIT" }
-                    )
-                    Text(
-                        "Ajustar (Inteiro)",
-                        modifier = Modifier.clickable { state.portraitScaleType = "FIT" },
-                        style = MaterialTheme.typography.bodyMedium
-                    )
+                ChoiceButtonRow("Ajustar (Inteiro)", state.portraitScaleType == "FIT") {
+                    state.portraitScaleType = "FIT"
                 }
 
                 Spacer(Modifier.height(16.dp))
@@ -1391,21 +1370,10 @@ private fun ImageSettingsDialog(
                     Spacer(Modifier.height(16.dp))
                     Text("Alinhamento", style = MaterialTheme.typography.labelLarge)
                     Spacer(Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
+                    Column {
                         listOf("TOP" to "Topo", "CENTER" to "Centro", "BOTTOM" to "Baixo").forEach { (key, label) ->
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                androidx.compose.material3.RadioButton(
-                                    selected = state.portraitAlignment == key,
-                                    onClick = { state.portraitAlignment = key }
-                                )
-                                Text(
-                                    label,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    modifier = Modifier.clickable { state.portraitAlignment = key }
-                                )
+                            ChoiceButtonRow(label, state.portraitAlignment == key) {
+                                state.portraitAlignment = key
                             }
                         }
                     }

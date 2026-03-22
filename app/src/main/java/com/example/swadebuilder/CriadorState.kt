@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.swadebuilder.model.AdvantageSnapshot
+import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
@@ -498,6 +499,97 @@ class CriadorState {
             }
         }
 
+        if (canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" && (key.contains("UMVEE") || key == "FERAL")) {
+            removeByIdOrName("DONS_DA_NATUREZA", "DONS DA NATUREZA")
+
+            when (variant) {
+                "Ápice" -> if (newHabilidades.none { it.id == "GARRAS" || it.nome.keyify() == "GARRAS" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Garras",
+                            descricao = "Ápice concede garras naturais que causam For+d4 de dano.",
+                            id = "GARRAS",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+                "Vínculo Bestial" -> if (newHabilidades.none { it.id == "SENHOR_DAS_FERAS" || it.nome.keyify() == "SENHOR DAS FERAS" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Senhor das Feras",
+                            descricao = "Vínculo Bestial concede a vantagem Senhor das Feras.",
+                            id = "SENHOR_DAS_FERAS",
+                            category = "racial_edge"
+                        )
+                    )
+                }
+                "Pele Iluminada pela Lua" -> if (newHabilidades.none { it.nome.keyify() == "APARAR +1" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Aparar +1",
+                            descricao = "Pele iluminada pela lua concede +1 de Aparar.",
+                            id = "APARAR_1",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+                "Gatoruja" -> {
+                    if (newHabilidades.none { it.id == "VISAO_NO_ESCURO" || it.nome.keyify() == "VISAO NO ESCURO" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Visão no Escuro",
+                                descricao = "Gatoruja concede visão no escuro.",
+                                id = "VISAO_NO_ESCURO",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
+                    if (newHabilidades.none { it.nome.keyify() == "PERCEBER D6" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Perceber d6",
+                                descricao = "Gatoruja aumenta o valor inicial de Perceber para d6 e seu máximo para d12+1.",
+                                id = "PERCEBER_D6",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
+                }
+                "Correnteza" -> if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +2" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "MOVIMENTAÇÃO +2",
+                            descricao = "Correnteza concede +2 em Movimentação.",
+                            id = "MOVIMENTACAO_2",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+                "Pedregoso" -> {
+                    if (newHabilidades.none { it.nome.keyify() == "RESISTENCIA +1" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Resistência +1",
+                                descricao = "Pedregoso concede +1 de Resistência.",
+                                id = "RESISTENCIA",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
+                    if (newHabilidades.none { it.nome.keyify() == "ARMADURA +2" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Armadura +2",
+                                descricao = "Pedregoso concede +2 de Armadura.",
+                                id = "ARMADURA",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
         if (key == "AQUARIANOS" && variant.equals("Semi-aquáticos", ignoreCase = true)) {
             removeByIdOrName("AQUATICO", "AQUATICO")
             removeByIdOrName("RESISTENCIA", "RESISTENCIA")
@@ -707,6 +799,7 @@ class CriadorState {
         "MESTRE DO CHI" to listOf("deflexao"),
         "BARDO" to listOf("aumentar_reduzir_caracteristica", "som_silencio"),
         "CLERIGO" to listOf("cura", "santuario"),
+        "DEMONIO" to listOf("disfarce_demoniaco"),
         "DIABOLISTA" to listOf("banir", "devastacao", "conjurar_aliado"),
         "DRUIDA" to listOf("amigo_das_feras", "protecao_ambiental", "mudanca_de_forma"),
         "ELEMENTALISTA" to listOf("manipulacao_elemental", "protecao_ambiental"),
@@ -2472,6 +2565,13 @@ class CriadorState {
             }
         }
 
+        if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
+            val variant = resolveCurrentSciFiVariantSelection(anc)
+            if (perKey == "PERCEBER" && variant.equals("Gatoruja", ignoreCase = true)) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
         // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
         if (compendioArteDaGuerraAtivo && ancKey.contains("USAGIMIMI")) {
             val chosen = usagimimiPericiaEscolhida?.keyify()
@@ -3186,6 +3286,7 @@ class CriadorState {
 
     fun getSlotsCountForArcano(arcKey: String): Int {
         val arcKeyNorm = arcKey.normAAKey()
+        if (usaPoderesDisponiveisPorEstagio(arcKeyNorm)) return 0
         val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
         val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
             arcKeyNorm == "MESTRE DO CHI" &&
@@ -3227,6 +3328,7 @@ class CriadorState {
     }
 
     fun getEffectiveSlotsCountForArcano(arcKey: String): Int {
+        if (usaPoderesDisponiveisPorEstagio(arcKey)) return 0
         val baseCount = getSlotsCountForArcano(arcKey)
         val arcKeyNorm = arcKey.normAAKey()
 
@@ -3338,6 +3440,60 @@ class CriadorState {
     var progresso by mutableIntStateOf(0)
     fun estagioAtual(): Estagio {
         return listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
+    }
+
+    private fun Vantagem.isStageBasedArcanoVariant(key: String): Boolean {
+        val normalizedKey = key.normAAKey()
+        val origin = canonicalOriginKey(origem)
+        return when (normalizedKey) {
+            "FEITICEIRO" -> id == "aa_magia_negra"
+            "DEMONIO" -> id == "aa_demonio"
+            "MILAGRES" -> {
+                id == "aa_milagres" ||
+                    (id == "antecedente_arcano_milagres" && origin == "CIDADE_SOL_VAPOR")
+            }
+            else -> false
+        }
+    }
+
+    fun usaPoderesDisponiveisPorEstagio(arcKey: String): Boolean {
+        val key = arcKey.normAAKey()
+        return vantagensSelecionadas.any { vantagem ->
+            vantagem.toArcanoKey()?.normAAKey() == key && vantagem.isStageBasedArcanoVariant(key)
+        }
+    }
+
+    fun bloqueiaNovosPoderesPorAntecedente(): Boolean =
+        vantagensSelecionadas.any {
+            when (it.toArcanoKey()?.normAAKey()) {
+                "FEITICEIRO" -> usaPoderesDisponiveisPorEstagio("FEITICEIRO")
+                "DEMONIO" -> usaPoderesDisponiveisPorEstagio("DEMONIO")
+                "MILAGRES" -> usaPoderesDisponiveisPorEstagio("MILAGRES")
+                else -> false
+            }
+        }
+
+    fun estagioAtinge(estagioNome: String): Boolean {
+        val atualIdx = listaDeEstagios.indexOf(estagioAtual())
+        val requeridoIdx = listaDeEstagios.indexOfFirst { it.nome.equals(estagioNome, ignoreCase = true) }
+        return requeridoIdx >= 0 && atualIdx >= requeridoIdx
+    }
+
+    fun poderesDisponiveisPorEstagioParaArcano(arcKey: String): Map<String, String> {
+        val key = arcKey.normAAKey()
+        if (!usaPoderesDisponiveisPorEstagio(key)) return emptyMap()
+        return ArcaneConfig.getStageBasedPowersByStage(key)
+    }
+
+    fun requisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): String? {
+        val key = arcKey.normAAKey()
+        if (!usaPoderesDisponiveisPorEstagio(key)) return null
+        return ArcaneConfig.getStageBasedPowerRequirement(key, powerId)
+    }
+
+    fun atendeRequisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): Boolean {
+        val requiredAdvantageId = requisitoEspecialDePoderPorArcano(arcKey, powerId) ?: return true
+        return vantagensSelecionadas.any { it.id == requiredAdvantageId }
     }
 
     private fun effectiveProgressoParaVantagens(): Int {
@@ -3844,6 +4000,13 @@ class CriadorState {
             }
         }
 
+        if (compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL") {
+            val chosen = humanoMineradorAtributo ?: "Força"
+            if (a.keyify() == chosen.keyify()) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
         // Sci-Fi Attribute Variants (Padrão vs Variant)
         if (compendioSciFiAtivo) {
             val ancKey = ancestralidade.keyify()
@@ -3962,6 +4125,15 @@ class CriadorState {
         }
 
         return modifiedBase
+    }
+
+    fun atributoMaxRawNaCriacao(a: String): Int {
+        val baseCap = atributoMaxRaw(a)
+        if (modoProgressaoAtivo) return baseCap
+        if (compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL" && a.keyify() == "ASTUCIA") {
+            return minOf(baseCap, 6)
+        }
+        return baseCap
     }
 
     private fun isHumanoFantasiaSelecionado(): Boolean {
@@ -4087,7 +4259,7 @@ class CriadorState {
                 attributeCaps = listaAtributos.associateWith { nome ->
                     AdjustAttributesForAncestryChangeUseCase.AttributeCap(
                         minRaw = atributoMinRaw(nome),
-                        maxRaw = atributoMaxRaw(nome)
+                        maxRaw = atributoMaxRawNaCriacao(nome)
                     )
                 },
                 paCostStacks = listaAtributos.associateWith { nome ->
@@ -4237,6 +4409,9 @@ class CriadorState {
                     }
                 }
                 if (compendioSciFiAtivo && ancKey == "HUMANOS" && humanoMineradorAtributo == null) {
+                    humanoMineradorAtributo = "Força"
+                }
+                if (compendioArteDaGuerraAtivo && ancKey == "FERAL" && humanoMineradorAtributo == null) {
                     humanoMineradorAtributo = "Força"
                 }
             }
@@ -4709,9 +4884,12 @@ class CriadorState {
         if (humanoMineradorAtributo == atributo) return
         humanoMineradorAtributo = atributo
         val msgs = mutableListOf<String>()
-        aplicarAncestralidade("HUMANOS", msgs)
+        aplicarAncestralidade(ancestralidade, msgs)
         recalcularPontosAtributo(msgs) // Ensure re-calc happens as attribute base changes
     }
+
+    fun isFeralAdgSelecionado(): Boolean =
+        compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL"
 
     private fun syncOraculoVariant() {
         if (ancestralidade.keyify() != "ORACULOS") return

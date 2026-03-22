@@ -105,7 +105,7 @@ fun AtributosContent(
                 state.minAttrPorVantagem[nome] ?: 4
             )
 
-            val maxRaw  = state.atributoMaxRaw(nome)
+            val maxRaw  = state.atributoMaxRawNaCriacao(nome)
             val stack   = state.paCostStackPorAtributo.getValue(nome)
 
             val efetivoRaw = state.atributoRawComSupers(nome)
