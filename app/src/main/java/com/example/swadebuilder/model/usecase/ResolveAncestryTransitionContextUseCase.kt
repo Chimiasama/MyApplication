@@ -34,11 +34,11 @@ class ResolveAncestryTransitionContextUseCase {
 
         val previousFreeAdvantageKeys = (
             params.currentAutomaticAdvantages.toSet() +
-                when (previousAncestryKey) {
-                    "SAURIOS" -> setOf("Sentidos Aguçados", "Prontidão")
-                    "PEQUENINOS" -> setOf("Sorte")
-                    "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
-                    "DEMONIO ABISMO" -> setOf("AA_DEMONIO", "ANTECEDENTE ARCANO DEMONIO", "ANTECEDENTE ARCANO (DEMONIO)")
+                when {
+                    previousAncestryKey == "SAURIOS" -> setOf("Sentidos Aguçados", "Prontidão")
+                    previousAncestryKey == "PEQUENINOS" -> setOf("Sorte")
+                    previousAncestryKey == "CELESTIAIS" -> setOf("ANTECEDENTE ARCANO MILAGRES", "ANTECEDENTE ARCANO (MILAGRES)")
+                    previousAncestryKey.contains("DEMONIO") -> setOf("AA_DEMONIO", "ANTECEDENTE ARCANO DEMONIO", "ANTECEDENTE ARCANO (DEMONIO)")
                     else -> emptySet()
                 }
             ).flatMap { advantageName ->

@@ -381,7 +381,7 @@ class CriadorState {
             activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
         } ?: return null
 
-        val withVariant = if (compendioSciFiAtivo && (selected.origem == "FC" || selected.origem == "SCI_FI")) {
+        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || key.contains("FERAL")) {
             applyAncestryVariantAdjustments(selected, key)
         } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             applyAncestryVariantAdjustments(selected, key)
@@ -2565,10 +2565,16 @@ class CriadorState {
             }
         }
 
-        if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
+        if (compendioArteDaGuerraAtivo && (ancKey.contains("UMVEE") || ancKey == "FERAL")) {
             val variant = resolveCurrentSciFiVariantSelection(anc)
             if (perKey == "PERCEBER" && variant.equals("Gatoruja", ignoreCase = true)) {
                 modifiedBase = maxOf(modifiedBase, 6)
+            }
+            if (perKey == "SOBREVIVENCIA" && variant.equals("Correnteza", ignoreCase = true) && ancKey == "FERAL") {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+            if (perKey == "OCULTISMO" && variant.equals("Gatoruja", ignoreCase = true) && ancKey.contains("UMVEE")) {
+                modifiedBase = maxOf(modifiedBase, 4)
             }
         }
 
