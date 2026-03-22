@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,8 +23,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -105,25 +106,57 @@ fun ExpandableSearchFilter(
 }
 
 @Composable
+fun ChoiceButtonRow(
+    label: String,
+    selected: Boolean,
+    enabled: Boolean = true,
+    subtitle: String? = null,
+    onSelect: () -> Unit
+) {
+    val colors = if (selected) {
+        ButtonDefaults.outlinedButtonColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+    } else {
+        ButtonDefaults.outlinedButtonColors()
+    }
+
+    OutlinedButton(
+        onClick = onSelect,
+        enabled = enabled,
+        colors = colors,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            subtitle?.let {
+                Spacer(Modifier.width(4.dp))
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun RadioButtonRow(
     label: String,
     selected: Boolean,
     onSelect: () -> Unit
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onSelect)
-            .padding(vertical = 4.dp)
-    ) {
-        RadioButton(
-            selected = selected,
-            onClick  = onSelect
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(text = label)
-    }
+    ChoiceButtonRow(
+        label = label,
+        selected = selected,
+        onSelect = onSelect
+    )
 }
 
 @Composable

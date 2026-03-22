@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -33,6 +32,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.classeExclusivaBloqueada
+import com.example.swadebuilder.ui.components.ChoiceButtonRow
 
 /* ===========================================================
    1) Dialog GENÉRICO para seleção (single/multi)
@@ -67,25 +67,28 @@ private fun <T> SelectDialog(
                         val isEnabled = enabled(item)
                         val isSelected = selected.contains(item)
 
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable(enabled = isEnabled) {
-                                    errorMessage = null
-                                    if (singleSelection) {
-                                        selected.clear()
-                                        selected.add(item)
-                                    } else {
+                        if (singleSelection) {
+                            ChoiceButtonRow(
+                                label = label(item),
+                                selected = isSelected,
+                                enabled = isEnabled
+                            ) {
+                                errorMessage = null
+                                selected.clear()
+                                selected.add(item)
+                            }
+                        } else {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable(enabled = isEnabled) {
+                                        errorMessage = null
                                         if (isSelected) selected.remove(item)
                                         else if (selected.size < maxSelections) selected.add(item)
                                     }
-                                }
-                                .padding(vertical = 8.dp, horizontal = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            if (singleSelection) {
-                                RadioButton(selected = isSelected, onClick = null, enabled = isEnabled)
-                            } else {
+                                    .padding(vertical = 8.dp, horizontal = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Checkbox(
                                     checked = isSelected,
                                     onCheckedChange = if (isEnabled) { checked ->
@@ -94,12 +97,12 @@ private fun <T> SelectDialog(
                                         else if (!checked && isSelected) selected.remove(item)
                                     } else null
                                 )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    text = label(item),
+                                    modifier = if (!isEnabled) Modifier.alpha(0.5f) else Modifier
+                                )
                             }
-                            Spacer(Modifier.width(8.dp))
-                            Text(
-                                text = label(item),
-                                modifier = if (!isEnabled) Modifier.alpha(0.5f) else Modifier
-                            )
                         }
                     }
                 }
