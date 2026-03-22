@@ -30,6 +30,24 @@ class CriadorStateMilagresSolVaporTest {
     }
 
     @Test
+    fun `milagres especifico da cidade do sol e vapor continua stage based`() {
+        val state = CriadorState().apply {
+            vantagensSelecionadas.add(
+                Vantagem(
+                    id = "antecedente_arcano_milagres",
+                    nome = "ANTECEDENTE ARCANO (Milagres)",
+                    categoria = Categoria.PODER,
+                    origem = "CIDADE_SOL_VAPOR",
+                    requisitos = Requisito()
+                )
+            )
+        }
+
+        assertTrue(state.usaPoderesDisponiveisPorEstagio("MILAGRES"))
+        assertEquals(0, state.getSlotsCountForArcano("MILAGRES"))
+    }
+
+    @Test
     fun `milagres exige guerreiro do senhor e ira do senhor nos poderes corretos`() {
         val state = CriadorState().apply {
             vantagensSelecionadas.add(
@@ -104,5 +122,23 @@ class CriadorStateMilagresSolVaporTest {
 
         assertFalse(state.usaPoderesDisponiveisPorEstagio("FEITICEIRO"))
         assertTrue(state.poderesDisponiveisPorEstagioParaArcano("FEITICEIRO").isEmpty())
+    }
+
+    @Test
+    fun `milagres generico de horror nao herda stage based por compartilhar id`() {
+        val state = CriadorState().apply {
+            vantagensSelecionadas.add(
+                Vantagem(
+                    id = "antecedente_arcano_milagres",
+                    nome = "ANTECEDENTE ARCANO (Milagres)",
+                    categoria = Categoria.PODER,
+                    origem = "HORROR",
+                    requisitos = Requisito()
+                )
+            )
+        }
+
+        assertFalse(state.usaPoderesDisponiveisPorEstagio("MILAGRES"))
+        assertTrue(state.poderesDisponiveisPorEstagioParaArcano("MILAGRES").isEmpty())
     }
 }

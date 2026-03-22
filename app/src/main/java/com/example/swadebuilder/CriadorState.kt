@@ -3442,26 +3442,24 @@ class CriadorState {
         return listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
     }
 
+    private fun Vantagem.isStageBasedArcanoVariant(key: String): Boolean {
+        val normalizedKey = key.normAAKey()
+        val origin = canonicalOriginKey(origem)
+        return when (normalizedKey) {
+            "FEITICEIRO" -> id == "aa_magia_negra"
+            "DEMONIO" -> id == "aa_demonio"
+            "MILAGRES" -> {
+                id == "aa_milagres" ||
+                    (id == "antecedente_arcano_milagres" && origin == "CIDADE_SOL_VAPOR")
+            }
+            else -> false
+        }
+    }
+
     fun usaPoderesDisponiveisPorEstagio(arcKey: String): Boolean {
         val key = arcKey.normAAKey()
         return vantagensSelecionadas.any { vantagem ->
-            if (vantagem.toArcanoKey()?.normAAKey() != key) return@any false
-
-            when (key) {
-                "FEITICEIRO" -> {
-                    vantagem.id == "aa_magia_negra" ||
-                        canonicalOriginKey(vantagem.origem) in setOf("SOL_VAPOR", "CIDADE_SOL_VAPOR")
-                }
-                "DEMONIO" -> {
-                    vantagem.id == "aa_demonio" ||
-                        canonicalOriginKey(vantagem.origem) in setOf("SOL_VAPOR", "CIDADE_SOL_VAPOR")
-                }
-                "MILAGRES" -> {
-                    vantagem.id == "aa_milagres" ||
-                        canonicalOriginKey(vantagem.origem) in setOf("SOL_VAPOR", "CIDADE_SOL_VAPOR")
-                }
-                else -> false
-            }
+            vantagem.toArcanoKey()?.normAAKey() == key && vantagem.isStageBasedArcanoVariant(key)
         }
     }
 
