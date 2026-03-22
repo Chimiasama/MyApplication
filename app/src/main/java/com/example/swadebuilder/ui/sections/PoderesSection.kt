@@ -52,6 +52,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.normAAKey
@@ -260,7 +261,7 @@ fun PoderesSection(
             val usaPoderesPorEstagio = stageBasedPowers.isNotEmpty()
             val originRaw = when {
                 usaListaChi -> "ARTE DA GUERRA"
-                else -> advantage?.origem?.uppercase()
+                else -> advantage?.origem?.let(::canonicalOriginKey)
                     ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
             }
             val normalizedOrigin = normalizePowerOriginKey(originRaw)

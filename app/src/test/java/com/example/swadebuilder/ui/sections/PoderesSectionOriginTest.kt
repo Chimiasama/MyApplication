@@ -8,6 +8,7 @@ class PoderesSectionOriginTest {
     @Test
     fun `cidade do sol e vapor usa cache de poderes sol vapor`() {
         assertEquals("SOL_VAPOR", normalizePowerOriginKey("CIDADE_SOL_VAPOR"))
+        assertEquals("SOL_VAPOR", normalizePowerOriginKey("CIDADE DO SOL A VAPOR"))
     }
 
     @Test
