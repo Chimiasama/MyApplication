@@ -31,6 +31,8 @@ jobs:
 
       - name: Install Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          cmdline-tools-version: 11076708
 
       - name: Build APK (Lite${{ github.event.inputs.buildType }})
         run: |
