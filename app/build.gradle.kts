@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     // Plugin de serialization
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.20"
 }
 
 // 🔹 Exclui globalmente a versão duplicada da JetBrains IntelliJ Annotations
@@ -24,8 +24,8 @@ android {
         applicationId = "com.swadebuilder"
         minSdk = 25
         targetSdk = 36
-        versionCode = 18
-        versionName = "2.7"
+        versionCode = 19
+        versionName = "2.8"
 
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
