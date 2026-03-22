@@ -80,6 +80,15 @@ private fun custoParaPenalidadeTexto(custo: String): String {
     return "—"
 }
 
+internal fun normalizePowerOriginKey(originRaw: String): String =
+    when (originRaw) {
+        "SCI_FI", "SCIFI" -> "SCIFI"
+        "SOL E VAPOR", "SOL_VAPOR", "CIDADE_SOL_VAPOR", "CIDADE_SOL_A_VAPOR" -> "SOL_VAPOR"
+        "CRYSTAL HEARTS", "CRYSTAL" -> "CRYSTAL"
+        "ARTE DA GUERRA", "ADG" -> "ADG"
+        else -> originRaw
+    }
+
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PoderesSection(
@@ -254,13 +263,7 @@ fun PoderesSection(
                 else -> advantage?.origem?.uppercase()
                     ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
             }
-            val normalizedOrigin = when (originRaw) {
-                "SCI_FI", "SCIFI" -> "SCIFI"
-                "SOL E VAPOR", "SOL_VAPOR" -> "SOL_VAPOR"
-                "CRYSTAL HEARTS", "CRYSTAL" -> "CRYSTAL"
-                "ARTE DA GUERRA", "ADG" -> "ADG"
-                else -> originRaw
-            }
+            val normalizedOrigin = normalizePowerOriginKey(originRaw)
 
             val specificList = powerCache[normalizedOrigin] ?: emptyList()
             val basicList = powerCache["BASICO"] ?: emptyList()
