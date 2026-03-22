@@ -113,6 +113,10 @@ fun PoderesSection(
     LaunchedEffect(arcanosAtivos, state.vantagensSelecionadas.size, state.tropoSelecionado) {
         arcanosAtivos.forEach { arcKeyRaw ->
             val arcKey = arcKeyRaw.normAAKey()
+            if (state.usaPoderesDisponiveisPorEstagio(arcKey)) {
+                state.poderSlotsPorArcano.remove(arcKey)
+                return@forEach
+            }
             val slotsCount = state.getEffectiveSlotsCountForArcano(arcKey)
             val existente = state.poderSlotsPorArcano[arcKey]
 
@@ -243,6 +247,8 @@ fun PoderesSection(
             val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
                 ?: ArcaneConfig.getPermittedPowers(arcKey)
             val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
+            val stageBasedPowers = state.poderesDisponiveisPorEstagioParaArcano(arcKey)
+            val usaPoderesPorEstagio = stageBasedPowers.isNotEmpty()
             val originRaw = when {
                 usaListaChi -> "ARTE DA GUERRA"
                 else -> advantage?.origem?.uppercase()
@@ -345,6 +351,11 @@ fun PoderesSection(
 
                 if (!isAllowed) return@filter false
 
+                if (usaPoderesPorEstagio) {
+                    val requiredStage = stageBasedPowers[power.id] ?: return@filter false
+                    if (!state.estagioAtinge(requiredStage)) return@filter false
+                }
+
                 // 2. Check Search
                 val matchSearch = if (searchQuery.isBlank()) true else {
                     power.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
@@ -353,7 +364,12 @@ fun PoderesSection(
 
                 // 3. Check Rank
                 val matchRank = if (selectedRank == "Todos") true else {
-                    power.estagio.semAcentos().equals(selectedRank.semAcentos(), ignoreCase = true)
+                    val rankSource = if (usaPoderesPorEstagio) {
+                        stageBasedPowers[power.id] ?: power.estagio
+                    } else {
+                        power.estagio
+                    }
+                    rankSource.semAcentos().equals(selectedRank.semAcentos(), ignoreCase = true)
                 }
 
                 matchSearch && matchRank
@@ -411,9 +427,12 @@ fun PoderesSection(
             val ppTotal = baseInfo.second
             val foco = baseInfo.third
             val slotsCount = state.getEffectiveSlotsCountForArcano(arcKey)
+            val usaPoderesPorEstagio = state.usaPoderesDisponiveisPorEstagio(arcKey)
 
             val centerText = if (state.usarSemPontosDePoder) {
                 "Teste $foco = -(custo/2)"
+            } else if (usaPoderesPorEstagio) {
+                "Poderes por estágio  •  PP especiais  •  $foco"
             } else {
                 val ppDisplay = if (arcKey == "MISTICO") {
                     val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && !hasStandardAB) 1 else 0
@@ -547,52 +566,72 @@ fun PoderesSection(
 
             if (isExpanded) {
                 // SLOTS PANEL
-                item(key = "slots_$arcKey") {
-                    val slots = state.poderSlotsPorArcano.getOrPut(arcKey) {
-                        mutableStateListOf<String?>().apply {
-                            repeat(state.getEffectiveSlotsCountForArcano(arcKey)) { add(null) }
+                if (usaPoderesPorEstagio) {
+                    item(key = "stage_based_info_$arcKey") {
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 4.dp)
+                        ) {
+                            Column(Modifier.padding(8.dp)) {
+                                Text("Disponibilidade especial", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.bodyMedium)
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    "Este antecedente não usa slots nem Novos Poderes. Todos os poderes abaixo ficam disponíveis automaticamente quando o estágio é alcançado.",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
                         }
                     }
-                    // Lock logic
-                    val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)
-                        state.arcanoSnapshotAntesDaCompra?.size ?: 0
-                    else 0
+                } else {
+                    item(key = "slots_$arcKey") {
+                        val slots = state.poderSlotsPorArcano.getOrPut(arcKey) {
+                            mutableStateListOf<String?>().apply {
+                                repeat(state.getEffectiveSlotsCountForArcano(arcKey)) { add(null) }
+                            }
+                        }
+                        // Lock logic
+                        val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)
+                            state.arcanoSnapshotAntesDaCompra?.size ?: 0
+                        else 0
 
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 4.dp)
-                    ) {
-                        Column(Modifier.padding(8.dp)) {
-                            Text("Slots: $slotsCount", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.bodyMedium)
-                            Spacer(Modifier.height(4.dp))
-                            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                slots.forEachIndexed { idx, poderId ->
-                                    val label = if (poderId == null) "— vazio —" else (idToName[poderId] ?: poderId.toFancyTitleCase())
-                                    val isFixed = state.isFixedPower(arcKey, poderId)
-                                    val isSlotLocked = locked || idx < lockedCount || isFixed
-                                    AssistChip(
-                                        onClick = {
-                                            if (!isSlotLocked && poderId != null) {
-                                                val (pode, msg) = state.podeRemoverPoderDoSlot(poderId)
-                                                if (!pode) {
-                                                    onShowMessage(msg ?: "Não é possível remover este poder.")
-                                                } else {
-                                                    slots[idx] = null
-                                                    state.syncPoderesSelecionadosFromSlots()
-                                                    state.manifestacoesPoderes.remove(poderId)
+                        Card(
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 4.dp)
+                        ) {
+                            Column(Modifier.padding(8.dp)) {
+                                Text("Slots: $slotsCount", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.bodyMedium)
+                                Spacer(Modifier.height(4.dp))
+                                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    slots.forEachIndexed { idx, poderId ->
+                                        val label = if (poderId == null) "— vazio —" else (idToName[poderId] ?: poderId.toFancyTitleCase())
+                                        val isFixed = state.isFixedPower(arcKey, poderId)
+                                        val isSlotLocked = locked || idx < lockedCount || isFixed
+                                        AssistChip(
+                                            onClick = {
+                                                if (!isSlotLocked && poderId != null) {
+                                                    val (pode, msg) = state.podeRemoverPoderDoSlot(poderId)
+                                                    if (!pode) {
+                                                        onShowMessage(msg ?: "Não é possível remover este poder.")
+                                                    } else {
+                                                        slots[idx] = null
+                                                        state.syncPoderesSelecionadosFromSlots()
+                                                        state.manifestacoesPoderes.remove(poderId)
+                                                    }
                                                 }
-                                            }
-                                        },
-                                        label = {
-                                            Text(
-                                                text = "${idx + 1}: $label" + if (isFixed) " (Fixo)" else "",
-                                                style = MaterialTheme.typography.bodySmall
-                                            )
-                                        },
-                                        enabled = !isSlotLocked && poderId != null
-                                    )
+                                            },
+                                            label = {
+                                                Text(
+                                                    text = "${idx + 1}: $label" + if (isFixed) " (Fixo)" else "",
+                                                    style = MaterialTheme.typography.bodySmall
+                                                )
+                                            },
+                                            enabled = !isSlotLocked && poderId != null
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -614,12 +653,17 @@ fun PoderesSection(
                         items = poderesParaEsteArcano,
                         key = { "${arcKey}_${it.id}" } // Unique key per AB + Power
                     ) { poder ->
-                        val slots = state.poderSlotsPorArcano.getOrPut(arcKey) {
-                            mutableStateListOf<String?>().apply {
-                                repeat(state.getEffectiveSlotsCountForArcano(arcKey)) { add(null) }
+                        val usaPoderesPorEstagioCard = state.usaPoderesDisponiveisPorEstagio(arcKey)
+                        val slots = if (usaPoderesPorEstagioCard) {
+                            mutableStateListOf<String?>()
+                        } else {
+                            state.poderSlotsPorArcano.getOrPut(arcKey) {
+                                mutableStateListOf<String?>().apply {
+                                    repeat(state.getEffectiveSlotsCountForArcano(arcKey)) { add(null) }
+                                }
                             }
                         }
-                        val selecionado = slots.any { it?.equals(poder.id, ignoreCase = true) == true }
+                        val selecionado = if (usaPoderesPorEstagioCard) false else slots.any { it?.equals(poder.id, ignoreCase = true) == true }
                         val lockedCount = if (state.mostrandoPoderesProgresso && state.arcanoEmCompraViaXpKey == arcKey)
                             state.arcanoSnapshotAntesDaCompra?.size ?: 0
                         else 0
@@ -636,8 +680,12 @@ fun PoderesSection(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp, vertical = 2.dp) // Reduced padding
-                                .alpha(if (selecionado) 0.6f else 1f) // Increased opacity for selected for better visibility
+                                .alpha(if (selecionado) 0.6f else 1f)
                                 .clickable(enabled = !isCardLocked) {
+                                    if (usaPoderesPorEstagioCard) {
+                                        expanded = !expanded
+                                        return@clickable
+                                    }
                                     if (selecionado) {
                                         val idx = slots.indexOfFirst { it?.equals(poder.id, ignoreCase = true) == true }
                                         if (idx >= 0 && idx >= lockedCount) {
@@ -687,7 +735,11 @@ fun PoderesSection(
                                             .replace("Morosidade/Velocidade", "Velocidade")
                                     }
                                     Text(displayNome, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
-                                    Text("PP: $ppExibicao", style = MaterialTheme.typography.bodySmall)
+                                    val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]
+                                    Text(
+                                        if (usaPoderesPorEstagioCard && specialStage != null) "$specialStage • PP: $ppExibicao" else "PP: $ppExibicao",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
                                 }
 
                                 if (state.usarSemPontosDePoder) {

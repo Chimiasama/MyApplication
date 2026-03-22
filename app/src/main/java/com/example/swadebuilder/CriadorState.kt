@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.swadebuilder.model.AdvantageSnapshot
+import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
@@ -3285,6 +3286,7 @@ class CriadorState {
 
     fun getSlotsCountForArcano(arcKey: String): Int {
         val arcKeyNorm = arcKey.normAAKey()
+        if (usaPoderesDisponiveisPorEstagio(arcKeyNorm)) return 0
         val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
         val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
             arcKeyNorm == "MESTRE DO CHI" &&
@@ -3326,6 +3328,7 @@ class CriadorState {
     }
 
     fun getEffectiveSlotsCountForArcano(arcKey: String): Int {
+        if (usaPoderesDisponiveisPorEstagio(arcKey)) return 0
         val baseCount = getSlotsCountForArcano(arcKey)
         val arcKeyNorm = arcKey.normAAKey()
 
@@ -3438,6 +3441,28 @@ class CriadorState {
     fun estagioAtual(): Estagio {
         return listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
     }
+
+    fun usaPoderesDisponiveisPorEstagio(arcKey: String): Boolean {
+        val key = arcKey.normAAKey()
+        return key == "FEITICEIRO" || key == "DEMONIO"
+    }
+
+    fun bloqueiaNovosPoderesPorAntecedente(): Boolean =
+        vantagensSelecionadas.any {
+            when (it.toArcanoKey()?.normAAKey()) {
+                "FEITICEIRO", "DEMONIO" -> true
+                else -> false
+            }
+        }
+
+    fun estagioAtinge(estagioNome: String): Boolean {
+        val atualIdx = listaDeEstagios.indexOf(estagioAtual())
+        val requeridoIdx = listaDeEstagios.indexOfFirst { it.nome.equals(estagioNome, ignoreCase = true) }
+        return requeridoIdx >= 0 && atualIdx >= requeridoIdx
+    }
+
+    fun poderesDisponiveisPorEstagioParaArcano(arcKey: String): Map<String, String> =
+        ArcaneConfig.getStageBasedPowersByStage(arcKey.normAAKey())
 
     private fun effectiveProgressoParaVantagens(): Int {
         val stName = overrideStageForVantagem ?: return progresso
