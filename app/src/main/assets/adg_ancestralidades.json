@@ -394,7 +394,7 @@
     "habilidades": [
       {
         "nome": "Dons da Natureza",
-        "descricao": "Os Umvee são filhos da lua e filhos da natureza. Eles começam com um dos seguintes dons da natureza: Ápice (ganham um ataque de Garras (For+d4)); Vínculo Bestial (começam com a Vantagem Senhor das Feras); Pele Iluminada pela Lua (+1 de Aparar); Gatoruja (Visão no Escuro e Perceber inicial d6); Correnteza (+2 em Movimentação); Pedregoso (+1 de Resistência e +2 de Armadura).",
+        "descricao": "Os Umvee são filhos da lua e filhos da natureza. Eles começam com um dos seguintes dons da natureza: Ápice (ganham um ataque de Garras (For+d4)); Vínculo Bestial (começam com a Vantagem Senhor das Feras); Pele Iluminada pela Lua (+1 de Aparar); Gatoruja (Visão no Escuro e Perceber inicial d6, aumentando seu máximo para d12+1); Correnteza (+2 em Movimentação); Pedregoso (+1 de Resistência e +2 de Armadura).",
         "category": "racial_trait_positive",
         "id": "DONS_DA_NATUREZA"
       },

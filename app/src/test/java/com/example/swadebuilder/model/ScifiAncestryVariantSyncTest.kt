@@ -410,6 +410,7 @@ class ScifiAncestryVariantSyncTest {
         assertEquals("Gatoruja", selecionada)
         assertEquals(4, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Ocultismo", atributo = "Astúcia", basica = false)))
         assertEquals(6, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Perceber", atributo = "Astúcia", basica = true)))
+        assertEquals(13, state.periciaCapRaw(Pericia(nome = "Perceber", atributo = "Astúcia", basica = true)))
     }
 
 }

@@ -547,7 +547,7 @@ class CriadorState {
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
                                 nome = "Perceber d6",
-                                descricao = "Gatoruja aumenta o valor inicial de Perceber para d6.",
+                                descricao = "Gatoruja aumenta o valor inicial de Perceber para d6 e seu máximo para d12+1.",
                                 id = "PERCEBER_D6",
                                 category = "racial_trait_positive"
                             )
