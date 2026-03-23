@@ -99,5 +99,6 @@ data class MeuPersonagem(
     val fama: Int = 0,
     val usaRiqueza: Boolean = false,
     val usaRequisicao: Boolean = false,
-    val modoProgressaoAtivo: Boolean = false
+    val modoProgressaoAtivo: Boolean = false,
+    val complicacoesTipos: Map<String, String> = emptyMap()
 )

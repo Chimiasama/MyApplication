@@ -60,6 +60,10 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
             .filterValues { it != null }
             .keys
             .map { it.id },
+        complicacoesTipos = this.complicacoesSelecionadas
+            .filterValues { it != null }
+            .mapKeys { it.key.id }
+            .mapValues { it.value!! },
         transtornos = this.transtornos.map { it.id },
         equipamentos = this.equipamentosComprados.toList() + this.extrairArmasNaturais(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
