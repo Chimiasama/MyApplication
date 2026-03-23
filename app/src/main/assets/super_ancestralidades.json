@@ -14,9 +14,30 @@
     "habilidades": [
       {
         "nome": "Construto",
-        "descricao": "CONSTRUTO: Androides adicionam +2 para se recuperar do Estado Abalado, não respiram, ignoram um nível de modificadores de Ferimentos e são imunes a venenos e doenças. Construtos não podem se curar naturalmente. Curar Androides requer a perícia Consertar, tal ação durará, a cada tentativa, uma hora por nível de Ferimento atual do alvo e não é limitada pela “Hora de Ouro” (veja pág. 112). \nFORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.\nPACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.\nVOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo",
-        "category": "racial_trait_negative",
-        "id": "CONSTRUTO"
+        "descricao": "CONSTRUTO: Androides adicionam +2 para se recuperar do Estado Abalado, não respiram, ignoram um nível de modificadores de Ferimentos e são imunes a venenos e doenças. Construtos não podem se curar naturalmente. Curar Androides requer a perícia Consertar, tal ação durará, a cada tentativa, uma hora por nível de Ferimento atual do alvo e não é limitada pela “Hora de Ouro” (veja pág. 112).",
+        "id": "CONSTRUTO",
+        "category": "racial_trait_positive"
+      },
+      {
+        "nome": "Forasteiro",
+        "descricao": "FORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.",
+        "id": "FORASTEIRO",
+        "category": "racial_hindrance",
+        "severity": "Maior"
+      },
+      {
+        "nome": "Pacifista",
+        "descricao": "PACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.",
+        "id": "PACIFISTA",
+        "category": "racial_hindrance",
+        "severity": "Maior"
+      },
+      {
+        "nome": "Voto",
+        "descricao": "VOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo",
+        "id": "VOTO",
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ]
   },
@@ -77,8 +98,9 @@
       {
         "nome": "Não Sabe Nadar",
         "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.",
-        "category": "racial_trait_negative",
-        "id": "NAO_SABE_NADAR"
+        "category": "racial_hindrance",
+        "id": "NAO_SABE_NADAR",
+        "severity": "Menor"
       },
       {
         "nome": "Sentidos Aguçados",
@@ -287,8 +309,9 @@
       {
         "nome": "Não Sabe Nadar",
         "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.",
-        "category": "racial_trait_negative",
-        "id": "NAO_SABE_NADAR"
+        "category": "racial_hindrance",
+        "id": "NAO_SABE_NADAR",
+        "severity": "Menor"
       },
       {
         "nome": "Sanguinário",
@@ -403,8 +426,9 @@
       {
         "nome": "Voto (Maior: Proteger a humanidade)",
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
-        "category": "racial_trait_positive",
-        "id": "VOTO_MAIOR_PROTEGER_A_HUMANIDADE"
+        "category": "racial_hindrance",
+        "id": "VOTO",
+        "severity": "Maior"
       }
     ]
   },
@@ -445,8 +469,9 @@
       {
         "nome": "Voto (Maior: Proteger a humanidade)",
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
-        "category": "racial_trait_positive",
-        "id": "VOTO_MAIOR_PROTEGER_A_HUMANIDADE"
+        "category": "racial_hindrance",
+        "id": "VOTO",
+        "severity": "Maior"
       }
     ]
   }

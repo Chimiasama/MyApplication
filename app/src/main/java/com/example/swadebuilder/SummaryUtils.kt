@@ -114,11 +114,34 @@ fun buildSummaryLines(
         return rawIds.map { compId ->
             val comp = mapPorId[compId.keyify()]
             if (comp != null) {
-                if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
+                val baseName = if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
                     comp.originalName!!.toFancyTitleCase()
                 } else {
                     comp.name.toFancyTitleCase()
                 }
+
+                val severityStr = comp.severity.trim().lowercase()
+                val isMenor = severityStr.contains("menor")
+                val isMaior = severityStr.contains("maior")
+
+                val sevDisplay = when {
+                    isMenor && isMaior -> ""
+                    isMenor -> " (Menor)"
+                    isMaior -> " (Maior)"
+                    else -> ""
+                }
+
+                // For racial complications, the user's selected complication degree is not stored in complications,
+                // but the base complication's severity is shown if it is unambiguous.
+                // However, character's standard selected complications degrees are stored in `personagem.complicacoesTipos`
+                val userChoice = personagem.complicacoesTipos[compId]?.let {
+                    val c = it.lowercase()
+                    if (c.contains("menor")) " (Menor)"
+                    else if (c.contains("maior")) " (Maior)"
+                    else ""
+                } ?: sevDisplay
+
+                "$baseName$userChoice"
             } else {
                 compId.replace('_', ' ').toFancyTitleCase()
             }
