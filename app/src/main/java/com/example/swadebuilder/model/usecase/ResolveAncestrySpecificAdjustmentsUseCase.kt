@@ -234,7 +234,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                             elementalAction = ElementalAction.NONE
                         )
                         "Minerador" -> {
-                            val choice = humanoMineradorAtributo ?: "Força"
                             Result(
                                 naturalArmorFromRace = 0,
                                 forceArmorZero = true,
@@ -876,7 +875,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = listOf("antecedente_arcano_milagres"),
-                        ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (MILAGRES)"),
+                        ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (Milagres)"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -922,7 +921,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = listOf("antecedente_arcano_dom"),
-                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (DOM)"),
+                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (Dom)"),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )
@@ -932,7 +931,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = listOf("aa_demonio"),
-                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (DEMÔNIO)"),
+                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (Demônio)"),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )
