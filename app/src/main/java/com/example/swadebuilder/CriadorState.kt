@@ -477,12 +477,12 @@ class CriadorState {
             when (descendenteElementalSelecionado) {
                 "Água" -> {
                     removeByIdOrName("AR_INTERNO", "AR INTERNO")
-                    removeByIdOrName("RAPIDO", "RÁPIDO")
+                    removeByIdOrName("rapido", "RÁPIDO")
                     removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
                 }
                 "Ar" -> {
                     removeByIdOrName("AQUATICO", "AQUÁTICO")
-                    removeByIdOrName("RAPIDO", "RÁPIDO")
+                    removeByIdOrName("rapido", "RÁPIDO")
                     removeByIdOrName("SOLIDO_COMO_ROCHA", "SÓLIDO COMO ROCHA")
                 }
                 "Fogo" -> {
@@ -493,7 +493,7 @@ class CriadorState {
                 "Terra" -> {
                     removeByIdOrName("AQUATICO", "AQUÁTICO")
                     removeByIdOrName("AR_INTERNO", "AR INTERNO")
-                    removeByIdOrName("RAPIDO", "RÁPIDO")
+                    removeByIdOrName("rapido", "RÁPIDO")
                 }
                 // If null (not selected yet), arguably show all or none. Showing all lets user see options.
                 // But removing generic resistance avoids duplication if logic adds it elsewhere?

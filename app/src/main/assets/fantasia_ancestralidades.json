@@ -234,8 +234,8 @@
       {
         "nome": "RÁPIDO",
         "descricao": "Descendentes do fogo são frenéticos e estão sempre em movimento. Possuem a Vantagem Rápido.",
-        "id": "RAPIDO",
-        "category": "racial_trait_positive"
+        "id": "rapido",
+        "category": "racial_edge"
       },
       {
         "nome": "SÓLIDO COMO ROCHA",

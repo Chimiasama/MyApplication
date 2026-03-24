@@ -457,8 +457,8 @@
       {
         "nome": "Campeões",
         "descricao": "Possuem a Vantagem Campeão dando a eles um bônus de +2 em dano contra forças malignas sobrenaturais como demônios e diabos.",
-        "category": "racial_trait_positive",
-        "id": "CAMPEOES"
+        "category": "racial_edge",
+        "id": "campeao"
       },
       {
         "nome": "Vigoroso",
