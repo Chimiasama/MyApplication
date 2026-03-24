@@ -4267,7 +4267,7 @@ class CriadorState {
                 targetAncestry = anc,
                 previousAncestryDef = prevAncDef,
                 targetAncestryDef = ancDef,
-                currentAutomaticAdvantages = vantagensAutomaticas.toList(),
+                currentAutomaticAdvantages = (vantagensAutomaticas + vantagensAutomaticasDoElemento.mapNotNull { id -> listaVantagens.find { it.id == id }?.nome }).toList(),
                 previousAutomaticDisadvantages = desvantagensRaciais.toList(),
                 pontosVantagemAtuais = pontosVantagem,
                 vantagensSelecionadas = vantagensSelecionadas.toList(),
