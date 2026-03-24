@@ -134,7 +134,8 @@
         "nome": "CÓDIGO DE HONRA",
         "descricao": "Celestiais seguem naturalmente uma moral boa. Abominam mentiras, protegem os fracos e buscam por justiça.",
         "id": "CODIGO_DE_HONRA",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "VOO",
