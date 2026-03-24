@@ -568,7 +568,7 @@ fun gerarFichaEmPdf(
             // Check for choice
             val choice = personagem.advantageChoices[id]?.firstOrNull()
             if (choice != null) {
-                "${baseName.toFancyTitleCase()} (${choice.trim()})"
+                "${baseName.toFancyTitleCase()} (${choice.trim().toFancyTitleCase()})"
             } else {
                 baseName.toFancyTitleCase()
             }
