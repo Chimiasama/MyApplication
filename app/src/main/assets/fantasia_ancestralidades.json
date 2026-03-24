@@ -1094,8 +1094,8 @@
       {
         "nome": "SUCATEIRO",
         "descricao": "Membros do povo ratazana colecionam itens obsessivamente onde quer que vão, carregando-os em seus corpos e em suas tocas. Possuem a Vantagem Sucateiro.",
-        "id": "SUCATEIRO",
-        "category": "racial_trait_positive"
+        "id": "sucateiro",
+        "category": "racial_edge"
       },
       {
         "nome": "TAMANHO -1",
