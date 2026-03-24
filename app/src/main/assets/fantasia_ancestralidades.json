@@ -1421,10 +1421,11 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "SEGREDO (Maior)",
+        "nome": "SEGREDO",
         "descricao": "A verdadeira natureza de um transmorfo raramente é conhecida — até mesmo por outros transmorfos. Eles mantêm sua habilidade em segredo, o que lhes concede a Complicação Segredo (Maior). Caso sejam descobertos por alguém que não seja um aliado próximo, esta Complicação é trocada por Inimigo, Vergonha, Procurado, Forasteiro ou outra Complicação apropriada.",
         "id": "SEGREDO",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       }
     ],
     "vantagensGratis": []
