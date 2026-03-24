@@ -371,7 +371,7 @@ fun buildSummaryLines(
             } else {
                 rawName
             }
-            if (escolha != null) "$baseNome (${escolha.trim()})" else baseNome
+            if (escolha != null) "$baseNome (${escolha.trim().toFancyTitleCase()})" else baseNome
         }.distinct()
         lines += nomesVantagens.joinToString(", ")
     }

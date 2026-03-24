@@ -875,7 +875,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = listOf("antecedente_arcano_milagres"),
-                        ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (Milagres)"),
+                        ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (MILAGRES)"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -921,7 +921,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = listOf("antecedente_arcano_dom"),
-                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (Dom)"),
+                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (DOM)"),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )
@@ -931,7 +931,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = listOf("aa_demonio"),
-                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (Demônio)"),
+                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (DEMÔNIO)"),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )
