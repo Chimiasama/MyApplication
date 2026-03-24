@@ -1,6 +1,5 @@
 package com.example.swadebuilder.model.usecase
 
-import android.util.Log
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 
@@ -37,16 +36,10 @@ class ResolveAncestryRacialPackageUseCase(
     )
 
     fun execute(params: Params): Result {
-        Log.d("AncestryTransition", "ResolveAncestryRacialPackageUseCase resolving for ${params.anc}")
-        Log.d("AncestryTransition", "Previous Free Advantage Keys: ${params.previousFreeAdvantageKeys}")
-
         val selected = params.selectedAdvantages
             .filterNot {
                 val isLeakedDom = (it.id == "antecedente_arcano" && it.choice?.keyify() == "DOM" && "ANTECEDENTE ARCANO (DOM)" in params.previousFreeAdvantageKeys) ||
                                   (it.id == "antecedente_arcano_dom" && "ANTECEDENTE ARCANO (DOM)" in params.previousFreeAdvantageKeys)
-                if (isLeakedDom) {
-                    Log.d("AncestryTransition", "Removing leaked Arcane Background Dom: ${it.id}")
-                }
                 it.nome.keyify() in params.previousFreeAdvantageKeys || isLeakedDom
             }
             .toMutableList()

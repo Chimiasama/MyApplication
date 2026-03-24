@@ -139,10 +139,12 @@ object ModifierEngine {
                 it.contains("TAMANHO", ignoreCase = true) && !it.keyify().startsWith("DIMINUTO")
             }
 
+            val isDiminutoAncestry = sources.any { it.keyify().startsWith("DIMINUTO") } ||
+                                     (state.compendioSciFiAtivo && anc.nome.keyify() == "FERAIS")
+
             val racialSizeFromText = abilityDescriptions
                 .firstNotNullOfOrNull { desc ->
                     val key = desc.keyify()
-                    if (key.contains("DIMINUTO")) return@firstNotNullOfOrNull null // Skip Diminuto traits to avoid double-counting
 
                     val fromSize = Regex("""TAMANHO\s*([\+\-]\s*\d+)""").find(key)
                         ?.groupValues
@@ -168,7 +170,7 @@ object ModifierEngine {
                 racialSizeFromText ?: 0
             }
 
-            if (racialSize != 0) {
+            if (racialSize != 0 && !isDiminutoAncestry) {
                 modifiers.add(Modifier(
                     id = "racial_size",
                     sourceType = SourceType.ANCESTRALIDADE,
