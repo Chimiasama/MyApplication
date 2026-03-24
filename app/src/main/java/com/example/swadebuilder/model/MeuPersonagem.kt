@@ -12,6 +12,7 @@ data class MeuPersonagem(
     val signoAdgSelecionado: String? = null,
     val descendenteElementalSelecionado: String? = null,
     val pacoteCulturalFantasiaSelecionado: String? = null,
+    val povoDoMarOpcao: String? = null,
     val celestialAAMilagresDesabilitado: Boolean,
     val tropoSelecionadoId: String? = null,
 

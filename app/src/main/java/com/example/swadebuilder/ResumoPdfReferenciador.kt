@@ -46,6 +46,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         signoAdgSelecionado = this.signoAdgSelecionado,
         descendenteElementalSelecionado = this.descendenteElementalSelecionado,
         pacoteCulturalFantasiaSelecionado = this.pacoteCulturalFantasiaSelecionado,
+        povoDoMarOpcao = this.povoDoMarOpcao,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         tropoSelecionadoId = this.tropoSelecionado?.id,
         vantagens = this.vantagensSelecionadas.map { it.id },
