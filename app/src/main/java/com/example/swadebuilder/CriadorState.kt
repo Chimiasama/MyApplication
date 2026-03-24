@@ -409,6 +409,16 @@ class CriadorState {
                     it.keyify() != "ADAPTAVEL"
                 }
 
+                when (pacoteCulturalFantasiaSelecionado) {
+                    "Nômades do Deserto" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Frio)", descricao = "Nômades do deserto possuem fraqueza ambiental ao frio.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
+                    "Povo da Montanha" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Calor)", descricao = "O povo da montanha possui fraqueza ambiental ao calor.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
+                    "Povo do Mar" -> {
+                        if (povoDoMarOpcao == "Penalidade em Cavalgar") {
+                            newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Penalidade em Cavalgar", descricao = "Subtrai 1 de rolagens de Cavalgar.", id = "PENALIDADE_CAVALGAR", category = "racial_trait_negative"))
+                        }
+                    }
+                }
+
                 return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
             }
             return base
@@ -5036,12 +5046,8 @@ class CriadorState {
         val extrasDesvantagens = mutableListOf<String>()
 
         when (pacoteCulturalFantasiaSelecionado) {
-            "Nômades do Deserto" -> extrasDesvantagens.add("FRAQUEZA AMBIENTAL (Frio)")
-            "Povo da Montanha" -> extrasDesvantagens.add("FRAQUEZA AMBIENTAL (Calor)")
             "Povo do Mar" -> {
-                if (povoDoMarOpcao == "Penalidade em Cavalgar") {
-                    extrasDesvantagens.add("PENALIDADE: CAVALGAR -1")
-                } else if (povoDoMarOpcao == "Procurado (Maior)") {
+                if (povoDoMarOpcao == "Procurado (Maior)") {
                     extrasDesvantagens.add("PROCURADO (Maior)")
                 }
             }
