@@ -39,7 +39,7 @@ private val fancyLowerCaseWords = setOf(
     "de", "da", "do", "das", "dos",
     "e", "em", "no", "na", "nos", "nas",
     "por", "para", "com", "sem", "sob", "sobre",
-    "a", "o", "as", "os", "à", "às", "ou"
+    "a", "o", "as", "os", "à", "às", "ou", "ao", "aos"
 )
 
 private val fancyUpperCaseWords = setOf(

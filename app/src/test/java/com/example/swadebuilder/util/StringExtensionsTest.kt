@@ -43,6 +43,8 @@ class StringExtensionsTest {
         assertEquals("Mordida ou Garra", "MORDIDA OU GARRA".toFancyTitleCase())
         assertEquals("Mordida ou Garra", "mordida ou garra".toFancyTitleCase())
         assertEquals("Um ou Outro", "UM OU OUTRO".toFancyTitleCase())
+        assertEquals("Junto ao Chão", "Junto Ao Chão".toFancyTitleCase())
+        assertEquals("Dano aos Inimigos", "dano aos inimigos".toFancyTitleCase())
     }
 
     @Test
