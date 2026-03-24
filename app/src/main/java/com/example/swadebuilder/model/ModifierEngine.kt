@@ -142,6 +142,8 @@ object ModifierEngine {
             val racialSizeFromText = abilityDescriptions
                 .firstNotNullOfOrNull { desc ->
                     val key = desc.keyify()
+                    if (key.contains("DIMINUTO")) return@firstNotNullOfOrNull null // Skip Diminuto traits to avoid double-counting
+
                     val fromSize = Regex("""TAMANHO\s*([\+\-]\s*\d+)""").find(key)
                         ?.groupValues
                         ?.getOrNull(1)

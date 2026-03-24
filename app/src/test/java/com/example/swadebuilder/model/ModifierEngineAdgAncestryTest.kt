@@ -75,4 +75,33 @@ class ModifierEngineAdgAncestryTest {
 
         assertTrue(modifiers.any { it.id == "racial_pace_explicit" && it.value == 2 })
     }
+
+    @Test
+    fun `povo rato size penalty is not double counted`() {
+        val state = stateWithAncestry(
+            ancestralidade = "Povo Rato",
+            modifier = RacialModifier(
+                nome = "Povo Rato",
+                origem = "FANTASIA",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                vantagensGratis = emptyList(),
+                desvantagens = emptyList(),
+                habilidades = listOf(
+                    RacialAbility(
+                        nome = "DIMINUTO (Tamanho -4)",
+                        descricao = "Membros do povo rato medem cerca de 18 centímetros de altura. Isso lhes confere Tamanho -4 e concede os benefícios de Minúsculo...",
+                        id = "DIMINUTO",
+                        category = "racial_trait_positive"
+                    )
+                )
+            )
+        )
+
+        val modifiers = ModifierEngine.collect(state)
+        val sizeModifiers = modifiers.filter { it.target == ModifierTarget.SIZE_DISPLAY }
+
+        assertTrue(sizeModifiers.size == 1)
+        assertTrue(sizeModifiers.first().value == -4)
+    }
 }
