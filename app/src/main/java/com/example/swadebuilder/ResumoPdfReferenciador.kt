@@ -462,13 +462,30 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
 
         weapons.forEach { w ->
             cx = x
+
+            val isNaturalWeapon = w.nome.equals("Desarmado", ignoreCase = true) ||
+                w.nome.equals("Garras", ignoreCase = true) ||
+                w.nome.equals("Mordida", ignoreCase = true) ||
+                w.nome.equals("Cascos", ignoreCase = true) ||
+                w.nome.equals("Chifres", ignoreCase = true) ||
+                w.nome.equals("Ataque Natural", ignoreCase = true) ||
+                w.nome.contains("Ataque Natural", ignoreCase = true) ||
+                w.nome.contains("Mordida", ignoreCase = true) ||
+                w.nome.contains("Garra", ignoreCase = true) ||
+                w.nome.contains("Chifre", ignoreCase = true) ||
+                w.nome.contains("Casco", ignoreCase = true) ||
+                w.nome.contains("Cabeça Dura", ignoreCase = true)
+
+            val cdtStr = if (isNaturalWeapon) "-" else w.cdt?.toString()?.replace("\"", "") ?: "1"
+            val pesoStr = if (isNaturalWeapon) "-" else w.peso?.toString()?.replace("\"", "") ?: "-"
+
             val data = listOf(
                 w.nome,
                 w.distancia?.toString()?.replace("\"", "") ?: "-",
                 w.dano?.toString()?.replace("\"", "") ?: "-",
                 w.pa?.toString()?.replace("\"", "") ?: "0",
-                w.cdt?.toString()?.replace("\"", "") ?: "1",
-                w.peso?.toString()?.replace("\"", "") ?: "-"
+                cdtStr,
+                pesoStr
             )
             data.forEachIndexed { i, txt ->
                 val safe = truncate(txt, rowPaint, colWidths[i] - 2f)

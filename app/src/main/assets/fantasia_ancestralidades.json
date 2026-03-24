@@ -1128,10 +1128,11 @@
         "category": "racial_trait_positive"
       },
       {
-        "nome": "FOBIA – GATOS (Menor)",
+        "nome": "FOBIA",
         "descricao": "Os gatos provocam um medo instintivo no povo rato.",
-        "id": "FOBIA_GATOS",
-        "category": "racial_trait_negative"
+        "id": "FOBIA",
+        "category": "racial_hindrance",
+        "severity": "Menor"
       },
       {
         "nome": "FORASTEIRO",
@@ -1157,12 +1158,6 @@
         "descricao": "O povo rato está acostumado a viver em pequenos espaços escuros ou tocas. Ignoram penalidades por Penumbra e Escuridão.",
         "id": "VISAO_NO_ESCURO",
         "category": "racial_trait_positive"
-      },
-      {
-        "nome": "FOBIA (Menor: Gatos)",
-        "descricao": "FOBIA (Menor: Gatos)",
-        "id": "FOBIA",
-        "category": "racial_trait_negative"
       },
       {
         "nome": "ALMOFADINHA",

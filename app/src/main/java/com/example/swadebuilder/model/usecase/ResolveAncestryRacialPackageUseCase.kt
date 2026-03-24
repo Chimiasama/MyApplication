@@ -37,7 +37,11 @@ class ResolveAncestryRacialPackageUseCase(
 
     fun execute(params: Params): Result {
         val selected = params.selectedAdvantages
-            .filterNot { it.nome.keyify() in params.previousFreeAdvantageKeys }
+            .filterNot {
+                val isLeakedDom = (it.id == "antecedente_arcano" && it.choice?.keyify() == "DOM" && "ANTECEDENTE ARCANO (DOM)" in params.previousFreeAdvantageKeys) ||
+                                  (it.id == "antecedente_arcano_dom" && "ANTECEDENTE ARCANO (DOM)" in params.previousFreeAdvantageKeys)
+                it.nome.keyify() in params.previousFreeAdvantageKeys || isLeakedDom
+            }
             .toMutableList()
 
         val vantagensAutomaticas = params.ancestryGrantedAdvantages.toMutableList()
