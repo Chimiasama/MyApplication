@@ -409,7 +409,7 @@
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
         "id": "VOTO",
         "category": "racial_hindrance",
-        "severity": "Menor"
+        "severity": "Maior"
       }
     ]
   },
@@ -447,7 +447,7 @@
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
         "id": "VOTO",
         "category": "racial_hindrance",
-        "severity": "Menor"
+        "severity": "Maior"
       },
       {
         "nome": "CAMPEÃO",

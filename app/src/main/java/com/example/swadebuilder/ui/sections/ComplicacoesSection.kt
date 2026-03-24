@@ -221,19 +221,48 @@ fun ComplicacoesSection(
                                         performRemoval(state, comp, feedbackMessages, onLogFeedback, complicacoesFiltradas)
                                     },
                                     enabled = isClickable,
-                                    label = { Text("${comp.name.toFancyTitleCase()} (${tipo?.toFancyTitleCase().orEmpty()})", style = MaterialTheme.typography.labelSmall) },
-                                    leadingIcon = {
-                                        Icon(
-                                            Icons.Default.Close,
-                                            contentDescription = "Remover ${comp.name}",
-                                            modifier = Modifier.size(12.dp)
-                                        )
+                                    label = {
+                                        val sevStr = comp.severity.trim().lowercase()
+                                        val finalTipo = tipo ?: when {
+                                            sevStr.contains("menor") && sevStr.contains("maior") -> ""
+                                            sevStr.contains("menor") -> "Menor"
+                                            sevStr.contains("maior") -> "Maior"
+                                            else -> ""
+                                        }
+
+                                        val baseText = if (finalTipo.isNotBlank()) {
+                                            "${comp.name.toFancyTitleCase()} (${finalTipo.toFancyTitleCase()})"
+                                        } else {
+                                            comp.name.toFancyTitleCase()
+                                        }
+
+                                        if (isAuto) {
+                                            Text("$baseText - Automática/Racial", style = MaterialTheme.typography.labelSmall)
+                                        } else {
+                                            Text(baseText, style = MaterialTheme.typography.labelSmall)
+                                        }
                                     },
+                                    leadingIcon = if (!isAuto) {
+                                        {
+                                            Icon(
+                                                Icons.Default.Close,
+                                                contentDescription = "Remover ${comp.name}",
+                                                modifier = Modifier.size(12.dp)
+                                            )
+                                        }
+                                    } else null,
                                     modifier = Modifier.height(24.dp),
-                                    colors = AssistChipDefaults.assistChipColors(
-                                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                        labelColor = MaterialTheme.colorScheme.onSecondaryContainer
-                                    )
+                                    colors = if (isAuto) {
+                                        AssistChipDefaults.assistChipColors(
+                                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                            labelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    } else {
+                                        AssistChipDefaults.assistChipColors(
+                                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                                            labelColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                        )
+                                    }
                                 )
                             }
 

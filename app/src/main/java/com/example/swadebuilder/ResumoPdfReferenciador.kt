@@ -60,6 +60,10 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
             .filterValues { it != null }
             .keys
             .map { it.id },
+        complicacoesTipos = this.complicacoesSelecionadas
+            .filterValues { it != null }
+            .mapKeys { it.key.id }
+            .mapValues { it.value!! },
         transtornos = this.transtornos.map { it.id },
         equipamentos = this.equipamentosComprados.toList() + this.extrairArmasNaturais(),
         poderes = this.poderSlotsPorArcano.mapValues { (_, slots) -> slots.filterNotNull() },
@@ -523,7 +527,27 @@ fun gerarFichaEmPdf(
         val comp = mapPorId[id.keyify()]
         if (comp != null) {
             val name = if (personagem.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName!! else comp.name
-            hindranceNames.add(name.toFancyTitleCase())
+            val baseName = name.toFancyTitleCase()
+
+            val severityStr = comp.severity.trim().lowercase()
+            val isMenor = severityStr.contains("menor")
+            val isMaior = severityStr.contains("maior")
+
+            val sevDisplay = when {
+                isMenor && isMaior -> ""
+                isMenor -> " (Menor)"
+                isMaior -> " (Maior)"
+                else -> ""
+            }
+
+            val userChoice = personagem.complicacoesTipos[id]?.let {
+                val c = it.lowercase()
+                if (c.contains("menor")) " (Menor)"
+                else if (c.contains("maior")) " (Maior)"
+                else ""
+            } ?: sevDisplay
+
+            hindranceNames.add("$baseName$userChoice")
         } else {
             hindranceNames.add(id.replace('_', ' ').toFancyTitleCase())
         }
