@@ -617,6 +617,8 @@ fun buildSummaryLines(
                             // while keeping behavior textual (not a free Edge).
                             if (ability.id?.keyify() == "FORTUNA_DA" || ability.nome.keyify() == "FORTUNA DA") {
                                 "Sorte"
+                            } else if (personagem.ancestralidade.keyify() == "POVO RATO" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
+                                "Fobia - Gatos (Menor)"
                             } else {
                                 // Use the display name from JSON (preserves symbols like '/')
                                 // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
