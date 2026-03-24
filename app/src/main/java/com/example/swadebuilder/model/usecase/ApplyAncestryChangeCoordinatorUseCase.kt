@@ -120,7 +120,13 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 ancestryAutomaticDisadvantages = (params.targetAncestryDef?.desvantagens ?: emptyList()) +
                         (params.targetAncestryDef?.habilidades
                             ?.filter { it.category == "racial_hindrance" }
-                            ?.map { it.nome } ?: emptyList()),
+                            ?.map {
+                                if (!it.severity.isNullOrBlank()) {
+                                    "${it.nome} (${it.severity})"
+                                } else {
+                                    it.nome
+                                }
+                            } ?: emptyList()),
                 ancestryOrigin = params.targetAncestryDef?.origem ?: "BASICO"
             )
         )

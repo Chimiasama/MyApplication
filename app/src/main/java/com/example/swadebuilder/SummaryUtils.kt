@@ -663,7 +663,7 @@ fun buildSummaryLines(
         }
 
     lines += "Complicações"
-    val complicationKeys = complicacoesNomeadas.map { it.keyify() }.toMutableSet()
+    val complicationKeys = complicacoesNomeadas.map { it.substringBefore("(").trim().keyify() }.toMutableSet()
     val allComplicationsList = buildList {
         addAll(complicacoesNomeadas)
         addAll(transtornosNomeados.map { "$it (Transtorno)" })
