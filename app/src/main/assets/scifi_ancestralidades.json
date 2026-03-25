@@ -325,8 +325,7 @@
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       }
     ],
     "tags": [
@@ -372,8 +371,7 @@
         "nome": "RUDE",
         "descricao": "Drakens são mais rápidos em ameaçar do que em argumentar. Subtraem 2 das rolagens de Persuadir.",
         "id": "RUDE",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       }
     ],
     "tags": [
@@ -1082,8 +1080,7 @@
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "TAMANHO +2",
