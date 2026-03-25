@@ -642,6 +642,21 @@ class CriadorState {
             }
         }
 
+        if (key == "RAKASHANOS" && variant.equals("Brincalhão", ignoreCase = true)) {
+            removeByIdOrName("SANGUINARIO", "SANGUINARIO")
+            if (newHabilidades.none { it.id == "CURIOSO" || it.nome.keyify() == "CURIOSO" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Curioso",
+                        descricao = "Sua natureza exploratória e brincalhona faz com que se metam onde não são chamados.",
+                        id = "CURIOSO",
+                        category = "racial_hindrance",
+                        severity = "Maior"
+                    )
+                )
+            }
+        }
+
         if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
             removeByIdOrName("FRAGIL", "FRAGIL")
             removeByIdOrName("NAO_SABE_NADAR", "NAO SABE NADAR")

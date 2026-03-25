@@ -102,9 +102,10 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("CURIOSO"), // Injected as Edge/Ability name (text only if no definition)
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("CURIOSO (Maior)"),
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("SANGUINÁRIO", "SANGUINÁRIO (Maior)")
                     )
                 } else {
                     // Básico
@@ -114,7 +115,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("SANGUINÁRIO"),
+                        ensureRacialDisadvantages = listOf("SANGUINÁRIO (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
                 }
@@ -207,9 +208,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("COMUNITÁRIO"),
                         automaticAdvantagesToRemove = listOf("DESASTRADO"),
-                        ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
+                        ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO", "TRANSTORNO DE SEPARAÇÃO (Maior)"),
                         elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("DESASTRADO")
+                        racialDisadvantagesToRemove = listOf("DESASTRADO", "DESASTRADO (Menor)")
                     )
                 } else {
                     // Básico
@@ -219,7 +220,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("DESASTRADO"),
+                        ensureRacialDisadvantages = listOf("DESASTRADO (Menor)"),
                         elementalAction = ElementalAction.NONE
                     )
                 }
