@@ -492,7 +492,7 @@ fun AncestralidadesSection(
                                 val itemKeyNorm = item.nome.keyify()
                                 if (item.opcoes.isNotEmpty()) {
                                     val opcoesValidas = if (itemKeyNorm == "ANOES" && !state.compendioScifiMechasCiberneticosAtivo) {
-                                        item.opcoes.filter { it.keyify() != "ciber" }
+                                        item.opcoes.filter { it.keyify() != "CIBER" }
                                     } else {
                                         item.opcoes
                                     }
