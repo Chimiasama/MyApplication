@@ -171,9 +171,9 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("COMUNITÁRIO"), result.ensureAutomaticAdvantages)
+        assertEquals(emptyList<String>(), result.ensureAutomaticAdvantages)
         assertEquals(listOf("DESASTRADO"), result.automaticAdvantagesToRemove)
-        assertEquals(listOf("TRANSTORNO DE SEPARAÇÃO", "TRANSTORNO DE SEPARAÇÃO (Maior)"), result.ensureRacialDisadvantages)
+        assertEquals(listOf("TRANSTORNO DE SEPARAÇÃO", "COMUNITÁRIO"), result.ensureRacialDisadvantages)
         assertEquals(listOf("DESASTRADO", "DESASTRADO (Menor)"), result.racialDisadvantagesToRemove)
     }
 

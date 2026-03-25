@@ -584,8 +584,7 @@
         "nome": "TRANSTORNO DE SEPARAÇÃO",
         "descricao": "Insetoides são criaturas coletivas e geralmente não se dão bem sozinhos. Quando nenhum outro insetoide estiver na linha de visão, a personagem sofre -2 nas rolagens de Espírito.",
         "id": "TRANSTORNO_DE_SEPARACAO",
-        "category": "racial_hindrance",
-        "severity": "Maior"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VISÃO DE 360°",
@@ -977,8 +976,7 @@
         "nome": "TRANSTORNO DE SEPARAÇÃO",
         "descricao": "Estas criaturas são entidades solitárias, subtraindo 2 das rolagens de Espírito quando não houver outros vazios presentes.",
         "id": "TRANSTORNO_DE_SEPARACAO",
-        "category": "racial_hindrance",
-        "severity": "Maior"
+        "category": "racial_trait_negative"
       }
     ],
     "tags": [

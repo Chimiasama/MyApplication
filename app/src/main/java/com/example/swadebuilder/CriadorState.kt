@@ -625,6 +625,8 @@ class CriadorState {
                     )
                 )
             }
+
+
         }
 
         if (key == "ELFOS" && variant.equals("Comunitário", ignoreCase = true)) {

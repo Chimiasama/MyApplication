@@ -247,7 +247,7 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertFalse(result.desvantagensRaciais.any { it.equals("DESASTRADO", ignoreCase = true) })
         assertFalse(result.vantagensRaciais.any { it.equals("DESASTRADO", ignoreCase = true) })
         assertTrue(result.desvantagensRaciais.any { it.equals("TRANSTORNO DE SEPARAÇÃO", ignoreCase = true) })
-        assertTrue(result.vantagensRaciais.any { it.equals("COMUNITÁRIO", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.equals("COMUNITÁRIO", ignoreCase = true) })
     }
 
     @Test
