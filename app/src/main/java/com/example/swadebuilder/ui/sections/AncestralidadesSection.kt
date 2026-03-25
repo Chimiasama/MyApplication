@@ -501,12 +501,18 @@ fun AncestralidadesSection(
                                         availableOptions = item.opcoes
                                     ) ?: item.opcoes.firstOrNull().orEmpty()
 
+                                    val opcoesValidas = if (itemKeyNorm == "ANOES" && !state.compendioScifiMechasCiberneticosAtivo) {
+                                        item.opcoes.filter { it.keyify() != "ciber" }
+                                    } else {
+                                        item.opcoes
+                                    }
+
                                     Box {
                                         OutlinedButton(onClick = { expanded = true }) {
                                             Text(currentSelection.toFancyTitleCase())
                                         }
                                         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                            item.opcoes.forEach { opt ->
+                                            opcoesValidas.forEach { opt ->
                                                 DropdownMenuItem(
                                                     text = { Text(opt.toFancyTitleCase()) },
                                                     onClick = {

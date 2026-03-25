@@ -63,14 +63,14 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
 
             if (ancKey == "ANOES") {
-                return if (effectiveVariant == "Cyber") {
+                return if (effectiveVariant == "Ciber") {
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
-                        ensureRacialDisadvantages = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
+                        ensureRacialDisadvantages = listOf("Anões Ciber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
                         elementalAction = ElementalAction.NONE,
                         anotacoesToAdd = emptyList()
                     )
