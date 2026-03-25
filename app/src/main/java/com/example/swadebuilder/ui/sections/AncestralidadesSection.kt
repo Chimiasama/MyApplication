@@ -497,16 +497,16 @@ fun AncestralidadesSection(
                                         item.opcoes
                                     }
 
+                                    val currentSelection = state.resolveSciFiVariantSelectionFor(
+                                        ancestryName = item.nome,
+                                        availableOptions = item.opcoes
+                                    ) ?: item.opcoes.firstOrNull().orEmpty()
+
                                     if (opcoesValidas.size > 1) {
                                         Spacer(Modifier.height(8.dp))
                                         Text("Variante:", style = MaterialTheme.typography.labelMedium)
 
                                         var expanded by remember { mutableStateOf(false) }
-
-                                        val currentSelection = state.resolveSciFiVariantSelectionFor(
-                                            ancestryName = item.nome,
-                                            availableOptions = item.opcoes
-                                        ) ?: item.opcoes.firstOrNull().orEmpty()
 
                                         Box {
                                             OutlinedButton(onClick = { expanded = true }) {
