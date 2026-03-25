@@ -67,7 +67,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
+                        ensureAdvantageNames = listOf("CIBERTOLERÂNCIA"),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
                         ensureRacialDisadvantages = listOf("Anões Ciber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),

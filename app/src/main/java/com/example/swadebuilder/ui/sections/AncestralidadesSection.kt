@@ -491,35 +491,37 @@ fun AncestralidadesSection(
                             if (isSelected) {
                                 val itemKeyNorm = item.nome.keyify()
                                 if (item.opcoes.isNotEmpty()) {
-                                    Spacer(Modifier.height(8.dp))
-                                    Text("Variante:", style = MaterialTheme.typography.labelMedium)
-
-                                    var expanded by remember { mutableStateOf(false) }
-
-                                    val currentSelection = state.resolveSciFiVariantSelectionFor(
-                                        ancestryName = item.nome,
-                                        availableOptions = item.opcoes
-                                    ) ?: item.opcoes.firstOrNull().orEmpty()
-
                                     val opcoesValidas = if (itemKeyNorm == "ANOES" && !state.compendioScifiMechasCiberneticosAtivo) {
                                         item.opcoes.filter { it.keyify() != "ciber" }
                                     } else {
                                         item.opcoes
                                     }
 
-                                    Box {
-                                        OutlinedButton(onClick = { expanded = true }) {
-                                            Text(currentSelection.toFancyTitleCase())
-                                        }
-                                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                            opcoesValidas.forEach { opt ->
-                                                DropdownMenuItem(
-                                                    text = { Text(opt.toFancyTitleCase()) },
-                                                    onClick = {
-                                                        state.selecionarScifiVariant(opt)
-                                                        expanded = false
-                                                    }
-                                                )
+                                    if (opcoesValidas.size > 1) {
+                                        Spacer(Modifier.height(8.dp))
+                                        Text("Variante:", style = MaterialTheme.typography.labelMedium)
+
+                                        var expanded by remember { mutableStateOf(false) }
+
+                                        val currentSelection = state.resolveSciFiVariantSelectionFor(
+                                            ancestryName = item.nome,
+                                            availableOptions = item.opcoes
+                                        ) ?: item.opcoes.firstOrNull().orEmpty()
+
+                                        Box {
+                                            OutlinedButton(onClick = { expanded = true }) {
+                                                Text(currentSelection.toFancyTitleCase())
+                                            }
+                                            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                                opcoesValidas.forEach { opt ->
+                                                    DropdownMenuItem(
+                                                        text = { Text(opt.toFancyTitleCase()) },
+                                                        onClick = {
+                                                            state.selecionarScifiVariant(opt)
+                                                            expanded = false
+                                                        }
+                                                    )
+                                                }
                                             }
                                         }
                                     }
