@@ -488,40 +488,5 @@
     "origem": "FANTASIA",
     "severity": "menor ou maior",
     "description": "Esta Complicação só pode ser adquirida por aqueles com Antecedente Arcano.\nO conjurador depende de um item físico para ativar seus poderes. O Talismã pode ser um cajado mágico, um símbolo sagrado, uma varinha, uma arma ou qualquer outro item transportável.\nQuando pego sem ele, subtrai 1 de todas as rolagens de perícias arcanas (-2 como uma Complicação Maior) e fica Atordoado se o teste for uma Falha Crítica.\nA substituição de um Talismã perdido depende do objeto, mas geralmente exige que o conjurador o pegue de volta. Se destruído, o Mestre deve trabalhar com o jogador para descobrir o que poderia ser um substituto adequado e como poderia ser obtido."
-  },
-  {
-    "id": "dependencia",
-    "name": "DEPENDÊNCIA",
-    "origem": "FANTASIA",
-    "severity": "maior",
-    "description": "Uma hora gasta se recuperando com a substância apropriada restaura todos os níveis de Fadiga ou perda de poderes causada por esta Complicação.\nObservação: Esta Complicação é a versão da Habilidade Racial Negativa presente no Savage Worlds Edição Aventura. Em uma campanha de supers, isso pode ser uma condição ou parte da história em vez de um traço hereditário da personagem.\nO super deve consumir ou ter contato com algum tipo relativamente comum de substância por uma hora a cada 24 horas. Caso contrário, não poderá usar seus poderes ou recebe um nível de Fadiga (decida qual quando a Complicação é comprada). Se escolher o segundo, recebe um nível adicional de Fadiga a cada 24 horas até que fique Incapacitado (isso pode causar morte)."
-  },
-  {
-    "id": "fraqueza_ambiental",
-    "name": "FRAQUEZA AMBIENTAL",
-    "origem": "FANTASIA",
-    "severity": "menor",
-    "description": "Sua personagem é mais suscetível a um Tipo de Poder específico (veja a pág. 53), como Frio, Fogo, Mental e assim por diante.\nAtaques deste tipo causam +4 de dano e um redutor de -4 é aplicado nas rolagens de Resistência deste Tipo de Poder (poderes que funcionem como infecção ou controle de mente).\nConverse com o Mestre antes de assumir esta Complicação – não é realmente uma Complicação se pegar Fraqueza Ambiental a um Tipo de Poder que nunca aparece em sua campanha.\nÉ possível adquirir está Complicação mais de uma vez para fraquezas a mais de um Tipo de Poder."
-  },
-  {
-    "id": "inimigo_racial",
-    "name": "INIMIGO RACIAL",
-    "origem": "FANTASIA",
-    "severity": "menor",
-    "description": "A sociedade desta ancestralidade cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam uns com os outros e geralmente se atacam à primeira vista."
-  },
-  {
-    "id": "sensibilidade_a_luz_solar",
-    "name": "SENSIBILIDADE À LUZ SOLAR",
-    "origem": "FANTASIA",
-    "severity": "menor",
-    "description": "A personagem deve se cobrir completamente ou fica em Estado Distraído enquanto estiver exposta à luz solar ou equivalente mágico/artificial."
-  },
-  {
-    "id": "aversao_animal",
-    "name": "AVERSÃO ANIMAL",
-    "origem": "FANTASIA",
-    "severity": "menor",
-    "description": "Os animais acham a personagem enervante. Eles não se aproximarão voluntariamente a menos de 5 quadros (10 metros). Além disso, subtrai 2 das rolagens para controlar ou montar animais."
   }
 ]

@@ -134,7 +134,8 @@
         "nome": "CÓDIGO DE HONRA",
         "descricao": "Celestiais seguem naturalmente uma moral boa. Abominam mentiras, protegem os fracos e buscam por justiça.",
         "id": "CODIGO_DE_HONRA",
-        "category": "racial_trait_negative"
+        "category": "racial_hindrance",
+        "severity": "Maior"
       },
       {
         "nome": "VOO",
@@ -234,8 +235,8 @@
       {
         "nome": "RÁPIDO",
         "descricao": "Descendentes do fogo são frenéticos e estão sempre em movimento. Possuem a Vantagem Rápido.",
-        "id": "RAPIDO",
-        "category": "racial_trait_positive"
+        "id": "rapido",
+        "category": "racial_edge"
       },
       {
         "nome": "SÓLIDO COMO ROCHA",
@@ -1094,8 +1095,8 @@
       {
         "nome": "SUCATEIRO",
         "descricao": "Membros do povo ratazana colecionam itens obsessivamente onde quer que vão, carregando-os em seus corpos e em suas tocas. Possuem a Vantagem Sucateiro.",
-        "id": "SUCATEIRO",
-        "category": "racial_trait_positive"
+        "id": "sucateiro",
+        "category": "racial_edge"
       },
       {
         "nome": "TAMANHO -1",

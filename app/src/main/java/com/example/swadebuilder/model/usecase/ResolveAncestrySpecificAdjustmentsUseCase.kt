@@ -908,6 +908,11 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
+                automaticAdvantagesToRemove = if (descendenteElementalSelecionado?.equals("Fogo", ignoreCase = true) == true) {
+                    emptyList()
+                } else {
+                    listOf("RAPIDO", "RÁPIDO", "rapido")
+                },
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = if (descendenteElementalSelecionado == null) {
                     ElementalAction.SELECT_DEFAULT

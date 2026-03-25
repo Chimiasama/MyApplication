@@ -148,6 +148,7 @@ fun buildSummaryLines(
         }
     }
 
+
     val vantagensNomeKey: List<String> = allAdvantages
         .filter { it.id in personagem.vantagens }
         .map { it.nome.keyify() }
@@ -496,6 +497,25 @@ fun buildSummaryLines(
             val pack = personagem.pacoteCulturalFantasiaSelecionado
             if (!pack.isNullOrBlank() && !pack.equals("Humano padrão", ignoreCase = true)) {
                 removeAll { it.keyify() == "ADAPTAVEL" }
+            }
+            if (personagem.compendioFantasiaAtivo) {
+                when (pack) {
+                    "Nômades do Deserto" -> {
+                        if (none { it.keyify() == "FRAQUEZA_AMBIENTAL" }) {
+                            add("Fraqueza Ambiental (Frio)")
+                        }
+                    }
+                    "Povo da Montanha" -> {
+                        if (none { it.keyify() == "FRAQUEZA_AMBIENTAL" }) {
+                            add("Fraqueza Ambiental (Calor)")
+                        }
+                    }
+                    "Povo do Mar" -> {
+                        if (personagem.povoDoMarOpcao == "Penalidade em Cavalgar" && none { it.keyify() == "PENALIDADE_CAVALGAR" }) {
+                            add("Penalidade em Cavalgar")
+                        }
+                    }
+                }
             }
         }
 

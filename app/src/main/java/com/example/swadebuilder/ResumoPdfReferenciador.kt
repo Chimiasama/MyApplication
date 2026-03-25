@@ -46,6 +46,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         signoAdgSelecionado = this.signoAdgSelecionado,
         descendenteElementalSelecionado = this.descendenteElementalSelecionado,
         pacoteCulturalFantasiaSelecionado = this.pacoteCulturalFantasiaSelecionado,
+        povoDoMarOpcao = this.povoDoMarOpcao,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         tropoSelecionadoId = this.tropoSelecionado?.id,
         vantagens = this.vantagensSelecionadas.map { it.id },
@@ -463,18 +464,12 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
         weapons.forEach { w ->
             cx = x
 
-            val isNaturalWeapon = w.nome.equals("Desarmado", ignoreCase = true) ||
-                w.nome.equals("Garras", ignoreCase = true) ||
-                w.nome.equals("Mordida", ignoreCase = true) ||
-                w.nome.equals("Cascos", ignoreCase = true) ||
-                w.nome.equals("Chifres", ignoreCase = true) ||
-                w.nome.equals("Ataque Natural", ignoreCase = true) ||
-                w.nome.contains("Ataque Natural", ignoreCase = true) ||
-                w.nome.contains("Mordida", ignoreCase = true) ||
-                w.nome.contains("Garra", ignoreCase = true) ||
-                w.nome.contains("Chifre", ignoreCase = true) ||
-                w.nome.contains("Casco", ignoreCase = true) ||
-                w.nome.contains("Cabeça Dura", ignoreCase = true)
+            val naturalKeywords = listOf(
+                "Desarmado", "Ataque Natural", "Garra", "Mordida",
+                "Casco", "Chifre", "Cabeça Dura", "Ferrão",
+                "Toque Arrepiante", "Toque da Morte", "Toque Venenoso", "Tentáculo"
+            )
+            val isNaturalWeapon = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
 
             val cdtStr = if (isNaturalWeapon) "-" else w.cdt?.toString()?.replace("\"", "") ?: "1"
             val pesoStr = if (isNaturalWeapon) "-" else w.peso?.toString()?.replace("\"", "") ?: "-"
