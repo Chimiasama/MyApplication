@@ -151,6 +151,14 @@ private fun CriadorState.evaluateVantagemVisibility(
         }
     }
 
+    // Sci-Fi Mechas & Cibernéticos rule check
+    if (!compendioScifiMechasCiberneticosAtivo) {
+        val sciFiMechEdges = setOf("cibertolerancia", "cibersamurai", "ciborgue")
+        if (vant.id in sciFiMechEdges) {
+            return VantagemVisibilityDecision(false, "blocked_by_missing_scifi_mechas_rule")
+        }
+    }
+
     // 3. Arcane Background UI Logic
 
 
