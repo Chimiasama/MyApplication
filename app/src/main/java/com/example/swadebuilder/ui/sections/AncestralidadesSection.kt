@@ -496,24 +496,34 @@ fun AncestralidadesSection(
 
                                     var expanded by remember { mutableStateOf(false) }
 
-                                    val currentSelection = state.resolveSciFiVariantSelectionFor(
-                                        ancestryName = item.nome,
-                                        availableOptions = item.opcoes
-                                    ) ?: item.opcoes.firstOrNull().orEmpty()
-
-                                    Box {
-                                        OutlinedButton(onClick = { expanded = true }) {
-                                            Text(currentSelection.toFancyTitleCase())
+                                    val opcoesValidas = item.opcoes.filter {
+                                        if (itemKeyNorm == "ANOES" && it.keyify() == "CIBER") {
+                                            state.compendioScifiMechasCiberneticosAtivo
+                                        } else {
+                                            true
                                         }
-                                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                            item.opcoes.forEach { opt ->
-                                                DropdownMenuItem(
-                                                    text = { Text(opt.toFancyTitleCase()) },
-                                                    onClick = {
-                                                        state.selecionarScifiVariant(opt)
-                                                        expanded = false
-                                                    }
-                                                )
+                                    }
+
+                                    if (opcoesValidas.isNotEmpty()) {
+                                        val currentSelection = state.resolveSciFiVariantSelectionFor(
+                                            ancestryName = item.nome,
+                                            availableOptions = opcoesValidas
+                                        ) ?: opcoesValidas.firstOrNull().orEmpty()
+
+                                        Box {
+                                            OutlinedButton(onClick = { expanded = true }) {
+                                                Text(currentSelection.toFancyTitleCase())
+                                            }
+                                            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                                opcoesValidas.forEach { opt ->
+                                                    DropdownMenuItem(
+                                                        text = { Text(opt.toFancyTitleCase()) },
+                                                        onClick = {
+                                                            state.selecionarScifiVariant(opt)
+                                                            expanded = false
+                                                        }
+                                                    )
+                                                }
                                             }
                                         }
                                     }
