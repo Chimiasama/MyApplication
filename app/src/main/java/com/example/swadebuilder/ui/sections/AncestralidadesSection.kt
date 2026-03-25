@@ -490,42 +490,38 @@ fun AncestralidadesSection(
 
                             if (isSelected) {
                                 val itemKeyNorm = item.nome.keyify()
-                                if (item.opcoes.isNotEmpty()) {
+                                val opcoesValidas = item.opcoes.filter {
+                                    if (item.nome.keyify() == "ANOES" && it.keyify() == "CIBER") {
+                                        state.compendioScifiMechasCiberneticosAtivo
+                                    } else {
+                                        true
+                                    }
+                                }
+
+                                if (opcoesValidas.size > 1) {
                                     Spacer(Modifier.height(8.dp))
                                     Text("Variante:", style = MaterialTheme.typography.labelMedium)
 
                                     var expanded by remember { mutableStateOf(false) }
 
-                                    val opcoesValidas = item.opcoes.filter {
-                                        if (item.nome.keyify() == "ANOES" && it.keyify() == "CIBER") {
-                                            state.compendioScifiMechasCiberneticosAtivo
-                                        } else {
-                                            true
+                                    val currentSelection = state.resolveSciFiVariantSelectionFor(
+                                        ancestryName = item.nome,
+                                        availableOptions = opcoesValidas
+                                    ) ?: opcoesValidas.firstOrNull().orEmpty()
+
+                                    Box {
+                                        OutlinedButton(onClick = { expanded = true }) {
+                                            Text(currentSelection.toFancyTitleCase())
                                         }
-                                    }
-
-                                    val currentSelection = if (opcoesValidas.isNotEmpty()) {
-                                        state.resolveSciFiVariantSelectionFor(
-                                            ancestryName = item.nome,
-                                            availableOptions = opcoesValidas
-                                        ) ?: opcoesValidas.firstOrNull().orEmpty()
-                                    } else ""
-
-                                    if (opcoesValidas.isNotEmpty()) {
-                                        Box {
-                                            OutlinedButton(onClick = { expanded = true }) {
-                                                Text(currentSelection.toFancyTitleCase())
-                                            }
-                                            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                                opcoesValidas.forEach { opt ->
-                                                    DropdownMenuItem(
-                                                        text = { Text(opt.toFancyTitleCase()) },
-                                                        onClick = {
-                                                            state.selecionarScifiVariant(opt)
-                                                            expanded = false
-                                                        }
-                                                    )
-                                                }
+                                        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                            opcoesValidas.forEach { opt ->
+                                                DropdownMenuItem(
+                                                    text = { Text(opt.toFancyTitleCase()) },
+                                                    onClick = {
+                                                        state.selecionarScifiVariant(opt)
+                                                        expanded = false
+                                                    }
+                                                )
                                             }
                                         }
                                     }
