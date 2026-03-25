@@ -34,15 +34,21 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         humanoMineradorAtributo: String? = null,
         ancestryOptions: List<String> = emptyList(),
         isSciFiActive: Boolean = false,
+        isSciFiMechasActive: Boolean = false,
         ancestryOrigin: String = "BASICO"
     ): Result {
         val ancKey = anc.keyify()
-        val effectiveVariant = if (ancestryOptions.isNotEmpty()) {
+        val validOptions = if (ancKey == "ANOES" && !isSciFiMechasActive) {
+            ancestryOptions.filter { it.keyify() != "CIBER" }
+        } else {
+            ancestryOptions
+        }
+        val effectiveVariant = if (validOptions.isNotEmpty()) {
             resolveAncestryVariantUseCase.execute(
                 ResolveAncestryVariantUseCase.Input(
                     selectedVariant = scifiVariant,
                     legacySelectedVariant = anoesScifiSelecionado,
-                    availableOptions = ancestryOptions
+                    availableOptions = validOptions
                 )
             ).normalizedSelection
         } else {

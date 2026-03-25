@@ -151,7 +151,7 @@ class SummaryUtilsTest {
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
                 complicacoes = emptyList(),
-                desvantagensRaciais = listOf("Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
+                desvantagensRaciais = listOf("Anões Ciber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
                 equipamentos = emptyList(),
                 poderes = emptyMap(),
                 dinheiro = 0,
@@ -177,7 +177,7 @@ class SummaryUtilsTest {
 
         val annotations = lines.firstOrNull { it.startsWith("Anotações Raciais:") }
         assertEquals(
-            "Anotações Raciais: Anões Cyber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário.",
+            "Anotações Raciais: Anões Ciber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário.",
             annotations
         )
     }

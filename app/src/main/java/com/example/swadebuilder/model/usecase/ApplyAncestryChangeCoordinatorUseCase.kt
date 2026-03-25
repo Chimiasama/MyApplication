@@ -39,6 +39,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val originPriorityResolver: (String?) -> Int,
         val compendioArteDaGuerraAtivo: Boolean,
         val compendioSciFiAtivo: Boolean = false,
+        val compendioScifiMechasCiberneticosAtivo: Boolean = false,
         val signoAdgSelecionado: String?,
         val modoSupers: Boolean,
         val meioElfoAgil: Boolean // Pass current flag
@@ -106,6 +107,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 humanoMineradorAtributo = params.humanoMineradorAtributo,
                 ancestryOptions = params.targetAncestryDef?.opcoes ?: emptyList(),
                 isSciFiActive = params.compendioSciFiAtivo,
+                isSciFiMechasActive = params.compendioScifiMechasCiberneticosAtivo,
                 allAdvantages = params.allAdvantages,
                 selectedAdvantages = filteredAdvantages,
                 previousFreeAdvantageKeys = transitionBootstrap.ancestryTransitionContext.previousFreeAdvantageKeys,

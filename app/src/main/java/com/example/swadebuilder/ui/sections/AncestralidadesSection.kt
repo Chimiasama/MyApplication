@@ -497,19 +497,21 @@ fun AncestralidadesSection(
                                     var expanded by remember { mutableStateOf(false) }
 
                                     val opcoesValidas = item.opcoes.filter {
-                                        if (itemKeyNorm == "ANOES" && it.keyify() == "CIBER") {
+                                        if (item.nome.keyify() == "ANOES" && it.keyify() == "CIBER") {
                                             state.compendioScifiMechasCiberneticosAtivo
                                         } else {
                                             true
                                         }
                                     }
 
-                                    if (opcoesValidas.isNotEmpty()) {
-                                        val currentSelection = state.resolveSciFiVariantSelectionFor(
+                                    val currentSelection = if (opcoesValidas.isNotEmpty()) {
+                                        state.resolveSciFiVariantSelectionFor(
                                             ancestryName = item.nome,
                                             availableOptions = opcoesValidas
                                         ) ?: opcoesValidas.firstOrNull().orEmpty()
+                                    } else ""
 
+                                    if (opcoesValidas.isNotEmpty()) {
                                         Box {
                                             OutlinedButton(onClick = { expanded = true }) {
                                                 Text(currentSelection.toFancyTitleCase())
@@ -529,9 +531,9 @@ fun AncestralidadesSection(
                                     }
 
                                     // Human Miner / Feral Primitive Attribute Choice
-                                    if ((itemKeyNorm == "HUMANOS" && currentSelection == "Minerador") || itemKeyNorm == "FERAL") {
+                                    if ((item.nome.keyify() == "HUMANOS" && currentSelection == "Minerador") || item.nome.keyify() == "FERAL") {
                                         Spacer(Modifier.height(8.dp))
-                                        val feralSelected = itemKeyNorm == "FERAL"
+                                        val feralSelected = item.nome.keyify() == "FERAL"
                                         val attributeOptions = if (feralSelected) {
                                             listOf("Força", "Vigor", "Agilidade")
                                         } else {
