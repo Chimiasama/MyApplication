@@ -111,6 +111,14 @@ private fun CriadorState.evaluateVantagemVisibility(
         return VantagemVisibilityDecision(false, "blocked_monstruosa_without_monster_mode")
     }
 
+    // Sci-Fi Cybernetics Check
+    if (origemNorm == "SCI_FI" && !compendioScifiMechasCiberneticosAtivo) {
+        val ciberneticAdvantages = setOf("cibertolerancia", "cibersamurai", "ciborgue")
+        if (vant.id in ciberneticAdvantages) {
+            return VantagemVisibilityDecision(false, "blocked_ciberneticos_rule_inactive")
+        }
+    }
+
     // Scenario strategy policies (Fase 4)
     if (selectedRules.blocksArcaneBackgrounds()) {
         if (vant.id.startsWith("antecedente_arcano") || vant.id.startsWith("aa_")) {

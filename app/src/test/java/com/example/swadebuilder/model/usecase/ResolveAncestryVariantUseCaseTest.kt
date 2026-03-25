@@ -50,12 +50,12 @@ class ResolveAncestryVariantUseCaseTest {
         val result = useCase.execute(
             ResolveAncestryVariantUseCase.Input(
                 selectedVariant = null,
-                legacySelectedVariant = "Cyber",
-                availableOptions = listOf("Básico", "Cyber")
+                legacySelectedVariant = "Ciber",
+                availableOptions = listOf("Básico", "Ciber")
             )
         )
 
-        assertEquals("Cyber", result.normalizedSelection)
+        assertEquals("Ciber", result.normalizedSelection)
     }
 
     @Test

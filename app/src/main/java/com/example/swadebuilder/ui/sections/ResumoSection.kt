@@ -206,7 +206,7 @@ fun SummaryContent(
     val tensaoLimite = if (isPersonagemRobotico) {
         state.limiteModsRoboticos()
     } else {
-        state.valoresAtributos["VIGOR"]?.intValue ?: 4
+        state.valorLimiteTensao().second
     }
     val tensaoLabel = if (isPersonagemRobotico) "Mods" else "Tensão"
     val ratio = if (weightLimit > 0f) totalWeight / weightLimit else Float.POSITIVE_INFINITY

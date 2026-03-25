@@ -744,11 +744,16 @@ class CriadorState {
         if (availableOptions.isEmpty()) return null
         val selected = overrideSelection ?: scifiVariant
         val legacySelection: String? = null
+        val filteredOptions = if (ancestryName.keyify() == "ANOES" && !compendioScifiMechasCiberneticosAtivo) {
+            availableOptions.filter { it.keyify() != "CIBER" }
+        } else {
+            availableOptions
+        }
         return resolveAncestryVariantUseCase.execute(
             ResolveAncestryVariantUseCase.Input(
                 selectedVariant = selected,
                 legacySelectedVariant = legacySelection,
-                availableOptions = availableOptions
+                availableOptions = filteredOptions
             )
         ).normalizedSelection
     }
@@ -4290,6 +4295,7 @@ class CriadorState {
                 originPriorityResolver = { getOriginPriority(it) },
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
+                compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo,
                 signoAdgSelecionado = signoAdgSelecionado,
                 modoSupers = modoSupers,
                 meioElfoAgil = meioElfoAgil,

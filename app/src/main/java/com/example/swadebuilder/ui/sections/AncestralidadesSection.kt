@@ -490,7 +490,15 @@ fun AncestralidadesSection(
 
                             if (isSelected) {
                                 val itemKeyNorm = item.nome.keyify()
-                                if (item.opcoes.isNotEmpty()) {
+                                val opcoesValidas = item.opcoes.filter {
+                                    if (item.nome.keyify() == "ANOES" && it.keyify() == "CIBER") {
+                                        state.compendioScifiMechasCiberneticosAtivo
+                                    } else {
+                                        true
+                                    }
+                                }
+
+                                if (opcoesValidas.size > 1) {
                                     Spacer(Modifier.height(8.dp))
                                     Text("Variante:", style = MaterialTheme.typography.labelMedium)
 
@@ -498,15 +506,15 @@ fun AncestralidadesSection(
 
                                     val currentSelection = state.resolveSciFiVariantSelectionFor(
                                         ancestryName = item.nome,
-                                        availableOptions = item.opcoes
-                                    ) ?: item.opcoes.firstOrNull().orEmpty()
+                                        availableOptions = opcoesValidas
+                                    ) ?: opcoesValidas.firstOrNull().orEmpty()
 
                                     Box {
                                         OutlinedButton(onClick = { expanded = true }) {
                                             Text(currentSelection.toFancyTitleCase())
                                         }
                                         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                            item.opcoes.forEach { opt ->
+                                            opcoesValidas.forEach { opt ->
                                                 DropdownMenuItem(
                                                     text = { Text(opt.toFancyTitleCase()) },
                                                     onClick = {
@@ -519,9 +527,9 @@ fun AncestralidadesSection(
                                     }
 
                                     // Human Miner / Feral Primitive Attribute Choice
-                                    if ((itemKeyNorm == "HUMANOS" && currentSelection == "Minerador") || itemKeyNorm == "FERAL") {
+                                    if ((item.nome.keyify() == "HUMANOS" && currentSelection == "Minerador") || item.nome.keyify() == "FERAL") {
                                         Spacer(Modifier.height(8.dp))
-                                        val feralSelected = itemKeyNorm == "FERAL"
+                                        val feralSelected = item.nome.keyify() == "FERAL"
                                         val attributeOptions = if (feralSelected) {
                                             listOf("Força", "Vigor", "Agilidade")
                                         } else {

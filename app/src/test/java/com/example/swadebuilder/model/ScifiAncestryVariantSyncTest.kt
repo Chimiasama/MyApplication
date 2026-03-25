@@ -16,7 +16,7 @@ class ScifiAncestryVariantSyncTest {
                 nome = "ANÕES", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
-                habilidades = emptyList(), opcoes = listOf("Básico", "Cyber")
+                habilidades = emptyList(), opcoes = listOf("Básico", "Ciber")
             ),
             com.example.swadebuilder.model.RacialModifier(
                 nome = "CENTAUX", origem = "SCI_FI",
@@ -120,9 +120,9 @@ class ScifiAncestryVariantSyncTest {
             injectMockAncestries(this)
             compendioSciFiAtivo = true
             ancestralidade = "ANÕES"
-            scifiVariant = "Cyber"
+            scifiVariant = "Ciber"
         }
-        assertEquals("Cyber", state.scifiVariant)
+        assertEquals("Ciber", state.scifiVariant)
 
         state.aplicarAncestralidade("HUMANOS", mutableListOf())
         assertNull(state.scifiVariant)
@@ -131,7 +131,7 @@ class ScifiAncestryVariantSyncTest {
         val anoesOptions = state.getAncestralidadeDef("ANÕES")?.opcoes.orEmpty()
         if (anoesOptions.isNotEmpty()) {
             val fallbackKey = state.scifiVariant?.keyify()
-            // Should reset to Basic/Padrao or null (implicit default), definitely NOT Cyber (previous selection)
+            // Should reset to Basic/Padrao or null (implicit default), definitely NOT Ciber (previous selection)
             assertTrue(fallbackKey == "BASICO" || fallbackKey == "PADRAO" || fallbackKey == null)
             org.junit.Assert.assertNotEquals("CYBER", fallbackKey)
         } else {
@@ -147,7 +147,7 @@ class ScifiAncestryVariantSyncTest {
 
         val selecionada = state.resolveSciFiVariantSelectionFor(
             ancestryName = "Qualquer",
-            availableOptions = listOf("Cyber", "Básico")
+            availableOptions = listOf("Ciber", "Básico")
         )
 
         assertEquals("Básico", selecionada)
@@ -157,7 +157,7 @@ class ScifiAncestryVariantSyncTest {
     fun `resolve variante usa estado atual para qualquer ancestralidade com opcoes`() {
         val state = CriadorState().apply {
             scifiVariant = "Gazela"
-            anoesScifiSelecionado = "Cyber"
+            anoesScifiSelecionado = "Ciber"
         }
 
         val selecionada = state.resolveSciFiVariantSelectionFor(
