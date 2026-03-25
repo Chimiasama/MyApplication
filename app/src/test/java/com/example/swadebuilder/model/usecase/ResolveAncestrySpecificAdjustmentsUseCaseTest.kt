@@ -145,7 +145,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
             result.ensureRacialDisadvantages
         )
-        assertEquals(listOf("NÃO SABE NADAR", "FRÁGIL"), result.racialDisadvantagesToRemove)
+        assertEquals(listOf("NÃO SABE NADAR", "NÃO SABE NADAR (Menor)", "FRÁGIL"), result.racialDisadvantagesToRemove)
         assertTrue(result.anotacoesToAdd.isEmpty())
     }
 

@@ -182,7 +182,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         automaticAdvantagesToRemove = listOf("FRÁGIL", "FRAGIL", "NÃO SABE NADAR", "NAO SABE NADAR"),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
                         elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR", "FRÁGIL")
+                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR", "NÃO SABE NADAR (Menor)", "FRÁGIL")
                     )
                 } else {
                     // Básico
