@@ -439,7 +439,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ALTA TECNOLOGIA",
+        "nome": "ALTA/BAIXA TECNOLOGIA",
         "descricao": "Devido ao seu tamanho menor, ferais desenvolveram dependência em tecnologia avançada para competir. Ferais possuem a Complicação Alta Tecnologia (Maior).",
         "id": "ALTA_TECNOLOGIA",
         "category": "racial_hindrance",

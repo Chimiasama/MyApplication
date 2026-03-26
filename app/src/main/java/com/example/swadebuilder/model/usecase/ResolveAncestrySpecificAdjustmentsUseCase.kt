@@ -355,7 +355,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
                         elementalAction = ElementalAction.NONE,
                         automaticAdvantagesToRemove = listOf("ESPIRITUOSO"),
-                        racialDisadvantagesToRemove = listOf("ALTA TECNOLOGIA", "ALTA TECNOLOGIA (Maior)")
+                        racialDisadvantagesToRemove = listOf("ALTA/BAIXA TECNOLOGIA", "ALTA/BAIXA TECNOLOGIA (Maior)")
                     )
                 } else {
                     // Padrão

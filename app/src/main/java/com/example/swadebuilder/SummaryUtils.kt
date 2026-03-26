@@ -454,7 +454,7 @@ fun buildSummaryLines(
             }
         }
     }
-    val habilidadesRaciaisBaseRaw = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val habilidadesRaciaisBaseRaw = ancestralidadeNomeObj?.habilidades?.filter { it.category != "racial_hindrance" }?.map { it.nome } ?: emptyList()
     val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AVIANOS" &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
