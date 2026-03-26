@@ -206,9 +206,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("COMUNITÁRIO"),
                         automaticAdvantagesToRemove = listOf("DESASTRADO"),
-                        ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO", "COMUNITÁRIO"),
+                        ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
                         elementalAction = ElementalAction.NONE,
                         racialDisadvantagesToRemove = listOf("DESASTRADO", "DESASTRADO (Menor)")
                     )
@@ -353,7 +353,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -4)"),
                         ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        automaticAdvantagesToRemove = listOf("ESPIRITUOSO"),
+                        racialDisadvantagesToRemove = listOf("ALTA TECNOLOGIA", "ALTA TECNOLOGIA (Maior)")
                     )
                 } else {
                     // Padrão
@@ -362,8 +364,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -3)", "ESPIRITUOSO"),
-                        ensureRacialDisadvantages = listOf("ALTA TECNOLOGIA (Maior)"),
+                        ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -3)"),
+                        ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
                 }

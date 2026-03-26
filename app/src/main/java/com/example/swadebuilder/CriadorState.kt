@@ -4105,7 +4105,6 @@ class CriadorState {
             }
 
             // Ferais: Padrão (Espirituoso - Spi d6). Menor (No Espirituoso - Spi d4).
-            // JSON cleared to d4.
             if (ancKey == "FERAIS") {
                 if (a.keyify() == "ESPIRITO") {
                     val variant = currentSciFiVariant ?: "Padrão"

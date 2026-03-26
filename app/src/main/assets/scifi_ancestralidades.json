@@ -434,12 +434,23 @@
       "Padrão",
       "Menor"
     ],
-    "atributos": {
-      "Espírito": 2
-    },
+    "atributos": {},
     "pericias": {},
     "desvantagens": [],
     "habilidades": [
+      {
+        "nome": "ALTA TECNOLOGIA",
+        "descricao": "Devido ao seu tamanho menor, ferais desenvolveram dependência em tecnologia avançada para competir. Ferais possuem a Complicação Alta Tecnologia (Maior).",
+        "id": "ALTA_TECNOLOGIA",
+        "category": "racial_hindrance",
+        "severity": "Maior"
+      },
+      {
+        "nome": "ESPIRITUOSO",
+        "descricao": "Ferais são determinados e tenazes. Começam com um d6 em Espírito (em vez de um d4). Isso aumenta o Espírito máximo para d12+1.",
+        "id": "ESPIRITUOSO",
+        "category": "racial_trait_positive"
+      },
       {
         "nome": "INIMIGO ANCESTRAL (Insetoide)",
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação.",
