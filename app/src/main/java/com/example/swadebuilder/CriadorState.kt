@@ -1688,9 +1688,15 @@ class CriadorState {
                     }
                 }
 
-                // Insetoides Padrão: For+d4
+                // Insetoides Padrão: For+d4 e PA 2
                 if (key.equals("Garras", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
                     dmgMatch = "For+d4"
+                    paFinal = maxOf(paFinal, 2)
+                }
+
+                // Insetoides Vespa Variante (Ferrão/Mordida): Tem PA -
+                if (key.equals("Ferrão", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
+                    paFinal = 0
                 }
 
                 if (key.equals("Garras", ignoreCase = true) && hasGarrasVampiro) {

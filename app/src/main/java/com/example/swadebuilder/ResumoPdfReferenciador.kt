@@ -474,11 +474,14 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
             val cdtStr = if (isNaturalWeapon) "-" else w.cdt?.toString()?.replace("\"", "") ?: "1"
             val pesoStr = if (isNaturalWeapon) "-" else w.peso?.toString()?.replace("\"", "") ?: "-"
 
+            val paVal = w.pa?.toString()?.replace("\"", "")
+            val paStr = if (isNaturalWeapon && (paVal == null || paVal == "0" || paVal.isBlank())) "-" else paVal ?: "0"
+
             val data = listOf(
                 w.nome,
                 w.distancia?.toString()?.replace("\"", "") ?: "-",
                 w.dano?.toString()?.replace("\"", "") ?: "-",
-                w.pa?.toString()?.replace("\"", "") ?: "0",
+                paStr,
                 cdtStr,
                 pesoStr
             )
