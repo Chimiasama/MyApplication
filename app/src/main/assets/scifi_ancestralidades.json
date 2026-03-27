@@ -710,6 +710,12 @@
         "descricao": "Oráculos podem se comunicar mentalmente com qualquer forma de vida inteligente em um raio de 12 quadros (24 metros), independentemente do idioma.",
         "id": "TELEPATIA",
         "category": "racial_trait_positive"
+      },
+      {
+        "nome": "NOÇÃO DO PERIGO",
+        "descricao": "Oráculos têm intuição e premonição sobre perigos iminentes. Começam com a Vantagem Noção do Perigo.",
+        "id": "NOCAO_DO_PERIGO",
+        "category": "racial_edge"
       }
     ],
     "tags": [

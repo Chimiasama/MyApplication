@@ -509,7 +509,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = listOf("poderes_misticos"), // Handled in CriadorState to set choice to Telepata
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("PODERES MÍSTICOS (TELEPATA)", "PODERES MISTICOS (TELEPATA)"),
+                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO_DO_PERIGO"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -519,8 +520,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("NOÇÃO DO PERIGO"),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAdvantageIds = listOf("nocao_do_perigo"),
+                        ensureAutomaticAdvantages = listOf("NOÇÃO DO PERIGO"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
