@@ -527,6 +527,14 @@ fun buildSummaryLines(
             removeAll { it.keyify() == "ARROGANTE" }
         }
 
+        if (personagem.ancestralidade.keyify() == "MINERADORES GENETICOS" || personagem.ancestralidade.keyify() == "MINERADORES GENÉTICOS") {
+            if (personagem.vantagensRaciais.any { it.keyify() == "ADAPTACAO GRAVITACIONAL" || it.keyify() == "ADAPTAÇÃO GRAVITACIONAL" } ||
+                personagem.vantagens.any { it.keyify() == "ADAPTACAO_GRAVITACIONAL" }
+            ) {
+                removeAll { it.keyify() == "DEPENDENCIA ATMOSFERICA" || it.keyify() == "DEPENDÊNCIA ATMOSFÉRICA" || it.keyify() == "FORTE" }
+            }
+        }
+
         if (personagem.ancestralidade.keyify() == "SERES SINTETICOS" || personagem.ancestralidade.keyify() == "SERES_SINTETICOS") {
             val hasVariantComplication = personagem.desvantagensRaciais.any {
                 val key = it.keyify()
