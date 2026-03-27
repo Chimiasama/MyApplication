@@ -482,9 +482,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL"),
                         ensureAdvantageIds = listOf("adaptacao_gravitacional"),
-                        ensureAutomaticAdvantages = emptyList(),
-                        automaticAdvantagesToRemove = listOf("FORTE"),
-                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA/ZERO"),
+                        ensureAutomaticAdvantages = listOf("ADAPTAÇÃO GRAVITACIONAL"),
+                        automaticAdvantagesToRemove = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
+                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)"),
                         racialDisadvantagesToRemove = listOf("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
@@ -495,8 +495,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FORTE"),
-                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
+                        ensureAutomaticAdvantages = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
+                        ensureRacialDisadvantages = emptyList(), // Removed from complications
                         elementalAction = ElementalAction.NONE
                     )
                 }

@@ -359,7 +359,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
+        assertTrue(result.ensureAutomaticAdvantages.contains("DEPENDÊNCIA ATMOSFÉRICA"))
     }
 
     @Test
@@ -372,10 +372,11 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.contains("HABITANTE DE GRAVIDADE BAIXA/ZERO"))
+        assertTrue(result.ensureRacialDisadvantages.contains("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)"))
         assertTrue(result.racialDisadvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
         assertTrue(result.ensureAdvantageIds.contains("adaptacao_gravitacional"))
         assertTrue(result.automaticAdvantagesToRemove.contains("FORTE"))
+        assertTrue(result.automaticAdvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA"))
     }
 
     @Test

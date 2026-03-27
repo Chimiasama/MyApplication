@@ -660,14 +660,24 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "DEPENDÊNCIA ATMOSFÉRICA (Maior)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "EM FORMA",
         "descricao": "Mineradores genéticos trabalham longas horas em condições difíceis. Começam com um d6 em Vigor, aumentando o limite para d12+1.",
         "id": "EM_FORMA",
+        "category": "racial_trait_positive"
+      },
+      {
+        "nome": "DEPENDÊNCIA ATMOSFÉRICA",
+        "descricao": "Tornaram-se dependentes da atmosfera artificial de colônias estelares ou minas.",
+        "id": "DEPENDENCIA_ATMOSFERICA",
+        "category": "racial_trait_negative"
+      },
+      {
+        "nome": "FORTE",
+        "descricao": "Começam com Força d6 (no lugar do d4). Isso também eleva o limite de Força da heroína para d12+1.",
+        "id": "FORTE",
         "category": "racial_trait_positive"
       }
     ],
