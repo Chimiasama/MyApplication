@@ -535,6 +535,14 @@ fun buildSummaryLines(
             }
         }
 
+        if (personagem.ancestralidade.keyify() == "ORACULOS" || personagem.ancestralidade.keyify() == "ORÁCULOS") {
+            if (personagem.vantagensRaciais.any { it.keyify().contains("PODERES MISTICOS (TELEPATA)") || it.keyify().contains("PODERES MÍSTICOS (TELEPATA)") } ||
+                personagem.vantagens.any { it.keyify() == "PODERES_MISTICOS" }
+            ) {
+                removeAll { it.keyify() == "NOCAO DO PERIGO" || it.keyify() == "NOÇÃO DO PERIGO" }
+            }
+        }
+
         if (personagem.ancestralidade.keyify() == "SERES SINTETICOS" || personagem.ancestralidade.keyify() == "SERES_SINTETICOS") {
             val hasVariantComplication = personagem.desvantagensRaciais.any {
                 val key = it.keyify()
