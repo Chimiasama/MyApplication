@@ -4517,7 +4517,15 @@ class CriadorState {
         invalidAdvantagesResolution.removedAdvantages.forEach { removed ->
             removeVantagemDinheiro(removed)
             removerVantagem(removed)
-            pontosVantagem++
+
+            // Only refund the PV if this advantage was actually purchased by the player (not granted for free by the previous ancestry/tropo)
+            val wasFreeFromPreviousContext = ancestryChangeCoordination.previousFreeAdvantageKeys.contains(removed.nome.keyify()) ||
+                                             ancestryChangeCoordination.previousFreeAdvantageKeys.contains(removed.id.keyify()) ||
+                                             (removed.id == "poderes_misticos" && "PODERES_MISTICOS" in ancestryChangeCoordination.previousFreeAdvantageKeys) ||
+                                             ancestryChangeCoordination.invalidAdvantagesResolution.removedAdvantages.any { it.id == removed.id && ancestryChangeCoordination.previousFreeAdvantageKeys.contains(it.nome.keyify()) }
+            if (!wasFreeFromPreviousContext && !vantagensAutomaticasDoTropo.contains(removed.id)) {
+                pontosVantagem++
+            }
             feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
         }
 
@@ -4947,10 +4955,11 @@ class CriadorState {
                     val arcKey = "MISTICO"
                     if (poderSlotsPorArcano.containsKey(arcKey)) {
                         poderSlotsPorArcano.remove(arcKey)
-                        // Trigger re-add logic if needed, or simply clearing slots forces refresh on next sync
                     }
-                    // Re-trigger add logic to populate slots
-                    adicionarVantagem(vantagensSelecionadas[idx])
+                    // Initialize empty slots manually without calling adicionarVantagem to avoid duplicates
+                    val count = getSlotsCountForArcano(arcKey)
+                    val initialSlots = mutableStateListOf<String?>().apply { repeat(count) { add(null) } }
+                    poderSlotsPorArcano[arcKey] = initialSlots
                 }
             }
         }
