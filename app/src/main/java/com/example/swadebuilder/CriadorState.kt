@@ -4231,7 +4231,6 @@ class CriadorState {
         // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
         val isHalfOrcIntimidate = compendioPathfinderAtivo &&
                 ancestralidade.keyify().contains("MEIO-ORC") &&
-                ancestralidade.keyify().contains("PATHFINDER") &&
                 per.nome.keyify() == "INTIMIDAR"
 
         val baseCap = if (startRaw >= 6 || isHalfOrcIntimidate) 13 else 12
