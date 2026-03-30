@@ -184,15 +184,8 @@ fun SummaryContent(
 
     val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
     val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
-    val bonusCapacity = if (hasMusculoso) 10f else 0f
-    val strengthRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4
-    val effectiveStrengthForLoad = if (hasSoldado && state.soldadoCargaAtivo) {
-        if (strengthRaw < 12) strengthRaw + 2 else strengthRaw + 1
-    } else {
-        strengthRaw
-    }
-    val baseLimit = ((effectiveStrengthForLoad - 2) / 2) * 10f
-    val weightLimit = baseLimit + bonusCapacity
+    val hasDwarfLoadBonus = state.compendioPathfinderAtivo && state.ancestralidade.keyify() == "ANAO"
+    val weightLimit = state.valorCargaMaxima()
     val totalWeight = state.equipamentosComprados
         .mapNotNull { item ->
             (item.peso as? kotlinx.serialization.json.JsonPrimitive)
@@ -220,8 +213,10 @@ fun SummaryContent(
     // Calculate weight info separately to pass to the custom card
     val weightInfoLines = remember(state.equipamentosComprados, state.valoresAtributos, state.vantagensSelecionadas) {
         val soldierLabel = when {
+            hasSoldado && state.soldadoCargaAtivo && hasDwarfLoadBonus -> " (Soldado e Anão +2 dados)"
             hasSoldado && state.soldadoCargaAtivo -> " (Soldado +1 dado)"
             hasSoldado -> " (Soldado inativo)"
+            hasDwarfLoadBonus -> " (Anão +1 dado)"
             else -> ""
         }
         val weightLine = "Peso: ${"%.1f".format(totalWeight)} / ${"%.1f".format(weightLimit)}$soldierLabel"

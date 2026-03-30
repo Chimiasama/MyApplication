@@ -1814,6 +1814,7 @@ class CriadorState {
         val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
         val hasSoldado = vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
         val hasMusculoso = vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
+        val hasDwarfLoadBonus = compendioPathfinderAtivo && ancestralidade.keyify() == "ANAO"
         // PROMPT 2: "Brawny treats Strength as one die type higher"
         val hasBrutamontes = vantagensSelecionadas.any {
             val nk = it.nome.keyify()
@@ -1829,6 +1830,11 @@ class CriadorState {
 
         // Soldier logic: treat as one die higher (if active)
         if (hasSoldado && soldadoCargaAtivo) {
+             effectiveStrength = if (effectiveStrength < 12) effectiveStrength + 2 else effectiveStrength + 1
+        }
+
+        // Pathfinder Dwarf logic: treat as one die higher
+        if (hasDwarfLoadBonus) {
              effectiveStrength = if (effectiveStrength < 12) effectiveStrength + 2 else effectiveStrength + 1
         }
 
