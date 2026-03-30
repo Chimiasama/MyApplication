@@ -41,7 +41,8 @@ class ResolveAncestryRacialPackageUseCase(
             .filterNot {
                 val isLeakedDom = (it.id == "antecedente_arcano" && it.choice?.keyify() == "DOM" && "ANTECEDENTE ARCANO (DOM)" in params.previousFreeAdvantageKeys) ||
                                   (it.id == "antecedente_arcano_dom" && "ANTECEDENTE ARCANO (DOM)" in params.previousFreeAdvantageKeys)
-                it.nome.keyify() in params.previousFreeAdvantageKeys || isLeakedDom
+                val isLeakedTelepata = (it.id == "poderes_misticos" && it.choice?.keyify() == "TELEPATA" && "PODERES MISTICOS (TELEPATA)" in params.previousFreeAdvantageKeys)
+                it.nome.keyify() in params.previousFreeAdvantageKeys || it.id.keyify() in params.previousFreeAdvantageKeys || isLeakedDom || isLeakedTelepata
             }
             .toMutableList()
 

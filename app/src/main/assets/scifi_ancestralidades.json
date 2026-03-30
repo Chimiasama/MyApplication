@@ -325,8 +325,7 @@
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       }
     ],
     "tags": [
@@ -372,8 +371,7 @@
         "nome": "RUDE",
         "descricao": "Drakens são mais rápidos em ameaçar do que em argumentar. Subtraem 2 das rolagens de Persuadir.",
         "id": "RUDE",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       }
     ],
     "tags": [
@@ -436,12 +434,23 @@
       "Padrão",
       "Menor"
     ],
-    "atributos": {
-      "Espírito": 2
-    },
+    "atributos": {},
     "pericias": {},
     "desvantagens": [],
     "habilidades": [
+      {
+        "nome": "ALTA/BAIXA TECNOLOGIA",
+        "descricao": "Devido ao seu tamanho menor, ferais desenvolveram dependência em tecnologia avançada para competir. Ferais possuem a Complicação Alta Tecnologia (Maior).",
+        "id": "ALTA_TECNOLOGIA",
+        "category": "racial_hindrance",
+        "severity": "Maior"
+      },
+      {
+        "nome": "ESPIRITUOSO",
+        "descricao": "Ferais são determinados e tenazes. Começam com um d6 em Espírito (em vez de um d4). Isso aumenta o Espírito máximo para d12+1.",
+        "id": "ESPIRITUOSO",
+        "category": "racial_trait_positive"
+      },
       {
         "nome": "INIMIGO ANCESTRAL (Insetoide)",
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação.",
@@ -584,8 +593,7 @@
         "nome": "TRANSTORNO DE SEPARAÇÃO",
         "descricao": "Insetoides são criaturas coletivas e geralmente não se dão bem sozinhos. Quando nenhum outro insetoide estiver na linha de visão, a personagem sofre -2 nas rolagens de Espírito.",
         "id": "TRANSTORNO_DE_SEPARACAO",
-        "category": "racial_hindrance",
-        "severity": "Maior"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "VISÃO DE 360°",
@@ -652,14 +660,24 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [
-      "DEPENDÊNCIA ATMOSFÉRICA (Maior)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "EM FORMA",
         "descricao": "Mineradores genéticos trabalham longas horas em condições difíceis. Começam com um d6 em Vigor, aumentando o limite para d12+1.",
         "id": "EM_FORMA",
+        "category": "racial_trait_positive"
+      },
+      {
+        "nome": "DEPENDÊNCIA ATMOSFÉRICA",
+        "descricao": "Tornaram-se dependentes da atmosfera artificial de colônias estelares ou minas.",
+        "id": "DEPENDENCIA_ATMOSFERICA",
+        "category": "racial_trait_negative"
+      },
+      {
+        "nome": "FORTE",
+        "descricao": "Começam com Força d6 (no lugar do d4). Isso também eleva o limite de Força da heroína para d12+1.",
+        "id": "FORTE",
         "category": "racial_trait_positive"
       }
     ],
@@ -692,6 +710,12 @@
         "descricao": "Oráculos podem se comunicar mentalmente com qualquer forma de vida inteligente em um raio de 12 quadros (24 metros), independentemente do idioma.",
         "id": "TELEPATIA",
         "category": "racial_trait_positive"
+      },
+      {
+        "nome": "NOÇÃO DO PERIGO",
+        "descricao": "Oráculos têm intuição e premonição sobre perigos iminentes. Começam com a Vantagem Noção do Perigo.",
+        "id": "NOCAO_DO_PERIGO",
+        "category": "racial_edge"
       }
     ],
     "tags": [
@@ -977,8 +1001,7 @@
         "nome": "TRANSTORNO DE SEPARAÇÃO",
         "descricao": "Estas criaturas são entidades solitárias, subtraindo 2 das rolagens de Espírito quando não houver outros vazios presentes.",
         "id": "TRANSTORNO_DE_SEPARACAO",
-        "category": "racial_hindrance",
-        "severity": "Maior"
+        "category": "racial_trait_negative"
       }
     ],
     "tags": [
@@ -1084,8 +1107,7 @@
         "nome": "ÓBVIO",
         "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
         "id": "OBVIO",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       },
       {
         "nome": "TAMANHO +2",

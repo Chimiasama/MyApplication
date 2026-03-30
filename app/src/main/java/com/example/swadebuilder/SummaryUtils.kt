@@ -454,7 +454,7 @@ fun buildSummaryLines(
             }
         }
     }
-    val habilidadesRaciaisBaseRaw = ancestralidadeNomeObj?.habilidades?.map { it.nome } ?: emptyList()
+    val habilidadesRaciaisBaseRaw = ancestralidadeNomeObj?.habilidades?.filter { it.category != "racial_hindrance" }?.map { it.nome } ?: emptyList()
     val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AVIANOS" &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
@@ -525,6 +525,22 @@ fun buildSummaryLines(
 
         if (personagem.ancestralidade.keyify() == "DRACONIANOS") {
             removeAll { it.keyify() == "ARROGANTE" }
+        }
+
+        if (personagem.ancestralidade.keyify() == "MINERADORES GENETICOS" || personagem.ancestralidade.keyify() == "MINERADORES GENÉTICOS") {
+            if (personagem.vantagensRaciais.any { it.keyify() == "ADAPTACAO GRAVITACIONAL" || it.keyify() == "ADAPTAÇÃO GRAVITACIONAL" } ||
+                personagem.vantagens.any { it.keyify() == "ADAPTACAO_GRAVITACIONAL" }
+            ) {
+                removeAll { it.keyify() == "DEPENDENCIA ATMOSFERICA" || it.keyify() == "DEPENDÊNCIA ATMOSFÉRICA" || it.keyify() == "FORTE" }
+            }
+        }
+
+        if (personagem.ancestralidade.keyify() == "ORACULOS" || personagem.ancestralidade.keyify() == "ORÁCULOS") {
+            if (personagem.vantagensRaciais.any { it.keyify().contains("PODERES MISTICOS (TELEPATA)") || it.keyify().contains("PODERES MÍSTICOS (TELEPATA)") } ||
+                personagem.vantagens.any { it.keyify() == "PODERES_MISTICOS" }
+            ) {
+                removeAll { it.keyify() == "NOCAO DO PERIGO" || it.keyify() == "NOÇÃO DO PERIGO" }
+            }
         }
 
         if (personagem.ancestralidade.keyify() == "SERES SINTETICOS" || personagem.ancestralidade.keyify() == "SERES_SINTETICOS") {

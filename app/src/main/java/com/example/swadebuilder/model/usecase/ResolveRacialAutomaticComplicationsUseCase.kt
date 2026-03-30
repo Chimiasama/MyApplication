@@ -51,29 +51,28 @@ class ResolveRacialAutomaticComplicationsUseCase {
                 val selected = variants.maxByOrNull { params.originPriorityResolver(it.origem) }
                     ?: variants.first()
 
-                // Determine severity from the parsed spec, defaulting to "Menor"
-                val specSeverity = currentSpecs[normId] ?: "Menor"
+                // Determine severity from the parsed spec, defaulting to Complication JSON severity or "Menor"
+                val fallbackSeverity = when {
+                    selected.severity.lowercase().contains("menor") && selected.severity.lowercase().contains("maior") -> "Menor"
+                    selected.severity.lowercase().contains("maior") -> "Maior"
+                    else -> "Menor"
+                }
+
+                val specSeverity = currentSpecs[normId] ?: fallbackSeverity
                 withoutOld[selected] = specSeverity
             }
 
         return Result(selectedComplications = withoutOld)
     }
 
-    private fun parseDisadvantages(list: List<String>): Map<String, String> {
-        val map = mutableMapOf<String, String>()
+    private fun parseDisadvantages(list: List<String>): Map<String, String?> {
+        val map = mutableMapOf<String, String?>()
         list.forEach { item ->
-            // item format might be "Name (Severity)" or "Name|Severity" if we change upstream
-            // For now assume standard "Name (Severity)" or just "Name"
-            // But we need to handle the new explicit severity if we passed it down?
-            // Actually, CriadorState passes strings. We need CriadorState to pass "Name|Severity" or use the (Parens) convention.
-            // Our script updated names to include (Maior)/(Menor)? No, script added `severity` field to JSON.
-            // We need CriadorState to construct the string properly from that JSON field.
-
             val normKey = normalizeToken(item.substringBefore("(").trim())
             val severity = when {
                 item.contains("(Maior)", ignoreCase = true) || item.contains("|Maior", ignoreCase = true) -> "Maior"
                 item.contains("(Menor)", ignoreCase = true) || item.contains("|Menor", ignoreCase = true) -> "Menor"
-                else -> "Menor" // Default if unspecified
+                else -> null // Signal that it lacks explicit severity, let JSON model provide fallback
             }
             map[normKey] = severity
         }

@@ -164,7 +164,7 @@ class ResolveAncestryRacialPackageUseCaseTest {
         )
 
         assertFalse(result.desvantagensRaciais.any { it.equals("DEPENDÊNCIA ATMOSFÉRICA (Maior)", ignoreCase = true) })
-        assertTrue(result.desvantagensRaciais.any { it.equals("HABITANTE DE GRAVIDADE BAIXA/ZERO", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.equals("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)", ignoreCase = true) })
     }
 
 

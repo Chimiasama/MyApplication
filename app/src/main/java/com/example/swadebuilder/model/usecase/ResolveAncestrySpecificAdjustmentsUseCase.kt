@@ -102,9 +102,10 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("CURIOSO"), // Injected as Edge/Ability name (text only if no definition)
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
+                        ensureAutomaticAdvantages = emptyList(),
+                        ensureRacialDisadvantages = listOf("CURIOSO (Maior)"),
+                        elementalAction = ElementalAction.NONE,
+                        racialDisadvantagesToRemove = listOf("SANGUINÁRIO", "SANGUINÁRIO (Maior)")
                     )
                 } else {
                     // Básico
@@ -114,7 +115,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("SANGUINÁRIO"),
+                        ensureRacialDisadvantages = listOf("SANGUINÁRIO (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
                 }
@@ -182,7 +183,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         automaticAdvantagesToRemove = listOf("FRÁGIL", "FRAGIL", "NÃO SABE NADAR", "NAO SABE NADAR"),
                         ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
                         elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR", "FRÁGIL")
+                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR", "NÃO SABE NADAR (Menor)", "FRÁGIL")
                     )
                 } else {
                     // Básico
@@ -209,7 +210,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         automaticAdvantagesToRemove = listOf("DESASTRADO"),
                         ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
                         elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("DESASTRADO")
+                        racialDisadvantagesToRemove = listOf("DESASTRADO", "DESASTRADO (Menor)")
                     )
                 } else {
                     // Básico
@@ -219,7 +220,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("DESASTRADO"),
+                        ensureRacialDisadvantages = listOf("DESASTRADO (Menor)"),
                         elementalAction = ElementalAction.NONE
                     )
                 }
@@ -352,7 +353,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -4)"),
                         ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
-                        elementalAction = ElementalAction.NONE
+                        elementalAction = ElementalAction.NONE,
+                        automaticAdvantagesToRemove = listOf("ESPIRITUOSO"),
+                        racialDisadvantagesToRemove = listOf("ALTA/BAIXA TECNOLOGIA", "ALTA/BAIXA TECNOLOGIA (Maior)")
                     )
                 } else {
                     // Padrão
@@ -361,8 +364,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -3)", "ESPIRITUOSO"),
-                        ensureRacialDisadvantages = listOf("ALTA TECNOLOGIA (Maior)"),
+                        ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -3)"),
+                        ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
                 }
@@ -479,9 +482,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL"),
                         ensureAdvantageIds = listOf("adaptacao_gravitacional"),
-                        ensureAutomaticAdvantages = emptyList(),
-                        automaticAdvantagesToRemove = listOf("FORTE"),
-                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA/ZERO"),
+                        ensureAutomaticAdvantages = listOf("ADAPTAÇÃO GRAVITACIONAL"),
+                        automaticAdvantagesToRemove = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
+                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)"),
                         racialDisadvantagesToRemove = listOf("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         elementalAction = ElementalAction.NONE
                     )
@@ -492,8 +495,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FORTE"),
-                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
+                        ensureAutomaticAdvantages = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
+                        ensureRacialDisadvantages = emptyList(), // Removed from complications
                         elementalAction = ElementalAction.NONE
                     )
                 }
@@ -506,7 +509,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = listOf("poderes_misticos"), // Handled in CriadorState to set choice to Telepata
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAutomaticAdvantages = listOf("PODERES MÍSTICOS (TELEPATA)"),
+                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO_DO_PERIGO"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -516,8 +520,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("NOÇÃO DO PERIGO"),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
+                        ensureAdvantageIds = listOf("nocao_do_perigo"),
+                        ensureAutomaticAdvantages = listOf("NOÇÃO DO PERIGO"),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )

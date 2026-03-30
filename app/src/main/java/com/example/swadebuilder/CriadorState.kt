@@ -625,6 +625,8 @@ class CriadorState {
                     )
                 )
             }
+
+
         }
 
         if (key == "ELFOS" && variant.equals("Comunitário", ignoreCase = true)) {
@@ -637,6 +639,21 @@ class CriadorState {
                         descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m).",
                         id = "COMUNITARIO",
                         category = "racial_trait_positive"
+                    )
+                )
+            }
+        }
+
+        if (key == "RAKASHANOS" && variant.equals("Brincalhão", ignoreCase = true)) {
+            removeByIdOrName("SANGUINARIO", "SANGUINARIO")
+            if (newHabilidades.none { it.id == "CURIOSO" || it.nome.keyify() == "CURIOSO" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Curioso",
+                        descricao = "Sua natureza exploratória e brincalhona faz com que se metam onde não são chamados.",
+                        id = "CURIOSO",
+                        category = "racial_hindrance",
+                        severity = "Maior"
                     )
                 )
             }
@@ -1671,9 +1688,15 @@ class CriadorState {
                     }
                 }
 
-                // Insetoides Padrão: For+d4
+                // Insetoides Padrão: For+d4 e PA 2
                 if (key.equals("Garras", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
                     dmgMatch = "For+d4"
+                    paFinal = maxOf(paFinal, 2)
+                }
+
+                // Insetoides Vespa Variante (Ferrão/Mordida): Tem PA -
+                if (key.equals("Ferrão", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
+                    paFinal = 0
                 }
 
                 if (key.equals("Garras", ignoreCase = true) && hasGarrasVampiro) {
@@ -4088,7 +4111,6 @@ class CriadorState {
             }
 
             // Ferais: Padrão (Espirituoso - Spi d6). Menor (No Espirituoso - Spi d4).
-            // JSON cleared to d4.
             if (ancKey == "FERAIS") {
                 if (a.keyify() == "ESPIRITO") {
                     val variant = currentSciFiVariant ?: "Padrão"
@@ -4495,7 +4517,15 @@ class CriadorState {
         invalidAdvantagesResolution.removedAdvantages.forEach { removed ->
             removeVantagemDinheiro(removed)
             removerVantagem(removed)
-            pontosVantagem++
+
+            // Only refund the PV if this advantage was actually purchased by the player (not granted for free by the previous ancestry/tropo)
+            val wasFreeFromPreviousContext = ancestryChangeCoordination.previousFreeAdvantageKeys.contains(removed.nome.keyify()) ||
+                                             ancestryChangeCoordination.previousFreeAdvantageKeys.contains(removed.id.keyify()) ||
+                                             (removed.id == "poderes_misticos" && "PODERES_MISTICOS" in ancestryChangeCoordination.previousFreeAdvantageKeys) ||
+                                             ancestryChangeCoordination.invalidAdvantagesResolution.removedAdvantages.any { it.id == removed.id && ancestryChangeCoordination.previousFreeAdvantageKeys.contains(it.nome.keyify()) }
+            if (!wasFreeFromPreviousContext && !vantagensAutomaticasDoTropo.contains(removed.id)) {
+                pontosVantagem++
+            }
             feedbackMessages.add("Vantagem '${removed.nome}' removida (requisitos não atendidos).")
         }
 
@@ -4925,10 +4955,11 @@ class CriadorState {
                     val arcKey = "MISTICO"
                     if (poderSlotsPorArcano.containsKey(arcKey)) {
                         poderSlotsPorArcano.remove(arcKey)
-                        // Trigger re-add logic if needed, or simply clearing slots forces refresh on next sync
                     }
-                    // Re-trigger add logic to populate slots
-                    adicionarVantagem(vantagensSelecionadas[idx])
+                    // Initialize empty slots manually without calling adicionarVantagem to avoid duplicates
+                    val count = getSlotsCountForArcano(arcKey)
+                    val initialSlots = mutableStateListOf<String?>().apply { repeat(count) { add(null) } }
+                    poderSlotsPorArcano[arcKey] = initialSlots
                 }
             }
         }
