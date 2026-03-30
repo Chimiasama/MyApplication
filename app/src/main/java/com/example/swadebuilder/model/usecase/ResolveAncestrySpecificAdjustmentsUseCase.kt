@@ -684,7 +684,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("ARMA DE SOPRO (Frio)"),
-                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA (deve estar em temperaturas abaixo de zero por pelo menos uma hora por dia)"),
+                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA"),
                         elementalAction = ElementalAction.NONE
                     )
                 } else {
