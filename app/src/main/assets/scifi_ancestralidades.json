@@ -939,8 +939,7 @@
         "nome": "TREINADOS PARA A GUERRA",
         "descricao": "Estes soldados têm pouco conhecimento prático da vida fora do exército. Subtraem 4 das rolagens de Conhecimento Geral.",
         "id": "TREINADOS_PARA_A_GUERRA",
-        "category": "racial_hindrance",
-        "severity": "Menor"
+        "category": "racial_trait_negative"
       }
     ],
     "tags": [
