@@ -561,13 +561,7 @@ fun EquipamentoSection(
                 (item.peso as? JsonPrimitive)?.content?.replace(",", ".")?.toFloatOrNull()
                 }
                 .sum()
-            val effectiveStrength = if (hasSoldado && soldadoCargaAtivo) {
-                if (forcaRaw < 12) forcaRaw + 2 else forcaRaw + 1
-            } else {
-                forcaRaw
-            }
-            val baseLimit = ((effectiveStrength - 2) / 2) * 10f
-            val limit = baseLimit + if (hasMusculoso) 10f else 0f
+            val limit = state.valorCargaMaxima()
 
             val tensaoExcedida = tensaoTotal > tensaoLimite
             val tensaoLabel = if (isPersonagemRobotico) "Mods (Robô)" else "Tensão (Ciber)"
