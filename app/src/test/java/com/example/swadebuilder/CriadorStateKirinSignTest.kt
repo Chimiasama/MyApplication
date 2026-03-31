@@ -55,6 +55,32 @@ class CriadorStateKirinSignTest {
         assertTrue("elevar_o_moral" in state.vantagensAutomaticasDoSigno)
     }
 
+    @Test
+    fun `contexto de troca racial inclui vantagens automaticas do signo`() {
+        val atraente = Vantagem(
+            id = "atraente",
+            nome = "Atraente",
+            categoria = Categoria.SOCIAIS,
+            requisitos = Requisito()
+        )
+
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "HUMANOS"
+            listaVantagens = listOf(atraente)
+            vantagensSelecionadas.add(atraente)
+            vantagensAutomaticasDoSigno.add("atraente")
+        }
+
+        val method = CriadorState::class.java.getDeclaredMethod("buildAutomaticAdvantageContextForTransition")
+        method.isAccessible = true
+        @Suppress("UNCHECKED_CAST")
+        val contextValues = method.invoke(state) as List<String>
+
+        assertTrue(contextValues.any { it.equals("atraente", ignoreCase = true) })
+        assertTrue(contextValues.any { it.equals("Atraente", ignoreCase = true) })
+    }
+
 
     @Test
     fun `adg nao ignora cap de pericia por valor inicial racial`() {

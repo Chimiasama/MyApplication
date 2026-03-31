@@ -1947,6 +1947,45 @@ class CriadorState {
             .replace("-", "")
             .replace(" ", "")
 
+    private fun buildAutomaticAdvantageContextForTransition(): List<String> {
+        val automaticTokens = linkedSetOf<String>()
+
+        fun addRawTokens(values: Collection<String>) {
+            values.forEach { value ->
+                if (value.isNotBlank()) automaticTokens.add(value)
+            }
+        }
+
+        fun addTokensFromIds(ids: Collection<String>) {
+            ids.forEach { id ->
+                if (id.isBlank()) return@forEach
+                automaticTokens.add(id)
+                listaVantagens.firstOrNull { it.id == id }?.let { vantagem ->
+                    automaticTokens.add(vantagem.id)
+                    automaticTokens.add(vantagem.nome)
+                }
+            }
+        }
+
+        addRawTokens(vantagensAutomaticas)
+        addRawTokens(vantagensRaciais)
+        addTokensFromIds(vantagensAutomaticasDoSigno)
+        addTokensFromIds(vantagensAutomaticasDoElemento)
+        addTokensFromIds(vantagensAutomaticasDoPotencialFisico)
+        addTokensFromIds(vantagensAutomaticasDoTropo)
+        addTokensFromIds(vantagensAutomaticasDoProtagonista)
+
+        vantagensSelecionadas
+            .asSequence()
+            .filter { isVantagemAutomatica(it) }
+            .forEach { vantagem ->
+                automaticTokens.add(vantagem.id)
+                automaticTokens.add(vantagem.nome)
+            }
+
+        return automaticTokens.toList()
+    }
+
     fun isVantagemAutomatica(v: Vantagem): Boolean {
         val key = normalizeAutoKey(v.nome.substringBefore("(").trim())
         val autoKeys = (vantagensAutomaticas + vantagensRaciais)
@@ -4299,7 +4338,7 @@ class CriadorState {
                 targetAncestry = anc,
                 previousAncestryDef = prevAncDef,
                 targetAncestryDef = ancDef,
-                currentAutomaticAdvantages = (vantagensAutomaticas + vantagensAutomaticasDoElemento.mapNotNull { id -> listaVantagens.find { it.id == id }?.nome }).toList(),
+                currentAutomaticAdvantages = buildAutomaticAdvantageContextForTransition(),
                 previousAutomaticDisadvantages = desvantagensRaciais.toList(),
                 pontosVantagemAtuais = pontosVantagem,
                 vantagensSelecionadas = vantagensSelecionadas.toList(),
