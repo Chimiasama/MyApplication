@@ -1974,6 +1974,9 @@ class CriadorState {
         addTokensFromIds(vantagensAutomaticasDoPotencialFisico)
         addTokensFromIds(vantagensAutomaticasDoTropo)
         addTokensFromIds(vantagensAutomaticasDoProtagonista)
+        addTokensFromIds(vantagensSlotProtagonista)
+        addTokensFromIds(samuraiCombatSlotIds)
+        addTokensFromIds(listOfNotNull(pathfinderFreeSlotId, vantagemAdaptavelSelecionadaId))
 
         vantagensSelecionadas
             .asSequence()

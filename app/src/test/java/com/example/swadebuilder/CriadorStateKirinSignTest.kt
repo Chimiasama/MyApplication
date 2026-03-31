@@ -56,29 +56,53 @@ class CriadorStateKirinSignTest {
     }
 
     @Test
-    fun `contexto de troca racial inclui vantagens automaticas do signo`() {
-        val atraente = Vantagem(
+    fun `troca de ancestralidade nao devolve pv ao remover vantagem gratuita de signo`() {
+        val atraenteInvalida = Vantagem(
             id = "atraente",
             nome = "Atraente",
             categoria = Categoria.SOCIAIS,
-            requisitos = Requisito()
+            requisitos = Requisito(estagio = "Heroico")
         )
 
         val state = CriadorState().apply {
             compendioArteDaGuerraAtivo = true
             ancestralidade = "HUMANOS"
-            listaVantagens = listOf(atraente)
-            vantagensSelecionadas.add(atraente)
+            listaVantagens = listOf(atraenteInvalida)
+            pontosVantagem = 0
+            vantagensSelecionadas.add(atraenteInvalida)
             vantagensAutomaticasDoSigno.add("atraente")
+            signoAdgSelecionado = "Basabasa"
         }
 
-        val method = CriadorState::class.java.getDeclaredMethod("buildAutomaticAdvantageContextForTransition")
-        method.isAccessible = true
-        @Suppress("UNCHECKED_CAST")
-        val contextValues = method.invoke(state) as List<String>
+        val feedback = mutableListOf<String>()
+        state.aplicarAncestralidade("ELFOS", feedback, autoRefund = false)
 
-        assertTrue(contextValues.any { it.equals("atraente", ignoreCase = true) })
-        assertTrue(contextValues.any { it.equals("Atraente", ignoreCase = true) })
+        assertFalse(state.vantagensSelecionadas.any { it.id == "atraente" })
+        assertEquals(0, state.pontosVantagem)
+    }
+
+    @Test
+    fun `troca de ancestralidade nao devolve pv ao remover vantagem gratuita de slot pathfinder`() {
+        val classeInvalida = Vantagem(
+            id = "lutador_de_classe",
+            nome = "Lutador de Classe",
+            categoria = Categoria.CLASSE,
+            requisitos = Requisito(estagio = "Heroico")
+        )
+
+        val state = CriadorState().apply {
+            ancestralidade = "HUMANOS"
+            listaVantagens = listOf(classeInvalida)
+            pontosVantagem = 0
+            vantagensSelecionadas.add(classeInvalida)
+            pathfinderFreeSlotId = "lutador_de_classe"
+        }
+
+        val feedback = mutableListOf<String>()
+        state.aplicarAncestralidade("ELFOS", feedback, autoRefund = false)
+
+        assertFalse(state.vantagensSelecionadas.any { it.id == "lutador_de_classe" })
+        assertEquals(0, state.pontosVantagem)
     }
 
 
