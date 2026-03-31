@@ -31,9 +31,19 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Icon
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
@@ -248,18 +258,40 @@ fun TroposSection(
                                 "Torre" to "Forte e estável, o corpo e a mente podem resistir aos elementos. Enquanto estiver em transe, um Bu Xista pode gastar um ponto de Chi para manifestar uma aura protetora. Essa aura luminosa dura enquanto o transe estiver ativo, fornecendo um bônus de +4 em Armadura (isso não se acumula com as armaduras usadas)."
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                caminhos.forEach { (nome, descricao) ->
-                                    RadioButtonRow(
-                                        selected = state.buXistaCaminhoSelecionado == nome,
-                                        label = nome,
-                                        onSelect = { state.buXistaCaminhoSelecionado = nome }
-                                    )
+                                var expanded by remember { mutableStateOf(false) }
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.buXistaCaminhoSelecionado ?: "Selecionar Caminho")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        caminhos.forEach { (nome, _) ->
+                                            DropdownMenuItem(
+                                                text = { Text(nome) },
+                                                onClick = {
+                                                    state.buXistaCaminhoSelecionado = nome
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                val caminhoSelecionado = state.buXistaCaminhoSelecionado
+                                if (caminhoSelecionado != null) {
+                                    val desc = caminhos.find { it.first == caminhoSelecionado }?.second ?: ""
                                     DetalhesTexto(
-                                        key = "buxista_$nome",
-                                        texto = descricao,
+                                        key = "buxista_selected",
+                                        texto = desc,
                                         allowLongTexts = allowLongTexts,
                                         detalhesExpandidos = detalhesExpandidos,
-                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                } else {
+                                    DetalhesTexto(
+                                        key = "buxista_todos",
+                                        texto = caminhos.joinToString("\n\n") { "${it.first}: ${it.second}" },
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
+                                        modifier = Modifier.padding(top = 4.dp)
                                     )
                                 }
                             }
@@ -286,18 +318,40 @@ fun TroposSection(
                                 "Madeira" to "Madeira: Chi vivo e crescimento. Manipula plantas e vida."
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                elementos.forEach { (nome, descricao) ->
-                                    RadioButtonRow(
-                                        selected = state.elementalistaElementoSelecionado == nome,
-                                        label = nome,
-                                        onSelect = { state.elementalistaElementoSelecionado = nome }
-                                    )
+                                var expanded by remember { mutableStateOf(false) }
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.elementalistaElementoSelecionado ?: "Selecionar Elemento")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        elementos.forEach { (nome, _) ->
+                                            DropdownMenuItem(
+                                                text = { Text(nome) },
+                                                onClick = {
+                                                    state.elementalistaElementoSelecionado = nome
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                val selecao = state.elementalistaElementoSelecionado
+                                if (selecao != null) {
+                                    val desc = elementos.find { it.first == selecao }?.second ?: ""
                                     DetalhesTexto(
-                                        key = "elementalista_$nome",
-                                        texto = descricao,
+                                        key = "elementalista_selected",
+                                        texto = desc,
                                         allowLongTexts = allowLongTexts,
                                         detalhesExpandidos = detalhesExpandidos,
-                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                } else {
+                                    DetalhesTexto(
+                                        key = "elementalista_todos",
+                                        texto = elementos.joinToString("\n\n") { "${it.first}: ${it.second}" },
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
+                                        modifier = Modifier.padding(top = 4.dp)
                                     )
                                 }
                             }
@@ -322,18 +376,40 @@ fun TroposSection(
                                 "Talismãs" to "Cria talismãs empoderados pelo Chi, inclusive imitando Técnicas Chi vistas nas últimas 48 horas, com custo em Chi e uso único."
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                ferramentas.forEach { (nome, descricao) ->
-                                    RadioButtonRow(
-                                        selected = state.kuiFerramentaSelecionada == nome,
-                                        label = nome,
-                                        onSelect = { state.kuiFerramentaSelecionada = nome }
-                                    )
+                                var expanded by remember { mutableStateOf(false) }
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.kuiFerramentaSelecionada ?: "Selecionar Ferramenta")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        ferramentas.forEach { (nome, _) ->
+                                            DropdownMenuItem(
+                                                text = { Text(nome) },
+                                                onClick = {
+                                                    state.kuiFerramentaSelecionada = nome
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                val selecao = state.kuiFerramentaSelecionada
+                                if (selecao != null) {
+                                    val desc = ferramentas.find { it.first == selecao }?.second ?: ""
                                     DetalhesTexto(
-                                        key = "kui_$nome",
-                                        texto = descricao,
+                                        key = "kui_selected",
+                                        texto = desc,
                                         allowLongTexts = allowLongTexts,
                                         detalhesExpandidos = detalhesExpandidos,
-                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                } else {
+                                    DetalhesTexto(
+                                        key = "kui_todos",
+                                        texto = ferramentas.joinToString("\n\n") { "${it.first}: ${it.second}" },
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
+                                        modifier = Modifier.padding(top = 4.dp)
                                     )
                                 }
                             }
@@ -358,16 +434,28 @@ fun TroposSection(
                                     style = MaterialTheme.typography.labelLarge,
                                     fontWeight = FontWeight.Bold
                                 )
-                                RadioButtonRow(
-                                    selected = state.samuraiPericiaEscolhida == "Jutsu",
-                                    label = "Jutsu (Lutar) d6",
-                                    onSelect = { state.atualizarSamuraiPericiaEscolhida("Jutsu") }
-                                )
-                                RadioButtonRow(
-                                    selected = state.samuraiPericiaEscolhida == "Atirar",
-                                    label = "Atirar d6",
-                                    onSelect = { state.atualizarSamuraiPericiaEscolhida("Atirar") }
-                                )
+                                var periciaExpanded by remember { mutableStateOf(false) }
+                                Box {
+                                    OutlinedButton(onClick = { periciaExpanded = true }) {
+                                        Text(if (state.samuraiPericiaEscolhida == "Jutsu") "Jutsu (Lutar) d6" else if (state.samuraiPericiaEscolhida == "Atirar") "Atirar d6" else "Selecionar Perícia")
+                                    }
+                                    DropdownMenu(expanded = periciaExpanded, onDismissRequest = { periciaExpanded = false }) {
+                                        DropdownMenuItem(
+                                            text = { Text("Jutsu (Lutar) d6") },
+                                            onClick = {
+                                                state.atualizarSamuraiPericiaEscolhida("Jutsu")
+                                                periciaExpanded = false
+                                            }
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text("Atirar d6") },
+                                            onClick = {
+                                                state.atualizarSamuraiPericiaEscolhida("Atirar")
+                                                periciaExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
                             }
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
                                 Text(
@@ -375,16 +463,28 @@ fun TroposSection(
                                     style = MaterialTheme.typography.labelLarge,
                                     fontWeight = FontWeight.Bold
                                 )
-                                RadioButtonRow(
-                                    selected = state.samuraiVantagemEscolhida == "Comando",
-                                    label = "Comando",
-                                    onSelect = { state.atualizarSamuraiVantagemEscolhida("Comando") }
-                                )
-                                RadioButtonRow(
-                                    selected = state.samuraiVantagemEscolhida == "Combate",
-                                    label = "Vantagem de Combate (1 slot grátis)",
-                                    onSelect = { state.atualizarSamuraiVantagemEscolhida("Combate") }
-                                )
+                                var vantagemExpanded by remember { mutableStateOf(false) }
+                                Box {
+                                    OutlinedButton(onClick = { vantagemExpanded = true }) {
+                                        Text(if (state.samuraiVantagemEscolhida == "Comando") "Comando" else if (state.samuraiVantagemEscolhida == "Combate") "Vantagem de Combate (1 slot grátis)" else "Selecionar Vantagem")
+                                    }
+                                    DropdownMenu(expanded = vantagemExpanded, onDismissRequest = { vantagemExpanded = false }) {
+                                        DropdownMenuItem(
+                                            text = { Text("Comando") },
+                                            onClick = {
+                                                state.atualizarSamuraiVantagemEscolhida("Comando")
+                                                vantagemExpanded = false
+                                            }
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text("Vantagem de Combate (1 slot grátis)") },
+                                            onClick = {
+                                                state.atualizarSamuraiVantagemEscolhida("Combate")
+                                                vantagemExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
                                 Text(
                                     text = "Com Conhecimento Batalha d8+, o Samurai ignora requisitos de Estágio para vantagens de Liderança.",
                                     style = MaterialTheme.typography.bodySmall,
@@ -415,30 +515,56 @@ fun TroposSection(
                                 "Presas do Javali" to "Adiciona +1 nas rolagens de ataque."
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                posturas.forEach { (nome, descricao) ->
-                                    val selecionada = state.samuraiPosturasSelecionadas.contains(nome)
-                                    val habilitada = selecionada || state.samuraiPosturasSelecionadas.size < 2
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 4.dp)
-                                    ) {
-                                        Checkbox(
-                                            checked = selecionada,
-                                            onCheckedChange = { if (habilitada) state.toggleSamuraiPostura(nome) },
-                                            enabled = habilitada
-                                        )
-                                        Column(modifier = Modifier.padding(start = 8.dp)) {
-                                            Text(text = nome, style = MaterialTheme.typography.bodyMedium)
-                                            DetalhesTexto(
-                                                key = "samurai_postura_$nome",
-                                                texto = descricao,
-                                                allowLongTexts = allowLongTexts,
-                                                detalhesExpandidos = detalhesExpandidos
+                                var expanded by remember { mutableStateOf(false) }
+                                val availableOptions = posturas.filter { it.first !in state.samuraiPosturasSelecionadas }
+                                val canAdd = state.samuraiPosturasSelecionadas.size < 2
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }, enabled = canAdd && availableOptions.isNotEmpty()) {
+                                        Text("Adicionar Postura")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        availableOptions.forEach { (nome, _) ->
+                                            DropdownMenuItem(
+                                                text = { Text(nome) },
+                                                onClick = {
+                                                    state.toggleSamuraiPostura(nome)
+                                                    expanded = false
+                                                }
                                             )
                                         }
                                     }
                                 }
+
+                                FlowRow(
+                                    modifier = Modifier.padding(top = 8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    state.samuraiPosturasSelecionadas.forEach { nome ->
+                                        AssistChip(
+                                            onClick = { state.toggleSamuraiPostura(nome) },
+                                            label = { Text(nome) },
+                                            trailingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover", modifier = Modifier.size(16.dp)) }
+                                        )
+                                    }
+                                }
+
+                                val textDesc = if (state.samuraiPosturasSelecionadas.isNotEmpty()) {
+                                    state.samuraiPosturasSelecionadas.joinToString("\n\n") { nome ->
+                                        val desc = posturas.find { it.first == nome }?.second ?: ""
+                                        "$nome: $desc"
+                                    }
+                                } else {
+                                    posturas.joinToString("\n\n") { "${it.first}: ${it.second}" }
+                                }
+
+                                DetalhesTexto(
+                                    key = if (state.samuraiPosturasSelecionadas.isNotEmpty()) "samurai_selected" else "samurai_todos",
+                                    texto = textDesc,
+                                    allowLongTexts = allowLongTexts,
+                                    detalhesExpandidos = detalhesExpandidos,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
                             }
                         }
 
@@ -462,18 +588,40 @@ fun TroposSection(
                                 "Passo das Sombras" to "Gasta um ponto de Chi para ganhar uma ação de Movimentação extra silenciosa; inimigos sofrem -2 em Perceber e ataques furtivos tratam sucesso como Ampliação."
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                talentos.forEach { (nome, descricao) ->
-                                    RadioButtonRow(
-                                        selected = state.shinobiTalentoSelecionado == nome,
-                                        label = nome,
-                                        onSelect = { state.shinobiTalentoSelecionado = nome }
-                                    )
+                                var expanded by remember { mutableStateOf(false) }
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.shinobiTalentoSelecionado ?: "Selecionar Talento")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        talentos.forEach { (nome, _) ->
+                                            DropdownMenuItem(
+                                                text = { Text(nome) },
+                                                onClick = {
+                                                    state.shinobiTalentoSelecionado = nome
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                val selecao = state.shinobiTalentoSelecionado
+                                if (selecao != null) {
+                                    val desc = talentos.find { it.first == selecao }?.second ?: ""
                                     DetalhesTexto(
-                                        key = "shinobi_talento_$nome",
-                                        texto = descricao,
+                                        key = "shinobi_talento_selected",
+                                        texto = desc,
                                         allowLongTexts = allowLongTexts,
                                         detalhesExpandidos = detalhesExpandidos,
-                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                } else {
+                                    DetalhesTexto(
+                                        key = "shinobi_talento_todos",
+                                        texto = talentos.joinToString("\n\n") { "${it.first}: ${it.second}" },
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
+                                        modifier = Modifier.padding(top = 4.dp)
                                     )
                                 }
                             }
@@ -496,18 +644,40 @@ fun TroposSection(
                                 "Espião" to "Gasta um Chi para rerrolar falhas em Convenção, Intimidar, Performance, Persuadir ou Idioma."
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                treinamentos.forEach { (nome, descricao) ->
-                                    RadioButtonRow(
-                                        selected = state.shinobiTreinamentoSelecionado == nome,
-                                        label = nome,
-                                        onSelect = { state.shinobiTreinamentoSelecionado = nome }
-                                    )
+                                var expanded by remember { mutableStateOf(false) }
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.shinobiTreinamentoSelecionado ?: "Selecionar Treinamento")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        treinamentos.forEach { (nome, _) ->
+                                            DropdownMenuItem(
+                                                text = { Text(nome) },
+                                                onClick = {
+                                                    state.shinobiTreinamentoSelecionado = nome
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                val selecao = state.shinobiTreinamentoSelecionado
+                                if (selecao != null) {
+                                    val desc = treinamentos.find { it.first == selecao }?.second ?: ""
                                     DetalhesTexto(
-                                        key = "shinobi_treinamento_$nome",
-                                        texto = descricao,
+                                        key = "shinobi_treinamento_selected",
+                                        texto = desc,
                                         allowLongTexts = allowLongTexts,
                                         detalhesExpandidos = detalhesExpandidos,
-                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                } else {
+                                    DetalhesTexto(
+                                        key = "shinobi_treinamento_todos",
+                                        texto = treinamentos.joinToString("\n\n") { "${it.first}: ${it.second}" },
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
+                                        modifier = Modifier.padding(top = 4.dp)
                                     )
                                 }
                             }
@@ -554,18 +724,40 @@ fun TroposSection(
                                 "Afiada" to "A arma é considerada Arma Pesada. Gastando um ponto de Chi, aumenta o dado de dano em um tipo de dado até o início do próximo turno."
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                historicos.forEach { (nome, descricao) ->
-                                    RadioButtonRow(
-                                        selected = state.youxiaHistoricoSelecionado == nome,
-                                        label = nome,
-                                        onSelect = { state.atualizarYouxiaHistoricoSelecionado(nome) }
-                                    )
+                                var expanded by remember { mutableStateOf(false) }
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(state.youxiaHistoricoSelecionado ?: "Selecionar Histórico")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        historicos.forEach { (nome, _) ->
+                                            DropdownMenuItem(
+                                                text = { Text(nome) },
+                                                onClick = {
+                                                    state.atualizarYouxiaHistoricoSelecionado(nome)
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                    }
+                                }
+                                val selecao = state.youxiaHistoricoSelecionado
+                                if (selecao != null) {
+                                    val desc = historicos.find { it.first == selecao }?.second ?: ""
                                     DetalhesTexto(
-                                        key = "youxia_historico_$nome",
-                                        texto = descricao,
+                                        key = "youxia_historico_selected",
+                                        texto = desc,
                                         allowLongTexts = allowLongTexts,
                                         detalhesExpandidos = detalhesExpandidos,
-                                        modifier = Modifier.padding(start = 40.dp, bottom = 4.dp, end = 8.dp)
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                } else {
+                                    DetalhesTexto(
+                                        key = "youxia_historico_todos",
+                                        texto = historicos.joinToString("\n\n") { "${it.first}: ${it.second}" },
+                                        allowLongTexts = allowLongTexts,
+                                        detalhesExpandidos = detalhesExpandidos,
+                                        modifier = Modifier.padding(top = 4.dp)
                                     )
                                 }
                             }
@@ -580,16 +772,33 @@ fun TroposSection(
                                 modifier = Modifier.padding(start = 40.dp, top = 4.dp)
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                RadioButtonRow(
-                                    selected = state.artistaMarcialJutsuOpcao == CriadorState.ARTISTA_MARCIAL_JUTSU_D6,
-                                    label = "Jutsu (Desarmado) d6",
-                                    onSelect = { state.atualizarArtistaMarcialJutsuOpcao(CriadorState.ARTISTA_MARCIAL_JUTSU_D6) }
-                                )
-                                RadioButtonRow(
-                                    selected = state.artistaMarcialJutsuOpcao == CriadorState.ARTISTA_MARCIAL_JUTSU_D4_D4,
-                                    label = "Jutsu (Desarmado) d4 + outro Jutsu d4",
-                                    onSelect = { state.atualizarArtistaMarcialJutsuOpcao(CriadorState.ARTISTA_MARCIAL_JUTSU_D4_D4) }
-                                )
+                                var expanded by remember { mutableStateOf(false) }
+                                val opcaoTexto = when (state.artistaMarcialJutsuOpcao) {
+                                    CriadorState.ARTISTA_MARCIAL_JUTSU_D6 -> "Jutsu (Desarmado) d6"
+                                    CriadorState.ARTISTA_MARCIAL_JUTSU_D4_D4 -> "Jutsu (Desarmado) d4 + outro Jutsu d4"
+                                    else -> "Selecionar Jutsu inicial"
+                                }
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(opcaoTexto)
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        DropdownMenuItem(
+                                            text = { Text("Jutsu (Desarmado) d6") },
+                                            onClick = {
+                                                state.atualizarArtistaMarcialJutsuOpcao(CriadorState.ARTISTA_MARCIAL_JUTSU_D6)
+                                                expanded = false
+                                            }
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text("Jutsu (Desarmado) d4 + outro Jutsu d4") },
+                                            onClick = {
+                                                state.atualizarArtistaMarcialJutsuOpcao(CriadorState.ARTISTA_MARCIAL_JUTSU_D4_D4)
+                                                expanded = false
+                                            }
+                                        )
+                                    }
+                                }
                             }
 
                             Spacer(Modifier.size(8.dp))
@@ -617,33 +826,52 @@ fun TroposSection(
                             val forDisabled = forValue >= forMax && !forSelected
                             val vigDisabled = vigValue >= vigMax && !vigSelected
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                RadioButtonRow(
-                                    selected = agiSelected,
-                                    label = if (agiDisabled) "Agilidade (Esquiva) - no máximo" else "Agilidade (Esquiva)",
-                                    onSelect = {
-                                        if (!agiDisabled) {
-                                            state.atualizarArtistaMarcialPotencialFisico("Agilidade")
+                                var expanded by remember { mutableStateOf(false) }
+                                val agiLabel = if (agiDisabled) "Agilidade (Esquiva) - no máximo" else "Agilidade (Esquiva)"
+                                val forLabel = if (forDisabled) "Força (Bloquear) - no máximo" else "Força (Bloquear)"
+                                val vigLabel = if (vigDisabled) "Vigor (Reflexos de Combate) - no máximo" else "Vigor (Reflexos de Combate)"
+
+                                val selectedText = when {
+                                    agiSelected -> agiLabel
+                                    forSelected -> forLabel
+                                    vigSelected -> vigLabel
+                                    else -> "Selecionar Potencial Físico"
+                                }
+
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }) {
+                                        Text(selectedText)
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        if (!agiDisabled || agiSelected) {
+                                            DropdownMenuItem(
+                                                text = { Text(agiLabel) },
+                                                onClick = {
+                                                    state.atualizarArtistaMarcialPotencialFisico("Agilidade")
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                        if (!forDisabled || forSelected) {
+                                            DropdownMenuItem(
+                                                text = { Text(forLabel) },
+                                                onClick = {
+                                                    state.atualizarArtistaMarcialPotencialFisico("Força")
+                                                    expanded = false
+                                                }
+                                            )
+                                        }
+                                        if (!vigDisabled || vigSelected) {
+                                            DropdownMenuItem(
+                                                text = { Text(vigLabel) },
+                                                onClick = {
+                                                    state.atualizarArtistaMarcialPotencialFisico("Vigor")
+                                                    expanded = false
+                                                }
+                                            )
                                         }
                                     }
-                                )
-                                RadioButtonRow(
-                                    selected = forSelected,
-                                    label = if (forDisabled) "Força (Bloquear) - no máximo" else "Força (Bloquear)",
-                                    onSelect = {
-                                        if (!forDisabled) {
-                                            state.atualizarArtistaMarcialPotencialFisico("Força")
-                                        }
-                                    }
-                                )
-                                RadioButtonRow(
-                                    selected = vigSelected,
-                                    label = if (vigDisabled) "Vigor (Reflexos de Combate) - no máximo" else "Vigor (Reflexos de Combate)",
-                                    onSelect = {
-                                        if (!vigDisabled) {
-                                            state.atualizarArtistaMarcialPotencialFisico("Vigor")
-                                        }
-                                    }
-                                )
+                                }
                             }
 
                             Spacer(Modifier.size(8.dp))
@@ -675,30 +903,56 @@ fun TroposSection(
                                 "Golpe Vital" to "Atacar o ponto certo pode enfraquecer qualquer brutamontes. Ataques Localizados ao usar golpes desarmados recebem +2 na rolagem."
                             )
                             Column(modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)) {
-                                tecnicasArtista.forEach { (nome, descricao) ->
-                                    val selecionada = state.artistaMarcialTecnicasSelecionadas.contains(nome)
-                                    val habilitada = selecionada || state.artistaMarcialTecnicasSelecionadas.size < 3
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 4.dp)
-                                    ) {
-                                        Checkbox(
-                                            checked = selecionada,
-                                            onCheckedChange = { if (habilitada) state.toggleArtistaMarcialTecnica(nome) },
-                                            enabled = habilitada
-                                        )
-                                        Column(modifier = Modifier.padding(start = 8.dp)) {
-                                            Text(text = nome, style = MaterialTheme.typography.bodyMedium)
-                                            DetalhesTexto(
-                                                key = "artista_tecnica_$nome",
-                                                texto = descricao,
-                                                allowLongTexts = allowLongTexts,
-                                                detalhesExpandidos = detalhesExpandidos
+                                var expanded by remember { mutableStateOf(false) }
+                                val availableOptions = tecnicasArtista.filter { it.first !in state.artistaMarcialTecnicasSelecionadas }
+                                val canAdd = state.artistaMarcialTecnicasSelecionadas.size < 3
+                                Box {
+                                    OutlinedButton(onClick = { expanded = true }, enabled = canAdd && availableOptions.isNotEmpty()) {
+                                        Text("Adicionar Técnica")
+                                    }
+                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                        availableOptions.forEach { (nome, _) ->
+                                            DropdownMenuItem(
+                                                text = { Text(nome) },
+                                                onClick = {
+                                                    state.toggleArtistaMarcialTecnica(nome)
+                                                    expanded = false
+                                                }
                                             )
                                         }
                                     }
                                 }
+
+                                FlowRow(
+                                    modifier = Modifier.padding(top = 8.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                ) {
+                                    state.artistaMarcialTecnicasSelecionadas.forEach { nome ->
+                                        AssistChip(
+                                            onClick = { state.toggleArtistaMarcialTecnica(nome) },
+                                            label = { Text(nome) },
+                                            trailingIcon = { Icon(Icons.Default.Close, contentDescription = "Remover", modifier = Modifier.size(16.dp)) }
+                                        )
+                                    }
+                                }
+
+                                val textDesc = if (state.artistaMarcialTecnicasSelecionadas.isNotEmpty()) {
+                                    state.artistaMarcialTecnicasSelecionadas.joinToString("\n\n") { nome ->
+                                        val desc = tecnicasArtista.find { it.first == nome }?.second ?: ""
+                                        "$nome: $desc"
+                                    }
+                                } else {
+                                    tecnicasArtista.joinToString("\n\n") { "${it.first}: ${it.second}" }
+                                }
+
+                                DetalhesTexto(
+                                    key = if (state.artistaMarcialTecnicasSelecionadas.isNotEmpty()) "artista_tecnica_selected" else "artista_tecnica_todos",
+                                    texto = textDesc,
+                                    allowLongTexts = allowLongTexts,
+                                    detalhesExpandidos = detalhesExpandidos,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
                             }
                         }
 
