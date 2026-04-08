@@ -1,8 +1,18 @@
 package com.example.swadebuilder
 
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.CrystalHeart
+import com.example.swadebuilder.model.EquipamentoCategoria
+import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.GameDataSnapshot
+import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.RacialAbility
+import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Requisito
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
 import org.junit.Assert.assertFalse
@@ -62,6 +72,42 @@ class CriadorStateKirinSignTest {
             ancestralidade = "HUMANOS"
             pontosVantagem = 0
         }
+        val humanosAdg = RacialModifier(
+            nome = "HUMANOS",
+            atributos = emptyMap(),
+            pericias = emptyMap(),
+            habilidades = listOf(
+                RacialAbility(
+                    nome = "Adaptável ou Signo",
+                    descricao = "",
+                    id = "adaptavel_ou_signo"
+                )
+            ),
+            origem = "ARTE_DA_GUERRA"
+        )
+        state.updateGameData(
+            GameDataSnapshot(
+                listaComplicacoes = emptyList<Complicacao>(),
+                listaCoracoesCrystal = emptyList<CrystalHeart>(),
+                listaAncestralidadesJson = listOf(humanosAdg),
+                listaMonstroTemplates = emptyList<MonstroTemplate>(),
+                racialAttrMinMap = emptyMap(),
+                racialSkillStartMap = emptyMap(),
+                listaAtributos = emptyList(),
+                mapaAtributosDisplay = emptyMap(),
+                listaPericias = emptyList<Pericia>(),
+                mapaPericias = emptyMap(),
+                mapaAtributosDescricao = emptyMap(),
+                listaVantagens = emptyList<Vantagem>(),
+                listaPoderes = emptyList<Poder>(),
+                listaTropos = emptyList<Tropo>(),
+                listaEquipamentos = emptyList<EquipamentoItem>(),
+                equipamentoCategorias = emptyList<EquipamentoCategoria>(),
+                superequipCategorias = emptyList<EquipamentoCategoria>(),
+                listaSuperPoderes = emptyList<SuperPoder>(),
+                arcanoInfo = emptyList()
+            )
+        )
 
         state.selecionarSigno("Nenhum")
 
