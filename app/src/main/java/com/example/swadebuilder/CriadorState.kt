@@ -457,7 +457,10 @@ class CriadorState {
             return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
         }
 
-        val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
+        val variant = when {
+            canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" && key == "FERAL" -> "Ápice"
+            else -> resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
+        }
         val newHabilidades = base.habilidades.toMutableList()
 
         fun removeByIdOrName(id: String, nameKey: String) {
@@ -2651,15 +2654,12 @@ class CriadorState {
             }
         }
 
-        if (compendioArteDaGuerraAtivo && (ancKey.contains("UMVEE") || ancKey == "FERAL")) {
+        if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
             val variant = resolveCurrentSciFiVariantSelection(anc)
             if (perKey == "SOBREVIVENCIA" && ancKey.contains("UMVEE")) {
                 modifiedBase = maxOf(modifiedBase, 4)
             }
             if (perKey == "PERCEBER" && variant.equals("Gatoruja", ignoreCase = true)) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-            if (perKey == "SOBREVIVENCIA" && variant.equals("Correnteza", ignoreCase = true) && ancKey == "FERAL") {
                 modifiedBase = maxOf(modifiedBase, 6)
             }
             if (perKey == "OCULTISMO" && variant.equals("Gatoruja", ignoreCase = true) && ancKey.contains("UMVEE")) {
