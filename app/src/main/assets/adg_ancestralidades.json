@@ -40,9 +40,8 @@
       {
         "nome": "Bom Conselheiro",
         "descricao": "Os Akaimimi são os mais sábios dos espíritos e sempre têm algo a compartilhar (mesmo que ninguém tenha pedido). Isso se manifesta como a Complicação Peculiaridade (Pedância).",
-        "category": "racial_hindrance",
-        "id": "BOM_CONSELHEIRO",
-        "severity": "Menor"
+        "category": "racial_trait_negative",
+        "id": "BOM_CONSELHEIRO"
       },
       {
         "nome": "Dicas Culturais",
