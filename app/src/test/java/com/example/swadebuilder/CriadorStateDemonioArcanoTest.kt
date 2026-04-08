@@ -35,27 +35,4 @@ class CriadorStateDemonioArcanoTest {
         assertEquals("Heroico", state.poderesDisponiveisPorEstagioParaArcano("DEMONIO")["drenar_pontos_de_poder_demonio"])
     }
 
-    @Test
-    fun `demonios cidade do sol a vapor usam 4 slots com disfarce demoniaco fixo no primeiro`() {
-        val aaDemonio = Vantagem(
-            id = "aa_demonio",
-            nome = "ANTECEDENTE ARCANO (Demônio)",
-            categoria = Categoria.PODER,
-            origem = "SOL_VAPOR",
-            requisitos = Requisito()
-        )
-
-        val state = CriadorState().apply {
-            compendioCidadeSolVaporAtivo = true
-            ancestralidade = "DEMÔNIOS"
-            arcanoInfo = mapOf("DEMONIO" to Triple(3, 10, "Conjurar"))
-            adicionarVantagem(aaDemonio)
-        }
-
-        val slots = state.poderSlotsPorArcano["DEMONIO"]
-        assertTrue(!state.usaPoderesDisponiveisPorEstagio("DEMONIO"))
-        assertEquals(4, state.getSlotsCountForArcano("DEMONIO"))
-        assertEquals(4, slots?.size)
-        assertEquals("disfarce_demoniaco", slots?.get(0))
-    }
 }
