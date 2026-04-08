@@ -5685,7 +5685,7 @@ class CriadorState {
 
         listaAtributos.forEach { nomeAttr ->
             val stack = paCostStackPorAtributo[nomeAttr] ?: return@forEach
-            var maxAllowed = atributoMaxRaw(nomeAttr)
+            var maxAllowed = atributoMaxRawNaCriacao(nomeAttr)
             var current = valoresAtributos[nomeAttr]?.intValue ?: return@forEach
 
             while (current > maxAllowed && stack.isNotEmpty()) {
@@ -5694,7 +5694,7 @@ class CriadorState {
                 valoresAtributos[nomeAttr]?.intValue = current.coerceAtLeast(atributoBaseRacial(nomeAttr))
                 feedbackMessages.add("Atributo $nomeAttr reduzido para respeitar o limite racial.")
                 pontosAtributo = calcularPontosAtributoRestantes()
-                maxAllowed = atributoMaxRaw(nomeAttr)
+                maxAllowed = atributoMaxRawNaCriacao(nomeAttr)
                 current = valoresAtributos[nomeAttr]?.intValue ?: current
             }
 

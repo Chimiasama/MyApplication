@@ -448,4 +448,23 @@ class ScifiAncestryVariantSyncTest {
         assertEquals(12, state.atributoMaxRaw("ASTUCIA"))
     }
 
+    @Test
+    fun `trocar para feral reduz astucia acima de d6 durante criacao`() {
+        val state = CriadorState().apply {
+            injectMockAncestries(this)
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "HUMANOS"
+            valoresAtributos["ASTUCIA"]?.intValue = 8
+            paCostStackPorAtributo.getValue("ASTUCIA").clear()
+            paCostStackPorAtributo.getValue("ASTUCIA").addAll(listOf("PB", "PB"))
+            recalcularPontosAtributo()
+        }
+
+        state.aplicarAncestralidade("Feral", mutableListOf(), autoRefund = false)
+
+        assertEquals(6, state.valoresAtributos.getValue("ASTUCIA").intValue)
+        assertEquals(1, state.paCostStackPorAtributo.getValue("ASTUCIA").size)
+        assertEquals(6, state.atributoMaxRawNaCriacao("ASTUCIA"))
+    }
+
 }
