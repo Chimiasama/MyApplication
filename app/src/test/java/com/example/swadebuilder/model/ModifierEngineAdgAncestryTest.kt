@@ -104,4 +104,37 @@ class ModifierEngineAdgAncestryTest {
         assertTrue(sizeModifiers.size == 1)
         assertTrue(sizeModifiers.first().value == -4)
     }
+
+    @Test
+    fun `terracota gains plus three toughness`() {
+        val state = stateWithAncestry(
+            ancestralidade = "Terracota",
+            modifier = RacialModifier(
+                nome = "Terracota",
+                origem = "ARTE_DA_GUERRA",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                vantagensGratis = emptyList(),
+                desvantagens = emptyList(),
+                habilidades = listOf(
+                    RacialAbility(
+                        nome = "Nascidos de Argila",
+                        descricao = "Terracotas são um equilíbrio entre carne e pedra.",
+                        id = "NASCIDOS_DE_ARGILA",
+                        category = "racial_trait_positive"
+                    )
+                )
+            )
+        )
+
+        val modifiers = ModifierEngine.collect(state)
+
+        assertTrue(
+            modifiers.any {
+                it.id == "racial_terracota_res" &&
+                    it.target == ModifierTarget.TOUGHNESS_FLAT &&
+                    it.value == 3
+            }
+        )
+    }
 }
