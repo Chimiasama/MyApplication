@@ -625,9 +625,14 @@ fun buildSummaryLines(
     val allRacialTraits = if (isAdgHuman) {
         adgHumanSignTrait
     } else {
+        val isTanukimimiWithPositiveThoughts = personagem.ancestralidade.keyify() == "TANUKIMIMI" &&
+            habilidadesRaciais.any { it.keyify() == "PENSAMENTOS POSITIVOS" }
         (habilidadesRaciais + personagem.vantagensRaciais)
             .filterNot { trait ->
                 isElfosComunitario && trait.keyify() == "DESASTRADO"
+            }
+            .filterNot { trait ->
+                isTanukimimiWithPositiveThoughts && trait.keyify() == "IMPULSO"
             }
             .filterNot { trait ->
                 isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")

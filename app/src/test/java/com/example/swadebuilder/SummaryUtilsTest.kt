@@ -512,6 +512,62 @@ class SummaryUtilsTest {
         assertTrue(lines.contains("Aparar: 5"))
     }
 
+    @Test
+    fun `buildSummaryLines oculta impulso em caracteristicas raciais de tanukimimi com pensamentos positivos`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Tanu",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "TANUKIMIMI",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                vantagensRaciais = listOf("Impulso"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioArteDaGuerraAtivo = true
+            ),
+            allAdvantages = listOf(
+                Vantagem(
+                    id = "impulso",
+                    nome = "Impulso",
+                    descricao = "",
+                    categoria = Categoria.ANTECEDENTE,
+                    requisitos = listOf(Requisito("Atributo", "Espírito d8"))
+                )
+            ),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "TANUKIMIMI",
+                    origem = "ARTE_DA_GUERRA",
+                    atributos = emptyMap(),
+                    pericias = emptyMap(),
+                    desvantagens = emptyList(),
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility("Pensamentos Positivos", ""),
+                        com.example.swadebuilder.model.RacialAbility("Lentos para Agir", "")
+                    )
+                )
+            ),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+        assertNotNull(racialLine)
+        assertTrue(racialLine!!.contains("Pensamentos Positivos"))
+        assertFalse(racialLine.contains("Impulso"))
+    }
+
 
     @Test
     fun `buildAncestralidadeDisplay humano adg usa formato sem signo ou signo sem do`() {
