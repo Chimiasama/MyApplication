@@ -4,6 +4,7 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -33,6 +34,58 @@ class CriadorStateDemonioArcanoTest {
         assertTrue(state.usaPoderesDisponiveisPorEstagio("DEMONIO"))
         assertEquals(0, state.getSlotsCountForArcano("DEMONIO"))
         assertEquals("Heroico", state.poderesDisponiveisPorEstagioParaArcano("DEMONIO")["drenar_pontos_de_poder_demonio"])
+    }
+
+    @Test
+    fun `demonios de cidade sol a vapor usam 4 slots com disfarce demoniaco fixo`() {
+        val aaDemonio = Vantagem(
+            id = "aa_demonio",
+            nome = "ANTECEDENTE ARCANO (Demônio)",
+            categoria = Categoria.PODER,
+            origem = "SOL_VAPOR",
+            requisitos = Requisito()
+        )
+
+        val state = CriadorState().apply {
+            compendioCidadeSolVaporAtivo = true
+            ancestralidade = "DEMÔNIOS"
+            arcanoInfo = mapOf("DEMONIO" to Triple(3, 10, "Conjurar"))
+            adicionarVantagem(aaDemonio)
+        }
+
+        val slots = state.poderSlotsPorArcano["DEMONIO"]
+        assertFalse(state.usaPoderesDisponiveisPorEstagio("DEMONIO"))
+        assertEquals(4, state.getSlotsCountForArcano("DEMONIO"))
+        assertEquals(4, slots?.size)
+        assertEquals("disfarce_demoniaco", slots?.get(0))
+    }
+
+    @Test
+    fun `demonios de cidade sol a vapor podem usar novos poderes para ganhar slots`() {
+        val aaDemonio = Vantagem(
+            id = "aa_demonio",
+            nome = "ANTECEDENTE ARCANO (Demônio)",
+            categoria = Categoria.PODER,
+            origem = "SOL_VAPOR",
+            requisitos = Requisito()
+        )
+        val novosPoderes = Vantagem(
+            id = "novos_poderes",
+            nome = "Novos Poderes",
+            categoria = Categoria.PODER,
+            origem = "BASICO",
+            requisitos = Requisito()
+        )
+
+        val state = CriadorState().apply {
+            compendioCidadeSolVaporAtivo = true
+            ancestralidade = "DEMÔNIOS"
+            arcanoInfo = mapOf("DEMONIO" to Triple(3, 10, "Conjurar"))
+            adicionarVantagem(aaDemonio)
+            vantagensSelecionadas.add(novosPoderes)
+        }
+
+        assertEquals(6, state.getSlotsCountForArcano("DEMONIO"))
     }
 
 }

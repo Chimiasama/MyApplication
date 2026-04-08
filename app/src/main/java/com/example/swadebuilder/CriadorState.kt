@@ -3382,6 +3382,10 @@ class CriadorState {
     fun getSlotsCountForArcano(arcKey: String): Int {
         val arcKeyNorm = arcKey.normAAKey()
         if (usaPoderesDisponiveisPorEstagio(arcKeyNorm)) return 0
+        val isCidadeSolVaporDemonAncestry =
+            compendioCidadeSolVaporAtivo &&
+                ancestralidade.keyify().contains("DEMONIOS") &&
+                arcKeyNorm == "DEMONIO"
         val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
         val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
             arcKeyNorm == "MESTRE DO CHI" &&
@@ -3419,7 +3423,8 @@ class CriadorState {
             }
 
         val bonusTecnicas = if (arcKeyNorm == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
-        return base + bonusSlots + bonusTecnicas
+        val totalSlots = base + bonusSlots + bonusTecnicas
+        return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
     }
 
     fun getEffectiveSlotsCountForArcano(arcKey: String): Int {
@@ -3540,9 +3545,11 @@ class CriadorState {
     private fun Vantagem.isStageBasedArcanoVariant(key: String): Boolean {
         val normalizedKey = key.normAAKey()
         val origin = canonicalOriginKey(origem)
+        val isCidadeSolVaporDemonAncestry =
+            compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
         return when (normalizedKey) {
             "FEITICEIRO" -> id == "aa_magia_negra"
-            "DEMONIO" -> id == "aa_demonio"
+            "DEMONIO" -> id == "aa_demonio" && !isCidadeSolVaporDemonAncestry
             "MILAGRES" -> {
                 id == "aa_milagres" ||
                     (id == "antecedente_arcano_milagres" && origin == "CIDADE_SOL_VAPOR")
