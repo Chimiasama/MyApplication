@@ -111,6 +111,10 @@ fun buildSummaryLines(
 
     fun complicationDisplayNames(rawIds: List<String>, modoOficialAtivo: Boolean): List<String> {
         val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
+        fun normalizeForasteiro(text: String): String {
+            val forasteiroWithDegree = Regex("""^FORASTEIRO\s*\((MENOR|MAIOR)\)$""", RegexOption.IGNORE_CASE)
+            return if (forasteiroWithDegree.matches(text.trim())) "Forasteiro" else text
+        }
         return rawIds.map { compId ->
             val comp = mapPorId[compId.keyify()]
             if (comp != null) {
@@ -141,9 +145,9 @@ fun buildSummaryLines(
                     else ""
                 } ?: sevDisplay
 
-                "$baseName$userChoice"
+                normalizeForasteiro("$baseName$userChoice")
             } else {
-                compId.replace('_', ' ').toFancyTitleCase()
+                normalizeForasteiro(compId.replace('_', ' ').toFancyTitleCase())
             }
         }
     }
@@ -681,8 +685,11 @@ fun buildSummaryLines(
     lines += ""
 
     fun complicationWithSeverity(raw: String): String {
+        val forasteiroWithDegree = Regex("""^FORASTEIRO\s*\((MENOR|MAIOR)\)$""", RegexOption.IGNORE_CASE)
+        if (forasteiroWithDegree.matches(raw.trim())) return "Forasteiro"
         if (raw.contains("(")) return raw
         val compKey = raw.substringBefore("(").trim().keyify()
+        if (compKey == "FORASTEIRO") return "Forasteiro"
         val def = listaComplicacoes.firstOrNull { comp ->
             comp.name.keyify() == compKey || (comp.originalName?.keyify() == compKey)
         } ?: return raw

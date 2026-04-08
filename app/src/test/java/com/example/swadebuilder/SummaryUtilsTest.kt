@@ -568,6 +568,49 @@ class SummaryUtilsTest {
         assertFalse(racialLine.contains("Impulso"))
     }
 
+    @Test
+    fun `buildSummaryLines mostra Forasteiro sem grau entre parenteses`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Terra",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "TERRACOTA",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = listOf("FORASTEIRO (Menor)"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioArteDaGuerraAtivo = true
+            ),
+            allAdvantages = emptyList(),
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = listOf(
+                com.example.swadebuilder.model.Complicacao(
+                    id = "FORASTEIRO",
+                    name = "FORASTEIRO",
+                    severity = "menor",
+                    description = "",
+                    origem = "ARTE_DA_GUERRA"
+                )
+            ),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val complicacoesLine = lines.firstOrNull { it.startsWith("Complicações") }
+        val detailsLine = lines.getOrNull((complicacoesLine?.let { lines.indexOf(it) } ?: -1) + 1)
+
+        assertEquals("Forasteiro", detailsLine)
+    }
+
 
     @Test
     fun `buildAncestralidadeDisplay humano adg usa formato sem signo ou signo sem do`() {
