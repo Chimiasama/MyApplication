@@ -56,6 +56,20 @@ class CriadorStateKirinSignTest {
     }
 
     @Test
+    fun `signo nenhum nao concede pv gratis e mantem slot adaptavel`() {
+        val state = CriadorState().apply {
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "HUMANOS"
+            pontosVantagem = 0
+        }
+
+        state.selecionarSigno("Nenhum")
+
+        assertEquals(0, state.pontosVantagem)
+        assertTrue(state.adaptavelSlotAvailable)
+    }
+
+    @Test
     fun `troca de ancestralidade nao devolve pv ao remover vantagem gratuita de signo`() {
         val atraenteInvalida = Vantagem(
             id = "atraente",
