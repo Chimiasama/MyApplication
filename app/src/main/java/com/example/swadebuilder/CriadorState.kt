@@ -2653,6 +2653,9 @@ class CriadorState {
 
         if (compendioArteDaGuerraAtivo && (ancKey.contains("UMVEE") || ancKey == "FERAL")) {
             val variant = resolveCurrentSciFiVariantSelection(anc)
+            if (perKey == "SOBREVIVENCIA" && ancKey.contains("UMVEE")) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
             if (perKey == "PERCEBER" && variant.equals("Gatoruja", ignoreCase = true)) {
                 modifiedBase = maxOf(modifiedBase, 6)
             }
