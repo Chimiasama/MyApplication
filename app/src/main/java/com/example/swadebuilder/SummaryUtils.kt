@@ -631,12 +631,17 @@ fun buildSummaryLines(
     } else {
         val isTanukimimiWithPositiveThoughts = personagem.ancestralidade.keyify() == "TANUKIMIMI" &&
             habilidadesRaciais.any { it.keyify() == "PENSAMENTOS POSITIVOS" }
+        val isFeralWithInsanidade = personagem.ancestralidade.keyify() == "FERAL" &&
+            habilidadesRaciais.any { it.keyify() == "INSANIDADE" }
         (habilidadesRaciais + personagem.vantagensRaciais)
             .filterNot { trait ->
                 isElfosComunitario && trait.keyify() == "DESASTRADO"
             }
             .filterNot { trait ->
                 isTanukimimiWithPositiveThoughts && trait.keyify() == "IMPULSO"
+            }
+            .filterNot { trait ->
+                isFeralWithInsanidade && trait.keyify() == "FURIOSO"
             }
             .filterNot { trait ->
                 isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")

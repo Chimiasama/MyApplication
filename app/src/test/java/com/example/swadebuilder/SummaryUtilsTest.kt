@@ -611,6 +611,62 @@ class SummaryUtilsTest {
         assertEquals("Forasteiro", detailsLine)
     }
 
+    @Test
+    fun `buildSummaryLines oculta furioso em caracteristicas raciais de feral com insanidade`() {
+        val lines = buildSummaryLines(
+            personagem = MeuPersonagem(
+                nome = "Feral",
+                atributos = emptyMap(),
+                pericias = emptyMap(),
+                ancestralidade = "FERAL",
+                celestialAAMilagresDesabilitado = false,
+                vantagens = emptyList(),
+                complicacoes = emptyList(),
+                desvantagensRaciais = emptyList(),
+                vantagensRaciais = listOf("FURIOSO"),
+                equipamentos = emptyList(),
+                poderes = emptyMap(),
+                dinheiro = 0,
+                pontosRestantes = 0,
+                compendioArteDaGuerraAtivo = true
+            ),
+            allAdvantages = listOf(
+                Vantagem(
+                    id = "furioso",
+                    nome = "Furioso",
+                    descricao = "",
+                    categoria = Categoria.ANTECEDENTE,
+                    requisitos = emptyList()
+                )
+            ),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "FERAL",
+                    origem = "ARTE_DA_GUERRA",
+                    atributos = emptyMap(),
+                    pericias = emptyMap(),
+                    desvantagens = emptyList(),
+                    habilidades = listOf(
+                        com.example.swadebuilder.model.RacialAbility("Insanidade", ""),
+                        com.example.swadebuilder.model.RacialAbility("Primitivo", "")
+                    )
+                )
+            ),
+            listaMonstros = emptyList(),
+            listaComplicacoes = emptyList(),
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
+        assertNotNull(racialLine)
+        assertTrue(racialLine!!.contains("Insanidade"))
+        assertFalse(racialLine.contains("Furioso"))
+    }
+
 
     @Test
     fun `buildAncestralidadeDisplay humano adg usa formato sem signo ou signo sem do`() {
