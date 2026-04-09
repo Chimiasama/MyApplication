@@ -3322,6 +3322,7 @@ class CriadorState {
 
     fun syncPoderesSelecionadosFromSlots() {
         ensureTransmorfoFixedDisguisePower()
+        ensureDemonioFixedPower()
         poderesSelecionados.apply {
             clear()
             addAll(poderSlotsPorArcano.values.flatMap { it.filterNotNull() })
@@ -3342,6 +3343,23 @@ class CriadorState {
             slots.add("disfarce")
         } else {
             slots[0] = "disfarce"
+        }
+    }
+
+    private fun ensureDemonioFixedPower() {
+        if (!compendioCidadeSolVaporAtivo || ancestralidade.keyify() != "DEMONIO (ABISMO)") return
+
+        val slots = poderSlotsPorArcano.getOrPut("DEMONIO") { mutableStateListOf() }
+        val requiredSlots = getEffectiveSlotsCountForArcano("DEMONIO")
+
+        while (slots.size < requiredSlots) {
+            slots.add(null)
+        }
+
+        if (slots.isEmpty()) {
+            slots.add("disfarce_demoniaco")
+        } else {
+            slots[0] = "disfarce_demoniaco"
         }
     }
 
@@ -3384,7 +3402,7 @@ class CriadorState {
         if (usaPoderesDisponiveisPorEstagio(arcKeyNorm)) return 0
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo &&
-                ancestralidade.keyify().contains("DEMONIOS") &&
+                ancestralidade.keyify().contains("DEMONIO (ABISMO)") &&
                 arcKeyNorm == "DEMONIO"
         val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
         val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
@@ -3546,7 +3564,7 @@ class CriadorState {
         val normalizedKey = key.normAAKey()
         val origin = canonicalOriginKey(origem)
         val isCidadeSolVaporDemonAncestry =
-            compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
+            compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIO (ABISMO)")
         return when (normalizedKey) {
             "FEITICEIRO" -> id == "aa_magia_negra"
             "DEMONIO" -> id == "aa_demonio" && !isCidadeSolVaporDemonAncestry
