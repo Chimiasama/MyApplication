@@ -537,7 +537,7 @@ class SummaryUtilsTest {
                     nome = "Impulso",
                     descricao = "",
                     categoria = Categoria.ANTECEDENTE,
-                    requisitos = listOf(Requisito("Atributo", "Espírito d8"))
+                    requisitos = Requisito(observacoes = "Espírito d8")
                 )
             ),
             listaAncestralidades = listOf(
@@ -636,7 +636,7 @@ class SummaryUtilsTest {
                     nome = "Furioso",
                     descricao = "",
                     categoria = Categoria.ANTECEDENTE,
-                    requisitos = emptyList()
+                    requisitos = Requisito()
                 )
             ),
             listaAncestralidades = listOf(

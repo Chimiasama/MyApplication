@@ -629,7 +629,7 @@ fun buildSummaryLines(
     val allRacialTraits = if (isAdgHuman) {
         adgHumanSignTrait
     } else {
-        val isTanukimimiWithPositiveThoughts = personagem.ancestralidade.keyify() == "TANUKIMIMI" &&
+        val isTanukimimiWithPositiveThoughts = personagem.ancestralidade.keyify().contains("TANUKIMIMI") &&
             habilidadesRaciais.any { it.keyify() == "PENSAMENTOS POSITIVOS" }
         val isFeralWithInsanidade = personagem.ancestralidade.keyify() == "FERAL" &&
             habilidadesRaciais.any { it.keyify() == "INSANIDADE" }
