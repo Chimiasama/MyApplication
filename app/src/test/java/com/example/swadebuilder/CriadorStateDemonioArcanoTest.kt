@@ -48,7 +48,7 @@ class CriadorStateDemonioArcanoTest {
 
         val state = CriadorState().apply {
             compendioCidadeSolVaporAtivo = true
-            ancestralidade = "DEMÔNIOS"
+            ancestralidade = "Demônios"
             arcanoInfo = mapOf("DEMONIO" to Triple(3, 10, "Conjurar"))
             adicionarVantagem(aaDemonio)
         }
@@ -79,7 +79,7 @@ class CriadorStateDemonioArcanoTest {
 
         val state = CriadorState().apply {
             compendioCidadeSolVaporAtivo = true
-            ancestralidade = "DEMÔNIOS"
+            ancestralidade = "Demônios"
             arcanoInfo = mapOf("DEMONIO" to Triple(3, 10, "Conjurar"))
             adicionarVantagem(aaDemonio)
             vantagensSelecionadas.add(novosPoderes)

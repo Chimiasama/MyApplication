@@ -3322,6 +3322,7 @@ class CriadorState {
 
     fun syncPoderesSelecionadosFromSlots() {
         ensureTransmorfoFixedDisguisePower()
+        ensureDemonioFixedPower()
         poderesSelecionados.apply {
             clear()
             addAll(poderSlotsPorArcano.values.flatMap { it.filterNotNull() })
@@ -3342,6 +3343,23 @@ class CriadorState {
             slots.add("disfarce")
         } else {
             slots[0] = "disfarce"
+        }
+    }
+
+    private fun ensureDemonioFixedPower() {
+        if (!compendioCidadeSolVaporAtivo || ancestralidade.keyify() != "DEMONIOS") return
+
+        val slots = poderSlotsPorArcano.getOrPut("DEMONIO") { mutableStateListOf() }
+        val requiredSlots = getEffectiveSlotsCountForArcano("DEMONIO")
+
+        while (slots.size < requiredSlots) {
+            slots.add(null)
+        }
+
+        if (slots.isEmpty()) {
+            slots.add("disfarce_demoniaco")
+        } else {
+            slots[0] = "disfarce_demoniaco"
         }
     }
 

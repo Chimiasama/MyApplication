@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -607,6 +608,9 @@ fun PoderesSection(
                                         val isFixed = state.isFixedPower(arcKey, poderId)
                                         val isSlotLocked = locked || idx < lockedCount || isFixed
                                         AssistChip(
+                                            colors = AssistChipDefaults.assistChipColors(
+                                                containerColor = if (poderId == null) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+                                            ),
                                             onClick = {
                                                 if (!isSlotLocked && poderId != null) {
                                                     val (pode, msg) = state.podeRemoverPoderDoSlot(poderId)
@@ -621,7 +625,7 @@ fun PoderesSection(
                                             },
                                             label = {
                                                 Text(
-                                                    text = "${idx + 1}: $label" + if (isFixed) " (Fixo)" else "",
+                                                    text = "${idx + 1}: $label",
                                                     style = MaterialTheme.typography.bodySmall
                                                 )
                                             },
