@@ -3347,7 +3347,7 @@ class CriadorState {
     }
 
     private fun ensureDemonioFixedPower() {
-        if (!compendioCidadeSolVaporAtivo || ancestralidade.keyify() != "DEMONIO (ABISMO)") return
+        if (!compendioCidadeSolVaporAtivo || ancestralidade.keyify() != "DEMONIOS") return
 
         val slots = poderSlotsPorArcano.getOrPut("DEMONIO") { mutableStateListOf() }
         val requiredSlots = getEffectiveSlotsCountForArcano("DEMONIO")
@@ -3402,7 +3402,7 @@ class CriadorState {
         if (usaPoderesDisponiveisPorEstagio(arcKeyNorm)) return 0
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo &&
-                ancestralidade.keyify().contains("DEMONIO (ABISMO)") &&
+                ancestralidade.keyify().contains("DEMONIOS") &&
                 arcKeyNorm == "DEMONIO"
         val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
         val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
@@ -3564,7 +3564,7 @@ class CriadorState {
         val normalizedKey = key.normAAKey()
         val origin = canonicalOriginKey(origem)
         val isCidadeSolVaporDemonAncestry =
-            compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIO (ABISMO)")
+            compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
         return when (normalizedKey) {
             "FEITICEIRO" -> id == "aa_magia_negra"
             "DEMONIO" -> id == "aa_demonio" && !isCidadeSolVaporDemonAncestry
