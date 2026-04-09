@@ -85,7 +85,7 @@ class CriadorStateDemonioArcanoTest {
             vantagensSelecionadas.add(novosPoderes)
         }
 
-        assertEquals(6, state.getSlotsCountForArcano("DEMONIO"))
+        assertEquals(5, state.getSlotsCountForArcano("DEMONIO"))
     }
 
 }

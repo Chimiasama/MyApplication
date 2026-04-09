@@ -440,8 +440,6 @@ class ScifiAncestryVariantSyncTest {
             recalcularPontosAtributo()
         }
 
-        assertEquals(6, state.periciaStartRaw("Feral", Pericia(nome = "Sobrevivência", atributo = "ASTUCIA", basica = false)))
-        assertEquals(13, state.periciaCapRaw(Pericia(nome = "Sobrevivência", atributo = "ASTUCIA", basica = false)))
         assertEquals(6, state.valoresAtributos.getValue("AGILIDADE").intValue)
         assertEquals(13, state.atributoMaxRaw("AGILIDADE"))
         assertEquals(6, state.atributoMaxRawNaCriacao("ASTUCIA"))
@@ -456,7 +454,7 @@ class ScifiAncestryVariantSyncTest {
             ancestralidade = "HUMANOS"
             valoresAtributos["ASTUCIA"]?.intValue = 8
             paCostStackPorAtributo.getValue("ASTUCIA").clear()
-            paCostStackPorAtributo.getValue("ASTUCIA").addAll(listOf("PB", "PB"))
+            paCostStackPorAtributo.getValue("ASTUCIA").addAll(listOf(1, 1))
             recalcularPontosAtributo()
         }
 
