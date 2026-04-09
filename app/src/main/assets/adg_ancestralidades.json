@@ -355,7 +355,7 @@
         "id": "METADE_CARNE"
       },
       {
-        "nome": "Forasteiro (Menor)",
+        "nome": "Forasteiro",
         "descricao": "Terracotas são raros o suficiente no mundo que, quando encontrados, são frequentemente alvo de preconceitos, suspeitas e vistos como seres não-naturais.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -413,7 +413,8 @@
     ],
     "atributos": {},
     "pericias": {
-      "Ocultismo": 0
+      "Ocultismo": 0,
+      "Sobrevivência": 0
     },
     "vantagensGratis": [],
     "desvantagens": [],

@@ -424,6 +424,7 @@ class ScifiAncestryVariantSyncTest {
 
         assertEquals("Gatoruja", selecionada)
         assertEquals(4, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Ocultismo", atributo = "Astúcia", basica = false)))
+        assertEquals(4, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Sobrevivência", atributo = "Astúcia", basica = false)))
         assertEquals(6, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Perceber", atributo = "Astúcia", basica = true)))
         assertEquals(13, state.periciaCapRaw(Pericia(nome = "Perceber", atributo = "Astúcia", basica = true)))
     }
@@ -439,12 +440,29 @@ class ScifiAncestryVariantSyncTest {
             recalcularPontosAtributo()
         }
 
-        assertEquals(6, state.periciaStartRaw("Feral", Pericia(nome = "Sobrevivência", atributo = "ASTUCIA", basica = false)))
-        assertEquals(13, state.periciaCapRaw(Pericia(nome = "Sobrevivência", atributo = "ASTUCIA", basica = false)))
         assertEquals(6, state.valoresAtributos.getValue("AGILIDADE").intValue)
         assertEquals(13, state.atributoMaxRaw("AGILIDADE"))
         assertEquals(6, state.atributoMaxRawNaCriacao("ASTUCIA"))
         assertEquals(12, state.atributoMaxRaw("ASTUCIA"))
+    }
+
+    @Test
+    fun `trocar para feral reduz astucia acima de d6 durante criacao`() {
+        val state = CriadorState().apply {
+            injectMockAncestries(this)
+            compendioArteDaGuerraAtivo = true
+            ancestralidade = "HUMANOS"
+            valoresAtributos["ASTUCIA"]?.intValue = 8
+            paCostStackPorAtributo.getValue("ASTUCIA").clear()
+            paCostStackPorAtributo.getValue("ASTUCIA").addAll(listOf(1, 1))
+            recalcularPontosAtributo()
+        }
+
+        state.aplicarAncestralidade("Feral", mutableListOf(), autoRefund = false)
+
+        assertEquals(6, state.valoresAtributos.getValue("ASTUCIA").intValue)
+        assertEquals(1, state.paCostStackPorAtributo.getValue("ASTUCIA").size)
+        assertEquals(6, state.atributoMaxRawNaCriacao("ASTUCIA"))
     }
 
 }

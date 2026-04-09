@@ -498,9 +498,14 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                if (opcoesValidas.size > 1) {
+                                val isFeral = item.nome.keyify() == "FERAL"
+                                val isUmvee = item.nome.keyify().contains("UMVEE")
+                                if (opcoesValidas.size > 1 && !isFeral) {
                                     Spacer(Modifier.height(8.dp))
-                                    Text("Variante:", style = MaterialTheme.typography.labelMedium)
+                                    Text(
+                                        if (isUmvee) "Dons da Natureza:" else "Variante:",
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
 
                                     var expanded by remember { mutableStateOf(false) }
 
@@ -526,23 +531,15 @@ fun AncestralidadesSection(
                                         }
                                     }
 
-                                    // Human Miner / Feral Primitive Attribute Choice
-                                    if ((item.nome.keyify() == "HUMANOS" && currentSelection == "Minerador") || item.nome.keyify() == "FERAL") {
+                                    // Human Miner Attribute Choice
+                                    if (item.nome.keyify() == "HUMANOS" && currentSelection == "Minerador") {
                                         Spacer(Modifier.height(8.dp))
-                                        val feralSelected = item.nome.keyify() == "FERAL"
-                                        val attributeOptions = if (feralSelected) {
-                                            listOf("Força", "Vigor", "Agilidade")
-                                        } else {
-                                            listOf("Força", "Vigor")
-                                        }
+                                        val attributeOptions = listOf("Força", "Vigor")
                                         var attributeExpanded by remember { mutableStateOf(false) }
                                         val currentAttributeSelection = state.humanoMineradorAtributo
                                             ?.takeIf { it in attributeOptions }
                                             ?: "Força"
-                                        Text(
-                                            if (feralSelected) "Atributo Primitivo (d6 inicial):" else "Bônus de Atributo (d6 inicial):",
-                                            style = MaterialTheme.typography.labelMedium
-                                        )
+                                        Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
                                         Box {
                                             OutlinedButton(onClick = { attributeExpanded = true }) {
                                                 Text(currentAttributeSelection.toFancyTitleCase())
@@ -557,6 +554,34 @@ fun AncestralidadesSection(
                                                         }
                                                     )
                                                 }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (isFeral) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Dons da Natureza: Ápice", style = MaterialTheme.typography.labelMedium)
+                                    Spacer(Modifier.height(8.dp))
+                                    val attributeOptions = listOf("Força", "Vigor", "Agilidade")
+                                    var attributeExpanded by remember { mutableStateOf(false) }
+                                    val currentAttributeSelection = state.humanoMineradorAtributo
+                                        ?.takeIf { it in attributeOptions }
+                                        ?: "Força"
+                                    Text("Atributo Primitivo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
+                                    Box {
+                                        OutlinedButton(onClick = { attributeExpanded = true }) {
+                                            Text(currentAttributeSelection.toFancyTitleCase())
+                                        }
+                                        DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
+                                            attributeOptions.forEach { option ->
+                                                DropdownMenuItem(
+                                                    text = { Text(option.toFancyTitleCase()) },
+                                                    onClick = {
+                                                        state.selecionarHumanoMineradorAtributo(option)
+                                                        attributeExpanded = false
+                                                    }
+                                                )
                                             }
                                         }
                                     }

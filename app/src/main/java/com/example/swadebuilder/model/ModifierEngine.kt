@@ -291,7 +291,7 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_resistencia", SourceType.ANCESTRALIDADE, "Resistência", ModifierTarget.TOUGHNESS_FLAT, 1))
             }
             if (anc.nome.keyify().contains("TERRACOTA")) {
-                modifiers.add(Modifier("racial_terracota_res", SourceType.ANCESTRALIDADE, "Terracota", ModifierTarget.TOUGHNESS_FLAT, 1))
+                modifiers.add(Modifier("racial_terracota_res", SourceType.ANCESTRALIDADE, "Terracota", ModifierTarget.TOUGHNESS_FLAT, 3))
             }
 
             if (hasFerocidade) {

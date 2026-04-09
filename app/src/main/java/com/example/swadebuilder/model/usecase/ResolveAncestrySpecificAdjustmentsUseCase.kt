@@ -771,22 +771,12 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         }
 
         if (canonicalOriginKey(ancestryOrigin) == "ARTE_DA_GUERRA" && ancKey == "FERAL") {
-            val giftAdvantages = when (effectiveVariant) {
-                "Ápice" -> Pair(emptyList(), listOf("GARRAS"))
-                "Vínculo Bestial" -> Pair(listOf("SENHOR DAS FERAS"), listOf("SENHOR DAS FERAS"))
-                "Pele Iluminada pela Lua" -> Pair(emptyList(), listOf("APARAR +1"))
-                "Gatoruja" -> Pair(emptyList(), listOf("VISÃO NO ESCURO"))
-                "Correnteza" -> Pair(emptyList(), listOf("MOVIMENTAÇÃO +2"))
-                "Pedregoso" -> Pair(emptyList(), listOf("RESISTÊNCIA +1"))
-                else -> Pair(emptyList(), listOf("GARRAS"))
-            }
-
             return Result(
-                naturalArmorFromRace = if (effectiveVariant == "Pedregoso") 2 else 0,
+                naturalArmorFromRace = 0,
                 forceArmorZero = true,
-                ensureAdvantageNames = listOf("FURIOSO") + giftAdvantages.first,
+                ensureAdvantageNames = listOf("FURIOSO"),
                 ensureAdvantageIds = emptyList(),
-                ensureAutomaticAdvantages = listOf("FURIOSO") + giftAdvantages.second,
+                ensureAutomaticAdvantages = listOf("FURIOSO", "GARRAS"),
                 ensureRacialDisadvantages = listOf("SANGUINÁRIO"),
                 elementalAction = ElementalAction.NONE,
                 anotacoesToAdd = listOf("Feral: não pode canalizar Técnicas de Chi.")

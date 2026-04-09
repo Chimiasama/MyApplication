@@ -114,7 +114,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
-    fun `feral recebe furioso sanguinario e bloqueio de chi`() {
+    fun `feral recebe furioso garras sanguinario e bloqueio de chi`() {
         val result = useCase.execute(
             anc = "Feral",
             descendenteElementalSelecionado = null,
@@ -124,7 +124,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertTrue(result.ensureAdvantageNames.contains("FURIOSO"))
-        assertTrue(result.ensureAutomaticAdvantages.contains("MOVIMENTAÇÃO +2"))
+        assertTrue(result.ensureAutomaticAdvantages.contains("GARRAS"))
         assertEquals(listOf("SANGUINÁRIO"), result.ensureRacialDisadvantages)
         assertTrue(result.anotacoesToAdd.any { it.contains("Técnicas de Chi") })
     }

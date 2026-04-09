@@ -457,7 +457,10 @@ class CriadorState {
             return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
         }
 
-        val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
+        val variant = when {
+            canonicalOriginKey(base.origem) == "ARTE_DA_GUERRA" && key == "FERAL" -> "Ápice"
+            else -> resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
+        }
         val newHabilidades = base.habilidades.toMutableList()
 
         fun removeByIdOrName(id: String, nameKey: String) {
@@ -2651,12 +2654,12 @@ class CriadorState {
             }
         }
 
-        if (compendioArteDaGuerraAtivo && (ancKey.contains("UMVEE") || ancKey == "FERAL")) {
+        if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
             val variant = resolveCurrentSciFiVariantSelection(anc)
-            if (perKey == "PERCEBER" && variant.equals("Gatoruja", ignoreCase = true)) {
-                modifiedBase = maxOf(modifiedBase, 6)
+            if (perKey == "SOBREVIVENCIA" && ancKey.contains("UMVEE")) {
+                modifiedBase = maxOf(modifiedBase, 4)
             }
-            if (perKey == "SOBREVIVENCIA" && variant.equals("Correnteza", ignoreCase = true) && ancKey == "FERAL") {
+            if (perKey == "PERCEBER" && variant.equals("Gatoruja", ignoreCase = true)) {
                 modifiedBase = maxOf(modifiedBase, 6)
             }
             if (perKey == "OCULTISMO" && variant.equals("Gatoruja", ignoreCase = true) && ancKey.contains("UMVEE")) {
@@ -3379,6 +3382,10 @@ class CriadorState {
     fun getSlotsCountForArcano(arcKey: String): Int {
         val arcKeyNorm = arcKey.normAAKey()
         if (usaPoderesDisponiveisPorEstagio(arcKeyNorm)) return 0
+        val isCidadeSolVaporDemonAncestry =
+            compendioCidadeSolVaporAtivo &&
+                ancestralidade.keyify().contains("DEMONIOS") &&
+                arcKeyNorm == "DEMONIO"
         val hasArcanoVantagem = vantagensSelecionadas.any { it.toArcanoKey()?.normAAKey() == arcKeyNorm }
         val usaTecnicasTropo = compendioArteDaGuerraAtivo &&
             arcKeyNorm == "MESTRE DO CHI" &&
@@ -3416,7 +3423,8 @@ class CriadorState {
             }
 
         val bonusTecnicas = if (arcKeyNorm == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
-        return base + bonusSlots + bonusTecnicas
+        val totalSlots = base + bonusSlots + bonusTecnicas
+        return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
     }
 
     fun getEffectiveSlotsCountForArcano(arcKey: String): Int {
@@ -3537,9 +3545,11 @@ class CriadorState {
     private fun Vantagem.isStageBasedArcanoVariant(key: String): Boolean {
         val normalizedKey = key.normAAKey()
         val origin = canonicalOriginKey(origem)
+        val isCidadeSolVaporDemonAncestry =
+            compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
         return when (normalizedKey) {
             "FEITICEIRO" -> id == "aa_magia_negra"
-            "DEMONIO" -> id == "aa_demonio"
+            "DEMONIO" -> id == "aa_demonio" && !isCidadeSolVaporDemonAncestry
             "MILAGRES" -> {
                 id == "aa_milagres" ||
                     (id == "antecedente_arcano_milagres" && origin == "CIDADE_SOL_VAPOR")
@@ -5682,7 +5692,7 @@ class CriadorState {
 
         listaAtributos.forEach { nomeAttr ->
             val stack = paCostStackPorAtributo[nomeAttr] ?: return@forEach
-            var maxAllowed = atributoMaxRaw(nomeAttr)
+            var maxAllowed = atributoMaxRawNaCriacao(nomeAttr)
             var current = valoresAtributos[nomeAttr]?.intValue ?: return@forEach
 
             while (current > maxAllowed && stack.isNotEmpty()) {
@@ -5691,7 +5701,7 @@ class CriadorState {
                 valoresAtributos[nomeAttr]?.intValue = current.coerceAtLeast(atributoBaseRacial(nomeAttr))
                 feedbackMessages.add("Atributo $nomeAttr reduzido para respeitar o limite racial.")
                 pontosAtributo = calcularPontosAtributoRestantes()
-                maxAllowed = atributoMaxRaw(nomeAttr)
+                maxAllowed = atributoMaxRawNaCriacao(nomeAttr)
                 current = valoresAtributos[nomeAttr]?.intValue ?: current
             }
 
