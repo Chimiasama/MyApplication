@@ -36,7 +36,29 @@ class BuildUsageInstructionsUseCase {
         }
 
         return buildString {
-            appendLine("Compêndios ativos:")
+            appendLine("### Como usar o app")
+            appendLine("• Navegue pelas abas na parte inferior (Características, Perícias, Vantagens, etc.) para montar seu personagem.")
+            appendLine("• Os pontos de construção são calculados e validados automaticamente.")
+            appendLine("• Na aba Resumo, você pode revisar todas as escolhas e exportar a ficha final em PDF.")
+            appendLine()
+
+            val hasSpecialInstructions = input.compendioPathfinderAtivo ||
+                                         input.compendioCrystalHeartAtivo ||
+                                         input.modoSupers ||
+                                         input.compendioSciFiAtivo ||
+                                         input.modoMonstroAtivo
+
+            if (hasSpecialInstructions) {
+                appendLine("### Instruções específicas dos compêndios ativos")
+                if (input.compendioPathfinderAtivo) appendLine("• Pathfinder: As Classes de Prestígio funcionam como Vantagens.")
+                if (input.compendioCrystalHeartAtivo) appendLine("• Crystal Heart: A instalação de Corações e Cristais afeta os dados de seus atributos e perícias automaticamente.")
+                if (input.modoSupers) appendLine("• Supers: Ajuste o Nível de Campanha. Seus Pontos de Super Poderes podem ser gastos na aba de Poderes.")
+                if (input.compendioSciFiAtivo) appendLine("• Ficção Científica: A instalação de Implantes Cibernéticos é limitada pela Tensão Máxima do personagem.")
+                if (input.modoMonstroAtivo) appendLine("• Monstros: Os limites normais de pontos são ignorados para permitir a criação livre de criaturas personalizadas.")
+                appendLine()
+            }
+
+            appendLine("### Compêndios ativos")
             activeBooks.forEach { appendLine("• $it") }
             appendLine()
             appendLine("Dica: para ativar/desativar compêndios, use Configurações → Novo personagem.")
