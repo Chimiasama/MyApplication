@@ -32,7 +32,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
@@ -95,7 +94,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.SnapshotFlags
-import com.example.swadebuilder.model.usecase.BuildUsageInstructionsUseCase
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.components.SettingsDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
@@ -109,7 +107,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 
 private const val MULTIPLOS_AA_HABILITADOS: Boolean = false
-private val buildUsageInstructionsUseCase = BuildUsageInstructionsUseCase()
 
 enum class PendingNavigationAction {
     ReturnToHome,
@@ -259,7 +256,6 @@ class MainActivity : ComponentActivity() {
             }
 
             var showSettingsDialog by rememberSaveable { mutableStateOf(false) }
-            var showHelpDialog by rememberSaveable { mutableStateOf(false) }
 
             var showSaveDialog by rememberSaveable { mutableStateOf(false) }
             var showLoadDialog by rememberSaveable { mutableStateOf(false) }
@@ -356,48 +352,6 @@ class MainActivity : ComponentActivity() {
                         onThemeSelected = { theme -> criadorViewModel.setAppTheme(theme) }
                     )
                 }
-            }
-
-            if (showHelpDialog) {
-                val pathfinderLabel = stringResource(R.string.sw_pathfinder_label)
-                AlertDialog(
-                    onDismissRequest = { showHelpDialog = false },
-                    title = { Text("Como usar o app") },
-                    text = {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(max = 360.dp)
-                                .verticalScroll(rememberScrollState())
-                        ) {
-                            Text(
-                                buildUsageInstructionsUseCase.execute(
-                                    BuildUsageInstructionsUseCase.Input(
-                                        compendioFantasiaAtivo = state.compendioFantasiaAtivo,
-                                        compendioHorrorAtivo = state.compendioHorrorAtivo,
-                                        compendioSciFiAtivo = state.compendioSciFiAtivo,
-                                        compendioPathfinderAtivo = state.compendioPathfinderAtivo,
-                                        compendioDeadlandsAtivo = state.compendioDeadlandsAtivo,
-                                        compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
-                                        compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo,
-                                        compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo,
-                                        compendioWiseguysAtivo = state.compendioWiseguysAtivo,
-                                        modoSupers = state.modoSupers,
-                                        modoMonstroAtivo = state.modoMonstroAtivo,
-                                        pathfinderLabel = pathfinderLabel,
-                                        supersBookLabel = stringResource(R.string.sw_supers_book_title),
-                                        monsterBookLabel = stringResource(R.string.sw_monsters_book_title)
-                                    )
-                                )
-                            )
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showHelpDialog = false }) {
-                            Text("Entendi")
-                        }
-                    }
-                )
             }
 
 
@@ -850,17 +804,7 @@ class MainActivity : ComponentActivity() {
                                             Box(
                                                 modifier = Modifier.fillMaxWidth(),
                                                 contentAlignment = Alignment.Center
-                                            ) {
-                                                IconButton(onClick = {
-                                                    triggerFeedback()
-                                                    showHelpDialog = true
-                                                }) {
-                                                    Icon(
-                                                        imageVector = Icons.AutoMirrored.Filled.Help,
-                                                        contentDescription = "Como usar"
-                                                    )
-                                                }
-                                            }
+                                            ) {}
                                         },
                                         navigationIcon = {
                                             if (state.estiloAbas == TabStyle.ICONES) {
