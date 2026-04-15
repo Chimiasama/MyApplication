@@ -32,7 +32,6 @@ Centralizar neste documento **todo o plano histórico + ajustes + próximos pass
 
 ### Fase 5 — Limpeza UI/Activity (concluída)
 - Helpers de regra removidos da `MainActivity` e movidos para domínio/utilitários:
-  - `BuildUsageInstructionsUseCase`
   - `DiceExtensions`
   - `ProgressionSlotRules`
 - Resultado: camada de UI mais fina e com menos risco de regressão funcional.

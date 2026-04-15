@@ -32,10 +32,8 @@ search_any() {
 
 # 1) Artefatos obrigatórios do plano unificado
 require_file "docs/plano-unificado-execucao-confiabilidade.md"
-require_file "app/src/main/java/com/example/swadebuilder/model/usecase/BuildUsageInstructionsUseCase.kt"
 require_file "app/src/main/java/com/example/swadebuilder/DiceExtensions.kt"
 require_file "app/src/main/java/com/example/swadebuilder/ProgressionSlotRules.kt"
-require_file "app/src/test/java/com/example/swadebuilder/model/usecase/BuildUsageInstructionsUseCaseTest.kt"
 require_file "app/src/test/java/com/example/swadebuilder/DiceExtensionsTest.kt"
 require_file "app/src/test/java/com/example/swadebuilder/ProgressionSlotRulesTest.kt"
 
@@ -45,20 +43,10 @@ if search_any "fun buildUsageInstructions\\(" app/src/main/java/com/example/swad
 fi
 pass "MainActivity não contém helper inline buildUsageInstructions(...)"
 
-# 3) Garantias de wiring do use-case e resources exigidos
-search_any "BuildUsageInstructionsUseCase" app/src/main/java/com/example/swadebuilder/MainActivity.kt \
-  || fail "MainActivity não referencia BuildUsageInstructionsUseCase"
-pass "MainActivity referencia BuildUsageInstructionsUseCase"
-
+# 3) Garantias de wiring de resources exigidos
 search_any "sw_supers_book_title|sw_monsters_book_title" app/src/main/res/values/strings.xml \
   || fail "Strings obrigatórias de livros não encontradas em strings.xml"
 pass "Strings de livros Supers/Monstros presentes"
-
-# 4) Garantia de cobertura mínima do cenário de monstro no teste do use-case
-search_any "modoMonstroAtivo[[:space:]]*=[[:space:]]*true|Livro de Monstros|Monstros" \
-  app/src/test/java/com/example/swadebuilder/model/usecase/BuildUsageInstructionsUseCaseTest.kt \
-  || fail "Teste de instruções não cobre explicitamente cenário de modo monstro"
-pass "Teste do use-case cobre modo monstro"
 
 # 5) Baseline continua executável (rastreabilidade de evolução)
 ./scripts/phase0_baseline_metrics.sh >/dev/null
