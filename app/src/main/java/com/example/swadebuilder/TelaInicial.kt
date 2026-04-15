@@ -468,7 +468,7 @@ fun TelaInicial(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Selecione os livros e regras para seu novo herói.",
+                        text = "Selecione o livro. Toque em REGRAS para personalizar.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
