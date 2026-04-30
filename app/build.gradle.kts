@@ -139,8 +139,6 @@ kotlin {
             "-opt-in=kotlin.RequiresOptIn"
         )
     }
-
-    jvmToolchain(21)
 }
 
 // ------------------------------------------------------------
@@ -173,7 +171,6 @@ dependencies {
     // --- Navegação e Persistência ---
     implementation(libs.androidx.navigation.common.android)
     implementation(libs.androidx.navigation.compose.android)
-    implementation(libs.androidx.room.compiler)
     implementation(libs.protolite.well.known.types)
     implementation(libs.engage.core)
 
@@ -202,10 +199,13 @@ dependencies {
 // 🔹 Otimizações pós-build
 // ------------------------------------------------------------
 
-// Desativa todas as tarefas Lint (acelera build local)
-tasks.configureEach {
-    if (name.contains("lint", ignoreCase = true)) {
-        enabled = false
+// Permite desativar lint apenas quando solicitado explicitamente
+val disableLint = providers.gradleProperty("disableLint").orNull == "true"
+if (disableLint) {
+    tasks.configureEach {
+        if (name.contains("lint", ignoreCase = true)) {
+            enabled = false
+        }
     }
 }
 
