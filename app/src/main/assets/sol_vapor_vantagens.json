@@ -16,7 +16,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil  é ignorada."
+    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil é ignorada."
   },
   {
     "id": "antecedente_arcano",
@@ -272,7 +272,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco ."
+    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco."
   },
   {
     "id": "famoso",
@@ -382,7 +382,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6 ."
+    "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6."
   },
   {
     "id": "musculoso",
@@ -608,7 +608,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág."
+    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais,."
   },
   {
     "id": "guerreiro_marcial",
@@ -646,7 +646,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance ."
+    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance."
   },
   {
     "id": "atacar_primeiro_aprimorado",
@@ -860,7 +860,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé ."
+    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé."
   },
   {
     "id": "disparo_duplo",
@@ -936,7 +936,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar ."
+    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar."
   },
   {
     "id": "muito_duro_de_matar",
@@ -993,7 +993,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sub +2 quando Evadindo de ataques em área ."
+    "descricao": "Sub +2 quando Evadindo de ataques em área."
   },
   {
     "id": "finta",
@@ -1160,7 +1160,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas ."
+    "descricao": "Ignora penalidade −2 ao usar armas improvisadas."
   },
   {
     "id": "lutar_com_duas_armas",
@@ -1198,7 +1198,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignore penalidade por Plataforma Instável  e penalidade de corrida reduzida a −1."
+    "descricao": "Ignore penalidade por Plataforma Instável e penalidade de corrida reduzida a −1."
   },
   {
     "id": "matador_de_gigantes",
@@ -1215,7 +1215,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores ."
+    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores."
   },
   {
     "id": "nervos_de_aco",
@@ -1272,7 +1272,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Absorção e Vigor para evitar Nocaute ."
+    "descricao": "+2 em Absorção e Vigor para evitar Nocaute."
   },
   {
     "id": "reflexos_de_combate",
@@ -1346,7 +1346,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2 ."
+    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2."
   },
   {
     "id": "tiro_mortal",
@@ -2250,7 +2250,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Perceber em testes de Surpresa ; ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
+    "descricao": "+2 em Perceber em testes de Surpresa; ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
   },
   {
     "id": "sucateiro",
@@ -2363,7 +2363,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro  pode ser adquirida quando o super alcança o Estágio Veterano."
+    "descricao": "Em um cenário de supers, a Vantagem Parceiro pode ser adquirida quando o super alcança o Estágio Veterano."
   },
   {
     "id": "duro_na_queda",
@@ -2420,7 +2420,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8 ."
+    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8."
   },
   {
     "id": "mestre_das_armas",
@@ -2447,7 +2447,7 @@
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
     "requisitos": "Novato, Demônio ou Meio-Demônio",
-    "descricao": "Perícia: Conjurar (Astúcia) Poderes Iniciais: Disfarce Demoníaco e mais 3 Pontos de Poder Iniciais: 10 Todos os demônios nascem com poderes mágicos, no entanto, seu potencial mágic"
+    "descricao": "Perícia: Conjurar (Astúcia) Poderes Iniciais: Disfarce Demoníaco e mais 3 Pontos de Poder Iniciais: 10 Todos os demônios nascem com poderes mágicos, no entanto, seu potencial mágic."
   },
   {
     "id": "aa_anjo",
@@ -2455,7 +2455,7 @@
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
     "requisitos": "Anjo, Experiente",
-    "descricao": "Habilidade: Fé (Espírito) Poderes Iniciais: 2 Pontos de Poder Iniciais: 15 Diferente dos demônios, nem todos os anjos são capazes de ter habilidades mágicas, mas os sacerdotes anjo"
+    "descricao": "Habilidade: Fé (Espírito) Poderes Iniciais: 2 Pontos de Poder Iniciais: 15 Diferente dos demônios, nem todos os anjos são capazes de ter habilidades mágicas, mas os sacerdotes anjo."
   },
   {
     "id": "anjo_cinza",
@@ -2479,7 +2479,7 @@
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
     "requisitos": "Novato, Humano, Tecnomagia d6+",
-    "descricao": "Perícia: Tecnomagia (Astúcia) Poderes Iniciais: Detectar Arcano e 2 poderes de sua escolha Pontos de Poder: Especial A era da tecnomagia começou em 1882, após as descobertas revolu"
+    "descricao": "Perícia: Tecnomagia (Astúcia) Poderes Iniciais: Detectar Arcano e 2 poderes de sua escolha Pontos de Poder: Especial A era da tecnomagia começou em 1882, após as descobertas revolu."
   },
   {
     "id": "magomecanico",
@@ -2511,7 +2511,7 @@
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
     "requisitos": "Novato, Humano, Ocultismo d6+",
-    "descricao": "Perícia: Ocultismo (Astúcia) Poderes Iniciais: Especiais Pontos de Poder: Especiais Certas pessoas podem usar os segredos sombrios de antigos grimórios para praticar magia, mas par"
+    "descricao": "Perícia: Ocultismo (Astúcia) Poderes Iniciais: Especiais Pontos de Poder: Especiais Certas pessoas podem usar os segredos sombrios de antigos grimórios para praticar magia, mas par."
   },
   {
     "id": "irmao_da_noite",
@@ -2639,7 +2639,7 @@
     "origem": "SOL_VAPOR",
     "categoria": "PODER",
     "requisitos": "Veterano, Antecedente Arcano (Tecnomagia), Poder da Mente, Magomecânico, Consertar d8+, Ciência d8+, Tecnomagia d8+",
-    "descricao": "Caso dois ou mais tecnomagos estejam em até 5 quadros de distância e um deles tiver esta vantagem, este personagem pode compartilhar os poderes configurados do seu equipamento com"
+    "descricao": "Caso dois ou mais tecnomagos estejam em até 5 quadros de distância e um deles tiver esta vantagem, este personagem pode compartilhar os poderes configurados do seu equipamento com."
   },
   {
     "id": "hacker",
@@ -2727,7 +2727,7 @@
     "categoria": "PODER",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato, Humano, Ocultismo d6+",
-    "descricao": "Perícia: Ocultismo (Astúcia) Poderes Iniciais: Especiais Pontos de Poder: Especiais Certas pessoas podem usar os segredos sombrios de antigos grimórios para praticar magia, mas par"
+    "descricao": "Perícia: Ocultismo (Astúcia) Poderes Iniciais: Especiais Pontos de Poder: Especiais Certas pessoas podem usar os segredos sombrios de antigos grimórios para praticar magia, mas par."
   },
   {
     "id": "aa_milagres",
@@ -2743,7 +2743,7 @@
     "categoria": "PODER",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato, Humano, Tecnomagia d6+",
-    "descricao": "Perícia: Tecnomagia (Astúcia) Poderes Iniciais: Detectar Arcano e 2 poderes de sua escolha Pontos de Poder: Especial A era da tecnomagia começou em 1882, após as descobertas revolu"
+    "descricao": "Perícia: Tecnomagia (Astúcia) Poderes Iniciais: Detectar Arcano e 2 poderes de sua escolha Pontos de Poder: Especial A era da tecnomagia começou em 1882, após as descobertas revolu."
   },
   {
     "id": "mecanico_cego",
@@ -2903,7 +2903,7 @@
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato, Humano, Carta Selvagem.",
-    "descricao": "“Quando alcança novas descobertas, é sempre importante parar e refletir sobre as experiências do passado.” Inicialmente, seu personagem pode não ter muitas habilidades, mas tem gra"
+    "descricao": "“Quando alcança novas descobertas, é sempre importante parar e refletir sobre as experiências do passado.” Inicialmente, seu personagem pode não ter muitas habilidades, mas tem gra."
   },
   {
     "id": "taro_demonio",
@@ -2919,7 +2919,7 @@
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato, Humano, Carta Selvagem.",
-    "descricao": "“Verdadeiros milagres só podem acontecer sob a luz de estrelas reais.” Seu personagem incorpora o lado sombrio da Era da Razão - aquele que não tem lugar para nada além de explicaç"
+    "descricao": "“Verdadeiros milagres só podem acontecer sob a luz de estrelas reais.” Seu personagem incorpora o lado sombrio da Era da Razão - aquele que não tem lugar para nada além de explicaç."
   },
   {
     "id": "taro_eter",
@@ -2951,7 +2951,7 @@
     "categoria": "ESTRANHAS",
     "origem": "SOL_VAPOR",
     "requisitos": "Novato, Humano, Carta Selvagem.",
-    "descricao": "“A criação de uma nova vida não coloca um homem em pé de igualdade com Deus, mas assume que ele já está lá.” Seu personagem é obcecado pela vida e morte e conseguiu desenvolver mei"
+    "descricao": "“A criação de uma nova vida não coloca um homem em pé de igualdade com Deus, mas assume que ele já está lá.” Seu personagem é obcecado pela vida e morte e conseguiu desenvolver mei."
   },
   {
     "id": "taro_cidade",

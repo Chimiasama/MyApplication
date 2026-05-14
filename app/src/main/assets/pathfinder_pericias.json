@@ -19,7 +19,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "PATHFINDER",
-      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa ."
+      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa."
     },
     {
       "nome": "Cavalgar",
@@ -54,7 +54,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "PATHFINDER",
-      "descricao": "Magia, feitiçaria e bruxaria são usos de Conjurar para utilizar poderes. Veja a Vantagem Antecedente Arcano (Magia) na pág."
+      "descricao": "Magia, feitiçaria e bruxaria são usos de Conjurar para utilizar poderes."
     },
     {
       "nome": "Consertar",
@@ -68,7 +68,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "PATHFINDER",
-      "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense. Veja a pág."
+      "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense."
     },
     {
       "nome": "Dirigir",
@@ -82,7 +82,7 @@
       "atributo": "Espírito",
       "basica": false,
       "origem": "PATHFINDER",
-      "descricao": "Fé é a perícia arcana requerida para o Antecedente Arcano (Milagres), descrito na pág. 178."
+      "descricao": "Fé é a perícia arcana usada por personagens com Antecedente Arcano (Milagres)."
     },
     {
       "nome": "Furtividade",

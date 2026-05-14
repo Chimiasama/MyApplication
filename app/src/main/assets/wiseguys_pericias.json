@@ -19,7 +19,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "WISEGUYS",
-      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa ."
+      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa."
     },
     {
       "nome": "Cavalgar",
@@ -61,7 +61,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "WISEGUYS",
-      "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense. Veja a pág."
+      "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense."
     },
     {
       "nome": "Dirigir",
@@ -75,14 +75,14 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "WISEGUYS",
-      "descricao": "Eletrônica permite o uso de dispositivos complexos ou especializados como os painéis de controle em uma máquina industrial ou os sistemas de sensores encontrados nas espaçonaves do"
+      "descricao": "Eletrônica permite operar e analisar dispositivos complexos, como painéis industriais, sensores e sistemas tecnológicos avançados."
     },
     {
       "nome": "Foco",
       "atributo": "Espírito",
       "basica": false,
       "origem": "WISEGUYS",
-      "descricao": "Foco é a perícia arcana para o Antecedente Arcano (Dom), veja pág. 177."
+      "descricao": "Foco é a perícia arcana para o Antecedente Arcano (Dom),."
     },
     {
       "nome": "Furtividade",
@@ -103,7 +103,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "WISEGUYS",
-      "descricao": "Em alguns cenários, como aqueles focados em ação pulp ou “romance planetário” (onde os personagens viajam entre diversas civilizações estranhas com frequência), falar vários idioma"
+      "descricao": "Em alguns cenários, como aqueles focados em ação pulp ou “romance planetário” (onde os personagens viajam entre diversas civilizações estranhas com frequência), falar vários idioma."
     },
     {
       "nome": "Intimidar",

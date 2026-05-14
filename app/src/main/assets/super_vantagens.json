@@ -111,7 +111,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O herói ou heroína escolhe outra personagem específica. Ao ajudar este parceiro em um Ataque Combinado bem-sucedido, o bônus é adicionado tanto à rolagem da perícia quanto ao dano ."
+    "descricao": "O herói ou heroína escolhe outra personagem específica. Ao ajudar este parceiro em um Ataque Combinado bem-sucedido, o bônus é adicionado tanto à rolagem da perícia quanto ao dano."
   },
   {
     "id": "parceiro",
@@ -130,6 +130,6 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro  pode ser adquirida quando o super alcança o Estágio Veterano."
+    "descricao": "Em um cenário de supers, a Vantagem Parceiro pode ser adquirida quando o super alcança o Estágio Veterano."
   }
 ]

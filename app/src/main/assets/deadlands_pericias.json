@@ -19,7 +19,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "DEADLANDS",
-      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa ."
+      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa."
     },
     {
       "nome": "Cavalgar",
@@ -61,7 +61,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "DEADLANDS",
-      "descricao": "Magia, feitiçaria e bruxaria são usos de Conjurar para utilizar poderes. Veja a Vantagem Antecedente Arcano (Magia) na pág."
+      "descricao": "Magia, feitiçaria e bruxaria são usos de Conjurar para utilizar poderes."
     },
     {
       "nome": "Consertar",
@@ -75,7 +75,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "DEADLANDS",
-      "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense. Veja a pág."
+      "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense."
     },
     {
       "nome": "Dirigir",
@@ -89,14 +89,14 @@
       "atributo": "Espírito",
       "basica": false,
       "origem": "DEADLANDS",
-      "descricao": "Fé é a perícia arcana requerida para o Antecedente Arcano (Milagres), descrito na pág. 178."
+      "descricao": "Fé é a perícia arcana usada por personagens com Antecedente Arcano (Milagres)."
     },
     {
       "nome": "Foco",
       "atributo": "Espírito",
       "basica": false,
       "origem": "DEADLANDS",
-      "descricao": "Foco é a perícia arcana para o Antecedente Arcano (Dom), veja pág. 177."
+      "descricao": "Foco é a perícia arcana para o Antecedente Arcano (Dom),."
     },
     {
       "nome": "Furtividade",
@@ -110,7 +110,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "DEADLANDS",
-      "descricao": "Em alguns cenários, como aqueles focados em ação pulp ou “romance planetário” (onde os personagens viajam entre diversas civilizações estranhas com frequência), falar vários idioma"
+      "descricao": "Em alguns cenários, como aqueles focados em ação pulp ou “romance planetário” (onde os personagens viajam entre diversas civilizações estranhas com frequência), falar vários idioma."
     },
     {
       "nome": "Intimidar",
@@ -208,7 +208,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "DEADLANDS",
-      "descricao": "É a perícia que \"psions\" ou \"psis\" usam para ativar e controlar suas habilidades psiônicas. Veja a Vantagem Antecedente Arcano (Psiônicos) na pág."
+      "descricao": "É a perícia que \"psions\" ou \"psis\" usam para ativar e controlar suas habilidades psiônicas."
     },
     {
       "nome": "Sobrevivência",

@@ -380,7 +380,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil  é ignorada."
+    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil é ignorada."
   },
   {
     "id": "atraente",
@@ -495,7 +495,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco ."
+    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco."
   },
   {
     "id": "famoso",
@@ -716,7 +716,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág."
+    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais,."
   },
   {
     "id": "guerreiro_marcial",
@@ -754,7 +754,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance ."
+    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance."
   },
   {
     "id": "atacar_primeiro_aprimorado",
@@ -968,7 +968,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé ."
+    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé."
   },
   {
     "id": "disparo_duplo",
@@ -1044,7 +1044,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar ."
+    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar."
   },
   {
     "id": "muito_duro_de_matar",
@@ -1101,7 +1101,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sub +2 quando Evadindo de ataques em área ."
+    "descricao": "Sub +2 quando Evadindo de ataques em área."
   },
   {
     "id": "finta",
@@ -1268,7 +1268,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas ."
+    "descricao": "Ignora penalidade −2 ao usar armas improvisadas."
   },
   {
     "id": "lutar_com_duas_armas",
@@ -1306,7 +1306,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignore penalidade por Plataforma Instável  e penalidade de corrida reduzida a −1."
+    "descricao": "Ignore penalidade por Plataforma Instável e penalidade de corrida reduzida a −1."
   },
   {
     "id": "matador_de_gigantes",
@@ -1323,7 +1323,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores ."
+    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores."
   },
   {
     "id": "nervos_de_aco",
@@ -1380,7 +1380,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Absorção e Vigor para evitar Nocaute ."
+    "descricao": "+2 em Absorção e Vigor para evitar Nocaute."
   },
   {
     "id": "reflexos_de_combate",
@@ -1454,7 +1454,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2 ."
+    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2."
   },
   {
     "id": "tiro_mortal",
@@ -2225,7 +2225,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Perceber em testes de Surpresa ; ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
+    "descricao": "+2 em Perceber em testes de Surpresa; ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
   },
   {
     "id": "senhor_das_feras",
@@ -2357,7 +2357,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro  pode ser adquirida quando o super alcança o Estágio Veterano."
+    "descricao": "Em um cenário de supers, a Vantagem Parceiro pode ser adquirida quando o super alcança o Estágio Veterano."
   },
   {
     "id": "duro_na_queda",
@@ -2414,7 +2414,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8 ."
+    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8."
   },
   {
     "id": "mestre_das_armas",

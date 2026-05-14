@@ -19,7 +19,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "ARTE_DA_GUERRA",
-      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa ."
+      "descricao": "Conhecimento Batalha é o comando da estratégia e das táticas de um indivíduo. Pode ser usada como conhecimento militar no geral e é crítico quando se comanda tropas em Batalhas em Massa."
     },
     {
       "nome": "Cavalgar",
@@ -61,7 +61,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "ARTE_DA_GUERRA",
-      "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense. Veja a pág."
+      "descricao": "Curar tem vários usos, desde tratar Ferimentos a diagnosticar doenças e analisar certos tipos de evidência forense."
     },
     {
       "nome": "Dirigir",
@@ -82,7 +82,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "ARTE_DA_GUERRA",
-      "descricao": "Em alguns cenários, como aqueles focados em ação pulp ou “romance planetário” (onde os personagens viajam entre diversas civilizações estranhas com frequência), falar vários idioma"
+      "descricao": "Em alguns cenários, como aqueles focados em ação pulp ou “romance planetário” (onde os personagens viajam entre diversas civilizações estranhas com frequência), falar vários idioma."
     },
     {
       "nome": "Intimidar",

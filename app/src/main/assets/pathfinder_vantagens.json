@@ -10,7 +10,7 @@
         "Agilidade": 8
       }
     },
-    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade para Mão Inábil  é ignorada."
+    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade para Mão Inábil é ignorada."
   },
   {
     "id": "antecedente_arcano_milagres_pf",
@@ -21,7 +21,7 @@
       "estagio": "Novato"
     },
     "subtipoArcano": "MILAGRES_PF",
-    "descricao": "Clérigos usam Fé como perícia arcana e devem escolher um Domínio . Quando escolhem esta Vantagem, ganham 10 Pontos de Poder, três poderes a sua escolha dentro dos poderes disponíveis de seu Domínio.",
+    "descricao": "Clérigos usam Fé como perícia arcana e devem escolher um Domínio. Quando escolhem esta Vantagem, ganham 10 Pontos de Poder, três poderes a sua escolha dentro dos poderes disponíveis de seu Domínio.",
     "observacoes": "Voto (Maior)",
     "poderes_permitidos": []
   },
@@ -37,7 +37,7 @@
     "tags": [
       "INTERFERENCIA_ARMADURA_LEVE"
     ],
-    "descricao": "Magos usam Conjurar como sua perícia arcana e têm Interferência de Armadura (Leve) (o que significa que subtraem 4 de suas rolagens de conjurar, Agilidade e perícias baseadas em Ag",
+    "descricao": "Magos usam Conjurar como sua perícia arcana e têm Interferência de Armadura (Leve) (o que significa que subtraem 4 de suas rolagens de conjurar, Agilidade e perícias baseadas em Ag.",
     "poderes_permitidos": [
       "adivinhacao_pf",
       "amigo_das_feras_pf",
@@ -178,7 +178,7 @@
         "Vigor": 8
       }
     },
-    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco ."
+    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco."
   },
   {
     "id": "famoso",
@@ -631,7 +631,7 @@
       ]
     },
     "limite_compra": "uma_vez",
-    "descricao": "A Natureza recompensa seus defensores com poderes e energia adicionais. Personagens da classe Druida que adquiram esta Vantagem ganham acesso a todos os Modificadores Épicos de Poderes ."
+    "descricao": "A Natureza recompensa seus defensores com poderes e energia adicionais. Personagens da classe Druida que adquiram esta Vantagem ganham acesso a todos os Modificadores Épicos de Poderes."
   },
   {
     "id": "classe_feiticeiro",
@@ -740,7 +740,7 @@
       ]
     },
     "limite_compra": "uma_vez",
-    "descricao": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes ."
+    "descricao": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes."
   },
   {
     "id": "linhagem_avancada",
@@ -754,7 +754,7 @@
       ]
     },
     "limite_compra": "uma_vez",
-    "descricao": "Você ganha a habilidade adicional listada em sua Linhagem ."
+    "descricao": "Você ganha a habilidade adicional listada em sua Linhagem."
   },
   {
     "id": "classe_guerreiro",
@@ -864,7 +864,7 @@
       ]
     },
     "limite_compra": "uma_vez",
-    "descricao": "Personagens de classe ladino têm a habilidade sobrenatural de evitar ataques e efeitos que afetam área Ignoram a penalidade habitual de -2 na Agilidade ao realizar tentativas de Evasão ."
+    "descricao": "Personagens de classe ladino têm a habilidade sobrenatural de evitar ataques e efeitos que afetam área Ignoram a penalidade habitual de -2 na Agilidade ao realizar tentativas de Evasão."
   },
   {
     "id": "oportunista",
@@ -878,7 +878,7 @@
       ]
     },
     "limite_compra": "uma_vez",
-    "descricao": "Quando um alvo usa Retirada para se afastar de um ladino , é possível atacá-lo gratuitamente mesmo que o inimigo tenha Retirada ou Retirada Aprimorada."
+    "descricao": "Quando um alvo usa Retirada para se afastar de um ladino, é possível atacá-lo gratuitamente mesmo que o inimigo tenha Retirada ou Retirada Aprimorada."
   },
   {
     "id": "classe_mago",
@@ -989,7 +989,7 @@
       ]
     },
     "limite_compra": "uma_vez",
-    "descricao": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes ."
+    "descricao": "Verdadeiro entendimento da energia mágica vem com prática e experiência. Aqueles que adquirem esta Vantagem ganham acesso aos Modificadores Épicos de Poderes."
   },
   {
     "id": "inspiracao_mistica",
@@ -1231,7 +1231,7 @@
         "Agilidade": 8
       }
     },
-    "descricao": "Uma vez por rodada, contando que não esteja em Estado Abalado ou Atordoado, quem tiver essa Vantagem ganha um ataque livre de Lutar contra um adversário imediatamente após ele entrar no seu Alcance ."
+    "descricao": "Uma vez por rodada, contando que não esteja em Estado Abalado ou Atordoado, quem tiver essa Vantagem ganha um ataque livre de Lutar contra um adversário imediatamente após ele entrar no seu Alcance."
   },
   {
     "id": "atacar_primeiro_aprimorado",
@@ -1313,7 +1313,7 @@
         "Espírito": 8
       }
     },
-    "descricao": "Personagens com essa vantagem têm mais vidas que uma gataria. Podem ignorar suas penalidades por Ferimentos quando fazem rolagem de Vigor para evitar ficar Sangrando ."
+    "descricao": "Personagens com essa vantagem têm mais vidas que uma gataria. Podem ignorar suas penalidades por Ferimentos quando fazem rolagem de Vigor para evitar ficar Sangrando."
   },
   {
     "id": "muito_duro_de_matar",
@@ -1477,7 +1477,7 @@
         "Agilidade": 8
       }
     },
-    "descricao": "Ao realizar duas ações de ataque (com mãos diferentes), o segundo ataque não inflige uma penalidade por Ação Múltipla. A penalidade por Mão Inábil ainda se aplica, a menos que seja Ambidestro ."
+    "descricao": "Ao realizar duas ações de ataque (com mãos diferentes), o segundo ataque não inflige uma penalidade por Ação Múltipla. A penalidade por Mão Inábil ainda se aplica, a menos que seja Ambidestro."
   },
   {
     "id": "finta",
@@ -1490,7 +1490,7 @@
         "Lutar": 8
       }
     },
-    "descricao": "Quando realiza um Desafio  com a perícia Lutar, você pode escolher que um adversário resista com Astúcia em vez de Agilidade."
+    "descricao": "Quando realiza um Desafio com a perícia Lutar, você pode escolher que um adversário resista com Astúcia em vez de Agilidade."
   },
   {
     "id": "focado",
@@ -1582,7 +1582,7 @@
         "Agilidade": 8
       }
     },
-    "descricao": "Ignore a penalidade por Plataforma Instável . Isso também ajuda durante a corrida, reduzindo a penalidade habitual de -2 para -1 ."
+    "descricao": "Ignore a penalidade por Plataforma Instável. Isso também ajuda durante a corrida, reduzindo a penalidade habitual de -2 para -1."
   },
   {
     "id": "matador_de_gigantes",
@@ -1592,7 +1592,7 @@
     "requisitos": {
       "estagio": "Veterano"
     },
-    "descricao": "Adicione +1d6 de dano ao atacar criaturas maiores em três ou mais Tamanhos ."
+    "descricao": "Adicione +1d6 de dano ao atacar criaturas maiores em três ou mais Tamanhos."
   },
   {
     "id": "nervos_de_aco",
@@ -1631,7 +1631,7 @@
         "Vigor": 8
       }
     },
-    "descricao": "Permite suportar até mesmo os golpes mais extremos. Adicione +2 em rolagens de Vigor e Absorção para evitar o Golpe Nocauteador ."
+    "descricao": "Permite suportar até mesmo os golpes mais extremos. Adicione +2 em rolagens de Vigor e Absorção para evitar o Golpe Nocauteador."
   },
   {
     "id": "recarregamento_rapido",
@@ -1878,7 +1878,7 @@
       "estagio": "Experiente",
       "observacoes": "Antecedente Arcano (qualquer um)"
     },
-    "descricao": "Artífices podem criar Dispositivos Arcanos e dá-los a aliados . Quando possível, o dispositivo representa o antecedente de quem o forjou."
+    "descricao": "Artífices podem criar Dispositivos Arcanos e dá-los a aliados. Quando possível, o dispositivo representa o antecedente de quem o forjou."
   },
   {
     "id": "canalizacao",
@@ -1990,7 +1990,7 @@
         "arqueiro_arcano"
       ]
     },
-    "descricao": "Arqueiros arcanos ganham duas novas qualidades: Flecha Alternante (Uma vez por encontro é possível disparar uma flecha que irá atravessar quaisquer barreiras não mágicas, ignorando"
+    "descricao": "Arqueiros arcanos ganham duas novas qualidades: Flecha Alternante (Uma vez por encontro é possível disparar uma flecha que irá atravessar quaisquer barreiras não mágicas, ignorando."
   },
   {
     "id": "arqueiro_arcano_3",
@@ -2003,7 +2003,7 @@
         "arqueiro_arcano_2"
       ]
     },
-    "descricao": "Arqueiros arcanos ganham duas novas qualidades: Imbuir (Uma vez por turno, é possível imbuir qualquer poder que afete área em uma flecha, \"conjurando\" o poder com Atirar e usando o"
+    "descricao": "Arqueiros arcanos ganham duas novas qualidades: Imbuir (Uma vez por turno, é possível imbuir qualquer poder que afete área em uma flecha, \"conjurando\" o poder com Atirar e usando o."
   },
   {
     "id": "assassino",
@@ -2054,7 +2054,7 @@
       },
       "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos (qualquer um)"
     },
-    "descricao": "Recarga Mística: Sempre que cavaleiros místicos conseguirem uma ampliação em uma rolagem de ataque para provocar dano (Atletismo (arremessar), Lutar, Atirar ou perícia arcana), rec"
+    "descricao": "Recarga Mística: Sempre que cavaleiros místicos conseguirem uma ampliação em uma rolagem de ataque para provocar dano (Atletismo (arremessar), Lutar, Atirar ou perícia arcana), rec."
   },
   {
     "id": "cavaleiro_mistico_2",
@@ -2138,7 +2138,7 @@
         "Ladinagem": 6
       }
     },
-    "descricao": "Visão no Escuro Melhorada: Uma forte conexão ao plano das sombras permite que a personagem enxergue perfeitamente em qualquer nível de iluminação a até 20 quadros (40 metros), igno"
+    "descricao": "Visão no Escuro Melhorada: Uma forte conexão ao plano das sombras permite que a personagem enxergue perfeitamente em qualquer nível de iluminação a até 20 quadros (40 metros), igno."
   },
   {
     "id": "dancarino_das_sombras_2",
@@ -2453,7 +2453,7 @@
       }
     },
     "limite_compra": "infinito",
-    "descricao": "Escolha uma das perícias a seguir: Conhecimento Acadêmico, Conhecimento Batalha, Ocultismo, Ciência ou uma perícia de “conhecimento” baseada em Astúcia permitida no seu jogo e adic"
+    "descricao": "Escolha uma das perícias a seguir: Conhecimento Acadêmico, Conhecimento Batalha, Ocultismo, Ciência ou uma perícia de “conhecimento” baseada em Astúcia permitida no seu jogo e adic."
   },
   {
     "id": "investigador",
@@ -2469,7 +2469,7 @@
         "Conhecimento Acadêmico": 8
       }
     },
-    "descricao": "Adicione +2 em rolagens de Conhecimento Acadêmico e Perceber feitas para buscar papéis importantes em uma mesa, olhar uma estante de livros atrás de algo digno de nota, ou notar it"
+    "descricao": "Adicione +2 em rolagens de Conhecimento Acadêmico e Perceber feitas para buscar papéis importantes em uma mesa, olhar uma estante de livros atrás de algo digno de nota, ou notar it."
   },
   {
     "id": "mateiro",
@@ -2528,7 +2528,7 @@
         "Vigor": 6
       }
     },
-    "descricao": "Depois de alguns dias se acostumando com seu equipamento (critério do Mestre), podem tratar sua Força como um tipo de dado maior quando determinam Sobrecarga  e Força Mínima para u"
+    "descricao": "Depois de alguns dias se acostumando com seu equipamento (critério do Mestre), podem tratar sua Força como um tipo de dado maior quando determinam Sobrecarga e Força Mínima para u."
   },
   {
     "id": "trovador",
@@ -2635,7 +2635,7 @@
         "Espírito": 8
       }
     },
-    "descricao": "Quando alguém com esta Vantagem faz um Desafio bem-sucedido contra qualquer oponente, também pode remover o Estado Distraído ou Vulnerável  de um de seus aliados."
+    "descricao": "Quando alguém com esta Vantagem faz um Desafio bem-sucedido contra qualquer oponente, também pode remover o Estado Distraído ou Vulnerável de um de seus aliados."
   },
   {
     "id": "elo_comum",
@@ -2675,7 +2675,7 @@
         "Astúcia": 6
       }
     },
-    "descricao": "Personagens que têm Manha adicionam +2 em rolagens de Intimidar e Persuadir feitas para uma Rede de Contatos  com elementos suspeitos ou criminosos."
+    "descricao": "Personagens que têm Manha adicionam +2 em rolagens de Intimidar e Persuadir feitas para uma Rede de Contatos com elementos suspeitos ou criminosos."
   },
   {
     "id": "obstinado",
@@ -2715,7 +2715,7 @@
         "Provocar": 6
       }
     },
-    "descricao": "Uma vez por turno, quando usa Provocar para um Desafio e consegue uma ampliação , pode usar Provocador em um alvo."
+    "descricao": "Uma vez por turno, quando usa Provocar para um Desafio e consegue uma ampliação, pode usar Provocador em um alvo."
   },
   {
     "id": "replica",
@@ -2790,7 +2790,7 @@
     "requisitos": {
       "estagio": "Novato"
     },
-    "descricao": "Quando rola para determinar Surpresa , adiciona +2 em sua rolagem de Perceber para agir na primeira rodada. Com uma ampliação, começa o encontro em situação de Aguardar."
+    "descricao": "Quando rola para determinar Surpresa, adiciona +2 em sua rolagem de Perceber para agir na primeira rodada. Com uma ampliação, começa o encontro em situação de Aguardar."
   },
   {
     "id": "senhor_das_feras",
@@ -2845,7 +2845,7 @@
         "Lutar": 12
       }
     },
-    "descricao": "Aumenta o Aparar em +1 e seu dado de bônus de dano em rolagens de Lutar é um d8 em vez de um d6 ."
+    "descricao": "Aumenta o Aparar em +1 e seu dado de bônus de dano em rolagens de Lutar é um d8 em vez de um d6."
   },
   {
     "id": "mestre_das_armas",
@@ -2880,7 +2880,7 @@
       "estagio": "Lendário",
       "observacoes": "tipo de dado máximo na Característica afetada"
     },
-    "descricao": "Quem tem essa Vantagem é especialista em uma perícia ou atributo em particular (sua escolha). Isso aumenta a Característica e o seu limite em um passo (um d12 + 1 se torna um d12 + 2 , por exemplo)."
+    "descricao": "Quem tem essa Vantagem é especialista em uma perícia ou atributo em particular (sua escolha). Isso aumenta a Característica e o seu limite em um passo (um d12 + 1 se torna um d12 + 2, por exemplo)."
   },
   {
     "id": "especialista",
