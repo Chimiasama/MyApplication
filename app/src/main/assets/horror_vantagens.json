@@ -16,7 +16,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Algumas pessoas usam o humor para lidar com circunstâncias terríveis ou talvez só sejam tão duronas que podem rir na cara da morte.\nPersonagens com Humor Ácido podem usar sua perícia Provocar em vez de Espírito ao realizar testes de Medo (todos os modificadores se aplicam normalmente). Se conseguir uma ampliação, o humor é tão efetivo que age como Suporte +1 para todos os aliados que realizem o mesmo teste de Medo."
+    "descricao": "Algumas pessoas usam o humor para lidar com circunstâncias terríveis ou talvez só sejam tão duronas que podem rir na cara da morte."
   },
   {
     "id": "implacavel",
@@ -35,7 +35,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Esta personagem é realmente dedicada a derrotar o mal. Investiga onde suspeita que esteja e não tolera interferências de quem tenta atrapalhá-la.\nEm troca dessa implacável determinação e inabalável dedicação, estas personagens ainda podem agir com uma única ação e uma penalidade de -2 quando em Estado Abalado."
+    "descricao": "Esta personagem é realmente dedicada a derrotar o mal. Investiga onde suspeita que esteja e não tolera interferências de quem tenta atrapalhá-la."
   },
   {
     "id": "veterano_do_mundo_sombrio",
@@ -54,7 +54,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sua heroína ou herói já está a mais tempo nessa luta do que o resto do grupo. Talvez seja a experiência da idade ou por ter enfrentado mais do que sua cota de abominações.\nVeteranos do Mundo Sombrio começam o jogo no Estágio Experiente (ou um Estágio maior do que as demais personagens da campanha), recebendo automaticamente quatro Progressos durante a criação da personagem. O preço desta experiência é a rolagem na tabela de Veterano do Mundo Sombrio acima para decidir que infortúnios estão no passado da personagem."
+    "descricao": "Sua heroína ou herói já está a mais tempo nessa luta do que o resto do grupo. Talvez seja a experiência da idade ou por ter enfrentado mais do que sua cota de abominações."
   },
   {
     "id": "bravura",
@@ -75,7 +75,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Heroínas e heróis calmos e resolutos inspiram aqueles ao seu redor, mesmo enfrentando um horror esmagador. Todos os aliados dentro do Raio de Comando ganham uma rerrolagem gratuita de um teste de Medo malsucedido."
+    "descricao": "Heroínas e heróis calmos e resolutos inspiram aqueles ao seu redor, mesmo enfrentando um horror esmagador."
   },
   {
     "id": "conjurador_silencioso_horror",
@@ -115,7 +115,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Conjuradores que dedicaram seu tempo na maestria de um feitiço, milagre ou dispositivo de ciência estranha em particular.\nEscolha um dos poderes desta personagem. Pode ignorar até 2 pontos de qualquer penalidade (Ações Múltiplas, Ferimentos, Fadiga etc,) ao ativar esse poder."
+    "descricao": "Conjuradores que dedicaram seu tempo na maestria de um feitiço, milagre ou dispositivo de ciência estranha em particular."
   },
   {
     "id": "cacador_de_monstros",
@@ -134,7 +134,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "A personagem é completamente imune a testes de Medo de um tipo geral de criatura, como fantasmas, lobisomens, vampiros, zumbis ou construtos (a critério do Mestre). Não anula testes de Medo provenientes do poder medo.\nA Vantagem pode ser adquirida várias vezes, cada vez para um tipo diferente de criatura."
+    "descricao": "A personagem é completamente imune a testes de Medo de um tipo geral de criatura, como fantasmas, lobisomens, vampiros, zumbis ou construtos (a critério do Mestre)."
   },
   {
     "id": "rainha_rei_do_grito",
@@ -151,7 +151,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Seu herói ou heroína já enfrentou tudo que a escuridão tem e sobreviveu. Superou monstros, loucura, caos e, o mais importante, medo.\nSempre que precisar rolar na tabela de Efeitos de Medo, pode rerrolar seu primeiro resultado, mas deve aceitar o segundo!"
+    "descricao": "Seu herói ou heroína já enfrentou tudo que a escuridão tem e sobreviveu. Superou monstros, loucura, caos e, o mais importante, medo."
   },
   {
     "id": "poco_de_virtude",
@@ -168,7 +168,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sua personagem raramente se entrega a vícios e acredita no poder do bem e do amor verdadeiro. Apesar dos outros zombarem dela por ser \"boa demais\", secretamente admiram sua paz interior e força de caráter.\nUma vez durante um combate (a critério do Mestre), pode gastar um Bene para ganhar cinco Marcadores de Inspiração. Isso é uma ação limitada. Pelo resto do encontro, a heroína ou herói pode dar esses marcadores a qualquer um dentro da Distância de sua Astúcia — mas não a si mesma. Isso pode ser feito a qualquer momento desde que esteja consciente, mas o alvo deve usar o marcador imediatamente — não pode ser guardado.\nCada Marcador de Inspiração permite rerrolar uma rolagem de Característica ou dano. A rolagem só pode se beneficiar de um único Marcador de Inspiração, mesmo que existam várias pessoas com esta Vantagem. Outras rerrolagens requerem o gasto de um Bene ou habilidade especial.\nMarcadores de Inspiração não são Benes, não ativam Vantagens que usem Benes (Como Impulso) e não podem ser usados para outras funções, como sacar uma nova Carta de Ação ou Absorver Ferimentos."
+    "descricao": "Sua personagem raramente se entrega a vícios e acredita no poder do bem e do amor verdadeiro."
   },
   {
     "id": "visao",
@@ -185,7 +185,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sonhos sombrios de imagens rápidas de destruição e perdição preenchem a mente desta pessoa. Apesar das visões normalmente serem perturbadoras, elas também podem ser úteis.\nUma vez por sessão de jogo, a personagem recebe uma visão. Pode ser um flash repentino que pode ocorrer a qualquer momento, um pesadelo que só acontece quando dorme, ou pode ser um processo ativo como ler as folhas de chá ou cartas de tarô.\nQuando isso acontece, use o sistema de Sinais e Presságios descritos na p. 61."
+    "descricao": "Sonhos sombrios de imagens rápidas de destruição e perdição preenchem a mente desta pessoa. Apesar das visões normalmente serem perturbadoras, elas também podem ser úteis."
   },
   {
     "id": "dano_agravado",
@@ -201,7 +201,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Os ataques feitos pelas garras, mordida e outros poderes inatos da criatura como luz sagrada e fogo infernal podem ferir qualquer outra criatura sobrenatural, independentemente de suas invulnerabilidades ou Fraquezas. Inimigos com Regeneração (Lenta ou Rápida) regeneram esses Ferimentos com uma penalidade de -4."
+    "descricao": "Os ataques feitos pelas garras, mordida e outros poderes inatos da criatura como luz sagrada e fogo infernal podem ferir qualquer outra criatura sobrenatural, independentemente de"
   },
   {
     "id": "medo_monstro",
@@ -219,7 +219,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Todos os monstros listados neste capítulo causam Medo em mortais na primeira vez em que são vistos — a menos que tais criaturas sejam comuns no cenário. Se esta Vantagem for adquirida, os testes de Medo são feitos com -2."
+    "descricao": "Todos os monstros listados neste capítulo causam Medo em mortais na primeira vez em que são vistos — a menos que tais criaturas sejam comuns no cenário."
   },
   {
     "id": "selvageria_monstro",
@@ -253,7 +253,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Alguns seres monstruosos podem ter visto Roma queimar, o discurso de Mark Twain ou até mesmo estado presentes quando Lúcifer caiu. Provavelmente tiveram muitas vidas, vários amores ou familiares e viveram em várias partes do mundo.\nSeus anos de experiência acumulada lhes dá +2 em todas as rolagens de Astúcia e Conhecimento Geral.\nObviamente, as outras perícias, Vantagens e habilidades que estes seres de longa vida normalmente teriam não são possíveis com as regras usuais de criação de personagem, então é necessário discutir com o Mestre para descobrir porque essas habilidades não estão presentes. Talvez tenham sido apagadas ou reprimidas por algum motivo, mas retornam conforme a criatura ganha Progressos e começa sua vida atual."
+    "descricao": "Alguns seres monstruosos podem ter visto Roma queimar, o discurso de Mark Twain ou até mesmo estado presentes quando Lúcifer caiu."
   },
   {
     "id": "ataque_alado (Anjo)",
@@ -270,7 +270,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "As asas do anjo se tornam armas. Pode atacar com elas causando For+d6, com Alcance 2, e pode usá-las com a Vantagem Varredura.\nSe voar pelo menos 5 quadros (10 metros) em uma linha relativamente reta, o primeiro ataque de suas asas no turno causa +4 de dano.\nAs asas também se tornam mais resistentes, permitindo que o anjo se envolva com elas. Enquanto estiver com as asas estendidas, recebe Resistência +2 — isso pode ser ignorado com um Ataque Localizado com -2."
+    "descricao": "As asas do anjo se tornam armas. Pode atacar com elas causando For+d6, com Alcance 2, e pode usá-las com a Vantagem Varredura."
   },
   {
     "id": "imortalidade_anjo",
@@ -287,7 +287,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O ser angelical possuí alma eterna e não é destruído mesmo se seu corpo for “morto”. Se morto, volta para o “paraíso” de onde veio por d4 dias e então retorna a um novo corpo com as mesmas estatísticas. Só pode ser morto de forma permanente com uma arma forjada no Inferno ou outros métodos desenvolvidos pelo Mestre."
+    "descricao": "O ser angelical possuí alma eterna e não é destruído mesmo se seu corpo for “morto”."
   },
   {
     "id": "lamina_divina",
@@ -304,7 +304,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Este anjo possuí uma arma mágica que pode facilmente matar outros imortais. Ela ignora a Vantagem Imortalidade e adiciona +d6 de dano a seu dano básico. Uma espada longa divina, por exemplo, causaria For+d8+d6 de dano."
+    "descricao": "Este anjo possuí uma arma mágica que pode facilmente matar outros imortais. Ela ignora a Vantagem Imortalidade e adiciona +d6 de dano a seu dano básico."
   },
   {
     "id": "linguas",
@@ -338,7 +338,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O anjo pode criar uma luz fraca ou brilhante em um único Modelo Grande de Explosão a até 12 quadros (24 metros) e pode movê-lo como ação livre limitada a cada rodada.\nComo ação limitada, o ser angelical também pode focar sua luz sagrada em um Modelo de Cone (ou Raio) abrasador. O ataque usa Fé e causa 2d4 de dano que pode ser Evadido (-2 com uma ampliação na rolagem de ataque). Uma Falha Crítica na rolagem de ataque causa Fadiga ao anjo."
+    "descricao": "O anjo pode criar uma luz fraca ou brilhante em um único Modelo Grande de Explosão a até 12 quadros (24 metros) e pode movê-lo como ação livre limitada a cada rodada."
   },
   {
     "id": "rajada_abrasadora",
@@ -412,7 +412,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O anjo pode sentir seres sobrenaturais e efeitos mágicos a até 10 quadros (20 metros). A habilidade não aponta ou rastreia estes seres, apenas diz que estão presentes e dá uma noção geral de quantidade (poucos ou muitos)."
+    "descricao": "O anjo pode sentir seres sobrenaturais e efeitos mágicos a até 10 quadros (20 metros)."
   },
   {
     "id": "velocidade_anjo",
@@ -448,7 +448,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Algumas criaturas angelicais possuem Antecedentes Arcanos completos, mas outras são abençoadas com habilidades limitadas, mas muito mais diretas garantidas por seu criador. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\nARAUTO: Adivinhação, aumentar/reduzir Característica, cura, vidência.\nMORTE: Aumentar Característica (apenas a si mesmo), deflexão, ferir, proteção (apenas a si mesmo)."
+    "descricao": "Algumas criaturas angelicais possuem Antecedentes Arcanos completos, mas outras são abençoadas com habilidades limitadas, mas muito mais diretas garantidas por seu criador."
   },
   {
     "id": "asas_demonio",
@@ -516,7 +516,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O demônio pode criar fogo (1d6) em um único Modelo Pequeno de Explosão em qualquer lugar a 12 quadros (24 metros) e pode movê-lo como ação livre limitada a cada rodada.\nComo ação limitada, pode também focar sua chama infernal em um Modelo de Cone ardente. O ataque usa Atletismo e causa 2d4 de dano, que pode ser Evadido (-2 com uma ampliação na rolagem de ataque). Uma Falha Crítica na rolagem de ataque causa Fadiga ao demônio."
+    "descricao": "O demônio pode criar fogo (1d6) em um único Modelo Pequeno de Explosão em qualquer lugar a 12 quadros (24 metros) e pode movê-lo como ação livre limitada a cada rodada."
   },
   {
     "id": "queimar_demonio",
@@ -571,7 +571,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O ser demoníaco pode sentir seres sobrenaturais e efeitos mágicos a 10 quadros (20 metros). A Vantagem não aponta ou rastreia esses seres, apenas diz que estão presentes e dá uma noção geral de quantidade (poucos ou muitos)."
+    "descricao": "O ser demoníaco pode sentir seres sobrenaturais e efeitos mágicos a 10 quadros (20 metros)."
   },
   {
     "id": "imortalidade_demoniaca",
@@ -588,7 +588,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O demônio tem uma alma imortal que retorna mesmo se seu corpo for destruído. Se morto, ele volta para qualquer que seja o “inferno” de onde veio por d4 dias e então retorna a um novo corpo com as mesmas estatísticas. Só pode ser morto permanentemente com uma arma forjada no Paraíso ou Inferno, ou outros métodos desenvolvidos pelo Mestre."
+    "descricao": "O demônio tem uma alma imortal que retorna mesmo se seu corpo for destruído."
   },
   {
     "id": "incorporeo",
@@ -605,7 +605,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O demônio é um espírito de energia sombria e maldade sem forma material. Ele pode passar por barreiras e não é afetado por armas físicas ou energias não mágicas como fogo, frio ou eletricidade. Armas mágicas ou abençoadas e energia o afetam normalmente.\nO demônio pode se tornar corpóreo por uma rodada ao realizar uma rolagem de Espírito como ação livre limitada. Enquanto corpóreo, pode afetar o mundo físico e também pode ser ferido por armas e energias normais."
+    "descricao": "O demônio é um espírito de energia sombria e maldade sem forma material. Ele pode passar por barreiras e não é afetado por armas físicas ou energias não mágicas como fogo, frio ou eletricidade."
   },
   {
     "id": "mordida_demonio",
@@ -622,7 +622,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "A criatura demoníaca possui presas que causam For+d6 de dano e podem ser usadas contra inimigos agarrados (veja Agarrar no Savage Worlds). A Vantagem pode ser adquirida uma segunda vez para aumentar o dano para For+d6, PA 2."
+    "descricao": "A criatura demoníaca possui presas que causam For+d6 de dano e podem ser usadas contra inimigos agarrados . A Vantagem pode ser adquirida uma segunda vez para aumentar o dano para For+d6, PA 2."
   },
   {
     "id": "poderes_misticos_demonio",
@@ -639,7 +639,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Demônios são seres mágicos e, às vezes, ampliam suas habilidades naturais com poderes variados. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\nINVOCADOR: Conjurar aliado, conjurar demônio, proteção, zumbi.\nPOSSESSOR: Aumentar/reduzir Característica, fantoche, maldição, pesadelos.\nSEDUTOR: Aumentar/reduzir Característica, disfarce, empatia, leitura de mente.\nTRAPACEIRO: Disfarce, deflexão (apenas a si mesmo), horrores ilusórios, medo."
+    "descricao": "Demônios são seres mágicos e, às vezes, ampliam suas habilidades naturais com poderes variados. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p."
   },
   {
     "id": "invisibilidade_fantasma",
@@ -658,7 +658,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "A assombração pode se tornar invisível enquanto etérea. Não pode ser vista, embora alguém que saiba a posição geral possa atacar com -4. Ela também não pode ser alvo de feitiços a menos que o conjurador possa vê-la com detectar arcano ou algum outro meio."
+    "descricao": "A assombração pode se tornar invisível enquanto etérea. Não pode ser vista, embora alguém que saiba a posição geral possa atacar com -4."
   },
   {
     "id": "poderes_misticos_fantasma",
@@ -675,7 +675,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O fantasma pode manipular energia espiritual para conjurar feitiços. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p. 14 para mais detalhes.\n• APARIÇÃO: Atordoar, cegar, luz/escuridão, morosidade.\n• POLTERGEIST: Devastação, horrores ilusórios, som/silêncio, telecinese.\n• SOMBRA: Confusão, fantoche, manipulação elemental, medo."
+    "descricao": "O fantasma pode manipular energia espiritual para conjurar feitiços. Escolha um dos pacotes a seguir e veja o quadro Poderes Místicos na p."
   },
   {
     "id": "rugir_fantasma",
@@ -695,7 +695,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O espírito emite um uivo fantasmagórico ou grito de banshee que arrepia a espinha daqueles que o escutam. Como ação limitada, a personagem pode fazer um Desafio de Intimidar em um Modelo de Cone. Todos os alvos dentro são afetados e devem resistir separadamente."
+    "descricao": "O espírito emite um uivo fantasmagórico ou grito de banshee que arrepia a espinha daqueles que o escutam. Como ação limitada, a personagem pode fazer um Desafio de Intimidar em um Modelo de Cone."
   },
   {
     "id": "toque_arrepiante",
@@ -714,7 +714,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O toque de um fantasma gela os ossos de um ser vivo da cabeça aos pés. Um Ataque de Toque bem-sucedido (em forma corpórea) contra um ser vivo causa For+d4 de dano que ignora tudo exceto armadura mágica."
+    "descricao": "O toque de um fantasma gela os ossos de um ser vivo da cabeça aos pés."
   },
   {
     "id": "travessia",
@@ -731,7 +731,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Fantasmas são um tipo específico de espírito que habita o mundo físico. Porém, ao se concentrar, podem desaparecer de nossa realidade e retornar ao reino espiritual brevemente para falar com outras entidades espirituais.\nIsso funciona como Rede de Contatos (veja Savage Worlds Edição Aventura) com todos os espíritos, almas perdidas, fantasmas e outros seres do vazio. O espírito pode usar Persuadir ou Intimidar, mas não pode garantir favores (O Dinheiro Fala Mais Alto ou Arrebentando Cabeças) a menos que o cenário permita."
+    "descricao": "Fantasmas são um tipo específico de espírito que habita o mundo físico."
   },
   {
     "id": "alfa",
@@ -748,7 +748,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O lobisomem pode tentar controlar qualquer criatura canina com uma rolagem bem-sucedida de Intimidar resistida pelo Espiríto da criatura. Isso é uma ação e, se bem-sucedida, o controle dura pelo resto do encontro. Se o alvo da criatura é o alfa, o resto da matilha segue sua liderança.\nA fera segue comandos básicos de acordo com sua inteligência. Alfa só funciona em criaturas naturais, não funciona em cães infernais, demoníacos ou feras sobrenaturais."
+    "descricao": "O lobisomem pode tentar controlar qualquer criatura canina com uma rolagem bem-sucedida de Intimidar resistida pelo Espiríto da criatura."
   },
   {
     "id": "andar_nas_paredes_lobo",
@@ -785,7 +785,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O monstro aprende a falar frases de forma irregular enquanto na forma de lobisomem. Subtraia 2 de qualquer rolagem de Característica que necessite de fala clara como rolagens de perícia arcana e a maioria das rolagens de Persuadir e Provocar."
+    "descricao": "O monstro aprende a falar frases de forma irregular enquanto na forma de lobisomem."
   },
   {
     "id": "mordida_garras_aprimorada",
@@ -819,7 +819,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O licantropo faz uma rolagem de Vigor como ação livre limitada para se regenerar. Sucesso cura um Ferimento ou remove o Estado Incapacitado e uma ampliação cura dois Ferimentos. Não é possível regenerar Ferimentos causados por prata."
+    "descricao": "O licantropo faz uma rolagem de Vigor como ação livre limitada para se regenerar. Sucesso cura um Ferimento ou remove o Estado Incapacitado e uma ampliação cura dois Ferimentos."
   },
   {
     "id": "resistencia_lobo",
@@ -853,7 +853,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O lobisomem uiva no máximo de seus pulmões bestiais, aterrorizando aqueles que o escutam. Como ação limitada, a personagem pode fazer um Desafio de Intimidar em um Modelo de Cone. Todos os alvos dentro do Modelo são afetados e devem resistir separadamente."
+    "descricao": "O lobisomem uiva no máximo de seus pulmões bestiais, aterrorizando aqueles que o escutam. Como ação limitada, a personagem pode fazer um Desafio de Intimidar em um Modelo de Cone."
   },
   {
     "id": "descarga",
@@ -870,7 +870,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raios e eletricidade deram VIDA a esta criação — e podem ser usados para tomá-la também. A criatura estoca energia em seu corpo.\nComo ação limitada, é possível receber um nível de Fadiga para liberar uma explosão de eletricidade em um Modelo Grande de Explosão centrado em si mesmo. Qualquer criatura dentro do Modelo recebe 4d6 de dano elétrico. Um monstro Incapacitado dessa forma desmaia, mas não morre."
+    "descricao": "Raios e eletricidade deram VIDA a esta criação — e podem ser usados para tomá-la também. A criatura estoca energia em seu corpo."
   },
   {
     "id": "flashbacks",
@@ -887,7 +887,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O monstro ocasionalmente tem vislumbres de memórias e conhecimento de uma das várias partes do corpo que o compõem.\nUma vez por encontro, pode aumentar qualquer perícia em um tipo de dado, desde que não exceda o atributo ao qual ela é ligada. Se não possuir a perícia, ele a ganha com d4, ignorando a penalidade usual de -2."
+    "descricao": "O monstro ocasionalmente tem vislumbres de memórias e conhecimento de uma das várias partes do corpo que o compõem."
   },
   {
     "id": "partes_destacaveis",
@@ -907,7 +907,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Este horror pode destacar várias partes de seu corpo e controlá-las à distância! A Distância máxima que a parte continua funcionando é um quilômetro e meio. Se a parte for destruída, é possível que outra cresça com o monstro se banqueteando com outra parte idêntica. Demora uma hora para que a parte cresça novamente. Pode destacar quantas partes destas descritas a seguir conforme desejar e alternar entre elas como uma ação:\n• MÃO: A mão se move com Movimentação 5 e tem a Força igual à de seu dono com dois tipos de dado menor. A Mão é Minúscula, então cabe ao Mestre e às circunstâncias definir se ela pode ou não atacar alvos de tamanho humano.\n• OLHO: O olho pode rolar por ai com Movimentação 3 e enxergar como um olho normal.\n• ORELHA: A orelha não pode se mover, mas escuta normalmente. Monstros podem deixá-la se quiserem bisbilhotar conversas de outros."
+    "descricao": "Este horror pode destacar várias partes de seu corpo e controlá-las à distância! A Distância máxima que a parte continua funcionando é um quilômetro e meio."
   },
   {
     "id": "robusto_monstro",
@@ -958,7 +958,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por dia, uma múmia com esta Vantagem pode conjurar um bando de insetos, pragas animais e outras infestações. Esse bando ocupa um Modelo Médio que não se divide e que pode receber ordens gerais mentalmente, tais como “Protejam aquela porta!” ou “Matem estes intrusos!”."
+    "descricao": "Uma vez por dia, uma múmia com esta Vantagem pode conjurar um bando de insetos, pragas animais e outras infestações."
   },
   {
     "id": "invocar_bando_maior",
@@ -994,7 +994,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Esta habilidade normalmente está associada a múmias egípcias, mas as de outras regiões podem usar habilidades similares com Manifestações diferentes. Uma vez por semana de jogo, a múmia pode conjurar uma enorme tempestade de areia de vários quilômetros de diâmetro. A tempestade varre tudo à sua frente, causando Escuridão e provocando rolagens de Vigor a cada minuto passado fora de abrigo. Aqueles que falharem recebem Fadiga e isso pode causar morte por sufocamento."
+    "descricao": "Esta habilidade normalmente está associada a múmias egípcias, mas as de outras regiões podem usar habilidades similares com Manifestações diferentes."
   },
   {
     "id": "podridao_mumia",
@@ -1011,7 +1011,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Qualquer um tocado pela múmia, quer receba dano ou não, deve fazer uma rolagem de Vigor. Falha significa que recebe a \"Podridão da Múmia\" e sofre imediatamente um Ferimento. Vítimas que morram como resultado da \"Podridão da Múmia\" podem ser trazidas de volta como múmias através do poder zumbi."
+    "descricao": "Qualquer um tocado pela múmia, quer receba dano ou não, deve fazer uma rolagem de Vigor. Falha significa que recebe a \"Podridão da Múmia\" e sofre imediatamente um Ferimento."
   },
   {
     "id": "poderes_misticos_mumia",
@@ -1028,7 +1028,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Algumas múmias podem recorrer a fontes místicas ou divinas para obter poderes mágicos. Escolha um dos pacotes a seguir e veja mais detalhes no quadro Poderes Místicos na p. 14 para mais detalhes.\n• ARQUITETO: Barreira, detectar/ocultar arcano, telecinese, trancar/destrancar.\n• RÉGIO: Explosão, rajada, rancor."
+    "descricao": "Algumas múmias podem recorrer a fontes místicas ou divinas para obter poderes mágicos. Escolha um dos pacotes a seguir e veja mais detalhes no quadro Poderes Místicos na p."
   },
   {
     "id": "regeneracao_lenta_mumia",
@@ -1081,7 +1081,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se um revivido com esta Vantagem devora um cérebro relativamente fresco e preservado de um ser senciente, é possível ter acesso a pedaços dispersos de suas memórias. O que exatamente o zumbi vê cabe ao Mestre, mas normalmente inclui eventos traumáticos, especialmente aqueles ligados à sua morte."
+    "descricao": "Se um revivido com esta Vantagem devora um cérebro relativamente fresco e preservado de um ser senciente, é possível ter acesso a pedaços dispersos de suas memórias."
   },
   {
     "id": "fedor",
@@ -1098,7 +1098,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "A carne do revivido está podre e fede, repelindo os seres vivos que se aproximem demais. Qualquer um adjacente à personagem e possua o sentido do olfato fica Distraído. Isso dura até que se afaste e seu turno termine."
+    "descricao": "A carne do revivido está podre e fede, repelindo os seres vivos que se aproximem demais. Qualquer um adjacente à personagem e possua o sentido do olfato fica Distraído."
   },
   {
     "id": "mestre_zumbis",
@@ -1115,7 +1115,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O revivido pode tentar controlar quaisquer zumbis ou esqueletos sem mente com uma rolagem de Intimidar bem-sucedida resistida pelo Espírito da criatura. Isso é uma ação e o controle dura pelo resto do encontro. A Vantagem normalmente não tem efeito em outros tipos de mortos-vivos (a critério do Mestre)."
+    "descricao": "O revivido pode tentar controlar quaisquer zumbis ou esqueletos sem mente com uma rolagem de Intimidar bem-sucedida resistida pelo Espírito da criatura."
   },
   {
     "id": "rastreador_implacavel",
@@ -1132,7 +1132,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Revividos são criaturas vingativas que perseguem suas presas de forma implacável. Revividos com esta Vantagem adicionam +2 nas rolagens de Sobrevivência (Rastrear) — acumula-se com outros bônus de rastrear — desde que estejam rastreando alguém que lhe fez mal de alguma forma (a critério do Mestre). Este é um sentido mágico que só é reforçado por evidências físicas da passagem da presa, então, mesmo que a trilha seja perdida, o revivido irá recuperá-la dentro de 2d6 horas (ou sempre que o Mestre achar que é possível).\nO revivido só pode usar esse sentido mágico em um único indivíduo por vez e, uma vez dispensado, não pode usar no mesmo alvo novamente (embora possa rastreá-lo normalmente)."
+    "descricao": "Revividos são criaturas vingativas que perseguem suas presas de forma implacável."
   },
   {
     "id": "toque_da_morte",
@@ -1149,7 +1149,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O poder mais temido dos revividos é seu toque mortal que causa For+d4 de dano contra os vivos (armadura protege normalmente). Contra aqueles que jurou vingança (o alvo de seu Voto), seu toque causa For+2d6 de dano."
+    "descricao": "O poder mais temido dos revividos é seu toque mortal que causa For+d4 de dano contra os vivos (armadura protege normalmente)."
   },
   {
     "id": "andarilho_do_dia",
@@ -1183,7 +1183,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O vampiro possui a habilidade de invocar e controlar morcegos, ratos e lobos. Uma vez por noite, em um ambiente apropriado onde estas criaturas habitem (a critério do Mestre), o vampiro pode automaticamente convocar um único lobo atroz, 1d4+1 lobos ou um bando Médio de morcegos e ratos. O último se divide em dois bandos Pequenos quando dispersados."
+    "descricao": "O vampiro possui a habilidade de invocar e controlar morcegos, ratos e lobos."
   },
   {
     "id": "encantar_vampiro",
@@ -1200,7 +1200,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Vampiros podem conjurar fantoche gastando um Bene e uma rolagem de Persuadir como perícia arcana. O alvo não pode ser Hostil, Antipático ou Não Cooperativo, então vale a pena ganhar a confiança de vítimas potenciais em primeiro lugar.\nA criatura maligna não pode usar nenhum Modificador de Poder com esta versão natural do poder, mas, se bem-sucedida, a Duração é 24 horas em vez de cinco rodadas, não pode ser mantido e vítimas que sucumbam não resistem ao ter seu sangue drenado."
+    "descricao": "Vampiros podem conjurar fantoche gastando um Bene e uma rolagem de Persuadir como perícia arcana."
   },
   {
     "id": "forma_animal_vampiro",
@@ -1217,7 +1217,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, vampiros podem se transformar em um lobo ou morcego, ou voltar para sua forma vampírica, com uma rolagem de Astúcia -2. Não é possível falar enquanto na forma de lobo ou morcego."
+    "descricao": "Como ação limitada, vampiros podem se transformar em um lobo ou morcego, ou voltar para sua forma vampírica, com uma rolagem de Astúcia -2."
   },
   {
     "id": "forma_nevoa",
@@ -1234,7 +1234,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por noite, o vampiro pode se transformar em uma névoa. Isso requer uma ação e uma rolagem de Astúcia -2. Se falhar, o vampiro recebe um nível de Fadiga, mas pode tentar novamente. Uma Falha Crítica significa que recebe um nível de Fadiga e não pode tentar novamente esta noite.\nVampiros em forma de névoa são visíveis, voam com Movimentação 6 e podem atravessar qualquer barreira que não seja selada. Não podem afetar o mundo físico ou usar outros poderes enquanto em forma de névoa. Podem retornar à forma normal como uma ação limitada (sem nenhuma rolagem)."
+    "descricao": "Uma vez por noite, o vampiro pode se transformar em uma névoa. Isso requer uma ação e uma rolagem de Astúcia -2. Se falhar, o vampiro recebe um nível de Fadiga, mas pode tentar novamente."
   },
   {
     "id": "garras_vampiro",
@@ -1285,7 +1285,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O vampiro pode se tornar o \"senhor\" de outro vampiro deixando um mortal beber seu sangue. Leva d4 horas para completar a transformação. Durante este tempo, o indivíduo pode se liberar da maldição através do poder cura e o Modificador Neutralizar Doença.\nO novo \"filhote\" não fica necessariamente agradecido pela mudança. Ele possui seu livre arbítrio e pode buscar vingança caso se ressinta da maldição!"
+    "descricao": "O vampiro pode se tornar o \"senhor\" de outro vampiro deixando um mortal beber seu sangue. Leva d4 horas para completar a transformação."
   },
   {
     "id": "servo",
@@ -1302,7 +1302,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Certos tipos de mortais se deliciam com o miasma dos mortos-vivos, atraídos por seu magnetismo poderoso ou esperançosos de que um dia se tornarão seres eternos.\nVampiros com esta Vantagem ganham um servo mortal que é completamente leal a seu \"mestre\" O servo é um Extra um Estágio abaixo de seu senhor e ganha Progressos conforme seu senhor ganha.\nO servo mantém seu livre arbítrio, mas quer servir o vampiro qualquer que seja a razão e morreria antes de traí-lo.\nÉ possível adquirir esta Vantagem até cinco vezes. Se um morrer, o senhor pode substituí-lo quando a situação permitir."
+    "descricao": "Certos tipos de mortais se deliciam com o miasma dos mortos-vivos, atraídos por seu magnetismo poderoso ou esperançosos de que um dia se tornarão seres eternos."
   },
   {
     "id": "regeneracao_rapida_vampiro",
@@ -1319,7 +1319,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O vampiro se regenera ao fazer uma rolagem de Vigor como ação livre limitada. Um sucesso cura um Ferimento ou remove o Estado Incapacitado e uma ampliação remove dois Ferimentos. Não é possível regenerar Ferimentos causados por decapitação, água benta ou armas abençoadas, luz do sol ou estaca no coração."
+    "descricao": "O vampiro se regenera ao fazer uma rolagem de Vigor como ação livre limitada. Um sucesso cura um Ferimento ou remove o Estado Incapacitado e uma ampliação remove dois Ferimentos."
   },
   {
     "id": "antecedente_arcano_alquimista_horror",
@@ -1341,7 +1341,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Alquimistas criam poções, óleos e elixires. Suas misturas são tratadas como ativadas conforme a necessidade. Possuem a Complicação Componente Material. Seus poderes com Distância Pessoal/Toque são poções; distâncias maiores usam nebulizadores ou granadas (Distância 12). Perícia Arcana: Alquimia (Astúcia). Começam com 15 Pontos de Poder e 3 Poderes.",
+    "descricao": "Alquimistas criam poções, óleos e elixires. Suas misturas são tratadas como ativadas conforme a necessidade. Possuem a Complicação Componente Material.",
     "poderes_permitidos": [
       "ajuda",
       "aumentar_reduzir_caracteristica",
@@ -1439,7 +1439,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Bruxos usam punhados e bugigangas para seus feitiços. Possuem as Complicações Componentes Materiais e Corrupção. Começam com um Familiar (animal inteligente com 5 PP próprios). Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e 3 Poderes.",
+    "descricao": "Bruxos usam punhados e bugigangas para seus feitiços. Possuem as Complicações Componentes Materiais e Corrupção. Começam com um Familiar (animal inteligente com 5 PP próprios).",
     "poderes_permitidos": [
       "adivinhacao",
       "ajuda",
@@ -1562,7 +1562,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Protetores sagrados. Possuem um Voto (Maior) de servir à religião. Ganham uma rerrolagem em Fé se exibirem seu símbolo sagrado. Perícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e os poderes Cura, Santuário mais 3 da lista.",
+    "descricao": "Protetores sagrados. Possuem um Voto (Maior) de servir à religião. Ganham uma rerrolagem em Fé se exibirem seu símbolo sagrado.",
     "poderes_permitidos": [
       "adivinhacao",
       "ajuda",
@@ -1658,7 +1658,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Indivíduos maculados por forças sobrenaturais ou experimentos. Possuem a Complicação Corrupção. Podem escolher Vantagens de qualquer Antecedente Arcano (substituindo o requisito de perícia por Foco). Perícia Arcana: Foco (Espírito). Começam com 15 Pontos de Poder, 2 poderes e um Poder Favorito inicial.",
+    "descricao": "Indivíduos maculados por forças sobrenaturais ou experimentos. Possuem a Complicação Corrupção. Podem escolher Vantagens de qualquer Antecedente Arcano (substituindo o requisito de perícia por Foco).",
     "poderes_permitidos": [
       "todos_disponiveis_a_criterio_do_mestre"
     ]
@@ -1683,7 +1683,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Lidam com entidades malignas. Possuem a Complicação Corrupção. Podem conjurar legionários demoníacos com o poder Conjurar Aliado já no estágio Novato. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e os poderes Banir, Conjurar Aliado, Devastação mais 2 da lista.",
+    "descricao": "Lidam com entidades malignas. Possuem a Complicação Corrupção. Podem conjurar legionários demoníacos com o poder Conjurar Aliado já no estágio Novato.",
     "poderes_permitidos": [
       "andar_nas_paredes",
       "adivinhacao",
@@ -1860,7 +1860,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Intermediários do mundo espiritual. Podem sentir criaturas incorpóreas e invisíveis (Detectar Arcano passivo). Perícia Arcana: Conjurar (Astúcia). Começam com 15 Pontos de Poder e os poderes Banir, Detectar/Ocultar Arcano mais 1 da lista.",
+    "descricao": "Intermediários do mundo espiritual. Podem sentir criaturas incorpóreas e invisíveis (Detectar Arcano passivo). Perícia Arcana: Conjurar (Astúcia).",
     "poderes_permitidos": [
       "adivinhacao",
       "amigo_das_feras",
@@ -1940,7 +1940,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Estudiosos do arcano e do profano. Possuem a Complicação Corrupção. Perícia Arcana: Conjurar (Astúcia). Começam com 10 Pontos de Poder e os poderes Detectar/Ocultar Arcano, Dissipar, Trancar/Destrancar mais 2 da lista.",
+    "descricao": "Estudiosos do arcano e do profano. Possuem a Complicação Corrupção. Perícia Arcana: Conjurar (Astúcia).",
     "poderes_permitidos": [
       "adivinhacao",
       "amigo_das_feras",
@@ -2059,7 +2059,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Possuem a habilidade 'A Visão': após Cartas de Ação serem resolvidas, gasta 1 Bene para redistribuir cartas de aliados dispostos. Perícia Arcana: Conjurar (Astúcia). Começam com 15 Pontos de Poder e 2 Poderes.",
+    "descricao": "Possuem a habilidade 'A Visão': após Cartas de Ação serem resolvidas, gasta 1 Bene para redistribuir cartas de aliados dispostos.",
     "poderes_permitidos": [
       "adivinhacao",
       "deflexao",
@@ -2132,7 +2132,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Houngans e mambos que barganham com os Loas. Usam amuletos guardados em sua bolsa Gris-Gris. Possuem a Complicação Componentes Materiais. Possuem dois poderes exclusivos: Aspecto de Loa Rada e Fúria de Loa Petro. Perícia Arcana: Fé (Espírito). Começam com 15 Pontos de Poder e 2 Poderes.",
+    "descricao": "Houngans e mambos que barganham com os Loas. Usam amuletos guardados em sua bolsa Gris-Gris. Possuem a Complicação Componentes Materiais.",
     "poderes_permitidos": [
       "adivinhacao",
       "ajuda",
@@ -2236,7 +2236,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil (veja pág. 115) é ignorada. Se estiverem empunhando uma arma em cada mão, personagens com esta Vantagem podem acumular os bônus de Aparar de ambas as armas (se houverem bônus)."
+    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil  é ignorada."
   },
   {
     "id": "antecedente_arcano",
@@ -2260,7 +2260,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Exposição a energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades. Tais eventos levam à Vantagem Antecedente Arcano e ao desenvolvimento de habilidades sobrenaturais. Veja o Capítulo Cinco para ter uma descrição completa dos Antecedentes Arcanos, poderes e como usá-los."
+    "descricao": "Exposição a energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades."
   },
   {
     "id": "antecedente_arcano_dom",
@@ -2377,7 +2377,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Este indivíduo nasceu com privilégios ou os adquiriu ao longo da vida. Pode ter dinheiro ou não (Vantagem Rico ou Podre de Rico), mas ainda anda no círculo social da elite dentro do cenário. Aristocratas adicionam +2 em Persuadir quando em uma Rede de Contatos (veja pág. 160) com a elite local, industriais, nobres ou demais aristocratas.\n\nTambém adicionam +2 em rolagens de Conhecimento Geral feitas para conhecer a etiqueta da elite, reconhecer ramos familiares e heráldica ou rumores envolvendo outros de sua posição."
+    "descricao": "Este indivíduo nasceu com privilégios ou os adquiriu ao longo da vida. Pode ter dinheiro ou não (Vantagem Rico ou Podre de Rico), mas ainda anda no círculo social da elite dentro do cenário."
   },
   {
     "id": "atraente",
@@ -2396,7 +2396,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes.\n\nAdicione +1 em rolagens de Performance e Persuadir se o alvo estiver atraído pelo seu tipo em geral (gênero, sexo, espécie etc.)."
+    "descricao": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes."
   },
   {
     "id": "muito_atraente",
@@ -2435,7 +2435,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam Atletismo como se ela estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso. Também podem resistir a Desafios de Atletismo com força, se desejarem. Por fim, Brutamontes aumentam em +1 a Curta Distância de qualquer item arremessado. Dobre isso para a Média Distância ajustada e dobre novamente para a Longa Distância.\n\nSe a Distância de um item arremessado for 3/6/12, por exemplo, a Distância para o Brutamontes é 4/8/16."
+    "descricao": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam Atletismo como se ela estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso."
   },
   {
     "id": "carismatico",
@@ -2473,7 +2473,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Quem possui esta Vantagem aprendeu a dominar seus medos ou lidou com tantos horrores que acabou se habituando. Estas figuras valentes e exploradoras adicionam +2 em Testes de Medo e subtraem 2 dos resultados da Tabela de Medo (veja pág. 140)."
+    "descricao": "Quem possui esta Vantagem aprendeu a dominar seus medos ou lidou com tantos horrores que acabou se habituando."
   },
   {
     "id": "cura_rapida",
@@ -2492,7 +2492,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco (veja Cura, pág. 112)."
+    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco ."
   },
   {
     "id": "famoso",
@@ -2509,7 +2509,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com essa vantagem são uma espécie de subcelebridade. Podem ter reconhecimento como membro popular da classe barda em um feudo em particular, uma estrela de rock menor ou ter atuado em um filme B. Ganham o dobro do cachê normal quando estiverem realizando uma performance (veja Performance, pág. 38). Também podem usar sua fama para adicionar +1 em rolagens de Persuadir se o alvo for amigável e souber quem são (rolagem de Conhecimento Geral modificada pela probabilidade do indivíduo conhecer a celebridade). A parte ruim de ser Famoso é que a personagem é geralmente reconhecida: pessoas querem algo dela com certa frequência, pode sofrer perseguição por parte de fãs ou admiradores, ou ainda não conseguir se livrar de obrigações, apresentações ou outras atividades sem se complicar."
+    "descricao": "Personagens com essa vantagem são uma espécie de subcelebridade."
   },
   {
     "id": "muito_famoso",
@@ -2528,7 +2528,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com esta Vantagem realmente têm fama. São bastante conhecidas em um círculo grande — país, grande indústria ou mídia popular (cinema, televisão, música etc.). Fazem 5× o cachê normal quando se apresentam e adicionam +2 em Persuadir ao influenciar indivíduos amigáveis que as conhecem. O preço também é mais alto: mais exigências de tempo, obrigações, rivais, escândalos e incapacidade de se misturar à multidão sem serem reconhecidas."
+    "descricao": "Personagens com esta Vantagem realmente têm fama. São bastante conhecidas em um círculo grande — país, grande indústria ou mídia popular (cinema, televisão, música etc.)."
   },
   {
     "id": "furioso",
@@ -2545,7 +2545,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Furiosos tornam-se selvagens e quase incontroláveis quando ficam com “sangue nos olhos”, mas continuam verdadeiras máquinas de matar! Imediatamente após sofrer um Ferimento ou resultado Abalado (só por dano físico), alguém com essa Vantagem deve fazer um teste de Astúcia ou ficar Furioso. Você pode falhar voluntariamente, se desejar.\n\nFicar Furioso tem os seguintes efeitos:\n- FÚRIA: Força aumenta em um tipo de dado e todo ataque corpo a corpo deve ser Ataque Selvagem (veja pág. 115). Não é permitido usar perícias que requeiram inteligência ou concentração (critério do Mestre).\n- ENRAIVECIDO: Adrenalina e raiva fortalecem os músculos, adicionando +2 em Resistência. Ignore um nível de penalidades por Ferimentos (acumula com outras habilidades que reduzam essas penalidades).\n- IMPRUDÊNCIA: Toda vez que rolar Falha Crítica em Lutar, acerta um alvo aleatório no seu raio de ataque (amigo ou inimigo). Se não houver, o golpe erra e pode quebrar objetos próximos.\n\nDepois de cinco rodadas consecutivas de fúria, ocorre um nível de Fadiga. Com dez rodadas, outro nível de Fadiga e a fúria termina. Também é possível encerrar a fúria a qualquer momento fazendo teste de Astúcia –2 (ação livre), possivelmente evitando a Fadiga se obtiver sucesso. Se entrar em fúria de novo, comece uma nova contagem, mesmo na mesma batalha."
+    "descricao": "Furiosos tornam-se selvagens e quase incontroláveis quando ficam com “sangue nos olhos”, mas continuam verdadeiras máquinas de matar!"
   },
   {
     "id": "impulso",
@@ -2564,7 +2564,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Impulso reflete energia ou espírito. Quando você gasta um Bene para rerrolar uma Característica, adicione +2 ao total da rerrolagem. Não se aplica a rolagens de dano nem a Absorção, a menos que use outro Bene para rerrolar Vigor."
+    "descricao": "Impulso reflete energia ou espírito. Quando você gasta um Bene para rerrolar uma Característica, adicione +2 ao total da rerrolagem."
   },
   {
     "id": "ligeiro",
@@ -2602,7 +2602,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6 (veja perícia Idiomas, pág. 35)."
+    "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6 ."
   },
   {
     "id": "musculoso",
@@ -2622,7 +2622,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Esta pessoa é muito forte ou está em ótima forma. Seu Tamanho aumenta em +1 (e a Resistência em 1), e a Força conta como dado maior para Sobrecarga (pág. 77) e Força Mínima para usar equipamentos sem penalidade (pág. 76). Não pode elevar Tamanho acima de +3."
+    "descricao": "Esta pessoa é muito forte ou está em ótima forma."
   },
   {
     "id": "prontidao",
@@ -2658,7 +2658,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reflexos ultrarrápidos: sempre que sacar Carta de Ação ≤ 5, pode descartá-la e sacar novamente até obter > 5. Personagens com Focado e Rápido sacam primeiro as cartas adicionais e escolhem qual usar; se for ≤ 5, usam a Vantagem para sacar até obter ≥ 6."
+    "descricao": "Reflexos ultrarrápidos: sempre que sacar Carta de Ação ≤ 5, pode descartá-la e sacar novamente até obter > 5."
   },
   {
     "id": "resistencia_arcana",
@@ -2677,7 +2677,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Magia e sobrenatural pouco afetam este indivíduo. Habilidades arcanas hostis contra ele sofrem −2 na rolagem e dano mágico é reduzido em 2. Mesmo se o poder não efetuar, consome Pontos de Poder e ainda pode afetar outros."
+    "descricao": "Magia e sobrenatural pouco afetam este indivíduo. Habilidades arcanas hostis contra ele sofrem −2 na rolagem e dano mágico é reduzido em 2."
   },
   {
     "id": "resistencia_arcana_aprimorada",
@@ -2749,7 +2749,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!).\nReceba um Bene adicional no início de cada sessão de jogo, de modo a ser frequentemente mais bem-sucedido que a maioria em tarefas importantes e para sobreviver a perigos incríveis."
+    "descricao": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!)."
   },
   {
     "id": "sorte_grande",
@@ -2790,7 +2790,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Alguém com essa Vantagem conhece uma arma única (Excalibur, Old Betsy, Ferroada) como a palma da sua mão. Quando a usa, pode adicionar +1 em suas rolagens de Atletismo (arremessar), Lutar ou Atirar e +1 no Aparar quando ela está preparada (mesmo que seja arma à distância). É permitido escolher várias vezes, aplicando a uma arma diferente cada vez. Se perdida, pode substituí-la, mas benefícios entram em vigor só após alguns dias."
+    "descricao": "Alguém com essa Vantagem conhece uma arma única (Excalibur, Old Betsy, Ferroada) como a palma da sua mão."
   },
   {
     "id": "arma_predileta_aprimorada",
@@ -2828,7 +2828,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág. 114). Soma +1 quando golpeia com eles e causa Força + d4 de dano. Se já tiver dano por Garras ou Brigão, aumente o dado em um tipo. Não soma com outras Armas Naturais."
+    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág."
   },
   {
     "id": "guerreiro_marcial",
@@ -2866,7 +2866,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance (veja Ataques Livres, pág. 116)."
+    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance ."
   },
   {
     "id": "atacar_primeiro_aprimorado",
@@ -2906,7 +2906,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Talento nato com armas de combate à distância. Se não se mover e não disparar acima de Cadência de Tiro 1 na primeira ação, pode adicionar +1 em uma rolagem de Atletismo ou Atirar, ou ignorar até 2 pontos em penalidades por localização, cobertura, distância, escala ou velocidade. Não se acumula com Mirar e não vale para ataques extras."
+    "descricao": "Talento nato com armas de combate à distância."
   },
   {
     "id": "atirar_com_duas_armas",
@@ -2925,7 +2925,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Funciona como Lutar com Duas Armas, mas para armas à distância. Permite disparo de cada mão em duas ações sem penalidade por Ação Múltipla. Se tiver Lutar com Duas Armas, segunda ação pode ser corpo a corpo."
+    "descricao": "Funciona como Lutar com Duas Armas, mas para armas à distância. Permite disparo de cada mão em duas ações sem penalidade por Ação Múltipla."
   },
   {
     "id": "bloquear",
@@ -3080,7 +3080,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé (veja pág. 148)."
+    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé ."
   },
   {
     "id": "disparo_duplo",
@@ -3099,7 +3099,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dispara dois tiros rápidos sem prejudicar mira. Só com armas de Cadência de Tiro 1 que disparam dois tiros sem recarregar. +1 em ataque e dano, gasta bala extra. Não combina com Disparo Rápido. Com rajada de três balas (pág. 77), +2 em Atirar e dano, gasta seis balas."
+    "descricao": "Dispara dois tiros rápidos sem prejudicar mira. Só com armas de Cadência de Tiro 1 que disparam dois tiros sem recarregar."
   },
   {
     "id": "disparo_rapido",
@@ -3156,7 +3156,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar (veja pág. 111)."
+    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar ."
   },
   {
     "id": "muito_duro_de_matar",
@@ -3213,7 +3213,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sub +2 quando Evadindo de ataques em área (veja pág. 122)."
+    "descricao": "Sub +2 quando Evadindo de ataques em área ."
   },
   {
     "id": "finta",
@@ -3380,7 +3380,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114)."
+    "descricao": "Ignora penalidade −2 ao usar armas improvisadas ."
   },
   {
     "id": "lutar_com_duas_armas",
@@ -3418,7 +3418,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignore penalidade por Plataforma Instável (veja pág. 124) e penalidade de corrida reduzida a −1."
+    "descricao": "Ignore penalidade por Plataforma Instável  e penalidade de corrida reduzida a −1."
   },
   {
     "id": "matador_de_gigantes",
@@ -3435,7 +3435,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores (veja pág. 215–216)."
+    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores ."
   },
   {
     "id": "nervos_de_aco",
@@ -3492,7 +3492,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Absorção e Vigor para evitar Nocaute (veja pág. 122)."
+    "descricao": "+2 em Absorção e Vigor para evitar Nocaute ."
   },
   {
     "id": "reflexos_de_combate",
@@ -3566,7 +3566,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2 (veja pág. 126)."
+    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2 ."
   },
   {
     "id": "tiro_mortal",
@@ -3930,7 +3930,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural.\nAdicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4."
+    "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades."
   },
   {
     "id": "mago",
@@ -4642,7 +4642,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Após beber destilado, +1 tipo de dado em Vigor (e Resistência) e ignore 1 penalidade por Ferimento. Astúcia, Agilidade e perícias sofrem −1. Dura 1 hora, depois 1 Fadiga por 4 h."
+    "descricao": "Após beber destilado, +1 tipo de dado em Vigor (e Resistência) e ignore 1 penalidade por Ferimento. Astúcia, Agilidade e perícias sofrem −1."
   },
   {
     "id": "curandeiro",
@@ -4695,7 +4695,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Perceber em testes de Surpresa (pág. 127); ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
+    "descricao": "+2 em Perceber em testes de Surpresa ; ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
   },
   {
     "id": "senhor_das_feras",
@@ -4714,7 +4714,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Animais não atacam a menos que iniciem; atrai um companheiro animal Extra Tamanho 0 (substituível em 1d4 dias). Repetível: ganha animal adicional, aumenta uma característica em +1 dado, aumenta Tamanho máximo do animal em +1 (max +3), ou torna animal Carta Selvagem (personagem Estágio Heroico)."
+    "descricao": "Animais não atacam a menos que iniciem; atrai um companheiro animal Extra Tamanho 0 (substituível em 1d4 dias)."
   },
   {
     "id": "sucateiro",
@@ -4827,7 +4827,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)"
+    "descricao": "Em um cenário de supers, a Vantagem Parceiro  pode ser adquirida quando o super alcança o Estágio Veterano."
   },
   {
     "id": "duro_na_queda",
@@ -4884,7 +4884,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8 (veja Bônus de Dano, pág. 109)."
+    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8 ."
   },
   {
     "id": "mestre_das_armas",

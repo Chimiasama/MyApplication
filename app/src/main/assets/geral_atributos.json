@@ -1,9 +1,29 @@
 {
   "atributos": [
-    { "nome": "Agilidade", "min": 4, "descricao": "É uma medida da flexibilidade, destreza e coordenação de cada personagem." },
-    { "nome": "Astúcia", "min": 4, "descricao": "Mede sua inteligência bruta, acuidade mental e o quão rápido se pode pensar. É usada para resistir a certos tipos de ataques mentais e sociais." },
-    { "nome": "Espírito", "min": 4, "descricao": "É autoconfiança, resiliência e força de vontade. É usado para resistir a ataques sociais e sobrenaturais, bem como ao medo." },
-    { "nome": "Força", "min": 4, "descricao": "É poder físico e boa forma. Também é usada como base para o dano causado em combate corpo a corpo e para determinar quanto peso personagens podem vestir ou carregar." },
-    { "nome": "Vigor", "min": 4, "descricao": "Representa a tolerância, resistência à doenças, veneno ou toxinas de um indivíduo e quanto dano físico ele pode suportar antes de tombar. É usado com mais frequência para resistir aos efeitos de Fadiga e como base para a estatística derivada Resistência." }
+    {
+      "nome": "Agilidade",
+      "min": 4,
+      "descricao": "É uma medida da flexibilidade, destreza e coordenação de cada personagem."
+    },
+    {
+      "nome": "Astúcia",
+      "min": 4,
+      "descricao": "Mede sua inteligência bruta, acuidade mental e o quão rápido se pode pensar. É usada para resistir a certos tipos de ataques mentais e sociais."
+    },
+    {
+      "nome": "Espírito",
+      "min": 4,
+      "descricao": "É autoconfiança, resiliência e força de vontade. É usado para resistir a ataques sociais e sobrenaturais, bem como ao medo."
+    },
+    {
+      "nome": "Força",
+      "min": 4,
+      "descricao": "É poder físico e boa forma. Também é usada como base para o dano causado em combate corpo a corpo e para determinar quanto peso personagens podem vestir ou carregar."
+    },
+    {
+      "nome": "Vigor",
+      "min": 4,
+      "descricao": "Representa a tolerância, resistência à doenças, veneno ou toxinas de um indivíduo e quanto dano físico ele pode suportar antes de tombar."
+    }
   ]
 }

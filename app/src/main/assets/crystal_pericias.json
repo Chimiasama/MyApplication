@@ -5,7 +5,7 @@
       "atributo": "Agilidade",
       "basica": false,
       "origem": "CRYSTAL_HEART",
-      "descricao": "A Syn fornece aos Agentes vários tipos de armas, mas encoraja a especialização em uma. Se espera que todos os Agentes da Syn que não se especializam em arremessar coisas adquiram Atirar para ter alguma habilidade de combate à distância."
+      "descricao": "A Syn fornece aos Agentes vários tipos de armas, mas encoraja a especialização em uma."
     },
     {
       "nome": "Atletismo",
@@ -33,7 +33,7 @@
       "atributo": "Astúcia",
       "basica": false,
       "origem": "CRYSTAL_HEART",
-      "descricao": "Essa perícia é combinada com Ciência para refletir conhecimento especializado de todos os tipos. É necessária uma rolagem para saber qualquer coisa importante sobre a Era Antiga ou Cristais, incluindo especulações sobre manifestações e habilidades de Cristais. Observe que esta perícia não significa ter acesso ao banco de dados completo da Syn."
+      "descricao": "Essa perícia é combinada com Ciência para refletir conhecimento especializado de todos os tipos."
     },
     {
       "nome": "Conhecimento Batalha",
@@ -47,7 +47,7 @@
       "atributo": "Astúcia",
       "basica": true,
       "origem": "CRYSTAL_HEART",
-      "descricao": "Com a tecnologia de comunicação ainda iniciando, as pessoas não tem muito conhecimento da maior parte de sua própria Terra, para não mencionar outras Terras. Fazer uma rolagem de Conhecimento Geral em Terras diferentes da sua natal é feito com uma penalidade de -1."
+      "descricao": "Com a tecnologia de comunicação ainda iniciando, as pessoas não tem muito conhecimento da maior parte de sua própria Terra, para não mencionar outras Terras."
     },
     {
       "nome": "Curar",
@@ -61,7 +61,7 @@
       "atributo": "Agilidade",
       "basica": false,
       "origem": "CRYSTAL_HEART",
-      "descricao": "A perícia é praticamente inexistente fora de algumas cidades fjordstadianas e da Syn; a maioria das pessoas nem saberá como ligar os limpadores de para-brisa. Dirigir não é necessário para viagens no Tanque, e todos os Agentes recebem algumas aulas ao volante, permitindo-lhes usar a perícia sem treinamento."
+      "descricao": "A perícia é praticamente inexistente fora de algumas cidades fjordstadianas e da Syn; a maioria das pessoas nem saberá como ligar os limpadores de para-brisa."
     },
     {
       "nome": "Engenharia",
@@ -131,14 +131,14 @@
       "atributo": "Espírito",
       "basica": true,
       "origem": "CRYSTAL_HEART",
-      "descricao": "Ninguém nas Cinco Terras é indiferente em relação a você. Persuadir pode ser usada para Requisitar equipamentos e serviços da Syn. Contatos: Em vez de pagar com dinheiro, um Agente pode pagar com Requisição, ganhando +2 por ponto gasto."
+      "descricao": "Ninguém nas Cinco Terras é indiferente em relação a você. Persuadir pode ser usada para Requisitar equipamentos e serviços da Syn."
     },
     {
       "nome": "Pesquisar",
       "atributo": "Astúcia",
       "basica": false,
       "origem": "CRYSTAL_HEART",
-      "descricao": "Essa perícia é bastante influenciada pelos livros e relatórios disponíveis. Agentes em uma Estação da Syn podem gastar pontos de Requisição para adicionar +4 a rolagem. Pesquisar também pode ser usada para Requisitar equipamentos e serviços da Syn."
+      "descricao": "Essa perícia é bastante influenciada pelos livros e relatórios disponíveis. Agentes em uma Estação da Syn podem gastar pontos de Requisição para adicionar +4 a rolagem."
     },
     {
       "nome": "Pilotar",

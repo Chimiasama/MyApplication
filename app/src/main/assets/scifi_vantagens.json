@@ -16,7 +16,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil (veja pág. 115) é ignorada. Se estiverem empunhando uma arma em cada mão, personagens com esta Vantagem podem acumular os bônus de Aparar de ambas as armas (se houverem bônus)."
+    "descricao": "Sua habilidade com as mãos esquerda e direita é igual e a penalidade Mão Inábil  é ignorada."
   },
   {
     "id": "antecedente_arcano",
@@ -40,7 +40,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Exposição a energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades. Tais eventos levam à Vantagem Antecedente Arcano e ao desenvolvimento de habilidades sobrenaturais. Veja o Capítulo Cinco para ter uma descrição completa dos Antecedentes Arcanos, poderes e como usá-los."
+    "descricao": "Exposição a energias estranhas, estudos em uma escola mágica ou dons de entidades divinas ou espirituais às vezes concedem às personagens seus próprios poderes e habilidades."
   },
   {
     "id": "antecedente_arcano_dom",
@@ -157,7 +157,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Este indivíduo nasceu com privilégios ou os adquiriu ao longo da vida. Pode ter dinheiro ou não (Vantagem Rico ou Podre de Rico), mas ainda anda no círculo social da elite dentro do cenário. Aristocratas adicionam +2 em Persuadir quando em uma Rede de Contatos (veja pág. 160) com a elite local, industriais, nobres ou demais aristocratas.\n\nTambém adicionam +2 em rolagens de Conhecimento Geral feitas para conhecer a etiqueta da elite, reconhecer ramos familiares e heráldica ou rumores envolvendo outros de sua posição."
+    "descricao": "Este indivíduo nasceu com privilégios ou os adquiriu ao longo da vida. Pode ter dinheiro ou não (Vantagem Rico ou Podre de Rico), mas ainda anda no círculo social da elite dentro do cenário."
   },
   {
     "id": "atraente",
@@ -176,7 +176,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes.\n\nAdicione +1 em rolagens de Performance e Persuadir se o alvo estiver atraído pelo seu tipo em geral (gênero, sexo, espécie etc.)."
+    "descricao": "Não é segredo que as pessoas ficam mais dispostas a ajudar quem consideram fisicamente atraentes."
   },
   {
     "id": "muito_atraente",
@@ -215,7 +215,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam Atletismo como se ela estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso. Também podem resistir a Desafios de Atletismo com força, se desejarem. Por fim, Brutamontes aumentam em +1 a Curta Distância de qualquer item arremessado. Dobre isso para a Média Distância ajustada e dobre novamente para a Longa Distância.\n\nSe a Distância de um item arremessado for 3/6/12, por exemplo, a Distância para o Brutamontes é 4/8/16."
+    "descricao": "Brutamontes se focam em força e capacidade física no lugar de coordenação e flexibilidade. Tratam Atletismo como se ela estivesse ligada a Força no lugar de Agilidade para propósitos de Progresso."
   },
   {
     "id": "carismatico",
@@ -253,7 +253,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Quem possui esta Vantagem aprendeu a dominar seus medos ou lidou com tantos horrores que acabou se habituando. Estas figuras valentes e exploradoras adicionam +2 em Testes de Medo e subtraem 2 dos resultados da Tabela de Medo (veja pág. 140)."
+    "descricao": "Quem possui esta Vantagem aprendeu a dominar seus medos ou lidou com tantos horrores que acabou se habituando."
   },
   {
     "id": "cura_rapida",
@@ -272,7 +272,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco (veja Cura, pág. 112)."
+    "descricao": "Personagens com esta bênção adicionam +2 ao Vigor em rolagens de cura natural e testam a cada três dias em vez de cinco ."
   },
   {
     "id": "famoso",
@@ -289,7 +289,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com essa vantagem são uma espécie de subcelebridade. Podem ter reconhecimento como membro popular da classe barda em um feudo em particular, uma estrela de rock menor ou ter atuado em um filme B. Ganham o dobro do cachê normal quando estiverem realizando uma performance (veja Performance, pág. 38). Também podem usar sua fama para adicionar +1 em rolagens de Persuadir se o alvo for amigável e souber quem são (rolagem de Conhecimento Geral modificada pela probabilidade do indivíduo conhecer a celebridade). A parte ruim de ser Famoso é que a personagem é geralmente reconhecida: pessoas querem algo dela com certa frequência, pode sofrer perseguição por parte de fãs ou admiradores, ou ainda não conseguir se livrar de obrigações, apresentações ou outras atividades sem se complicar."
+    "descricao": "Personagens com essa vantagem são uma espécie de subcelebridade."
   },
   {
     "id": "muito_famoso",
@@ -308,7 +308,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Personagens com esta Vantagem realmente têm fama. São bastante conhecidas em um círculo grande — país, grande indústria ou mídia popular (cinema, televisão, música etc.). Fazem 5× o cachê normal quando se apresentam e adicionam +2 em Persuadir ao influenciar indivíduos amigáveis que as conhecem. O preço também é mais alto: mais exigências de tempo, obrigações, rivais, escândalos e incapacidade de se misturar à multidão sem serem reconhecidas."
+    "descricao": "Personagens com esta Vantagem realmente têm fama. São bastante conhecidas em um círculo grande — país, grande indústria ou mídia popular (cinema, televisão, música etc.)."
   },
   {
     "id": "furioso",
@@ -325,7 +325,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Furiosos tornam-se selvagens e quase incontroláveis quando ficam com “sangue nos olhos”, mas continuam verdadeiras máquinas de matar! Imediatamente após sofrer um Ferimento ou resultado Abalado (só por dano físico), alguém com essa Vantagem deve fazer um teste de Astúcia ou ficar Furioso. Você pode falhar voluntariamente, se desejar.\n\nFicar Furioso tem os seguintes efeitos:\n- FÚRIA: Força aumenta em um tipo de dado e todo ataque corpo a corpo deve ser Ataque Selvagem (veja pág. 115). Não é permitido usar perícias que requeiram inteligência ou concentração (critério do Mestre).\n- ENRAIVECIDO: Adrenalina e raiva fortalecem os músculos, adicionando +2 em Resistência. Ignore um nível de penalidades por Ferimentos (acumula com outras habilidades que reduzam essas penalidades).\n- IMPRUDÊNCIA: Toda vez que rolar Falha Crítica em Lutar, acerta um alvo aleatório no seu raio de ataque (amigo ou inimigo). Se não houver, o golpe erra e pode quebrar objetos próximos.\n\nDepois de cinco rodadas consecutivas de fúria, ocorre um nível de Fadiga. Com dez rodadas, outro nível de Fadiga e a fúria termina. Também é possível encerrar a fúria a qualquer momento fazendo teste de Astúcia –2 (ação livre), possivelmente evitando a Fadiga se obtiver sucesso. Se entrar em fúria de novo, comece uma nova contagem, mesmo na mesma batalha."
+    "descricao": "Furiosos tornam-se selvagens e quase incontroláveis quando ficam com “sangue nos olhos”, mas continuam verdadeiras máquinas de matar!"
   },
   {
     "id": "impulso",
@@ -344,7 +344,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Impulso reflete energia ou espírito. Quando você gasta um Bene para rerrolar uma Característica, adicione +2 ao total da rerrolagem. Não se aplica a rolagens de dano nem a Absorção, a menos que use outro Bene para rerrolar Vigor."
+    "descricao": "Impulso reflete energia ou espírito. Quando você gasta um Bene para rerrolar uma Característica, adicione +2 ao total da rerrolagem."
   },
   {
     "id": "ligeiro",
@@ -382,7 +382,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6 (veja perícia Idiomas, pág. 35)."
+    "descricao": "Esta pessoa viaja o mundo e tem um ouvido apurado. Começa o jogo conhecendo um número de Idiomas igual à metade do seu dado de Astúcia, cada um em d6 ."
   },
   {
     "id": "musculoso",
@@ -402,7 +402,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Esta pessoa é muito forte ou está em ótima forma. Seu Tamanho aumenta em +1 (e a Resistência em 1), e a Força conta como dado maior para Sobrecarga (pág. 77) e Força Mínima para usar equipamentos sem penalidade (pág. 76). Não pode elevar Tamanho acima de +3."
+    "descricao": "Esta pessoa é muito forte ou está em ótima forma."
   },
   {
     "id": "prontidao",
@@ -438,7 +438,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reflexos ultrarrápidos: sempre que sacar Carta de Ação ≤ 5, pode descartá-la e sacar novamente até obter > 5. Personagens com Focado e Rápido sacam primeiro as cartas adicionais e escolhem qual usar; se for ≤ 5, usam a Vantagem para sacar até obter ≥ 6."
+    "descricao": "Reflexos ultrarrápidos: sempre que sacar Carta de Ação ≤ 5, pode descartá-la e sacar novamente até obter > 5."
   },
   {
     "id": "resistencia_arcana",
@@ -457,7 +457,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Magia e sobrenatural pouco afetam este indivíduo. Habilidades arcanas hostis contra ele sofrem −2 na rolagem e dano mágico é reduzido em 2. Mesmo se o poder não efetuar, consome Pontos de Poder e ainda pode afetar outros."
+    "descricao": "Magia e sobrenatural pouco afetam este indivíduo. Habilidades arcanas hostis contra ele sofrem −2 na rolagem e dano mágico é reduzido em 2."
   },
   {
     "id": "resistencia_arcana_aprimorada",
@@ -523,14 +523,13 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-      ],
+      "vantagens_previas": [],
       "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!).\nReceba um Bene adicional no início de cada sessão de jogo, de modo a ser frequentemente mais bem-sucedido que a maioria em tarefas importantes e para sobreviver a perigos incríveis."
+    "descricao": "Quem tem Sorte parece ser abençoado pelo destino, deuses ou qualquer força externa na qual acredite (ou que acredite nesta figura!)."
   },
   {
     "id": "sorte_grande",
@@ -571,7 +570,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Alguém com essa Vantagem conhece uma arma única (Excalibur, Old Betsy, Ferroada) como a palma da sua mão. Quando a usa, pode adicionar +1 em suas rolagens de Atletismo (arremessar), Lutar ou Atirar e +1 no Aparar quando ela está preparada (mesmo que seja arma à distância). É permitido escolher várias vezes, aplicando a uma arma diferente cada vez. Se perdida, pode substituí-la, mas benefícios entram em vigor só após alguns dias."
+    "descricao": "Alguém com essa Vantagem conhece uma arma única (Excalibur, Old Betsy, Ferroada) como a palma da sua mão."
   },
   {
     "id": "arma_predileta_aprimorada",
@@ -609,7 +608,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág. 114). Soma +1 quando golpeia com eles e causa Força + d4 de dano. Se já tiver dano por Garras ou Brigão, aumente o dado em um tipo. Não soma com outras Armas Naturais."
+    "descricao": "Alguém com essa Vantagem tem treinamento básico em artes marciais. Sempre está com armas, causa dano com punhos e pés (Armas Naturais, pág."
   },
   {
     "id": "guerreiro_marcial",
@@ -647,7 +646,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance (veja Ataques Livres, pág. 116)."
+    "descricao": "Uma vez por rodada, se não estiver Abalado ou Atordoado, ganha um ataque livre de Lutar contra adversário que entrar em seu Alcance ."
   },
   {
     "id": "atacar_primeiro_aprimorado",
@@ -687,7 +686,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Talento nato com armas de combate à distância. Se não se mover e não disparar acima de Cadência de Tiro 1 na primeira ação, pode adicionar +1 em uma rolagem de Atletismo ou Atirar, ou ignorar até 2 pontos em penalidades por localização, cobertura, distância, escala ou velocidade. Não se acumula com Mirar e não vale para ataques extras."
+    "descricao": "Talento nato com armas de combate à distância."
   },
   {
     "id": "atirar_com_duas_armas",
@@ -706,7 +705,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Funciona como Lutar com Duas Armas, mas para armas à distância. Permite disparo de cada mão em duas ações sem penalidade por Ação Múltipla. Se tiver Lutar com Duas Armas, segunda ação pode ser corpo a corpo."
+    "descricao": "Funciona como Lutar com Duas Armas, mas para armas à distância. Permite disparo de cada mão em duas ações sem penalidade por Ação Múltipla."
   },
   {
     "id": "bloquear",
@@ -861,7 +860,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé (veja pág. 148)."
+    "descricao": "Pratica parkour, movendo-se em terreno acidentado com Movimentação total a pé. +2 em Atletismo para escalar e em Perseguições a pé ."
   },
   {
     "id": "disparo_duplo",
@@ -880,7 +879,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dispara dois tiros rápidos sem prejudicar mira. Só com armas de Cadência de Tiro 1 que disparam dois tiros sem recarregar. +1 em ataque e dano, gasta bala extra. Não combina com Disparo Rápido. Com rajada de três balas (pág. 77), +2 em Atirar e dano, gasta seis balas."
+    "descricao": "Dispara dois tiros rápidos sem prejudicar mira. Só com armas de Cadência de Tiro 1 que disparam dois tiros sem recarregar."
   },
   {
     "id": "disparo_rapido",
@@ -937,7 +936,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar (veja pág. 111)."
+    "descricao": "Ignore penalidades por Ferimentos em rolagens de Vigor para evitar Sangrar ."
   },
   {
     "id": "muito_duro_de_matar",
@@ -994,7 +993,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Sub +2 quando Evadindo de ataques em área (veja pág. 122)."
+    "descricao": "Sub +2 quando Evadindo de ataques em área ."
   },
   {
     "id": "finta",
@@ -1161,7 +1160,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114)."
+    "descricao": "Ignora penalidade −2 ao usar armas improvisadas ."
   },
   {
     "id": "lutar_com_duas_armas",
@@ -1199,7 +1198,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignore penalidade por Plataforma Instável (veja pág. 124) e penalidade de corrida reduzida a −1."
+    "descricao": "Ignore penalidade por Plataforma Instável  e penalidade de corrida reduzida a −1."
   },
   {
     "id": "matador_de_gigantes",
@@ -1216,7 +1215,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores (veja pág. 215–216)."
+    "descricao": "+1d6 de dano ao atacar criaturas de Tamanho ≥ 3 maiores ."
   },
   {
     "id": "nervos_de_aco",
@@ -1273,7 +1272,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Absorção e Vigor para evitar Nocaute (veja pág. 122)."
+    "descricao": "+2 em Absorção e Vigor para evitar Nocaute ."
   },
   {
     "id": "reflexos_de_combate",
@@ -1347,7 +1346,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2 (veja pág. 126)."
+    "descricao": "Se não se movimentar, ignore penalidade por Recuo em Cadência ≥ 2 ."
   },
   {
     "id": "tiro_mortal",
@@ -1711,7 +1710,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades. Para sobreviverem a tais provações, as forças do bem (ou do mal) concedem milagres e a habilidade de transformar seu favor em proteção sobrenatural.\nAdicione +1 ao total do valor final de uma rolagem de Absorção para cada Ponto de Poder gasto, até um máximo de +4."
+    "descricao": "Fiéis enfrentam grandes perigos à serviço de suas divindades."
   },
   {
     "id": "mago",
@@ -2423,7 +2422,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Após beber destilado, +1 tipo de dado em Vigor (e Resistência) e ignore 1 penalidade por Ferimento. Astúcia, Agilidade e perícias sofrem −1. Dura 1 hora, depois 1 Fadiga por 4 h."
+    "descricao": "Após beber destilado, +1 tipo de dado em Vigor (e Resistência) e ignore 1 penalidade por Ferimento. Astúcia, Agilidade e perícias sofrem −1."
   },
   {
     "id": "curandeiro",
@@ -2476,7 +2475,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Perceber em testes de Surpresa (pág. 127); ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
+    "descricao": "+2 em Perceber em testes de Surpresa ; ampliação permite agir em Aguardar. Em outras situações, rolagem de Perceber com −2 (ou +2 se permitido) para detectar perigo; impede Finalização."
   },
   {
     "id": "senhor_das_feras",
@@ -2495,7 +2494,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Animais não atacam a menos que iniciem; atrai um companheiro animal Extra Tamanho 0 (substituível em 1d4 dias). Repetível: ganha animal adicional, aumenta uma característica em +1 dado, aumenta Tamanho máximo do animal em +1 (max +3), ou torna animal Carta Selvagem (personagem Estágio Heroico)."
+    "descricao": "Animais não atacam a menos que iniciem; atrai um companheiro animal Extra Tamanho 0 (substituível em 1d4 dias)."
   },
   {
     "id": "sucateiro",
@@ -2608,7 +2607,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)"
+    "descricao": "Em um cenário de supers, a Vantagem Parceiro  pode ser adquirida quando o super alcança o Estágio Veterano."
   },
   {
     "id": "duro_na_queda",
@@ -2665,7 +2664,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8 (veja Bônus de Dano, pág. 109)."
+    "descricao": "Aparar +1 e dado bônus de dano em Lutar passa a d8 ."
   },
   {
     "id": "mestre_das_armas",
@@ -2733,7 +2732,7 @@
     "requisitos": {
       "estagio": "Novato"
     },
-    "descricao": "O Limite de Tensão e o máximo do ciborgue aumentam em +4 (e acumulam com as Vantagens Cibertolerância e Cibersamurai), e ganha $20K em implantes instalados. O herói ou heroína não faz mais rolagens de Cura Natural, mas ainda pode Sangrar, e os Ferimentos são recuperados com a menor perícia entre Curar ou Consertar do médico. No entanto, o preço dessa conversão é alto. É necessário pegar uma Complicação Maior adicional que não seja de Cibernéticos ou rolar um resultado permanente na tabela Efeitos Colaterais de Cibernérticos."
+    "descricao": "O Limite de Tensão e o máximo do ciborgue aumentam em +4 (e acumulam com as Vantagens Cibertolerância e Cibersamurai), e ganha $20K em implantes instalados."
   },
   {
     "id": "jockey_mecha",
@@ -2789,7 +2788,7 @@
         "Comando"
       ]
     },
-    "descricao": "Você tem um transportador de carga leve ou uma nave batedora própria. Você é responsável pela manutenção, custos e tripulação. Começa a campanha com uma nave estelar grande o suficiente para acomodar o grupo (geralmente um Transporte Multitarefa)."
+    "descricao": "Você tem um transportador de carga leve ou uma nave batedora própria. Você é responsável pela manutenção, custos e tripulação."
   },
   {
     "id": "equipado",
@@ -2799,7 +2798,7 @@
     "requisitos": {
       "estagio": "Novato"
     },
-    "descricao": "Você começa com 10 vezes os fundos iniciais em posses (geralmente $10.000). Se usados para ciberequipamentos ou Mods Robóticos, já vêm instalados. Benefício único (não reposto se perdido)."
+    "descricao": "Você começa com 10 vezes os fundos iniciais em posses (geralmente $10.000). Se usados para ciberequipamentos ou Mods Robóticos, já vêm instalados."
   },
   {
     "id": "habitante_gravidade_intensa",
@@ -2809,7 +2808,7 @@
     "requisitos": {
       "estagio": "Novato"
     },
-    "descricao": "Vem de um mundo de gravidade intensa. Trate sua Força como um tipo de dado maior para Sobrecarga e Força Mínima de armaduras/armas sem penalidade. Dobra as distâncias normais de salto."
+    "descricao": "Vem de um mundo de gravidade intensa. Trate sua Força como um tipo de dado maior para Sobrecarga e Força Mínima de armaduras/armas sem penalidade."
   },
   {
     "id": "terreno_favorito",
@@ -2822,7 +2821,7 @@
         "Sobrevivência": 6
       }
     },
-    "descricao": "Escolha um terreno (incluindo Urbano/Estações Espaciais). Ganha rerrolagem gratuita em Sobrevivência e Perceber nele. Compra uma Carta de Ação adicional para iniciativa quando estiver no terreno favorito."
+    "descricao": "Escolha um terreno (incluindo Urbano/Estações Espaciais). Ganha rerrolagem gratuita em Sobrevivência e Perceber nele."
   },
   {
     "id": "gerenciador_municao",
@@ -2900,7 +2899,7 @@
       "Guerreiro Estelar",
       "Telepata"
     ],
-    "descricao": "Por toda a galáxia, existem indivíduos especiais que desenvolveram habilidades psíquicas ou espirituais limitadas para ajudá-los na profissão que escolheram. Não são tão poderosos ou versáteis quanto aqueles com Antecedentes Arcanos, mas seus poderes limitados são mais confiáveis.\n\nPersonagens com Poderes Místicos têm os poderes listados a seguir e 10 Pontos de Poder que recarregam normalmente. Como ação livre limitada, ativam o poder automaticamente com um sucesso por seu custo normal, ou com uma ampliação por 2 Pontos de Poder adicionais. É possível usar Modificadores de Poder aplicáveis se desejar (ao custo normal).\n\nPoderes Místicos não garantem acesso a Vantagens que requeiram um Antecedente Arcano, mas é possível adquirir as Vantagens Pontos de Poder ou Drenar Alma (substituindo o requisito de perícia arcana por Espírito). Se também tiver um Antecedente Arcano, nenhuma de suas Vantagens ou habilidades poderá ser usada com Poderes Místicos e vice-versa.\n\nPoderes com “Pessoal” ou “Alcance” não recebem nenhum benefício dessas Limitações.\n\n„ GUERREIRO ESTELAR (Lutar d8+): Aumentar Característica (apenas Lutar, Força e Vigor), deflexão, devastação, proteção, telecinese. Todos, exceto telecinese, têm a Limitação Pessoal.\n\n„ TELEPATA (Astúcia d8+): Ajuda, atordoar, confusão, empatia, leitura mental. Todos têm Limitação Alcance."
+    "descricao": "Por toda a galáxia, existem indivíduos especiais que desenvolveram habilidades psíquicas ou espirituais limitadas para ajudá-los na profissão que escolheram."
   },
   {
     "id": "adaptacao_atmosferica",
