@@ -31,7 +31,7 @@ class CriadorStateArcaneSkillGrantTest {
     private fun fantasiaState() = CriadorState().apply {
         listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
         listaPericias = listOf(
-            Pericia(nome = "Conjurar", atributo = "ASTUCIA", basica = false, origem = "BASICO")
+            Pericia(nome = "Conjurar", atributo = "ASTUCIA", basica = false, origem = "FANTASIA")
         )
         ensureAllAtributosRegistered()
         ensureAllPericiasRegistered()
