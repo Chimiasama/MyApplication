@@ -2,6 +2,7 @@ package com.example.swadebuilder
 
 import com.example.swadebuilder.model.AdvancementAction
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
 import org.junit.Assert.assertEquals
@@ -28,6 +29,12 @@ class CriadorStateArcaneSkillGrantTest {
     )
 
     private fun fantasiaState() = CriadorState().apply {
+        listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
+        listaPericias = listOf(
+            Pericia(nome = "Conjurar", atributo = "ASTUCIA", basica = false, origem = "BASICO")
+        )
+        ensureAllAtributosRegistered()
+        ensureAllPericiasRegistered()
         compendioFantasiaAtivo = true
         arcanoInfo = mapOf(
             "MAGO" to Triple(6, 15, "Conjurar"),
