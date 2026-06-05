@@ -2065,6 +2065,14 @@ class CriadorState {
         return idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nameKey == "BRUTAMONTES" || nameKey == "BRAWNY"
     }
 
+    private fun rawValuesBeforeArcaneSkillGrant(v: Vantagem): Map<String, Int>? {
+        if (modoProgressaoAtivo) return null
+        if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioPathfinderAtivo) return null
+        if (v.toArcanoKey() == null) return null
+
+        return periciasComIdiomas().associate { per -> per.nome to rawTotal(per) }
+    }
+
     fun comprarVantagem(v: Vantagem, onFeedback: (String) -> Unit = {}): Boolean {
         // Special case: Power Points
         val isPowerPoint = v.nome.contains("Pontos de Poder", true) || v.nomeExibicao.contains("Pontos de Poder", true)
@@ -2087,6 +2095,8 @@ class CriadorState {
             !isVantagemAutomatica(v)
 
         if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
+
+        val rawBeforeArcaneSkillGrant = rawValuesBeforeArcaneSkillGrant(v)
 
         applyVantagemDinheiro(v)
         checkAndRefundResourcePb()
@@ -2111,7 +2121,10 @@ class CriadorState {
         }
 
         val enforcePoolLimit = !v.isBrutamontes()
-        rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+        rebuildAllPericiaStacks(
+            enforcePoolLimit = enforcePoolLimit,
+            desiredRawValues = rawBeforeArcaneSkillGrant
+        )
 
         return true
     }
@@ -2492,7 +2505,14 @@ class CriadorState {
         return true
     }
 
-    fun periciaStartRaw(anc: String, per: Pericia): Int {
+    fun periciaStartRaw(anc: String, per: Pericia): Int =
+        periciaStartRawInternal(anc, per, includeArcaneVantage = { true })
+
+    private fun periciaStartRawInternal(
+        anc: String,
+        per: Pericia,
+        includeArcaneVantage: ((Vantagem) -> Boolean)?
+    ): Int {
         val ancKey = anc.keyify()
         val perKey = per.nome.keyify()
 
@@ -2675,30 +2695,58 @@ class CriadorState {
             }
         }
 
-        // Fantasia: Antecedente Arcano concede d4 na perícia (se não tiver)
-        if (compendioFantasiaAtivo || compendioHorrorAtivo || compendioPathfinderAtivo) {
-            val absVantages = vantagensSelecionadas.filter { it.toArcanoKey() != null }
-
-            // Pathfinder: Apenas o SEGUNDO (ou posteriores) Antecedente Arcano concede a perícia d4 grátis.
-            // O primeiro (classe principal) deve ser comprado com pontos.
-            val absToConsider = if (compendioPathfinderAtivo) {
-                if (absVantages.size > 1) absVantages.drop(1) else emptyList()
-            } else {
-                absVantages
-            }
-
-            absToConsider.forEach { vant ->
-                val abKey = vant.toArcanoKey()?.normAAKey()
-                if (abKey != null && arcanoInfo.containsKey(abKey)) {
-                    val info = arcanoInfo[abKey]
-                    if (info != null && info.third.keyify() == perKey) {
-                        modifiedBase = maxOf(modifiedBase, 4)
-                    }
-                }
-            }
+        includeArcaneVantage?.let { predicate ->
+            modifiedBase = maxOf(modifiedBase, arcaneSkillStartRawFor(per, predicate))
         }
 
         return modifiedBase
+    }
+
+    private fun arcaneSkillStartRawFor(
+        per: Pericia,
+        includeVantage: (Vantagem) -> Boolean = { true }
+    ): Int {
+        if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioPathfinderAtivo) return 0
+
+        val perKey = per.nome.keyify()
+        val absVantages = vantagensSelecionadas.filter { includeVantage(it) && it.toArcanoKey() != null }
+
+        // Pathfinder: Apenas o SEGUNDO (ou posteriores) Antecedente Arcano concede a perícia d4 grátis.
+        // O primeiro (classe principal) deve ser comprado com pontos.
+        val absToConsider = if (compendioPathfinderAtivo) {
+            if (absVantages.size > 1) absVantages.drop(1) else emptyList()
+        } else {
+            absVantages
+        }
+
+        val grantsArcaneSkill = absToConsider.any { vant ->
+            val abKey = vant.toArcanoKey()?.normAAKey()
+            val info = abKey?.let { arcanoInfo[it] }
+            info?.third?.keyify() == perKey
+        }
+
+        return if (grantsArcaneSkill) 4 else 0
+    }
+
+    private fun rawFromStartAndIncrements(startRaw: Int, increments: Int): Int {
+        if (startRaw == 0 && increments == 0) return 0
+
+        val (startForSteps, steps) = if (startRaw == 0) {
+            4 to (increments - 1).coerceAtLeast(0)
+        } else {
+            startRaw to increments.coerceAtLeast(0)
+        }
+
+        return applySuperStepsFrom(startForSteps, steps)
+    }
+
+    private fun xpArcaneAdvantageIds(): Set<String> {
+        val historyIds = advancementHistory
+            .filterIsInstance<com.example.swadebuilder.model.AdvancementAction.SpendOnAdvantage>()
+            .filter { it.arcanoKey != null }
+            .map { it.advantageId }
+        val pendingId = advantageForCurrentAdvancement?.takeIf { arcanoEmCompraViaXpKey != null }
+        return (historyIds + listOfNotNull(pendingId)).toSet()
     }
 
     private val _periciasComIdiomas: List<Pericia> by derivedStateOf {
@@ -4323,20 +4371,32 @@ class CriadorState {
     }
 
     fun rawTotal(per: Pericia): Int {
-        val startRaw     = periciaStartRaw(ancestralidade, per)
-        val normalIncs   = baseIncsPorPericia[per] ?: 0
+        val startRaw = periciaStartRaw(ancestralidade, per)
+        val normalIncs = baseIncsPorPericia[per] ?: 0
         val complicsIncs = compIncsPorPericia[per] ?: 0
-        val totalIncs    = normalIncs + complicsIncs
+        val totalIncs = normalIncs + complicsIncs
 
-        if (startRaw == 0 && totalIncs == 0) return 0
+        if (modoProgressaoAtivo) {
+            val xpArcaneIds = xpArcaneAdvantageIds()
+            if (xpArcaneIds.isNotEmpty()) {
+                val startWithoutXpArcane = periciaStartRawInternal(
+                    ancestralidade,
+                    per,
+                    includeArcaneVantage = { it.id !in xpArcaneIds }
+                )
+                val xpArcaneStart = if (startRaw > startWithoutXpArcane) startRaw else 0
 
-        val (startForSteps, steps) = if (startRaw == 0) {
-            4 to (totalIncs - 1).coerceAtLeast(0)
-        } else {
-            startRaw to totalIncs.coerceAtLeast(0)
+                if (xpArcaneStart > 0) {
+                    val frozenIncs = (frozenSkillIncrements[per.nome] ?: 0).coerceIn(0, normalIncs)
+                    val progressionIncs = (normalIncs - frozenIncs).coerceAtLeast(0)
+                    val preXpRaw = rawFromStartAndIncrements(startWithoutXpArcane, frozenIncs + complicsIncs)
+                    val effectiveStart = maxOf(preXpRaw, xpArcaneStart)
+                    return rawFromStartAndIncrements(effectiveStart, progressionIncs)
+                }
+            }
         }
 
-        return applySuperStepsFrom(startForSteps, steps)
+        return rawFromStartAndIncrements(startRaw, totalIncs)
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
@@ -5984,7 +6044,8 @@ class CriadorState {
 
     fun rebuildAllPericiaStacks(
         feedbackMessages: MutableList<String> = mutableListOf(),
-        enforcePoolLimit: Boolean = true
+        enforcePoolLimit: Boolean = true,
+        desiredRawValues: Map<String, Int>? = null
     ) {
         if (modoProgressaoAtivo) return
 
@@ -6019,7 +6080,7 @@ class CriadorState {
         val input = RebuildSkillStacksUseCase.Input(
             pericias = pericias,
             totalSpPool = totalSpPool,
-            currentRawValues = pericias.associate { it.nome to rawTotal(it) },
+            currentRawValues = desiredRawValues ?: pericias.associate { it.nome to rawTotal(it) },
             startRawValues = pericias.associate { it.nome to periciaStartRaw(ancestralidade, it) },
             capRawValues = pericias.associate { it.nome to periciaCapRaw(it) },
             minRawValues = pericias.associate { it.nome to maxOf(if (isPericiaBasicaEfetiva(it)) 4 else 0, linguistaMinRawFor(it)) },
