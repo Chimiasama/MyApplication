@@ -2067,7 +2067,7 @@ class CriadorState {
 
     private fun rawValuesBeforeArcaneSkillGrant(v: Vantagem): Map<String, Int>? {
         if (modoProgressaoAtivo) return null
-        if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioPathfinderAtivo) return null
+        if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioPathfinderAtivo && !compendioSciFiAtivo) return null
         if (v.toArcanoKey() == null) return null
 
         return periciasComIdiomas().associate { per -> per.nome to rawTotal(per) }
@@ -2706,18 +2706,12 @@ class CriadorState {
         per: Pericia,
         includeVantage: (Vantagem) -> Boolean = { true }
     ): Int {
-        if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioPathfinderAtivo) return 0
+        if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioPathfinderAtivo && !compendioSciFiAtivo) return 0
 
         val perKey = per.nome.keyify()
         val absVantages = vantagensSelecionadas.filter { includeVantage(it) && it.toArcanoKey() != null }
 
-        // Pathfinder: Apenas o SEGUNDO (ou posteriores) Antecedente Arcano concede a perícia d4 grátis.
-        // O primeiro (classe principal) deve ser comprado com pontos.
-        val absToConsider = if (compendioPathfinderAtivo) {
-            if (absVantages.size > 1) absVantages.drop(1) else emptyList()
-        } else {
-            absVantages
-        }
+        val absToConsider = absVantages
 
         val grantsArcaneSkill = absToConsider.any { vant ->
             val abKey = vant.toArcanoKey()?.normAAKey()
