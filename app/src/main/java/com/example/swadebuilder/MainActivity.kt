@@ -781,11 +781,15 @@ class MainActivity : ComponentActivity() {
                             Scaffold(
                                 snackbarHost = { SnackbarHost(hostState = snackHost) },
                                 floatingActionButton = {
-                                    if (!state.modoProgressaoAtivo && state.creationComplete()) {
+                                    if (!state.modoProgressaoAtivo && !state.isNpcExibicao && (state.modoLivre || state.creationComplete())) {
                                         ExtendedFloatingActionButton(
                                             onClick = {
                                                 triggerFeedback()
-                                                requestNavigation(PendingNavigationAction.StartProgression)
+                                                if (state.modoLivre) {
+                                                    state.isNpcExibicao = true
+                                                } else {
+                                                    requestNavigation(PendingNavigationAction.StartProgression)
+                                                }
                                             },
                                             icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
                                             text = { Text("Finalizar") },

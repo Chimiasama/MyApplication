@@ -474,6 +474,8 @@ class CriadorViewModel(
         state.arcanoSnapshotAntesDaCompra = null
         state.mostrandoPoderesProgresso = false
         state.mostrandoAtributosProgresso = false
+        state.modoLivre = false
+        state.isNpcExibicao = false
 
         // Reset Supers
         state.superInvestments.clear()

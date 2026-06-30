@@ -21,6 +21,20 @@ private fun CriadorState.resolveScenarioRules() = RulesResolver().resolve(
 )
 
 fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
+    if (modoLivre) {
+        add("BASICO")
+        add("FANTASIA")
+        add("SCI_FI")
+        add("SUPER")
+        add("HORROR")
+        add("PATHFINDER")
+        add("DEADLANDS")
+        add("ARTE_DA_GUERRA")
+        add("CIDADE_SOL_VAPOR")
+        add("WISEGUYS")
+        add("CRYSTAL_HEART")
+        return@buildSet
+    }
     // 1. Add active compendiums to the set
     if (compendioFantasiaAtivo) add("FANTASIA")
     if (compendioSciFiAtivo) add("SCI_FI")

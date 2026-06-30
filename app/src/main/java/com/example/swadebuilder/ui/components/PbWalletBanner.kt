@@ -38,8 +38,9 @@ fun PbWalletBanner(
     onSpend: () -> Unit,
     onRefund: () -> Unit,
     modifier: Modifier = Modifier,
+    isNpcMode: Boolean = false
 ) {
-    val hasBonus = pcTotal > 0
+    val hasBonus = pcTotal > 0 && !isNpcMode
     val showActions = hasBonus && (spendEnabled || refundEnabled)
 
     if (!hasBonus) return

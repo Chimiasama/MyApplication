@@ -88,12 +88,14 @@ fun AtributosContent(
             .padding(12.dp)
     ) {
         // Updated Header to show potential BP
-        SectionHeader(
-            onHelpClick = null,
-            centerText = "Pontos de Atributo: ${state.pontosAtributo}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
-            onListaCompletaClick = null,
-            listaCompletaText = ""
-        )
+        if (!state.modoLivre) {
+            SectionHeader(
+                onHelpClick = null,
+                centerText = "Pontos de Atributo: ${state.pontosAtributo}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
+                onListaCompletaClick = null,
+                listaCompletaText = ""
+            )
+        }
 
         Spacer(Modifier.height(4.dp))
 
@@ -116,7 +118,7 @@ fun AtributosContent(
             val allowedByRule = !state.isAttributeRankLimitReached() || state.isAttributeFreeForMonster(nome)
 
             // Updated logic: allow increase if points > 0 OR if we have enough BP to auto-buy
-            val canIncrease = !locked && (state.pontosAtributo > 0 || pcLivres >= 2) && (nextRaw <= maxRaw) && allowedByRule
+            val canIncrease = if (state.modoLivre) true else !locked && (state.pontosAtributo > 0 || pcLivres >= 2) && (nextRaw <= maxRaw) && allowedByRule
 
             val canReduce = run {
                 val baseCanReduce = !locked && stack.isNotEmpty() && (prevRaw >= minReq)
@@ -202,9 +204,9 @@ fun AtributosContent(
 
                     IconButton(
                         onClick = {
-                            if (nextRaw > maxRaw) return@IconButton
+                            if (!state.modoLivre && nextRaw > maxRaw) return@IconButton
 
-                            if (state.pontosAtributo <= 0) {
+                            if (!state.modoLivre && state.pontosAtributo <= 0) {
                                 // Auto-spend BP
                                 if (!state.gastarPcParaAtributo()) return@IconButton
                             }

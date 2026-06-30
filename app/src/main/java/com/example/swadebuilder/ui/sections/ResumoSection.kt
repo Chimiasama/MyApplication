@@ -267,6 +267,35 @@ fun SummaryContent(
         activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
         )
 
+        if (state.modoLivre) {
+            val violations = state.calculateNpcViolations()
+            if (violations.isNotEmpty()) {
+                Spacer(Modifier.height(12.dp))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.error)
+                ) {
+                    Column(Modifier.padding(12.dp)) {
+                        Text(
+                            "Relatório de NPC (Custos Excedidos)",
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        violations.forEach { violation ->
+                            Text(
+                                "• $violation",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         Spacer(Modifier.height(12.dp))
 
         derivedSection?.let {

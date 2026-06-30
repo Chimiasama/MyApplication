@@ -433,12 +433,14 @@ fun VantagensContent(
     // Reusable Header Content
     val headerContent: @Composable () -> Unit = {
         Column {
-            SectionHeader(
-                onHelpClick = null,
-                centerText = "Pontos de Vantagem: ${state.pontosVantagem}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
-                onListaCompletaClick = null,
-                listaCompletaText = ""
-            )
+            if (!state.modoLivre) {
+                SectionHeader(
+                    onHelpClick = null,
+                    centerText = "Pontos de Vantagem: ${state.pontosVantagem}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
+                    onListaCompletaClick = null,
+                    listaCompletaText = ""
+                )
+            }
 
             Spacer(Modifier.size(4.dp))
 

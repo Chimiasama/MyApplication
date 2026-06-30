@@ -159,13 +159,15 @@ fun ComplicacoesSection(
                 modifier = Modifier
                     .fillMaxWidth()
             ) {
-                SectionHeader(
-                    onHelpClick          = null,
-                    centerText           = "Pontos Complicação: Livres $livresPc / $totalPc",
-                    onCenterClick        = null,
-                    onListaCompletaClick = null,
-                    listaCompletaText    = ""
-                )
+                if (!state.modoLivre) {
+                    SectionHeader(
+                        onHelpClick          = null,
+                        centerText           = "Pontos Complicação: Livres $livresPc / $totalPc",
+                        onCenterClick        = null,
+                        onListaCompletaClick = null,
+                        listaCompletaText    = ""
+                    )
+                }
 
                 if (showTempError) {
                     Spacer(Modifier.height(8.dp))
