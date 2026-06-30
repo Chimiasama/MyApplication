@@ -46,7 +46,8 @@ class ValidateSelectionUseCaseTest {
             nasceUmHeroi = false,
             pvFromXpOutstanding = 0,
             tropoSelecionadoId = null,
-            getBestPericia = { null }
+            getBestPericia = { null },
+            modoLivre = false
         )
     }
 

@@ -3706,7 +3706,6 @@ class CriadorState {
     var frozenAdvantageCount by mutableIntStateOf(0)
 
     var pontosAtributo by mutableIntStateOf(5)
-        private set
 
     var armadura by mutableIntStateOf(0)
 
