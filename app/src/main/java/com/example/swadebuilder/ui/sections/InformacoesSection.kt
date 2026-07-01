@@ -49,7 +49,6 @@ fun InformacoesSection(
 
     var showProgressDialog by rememberSaveable { mutableStateOf(false) }
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
-    var showNpcWarning by rememberSaveable { mutableStateOf(false) }
     var dinheiroInput by rememberSaveable { mutableStateOf(state.dinheiro.toString()) }
     val focusManager = LocalFocusManager.current
 
@@ -70,20 +69,6 @@ fun InformacoesSection(
 
             Spacer(Modifier.height(8.dp))
 
-            if (!state.modoLivre) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text("Transformar em NPC (Modo Livre)", style = MaterialTheme.typography.bodyMedium)
-                    androidx.compose.material3.Switch(
-                        checked = state.modoLivre,
-                        onCheckedChange = { if (it) showNpcWarning = true }
-                    )
-                }
-                Spacer(Modifier.height(8.dp))
-            }
 
             if (state.emProgresso && !state.usaRiqueza && !state.usaRequisicao) {
                 TextButton(onClick = {
@@ -314,22 +299,6 @@ fun InformacoesSection(
         }
     }
 
-    if (showNpcWarning) {
-        AlertDialog(
-            onDismissRequest = { showNpcWarning = false },
-            title = { Text("Transformar em NPC?") },
-            text = { Text("Ao ativar o Modo Livre, este personagem será transformado em um NPC. Custos de pontos e requisitos serão ignorados, e a progressão de XP padrão será desabilitada. Esta ação é irreversível para este personagem.") },
-            confirmButton = {
-                TextButton(onClick = {
-                    state.modoLivre = true
-                    showNpcWarning = false
-                }) { Text("Confirmar") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showNpcWarning = false }) { Text("Cancelar") }
-            }
-        )
-    }
 }
 
 @Composable
