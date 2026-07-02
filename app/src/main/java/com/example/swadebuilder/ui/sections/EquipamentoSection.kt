@@ -431,6 +431,8 @@ fun EquipamentoSection(
                     onListaCompletaClick = null,
                     listaCompletaText = ""
                 )
+            } else {
+                Spacer(Modifier.height(8.dp))
             }
 
             if (usaRequisicao && (emProgresso || modoProgressaoAtivo)) {

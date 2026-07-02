@@ -2096,7 +2096,7 @@ class CriadorState {
             (v.requisitos.estagio.isBlank() || v.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
             !isVantagemAutomatica(v)
 
-        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
+        if (!modoLivre && !isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
 
         val rawBeforeArcaneSkillGrant = rawValuesBeforeArcaneSkillGrant(v)
 
@@ -5887,7 +5887,7 @@ class CriadorState {
 
     fun increasePericiaFromAdvancement(per: Pericia, cost: Int, feedbackMessages: MutableList<String>? = null) {
         // Safety check for creation mode + Idoso
-        if (!modoProgressaoAtivo) {
+        if (!modoProgressaoAtivo && !modoLivre) {
              val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
              if (hasIdoso && per.atributo != "Astúcia") {
                  val spentOnSmarts = periciasComIdiomas()
@@ -6344,22 +6344,23 @@ class CriadorState {
             }
         }
 
-        // 4. Spent Points (Bypassing the modoLivre=0 check in standard functions)
-        val remainingPa = calcularPontosAtributoRestantesForViolation()
-        if (remainingPa < 0) violations.add("Gastou ${-remainingPa} ponto(s) de atributo extras")
+        // 4. Points Check (Calculated directly to include PB and other sources)
+        val paRestantes = calcularPontosAtributoRestantesInternal()
+        if (paRestantes < 0) violations.add("Gastou ${-paRestantes} ponto(s) de atributo extras")
 
         val usedSp = spCostStackPorPericia.values.sumOf { it.sum() } +
                 compCostStackPorPericia.values.sumOf { it.sum() }
-        val remainingSp = totalSpPool - usedSp
-        if (remainingSp < 0) violations.add("Gastou ${-remainingSp} ponto(s) de perícia extras")
+        val spRestantes = totalSpPool - usedSp
+        if (spRestantes < 0) violations.add("Gastou ${-spRestantes} ponto(s) de perícia extras")
 
-        val pvExtra = -pontosVantagem
-        if (pvExtra > 0) violations.add("Gastou $pvExtra ponto(s) de vantagem extras")
+        if (pontosVantagem < 0) {
+            violations.add("Gastou ${-pontosVantagem} ponto(s) de vantagem extras")
+        }
 
         return violations
     }
 
-    private fun calcularPontosAtributoRestantesForViolation(): Int {
+    private fun calcularPontosAtributoRestantesInternal(): Int {
         var usados = 0
         for (nome in listaAtributos) {
             val atual = valoresAtributos[nome]!!.intValue

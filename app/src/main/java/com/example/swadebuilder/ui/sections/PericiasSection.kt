@@ -216,6 +216,8 @@ fun PericiasContent(
                         listaCompletaText    = ""
                     )
                     Spacer(Modifier.height(4.dp))
+                } else {
+                    Spacer(Modifier.height(8.dp))
                 }
                 // Legacy PB buttons removed
             }

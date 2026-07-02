@@ -167,6 +167,8 @@ fun ComplicacoesSection(
                         onListaCompletaClick = null,
                         listaCompletaText    = ""
                     )
+                } else {
+                    Spacer(Modifier.height(8.dp))
                 }
 
                 if (showTempError) {
