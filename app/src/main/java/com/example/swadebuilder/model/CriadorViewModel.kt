@@ -88,6 +88,15 @@ class CriadorViewModel(
     private fun periciasMapData() = gameDataStore.getPericiasMap()
 
     private fun moduleKeysFromFlags(flags: SnapshotFlags): Set<String> = buildSet {
+        if (flags.modoLivre) {
+            addAll(listOf(
+                ModuleIds.FANTASIA, ModuleIds.HORROR, ModuleIds.SCI_FI,
+                ModuleIds.PATHFINDER, ModuleIds.DEADLANDS, ModuleIds.CRYSTAL_HEART,
+                ModuleIds.ARTE_DA_GUERRA, ModuleIds.CIDADE_SOL_VAPOR,
+                ModuleIds.WISEGUYS, ModuleIds.SUPER
+            ))
+            return@buildSet
+        }
         if (flags.compendioFantasiaAtivo) add(ModuleIds.FANTASIA)
         if (flags.compendioHorrorAtivo) add(ModuleIds.HORROR)
         if (flags.compendioSciFiAtivo) add(ModuleIds.SCI_FI)

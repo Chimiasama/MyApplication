@@ -279,6 +279,14 @@ class CriadorState {
     var dominioClerigoPathfinderSelecionado by mutableStateOf<String?>(null)
 
     fun getActiveModuleKeys(): Set<String> {
+        if (modoLivre) {
+            return setOf(
+                ModuleIds.FANTASIA, ModuleIds.HORROR, ModuleIds.SCI_FI,
+                ModuleIds.PATHFINDER, ModuleIds.DEADLANDS, ModuleIds.CRYSTAL_HEART,
+                ModuleIds.ARTE_DA_GUERRA, ModuleIds.CIDADE_SOL_VAPOR,
+                ModuleIds.WISEGUYS, ModuleIds.SUPER
+            )
+        }
         val keys = mutableSetOf<String>()
         if (compendioFantasiaAtivo) keys.add(ModuleIds.FANTASIA)
         if (compendioHorrorAtivo) keys.add(ModuleIds.HORROR)
@@ -6336,15 +6344,7 @@ class CriadorState {
             }
         }
 
-        // 3. Unmet Advantages Requirements
-        val contextStandard = validationContext.copy(modoLivre = false)
-        vantagensSelecionadas.forEach { vant ->
-            if (!isVantagemAutomatica(vant) && !validateSelectionUseCase.execute(vant, contextStandard)) {
-                violations.add("Vantagem ${vant.nomeExibicao} com requisitos não atendidos")
-            }
-        }
-
-        // 4. Points Check (Calculated directly to include PB and other sources)
+        // 3. Points Check (Calculated directly to include PB and other sources)
         val paRestantes = calcularPontosAtributoRestantesInternal()
         if (paRestantes < 0) violations.add("Gastou ${-paRestantes} ponto(s) de atributo extras")
 
