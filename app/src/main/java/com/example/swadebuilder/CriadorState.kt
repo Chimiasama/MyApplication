@@ -4305,7 +4305,7 @@ class CriadorState {
     }
 
     fun atributoMaxRawNaCriacao(a: String, forceStandard: Boolean = false): Int {
-        if (modoLivre && !forceStandard) return 20
+        if (modoLivre && !forceStandard) return 100
         val baseCap = atributoMaxRaw(a, forceStandard)
         if (modoProgressaoAtivo) return baseCap
         if (compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL" && a.keyify() == "ASTUCIA") {
@@ -4325,7 +4325,7 @@ class CriadorState {
         atributoBaseRacial(a)
 
     fun atributoMaxRaw(a: String, forceStandard: Boolean = false): Int {
-        if (modoLivre && !forceStandard) return 20
+        if (modoLivre && !forceStandard) return 100
         val minRaw = atributoMinRaw(a)
 
         var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
@@ -4362,7 +4362,7 @@ class CriadorState {
     }
 
     fun periciaCapRaw(per: Pericia, forceStandard: Boolean = false): Int {
-        if (modoLivre && !forceStandard) return 20
+        if (modoLivre && !forceStandard) return 100
         val startRaw = periciaStartRaw(ancestralidade, per)
 
         // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
@@ -6321,67 +6321,6 @@ class CriadorState {
             )
         )
     }
-
-    fun calculateNpcViolations(): List<String> {
-        if (!modoLivre) return emptyList()
-        val violations = mutableListOf<String>()
-
-        // 1. Attributes above limit
-        listaAtributos.forEach { attr ->
-            val current = valoresAtributos[attr]?.intValue ?: 4
-            val max = atributoMaxRaw(attr, forceStandard = true)
-            if (current > max) {
-                violations.add("Atributo ${mapaAtributosDisplay[attr] ?: attr} acima do limite (d$current > d$max)")
-            }
-        }
-
-        // 2. Skills above limit
-        periciasComIdiomas().forEach { per ->
-            val current = rawTotal(per)
-            val max = periciaCapRaw(per, forceStandard = true)
-            if (current > max) {
-                violations.add("Perícia ${per.nome} acima do limite (d$current > d$max)")
-            }
-        }
-
-        // 3. Points Check (Calculated directly to include PB and other sources)
-        val paRestantes = calcularPontosAtributoRestantesInternal()
-        if (paRestantes < 0) violations.add("Gastou ${-paRestantes} ponto(s) de atributo extras")
-
-        val usedSp = spCostStackPorPericia.values.sumOf { it.sum() } +
-                compCostStackPorPericia.values.sumOf { it.sum() }
-        val spRestantes = totalSpPool - usedSp
-        if (spRestantes < 0) violations.add("Gastou ${-spRestantes} ponto(s) de perícia extras")
-
-        if (pontosVantagem < 0) {
-            violations.add("Gastou ${-pontosVantagem} ponto(s) de vantagem extras")
-        }
-
-        return violations
-    }
-
-    private fun calcularPontosAtributoRestantesInternal(): Int {
-        var usados = 0
-        for (nome in listaAtributos) {
-            val atual = valoresAtributos[nome]!!.intValue
-            val base = atributoBaseRacial(nome)
-            var cur = base
-            while (cur < atual) {
-                cur += if (cur < 12) 2 else 1
-                usados += 1
-            }
-        }
-        val isPathfinderHuman = compendioPathfinderAtivo &&
-                (ancestralidade.equals("Humano", ignoreCase = true) || ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
-        val isPathfinderHalfElf = compendioPathfinderAtivo &&
-                ancestralidade.keyify().contains("MEIO-ELFO")
-        val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
-        return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
-    }
-
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun restoreFromSnapshot(snapshot: PersonagemSnapshot, feedbackMessages: MutableList<String>) {
-        val flags = snapshot.flags
 
         cartaSelvagem = flags.cartaSelvagem
         maisPontosPericias = flags.maisPontosPericias
