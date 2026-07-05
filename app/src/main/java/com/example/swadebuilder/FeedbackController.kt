@@ -5,7 +5,6 @@ import android.media.AudioManager
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.view.SoundEffectConstants
 import kotlin.math.roundToInt
 
 class FeedbackController(context: Context) {
@@ -40,7 +39,7 @@ class FeedbackController(context: Context) {
         if (clamped <= 0) return
 
         val volume = clamped / 100f
-        audioManager?.playSoundEffect(SoundEffectConstants.CLICK, volume)
+        audioManager?.playSoundEffect(AudioManager.FX_KEY_CLICK, volume)
     }
 
     fun dispose() {

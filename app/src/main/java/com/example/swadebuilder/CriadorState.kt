@@ -6322,6 +6322,12 @@ class CriadorState {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+    fun restoreFromSnapshot(
+        snapshot: PersonagemSnapshot,
+        feedbackMessages: MutableList<String> = mutableListOf()
+    ) {
+        val flags = snapshot.flags
         cartaSelvagem = flags.cartaSelvagem
         maisPontosPericias = flags.maisPontosPericias
         modoSupers = flags.modoSupers

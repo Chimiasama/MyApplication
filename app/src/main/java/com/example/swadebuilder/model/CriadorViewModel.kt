@@ -182,6 +182,7 @@ class CriadorViewModel(
         state.equipExpandedTypes.clear()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun resetToEmptyState() {
         resetStateParaNovoPersonagem(
             cartaSelvagem = true,
@@ -277,6 +278,7 @@ class CriadorViewModel(
         val message: String? = null
     )
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     suspend fun carregarPersonagem(context: Context, saveId: String): LoadOutcome {
         val snapshot = when (val result = CharacterStorage.load(context, saveId)) {
             is CharacterStorage.LoadResult.Success -> result.snapshot
@@ -335,6 +337,7 @@ class CriadorViewModel(
         state.vantagensSelecionadas.addAll(convertidos.distinctBy { it.id })
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun resetStateParaNovoPersonagem(
         cartaSelvagem: Boolean,
         maisPontosPericias: Boolean,
