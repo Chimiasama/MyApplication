@@ -1,11 +1,6 @@
 <resources>
-    <string name="select_theme">Selecionar Tema</string>
     <string name="cancel">Cancel</string>
-    <string name="cd_expand">Expand section</string>
-    <string name="cd_collapse">Collapse section</string>
     <string name="state_expanded">Expanded</string>
     <string name="state_collapsed">Collapsed</string>
     <string name="sw_pathfinder_label">Pathfinder</string>
-    <string name="sw_supers_book_title">Livro Supers</string>
-    <string name="sw_monsters_book_title">Livro de Monstros</string>
 </resources>

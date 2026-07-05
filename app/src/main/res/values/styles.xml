@@ -35,10 +35,5 @@
     </style>
 
     <!-- (Opcional) Tema para alguma Activity de detalhe -->
-    <style name="Theme.DetalheActivity" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:windowBackground">@color/pergaminho_fundo</item>
-        <item name="android:colorBackground">@color/pergaminho_fundo</item>
-        <item name="android:textColorPrimary">@android:color/black</item>
-    </style>
 
 </resources>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Cores padrão do app -->
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="pergaminho_fundo">#f2e3c6</color>
 

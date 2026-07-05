@@ -59,7 +59,6 @@ android {
             buildConfigField("boolean", "ENABLE_PB_WALLET_REDESIGN", "true")
 
             resValue("string", "app_name", "SWADEbuilder")
-            resValue("bool", "show_lista_completa", "false")
             resValue("bool", "enable_long_texts", "false")
             resValue("bool", "enable_pb_wallet_redesign", "true")
         }
@@ -74,7 +73,6 @@ android {
             buildConfigField("boolean", "ENABLE_PB_WALLET_REDESIGN", "true")
 
             resValue("string", "app_name", "SWADEbuilder (Completo)")
-            resValue("bool", "show_lista_completa", "true")
             resValue("bool", "enable_long_texts", "true")
             resValue("bool", "enable_pb_wallet_redesign", "true")
         }
