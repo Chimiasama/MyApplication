@@ -402,7 +402,7 @@ fun VantagensContent(
                 (vantToBuy.requisitos.estagio.isBlank() || vantToBuy.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
                 !state.isVantagemAutomatica(vantToBuy)
 
-        val needsPoints = !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai && !isFreeAdaptavel
+        val needsPoints = !state.modoLivre && !isFreePathfinder && !isFreeProtagonista && !isFreeSamurai && !isFreeAdaptavel
 
         var failed = false
         if (needsPoints && state.pontosVantagem <= 0) {
@@ -433,12 +433,16 @@ fun VantagensContent(
     // Reusable Header Content
     val headerContent: @Composable () -> Unit = {
         Column {
-            SectionHeader(
-                onHelpClick = null,
-                centerText = "Pontos de Vantagem: ${state.pontosVantagem}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
-                onListaCompletaClick = null,
-                listaCompletaText = ""
-            )
+            if (!state.modoLivre) {
+                SectionHeader(
+                    onHelpClick = null,
+                    centerText = "Pontos de Vantagem: ${state.pontosVantagem}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
+                    onListaCompletaClick = null,
+                    listaCompletaText = ""
+                )
+            } else {
+                Spacer(Modifier.height(8.dp))
+            }
 
             Spacer(Modifier.size(4.dp))
 
@@ -1760,11 +1764,11 @@ private fun VantagemItem(
                     val canAfford = state.pontosVantagem > 0 || hasBP
 
                     when {
-                        !isPathfinderFree && !isProtagonistaFree && !isFreeAdaptavel && !canAfford -> onError("Sem PV disponível")
+                        !state.modoLivre && !isPathfinderFree && !isProtagonistaFree && !isFreeAdaptavel && !canAfford -> onError("Sem PV disponível")
                         // PROMPT 4: Check class blocking specifically for error message
-                        state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
-                        conflitoMsg != null -> onError(conflitoMsg)
-                            !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
+                        !state.modoLivre && state.vantagensSelecionadas.classeExclusivaBloqueada(vant) -> onError("Requer a vantagem Multiclasse para possuir duas classes")
+                        !state.modoLivre && conflitoMsg != null -> onError(conflitoMsg)
+                        !state.modoLivre && !state.podeSelecionar(vant) -> onError("Faltam requisitos para '${vant.nomeExibicao}'")
                         else -> onSelect()
                     }
                 }

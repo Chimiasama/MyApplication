@@ -48,10 +48,12 @@ class ValidateSelectionUseCase(
         val nasceUmHeroi: Boolean,
         val pvFromXpOutstanding: Int,
         val tropoSelecionadoId: String?,
-        val getBestPericia: (String) -> Pericia?
+        val getBestPericia: (String) -> Pericia?,
+        val modoLivre: Boolean
     )
 
     fun execute(vantagem: Vantagem, context: Context): Boolean {
+        if (context.modoLivre) return true
 
         // 1. Scenario Rules
         if (!validateScenarioRulesUseCase.execute(

@@ -36,7 +36,7 @@ fun CriadorState.calcularPericiaRules(
         currentRaw < 12 -> currentRaw + 2
         else -> currentRaw + 1
     }
-    val costNormal = if (nextRaw <= atrRaw) 1 else 2
+    val costNormal = if (modoLivre) 0 else (if (nextRaw <= atrRaw) 1 else 2)
 
     val compStack = compCostStackPorPericia[pericia] ?: emptyList()
     val spStack = spCostStackPorPericia[pericia] ?: emptyList()
@@ -56,13 +56,17 @@ fun CriadorState.calcularPericiaRules(
     val linguistaMin = linguistaMinRawFor(pericia)
     val minimoTotal = max(max(minimoBasico, minimoOpcional), linguistaMin)
 
-    val canDecrease = if (modoProgressaoAtivo) {
-        val frozenIncs = frozenSkillIncrements[pericia.nome] ?: 0
-        (baseIncsPorPericia[pericia] ?: 0) > frozenIncs
-    } else {
-        !locked &&
-            (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
-            (currentRaw - 2 >= minimoTotal)
+    val canDecrease = when {
+        modoLivre -> currentRaw > 0
+        modoProgressaoAtivo -> {
+            val frozenIncs = frozenSkillIncrements[pericia.nome] ?: 0
+            (baseIncsPorPericia[pericia] ?: 0) > frozenIncs
+        }
+        else -> {
+            !locked &&
+                (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
+                (currentRaw - 2 >= minimoTotal)
+        }
     }
 
     val astuciaSpent = spCostStackPorPericia
@@ -70,14 +74,18 @@ fun CriadorState.calcularPericiaRules(
         .values
         .sumOf { costs -> costs.sum() }
 
-    val canIncrease = !locked &&
-        pontosPericia >= costNormal &&
-        nextRaw <= capRaw &&
-        (if (idosoActive && astuciaSpent < 5) {
-            pericia.atributo == RuleConstants.ATRIBUTO_ASTUCIA
-        } else {
-            true
-        })
+    val canIncrease = if (modoLivre) {
+        nextRaw <= 20
+    } else {
+        !locked &&
+            pontosPericia >= costNormal &&
+            nextRaw <= capRaw &&
+            (if (idosoActive && astuciaSpent < 5) {
+                pericia.atributo == RuleConstants.ATRIBUTO_ASTUCIA
+            } else {
+                true
+            })
+    }
 
     return PericiaRuleSnapshot(
         attrKey = attrKey,

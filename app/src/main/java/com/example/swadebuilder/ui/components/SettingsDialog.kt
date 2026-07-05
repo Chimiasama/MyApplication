@@ -22,6 +22,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedButton
@@ -32,7 +33,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -52,6 +56,8 @@ fun SettingsDialog(
     feedbackController: FeedbackController,
     onThemeSelected: (AppTheme) -> Unit
 ) {
+    var showNpcWarning by remember { mutableStateOf(false) }
+
     val themeNames = remember {
         mapOf(
             AppTheme.DEFAULT   to "Padrão",
@@ -124,6 +130,27 @@ fun SettingsDialog(
                                 },
                                 modifier = Modifier.scale(0.8f)
                             )
+                        }
+
+                        // NPC Mode Toggle (Only during creation phase and if not already NPC)
+                        if (!state.modoProgressaoAtivo && !state.isNpcExibicao) {
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("Modo Livre (NPC)", style = MaterialTheme.typography.bodyMedium)
+                                    Text("Ignora custos e requisitos.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                Switch(
+                                    checked = state.modoLivre,
+                                    onCheckedChange = { if (it && !state.modoLivre) showNpcWarning = true },
+                                    enabled = !state.modoLivre, // Irreversible
+                                    modifier = Modifier.scale(0.8f)
+                                )
+                            }
                         }
                     }
                 }
@@ -332,4 +359,21 @@ fun SettingsDialog(
             }
         }
     )
+
+    if (showNpcWarning) {
+        AlertDialog(
+            onDismissRequest = { showNpcWarning = false },
+            title = { Text("Transformar em NPC?") },
+            text = { Text("Ao ativar o Modo Livre, este personagem será transformado em um NPC. Custos de pontos e requisitos serão ignorados, e a progressão de XP padrão será desabilitada. Esta ação é irreversível para este personagem.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    state.modoLivre = true
+                    showNpcWarning = false
+                }) { Text("Confirmar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showNpcWarning = false }) { Text("Cancelar") }
+            }
+        )
+    }
 }

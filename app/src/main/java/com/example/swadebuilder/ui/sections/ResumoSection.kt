@@ -267,6 +267,7 @@ fun SummaryContent(
         activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
         )
 
+
         Spacer(Modifier.height(12.dp))
 
         derivedSection?.let {

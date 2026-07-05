@@ -208,14 +208,17 @@ fun PericiasContent(
                     .fillMaxWidth()
                     .padding(8.dp)
             ) {
-                SectionHeader(
-                    onHelpClick          = null,
-                    centerText           = "Pontos de Perícia: ${state.pontosPericia}${if (!locked && pcLivres >= 1) " (+${pcLivres} via PB)" else ""}",
-                    onListaCompletaClick = null,
-                    listaCompletaText    = ""
-                )
-
-                Spacer(Modifier.height(4.dp))
+                if (!state.modoLivre) {
+                    SectionHeader(
+                        onHelpClick          = null,
+                        centerText           = "Pontos de Perícia: ${state.pontosPericia}${if (!locked && pcLivres >= 1) " (+${pcLivres} via PB)" else ""}",
+                        onListaCompletaClick = null,
+                        listaCompletaText    = ""
+                    )
+                    Spacer(Modifier.height(4.dp))
+                } else {
+                    Spacer(Modifier.height(8.dp))
+                }
                 // Legacy PB buttons removed
             }
 
@@ -398,7 +401,7 @@ fun PericiasContent(
                             )
 
                             // Updated Increase Logic
-                            val canIncreaseWithBP = !locked && (pcLivres >= regra.cost) && (regra.nextRaw <= regra.capRaw)
+                            val canIncreaseWithBP = if (state.modoLivre) true else !locked && (pcLivres >= regra.cost) && (regra.nextRaw <= regra.capRaw)
 
                             IconButton(
                                 onClick = {
@@ -406,7 +409,7 @@ fun PericiasContent(
                                     val regrasAtuais = state.calcularPericiaRules(per, idosoActive, locked)
 
                                     // If standard checks fail, verify BP override
-                                    if (!regrasAtuais.canIncrease) {
+                                    if (!state.modoLivre && !regrasAtuais.canIncrease) {
                                         val cost = regrasAtuais.cost
                                         val hasBP = pcLivres >= cost
                                         val notCapped = regrasAtuais.nextRaw <= regrasAtuais.capRaw

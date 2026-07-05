@@ -235,6 +235,8 @@ class CriadorState {
     var optRegraCosaNostra by mutableStateOf(false)
     var optRegraFama by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
+    var modoLivre by mutableStateOf(false)
+    var isNpcExibicao by mutableStateOf(false)
     var modoMonstroAtivo by mutableStateOf(false)
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
@@ -277,6 +279,14 @@ class CriadorState {
     var dominioClerigoPathfinderSelecionado by mutableStateOf<String?>(null)
 
     fun getActiveModuleKeys(): Set<String> {
+        if (modoLivre) {
+            return setOf(
+                ModuleIds.FANTASIA, ModuleIds.HORROR, ModuleIds.SCI_FI,
+                ModuleIds.PATHFINDER, ModuleIds.DEADLANDS, ModuleIds.CRYSTAL_HEART,
+                ModuleIds.ARTE_DA_GUERRA, ModuleIds.CIDADE_SOL_VAPOR,
+                ModuleIds.WISEGUYS, ModuleIds.SUPER
+            )
+        }
         val keys = mutableSetOf<String>()
         if (compendioFantasiaAtivo) keys.add(ModuleIds.FANTASIA)
         if (compendioHorrorAtivo) keys.add(ModuleIds.HORROR)
@@ -2094,7 +2104,7 @@ class CriadorState {
             (v.requisitos.estagio.isBlank() || v.requisitos.estagio.equals("Novato", ignoreCase = true)) &&
             !isVantagemAutomatica(v)
 
-        if (!isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
+        if (!modoLivre && !isFreePathfinder && !isFreeProtagonista && !isFreeSamuraiCombat && !isFreeAdaptavel && pontosVantagem <= 0) return false // No points
 
         val rawBeforeArcaneSkillGrant = rawValuesBeforeArcaneSkillGrant(v)
 
@@ -3543,7 +3553,7 @@ class CriadorState {
     val cpPvStack       = mutableStateListOf<Unit>()
     val cpRecursosStack = mutableStateListOf<Unit>()
 
-    private val totalSpPool: Int
+    val totalSpPool: Int
         get() {
             // PROMPT: Arte da Guerra skill points adjustment
             if (compendioArteDaGuerraAtivo) {
@@ -3864,6 +3874,7 @@ class CriadorState {
     }
 
     fun podeRemoverPoderDoSlot(poderId: String): Pair<Boolean, String?> {
+        if (modoLivre) return true to null
         val normalizedId = poderId.replace('_', ' ').keyify()
 
         if (ancestralidade.keyify() == "TRANSMORFOS" && normalizedId == "DISFARCE") {
@@ -3886,6 +3897,7 @@ class CriadorState {
     }
 
     fun podeSelecionarComplicacao(complicacao: Complicacao): Pair<Boolean, String?> {
+        if (modoLivre) return true to null
         if (complicacao.id == "talisma" && !temAntecedenteArcano()) {
             return false to "Talismã requer um Antecedente Arcano."
         }
@@ -3912,6 +3924,7 @@ class CriadorState {
     }
 
     fun podeRemoverComplicacao(comp: Complicacao, tipo: String? = null): Pair<Boolean, String?> {
+        if (modoLivre) return true to null
         // Locked check
         if (criacaoBasicaCongelada && !modoProgressaoAtivo) return false to "Criação finalizada."
 
@@ -3943,6 +3956,7 @@ class CriadorState {
     }
 
     fun podeRemoverVantagem(vantagem: Vantagem): Pair<Boolean, String?> {
+        if (modoLivre) return true to null
         val keyId = normalizeAutoKey(vantagem.id)
         val keyNome = normalizeAutoKey(vantagem.nome.substringBefore("("))
         val automaticKeys = vantagensAutomaticas.map { normalizeAutoKey(it.substringBefore("(")) }.toSet()
@@ -4012,11 +4026,13 @@ class CriadorState {
             nasceUmHeroi = nasceUmHeroi,
             pvFromXpOutstanding = pvFromXpOutstanding,
             tropoSelecionadoId = tropoSelecionado?.id,
-            getBestPericia = { getBestPericia(it) }
+            getBestPericia = { getBestPericia(it) },
+            modoLivre = modoLivre
         )
     }
 
     fun podeSelecionar(v: Vantagem): Boolean {
+        if (modoLivre) return true
         return validateSelectionUseCase.execute(v, validationContext)
     }
 
@@ -4288,8 +4304,9 @@ class CriadorState {
         return modifiedBase
     }
 
-    fun atributoMaxRawNaCriacao(a: String): Int {
-        val baseCap = atributoMaxRaw(a)
+    fun atributoMaxRawNaCriacao(a: String, forceStandard: Boolean = false): Int {
+        if (modoLivre && !forceStandard) return 100
+        val baseCap = atributoMaxRaw(a, forceStandard)
         if (modoProgressaoAtivo) return baseCap
         if (compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL" && a.keyify() == "ASTUCIA") {
             return minOf(baseCap, 6)
@@ -4307,7 +4324,8 @@ class CriadorState {
     fun atributoMinRaw(a: String): Int =
         atributoBaseRacial(a)
 
-    fun atributoMaxRaw(a: String): Int {
+    fun atributoMaxRaw(a: String, forceStandard: Boolean = false): Int {
+        if (modoLivre && !forceStandard) return 100
         val minRaw = atributoMinRaw(a)
 
         var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
@@ -4343,7 +4361,8 @@ class CriadorState {
         return finalCap
     }
 
-    fun periciaCapRaw(per: Pericia): Int {
+    fun periciaCapRaw(per: Pericia, forceStandard: Boolean = false): Int {
+        if (modoLivre && !forceStandard) return 100
         val startRaw = periciaStartRaw(ancestralidade, per)
 
         // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
@@ -4870,7 +4889,8 @@ class CriadorState {
     }
 
     // PROMPT 1: Explicit calculation: (Current Step - Racial Base Step)
-    private fun calcularPontosAtributoRestantes(): Int {
+    fun calcularPontosAtributoRestantes(): Int {
+        if (modoLivre) return 0
         var usados = 0
 
         for (nome in listaAtributos) {
@@ -5391,6 +5411,7 @@ class CriadorState {
     }
 
     fun podeSelecionarTropoPorRestricoesAtuais(tropo: Tropo?): Boolean {
+        if (modoLivre) return true
         if (!isUsagimimiTransicaoRestrictionActive()) return true
         return tropo == null || tropo.id == "tropo_elementalista"
     }
@@ -5874,7 +5895,7 @@ class CriadorState {
 
     fun increasePericiaFromAdvancement(per: Pericia, cost: Int, feedbackMessages: MutableList<String>? = null) {
         // Safety check for creation mode + Idoso
-        if (!modoProgressaoAtivo) {
+        if (!modoProgressaoAtivo && !modoLivre) {
              val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
              if (hasIdoso && per.atributo != "Astúcia") {
                  val spentOnSmarts = periciasComIdiomas()
@@ -6151,7 +6172,9 @@ class CriadorState {
                 obesoMalusMov = obesoMalusMov,
                 bonusPoderExtra = bonusPoderExtra,
                 optRegraRiqueza = optRegraRiqueza,
-                optRegraCosaNostra = optRegraCosaNostra
+                optRegraCosaNostra = optRegraCosaNostra,
+                modoLivre = modoLivre,
+                isNpcExibicao = isNpcExibicao
             ),
             recursos = SnapshotRecursos(
                 dinheiro = dinheiro,
@@ -6300,9 +6323,11 @@ class CriadorState {
     }
 
     @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
-    fun restoreFromSnapshot(snapshot: PersonagemSnapshot, feedbackMessages: MutableList<String>) {
+    fun restoreFromSnapshot(
+        snapshot: PersonagemSnapshot,
+        feedbackMessages: MutableList<String> = mutableListOf()
+    ) {
         val flags = snapshot.flags
-
         cartaSelvagem = flags.cartaSelvagem
         maisPontosPericias = flags.maisPontosPericias
         modoSupers = flags.modoSupers
@@ -6319,6 +6344,8 @@ class CriadorState {
         optRegraFama = flags.optRegraFama
         optRegraRiqueza = flags.optRegraRiqueza
         optRegraCosaNostra = flags.optRegraCosaNostra
+        modoLivre = flags.modoLivre
+        isNpcExibicao = flags.isNpcExibicao
         modoOficialAtivo = flags.modoOficialAtivo
         modoMonstroAtivo = flags.modoMonstroAtivo
         usarEspecializacoesDePericia = flags.usarEspecializacoesDePericia

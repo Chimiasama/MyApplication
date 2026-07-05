@@ -1,5 +1,5 @@
 @file:OptIn(
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class,
 )
 @file:Suppress("LanguageDetectionInspection", "unused")
 
@@ -215,7 +215,7 @@ class MainActivity : ComponentActivity() {
 
             val context = LocalContext.current
             val activity = (context as? ComponentActivity)
-            var mostrouTelaInicial by rememberSaveable { mutableStateOf(true) }
+            var mostrouTelaInicial by rememberSaveable { mutableStateOf(value = true) }
             var showExitDialog     by rememberSaveable { mutableStateOf(false) }
 
             val feedbackController = remember { FeedbackController(context) }
@@ -348,9 +348,10 @@ class MainActivity : ComponentActivity() {
                         state = state,
                         onDismiss = { showSettingsDialog = false },
                         persistPrefs = { persistPrefs() },
-                        feedbackController = feedbackController,
-                        onThemeSelected = { theme -> criadorViewModel.setAppTheme(theme) }
-                    )
+                        feedbackController = feedbackController
+                    ) { theme ->
+                        criadorViewModel.setAppTheme(theme)
+                    }
                 }
             }
 
@@ -361,8 +362,9 @@ class MainActivity : ComponentActivity() {
                     title = { Text("Apagar personagem") },
                     text = { Text("Deseja apagar \"${entryToDelete?.nome}\"?") },
                     confirmButton = {
-                        TextButton(onClick = {
-                            entryToDelete?.let { entry ->
+                        TextButton(
+                            onClick = {
+                                entryToDelete?.let { entry ->
                                 scope.launch {
                                     val snapshotToDelete = when (
                                         val result = CharacterStorage.load(context, entry.id)
@@ -459,7 +461,7 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            if (showSaveBeforeNavigateDialog && pendingNavigationAction != null) {
+            if (showSaveBeforeNavigateDialog && (pendingNavigationAction != null)) {
                 val action = pendingNavigationAction!!
                 val dialogMessage = when (action) {
                     PendingNavigationAction.StartProgression ->
@@ -781,11 +783,15 @@ class MainActivity : ComponentActivity() {
                             Scaffold(
                                 snackbarHost = { SnackbarHost(hostState = snackHost) },
                                 floatingActionButton = {
-                                    if (!state.modoProgressaoAtivo && state.creationComplete()) {
+                                    if (!state.modoProgressaoAtivo && !state.isNpcExibicao && (state.modoLivre || state.creationComplete())) {
                                         ExtendedFloatingActionButton(
                                             onClick = {
                                                 triggerFeedback()
-                                                requestNavigation(PendingNavigationAction.StartProgression)
+                                                if (state.modoLivre) {
+                                                    state.isNpcExibicao = true
+                                                } else {
+                                                    requestNavigation(PendingNavigationAction.StartProgression)
+                                                }
                                             },
                                             icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
                                             text = { Text("Finalizar") },

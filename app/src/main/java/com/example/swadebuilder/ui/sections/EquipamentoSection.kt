@@ -423,13 +423,17 @@ fun EquipamentoSection(
                 "Dinheiro: ${MoneyUtils.formatCurrency(dinheiro, false)}"
             }
 
-            SectionHeader(
-                onHelpClick = null,
-                centerText = moneyDisplayText,
-                onCenterClick = null,
-                onListaCompletaClick = null,
-                listaCompletaText = ""
-            )
+            if (!state.modoLivre) {
+                SectionHeader(
+                    onHelpClick = null,
+                    centerText = moneyDisplayText,
+                    onCenterClick = null,
+                    onListaCompletaClick = null,
+                    listaCompletaText = ""
+                )
+            } else {
+                Spacer(Modifier.height(8.dp))
+            }
 
             if (usaRequisicao && (emProgresso || modoProgressaoAtivo)) {
                 Row(

@@ -88,6 +88,15 @@ class CriadorViewModel(
     private fun periciasMapData() = gameDataStore.getPericiasMap()
 
     private fun moduleKeysFromFlags(flags: SnapshotFlags): Set<String> = buildSet {
+        if (flags.modoLivre) {
+            addAll(listOf(
+                ModuleIds.FANTASIA, ModuleIds.HORROR, ModuleIds.SCI_FI,
+                ModuleIds.PATHFINDER, ModuleIds.DEADLANDS, ModuleIds.CRYSTAL_HEART,
+                ModuleIds.ARTE_DA_GUERRA, ModuleIds.CIDADE_SOL_VAPOR,
+                ModuleIds.WISEGUYS, ModuleIds.SUPER
+            ))
+            return@buildSet
+        }
         if (flags.compendioFantasiaAtivo) add(ModuleIds.FANTASIA)
         if (flags.compendioHorrorAtivo) add(ModuleIds.HORROR)
         if (flags.compendioSciFiAtivo) add(ModuleIds.SCI_FI)
@@ -173,6 +182,7 @@ class CriadorViewModel(
         state.equipExpandedTypes.clear()
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun resetToEmptyState() {
         resetStateParaNovoPersonagem(
             cartaSelvagem = true,
@@ -268,6 +278,7 @@ class CriadorViewModel(
         val message: String? = null
     )
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     suspend fun carregarPersonagem(context: Context, saveId: String): LoadOutcome {
         val snapshot = when (val result = CharacterStorage.load(context, saveId)) {
             is CharacterStorage.LoadResult.Success -> result.snapshot
@@ -326,6 +337,7 @@ class CriadorViewModel(
         state.vantagensSelecionadas.addAll(convertidos.distinctBy { it.id })
     }
 
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun resetStateParaNovoPersonagem(
         cartaSelvagem: Boolean,
         maisPontosPericias: Boolean,
@@ -474,6 +486,8 @@ class CriadorViewModel(
         state.arcanoSnapshotAntesDaCompra = null
         state.mostrandoPoderesProgresso = false
         state.mostrandoAtributosProgresso = false
+        state.modoLivre = false
+        state.isNpcExibicao = false
 
         // Reset Supers
         state.superInvestments.clear()

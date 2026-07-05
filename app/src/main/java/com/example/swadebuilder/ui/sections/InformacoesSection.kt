@@ -69,6 +69,7 @@ fun InformacoesSection(
 
             Spacer(Modifier.height(8.dp))
 
+
             if (state.emProgresso && !state.usaRiqueza && !state.usaRequisicao) {
                 TextButton(onClick = {
                     dinheiroInput = state.dinheiro.toString()
@@ -297,6 +298,7 @@ fun InformacoesSection(
             }
         }
     }
+
 }
 
 @Composable

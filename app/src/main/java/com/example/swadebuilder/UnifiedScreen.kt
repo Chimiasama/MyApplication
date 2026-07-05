@@ -7,6 +7,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,6 +42,7 @@ import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -53,11 +55,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
@@ -237,13 +241,22 @@ fun UnifiedScreen(
                 state = state
             )
             Column(Modifier.weight(1f)) {
-                if (state.modoProgressaoAtivo) {
+                if (state.isNpcExibicao) {
+                    Text(
+                        text = "NPC FINALIZADO",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                    HorizontalDivider()
+                } else if (state.modoProgressaoAtivo) {
                     Text(
                         text = "MODO DE PROGRESSÃO",
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        textAlign = TextAlign.Center
                     )
                     HorizontalDivider()
                 }
@@ -300,13 +313,22 @@ fun UnifiedScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            if (state.modoProgressaoAtivo) {
+            if (state.isNpcExibicao) {
+                Text(
+                    text = "NPC FINALIZADO",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
+                )
+                HorizontalDivider()
+            } else if (state.modoProgressaoAtivo) {
                 Text(
                     text = "MODO DE PROGRESSÃO",
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.fillMaxWidth(),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = TextAlign.Center
                 )
                 HorizontalDivider()
             }
@@ -691,7 +713,24 @@ private fun SectionDetailPane(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        if (state.modoProgressaoAtivo) {
+        if (state.isNpcExibicao) {
+            Box(Modifier.fillMaxSize()) {
+                SummaryTabContent(
+                    state = state,
+                    viewModel = viewModel,
+                    onClearRequested = onClearRequested,
+                    onShowMessage = onShowMessage,
+                    onRequestProgression = onRequestProgression
+                )
+
+                TextButton(
+                    onClick = { state.isNpcExibicao = false },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                ) {
+                    Text("Voltar para Criação")
+                }
+            }
+        } else if (state.modoProgressaoAtivo) {
             ProgressionDetailContent(
                 state = state,
                 viewModel = viewModel,
@@ -723,8 +762,9 @@ private fun SectionDetailPane(
 }
 
 private fun availableSectionsFor(state: CriadorState): List<MainSection> {
+    if (state.isNpcExibicao) return listOf(MainSection.RESUMO)
     val sections = mutableListOf(MainSection.RESUMO)
-    if (state.modoProgressaoAtivo) {
+    if (state.modoProgressaoAtivo && !state.modoLivre) {
         if (state.compendioCrystalHeartAtivo) {
             sections += MainSection.CRYSTAL_HEART
         }
