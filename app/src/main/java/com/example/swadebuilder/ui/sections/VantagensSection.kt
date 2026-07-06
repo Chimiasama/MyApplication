@@ -57,6 +57,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
@@ -1076,9 +1077,9 @@ fun VantagensContent(
         val vantOriginal = dialogMostrandoAntecedente!!
 
         val formatarRequisitos = { vant: Vantagem ->
-            val attrs = vant.requisitos.atributoMin.entries.map { "${it.key} d${it.value}" }
+            val attrs = vant.requisitos.atributoMin.entries.map { "${it.key} ${it.value.toDiceString()}" }
             val skills = vant.requisitos.periciaMin.entries.map {
-                "${applyJutsuSkinToSkillName(it.key, state)} d${it.value}"
+                "${applyJutsuSkinToSkillName(it.key, state)} ${it.value.toDiceString()}"
             }
             val all = attrs + skills
             if (all.isNotEmpty()) " (${all.joinToString(", ")})" else ""
@@ -1692,16 +1693,16 @@ private fun VantagemItem(
         }?.let { add(it.nome) }
 
         vant.requisitos.atributoMin.forEach { (a, m) ->
-            add("$a d$m")
+            add("$a ${m.toDiceString()}")
         }
         vant.requisitos.periciaMin.forEach { (p, m) ->
-            add("${applyJutsuSkinToSkillName(p, state)} d$m")
+            add("${applyJutsuSkinToSkillName(p, state)} ${m.toDiceString()}")
         }
 
         if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
             add(
                 vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
-                    "${applyJutsuSkinToSkillName(it.key, state)} d${it.value}"
+                    "${it.key} ${it.value.toDiceString()}"
                 }
             )
         }

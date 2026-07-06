@@ -1624,7 +1624,7 @@ fun ProgressosDialog(
                                     ?: v.nome.removePrefix("ANTECEDENTE ARCANO ").replace("(", "").replace(")", "").trim().toSentenceCase()
 
                                 val reqs = if (v.requisitos.atributoMin.isNotEmpty()) {
-                                    val r = v.requisitos.atributoMin.entries.joinToString(", ") { "${it.key} d${it.value}" }
+                                    val r = v.requisitos.atributoMin.entries.joinToString(", ") { "${it.key} ${it.value.toDiceString()}" }
                                     " ($r)"
                                 } else ""
 
@@ -1809,16 +1809,16 @@ private fun DialogVantagemItem(
         }?.let { add(it.nome) }
 
         vant.requisitos.atributoMin.forEach { (a, m) ->
-            add("$a d$m")
+            add("$a ${m.toDiceString()}")
         }
         vant.requisitos.periciaMin.forEach { (p, m) ->
-            add("$p d$m")
+            add("$p ${m.toDiceString()}")
         }
 
         if (vant.requisitos.periciaMinOpcional.isNotEmpty()) {
             add(
                 vant.requisitos.periciaMinOpcional.entries.joinToString(" ou ") {
-                    "${it.key} d${it.value}"
+                    "${it.key} ${it.value.toDiceString()}"
                 }
             )
         }

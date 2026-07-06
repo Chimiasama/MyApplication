@@ -27,6 +27,7 @@ import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
 import com.example.swadebuilder.util.toFancyTitleCase
+import com.example.swadebuilder.toDiceString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -340,7 +341,7 @@ class AttributeBlock(
         listaAtributos.forEach { attr ->
             val value = p.atributos[attr] ?: 4
             val display = mapaAtributosDisplay[attr] ?: attr
-            drawAttributeShape(canvas, x + 25f, currY + 20f, "d$value", theme)
+            drawAttributeShape(canvas, x + 25f, currY + 20f, value.toDiceString(), theme)
             val namePaint = TextPaint().apply { color = theme.textColor; textSize = 12f; typeface = theme.typefaceBody; isFakeBoldText = true }
             canvas.drawText(display, x + 60f, currY + 25f, namePaint)
             currY += 50f
@@ -363,7 +364,7 @@ class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
             val value = entry.value
             val note = p.notasPericia[name]
             val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
-            "$name d$value$noteStr"
+            "$name ${value.toDiceString()}$noteStr"
         }
 
     override fun measure(width: Float, theme: PdfTheme): Float {

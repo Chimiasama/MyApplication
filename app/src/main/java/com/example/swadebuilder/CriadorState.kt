@@ -5823,7 +5823,7 @@ class CriadorState {
             val novo = if (atual > 12) atual - 1 else atual - 2
             valoresAtributos[nomeAttr]!!.intValue = novo.coerceAtLeast(base)
 
-            feedbackMessages.add("Atributo $nomeAttr reduzido para d${novo.coerceAtLeast(base)} para compensar pontos.")
+            feedbackMessages.add("Atributo $nomeAttr reduzido para ${novo.coerceAtLeast(base).toDiceString()} para compensar pontos.")
 
             pontosAtributo = calcularPontosAtributoRestantes()
         }

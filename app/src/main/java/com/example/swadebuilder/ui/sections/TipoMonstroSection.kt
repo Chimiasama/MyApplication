@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.components.SectionCard
 
@@ -75,7 +76,7 @@ fun TipoMonstroSection(
 
                             if (template.atributos_bonus.isNotEmpty()) {
                                 Text(
-                                    text = "Bônus de Atributos: ${template.atributos_bonus.entries.joinToString { "${it.key} d${it.value}" }}",
+                                    text = "Bônus de Atributos: ${template.atributos_bonus.entries.joinToString { "${it.key} ${it.value.toDiceString()}" }}",
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(start = 40.dp, end = 8.dp)
