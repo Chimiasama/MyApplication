@@ -329,7 +329,7 @@ fun buildSummaryLines(
             val note = personagem.notasPericia[nome]
             val noteStr = if (!note.isNullOrBlank()) " ($note)" else ""
             val displayNome = if (idiomaRegex.matches(nome)) "Idiomas" else nome.toFancyTitleCase()
-            lines += "$displayNome: d$raw$noteStr"
+            lines += "$displayNome: ${raw.toDiceString()}$noteStr"
         }
     }
     lines += ""
@@ -338,7 +338,7 @@ fun buildSummaryLines(
     if (personagem.usaRequisicao) {
         lines += "Requisição: ${personagem.requisicao}"
     } else if (personagem.usaRiqueza && (personagem.dadoRiqueza != null && personagem.modoProgressaoAtivo)) {
-        lines += "Riqueza: d${personagem.dadoRiqueza}"
+        lines += "Riqueza: ${personagem.dadoRiqueza!!.toDiceString()}"
     } else {
         lines += "Dinheiro restante: ${personagem.dinheiro}"
     }

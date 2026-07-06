@@ -744,7 +744,7 @@ class CriadorViewModel(
                             direction = ApplySuperAttributeDeltaUseCase.Direction.INCREASE
                         )
                     )
-                    logFeedback("Atributo $key aumentado de d$antes para d${holder.intValue}.")
+                    logFeedback("Atributo $key aumentado de ${antes.toDiceString()} para ${holder.intValue.toDiceString()}.")
                 }
             }
 
@@ -822,7 +822,7 @@ class CriadorViewModel(
                             direction = ApplySuperAttributeDeltaUseCase.Direction.DECREASE
                         )
                     )
-                    logFeedback("Atributo $key reduzido de d$antes para d${holder.intValue}.")
+                    logFeedback("Atributo $key reduzido de ${antes.toDiceString()} para ${holder.intValue.toDiceString()}.")
                 }
             }
 

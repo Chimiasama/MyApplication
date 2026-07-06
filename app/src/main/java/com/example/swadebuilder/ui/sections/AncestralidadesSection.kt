@@ -46,6 +46,7 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.Constants
@@ -841,12 +842,7 @@ fun AncestralidadesSection(
                                         if (item.atributos.isNotEmpty()) {
                                             val attrsText = item.atributos.entries.joinToString(", ") { (k, v) ->
                                                 val dieVal = 4 + v
-                                                val dieStr = if (dieVal > 12) {
-                                                    "d12+${dieVal - 12}"
-                                                } else {
-                                                    "d$dieVal"
-                                                }
-                                                "${k.toFancyTitleCase()} $dieStr"
+                                                "${k.toFancyTitleCase()} ${dieVal.toDiceString()}"
                                             }
                                             Text(
                                                 text = "Atributos: $attrsText",
@@ -859,7 +855,7 @@ fun AncestralidadesSection(
                                         // Skills
                                         if (item.pericias.isNotEmpty()) {
                                             val skillsText = item.pericias.entries.joinToString(", ") { (k, v) ->
-                                                val die = if (v == 0) "d4-2" else "d${(4 + (v - 1) * 2).coerceAtMost(12)}"
+                                                val die = if (v == 0) "d4-2" else (4 + (v - 1) * 2).toDiceString()
                                                 "${k.toFancyTitleCase()} $die"
                                             }
                                             Text(

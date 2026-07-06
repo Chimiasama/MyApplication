@@ -73,6 +73,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.model.CriadorViewModel
@@ -280,7 +281,7 @@ fun SummaryContent(
                 onWealthChange = if (showWealthControl) { delta ->
                     state.riquezaModifier += delta
                 } else null,
-                wealthDieValue = if (showWealthControl) "d${state.dadoRiqueza}" else null
+                wealthDieValue = if (showWealthControl) state.dadoRiqueza.toDiceString() else null
             )
             Spacer(Modifier.height(12.dp))
         }
