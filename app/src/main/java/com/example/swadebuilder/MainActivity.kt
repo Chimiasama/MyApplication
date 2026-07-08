@@ -634,51 +634,9 @@ class MainActivity : ComponentActivity() {
                     text = { Text("Deseja limpar a ficha atual e iniciar um novo personagem?") },
                     confirmButton = {
                         TextButton(onClick = {
-                            val cartaSelvagem = state.cartaSelvagem
-                            val maisPontosPericias = state.maisPontosPericias
-                            val modoSupers = state.modoSupers
-                            val compendioFantasiaAtivo = state.compendioFantasiaAtivo
-                            val compendioHorrorAtivo = state.compendioHorrorAtivo
-                            val compendioSciFiAtivo = state.compendioSciFiAtivo
-                            val compendioPathfinderAtivo = state.compendioPathfinderAtivo
-                            val compendioDeadlandsAtivo = state.compendioDeadlandsAtivo
-                            val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
-                            val compendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
-                            val compendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
-                            val compendioWiseguysAtivo = state.compendioWiseguysAtivo
-                            val modoMonstroAtivo = state.modoMonstroAtivo
-                            val usarEspecializacoesDePericia = state.usarEspecializacoesDePericia
-                            val grandesResponsabilidades = state.grandesResponsabilidades
-                            val regraMultiplosIdiomas = state.regraMultiplosIdiomas
-                            val nasceUmHeroi = state.nasceUmHeroi
-                            val usarSemPontosDePoder = state.usarSemPontosDePoder
-                            val compendioScifiMechasCiberneticosAtivo = state.compendioScifiMechasCiberneticosAtivo
-
-                            criadorViewModel.resetStateParaNovoPersonagem(
-                                cartaSelvagem = cartaSelvagem,
-                                maisPontosPericias = maisPontosPericias,
-                                modoSupers = modoSupers,
-                                compendioFantasiaAtivo = compendioFantasiaAtivo,
-                                compendioHorrorAtivo = compendioHorrorAtivo,
-                                compendioSciFiAtivo = compendioSciFiAtivo,
-                                compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo,
-                                compendioPathfinderAtivo = compendioPathfinderAtivo,
-                                compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-                                compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-                                compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-                                compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-                                compendioWiseguysAtivo = compendioWiseguysAtivo,
-                                modoMonstroAtivo = modoMonstroAtivo,
-                                usarEspecializacoesDePericia = usarEspecializacoesDePericia,
-                                grandesResponsabilidades = grandesResponsabilidades,
-                                regraMultiplosIdiomas = regraMultiplosIdiomas
-                            )
-                            scope.launch {
-                                criadorViewModel.prepararNomeInicial(context)
-                            }
-                            state.nasceUmHeroi = nasceUmHeroi
-                            state.usarSemPontosDePoder = usarSemPontosDePoder
-                            state.grandesResponsabilidades = grandesResponsabilidades
+                            triggerFeedback()
+                            criadorViewModel.resetToEmptyState()
+                            mostrouTelaInicial = true
                             showResetDialog = false
                             scope.launch {
                                 snackHost.showSnackbar("Ficha limpa.")
