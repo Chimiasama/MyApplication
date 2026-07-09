@@ -285,7 +285,7 @@ fun TelaInicial(
         )
     )
 
-    val settingModules = listOf(
+    val settingModules = if (isFullEdition) listOf(
         ModuleItemData(
             androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label),
             if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário ${androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)} e material temático.",
@@ -360,7 +360,7 @@ fun TelaInicial(
             { applyRulesPreset("Wiseguys"); showRulesDialog = true },
             isRulesActive = optCompendioWiseguys
         )
-    )
+    ) else emptyList()
 
     Scaffold(
         topBar = {
@@ -494,21 +494,23 @@ fun TelaInicial(
             }
 
             // --- Cenários de Campanha ---
-            item(span = { GridItemSpan(2) }) { SectionHeader("Cenários de Campanha") }
+            if (settingModules.isNotEmpty()) {
+                item(span = { GridItemSpan(2) }) { SectionHeader("Cenários de Campanha") }
 
-            items(settingModules) { module ->
-                ModuleCard(
-                    title = module.title,
-                    description = module.description,
-                    icon = module.icon,
-                    isSelected = module.isSelected,
-                    enabled = module.enabled,
-                    onToggle = module.onToggle,
-                    showDescription = viewModel.state.mostrarDescricaoHome,
-                    onRulesClick = if (module.isSelected) module.onRulesClick else null,
-                    isRulesActive = module.isRulesActive,
-                    tabStyle = viewModel.state.estiloAbas
-                )
+                items(settingModules) { module ->
+                    ModuleCard(
+                        title = module.title,
+                        description = module.description,
+                        icon = module.icon,
+                        isSelected = module.isSelected,
+                        enabled = module.enabled,
+                        onToggle = module.onToggle,
+                        showDescription = viewModel.state.mostrarDescricaoHome,
+                        onRulesClick = if (module.isSelected) module.onRulesClick else null,
+                        isRulesActive = module.isRulesActive,
+                        tabStyle = viewModel.state.estiloAbas
+                    )
+                }
             }
 
             // Spacer for FAB
