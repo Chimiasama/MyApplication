@@ -58,13 +58,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Surface
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.BoxScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
@@ -413,26 +412,8 @@ fun SuperPoderesSection(
             .padding(8.dp)
     ) {
         if (state.superInvestments.isNotEmpty()) {
-            val fadeBrush = remember {
-                Brush.horizontalGradient(
-                    colorStops = listOf(
-                        0.0f to Color.Black,
-                        0.85f to Color.Black,
-                        1.0f to Color.Transparent
-                    )
-                )
-            }
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .graphicsLayer { alpha = 0.99f }
-                    .drawWithContent {
-                        drawContent()
-                        drawRect(
-                            brush = fadeBrush,
-                            blendMode = BlendMode.DstIn
-                        )
-                    }
+                modifier = Modifier.fillMaxWidth()
             ) {
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -510,6 +491,22 @@ fun SuperPoderesSection(
                         }
                     }
                 }
+
+                // Smooth fade gradient overlay at the right edge to indicate horizontal scrollability
+                Box(
+                    modifier = Modifier
+                        .width(24.dp)
+                        .align(Alignment.CenterEnd)
+                        .matchParentSize()
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    MaterialTheme.colorScheme.surfaceVariant
+                                )
+                            )
+                        )
+                )
             }
             Spacer(Modifier.height(4.dp))
         }
