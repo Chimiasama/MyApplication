@@ -415,9 +415,11 @@ fun SuperPoderesSection(
         if (state.superInvestments.isNotEmpty()) {
             val fadeBrush = remember {
                 Brush.horizontalGradient(
-                    0.0f to Color.Black,
-                    0.85f to Color.Black,
-                    1.0f to Color.Transparent
+                    colorStops = listOf(
+                        0.0f to Color.Black,
+                        0.85f to Color.Black,
+                        1.0f to Color.Transparent
+                    )
                 )
             }
             Box(
@@ -459,7 +461,8 @@ fun SuperPoderesSection(
                         }
                     }
 
-                    items(uniqueInvestments, key = { it.first.id }) { (investment, cost) ->
+                    items(uniqueInvestments, key = { it.first.id }) { pair ->
+                        val (investment, cost) = pair
                         Surface(
                             shape = MaterialTheme.shapes.extraSmall,
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
@@ -497,11 +500,7 @@ fun SuperPoderesSection(
                                 )
                                 Spacer(Modifier.width(4.dp))
                                 Text(
-                                    text = if (investment.effect is PowerEffect.Generico) {
-                                        "${investment.displayName} (+$cost)"
-                                    } else {
-                                        "${investment.displayName} (+$cost)"
-                                    },
+                                    text = "${investment.displayName} (+$cost)",
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
