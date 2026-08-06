@@ -652,8 +652,20 @@ class CriadorViewModel(
     fun canInvestInPower(
         poderId: String,
         custo: Int,
-        efeito: PowerEffect
+        efeito: PowerEffect,
+        baseCost: Int = 0,
+        modifiers: Map<String, Int> = emptyMap()
     ): InvestCheck {
+        if (poderId.uppercase() == "SP_VELOCIDADE") {
+            val hasTensao = modifiers.keys.any {
+                val k = it.keyify()
+                k == "TENSAO SUPERFICIAL" || k == "TENSAO_SUPERFICIAL"
+            }
+            if (hasTensao && baseCost < 13) {
+                return InvestCheck(false, "O modificador Tensão Superficial requer no mínimo o nível de 13 pontos (Velocidade Sônica) no poder Velocidade.")
+            }
+        }
+
         val effectInput = when (efeito) {
             is PowerEffect.SuperAtributo -> {
                 ValidatePowerInvestmentWorkflowUseCase.EffectInput.SuperAtributo(
@@ -952,7 +964,9 @@ class CriadorViewModel(
         val check = canInvestInPower(
             poderId = investment.powerId,
             custo = investment.cost,
-            efeito = investment.effect
+            efeito = investment.effect,
+            baseCost = investment.baseCost,
+            modifiers = investment.modifiers
         )
         if (!check.ok) {
             return InvestResult(false, check.motivoBloqueio ?: "Não foi possível investir.")
