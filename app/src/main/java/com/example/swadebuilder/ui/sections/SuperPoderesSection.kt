@@ -166,7 +166,7 @@ fun BuySuperPowerDialog(
     val isLongRange = allowedBaseOptions.size > 7 ||
             (maxAllowed - minAllowed) > 10
 
-    var baseIdx by rememberSaveable(allowedBaseOptions) { mutableIntStateOf(0) }
+    var baseIdx by rememberSaveable(poder.nome) { mutableIntStateOf(0) }
     val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
 
     LaunchedEffect(baseCost) {
