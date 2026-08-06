@@ -54,8 +54,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.booleanResource
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.Surface
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.BoxScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
@@ -404,63 +412,103 @@ fun SuperPoderesSection(
             .padding(8.dp)
     ) {
         if (state.superInvestments.isNotEmpty()) {
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+            Box(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                val genericosAgrupados = state.superInvestments
-                    .filter { it.effect is PowerEffect.Generico }
-                    .groupBy { it.powerId }
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    contentPadding = PaddingValues(end = 24.dp) // creates a nice clipped / cut-off effect for the last element
+                ) {
+                    val genericosAgrupados = state.superInvestments
+                        .filter { it.effect is PowerEffect.Generico }
+                        .groupBy { it.powerId }
 
-                val emittedIds = mutableSetOf<String>()
+                    val uniqueInvestments = mutableListOf<Pair<SuperInvestment, Int>>()
+                    val emittedIds = mutableSetOf<String>()
 
-                state.superInvestments.forEach { investment ->
-                    when (investment.effect) {
-                        is PowerEffect.Generico -> {
-                            if (emittedIds.add(investment.powerId)) {
-                                val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
-                                val custoSomado = listaMesmoPoder.sumOf { it.cost }
+                    state.superInvestments.forEach { investment ->
+                        when (investment.effect) {
+                            is PowerEffect.Generico -> {
+                                if (emittedIds.add(investment.powerId)) {
+                                    val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
+                                    val custoSomado = listaMesmoPoder.sumOf { it.cost }
+                                    uniqueInvestments.add(investment to custoSomado)
+                                }
+                            }
+                            else -> {
+                                uniqueInvestments.add(investment to investment.cost)
+                            }
+                        }
+                    }
 
-                                AssistChip(
-                                    onClick = {
-                                        listaMesmoPoder.forEach { inv ->
-                                            viewModel.desfazerInvestimentoSuper(inv)
-                                            state.removerSuperPoder(inv, desfazerNoLedger = false)
+                    items(uniqueInvestments, key = { it.first.id }) { pair ->
+                        val (investment, cost) = pair
+                        Surface(
+                            shape = MaterialTheme.shapes.extraSmall,
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            tonalElevation = 1.dp,
+                            modifier = Modifier.padding(vertical = 4.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .clickable {
+                                        if (investment.effect is PowerEffect.Generico) {
+                                            val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
+                                            listaMesmoPoder.forEach { inv ->
+                                                viewModel.desfazerInvestimentoSuper(inv)
+                                                state.removerSuperPoder(inv, desfazerNoLedger = false)
+                                            }
+                                        } else {
+                                            val r = viewModel.desfazerInvestimentoSuper(investment)
+                                            if (r.ok) {
+                                                state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                            } else {
+                                                onShowMessage(r.mensagem)
+                                            }
                                         }
-                                    },
-                                    label = { Text("${investment.displayName} (+$custoSomado)") },
-                                    leadingIcon = {
-                                        Icon(
-                                            imageVector = Icons.Filled.Close,
-                                            contentDescription = "Remover"
-                                        )
                                     }
+                                    .padding(horizontal = 6.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Close,
+                                    contentDescription = "Remover",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                                    modifier = Modifier.size(12.dp)
+                                )
+                                Spacer(Modifier.width(4.dp))
+                                Text(
+                                    text = "${investment.displayName} (+$cost)",
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1
                                 )
                             }
                         }
-                        else -> {
-                            AssistChip(
-                                onClick = {
-                                    val r = viewModel.desfazerInvestimentoSuper(investment)
-                                    if (r.ok) {
-                                        state.removerSuperPoder(investment, desfazerNoLedger = false)
-                                    } else {
-                                        onShowMessage(r.mensagem)
-                                    }
-                                },
-                                label = { Text("${investment.displayName} (+${investment.cost})") },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.Close,
-                                        contentDescription = "Remover"
-                                    )
-                                }
-                            )
-                        }
                     }
                 }
+
+                // Smooth fade gradient overlay at the right edge to indicate horizontal scrollability
+                Box(
+                    modifier = Modifier
+                        .width(24.dp)
+                        .align(Alignment.CenterEnd)
+                        .matchParentSize()
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color.Transparent,
+                                    MaterialTheme.colorScheme.surfaceVariant
+                                )
+                            )
+                        )
+                )
             }
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
         }
 
         Text("Nível de Superpoderes")
