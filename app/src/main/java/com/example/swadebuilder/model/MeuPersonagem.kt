@@ -48,6 +48,7 @@ data class MeuPersonagem(
     val tipoMonstroSelecionado: String? = null,
     val superPontosTotais: Int = 0,
     val superPontosDisponiveis: Int = 0,
+    val superNivelCampanha: Int? = null,
 
     // Limites & favorecido
     val limitePorPoderPadrao: Int = 0,

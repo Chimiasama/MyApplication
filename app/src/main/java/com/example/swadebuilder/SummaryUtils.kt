@@ -831,7 +831,12 @@ fun buildSummaryLines(
             lines += "– Nenhum superpoder registrado"
         } else {
             personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                lines += "• ${poderId.toFancyTitleCase()}: $custo SP"
+                val cleanId = if (poderId.startsWith("sp_", ignoreCase = true)) {
+                    poderId.substring(3)
+                } else {
+                    poderId
+                }
+                lines += "${cleanId.toFancyTitleCase()}: $custo SP"
             }
         }
 

@@ -133,13 +133,14 @@ fun BuySuperPowerDialog(
 
     val modStates = remember(poder.modificadores) {
         poder.modificadores.orEmpty().map { modObj ->
-            val name = modObj.substringBefore(":").trim()
-            val paren = Regex("\\(([^)]*)\\)").find(name)?.groupValues?.get(1).orEmpty()
+            val fullName = modObj.substringBefore(":").trim()
+            val cleanName = fullName.replace(Regex("\\s*\\([+-]?\\d+(/\\d+)*\\)\\s*$"), "")
+            val paren = Regex("\\(([^)]*)\\)").find(fullName)?.groupValues?.get(1).orEmpty()
             val opts = paren.split("/")
                 .mapNotNull { it.trim().removePrefix("+").toIntOrNull() }
                 .takeIf { it.isNotEmpty() } ?: listOf(0)
             ModState(
-                name = name,
+                name = cleanName,
                 options = opts,
                 included = mutableStateOf(false),
                 selected = mutableIntStateOf(opts.first())
@@ -259,7 +260,9 @@ fun BuySuperPowerDialog(
                                     onCheckedChange = { mod.included.value = it }
                                 )
                                 Spacer(Modifier.width(8.dp))
-                                Text("${mod.name} (${mod.options.first()})")
+                                val firstOpt = mod.options.first()
+                                val optStr = if (firstOpt > 0) "+$firstOpt" else firstOpt.toString()
+                                Text("${mod.name} ($optStr)")
                             }
                         } else {
                             Column(
@@ -273,7 +276,14 @@ fun BuySuperPowerDialog(
                                         onCheckedChange = { mod.included.value = it }
                                     )
                                     Spacer(Modifier.width(8.dp))
-                                    Text(mod.name)
+                                    val optStr = if (mod.included.value) {
+                                        val sel = mod.selected.value
+                                        if (sel > 0) "+$sel" else sel.toString()
+                                    } else {
+                                        val optList = mod.options.map { if (it > 0) "+$it" else it.toString() }
+                                        optList.joinToString("/")
+                                    }
+                                    Text("${mod.name} ($optStr)")
                                 }
                                 if (mod.included.value) {
                                     val sel = mod.selected.value

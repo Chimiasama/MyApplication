@@ -82,6 +82,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         tipoMonstroSelecionado = this.tipoMonstroSelecionado,
         superPontosTotais = this.superPontosTotais,
         superPontosDisponiveis = this.superPontosDisponiveis,
+        superNivelCampanha = this.superNivelCampanha,
         limitePorPoderPadrao = this.limitePorPoderPadrao,
         limiteFavorecido = this.limiteFavorecido,
         poderFavoritoId = this.poderFavoritoId,
@@ -631,6 +632,32 @@ fun gerarFichaEmPdf(
             powerLines.add(namedList.joinToString(", "))
         }
         rightQueue.add(object : TextListBlock("Poderes", powerLines) {})
+    }
+
+    // Superpoderes
+    if (personagem.modoSupers &&
+        (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
+    ) {
+        val superLines = mutableListOf<String>()
+        val nivelStr = personagem.superNivelCampanha?.let { "Nível $it" } ?: "–"
+        superLines.add("Nível da Campanha: $nivelStr")
+        superLines.add("Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})")
+        superLines.add("Limite por Poder: ${personagem.limitePorPoderPadrao}")
+        superLines.add("")
+
+        if (personagem.gastosPorPoder.isEmpty()) {
+            superLines.add("– Nenhum superpoder registrado")
+        } else {
+            personagem.gastosPorPoder.forEach { (poderId, custo) ->
+                val cleanId = if (poderId.startsWith("sp_", ignoreCase = true)) {
+                    poderId.substring(3)
+                } else {
+                    poderId
+                }
+                superLines.add("${cleanId.toFancyTitleCase()}: $custo SP")
+            }
+        }
+        rightQueue.add(object : TextListBlock("Superpoderes", superLines) {})
     }
 
     // Weapons
