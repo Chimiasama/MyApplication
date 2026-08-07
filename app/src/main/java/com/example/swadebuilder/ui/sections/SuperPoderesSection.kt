@@ -166,8 +166,18 @@ fun BuySuperPowerDialog(
     val isLongRange = allowedBaseOptions.size > 7 ||
             (maxAllowed - minAllowed) > 10
 
-    var baseIdx by rememberSaveable(allowedBaseOptions) { mutableIntStateOf(0) }
+    var baseIdx by rememberSaveable(poder.nome) { mutableIntStateOf(0) }
     val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
+
+    LaunchedEffect(baseCost) {
+        if (poder.nome.keyify() == "VELOCIDADE" && baseCost < 13) {
+            modStates.forEach { mod ->
+                if (mod.name.keyify() == "TENSAO SUPERFICIAL" || mod.name.keyify() == "TENSAO_SUPERFICIAL") {
+                    mod.included.value = false
+                }
+            }
+        }
+    }
 
     val totalAtualRaw = baseCost + modCost
     val totalAtual = totalAtualRaw.coerceAtLeast(1)
@@ -247,22 +257,30 @@ fun BuySuperPowerDialog(
                     Spacer(Modifier.height(4.dp))
 
                     modStates.forEach { mod ->
+                        val isTensaoSuperficial = poder.nome.keyify() == "VELOCIDADE" &&
+                                (mod.name.keyify() == "TENSAO SUPERFICIAL" || mod.name.keyify() == "TENSAO_SUPERFICIAL")
+                        val isModEnabled = !isTensaoSuperficial || baseCost >= 13
+
                         if (mod.options.size == 1) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable { mod.included.value = !mod.included.value }
+                                    .clickable(enabled = isModEnabled) { mod.included.value = !mod.included.value }
                                     .padding(vertical = 4.dp)
                             ) {
                                 Checkbox(
                                     checked = mod.included.value,
-                                    onCheckedChange = { mod.included.value = it }
+                                    onCheckedChange = { if (isModEnabled) mod.included.value = it },
+                                    enabled = isModEnabled
                                 )
                                 Spacer(Modifier.width(8.dp))
                                 val firstOpt = mod.options.first()
                                 val optStr = if (firstOpt > 0) "+$firstOpt" else firstOpt.toString()
-                                Text("${mod.name} ($optStr)")
+                                Text(
+                                    text = "${mod.name} ($optStr)",
+                                    color = if (isModEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                )
                             }
                         } else {
                             Column(
@@ -273,7 +291,8 @@ fun BuySuperPowerDialog(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Checkbox(
                                         checked = mod.included.value,
-                                        onCheckedChange = { mod.included.value = it }
+                                        onCheckedChange = { if (isModEnabled) mod.included.value = it },
+                                        enabled = isModEnabled
                                     )
                                     Spacer(Modifier.width(8.dp))
                                     val optStr = if (mod.included.value) {
@@ -283,7 +302,10 @@ fun BuySuperPowerDialog(
                                         val optList = mod.options.map { if (it > 0) "+$it" else it.toString() }
                                         optList.joinToString("/")
                                     }
-                                    Text("${mod.name} ($optStr)")
+                                    Text(
+                                        text = "${mod.name} ($optStr)",
+                                        color = if (isModEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                    )
                                 }
                                 if (mod.included.value) {
                                     val sel = mod.selected.value

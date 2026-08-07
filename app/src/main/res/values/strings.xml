@@ -3,4 +3,6 @@
     <string name="state_expanded">Expanded</string>
     <string name="state_collapsed">Collapsed</string>
     <string name="sw_pathfinder_label">Pathfinder</string>
+    <string name="sw_supers_book_title">Superpoderes</string>
+    <string name="sw_monsters_book_title">Monstros</string>
 </resources>
