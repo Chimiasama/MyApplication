@@ -5909,9 +5909,9 @@ class CriadorState {
         // Safety check for creation mode + Idoso
         if (!modoProgressaoAtivo && !modoLivre) {
              val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
-             if (hasIdoso && per.atributo != "Astúcia") {
+             if (hasIdoso && per.atributo != "ASTUCIA") {
                  val spentOnSmarts = periciasComIdiomas()
-                     .filter { it.atributo == "Astúcia" }
+                     .filter { it.atributo == "ASTUCIA" }
                      .sumOf { spCostStackPorPericia[it]?.sum() ?: 0 }
                  if (spentOnSmarts < 5) {
                      feedbackMessages?.add("Distribua ao menos 5 pontos em perícias de astúcia antes.")
@@ -5953,7 +5953,7 @@ class CriadorState {
         if (!hasIdoso) return true
 
         // If trying to reduce a Smarts-based skill
-        if (pericia.atributo == "Astúcia") {
+        if (pericia.atributo == "ASTUCIA") {
             // Check if removing this point would violate the 5-point minimum IF we have spent points on non-Smarts skills?
             // Actually, simply returning true allows reduction. The constraint is checked at completion.
             return true
@@ -5998,7 +5998,7 @@ class CriadorState {
         if (hasIdoso) {
              // "ter gasto ao menos 5 sp em perícias de Astúcia"
              val spentOnSmarts = periciasComIdiomas()
-                 .filter { it.atributo == "Astúcia" }
+                 .filter { it.atributo == "ASTUCIA" }
                  .sumOf { spCostStackPorPericia[it]?.sum() ?: 0 }
 
              if (spentOnSmarts < 5) return false
