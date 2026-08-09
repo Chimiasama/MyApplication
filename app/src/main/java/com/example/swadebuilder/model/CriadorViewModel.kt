@@ -208,6 +208,57 @@ class CriadorViewModel(
         )
     }
 
+    fun limparFichaMantendoLivro() {
+        val currentCartaSelvagem = state.cartaSelvagem
+        val currentMaisPontosPericias = state.maisPontosPericias
+        val currentModoSupers = state.modoSupers
+        val currentCompendioFantasiaAtivo = state.compendioFantasiaAtivo
+        val currentCompendioHorrorAtivo = state.compendioHorrorAtivo
+        val currentCompendioSciFiAtivo = state.compendioSciFiAtivo
+        val currentCompendioScifiMechasCiberneticosAtivo = state.compendioScifiMechasCiberneticosAtivo
+        val currentCompendioPathfinderAtivo = state.compendioPathfinderAtivo
+        val currentCompendioDeadlandsAtivo = state.compendioDeadlandsAtivo
+        val currentCompendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
+        val currentCompendioArteDaGuerraAtivo = state.compendioArteDaGuerraAtivo
+        val currentCompendioCidadeSolVaporAtivo = state.compendioCidadeSolVaporAtivo
+        val currentCompendioWiseguysAtivo = state.compendioWiseguysAtivo
+        val currentModoMonstroAtivo = state.modoMonstroAtivo
+        val currentUsarEspecializacoesDePericia = state.usarEspecializacoesDePericia
+        val currentGrandesResponsabilidades = state.grandesResponsabilidades
+        val currentRegraMultiplosIdiomas = state.regraMultiplosIdiomas
+        val currentOptRegraFama = state.optRegraFama
+        val currentOptRegraRiqueza = state.optRegraRiqueza
+        val currentOptRegraCosaNostra = state.optRegraCosaNostra
+        val currentNasceUmHeroi = state.nasceUmHeroi
+        val currentUsarSemPontosDePoder = state.usarSemPontosDePoder
+
+        resetStateParaNovoPersonagem(
+            cartaSelvagem = currentCartaSelvagem,
+            maisPontosPericias = currentMaisPontosPericias,
+            modoSupers = currentModoSupers,
+            compendioFantasiaAtivo = currentCompendioFantasiaAtivo,
+            compendioHorrorAtivo = currentCompendioHorrorAtivo,
+            compendioSciFiAtivo = currentCompendioSciFiAtivo,
+            compendioScifiMechasCiberneticosAtivo = currentCompendioScifiMechasCiberneticosAtivo,
+            compendioPathfinderAtivo = currentCompendioPathfinderAtivo,
+            compendioDeadlandsAtivo = currentCompendioDeadlandsAtivo,
+            compendioCrystalHeartAtivo = currentCompendioCrystalHeartAtivo,
+            compendioArteDaGuerraAtivo = currentCompendioArteDaGuerraAtivo,
+            compendioCidadeSolVaporAtivo = currentCompendioCidadeSolVaporAtivo,
+            compendioWiseguysAtivo = currentCompendioWiseguysAtivo,
+            modoMonstroAtivo = currentModoMonstroAtivo,
+            usarEspecializacoesDePericia = currentUsarEspecializacoesDePericia,
+            grandesResponsabilidades = currentGrandesResponsabilidades,
+            regraMultiplosIdiomas = currentRegraMultiplosIdiomas,
+            optRegraFama = currentOptRegraFama,
+            optRegraRiqueza = currentOptRegraRiqueza,
+            optRegraCosaNostra = currentOptRegraCosaNostra
+        )
+
+        state.nasceUmHeroi = currentNasceUmHeroi
+        state.usarSemPontosDePoder = currentUsarSemPontosDePoder
+    }
+
     suspend fun prepararNomeInicial(context: Context) {
         state.nomePersonagem = generateSequentialNameUseCase.execute(
             baseName = DEFAULT_CHARACTER_NAME,
