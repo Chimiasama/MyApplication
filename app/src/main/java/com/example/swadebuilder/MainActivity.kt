@@ -635,12 +635,12 @@ class MainActivity : ComponentActivity() {
                     confirmButton = {
                         TextButton(onClick = {
                             triggerFeedback()
-                            criadorViewModel.resetToEmptyState()
-                            mostrouTelaInicial = true
-                            showResetDialog = false
                             scope.launch {
+                                criadorViewModel.limparFichaMantendoLivro()
+                                criadorViewModel.prepararNomeInicial(context)
                                 snackHost.showSnackbar("Ficha limpa.")
                             }
+                            showResetDialog = false
                         }) {
                             Text("Limpar")
                         }
