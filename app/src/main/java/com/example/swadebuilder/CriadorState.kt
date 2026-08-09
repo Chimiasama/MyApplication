@@ -108,26 +108,26 @@ class CriadorState {
     private val resolveAncestryVariantUseCase = ResolveAncestryVariantUseCase()
 
     // --- Game Data Properties (Replaces Globals) ---
-    var listaAtributos: List<String> = emptyList()
-    var listaPericias: List<Pericia> = emptyList()
-    var listaVantagens: List<Vantagem> = emptyList()
-    var listaComplicacoes: List<Complicacao> = emptyList()
-    var listaTropos: List<Tropo> = emptyList()
-    var listaEquipamentos: List<EquipamentoItem> = emptyList()
-    var listaPoderes: List<Poder> = emptyList()
-    var listaSuperPoderes: List<SuperPoder> = emptyList()
-    var listaAncestralidadesJson: List<RacialModifier> = emptyList()
-    var listaMonstroTemplates: List<MonstroTemplate> = emptyList()
-    var listaCoracoesCrystal: List<CrystalHeart> = emptyList()
+    var listaAtributos by mutableStateOf<List<String>>(emptyList())
+    var listaPericias by mutableStateOf<List<Pericia>>(emptyList())
+    var listaVantagens by mutableStateOf<List<Vantagem>>(emptyList())
+    var listaComplicacoes by mutableStateOf<List<Complicacao>>(emptyList())
+    var listaTropos by mutableStateOf<List<Tropo>>(emptyList())
+    var listaEquipamentos by mutableStateOf<List<EquipamentoItem>>(emptyList())
+    var listaPoderes by mutableStateOf<List<Poder>>(emptyList())
+    var listaSuperPoderes by mutableStateOf<List<SuperPoder>>(emptyList())
+    var listaAncestralidadesJson by mutableStateOf<List<RacialModifier>>(emptyList())
+    var listaMonstroTemplates by mutableStateOf<List<MonstroTemplate>>(emptyList())
+    var listaCoracoesCrystal by mutableStateOf<List<CrystalHeart>>(emptyList())
 
-    var equipamentoCategorias: List<EquipamentoCategoria> = emptyList()
-    var superequipCategorias: List<EquipamentoCategoria> = emptyList()
+    var equipamentoCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
+    var superequipCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
 
-    var mapaAtributosDisplay: Map<String, String> = emptyMap()
-    var mapaPericias: Map<String, Pericia> = emptyMap()
-    var racialAttrMinMap: Map<String, Map<String, Int>> = emptyMap()
-    var racialSkillStartMap: Map<String, Map<String, Int>> = emptyMap()
-    var arcanoInfo: Map<String, Triple<Int, Int, String>> = emptyMap()
+    var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
+    var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
+    var racialAttrMinMap by mutableStateOf<Map<String, Map<String, Int>>>(emptyMap())
+    var racialSkillStartMap by mutableStateOf<Map<String, Map<String, Int>>>(emptyMap())
+    var arcanoInfo by mutableStateOf<Map<String, Triple<Int, Int, String>>>(emptyMap())
 
     // Optimization: Cache ancestry lookup to avoid O(N) filtering on every access.
     // Maps keyify(name) -> List of candidates.
@@ -5909,9 +5909,9 @@ class CriadorState {
         // Safety check for creation mode + Idoso
         if (!modoProgressaoAtivo && !modoLivre) {
              val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
-             if (hasIdoso && per.atributo != "Astúcia") {
+             if (hasIdoso && per.atributo != "ASTUCIA") {
                  val spentOnSmarts = periciasComIdiomas()
-                     .filter { it.atributo == "Astúcia" }
+                     .filter { it.atributo == "ASTUCIA" }
                      .sumOf { spCostStackPorPericia[it]?.sum() ?: 0 }
                  if (spentOnSmarts < 5) {
                      feedbackMessages?.add("Distribua ao menos 5 pontos em perícias de astúcia antes.")
@@ -5953,7 +5953,7 @@ class CriadorState {
         if (!hasIdoso) return true
 
         // If trying to reduce a Smarts-based skill
-        if (pericia.atributo == "Astúcia") {
+        if (pericia.atributo == "ASTUCIA") {
             // Check if removing this point would violate the 5-point minimum IF we have spent points on non-Smarts skills?
             // Actually, simply returning true allows reduction. The constraint is checked at completion.
             return true
@@ -5998,7 +5998,7 @@ class CriadorState {
         if (hasIdoso) {
              // "ter gasto ao menos 5 sp em perícias de Astúcia"
              val spentOnSmarts = periciasComIdiomas()
-                 .filter { it.atributo == "Astúcia" }
+                 .filter { it.atributo == "ASTUCIA" }
                  .sumOf { spCostStackPorPericia[it]?.sum() ?: 0 }
 
              if (spentOnSmarts < 5) return false
