@@ -30,9 +30,20 @@ private val liteDisplayReplacements = listOf(
     "Deadlands" to "Faroeste Assombrado",
     "Wiseguys" to "Malandros",
     "Kemonomimi (Espírito Animal)" to "Povo Animal Espiritual",
-    "Humano (Império do Sol)" to "Humano (Império Oriental)",
-    "Terracota" to "Povo de Barro",
-    "Onigem (Sangue de Oni)" to "Sangue de Demônio"
+    "Humano (Império San)" to "Humano",
+    "Humano (Império do Sol)" to "Humano",
+    "Humano (Império Oriental)" to "Humano",
+    "Akaimimi (Panda Vermelho)" to "Panda Vermelho",
+    "Araiguma (Guaxinim)" to "Guaxinim",
+    "Inumimi (Cão)" to "Cão",
+    "Kitsunemimi (Raposa)" to "Raposa",
+    "Nekomimi (Gato)" to "Gato",
+    "Onigem (Sangue Oni)" to "Sangue Oni",
+    "Onigem (Sangue de Oni)" to "Sangue Oni",
+    "Tanukimimi (Tanuki)" to "Tanuki",
+    "Umvee (Filhos da Lua)" to "Filhos da Lua",
+    "Usagimimi (Coelho)" to "Coelho",
+    "Terracota" to "Povo de Barro"
 )
 
 fun String.toEditionDisplayName(): String {
