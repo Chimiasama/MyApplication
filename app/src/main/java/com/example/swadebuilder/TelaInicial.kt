@@ -285,7 +285,7 @@ fun TelaInicial(
         )
     )
 
-    val settingModules = if (isFullEdition) listOf(
+    val settingModules = listOf(
         ModuleItemData(
             androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label),
             if (isFullEdition) "Conteúdo oficial de Mundo Ancestral (Classes, Raças)." else "Cenário ${androidx.compose.ui.res.stringResource(R.string.sw_pathfinder_label)} e material temático.",
@@ -360,7 +360,7 @@ fun TelaInicial(
             { applyRulesPreset("Wiseguys"); showRulesDialog = true },
             isRulesActive = optCompendioWiseguys
         )
-    ) else emptyList()
+    )
 
     Scaffold(
         topBar = {
