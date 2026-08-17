@@ -13,7 +13,11 @@ object GenericNameMapper {
         "Crystal Heart" to "Coração de Cristal",
         "Syn" to "Organização",
         "Cronista Desbravador" to "Cronista Buscatrilha",
-        "Desbravador" to "Buscatrilha"
+        "Desbravador" to "Buscatrilha",
+        "Aeronave (Dirigível)" to "Aeronave",
+        " (Dirigível)" to "",
+        "(Dirigível)" to "",
+        "Dragão Alquímico" to "D. Alquímico"
     )
 
     fun map(input: String): String {
