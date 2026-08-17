@@ -242,4 +242,42 @@ class ContentVisibilityTest {
         assertFalse(state.isVantagemVisible(novosPoderes, multiplosAAHabilitados = true))
     }
 
+    @Test
+    fun `todos livros de cenario ativos sao incluidos em getActiveOrigins e getActiveModuleKeys`() {
+        val testCases = listOf(
+            Pair({ s: CriadorState -> s.compendioPathfinderAtivo = true }, "PATHFINDER"),
+            Pair({ s: CriadorState -> s.compendioDeadlandsAtivo = true }, "DEADLANDS"),
+            Pair({ s: CriadorState -> s.compendioCrystalHeartAtivo = true }, "CRYSTAL_HEART"),
+            Pair({ s: CriadorState -> s.compendioArteDaGuerraAtivo = true }, "ARTE_DA_GUERRA"),
+            Pair({ s: CriadorState -> s.compendioCidadeSolVaporAtivo = true }, "CIDADE_SOL_VAPOR"),
+            Pair({ s: CriadorState -> s.compendioWiseguysAtivo = true }, "WISEGUYS")
+        )
+
+        for ((activator, expectedKey) in testCases) {
+            val state = CriadorState().apply { activator(this) }
+            val origins = state.getActiveOrigins()
+            val moduleKeys = state.getActiveModuleKeys()
+
+            assertTrue("$expectedKey deve estar em activeOrigins", expectedKey in origins)
+            assertTrue("$expectedKey deve estar em activeModuleKeys", expectedKey in moduleKeys)
+        }
+    }
+
+    @Test
+    fun `complicacoes do pathfinder sao visiveis quando compendioPathfinderAtivo esta verdadeiro`() {
+        val state = CriadorState().apply {
+            compendioPathfinderAtivo = true
+        }
+
+        val pfComplication = Complicacao(
+            id = "almofadinha",
+            name = "ALMOFADINHA",
+            severity = "menor",
+            description = "Descrição",
+            origem = "PATHFINDER"
+        )
+
+        assertTrue(state.isComplicacaoVisible(pfComplication))
+    }
+
 }

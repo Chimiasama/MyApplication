@@ -22,21 +22,18 @@ private fun CriadorState.resolveScenarioRules() = RulesResolver().resolve(
 )
 
 fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
-    val isFull = EditionConfig.isFullEdition
     if (modoLivre) {
         add("BASICO")
         add("FANTASIA")
         add("SCI_FI")
         add("SUPER")
         add("HORROR")
-        if (isFull) {
-            add("PATHFINDER")
-            add("DEADLANDS")
-            add("ARTE_DA_GUERRA")
-            add("CIDADE_SOL_VAPOR")
-            add("WISEGUYS")
-            add("CRYSTAL_HEART")
-        }
+        add("PATHFINDER")
+        add("DEADLANDS")
+        add("ARTE_DA_GUERRA")
+        add("CIDADE_SOL_VAPOR")
+        add("WISEGUYS")
+        add("CRYSTAL_HEART")
         return@buildSet
     }
     // 1. Add active compendiums to the set
@@ -44,17 +41,12 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     if (compendioSciFiAtivo) add("SCI_FI")
     if (modoSupers) add("SUPER")
     if (compendioHorrorAtivo) add("HORROR")
-
-    if (isFull) {
-        if (compendioPathfinderAtivo) add("PATHFINDER")
-        if (compendioDeadlandsAtivo) add("DEADLANDS")
-        if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
-        if (compendioCidadeSolVaporAtivo) {
-            add("CIDADE_SOL_VAPOR")
-        }
-        if (compendioWiseguysAtivo) add("WISEGUYS")
-        if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
-    }
+    if (compendioPathfinderAtivo) add("PATHFINDER")
+    if (compendioDeadlandsAtivo) add("DEADLANDS")
+    if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
+    if (compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
+    if (compendioWiseguysAtivo) add("WISEGUYS")
+    if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
 
     // 2. Determine if "BASICO" should be included
     // "Replacement Settings" are those that provide their own dataset for section content.
@@ -64,14 +56,12 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
         compendioFantasiaAtivo ||
         compendioHorrorAtivo ||
         compendioSciFiAtivo ||
-        (isFull && (
-            compendioPathfinderAtivo ||
-            compendioDeadlandsAtivo ||
-            compendioCrystalHeartAtivo ||
-            compendioArteDaGuerraAtivo ||
-            compendioCidadeSolVaporAtivo ||
-            compendioWiseguysAtivo
-        ))
+        compendioPathfinderAtivo ||
+        compendioDeadlandsAtivo ||
+        compendioCrystalHeartAtivo ||
+        compendioArteDaGuerraAtivo ||
+        compendioCidadeSolVaporAtivo ||
+        compendioWiseguysAtivo
 
     if (!replacementSettingsActive) {
         add("BASICO")
