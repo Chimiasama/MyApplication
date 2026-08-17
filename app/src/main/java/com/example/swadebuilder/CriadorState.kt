@@ -279,21 +279,18 @@ class CriadorState {
     var dominioClerigoPathfinderSelecionado by mutableStateOf<String?>(null)
 
     fun getActiveModuleKeys(): Set<String> {
-        val isFull = EditionConfig.isFullEdition
         if (modoLivre) {
             return buildSet {
                 add(ModuleIds.FANTASIA)
                 add(ModuleIds.HORROR)
                 add(ModuleIds.SCI_FI)
                 add(ModuleIds.SUPER)
-                if (isFull) {
-                    add(ModuleIds.PATHFINDER)
-                    add(ModuleIds.DEADLANDS)
-                    add(ModuleIds.CRYSTAL_HEART)
-                    add(ModuleIds.ARTE_DA_GUERRA)
-                    add(ModuleIds.CIDADE_SOL_VAPOR)
-                    add(ModuleIds.WISEGUYS)
-                }
+                add(ModuleIds.PATHFINDER)
+                add(ModuleIds.DEADLANDS)
+                add(ModuleIds.CRYSTAL_HEART)
+                add(ModuleIds.ARTE_DA_GUERRA)
+                add(ModuleIds.CIDADE_SOL_VAPOR)
+                add(ModuleIds.WISEGUYS)
             }
         }
         val keys = mutableSetOf<String>()
@@ -301,15 +298,12 @@ class CriadorState {
         if (compendioHorrorAtivo) keys.add(ModuleIds.HORROR)
         if (compendioSciFiAtivo) keys.add(ModuleIds.SCI_FI)
         if (modoSupers) keys.add(ModuleIds.SUPER)
-
-        if (isFull) {
-            if (compendioPathfinderAtivo) keys.add(ModuleIds.PATHFINDER)
-            if (compendioDeadlandsAtivo) keys.add(ModuleIds.DEADLANDS)
-            if (compendioCrystalHeartAtivo) keys.add(ModuleIds.CRYSTAL_HEART)
-            if (compendioArteDaGuerraAtivo) keys.add(ModuleIds.ARTE_DA_GUERRA)
-            if (compendioCidadeSolVaporAtivo) keys.add(ModuleIds.CIDADE_SOL_VAPOR)
-            if (compendioWiseguysAtivo) keys.add(ModuleIds.WISEGUYS)
-        }
+        if (compendioPathfinderAtivo) keys.add(ModuleIds.PATHFINDER)
+        if (compendioDeadlandsAtivo) keys.add(ModuleIds.DEADLANDS)
+        if (compendioCrystalHeartAtivo) keys.add(ModuleIds.CRYSTAL_HEART)
+        if (compendioArteDaGuerraAtivo) keys.add(ModuleIds.ARTE_DA_GUERRA)
+        if (compendioCidadeSolVaporAtivo) keys.add(ModuleIds.CIDADE_SOL_VAPOR)
+        if (compendioWiseguysAtivo) keys.add(ModuleIds.WISEGUYS)
         return keys
     }
 

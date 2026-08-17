@@ -242,4 +242,34 @@ class ContentVisibilityTest {
         assertFalse(state.isVantagemVisible(novosPoderes, multiplosAAHabilitados = true))
     }
 
+    @Test
+    fun `pathfinder ativo inclui PATHFINDER em getActiveOrigins e getActiveModuleKeys`() {
+        val state = CriadorState().apply {
+            compendioPathfinderAtivo = true
+        }
+
+        val origins = state.getActiveOrigins()
+        val moduleKeys = state.getActiveModuleKeys()
+
+        assertTrue("PATHFINDER deve estar em activeOrigins", "PATHFINDER" in origins)
+        assertTrue("PATHFINDER deve estar em activeModuleKeys", "PATHFINDER" in moduleKeys)
+    }
+
+    @Test
+    fun `complicacoes do pathfinder sao visiveis quando compendioPathfinderAtivo esta verdadeiro`() {
+        val state = CriadorState().apply {
+            compendioPathfinderAtivo = true
+        }
+
+        val pfComplication = Complicacao(
+            id = "almofadinha",
+            name = "ALMOFADINHA",
+            severity = "menor",
+            description = "Descrição",
+            origem = "PATHFINDER"
+        )
+
+        assertTrue(state.isComplicacaoVisible(pfComplication))
+    }
+
 }
