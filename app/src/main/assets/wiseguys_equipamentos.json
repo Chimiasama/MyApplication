@@ -1,5 +1,2788 @@
 [
   {
+    "tipo": "Equipamento Geral",
+    "subtipo": "Animais e Arreios",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Cavalo",
+        "custo": 300,
+        "peso": 0,
+        "observacoes": "Animal de montaria.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Cavalo de Guerra",
+        "custo": 750,
+        "peso": 0,
+        "observacoes": "Treinado para combate.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Sela",
+        "custo": 10,
+        "peso": 5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Sela Elaborada",
+        "custo": 50,
+        "peso": 5,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Geral",
+    "subtipo": "Acessórios para armas de fogo",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Bipé/Tripé",
+        "custo": 100,
+        "peso": 1,
+        "observacoes": "Requer ação para posicionar. Nega Recuo e Força Mínima.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Luneta de Rifle",
+        "custo": 100,
+        "peso": 1,
+        "observacoes": "Cancela 2 pontos de penalidade ao Mirar.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mira Laser/Red Dot",
+        "custo": 150,
+        "peso": 0.5,
+        "observacoes": "+1 em Atirar em Distância Curta e Média.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Geral",
+    "subtipo": "Equipamento de Aventura",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Algemas (grilhões)",
+        "custo": 15,
+        "peso": 1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mochila",
+        "custo": 50,
+        "peso": 1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Óculos",
+        "custo": 20,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Óleo (meio litro)",
+        "custo": 2,
+        "peso": 0.5,
+        "observacoes": "Para lamparina.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Pá",
+        "custo": 5,
+        "peso": 2.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Pé de Cabra",
+        "custo": 10,
+        "peso": 1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Pederneira e Aço",
+        "custo": 3,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Pedra de Amolar",
+        "custo": 5,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Sabão",
+        "custo": 1,
+        "peso": 0.1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Saco de dormir",
+        "custo": 25,
+        "peso": 2,
+        "observacoes": "Preparado para o inverno.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Tocha",
+        "custo": 5,
+        "peso": 0.5,
+        "observacoes": "Uma hora, 4 quadros de raio.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Vela",
+        "custo": 1,
+        "peso": 0.5,
+        "observacoes": "Uma hora, 2 quadros de raio.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Aljava",
+        "custo": 25,
+        "peso": 1,
+        "observacoes": "Guarda até 20 flechas/virotes.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Apito",
+        "custo": 2,
+        "peso": 0,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Câmera (descartável)",
+        "custo": 10,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Câmera (digital)",
+        "custo": 300,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Câmera (normal)",
+        "custo": 75,
+        "peso": 1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Cantil (odre)",
+        "custo": 5,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Cobertor",
+        "custo": 10,
+        "peso": 2,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Corda, cânhamo (20m)",
+        "custo": 10,
+        "peso": 7.5,
+        "observacoes": "10 quadros/20 metros.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Corda, nylon (20m)",
+        "custo": 10,
+        "peso": 1.5,
+        "observacoes": "10 quadros/20 metros.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Frasco (cerâmica)",
+        "custo": 5,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Gancho de Escalada",
+        "custo": 100,
+        "peso": 1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Gazuas",
+        "custo": 200,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Guarda-Chuva",
+        "custo": 5,
+        "peso": 1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Isqueiro",
+        "custo": 2,
+        "peso": 0,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit de Ferramentas",
+        "custo": 200,
+        "peso": 2.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit de Primeiros Socorros",
+        "custo": 10,
+        "peso": 0.5,
+        "observacoes": "Três usos, veja Cura.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Kit Médico",
+        "custo": 100,
+        "peso": 2,
+        "observacoes": "Cinco usos, +1 em rolagens de Curar; $25 para reabastecer.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Lamparina",
+        "custo": 25,
+        "peso": 1.5,
+        "observacoes": "4 horas, 4 quadros de raio.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Lanterna",
+        "custo": 20,
+        "peso": 1.5,
+        "observacoes": "Feixe de 10 quadros.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Martelo",
+        "custo": 10,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Equipamento Geral",
+    "subtipo": "Vestuário",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Botas de Inverno",
+        "custo": 100,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Botas, Caminhada",
+        "custo": 100,
+        "peso": 1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Equipamento de Inverno",
+        "custo": 200,
+        "peso": 1.5,
+        "observacoes": "Capa/jaqueta.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Vestuário Camuflado",
+        "custo": 20,
+        "peso": 1.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Vestuário Casual",
+        "custo": 20,
+        "peso": 1,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Vestuário Formal",
+        "custo": 200,
+        "peso": 1.5,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Eletrônicos",
+    "subtipo": "Computadores e Vigilância",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Desktop",
+        "custo": 800,
+        "peso": 10,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "De Mão (Handheld)",
+        "custo": 250,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "GPS",
+        "custo": 250,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Laptop",
+        "custo": 1200,
+        "peso": 2.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Botão Câmera",
+        "custo": 50,
+        "peso": 0,
+        "observacoes": "12 horas de uso contínuo.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Detector de Transmissão",
+        "custo": 525,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escuta (Micro-Transmissor)",
+        "custo": 30,
+        "peso": 0,
+        "observacoes": "12 horas de uso contínuo.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escuta Telefônica",
+        "custo": 250,
+        "peso": 0,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Interceptador de Celular",
+        "custo": 650,
+        "peso": 2.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Telefone de Reparos",
+        "custo": 150,
+        "peso": 1,
+        "observacoes": "Rolagem de Consertar para conectar em uma linha.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Microfone Parabólico",
+        "custo": 750,
+        "peso": 2,
+        "observacoes": "Ouve sussurros a até 200m.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Óculos de Visão Noturna",
+        "custo": 500,
+        "peso": 1.5,
+        "observacoes": "Sem penalidades por Penumbra/Escuridão.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Consumíveis",
+    "subtipo": "Comida",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Refeição Fast Food",
+        "custo": 8,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Boa Refeição (Restaurante)",
+        "custo": 15,
+        "peso": 0,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "RPC (Refeição Pronta)",
+        "custo": 10,
+        "peso": 0.5,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Rações de Viagem",
+        "custo": 10,
+        "peso": 2.5,
+        "observacoes": "5 refeições; uma semana sem estragar.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pessoais",
+    "subtipo": "Defesa Pessoal",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Arma Atordoante",
+        "distancia": "1/2/4",
+        "custo": 25,
+        "peso": 0.25,
+        "observacoes": "Vigor -2 ou Atordoado. 3 tiros.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Spray de Pimenta",
+        "distancia": "2 quadros",
+        "custo": 15,
+        "peso": 0.25,
+        "observacoes": "Vigor -2 ou Atordoado. 5 usos. Usa Atirar ou Lutar.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Munição",
+    "subtipo": "Geral",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Balas Pequenas",
+        "custo": 10,
+        "peso": 0.5,
+        "observacoes": "50 munições. Calibre .22 a .32.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Balas Médias",
+        "custo": 20,
+        "peso": 1,
+        "observacoes": "50 munições. Calibre 9mm a .45.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Balas Grandes",
+        "custo": 50,
+        "peso": 7.5,
+        "observacoes": "50 munições. Calibre .50+.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Balas (c/ pólvora)",
+        "custo": 1,
+        "peso": 0.25,
+        "observacoes": "10 munições. Para armas de pólvora negra.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Bateria Laser (Pistola)",
+        "custo": 20,
+        "peso": 0.12,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Bateria Laser (Rifle/SMG)",
+        "custo": 20,
+        "peso": 0.25,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Bateria Laser (Gatling)",
+        "custo": 50,
+        "peso": 2,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Cartuchos de Escopeta",
+        "custo": 15,
+        "peso": 0.7,
+        "observacoes": "25 cartuchos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Balas Sólidas (Escopeta)",
+        "custo": 20,
+        "peso": 0.7,
+        "observacoes": "25 balas. Veja pág. 121.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Flechas/Virotes",
+        "custo": 1,
+        "peso": 0.5,
+        "observacoes": "2 flechas/virotes. Peso por 5 flechas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Pedras de funda",
+        "custo": 2,
+        "peso": 0.5,
+        "observacoes": "20 pedras. Peso por 20.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Tecido e Couro",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Jaqueta",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 20,
+        "observacoes": "Tronco, braços.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Manto",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 30,
+        "observacoes": "Tronco, braços, pernas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Calças (Tecido)",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 20,
+        "observacoes": "Pernas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Capuz (Tecido)",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 5,
+        "observacoes": "Cabeça.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Jaqueta (Couro Fervido)",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 80,
+        "observacoes": "Tronco, braços.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Calças (Couro Fervido)",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 3.5,
+        "custo": 40,
+        "observacoes": "Pernas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Capuz (Couro Fervido)",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 0.5,
+        "custo": 20,
+        "observacoes": "Cabeça.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Medievais de Metal",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Camisa de Cota de Malha",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 12.5,
+        "custo": 300,
+        "observacoes": "Tronco, braços.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Calças de Cota de Malha",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 5,
+        "custo": 150,
+        "observacoes": "Pernas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Capuz de Cota ou Elmo",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 2,
+        "custo": 25,
+        "observacoes": "Cabeça.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Corselete de Bronze",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 6.5,
+        "custo": 80,
+        "observacoes": "Tronco.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Braçadeiras de Bronze",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 2.5,
+        "custo": 40,
+        "observacoes": "Braços.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Grevas de Bronze",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 50,
+        "observacoes": "Pernas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Elmo de Bronze",
+        "armadura": "+3",
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 25,
+        "observacoes": "Cabeça.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Barda de Bronze (Cavalo)",
+        "armadura": "+3",
+        "forcaMin": "d10",
+        "peso": 25,
+        "custo": 1500,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Corselete de Placas",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 15,
+        "custo": 500,
+        "observacoes": "Tronco.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Braçadeiras de Placas",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 5,
+        "custo": 200,
+        "observacoes": "Braços.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Grevas de Placas",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 5,
+        "custo": 200,
+        "observacoes": "Pernas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Elmo Pesado",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 2,
+        "custo": 100,
+        "observacoes": "Cabeça.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Elmo Pesado Fechado",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 4,
+        "custo": 200,
+        "observacoes": "Cabeça. -1 em Perceber (visão).",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Barda de Placas (Cavalo)",
+        "armadura": "+4",
+        "forcaMin": "d10",
+        "peso": 25,
+        "custo": 1500,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armaduras",
+    "subtipo": "Modernas e Futuristas",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Casaco Grosso/Jaqueta Couro",
+        "armadura": "+1",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 100,
+        "observacoes": "Tronco, braços.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Jaqueta Motociclista Kevlar",
+        "armadura": "+2",
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 350,
+        "observacoes": "Tronco, braços.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Capacete de Bicicleta",
+        "armadura": "+2",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 50,
+        "observacoes": "Cabeça.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Capacete de Motociclista",
+        "armadura": "+3",
+        "forcaMin": "d4",
+        "peso": 1.5,
+        "custo": 100,
+        "observacoes": "Cabeça.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Jaqueta à Prova de Balas",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 40,
+        "observacoes": "Tronco. Era do Vietnã.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Colete de Kevlar",
+        "armadura": "+2",
+        "forcaMin": "d6",
+        "peso": 2.5,
+        "custo": 200,
+        "observacoes": "Tronco. +4 contra balas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Colete Kevlar c/ Cerâmica",
+        "armadura": "+4",
+        "forcaMin": "d8",
+        "peso": 8.5,
+        "custo": 500,
+        "observacoes": "Tronco. +4 contra balas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Capacete de Kevlar",
+        "armadura": "+4",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 80,
+        "observacoes": "Cabeça. +4 contra balas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Traje Antibombas",
+        "armadura": "+10",
+        "forcaMin": "d12",
+        "peso": 40,
+        "custo": 25000,
+        "observacoes": "Corpo inteiro. Agilidade max d6, Mov -2.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Armadura Corporal (Sci-Fi)",
+        "armadura": "+4",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 200,
+        "observacoes": "Corpo. +4 contra balas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Traje de Batalha Infantaria (Sci-Fi)",
+        "armadura": "+6",
+        "forcaMin": "d6",
+        "peso": 6,
+        "custo": 800,
+        "observacoes": "Corpo. +4 contra balas.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Capacete de Batalha (Sci-Fi)",
+        "armadura": "+6",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 100,
+        "observacoes": "Cabeça. +4 contra balas.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Escudos",
+    "subtipo": "Geral",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Escudo Pequeno",
+        "aparar": "+1",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 50,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escudo Médio",
+        "aparar": "+2",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 100,
+        "observacoes": "Cobertura -2.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escudo Grande",
+        "aparar": "+3",
+        "forcaMin": "d8",
+        "peso": 6,
+        "custo": 200,
+        "observacoes": "Cobertura -4.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escudo Anti Tumulto",
+        "aparar": "+3",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 80,
+        "observacoes": "Cobertura -4.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escudo Balístico",
+        "aparar": "+3",
+        "armadura": "+4",
+        "forcaMin": "d6",
+        "peso": 4.5,
+        "custo": 250,
+        "observacoes": "Cobertura -4. +4 Armadura contra armas de fogo.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escudo Polímero Peq. (Sci-Fi)",
+        "aparar": "+1",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 200,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escudo Polímero Méd. (Sci-Fi)",
+        "aparar": "+2",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 300,
+        "observacoes": "Cobertura -2.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Escudo Polímero Grd. (Sci-Fi)",
+        "aparar": "+3",
+        "forcaMin": "d6",
+        "peso": 3,
+        "custo": 400,
+        "observacoes": "Cobertura -4.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Medievais",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Adaga/Faca",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 25,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Alabarda",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 250,
+        "observacoes": "Alcance 1, duas mãos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Bastão",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 10,
+        "observacoes": "Aparar +1, Alcance 1, duas mãos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Clava Leve",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 25,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Clava Pesada",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 2.5,
+        "custo": 50,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Espada Curta",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 100,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Espada Grande",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "peso": 3,
+        "custo": 400,
+        "observacoes": "Duas mãos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Espada Longa",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 1.5,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Katana",
+        "dano": "For+d6+1",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 1000,
+        "observacoes": "Duas mãos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Lança",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 100,
+        "observacoes": "Alcance 1, Aparar +1 se duas mãos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Lança de Cavalaria",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 3,
+        "custo": 300,
+        "observacoes": "PA 2 em investidas, Alcance 2, combate montado.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Maça",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 2,
+        "custo": 100,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Machado de Batalha",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 2,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Machado de Mão",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 100,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Machado Grande",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "peso": 3.5,
+        "custo": 400,
+        "observacoes": "PA 2, Aparar -1, duas mãos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Malho",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "peso": 5,
+        "custo": 400,
+        "observacoes": "Duas mãos, +2 dano quebrar objetos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mangual",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 200,
+        "observacoes": "Ignora bônus de escudo.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Martelo de Guerra",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 250,
+        "observacoes": "PA 1.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Pique",
+        "dano": "For+d8",
+        "forcaMin": "d8",
+        "peso": 9,
+        "custo": 400,
+        "observacoes": "Alcance 2, duas mãos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Rapieira",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 150,
+        "observacoes": "Aparar +1.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Corpo a Corpo",
+    "subtipo": "Modernas e Futuristas",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Baioneta",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 25,
+        "observacoes": "For+d6 e Aparar +1 se fixada em rifle.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Bastão de Disparo",
+        "dano": "3d6",
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 5,
+        "observacoes": "Cartucho de escopeta em bastão. 1 uso.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Canivete",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.25,
+        "custo": 10,
+        "observacoes": "-2 em Perceber se escondido.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Cassetete/Porrete",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 10,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Faca de Sobrevivência",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 50,
+        "observacoes": "+1 em Sobrevivência.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Motosserra",
+        "dano": "2d6+4",
+        "forcaMin": "d6",
+        "peso": 10,
+        "custo": 200,
+        "observacoes": "Falha Crítica atinge usuário.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Soqueiras",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 20,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Espada Laser (Sci-Fi)",
+        "dano": "For+d6+8",
+        "pa": 12,
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 1000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Espada Molecular (Sci-Fi)",
+        "dano": "For+d8+2",
+        "pa": 4,
+        "forcaMin": "d6",
+        "peso": 1,
+        "custo": 500,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Faca Molecular (Sci-Fi)",
+        "dano": "For+d4+2",
+        "pa": 2,
+        "forcaMin": "d4",
+        "peso": 0.25,
+        "custo": 250,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas à Distância",
+    "subtipo": "Medievais",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Adaga/Faca (Arremesso)",
+        "distancia": "3/6/12",
+        "dano": "For+d4",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 25,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arco",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 250,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arco Longo",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "forcaMin": "d8",
+        "peso": 1.5,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Besta",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 2.5,
+        "custo": 250,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Besta Pesada",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 400,
+        "observacoes": "Recarregar 2.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Funda",
+        "distancia": "4/8/16",
+        "dano": "For+d4",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 10,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Lança/Dardo (Arremesso)",
+        "distancia": "3/6/12",
+        "dano": "For+d6",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 100,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Machado de Arremesso",
+        "distancia": "3/6/12",
+        "dano": "For+d6",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 100,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Rede",
+        "distancia": "3/6/12",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 50,
+        "observacoes": "Alvo fica Enredado.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas à Distância",
+    "subtipo": "Modernas (Arcos)",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Arco Composto",
+        "distancia": "12/24/48",
+        "dano": "For+d6",
+        "pa": 1,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 1.5,
+        "custo": 200,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Besta (Moderna)",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 3.5,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Pólvora Negra",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Pistola Flintlock",
+        "distancia": "5/10/20",
+        "dano": "2d6+1",
+        "cdt": 1,
+        "forcaMin": "d4",
+        "peso": 1.5,
+        "custo": 150,
+        "observacoes": "Recarregar 3.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Bacamarte",
+        "distancia": "10/20/40",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 6,
+        "custo": 300,
+        "observacoes": "Recarregar 3. Trate como Escopeta.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mosquete (Brown Bess)",
+        "distancia": "10/20/40",
+        "dano": "2d8",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 7.5,
+        "custo": 300,
+        "observacoes": "Recarregar 3.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Rifle Kentucky",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 300,
+        "observacoes": "Recarregar 4.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Springfield Modelo 1861",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "cdt": 1,
+        "forcaMin": "d6",
+        "peso": 5.5,
+        "custo": 250,
+        "observacoes": "Recarregar 3.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Pistolas Modernas",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Colt Peacemaker (.45)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 200,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Derringer (.41)",
+        "distancia": "3/6/12",
+        "dano": "2d4",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d4",
+        "peso": 0.5,
+        "custo": 100,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Revólver Policial (.38)",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 150,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Smith & Wesson (.357)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 2.5,
+        "custo": 250,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Colt 1911 (.45)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "7",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 200,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Desert Eagle (.50)",
+        "distancia": "15/30/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "7",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Glock (9mm)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 1,
+        "tiros": "17",
+        "forcaMin": "d4",
+        "peso": 1.5,
+        "custo": 200,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Ruger (.22)",
+        "distancia": "10/20/40",
+        "dano": "2d4",
+        "cdt": 1,
+        "tiros": "9",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 100,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Submetralhadoras",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "H&K MP5 (9mm)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 3,
+        "tiros": "30",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Tommy Gun (.45)",
+        "distancia": "12/24/48",
+        "dano": "2d6+1",
+        "pa": 1,
+        "cdt": 3,
+        "tiros": "20",
+        "forcaMin": "d6",
+        "peso": 6.5,
+        "custo": 350,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Uzi (9mm)",
+        "distancia": "12/24/48",
+        "dano": "2d6",
+        "pa": 1,
+        "cdt": 3,
+        "tiros": "32",
+        "forcaMin": "d4",
+        "peso": 4.5,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Rifles",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Barrett (.50)",
+        "distancia": "50/100/200",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 1,
+        "tiros": "10",
+        "forcaMin": "d8",
+        "peso": 17.5,
+        "custo": 750,
+        "observacoes": "Arma Pesada, Tiro Rápido, Luneta.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Carabina Spencer (.52)",
+        "distancia": "20/40/80",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "7",
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 250,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M1 Garand (.30-06)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "8",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Rifle de Caça (.308)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "5",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 350,
+        "observacoes": "Tiro Rápido.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Sharps Big 50 (.50)",
+        "distancia": "30/60/120",
+        "dano": "2d10",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "1",
+        "forcaMin": "d8",
+        "peso": 5.5,
+        "custo": 400,
+        "observacoes": "Tiro Rápido.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Winchester '73 (.44-40)",
+        "distancia": "24/48/96",
+        "dano": "2d8-1",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "15",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "AK47 (7.62mm)",
+        "distancia": "24/48/96",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "30",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 450,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M-16 (5.56mm)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "30",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 400,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Steyr AUG (5.56mm)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "30",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 400,
+        "observacoes": "Pode disparar Rajada de Três Balas.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Escopetas",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Cano Duplo",
+        "distancia": "12/24/48",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d6",
+        "peso": 5.5,
+        "custo": 150,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Cano Duplo Serrado",
+        "distancia": "5/10/20",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "tiros": "2",
+        "forcaMin": "d4",
+        "peso": 3,
+        "custo": 150,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Pump Action",
+        "distancia": "12/24/48",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "tiros": "6",
+        "forcaMin": "d4",
+        "peso": 4,
+        "custo": 150,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Espingarda de Assalto",
+        "distancia": "12/24/48",
+        "dano": "1-3d6",
+        "cdt": 1,
+        "tiros": "12",
+        "forcaMin": "d6",
+        "peso": 5,
+        "custo": 450,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Fogo",
+    "subtipo": "Metralhadoras",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Browning (BAR) (.30-06)",
+        "distancia": "20/40/60",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "20",
+        "forcaMin": "d8",
+        "peso": 8.5,
+        "custo": 300,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Gatling (.45)",
+        "distancia": "24/48/96",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "100",
+        "peso": 85,
+        "custo": 500,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Minigun (7.62mm)",
+        "distancia": "30/60/120",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 5,
+        "tiros": "4000",
+        "forcaMin": "d10",
+        "peso": 42.5,
+        "custo": 100000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "MG42 (7.92mm)",
+        "distancia": "30/60/120",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": "200",
+        "forcaMin": "d10",
+        "peso": 13,
+        "custo": 750,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M2 Browning (.50)",
+        "distancia": "50/100/200",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 3,
+        "tiros": "200",
+        "peso": 42.5,
+        "custo": 1500,
+        "observacoes": "Arma Pesada.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M60 (7.62mm)",
+        "distancia": "30/60/120",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "100",
+        "forcaMin": "d8",
+        "peso": 16.5,
+        "custo": 6000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "SAW (5.56mm)",
+        "distancia": "30/60/120",
+        "dano": "2d8",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": "200",
+        "forcaMin": "d8",
+        "peso": 10,
+        "custo": 4000,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas de Energia",
+    "subtipo": "Lasers (Sci-Fi)",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Pistola Laser",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 1,
+        "tiros": "50",
+        "forcaMin": "d4",
+        "peso": 1,
+        "custo": 250,
+        "observacoes": "Sem recuo.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Rifle Laser",
+        "distancia": "30/60/120",
+        "dano": "3d6",
+        "pa": 2,
+        "cdt": 3,
+        "tiros": "100",
+        "forcaMin": "d6",
+        "peso": 4,
+        "custo": 700,
+        "observacoes": "Sem recuo.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Submetralhadora Laser",
+        "distancia": "15/30/60",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": "100",
+        "forcaMin": "d4",
+        "peso": 2,
+        "custo": 500,
+        "observacoes": "Sem recuo.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Gatling Laser",
+        "distancia": "50/100/200",
+        "dano": "3d6+4",
+        "pa": 2,
+        "cdt": 4,
+        "tiros": "800",
+        "forcaMin": "d8",
+        "peso": 10,
+        "custo": 1000,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Canhões e Catapultas",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Canhão (12 lb)",
+        "distancia": "50/100/200",
+        "dano": "3d6+1",
+        "pa": 4,
+        "cdt": 1,
+        "peso": 600,
+        "custo": 10000,
+        "observacoes": "Arma Pesada. Recarregar 8.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Catapulta",
+        "distancia": "24/48/96",
+        "dano": "3d6",
+        "pa": 4,
+        "custo": 10000,
+        "observacoes": "Arma Pesada. MME. Recarregar a cada 5 min.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Trabuco",
+        "distancia": "30/60/120",
+        "dano": "3d8",
+        "pa": 4,
+        "custo": 50000,
+        "observacoes": "Arma Pesada. MME. Recarregar a cada 5 min.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Especiais",
+    "subtipo": "Explosivos e Lança-Chamas",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Lança-Chamas",
+        "distancia": "Cone",
+        "dano": "3d6",
+        "cdt": 1,
+        "tiros": "10",
+        "forcaMin": "d8",
+        "peso": 35,
+        "custo": 300,
+        "observacoes": "Arma Pesada.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mina Antipessoal",
+        "dano": "2d6+2",
+        "peso": 5,
+        "custo": 100,
+        "observacoes": "Arma Pesada. MPE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mina Antitanque",
+        "dano": "4d6",
+        "pa": 5,
+        "peso": 10,
+        "custo": 200,
+        "observacoes": "Arma Pesada. MME.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Betty Saltitante",
+        "dano": "3d6",
+        "peso": 4.5,
+        "custo": 125,
+        "observacoes": "Mina Antipessoal mortal. MPE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mina Claymore",
+        "distancia": "Cone 12q",
+        "dano": "3d6",
+        "peso": 2,
+        "custo": 75,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Granada Atordoante",
+        "distancia": "5/10/20",
+        "peso": 0.5,
+        "custo": 50,
+        "observacoes": "Arma Pesada. MGE. Vigor -2 ou Atordoado.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Granada de Fumaça",
+        "distancia": "5/10/20",
+        "peso": 0.5,
+        "custo": 50,
+        "observacoes": "Arma Pesada. MGE. Obscurece visão.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Granada Mk II (WWII)",
+        "distancia": "4/8/16",
+        "dano": "3d6",
+        "peso": 0.5,
+        "custo": 40,
+        "observacoes": "Arma Pesada. MME.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Granada Mk67 (Moderna)",
+        "distancia": "5/10/20",
+        "dano": "3d6",
+        "peso": 0.5,
+        "custo": 50,
+        "observacoes": "Arma Pesada. MME.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Granada Potato Masher (WWII)",
+        "distancia": "5/10/20",
+        "dano": "3d6-2",
+        "peso": 1,
+        "custo": 50,
+        "observacoes": "Arma Pesada. MME.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Pesadas",
+    "subtipo": "Lança-Foguetes e Mísseis",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "AT-4",
+        "distancia": "24/48/96",
+        "dano": "4d8+2",
+        "pa": 24,
+        "cdt": 1,
+        "peso": 7.5,
+        "custo": 1500,
+        "observacoes": "Arma Pesada. MME. Tiro Único.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Bazuca",
+        "distancia": "24/48/96",
+        "dano": "4d8",
+        "pa": 8,
+        "cdt": 1,
+        "peso": 6,
+        "custo": 500,
+        "observacoes": "Arma Pesada. MME. Tiro Rápido.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M203 40mm",
+        "distancia": "24/48/96",
+        "dano": "4d8",
+        "cdt": 1,
+        "peso": 1.5,
+        "custo": 1500,
+        "observacoes": "Arma Pesada. MME. Tiro Rápido.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M72 Law",
+        "distancia": "24/48/96",
+        "dano": "4d8+2",
+        "pa": 22,
+        "cdt": 1,
+        "peso": 2.5,
+        "custo": 750,
+        "observacoes": "Arma Pesada. MME. Tiro Rápido.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Panzerschreck",
+        "distancia": "15/30/60",
+        "dano": "4d8",
+        "pa": 12,
+        "cdt": 1,
+        "peso": 10,
+        "custo": 1000,
+        "observacoes": "Arma Pesada. MME. Tiro Rápido.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Míssil Hellfire",
+        "distancia": "150/300/600",
+        "dano": "5d10",
+        "pa": 40,
+        "peso": 50,
+        "custo": 115000,
+        "observacoes": "Arma Pesada. MME. Guiado.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Míssil Sidewinder",
+        "distancia": "100/200/400",
+        "dano": "4d8",
+        "pa": 6,
+        "peso": 94,
+        "custo": 600000,
+        "observacoes": "Arma Pesada. MPE. Guiado por calor.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Míssil Sparrow",
+        "distancia": "150/300/600",
+        "dano": "5d8",
+        "pa": 6,
+        "peso": 308.5,
+        "custo": 125000,
+        "observacoes": "Arma Pesada. MPE. Guiado por radar.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Míssil TOW",
+        "distancia": "75/150/300",
+        "dano": "5d10",
+        "pa": 34,
+        "cdt": 1,
+        "peso": 103.5,
+        "custo": 60000,
+        "observacoes": "Arma Pesada. MME. Guiado por fio.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Armas Veiculares",
+    "subtipo": "Canhões e Metralhadoras Montadas",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Arma Antitanque 2 libras",
+        "distancia": "75/150/300",
+        "dano": "4d8 (PA)/3d6 (AE)",
+        "pa": 5,
+        "cdt": 1,
+        "custo": 75000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arma Antitanque 37mm",
+        "distancia": "50/100/200",
+        "dano": "4d8 (PA)/4d6 (AE)",
+        "pa": 3,
+        "cdt": 1,
+        "custo": 100000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arma Antitanque 57mm",
+        "distancia": "75/150/300",
+        "dano": "4d8 (PA)/3d8 (AE)",
+        "pa": 5,
+        "cdt": 1,
+        "custo": 150000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arma de Tanque 75mm",
+        "distancia": "75/150/300",
+        "dano": "4d10 (PA)/3d8 (AE)",
+        "pa": 6,
+        "cdt": 1,
+        "custo": 250000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arma de Tanque 76mm",
+        "distancia": "75/150/300",
+        "dano": "4d10 (PA)/3d8 (AE)",
+        "pa": 10,
+        "cdt": 1,
+        "custo": 300000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arma de Tanque 88mm",
+        "distancia": "100/200/400",
+        "dano": "4d10+1 (PA)/4d8 (AE)",
+        "pa": 16,
+        "cdt": 1,
+        "custo": 500000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arma de Tanque 120mm",
+        "distancia": "100/200/400",
+        "dano": "5d10 (PA)/4d8 (AE)",
+        "pa": 31,
+        "cdt": 1,
+        "custo": 800000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Arma de Tanque 125mm",
+        "distancia": "100/200/400",
+        "dano": "5d10 (PA)/4d8 (AE)",
+        "pa": 30,
+        "cdt": 1,
+        "custo": 1000000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Canhão 20mm",
+        "distancia": "50/100/200",
+        "dano": "2d12",
+        "pa": 4,
+        "cdt": 4,
+        "custo": 50000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Canhão 25mm",
+        "distancia": "50/100/200",
+        "dano": "3d8",
+        "pa": 4,
+        "cdt": 3,
+        "custo": 75000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Canhão 30mm",
+        "distancia": "50/100/200",
+        "dano": "3d8",
+        "pa": 6,
+        "cdt": 3,
+        "custo": 200000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Canhão 40mm",
+        "distancia": "75/150/300",
+        "dano": "4d8 (PA)/3d8 (AE)",
+        "pa": 5,
+        "cdt": 4,
+        "custo": 200000,
+        "observacoes": "MME. Mun. PA ou AE.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Lança Chamas Pesado",
+        "distancia": "Cone/MME",
+        "dano": "3d8",
+        "cdt": 1,
+        "custo": 1000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Metralhadora Média Veicular",
+        "distancia": "30/60/120",
+        "dano": "2d8+1",
+        "pa": 2,
+        "cdt": 3,
+        "custo": 750,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Metralhadora Pesada Veicular",
+        "distancia": "50/100/200",
+        "dano": "2d10",
+        "pa": 4,
+        "cdt": 3,
+        "custo": 1000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Laser Pesado",
+        "distancia": "150/300/600",
+        "dano": "4d10",
+        "pa": 30,
+        "cdt": 1,
+        "custo": 1000000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Gatling Laser Veicular",
+        "distancia": "50/100/200",
+        "dano": "3d6+4",
+        "pa": 4,
+        "cdt": 4,
+        "custo": 1000,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Terrestres Civis",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Bicicleta",
+        "tamanho": -1,
+        "manobrabilidade": 1,
+        "velMaxima": 25,
+        "resistencia": "4",
+        "tripulacao": "1",
+        "custo": 250,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Carro Antigo (Modelo T)",
+        "tamanho": 3,
+        "manobrabilidade": -1,
+        "velMaxima": 64,
+        "resistencia": "7",
+        "tripulacao": "1+3",
+        "custo": 1000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Carro Compacto",
+        "tamanho": 4,
+        "manobrabilidade": 1,
+        "velMaxima": 192,
+        "resistencia": "10 (2)",
+        "tripulacao": "1+3",
+        "custo": 14000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Carro Médio",
+        "tamanho": 4,
+        "manobrabilidade": 0,
+        "velMaxima": 192,
+        "resistencia": "11 (2)",
+        "tripulacao": "1+4",
+        "custo": 30000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Carro Esportivo",
+        "tamanho": 4,
+        "manobrabilidade": 2,
+        "velMaxima": 256,
+        "resistencia": "10 (2)",
+        "tripulacao": "1+3",
+        "custo": 60000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Carruagem",
+        "tamanho": 3,
+        "manobrabilidade": -2,
+        "velMaxima": 25,
+        "resistencia": "6",
+        "tripulacao": "1+3",
+        "custo": 1000,
+        "observacoes": "Tração animal.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Minivan",
+        "tamanho": 4,
+        "manobrabilidade": 0,
+        "velMaxima": 144,
+        "resistencia": "12 (2)",
+        "tripulacao": "1+7",
+        "custo": 25000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Motocicleta de Rua",
+        "tamanho": 1,
+        "manobrabilidade": 1,
+        "velMaxima": 192,
+        "resistencia": "8",
+        "tripulacao": "1+1",
+        "custo": 3000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Motocicleta Motocross",
+        "tamanho": 0,
+        "manobrabilidade": 1,
+        "velMaxima": 128,
+        "resistencia": "7",
+        "tripulacao": "1",
+        "custo": 2000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Utilitário (SUV)",
+        "tamanho": 5,
+        "manobrabilidade": 0,
+        "velMaxima": 192,
+        "resistencia": "14 (2)",
+        "tripulacao": "1+7",
+        "custo": 50000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Caminhão",
+        "tamanho": 9,
+        "manobrabilidade": 0,
+        "velMaxima": 120,
+        "resistencia": "14 (2)",
+        "tripulacao": "1+1",
+        "custo": 200000,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Militares (WWII)",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Jipe",
+        "tamanho": 4,
+        "manobrabilidade": 1,
+        "velMaxima": 104,
+        "resistencia": "10 (2)",
+        "tripulacao": "2+3",
+        "custo": 1000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M4 Sherman",
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 48,
+        "resistencia": "24 (8)",
+        "tripulacao": "5",
+        "custo": 45000,
+        "observacoes": "Armadura Pesada, Esteira.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M5A1 Stuart",
+        "tamanho": 7,
+        "manobrabilidade": 0,
+        "velMaxima": 58,
+        "resistencia": "21 (7)",
+        "tripulacao": "4",
+        "custo": 30000,
+        "observacoes": "Armadura Pesada, Esteira.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Panzer IV J",
+        "tamanho": 7,
+        "manobrabilidade": -1,
+        "velMaxima": 40,
+        "resistencia": "26 (10)",
+        "tripulacao": "5",
+        "custo": 45000,
+        "observacoes": "Armadura Pesada, Esteira.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Panzer VI Tiger II",
+        "tamanho": 8,
+        "manobrabilidade": -2,
+        "velMaxima": 40,
+        "resistencia": "34 (16)",
+        "tripulacao": "5",
+        "custo": 120000,
+        "observacoes": "Armadura Pesada, Esteira.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "T-34/76",
+        "tamanho": 7,
+        "manobrabilidade": -1,
+        "velMaxima": 56,
+        "resistencia": "24 (8)",
+        "tripulacao": "4",
+        "custo": 30000,
+        "observacoes": "Armadura Pesada, Esteira.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Militares Modernos e Sci-Fi",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "BTR 70 APC",
+        "tamanho": 6,
+        "manobrabilidade": -1,
+        "velMaxima": 78,
+        "resistencia": "20 (5)",
+        "tripulacao": "2+8",
+        "custo": 700000,
+        "observacoes": "Anfíbio, Armadura Pesada.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M1A1 Abrams",
+        "tamanho": 9,
+        "manobrabilidade": -1,
+        "velMaxima": 64,
+        "resistencia": "57 (37)",
+        "tripulacao": "4",
+        "custo": 4000000,
+        "observacoes": "Armadura Pesada, Esteira, Visão Noturna.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "M2 Bradley",
+        "tamanho": 7,
+        "manobrabilidade": 0,
+        "velMaxima": 64,
+        "resistencia": "22 (6)",
+        "tripulacao": "3+7",
+        "custo": 3000000,
+        "observacoes": "Armadura Pesada, Esteira.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "T-72 MBT",
+        "tamanho": 9,
+        "manobrabilidade": -1,
+        "velMaxima": 80,
+        "resistencia": "43 (25)",
+        "tripulacao": "3",
+        "custo": 1000000,
+        "observacoes": "Armadura Pesada, Esteira.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "T-80 MBT",
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 70,
+        "resistencia": "52 (32)",
+        "tripulacao": "3",
+        "custo": 2200000,
+        "observacoes": "Armadura Pesada, Esteira, Visão Noturna.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "APC Flutuador (Sci-Fi)",
+        "tamanho": 7,
+        "manobrabilidade": 0,
+        "velMaxima": 120,
+        "resistencia": "26 (10)",
+        "tripulacao": "2+14",
+        "custo": 75000,
+        "observacoes": "Armadura Pesada, Flutuador.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Tanque Flutuador (Sci-Fi)",
+        "tamanho": 7,
+        "manobrabilidade": 0,
+        "velMaxima": 72,
+        "resistencia": "38 (22)",
+        "tripulacao": "4",
+        "custo": 1200000,
+        "observacoes": "Armadura Pesada, Flutuador.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Aeronaves",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Bimotor",
+        "tamanho": 4,
+        "manobrabilidade": 1,
+        "velMaxima": 200,
+        "resistencia": "12 (1)",
+        "tripulacao": "1",
+        "custo": 150000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Cessna Skyhawk",
+        "tamanho": 5,
+        "manobrabilidade": 1,
+        "velMaxima": 224,
+        "resistencia": "12 (2)",
+        "tripulacao": "1+3",
+        "custo": 150000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Helicóptero",
+        "tamanho": 7,
+        "manobrabilidade": 0,
+        "velMaxima": 208,
+        "resistencia": "12 (2)",
+        "tripulacao": "1+3",
+        "custo": 500000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Learjet",
+        "tamanho": 8,
+        "manobrabilidade": 2,
+        "velMaxima": 864,
+        "resistencia": "16 (2)",
+        "tripulacao": "2+10",
+        "custo": 20000000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Ônibus Espacial",
+        "tamanho": 13,
+        "manobrabilidade": -1,
+        "velMaxima": 27000,
+        "resistencia": "20 (4)",
+        "tripulacao": "1+40",
+        "custo": 250000000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "BF-109 (WWII)",
+        "tamanho": 6,
+        "manobrabilidade": 1,
+        "velMaxima": 608,
+        "resistencia": "13 (2)",
+        "tripulacao": "1",
+        "custo": 35000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "B-17 Fortaleza Voadora (WWII)",
+        "tamanho": 10,
+        "manobrabilidade": -2,
+        "velMaxima": 184,
+        "resistencia": "19 (2)",
+        "tripulacao": "10",
+        "custo": 250000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Mitsubishi Zero (WWII)",
+        "tamanho": 6,
+        "manobrabilidade": 1,
+        "velMaxima": 560,
+        "resistencia": "12 (2)",
+        "tripulacao": "1",
+        "custo": 30000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "P-51 Mustang (WWII)",
+        "tamanho": 7,
+        "manobrabilidade": 1,
+        "velMaxima": 700,
+        "resistencia": "14 (2)",
+        "tripulacao": "1",
+        "custo": 50000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Spitfire Mk IIA (WWII)",
+        "tamanho": 6,
+        "manobrabilidade": 1,
+        "velMaxima": 576,
+        "resistencia": "14 (1)",
+        "tripulacao": "1",
+        "custo": 40000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "AH-64 Apache",
+        "tamanho": 8,
+        "manobrabilidade": 0,
+        "velMaxima": 360,
+        "resistencia": "20 (4)",
+        "tripulacao": "2",
+        "custo": 35000000,
+        "observacoes": "Helicóptero, Visão Noturna.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "AV-8B Harrier",
+        "tamanho": 7,
+        "manobrabilidade": 1,
+        "velMaxima": 1000,
+        "resistencia": "17 (3)",
+        "tripulacao": "1",
+        "custo": 28000000,
+        "observacoes": "Decolagem vertical.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "F-15 Eagle",
+        "tamanho": 9,
+        "manobrabilidade": 2,
+        "velMaxima": 3000,
+        "resistencia": "18 (4)",
+        "tripulacao": "1",
+        "custo": 30000000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "SU-27",
+        "tamanho": 9,
+        "manobrabilidade": 1,
+        "velMaxima": 2480,
+        "resistencia": "16 (4)",
+        "tripulacao": "1",
+        "custo": 30000000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "UH-1 Huey",
+        "tamanho": 7,
+        "manobrabilidade": 2,
+        "velMaxima": 192,
+        "resistencia": "14 (2)",
+        "tripulacao": "4+12",
+        "custo": 25000000,
+        "observacoes": "Helicóptero.",
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Embarcações",
+    "origem": "WISEGUYS",
+    "itens": [
+      {
+        "nome": "Barco a Remo",
+        "tamanho": 0,
+        "manobrabilidade": -2,
+        "velMaxima": 8,
+        "resistencia": "8 (1)",
+        "tripulacao": "1+3",
+        "custo": 500,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Lancha",
+        "tamanho": 4,
+        "manobrabilidade": 1,
+        "velMaxima": 144,
+        "resistencia": "10 (1)",
+        "tripulacao": "1+3",
+        "custo": 60000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Iate Pequeno",
+        "tamanho": 8,
+        "manobrabilidade": 0,
+        "velMaxima": 56,
+        "resistencia": "14 (2)",
+        "tripulacao": "1+9",
+        "custo": 500000,
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Barco de Patrulha (Rio)",
+        "tamanho": 7,
+        "manobrabilidade": 1,
+        "velMaxima": 52,
+        "resistencia": "15 (4)",
+        "tripulacao": "4",
+        "custo": 700000,
+        "observacoes": "Armadura Pesada.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Barco PT (WWII)",
+        "tamanho": 12,
+        "manobrabilidade": 1,
+        "velMaxima": 64,
+        "resistencia": "14 (2)",
+        "tripulacao": "10",
+        "custo": 250000,
+        "observacoes": "Armadura Pesada.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Galeão",
+        "tamanho": 14,
+        "manobrabilidade": -2,
+        "velMaxima": 15,
+        "resistencia": "20 (4)",
+        "tripulacao": "20+80",
+        "custo": 300000,
+        "observacoes": "Armadura Pesada.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Galé",
+        "tamanho": 13,
+        "manobrabilidade": -1,
+        "velMaxima": 30,
+        "resistencia": "20 (4)",
+        "tripulacao": "20+100",
+        "custo": 150000,
+        "observacoes": "Armadura Pesada. Remos.",
+        "origem": "WISEGUYS"
+      },
+      {
+        "nome": "Hidrofólio",
+        "tamanho": 10,
+        "manobrabilidade": 0,
+        "velMaxima": 112,
+        "resistencia": "15 (3)",
+        "tripulacao": "1+9",
+        "custo": 400000,
+        "origem": "WISEGUYS"
+      }
+    ]
+  },
+  {
     "tipo": "Armas Corpo a Corpo",
     "subtipo": "Novas Armas (Wiseguys)",
     "origem": "WISEGUYS",
