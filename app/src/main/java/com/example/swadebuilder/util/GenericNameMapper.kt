@@ -10,6 +10,7 @@ object GenericNameMapper {
     private val termReplacements = listOf(
         "Pedra Fantasma" to "Carvão Espectral",
         "Ghost Rock" to "Carvão Espectral",
+        "Fantasma" to "F.",
         "Crystal Heart" to "Coração de Cristal",
         "Syn" to "Organização",
         "Cronista Desbravador" to "Cronista Buscatrilha",
