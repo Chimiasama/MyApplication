@@ -17,7 +17,10 @@ object GenericNameMapper {
         "Aeronave (Dirigível)" to "Aeronave",
         " (Dirigível)" to "",
         "(Dirigível)" to "",
-        "Dragão Alquímico" to "D. Alquímico"
+        "Dragão Alquímico" to "D. Alquímico",
+        "Veterano do Oeste Estranho" to "Veterano do Oeste",
+        "Atormentando" to "Revivido",
+        "Atormentado" to "Revivido"
     )
 
     fun map(input: String): String {
