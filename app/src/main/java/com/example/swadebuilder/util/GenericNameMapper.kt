@@ -11,7 +11,9 @@ object GenericNameMapper {
         "Pedra Fantasma" to "Carvão Espectral",
         "Ghost Rock" to "Carvão Espectral",
         "Crystal Heart" to "Coração de Cristal",
-        "Syn" to "Organização"
+        "Syn" to "Organização",
+        "Cronista Desbravador" to "Cronista Buscatrilha",
+        "Desbravador" to "Buscatrilha"
     )
 
     fun map(input: String): String {
