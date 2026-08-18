@@ -10,7 +10,9 @@ import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.util.GenericNameMapper
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.util.toFancyTitleCase
 import kotlin.math.max
 
@@ -23,7 +25,12 @@ private fun formatRacialAnnotationDisplay(raw: String): String {
 }
 
 fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
-    val baseOriginal = (ancestralidadeNomeBase ?: personagem.ancestralidade).toFancyTitleCase()
+    val baseRaw = (ancestralidadeNomeBase ?: personagem.ancestralidade)
+    val baseOriginal = if (!EditionConfig.isFullEdition) {
+        baseRaw.toEditionDisplayName().let { GenericNameMapper.map(it) }.toFancyTitleCase()
+    } else {
+        baseRaw.toFancyTitleCase()
+    }
     val isHuman = baseOriginal.keyify().contains("HUMANO")
 
     if (personagem.compendioArteDaGuerraAtivo && isHuman) {
@@ -68,7 +75,7 @@ fun buildSummaryLines(
 ): List<String> {
     val lines = mutableListOf<String>()
 
-    val showOfficialNames = personagem.modoOficialAtivo
+    val showOfficialNames = EditionConfig.isFullEdition && personagem.modoOficialAtivo
 
     val ancestralidadeNomeObj = listaAncestralidades
         .filter { it.nome.keyify() == personagem.ancestralidade }
@@ -95,7 +102,8 @@ fun buildSummaryLines(
     val rawAncestralidadeNome = if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
         ancestralidadeNomeObj.originalName
     } else {
-        ancestralidadeNomeObj?.nome ?: personagem.ancestralidade
+        val baseName = ancestralidadeNomeObj?.nome ?: personagem.ancestralidade
+        if (!EditionConfig.isFullEdition) baseName.toEditionDisplayName().let { GenericNameMapper.map(it) } else baseName
     }
 
     // Remove sufixos como (Buscatrilha), (Trilhador), etc.
@@ -115,13 +123,14 @@ fun buildSummaryLines(
             val forasteiroWithDegree = Regex("""^FORASTEIRO\s*\((MENOR|MAIOR)\)$""", RegexOption.IGNORE_CASE)
             return if (forasteiroWithDegree.matches(text.trim())) "Forasteiro" else text
         }
+        val showOfficial = EditionConfig.isFullEdition && modoOficialAtivo
         return rawIds.map { compId ->
             val comp = mapPorId[compId.keyify()]
             if (comp != null) {
-                val baseName = if (modoOficialAtivo && !comp.originalName.isNullOrBlank()) {
+                val baseName = if (showOfficial && !comp.originalName.isNullOrBlank()) {
                     comp.originalName!!.toFancyTitleCase()
                 } else {
-                    comp.name.toFancyTitleCase()
+                    comp.nomeExibicao.toFancyTitleCase()
                 }
 
                 val severityStr = comp.severity.trim().lowercase()
@@ -265,7 +274,8 @@ fun buildSummaryLines(
     val ancestralidadeDisplay = buildAncestralidadeDisplay(personagem, ancestralidadeNome)
     lines += "$ancestralidadeDisplay$monstroNome"
     if (personagem.coracaoCrystalSelecionado != null) {
-        lines += "Coração de Cristal: ${personagem.coracaoCrystalSelecionado.nome}"
+        val heartName = if (!EditionConfig.isFullEdition) GenericNameMapper.map(personagem.coracaoCrystalSelecionado.nome) else personagem.coracaoCrystalSelecionado.nome
+        lines += "Coração de Cristal: $heartName"
     }
     lines += ""
 
@@ -347,7 +357,7 @@ fun buildSummaryLines(
     } else {
         lines += "Equipamentos:"
         personagem.equipamentos.forEach { eq ->
-            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName!!.toFancyTitleCase() else eq.nome.toFancyTitleCase()
+            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName!!.toFancyTitleCase() else eq.nomeExibicao.toFancyTitleCase()
             lines += "• $nomeEq"
         }
     }
@@ -672,11 +682,13 @@ fun buildSummaryLines(
                             } else {
                                 // Use the display name from JSON (preserves symbols like '/')
                                 // But ensure consistent casing (Title Case) unless punctuation suggests otherwise
-                                formatRacialAnnotationDisplay(ability.nome)
+                                val formatted = formatRacialAnnotationDisplay(ability.nome)
+                                if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
                             }
                         } else {
                             // 3. Fallback
-                            trait.toFancyTitleCase()
+                            val formatted = trait.toFancyTitleCase()
+                            if (!EditionConfig.isFullEdition) GenericNameMapper.map(formatted) else formatted
                         }
                     }
                 }
@@ -792,6 +804,7 @@ fun buildSummaryLines(
                     .lowercase()
                     .replace('_', ' ')
                     .toFancyTitleCase()
+                    .let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
 
                 val label = if (details.isNotBlank()) "$labelBase $details" else labelBase
 
@@ -801,7 +814,8 @@ fun buildSummaryLines(
                     val poderesComManifestacao = lista.map { poderId ->
                         val poderDef = listaPoderes.firstOrNull { it.id == poderId }
                         val baseNome = poderDef?.nome ?: poderId
-                        var displayNome = baseNome.toFancyTitleCase()
+                        var displayNome = if (!EditionConfig.isFullEdition) GenericNameMapper.map(baseNome) else baseNome
+                        displayNome = displayNome.toFancyTitleCase()
 
                         // Text replacements for Pathfinder Místico (positive aspects only)
                         if (personagem.compendioPathfinderAtivo && cleanKey == "MISTICO") {

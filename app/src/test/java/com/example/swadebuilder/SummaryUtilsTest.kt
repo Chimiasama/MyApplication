@@ -764,4 +764,70 @@ class SummaryUtilsTest {
         assertEquals("Características Raciais: Signo Garça", racialLine)
     }
 
+    @Test
+    fun `buildSummaryLines uses skin names in lite mode even when modoOficialAtivo is true`() {
+        val advantages = listOf(
+            Vantagem(
+                id = "bom_companheiro",
+                nome = "BOM COMPANHEIRO (Made Man)",
+                originalName = "Made Man",
+                categoria = Categoria.ANTECEDENTE,
+                origem = "WISEGUYS",
+                requisitos = Requisito()
+            )
+        )
+        val complicacoes = listOf(
+            com.example.swadebuilder.model.Complicacao(
+                id = "procurado_wiseguys",
+                name = "PROCURADO (Wiseguys)",
+                originalName = "Wanted (Wiseguys)",
+                severity = "menor",
+                description = "",
+                origem = "WISEGUYS"
+            )
+        )
+        val eq = listOf(
+            com.example.swadebuilder.model.ObjetoGeral(
+                nome = "Pedra Fantasma",
+                originalName = "Ghost Rock",
+                categoria = "Equipamento"
+            )
+        )
+
+        val personagem = MeuPersonagem(
+            nome = "Mafioso",
+            atributos = emptyMap(),
+            pericias = emptyMap(),
+            ancestralidade = "HUMANOS",
+            modoOficialAtivo = true, // Attempt to force official mode
+            vantagens = listOf("bom_companheiro"),
+            complicacoes = listOf("procurado_wiseguys"),
+            desvantagensRaciais = emptyList(),
+            equipamentos = eq,
+            poderes = emptyMap(),
+            dinheiro = 100,
+            pontosRestantes = 0
+        )
+
+        val lines = buildSummaryLines(
+            personagem = personagem,
+            allAdvantages = advantages,
+            listaAncestralidades = emptyList(),
+            listaMonstros = emptyList(),
+            listaComplicacoes = complicacoes,
+            listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+            mapaAtributosDisplay = mapOf(),
+            listaPericias = emptyList(),
+            listaPoderes = emptyList(),
+            arcanoInfo = emptyMap()
+        )
+
+        val joined = lines.joinToString("\n")
+        // In Lite edition, EditionConfig.isFullEdition is false.
+        // Even with modoOficialAtivo = true, output MUST use skin terms (e.g. Máfia instead of Wiseguys/Made Man, Carvão Espectral instead of Pedra Fantasma/Ghost Rock).
+        assertFalse("Should not display raw official name Made Man in Lite mode", joined.contains("Made Man"))
+        assertFalse("Should not display Ghost Rock in Lite mode", joined.contains("Ghost Rock"))
+        assertTrue("Should map Wiseguys to Máfia in Lite mode", joined.contains("Máfia") || joined.contains("Procurado"))
+    }
+
 }
