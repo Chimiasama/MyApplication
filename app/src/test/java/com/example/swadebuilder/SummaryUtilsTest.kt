@@ -1,10 +1,10 @@
 package com.example.swadebuilder
 
+import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Pericia
-import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Requisito
+import com.example.swadebuilder.model.Vantagem
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -787,10 +787,9 @@ class SummaryUtilsTest {
             )
         )
         val eq = listOf(
-            com.example.swadebuilder.model.ObjetoGeral(
+            com.example.swadebuilder.model.EquipamentoItem(
                 nome = "Pedra Fantasma",
-                originalName = "Ghost Rock",
-                categoria = "Equipamento"
+                originalName = "Ghost Rock"
             )
         )
 
@@ -800,6 +799,7 @@ class SummaryUtilsTest {
             pericias = emptyMap(),
             ancestralidade = "HUMANOS",
             modoOficialAtivo = true, // Attempt to force official mode
+            celestialAAMilagresDesabilitado = false,
             vantagens = listOf("bom_companheiro"),
             complicacoes = listOf("procurado_wiseguys"),
             desvantagensRaciais = emptyList(),
