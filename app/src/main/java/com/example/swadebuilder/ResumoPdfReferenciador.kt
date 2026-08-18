@@ -23,6 +23,7 @@ import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.theme.AppTheme
+import com.example.swadebuilder.util.GenericNameMapper
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.titleCase
@@ -479,8 +480,11 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
             val paVal = w.pa?.toString()?.replace("\"", "")
             val paStr = if (isNaturalWeapon && (paVal == null || paVal == "0" || paVal.isBlank())) "-" else paVal ?: "0"
 
+            val showOfficialNames = EditionConfig.isFullEdition && p.modoOficialAtivo
+            val nomeArma = if (showOfficialNames && !w.originalName.isNullOrBlank()) w.originalName!! else w.nomeExibicao
+
             val data = listOf(
-                w.nome,
+                nomeArma,
                 w.distancia?.toString()?.replace("\"", "") ?: "-",
                 w.dano?.toString()?.replace("\"", "") ?: "-",
                 paStr,
@@ -540,10 +544,11 @@ fun gerarFichaEmPdf(
 
     val hindranceNames = mutableListOf<String>()
     val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
+    val showOfficialNames = EditionConfig.isFullEdition && personagem.modoOficialAtivo
     personagem.complicacoes.forEach { id ->
         val comp = mapPorId[id.keyify()]
         if (comp != null) {
-            val name = if (personagem.modoOficialAtivo && !comp.originalName.isNullOrBlank()) comp.originalName!! else comp.name
+            val name = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName!! else comp.nomeExibicao
             val baseName = name.toFancyTitleCase()
 
             val severityStr = comp.severity.trim().lowercase()
@@ -566,7 +571,8 @@ fun gerarFichaEmPdf(
 
             hindranceNames.add("$baseName$userChoice")
         } else {
-            hindranceNames.add(id.replace('_', ' ').toFancyTitleCase())
+            val mappedFallback = if (!EditionConfig.isFullEdition) GenericNameMapper.map(id.replace('_', ' ')) else id.replace('_', ' ')
+            hindranceNames.add(mappedFallback.toFancyTitleCase())
         }
     }
     leftQueue.add(object : TextListBlock("Complicações", hindranceNames) {})
@@ -578,18 +584,22 @@ fun gerarFichaEmPdf(
         try {
             val v = listaVantagens.firstOrNull { it.id == id }
             val baseName = if (v != null) {
-                if (personagem.modoOficialAtivo && !v.originalName.isNullOrBlank()) v.originalName!! else v.nomeExibicao
+                if (showOfficialNames && !v.originalName.isNullOrBlank()) v.originalName!! else v.nomeExibicao
             } else {
-                id
+                if (!EditionConfig.isFullEdition) GenericNameMapper.map(id) else id
             }
             // Check for choice
             val choice = personagem.advantageChoices[id]?.firstOrNull()
             if (choice != null) {
-                "${baseName.toFancyTitleCase()} (${choice.trim().toFancyTitleCase()})"
+                val mappedChoice = if (!EditionConfig.isFullEdition) GenericNameMapper.map(choice) else choice
+                "${baseName.toFancyTitleCase()} (${mappedChoice.trim().toFancyTitleCase()})"
             } else {
                 baseName.toFancyTitleCase()
             }
-        } catch(e: Exception) { id.toFancyTitleCase() }
+        } catch(e: Exception) {
+            val fallback = if (!EditionConfig.isFullEdition) GenericNameMapper.map(id) else id
+            fallback.toFancyTitleCase()
+        }
     }
     rightQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
 
@@ -616,10 +626,12 @@ fun gerarFichaEmPdf(
         }
 
         personagem.poderes.forEach { (arc, list) ->
-            powerLines.add("Arcano: ${arc.toFancyTitleCase()}")
+            val arcLabel = "Arcano: ${arc.toFancyTitleCase()}".let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
+            powerLines.add(arcLabel)
             val namedList = list.map { id ->
                 val pName = listaPoderes.firstOrNull { it.id == id }?.nome ?: id
-                var displayNome = pName.toFancyTitleCase()
+                var displayNome = if (!EditionConfig.isFullEdition) GenericNameMapper.map(pName) else pName
+                displayNome = displayNome.toFancyTitleCase()
 
                 if (personagem.compendioPathfinderAtivo && arc.uppercase().trim() == "MISTICO") {
                     displayNome = displayNome
@@ -664,7 +676,10 @@ fun gerarFichaEmPdf(
     rightQueue.add(WeaponTableBlock(personagem))
 
     // Gear
-    val gear = personagem.equipamentos.filterNot { it.dano != null }.map { it.nome.toFancyTitleCase() }
+    val gear = personagem.equipamentos.filterNot { it.dano != null }.map { eq ->
+        val name = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName!! else eq.nomeExibicao
+        name.toFancyTitleCase()
+    }
     if (gear.isNotEmpty()) {
         rightQueue.add(object : TextListBlock("Outros Equipamentos", gear) {})
     }
@@ -952,7 +967,8 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     canvas.drawText("$ancestralidadeTitulo - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
 
     if (p.coracaoCrystalSelecionado != null) {
-        val heartText = "Coração: ${p.coracaoCrystalSelecionado.nome}"
+        val heartName = if (!EditionConfig.isFullEdition) GenericNameMapper.map(p.coracaoCrystalSelecionado.nome) else p.coracaoCrystalSelecionado.nome
+        val heartText = "Coração: $heartName"
         canvas.drawText(heartText, rect.left + 10f, rect.top + 70f, subtitlePaint)
     }
 
