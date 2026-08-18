@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     // Plugin de serialization
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.3.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.10"
 }
 
 // 🔹 Exclui globalmente a versão duplicada da JetBrains IntelliJ Annotations
@@ -18,14 +18,14 @@ configurations
 
 android {
     namespace = "com.example.swadebuilder"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.swadebuilder"
         minSdk = 25
         targetSdk = 36
-        versionCode = 20
-        versionName = "2.9"
+        versionCode = 22
+        versionName = "3.0"
 
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
@@ -133,7 +133,6 @@ kotlin {
         // Agora Kotlin também compila para Java 21
         jvmTarget.set(JvmTarget.JVM_21)
         freeCompilerArgs.addAll(
-            "-Xcontext-receivers",
             "-opt-in=kotlin.RequiresOptIn"
         )
     }

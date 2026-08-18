@@ -92,7 +92,7 @@ fun BuySuperPowerDialog(
     pontosDisponiveis: Int,
     limitePorPoder: Int,
     onConfirm: (baseCost: Int, totalCost: Int, modifiers: Map<String, Int>) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     fun parseCustoBaseOptions(raw: String?): List<Int> {
         if (raw.isNullOrBlank()) return listOf(1)
@@ -103,7 +103,7 @@ fun BuySuperPowerDialog(
             val parts = s.split(enDash).map { it.trim() }
             val a = parts.getOrNull(0)?.toIntOrNull()
             val b = parts.getOrNull(1)?.toIntOrNull()
-            if (a != null && b != null) {
+            if ((a != null) && (b != null)) {
                 val start = minOf(a, b)
                 val end = maxOf(a, b)
                 return (start..end).toList()
@@ -112,9 +112,11 @@ fun BuySuperPowerDialog(
 
         if (s.contains('/')) {
             return s.split('/')
+                .asSequence()
                 .mapNotNull { it.trim().toIntOrNull() }
                 .distinct()
                 .sorted()
+                .toList()
         }
 
         return s.toIntOrNull()?.let { listOf(it) } ?: listOf(1)
@@ -128,7 +130,7 @@ fun BuySuperPowerDialog(
         val name: String,
         val options: List<Int>,
         val included: MutableState<Boolean>,
-        val selected: MutableState<Int>
+        val selected: MutableState<Int>,
     )
 
     val modStates = remember(poder.modificadores) {
@@ -142,7 +144,7 @@ fun BuySuperPowerDialog(
             ModState(
                 name = cleanName,
                 options = opts,
-                included = mutableStateOf(false),
+                included = mutableStateOf(value = false),
                 selected = mutableIntStateOf(opts.first())
             )
         }
@@ -150,7 +152,7 @@ fun BuySuperPowerDialog(
 
     val modCost by remember(modStates) {
         androidx.compose.runtime.derivedStateOf {
-            modStates.filter { it.included.value }.sumOf { it.selected.value }
+            modStates.asSequence().filter { it.included.value }.sumOf { it.selected.value }
         }
     }
 
@@ -344,7 +346,7 @@ fun BuySuperPowerDialog(
                 onClick = {
                     val mods = modStates
                         .filter { it.included.value }
-                        .associate { it.name to it.selected.value }
+                        .associateBy({ it.name }) { it.selected.value }
                     onConfirm(baseCost, totalAtual, mods)
                 }
             ) { Text("Comprar ($totalAtual)") }
@@ -359,15 +361,10 @@ private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
     if (grupoId?.equals("antecedente_arcano", ignoreCase = true) == true) return true
     if (id.contains("antecedente_arcano", ignoreCase = true)) return true
 
-    if (requisitos.vantagensPrevias.any { req ->
-            req.equals("antecedente_arcano", ignoreCase = true) ||
-                    req.contains("antecedente_arcano", ignoreCase = true)
-        }
-    ) {
-        return true
+    return requisitos.vantagensPrevias.any { req ->
+        req.equals("antecedente_arcano", ignoreCase = true) ||
+                req.contains("antecedente_arcano", ignoreCase = true)
     }
-
-    return false
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -404,7 +401,7 @@ fun SuperPoderesSection(
 
     val podeComprarSupers = supersLiberados && nivelDefinido
 
-    var showNivelDialog by rememberSaveable { mutableStateOf(false) }
+    var showNivelDialog by rememberSaveable { mutableStateOf(value = false) }
 
     fun aplicarNivelSuper(novoNivel: Int) {
         if (novoNivel <= 0) {
@@ -650,7 +647,7 @@ fun SuperPoderesSection(
                         is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
                         is JsonPrimitive -> listOfNotNull(m.contentOrNull)
                         else -> emptyList()
-                    }.mapNotNull { it.trim() }
+                    }.map { it.trim() }
                         .filter { it.isNotEmpty() }
                         .distinct()
                 }
@@ -841,9 +838,9 @@ fun SuperPoderesSection(
             poderParaComprar = null
         } else {
             val nomeUpper = poder.nome.trim().uppercase()
-            val poderIdEspecifico = when {
-                nomeUpper == "ARMADURA" -> "sp_armor"
-                nomeUpper == "RESISTÊNCIA" || nomeUpper == "RESISTENCIA" -> "sp_res"
+            val poderIdEspecifico = when (nomeUpper) {
+                "ARMADURA" -> "sp_armor"
+                "RESISTÊNCIA", "RESISTENCIA" -> "sp_res"
                 else -> null
             }
 
@@ -928,8 +925,8 @@ fun SuperPoderesSection(
                     val nome = poder.nome.trim().uppercase()
                     var result: com.example.swadebuilder.model.InvestResult? = null
 
-                    when {
-                        nome == "APARAR" -> {
+                    when (nome) {
+                        "APARAR" -> {
                             result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_aparar",
@@ -941,7 +938,7 @@ fun SuperPoderesSection(
                                 )
                             )
                         }
-                        nome == "MOVIMENTAÇÃO" || nome == "MOVIMENTACAO" -> {
+                        "MOVIMENTAÇÃO", "MOVIMENTACAO" -> {
                             result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_movimentacao",
@@ -953,7 +950,7 @@ fun SuperPoderesSection(
                                 )
                             )
                         }
-                        nome == "ARMADURA" -> {
+                        "ARMADURA" -> {
                             result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_armor",
@@ -965,7 +962,7 @@ fun SuperPoderesSection(
                                 )
                             )
                         }
-                        nome == "RESISTÊNCIA" || nome == "RESISTENCIA" -> {
+                        "RESISTÊNCIA", "RESISTENCIA" -> {
                             result = viewModel.tentarInvestirSuper(
                                 SuperInvestment(
                                     powerId = "sp_res",
@@ -977,12 +974,12 @@ fun SuperPoderesSection(
                                 )
                             )
                         }
-                        nome == "SUPERATRIBUTO" || nome == "SUPER ATRIBUTO" -> {
+                        "SUPERATRIBUTO", "SUPER ATRIBUTO" -> {
                             poolSuperAttr = baseCost / 2
                             showSuperAttrPicker = true
                         }
-                        nome == "SUPERPERÍCIA" || nome == "SUPER PERÍCIA" ||
-                                nome == "SUPERPERICIA" || nome == "SUPER PERICIA" -> {
+                        "SUPERPERÍCIA", "SUPER PERÍCIA",
+                        "SUPERPERICIA", "SUPER PERICIA" -> {
                             poolSuperPericia = baseCost
                             if (poolSuperPericia > 0) {
                                 showSuperPericiaPicker = true
@@ -990,16 +987,16 @@ fun SuperPoderesSection(
                                 onShowMessage("Limite deste poder já foi atingido.")
                             }
                         }
-                        nome == "SUPERVANTAGEM" || nome == "SUPER VANTAGEM" -> {
+                        "SUPERVANTAGEM", "SUPER VANTAGEM" -> {
                             poolSuperVant = baseCost / 2
                             if (poolSuperVant > 0) {
                                 showSuperVantPicker = true
                             }
                         }
-                        nome == "BÔNUS DE PERÍCIA" ||
-                                nome == "BÔNUS DE PERICIA" ||
-                                nome == "BONUS DE PERÍCIA" ||
-                                nome == "BONUS DE PERICIA" -> {
+                        "BÔNUS DE PERÍCIA",
+                        "BÔNUS DE PERICIA",
+                        "BONUS DE PERÍCIA",
+                        "BONUS DE PERICIA" -> {
                             bonusPericiaBaseCost = baseCost
                             bonusPericiaTotalCost = custoTotal
                             bonusPericiaNivel = if (baseCost >= 4) 2 else 1
@@ -1030,7 +1027,7 @@ fun SuperPoderesSection(
                         poderParaComprar = null
                     }
                 },
-                onDismiss = { poderParaComprar = null }
+                onDismiss = { poderParaComprar = null },
             )
         }
     }
