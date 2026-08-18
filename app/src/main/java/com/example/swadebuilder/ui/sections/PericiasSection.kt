@@ -69,7 +69,7 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @Composable
 fun PericiasContent(
     state: CriadorState,

@@ -96,7 +96,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.MessageDigest
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 // @Preview(showBackground = true) // Commented out to avoid build errors with ViewModel
 @Composable
 fun PreviewApp() {
@@ -115,7 +115,7 @@ fun PreviewApp() {
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @Composable
 fun UnifiedScreen(
     state: CriadorState,
@@ -691,7 +691,7 @@ private fun activeSectionIndex(
     return if (index >= 0) index else 0
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @Composable
 private fun SectionDetailPane(
     modifier: Modifier,
@@ -822,7 +822,7 @@ internal fun resolveActiveSection(
     return availableSections.first()
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @Composable
 private fun ProgressionDetailContent(
     state: CriadorState,
@@ -980,7 +980,7 @@ private fun ProgressionDetailContent(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @Composable
 private fun CreationDetailContent(
     state: CriadorState,
@@ -1173,7 +1173,7 @@ private fun PoderesSection(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @Composable
 private fun SuperPoderesSection(
     state: CriadorState,

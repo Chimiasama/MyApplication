@@ -3,8 +3,6 @@ package com.example.swadebuilder.model
 
 import android.content.Context
 import android.net.Uri
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.swadebuilder.CriadorState
@@ -26,11 +24,7 @@ import com.example.swadebuilder.model.usecase.RemoveCrystalHeartUseCase
 import com.example.swadebuilder.model.usecase.ResolveAdvantageByIdUseCase
 import com.example.swadebuilder.model.usecase.ResolveDependentPowerRemovalUseCase
 import com.example.swadebuilder.model.usecase.UpsertCrystalHeartUseCase
-import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentUseCase
 import com.example.swadebuilder.model.usecase.ValidatePowerInvestmentWorkflowUseCase
-import com.example.swadebuilder.model.usecase.ValidateSpecialPowerRequirementsUseCase
-import com.example.swadebuilder.model.usecase.ValidateSuperAdvantageInvestmentUseCase
-import com.example.swadebuilder.model.usecase.ValidateSuperAttributeInvestmentUseCase
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.toArcanoKey
@@ -49,7 +43,7 @@ data class InvestResult(val ok: Boolean, val mensagem: String)
  * ViewModel que gerencia o estado de criação de personagem.
  */
 class CriadorViewModel(
-    private val gameDataRepository: GameDataRepository = AssetGameDataRepository()
+    private val gameDataRepository: GameDataRepository = AssetGameDataRepository(),
 ) : ViewModel() {
 
     companion object {
@@ -66,10 +60,6 @@ class CriadorViewModel(
     private val upsertCrystalHeartUseCase = UpsertCrystalHeartUseCase()
     private val removeCrystalHeartUseCase = RemoveCrystalHeartUseCase()
     private val generateSequentialNameUseCase = GenerateSequentialNameUseCase(defaultName = DEFAULT_CHARACTER_NAME)
-    private val validatePowerInvestmentUseCase = ValidatePowerInvestmentUseCase()
-    private val validateSpecialPowerRequirementsUseCase = ValidateSpecialPowerRequirementsUseCase()
-    private val validateSuperAdvantageInvestmentUseCase = ValidateSuperAdvantageInvestmentUseCase()
-    private val validateSuperAttributeInvestmentUseCase = ValidateSuperAttributeInvestmentUseCase()
     private val applySuperAttributeDeltaUseCase = ApplySuperAttributeDeltaUseCase()
     private val calculatePerPowerLimitUseCase = CalculatePerPowerLimitUseCase()
     private val calculateSuperSkillRawAfterRevertUseCase = CalculateSuperSkillRawAfterRevertUseCase()
@@ -89,12 +79,14 @@ class CriadorViewModel(
 
     private fun moduleKeysFromFlags(flags: SnapshotFlags): Set<String> = buildSet {
         if (flags.modoLivre) {
-            addAll(listOf(
-                ModuleIds.FANTASIA, ModuleIds.HORROR, ModuleIds.SCI_FI,
-                ModuleIds.PATHFINDER, ModuleIds.DEADLANDS, ModuleIds.CRYSTAL_HEART,
-                ModuleIds.ARTE_DA_GUERRA, ModuleIds.CIDADE_SOL_VAPOR,
-                ModuleIds.WISEGUYS, ModuleIds.SUPER
-            ))
+            addAll(
+                listOf(
+                    ModuleIds.FANTASIA, ModuleIds.HORROR, ModuleIds.SCI_FI,
+                    ModuleIds.PATHFINDER, ModuleIds.DEADLANDS, ModuleIds.CRYSTAL_HEART,
+                    ModuleIds.ARTE_DA_GUERRA, ModuleIds.CIDADE_SOL_VAPOR,
+                    ModuleIds.WISEGUYS, ModuleIds.SUPER,
+                ),
+            )
             return@buildSet
         }
         if (flags.compendioFantasiaAtivo) add(ModuleIds.FANTASIA)
@@ -153,7 +145,7 @@ class CriadorViewModel(
             usarEspecializacoesDePericia = state.usarEspecializacoesDePericia,
             pericias = pericias,
             rawTotalProvider = { per -> state.rawTotal(per) },
-            atual = state.especializacoesPorPericia.toMap()
+            atual = state.especializacoesPorPericia.toMap(),
         )
 
         state.especializacoesPorPericia.clear()
@@ -182,7 +174,6 @@ class CriadorViewModel(
         state.equipExpandedTypes.clear()
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun resetToEmptyState() {
         resetStateParaNovoPersonagem(
             cartaSelvagem = true,
@@ -204,7 +195,7 @@ class CriadorViewModel(
             regraMultiplosIdiomas = false,
                 optRegraFama = false,
                 optRegraRiqueza = false,
-                optRegraCosaNostra = false
+                optRegraCosaNostra = false,
         )
     }
 
@@ -252,7 +243,7 @@ class CriadorViewModel(
             regraMultiplosIdiomas = currentRegraMultiplosIdiomas,
             optRegraFama = currentOptRegraFama,
             optRegraRiqueza = currentOptRegraRiqueza,
-            optRegraCosaNostra = currentOptRegraCosaNostra
+            optRegraCosaNostra = currentOptRegraCosaNostra,
         )
 
         state.nasceUmHeroi = currentNasceUmHeroi
@@ -288,8 +279,10 @@ class CriadorViewModel(
         val savedEntries = listarPersonagensSalvos(context)
         val idToIgnore = if (criarCopia) null else state.idAtual
         val otherNames = savedEntries
+            .asSequence()
             .filter { it.id != idToIgnore }
             .map { it.nome }
+            .toList()
 
         val finalName = if (desiredName.equals(DEFAULT_CHARACTER_NAME, ignoreCase = true)) {
             generateSequentialNameUseCase.execute(DEFAULT_CHARACTER_NAME, otherNames, usarParenteses = false)
@@ -309,7 +302,7 @@ class CriadorViewModel(
         if (!criarCopia) {
             val previousPortrait = previousSnapshot?.selecoes?.retratoFileName
             val currentPortrait = snapshot.selecoes.retratoFileName
-            if (previousPortrait != null && previousPortrait != currentPortrait) {
+            if ((previousPortrait != null) && (previousPortrait != currentPortrait)) {
                 CharacterPortraitStorage.deleteIfUnused(context, previousPortrait)
             }
         }
@@ -329,7 +322,6 @@ class CriadorViewModel(
         val message: String? = null
     )
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     suspend fun carregarPersonagem(context: Context, saveId: String): LoadOutcome {
         val snapshot = when (val result = CharacterStorage.load(context, saveId)) {
             is CharacterStorage.LoadResult.Success -> result.snapshot
@@ -378,7 +370,7 @@ class CriadorViewModel(
     fun normalizeArcanoIdsNoCarregamento() {
 
         val convertidos = state.vantagensSelecionadas.map { v ->
-            if (v.id == ArcaneBackgroundIds.BASE && v.choice != null) {
+            if ((v.id == ArcaneBackgroundIds.BASE) && (v.choice != null)) {
                 val novoId = normalizeArcaneBackgroundChoiceUseCase.execute(v.choice)
                 val novo = vantagensData().find { it.id == novoId }
                 novo ?: v
@@ -388,7 +380,6 @@ class CriadorViewModel(
         state.vantagensSelecionadas.addAll(convertidos.distinctBy { it.id })
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun resetStateParaNovoPersonagem(
         cartaSelvagem: Boolean,
         maisPontosPericias: Boolean,
@@ -563,7 +554,7 @@ class CriadorViewModel(
         state.progresso = 0
         state.progressosDisponiveis = 0
         state.stageXpSpent.keys.forEach { state.stageXpSpent[it] = 0 }
-        state.xpSlots.fill(false)
+        state.xpSlots.fill(value = false)
         state.frozenAdvantageCount = 0
         state.advancementHistory.clear()
         state.emProgresso = false
@@ -627,8 +618,7 @@ class CriadorViewModel(
 
         if (state.compendioCrystalHeartAtivo) {
             val starterHeartId = selectedRules.defaultCrystalHeartId() ?: CrystalHeartIds.HEART_STARTER
-            val basicHeart = coracoesData().firstOrNull { it.id == starterHeartId }
-            if (basicHeart != null) {
+            coracoesData().firstOrNull { it.id == starterHeartId }?.let { basicHeart ->
                 state.coracaoCrystalSelecionado = basicHeart
             }
         }
@@ -661,9 +651,7 @@ class CriadorViewModel(
         }
 
         val fileName = CharacterPortraitStorage.savePortrait(context, sourceUri)
-        if (fileName != null) {
-            state.portraitFileName = fileName
-        }
+        fileName?.let { state.portraitFileName = it }
     }
 
     fun perPowerLimit(poderId: String): Int {
@@ -679,17 +667,6 @@ class CriadorViewModel(
 
     fun definirPoderFavorecido(poderId: String?) {
         state.poderFavoritoId = poderId
-    }
-
-    fun podeSubirAtributoPorSuper(attrKey: String, steps: Int): InvestCheck {
-        val erro = validateSuperAttributeInvestmentUseCase.execute(
-            ValidateSuperAttributeInvestmentUseCase.Input(
-                currentRaw = state.atributoRawComSupers(attrKey),
-                steps = steps,
-                applySteps = { raw, delta -> state.applySuperStepsFrom(raw, delta) }
-            )
-        )
-        return if (erro == null) InvestCheck(true) else InvestCheck(false, erro)
     }
 
     private fun bloqueioClasseExclusiva(vant: Vantagem): String? {
@@ -710,10 +687,10 @@ class CriadorViewModel(
         if (poderId.uppercase() == "SP_VELOCIDADE") {
             val hasTensao = modifiers.keys.any {
                 val k = it.keyify()
-                k == "TENSAO SUPERFICIAL" || k == "TENSAO_SUPERFICIAL"
+                (k == "TENSAO SUPERFICIAL") || (k == "TENSAO_SUPERFICIAL")
             }
-            if (hasTensao && baseCost < 13) {
-                return InvestCheck(false, "O modificador Tensão Superficial requer no mínimo o nível de 13 pontos (Velocidade Sônica) no poder Velocidade.")
+            if (hasTensao && (baseCost < 13)) {
+                return InvestCheck(ok = false, motivoBloqueio = "O modificador Tensão Superficial requer no mínimo o nível de 13 pontos (Velocidade Sônica) no poder Velocidade.")
             }
         }
 
@@ -722,8 +699,7 @@ class CriadorViewModel(
                 ValidatePowerInvestmentWorkflowUseCase.EffectInput.SuperAtributo(
                     currentRaw = state.atributoRawComSupers(efeito.attrKey),
                     steps = efeito.steps,
-                    applySteps = { raw, delta -> state.applySuperStepsFrom(raw, delta) }
-                )
+                ) { raw, delta -> state.applySuperStepsFrom(raw, delta) }
             }
 
             is PowerEffect.SuperVantagem -> {
@@ -746,7 +722,7 @@ class CriadorViewModel(
                     vantagemIdSolicitada = efeito.vantagemId,
                     vantagemNome = vant?.nome,
                     mensagemBloqueioClasse = vant?.let { bloqueioClasseExclusiva(it) },
-                    jaPossuiVantagem = vant != null && state.vantagensSelecionadas.any { it.id == vant.id },
+                    jaPossuiVantagem = (vant != null) && state.vantagensSelecionadas.any { it.id == vant.id },
                     requisitosAtendidosIgnorandoEstagio = permitido
                 )
             }
@@ -775,7 +751,7 @@ class CriadorViewModel(
             )
         )
 
-        return if (erro == null) InvestCheck(true, null) else InvestCheck(false, erro)
+        return if (erro == null) InvestCheck(ok = true, motivoBloqueio = null) else InvestCheck(ok = false, motivoBloqueio = erro)
     }
 
     /**
@@ -910,8 +886,7 @@ class CriadorViewModel(
                             baseRaw = baseRaw,
                             currentSuperSteps = incsAtuais,
                             revertingSteps = efeito.steps,
-                            applySteps = { raw, steps -> state.applySuperStepsFrom(raw, steps) }
-                        )
+                        ) { raw, steps -> state.applySuperStepsFrom(raw, steps) }
                     )
 
                     val perKey = perObj.nome.keyify()
@@ -1060,7 +1035,6 @@ class CriadorViewModel(
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun finishSkillAdvancement() {
         if (state.skillAdvancementInProgress) {
             val skills = state.skillsForCurrentAdvancement.toList()
@@ -1095,7 +1069,7 @@ class CriadorViewModel(
         }
     }
 
-    fun increaseSkillForAdvancement(skill: com.example.swadebuilder.model.Pericia): Boolean {
+    fun increaseSkillForAdvancement(skill: Pericia): Boolean {
         if (!state.skillAdvancementInProgress) return false
 
         // Check if user has points
@@ -1116,7 +1090,7 @@ class CriadorViewModel(
         return true
     }
 
-    fun decreaseSkillForAdvancement(skill: com.example.swadebuilder.model.Pericia): Boolean {
+    fun decreaseSkillForAdvancement(skill: Pericia): Boolean {
         if (!state.skillAdvancementInProgress) return false
 
         // Ensure the skill was actually increased in this session
@@ -1154,7 +1128,6 @@ class CriadorViewModel(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun finishAdvantageAdvancement() {
         if (state.advantageAdvancementInProgress) {
             if (state.arcanoCompraPendente()) {
@@ -1372,7 +1345,6 @@ class CriadorViewModel(
         state.checkFreeze()
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun finishAttributeAdvancement() {
         if (state.attributeAdvancementInProgress) {
             val before = state.attributeStacksBeforeAdvancement ?: emptyMap()
@@ -1420,7 +1392,6 @@ class CriadorViewModel(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun cancelAdvancementInProgress() {
         // Roda apenas se houver um avanço em andamento para ser cancelado.
         if (
@@ -1447,9 +1418,7 @@ class CriadorViewModel(
             state.skillsForCurrentAdvancement.forEach { skillName ->
                 val skill = state.periciasComIdiomas().firstOrNull { it.nome.keyify() == skillName.keyify() }
                     ?: periciasMapData()[skillName.keyify()]
-                if (skill != null) {
-                    state.decreasePericia(skill)
-                }
+                skill?.let { state.decreasePericia(it) }
             }
             state.skillsForCurrentAdvancement.clear()
             state.spFromProgress = (state.spFromProgress - 2).coerceAtLeast(0)
@@ -1504,7 +1473,6 @@ class CriadorViewModel(
         state.updateEmProgressoFlag()
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun undoLastProgressAction() {
         val hasPendingProgress =
             state.skillAdvancementInProgress ||
@@ -1524,11 +1492,10 @@ class CriadorViewModel(
         revertLastAdvancement()
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun revertLastAdvancement() {
         if (state.advancementHistory.isEmpty()) return
 
-        val lastAction = state.advancementHistory.removeLast()
+        val lastAction = state.advancementHistory.removeAt(state.advancementHistory.lastIndex)
         val stageName = lastAction.stageName
 
         // Reverte o slot de XP e o contador de progresso
@@ -1543,12 +1510,12 @@ class CriadorViewModel(
                 // Reverte o gasto E a concessão do ponto de vantagem
                 // Usa lastOrNull para pegar a instância mais recente (importante para Pontos de Poder que pode ter várias)
                 val advantage = state.vantagensSelecionadas.lastOrNull { it.id == lastAction.advantageId }
-                if (advantage != null) {
-                    if (advantage.nome.contains("Pontos de Poder", true)) {
-                        state.removerPontosDePoder(advantage, estagioOverride = lastAction.stageName)
+                advantage?.let {
+                    if (it.nome.contains("Pontos de Poder", true)) {
+                        state.removerPontosDePoder(it, estagioOverride = lastAction.stageName)
                     } else {
-                        state.removeVantagemDinheiro(advantage)
-                        state.removerVantagem(advantage)
+                        state.removeVantagemDinheiro(it)
+                        state.removerVantagem(it)
                     }
                 }
                 lastAction.arcanoKey?.let { arcKey ->
@@ -1564,8 +1531,8 @@ class CriadorViewModel(
             }
             is AdvancementAction.IncreaseAttribute -> {
                 val stack = state.paCostStackPorAtributo[lastAction.attributeName]
-                if (stack != null && stack.isNotEmpty()) {
-                    stack.removeLast()
+                if (!stack.isNullOrEmpty()) {
+                    stack.removeAt(stack.lastIndex)
                     val current = state.valoresAtributos[lastAction.attributeName]!!.intValue
                     val prevRaw = if (current > 12) current - 1 else current - 2
                     state.valoresAtributos[lastAction.attributeName]!!.intValue = prevRaw

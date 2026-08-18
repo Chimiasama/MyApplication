@@ -129,7 +129,7 @@ fun PoderesSection(
                 if (existente.size < slotsCount) {
                     while (existente.size < slotsCount) { existente.add(null) }
                 } else if (existente.size > slotsCount) {
-                    while (existente.size > slotsCount) { existente.removeLast() }
+                    while (existente.size > slotsCount) { existente.removeAt(existente.lastIndex) }
                 }
             }
         }

@@ -164,7 +164,7 @@ fun VantFilterDialog(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun VantagensContent(

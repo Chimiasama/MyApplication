@@ -1,6 +1,5 @@
 package com.example.swadebuilder
 
-import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -3355,12 +3354,11 @@ class CriadorState {
         pilha.add(escolhas)
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun desfazerUltimosNovosPoderes(versionKey: String, initialSlots: Int) {
         val pilha = novosPoderesStacksPorArcano[versionKey] ?: return
         if (pilha.isEmpty()) return
 
-        val ultima = pilha.removeLast()
+        val ultima = pilha.removeAt(pilha.lastIndex)
         val slots = poderSlotsPorArcano[versionKey] ?: return
 
         ultima.forEach { poderId ->
@@ -3372,7 +3370,7 @@ class CriadorState {
         val tamanhoMinimo = (initialSlots + extrasAinda).coerceAtLeast(initialSlots)
 
         while (slots.size > tamanhoMinimo && slots.lastOrNull() == null) {
-            slots.removeLast()
+            slots.removeAt(slots.lastIndex)
         }
 
         syncPoderesSelecionadosFromSlots()
@@ -4418,7 +4416,6 @@ class CriadorState {
         return rawFromStartAndIncrements(startRaw, totalIncs)
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun aplicarAncestralidade(anc: String, feedbackMessages: MutableList<String>, autoRefund: Boolean = true) {
         debugLog(
             "AdaptavelDebug",
@@ -5000,7 +4997,6 @@ class CriadorState {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarSigno(novoSigno: String?) {
         if (signoAdgSelecionado == novoSigno) return
 
@@ -5035,7 +5031,6 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarAnoesScifi(opcao: String?) {
         val ancDef = getAncestralidadeDef("ANÕES")
         val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
@@ -5052,7 +5047,6 @@ class CriadorState {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarScifiVariant(opcao: String?) {
         val ancDef = currentAncestryDef
         val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
@@ -5070,7 +5064,6 @@ class CriadorState {
         aplicarAncestralidade(ancestralidade, msgs)
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarHumanoMineradorAtributo(atributo: String?) {
         if (humanoMineradorAtributo == atributo) return
         humanoMineradorAtributo = atributo
@@ -5104,7 +5097,6 @@ class CriadorState {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarPacoteCulturalFantasia(novoPacote: String) {
         if (pacoteCulturalFantasiaSelecionado == novoPacote) return
         pacoteCulturalFantasiaSelecionado = novoPacote
@@ -5392,7 +5384,6 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarPericiaUsagimimi(
         pericia: String?,
         feedbackMessages: MutableList<String> = mutableListOf()
@@ -5422,7 +5413,6 @@ class CriadorState {
         return tropo == null || tropo.id == "tropo_elementalista"
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun updateProtagonistaRollTecnicas(value: Int?) {
         if (protagonistaRollTecnicas == value) return
         protagonistaRollTecnicas = value?.coerceIn(1, 4)
@@ -5544,14 +5534,13 @@ class CriadorState {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     private fun syncMestreDoChiSlots() {
         rebuildAllPericiaStacks()
         poderSlotsPorArcano["MESTRE DO CHI"]?.let { slots ->
             val required = getSlotsCountForArcano("MESTRE DO CHI")
             while (slots.size < required) slots.add(null)
             while (slots.size > required && slots.lastOrNull() == null) {
-                slots.removeLast()
+                slots.removeAt(slots.lastIndex)
             }
             syncPoderesSelecionadosFromSlots()
         }
@@ -5616,7 +5605,6 @@ class CriadorState {
         rebuildAllPericiaStacks()
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun selecionarTropo(
         novoTropo: Tropo?,
         feedbackMessages: MutableList<String> = mutableListOf()
@@ -6048,13 +6036,12 @@ class CriadorState {
     fun snapshotAttributeStacks(): Map<String, Int> =
         paCostStackPorAtributo.mapValues { (_, stack) -> stack.size }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun restoreAttributeStacks(snapshot: Map<String, Int>) {
         listaAtributos.forEach { attr ->
             val stack = paCostStackPorAtributo.getValue(attr)
             val target = snapshot[attr] ?: 0
             while (stack.size > target) {
-                stack.removeLast()
+                stack.removeAt(stack.lastIndex)
                 val current = valoresAtributos[attr]!!.intValue
                 val prev = if (current > 12) current - 1 else current - 2
                 valoresAtributos[attr]!!.intValue = prev
@@ -6328,7 +6315,6 @@ class CriadorState {
         )
     }
 
-    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     fun restoreFromSnapshot(
         snapshot: PersonagemSnapshot,
         feedbackMessages: MutableList<String> = mutableListOf()

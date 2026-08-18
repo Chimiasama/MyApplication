@@ -123,7 +123,7 @@ private fun stripScenarioSuffix(nome: String): String {
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @Composable
 fun AncestralidadesSection(
     state: CriadorState,

@@ -2,8 +2,6 @@
 
 package com.example.swadebuilder.ui.sections
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -145,7 +143,7 @@ fun BuySuperPowerDialog(
                 name = cleanName,
                 options = opts,
                 included = mutableStateOf(value = false),
-                selected = mutableIntStateOf(opts.first())
+                selected = mutableIntStateOf(value = opts.first()),
             )
         }
     }
@@ -160,21 +158,21 @@ fun BuySuperPowerDialog(
 
     val capParaBase = (totalCap - modCost).coerceAtLeast(baseMinDeclarado)
     val allowedBaseOptions = baseOptionsAll
-        .filter { it in baseMinDeclarado..minOf(baseMaxDeclarado, capParaBase) }
+        .filter { it in (baseMinDeclarado..minOf(baseMaxDeclarado, capParaBase)) }
         .ifEmpty { listOf(baseMinDeclarado.coerceAtMost(capParaBase)) }
 
     val minAllowed = allowedBaseOptions.first()
     val maxAllowed = allowedBaseOptions.last()
-    val isLongRange = allowedBaseOptions.size > 7 ||
-            (maxAllowed - minAllowed) > 10
+    val isLongRange = (allowedBaseOptions.size > 7) ||
+            ((maxAllowed - minAllowed) > 10)
 
     var baseIdx by rememberSaveable(poder.nome) { mutableIntStateOf(0) }
     val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
 
     LaunchedEffect(baseCost) {
-        if (poder.nome.keyify() == "VELOCIDADE" && baseCost < 13) {
+        if ((poder.nome.keyify() == "VELOCIDADE") && (baseCost < 13)) {
             modStates.forEach { mod ->
-                if (mod.name.keyify() == "TENSAO SUPERFICIAL" || mod.name.keyify() == "TENSAO_SUPERFICIAL") {
+                if ((mod.name.keyify() == "TENSAO SUPERFICIAL") || (mod.name.keyify() == "TENSAO_SUPERFICIAL")) {
                     mod.included.value = false
                 }
             }
@@ -197,7 +195,7 @@ fun BuySuperPowerDialog(
                     .fillMaxWidth()
                     .heightIn(max = 280.dp)
                     .verticalScroll(scroll)
-                    .padding(8.dp)
+                    .padding(8.dp),
             ) {
                 Text("Custo base:", fontWeight = FontWeight.SemiBold)
                 Spacer(Modifier.height(4.dp))
@@ -209,13 +207,13 @@ fun BuySuperPowerDialog(
                     !isLongRange -> {
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
                             allowedBaseOptions.forEachIndexed { idx, opt ->
                                 FilterChip(
                                     selected = (idx == baseIdx),
                                     onClick = { baseIdx = idx },
-                                    label = { Text("$opt SP") }
+                                    label = { Text("$opt SP") },
                                 )
                             }
                         }
@@ -320,6 +318,7 @@ fun BuySuperPowerDialog(
                                                     mod.options.maxOrNull() ?: 0
                                                 )
                                             val outros = modStates
+                                                .asSequence()
                                                 .filter { it.included.value && it != mod }
                                                 .sumOf { it.selected.value }
                                             val futuroTotal =
@@ -345,6 +344,7 @@ fun BuySuperPowerDialog(
                 enabled = podeConfirmar,
                 onClick = {
                     val mods = modStates
+                        .asSequence()
                         .filter { it.included.value }
                         .associateBy({ it.name }) { it.selected.value }
                     onConfirm(baseCost, totalAtual, mods)
@@ -449,6 +449,7 @@ fun SuperPoderesSection(
                     contentPadding = PaddingValues(end = 24.dp) // creates a nice clipped / cut-off effect for the last element
                 ) {
                     val genericosAgrupados = state.superInvestments
+                        .asSequence()
                         .filter { it.effect is PowerEffect.Generico }
                         .groupBy { it.powerId }
 
@@ -611,7 +612,7 @@ fun SuperPoderesSection(
         Spacer(Modifier.height(8.dp))
 
         var searchQuery by rememberSaveable { mutableStateOf("") }
-        var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
+        var isSearchExpanded by rememberSaveable { mutableStateOf(value = false) }
 
         val filteredList = remember(listaSuperPoderes, searchQuery) {
             if (searchQuery.isBlank()) listaSuperPoderes
@@ -647,9 +648,11 @@ fun SuperPoderesSection(
                         is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
                         is JsonPrimitive -> listOfNotNull(m.contentOrNull)
                         else -> emptyList()
-                    }.map { it.trim() }
+                    }.asSequence()
+                        .map { it.trim() }
                         .filter { it.isNotEmpty() }
                         .distinct()
+                        .toList()
                 }
 
                 val showDetails = allowLongTexts && (
@@ -818,13 +821,13 @@ fun SuperPoderesSection(
         )
     }
 
-    var showSuperAttrPicker by rememberSaveable { mutableStateOf(false) }
+    var showSuperAttrPicker by rememberSaveable { mutableStateOf(value = false) }
     var poolSuperAttr by rememberSaveable { mutableIntStateOf(0) }
 
-    var showSuperPericiaPicker by rememberSaveable { mutableStateOf(false) }
+    var showSuperPericiaPicker by rememberSaveable { mutableStateOf(value = false) }
     var poolSuperPericia by rememberSaveable { mutableIntStateOf(0) }
 
-    var showSuperVantPicker by rememberSaveable { mutableStateOf(false) }
+    var showSuperVantPicker by rememberSaveable { mutableStateOf(value = false) }
     var poolSuperVant by rememberSaveable { mutableIntStateOf(0) }
 
     var showBonusPericiaPicker by rememberSaveable { mutableStateOf(false) }
@@ -978,8 +981,10 @@ fun SuperPoderesSection(
                             poolSuperAttr = baseCost / 2
                             showSuperAttrPicker = true
                         }
-                        "SUPERPERÍCIA", "SUPER PERÍCIA",
-                        "SUPERPERICIA", "SUPER PERICIA" -> {
+                        "SUPERPERÍCIA",
+                        "SUPER PERÍCIA",
+                        "SUPERPERICIA",
+                        "SUPER PERICIA" -> {
                             poolSuperPericia = baseCost
                             if (poolSuperPericia > 0) {
                                 showSuperPericiaPicker = true
@@ -1026,9 +1031,8 @@ fun SuperPoderesSection(
                         // Pickers opened or other non-invest actions
                         poderParaComprar = null
                     }
-                },
-                onDismiss = { poderParaComprar = null },
-            )
+                }
+            ) { poderParaComprar = null }
         }
     }
 
@@ -1265,7 +1269,7 @@ fun SuperPoderesSection(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
+
 @Composable
 fun SuperPoderesContent(
     state: CriadorState,
