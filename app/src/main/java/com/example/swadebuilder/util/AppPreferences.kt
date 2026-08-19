@@ -13,6 +13,7 @@ object AppPreferences {
     private const val KEY_SHOW_DESC_HOME = "show_desc_home_v2"
     private const val KEY_SYSTEM_MESSAGES = "show_system_messages"
     private const val KEY_APP_THEME = "app_theme"
+    private const val KEY_PULAR_SELECAO_REGRAS = "pular_selecao_regras"
 
     data class GlobalPrefs(
         val hapticStrength: Int,
@@ -21,7 +22,8 @@ object AppPreferences {
         val showBookIcon: Boolean,
         val showDescHome: Boolean,
         val showSystemMessages: Boolean,
-        val appTheme: AppTheme
+        val appTheme: AppTheme,
+        val pularSelecaoRegras: Boolean
     )
 
     fun loadPrefs(context: Context, defaultHaptics: Int, defaultSound: Int): GlobalPrefs {
@@ -47,7 +49,9 @@ object AppPreferences {
             AppTheme.DEFAULT
         }
 
-        return GlobalPrefs(haptics, sound, tabStyle, showBookIcon, showDescHome, showSystemMessages, appTheme)
+        val pularSelecaoRegras = prefs.getBoolean(KEY_PULAR_SELECAO_REGRAS, false)
+
+        return GlobalPrefs(haptics, sound, tabStyle, showBookIcon, showDescHome, showSystemMessages, appTheme, pularSelecaoRegras)
     }
 
     fun savePrefs(
@@ -58,7 +62,8 @@ object AppPreferences {
         showBookIcon: Boolean,
         showDescHome: Boolean,
         showSystemMessages: Boolean,
-        appTheme: AppTheme
+        appTheme: AppTheme,
+        pularSelecaoRegras: Boolean
     ) {
         context
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
@@ -70,6 +75,7 @@ object AppPreferences {
             .putBoolean(KEY_SHOW_DESC_HOME, showDescHome)
             .putBoolean(KEY_SYSTEM_MESSAGES, showSystemMessages)
             .putString(KEY_APP_THEME, appTheme.name)
+            .putBoolean(KEY_PULAR_SELECAO_REGRAS, pularSelecaoRegras)
             .apply()
     }
 

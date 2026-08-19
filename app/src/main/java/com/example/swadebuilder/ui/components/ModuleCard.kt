@@ -13,14 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.swadebuilder.TabStyle
 
 @Composable
 fun ModuleCard(
@@ -42,9 +38,6 @@ fun ModuleCard(
     enabled: Boolean = true,
     onToggle: () -> Unit,
     showDescription: Boolean = true,
-    onRulesClick: (() -> Unit)? = null,
-    isRulesActive: Boolean = false,
-    tabStyle: TabStyle = TabStyle.TEXTO,
     modifier: Modifier = Modifier
 ) {
     val scale by animateFloatAsState(targetValue = if (isSelected) 1.04f else if (enabled) 1.0f else 0.97f, label = "scale")
@@ -117,40 +110,6 @@ fun ModuleCard(
                                 overflow = TextOverflow.Ellipsis,
                                 textAlign = TextAlign.Center
                             )
-                        }
-                    }
-
-                    // Rules Button (TopEnd)
-                    if (onRulesClick != null) {
-                        val rulesColor = if (isRulesActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.TopEnd)
-                                .padding(4.dp)
-                        ) {
-                            if (tabStyle == TabStyle.ICONES) {
-                                IconButton(
-                                    onClick = onRulesClick
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Gavel,
-                                        contentDescription = "Regras",
-                                        tint = rulesColor
-                                    )
-                                }
-                            } else {
-                                TextButton(
-                                    onClick = onRulesClick
-                                ) {
-                                    Text(
-                                        text = "REGRAS",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        fontWeight = FontWeight.Bold,
-                                        color = rulesColor
-                                    )
-                                }
-                            }
                         }
                     }
                 }

@@ -219,6 +219,7 @@ class CriadorState {
     var hapticStrength by mutableIntStateOf(DEFAULT_HAPTIC_STRENGTH)
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
     var showSystemMessages by mutableStateOf(true)
+    var pularSelecaoRegras by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)

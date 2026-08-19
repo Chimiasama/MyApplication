@@ -233,6 +233,7 @@ class MainActivity : ComponentActivity() {
                 state.mostrarDescricaoHome = prefs.showDescHome
                 state.showSystemMessages = prefs.showSystemMessages
                 state.appTheme = prefs.appTheme
+                state.pularSelecaoRegras = prefs.pularSelecaoRegras
             }
             val persistPrefs: () -> Unit = remember {
                 {
@@ -244,7 +245,8 @@ class MainActivity : ComponentActivity() {
                         state.mostrarIdentificadorLivro,
                         state.mostrarDescricaoHome,
                         state.showSystemMessages,
-                        state.appTheme
+                        state.appTheme,
+                        state.pularSelecaoRegras
                     )
                 }
             }
@@ -344,6 +346,7 @@ class MainActivity : ComponentActivity() {
                 SWADEbuilderTheme(appTheme = state.appTheme) {
                     SettingsDialog(
                         state = state,
+                        isCreationPhase = (!mostrouTelaInicial && !state.modoProgressaoAtivo && !state.isNpcExibicao),
                         onDismiss = { showSettingsDialog = false },
                         persistPrefs = { persistPrefs() },
                         feedbackController = feedbackController

@@ -143,16 +143,34 @@ fun TelaInicial(
     var showCreditsDialog by remember { mutableStateOf(false) }
     var showRulesDialog by remember { mutableStateOf(false) }
 
+    // Reset all rule flags to clean slate
+    fun resetAllRuleFlags() {
+        optCartaSelvagem = true
+        optMaisPontosPericias = true
+        optMultiAntecedenteArcano = false
+        optEspecializacaoPer = false
+        optMultiplosIdiomas = false
+        optNasceUmHeroi = false
+        optSemPontosPoder = false
+        optGrandesResponsabilidades = false
+        optModoMonstro = false
+        optRegraFama = false
+        optRegraRiqueza = false
+        optRegraCosaNostra = false
+        optRegraMechasCiberneticos = false
+    }
+
     // Helper for applying rules presets
     fun applyRulesPreset(preset: String) {
+        resetAllRuleFlags()
         when (preset) {
             "Supers" -> {
                 optCartaSelvagem = true
                 optMaisPontosPericias = true
-                optNasceUmHeroi = false
             }
             "Arte da Guerra" -> {
                 optCartaSelvagem = true
+                optMaisPontosPericias = false
                 optNasceUmHeroi = true
             }
             "Wiseguys" -> {
@@ -160,44 +178,36 @@ fun TelaInicial(
                 optMaisPontosPericias = true
                 optRegraRiqueza = true
                 optRegraCosaNostra = true
-                optMultiAntecedenteArcano = false
-                optEspecializacaoPer = false
-                optMultiplosIdiomas = false
-                optNasceUmHeroi = false
-                optSemPontosPoder = false
             }
-            "Pathfinder" -> {
+            "Pathfinder", "Deadlands", "Crystal Heart", "Fantasia" -> {
                 optCartaSelvagem = true
                 optMaisPontosPericias = false
             }
-            "Deadlands" -> {
-                optCartaSelvagem = true
-                optMaisPontosPericias = false
-            }
-            "Crystal Heart" -> {
-                optCartaSelvagem = true
-                optMaisPontosPericias = false
-                optMultiAntecedenteArcano = false
-                optSemPontosPoder = false
-                optRegraRiqueza = false
-            }
-            "Básico" -> {
+            "Básico", "Horror", "Ficção", "Cidade Sol Vapor" -> {
                 optCartaSelvagem = true
                 optMaisPontosPericias = true
-                optNasceUmHeroi = false
-                optRegraRiqueza = false
-                optRegraCosaNostra = false
-                optRegraFama = false
-            }
-            "Fantasia" -> {
-                optCartaSelvagem = true
-                optMaisPontosPericias = false
-                optNasceUmHeroi = false
-                optRegraRiqueza = false
-                optRegraCosaNostra = false
-                optRegraFama = false
             }
         }
+    }
+
+    fun getActiveBookPreset(): String {
+        return when {
+            optSuperPoderes -> "Supers"
+            optCompendioArteDaGuerra -> "Arte da Guerra"
+            optCompendioWiseguys -> "Wiseguys"
+            optCompendioPathfinder -> "Pathfinder"
+            optCompendioDeadlands -> "Deadlands"
+            optCompendioCrystalHeart -> "Crystal Heart"
+            optCompendioFantasia -> "Fantasia"
+            optCompendioHorror -> "Horror"
+            optCompendioSciFi -> "Ficção"
+            optCompendioCidadeSolVapor -> "Cidade Sol Vapor"
+            else -> "Básico"
+        }
+    }
+
+    fun resetAllBookRulesToDefaults() {
+        applyRulesPreset(getActiveBookPreset())
     }
 
     // Data for Grid
@@ -207,9 +217,7 @@ fun TelaInicial(
         val icon: ImageVector,
         val isSelected: Boolean,
         val enabled: Boolean,
-        val onToggle: () -> Unit,
-        val onRulesClick: (() -> Unit)?,
-        val isRulesActive: Boolean = false
+        val onToggle: () -> Unit
     )
 
     val isAnyBookSelected = optCompendioFantasia || optCompendioSciFi || optCompendioHorror || optSuperPoderes ||
@@ -236,9 +244,7 @@ fun TelaInicial(
                  optCompendioCidadeSolVapor = false
                  optCompendioWiseguys = false
                  applyRulesPreset("Básico")
-            },
-            onRulesClick = { applyRulesPreset("Básico"); showRulesDialog = true },
-            isRulesActive = !optSuperPoderes && !optCompendioPathfinder && !optCompendioArteDaGuerra && !optCompendioWiseguys
+            }
         ),
         ModuleItemData(
             "Compêndio de Fantasia",
@@ -248,9 +254,8 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioFantasia,
             {
                 optCompendioFantasia = !optCompendioFantasia
-                if (optCompendioFantasia) applyRulesPreset("Fantasia")
-            },
-            { applyRulesPreset("Fantasia"); showRulesDialog = true }
+                applyRulesPreset(if (optCompendioFantasia) "Fantasia" else "Básico")
+            }
         ),
         ModuleItemData(
             "Compêndio de Ficção",
@@ -258,8 +263,10 @@ fun TelaInicial(
             Icons.Default.RocketLaunch,
             optCompendioSciFi,
             !isAnyBookSelected || optCompendioSciFi,
-            { optCompendioSciFi = !optCompendioSciFi },
-            { applyRulesPreset("Básico"); showRulesDialog = true }
+            {
+                optCompendioSciFi = !optCompendioSciFi
+                applyRulesPreset(if (optCompendioSciFi) "Ficção" else "Básico")
+            }
         ),
         ModuleItemData(
             "Compêndio de Horror",
@@ -267,8 +274,10 @@ fun TelaInicial(
             Icons.Default.MoodBad,
             optCompendioHorror,
             !isAnyBookSelected || optCompendioHorror,
-            { optCompendioHorror = !optCompendioHorror },
-            { applyRulesPreset("Básico"); showRulesDialog = true }
+            {
+                optCompendioHorror = !optCompendioHorror
+                applyRulesPreset(if (optCompendioHorror) "Horror" else "Básico")
+            }
         ),
         ModuleItemData(
             "Superpoderes",
@@ -278,10 +287,8 @@ fun TelaInicial(
             !isAnyBookSelected || optSuperPoderes,
             {
                 optSuperPoderes = !optSuperPoderes
-                if (optSuperPoderes) applyRulesPreset("Supers")
-            },
-            { applyRulesPreset("Supers"); showRulesDialog = true },
-            isRulesActive = optSuperPoderes
+                applyRulesPreset(if (optSuperPoderes) "Supers" else "Básico")
+            }
         )
     )
 
@@ -294,10 +301,8 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioPathfinder,
             {
                 optCompendioPathfinder = !optCompendioPathfinder
-                if (optCompendioPathfinder) applyRulesPreset("Pathfinder")
-            },
-            null,
-            isRulesActive = false
+                applyRulesPreset(if (optCompendioPathfinder) "Pathfinder" else "Básico")
+            }
         ),
         ModuleItemData(
             "Deadlands".toEditionDisplayName(),
@@ -307,9 +312,8 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioDeadlands,
             {
                 optCompendioDeadlands = !optCompendioDeadlands
-                if (optCompendioDeadlands) applyRulesPreset("Deadlands")
-            },
-            { applyRulesPreset("Deadlands"); showRulesDialog = true }
+                applyRulesPreset(if (optCompendioDeadlands) "Deadlands" else "Básico")
+            }
         ),
         ModuleItemData(
             "Crystal Heart".toEditionDisplayName(),
@@ -319,11 +323,8 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioCrystalHeart,
             {
                 optCompendioCrystalHeart = !optCompendioCrystalHeart
-                if (optCompendioCrystalHeart) {
-                    applyRulesPreset("Crystal Heart")
-                }
-            },
-            { applyRulesPreset("Crystal Heart"); showRulesDialog = true }
+                applyRulesPreset(if (optCompendioCrystalHeart) "Crystal Heart" else "Básico")
+            }
         ),
         ModuleItemData(
             "Arte da Guerra: Nova Era".toEditionDisplayName(),
@@ -333,10 +334,8 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioArteDaGuerra,
             {
                 optCompendioArteDaGuerra = !optCompendioArteDaGuerra
-                if (optCompendioArteDaGuerra) applyRulesPreset("Arte da Guerra")
-            },
-            { applyRulesPreset("Arte da Guerra"); showRulesDialog = true },
-            isRulesActive = optCompendioArteDaGuerra
+                applyRulesPreset(if (optCompendioArteDaGuerra) "Arte da Guerra" else "Básico")
+            }
         ),
         ModuleItemData(
             "A Cidade do Sol a Vapor".toEditionDisplayName(),
@@ -344,8 +343,10 @@ fun TelaInicial(
             Icons.Default.Build,
             optCompendioCidadeSolVapor,
             !isAnyBookSelected || optCompendioCidadeSolVapor,
-            { optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor },
-            { applyRulesPreset("Básico"); showRulesDialog = true }
+            {
+                optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor
+                applyRulesPreset(if (optCompendioCidadeSolVapor) "Cidade Sol Vapor" else "Básico")
+            }
         ),
         ModuleItemData(
             "Wiseguys".toEditionDisplayName(),
@@ -355,12 +356,64 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioWiseguys,
             {
                 optCompendioWiseguys = !optCompendioWiseguys
-                if (optCompendioWiseguys) applyRulesPreset("Wiseguys")
-            },
-            { applyRulesPreset("Wiseguys"); showRulesDialog = true },
-            isRulesActive = optCompendioWiseguys
+                applyRulesPreset(if (optCompendioWiseguys) "Wiseguys" else "Básico")
+            }
         )
     )
+
+    val startCreation = {
+        val activeModules = mutableSetOf<String>()
+        if (optCompendioFantasia) activeModules.add("FANTASIA")
+        if (optCompendioHorror) activeModules.add("HORROR")
+        if (optCompendioSciFi) activeModules.add("SCI_FI")
+        if (optCompendioPathfinder) activeModules.add("PATHFINDER")
+        if (optCompendioDeadlands) activeModules.add("DEADLANDS")
+        if (optCompendioCrystalHeart) activeModules.add("CRYSTAL_HEART")
+        if (optCompendioArteDaGuerra) activeModules.add("ARTE_DA_GUERRA")
+        if (optCompendioCidadeSolVapor) activeModules.add("CIDADE_SOL_VAPOR")
+        if (optCompendioWiseguys) activeModules.add("WISEGUYS")
+        if (optSuperPoderes) activeModules.add("SUPER")
+
+        scope.launch(Dispatchers.IO) {
+            viewModel.carregarDadosDeJogo(context, activeModules)
+            withContext(Dispatchers.Main) {
+                onCriarNovo(
+                    optCartaSelvagem,
+                    optMaisPontosPericias,
+                    optSuperPoderes,
+                    optCompendioFantasia,
+                    optCompendioHorror,
+                    optCompendioSciFi,
+                    optCompendioPathfinder,
+                    optCompendioDeadlands,
+                    optCompendioCrystalHeart,
+                    optCompendioArteDaGuerra,
+                    optCompendioCidadeSolVapor,
+                    optCompendioWiseguys,
+                    optModoMonstro,
+                    optNasceUmHeroi,
+                    optEspecializacaoPer,
+                    optSemPontosPoder,
+                    optMultiplosIdiomas,
+                    optGrandesResponsabilidades,
+                    optRegraFama,
+                    optRegraRiqueza,
+                    optRegraCosaNostra,
+                    optRegraMechasCiberneticos
+                )
+            }
+        }
+        viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
+        viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
+        viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
+        viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
+        viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
+        viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
+        viewModel.state.optRegraRiqueza = optRegraRiqueza
+        viewModel.state.optRegraCosaNostra = optRegraCosaNostra
+        viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
+        viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
+    }
 
     Scaffold(
         topBar = {
@@ -386,57 +439,12 @@ fun TelaInicial(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    val activeModules = mutableSetOf<String>()
-                    if (optCompendioFantasia) activeModules.add("FANTASIA")
-                    if (optCompendioHorror) activeModules.add("HORROR")
-                    if (optCompendioSciFi) activeModules.add("SCI_FI")
-                    if (optCompendioPathfinder) activeModules.add("PATHFINDER")
-                    if (optCompendioDeadlands) activeModules.add("DEADLANDS")
-                    if (optCompendioCrystalHeart) activeModules.add("CRYSTAL_HEART")
-                    if (optCompendioArteDaGuerra) activeModules.add("ARTE_DA_GUERRA")
-                    if (optCompendioCidadeSolVapor) activeModules.add("CIDADE_SOL_VAPOR")
-                    if (optCompendioWiseguys) activeModules.add("WISEGUYS")
-                    if (optSuperPoderes) activeModules.add("SUPER")
-
-                    scope.launch(Dispatchers.IO) {
-                        viewModel.carregarDadosDeJogo(context, activeModules)
-                        withContext(Dispatchers.Main) {
-                            onCriarNovo(
-                                optCartaSelvagem,
-                                optMaisPontosPericias,
-                                optSuperPoderes,
-                                optCompendioFantasia,
-                                optCompendioHorror,
-                                optCompendioSciFi,
-                                optCompendioPathfinder,
-                                optCompendioDeadlands,
-                                optCompendioCrystalHeart,
-                                optCompendioArteDaGuerra,
-                                optCompendioCidadeSolVapor,
-                                optCompendioWiseguys,
-                                optModoMonstro,
-                                optNasceUmHeroi,
-                                optEspecializacaoPer,
-                                optSemPontosPoder,
-                                optMultiplosIdiomas,
-                                optGrandesResponsabilidades,
-                                optRegraFama,
-                                optRegraRiqueza,
-                                optRegraCosaNostra,
-                                optRegraMechasCiberneticos
-                            )
-                        }
+                    resetAllBookRulesToDefaults()
+                    if (viewModel.state.pularSelecaoRegras) {
+                        startCreation()
+                    } else {
+                        showRulesDialog = true
                     }
-                    viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
-                    viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
-                    viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
-                    viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
-                    viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
-                    viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
-                    viewModel.state.optRegraRiqueza = optRegraRiqueza
-                    viewModel.state.optRegraCosaNostra = optRegraCosaNostra
-                    viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
-                    viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
                 },
                 icon = { Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null) },
                 text = { Text("CRIAR PERSONAGEM") },
@@ -468,7 +476,7 @@ fun TelaInicial(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Selecione o livro. Toque em REGRAS para personalizar.",
+                        text = "Selecione o livro desejado para iniciar a criação.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -486,10 +494,7 @@ fun TelaInicial(
                     isSelected = module.isSelected,
                     enabled = module.enabled,
                     onToggle = module.onToggle,
-                    showDescription = viewModel.state.mostrarDescricaoHome,
-                    onRulesClick = if (module.isSelected) module.onRulesClick else null,
-                    isRulesActive = module.isRulesActive,
-                    tabStyle = viewModel.state.estiloAbas
+                    showDescription = viewModel.state.mostrarDescricaoHome
                 )
             }
 
@@ -505,10 +510,7 @@ fun TelaInicial(
                         isSelected = module.isSelected,
                         enabled = module.enabled,
                         onToggle = module.onToggle,
-                        showDescription = viewModel.state.mostrarDescricaoHome,
-                        onRulesClick = if (module.isSelected) module.onRulesClick else null,
-                        isRulesActive = module.isRulesActive,
-                        tabStyle = viewModel.state.estiloAbas
+                        showDescription = viewModel.state.mostrarDescricaoHome
                     )
                 }
             }
@@ -523,7 +525,15 @@ fun TelaInicial(
     if (showRulesDialog) {
         AlertDialog(
             onDismissRequest = { showRulesDialog = false },
-            confirmButton = { TextButton(onClick = { showRulesDialog = false }) { Text("Fechar") } },
+            confirmButton = {
+                TextButton(onClick = {
+                    showRulesDialog = false
+                    startCreation()
+                }) { Text("CONFIRMAR") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showRulesDialog = false }) { Text("Cancelar") }
+            },
             title = { Text("Regras de Cenário") },
             text = {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
