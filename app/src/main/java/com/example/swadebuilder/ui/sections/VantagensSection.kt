@@ -537,8 +537,9 @@ fun VantagensContent(
                             enabled = canRemove,
                             label = {
                                 val baseName = vant.nomeExibicao.toFancyTitleCase()
-                                val adjustedName = if (vant.id == "antecedente_arcano_milagres" && !baseName.contains("Milagres", ignoreCase = true)) {
-                                    "$baseName (Milagres)"
+                                val subtipo = vant.subtipoArcano?.toFancyTitleCase()
+                                val adjustedName = if (!subtipo.isNullOrBlank() && !baseName.contains(subtipo, ignoreCase = true)) {
+                                    "$baseName ($subtipo)"
                                 } else {
                                     baseName
                                 }
