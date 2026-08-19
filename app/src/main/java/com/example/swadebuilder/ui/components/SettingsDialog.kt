@@ -51,9 +51,11 @@ import kotlin.math.roundToInt
 @Composable
 fun SettingsDialog(
     state: CriadorState,
+    isCreationPhase: Boolean = false,
     onDismiss: () -> Unit,
     persistPrefs: () -> Unit,
     feedbackController: FeedbackController,
+    onResetRulesToDefaults: (() -> Unit)? = null,
     onThemeSelected: (AppTheme) -> Unit
 ) {
     var showNpcWarning by remember { mutableStateOf(false) }
@@ -132,8 +134,28 @@ fun SettingsDialog(
                             )
                         }
 
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Não solicitar escolha de regras", style = MaterialTheme.typography.bodyMedium)
+                                Text("Direto para criação com regras padrão.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            Switch(
+                                checked = state.pularSelecaoRegras,
+                                onCheckedChange = {
+                                    state.pularSelecaoRegras = it
+                                    persistPrefs()
+                                    onResetRulesToDefaults?.invoke()
+                                },
+                                modifier = Modifier.scale(0.8f)
+                            )
+                        }
+
                         // NPC Mode Toggle (Only during creation phase and if not already NPC)
-                        if (!state.modoProgressaoAtivo && !state.isNpcExibicao) {
+                        if (isCreationPhase && !state.modoProgressaoAtivo && !state.isNpcExibicao) {
                             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
