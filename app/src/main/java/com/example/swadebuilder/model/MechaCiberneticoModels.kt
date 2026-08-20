@@ -20,6 +20,14 @@ data class MechaModItem(
 )
 
 @Serializable
+data class MechaWeaponItem(
+    val id: String,
+    val nome: String,
+    val mods_cost: Int = 1,
+    val descricao: String = ""
+)
+
+@Serializable
 data class MechaItem(
     val id: String,
     val nome: String,
@@ -61,4 +69,9 @@ data class CiberneticoCatalogWrapper(
 @Serializable
 data class MechaModCatalogWrapper(
     val modificadores: List<MechaModItem> = emptyList()
+)
+
+@Serializable
+data class MechaWeaponCatalogWrapper(
+    val armas: List<MechaWeaponItem> = emptyList()
 )

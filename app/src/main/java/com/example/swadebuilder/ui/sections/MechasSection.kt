@@ -1,14 +1,18 @@
 package com.example.swadebuilder.ui.sections
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,12 +22,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +44,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,12 +53,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.MechaCatalogWrapper
 import com.example.swadebuilder.model.MechaCustomizacoes
 import com.example.swadebuilder.model.MechaItem
 import com.example.swadebuilder.model.MechaModCatalogWrapper
 import com.example.swadebuilder.model.MechaModItem
+import com.example.swadebuilder.model.MechaWeaponCatalogWrapper
+import com.example.swadebuilder.model.MechaWeaponItem
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -79,6 +91,14 @@ fun MechasSection(
         }.getOrElse { emptyList() }
     }
 
+    val weaponCatalog = remember(context) {
+        runCatching {
+            context.assets.open("scifi_mecha_weapons.json").use { input ->
+                Json { ignoreUnknownKeys = true }.decodeFromStream<MechaWeaponCatalogWrapper>(input).armas
+            }
+        }.getOrElse { emptyList() }
+    }
+
     var showCreateCustomDialog by remember { mutableStateOf(false) }
 
     LazyColumn(
@@ -90,7 +110,7 @@ fun MechasSection(
         item {
             SectionHeader(centerText = "Gestão de Mechas")
             Text(
-                text = "Selecione um chassi base oficial ou crie um Mecha do zero. Adicione Modificadores (Positivos e Negativos). Qualidades Negativas devolvem espaços de MODs para customização extra.",
+                text = "Selecione um chassi base oficial ou crie um Mecha do zero. Adicione Modificadores e Armamentos (que consomem espaços de MODs). Qualidades Negativas devolvem espaços de MODs para customização extra.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -171,6 +191,7 @@ fun MechasSection(
                 MechaCardItem(
                     mecha = mecha,
                     modCatalog = modCatalog,
+                    weaponCatalog = weaponCatalog,
                     onUpdateMecha = { updated ->
                         val index = state.mechasSelecionados.indexOfFirst { it.id == mecha.id }
                         if (index != -1) {
@@ -219,7 +240,7 @@ private fun CreateCustomMechaDialog(
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            Button(
+            FilledTonalButton(
                 onClick = {
                     val customMecha = MechaItem(
                         id = "custom_mech_${System.currentTimeMillis()}",
@@ -338,15 +359,22 @@ private fun CreateCustomMechaDialog(
 private fun MechaCardItem(
     mecha: MechaItem,
     modCatalog: List<MechaModItem>,
+    weaponCatalog: List<MechaWeaponItem>,
     onUpdateMecha: (MechaItem) -> Unit,
     onRemove: () -> Unit
 ) {
     var weaponInput by remember { mutableStateOf("") }
     var systemInput by remember { mutableStateOf("") }
     var showModDialog by remember { mutableStateOf(false) }
+    var showWeaponCatalogDialog by remember { mutableStateOf(false) }
 
-    // Dynamic stat calculations with modifiers
-    val modsGasto = mecha.mods_instalados.sumOf { it.mods_cost }
+    // Dynamic stat calculations with modifiers and equipped weapons MOD costs
+    val modsDoModifiers = mecha.mods_instalados.sumOf { it.mods_cost }
+    val modsDasArmas = mecha.armas_equipadas.sumOf { armaStr ->
+        val found = weaponCatalog.firstOrNull { w -> armaStr.contains(w.nome, ignoreCase = true) || w.nome.contains(armaStr, ignoreCase = true) }
+        found?.mods_cost ?: 0
+    }
+    val modsGasto = modsDoModifiers + modsDasArmas
     val modsRestantes = mecha.mod_pontos_max - modsGasto
 
     val extraRes = mecha.mods_instalados.count { it.id == "mod_def_resistencia" } - (2 * mecha.mods_instalados.count { it.id == "mod_neg_danificado" })
@@ -412,9 +440,13 @@ private fun MechaCardItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Modificadores & Qualidades", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                    Button(onClick = { showModDialog = true }) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
-                        Text("Adicionar Mod")
+                    FilledTonalButton(
+                        onClick = { showModDialog = true },
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Adicionar Mod", fontSize = 12.sp)
                     }
                 }
 
@@ -449,7 +481,7 @@ private fun MechaCardItem(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("Blindagem Extra: ", style = MaterialTheme.typography.bodyMedium)
-                    Button(
+                    FilledTonalIconButton(
                         onClick = {
                             val newBlindagem = (mecha.customizacoes.blindagem_extra - 1).coerceAtLeast(0)
                             onUpdateMecha(
@@ -458,15 +490,16 @@ private fun MechaCardItem(
                                 )
                             )
                         },
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        contentPadding = ButtonDefaults.ContentPadding
-                    ) { Text("-") }
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.size(16.dp))
+                    }
                     Text(
-                        text = "+${mecha.customizacoes.blindagem_extra}",
+                        text = " +${mecha.customizacoes.blindagem_extra} ",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
-                    Button(
+                    FilledTonalIconButton(
                         onClick = {
                             val newBlindagem = mecha.customizacoes.blindagem_extra + 1
                             onUpdateMecha(
@@ -475,9 +508,10 @@ private fun MechaCardItem(
                                 )
                             )
                         },
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        contentPadding = ButtonDefaults.ContentPadding
-                    ) { Text("+") }
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.size(16.dp))
+                    }
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -497,7 +531,22 @@ private fun MechaCardItem(
 
             // Armas Equipadas
             Column {
-                Text("Armas Equipadas", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Armas Equipadas", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                    FilledTonalButton(
+                        onClick = { showWeaponCatalogDialog = true },
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Catálogo de Armas", fontSize = 12.sp)
+                    }
+                }
+
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp),
@@ -518,16 +567,17 @@ private fun MechaCardItem(
                         )
                     }
                 }
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     OutlinedTextField(
                         value = weaponInput,
                         onValueChange = { weaponInput = it },
-                        label = { Text("Adicionar Arma") },
+                        label = { Text("Arma Personalizada") },
                         modifier = Modifier.weight(1f),
                         singleLine = true
                     )
                     Spacer(Modifier.width(8.dp))
-                    Button(
+                    FilledTonalIconButton(
                         onClick = {
                             if (weaponInput.isNotBlank()) {
                                 onUpdateMecha(
@@ -560,8 +610,10 @@ private fun MechaCardItem(
         }
     }
 
-    // Modal de Modificadores
+    // Modal de Modificadores com Categorias Expansíveis
     if (showModDialog) {
+        val expandedCategories = remember { mutableStateMapOf<String, Boolean>() }
+
         AlertDialog(
             onDismissRequest = { showModDialog = false },
             confirmButton = {
@@ -572,25 +624,15 @@ private fun MechaCardItem(
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     val grouped = modCatalog.groupBy { it.categoria }
                     grouped.forEach { (catName, mods) ->
-                        item {
-                            Text(
-                                text = catName,
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
-                        }
-                        items(mods) { mod ->
-                            val currentUses = mecha.mods_instalados.count { it.id == mod.id }
-                            val isMaxed = currentUses >= mod.max_uses
-                            val isNeg = mod.mods_cost < 0
+                        val isExpanded = expandedCategories[catName] ?: false
 
+                        item {
                             ElevatedCard(
-                                modifier = Modifier.fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { expandedCategories[catName] = !isExpanded },
                                 colors = CardDefaults.elevatedCardColors(
-                                    containerColor = if (isNeg) MaterialTheme.colorScheme.secondaryContainer
-                                    else MaterialTheme.colorScheme.surfaceContainer
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                                 )
                             ) {
                                 Row(
@@ -600,32 +642,126 @@ private fun MechaCardItem(
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Column(modifier = Modifier.weight(1f)) {
-                                        Text(
-                                            text = mod.nome,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        Text(
-                                            text = "MODs: ${if (isNeg) "${mod.mods_cost} (Devolve slots)" else "+${mod.mods_cost}"} | ${mod.descricao}",
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
-                                    Button(
-                                        onClick = {
-                                            if (!isMaxed) {
-                                                onUpdateMecha(
-                                                    mecha.copy(
-                                                        mods_instalados = mecha.mods_instalados + mod
-                                                    )
-                                                )
-                                            }
-                                        },
-                                        enabled = !isMaxed
+                                    Text(
+                                        text = "$catName (${mods.size})",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                    Icon(
+                                        imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                                        contentDescription = if (isExpanded) "Recolher" else "Expandir"
+                                    )
+                                }
+                            }
+                        }
+
+                        if (isExpanded) {
+                            items(mods) { mod ->
+                                val currentUses = mecha.mods_instalados.count { it.id == mod.id }
+                                val isMaxed = currentUses >= mod.max_uses
+                                val isNeg = mod.mods_cost < 0
+
+                                ElevatedCard(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(start = 8.dp),
+                                    colors = CardDefaults.elevatedCardColors(
+                                        containerColor = if (isNeg) MaterialTheme.colorScheme.secondaryContainer
+                                        else MaterialTheme.colorScheme.surfaceContainer
+                                    )
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(10.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Text(if (isMaxed) "Máx" else "+")
+                                        Column(modifier = Modifier.weight(1f)) {
+                                            Text(
+                                                text = mod.nome,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            Text(
+                                                text = "MODs: ${if (isNeg) "${mod.mods_cost} (Devolve slots)" else "+${mod.mods_cost}"} | ${mod.descricao}",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                        FilledTonalButton(
+                                            onClick = {
+                                                if (!isMaxed) {
+                                                    onUpdateMecha(
+                                                        mecha.copy(
+                                                            mods_instalados = mecha.mods_instalados + mod
+                                                        )
+                                                    )
+                                                }
+                                            },
+                                            enabled = !isMaxed,
+                                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                        ) {
+                                            Text(if (isMaxed) "Máx" else "+", fontSize = 11.sp)
+                                        }
                                     }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        )
+    }
+
+    // Modal de Catálogo de Armas Oficiais para Mechas
+    if (showWeaponCatalogDialog) {
+        AlertDialog(
+            onDismissRequest = { showWeaponCatalogDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showWeaponCatalogDialog = false }) { Text("Fechar") }
+            },
+            title = { Text("Armas de Mecha e Veículos") },
+            text = {
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    items(weaponCatalog) { w ->
+                        ElevatedCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.elevatedCardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            )
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(10.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = w.nome,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "Custo: ${w.mods_cost} MODs | ${w.descricao}",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                                FilledTonalButton(
+                                    onClick = {
+                                        onUpdateMecha(
+                                            mecha.copy(
+                                                armas_equipadas = mecha.armas_equipadas + w.nome
+                                            )
+                                        )
+                                    },
+                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                ) {
+                                    Text("Equipar", fontSize = 11.sp)
                                 }
                             }
                         }
