@@ -51,6 +51,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
@@ -446,8 +447,6 @@ fun VantagensContent(
             }
 
             Spacer(Modifier.size(4.dp))
-
-            fun normalizeUIKey(s: String): String = s.keyify().replace("_", "").replace("-", "").replace(" ", "")
 
             // Sticky Header for Selected Advantages
             if (state.vantagensSelecionadas.isNotEmpty()) {
@@ -1532,12 +1531,13 @@ fun VantagensContent(
                 .mapNotNull { it.choice?.keyify() }
                 .toSet()
 
+            val currentLocale = LocalConfiguration.current.locales[0]
             val knowledgeOptions = state.periciasComIdiomas()
                 .filter { per -> per.nome.contains("CONHECIMENTO", ignoreCase = true) }
                 .map { per ->
                     val base = per.nome.substringBefore("(").trim()
-                    base.lowercase(Locale.getDefault()).replaceFirstChar {
-                        it.titlecase(Locale.getDefault())
+                    base.lowercase(currentLocale).replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(currentLocale) else it.toString()
                     }
                 }
                 .distinct()
@@ -1587,8 +1587,7 @@ fun VantagensContent(
 
                 vant.id == "arma_predileta_aprimorada" -> {
                     state.vantagensSelecionadas
-                        .filter { it.id == "arma_predileta" && it.choice != null }
-                        .mapNotNull { it.choice }
+                        .mapNotNull { if (it.id == "arma_predileta") it.choice else null }
                         .distinct()
                 }
 
@@ -1598,8 +1597,7 @@ fun VantagensContent(
 
                 vant.id == "especialista" -> {
                     state.vantagensSelecionadas
-                        .filter { it.id == "profissional" && it.choice != null }
-                        .mapNotNull { it.choice }
+                        .mapNotNull { if (it.id == "profissional") it.choice else null }
                 }
 
                 vant.id == "discipulo_artes_marciais" -> {
@@ -1896,11 +1894,6 @@ private fun VantagemItem(
     }
 }
 
-private fun Vantagem.isBrutamontes(): Boolean {
-    val idKey = id.keyify()
-    val nameKey = nome.keyify()
-    return idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nameKey == "BRUTAMONTES" || nameKey == "BRAWNY"
-}
 
 private val lutarWordRegex = Regex("\\bLutar\\b")
 

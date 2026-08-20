@@ -214,7 +214,7 @@ fun ComplicacoesSection(
                                                 tempErrorMsg = msg ?: "Ação bloqueada."
                                                 showTempError = true
                                                 scope.launch {
-                                                    delay(3000)
+                                                    delay(3000L)
                                                     showTempError = false
                                                 }
                                             }
@@ -510,11 +510,10 @@ fun ComplicacoesSection(
 
                     // PROMPT 3: Add Disorder Dialog
                     if (showAddTranstornoDialog) {
-                        val available = uniqueComplications.filter {
-                            !state.complicacoesSelecionadas.containsKey(it) && !state.transtornos.contains(
-                                it
-                            )
-                        }.map { it.name.toFancyTitleCase() }.sortedWith(ptBrCollator)
+                        val available = uniqueComplications
+                            .filter { it !in state.complicacoesSelecionadas && it !in state.transtornos }
+                            .map { it.name.toFancyTitleCase() }
+                            .sortedWith(ptBrCollator)
 
                         ChoiceDialog(
                             options = available,
@@ -565,7 +564,7 @@ fun ComplicacoesSection(
                                     tempErrorMsg = msg
                                     showTempError = true
                                     scope.launch {
-                                        delay(2_000)
+                                        delay(2000L)
                                         showTempError = false
                                     }
                                 }

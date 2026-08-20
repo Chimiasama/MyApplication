@@ -16,6 +16,8 @@ import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.text.StaticLayout
 import android.text.TextPaint
+import androidx.core.graphics.withClip
+import androidx.core.graphics.withTranslation
 import android.util.Log
 import androidx.core.content.FileProvider
 import com.example.swadebuilder.model.Complicacao
@@ -250,10 +252,9 @@ abstract class TextListBlock(private val title: String, private val items: List<
         items.forEach { item ->
             val sl = StaticLayout.Builder.obtain(item, 0, item.length, bodyPaint, width.toInt())
                 .build()
-            canvas.save()
-            canvas.translate(x, currY)
-            sl.draw(canvas)
-            canvas.restore()
+            canvas.withTranslation(x, currY) {
+                sl.draw(this)
+            }
             currY += sl.height + 5f
         }
     }
@@ -304,10 +305,9 @@ abstract class TextListBlock(private val title: String, private val items: List<
                            var cy = y
                            items.forEach { it ->
                                 val sl = StaticLayout.Builder.obtain(it, 0, it.length, bPaint, width.toInt()).build()
-                                canvas.save()
-                                canvas.translate(x, cy)
-                                sl.draw(canvas)
-                                canvas.restore()
+                                canvas.withTranslation(x, cy) {
+                                    sl.draw(this)
+                                }
                                 cy += sl.height + 5f
                            }
                        }
@@ -943,19 +943,18 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
                 addRect(portraitRect, Path.Direction.CW)
             }
         }
-        canvas.save()
-        canvas.clipPath(path)
-        val scale = Math.max(portraitW / portrait.width, portraitH / portrait.height)
-        val scaledW = portrait.width * scale
-        val scaledH = portrait.height * scale
-        val dx = portraitX + (portraitW - scaledW) / 2
-        val dy = portraitY + (portraitH - scaledH) / 2
-        val matrix = Matrix().apply {
-            postScale(scale, scale)
-            postTranslate(dx, dy)
+        canvas.withClip(path) {
+            val scale = Math.max(portraitW / portrait.width, portraitH / portrait.height)
+            val scaledW = portrait.width * scale
+            val scaledH = portrait.height * scale
+            val dx = portraitRect.left + (portraitW - scaledW) / 2f
+            val dy = portraitRect.top + (portraitH - scaledH) / 2f
+            val matrix = android.graphics.Matrix().apply {
+                postScale(scale, scale)
+                postTranslate(dx, dy)
+            }
+            drawBitmap(portrait, matrix, null)
         }
-        canvas.drawBitmap(portrait, matrix, null)
-        canvas.restore()
         canvas.drawPath(path, paint)
     } else {
         val placePaint = Paint().apply {

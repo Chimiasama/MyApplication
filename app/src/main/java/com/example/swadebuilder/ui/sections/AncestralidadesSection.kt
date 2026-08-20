@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
@@ -135,6 +136,7 @@ fun AncestralidadesSection(
     onUserFeedback: () -> Unit
 ) {
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
@@ -152,6 +154,8 @@ fun AncestralidadesSection(
 
     val ancestralidadesState = androidx.compose.runtime.produceState(
         initialValue = emptyList<RacialModifierLite>(),
+        context,
+        configuration,
         compendioFantasiaAtivo,
         compendioPathfinderAtivo,
         compendioDeadlandsAtivo,
@@ -259,7 +263,6 @@ fun AncestralidadesSection(
                 } else {
                     representative.nome
                 }
-                val adjustedName = adjustName(representative.nome)
                 val displayName = adjustName(baseDisplayName)
                 val originalName = if (EditionConfig.isFullEdition && !hasMultipleOrigins) {
                     representative.originalName
@@ -490,7 +493,6 @@ fun AncestralidadesSection(
                             }
 
                             if (isSelected) {
-                                val itemKeyNorm = item.nome.keyify()
                                 val opcoesValidas = item.opcoes.filter {
                                     if (item.nome.keyify() == "ANOES" && it.keyify() == "CIBER") {
                                         state.compendioScifiMechasCiberneticosAtivo

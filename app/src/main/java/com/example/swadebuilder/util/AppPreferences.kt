@@ -1,6 +1,7 @@
 package com.example.swadebuilder.util
 
 import android.content.Context
+import androidx.core.content.edit
 import com.example.swadebuilder.TabStyle
 import com.example.swadebuilder.ui.theme.AppTheme
 
@@ -67,16 +68,16 @@ object AppPreferences {
     ) {
         context
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-            .edit()
-            .putInt(KEY_HAPTIC, hapticStrength)
-            .putInt(KEY_SOUND, soundVolume)
-            .putString(KEY_TAB_STYLE, tabStyle.name)
-            .putBoolean(KEY_SHOW_BOOK_ICON, showBookIcon)
-            .putBoolean(KEY_SHOW_DESC_HOME, showDescHome)
-            .putBoolean(KEY_SYSTEM_MESSAGES, showSystemMessages)
-            .putString(KEY_APP_THEME, appTheme.name)
-            .putBoolean(KEY_PULAR_SELECAO_REGRAS, pularSelecaoRegras)
-            .apply()
+            .edit {
+                putInt(KEY_HAPTIC, hapticStrength)
+                putInt(KEY_SOUND, soundVolume)
+                putString(KEY_TAB_STYLE, tabStyle.name)
+                putBoolean(KEY_SHOW_BOOK_ICON, showBookIcon)
+                putBoolean(KEY_SHOW_DESC_HOME, showDescHome)
+                putBoolean(KEY_SYSTEM_MESSAGES, showSystemMessages)
+                putString(KEY_APP_THEME, appTheme.name)
+                putBoolean(KEY_PULAR_SELECAO_REGRAS, pularSelecaoRegras)
+            }
     }
 
     // Legacy support to avoid breaking existing calls if any
@@ -94,10 +95,10 @@ object AppPreferences {
          // but since we are replacing the usage in MainActivity, it should be fine.
          // To be safe, we read first.
          val prefs = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-         prefs.edit()
-            .putInt(KEY_HAPTIC, hapticStrength)
-            .putInt(KEY_SOUND, soundVolume)
-            .apply()
+         prefs.edit {
+            putInt(KEY_HAPTIC, hapticStrength)
+            putInt(KEY_SOUND, soundVolume)
+         }
     }
 
     data class FeedbackPrefs(
