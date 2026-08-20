@@ -42,6 +42,7 @@ fun <T> WheelPicker(
 ) {
     val listState = rememberLazyListState()
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
+    val itemHeight = 40.dp
 
     // Consome o scroll excedente para impedir que o pai (SettingsDialog) scrolle
     val nestedScrollConnection = remember {

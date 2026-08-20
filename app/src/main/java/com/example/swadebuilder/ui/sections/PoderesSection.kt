@@ -655,7 +655,7 @@ fun PoderesSection(
                     ) { poder ->
                         val usaPoderesPorEstagioCard = state.usaPoderesDisponiveisPorEstagio(arcKey)
                         val slots = if (usaPoderesPorEstagioCard) {
-                            emptyList()
+                            remember(arcKey) { mutableStateListOf<String?>() }
                         } else {
                             state.poderSlotsPorArcano[arcKey] ?: remember(arcKey) {
                                 mutableStateListOf<String?>().apply {
