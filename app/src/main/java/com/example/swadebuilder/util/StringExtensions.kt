@@ -3,7 +3,6 @@ package com.example.swadebuilder.util
 import java.text.Collator
 import java.text.Normalizer
 import java.util.Collections
-import java.util.LinkedHashMap
 import java.util.Locale
 
 private val DIACRITICS_REGEX = "\\p{M}".toRegex()

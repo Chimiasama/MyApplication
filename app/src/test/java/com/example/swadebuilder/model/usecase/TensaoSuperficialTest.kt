@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.CriadorViewModel
-import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.PowerEffect
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

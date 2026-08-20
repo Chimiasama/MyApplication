@@ -73,13 +73,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Pericia
-import com.example.swadebuilder.ui.components.ChoiceButtonRow
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.toMeuPersonagem
+import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toFancyTitleCase

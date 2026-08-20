@@ -1,6 +1,5 @@
 package com.example.swadebuilder
 
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -14,6 +13,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
 import com.example.swadebuilder.model.CrystalHeart
@@ -22,9 +22,8 @@ import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Estagio
-import com.example.swadebuilder.model.MechaItem
-import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.GameDataSnapshot
+import com.example.swadebuilder.model.MechaItem
 import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
 import com.example.swadebuilder.model.MonstroTemplate
@@ -69,8 +68,8 @@ import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUs
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
-import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.debugLog
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
 import java.util.UUID

@@ -2,9 +2,7 @@ package com.example.swadebuilder.model
 
 import android.content.Context
 import android.content.res.AssetManager
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos

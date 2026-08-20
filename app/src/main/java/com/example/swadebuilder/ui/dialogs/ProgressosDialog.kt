@@ -1,7 +1,5 @@
 package com.example.swadebuilder.ui.dialogs
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,14 +15,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
@@ -76,12 +73,12 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RequirementValidator
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.atingiuLimiteClasseOuPrestigioNoEstagio
+import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.dynamicStageCaps
 import com.example.swadebuilder.model.getActiveOrigins
-import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.model.isFamiliaClassePathfinder
+import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.stageForSlot
 import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.toDiceString
@@ -91,8 +88,8 @@ import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.VantFilterDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
-import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.debugLog
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.coroutines.delay

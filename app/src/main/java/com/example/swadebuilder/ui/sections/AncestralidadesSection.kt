@@ -1,7 +1,5 @@
 package com.example.swadebuilder.ui.sections
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,17 +45,17 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
-import com.example.swadebuilder.util.toFancyTitleCase
 import com.example.swadebuilder.util.toEditionDisplayName
+import com.example.swadebuilder.util.toFancyTitleCase
 import kotlinx.serialization.Serializable
 
 @Serializable

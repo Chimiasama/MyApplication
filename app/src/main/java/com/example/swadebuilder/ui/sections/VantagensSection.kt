@@ -1,7 +1,5 @@
 package com.example.swadebuilder.ui.sections
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -58,7 +56,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CriadorViewModel
@@ -73,20 +70,20 @@ import com.example.swadebuilder.model.explainVantagemVisibility
 import com.example.swadebuilder.model.isVantagemVisible
 import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.toArcanoKey
+import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
-import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
-import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.debugLog
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.ptBrCollator
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.Locale
 
 @Composable
 fun VantFilterDialog(

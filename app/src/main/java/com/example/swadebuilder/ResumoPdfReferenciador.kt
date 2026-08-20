@@ -7,7 +7,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.RectF
@@ -16,10 +15,10 @@ import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.text.StaticLayout
 import android.text.TextPaint
-import androidx.core.graphics.withClip
-import androidx.core.graphics.withTranslation
 import android.util.Log
 import androidx.core.content.FileProvider
+import androidx.core.graphics.withClip
+import androidx.core.graphics.withTranslation
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
@@ -28,9 +27,7 @@ import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.GenericNameMapper
 import com.example.swadebuilder.util.SecurityUtils
 import com.example.swadebuilder.util.keyify
-import com.example.swadebuilder.util.titleCase
 import com.example.swadebuilder.util.toFancyTitleCase
-import com.example.swadebuilder.toDiceString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File

@@ -63,7 +63,6 @@ import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.ptBrCollator
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
-import com.example.swadebuilder.util.toSentenceCase
 import kotlinx.serialization.Serializable
 
 @Serializable

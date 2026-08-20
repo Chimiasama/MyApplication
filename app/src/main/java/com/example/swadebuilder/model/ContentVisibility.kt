@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.model.rules.RulesResolver
 
 /**
