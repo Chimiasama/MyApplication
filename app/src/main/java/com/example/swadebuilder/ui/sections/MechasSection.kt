@@ -108,22 +108,12 @@ fun MechasSection(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Modelos / Chassis Disponíveis",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Button(onClick = { showCreateCustomDialog = true }) {
-                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
-                            Text("Criar do Zero")
-                        }
-                    }
+                    Text(
+                        text = "Modelos / Chassis Disponíveis",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
 
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -145,6 +135,17 @@ fun MechasSection(
                                 )
                                 Text(mecha.nome)
                             }
+                        }
+
+                        OutlinedButton(
+                            onClick = { showCreateCustomDialog = true }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                modifier = Modifier.padding(end = 6.dp)
+                            )
+                            Text("Criar Mecha Personalizado")
                         }
                     }
                 }
