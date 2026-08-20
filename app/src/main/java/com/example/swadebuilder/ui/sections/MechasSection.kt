@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -43,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.MechaCatalogWrapper
+import com.example.swadebuilder.model.MechaCustomizacoes
 import com.example.swadebuilder.model.MechaItem
 import com.example.swadebuilder.model.MechaModCatalogWrapper
 import com.example.swadebuilder.model.MechaModItem
@@ -75,6 +79,8 @@ fun MechasSection(
         }.getOrElse { emptyList() }
     }
 
+    var showCreateCustomDialog by remember { mutableStateOf(false) }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,13 +90,13 @@ fun MechasSection(
         item {
             SectionHeader(centerText = "Gestão de Mechas")
             Text(
-                text = "Selecione um chassi base e adicione Modificadores (Positivos e Negativos). Qualidades Negativas devolvem espaços de MODs para customização extra.",
+                text = "Selecione um chassi base oficial ou crie um Mecha do zero. Adicione Modificadores (Positivos e Negativos). Qualidades Negativas devolvem espaços de MODs para customização extra.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
 
-        // Catálogo de Chassis Disponíveis
+        // Catálogo de Chassis Disponíveis e Botão para Criar do Zero
         item {
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
@@ -102,12 +108,22 @@ fun MechasSection(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text(
-                        text = "Modelos / Chassis Disponíveis",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Modelos / Chassis Disponíveis",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Button(onClick = { showCreateCustomDialog = true }) {
+                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
+                            Text("Criar do Zero")
+                        }
+                    }
 
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -143,7 +159,7 @@ fun MechasSection(
         if (state.mechasSelecionados.isEmpty()) {
             item {
                 Text(
-                    text = "Nenhum Mecha selecionado. Escolha um modelo acima.",
+                    text = "Nenhum Mecha selecionado. Escolha um modelo acima ou crie um do zero.",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(8.dp)
@@ -168,6 +184,152 @@ fun MechasSection(
             }
         }
     }
+
+    // Modal de Criação de Mecha Customizado do Zero
+    if (showCreateCustomDialog) {
+        CreateCustomMechaDialog(
+            onDismiss = { showCreateCustomDialog = false },
+            onCreate = { newMecha ->
+                state.mechasSelecionados.add(newMecha)
+                showCreateCustomDialog = false
+                onUserFeedback()
+            }
+        )
+    }
+}
+
+@Composable
+private fun CreateCustomMechaDialog(
+    onDismiss: () -> Unit,
+    onCreate: (MechaItem) -> Unit
+) {
+    var nomeText by remember { mutableStateOf("Mecha Customizado") }
+    var categoriaChassiText by remember { mutableStateOf("Grande") }
+    var tamanhoText by remember { mutableStateOf("7") }
+    var manobText by remember { mutableStateOf("0") }
+    var velMaxText by remember { mutableStateOf("8") }
+    var resBaseText by remember { mutableStateOf("15") }
+    var armBaseText by remember { mutableStateOf("20") }
+    var ferimentosText by remember { mutableStateOf("4") }
+    var forcaText by remember { mutableStateOf("d12+7") }
+    var energiaText by remember { mutableStateOf("5") }
+    var modMaxText by remember { mutableStateOf("21") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            Button(
+                onClick = {
+                    val customMecha = MechaItem(
+                        id = "custom_mech_${System.currentTimeMillis()}",
+                        nome = nomeText.ifBlank { "Mecha Customizado" },
+                        categoria_chassi = categoriaChassiText,
+                        tamanho = tamanhoText.toIntOrNull() ?: 7,
+                        manobrabilidade = manobText.toIntOrNull() ?: 0,
+                        vel_maxima = velMaxText.toIntOrNull() ?: 8,
+                        resistencia_base = resBaseText.toIntOrNull() ?: 15,
+                        armadura_base = armBaseText.toIntOrNull() ?: 20,
+                        ferimentos = ferimentosText.toIntOrNull() ?: 4,
+                        forca = forcaText.ifBlank { "d12+7" },
+                        energia_dias = energiaText.toIntOrNull() ?: 5,
+                        mod_pontos_max = modMaxText.toIntOrNull() ?: 21,
+                        sistemas_instalados = listOf("Selado", "Sensores HUD")
+                    )
+                    onCreate(customMecha)
+                }
+            ) {
+                Text("Criar Mecha")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancelar") }
+        },
+        title = { Text("Criar Mecha do Zero") },
+        text = {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedTextField(
+                    value = nomeText,
+                    onValueChange = { nomeText = it },
+                    label = { Text("Nome / Apelido do Mecha") },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = tamanhoText,
+                        onValueChange = { tamanhoText = it.filter { char -> char.isDigit() || char == '-' } },
+                        label = { Text("Tamanho") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = manobText,
+                        onValueChange = { manobText = it.filter { char -> char.isDigit() || char == '-' } },
+                        label = { Text("Manobrabilidade") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = velMaxText,
+                        onValueChange = { velMaxText = it.filter { char -> char.isDigit() } },
+                        label = { Text("Vel. Máxima") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = ferimentosText,
+                        onValueChange = { ferimentosText = it.filter { char -> char.isDigit() } },
+                        label = { Text("Ferimentos") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = resBaseText,
+                        onValueChange = { resBaseText = it.filter { char -> char.isDigit() } },
+                        label = { Text("Resistência Base") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = armBaseText,
+                        onValueChange = { armBaseText = it.filter { char -> char.isDigit() } },
+                        label = { Text("Armadura Base") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = forcaText,
+                        onValueChange = { forcaText = it },
+                        label = { Text("Força") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = modMaxText,
+                        onValueChange = { modMaxText = it.filter { char -> char.isDigit() } },
+                        label = { Text("Espaços MODs Max") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+            }
+        }
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -211,24 +373,14 @@ private fun MechaCardItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = mecha.nome,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "Tam: ${mecha.tamanho} | Manob: ${if (manobCalc >= 0) "+$manobCalc" else "$manobCalc"} | Vel. Máx: $velCalc | Resist: $resistenciaCalc ($armaduraCalc) | Ferimentos: $ferimentosCalc | Força: ${mecha.forca}",
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    Text(
-                        text = "Capacidade MODs: Espaços Usados: $modsGasto / ${mecha.mod_pontos_max} (Restantes: $modsRestantes)",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = if (modsRestantes < 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                OutlinedTextField(
+                    value = mecha.nome,
+                    onValueChange = { newName -> onUpdateMecha(mecha.copy(nome = newName)) },
+                    label = { Text("Nome / Apelido do Mecha") },
+                    modifier = Modifier.weight(1f),
+                    singleLine = true
+                )
+                Spacer(Modifier.width(8.dp))
                 IconButton(onClick = onRemove) {
                     Icon(
                         imageVector = Icons.Default.Delete,
@@ -237,6 +389,17 @@ private fun MechaCardItem(
                     )
                 }
             }
+
+            Text(
+                text = "Tam: ${mecha.tamanho} | Manob: ${if (manobCalc >= 0) "+$manobCalc" else "$manobCalc"} | Vel. Máx: $velCalc | Resist: $resistenciaCalc ($armaduraCalc) | Ferimentos: $ferimentosCalc | Força: ${mecha.forca}",
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = "Capacidade MODs: Espaços Usados: $modsGasto / ${mecha.mod_pontos_max} (Restantes: $modsRestantes)",
+                style = MaterialTheme.typography.labelSmall,
+                color = if (modsRestantes < 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
             HorizontalDivider(thickness = 0.5.dp)
 
