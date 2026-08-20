@@ -686,6 +686,27 @@ fun gerarFichaEmPdf(
         rightQueue.add(object : TextListBlock("Outros Equipamentos", gear) {})
     }
 
+    if (personagem.mechasSelecionados.isNotEmpty()) {
+        val mechaPdfLines = personagem.mechasSelecionados.map { m ->
+            val extras = mutableListOf<String>()
+            if (m.customizacoes.blindagem_extra > 0) extras += "Blindagem +${m.customizacoes.blindagem_extra}"
+            if (m.customizacoes.propulsores) extras += "Propulsores"
+            if (m.mods_instalados.isNotEmpty()) extras += "Mods: " + m.mods_instalados.joinToString { it.nome }
+            if (m.armas_equipadas.isNotEmpty()) extras += "Armas: " + m.armas_equipadas.joinToString()
+            val extraStr = if (extras.isNotEmpty()) " (${extras.joinToString("; ")})" else ""
+            "${m.nome}$extraStr"
+        }
+        rightQueue.add(object : TextListBlock("Mechas", mechaPdfLines) {})
+    }
+
+    if (personagem.ciberneticosInstalados.isNotEmpty()) {
+        val ciberneticosPdfLines = personagem.ciberneticosInstalados.map { c ->
+            val effStr = if (c.efeito.isNotBlank()) " (${c.efeito})" else ""
+            "${c.nome} [Tensão ${c.strain_custo}]$effStr"
+        }
+        rightQueue.add(object : TextListBlock("Cibernéticos Instalados", ciberneticosPdfLines) {})
+    }
+
     // Notes
     if (personagem.anotacoes.isNotBlank()) {
         rightQueue.add(object : TextListBlock("Anotações", listOf(personagem.anotacoes)) {})
