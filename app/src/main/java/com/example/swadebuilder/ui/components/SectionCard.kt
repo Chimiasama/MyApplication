@@ -28,7 +28,6 @@ fun SectionCard(
     showHeader: Boolean = true,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val headerColor = MaterialTheme.colorScheme.onBackground
     val cardColor   = MaterialTheme.colorScheme.surfaceVariant
 
     Column(modifier = Modifier.fillMaxWidth()) {

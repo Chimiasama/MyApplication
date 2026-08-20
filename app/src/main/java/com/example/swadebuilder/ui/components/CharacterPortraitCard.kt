@@ -3,6 +3,7 @@ package com.example.swadebuilder.ui.components
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.core.graphics.scale
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -96,7 +97,7 @@ fun CharacterPortraitCard(
                              val ratio = maxSide.toFloat() / currentMax.toFloat()
                              val targetWidth = (sampled.width * ratio).toInt().coerceAtLeast(1)
                              val targetHeight = (sampled.height * ratio).toInt().coerceAtLeast(1)
-                             Bitmap.createScaledBitmap(sampled, targetWidth, targetHeight, true)
+                             sampled.scale(targetWidth, targetHeight)
                         } else {
                              sampled
                         }

@@ -583,7 +583,7 @@ fun PoderesSection(
                     }
                 } else {
                     item(key = "slots_$arcKey") {
-                        val slots = state.poderSlotsPorArcano.getOrPut(arcKey) {
+                        val slots = state.poderSlotsPorArcano[arcKey] ?: remember(arcKey) {
                             mutableStateListOf<String?>().apply {
                                 repeat(state.getEffectiveSlotsCountForArcano(arcKey)) { add(null) }
                             }
@@ -655,9 +655,9 @@ fun PoderesSection(
                     ) { poder ->
                         val usaPoderesPorEstagioCard = state.usaPoderesDisponiveisPorEstagio(arcKey)
                         val slots = if (usaPoderesPorEstagioCard) {
-                            mutableStateListOf<String?>()
+                            emptyList()
                         } else {
-                            state.poderSlotsPorArcano.getOrPut(arcKey) {
+                            state.poderSlotsPorArcano[arcKey] ?: remember(arcKey) {
                                 mutableStateListOf<String?>().apply {
                                     repeat(state.getEffectiveSlotsCountForArcano(arcKey)) { add(null) }
                                 }

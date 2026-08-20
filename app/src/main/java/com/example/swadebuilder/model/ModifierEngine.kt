@@ -146,7 +146,7 @@ object ModifierEngine {
                 .firstNotNullOfOrNull { desc ->
                     val key = desc.keyify()
 
-                    val fromSize = Regex("""TAMANHO\s*([\+\-]\s*\d+)""").find(key)
+                    val fromSize = Regex("""TAMANHO\s*([+-]\s*\d+)""").find(key)
                         ?.groupValues
                         ?.getOrNull(1)
                         ?.replace(" ", "")
@@ -260,13 +260,13 @@ object ModifierEngine {
                 it.id?.keyify() == "FRAGIL" || it.nome.equals("Frágil", ignoreCase = true)
             }?.descricao
                 ?.let { descricao ->
-                    Regex("""(?:RESISTENCIA|RESISTÊNCIA)\s*(\+|\-)\s*(\d+)""", RegexOption.IGNORE_CASE).find(descricao)
+                    Regex("""(?:RESISTENCIA|RESISTÊNCIA)\s*([+-])\s*(\d+)""", RegexOption.IGNORE_CASE).find(descricao)
                         ?.let { match ->
                             val sign = match.groupValues[1]
                             val value = match.groupValues[2].toInt()
                             if (sign == "-") -value else value
                         }
-                        ?: Regex("""(\-|\+)\s*(\d+)\s+na\s+Resist[êe]ncia""", RegexOption.IGNORE_CASE).find(descricao)
+                        ?: Regex("""([+-])\s*(\d+)\s+na\s+Resist[êe]ncia""", RegexOption.IGNORE_CASE).find(descricao)
                             ?.let { match ->
                                 val sign = match.groupValues[1]
                                 val value = match.groupValues[2].toInt()
@@ -334,7 +334,7 @@ object ModifierEngine {
             sources.forEach { str ->
                 val k = str.keyify()
                 if (k.contains("RESISTENCIA")) {
-                    val match = Regex("""RESISTENCIA\s*(\+|\-)\s*(\d+)""").find(k) // Enhanced regex to capture sign and spaces
+                    val match = Regex("""RESISTENCIA\s*([+-])\s*(\d+)""").find(k) // Enhanced regex to capture sign and spaces
                     if (match != null) {
                         val sign = match.groupValues[1]
                         val value = match.groupValues[2].toInt()
@@ -372,7 +372,7 @@ object ModifierEngine {
                         if (bonusMatch != null) {
                              modifiers.add(Modifier("racial_pace_generic_plus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, bonusMatch.groupValues[1].toInt()))
                         }
-                        val malusMatch = Regex("""MOVIMENTACAO\s*\-(\d+)""").find(k)
+                        val malusMatch = Regex("""MOVIMENTACAO\s*-(\d+)""").find(k)
                         if (malusMatch != null) {
                             // Do not apply generic minus if "Movimentação Reduzida" was already added by explicit logic to prevent double penalty
                             val alreadyReduced = modifiers.any { it.id == "racial_pace_reduced" && it.value == -1 }
@@ -383,7 +383,7 @@ object ModifierEngine {
                     }
                 }
                 if (k.contains("APARAR")) {
-                    val match = Regex("""APARAR\s*(\+|\-)\s*(\d+)""").find(k)
+                    val match = Regex("""APARAR\s*([+-])\s*(\d+)""").find(k)
                     if (match != null) {
                         val sign = match.groupValues[1]
                         val value = match.groupValues[2].toInt()

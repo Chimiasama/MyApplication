@@ -375,7 +375,6 @@ private fun MechaCardItem(
         found?.mods_cost ?: 0
     }
     val modsGasto = modsDoModifiers + modsDasArmas
-    val modsRestantes = mecha.mod_pontos_max - modsGasto
 
     val extraRes = mecha.mods_instalados.count { it.id == "mod_def_resistencia" } - (2 * mecha.mods_instalados.count { it.id == "mod_neg_danificado" })
     val resistenciaCalc = mecha.resistencia_base + extraRes

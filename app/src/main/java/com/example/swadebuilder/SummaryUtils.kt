@@ -167,10 +167,6 @@ fun buildSummaryLines(
         .map { it.nome.keyify() }
     val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes, showOfficialNames)
     val transtornosNomeados: List<String> = complicationDisplayNames(personagem.transtornos, showOfficialNames)
-    val complicacoesNomeKeyset = listaComplicacoes
-        .flatMap { comp -> listOfNotNull(comp.name, comp.originalName) }
-        .map { it.keyify() }
-        .toSet()
 
     val vantagemChoices: MutableMap<String, MutableList<String>> = personagem.advantageChoices
         .mapValues { it.value.toMutableList() }
