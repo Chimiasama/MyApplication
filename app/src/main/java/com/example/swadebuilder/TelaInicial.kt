@@ -94,7 +94,8 @@ fun TelaInicial(
         optRegraFama: Boolean,
         optRegraRiqueza: Boolean,
         optRegraCosaNostra: Boolean,
-        optRegraMechasCiberneticos: Boolean
+        optRegraMechas: Boolean,
+        optRegraCiberneticos: Boolean
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
     onOpenSettings: () -> Unit,
@@ -137,7 +138,8 @@ fun TelaInicial(
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
-    var optRegraMechasCiberneticos by rememberSaveable { mutableStateOf(false) }
+    var optRegraMechas by rememberSaveable { mutableStateOf(false) }
+    var optRegraCiberneticos by rememberSaveable { mutableStateOf(false) }
 
     // Dialog States
     var showCreditsDialog by remember { mutableStateOf(false) }
@@ -157,7 +159,8 @@ fun TelaInicial(
         optRegraFama = false
         optRegraRiqueza = false
         optRegraCosaNostra = false
-        optRegraMechasCiberneticos = false
+        optRegraMechas = false
+        optRegraCiberneticos = false
     }
 
     // Helper for applying rules presets
@@ -399,7 +402,8 @@ fun TelaInicial(
                     optRegraFama,
                     optRegraRiqueza,
                     optRegraCosaNostra,
-                    optRegraMechasCiberneticos
+                    optRegraMechas,
+                    optRegraCiberneticos
                 )
             }
         }
@@ -614,10 +618,16 @@ fun TelaInicial(
 
                         if (optCompendioSciFi) {
                             SimpleCheckRow(
-                                title = "Mechas e Cibernéticos",
-                                description = "Ativa regras de Tensão e equipamentos avançados.",
-                                checked = optRegraMechasCiberneticos,
-                                onCheckedChange = { optRegraMechasCiberneticos = it }
+                                title = "Habilitar Regras de Mechas",
+                                description = "Ativa a aba de escolha e customização de Mechas.",
+                                checked = optRegraMechas,
+                                onCheckedChange = { optRegraMechas = it }
+                            )
+                            SimpleCheckRow(
+                                title = "Habilitar Regras de Cibernéticos",
+                                description = "Ativa a aba de peças e próteses cibernéticas.",
+                                checked = optRegraCiberneticos,
+                                onCheckedChange = { optRegraCiberneticos = it }
                             )
                         }
                     }

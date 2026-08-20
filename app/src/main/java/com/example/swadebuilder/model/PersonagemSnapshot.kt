@@ -32,6 +32,8 @@ data class SnapshotFlags(
     val compendioHorrorAtivo: Boolean,
     val compendioSciFiAtivo: Boolean = false,
     val compendioScifiMechasCiberneticosAtivo: Boolean = false,
+    val compendioScifiMechasAtivo: Boolean = false,
+    val compendioScifiCiberneticosAtivo: Boolean = false,
     val compendioPathfinderAtivo: Boolean = false,
     val compendioDeadlandsAtivo: Boolean = false,
     val compendioCrystalHeartAtivo: Boolean = false,
@@ -171,7 +173,9 @@ data class SnapshotSelecoes(
     val anoesScifiSelecionado: String? = null,
     val scifiVariant: String? = null,
     val humanoMineradorAtributo: String? = null,
-    val vantagemAdaptavelSelecionadaId: String? = null
+    val vantagemAdaptavelSelecionadaId: String? = null,
+    val mechasSelecionados: List<MechaItem> = emptyList(),
+    val ciberneticosInstalados: List<CiberneticoItem> = emptyList()
 )
 
 @Serializable

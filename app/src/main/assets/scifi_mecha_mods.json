@@ -1,0 +1,324 @@
+{
+  "modificadores": [
+    {
+      "id": "mod_neg_danificado",
+      "nome": "Danificado",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 2,
+      "descricao": "Reduz a Resistência base em 2. Devolve 2 espaços de MODs."
+    },
+    {
+      "id": "mod_neg_drone",
+      "nome": "Drone",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "Sem piloto/tripulação. Requer controle remoto ou IA. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_exigente",
+      "nome": "Exigente",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 2,
+      "descricao": "-2 em testes de Consertar. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_feedback",
+      "nome": "Feedback Neural",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "O piloto fica Abalado sempre que o mecha sofre Ferimento. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_forca_reduzida",
+      "nome": "Força Reduzida",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 4,
+      "descricao": "Reduz a Força em 1 passo de dado. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_fragil",
+      "nome": "Frágil",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 2,
+      "descricao": "Reduz o total de Ferimentos em 1. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_ineficiente",
+      "nome": "Ineficiente",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "Dobre o consumo diário de combustível/energia. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_inseguro",
+      "nome": "Inseguro",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "Passageiros sofrem dano total em colisões e -2 para ejetar. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_manob_reduzida",
+      "nome": "Manobrabilidade Reduzida",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 6,
+      "descricao": "Subtrai 1 da Manobrabilidade. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_manual",
+      "nome": "Manual",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "Sem componentes eletrônicos automatizados. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_passeio_dificil",
+      "nome": "Passeio Difícil",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "Penalidade de Plataforma Instável é -4. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_sem_maos",
+      "nome": "Sem Mãos",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "Não pode agarrar ou usar armas manuais. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_vel_reduzida",
+      "nome": "Velocidade Reduzida",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 3,
+      "descricao": "Reduz a Velocidade Máxima em 1 passo. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_cent_assento",
+      "nome": "Assento para Tripulação",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 2,
+      "max_uses": 2,
+      "descricao": "Adiciona assentos para tripulantes extras."
+    },
+    {
+      "id": "mod_cent_comunicacao_emaranhada",
+      "nome": "Comunicações Emaranhadas",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 1,
+      "max_uses": 1,
+      "descricao": "Comunicação quântica ilimitada e inquebrável com receptor pareado."
+    },
+    {
+      "id": "mod_cent_sensores",
+      "nome": "Conjunto de Sensores",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 4,
+      "max_uses": 1,
+      "descricao": "Antena parabólica extensível para escaneamento planetário e espacial."
+    },
+    {
+      "id": "mod_cent_escaner",
+      "nome": "Escâner Integrado",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 1,
+      "max_uses": 2,
+      "descricao": "Detecta e identifica matéria/energia a até 50m (+2 Perceber)."
+    },
+    {
+      "id": "mod_cent_forca_ampliada",
+      "nome": "Força Ampliada",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 2,
+      "max_uses": 5,
+      "descricao": "Aumenta a Força do mecha em 1 passo de dado."
+    },
+    {
+      "id": "mod_cent_forma_variavel",
+      "nome": "Forma Variável",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 3,
+      "max_uses": 1,
+      "descricao": "Alterna entre forma humanoide e modo veicular/caça."
+    },
+    {
+      "id": "mod_cent_ia",
+      "nome": "Inteligência Artificial (IA)",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 1,
+      "max_uses": 3,
+      "descricao": "IA automatizada que atua como co-piloto/artilheiro aliado."
+    },
+    {
+      "id": "mod_cent_modulo_comando",
+      "nome": "Módulo de Comando",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 1,
+      "max_uses": 1,
+      "descricao": "HUD integrado conectando biolinks da equipe e estendendo Raio de Comando."
+    },
+    {
+      "id": "mod_def_armadura_inclinada",
+      "nome": "Armadura Inclinada",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Inimigos subtraem 2 das rolagens de Atirar contra o mecha."
+    },
+    {
+      "id": "mod_def_armadura_extra",
+      "nome": "Armadura Extra",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 1,
+      "max_uses": 5,
+      "descricao": "+2 de Armadura Pesada por nível."
+    },
+    {
+      "id": "mod_def_blindagem_pem",
+      "nome": "Blindagem PEM",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Ignora 2 pontos de penalidade contra pulso eletromagnético."
+    },
+    {
+      "id": "mod_def_cace",
+      "nome": "CA/CE (Contramedidas Antimísseis)",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 1,
+      "max_uses": 1,
+      "descricao": "Elimina 2 pontos de penalidade de Evasão contra armas guiadas."
+    },
+    {
+      "id": "mod_def_drones_reparo",
+      "nome": "Drones de Reparo",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Drones reparadores automáticos em combate."
+    },
+    {
+      "id": "mod_def_escudo_bracal",
+      "nome": "Escudo Braçal",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Fornece Aparar +2 e Cobertura -2 (Dureza 20)."
+    },
+    {
+      "id": "mod_def_escudos_energia",
+      "nome": "Escudos de Energia",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Campo de força defensivo recarregável para Absorção."
+    },
+    {
+      "id": "mod_def_resistencia",
+      "nome": "Resistência Extra",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 1,
+      "max_uses": 5,
+      "descricao": "+1 de Resistência base por nível."
+    },
+    {
+      "id": "mod_def_sistema_furtivo",
+      "nome": "Sistema Furtivo",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Camuflagem e absorção de radar (-4 em rolagens para detectar/travar)."
+    },
+    {
+      "id": "mod_loc_anfibio",
+      "nome": "Anfíbio",
+      "categoria": "LOCOMOÇÃO",
+      "mods_cost": 1,
+      "max_uses": 2,
+      "descricao": "Permite operação e deslocamento sob a água."
+    },
+    {
+      "id": "mod_loc_manobrabilidade",
+      "nome": "Manobrabilidade Melhora",
+      "categoria": "LOCOMOÇÃO",
+      "mods_cost": 2,
+      "max_uses": 2,
+      "descricao": "+1 de Manobrabilidade."
+    },
+    {
+      "id": "mod_loc_propulsores_salto",
+      "nome": "Propulsores para Salto",
+      "categoria": "LOCOMOÇÃO",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Jatos de salto para manobras 'Morte Vinda de Cima'."
+    },
+    {
+      "id": "mod_loc_propulsores_voo",
+      "nome": "Propulsores (Voo)",
+      "categoria": "LOCOMOÇÃO",
+      "mods_cost": 3,
+      "max_uses": 1,
+      "descricao": "Permite voo com Classificação de Velocidade 8."
+    },
+    {
+      "id": "mod_loc_velocidade_ampliada",
+      "nome": "Velocidade Ampliada",
+      "categoria": "LOCOMOÇÃO",
+      "mods_cost": 2,
+      "max_uses": 3,
+      "descricao": "+1 na Classificação de Velocidade Máxima."
+    },
+    {
+      "id": "mod_of_arma_transportada",
+      "nome": "Arma Transportada (Rifle Mecha)",
+      "categoria": "SISTEMAS OFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 2,
+      "descricao": "Configura uma arma grande empunhada pelas duas mãos."
+    },
+    {
+      "id": "mod_of_estabilizador",
+      "nome": "Estabilizador de Armas",
+      "categoria": "SISTEMAS OFENSIVOS",
+      "mods_cost": 1,
+      "max_uses": 1,
+      "descricao": "Anula penalidade de Plataforma Instável e corrida."
+    },
+    {
+      "id": "mod_of_lamina_braco",
+      "nome": "Lâmina de Braço (For+d12, PA 6)",
+      "categoria": "SISTEMAS OFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Espada de corte para combate corpo a corpo de mechas."
+    },
+    {
+      "id": "mod_of_lamina_energia",
+      "nome": "Lâmina de Energia (For+d12, PA 12)",
+      "categoria": "SISTEMAS OFENSIVOS",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "Lâmina de plasma/energia com PA 12 como Arma Pesada."
+    },
+    {
+      "id": "mod_of_sistema_mira",
+      "nome": "Sistema de Mira",
+      "categoria": "SISTEMAS OFENSIVOS",
+      "mods_cost": 1,
+      "max_uses": 1,
+      "descricao": "Reduz 2 pontos de penalidades de disparo (Ataque Localizado, Cobertura, Escala)."
+    }
+  ]
+}

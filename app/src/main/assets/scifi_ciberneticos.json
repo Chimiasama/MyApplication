@@ -1,0 +1,60 @@
+{
+  "ciberneticos": [
+    {
+      "id": "braco_cibernetico_padrao",
+      "nome": "Braço Cibernético",
+      "strain_custo": 2,
+      "efeito": "+2 em testes de Força com o braço",
+      "modificacoes": ["Servomotores Reforçados", "Arma Embutida"]
+    },
+    {
+      "id": "perna_cibernetica_padrao",
+      "nome": "Perna Cibernética",
+      "strain_custo": 2,
+      "efeito": "+2 em Movimentação e salto ampliado",
+      "modificacoes": ["Amortecedores de Impacto"]
+    },
+    {
+      "id": "olhos_ciberneticos",
+      "nome": "Olhos Cibernéticos (Par)",
+      "strain_custo": 1,
+      "efeito": "Visão Noturna, Termográfica e HUD integrativa",
+      "modificacoes": ["Filtro de Ofuscamento"]
+    },
+    {
+      "id": "blindagem_subcutanea",
+      "nome": "Blindagem Subcutânea",
+      "strain_custo": 2,
+      "efeito": "+2 de Armadura sob a pele",
+      "modificacoes": ["Placas Revestidas de Carbono"]
+    },
+    {
+      "id": "amplificador_neural",
+      "nome": "Amplificador Neural",
+      "strain_custo": 1,
+      "efeito": "+2 em testes de Astúcia para absorver informações e hackear",
+      "modificacoes": ["Interface Direta Neural"]
+    },
+    {
+      "id": "filtros_pulmonares",
+      "nome": "Filtros Pulmonares Sintéticos",
+      "strain_custo": 1,
+      "efeito": "Imunidade a toxinas inaláveis e respirador subaquático por 2 horas",
+      "modificacoes": ["Sintetizador de Oxigênio"]
+    },
+    {
+      "id": "injetor_adrenal",
+      "nome": "Injetor Adrenal Cibernético",
+      "strain_custo": 2,
+      "efeito": "Ignora 1 ponto de penalidade de Ferimento em combate por 3 rodadas",
+      "modificacoes": ["Dosador Automático"]
+    },
+    {
+      "id": "garras_retrateis",
+      "nome": "Garras Cibernéticas Retráteis",
+      "strain_custo": 1,
+      "efeito": "Dano de combate d6+Força com PA 2",
+      "modificacoes": ["Lâminas Monomoleculares"]
+    }
+  ]
+}

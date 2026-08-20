@@ -102,5 +102,7 @@ data class MeuPersonagem(
     val usaRiqueza: Boolean = false,
     val usaRequisicao: Boolean = false,
     val modoProgressaoAtivo: Boolean = false,
-    val complicacoesTipos: Map<String, String> = emptyMap()
+    val complicacoesTipos: Map<String, String> = emptyMap(),
+    val mechasSelecionados: List<MechaItem> = emptyList(),
+    val ciberneticosInstalados: List<CiberneticoItem> = emptyList()
 )

@@ -1,0 +1,92 @@
+{
+  "mechas": [
+    {
+      "id": "mech_estrutura_grande",
+      "nome": "Estrutura Grande (Classe II - Tam 7)",
+      "categoria_chassi": "Grande",
+      "tamanho": 7,
+      "manobrabilidade": 0,
+      "vel_maxima": 8,
+      "resistencia_base": 15,
+      "armadura_base": 20,
+      "ferimentos": 4,
+      "força": "d12+7",
+      "energia_dias": 5,
+      "mod_pontos_max": 21,
+      "sistemas_instalados": ["Selado", "Sensores HUD"],
+      "armas_equipadas": [],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": ""
+      }
+    },
+    {
+      "id": "mech_variavel_caca",
+      "nome": "Mecha Variável Caça (Classe II)",
+      "categoria_chassi": "Grande",
+      "tamanho": 7,
+      "manobrabilidade": 2,
+      "vel_maxima": 8,
+      "resistencia_base": 16,
+      "armadura_base": 22,
+      "ferimentos": 4,
+      "força": "d12+7",
+      "energia_dias": 5,
+      "mod_pontos_max": 21,
+      "sistemas_instalados": ["Forma Variável (Caça Espacial)", "CA/CE", "Sistema de Mira"],
+      "armas_equipadas": [
+        "Laser Gatling (3d6+4, PA 4)",
+        "Canhão Médio (4d10, PA 10)",
+        "Lança-Míssil 8x (6d6, PA 16)"
+      ],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": true,
+        "anotacoes": "Comutável entre forma humanoide e caça espacial (Velocidade Máxima 17)."
+      }
+    },
+    {
+      "id": "mech_estrutura_enorme",
+      "nome": "Estrutura Enorme (Classe IV - Tam 10)",
+      "categoria_chassi": "Enorme",
+      "tamanho": 10,
+      "manobrabilidade": -1,
+      "vel_maxima": 6,
+      "resistencia_base": 20,
+      "armadura_base": 30,
+      "ferimentos": 5,
+      "força": "d12+10",
+      "energia_dias": 5,
+      "mod_pontos_max": 30,
+      "sistemas_instalados": ["Selado", "Sensores HUD"],
+      "armas_equipadas": [],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": ""
+      }
+    },
+    {
+      "id": "mech_estrutura_colossal",
+      "nome": "Estrutura Colossal (Classe V - Tam 14)",
+      "categoria_chassi": "Colossal",
+      "tamanho": 14,
+      "manobrabilidade": -2,
+      "vel_maxima": 4,
+      "resistencia_base": 25,
+      "armadura_base": 40,
+      "ferimentos": 6,
+      "força": "d12+14",
+      "energia_dias": 5,
+      "mod_pontos_max": 56,
+      "sistemas_instalados": ["Selado", "Sensores HUD Avançados", "Pisotear Colossal"],
+      "armas_equipadas": [],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": ""
+      }
+    }
+  ]
+}

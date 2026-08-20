@@ -120,7 +120,9 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         fama = this.valorFama(),
         usaRiqueza = this.usaRiqueza,
         usaRequisicao = this.usaRequisicao,
-        modoProgressaoAtivo = this.modoProgressaoAtivo
+        modoProgressaoAtivo = this.modoProgressaoAtivo,
+        mechasSelecionados = this.mechasSelecionados.toList(),
+        ciberneticosInstalados = this.ciberneticosInstalados.toList()
     )
 }
 

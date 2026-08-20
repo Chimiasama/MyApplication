@@ -344,6 +344,33 @@ fun buildSummaryLines(
     }
     lines += ""
 
+    if (personagem.mechasSelecionados.isNotEmpty()) {
+        lines += "Mechas:"
+        personagem.mechasSelecionados.forEach { m ->
+            val extras = mutableListOf<String>()
+            if (m.customizacoes.blindagem_extra > 0) extras += "Blindagem +${m.customizacoes.blindagem_extra}"
+            if (m.customizacoes.propulsores) extras += "Propulsores"
+            if (m.mods_instalados.isNotEmpty()) {
+                extras += "Mods: " + m.mods_instalados.joinToString { it.nome }
+            }
+            if (m.armas_equipadas.isNotEmpty()) {
+                extras += "Armas: " + m.armas_equipadas.joinToString()
+            }
+            val extraStr = if (extras.isNotEmpty()) " (${extras.joinToString("; ")})" else ""
+            lines += "• ${m.nome}$extraStr"
+        }
+        lines += ""
+    }
+
+    if (personagem.ciberneticosInstalados.isNotEmpty()) {
+        lines += "Cibernéticos Instalados:"
+        personagem.ciberneticosInstalados.forEach { c ->
+            val effStr = if (c.efeito.isNotBlank()) " (${c.efeito})" else ""
+            lines += "• ${c.nome} [Tensão ${c.strain_custo}]$effStr"
+        }
+        lines += ""
+    }
+
     lines += "Recursos & Equipamentos"
     if (personagem.usaRequisicao) {
         lines += "Requisição: ${personagem.requisicao}"
