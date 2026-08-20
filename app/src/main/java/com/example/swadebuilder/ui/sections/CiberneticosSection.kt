@@ -2,21 +2,16 @@ package com.example.swadebuilder.ui.sections
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.PrecisionManufacturing
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -26,7 +21,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,7 +41,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun CiberneticosSection(
     state: CriadorState,
@@ -82,7 +76,7 @@ fun CiberneticosSection(
         item {
             SectionHeader(title = "Implantes Cibernéticos")
             Text(
-                text = "Gerencie e instale peças cibernéticas. O limite de Tensão depende dos seus atributos de Espírito e Vigor.",
+                text = "Gerencie e instale peças cibernéticas das categorias Corpo, Defensivo, Ofensivo e Locomoção. O limite de Tensão depende de Espírito e Vigor.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -130,7 +124,7 @@ fun CiberneticosSection(
 
                     if (tensaoExcedida) {
                         Text(
-                            text = "Atenção: Tensão limite excedida (+${tensaoTotal - tensaoLimite}). Testes de Vigor ou penalidades podem ser aplicados.",
+                            text = "Atenção: Tensão limite excedida (+${tensaoTotal - tensaoLimite}). Efeitos colaterais e penalidades podem ser aplicados.",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onErrorContainer
                         )
@@ -139,68 +133,94 @@ fun CiberneticosSection(
             }
         }
 
-        // Catálogo de Cibernéticos Disponíveis
-        item {
-            SectionHeader(title = "Catálogo de Implantes")
+        // Implantes por Categoria
+        val groupedCatalog = ciberneticoCatalog.groupBy { item ->
+            when (item.id.split("_").getOrNull(1)?.uppercase()) {
+                "CORPO" -> "CORPO"
+                "DEF" -> "DEFENSIVO"
+                "OF" -> "OFENSIVO"
+                "LOC" -> "LOCOMOÇÃO"
+                else -> "OUTROS"
+            }
         }
 
-        items(ciberneticoCatalog, key = { it.id }) { item ->
-            val isInstalado = state.ciberneticosInstalados.any { it.id == item.id }
+        groupedCatalog.forEach { (catName, itemsInCat) ->
+            item {
+                SectionHeader(title = catName)
+            }
 
-            ElevatedCard(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.elevatedCardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
-                )
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+            items(itemsInCat, key = { it.id }) { item ->
+                val currentInstalledCount = state.ciberneticosInstalados.count { it.id == item.id }
+
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
                 ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = item.nome,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Custo de Tensão: ${item.strain_custo}",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        if (item.efeito.isNotBlank()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = item.efeito,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                text = item.nome,
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
                             )
-                        }
-                    }
-
-                    if (isInstalado) {
-                        Button(
-                            onClick = {
-                                state.ciberneticosInstalados.removeIf { it.id == item.id }
-                                onUserFeedback()
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error
+                            Text(
+                                text = "Tensão: ${item.strain_custo}",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = MaterialTheme.colorScheme.primary
                             )
-                        ) {
-                            Text("Remover")
-                        }
-                    } else {
-                        Button(
-                            onClick = {
-                                state.ciberneticosInstalados.add(item)
-                                onUserFeedback()
+                            if (item.efeito.isNotBlank()) {
+                                Text(
+                                    text = item.efeito,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
-                        ) {
-                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
-                            Text("Instalar")
+                        }
+
+                        if (currentInstalledCount > 0) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Button(
+                                    onClick = {
+                                        state.ciberneticosInstalados.add(item.copy(id = "${item.id}_${System.currentTimeMillis()}"))
+                                        onUserFeedback()
+                                    }
+                                ) {
+                                    Text("+1 ($currentInstalledCount)")
+                                }
+                                Spacer(Modifier.width(4.dp))
+                                Button(
+                                    onClick = {
+                                        val idx = state.ciberneticosInstalados.indexOfFirst { it.id.startsWith(item.id) || it.id == item.id }
+                                        if (idx != -1) {
+                                            state.ciberneticosInstalados.removeAt(idx)
+                                        }
+                                        onUserFeedback()
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = MaterialTheme.colorScheme.error
+                                    )
+                                ) {
+                                    Text("-")
+                                }
+                            }
+                        } else {
+                            Button(
+                                onClick = {
+                                    state.ciberneticosInstalados.add(item)
+                                    onUserFeedback()
+                                }
+                            ) {
+                                Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
+                                Text("Instalar")
+                            }
                         }
                     }
                 }
