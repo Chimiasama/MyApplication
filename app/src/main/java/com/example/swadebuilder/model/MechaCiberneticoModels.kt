@@ -30,7 +30,7 @@ data class MechaItem(
     val resistencia_base: Int = 15,
     val armadura_base: Int = 20,
     val ferimentos: Int = 4,
-    val força: String = "d12+4",
+    val forca: String = "d12+4",
     val energia_dias: Int = 5,
     val mod_pontos_max: Int = 12,
     val mods_instalados: List<MechaModItem> = emptyList(),

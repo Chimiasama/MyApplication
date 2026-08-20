@@ -219,7 +219,7 @@ private fun MechaCardItem(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Tam: ${mecha.tamanho} | Manob: ${if (manobCalc >= 0) "+$manobCalc" else "$manobCalc"} | Vel. Máx: $velCalc | Resist: $resistenciaCalc ($armaduraCalc) | Ferimentos: $ferimentosCalc | Força: ${mecha.força}",
+                        text = "Tam: ${mecha.tamanho} | Manob: ${if (manobCalc >= 0) "+$manobCalc" else "$manobCalc"} | Vel. Máx: $velCalc | Resist: $resistenciaCalc ($armaduraCalc) | Ferimentos: $ferimentosCalc | Força: ${mecha.forca}",
                         style = MaterialTheme.typography.labelMedium,
                         fontWeight = FontWeight.SemiBold
                     )
