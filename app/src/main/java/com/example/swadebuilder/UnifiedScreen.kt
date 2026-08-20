@@ -1113,6 +1113,14 @@ private fun CreationDetailContent(
                 onShowMessage = onShowMessage
             )
         }
+        MainSection.MECHAS -> MechasSection(
+            state = state,
+            onUserFeedback = onUserFeedback
+        )
+        MainSection.CIBERNETICOS -> CiberneticosSection(
+            state = state,
+            onUserFeedback = onUserFeedback
+        )
         MainSection.EQUIPAMENTOS -> EquipamentoSection(
             state = state,
             equipamentoCategorias = equipamentoCategorias,
