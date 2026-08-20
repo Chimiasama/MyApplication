@@ -22,6 +22,8 @@ import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Estagio
+import com.example.swadebuilder.model.MechaItem
+import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.GameDataSnapshot
 import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget

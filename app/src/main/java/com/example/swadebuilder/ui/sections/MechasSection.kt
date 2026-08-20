@@ -82,7 +82,7 @@ fun MechasSection(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            SectionHeader(title = "Gestão de Mechas")
+            SectionHeader(centerText = "Gestão de Mechas")
             Text(
                 text = "Selecione um chassi base e adicione Modificadores (Positivos e Negativos). Qualidades Negativas devolvem espaços de MODs para customização extra.",
                 style = MaterialTheme.typography.bodyMedium,
@@ -137,7 +137,7 @@ fun MechasSection(
 
         // Mechas do Personagem
         item {
-            SectionHeader(title = "Mechas Equipados (${state.mechasSelecionados.size})")
+            SectionHeader(centerText = "Mechas Equipados (${state.mechasSelecionados.size})")
         }
 
         if (state.mechasSelecionados.isEmpty()) {

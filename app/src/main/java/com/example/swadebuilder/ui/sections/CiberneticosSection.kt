@@ -59,7 +59,7 @@ fun CiberneticosSection(
 
     val tensaoTotal = state.totalTensaoCibernetica()
     val tensaoLimite = state.valorLimiteTensao().second
-    val isPersonagemRobotico = state.isAncestryRobotica()
+    val isPersonagemRobotico = state.isPersonagemRobotico()
     val tensaoLabel = if (isPersonagemRobotico) "Mods" else "Tensão"
     val tensaoExcedida = tensaoTotal > tensaoLimite
 
@@ -74,7 +74,7 @@ fun CiberneticosSection(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
-            SectionHeader(title = "Implantes Cibernéticos")
+            SectionHeader(centerText = "Implantes Cibernéticos")
             Text(
                 text = "Gerencie e instale peças cibernéticas das categorias Corpo, Defensivo, Ofensivo e Locomoção. O limite de Tensão depende de Espírito e Vigor.",
                 style = MaterialTheme.typography.bodyMedium,
@@ -146,7 +146,7 @@ fun CiberneticosSection(
 
         groupedCatalog.forEach { (catName, itemsInCat) ->
             item {
-                SectionHeader(title = catName)
+                SectionHeader(centerText = catName)
             }
 
             items(itemsInCat, key = { it.id }) { item ->
@@ -301,7 +301,7 @@ fun CiberneticosSection(
 
         // Implantes Instalados
         item {
-            SectionHeader(title = "Implantes Instalados (${state.ciberneticosInstalados.size})")
+            SectionHeader(centerText = "Implantes Instalados (${state.ciberneticosInstalados.size})")
         }
 
         if (state.ciberneticosInstalados.isEmpty()) {
