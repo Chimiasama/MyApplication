@@ -1,0 +1,363 @@
+{
+  "ciberneticos": [
+    {
+      "id": "ciber_corpo_anfibio",
+      "nome": "Anfíbio",
+      "categoria": "CORPO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Guelras e membranas retráteis. Não se afoga em águas oxigenadas e nada na Movimentação máxima."
+    },
+    {
+      "id": "ciber_corpo_atraente",
+      "nome": "Atraente",
+      "categoria": "CORPO",
+      "strain_custo": 2,
+      "max_uses": 2,
+      "custo": "$5K",
+      "efeito": "+1 em Performance e Persuadir (máx +2 com 2º nível ou Vantagem Atraente)."
+    },
+    {
+      "id": "ciber_corpo_audicao_aprimorada",
+      "nome": "Audição Aprimorada",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "+2 em testes de Perceber baseados em audição e escuta de sussurros a até 200 metros."
+    },
+    {
+      "id": "ciber_corpo_aumento_atributo",
+      "nome": "Aumento de Atributo",
+      "categoria": "CORPO",
+      "strain_custo": 2,
+      "max_uses": 99,
+      "custo": "$5K",
+      "efeito": "Aumenta um atributo em um tipo de dado (+2 de Tensão por passo acima do máximo)."
+    },
+    {
+      "id": "ciber_corpo_bonus_pericia",
+      "nome": "Bônus de Perícia",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 99,
+      "custo": "$5K",
+      "efeito": "+1 em uma perícia (+2 se comprado duas vezes; máx +2 acumulado por perícia)."
+    },
+    {
+      "id": "ciber_corpo_chip_pericia",
+      "nome": "Chip de Perícia",
+      "categoria": "CORPO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$15K",
+      "efeito": "Concede d6 em qualquer perícia. Chips trocáveis como uma ação."
+    },
+    {
+      "id": "ciber_corpo_compartimento_oculto",
+      "nome": "Compartimento Oculto",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 99,
+      "custo": "$2K",
+      "efeito": "Espaço interno oculto para até 1kg de objetos (Perceber -4 para detectar)."
+    },
+    {
+      "id": "ciber_corpo_comunicadores",
+      "nome": "Comunicadores",
+      "categoria": "CORPO",
+      "strain_custo": 0,
+      "max_uses": 1,
+      "custo": "$1K",
+      "efeito": "Comunicador integrado com raio de alcance de 35 km."
+    },
+    {
+      "id": "ciber_corpo_conector_dados",
+      "nome": "Conector de Dados",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Conecta diretamente a eletrônicos. Rerrolagem para falha em Eletrônica ou Hackear."
+    },
+    {
+      "id": "ciber_corpo_escaner",
+      "nome": "Escâner",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$1K",
+      "efeito": "Detecta composição de matéria ou energia a até 50 metros de distância."
+    },
+    {
+      "id": "ciber_corpo_membro_substituto",
+      "nome": "Membro Substituto Protético",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 99,
+      "custo": "$2K",
+      "efeito": "Substitui um braço ou perna perdido, corrigindo Lesão Permanente. Permite 1 Tensão de aprimoramento embutido grátis."
+    },
+    {
+      "id": "ciber_corpo_membros_extras",
+      "nome": "Membros Extras (Par de Braços)",
+      "categoria": "CORPO",
+      "strain_custo": 2,
+      "max_uses": 2,
+      "custo": "$5K",
+      "efeito": "Par adicional de braços. +1 de Agrupar em corpo a corpo e +1 em Atletismo."
+    },
+    {
+      "id": "ciber_corpo_mudanca_rosto",
+      "nome": "Mudança de Rosto",
+      "categoria": "CORPO",
+      "strain_custo": 3,
+      "max_uses": 1,
+      "custo": "$15K",
+      "efeito": "Altera características faciais e voz para duplicar pessoas específicas."
+    },
+    {
+      "id": "ciber_corpo_olho_destacavel",
+      "nome": "Olho Destacável",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Órgão ocular removível que transmite áudio/vídeo gravado a até 1,5 km por 10 horas."
+    },
+    {
+      "id": "ciber_corpo_reforco_esqueleto",
+      "nome": "Reforço Esquelético",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Trata a Força como 1 passo acima para Sobrecarga e Força Mínima de equipamentos."
+    },
+    {
+      "id": "ciber_corpo_tamanho",
+      "nome": "Tamanho Aumentado",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 3,
+      "custo": "$5K",
+      "efeito": "Aumenta o Tamanho (e Resistência) do personagem em +1 (máximo +3)."
+    },
+    {
+      "id": "ciber_corpo_visao_aprimorada",
+      "nome": "Visão Aprimorada",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$10K",
+      "efeito": "Ampliação 50x. Anula até 4 pontos de penalidades por Iluminação e +2 em Perceber visual."
+    },
+    {
+      "id": "ciber_def_analisador_ameacas",
+      "nome": "Analisador de Ameaças",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Microssensores neurais concedem a Vantagem Noção do Perigo."
+    },
+    {
+      "id": "ciber_def_armadura",
+      "nome": "Armadura Subdérmica",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 3,
+      "custo": "$5K",
+      "efeito": "+2 de Armadura natural no corpo todo (acumula até +10)."
+    },
+    {
+      "id": "ciber_def_autorrecuperacao",
+      "nome": "Autorrecuperação (Nanorrobôs)",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$10K",
+      "efeito": "Rolagem de cura natural 1x/dia. Remove penalidades contra Sangramento."
+    },
+    {
+      "id": "ciber_def_blindagem_pem",
+      "nome": "Blindagem PEM",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 0,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Ignora 2 pontos de penalidade ao reiniciar/operar após ataque PEM."
+    },
+    {
+      "id": "ciber_def_editor_dor",
+      "nome": "Editor de Dor",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 3,
+      "efeito": "Ignora 1 ponto de penalidade de Fadiga ou Ferimento por nível."
+    },
+    {
+      "id": "ciber_def_filtros_toxinas",
+      "nome": "Filtros de Toxinas",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$3K",
+      "efeito": "+4 em rolagens para resistir a doenças, venenos inaláveis e atmosferas perigosas."
+    },
+    {
+      "id": "ciber_def_orgãos_redundantes",
+      "nome": "Órgãos Redundantes",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Ataques Localizados na cabeça ou órgãos vitais não causam dano adicional."
+    },
+    {
+      "id": "ciber_def_resistencia",
+      "nome": "Resistência Corporal",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 3,
+      "custo": "$5K",
+      "efeito": "+1 na Resistência base a cada nível."
+    },
+    {
+      "id": "ciber_def_robusto",
+      "nome": "Robusto",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Segundo resultado Abalado em combate não resulta em Ferimento."
+    },
+    {
+      "id": "ciber_def_sentidos_fortalecidos",
+      "nome": "Sentidos Fortalecidos",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "+4 em testes de Vigor para se recuperar de Atordoado."
+    },
+    {
+      "id": "ciber_def_surto_adrenalina",
+      "nome": "Surto de Adrenalina",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "+2 para se recuperar de Abalado ou Atordoado (acumula com Reflexos de Combate)."
+    },
+    {
+      "id": "ciber_def_visao_combate",
+      "nome": "Visão de Combate",
+      "categoria": "DEFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 2,
+      "custo": "$5K",
+      "efeito": "Cancela 1 ponto do bônus de Agrupar dos inimigos (ou 2 pontos se instalado 2x)."
+    },
+    {
+      "id": "ciber_of_acao_adicional",
+      "nome": "Ação Adicional Neural",
+      "categoria": "OFENSIVO",
+      "strain_custo": 5,
+      "max_uses": 1,
+      "custo": "$10K",
+      "efeito": "Ignore 2 pontos de penalidade por Ações Múltiplas por turno."
+    },
+    {
+      "id": "ciber_of_alcance",
+      "nome": "Membros Extensíveis (Alcance)",
+      "categoria": "OFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 3,
+      "custo": "$2,5K",
+      "efeito": "Membros extensíveis concedem +1 de Alcance (2 metros)."
+    },
+    {
+      "id": "ciber_of_equipamento_integrado",
+      "nome": "Equipamento/Arma Integrada",
+      "categoria": "OFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 99,
+      "custo": "$5K",
+      "efeito": "Incorpora até 5kg de equipamento ou arma ao corpo (estende/retrai como ação livre)."
+    },
+    {
+      "id": "ciber_of_garras",
+      "nome": "Garras Cibernéticas",
+      "categoria": "OFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 2,
+      "custo": "$5K",
+      "efeito": "Garras causam For+d4. Se instalado 2x, aumenta para For+d6, PA 2."
+    },
+    {
+      "id": "ciber_of_ponto_fixacao",
+      "nome": "Ponto de Fixação de Arma Veicular",
+      "categoria": "OFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$10K",
+      "efeito": "Suporte expansível para acoplar armas veiculares pesadas."
+    },
+    {
+      "id": "ciber_of_sistema_mira",
+      "nome": "Sistema de Mira Integrado",
+      "categoria": "OFENSIVO",
+      "strain_custo": 1,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "Reduz 2 pontos de penalidades por Atirar (Ataque Localizado, Cobertura, Alcance, Escala)."
+    },
+    {
+      "id": "ciber_of_soco_poderoso",
+      "nome": "Soco Poderoso",
+      "categoria": "OFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$5K",
+      "efeito": "+4 de dano a ataques desarmados/corpo a corpo e repele o alvo 1d6 quadros caindo prostrado."
+    },
+    {
+      "id": "ciber_of_vantagem_combate",
+      "nome": "Vantagem de Combate Implantada",
+      "categoria": "OFENSIVO",
+      "strain_custo": 2,
+      "max_uses": 99,
+      "custo": "$5K x Estágio",
+      "efeito": "Concede uma Vantagem de Combate do seu Estágio ou inferior, ignorando Requisitos."
+    },
+    {
+      "id": "ciber_loc_andar_paredes",
+      "nome": "Andar nas Paredes",
+      "categoria": "LOCOMOÇÃO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$3K",
+      "efeito": "Move-se em superfícies horizontais na Movimentação e verticais em metade da Movimentação."
+    },
+    {
+      "id": "ciber_loc_melhoria_perna",
+      "nome": "Melhoria de Perna",
+      "categoria": "LOCOMOÇÃO",
+      "strain_custo": 2,
+      "max_uses": 99,
+      "custo": "$10K",
+      "efeito": "+2 na Movimentação e aumenta o dado de corrida em um tipo de dado."
+    },
+    {
+      "id": "ciber_loc_saltador",
+      "nome": "Saltador Hidráulico",
+      "categoria": "LOCOMOÇÃO",
+      "strain_custo": 2,
+      "max_uses": 1,
+      "custo": "$10K",
+      "efeito": "Pula 16 metros horizontalmente ou 8 metros verticalmente (+2 dano em Ataque Selvagem)."
+    }
+  ]
+}

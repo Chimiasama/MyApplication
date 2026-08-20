@@ -22,6 +22,8 @@ import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Estagio
+import com.example.swadebuilder.model.MechaItem
+import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.GameDataSnapshot
 import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
@@ -224,7 +226,17 @@ class CriadorState {
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
     var compendioSciFiAtivo by mutableStateOf(false)
-    var compendioScifiMechasCiberneticosAtivo by mutableStateOf(false)
+    var compendioScifiMechasAtivo by mutableStateOf(false)
+    var compendioScifiCiberneticosAtivo by mutableStateOf(false)
+    var compendioScifiMechasCiberneticosAtivo: Boolean
+        get() = compendioScifiMechasAtivo || compendioScifiCiberneticosAtivo
+        set(value) {
+            compendioScifiMechasAtivo = value
+            compendioScifiCiberneticosAtivo = value
+        }
+
+    val mechasSelecionados = mutableStateListOf<MechaItem>()
+    val ciberneticosInstalados = mutableStateListOf<CiberneticoItem>()
     var compendioPathfinderAtivo by mutableStateOf(false)
     var compendioDeadlandsAtivo by mutableStateOf(false)
     var compendioCrystalHeartAtivo by mutableStateOf(false)
@@ -780,7 +792,7 @@ class CriadorState {
         if (availableOptions.isEmpty()) return null
         val selected = overrideSelection ?: scifiVariant
         val legacySelection: String? = null
-        val filteredOptions = if (ancestryName.keyify() == "ANOES" && !compendioScifiMechasCiberneticosAtivo) {
+        val filteredOptions = if (ancestryName.keyify() == "ANOES" && !compendioScifiCiberneticosAtivo) {
             availableOptions.filter { it.keyify() != "CIBER" }
         } else {
             availableOptions
@@ -1325,7 +1337,7 @@ class CriadorState {
     fun totalTensaoEquipamentos(): Int = totalTensaoCibernetica()
 
     fun totalTensaoCibernetica(): Int =
-        equipamentosComprados.sumOf { it.tensao ?: 0 }
+        ciberneticosInstalados.sumOf { it.strain_custo } + equipamentosComprados.sumOf { it.tensao ?: 0 }
 
     fun totalTensaoAtual(): Int = totalTensaoCibernetica()
 
@@ -6140,6 +6152,8 @@ class CriadorState {
                 compendioHorrorAtivo = compendioHorrorAtivo,
                 compendioSciFiAtivo = compendioSciFiAtivo,
                 compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo,
+                compendioScifiMechasAtivo = compendioScifiMechasAtivo,
+                compendioScifiCiberneticosAtivo = compendioScifiCiberneticosAtivo,
                 compendioPathfinderAtivo = compendioPathfinderAtivo,
                 compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                 compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
@@ -6221,6 +6235,8 @@ class CriadorState {
                 arcanoEmCompraViaXpKey = arcanoEmCompraViaXpKey,
                 arcanoSnapshotAntesDaCompra = arcanoSnapshotAntesDaCompra,
                 equipamentosComprados = equipamentosComprados.toList(),
+                mechasSelecionados = mechasSelecionados.toList(),
+                ciberneticosInstalados = ciberneticosInstalados.toList(),
                 coracaoCrystalId = coracaoCrystalSelecionado?.id,
                 tropoSelecionadoId = tropoSelecionado?.id,
                 vantagensTropoAutomaticas = vantagensAutomaticasDoTropo.toList(),
@@ -6327,7 +6343,8 @@ class CriadorState {
         compendioFantasiaAtivo = flags.compendioFantasiaAtivo
         compendioHorrorAtivo = flags.compendioHorrorAtivo
         compendioSciFiAtivo = flags.compendioSciFiAtivo
-        compendioScifiMechasCiberneticosAtivo = flags.compendioScifiMechasCiberneticosAtivo
+        compendioScifiMechasAtivo = flags.compendioScifiMechasAtivo || flags.compendioScifiMechasCiberneticosAtivo
+        compendioScifiCiberneticosAtivo = flags.compendioScifiCiberneticosAtivo || flags.compendioScifiMechasCiberneticosAtivo
         compendioPathfinderAtivo = flags.compendioPathfinderAtivo
         compendioDeadlandsAtivo = flags.compendioDeadlandsAtivo
         compendioCrystalHeartAtivo = flags.compendioCrystalHeartAtivo
@@ -6544,6 +6561,8 @@ class CriadorState {
         }
 
         equipamentosComprados.apply { clear(); addAll(snapshot.selecoes.equipamentosComprados) }
+        mechasSelecionados.apply { clear(); addAll(snapshot.selecoes.mechasSelecionados) }
+        ciberneticosInstalados.apply { clear(); addAll(snapshot.selecoes.ciberneticosInstalados) }
 
         tropoSelecionado = snapshot.selecoes.tropoSelecionadoId?.let { id ->
             listaTropos.firstOrNull { it.id == id }

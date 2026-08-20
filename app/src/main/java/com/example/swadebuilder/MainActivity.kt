@@ -694,7 +694,7 @@ class MainActivity : ComponentActivity() {
                                                 nasceUmHeroi, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra,
-                                                optRegraMechasCiberneticos ->
+                                                optRegraMechas, optRegraCiberneticos ->
 
                                     creationSession++
 
@@ -705,7 +705,8 @@ class MainActivity : ComponentActivity() {
                                         compendioFantasiaAtivo = compendioFantasiaAtivo,
                                         compendioHorrorAtivo = compendioHorrorAtivo,
                                         compendioSciFiAtivo = compendioSciFiAtivo,
-                                        compendioScifiMechasCiberneticosAtivo = optRegraMechasCiberneticos,
+                                        compendioScifiMechasAtivo = optRegraMechas,
+                                        compendioScifiCiberneticosAtivo = optRegraCiberneticos,
                                         compendioPathfinderAtivo = compendioPathfinderAtivo,
                                         compendioDeadlandsAtivo = compendioDeadlandsAtivo,
                                         compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,

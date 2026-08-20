@@ -1,0 +1,240 @@
+{
+  "mechas": [
+    {
+      "id": "mech_apoio_infantaria",
+      "nome": "Mecha de Apoio de Infantaria (Classe II)",
+      "categoria_chassi": "Grande",
+      "tamanho": 4,
+      "manobrabilidade": 0,
+      "vel_maxima": 9,
+      "resistencia_base": 15,
+      "armadura_base": 21,
+      "ferimentos": 4,
+      "forca": "d12+4",
+      "energia_dias": 5,
+      "mod_pontos_max": 12,
+      "sistemas_instalados": ["Armadura x3", "CA/CE", "Estabilizador", "Velocidade Ampliada"],
+      "armas_equipadas": [
+        "Canhões Automáticos Leves Duplos (3d8, PA 4, CdT 4)",
+        "2x Lança-Mísseis (6d6, PA 16, Guiado)"
+      ],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": "Plataforma de combate móvel para apoio de infantaria corpo a corpo."
+      }
+    },
+    {
+      "id": "mech_batedor_leve",
+      "nome": "Batedor Leve (Classe II)",
+      "categoria_chassi": "Grande",
+      "tamanho": 7,
+      "manobrabilidade": 2,
+      "vel_maxima": 8,
+      "resistencia_base": 16,
+      "armadura_base": 20,
+      "ferimentos": 4,
+      "forca": "d12+7",
+      "energia_dias": 5,
+      "mod_pontos_max": 21,
+      "sistemas_instalados": ["Armadura x2", "Armadura Inclinada", "Manobrabilidade x2", "Resistência", "Sistema de Mira"],
+      "armas_equipadas": [
+        "2x Lança-Projéteis Médios (2d8+1, PA 2, CdT 3)",
+        "Laser Médio (3d10, PA 20)"
+      ],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": "Coleta de informações e ataques rápidos."
+      }
+    },
+    {
+      "id": "mech_variavel_caca",
+      "nome": "Mecha Variável Caça (Classe II)",
+      "categoria_chassi": "Grande",
+      "tamanho": 7,
+      "manobrabilidade": 2,
+      "vel_maxima": 8,
+      "resistencia_base": 16,
+      "armadura_base": 22,
+      "ferimentos": 4,
+      "forca": "d12+7",
+      "energia_dias": 5,
+      "mod_pontos_max": 21,
+      "sistemas_instalados": ["Armadura x3", "CA/CE", "Forma Variável (Caça Espacial)", "Manobrabilidade x2", "Resistência", "Sistema de Mira"],
+      "armas_equipadas": [
+        "Laser Gatling (3d6+4, PA 4)",
+        "Canhão Médio (4d10, PA 10)",
+        "Lança-Míssil 8x (6d6, PA 16)"
+      ],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": true,
+        "anotacoes": "Alterna entre forma humanoide e caça espacial (Velocidade Máxima 17)."
+      }
+    },
+    {
+      "id": "mech_lutador_medio",
+      "nome": "Lutador Médio (Classe III)",
+      "categoria_chassi": "Enorme",
+      "tamanho": 8,
+      "manobrabilidade": 0,
+      "vel_maxima": 6,
+      "resistencia_base": 20,
+      "armadura_base": 30,
+      "ferimentos": 5,
+      "forca": "d12+8",
+      "energia_dias": 5,
+      "mod_pontos_max": 24,
+      "sistemas_instalados": ["Armadura x5", "Armadura Inclinada", "Manobrabilidade", "Propulsores para Salto", "Sistema de Mira"],
+      "armas_equipadas": [
+        "Lâmina de Braço (For+d12, PA 6)",
+        "Lasers Leves Duplos Ligados (2d10, PA 10)",
+        "Canhão Médio (4d10, PA 10)"
+      ],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": true,
+        "anotacoes": "Especialista em guerra urbana e combate corpo a corpo."
+      }
+    },
+    {
+      "id": "mech_suporte_fogo_pesado",
+      "nome": "Suporte de Fogo Pesado (Classe IV)",
+      "categoria_chassi": "Enorme",
+      "tamanho": 9,
+      "manobrabilidade": -1,
+      "vel_maxima": 6,
+      "resistencia_base": 20,
+      "armadura_base": 40,
+      "ferimentos": 5,
+      "forca": "d12+9",
+      "energia_dias": 5,
+      "mod_pontos_max": 27,
+      "sistemas_instalados": ["Armadura x10", "Sistema de Mira"],
+      "armas_equipadas": [
+        "Lasers Médios Quádruplos Conectados (3d10, PA 20)",
+        "Lança-Míssil 6x Pesados (8d6, PA 32)",
+        "2x Canhões de Partículas Médios (6d6+6, PA 10, CdT 3)"
+      ],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": "Plataforma de artilharia pesada."
+      }
+    },
+    {
+      "id": "mech_ataque",
+      "nome": "Mecha de Ataque (Classe IV)",
+      "categoria_chassi": "Enorme",
+      "tamanho": 10,
+      "manobrabilidade": -1,
+      "vel_maxima": 6,
+      "resistencia_base": 25,
+      "armadura_base": 45,
+      "ferimentos": 5,
+      "forca": "d12+10",
+      "energia_dias": 5,
+      "mod_pontos_max": 30,
+      "sistemas_instalados": ["Armadura x10", "Resistência x5", "Sistema de Mira"],
+      "armas_equipadas": [
+        "Lasers Médios Quádruplos Conectados (3d10, PA 20)",
+        "Lança-Míssil 24x Médios (7d6, PA 24, CdT 2)",
+        "Canhão Pesado (5d10, PA 20)"
+      ],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": "Bigorna do martelo dos pesos-pesados em combate blindado."
+      }
+    },
+    {
+      "id": "mech_infantaria",
+      "nome": "Mecha de Infantaria (Classe V)",
+      "categoria_chassi": "Colossal",
+      "tamanho": 13,
+      "manobrabilidade": 0,
+      "vel_maxima": 4,
+      "resistencia_base": 26,
+      "armadura_base": 50,
+      "ferimentos": 6,
+      "forca": "d12+14",
+      "energia_dias": 5,
+      "mod_pontos_max": 52,
+      "sistemas_instalados": ["Armadura x12", "CA/CE", "Escudo de Braço", "Força Ampliada", "Manobrabilidade x2", "Propulsores", "Resistência", "Sistema de Mira"],
+      "armas_equipadas": [
+        "Lança-Projéteis Médios Duplos (2d8+1, PA 2, CdT 3)",
+        "Lâmina de Energia (For+d12, PA 12)",
+        "Laser Pesado (4d10, PA 30)"
+      ],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": true,
+        "anotacoes": "Titã de campo de batalha dominante contra tanques e naves."
+      }
+    },
+    {
+      "id": "mech_estrutura_grande",
+      "nome": "Estrutura Grande Base (Tam 4–7)",
+      "categoria_chassi": "Grande",
+      "tamanho": 7,
+      "manobrabilidade": 0,
+      "vel_maxima": 8,
+      "resistencia_base": 15,
+      "armadura_base": 20,
+      "ferimentos": 4,
+      "forca": "d12+7",
+      "energia_dias": 5,
+      "mod_pontos_max": 21,
+      "sistemas_instalados": ["Selado", "Sensores HUD"],
+      "armas_equipadas": [],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": "Estrutura base para mechas Grandes."
+      }
+    },
+    {
+      "id": "mech_estrutura_enorme",
+      "nome": "Estrutura Enorme Base (Tam 8–11)",
+      "categoria_chassi": "Enorme",
+      "tamanho": 10,
+      "manobrabilidade": -1,
+      "vel_maxima": 6,
+      "resistencia_base": 20,
+      "armadura_base": 30,
+      "ferimentos": 5,
+      "forca": "d12+10",
+      "energia_dias": 5,
+      "mod_pontos_max": 30,
+      "sistemas_instalados": ["Selado", "Sensores HUD"],
+      "armas_equipadas": [],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": "Estrutura base para mechas Enormes."
+      }
+    },
+    {
+      "id": "mech_estrutura_colossal",
+      "nome": "Estrutura Colossal Base (Tam 12–20)",
+      "categoria_chassi": "Colossal",
+      "tamanho": 14,
+      "manobrabilidade": -2,
+      "vel_maxima": 4,
+      "resistencia_base": 25,
+      "armadura_base": 40,
+      "ferimentos": 6,
+      "forca": "d12+14",
+      "energia_dias": 5,
+      "mod_pontos_max": 56,
+      "sistemas_instalados": ["Selado", "Sensores HUD Avançados", "Pisotear Colossal"],
+      "armas_equipadas": [],
+      "customizacoes": {
+        "blindagem_extra": 0,
+        "propulsores": false,
+        "anotacoes": "Estrutura base para mechas Colossais."
+      }
+    }
+  ]
+}

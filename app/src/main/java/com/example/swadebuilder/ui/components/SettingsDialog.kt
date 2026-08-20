@@ -154,6 +154,46 @@ fun SettingsDialog(
                             )
                         }
 
+                        if (state.compendioSciFiAtivo) {
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("Habilitar Regras de Mechas", style = MaterialTheme.typography.bodyMedium)
+                                    Text("Aba de escolha e customização de Mechas.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                Switch(
+                                    checked = state.compendioScifiMechasAtivo,
+                                    onCheckedChange = {
+                                        state.compendioScifiMechasAtivo = it
+                                        persistPrefs()
+                                    },
+                                    modifier = Modifier.scale(0.8f)
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("Habilitar Regras de Cibernéticos", style = MaterialTheme.typography.bodyMedium)
+                                    Text("Aba de peças e próteses cibernéticas.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                Switch(
+                                    checked = state.compendioScifiCiberneticosAtivo,
+                                    onCheckedChange = {
+                                        state.compendioScifiCiberneticosAtivo = it
+                                        persistPrefs()
+                                    },
+                                    modifier = Modifier.scale(0.8f)
+                                )
+                            }
+                        }
+
                         // NPC Mode Toggle (Only during creation phase and if not already NPC)
                         if (isCreationPhase && !state.modoProgressaoAtivo && !state.isNpcExibicao) {
                             HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)

@@ -30,6 +30,8 @@ import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.PrecisionManufacturing
+import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
@@ -75,8 +77,10 @@ import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
 import com.example.swadebuilder.ui.sections.ComplicacoesSection
+import com.example.swadebuilder.ui.sections.CiberneticosSection
 import com.example.swadebuilder.ui.sections.CrystalHeartSection
 import com.example.swadebuilder.ui.sections.EquipamentoSection
+import com.example.swadebuilder.ui.sections.MechasSection
 import com.example.swadebuilder.ui.sections.PericiasContent
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.SummaryContent
@@ -659,6 +663,8 @@ private fun MainSection.icon(): ImageVector = when (this) {
     MainSection.PODERES -> Icons.Default.FlashOn
     MainSection.XP -> Icons.Default.ArrowUpward
     MainSection.CRYSTAL_HEART -> Icons.Default.Favorite
+    MainSection.MECHAS -> Icons.Default.SmartToy
+    MainSection.CIBERNETICOS -> Icons.Default.PrecisionManufacturing
 }
 
 private fun MainSection.tabLabel(state: CriadorState): String = when (this) {
@@ -681,6 +687,8 @@ private fun MainSection.tabLabel(state: CriadorState): String = when (this) {
     MainSection.XP -> "XP"
     MainSection.MONSTRO -> "Monstro"
     MainSection.CRYSTAL_HEART -> "Crystal Heart".toEditionDisplayName()
+    MainSection.MECHAS -> "Mechas"
+    MainSection.CIBERNETICOS -> "Cibernéticos"
 }
 
 private fun activeSectionIndex(
@@ -768,6 +776,12 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
         if (state.compendioCrystalHeartAtivo) {
             sections += MainSection.CRYSTAL_HEART
         }
+        if (state.compendioSciFiAtivo && state.compendioScifiMechasAtivo) {
+            sections += MainSection.MECHAS
+        }
+        if (state.compendioSciFiAtivo && state.compendioScifiCiberneticosAtivo) {
+            sections += MainSection.CIBERNETICOS
+        }
         sections += MainSection.EQUIPAMENTOS
         sections += MainSection.XP
         return sections
@@ -802,6 +816,12 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
         sections += MainSection.PODERES
     }
 
+    if (state.compendioSciFiAtivo && state.compendioScifiMechasAtivo) {
+        sections += MainSection.MECHAS
+    }
+    if (state.compendioSciFiAtivo && state.compendioScifiCiberneticosAtivo) {
+        sections += MainSection.CIBERNETICOS
+    }
     sections += MainSection.EQUIPAMENTOS
     return sections
 }
@@ -955,6 +975,14 @@ private fun ProgressionDetailContent(
             state = state,
             viewModel = viewModel
         )
+        MainSection.MECHAS -> MechasSection(
+            state = state,
+            onUserFeedback = onUserFeedback
+        )
+        MainSection.CIBERNETICOS -> CiberneticosSection(
+            state = state,
+            onUserFeedback = onUserFeedback
+        )
         MainSection.EQUIPAMENTOS -> EquipamentoSection(
             state = state,
             equipamentoCategorias = equipamentoCategorias,
@@ -1085,6 +1113,14 @@ private fun CreationDetailContent(
                 onShowMessage = onShowMessage
             )
         }
+        MainSection.MECHAS -> MechasSection(
+            state = state,
+            onUserFeedback = onUserFeedback
+        )
+        MainSection.CIBERNETICOS -> CiberneticosSection(
+            state = state,
+            onUserFeedback = onUserFeedback
+        )
         MainSection.EQUIPAMENTOS -> EquipamentoSection(
             state = state,
             equipamentoCategorias = equipamentoCategorias,

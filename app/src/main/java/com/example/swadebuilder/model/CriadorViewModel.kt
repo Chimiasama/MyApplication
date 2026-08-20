@@ -206,7 +206,8 @@ class CriadorViewModel(
         val currentCompendioFantasiaAtivo = state.compendioFantasiaAtivo
         val currentCompendioHorrorAtivo = state.compendioHorrorAtivo
         val currentCompendioSciFiAtivo = state.compendioSciFiAtivo
-        val currentCompendioScifiMechasCiberneticosAtivo = state.compendioScifiMechasCiberneticosAtivo
+        val currentCompendioScifiMechasAtivo = state.compendioScifiMechasAtivo
+        val currentCompendioScifiCiberneticosAtivo = state.compendioScifiCiberneticosAtivo
         val currentCompendioPathfinderAtivo = state.compendioPathfinderAtivo
         val currentCompendioDeadlandsAtivo = state.compendioDeadlandsAtivo
         val currentCompendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
@@ -230,7 +231,8 @@ class CriadorViewModel(
             compendioFantasiaAtivo = currentCompendioFantasiaAtivo,
             compendioHorrorAtivo = currentCompendioHorrorAtivo,
             compendioSciFiAtivo = currentCompendioSciFiAtivo,
-            compendioScifiMechasCiberneticosAtivo = currentCompendioScifiMechasCiberneticosAtivo,
+            compendioScifiMechasAtivo = currentCompendioScifiMechasAtivo,
+            compendioScifiCiberneticosAtivo = currentCompendioScifiCiberneticosAtivo,
             compendioPathfinderAtivo = currentCompendioPathfinderAtivo,
             compendioDeadlandsAtivo = currentCompendioDeadlandsAtivo,
             compendioCrystalHeartAtivo = currentCompendioCrystalHeartAtivo,
@@ -388,6 +390,8 @@ class CriadorViewModel(
         compendioHorrorAtivo: Boolean = false,
         compendioSciFiAtivo: Boolean = false,
         compendioScifiMechasCiberneticosAtivo: Boolean = false,
+        compendioScifiMechasAtivo: Boolean = false,
+        compendioScifiCiberneticosAtivo: Boolean = false,
         compendioPathfinderAtivo: Boolean = false,
         compendioDeadlandsAtivo: Boolean = false,
         compendioCrystalHeartAtivo: Boolean = false,
@@ -407,7 +411,10 @@ class CriadorViewModel(
         state.compendioFantasiaAtivo = compendioFantasiaAtivo
         state.compendioHorrorAtivo = compendioHorrorAtivo
         state.compendioSciFiAtivo = compendioSciFiAtivo
-        state.compendioScifiMechasCiberneticosAtivo = compendioScifiMechasCiberneticosAtivo
+        state.compendioScifiMechasAtivo = compendioScifiMechasAtivo || compendioScifiMechasCiberneticosAtivo
+        state.compendioScifiCiberneticosAtivo = compendioScifiCiberneticosAtivo || compendioScifiMechasCiberneticosAtivo
+        state.mechasSelecionados.clear()
+        state.ciberneticosInstalados.clear()
         state.compendioPathfinderAtivo = compendioPathfinderAtivo
         state.compendioDeadlandsAtivo = compendioDeadlandsAtivo
         state.compendioCrystalHeartAtivo = compendioCrystalHeartAtivo
