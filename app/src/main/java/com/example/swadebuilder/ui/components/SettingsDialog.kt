@@ -77,6 +77,19 @@ fun SettingsDialog(
         )
     }
 
+    val themeDescriptions = remember {
+        mapOf(
+            AppTheme.DEFAULT   to "Pergaminho clássico (Old School)",
+            AppTheme.MEDIEVAL  to "Manuscrito antigo e detalhes dourados",
+            AppTheme.CYBERPUNK to "Estilo Matrix com linhas wireframe verdes",
+            AppTheme.WW2       to "Papel Khaki e carimbo militar de campo",
+            AppTheme.HORROR    to "Atmosfera gótica e detalhes carmesim",
+            AppTheme.SCIFI     to "Interface holofuturista e azul estelar",
+            AppTheme.MINIMALIST to "Design limpo e alto contraste",
+            AppTheme.HALLOWEEN to "Laranja abóbora e roxo místico"
+        )
+    }
+
     val sortedThemes = remember(themeNames) {
         AppTheme.entries.sortedBy { themeNames[it] ?: it.name }
     }
@@ -392,24 +405,39 @@ fun SettingsDialog(
                     sortedThemes.forEach { theme ->
                         val isSelected = state.appTheme == theme
                         val themeLabel = themeNames[theme] ?: theme.name
-                        if (isSelected) {
-                            TextButton(
-                                onClick = { showThemeDialog = false },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text("✓ $themeLabel", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                            }
-                        } else {
-                            OutlinedButton(
-                                onClick = {
-                                    onThemeSelected(theme)
-                                    persistPrefs()
-                                    feedbackController.play(state.hapticStrength, state.soundVolume)
-                                    showThemeDialog = false
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(themeLabel)
+                        val themeDesc = themeDescriptions[theme] ?: ""
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)
+                        ) {
+                            if (isSelected) {
+                                TextButton(
+                                    onClick = { showThemeDialog = false },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text("✓ $themeLabel", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                                        if (themeDesc.isNotBlank()) {
+                                            Text(themeDesc, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        }
+                                    }
+                                }
+                            } else {
+                                OutlinedButton(
+                                    onClick = {
+                                        onThemeSelected(theme)
+                                        persistPrefs()
+                                        feedbackController.play(state.hapticStrength, state.soundVolume)
+                                        showThemeDialog = false
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(themeLabel, style = MaterialTheme.typography.titleMedium)
+                                        if (themeDesc.isNotBlank()) {
+                                            Text(themeDesc, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
