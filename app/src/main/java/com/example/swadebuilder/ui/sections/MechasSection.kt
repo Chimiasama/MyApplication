@@ -530,12 +530,11 @@ private fun MechaCardItem(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 )
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Blindagem Extra: ", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
@@ -573,6 +572,7 @@ private fun MechaCardItem(
                     }
 
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
