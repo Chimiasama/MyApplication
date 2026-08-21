@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
@@ -149,11 +150,13 @@ fun AncestralidadesSection(
     val compendioHorrorAtivo = state.compendioHorrorAtivo
     val compendioSciFiAtivo = state.compendioSciFiAtivo
     val compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo
+    val pathfinderLabel = stringResource(R.string.sw_pathfinder_label)
 
     val ancestralidadesState = androidx.compose.runtime.produceState(
         initialValue = emptyList<RacialModifierLite>(),
         context,
         configuration,
+        pathfinderLabel,
         compendioFantasiaAtivo,
         compendioPathfinderAtivo,
         compendioDeadlandsAtivo,
@@ -165,7 +168,6 @@ fun AncestralidadesSection(
         compendioCrystalHeartAtivo
     ) {
         val all = state.listaAncestralidadesJson
-        val pathfinderLabel = context.getString(R.string.sw_pathfinder_label) ?: "Pathfinder"
 
         fun adjustName(nome: String): String {
             if (compendioPathfinderAtivo) {

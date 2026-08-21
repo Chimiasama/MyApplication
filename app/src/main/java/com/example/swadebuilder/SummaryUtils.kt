@@ -405,7 +405,7 @@ fun buildSummaryLines(
 
             val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
                 ?.takeIf { it.isNotBlank() }
-            val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nome.toFancyTitleCase()
+            val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase()
 
             val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
                 "$rawName (DESABILITADO)"
