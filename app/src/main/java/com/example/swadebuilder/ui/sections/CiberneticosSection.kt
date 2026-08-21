@@ -1,7 +1,9 @@
 package com.example.swadebuilder.ui.sections
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,16 +13,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,10 +29,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.CircleShape
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.CiberneticoCatalogWrapper
 import com.example.swadebuilder.model.CiberneticoItem
@@ -87,7 +89,7 @@ fun CiberneticosSection(
             ElevatedCard(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.elevatedCardColors(
-                    containerColor = if (tensaoExcedida) MaterialTheme.colorScheme.errorContainer
+                    containerColor = if (tensaoExcedida) MaterialTheme.colorScheme.error.copy(alpha = 0.08f)
                     else MaterialTheme.colorScheme.surfaceContainerLow
                 )
             ) {
@@ -104,7 +106,7 @@ fun CiberneticosSection(
                             text = "$tensaoLabel Cibernética: $tensaoTotal / $tensaoLimite",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = if (tensaoExcedida) MaterialTheme.colorScheme.onErrorContainer
+                            color = if (tensaoExcedida) MaterialTheme.colorScheme.error
                             else MaterialTheme.colorScheme.primary
                         )
                         if (tensaoExcedida) {
@@ -126,7 +128,7 @@ fun CiberneticosSection(
                         Text(
                             text = "Atenção: Tensão limite excedida (+${tensaoTotal - tensaoLimite}). Efeitos colaterais e penalidades podem ser aplicados.",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onErrorContainer
+                            color = MaterialTheme.colorScheme.error
                         )
                     }
                 }
@@ -150,18 +152,18 @@ fun CiberneticosSection(
             }
 
             items(itemsInCat, key = { it.id }) { item ->
-                val currentInstalledCount = state.ciberneticosInstalados.count { it.id == item.id }
+                val currentInstalledCount = state.ciberneticosInstalados.count { it.id.startsWith(item.id) }
 
-                ElevatedCard(
+                OutlinedCard(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    colors = CardDefaults.outlinedCardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                     )
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .padding(horizontal = 12.dp, vertical = 10.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -185,41 +187,45 @@ fun CiberneticosSection(
                             }
                         }
 
-                        if (currentInstalledCount > 0) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Button(
-                                    onClick = {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            Text(
+                                text = "+",
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable {
                                         state.ciberneticosInstalados.add(item.copy(id = "${item.id}_${System.currentTimeMillis()}"))
                                         onUserFeedback()
                                     }
-                                ) {
-                                    Text("+1 ($currentInstalledCount)")
-                                }
-                                Spacer(Modifier.width(4.dp))
-                                Button(
-                                    onClick = {
-                                        val idx = state.ciberneticosInstalados.indexOfFirst { it.id.startsWith(item.id) || it.id == item.id }
-                                        if (idx != -1) {
-                                            state.ciberneticosInstalados.removeAt(idx)
+                                    .padding(horizontal = 10.dp, vertical = 2.dp),
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            )
+                            if (currentInstalledCount > 0) {
+                                Text(
+                                    text = "-",
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            val idx = state.ciberneticosInstalados.indexOfFirst { it.id.startsWith(item.id) }
+                                            if (idx != -1) {
+                                                state.ciberneticosInstalados.removeAt(idx)
+                                            }
+                                            onUserFeedback()
                                         }
-                                        onUserFeedback()
-                                    },
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.error
-                                    )
-                                ) {
-                                    Text("-")
-                                }
-                            }
-                        } else {
-                            Button(
-                                onClick = {
-                                    state.ciberneticosInstalados.add(item)
-                                    onUserFeedback()
-                                }
-                            ) {
-                                Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
-                                Text("Instalar")
+                                        .padding(horizontal = 10.dp, vertical = 0.dp),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.error,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "x$currentInstalledCount",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         }
                     }
@@ -272,7 +278,7 @@ fun CiberneticosSection(
                         )
                     }
 
-                    Button(
+                    OutlinedButton(
                         onClick = {
                             if (customName.isNotBlank()) {
                                 val strainVal = customStrainText.toIntOrNull() ?: 1
@@ -289,10 +295,10 @@ fun CiberneticosSection(
                                 onUserFeedback()
                             }
                         },
-                        modifier = Modifier.align(Alignment.End)
+                        modifier = Modifier.align(Alignment.End),
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = null)
-                        Spacer(Modifier.width(4.dp))
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.padding(end = 4.dp))
                         Text("Adicionar Customizado")
                     }
                 }
@@ -341,18 +347,19 @@ fun CiberneticosSection(
                             )
                         }
 
-                        IconButton(
-                            onClick = {
-                                state.ciberneticosInstalados.removeIf { it.id == installed.id }
-                                onUserFeedback()
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Remover",
-                                tint = MaterialTheme.colorScheme.error
-                            )
-                        }
+                        Text(
+                            text = "-",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .clickable {
+                                    state.ciberneticosInstalados.removeIf { it.id == installed.id }
+                                    onUserFeedback()
+                                }
+                                .padding(horizontal = 10.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.error,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }

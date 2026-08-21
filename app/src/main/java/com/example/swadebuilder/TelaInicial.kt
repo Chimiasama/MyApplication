@@ -64,7 +64,6 @@ import com.example.swadebuilder.ui.components.ModuleCard
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -375,35 +374,33 @@ fun TelaInicial(
         if (optCompendioWiseguys) activeModules.add("WISEGUYS")
         if (optSuperPoderes) activeModules.add("SUPER")
 
+        onCriarNovo(
+            optCartaSelvagem,
+            optMaisPontosPericias,
+            optSuperPoderes,
+            optCompendioFantasia,
+            optCompendioHorror,
+            optCompendioSciFi,
+            optCompendioPathfinder,
+            optCompendioDeadlands,
+            optCompendioCrystalHeart,
+            optCompendioArteDaGuerra,
+            optCompendioCidadeSolVapor,
+            optCompendioWiseguys,
+            optModoMonstro,
+            optNasceUmHeroi,
+            optEspecializacaoPer,
+            optSemPontosPoder,
+            optMultiplosIdiomas,
+            optGrandesResponsabilidades,
+            optRegraFama,
+            optRegraRiqueza,
+            optRegraCosaNostra,
+            optRegraMechas,
+            optRegraCiberneticos
+        )
         scope.launch(Dispatchers.IO) {
             viewModel.carregarDadosDeJogo(context, activeModules)
-            withContext(Dispatchers.Main) {
-                onCriarNovo(
-                    optCartaSelvagem,
-                    optMaisPontosPericias,
-                    optSuperPoderes,
-                    optCompendioFantasia,
-                    optCompendioHorror,
-                    optCompendioSciFi,
-                    optCompendioPathfinder,
-                    optCompendioDeadlands,
-                    optCompendioCrystalHeart,
-                    optCompendioArteDaGuerra,
-                    optCompendioCidadeSolVapor,
-                    optCompendioWiseguys,
-                    optModoMonstro,
-                    optNasceUmHeroi,
-                    optEspecializacaoPer,
-                    optSemPontosPoder,
-                    optMultiplosIdiomas,
-                    optGrandesResponsabilidades,
-                    optRegraFama,
-                    optRegraRiqueza,
-                    optRegraCosaNostra,
-                    optRegraMechas,
-                    optRegraCiberneticos
-                )
-            }
         }
         viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
         viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands

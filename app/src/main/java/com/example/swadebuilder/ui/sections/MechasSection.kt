@@ -1,7 +1,10 @@
 package com.example.swadebuilder.ui.sections
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -24,6 +27,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalButton
@@ -36,20 +40,23 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.MechaCatalogWrapper
@@ -60,6 +67,7 @@ import com.example.swadebuilder.model.MechaWeaponCatalogWrapper
 import com.example.swadebuilder.model.MechaWeaponItem
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
@@ -96,6 +104,14 @@ fun MechasSection(
     }
 
     var showCreateCustomDialog by remember { mutableStateOf(false) }
+    var highlightedMechaId by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(highlightedMechaId) {
+        if (highlightedMechaId != null) {
+            delay(450)
+            highlightedMechaId = null
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -136,13 +152,22 @@ fun MechasSection(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         mechaCatalog.forEach { mecha ->
+                            val isHighlighted = highlightedMechaId == mecha.id
                             OutlinedButton(
                                 onClick = {
+                                    highlightedMechaId = mecha.id
                                     state.mechasSelecionados.add(
                                         mecha.copy(id = "${mecha.id}_${System.currentTimeMillis()}")
                                     )
                                     onUserFeedback()
-                                }
+                                },
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    containerColor = if (isHighlighted) MaterialTheme.colorScheme.primaryContainer
+                                    else MaterialTheme.colorScheme.surfaceContainerLow,
+                                    contentColor = if (isHighlighted) MaterialTheme.colorScheme.onPrimaryContainer
+                                    else MaterialTheme.colorScheme.primary
+                                ),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.SmartToy,
@@ -154,7 +179,8 @@ fun MechasSection(
                         }
 
                         OutlinedButton(
-                            onClick = { showCreateCustomDialog = true }
+                            onClick = { showCreateCustomDialog = true },
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
@@ -350,6 +376,32 @@ private fun CreateCustomMechaDialog(
     )
 }
 
+@Composable
+private fun CircleToggle(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .size(17.dp)
+            .clip(CircleShape)
+            .background(if (checked) MaterialTheme.colorScheme.primary else Color.Transparent)
+            .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            .clickable { onCheckedChange(!checked) },
+        contentAlignment = Alignment.Center
+    ) {
+        if (checked) {
+            Box(
+                modifier = Modifier
+                    .size(6.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.onPrimary)
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun MechaCardItem(
@@ -436,14 +488,16 @@ private fun MechaCardItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Modificadores & Qualidades", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                    OutlinedButton(
-                        onClick = { showModDialog = true },
-                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Adicionar Mod", fontSize = 12.sp)
-                    }
+                    Text(
+                        text = "+",
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable { showModDialog = true }
+                            .padding(horizontal = 12.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
 
                 FlowRow(
@@ -476,12 +530,11 @@ private fun MechaCardItem(
                     containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                 )
             ) {
-                Row(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Blindagem Extra: ", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
@@ -519,11 +572,12 @@ private fun MechaCardItem(
                     }
 
                     Row(
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text("Propulsores", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
-                        Switch(
+                        CircleToggle(
                             checked = mecha.customizacoes.propulsores,
                             onCheckedChange = { prop ->
                                 onUpdateMecha(
@@ -682,7 +736,7 @@ private fun MechaCardItem(
                                         .fillMaxWidth()
                                         .padding(start = 6.dp),
                                     colors = CardDefaults.outlinedCardColors(
-                                        containerColor = if (isNeg) MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.15f)
+                                        containerColor = if (isNeg) MaterialTheme.colorScheme.error.copy(alpha = 0.06f)
                                         else MaterialTheme.colorScheme.surfaceContainerLow
                                     )
                                 ) {
@@ -720,20 +774,44 @@ private fun MechaCardItem(
                                             )
                                         }
                                         Spacer(Modifier.width(8.dp))
-                                        OutlinedButton(
-                                            onClick = {
-                                                if (!isMaxed) {
-                                                    onUpdateMecha(
-                                                        mecha.copy(
-                                                            mods_instalados = mecha.mods_instalados + mod
-                                                        )
-                                                    )
-                                                }
-                                            },
-                                            enabled = !isMaxed,
-                                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.spacedBy(4.dp)
                                         ) {
-                                            Text(if (isMaxed) "Máx" else "+ Add", fontSize = 11.sp)
+                                            Text(
+                                                text = if (isMaxed) "Máx" else "+",
+                                                modifier = Modifier
+                                                    .clip(CircleShape)
+                                                    .clickable(enabled = !isMaxed) {
+                                                        onUpdateMecha(
+                                                            mecha.copy(
+                                                                mods_instalados = mecha.mods_instalados + mod
+                                                            )
+                                                        )
+                                                    }
+                                                    .padding(horizontal = 10.dp, vertical = 2.dp),
+                                                style = MaterialTheme.typography.titleMedium,
+                                                color = if (isMaxed) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            if (currentUses > 0) {
+                                                Text(
+                                                    text = "-",
+                                                    modifier = Modifier
+                                                        .clip(CircleShape)
+                                                        .clickable {
+                                                            onUpdateMecha(
+                                                                mecha.copy(
+                                                                    mods_instalados = mecha.mods_instalados - mod
+                                                                )
+                                                            )
+                                                        }
+                                                        .padding(horizontal = 10.dp, vertical = 0.dp),
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    color = MaterialTheme.colorScheme.error,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                            }
                                         }
                                     }
                                 }
