@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FilledTonalButton
@@ -42,6 +43,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -65,6 +67,7 @@ import com.example.swadebuilder.model.MechaWeaponCatalogWrapper
 import com.example.swadebuilder.model.MechaWeaponItem
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
@@ -101,6 +104,14 @@ fun MechasSection(
     }
 
     var showCreateCustomDialog by remember { mutableStateOf(false) }
+    var highlightedMechaId by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(highlightedMechaId) {
+        if (highlightedMechaId != null) {
+            delay(450)
+            highlightedMechaId = null
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -141,33 +152,43 @@ fun MechasSection(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         mechaCatalog.forEach { mecha ->
-                            Text(
-                                text = "+ ${mecha.nome}",
-                                modifier = Modifier
-                                    .clip(MaterialTheme.shapes.small)
-                                    .clickable {
-                                        state.mechasSelecionados.add(
-                                            mecha.copy(id = "${mecha.id}_${System.currentTimeMillis()}")
-                                        )
-                                        onUserFeedback()
-                                    }
-                                    .padding(horizontal = 6.dp, vertical = 4.dp),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.SemiBold
-                            )
+                            val isHighlighted = highlightedMechaId == mecha.id
+                            OutlinedButton(
+                                onClick = {
+                                    highlightedMechaId = mecha.id
+                                    state.mechasSelecionados.add(
+                                        mecha.copy(id = "${mecha.id}_${System.currentTimeMillis()}")
+                                    )
+                                    onUserFeedback()
+                                },
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    containerColor = if (isHighlighted) MaterialTheme.colorScheme.primaryContainer
+                                    else MaterialTheme.colorScheme.surfaceContainerLow,
+                                    contentColor = if (isHighlighted) MaterialTheme.colorScheme.onPrimaryContainer
+                                    else MaterialTheme.colorScheme.primary
+                                ),
+                                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.SmartToy,
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(end = 6.dp)
+                                )
+                                Text(mecha.nome)
+                            }
                         }
 
-                        Text(
-                            text = "+ Criar Mecha Personalizado",
-                            modifier = Modifier
-                                .clip(MaterialTheme.shapes.small)
-                                .clickable { showCreateCustomDialog = true }
-                                .padding(horizontal = 6.dp, vertical = 4.dp),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        OutlinedButton(
+                            onClick = { showCreateCustomDialog = true },
+                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                modifier = Modifier.padding(end = 6.dp)
+                            )
+                            Text("Criar Mecha Personalizado")
+                        }
                     }
                 }
             }
