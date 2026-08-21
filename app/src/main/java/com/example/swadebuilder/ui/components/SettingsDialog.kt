@@ -53,6 +53,7 @@ import androidx.compose.material3.OutlinedButton
 @Composable
 fun SettingsDialog(
     state: CriadorState,
+    isHomeScreen: Boolean = false,
     isCreationPhase: Boolean = false,
     onDismiss: () -> Unit,
     persistPrefs: () -> Unit,
@@ -122,24 +123,26 @@ fun SettingsDialog(
                             )
                         }
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text("Não solicitar escolha de regras", style = MaterialTheme.typography.bodyMedium)
-                                Text("Direto para criação com regras padrão.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        if (isHomeScreen) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text("Não solicitar escolha de regras", style = MaterialTheme.typography.bodyMedium)
+                                    Text("Direto para criação com regras padrão.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                Switch(
+                                    checked = state.pularSelecaoRegras,
+                                    onCheckedChange = {
+                                        state.pularSelecaoRegras = it
+                                        persistPrefs()
+                                        onResetRulesToDefaults?.invoke()
+                                    },
+                                    modifier = Modifier.scale(0.8f)
+                                )
                             }
-                            Switch(
-                                checked = state.pularSelecaoRegras,
-                                onCheckedChange = {
-                                    state.pularSelecaoRegras = it
-                                    persistPrefs()
-                                    onResetRulesToDefaults?.invoke()
-                                },
-                                modifier = Modifier.scale(0.8f)
-                            )
                         }
 
                         // NPC Mode Toggle (Only during creation phase and if not already NPC)
