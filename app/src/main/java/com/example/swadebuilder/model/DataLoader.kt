@@ -251,13 +251,7 @@ object DataLoader {
         val localMapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val skillModulesToLoad = if (shouldReplaceBasico) {
-            skillModules.filter { it.fileName != "basico_pericias.json" }
-        } else {
-            skillModules
-        }
-
-        val todasPericiasJson = skillModulesToLoad.filter {
+        val todasPericiasJson = skillModules.filter {
             val key = it.originOverride?.uppercase() ?: "BASICO"
             key in keys
         }.flatMap { module ->
@@ -309,11 +303,7 @@ object DataLoader {
         }
 
         // 7. Vantagens
-        val advantagesToLoad = if (shouldReplaceBasico) {
-            advantageModules.filter { it.fileName != "basico_vantagens.json" }
-        } else {
-            advantageModules
-        }
+        val advantagesToLoad = advantageModules
 
         val todasVantagens = assets.loadAndMerge<Vantagem>(advantagesToLoad, keys) { item, override ->
              if (override != null) item.copy(origem = override) else item
@@ -371,22 +361,14 @@ object DataLoader {
 
         val localListaTropos = adgTropos + chTropos
 
-        val complicationModulesToLoad = if (shouldReplaceBasico) {
-            complicationModules.filter { it.fileName != "basico_complicacoes.json" }
-        } else {
-            complicationModules
-        }
+        val complicationModulesToLoad = complicationModules
 
         val localListaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
 
         // 9. Ancestralidades
-        val ancestriesToLoad = if (shouldReplaceBasico) {
-            ancestryModules.filter { it.fileName != "basico_ancestralidades.json" }
-        } else {
-            ancestryModules
-        }
+        val ancestriesToLoad = ancestryModules
         val localListaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestriesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
@@ -424,11 +406,7 @@ object DataLoader {
         // Kept for consistency if needed later
 
         // 13. Poderes
-        val powerModulesToLoad = if (shouldReplaceBasico) {
-            powerModules.filter { it.fileName != "basico_poderes.json" }
-        } else {
-            powerModules
-        }
+        val powerModulesToLoad = powerModules
         val todosPoderes = assets.loadAndMerge<Poder>(powerModulesToLoad, keys) { item, override ->
             if (override != null) item.copy(origem = override) else item
         }
