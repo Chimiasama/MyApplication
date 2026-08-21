@@ -47,10 +47,13 @@ import com.example.swadebuilder.TabStyle
 import com.example.swadebuilder.ui.theme.AppTheme
 import kotlin.math.roundToInt
 
+import androidx.compose.material3.OutlinedButton
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
     state: CriadorState,
+    isHomeScreen: Boolean = false,
     isCreationPhase: Boolean = false,
     onDismiss: () -> Unit,
     persistPrefs: () -> Unit,
@@ -59,6 +62,7 @@ fun SettingsDialog(
     onThemeSelected: (AppTheme) -> Unit
 ) {
     var showNpcWarning by remember { mutableStateOf(false) }
+    var showThemeDialog by remember { mutableStateOf(false) }
 
     val themeNames = remember {
         mapOf(
@@ -108,21 +112,6 @@ fun SettingsDialog(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text("Descrições na tela inicial", style = MaterialTheme.typography.bodyMedium)
-                            Switch(
-                                checked = state.mostrarDescricaoHome,
-                                onCheckedChange = {
-                                    state.mostrarDescricaoHome = it
-                                    persistPrefs()
-                                },
-                                modifier = Modifier.scale(0.8f)
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
                             Text("Mensagens do Sistema", style = MaterialTheme.typography.bodyMedium)
                             Switch(
                                 checked = state.showSystemMessages,
@@ -134,60 +123,22 @@ fun SettingsDialog(
                             )
                         }
 
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text("Não solicitar escolha de regras", style = MaterialTheme.typography.bodyMedium)
-                                Text("Direto para criação com regras padrão.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                            Switch(
-                                checked = state.pularSelecaoRegras,
-                                onCheckedChange = {
-                                    state.pularSelecaoRegras = it
-                                    persistPrefs()
-                                    onResetRulesToDefaults?.invoke()
-                                },
-                                modifier = Modifier.scale(0.8f)
-                            )
-                        }
-
-                        if (state.compendioSciFiAtivo) {
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                        if (isHomeScreen) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column(modifier = Modifier.weight(1f)) {
-                                    Text("Habilitar Regras de Mechas", style = MaterialTheme.typography.bodyMedium)
-                                    Text("Aba de escolha e customização de Mechas.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    Text("Não solicitar escolha de regras", style = MaterialTheme.typography.bodyMedium)
+                                    Text("Direto para criação com regras padrão.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 }
                                 Switch(
-                                    checked = state.compendioScifiMechasAtivo,
+                                    checked = state.pularSelecaoRegras,
                                     onCheckedChange = {
-                                        state.compendioScifiMechasAtivo = it
+                                        state.pularSelecaoRegras = it
                                         persistPrefs()
-                                    },
-                                    modifier = Modifier.scale(0.8f)
-                                )
-                            }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text("Habilitar Regras de Cibernéticos", style = MaterialTheme.typography.bodyMedium)
-                                    Text("Aba de peças e próteses cibernéticas.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                }
-                                Switch(
-                                    checked = state.compendioScifiCiberneticosAtivo,
-                                    onCheckedChange = {
-                                        state.compendioScifiCiberneticosAtivo = it
-                                        persistPrefs()
+                                        onResetRulesToDefaults?.invoke()
                                     },
                                     modifier = Modifier.scale(0.8f)
                                 )
@@ -233,21 +184,6 @@ fun SettingsDialog(
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Ícone do livro na ficha", style = MaterialTheme.typography.bodyMedium)
-                            Switch(
-                                checked = state.mostrarIdentificadorLivro,
-                                onCheckedChange = {
-                                    state.mostrarIdentificadorLivro = it
-                                    persistPrefs()
-                                },
-                                modifier = Modifier.scale(0.8f)
-                            )
-                        }
 
                         Text("Estilo das Abas / Opções", style = MaterialTheme.typography.bodyMedium)
 
@@ -273,23 +209,26 @@ fun SettingsDialog(
 
                         Spacer(Modifier.height(4.dp))
 
-                        // Theme Selection (Wheel Picker)
-                        Text("Tema do App", style = MaterialTheme.typography.bodyMedium)
-                        Spacer(Modifier.height(8.dp))
-
-                        WheelPicker(
-                            items = sortedThemes,
-                            selectedItem = state.appTheme,
-                            onItemSelected = { theme ->
-                                if (state.appTheme != theme) {
-                                    onThemeSelected(theme)
-                                    persistPrefs()
-                                    feedbackController.play(state.hapticStrength, state.soundVolume)
-                                }
-                            },
-                            itemLabel = { themeNames[it] ?: it.name },
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                        // Theme Selection Trigger Button
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Tema do App", style = MaterialTheme.typography.bodyMedium)
+                                Text(
+                                    text = themeNames[state.appTheme] ?: state.appTheme.name,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                            OutlinedButton(
+                                onClick = { showThemeDialog = true }
+                            ) {
+                                Text("Alterar Tema")
+                            }
+                        }
                     }
                 }
 
@@ -435,6 +374,51 @@ fun SettingsDialog(
             },
             dismissButton = {
                 TextButton(onClick = { showNpcWarning = false }) { Text("Cancelar") }
+            }
+        )
+    }
+
+    if (showThemeDialog) {
+        AlertDialog(
+            onDismissRequest = { showThemeDialog = false },
+            title = { Text("Selecionar Tema do App", style = MaterialTheme.typography.titleLarge) },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    sortedThemes.forEach { theme ->
+                        val isSelected = state.appTheme == theme
+                        val themeLabel = themeNames[theme] ?: theme.name
+                        if (isSelected) {
+                            TextButton(
+                                onClick = { showThemeDialog = false },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("✓ $themeLabel", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                            }
+                        } else {
+                            OutlinedButton(
+                                onClick = {
+                                    onThemeSelected(theme)
+                                    persistPrefs()
+                                    feedbackController.play(state.hapticStrength, state.soundVolume)
+                                    showThemeDialog = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(themeLabel)
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showThemeDialog = false }) {
+                    Text("Cancelar")
+                }
             }
         )
     }

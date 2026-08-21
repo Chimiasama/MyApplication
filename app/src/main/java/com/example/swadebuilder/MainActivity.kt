@@ -346,6 +346,7 @@ class MainActivity : ComponentActivity() {
                 SWADEbuilderTheme(appTheme = state.appTheme) {
                     SettingsDialog(
                         state = state,
+                        isHomeScreen = mostrouTelaInicial,
                         isCreationPhase = (!mostrouTelaInicial && !state.modoProgressaoAtivo && !state.isNpcExibicao),
                         onDismiss = { showSettingsDialog = false },
                         persistPrefs = { persistPrefs() },

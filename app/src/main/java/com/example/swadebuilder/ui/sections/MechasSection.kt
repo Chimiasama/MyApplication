@@ -33,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
@@ -435,11 +436,11 @@ private fun MechaCardItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Modificadores & Qualidades", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                    FilledTonalButton(
+                    OutlinedButton(
                         onClick = { showModDialog = true },
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
                         Spacer(Modifier.width(4.dp))
                         Text("Adicionar Mod", fontSize = 12.sp)
                     }
@@ -469,58 +470,70 @@ private fun MechaCardItem(
             }
 
             // Customizações Rápidas
-            Row(
+            OutlinedCard(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                colors = CardDefaults.outlinedCardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                )
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Blindagem Extra: ", style = MaterialTheme.typography.bodyMedium)
-                    FilledTonalIconButton(
-                        onClick = {
-                            val newBlindagem = (mecha.customizacoes.blindagem_extra - 1).coerceAtLeast(0)
-                            onUpdateMecha(
-                                mecha.copy(
-                                    customizacoes = mecha.customizacoes.copy(blindagem_extra = newBlindagem)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Blindagem Extra: ", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                        FilledTonalIconButton(
+                            onClick = {
+                                val newBlindagem = (mecha.customizacoes.blindagem_extra - 1).coerceAtLeast(0)
+                                onUpdateMecha(
+                                    mecha.copy(
+                                        customizacoes = mecha.customizacoes.copy(blindagem_extra = newBlindagem)
+                                    )
                                 )
-                            )
-                        },
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.size(16.dp))
-                    }
-                    Text(
-                        text = " +${mecha.customizacoes.blindagem_extra} ",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                    FilledTonalIconButton(
-                        onClick = {
-                            val newBlindagem = mecha.customizacoes.blindagem_extra + 1
-                            onUpdateMecha(
-                                mecha.copy(
-                                    customizacoes = mecha.customizacoes.copy(blindagem_extra = newBlindagem)
-                                )
-                            )
-                        },
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.size(16.dp))
-                    }
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Propulsores: ", style = MaterialTheme.typography.bodyMedium)
-                    Switch(
-                        checked = mecha.customizacoes.propulsores,
-                        onCheckedChange = { prop ->
-                            onUpdateMecha(
-                                mecha.copy(
-                                    customizacoes = mecha.customizacoes.copy(propulsores = prop)
-                                )
-                            )
+                            },
+                            modifier = Modifier.size(28.dp)
+                        ) {
+                            Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.size(14.dp))
                         }
-                    )
+                        Text(
+                            text = " +${mecha.customizacoes.blindagem_extra} ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        FilledTonalIconButton(
+                            onClick = {
+                                val newBlindagem = mecha.customizacoes.blindagem_extra + 1
+                                onUpdateMecha(
+                                    mecha.copy(
+                                        customizacoes = mecha.customizacoes.copy(blindagem_extra = newBlindagem)
+                                    )
+                                )
+                            },
+                            modifier = Modifier.size(28.dp)
+                        ) {
+                            Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.size(14.dp))
+                        }
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text("Propulsores", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                        Switch(
+                            checked = mecha.customizacoes.propulsores,
+                            onCheckedChange = { prop ->
+                                onUpdateMecha(
+                                    mecha.copy(
+                                        customizacoes = mecha.customizacoes.copy(propulsores = prop)
+                                    )
+                                )
+                            }
+                        )
+                    }
                 }
             }
 
@@ -532,11 +545,11 @@ private fun MechaCardItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text("Armas Equipadas", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-                    FilledTonalButton(
+                    OutlinedButton(
                         onClick = { showWeaponCatalogDialog = true },
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
                         Spacer(Modifier.width(4.dp))
                         Text("Catálogo de Armas", fontSize = 12.sp)
                     }
@@ -614,7 +627,13 @@ private fun MechaCardItem(
             confirmButton = {
                 TextButton(onClick = { showModDialog = false }) { Text("Fechar") }
             },
-            title = { Text("Catálogo de Modificadores de Mecha") },
+            title = {
+                Text(
+                    text = "Catálogo de Modificadores de Mecha",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            },
             text = {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     val grouped = modCatalog.groupBy { it.categoria }
@@ -622,18 +641,18 @@ private fun MechaCardItem(
                         val isExpanded = expandedCategories[catName] ?: false
 
                         item {
-                            ElevatedCard(
+                            OutlinedCard(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .clickable { expandedCategories[catName] = !isExpanded },
-                                colors = CardDefaults.elevatedCardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+                                colors = CardDefaults.outlinedCardColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                                 )
                             ) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(12.dp),
+                                        .padding(horizontal = 12.dp, vertical = 10.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -645,7 +664,8 @@ private fun MechaCardItem(
                                     )
                                     Icon(
                                         imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                                        contentDescription = if (isExpanded) "Recolher" else "Expandir"
+                                        contentDescription = if (isExpanded) "Recolher" else "Expandir",
+                                        tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
                             }
@@ -657,13 +677,13 @@ private fun MechaCardItem(
                                 val isMaxed = currentUses >= mod.max_uses
                                 val isNeg = mod.mods_cost < 0
 
-                                ElevatedCard(
+                                OutlinedCard(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .padding(start = 8.dp),
-                                    colors = CardDefaults.elevatedCardColors(
-                                        containerColor = if (isNeg) MaterialTheme.colorScheme.secondaryContainer
-                                        else MaterialTheme.colorScheme.surfaceContainer
+                                        .padding(start = 6.dp),
+                                    colors = CardDefaults.outlinedCardColors(
+                                        containerColor = if (isNeg) MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.15f)
+                                        else MaterialTheme.colorScheme.surfaceContainerLow
                                     )
                                 ) {
                                     Row(
@@ -673,19 +693,34 @@ private fun MechaCardItem(
                                         horizontalArrangement = Arrangement.SpaceBetween,
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        Column(modifier = Modifier.weight(1f)) {
+                                        Column(
+                                            modifier = Modifier.weight(1f),
+                                            verticalArrangement = Arrangement.spacedBy(2.dp)
+                                        ) {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                            ) {
+                                                Text(
+                                                    text = mod.nome,
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                                Text(
+                                                    text = if (isNeg) "${mod.mods_cost} MODs" else "+${mod.mods_cost} MODs",
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = if (isNeg) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                                                    fontWeight = FontWeight.SemiBold
+                                                )
+                                            }
                                             Text(
-                                                text = mod.nome,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                fontWeight = FontWeight.Bold
-                                            )
-                                            Text(
-                                                text = "MODs: ${if (isNeg) "${mod.mods_cost} (Devolve slots)" else "+${mod.mods_cost}"} | ${mod.descricao}",
+                                                text = mod.descricao,
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
                                         }
-                                        FilledTonalButton(
+                                        Spacer(Modifier.width(8.dp))
+                                        OutlinedButton(
                                             onClick = {
                                                 if (!isMaxed) {
                                                     onUpdateMecha(
@@ -696,9 +731,9 @@ private fun MechaCardItem(
                                                 }
                                             },
                                             enabled = !isMaxed,
-                                            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                                         ) {
-                                            Text(if (isMaxed) "Máx" else "+", fontSize = 11.sp)
+                                            Text(if (isMaxed) "Máx" else "+ Add", fontSize = 11.sp)
                                         }
                                     }
                                 }
@@ -717,14 +752,20 @@ private fun MechaCardItem(
             confirmButton = {
                 TextButton(onClick = { showWeaponCatalogDialog = false }) { Text("Fechar") }
             },
-            title = { Text("Armas de Mecha e Veículos") },
+            title = {
+                Text(
+                    text = "Armas de Mecha e Veículos",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
+            },
             text = {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(weaponCatalog) { w ->
-                        ElevatedCard(
+                        OutlinedCard(
                             modifier = Modifier.fillMaxWidth(),
-                            colors = CardDefaults.elevatedCardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceContainer
+                            colors = CardDefaults.outlinedCardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                             )
                         ) {
                             Row(
@@ -734,19 +775,34 @@ private fun MechaCardItem(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column(modifier = Modifier.weight(1f)) {
+                                Column(
+                                    modifier = Modifier.weight(1f),
+                                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    ) {
+                                        Text(
+                                            text = w.nome,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            text = "${w.mods_cost} MODs",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
                                     Text(
-                                        text = w.nome,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = "Custo: ${w.mods_cost} MODs | ${w.descricao}",
+                                        text = w.descricao,
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
-                                FilledTonalButton(
+                                Spacer(Modifier.width(8.dp))
+                                OutlinedButton(
                                     onClick = {
                                         onUpdateMecha(
                                             mecha.copy(
@@ -754,7 +810,7 @@ private fun MechaCardItem(
                                             )
                                         )
                                     },
-                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                                 ) {
                                     Text("Equipar", fontSize = 11.sp)
                                 }

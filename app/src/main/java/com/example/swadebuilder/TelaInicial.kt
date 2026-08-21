@@ -496,7 +496,7 @@ fun TelaInicial(
                     isSelected = module.isSelected,
                     enabled = module.enabled,
                     onToggle = module.onToggle,
-                    showDescription = viewModel.state.mostrarDescricaoHome
+                    showDescription = true
                 )
             }
 
@@ -512,7 +512,7 @@ fun TelaInicial(
                         isSelected = module.isSelected,
                         enabled = module.enabled,
                         onToggle = module.onToggle,
-                        showDescription = viewModel.state.mostrarDescricaoHome
+                        showDescription = true
                     )
                 }
             }
