@@ -328,10 +328,18 @@ fun ComplicacoesSection(
                                     )
                                 }
                                 items(listOf("Todos", "Menor", "Maior")) { type ->
+                                    val count = remember(uniqueComplications, type) {
+                                        when (type) {
+                                            "Todos" -> uniqueComplications.size
+                                            "Menor" -> uniqueComplications.count { it.severity.lowercase().contains("menor") }
+                                            "Maior" -> uniqueComplications.count { it.severity.lowercase().contains("maior") }
+                                            else -> uniqueComplications.size
+                                        }
+                                    }
                                     FilterChip(
                                         selected = selectedSeverity == type,
                                         onClick = { selectedSeverity = type },
-                                        label = { Text(type) }
+                                        label = { Text("$type ($count)") }
                                     )
                                 }
                             }

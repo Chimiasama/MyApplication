@@ -400,17 +400,21 @@ fun PoderesSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {
+                    val count = allPoderes.size
                     FilterChip(
                         selected = selectedRank == "Todos",
                         onClick = { selectedRank = "Todos" },
-                        label = { Text("Todos") }
+                        label = { Text("Todos ($count)") }
                     )
                 }
                 items(listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendario")) { rank ->
+                    val count = remember(allPoderes, rank) {
+                        allPoderes.count { it.estagio.semAcentos().equals(rank.semAcentos(), ignoreCase = true) }
+                    }
                     FilterChip(
                         selected = selectedRank == rank,
                         onClick = { selectedRank = rank },
-                        label = { Text(rank) }
+                        label = { Text("$rank ($count)") }
                     )
                 }
             }
