@@ -12,83 +12,83 @@ class ScifiAncestryVariantSyncTest {
 
     private fun injectMockAncestries(state: CriadorState) {
         state.listaAncestralidadesJson = listOf(
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "ANÕES", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ciber")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "CENTAUX", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Gazela")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "AQUARIANOS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Semi-aquáticos")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "DRAKENS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Dragão")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "ELEMENTAIS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Ar, Fogo ou Água")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "FERAIS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Menor")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "MÍMICOS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Resistente")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "AVIANOS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ave de rapina")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "Umvee (Filhos da Lua)", origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(), pericias = mapOf("Ocultismo" to 0),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = listOf(
-                    com.example.swadebuilder.model.RacialAbility("Dons da Natureza", "", id = "DONS_DA_NATUREZA"),
-                    com.example.swadebuilder.model.RacialAbility("Naturalmente Sobrenatural", "", id = "NATURALMENTE_SOBRENATURAL"),
-                    com.example.swadebuilder.model.RacialAbility("Forasteiro", "", id = "FORASTEIRO", category = "racial_hindrance", severity = "Menor")
+                    RacialAbility("Dons da Natureza", "", id = "DONS_DA_NATUREZA"),
+                    RacialAbility("Naturalmente Sobrenatural", "", id = "NATURALMENTE_SOBRENATURAL"),
+                    RacialAbility("Forasteiro", "", id = "FORASTEIRO", category = "racial_hindrance", severity = "Menor")
                 ),
                 opcoes = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso")
             ),
-            com.example.swadebuilder.model.RacialModifier(
+            RacialModifier(
                 nome = "Feral", origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(), pericias = mapOf("Sobrevivência" to 2),
                 vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = listOf(
-                    com.example.swadebuilder.model.RacialAbility("Integrado à Natureza", "", id = "INTEGRADO_A_NATUREZA"),
-                    com.example.swadebuilder.model.RacialAbility("Insanidade", "", id = "INSANIDADE"),
-                    com.example.swadebuilder.model.RacialAbility("Dons da Natureza", "", id = "DONS_DA_NATUREZA"),
-                    com.example.swadebuilder.model.RacialAbility("Primitivo", "", id = "PRIMITIVO"),
-                    com.example.swadebuilder.model.RacialAbility("Mente Primitiva", "", id = "MENTE_PRIMITIVA"),
-                    com.example.swadebuilder.model.RacialAbility("Limitações Técnicas", "", id = "LIMITACOES_TECNICAS"),
-                    com.example.swadebuilder.model.RacialAbility("Forasteiro", "", id = "FORASTEIRO", category = "racial_hindrance", severity = "Menor")
+                    RacialAbility("Integrado à Natureza", "", id = "INTEGRADO_A_NATUREZA"),
+                    RacialAbility("Insanidade", "", id = "INSANIDADE"),
+                    RacialAbility("Dons da Natureza", "", id = "DONS_DA_NATUREZA"),
+                    RacialAbility("Primitivo", "", id = "PRIMITIVO"),
+                    RacialAbility("Mente Primitiva", "", id = "MENTE_PRIMITIVA"),
+                    RacialAbility("Limitações Técnicas", "", id = "LIMITACOES_TECNICAS"),
+                    RacialAbility("Forasteiro", "", id = "FORASTEIRO", category = "racial_hindrance", severity = "Menor")
                 ),
                 opcoes = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso")
             )
         )
         state.updateGameData(
-            com.example.swadebuilder.model.GameDataSnapshot(
+            GameDataSnapshot(
                 listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
                 listaAncestralidadesJson = state.listaAncestralidadesJson,
                 listaPericias = emptyList(),

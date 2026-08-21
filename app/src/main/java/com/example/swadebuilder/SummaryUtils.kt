@@ -80,8 +80,7 @@ fun buildSummaryLines(
     val ancestralidadeNomeObj = listaAncestralidades
         .filter { it.nome.keyify() == personagem.ancestralidade }
         .filter { item ->
-            val origin = item.origem.uppercase()
-            when (origin) {
+            when (val origin = item.origem.uppercase()) {
                 "FANTASIA" -> personagem.compendioFantasiaAtivo
                 "HORROR" -> personagem.compendioHorrorAtivo
                 "ARTE_DA_GUERRA" -> personagem.compendioArteDaGuerraAtivo

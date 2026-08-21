@@ -52,8 +52,7 @@ object SecurityHardening {
             if (File(path).exists()) return true
         }
         val tags = Build.TAGS
-        if (tags != null && tags.contains("test-keys")) return true
-        return false
+        return tags != null && tags.contains("test-keys")
     }
 
     private fun checkEmulator(): Boolean {

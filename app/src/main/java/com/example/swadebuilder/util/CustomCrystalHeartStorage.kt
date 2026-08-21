@@ -70,7 +70,7 @@ object CustomCrystalHeartStorage {
         }
     }
 
-    private fun sanitize(heart: CrystalHeart): CrystalHeart? {
+    private fun sanitize(heart: CrystalHeart): CrystalHeart {
         val safeName = SecurityUtils.sanitizeText(heart.nome)
             .trim()
             .take(MAX_NAME_LENGTH)

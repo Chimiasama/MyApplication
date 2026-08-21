@@ -362,11 +362,11 @@ class CriadorState {
      * This avoids re-running filters and variant application logic (which creates object copies)
      * every time a UI element needs to check racial traits (e.g. for complications, edges, attributes).
      */
-    val currentAncestryDef: com.example.swadebuilder.model.RacialModifier? by derivedStateOf {
+    val currentAncestryDef: RacialModifier? by derivedStateOf {
         getAncestralidadeDef(ancestralidade)
     }
 
-    fun getAncestralidadeDef(name: String): com.example.swadebuilder.model.RacialModifier? {
+    fun getAncestralidadeDef(name: String): RacialModifier? {
         val key = name.keyify()
         val baseNoSuffix = name.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "").keyify()
         val lookupKeys = linkedSetOf(key, baseNoSuffix).apply {
@@ -421,7 +421,7 @@ class CriadorState {
         return withVariant
     }
 
-    private fun applyAncestryVariantAdjustments(base: com.example.swadebuilder.model.RacialModifier, key: String): com.example.swadebuilder.model.RacialModifier {
+    private fun applyAncestryVariantAdjustments(base: RacialModifier, key: String): RacialModifier {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
             if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
                 val newHabilidades = base.habilidades.toMutableList()
@@ -894,7 +894,7 @@ class CriadorState {
         "MISTICO_FORCA_SOMBRIA_PF" to listOf("rajada", "ilusao", "conjurar_aliado", "teleporte")
     )
 
-    private fun getEffectiveKeyForMistico(vant: com.example.swadebuilder.model.Vantagem): String {
+    private fun getEffectiveKeyForMistico(vant: Vantagem): String {
         if (!vant.choice.isNullOrBlank()) {
             return "MISTICO_${vant.choice!!.normAAKey()}"
         }
@@ -1163,7 +1163,7 @@ class CriadorState {
     var portraitScaleType by mutableStateOf("CROP") // CROP, FIT
     var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM
 
-    var coracaoCrystalSelecionado by mutableStateOf<com.example.swadebuilder.model.CrystalHeart?>(null)
+    var coracaoCrystalSelecionado by mutableStateOf<CrystalHeart?>(null)
 
     val comprasPpPorEstagio = mutableStateMapOf<String, Int>().apply {
         listaDeEstagios.forEach { this[it.nome] = 0 }
@@ -1319,7 +1319,7 @@ class CriadorState {
             val itemProto = findItem(t)
             if (itemProto != null) {
                 val newItem = itemProto.copy(
-                    custo = kotlinx.serialization.json.JsonPrimitive(0),
+                    custo = JsonPrimitive(0),
                     origemGrant = "CAVALEIRO"
                 )
                 equipamentosComprados.add(newItem)
@@ -1332,8 +1332,6 @@ class CriadorState {
         val mods = ModifierEngine.sum(this, ModifierTarget.PACE)
         return (base + mods).coerceAtLeast(0)
     }
-
-    fun totalTensaoEquipamentos(): Int = totalTensaoCibernetica()
 
     fun totalTensaoCibernetica(): Int =
         ciberneticosInstalados.sumOf { it.strain_custo } + equipamentosComprados.sumOf { it.tensao ?: 0 }
@@ -2453,7 +2451,7 @@ class CriadorState {
             // Unify duplicates by Key, choosing the most relevant source
             val unifiedList = filteredByOrigin.groupBy { it.nome.keyify() }
                 .mapNotNull { (_, group) ->
-                    group.maxByOrNull { CriadorState.getOriginPriority(it.origem) }
+                    group.maxByOrNull { getOriginPriority(it.origem) }
                 }
 
             if (compendioPathfinderAtivo) {
@@ -3250,7 +3248,7 @@ class CriadorState {
 
         while (dinheiro < amount && equipamentosComprados.isNotEmpty()) {
             val eq = equipamentosComprados.removeAt(equipamentosComprados.lastIndex)
-            val custo = (eq.custo as? kotlinx.serialization.json.JsonPrimitive)
+            val custo = (eq.custo as? JsonPrimitive)
                 ?.content
                 ?.toIntOrNull()
                 ?: 0
@@ -3742,7 +3740,7 @@ class CriadorState {
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
-    private fun effectiveVantagensGratis(rm: com.example.swadebuilder.model.RacialModifier): List<String> {
+    private fun effectiveVantagensGratis(rm: RacialModifier): List<String> {
         val fromList = rm.vantagensGratis
         val fromHabilidades = rm.habilidades
             .filter { it.category == "racial_edge" }
@@ -3750,7 +3748,7 @@ class CriadorState {
         return fromList + fromHabilidades
     }
 
-    private fun effectiveDesvantagens(rm: com.example.swadebuilder.model.RacialModifier): List<String> {
+    private fun effectiveDesvantagens(rm: RacialModifier): List<String> {
         val fromList = rm.desvantagens
         val fromHabilidades = rm.habilidades
             .filter { it.category == "racial_hindrance" }
@@ -4804,22 +4802,6 @@ class CriadorState {
         }
 
         return true
-    }
-
-    fun spendProgressAcrossStages(n: Int) {
-        var remaining = n
-        reachedStages().mapIndexed { idx, est -> idx to est }.forEach { (idx, est) ->
-            if (remaining == 0) return@forEach
-            val cap   = dynamicStageCaps[idx]
-            val spent = stageXpSpent.getValue(est.nome)
-            val avail = (cap - spent).coerceAtLeast(0)
-            val use   = avail.coerceAtMost(remaining)
-            if (use > 0) {
-                stageXpSpent[est.nome] = spent + use
-                remaining -= use
-            }
-        }
-        recomputeAvailableProgress()
     }
 
     fun spendProgressAtStage(stageName: String, n: Int) {

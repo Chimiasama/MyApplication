@@ -300,8 +300,8 @@ abstract class TextListBlock(private val title: String, private val items: List<
                            if (items.isEmpty()) return
                            val bPaint = TextPaint().apply { color = theme.textColor; textSize = 11f; typeface = theme.typefaceBody }
                            var cy = y
-                           items.forEach { it ->
-                                val sl = StaticLayout.Builder.obtain(it, 0, it.length, bPaint, width.toInt()).build()
+                           items.forEach {
+                               val sl = StaticLayout.Builder.obtain(it, 0, it.length, bPaint, width.toInt()).build()
                                 canvas.withTranslation(x, cy) {
                                     sl.draw(this)
                                 }

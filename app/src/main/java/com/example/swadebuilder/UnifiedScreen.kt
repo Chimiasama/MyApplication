@@ -1197,7 +1197,7 @@ private fun PoderesSection(
             icon = Icons.Default.FlashOn,
             showHeader = false
         ) {
-            com.example.swadebuilder.ui.sections.PoderesSection(
+            PoderesSection(
                 state = state,
                 arcanoInfoMap = arcanoInfoMap,
                 onShowMessage = onShowMessage

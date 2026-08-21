@@ -54,7 +54,7 @@ object CrystalHeartRules : GameRules {
     override fun startingResources(): StartingResources = StartingResources(dinheiro = 500)
     override fun defaultAncestralidade(): String = "As Ilhas"
     override fun mandatoryAdvantageIds(): Set<String> = setOf(AdvantageIds.AA_AGENTE_SYN)
-    override fun defaultCrystalHeartId(): String? = CrystalHeartIds.HEART_STARTER
+    override fun defaultCrystalHeartId(): String = CrystalHeartIds.HEART_STARTER
     override fun blocksArcaneBackgrounds(): Boolean = true
 }
 

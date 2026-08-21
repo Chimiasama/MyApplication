@@ -179,8 +179,8 @@ class CriadorStateKirinSignTest {
             )
         }
 
-        val convencao = com.example.swadebuilder.model.Pericia("Convenção", "ASTUCIA", true)
-        val conhecimento = com.example.swadebuilder.model.Pericia("Conhecimento Geral", "ASTUCIA", true)
+        val convencao = Pericia("Convenção", "ASTUCIA", true)
+        val conhecimento = Pericia("Conhecimento Geral", "ASTUCIA", true)
 
         assertEquals(13, state.periciaCapRaw(convencao))
         assertEquals(13, state.periciaCapRaw(conhecimento))
@@ -195,8 +195,8 @@ class CriadorStateKirinSignTest {
             kitsunemimiPericiaEscolhida = "Pesquisar"
         }
 
-        val pesquisar = com.example.swadebuilder.model.Pericia("Pesquisar", "ASTUCIA", false)
-        val intimidar = com.example.swadebuilder.model.Pericia("Intimidar", "ESPIRITO", false)
+        val pesquisar = Pericia("Pesquisar", "ASTUCIA", false)
+        val intimidar = Pericia("Intimidar", "ESPIRITO", false)
 
         assertEquals(4, state.periciaStartRaw(state.ancestralidade, pesquisar))
         assertEquals(0, state.periciaStartRaw(state.ancestralidade, intimidar))

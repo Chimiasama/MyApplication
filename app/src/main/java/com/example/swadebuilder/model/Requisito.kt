@@ -111,9 +111,7 @@ object RequisitoSerializer : KSerializer<Requisito> {
     override fun deserialize(decoder: Decoder): Requisito {
         val jsonDecoder = decoder as? JsonDecoder
             ?: throw SerializationException("RequisitoSerializer only supports JSON")
-        val element = jsonDecoder.decodeJsonElement()
-
-        return when (element) {
+        return when (val element = jsonDecoder.decodeJsonElement()) {
             is JsonObject -> jsonDecoder.json.decodeFromJsonElement(RequisitoRaw.serializer(), element).toDomain()
             is JsonPrimitive -> {
                 val raw = element.contentOrNull.orEmpty().trim()

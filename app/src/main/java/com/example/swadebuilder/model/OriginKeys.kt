@@ -22,8 +22,7 @@ fun canonicalOriginKey(raw: String?): String {
 }
 
 fun powerAssetOriginKey(raw: String?): String {
-    val canonical = canonicalOriginKey(raw)
-    return when (canonical) {
+    return when (val canonical = canonicalOriginKey(raw)) {
         "CIDADE_SOL_VAPOR" -> "SOL_VAPOR"
         else -> canonical
     }
