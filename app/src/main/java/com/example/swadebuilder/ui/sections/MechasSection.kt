@@ -715,7 +715,7 @@ private fun MechaCardItem(
                                         .fillMaxWidth()
                                         .padding(start = 6.dp),
                                     colors = CardDefaults.outlinedCardColors(
-                                        containerColor = if (isNeg) MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.32f)
+                                        containerColor = if (isNeg) MaterialTheme.colorScheme.error.copy(alpha = 0.06f)
                                         else MaterialTheme.colorScheme.surfaceContainerLow
                                     )
                                 ) {
