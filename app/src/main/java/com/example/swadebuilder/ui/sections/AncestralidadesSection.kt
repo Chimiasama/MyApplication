@@ -50,6 +50,8 @@ import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.canonicalOriginKey
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -180,27 +182,16 @@ fun AncestralidadesSection(
                 .replace("Pathfinder", pathfinderLabel)
         }
 
-        val activeOrigins = buildList {
-            if (!compendioFantasiaAtivo && !compendioHorrorAtivo && !compendioSciFiAtivo && !compendioPathfinderAtivo && !compendioCidadeSolVaporAtivo) add("BASICO")
-            if (compendioArteDaGuerraAtivo) add("ARTE_DA_GUERRA")
-            if (compendioFantasiaAtivo) add("FANTASIA")
-            if (compendioPathfinderAtivo) add("PATHFINDER")
-            if (compendioDeadlandsAtivo) add("DEADLANDS")
-            if (compendioCidadeSolVaporAtivo) add("CIDADE_SOL_VAPOR")
-            if (compendioWiseguysAtivo) add("WISEGUYS")
-            if (compendioHorrorAtivo) add("HORROR")
-            if (compendioSciFiAtivo) add("FC")
-            if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
-        }
+        val activeOrigins = state.getActiveOrigins()
 
         val allowedOrigins = if (activeOrigins.isNotEmpty()) {
-            activeOrigins.toSet()
+            activeOrigins
         } else {
             setOf("BASICO")
         }
 
         val filtered = all.filter {
-            val origin = it.origem?.uppercase() ?: "BASICO"
+            val origin = canonicalOriginKey(it.origem)
             val key = it.nome.keyify()
 
             // Cidade do Sol a Vapor (jogadores): Humanos, Demônios e Meio-Demônios.
@@ -232,7 +223,7 @@ fun AncestralidadesSection(
                 if (duplicates.size == 1) return@map duplicates.first()
 
                 fun priority(origin: String?): Int {
-                    val o = origin?.uppercase() ?: "BASICO"
+                    val o = canonicalOriginKey(origin)
                     return when {
                         o == "HORROR" -> 1000
                         o == "FANTASIA" -> 900
@@ -241,21 +232,21 @@ fun AncestralidadesSection(
                         o == "WISEGUYS" -> 800
                         o == "CIDADE_SOL_VAPOR" -> 800
                         o.contains("TRILHADOR") || o.contains("PATHFINDER") -> 800
-                        o == "FC" || o == "SCIFI" -> 800
+                        o == "FC" || o == "SCIFI" || o == "SCI_FI" -> 800
                         o == "CRYSTAL_HEART" -> 800
                         o == "BASICO" -> 0
                         else -> 100
                     }
                 }
-                duplicates.maxBy { priority(it.origem) }
-            }
+            duplicates.maxBy { priority(it.origem) }
+        }
 
         val deduped = prioritized
             .groupBy { it.signature() }
             .values
             .map { group ->
                 val representative = group.first()
-                val originsInGroup = group.map { (it.origem ?: "BASICO").uppercase() }.toSet()
+                val originsInGroup = group.map { canonicalOriginKey(it.origem) }.toSet()
                 val hasMultipleOrigins = originsInGroup.size > 1
 
                 val baseDisplayName = if (hasMultipleOrigins) {

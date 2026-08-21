@@ -387,13 +387,9 @@ object DataLoader {
         } else {
             ancestryModules
         }
-        val localListaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestryModules.filter {
-            // Apply filtering logic similar to other modules if needed,
-            // or simply reuse the `ancestriesToLoad` calculated above.
-            // The original code calculated `ancestriesToLoad` but then passed it to `loadAndMerge`.
-            // Here we just use the variable we defined.
-            it in ancestriesToLoad
-        }, keys)
+        val localListaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestriesToLoad, keys) { item, override ->
+            if (override != null) item.copy(origem = override) else item
+        }
 
         // 10. Monstros
         val localListaMonstroTemplates = if ("HORROR" in keys) {
