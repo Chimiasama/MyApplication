@@ -363,17 +363,17 @@ private fun CircleToggle(
 ) {
     Box(
         modifier = modifier
-            .size(28.dp)
+            .size(17.dp)
             .clip(CircleShape)
             .background(if (checked) MaterialTheme.colorScheme.primary else Color.Transparent)
-            .border(1.5.dp, MaterialTheme.colorScheme.primary, CircleShape)
+            .border(1.dp, MaterialTheme.colorScheme.primary, CircleShape)
             .clickable { onCheckedChange(!checked) },
         contentAlignment = Alignment.Center
     ) {
         if (checked) {
             Box(
                 modifier = Modifier
-                    .size(10.dp)
+                    .size(6.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.onPrimary)
             )
