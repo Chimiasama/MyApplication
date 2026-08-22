@@ -42,9 +42,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CustomContentType
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.getActiveOrigins
+import com.example.swadebuilder.model.getDisplayName
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.FeedbackController
 import com.example.swadebuilder.TabStyle
@@ -350,6 +352,42 @@ fun SettingsDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
+                                                    val availableAdvCategories = remember(state.listaVantagens, activeBookKey, state.compendioArteDaGuerraAtivo, state.compendioPathfinderAtivo, state.compendioDeadlandsAtivo, state.compendioHorrorAtivo, state.modoMonstroAtivo, state.modoSupers) {
+                                                        val baseCategories = mutableSetOf(
+                                                            Categoria.ANTECEDENTE,
+                                                            Categoria.COMBATE,
+                                                            Categoria.ESTRANHAS,
+                                                            Categoria.LENDARIAS,
+                                                            Categoria.LIDERANCA,
+                                                            Categoria.PODER,
+                                                            Categoria.PROFISSIONAL,
+                                                            Categoria.SOCIAIS
+                                                        )
+                                                        if (state.listaVantagens.isNotEmpty()) {
+                                                            baseCategories.addAll(state.listaVantagens.map { it.categoria })
+                                                        }
+                                                        if (activeBookKey == "ARTE_DA_GUERRA" || state.compendioArteDaGuerraAtivo) {
+                                                            baseCategories.addAll(listOf(Categoria.CHI, Categoria.TROPO, Categoria.ESTILO_MARCIAL))
+                                                        }
+                                                        if (activeBookKey == "PATHFINDER" || state.compendioPathfinderAtivo) {
+                                                            baseCategories.addAll(listOf(Categoria.CLASSE, Categoria.VANTAGEM_DE_CLASSE, Categoria.PRESTIGIO, Categoria.ANCESTRALIDADE))
+                                                        }
+                                                        if (activeBookKey == "DEADLANDS" || state.compendioDeadlandsAtivo) {
+                                                            baseCategories.addAll(listOf(Categoria.ATORMENTADO, Categoria.ANCESTRALIDADE))
+                                                        }
+                                                        if (activeBookKey == "HORROR" || state.compendioHorrorAtivo || state.modoMonstroAtivo) {
+                                                            baseCategories.add(Categoria.MONSTRUOSAS)
+                                                        }
+                                                        if (state.modoSupers) {
+                                                            baseCategories.add(Categoria.SUPER)
+                                                        }
+                                                        Categoria.entries.filter { it in baseCategories }
+                                                    }
+
+                                                    if (customAdvCategory !in availableAdvCategories) {
+                                                        customAdvCategory = availableAdvCategories.firstOrNull() ?: Categoria.PROFISSIONAL
+                                                    }
+
                                                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                                         Text("Categoria da Vantagem:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                                                         @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
@@ -357,11 +395,11 @@ fun SettingsDialog(
                                                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                                                             verticalArrangement = Arrangement.spacedBy(4.dp)
                                                         ) {
-                                                            com.example.swadebuilder.model.Categoria.entries.forEach { catEnum ->
+                                                            availableAdvCategories.forEach { catEnum ->
                                                                 androidx.compose.material3.FilterChip(
                                                                     selected = customAdvCategory == catEnum,
                                                                     onClick = { customAdvCategory = catEnum },
-                                                                    label = { Text(catEnum.name.lowercase().replaceFirstChar { it.uppercase() }, style = MaterialTheme.typography.labelSmall) }
+                                                                    label = { Text(catEnum.getDisplayName(), style = MaterialTheme.typography.labelSmall) }
                                                                 )
                                                             }
                                                         }

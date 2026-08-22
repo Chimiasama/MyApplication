@@ -75,6 +75,7 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RequirementValidator
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.getDisplayName
 import com.example.swadebuilder.model.atingiuLimiteClasseOuPrestigioNoEstagio
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.dynamicStageCaps
@@ -1201,8 +1202,7 @@ fun ProgressosDialog(
                                         advSelectedCategories = if (cat in advSelectedCategories) advSelectedCategories - cat else advSelectedCategories + cat
                                     },
                                     label = {
-                                        val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase()
-                                        Text(label)
+                                        Text(cat.getDisplayName())
                                     }
                                 )
                             }
@@ -1227,7 +1227,7 @@ fun ProgressosDialog(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
-                                            text = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase(),
+                                            text = cat.getDisplayName(),
                                             style = MaterialTheme.typography.titleSmall,
                                             fontWeight = FontWeight.SemiBold
                                         )

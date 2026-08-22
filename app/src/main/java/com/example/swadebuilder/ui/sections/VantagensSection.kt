@@ -64,6 +64,7 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.getDisplayName
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.explainVantagemVisibility
@@ -707,8 +708,7 @@ fun VantagensContent(
                                 else selectedCategories.add(cat)
                             },
                             label = {
-                                val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toFancyTitleCase()
-                                Text(label)
+                                Text(cat.getDisplayName())
                             }
                         )
                     }
@@ -749,7 +749,7 @@ fun VantagensContent(
                     item(key = "header_${cat.name}") {
                         Column {
                             CollapsibleSection(
-                                title = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toFancyTitleCase(),
+                                title = cat.getDisplayName(),
                                 expanded = expanded,
                                 onToggle = { expandedMap[cat] = !expanded },
                                 onToggleFeedback = onUserFeedback
