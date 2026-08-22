@@ -227,40 +227,200 @@ fun SettingsDialog(
 
                     if (showCustomContentDialog) {
                         val manager = remember { com.example.swadebuilder.util.CustomContentManager() }
+                        var selectedCategory by remember { mutableStateOf("Vantagem") }
+                        var customRequirements by remember { mutableStateOf("") }
+                        var customStage by remember { mutableStateOf("Novato") }
+                        var customSeverity by remember { mutableStateOf("Maior") }
+                        var customCost by remember { mutableStateOf("0") }
+                        var customWeight by remember { mutableStateOf("0") }
+                        var customDamage by remember { mutableStateOf("") }
+                        var customPp by remember { mutableStateOf("1") }
+                        var customRange by remember { mutableStateOf("Toque") }
+                        var customDuration by remember { mutableStateOf("3 turnos") }
+                        var customRacialTrait by remember { mutableStateOf("") }
+                        var showJsonImportSection by remember { mutableStateOf(false) }
+
+                        val categories = listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça")
 
                         AlertDialog(
                             onDismissRequest = { showCustomContentDialog = false },
-                            title = { Text("Conteúdo Customizado") },
+                            title = { Text("Criar Conteúdo Customizado", style = MaterialTheme.typography.titleMedium) },
                             text = {
-                                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                                    Text("Criar Item Customizado", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                                    Spacer(Modifier.height(8.dp))
+                                Column(
+                                    modifier = Modifier
+                                        .verticalScroll(rememberScrollState())
+                                        .fillMaxWidth(),
+                                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                                ) {
+                                    Text(
+                                        text = "O que você deseja criar?",
+                                        style = MaterialTheme.typography.labelLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+
+                                    // Category selector chips/buttons
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    ) {
+                                        categories.forEach { cat ->
+                                            val isSel = selectedCategory == cat
+                                            if (isSel) {
+                                                androidx.compose.material3.Button(
+                                                    onClick = { selectedCategory = cat },
+                                                    modifier = Modifier.weight(1f),
+                                                    contentPadding = androidx.compose.foundation.layout.PaddingValues(4.dp)
+                                                ) {
+                                                    Text(cat, style = MaterialTheme.typography.labelSmall)
+                                                }
+                                            } else {
+                                                OutlinedButton(
+                                                    onClick = { selectedCategory = cat },
+                                                    modifier = Modifier.weight(1f),
+                                                    contentPadding = androidx.compose.foundation.layout.PaddingValues(4.dp)
+                                                ) {
+                                                    Text(cat, style = MaterialTheme.typography.labelSmall)
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+                                    // Common Name and Description fields
                                     androidx.compose.material3.OutlinedTextField(
                                         value = customItemName,
                                         onValueChange = { customItemName = it },
-                                        label = { Text("Nome do Item") },
+                                        label = { Text("Nome da $selectedCategory") },
                                         singleLine = true,
                                         modifier = Modifier.fillMaxWidth()
                                     )
-                                    Spacer(Modifier.height(8.dp))
+
+                                    // Specific fields by Category
+                                    when (selectedCategory) {
+                                        "Vantagem" -> {
+                                            androidx.compose.material3.OutlinedTextField(
+                                                value = customRequirements,
+                                                onValueChange = { customRequirements = it },
+                                                label = { Text("Requisitos (ex: Novato, Agilidade d6)") },
+                                                singleLine = true,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                            ) {
+                                                Text("Estágio:", style = MaterialTheme.typography.bodySmall)
+                                                listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário").forEach { stage ->
+                                                    androidx.compose.material3.FilterChip(
+                                                        selected = customStage == stage,
+                                                        onClick = { customStage = stage },
+                                                        label = { Text(stage, style = MaterialTheme.typography.labelSmall) }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        "Complicação" -> {
+                                            Row(
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                            ) {
+                                                Text("Severidade:", style = MaterialTheme.typography.bodySmall)
+                                                listOf("Maior", "Menor").forEach { sev ->
+                                                    androidx.compose.material3.FilterChip(
+                                                        selected = customSeverity == sev,
+                                                        onClick = { customSeverity = sev },
+                                                        label = { Text(sev, style = MaterialTheme.typography.labelSmall) }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        "Equipamento" -> {
+                                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                                androidx.compose.material3.OutlinedTextField(
+                                                    value = customCost,
+                                                    onValueChange = { customCost = it },
+                                                    label = { Text("Custo ($)") },
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                androidx.compose.material3.OutlinedTextField(
+                                                    value = customWeight,
+                                                    onValueChange = { customWeight = it },
+                                                    label = { Text("Peso (kg)") },
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                            }
+                                            androidx.compose.material3.OutlinedTextField(
+                                                value = customDamage,
+                                                onValueChange = { customDamage = it },
+                                                label = { Text("Dano / Armadura / Efeito (ex: For+d6)") },
+                                                singleLine = true,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
+                                        }
+                                        "Poder" -> {
+                                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                                androidx.compose.material3.OutlinedTextField(
+                                                    value = customPp,
+                                                    onValueChange = { customPp = it },
+                                                    label = { Text("Pontos de Poder (PP)") },
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                androidx.compose.material3.OutlinedTextField(
+                                                    value = customRange,
+                                                    onValueChange = { customRange = it },
+                                                    label = { Text("Alcance") },
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                            }
+                                            androidx.compose.material3.OutlinedTextField(
+                                                value = customDuration,
+                                                onValueChange = { customDuration = it },
+                                                label = { Text("Duração (ex: 3 turnos)") },
+                                                singleLine = true,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
+                                        }
+                                        "Raça" -> {
+                                            androidx.compose.material3.OutlinedTextField(
+                                                value = customRacialTrait,
+                                                onValueChange = { customRacialTrait = it },
+                                                label = { Text("Habilidade Racial Principal") },
+                                                singleLine = true,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
+                                        }
+                                    }
+
                                     androidx.compose.material3.OutlinedTextField(
                                         value = customItemDesc,
                                         onValueChange = { customItemDesc = it },
-                                        label = { Text("Descrição") },
-                                        modifier = Modifier.fillMaxWidth().height(100.dp)
+                                        label = { Text("Descrição / Efeitos") },
+                                        modifier = Modifier.fillMaxWidth().height(80.dp)
                                     )
-                                    Spacer(Modifier.height(12.dp))
-                                    Text("Importar Pacote JSON", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
-                                    Spacer(Modifier.height(8.dp))
-                                    androidx.compose.material3.OutlinedTextField(
-                                        value = customPackageJson,
-                                        onValueChange = { customPackageJson = it },
-                                        label = { Text("Cole o JSON do pacote") },
-                                        modifier = Modifier.fillMaxWidth().height(100.dp)
-                                    )
+
+                                    // Collapsible Advanced JSON Import section
+                                    TextButton(onClick = { showJsonImportSection = !showJsonImportSection }) {
+                                        Text(if (showJsonImportSection) "▼ Ocultar Importação JSON" else "▶ Avançado: Importar Pacote JSON")
+                                    }
+
+                                    if (showJsonImportSection) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = customPackageJson,
+                                            onValueChange = { customPackageJson = it },
+                                            label = { Text("Cole o JSON do pacote") },
+                                            modifier = Modifier.fillMaxWidth().height(90.dp)
+                                        )
+                                    }
+
                                     if (statusMessage != null) {
-                                        Spacer(Modifier.height(8.dp))
-                                        Text(statusMessage!!, color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.bodySmall)
+                                        Text(
+                                            text = statusMessage!!,
+                                            color = MaterialTheme.colorScheme.primary,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
                                     }
                                 }
                             },
@@ -269,32 +429,81 @@ fun SettingsDialog(
                                     TextButton(onClick = {
                                         if (customItemName.isNotBlank() && customItemDesc.isNotBlank()) {
                                             val id = "custom:${customItemName.lowercase().replace(" ", "_")}"
-                                            val customItem = com.example.swadebuilder.model.CustomContentItem(
-                                                id = id,
-                                                name = customItemName,
-                                                type = CustomContentType.ADVANTAGE,
-                                                category = "vantagem",
-                                                description = customItemDesc
-                                            )
-                                            when (val validation = manager.validateItem(customItem)) {
-                                                is com.example.swadebuilder.util.CustomContentValidationResult.Valid -> {
+                                            when (selectedCategory) {
+                                                "Vantagem" -> {
                                                     val newAdv = com.example.swadebuilder.model.Vantagem(
                                                         id = id,
                                                         nome = customItemName,
                                                         categoria = com.example.swadebuilder.model.Categoria.PROFISSIONAL,
-                                                        descricao = customItemDesc,
+                                                        descricao = if (customRequirements.isNotBlank()) "Requisitos: $customRequirements. $customItemDesc" else customItemDesc,
                                                         origem = "CUSTOM",
-                                                        requisitos = Requisito()
+                                                        requisitos = Requisito(estagio = customStage)
                                                     )
                                                     state.addCustomVantagem(newAdv)
-                                                    statusMessage = "Item '$customItemName' adicionado com sucesso!"
-                                                    customItemName = ""
-                                                    customItemDesc = ""
+                                                    statusMessage = "Vantagem '$customItemName' criada com sucesso!"
                                                 }
-                                                is com.example.swadebuilder.util.CustomContentValidationResult.Invalid -> {
-                                                    statusMessage = "Erro: ${validation.reason}"
+                                                "Complicação" -> {
+                                                    val newComp = com.example.swadebuilder.model.Complicacao(
+                                                        id = id,
+                                                        name = customItemName,
+                                                        severity = customSeverity,
+                                                        description = customItemDesc,
+                                                        origem = "CUSTOM"
+                                                    )
+                                                    state.addCustomComplicacao(newComp)
+                                                    statusMessage = "Complicação '$customItemName' criada com sucesso!"
+                                                }
+                                                "Equipamento" -> {
+                                                    val newEquip = com.example.swadebuilder.model.EquipamentoItem(
+                                                        nome = customItemName,
+                                                        custo = kotlinx.serialization.json.JsonPrimitive(customCost.toIntOrNull() ?: 0),
+                                                        peso = kotlinx.serialization.json.JsonPrimitive(customWeight.toFloatOrNull() ?: 0f),
+                                                        dano = if (customDamage.isNotBlank()) kotlinx.serialization.json.JsonPrimitive(customDamage) else null,
+                                                        observacoes = if (customItemDesc.isNotBlank()) kotlinx.serialization.json.JsonPrimitive(customItemDesc) else null,
+                                                        origem = "CUSTOM"
+                                                    )
+                                                    state.addCustomEquipamento(newEquip)
+                                                    statusMessage = "Equipamento '$customItemName' criado com sucesso!"
+                                                }
+                                                "Poder" -> {
+                                                    val newPoder = com.example.swadebuilder.model.Poder(
+                                                        id = id,
+                                                        nome = customItemName,
+                                                        pontosDePoder = customPp.ifBlank { "1" },
+                                                        distancia = customRange.ifBlank { "Toque" },
+                                                        duracao = customDuration.ifBlank { "3 turnos" },
+                                                        descricao = customItemDesc,
+                                                        estagio = "Novato",
+                                                        origem = "CUSTOM"
+                                                    )
+                                                    state.addCustomPoder(newPoder)
+                                                    statusMessage = "Poder '$customItemName' criado com sucesso!"
+                                                }
+                                                "Raça" -> {
+                                                    val newRace = com.example.swadebuilder.model.RacialModifier(
+                                                        nome = customItemName,
+                                                        descricao = customItemDesc,
+                                                        atributos = emptyMap(),
+                                                        pericias = emptyMap(),
+                                                        origem = "CUSTOM",
+                                                        habilidades = listOf(
+                                                            com.example.swadebuilder.model.RacialAbility(
+                                                                nome = customRacialTrait.ifBlank { "Traço Customizado" },
+                                                                descricao = customItemDesc,
+                                                                id = "${id}_trait",
+                                                                category = "racial_trait_positive"
+                                                            )
+                                                        )
+                                                    )
+                                                    state.listaAncestralidadesJson = state.listaAncestralidadesJson + newRace
+                                                    statusMessage = "Raça '$customItemName' criada com sucesso!"
                                                 }
                                             }
+                                            customItemName = ""
+                                            customItemDesc = ""
+                                            customRequirements = ""
+                                            customDamage = ""
+                                            customRacialTrait = ""
                                         } else if (customPackageJson.isNotBlank()) {
                                             val importRes = manager.importPackageFromJson(customPackageJson)
                                             if (importRes.isSuccess) {
@@ -303,8 +512,10 @@ fun SettingsDialog(
                                             } else {
                                                 statusMessage = "Erro ao importar: ${importRes.exceptionOrNull()?.message}"
                                             }
+                                        } else {
+                                            statusMessage = "Preencha o Nome e a Descrição do item."
                                         }
-                                    }) { Text("Adicionar / Importar") }
+                                    }) { Text("Criar / Importar") }
                                     TextButton(onClick = { showCustomContentDialog = false }) { Text("Fechar") }
                                 }
                             }

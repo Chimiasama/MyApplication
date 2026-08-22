@@ -165,6 +165,10 @@ class CriadorViewModel(
     }
 
     fun applyArchetype(archetype: com.example.swadebuilder.model.CreationArchetype): com.example.swadebuilder.model.ArchetypeApplicationReport {
+        if (!archetype.ancestry.isNullOrBlank()) {
+            state.aplicarAncestralidade(archetype.ancestry, mutableListOf())
+        }
+
         archetype.attributes.forEach { bonus ->
             val attrKey = bonus.attributeName.uppercase().trim()
             val stack = state.paCostStackPorAtributo.getOrPut(attrKey) { mutableListOf() }

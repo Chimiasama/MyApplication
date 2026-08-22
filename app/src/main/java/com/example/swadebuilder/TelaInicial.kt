@@ -141,7 +141,6 @@ fun TelaInicial(
     // Dialog States
     var showCreditsDialog by remember { mutableStateOf(false) }
     var showRulesDialog by remember { mutableStateOf(false) }
-    var showArchetypeDialog by remember { mutableStateOf(false) }
 
     // Reset all rule flags to clean slate
     fun resetAllRuleFlags() {
@@ -410,9 +409,6 @@ fun TelaInicial(
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
-                    IconButton(onClick = { showArchetypeDialog = true }) {
-                        Icon(Icons.Default.AutoAwesome, contentDescription = "Arquétipos e Templates")
-                    }
                     IconButton(onClick = onCarregarPersonagem) {
                         Icon(Icons.Default.FolderOpen, contentDescription = "Carregar Personagem")
                     }
@@ -510,17 +506,6 @@ fun TelaInicial(
     }
 
     // --- Dialogs ---
-
-    if (showArchetypeDialog) {
-        com.example.swadebuilder.ui.dialogs.ArchetypeSelectionDialog(
-            settingKey = getActiveBookPresetId(),
-            onDismiss = { showArchetypeDialog = false },
-            onApplyArchetype = { archetype ->
-                startCreation()
-                viewModel.applyArchetype(archetype)
-            }
-        )
-    }
 
     if (showRulesDialog) {
         AlertDialog(

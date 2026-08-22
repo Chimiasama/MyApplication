@@ -20,6 +20,7 @@ data class CreationArchetype(
     val name: String,
     val description: String,
     val targetSetting: String = "BASICO",
+    val ancestry: String? = null,
     val attributes: List<ArchetypeAttributeBonus> = emptyList(),
     val skills: List<ArchetypeSkillBonus> = emptyList(),
     val edges: List<String> = emptyList(),
