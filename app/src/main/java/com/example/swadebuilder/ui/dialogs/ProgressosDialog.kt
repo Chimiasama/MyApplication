@@ -359,7 +359,13 @@ fun ProgressosDialog(
                                 if (history.revisions.isEmpty()) {
                                     Text("Nenhuma revisão registrada ainda.", style = MaterialTheme.typography.bodyMedium)
                                 } else {
-                                    history.revisions.forEach { revision ->
+                                    history.revisions.forEachIndexed { revisionIdx, revision ->
+                                        val action = state.advancementHistory.getOrNull(revisionIdx)
+                                        val detailsText = action?.getDisplayText(
+                                            getAdvantageName = { id -> idParaNome[id] ?: id.toSentenceCase() },
+                                            getSkillValue = { name -> state.periciasComIdiomas().firstOrNull { it.nome.keyify() == name.keyify() }?.let { state.rawTotal(it) } ?: 0 }
+                                        ) ?: ""
+
                                         Card(
                                             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
@@ -367,15 +373,14 @@ fun ProgressosDialog(
                                             Column(Modifier.padding(12.dp)) {
                                                 Text(revision.reason, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                                                 Text("Estágio: ${revision.stageName}", style = MaterialTheme.typography.bodySmall)
+                                                if (detailsText.isNotBlank()) {
+                                                    Spacer(Modifier.height(2.dp))
+                                                    Text("Item adquirido: $detailsText", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
+                                                }
                                                 Spacer(Modifier.height(4.dp))
-                                                val revisionIdx = history.revisions.indexOf(revision)
                                                 TextButton(
                                                     onClick = {
-                                                        if (revisionIdx >= 0) {
-                                                            viewModel.revertToRevisionIndex(revisionIdx)
-                                                        } else {
-                                                            state.restoreFromSnapshot(revision.snapshot, mutableListOf())
-                                                        }
+                                                        viewModel.revertToRevisionIndex(revisionIdx)
                                                         showRevisionsDialog = false
                                                         onDismiss()
                                                     }

@@ -1522,8 +1522,8 @@ class CriadorViewModel(
     }
 
     fun revertToRevisionIndex(targetIndex: Int) {
-        if (targetIndex < 0 || targetIndex >= state.advancementHistory.size) return
-        while (state.advancementHistory.size > targetIndex) {
+        val targetSize = (targetIndex + 1).coerceAtLeast(0)
+        while (state.advancementHistory.size > targetSize) {
             revertLastAdvancement()
         }
     }

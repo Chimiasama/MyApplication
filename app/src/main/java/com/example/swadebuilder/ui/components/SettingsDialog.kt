@@ -259,146 +259,192 @@ fun SettingsDialog(
                                         color = MaterialTheme.colorScheme.primary
                                     )
 
-                                    // Category selector chips/buttons
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                    // Category selector horizontal carousel (styled like superpower carousel with smooth edge gradient)
+                                    Box(
+                                        modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        categories.forEach { cat ->
-                                            val isSel = selectedCategory == cat
-                                            if (isSel) {
-                                                androidx.compose.material3.Button(
+                                        androidx.compose.foundation.lazy.LazyRow(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                            contentPadding = androidx.compose.foundation.layout.PaddingValues(end = 24.dp)
+                                        ) {
+                                            items(categories.size) { index ->
+                                                val cat = categories[index]
+                                                val isSel = selectedCategory == cat
+                                                androidx.compose.material3.FilterChip(
+                                                    selected = isSel,
                                                     onClick = { selectedCategory = cat },
-                                                    modifier = Modifier.weight(1f),
-                                                    contentPadding = androidx.compose.foundation.layout.PaddingValues(4.dp)
-                                                ) {
-                                                    Text(cat, style = MaterialTheme.typography.labelSmall)
-                                                }
-                                            } else {
-                                                OutlinedButton(
-                                                    onClick = { selectedCategory = cat },
-                                                    modifier = Modifier.weight(1f),
-                                                    contentPadding = androidx.compose.foundation.layout.PaddingValues(4.dp)
-                                                ) {
-                                                    Text(cat, style = MaterialTheme.typography.labelSmall)
-                                                }
+                                                    label = {
+                                                        Text(
+                                                            text = cat,
+                                                            style = MaterialTheme.typography.labelMedium,
+                                                            fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal
+                                                        )
+                                                    },
+                                                    colors = androidx.compose.material3.FilterChipDefaults.filterChipColors(
+                                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                                    )
+                                                )
                                             }
                                         }
+
+                                        // Edge gradient fade
+                                        Box(
+                                            modifier = Modifier
+                                                .width(20.dp)
+                                                .align(Alignment.CenterEnd)
+                                                .fillMaxHeight()
+                                                .background(
+                                                    androidx.compose.ui.graphics.Brush.horizontalGradient(
+                                                        colors = listOf(
+                                                            androidx.compose.ui.graphics.Color.Transparent,
+                                                            MaterialTheme.colorScheme.surfaceContainerHigh
+                                                        )
+                                                    )
+                                                )
+                                        )
                                     }
 
                                     HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-                                    // Common Name and Description fields
-                                    androidx.compose.material3.OutlinedTextField(
-                                        value = customItemName,
-                                        onValueChange = { customItemName = it },
-                                        label = { Text("Nome da $selectedCategory") },
-                                        singleLine = true,
+                                    // Container card for form elements to prevent overlapping and maintain clean spacing
+                                    androidx.compose.material3.Surface(
+                                        shape = MaterialTheme.shapes.medium,
+                                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
                                         modifier = Modifier.fillMaxWidth()
-                                    )
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.padding(12.dp),
+                                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                                        ) {
+                                            // Common Name field
+                                            androidx.compose.material3.OutlinedTextField(
+                                                value = customItemName,
+                                                onValueChange = { customItemName = it },
+                                                label = { Text("Nome da $selectedCategory") },
+                                                singleLine = true,
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
 
-                                    // Specific fields by Category
-                                    when (selectedCategory) {
-                                        "Vantagem" -> {
-                                            androidx.compose.material3.OutlinedTextField(
-                                                value = customRequirements,
-                                                onValueChange = { customRequirements = it },
-                                                label = { Text("Requisitos (ex: Novato, Agilidade d6)") },
-                                                singleLine = true,
-                                                modifier = Modifier.fillMaxWidth()
-                                            )
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                            ) {
-                                                Text("Estágio:", style = MaterialTheme.typography.bodySmall)
-                                                listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário").forEach { stage ->
-                                                    androidx.compose.material3.FilterChip(
-                                                        selected = customStage == stage,
-                                                        onClick = { customStage = stage },
-                                                        label = { Text(stage, style = MaterialTheme.typography.labelSmall) }
+                                            // Category-specific fields
+                                            when (selectedCategory) {
+                                                "Vantagem" -> {
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customRequirements,
+                                                        onValueChange = { customRequirements = it },
+                                                        label = { Text("Requisitos (ex: Novato, Agilidade d6)") },
+                                                        singleLine = true,
+                                                        modifier = Modifier.fillMaxWidth()
+                                                    )
+                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                        Text("Estágio Mínimo:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                        @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                        androidx.compose.foundation.layout.FlowRow(
+                                                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                        ) {
+                                                            listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário").forEach { stage ->
+                                                                androidx.compose.material3.FilterChip(
+                                                                    selected = customStage == stage,
+                                                                    onClick = { customStage = stage },
+                                                                    label = { Text(stage, style = MaterialTheme.typography.labelSmall) }
+                                                                )
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                "Complicação" -> {
+                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                        Text("Severidade:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                                            listOf("Maior", "Menor").forEach { sev ->
+                                                                androidx.compose.material3.FilterChip(
+                                                                    selected = customSeverity == sev,
+                                                                    onClick = { customSeverity = sev },
+                                                                    label = { Text(sev, style = MaterialTheme.typography.labelSmall) }
+                                                                )
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                "Equipamento" -> {
+                                                    Row(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                    ) {
+                                                        androidx.compose.material3.OutlinedTextField(
+                                                            value = customCost,
+                                                            onValueChange = { customCost = it },
+                                                            label = { Text("Custo ($)") },
+                                                            singleLine = true,
+                                                            modifier = Modifier.weight(1f)
+                                                        )
+                                                        androidx.compose.material3.OutlinedTextField(
+                                                            value = customWeight,
+                                                            onValueChange = { customWeight = it },
+                                                            label = { Text("Peso (kg)") },
+                                                            singleLine = true,
+                                                            modifier = Modifier.weight(1f)
+                                                        )
+                                                    }
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customDamage,
+                                                        onValueChange = { customDamage = it },
+                                                        label = { Text("Dano / Efeito (ex: For+d6)") },
+                                                        singleLine = true,
+                                                        modifier = Modifier.fillMaxWidth()
+                                                    )
+                                                }
+                                                "Poder" -> {
+                                                    Row(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                    ) {
+                                                        androidx.compose.material3.OutlinedTextField(
+                                                            value = customPp,
+                                                            onValueChange = { customPp = it },
+                                                            label = { Text("Pontos de Poder") },
+                                                            singleLine = true,
+                                                            modifier = Modifier.weight(1f)
+                                                        )
+                                                        androidx.compose.material3.OutlinedTextField(
+                                                            value = customRange,
+                                                            onValueChange = { customRange = it },
+                                                            label = { Text("Alcance") },
+                                                            singleLine = true,
+                                                            modifier = Modifier.weight(1f)
+                                                        )
+                                                    }
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customDuration,
+                                                        onValueChange = { customDuration = it },
+                                                        label = { Text("Duração (ex: 3 turnos)") },
+                                                        singleLine = true,
+                                                        modifier = Modifier.fillMaxWidth()
+                                                    )
+                                                }
+                                                "Raça" -> {
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customRacialTrait,
+                                                        onValueChange = { customRacialTrait = it },
+                                                        label = { Text("Habilidade Racial Principal") },
+                                                        singleLine = true,
+                                                        modifier = Modifier.fillMaxWidth()
                                                     )
                                                 }
                                             }
-                                        }
-                                        "Complicação" -> {
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                                            ) {
-                                                Text("Severidade:", style = MaterialTheme.typography.bodySmall)
-                                                listOf("Maior", "Menor").forEach { sev ->
-                                                    androidx.compose.material3.FilterChip(
-                                                        selected = customSeverity == sev,
-                                                        onClick = { customSeverity = sev },
-                                                        label = { Text(sev, style = MaterialTheme.typography.labelSmall) }
-                                                    )
-                                                }
-                                            }
-                                        }
-                                        "Equipamento" -> {
-                                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                                androidx.compose.material3.OutlinedTextField(
-                                                    value = customCost,
-                                                    onValueChange = { customCost = it },
-                                                    label = { Text("Custo ($)") },
-                                                    modifier = Modifier.weight(1f)
-                                                )
-                                                androidx.compose.material3.OutlinedTextField(
-                                                    value = customWeight,
-                                                    onValueChange = { customWeight = it },
-                                                    label = { Text("Peso (kg)") },
-                                                    modifier = Modifier.weight(1f)
-                                                )
-                                            }
+
+                                            // Common Description field
                                             androidx.compose.material3.OutlinedTextField(
-                                                value = customDamage,
-                                                onValueChange = { customDamage = it },
-                                                label = { Text("Dano / Armadura / Efeito (ex: For+d6)") },
-                                                singleLine = true,
-                                                modifier = Modifier.fillMaxWidth()
-                                            )
-                                        }
-                                        "Poder" -> {
-                                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                                androidx.compose.material3.OutlinedTextField(
-                                                    value = customPp,
-                                                    onValueChange = { customPp = it },
-                                                    label = { Text("Pontos de Poder (PP)") },
-                                                    modifier = Modifier.weight(1f)
-                                                )
-                                                androidx.compose.material3.OutlinedTextField(
-                                                    value = customRange,
-                                                    onValueChange = { customRange = it },
-                                                    label = { Text("Alcance") },
-                                                    modifier = Modifier.weight(1f)
-                                                )
-                                            }
-                                            androidx.compose.material3.OutlinedTextField(
-                                                value = customDuration,
-                                                onValueChange = { customDuration = it },
-                                                label = { Text("Duração (ex: 3 turnos)") },
-                                                singleLine = true,
-                                                modifier = Modifier.fillMaxWidth()
-                                            )
-                                        }
-                                        "Raça" -> {
-                                            androidx.compose.material3.OutlinedTextField(
-                                                value = customRacialTrait,
-                                                onValueChange = { customRacialTrait = it },
-                                                label = { Text("Habilidade Racial Principal") },
-                                                singleLine = true,
-                                                modifier = Modifier.fillMaxWidth()
+                                                value = customItemDesc,
+                                                onValueChange = { customItemDesc = it },
+                                                label = { Text("Descrição / Efeitos") },
+                                                modifier = Modifier.fillMaxWidth().height(90.dp),
+                                                maxLines = 4
                                             )
                                         }
                                     }
-
-                                    androidx.compose.material3.OutlinedTextField(
-                                        value = customItemDesc,
-                                        onValueChange = { customItemDesc = it },
-                                        label = { Text("Descrição / Efeitos") },
-                                        modifier = Modifier.fillMaxWidth().height(80.dp)
-                                    )
 
                                     // Collapsible Advanced JSON Import section
                                     TextButton(onClick = { showJsonImportSection = !showJsonImportSection }) {
