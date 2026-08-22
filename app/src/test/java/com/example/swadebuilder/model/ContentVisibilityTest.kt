@@ -280,4 +280,16 @@ class ContentVisibilityTest {
         assertTrue(state.isComplicacaoVisible(pfComplication))
     }
 
+    @Test
+    fun `livros de cenario excluem BASICO de getActiveOrigins para evitar vazamento de conteudo basico`() {
+        val pathfinderState = CriadorState().apply { compendioPathfinderAtivo = true }
+        assertFalse("BASICO não deve estar ativo para Pathfinder", "BASICO" in pathfinderState.getActiveOrigins())
+
+        val adgState = CriadorState().apply { compendioArteDaGuerraAtivo = true }
+        assertFalse("BASICO não deve estar ativo para Arte da Guerra", "BASICO" in adgState.getActiveOrigins())
+
+        val scifiState = CriadorState().apply { compendioSciFiAtivo = true }
+        assertFalse("BASICO não deve estar ativo para Sci-Fi", "BASICO" in scifiState.getActiveOrigins())
+    }
+
 }
