@@ -1786,8 +1786,10 @@ private fun VantagemItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
+                    val isCustom = vant.origem.equals("CUSTOM", ignoreCase = true) || vant.id.startsWith("custom:") || vant.id.startsWith("fanmade:")
+                    val customBadge = if (isCustom) " ⓒ" else ""
                     Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase(),
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) "${vant.originalName!!.toFancyTitleCase()}$customBadge" else "${vant.nomeExibicao.toFancyTitleCase()}$customBadge",
                         style = MaterialTheme.typography.titleSmall
                     )
 

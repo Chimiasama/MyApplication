@@ -413,10 +413,55 @@ object DataLoader {
 
         val localListaPoderes = todosPoderes
 
+        // 14. Custom Local Content per active book
+        val customStorageManager = com.example.swadebuilder.util.CustomStorageManager()
+        val customVantagens = mutableListOf<Vantagem>()
+        val customComplicacoes = mutableListOf<Complicacao>()
+        val customEquipamentos = mutableListOf<EquipamentoItem>()
+        val customPoderes = mutableListOf<Poder>()
+        val customRacas = mutableListOf<RacialModifier>()
+
+        keys.forEach { bookKey ->
+            val customData = customStorageManager.loadCustomContent(context, bookKey)
+            customVantagens += customData.vantagens
+            customComplicacoes += customData.complicacoes
+            customEquipamentos += customData.equipamentos
+            customPoderes += customData.poderes
+            customRacas += customData.racas
+        }
+
+        val mergedVantagens = (localListaVantagens + customVantagens).distinctBy { it.id }
+        val mergedComplicacoes = (localListaComplicacoes + customComplicacoes).distinctBy { it.id }
+        val mergedEquipamentos = (localListaEquipamentos + customEquipamentos).distinctBy { it.nome.keyify() }
+        val mergedPoderes = (localListaPoderes + customPoderes).distinctBy { it.id }
+        val mergedAncestralidades = (localListaAncestralidadesJson + customRacas).distinctBy { it.nome.keyify() }
+
+        // Inject custom equipment into categories so they appear in EquipamentoSection
+        val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {
+            val categorizedCustoms = customEquipamentos.groupBy { it.subtipo ?: "Equipamento Geral" }
+            val existingTypes = localEquipamentoCategorias.map { it.subtipo to it }.toMap().toMutableMap()
+            categorizedCustoms.forEach { (subtipo, items) ->
+                val existing = existingTypes[subtipo]
+                if (existing != null) {
+                    existingTypes[subtipo] = existing.copy(itens = (existing.itens + items).distinctBy { it.nome.keyify() })
+                } else {
+                    existingTypes[subtipo] = EquipamentoCategoria(
+                        tipo = "EQUIPAMENTO GERAL",
+                        subtipo = subtipo,
+                        origem = "CUSTOM",
+                        itens = items
+                    )
+                }
+            }
+            existingTypes.values.toList()
+        } else {
+            localEquipamentoCategorias
+        }
+
         return GameDataSnapshot(
-            listaComplicacoes = localListaComplicacoes,
+            listaComplicacoes = mergedComplicacoes,
             listaCoracoesCrystal = localListaCoracoesCrystal,
-            listaAncestralidadesJson = localListaAncestralidadesJson,
+            listaAncestralidadesJson = mergedAncestralidades,
             listaMonstroTemplates = localListaMonstroTemplates,
             racialAttrMinMap = localRacialAttrMinMap,
             racialSkillStartMap = localRacialSkillStartMap,
@@ -425,11 +470,11 @@ object DataLoader {
             listaPericias = localListaPericias,
             mapaPericias = localMapaPericias,
             mapaAtributosDescricao = localMapaAtributosDescricao,
-            listaVantagens = localListaVantagens,
-            listaPoderes = localListaPoderes,
+            listaVantagens = mergedVantagens,
+            listaPoderes = mergedPoderes,
             listaTropos = localListaTropos,
-            listaEquipamentos = localListaEquipamentos,
-            equipamentoCategorias = localEquipamentoCategorias,
+            listaEquipamentos = mergedEquipamentos,
+            equipamentoCategorias = updatedEquipamentoCategorias,
             superequipCategorias = localSuperequipCategorias,
             listaSuperPoderes = localListaSuperPoderes,
             arcanoInfo = loadedArcanoInfoList

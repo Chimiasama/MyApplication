@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CustomContentType
 import com.example.swadebuilder.model.Requisito
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.FeedbackController
 import com.example.swadebuilder.TabStyle
@@ -226,11 +227,19 @@ fun SettingsDialog(
                     }
 
                     if (showCustomContentDialog) {
+                        val context = androidx.compose.ui.platform.LocalContext.current
+                        val customStorageManager = remember { com.example.swadebuilder.util.CustomStorageManager() }
                         val manager = remember { com.example.swadebuilder.util.CustomContentManager() }
+                        val activeBookKey = remember(state) {
+                            state.getActiveOrigins().firstOrNull() ?: "BASICO"
+                        }
                         var selectedCategory by remember { mutableStateOf("Vantagem") }
                         var customRequirements by remember { mutableStateOf("") }
+                        var customAdvCategory by remember { mutableStateOf(com.example.swadebuilder.model.Categoria.PROFISSIONAL) }
                         var customStage by remember { mutableStateOf("Novato") }
                         var customSeverity by remember { mutableStateOf("Maior") }
+                        var customEquipSuperType by remember { mutableStateOf("Arma") }
+                        var customEquipSubtype by remember { mutableStateOf("Corpo a Corpo") }
                         var customCost by remember { mutableStateOf("0") }
                         var customWeight by remember { mutableStateOf("0") }
                         var customDamage by remember { mutableStateOf("") }
@@ -239,8 +248,12 @@ fun SettingsDialog(
                         var customDuration by remember { mutableStateOf("3 turnos") }
                         var customRacialTrait by remember { mutableStateOf("") }
                         var showJsonImportSection by remember { mutableStateOf(false) }
+                        var refreshTrigger by remember { mutableStateOf(0) }
 
                         val categories = listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça")
+                        val activeBookCustomData = remember(activeBookKey, refreshTrigger) {
+                            customStorageManager.loadCustomContent(context, activeBookKey)
+                        }
 
                         AlertDialog(
                             onDismissRequest = { showCustomContentDialog = false },
@@ -338,6 +351,22 @@ fun SettingsDialog(
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
                                                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                        Text("Categoria da Vantagem:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                        @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                        androidx.compose.foundation.layout.FlowRow(
+                                                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                        ) {
+                                                            com.example.swadebuilder.model.Categoria.entries.forEach { catEnum ->
+                                                                androidx.compose.material3.FilterChip(
+                                                                    selected = customAdvCategory == catEnum,
+                                                                    onClick = { customAdvCategory = catEnum },
+                                                                    label = { Text(catEnum.name.lowercase().replaceFirstChar { it.uppercase() }, style = MaterialTheme.typography.labelSmall) }
+                                                                )
+                                                            }
+                                                        }
+                                                    }
+                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                                                         Text("Estágio Mínimo:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                                                         @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
                                                         androidx.compose.foundation.layout.FlowRow(
@@ -356,9 +385,9 @@ fun SettingsDialog(
                                                 }
                                                 "Complicação" -> {
                                                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                        Text("Severidade:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                        Text("Severidade Permitida:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
                                                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                                            listOf("Maior", "Menor").forEach { sev ->
+                                                            listOf("Maior", "Menor", "Maior ou Menor").forEach { sev ->
                                                                 androidx.compose.material3.FilterChip(
                                                                     selected = customSeverity == sev,
                                                                     onClick = { customSeverity = sev },
@@ -369,6 +398,41 @@ fun SettingsDialog(
                                                     }
                                                 }
                                                 "Equipamento" -> {
+                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                        Text("Tipo de Equipamento:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                                            listOf("Arma", "Armadura", "Escudo", "Geral", "Veículo").forEach { st ->
+                                                                androidx.compose.material3.FilterChip(
+                                                                    selected = customEquipSuperType == st,
+                                                                    onClick = {
+                                                                        customEquipSuperType = st
+                                                                        customEquipSubtype = when (st) {
+                                                                            "Arma" -> "Corpo a Corpo"
+                                                                            "Armadura" -> "Armadura Corporal"
+                                                                            "Escudo" -> "Escudo"
+                                                                            "Veículo" -> "Veículo"
+                                                                            else -> "Equipamento Geral"
+                                                                        }
+                                                                    },
+                                                                    label = { Text(st, style = MaterialTheme.typography.labelSmall) }
+                                                                )
+                                                            }
+                                                        }
+                                                    }
+                                                    if (customEquipSuperType == "Arma") {
+                                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                            Text("Subtipo de Arma:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                                                                listOf("Corpo a Corpo", "Ataque a Distância", "Futurista").forEach { sub ->
+                                                                    androidx.compose.material3.FilterChip(
+                                                                        selected = customEquipSubtype == sub,
+                                                                        onClick = { customEquipSubtype = sub },
+                                                                        label = { Text(sub, style = MaterialTheme.typography.labelSmall) }
+                                                                    )
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                     Row(
                                                         modifier = Modifier.fillMaxWidth(),
                                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -391,7 +455,7 @@ fun SettingsDialog(
                                                     androidx.compose.material3.OutlinedTextField(
                                                         value = customDamage,
                                                         onValueChange = { customDamage = it },
-                                                        label = { Text("Dano / Efeito (ex: For+d6)") },
+                                                        label = { Text("Dano / Armadura / Efeito (ex: For+d12+5)") },
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
@@ -460,6 +524,70 @@ fun SettingsDialog(
                                         )
                                     }
 
+                                    // Custom Content Items Manager List for the active book
+                                    HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                                    Text(
+                                        text = "Itens Customizados do Livro ($activeBookKey)",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold
+                                    )
+
+                                    val allCustomItems = remember(activeBookCustomData) {
+                                        buildList {
+                                            activeBookCustomData.vantagens.forEach { add("Vantagem" to it.nome) }
+                                            activeBookCustomData.complicacoes.forEach { add("Complicação" to it.name) }
+                                            activeBookCustomData.equipamentos.forEach { add("Equipamento" to it.nome) }
+                                            activeBookCustomData.poderes.forEach { add("Poder" to it.nome) }
+                                            activeBookCustomData.racas.forEach { add("Raça" to it.nome) }
+                                        }
+                                    }
+
+                                    if (allCustomItems.isEmpty()) {
+                                        Text(
+                                            text = "Nenhum item customizado criado neste livro ainda.",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    } else {
+                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            allCustomItems.forEach { (type, name) ->
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Text(
+                                                        text = "[$type] $name ⓒ",
+                                                        style = MaterialTheme.typography.bodySmall,
+                                                        fontWeight = FontWeight.Medium
+                                                    )
+                                                    TextButton(onClick = {
+                                                        when (type) {
+                                                            "Vantagem" -> {
+                                                                val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
+                                                                item?.let { customStorageManager.deleteVantagem(context, activeBookKey, it.id) }
+                                                            }
+                                                            "Complicação" -> {
+                                                                val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
+                                                                item?.let { customStorageManager.deleteComplicacao(context, activeBookKey, it.id) }
+                                                            }
+                                                            "Equipamento" -> customStorageManager.deleteEquipamento(context, activeBookKey, name)
+                                                            "Poder" -> {
+                                                                val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
+                                                                item?.let { customStorageManager.deletePoder(context, activeBookKey, it.id) }
+                                                            }
+                                                            "Raça" -> customStorageManager.deleteRaca(context, activeBookKey, name)
+                                                        }
+                                                        refreshTrigger++
+                                                    }) {
+                                                        Text("Deletar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     if (statusMessage != null) {
                                         Text(
                                             text = statusMessage!!,
@@ -473,31 +601,34 @@ fun SettingsDialog(
                             confirmButton = {
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     TextButton(onClick = {
-                                        if (customItemName.isNotBlank() && customItemDesc.isNotBlank()) {
+                                                val safeDesc = customItemDesc.ifBlank { "-" }
+                                                if (customItemName.isNotBlank()) {
                                             val id = "custom:${customItemName.lowercase().replace(" ", "_")}"
                                             when (selectedCategory) {
                                                 "Vantagem" -> {
                                                     val newAdv = com.example.swadebuilder.model.Vantagem(
                                                         id = id,
                                                         nome = customItemName,
-                                                        categoria = com.example.swadebuilder.model.Categoria.PROFISSIONAL,
-                                                        descricao = if (customRequirements.isNotBlank()) "Requisitos: $customRequirements. $customItemDesc" else customItemDesc,
-                                                        origem = "CUSTOM",
+                                                                categoria = customAdvCategory,
+                                                                descricao = if (customRequirements.isNotBlank()) "Requisitos: $customRequirements. $safeDesc" else safeDesc,
+                                                                origem = activeBookKey,
                                                         requisitos = Requisito(estagio = customStage)
                                                     )
+                                                            customStorageManager.addVantagem(context, activeBookKey, newAdv)
                                                     state.addCustomVantagem(newAdv)
-                                                    statusMessage = "Vantagem '$customItemName' criada com sucesso!"
+                                                            statusMessage = "Vantagem '$customItemName' salva no livro $activeBookKey!"
                                                 }
                                                 "Complicação" -> {
                                                     val newComp = com.example.swadebuilder.model.Complicacao(
                                                         id = id,
                                                         name = customItemName,
                                                         severity = customSeverity,
-                                                        description = customItemDesc,
-                                                        origem = "CUSTOM"
+                                                                description = safeDesc,
+                                                                origem = activeBookKey
                                                     )
+                                                            customStorageManager.addComplicacao(context, activeBookKey, newComp)
                                                     state.addCustomComplicacao(newComp)
-                                                    statusMessage = "Complicação '$customItemName' criada com sucesso!"
+                                                            statusMessage = "Complicação '$customItemName' salva no livro $activeBookKey!"
                                                 }
                                                 "Equipamento" -> {
                                                     val newEquip = com.example.swadebuilder.model.EquipamentoItem(
@@ -505,11 +636,13 @@ fun SettingsDialog(
                                                         custo = kotlinx.serialization.json.JsonPrimitive(customCost.toIntOrNull() ?: 0),
                                                         peso = kotlinx.serialization.json.JsonPrimitive(customWeight.toFloatOrNull() ?: 0f),
                                                         dano = if (customDamage.isNotBlank()) kotlinx.serialization.json.JsonPrimitive(customDamage) else null,
-                                                        observacoes = if (customItemDesc.isNotBlank()) kotlinx.serialization.json.JsonPrimitive(customItemDesc) else null,
-                                                        origem = "CUSTOM"
+                                                                observacoes = kotlinx.serialization.json.JsonPrimitive(safeDesc),
+                                                                origem = activeBookKey,
+                                                                subtipo = customEquipSubtype
                                                     )
+                                                            customStorageManager.addEquipamento(context, activeBookKey, newEquip)
                                                     state.addCustomEquipamento(newEquip)
-                                                    statusMessage = "Equipamento '$customItemName' criado com sucesso!"
+                                                            statusMessage = "Equipamento '$customItemName' salvo no livro $activeBookKey!"
                                                 }
                                                 "Poder" -> {
                                                     val newPoder = com.example.swadebuilder.model.Poder(
@@ -518,33 +651,36 @@ fun SettingsDialog(
                                                         pontosDePoder = customPp.ifBlank { "1" },
                                                         distancia = customRange.ifBlank { "Toque" },
                                                         duracao = customDuration.ifBlank { "3 turnos" },
-                                                        descricao = customItemDesc,
+                                                                descricao = safeDesc,
                                                         estagio = "Novato",
-                                                        origem = "CUSTOM"
+                                                                origem = activeBookKey
                                                     )
+                                                            customStorageManager.addPoder(context, activeBookKey, newPoder)
                                                     state.addCustomPoder(newPoder)
-                                                    statusMessage = "Poder '$customItemName' criado com sucesso!"
+                                                            statusMessage = "Poder '$customItemName' salvo no livro $activeBookKey!"
                                                 }
                                                 "Raça" -> {
                                                     val newRace = com.example.swadebuilder.model.RacialModifier(
                                                         nome = customItemName,
-                                                        descricao = customItemDesc,
+                                                                descricao = safeDesc,
                                                         atributos = emptyMap(),
                                                         pericias = emptyMap(),
-                                                        origem = "CUSTOM",
+                                                                origem = activeBookKey,
                                                         habilidades = listOf(
                                                             com.example.swadebuilder.model.RacialAbility(
                                                                 nome = customRacialTrait.ifBlank { "Traço Customizado" },
-                                                                descricao = customItemDesc,
+                                                                        descricao = safeDesc,
                                                                 id = "${id}_trait",
                                                                 category = "racial_trait_positive"
                                                             )
                                                         )
                                                     )
+                                                            customStorageManager.addRaca(context, activeBookKey, newRace)
                                                     state.listaAncestralidadesJson = state.listaAncestralidadesJson + newRace
-                                                    statusMessage = "Raça '$customItemName' criada com sucesso!"
+                                                            statusMessage = "Raça '$customItemName' salva no livro $activeBookKey!"
                                                 }
                                             }
+                                                    refreshTrigger++
                                             customItemName = ""
                                             customItemDesc = ""
                                             customRequirements = ""
@@ -559,9 +695,9 @@ fun SettingsDialog(
                                                 statusMessage = "Erro ao importar: ${importRes.exceptionOrNull()?.message}"
                                             }
                                         } else {
-                                            statusMessage = "Preencha o Nome e a Descrição do item."
+                                                    statusMessage = "Preencha o Nome do item."
                                         }
-                                    }) { Text("Criar / Importar") }
+                                            }) { Text("Salvar Item") }
                                     TextButton(onClick = { showCustomContentDialog = false }) { Text("Fechar") }
                                 }
                             }

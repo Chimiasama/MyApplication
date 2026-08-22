@@ -407,10 +407,12 @@ fun buildSummaryLines(
                 ?.takeIf { it.isNotBlank() }
             val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase()
 
+        val isCustom = vant.origem.equals("CUSTOM", ignoreCase = true) || vant.id.startsWith("custom:") || vant.id.startsWith("fanmade:")
+        val customBadge = if (isCustom) " ⓒ" else ""
             val baseNome = if (vant.id == "antecedente_arcano_milagres" && personagem.celestialAAMilagresDesabilitado) {
-                "$rawName (DESABILITADO)"
+            "$rawName (DESABILITADO)$customBadge"
             } else {
-                rawName
+            "$rawName$customBadge"
             }
             if (escolha != null) "$baseNome (${escolha.trim().toFancyTitleCase()})" else baseNome
         }.distinct()

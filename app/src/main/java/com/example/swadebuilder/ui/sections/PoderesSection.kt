@@ -737,6 +737,10 @@ fun PoderesSection(
                                             .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
                                             .replace("Morosidade/Velocidade", "Velocidade")
                                     }
+                                    val isCustom = poder.origem.equals("CUSTOM", ignoreCase = true) || poder.id.startsWith("custom:") || poder.id.startsWith("fanmade:")
+                                    if (isCustom) {
+                                        displayNome = "$displayNome ⓒ"
+                                    }
                                     Text(displayNome, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
                                     val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]
                                     Text(
