@@ -1521,6 +1521,13 @@ class CriadorViewModel(
         state.updateEmProgressoFlag()
     }
 
+    fun revertToRevisionIndex(targetIndex: Int) {
+        if (targetIndex < 0 || targetIndex >= state.advancementHistory.size) return
+        while (state.advancementHistory.size > targetIndex) {
+            revertLastAdvancement()
+        }
+    }
+
     fun undoLastProgressAction() {
         val hasPendingProgress =
             state.skillAdvancementInProgress ||

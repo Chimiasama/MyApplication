@@ -269,25 +269,27 @@ fun SummaryContent(
         activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
         )
 
-        var showArchetypeDialog by remember { mutableStateOf(false) }
+        if (!state.modoProgressaoAtivo) {
+            var showArchetypeDialog by remember { mutableStateOf(false) }
 
-        androidx.compose.material3.OutlinedButton(
-            onClick = { showArchetypeDialog = true },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-        ) {
-            Icon(Icons.Default.AutoAwesome, contentDescription = null)
-            Spacer(Modifier.size(8.dp))
-            Text("Aplicar Arquétipo / Template")
-        }
+            androidx.compose.material3.OutlinedButton(
+                onClick = { showArchetypeDialog = true },
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            ) {
+                Icon(Icons.Default.AutoAwesome, contentDescription = null)
+                Spacer(Modifier.size(8.dp))
+                Text("Aplicar Arquétipo / Template")
+            }
 
-        if (showArchetypeDialog) {
-            com.example.swadebuilder.ui.dialogs.ArchetypeSelectionDialog(
-                settingKey = state.getActiveOrigins().firstOrNull() ?: "BASICO",
-                onDismiss = { showArchetypeDialog = false },
-                onApplyArchetype = { archetype ->
-                    viewModel.applyArchetype(archetype)
-                }
-            )
+            if (showArchetypeDialog) {
+                com.example.swadebuilder.ui.dialogs.ArchetypeSelectionDialog(
+                    settingKey = state.getActiveOrigins().firstOrNull() ?: "BASICO",
+                    onDismiss = { showArchetypeDialog = false },
+                    onApplyArchetype = { archetype ->
+                        viewModel.applyArchetype(archetype)
+                    }
+                )
+            }
         }
 
         Spacer(Modifier.height(12.dp))

@@ -368,14 +368,19 @@ fun ProgressosDialog(
                                                 Text(revision.reason, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                                                 Text("Estágio: ${revision.stageName}", style = MaterialTheme.typography.bodySmall)
                                                 Spacer(Modifier.height(4.dp))
+                                                val revisionIdx = history.revisions.indexOf(revision)
                                                 TextButton(
                                                     onClick = {
-                                                        state.restoreFromSnapshot(revision.snapshot, mutableListOf())
+                                                        if (revisionIdx >= 0) {
+                                                            viewModel.revertToRevisionIndex(revisionIdx)
+                                                        } else {
+                                                            state.restoreFromSnapshot(revision.snapshot, mutableListOf())
+                                                        }
                                                         showRevisionsDialog = false
                                                         onDismiss()
                                                     }
                                                 ) {
-                                                    Text("Restaurar esta versão")
+                                                    Text("Reverter até esta versão")
                                                 }
                                             }
                                         }
