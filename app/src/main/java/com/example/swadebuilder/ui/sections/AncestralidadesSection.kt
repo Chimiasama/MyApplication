@@ -138,7 +138,7 @@ fun AncestralidadesSection(
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
-    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo

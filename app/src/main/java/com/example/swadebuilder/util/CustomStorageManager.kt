@@ -10,6 +10,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
 
+import com.example.swadebuilder.model.HabilidadeCriacao
+
 @Serializable
 data class BookCustomContent(
     val bookKey: String,
@@ -17,7 +19,8 @@ data class BookCustomContent(
     val complicacoes: List<Complicacao> = emptyList(),
     val equipamentos: List<EquipamentoItem> = emptyList(),
     val poderes: List<Poder> = emptyList(),
-    val racas: List<RacialModifier> = emptyList()
+    val racas: List<RacialModifier> = emptyList(),
+    val habilidadesRaciais: List<HabilidadeCriacao> = emptyList()
 )
 
 class CustomStorageManager(
@@ -161,6 +164,28 @@ class CustomStorageManager(
 
     fun deleteRaca(context: Context, bookKey: String, itemNome: String) {
         deleteRaca(context.filesDir, bookKey, itemNome)
+    }
+
+    fun addHabilidadeRacial(baseDir: File, bookKey: String, item: HabilidadeCriacao) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            habilidadesRaciais = (current.habilidadesRaciais.filterNot { it.nome.equals(item.nome, ignoreCase = true) } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addHabilidadeRacial(context: Context, bookKey: String, item: HabilidadeCriacao) {
+        addHabilidadeRacial(context.filesDir, bookKey, item)
+    }
+
+    fun deleteHabilidadeRacial(baseDir: File, bookKey: String, itemNome: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(habilidadesRaciais = current.habilidadesRaciais.filterNot { it.nome.equals(itemNome, ignoreCase = true) })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteHabilidadeRacial(context: Context, bookKey: String, itemNome: String) {
+        deleteHabilidadeRacial(context.filesDir, bookKey, itemNome)
     }
 
     fun importItemFromAnotherBook(baseDir: File, targetBookKey: String, sourceBookKey: String, itemType: String, itemIdOrName: String): Boolean {

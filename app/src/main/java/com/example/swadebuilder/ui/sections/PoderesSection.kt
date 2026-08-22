@@ -50,6 +50,7 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
@@ -89,7 +90,7 @@ fun PoderesSection(
     onShowMessage: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
 
     val locked = state.criacaoBasicaCongeladaComXp
 

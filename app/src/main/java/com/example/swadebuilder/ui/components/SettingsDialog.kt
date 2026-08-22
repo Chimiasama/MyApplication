@@ -18,8 +18,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -44,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CustomContentType
+import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.getDisplayName
@@ -239,6 +242,14 @@ fun SettingsDialog(
                         var customRequirements by remember { mutableStateOf("") }
                         var customAdvCategory by remember { mutableStateOf(com.example.swadebuilder.model.Categoria.PROFISSIONAL) }
                         var customStage by remember { mutableStateOf("Novato") }
+                        var customAttrMin by remember { mutableStateOf(mapOf<String, Int>()) }
+                        var customSkillMin by remember { mutableStateOf(mapOf<String, Int>()) }
+                        var customPrereqEdges by remember { mutableStateOf(listOf<String>()) }
+                        var customPrereqComps by remember { mutableStateOf(listOf<String>()) }
+                        var showAttrDialog by remember { mutableStateOf(false) }
+                        var showSkillDialog by remember { mutableStateOf(false) }
+                        var showEdgeDialog by remember { mutableStateOf(false) }
+                        var showCompDialog by remember { mutableStateOf(false) }
                         var customSeverity by remember { mutableStateOf("Maior") }
                         var customEquipSuperType by remember { mutableStateOf("Arma") }
                         var customEquipSubtype by remember { mutableStateOf("Corpo a Corpo") }
@@ -252,7 +263,17 @@ fun SettingsDialog(
                         var showJsonImportSection by remember { mutableStateOf(false) }
                         var refreshTrigger by remember { mutableStateOf(0) }
 
-                        val categories = listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça")
+                        var customTraitCost by remember { mutableStateOf("1") }
+                        var selectedRacialTraits by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
+                        var showTraitSelectDialog by remember { mutableStateOf(false) }
+
+                        val baseRacialCatalog: List<com.example.swadebuilder.model.HabilidadeCriacao> = remember {
+                            runCatching {
+                                context.loadJsonAsset<List<com.example.swadebuilder.model.HabilidadeCriacao>>("basico_habilidades_raciais.json")
+                            }.getOrElse { emptyList() }
+                        }
+
+                        val categories = listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça", "Traço Racial")
                         val activeBookCustomData = remember(activeBookKey, refreshTrigger) {
                             customStorageManager.loadCustomContent(context, activeBookKey)
                         }
@@ -345,10 +366,51 @@ fun SettingsDialog(
                                             // Category-specific fields
                                             when (selectedCategory) {
                                                 "Vantagem" -> {
+                                                    // Modular Requirements Section
+                                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                                        Text("Requisitos Modulares da Vantagem:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+
+                                                        // Summary of configured requirements
+                                                        val reqSummary = buildList {
+                                                            if (customStage.isNotBlank()) add("Estágio: $customStage")
+                                                            if (customAttrMin.isNotEmpty()) add("Atributos: " + customAttrMin.entries.joinToString { "${it.key} d${it.value}" })
+                                                            if (customSkillMin.isNotEmpty()) add("Perícias: " + customSkillMin.entries.joinToString { "${it.key} d${it.value}" })
+                                                            if (customPrereqEdges.isNotEmpty()) add("Vantagens Prévias: ${customPrereqEdges.size} selecionada(s)")
+                                                            if (customPrereqComps.isNotEmpty()) add("Complicações: ${customPrereqComps.size} selecionada(s)")
+                                                        }
+                                                        if (reqSummary.isNotEmpty()) {
+                                                            Text(
+                                                                text = reqSummary.joinToString(" | "),
+                                                                style = MaterialTheme.typography.bodySmall,
+                                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                            )
+                                                        }
+
+                                                        // Interactive Selector Buttons
+                                                        @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                        androidx.compose.foundation.layout.FlowRow(
+                                                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                        ) {
+                                                            OutlinedButton(onClick = { showAttrDialog = true }) {
+                                                                Text(if (customAttrMin.isEmpty()) "+ Atributos" else "Atributos (${customAttrMin.size})", style = MaterialTheme.typography.labelSmall)
+                                                            }
+                                                            OutlinedButton(onClick = { showSkillDialog = true }) {
+                                                                Text(if (customSkillMin.isEmpty()) "+ Perícias" else "Perícias (${customSkillMin.size})", style = MaterialTheme.typography.labelSmall)
+                                                            }
+                                                            OutlinedButton(onClick = { showEdgeDialog = true }) {
+                                                                Text(if (customPrereqEdges.isEmpty()) "+ Vantagens Prévias" else "Vantagens (${customPrereqEdges.size})", style = MaterialTheme.typography.labelSmall)
+                                                            }
+                                                            OutlinedButton(onClick = { showCompDialog = true }) {
+                                                                Text(if (customPrereqComps.isEmpty()) "+ Complicações" else "Complicações (${customPrereqComps.size})", style = MaterialTheme.typography.labelSmall)
+                                                            }
+                                                        }
+                                                    }
+
                                                     androidx.compose.material3.OutlinedTextField(
                                                         value = customRequirements,
                                                         onValueChange = { customRequirements = it },
-                                                        label = { Text("Requisitos (ex: Novato, Agilidade d6)") },
+                                                        label = { Text("Outros Requisitos (texto livre)") },
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
@@ -527,10 +589,61 @@ fun SettingsDialog(
                                                     )
                                                 }
                                                 "Raça" -> {
+                                                    val netRacePoints = selectedRacialTraits.sumOf { it.custo }
+                                                    val pointColor = if (netRacePoints == 2) MaterialTheme.colorScheme.primary else if (netRacePoints < 2) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error
+
+                                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                                                        Row(
+                                                            modifier = Modifier.fillMaxWidth(),
+                                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                                            verticalAlignment = Alignment.CenterVertically
+                                                        ) {
+                                                            Text(
+                                                                text = "Pontos de Traços Raciais: $netRacePoints / 2",
+                                                                style = MaterialTheme.typography.titleSmall,
+                                                                fontWeight = FontWeight.Bold,
+                                                                color = pointColor
+                                                            )
+                                                            OutlinedButton(onClick = { showTraitSelectDialog = true }) {
+                                                                Text("Selecionar Traços")
+                                                            }
+                                                        }
+
+                                                        if (selectedRacialTraits.isEmpty()) {
+                                                            Text(
+                                                                text = "Nenhum traço racial adicionado. O padrão de criação de raças busca fechar em +2 pontos.",
+                                                                style = MaterialTheme.typography.bodySmall,
+                                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                            )
+                                                        } else {
+                                                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                                selectedRacialTraits.forEach { trait ->
+                                                                    Row(
+                                                                        modifier = Modifier.fillMaxWidth(),
+                                                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                                                        verticalAlignment = Alignment.CenterVertically
+                                                                    ) {
+                                                                        Text(
+                                                                            text = "• ${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)",
+                                                                            style = MaterialTheme.typography.bodySmall,
+                                                                            fontWeight = FontWeight.Medium
+                                                                        )
+                                                                        TextButton(onClick = {
+                                                                            selectedRacialTraits = selectedRacialTraits - trait
+                                                                        }) {
+                                                                            Text("Remover", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                "Traço Racial" -> {
                                                     androidx.compose.material3.OutlinedTextField(
-                                                        value = customRacialTrait,
-                                                        onValueChange = { customRacialTrait = it },
-                                                        label = { Text("Habilidade Racial Principal") },
+                                                        value = customTraitCost,
+                                                        onValueChange = { customTraitCost = it },
+                                                        label = { Text("Custo em Pontos (ex: 2 para positivo, -1 para negativo)") },
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
@@ -578,6 +691,7 @@ fun SettingsDialog(
                                             activeBookCustomData.equipamentos.forEach { add("Equipamento" to it.nome) }
                                             activeBookCustomData.poderes.forEach { add("Poder" to it.nome) }
                                             activeBookCustomData.racas.forEach { add("Raça" to it.nome) }
+                                            activeBookCustomData.habilidadesRaciais.forEach { add("Traço Racial" to it.nome) }
                                         }
                                     }
 
@@ -616,6 +730,7 @@ fun SettingsDialog(
                                                                 item?.let { customStorageManager.deletePoder(context, activeBookKey, it.id) }
                                                             }
                                                             "Raça" -> customStorageManager.deleteRaca(context, activeBookKey, name)
+                                                            "Traço Racial" -> customStorageManager.deleteHabilidadeRacial(context, activeBookKey, name)
                                                         }
                                                         refreshTrigger++
                                                     }) {
@@ -644,15 +759,23 @@ fun SettingsDialog(
                                             val id = "custom:${customItemName.lowercase().replace(" ", "_")}"
                                             when (selectedCategory) {
                                                 "Vantagem" -> {
+                                                    val combinedPrevEdges = customPrereqEdges + customPrereqComps
+                                                    val reqObj = Requisito(
+                                                        estagio = customStage,
+                                                        atributoMin = customAttrMin,
+                                                        periciaMin = customSkillMin,
+                                                        vantagensPrevias = combinedPrevEdges,
+                                                        observacoes = customRequirements
+                                                    )
                                                     val newAdv = com.example.swadebuilder.model.Vantagem(
                                                         id = id,
                                                         nome = customItemName,
-                                                                categoria = customAdvCategory,
-                                                                descricao = if (customRequirements.isNotBlank()) "Requisitos: $customRequirements. $safeDesc" else safeDesc,
-                                                                origem = activeBookKey,
-                                                        requisitos = Requisito(estagio = customStage)
+                                                        categoria = customAdvCategory,
+                                                        descricao = safeDesc,
+                                                        origem = activeBookKey,
+                                                        requisitos = reqObj
                                                     )
-                                                            customStorageManager.addVantagem(context, activeBookKey, newAdv)
+                                                    customStorageManager.addVantagem(context, activeBookKey, newAdv)
                                                     state.addCustomVantagem(newAdv)
                                                             statusMessage = "Vantagem '$customItemName' salva no livro $activeBookKey!"
                                                 }
@@ -698,30 +821,56 @@ fun SettingsDialog(
                                                             statusMessage = "Poder '$customItemName' salvo no livro $activeBookKey!"
                                                 }
                                                 "Raça" -> {
-                                                    val newRace = com.example.swadebuilder.model.RacialModifier(
-                                                        nome = customItemName,
-                                                                descricao = safeDesc,
-                                                        atributos = emptyMap(),
-                                                        pericias = emptyMap(),
-                                                                origem = activeBookKey,
-                                                        habilidades = listOf(
+                                                    val raceAbilities = if (selectedRacialTraits.isNotEmpty()) {
+                                                        selectedRacialTraits.map { trait ->
                                                             com.example.swadebuilder.model.RacialAbility(
-                                                                nome = customRacialTrait.ifBlank { "Traço Customizado" },
-                                                                        descricao = safeDesc,
+                                                                nome = trait.nome,
+                                                                descricao = trait.descricao,
+                                                                id = trait.nome.lowercase().replace(" ", "_"),
+                                                                category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative"
+                                                            )
+                                                        }
+                                                    } else {
+                                                        listOf(
+                                                            com.example.swadebuilder.model.RacialAbility(
+                                                                nome = "Traço Customizado",
+                                                                descricao = safeDesc,
                                                                 id = "${id}_trait",
                                                                 category = "racial_trait_positive"
                                                             )
                                                         )
+                                                    }
+                                                    val newRace = com.example.swadebuilder.model.RacialModifier(
+                                                        nome = customItemName,
+                                                        descricao = safeDesc,
+                                                        atributos = emptyMap(),
+                                                        pericias = emptyMap(),
+                                                        origem = activeBookKey,
+                                                        habilidades = raceAbilities
                                                     )
-                                                            customStorageManager.addRaca(context, activeBookKey, newRace)
+                                                    customStorageManager.addRaca(context, activeBookKey, newRace)
                                                     state.listaAncestralidadesJson = state.listaAncestralidadesJson + newRace
-                                                            statusMessage = "Raça '$customItemName' salva no livro $activeBookKey!"
+                                                    statusMessage = "Raça '$customItemName' salva no livro $activeBookKey!"
+                                                }
+                                                "Traço Racial" -> {
+                                                    val costInt = customTraitCost.toIntOrNull() ?: 1
+                                                    val newTrait = com.example.swadebuilder.model.HabilidadeCriacao(
+                                                        nome = customItemName,
+                                                        custo = costInt,
+                                                        descricao = safeDesc
+                                                    )
+                                                    customStorageManager.addHabilidadeRacial(context, activeBookKey, newTrait)
+                                                    statusMessage = "Traço racial '$customItemName' salvo no livro $activeBookKey!"
                                                 }
                                             }
                                                     refreshTrigger++
                                             customItemName = ""
                                             customItemDesc = ""
                                             customRequirements = ""
+                                            customAttrMin = emptyMap()
+                                            customSkillMin = emptyMap()
+                                            customPrereqEdges = emptyList()
+                                            customPrereqComps = emptyList()
                                             customDamage = ""
                                             customRacialTrait = ""
                                         } else if (customPackageJson.isNotBlank()) {
@@ -740,6 +889,198 @@ fun SettingsDialog(
                                 }
                             }
                         )
+
+                        // Requirement Selector Modals
+                        if (showAttrDialog) {
+                            val attrs = listOf("AGILIDADE" to "Agilidade", "ASTUCIA" to "Astúcia", "ESPIRITO" to "Espírito", "FORCA" to "Força", "VIGOR" to "Vigor")
+                            AlertDialog(
+                                onDismissRequest = { showAttrDialog = false },
+                                title = { Text("Atributos Mínimos") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        attrs.forEach { (key, name) ->
+                                            val currentDie = customAttrMin[key] ?: 0
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(name, style = MaterialTheme.typography.bodyMedium)
+                                                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    listOf(0, 4, 6, 8, 10, 12).forEach { die ->
+                                                        val label = if (die == 0) "-" else "d$die"
+                                                        androidx.compose.material3.FilterChip(
+                                                            selected = currentDie == die,
+                                                            onClick = {
+                                                                val mut = customAttrMin.toMutableMap()
+                                                                if (die == 0) mut.remove(key) else mut[key] = die
+                                                                customAttrMin = mut
+                                                            },
+                                                            label = { Text(label, style = MaterialTheme.typography.labelSmall) }
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showAttrDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        if (showSkillDialog) {
+                            val allSkillsList = state.listaPericias.map { it.nome }.distinct().sorted()
+                            var filterSkillText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showSkillDialog = false },
+                                title = { Text("Perícias Mínimas") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterSkillText,
+                                            onValueChange = { filterSkillText = it },
+                                            label = { Text("Filtrar Perícia") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        allSkillsList.filter { it.contains(filterSkillText, ignoreCase = true) }.forEach { skillName ->
+                                            val currentDie = customSkillMin[skillName] ?: 0
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(skillName, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                                                Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                                                    listOf(0, 4, 6, 8, 10, 12).forEach { die ->
+                                                        val label = if (die == 0) "-" else "d$die"
+                                                        androidx.compose.material3.FilterChip(
+                                                            selected = currentDie == die,
+                                                            onClick = {
+                                                                val mut = customSkillMin.toMutableMap()
+                                                                if (die == 0) mut.remove(skillName) else mut[skillName] = die
+                                                                customSkillMin = mut
+                                                            },
+                                                            label = { Text(label, style = MaterialTheme.typography.labelSmall) }
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showSkillDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        if (showEdgeDialog) {
+                            val availableEdges = state.listaVantagens.distinctBy { it.id }.sortedBy { it.nome }
+                            var filterEdgeText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showEdgeDialog = false },
+                                title = { Text("Vantagens Prévias") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterEdgeText,
+                                            onValueChange = { filterEdgeText = it },
+                                            label = { Text("Filtrar Vantagem") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        availableEdges.filter { it.nome.contains(filterEdgeText, ignoreCase = true) }.forEach { edge ->
+                                            val isSel = edge.id in customPrereqEdges
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    customPrereqEdges = if (isSel) customPrereqEdges - edge.id else customPrereqEdges + edge.id
+                                                }.padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                    customPrereqEdges = if (it) customPrereqEdges + edge.id else customPrereqEdges - edge.id
+                                                })
+                                                Spacer(Modifier.width(8.dp))
+                                                Text(edge.nome, style = MaterialTheme.typography.bodySmall)
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showEdgeDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        if (showCompDialog) {
+                            val availableComps = state.listaComplicacoes.distinctBy { it.id }.sortedBy { it.name }
+                            var filterCompText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showCompDialog = false },
+                                title = { Text("Complicações Mínimas") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterCompText,
+                                            onValueChange = { filterCompText = it },
+                                            label = { Text("Filtrar Complicação") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        availableComps.filter { it.name.contains(filterCompText, ignoreCase = true) }.forEach { comp ->
+                                            val isSel = comp.id in customPrereqComps
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    customPrereqComps = if (isSel) customPrereqComps - comp.id else customPrereqComps + comp.id
+                                                }.padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                    customPrereqComps = if (it) customPrereqComps + comp.id else customPrereqComps - comp.id
+                                                })
+                                                Spacer(Modifier.width(8.dp))
+                                                Text(comp.name, style = MaterialTheme.typography.bodySmall)
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showCompDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        if (showTraitSelectDialog) {
+                            val allTraitsCatalog = (baseRacialCatalog + activeBookCustomData.habilidadesRaciais).distinctBy { it.nome }
+                            var filterTraitText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showTraitSelectDialog = false },
+                                title = { Text("Selecionar Traços Raciais") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterTraitText,
+                                            onValueChange = { filterTraitText = it },
+                                            label = { Text("Filtrar Traço") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        allTraitsCatalog.filter { it.nome.contains(filterTraitText, ignoreCase = true) }.forEach { trait ->
+                                            val isSel = selectedRacialTraits.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    selectedRacialTraits = if (isSel) selectedRacialTraits.filterNot { it.nome.equals(trait.nome, ignoreCase = true) } else selectedRacialTraits + trait
+                                                }.padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                    selectedRacialTraits = if (it) selectedRacialTraits + trait else selectedRacialTraits.filterNot { t -> t.nome.equals(trait.nome, ignoreCase = true) }
+                                                })
+                                                Spacer(Modifier.width(8.dp))
+                                                Column {
+                                                    Text("${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                    if (trait.descricao.isNotBlank()) {
+                                                        Text(trait.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showTraitSelectDialog = false }) { Text("OK") } }
+                            )
+                        }
                     }
                 }
 

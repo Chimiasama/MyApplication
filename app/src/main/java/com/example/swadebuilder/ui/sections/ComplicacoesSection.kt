@@ -92,7 +92,7 @@ fun ComplicacoesSection(
         .map { normalizeUIKey(it.substringBefore("(").trim()) }
         .toSet()
 
-    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
     val scope = rememberCoroutineScope()
