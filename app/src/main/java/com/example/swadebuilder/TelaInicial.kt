@@ -360,44 +360,44 @@ fun TelaInicial(
         if (optCompendioWiseguys) activeModules.add("WISEGUYS")
         if (optSuperPoderes) activeModules.add("SUPER")
 
-        onCriarNovo(
-            optCartaSelvagem,
-            optMaisPontosPericias,
-            optSuperPoderes,
-            optCompendioFantasia,
-            optCompendioHorror,
-            optCompendioSciFi,
-            optCompendioPathfinder,
-            optCompendioDeadlands,
-            optCompendioCrystalHeart,
-            optCompendioArteDaGuerra,
-            optCompendioCidadeSolVapor,
-            optCompendioWiseguys,
-            optModoMonstro,
-            optNasceUmHeroi,
-            optEspecializacaoPer,
-            optSemPontosPoder,
-            optMultiplosIdiomas,
-            optGrandesResponsabilidades,
-            optRegraFama,
-            optRegraRiqueza,
-            optRegraCosaNostra,
-            optRegraMechas,
-            optRegraCiberneticos
-        )
-        scope.launch(Dispatchers.IO) {
+        scope.launch {
             viewModel.carregarDadosDeJogo(context, activeModules)
+            onCriarNovo(
+                optCartaSelvagem,
+                optMaisPontosPericias,
+                optSuperPoderes,
+                optCompendioFantasia,
+                optCompendioHorror,
+                optCompendioSciFi,
+                optCompendioPathfinder,
+                optCompendioDeadlands,
+                optCompendioCrystalHeart,
+                optCompendioArteDaGuerra,
+                optCompendioCidadeSolVapor,
+                optCompendioWiseguys,
+                optModoMonstro,
+                optNasceUmHeroi,
+                optEspecializacaoPer,
+                optSemPontosPoder,
+                optMultiplosIdiomas,
+                optGrandesResponsabilidades,
+                optRegraFama,
+                optRegraRiqueza,
+                optRegraCosaNostra,
+                optRegraMechas,
+                optRegraCiberneticos
+            )
+            viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
+            viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
+            viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
+            viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
+            viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
+            viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
+            viewModel.state.optRegraRiqueza = optRegraRiqueza
+            viewModel.state.optRegraCosaNostra = optRegraCosaNostra
+            viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
+            viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
         }
-        viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
-        viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
-        viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
-        viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
-        viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
-        viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
-        viewModel.state.optRegraRiqueza = optRegraRiqueza
-        viewModel.state.optRegraCosaNostra = optRegraCosaNostra
-        viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
-        viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
     }
 
     Scaffold(
