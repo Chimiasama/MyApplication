@@ -2,6 +2,8 @@ package com.example.swadebuilder.ui.dialogs
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -322,6 +324,69 @@ fun ProgressosDialog(
                         color = Color.Gray
                     )
                     Spacer(Modifier.height(8.dp))
+                }
+
+                // ── Histórico de Revisões / Linha do Tempo ────────────────────────
+                var showRevisionsDialog by remember { mutableStateOf(false) }
+
+                TextButton(
+                    onClick = { showRevisionsDialog = true },
+                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
+                ) {
+                    Text("Histórico de Revisões / Linha do Tempo")
+                }
+
+                if (showRevisionsDialog) {
+                    val revisionManager = remember { com.example.swadebuilder.util.CharacterRevisionManager() }
+                    val history = remember(state.idAtual, state.advancementHistory.size) {
+                        com.example.swadebuilder.util.CharacterRevisionHistory(
+                            characterId = state.idAtual ?: "current",
+                            revisions = state.advancementHistory.mapIndexed { idx, action ->
+                                revisionManager.createRevision(
+                                    snapshot = state.toSnapshot(),
+                                    reason = "Avanço #${idx + 1}: ${action.stageName}",
+                                    stageName = action.stageName
+                                )
+                            }
+                        )
+                    }
+
+                    AlertDialog(
+                        onDismissRequest = { showRevisionsDialog = false },
+                        title = { Text("Histórico de Revisões") },
+                        text = {
+                            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                if (history.revisions.isEmpty()) {
+                                    Text("Nenhuma revisão registrada ainda.", style = MaterialTheme.typography.bodyMedium)
+                                } else {
+                                    history.revisions.forEach { revision ->
+                                        Card(
+                                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                                        ) {
+                                            Column(Modifier.padding(12.dp)) {
+                                                Text(revision.reason, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                                                Text("Estágio: ${revision.stageName}", style = MaterialTheme.typography.bodySmall)
+                                                Spacer(Modifier.height(4.dp))
+                                                TextButton(
+                                                    onClick = {
+                                                        state.restoreFromSnapshot(revision.snapshot, mutableListOf())
+                                                        showRevisionsDialog = false
+                                                        onDismiss()
+                                                    }
+                                                ) {
+                                                    Text("Restaurar esta versão")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(onClick = { showRevisionsDialog = false }) { Text("Fechar") }
+                        }
+                    )
                 }
 
                 // ── Remover / Reduzir Complicação ─────────────────────────────────

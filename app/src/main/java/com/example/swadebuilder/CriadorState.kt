@@ -137,6 +137,30 @@ class CriadorState {
 
     // listaDeEstagios is imported from model (static rules)
 
+    fun addCustomVantagem(vant: Vantagem) {
+        if (listaVantagens.none { it.id == vant.id }) {
+            listaVantagens = listaVantagens + vant
+        }
+    }
+
+    fun addCustomComplicacao(comp: Complicacao) {
+        if (listaComplicacoes.none { it.id == comp.id }) {
+            listaComplicacoes = listaComplicacoes + comp
+        }
+    }
+
+    fun addCustomEquipamento(item: EquipamentoItem) {
+        if (listaEquipamentos.none { it.nome == item.nome }) {
+            listaEquipamentos = listaEquipamentos + item
+        }
+    }
+
+    fun addCustomPoder(poder: Poder) {
+        if (listaPoderes.none { it.id == poder.id }) {
+            listaPoderes = listaPoderes + poder
+        }
+    }
+
     fun updateGameData(snapshot: GameDataSnapshot) {
         this.listaAtributos = snapshot.listaAtributos
         this.listaPericias = snapshot.listaPericias
