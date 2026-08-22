@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.foundation.clickable
@@ -27,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
@@ -44,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CustomContentType
 import com.example.swadebuilder.util.loadJsonAsset
@@ -592,46 +596,74 @@ fun SettingsDialog(
                                                     val netRacePoints = selectedRacialTraits.sumOf { it.custo }
                                                     val pointColor = if (netRacePoints == 2) MaterialTheme.colorScheme.primary else if (netRacePoints < 2) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error
 
-                                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(),
-                                                            horizontalArrangement = Arrangement.SpaceBetween,
-                                                            verticalAlignment = Alignment.CenterVertically
+                                                    OutlinedCard(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        colors = CardDefaults.outlinedCardColors(
+                                                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                                                        )
+                                                    ) {
+                                                        Column(
+                                                            modifier = Modifier.padding(12.dp),
+                                                            verticalArrangement = Arrangement.spacedBy(8.dp)
                                                         ) {
-                                                            Text(
-                                                                text = "Pontos de Traços Raciais: $netRacePoints / 2",
-                                                                style = MaterialTheme.typography.titleSmall,
-                                                                fontWeight = FontWeight.Bold,
-                                                                color = pointColor
-                                                            )
-                                                            OutlinedButton(onClick = { showTraitSelectDialog = true }) {
-                                                                Text("Selecionar Traços")
+                                                            Row(
+                                                                modifier = Modifier.fillMaxWidth(),
+                                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                                verticalAlignment = Alignment.CenterVertically
+                                                            ) {
+                                                                Column {
+                                                                    Text(
+                                                                        text = "Traços Raciais",
+                                                                        style = MaterialTheme.typography.titleSmall,
+                                                                        fontWeight = FontWeight.Bold
+                                                                    )
+                                                                    Text(
+                                                                        text = "Pontos: $netRacePoints / 2",
+                                                                        style = MaterialTheme.typography.labelSmall,
+                                                                        fontWeight = FontWeight.SemiBold,
+                                                                        color = pointColor
+                                                                    )
+                                                                }
+                                                                OutlinedButton(
+                                                                    onClick = { showTraitSelectDialog = true },
+                                                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                                                ) {
+                                                                    Icon(
+                                                                        imageVector = Icons.Default.Add,
+                                                                        contentDescription = null,
+                                                                        modifier = Modifier.size(16.dp)
+                                                                    )
+                                                                    Spacer(Modifier.width(4.dp))
+                                                                    Text("Adicionar Traço", fontSize = 12.sp)
+                                                                }
                                                             }
-                                                        }
 
-                                                        if (selectedRacialTraits.isEmpty()) {
-                                                            Text(
-                                                                text = "Nenhum traço racial adicionado. O padrão de criação de raças busca fechar em +2 pontos.",
-                                                                style = MaterialTheme.typography.bodySmall,
-                                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                            )
-                                                        } else {
-                                                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                                selectedRacialTraits.forEach { trait ->
-                                                                    Row(
-                                                                        modifier = Modifier.fillMaxWidth(),
-                                                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                                                        verticalAlignment = Alignment.CenterVertically
-                                                                    ) {
-                                                                        Text(
-                                                                            text = "• ${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)",
-                                                                            style = MaterialTheme.typography.bodySmall,
-                                                                            fontWeight = FontWeight.Medium
-                                                                        )
-                                                                        TextButton(onClick = {
-                                                                            selectedRacialTraits = selectedRacialTraits - trait
-                                                                        }) {
-                                                                            Text("Remover", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
+                                                            if (selectedRacialTraits.isEmpty()) {
+                                                                Text(
+                                                                    text = "Nenhum traço racial adicionado. O padrão de criação de raças busca fechar em +2 pontos.",
+                                                                    style = MaterialTheme.typography.bodySmall,
+                                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                                )
+                                                            } else {
+                                                                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                                    selectedRacialTraits.forEach { trait ->
+                                                                        Row(
+                                                                            modifier = Modifier.fillMaxWidth(),
+                                                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                                                            verticalAlignment = Alignment.CenterVertically
+                                                                        ) {
+                                                                            Text(
+                                                                                text = "• ${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)",
+                                                                                style = MaterialTheme.typography.bodySmall,
+                                                                                fontWeight = FontWeight.Medium,
+                                                                                modifier = Modifier.weight(1f)
+                                                                            )
+                                                                            TextButton(
+                                                                                onClick = { selectedRacialTraits = selectedRacialTraits - trait },
+                                                                                contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp)
+                                                                            ) {
+                                                                                Text("Remover", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
+                                                                            }
                                                                         }
                                                                     }
                                                                 }
