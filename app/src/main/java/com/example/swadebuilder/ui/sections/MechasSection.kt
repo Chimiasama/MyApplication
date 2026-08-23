@@ -751,22 +751,11 @@ private fun MechaCardItem(
                                             modifier = Modifier.weight(1f),
                                             verticalArrangement = Arrangement.spacedBy(2.dp)
                                         ) {
-                                            Row(
-                                                verticalAlignment = Alignment.CenterVertically,
-                                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                            ) {
-                                                Text(
-                                                    text = mod.nome,
-                                                    style = MaterialTheme.typography.bodyMedium,
-                                                    fontWeight = FontWeight.Bold
-                                                )
-                                                Text(
-                                                    text = if (isNeg) "${mod.mods_cost} MODs" else "+${mod.mods_cost} MODs",
-                                                    style = MaterialTheme.typography.labelSmall,
-                                                    color = if (isNeg) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
-                                                    fontWeight = FontWeight.SemiBold
-                                                )
-                                            }
+                                            Text(
+                                                text = mod.nome,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.Bold
+                                            )
                                             Text(
                                                 text = mod.descricao,
                                                 style = MaterialTheme.typography.labelSmall,
@@ -779,7 +768,7 @@ private fun MechaCardItem(
                                             verticalArrangement = Arrangement.spacedBy(4.dp)
                                         ) {
                                             Text(
-                                                text = if (isMaxed) "Máx" else "+",
+                                                text = if (isMaxed) "Máx" else if (mod.mods_cost >= 0) "+${mod.mods_cost}" else "${mod.mods_cost}",
                                                 modifier = Modifier
                                                     .clip(CircleShape)
                                                     .clickable(enabled = !isMaxed) {
@@ -791,7 +780,7 @@ private fun MechaCardItem(
                                                     }
                                                     .padding(horizontal = 10.dp, vertical = 2.dp),
                                                 style = MaterialTheme.typography.titleMedium,
-                                                color = if (isMaxed) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
+                                                color = if (isMaxed) MaterialTheme.colorScheme.onSurfaceVariant else if (isNeg) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                                                 fontWeight = FontWeight.Bold
                                             )
                                             if (currentUses > 0) {
