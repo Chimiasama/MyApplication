@@ -29,7 +29,6 @@ object DataLoader {
     // --- Module Definitions ---
 
     private val equipmentModules = listOf(
-        ModuleFile("basico_equipamentos.json"),
         ModuleFile("fantasia_equipamentos.json", originOverride = "FANTASIA"),
         ModuleFile("horror_equipamentos.json", originOverride = "HORROR"),
         ModuleFile("scifi_equipamentos.json", originOverride = "SCI_FI"),
@@ -39,11 +38,11 @@ object DataLoader {
         ModuleFile("wiseguys_equipamentos.json", originOverride = "WISEGUYS"),
         ModuleFile("adg_equipamentos.json", originOverride = "ARTE_DA_GUERRA"),
         ModuleFile("sol_vapor_equipamentos.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_equipamentos.json", originOverride = "DEADLANDS")
+        ModuleFile("deadlands_equipamentos.json", originOverride = "DEADLANDS"),
+        ModuleFile("basico_equipamentos.json")
     )
 
     private val skillModules = listOf(
-        ModuleFile("basico_pericias.json"),
         ModuleFile("adg_pericias.json", originOverride = "ARTE_DA_GUERRA"),
         ModuleFile("fantasia_pericias.json", originOverride = "FANTASIA"),
         ModuleFile("horror_pericias.json", originOverride = "HORROR"),
@@ -53,11 +52,11 @@ object DataLoader {
         ModuleFile("pathfinder_pericias.json", originOverride = "PATHFINDER"),
         ModuleFile("sol_vapor_pericias.json", originOverride = "CIDADE_SOL_VAPOR"),
         ModuleFile("crystal_pericias.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("super_pericias.json", originOverride = "SUPER")
+        ModuleFile("super_pericias.json", originOverride = "SUPER"),
+        ModuleFile("basico_pericias.json")
     )
 
     private val advantageModules = listOf(
-        ModuleFile("basico_vantagens.json"),
         ModuleFile("fantasia_vantagens.json", originOverride = "FANTASIA"),
         ModuleFile("horror_vantagens.json", originOverride = "HORROR"),
         ModuleFile("scifi_vantagens.json", originOverride = "SCI_FI"),
@@ -67,11 +66,11 @@ object DataLoader {
         ModuleFile("adg_vantagens.json", originOverride = "ARTE_DA_GUERRA"),
         ModuleFile("sol_vapor_vantagens.json", originOverride = "CIDADE_SOL_VAPOR"),
         ModuleFile("deadlands_vantagens.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_vantagens.json", originOverride = "PATHFINDER")
+        ModuleFile("pathfinder_vantagens.json", originOverride = "PATHFINDER"),
+        ModuleFile("basico_vantagens.json")
     )
 
     private val complicationModules = listOf(
-        ModuleFile("basico_complicacoes.json"),
         ModuleFile("fantasia_complicacoes.json", originOverride = "FANTASIA"),
         ModuleFile("horror_complicacoes.json", originOverride = "HORROR"),
         ModuleFile("scifi_complicacoes.json", originOverride = "SCI_FI"),
@@ -81,11 +80,11 @@ object DataLoader {
         ModuleFile("adg_complicacoes.json", originOverride = "ARTE_DA_GUERRA"),
         ModuleFile("sol_vapor_complicacoes.json", originOverride = "CIDADE_SOL_VAPOR"),
         ModuleFile("deadlands_complicacoes.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_complicacoes.json", originOverride = "PATHFINDER")
+        ModuleFile("pathfinder_complicacoes.json", originOverride = "PATHFINDER"),
+        ModuleFile("basico_complicacoes.json")
     )
 
     private val ancestryModules = listOf(
-        ModuleFile("basico_ancestralidades.json"),
         ModuleFile("fantasia_ancestralidades.json", originOverride = "FANTASIA"),
         ModuleFile("horror_ancestralidades.json", originOverride = "HORROR"),
         ModuleFile("scifi_ancestralidades.json", originOverride = "SCI_FI"),
@@ -95,11 +94,11 @@ object DataLoader {
         ModuleFile("sol_vapor_ancestralidades.json", originOverride = "CIDADE_SOL_VAPOR"),
         ModuleFile("deadlands_ancestralidades.json", originOverride = "DEADLANDS"),
         ModuleFile("pathfinder_ancestralidades.json", originOverride = "PATHFINDER"),
-        ModuleFile("super_ancestralidades.json", originOverride = "SUPER")
+        ModuleFile("super_ancestralidades.json", originOverride = "SUPER"),
+        ModuleFile("basico_ancestralidades.json")
     )
 
     private val powerModules = listOf(
-        ModuleFile("basico_poderes.json"),
         ModuleFile("fantasia_poderes.json", originOverride = "FANTASIA"),
         ModuleFile("scifi_poderes.json", originOverride = "SCI_FI"),
         ModuleFile("horror_poderes.json", originOverride = "HORROR"),
@@ -110,7 +109,8 @@ object DataLoader {
         ModuleFile("wiseguys_poderes.json", originOverride = "WISEGUYS"),
         ModuleFile("adg_poderes.json", originOverride = "ARTE_DA_GUERRA"),
         ModuleFile("adg_tecnicas_chi.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("super_poderes_base.json", originOverride = "SUPER")
+        ModuleFile("super_poderes_base.json", originOverride = "SUPER"),
+        ModuleFile("basico_poderes.json")
     )
 
     // --- Loading Logic ---
