@@ -38,17 +38,12 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         ancestryOrigin: String = "BASICO"
     ): Result {
         val ancKey = anc.keyify()
-        val validOptions = if (ancKey == "ANOES" && !isSciFiMechasActive) {
-            ancestryOptions.filter { it.keyify() != "CIBER" }
-        } else {
-            ancestryOptions
-        }
-        val effectiveVariant = if (validOptions.isNotEmpty()) {
+        val effectiveVariant = if (ancestryOptions.isNotEmpty()) {
             resolveAncestryVariantUseCase.execute(
                 ResolveAncestryVariantUseCase.Input(
                     selectedVariant = scifiVariant,
                     legacySelectedVariant = anoesScifiSelecionado,
-                    availableOptions = validOptions
+                    availableOptions = ancestryOptions
                 )
             ).normalizedSelection
         } else {

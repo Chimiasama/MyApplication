@@ -815,16 +815,11 @@ class CriadorState {
         if (availableOptions.isEmpty()) return null
         val selected = overrideSelection ?: scifiVariant
         val legacySelection: String? = null
-        val filteredOptions = if (ancestryName.keyify() == "ANOES" && !compendioScifiCiberneticosAtivo) {
-            availableOptions.filter { it.keyify() != "CIBER" }
-        } else {
-            availableOptions
-        }
         return resolveAncestryVariantUseCase.execute(
             ResolveAncestryVariantUseCase.Input(
                 selectedVariant = selected,
                 legacySelectedVariant = legacySelection,
-                availableOptions = filteredOptions
+                availableOptions = availableOptions
             )
         ).normalizedSelection
     }

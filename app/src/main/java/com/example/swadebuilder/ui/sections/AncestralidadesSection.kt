@@ -484,13 +484,7 @@ fun AncestralidadesSection(
                             }
 
                             if (isSelected) {
-                                val opcoesValidas = item.opcoes.filter {
-                                    if (item.nome.keyify() == "ANOES" && it.keyify() == "CIBER") {
-                                        state.compendioScifiMechasCiberneticosAtivo
-                                    } else {
-                                        true
-                                    }
-                                }
+                                val opcoesValidas = item.opcoes
 
                                 val isFeral = item.nome.keyify() == "FERAL"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
