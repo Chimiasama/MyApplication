@@ -161,53 +161,39 @@ fun TelaInicial(
     }
 
     // Helper for applying rules presets
-    fun applyRulesPreset(preset: String) {
+    fun applyRulesPreset(presetId: String) {
         resetAllRuleFlags()
-        when (preset) {
-            "Supers" -> {
-                optCartaSelvagem = true
-                optMaisPontosPericias = true
-            }
-            "Arte da Guerra" -> {
-                optCartaSelvagem = true
-                optMaisPontosPericias = false
-                optNasceUmHeroi = true
-            }
-            "Wiseguys" -> {
-                optCartaSelvagem = true
-                optMaisPontosPericias = true
-                optRegraRiqueza = true
-                optRegraCosaNostra = true
-            }
-            "Pathfinder", "Deadlands", "Crystal Heart", "Fantasia" -> {
-                optCartaSelvagem = true
-                optMaisPontosPericias = false
-            }
-            "Básico", "Horror", "Ficção", "Cidade Sol Vapor" -> {
-                optCartaSelvagem = true
-                optMaisPontosPericias = true
-            }
-        }
+        val preset = com.example.swadebuilder.model.CreationPreset.getById(presetId)
+        optCartaSelvagem = preset.defaultCartaSelvagem
+        optMaisPontosPericias = preset.defaultMaisPontosPericias
+        optNasceUmHeroi = preset.defaultNasceUmHeroi
+        optRegraFama = preset.defaultRegraFama
+        optRegraRiqueza = preset.defaultRegraRiqueza
+        optRegraCosaNostra = preset.defaultRegraCosaNostra
+        optRegraMechas = preset.defaultRegraMechas
+        optRegraCiberneticos = preset.defaultRegraCiberneticos
+        optGrandesResponsabilidades = preset.defaultGrandesResponsabilidades
+        optModoMonstro = preset.defaultModoMonstro
     }
 
-    fun getActiveBookPreset(): String {
+    fun getActiveBookPresetId(): String {
         return when {
-            optSuperPoderes -> "Supers"
-            optCompendioArteDaGuerra -> "Arte da Guerra"
-            optCompendioWiseguys -> "Wiseguys"
-            optCompendioPathfinder -> "Pathfinder"
-            optCompendioDeadlands -> "Deadlands"
-            optCompendioCrystalHeart -> "Crystal Heart"
-            optCompendioFantasia -> "Fantasia"
-            optCompendioHorror -> "Horror"
-            optCompendioSciFi -> "Ficção"
-            optCompendioCidadeSolVapor -> "Cidade Sol Vapor"
-            else -> "Básico"
+            optSuperPoderes -> "supers"
+            optCompendioArteDaGuerra -> "arte_da_guerra"
+            optCompendioWiseguys -> "wiseguys"
+            optCompendioPathfinder -> "pathfinder"
+            optCompendioDeadlands -> "deadlands"
+            optCompendioCrystalHeart -> "crystal_heart"
+            optCompendioFantasia -> "fantasia"
+            optCompendioHorror -> "horror"
+            optCompendioSciFi -> "scifi"
+            optCompendioCidadeSolVapor -> "cidade_sol_vapor"
+            else -> "basico"
         }
     }
 
     fun resetAllBookRulesToDefaults() {
-        applyRulesPreset(getActiveBookPreset())
+        applyRulesPreset(getActiveBookPresetId())
     }
 
     // Data for Grid
@@ -243,7 +229,7 @@ fun TelaInicial(
                  optCompendioArteDaGuerra = false
                  optCompendioCidadeSolVapor = false
                  optCompendioWiseguys = false
-                 applyRulesPreset("Básico")
+                 applyRulesPreset("basico")
             }
         ),
         ModuleItemData(
@@ -254,7 +240,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioFantasia,
             {
                 optCompendioFantasia = !optCompendioFantasia
-                applyRulesPreset(if (optCompendioFantasia) "Fantasia" else "Básico")
+                applyRulesPreset(if (optCompendioFantasia) "fantasia" else "basico")
             }
         ),
         ModuleItemData(
@@ -265,7 +251,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioSciFi,
             {
                 optCompendioSciFi = !optCompendioSciFi
-                applyRulesPreset(if (optCompendioSciFi) "Ficção" else "Básico")
+                applyRulesPreset(if (optCompendioSciFi) "scifi" else "basico")
             }
         ),
         ModuleItemData(
@@ -276,7 +262,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioHorror,
             {
                 optCompendioHorror = !optCompendioHorror
-                applyRulesPreset(if (optCompendioHorror) "Horror" else "Básico")
+                applyRulesPreset(if (optCompendioHorror) "horror" else "basico")
             }
         ),
         ModuleItemData(
@@ -287,7 +273,7 @@ fun TelaInicial(
             !isAnyBookSelected || optSuperPoderes,
             {
                 optSuperPoderes = !optSuperPoderes
-                applyRulesPreset(if (optSuperPoderes) "Supers" else "Básico")
+                applyRulesPreset(if (optSuperPoderes) "supers" else "basico")
             }
         )
     )
@@ -301,7 +287,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioPathfinder,
             {
                 optCompendioPathfinder = !optCompendioPathfinder
-                applyRulesPreset(if (optCompendioPathfinder) "Pathfinder" else "Básico")
+                applyRulesPreset(if (optCompendioPathfinder) "pathfinder" else "basico")
             }
         ),
         ModuleItemData(
@@ -312,7 +298,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioDeadlands,
             {
                 optCompendioDeadlands = !optCompendioDeadlands
-                applyRulesPreset(if (optCompendioDeadlands) "Deadlands" else "Básico")
+                applyRulesPreset(if (optCompendioDeadlands) "deadlands" else "basico")
             }
         ),
         ModuleItemData(
@@ -323,7 +309,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioCrystalHeart,
             {
                 optCompendioCrystalHeart = !optCompendioCrystalHeart
-                applyRulesPreset(if (optCompendioCrystalHeart) "Crystal Heart" else "Básico")
+                applyRulesPreset(if (optCompendioCrystalHeart) "crystal_heart" else "basico")
             }
         ),
         ModuleItemData(
@@ -334,7 +320,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioArteDaGuerra,
             {
                 optCompendioArteDaGuerra = !optCompendioArteDaGuerra
-                applyRulesPreset(if (optCompendioArteDaGuerra) "Arte da Guerra" else "Básico")
+                applyRulesPreset(if (optCompendioArteDaGuerra) "arte_da_guerra" else "basico")
             }
         ),
         ModuleItemData(
@@ -345,7 +331,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioCidadeSolVapor,
             {
                 optCompendioCidadeSolVapor = !optCompendioCidadeSolVapor
-                applyRulesPreset(if (optCompendioCidadeSolVapor) "Cidade Sol Vapor" else "Básico")
+                applyRulesPreset(if (optCompendioCidadeSolVapor) "cidade_sol_vapor" else "basico")
             }
         ),
         ModuleItemData(
@@ -356,7 +342,7 @@ fun TelaInicial(
             !isAnyBookSelected || optCompendioWiseguys,
             {
                 optCompendioWiseguys = !optCompendioWiseguys
-                applyRulesPreset(if (optCompendioWiseguys) "Wiseguys" else "Básico")
+                applyRulesPreset(if (optCompendioWiseguys) "wiseguys" else "basico")
             }
         )
     )
@@ -374,44 +360,44 @@ fun TelaInicial(
         if (optCompendioWiseguys) activeModules.add("WISEGUYS")
         if (optSuperPoderes) activeModules.add("SUPER")
 
-        onCriarNovo(
-            optCartaSelvagem,
-            optMaisPontosPericias,
-            optSuperPoderes,
-            optCompendioFantasia,
-            optCompendioHorror,
-            optCompendioSciFi,
-            optCompendioPathfinder,
-            optCompendioDeadlands,
-            optCompendioCrystalHeart,
-            optCompendioArteDaGuerra,
-            optCompendioCidadeSolVapor,
-            optCompendioWiseguys,
-            optModoMonstro,
-            optNasceUmHeroi,
-            optEspecializacaoPer,
-            optSemPontosPoder,
-            optMultiplosIdiomas,
-            optGrandesResponsabilidades,
-            optRegraFama,
-            optRegraRiqueza,
-            optRegraCosaNostra,
-            optRegraMechas,
-            optRegraCiberneticos
-        )
-        scope.launch(Dispatchers.IO) {
+        scope.launch {
             viewModel.carregarDadosDeJogo(context, activeModules)
+            onCriarNovo(
+                optCartaSelvagem,
+                optMaisPontosPericias,
+                optSuperPoderes,
+                optCompendioFantasia,
+                optCompendioHorror,
+                optCompendioSciFi,
+                optCompendioPathfinder,
+                optCompendioDeadlands,
+                optCompendioCrystalHeart,
+                optCompendioArteDaGuerra,
+                optCompendioCidadeSolVapor,
+                optCompendioWiseguys,
+                optModoMonstro,
+                optNasceUmHeroi,
+                optEspecializacaoPer,
+                optSemPontosPoder,
+                optMultiplosIdiomas,
+                optGrandesResponsabilidades,
+                optRegraFama,
+                optRegraRiqueza,
+                optRegraCosaNostra,
+                optRegraMechas,
+                optRegraCiberneticos
+            )
+            viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
+            viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
+            viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
+            viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
+            viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
+            viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
+            viewModel.state.optRegraRiqueza = optRegraRiqueza
+            viewModel.state.optRegraCosaNostra = optRegraCosaNostra
+            viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
+            viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
         }
-        viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
-        viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
-        viewModel.state.compendioCrystalHeartAtivo = optCompendioCrystalHeart
-        viewModel.state.compendioArteDaGuerraAtivo = optCompendioArteDaGuerra
-        viewModel.state.compendioCidadeSolVaporAtivo = optCompendioCidadeSolVapor
-        viewModel.state.compendioWiseguysAtivo = optCompendioWiseguys
-        viewModel.state.optRegraRiqueza = optRegraRiqueza
-        viewModel.state.optRegraCosaNostra = optRegraCosaNostra
-        viewModel.state.permiteMultiAntecedenteArcano = optMultiAntecedenteArcano
-        viewModel.state.regraMultiplosIdiomas = optMultiplosIdiomas
     }
 
     Scaffold(
@@ -533,9 +519,39 @@ fun TelaInicial(
             dismissButton = {
                 TextButton(onClick = { showRulesDialog = false }) { Text("Cancelar") }
             },
-            title = { Text("Regras de Cenário") },
+            title = { Text("Resumo do Módulo e Regras") },
             text = {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    val activePreset = com.example.swadebuilder.model.CreationPreset.getById(getActiveBookPresetId())
+                    androidx.compose.material3.Card(
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                        colors = androidx.compose.material3.CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "Módulo: ${activePreset.titulo}",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                text = activePreset.subtitulo,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                            Spacer(Modifier.height(4.dp))
+                            val flavorText = if (isFullEdition) "Edição Completa" else "Edição Lite"
+                            Text(
+                                text = "Recursos: $flavorText",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                            )
+                        }
+                    }
+
                     val isCrystalHeart = optCompendioCrystalHeart
                     if (optSuperPoderes) {
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }

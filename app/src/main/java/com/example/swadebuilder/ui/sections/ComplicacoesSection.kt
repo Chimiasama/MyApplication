@@ -92,7 +92,7 @@ fun ComplicacoesSection(
         .map { normalizeUIKey(it.substringBefore("(").trim()) }
         .toSet()
 
-    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
     val scope = rememberCoroutineScope()
@@ -328,10 +328,18 @@ fun ComplicacoesSection(
                                     )
                                 }
                                 items(listOf("Todos", "Menor", "Maior")) { type ->
+                                    val count = remember(uniqueComplications, type) {
+                                        when (type) {
+                                            "Todos" -> uniqueComplications.size
+                                            "Menor" -> uniqueComplications.count { it.severity.lowercase().contains("menor") }
+                                            "Maior" -> uniqueComplications.count { it.severity.lowercase().contains("maior") }
+                                            else -> uniqueComplications.size
+                                        }
+                                    }
                                     FilterChip(
                                         selected = selectedSeverity == type,
                                         onClick = { selectedSeverity = type },
-                                        label = { Text(type) }
+                                        label = { Text("$type ($count)") }
                                     )
                                 }
                             }
@@ -685,8 +693,10 @@ private fun ComplicacaoItem(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
+                val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
+                val customBadge = if (isCustom) " ⓒ" else ""
                 Text(
-                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName!!.toFancyTitleCase() else comp.name.toFancyTitleCase(),
+                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName!!.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface
                 )

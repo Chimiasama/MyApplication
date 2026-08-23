@@ -2,6 +2,8 @@ package com.example.swadebuilder.ui.dialogs
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -73,6 +75,7 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RequirementValidator
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.getDisplayName
 import com.example.swadebuilder.model.atingiuLimiteClasseOuPrestigioNoEstagio
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.dynamicStageCaps
@@ -322,6 +325,79 @@ fun ProgressosDialog(
                         color = Color.Gray
                     )
                     Spacer(Modifier.height(8.dp))
+                }
+
+                // ── Histórico de Revisões / Linha do Tempo ────────────────────────
+                var showRevisionsDialog by remember { mutableStateOf(false) }
+
+                TextButton(
+                    onClick = { showRevisionsDialog = true },
+                    modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
+                ) {
+                    Text("Histórico de Revisões / Linha do Tempo")
+                }
+
+                if (showRevisionsDialog) {
+                    val revisionManager = remember { com.example.swadebuilder.util.CharacterRevisionManager() }
+                    val history = remember(state.idAtual, state.advancementHistory.size) {
+                        com.example.swadebuilder.util.CharacterRevisionHistory(
+                            characterId = state.idAtual ?: "current",
+                            revisions = state.advancementHistory.mapIndexed { idx, action ->
+                                revisionManager.createRevision(
+                                    snapshot = state.toSnapshot(),
+                                    reason = "Avanço #${idx + 1}: ${action.stageName}",
+                                    stageName = action.stageName
+                                )
+                            }
+                        )
+                    }
+
+                    AlertDialog(
+                        onDismissRequest = { showRevisionsDialog = false },
+                        title = { Text("Histórico de Revisões") },
+                        text = {
+                            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                if (history.revisions.isEmpty()) {
+                                    Text("Nenhuma revisão registrada ainda.", style = MaterialTheme.typography.bodyMedium)
+                                } else {
+                                    history.revisions.forEachIndexed { revisionIdx, revision ->
+                                        val action = state.advancementHistory.getOrNull(revisionIdx)
+                                        val detailsText = action?.getDisplayText(
+                                            getAdvantageName = { id -> idParaNome[id] ?: id.toSentenceCase() },
+                                            getSkillValue = { name -> state.periciasComIdiomas().firstOrNull { it.nome.keyify() == name.keyify() }?.let { state.rawTotal(it) } ?: 0 }
+                                        ) ?: ""
+
+                                        Card(
+                                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                                        ) {
+                                            Column(Modifier.padding(12.dp)) {
+                                                Text(revision.reason, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
+                                                Text("Estágio: ${revision.stageName}", style = MaterialTheme.typography.bodySmall)
+                                                if (detailsText.isNotBlank()) {
+                                                    Spacer(Modifier.height(2.dp))
+                                                    Text("Item adquirido: $detailsText", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Medium)
+                                                }
+                                                Spacer(Modifier.height(4.dp))
+                                                TextButton(
+                                                    onClick = {
+                                                        viewModel.revertToRevisionIndex(revisionIdx)
+                                                        showRevisionsDialog = false
+                                                        onDismiss()
+                                                    }
+                                                ) {
+                                                    Text("Reverter até esta versão")
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(onClick = { showRevisionsDialog = false }) { Text("Fechar") }
+                        }
+                    )
                 }
 
                 // ── Remover / Reduzir Complicação ─────────────────────────────────
@@ -1126,8 +1202,7 @@ fun ProgressosDialog(
                                         advSelectedCategories = if (cat in advSelectedCategories) advSelectedCategories - cat else advSelectedCategories + cat
                                     },
                                     label = {
-                                        val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase()
-                                        Text(label)
+                                        Text(cat.getDisplayName())
                                     }
                                 )
                             }
@@ -1152,7 +1227,7 @@ fun ProgressosDialog(
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(
-                                            text = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toSentenceCase(),
+                                            text = cat.getDisplayName(),
                                             style = MaterialTheme.typography.titleSmall,
                                             fontWeight = FontWeight.SemiBold
                                         )

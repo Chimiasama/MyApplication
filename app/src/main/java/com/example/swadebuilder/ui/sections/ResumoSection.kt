@@ -73,6 +73,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.model.CriadorViewModel
@@ -268,6 +269,28 @@ fun SummaryContent(
         activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
         )
 
+        if (!state.modoProgressaoAtivo) {
+            var showArchetypeDialog by remember { mutableStateOf(false) }
+
+            androidx.compose.material3.OutlinedButton(
+                onClick = { showArchetypeDialog = true },
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            ) {
+                Icon(Icons.Default.AutoAwesome, contentDescription = null)
+                Spacer(Modifier.size(8.dp))
+                Text("Aplicar Arquétipo / Template")
+            }
+
+            if (showArchetypeDialog) {
+                com.example.swadebuilder.ui.dialogs.ArchetypeSelectionDialog(
+                    settingKey = state.getActiveOrigins().firstOrNull() ?: "BASICO",
+                    onDismiss = { showArchetypeDialog = false },
+                    onApplyArchetype = { archetype ->
+                        viewModel.applyArchetype(archetype)
+                    }
+                )
+            }
+        }
 
         Spacer(Modifier.height(12.dp))
 

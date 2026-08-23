@@ -48,13 +48,8 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     if (compendioCrystalHeartAtivo) add("CRYSTAL_HEART")
 
     // 2. Determine if "BASICO" should be included
-    // "Replacement Settings" are those that provide their own dataset for section content.
-    // When any compendium book is active, BASICO is excluded from origin visibility
-    // and each section should be built from active book JSON files.
+    // Standalone replacement settings replace the basic book, whereas Companions (Fantasia, Horror, Sci-Fi, Supers) extend BÁSICO.
     val replacementSettingsActive =
-        compendioFantasiaAtivo ||
-        compendioHorrorAtivo ||
-        compendioSciFiAtivo ||
         compendioPathfinderAtivo ||
         compendioDeadlandsAtivo ||
         compendioCrystalHeartAtivo ||

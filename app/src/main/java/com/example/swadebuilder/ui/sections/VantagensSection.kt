@@ -64,6 +64,7 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.getDisplayName
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.explainVantagemVisibility
@@ -314,7 +315,7 @@ fun VantagensContent(
     }
 
     val locked = state.criacaoBasicaCongeladaComXp
-    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val pcTotal = state.pontosComplicacao
@@ -707,8 +708,7 @@ fun VantagensContent(
                                 else selectedCategories.add(cat)
                             },
                             label = {
-                                val label = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toFancyTitleCase()
-                                Text(label)
+                                Text(cat.getDisplayName())
                             }
                         )
                     }
@@ -749,7 +749,7 @@ fun VantagensContent(
                     item(key = "header_${cat.name}") {
                         Column {
                             CollapsibleSection(
-                                title = if (cat.name == "LIDERANCA") "Liderança" else cat.name.toFancyTitleCase(),
+                                title = cat.getDisplayName(),
                                 expanded = expanded,
                                 onToggle = { expandedMap[cat] = !expanded },
                                 onToggleFeedback = onUserFeedback
@@ -1786,8 +1786,10 @@ private fun VantagemItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
+                    val isCustom = vant.origem.equals("CUSTOM", ignoreCase = true) || vant.id.startsWith("custom:") || vant.id.startsWith("fanmade:")
+                    val customBadge = if (isCustom) " ⓒ" else ""
                     Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase(),
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) "${vant.originalName!!.toFancyTitleCase()}$customBadge" else "${vant.nomeExibicao.toFancyTitleCase()}$customBadge",
                         style = MaterialTheme.typography.titleSmall
                     )
 

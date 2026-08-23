@@ -50,6 +50,7 @@ import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
@@ -89,7 +90,7 @@ fun PoderesSection(
     onShowMessage: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
 
     val locked = state.criacaoBasicaCongeladaComXp
 
@@ -400,17 +401,21 @@ fun PoderesSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {
+                    val count = allPoderes.size
                     FilterChip(
                         selected = selectedRank == "Todos",
                         onClick = { selectedRank = "Todos" },
-                        label = { Text("Todos") }
+                        label = { Text("Todos ($count)") }
                     )
                 }
                 items(listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendario")) { rank ->
+                    val count = remember(allPoderes, rank) {
+                        allPoderes.count { it.estagio.semAcentos().equals(rank.semAcentos(), ignoreCase = true) }
+                    }
                     FilterChip(
                         selected = selectedRank == rank,
                         onClick = { selectedRank = rank },
-                        label = { Text(rank) }
+                        label = { Text("$rank ($count)") }
                     )
                 }
             }
@@ -732,6 +737,10 @@ fun PoderesSection(
                                         displayNome = displayNome
                                             .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
                                             .replace("Morosidade/Velocidade", "Velocidade")
+                                    }
+                                    val isCustom = poder.origem.equals("CUSTOM", ignoreCase = true) || poder.id.startsWith("custom:") || poder.id.startsWith("fanmade:")
+                                    if (isCustom) {
+                                        displayNome = "$displayNome ⓒ"
                                     }
                                     Text(displayNome, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
                                     val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]

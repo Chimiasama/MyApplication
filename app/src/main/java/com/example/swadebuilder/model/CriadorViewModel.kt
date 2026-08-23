@@ -164,6 +164,47 @@ class CriadorViewModel(
         state.appTheme = theme
     }
 
+    fun applyArchetype(archetype: com.example.swadebuilder.model.CreationArchetype): com.example.swadebuilder.model.ArchetypeApplicationReport {
+        if (!archetype.ancestry.isNullOrBlank()) {
+            state.aplicarAncestralidade(archetype.ancestry, mutableListOf())
+        }
+
+        archetype.attributes.forEach { bonus ->
+            val attrKey = bonus.attributeName.uppercase().trim()
+            val stack = state.paCostStackPorAtributo.getOrPut(attrKey) { mutableListOf() }
+            repeat(bonus.diceIncrements) {
+                stack.add(1)
+            }
+        }
+        state.recalcularPontosAtributo()
+
+        archetype.skills.forEach { bonus ->
+            val pericia = state.getBestPericia(bonus.skillName)
+            if (pericia != null) {
+                repeat(bonus.diceIncrements) {
+                    state.increasePericiaFromAdvancement(pericia, 1)
+                }
+            }
+        }
+        state.rebuildAllPericiaStacks()
+
+        archetype.edges.forEach { edgeId ->
+            val vant = gameDataStore.getVantagens().firstOrNull { it.id == edgeId || it.nome.keyify() == edgeId.keyify() }
+            if (vant != null && state.vantagensSelecionadas.none { it.id == vant.id }) {
+                state.adicionarVantagem(vant.copy())
+            }
+        }
+
+        archetype.hindrances.forEach { hindId ->
+            val comp = gameDataStore.getComplicacoes().firstOrNull { it.id == hindId || it.name.keyify() == hindId.keyify() }
+            if (comp != null && !state.complicacoesSelecionadas.containsKey(comp)) {
+                state.adicionarComplicacao(comp, "Maior")
+            }
+        }
+
+        return com.example.swadebuilder.util.ArchetypeTemplateManager().generateReport(archetype)
+    }
+
     private fun resetUiState() {
         state.vantSearchQuery = ""
         state.vantSelectedCategories.clear()
@@ -1478,6 +1519,13 @@ class CriadorViewModel(
         state.mostrandoVantagensProgresso = false
         state.mostrandoPoderesProgresso = false
         state.updateEmProgressoFlag()
+    }
+
+    fun revertToRevisionIndex(targetIndex: Int) {
+        val targetSize = (targetIndex + 1).coerceAtLeast(0)
+        while (state.advancementHistory.size > targetSize) {
+            revertLastAdvancement()
+        }
     }
 
     fun undoLastProgressAction() {

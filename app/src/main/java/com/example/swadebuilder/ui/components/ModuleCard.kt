@@ -25,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -56,7 +59,11 @@ fun ModuleCard(
         modifier = modifier
             .scale(scale)
             .fillMaxWidth()
-            .padding(vertical = if (showDescription) 0.dp else 4.dp), // Minimal padding if collapsed
+            .padding(vertical = if (showDescription) 0.dp else 4.dp)
+            .semantics {
+                contentDescription = "$title. $description"
+                stateDescription = if (isSelected) "Selecionado" else if (enabled) "Disponível para seleção" else "Indisponível"
+            },
         shape = MaterialTheme.shapes.medium,
         border = BorderStroke(borderWidth, borderColor),
         elevation = CardDefaults.outlinedCardElevation(defaultElevation = if (isSelected) 8.dp else 2.dp),

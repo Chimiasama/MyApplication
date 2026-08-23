@@ -1,0 +1,474 @@
+[
+  {
+    "id": "acao_adicional",
+    "nome": "Ação Adicional",
+    "custo": 5,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode ignorar 2 pontos de penalidades por Ações Múltiplas a cada turno.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "adaptavel",
+    "nome": "Adaptável",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "alcance",
+    "nome": "Alcance (+1)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Membros alongados ou tentáculos concedem Alcance +1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "andar_paredes",
+    "nome": "Andar nas Paredes",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode andar em superfícies verticais normalmente ou invertidas com metade da Movimentação.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "aparar_positivo",
+    "nome": "Aparar (+1)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "O Aparar natural é aumentado em +1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "semi_aquatico",
+    "nome": "Semi-Aquático",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode prender a respiração por 15 minutos antes de testes de afogamento.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "aquatico",
+    "nome": "Aquático",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Natural da Água, não pode se afogar em líquido oxigenado e se move com Movimentação completa ao nadar.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "armadura_racial",
+    "nome": "Armadura (+2)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pele grossa, placas ou carapaça garantem Armadura +2.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "aumento_atributo",
+    "nome": "Aumento de Atributo",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Aumenta um atributo específico em um tipo de dado e seu máximo em um.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "bonus_pericia_1",
+    "nome": "Bônus de Perícia (+1)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Concede bônus de +1 em testes de uma Perícia específica.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "bonus_pericia_2",
+    "nome": "Bônus de Perícia (+2)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Concede bônus de +2 em testes de uma Perícia específica.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "cavar",
+    "nome": "Cavar",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode se mover sob a terra com metade da Movimentação.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "chifres",
+    "nome": "Chifres (For+d4)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Arma natural de chifres causando For+d4 de dano.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "chifres_maior",
+    "nome": "Chifres Aprimorados (For+d6)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Arma natural de chifres causando For+d6 de dano.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "construto",
+    "nome": "Construto",
+    "custo": 8,
+    "categoria": "racial_trait_positive",
+    "descricao": "+2 para se recuperar de Abalado, ignora 1 nível de Ferimento, não respira, imune a doenças e venenos.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "garras_d4",
+    "nome": "Garras (For+d4)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Garras naturais causando For+d4 de dano.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "garras_d6",
+    "nome": "Garras (For+d6)",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Garras naturais causando For+d6 de dano.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "garras_pa",
+    "nome": "Garras Aprimoradas (For+d6, PA 2)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Garras naturais causando For+d6 de dano com PA 2.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "imune_doencas_venenos",
+    "nome": "Imunidade a Doenças ou Venenos",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Imune a doenças ou venenos (pode ser comprado duas vezes).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "infravisao",
+    "nome": "Infravisão",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Reduz pela metade penalidades de Iluminação contra alvos quentes.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "mordida",
+    "nome": "Mordida (For+d4)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Presas naturais causando For+d4 de dano.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "movimentacao_bonus",
+    "nome": "Movimentação Aumentada (+2)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "+2 na Movimentação e aumenta o dado de corrida em um tipo.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "nao_respira",
+    "nome": "Não Respira",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Não respira, imune a toxinas inaladas, afogamento e sufocamento.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "pericia_racial_d4",
+    "nome": "Perícia Racial (d4)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Começa com d4 em uma perícia inerente.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "pericia_racial_d6",
+    "nome": "Perícia Racial (d6)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Começa com d6 em uma perícia inerente e aumenta máximo para d12+1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "poder_racial",
+    "nome": "Poder Inato",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Concede Antecedente Arcano (Dom) e um poder inato.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "reducao_sono",
+    "nome": "Redução de Sono",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Precisa de metade do tempo de sono (ou nenhum sono se comprado 2x).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "regeneracao",
+    "nome": "Regeneração",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Rolagem de Cura natural uma vez por dia.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "regeneracao_maior",
+    "nome": "Regeneração Maior",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Regenera lesões permanentes após todos os ferimentos curados.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "resistencia_racial",
+    "nome": "Resistência (+1)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pele endurecida ou músculos densos aumentam a Resistência em +1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "resistencia_ambiental",
+    "nome": "Resistência Ambiental",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "+4 em rolagens de resistência e -4 de dano contra um efeito ambiental.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "robusto",
+    "nome": "Robusto",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Um segundo resultado Abalado não causa Ferimento.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "saltador",
+    "nome": "Saltador",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pula o dobro da distância normal e +4 no dano em Ataque Selvagem com salto.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "sem_orgaos_vitais",
+    "nome": "Sem Órgãos Vitais",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Ataques Localizados não provocam dano extra.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "tamanho_mais_1",
+    "nome": "Tamanho +1",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "+1 na Resistência e +1 no máximo de Força.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "toque_venenoso",
+    "nome": "Toque Venenoso (Moderado)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Ataque de toque força Vigor ou sofre Veneno Moderado.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "toque_venenoso_letal",
+    "nome": "Toque Venenoso (Letal/Nocauteador)",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Veneno aprimorado provoca Fadiga ao usar.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "vantagem_racial",
+    "nome": "Vantagem Inata",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Começa com uma Vantagem inata do cenário ignorando requisitos de Estágio.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "visao_escuro",
+    "nome": "Visão no Escuro",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Ignora penalidades por Penumbra e Escuridão.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "voo_6",
+    "nome": "Voo (Mov 6)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode voar com Movimentação 6.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "voo_12",
+    "nome": "Voo (Mov 12)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode voar com Movimentação 12.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "voo_24",
+    "nome": "Voo (Mov 24)",
+    "custo": 6,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode voar com Movimentação 24 e correr com +2d6.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "aparar_baixo",
+    "nome": "Aparar Baixo",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Aparar -1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "complicacao_racial_menor",
+    "nome": "Complicação Racial (Menor)",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Possui uma Complicação Menor inerente.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "complicacao_racial_maior",
+    "nome": "Complicação Racial (Maior)",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "Possui uma Complicação Maior inerente.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "dependencia",
+    "nome": "Dependência",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "Precisa ter contato com uma substância por 1h a cada 24h ou sofre Fadiga.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "fragil",
+    "nome": "Frágil",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Reduz a Resistência em 1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "fraqueza_ambiental",
+    "nome": "Fraqueza Ambiental",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "-4 para resistir a um efeito ambiental e sofre +4 de dano dele.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "inimigo_racial",
+    "nome": "Inimigo Racial",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "-2 em Persuadir ao lidar com a espécie rival.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "movimentacao_reduzida_1",
+    "nome": "Movimentação Reduzida (-1)",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "-1 na Movimentação e reduz dado de corrida em um tipo.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "movimentacao_reduzida_2",
+    "nome": "Movimentação Reduzida (-3)",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "-3 na Movimentação e -2 em testes de Atletismo móveis.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "nao_fala",
+    "nome": "Não Fala",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Não pode formar sons comuns. Comunica-se por gestos, música ou linguagem própria.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "penalidade_atributo_1",
+    "nome": "Penalidade em Atributo (-1)",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "Um Atributo sofre penalidade de -1 em seus testes.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "penalidade_atributo_2",
+    "nome": "Penalidade em Atributo (-2)",
+    "custo": -3,
+    "categoria": "racial_trait_negative",
+    "descricao": "Um Atributo sofre penalidade de -2 em seus testes.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "penalidade_pericia_1",
+    "nome": "Penalidade em Perícia (-1)",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Sofre -1 em uma perícia comum (ou -2 se incomum).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "penalidade_pericia_2",
+    "nome": "Penalidade em Perícia (-2)",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "Sofre -2 em uma perícia comum (ou -4 se incomum).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "pericias_basicas_reduzidas",
+    "nome": "Perícias Básicas Reduzidas",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Começa o jogo com uma perícia básica a menos.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "tamanho_menos_1",
+    "nome": "Tamanho -1",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Reduz o Tamanho e a Resistência em 1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "volumoso",
+    "nome": "Volumoso",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "-2 em Características ao usar equipamento comum; custos de itens dobrados.",
+    "origem": "BASICO"
+  }
+]

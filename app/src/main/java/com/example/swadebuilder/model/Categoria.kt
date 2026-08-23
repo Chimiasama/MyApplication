@@ -28,3 +28,24 @@ enum class Categoria {
     @SerialName("TROPO")         TROPO,
     @SerialName("ANCESTRALIDADE") ANCESTRALIDADE
 }
+
+fun Categoria.getDisplayName(): String = when (this) {
+    Categoria.ANTECEDENTE -> "Antecedente"
+    Categoria.COMBATE -> "Combate"
+    Categoria.ESTILO_MARCIAL -> "Estilo Martial"
+    Categoria.LIDERANCA -> "Liderança"
+    Categoria.PODER -> "Poder"
+    Categoria.PROFISSIONAL -> "Profissional"
+    Categoria.SOCIAIS -> "Sociais"
+    Categoria.ESTRANHAS -> "Estranhas"
+    Categoria.ATORMENTADO -> "Atormentado"
+    Categoria.LENDARIAS -> "Lendárias"
+    Categoria.SUPER -> "Super"
+    Categoria.MONSTRUOSAS -> "Monstruosas"
+    Categoria.CHI -> "Chi"
+    Categoria.CLASSE -> "Classe"
+    Categoria.VANTAGEM_DE_CLASSE -> "Vantagem de Classe"
+    Categoria.PRESTIGIO -> "Prestígio"
+    Categoria.TROPO -> "Tropo"
+    Categoria.ANCESTRALIDADE -> "Ancestralidade"
+}

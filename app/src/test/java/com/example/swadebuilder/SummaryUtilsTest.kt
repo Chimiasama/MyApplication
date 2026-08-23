@@ -766,6 +766,7 @@ class SummaryUtilsTest {
 
     @Test
     fun `buildSummaryLines uses skin names in lite mode even when modoOficialAtivo is true`() {
+        org.junit.Assume.assumeFalse("Test only applies to Lite edition flavor", EditionConfig.isFullEdition)
         val advantages = listOf(
             Vantagem(
                 id = "bom_companheiro",

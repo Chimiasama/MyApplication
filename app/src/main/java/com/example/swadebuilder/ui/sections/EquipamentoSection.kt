@@ -508,13 +508,17 @@ fun EquipamentoSection(
                     }
 
                     items(availableSuperTypes, key = { it.name }, contentType = { "type_chip" }) { type ->
+                        val count = remember(mappedCategories, type) {
+                            mappedCategories.filter { it.superType == type }
+                                .sumOf { cat -> cat.original.itens.size }
+                        }
                         FilterChip(
                             selected = type in selectedSuperTypes,
                             onClick = {
                                 if (type in selectedSuperTypes) selectedSuperTypes.remove(type)
                                 else selectedSuperTypes.add(type)
                             },
-                            label = { Text(type.label) }
+                            label = { Text("${type.label} ($count)") }
                         )
                     }
                 }
