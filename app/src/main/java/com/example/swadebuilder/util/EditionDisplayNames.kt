@@ -43,7 +43,16 @@ private val liteDisplayReplacements = listOf(
     "Tanukimimi (Tanuki)" to "Tanuki",
     "Umvee (Filhos da Lua)" to "Filhos da Lua",
     "Usagimimi (Coelho)" to "Coelho",
-    "Terracota" to "Povo de Barro"
+    "Terracota" to "Povo de Barro",
+    "Bogovia" to "Povo da Força",
+    "Fjordstad" to "Povo da Astúcia",
+    "As Ilhas" to "Povo do Vigor",
+    "Maseia" to "Povo da Agilidade",
+    "Zingama" to "Povo do Espírito",
+    "Bogoviano" to "Povo da Força",
+    "Fjordstadiano" to "Povo da Astúcia",
+    "Maseiano" to "Povo da Agilidade",
+    "Zingamaiano" to "Povo do Espírito"
 )
 
 fun String.toEditionDisplayName(): String {
