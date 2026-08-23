@@ -26,6 +26,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -624,17 +625,15 @@ fun SettingsDialog(
                                                                         color = pointColor
                                                                     )
                                                                 }
-                                                                OutlinedButton(
+                                                                FilledTonalIconButton(
                                                                     onClick = { showTraitSelectDialog = true },
-                                                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
+                                                                    modifier = Modifier.size(32.dp)
                                                                 ) {
                                                                     Icon(
                                                                         imageVector = Icons.Default.Add,
-                                                                        contentDescription = null,
-                                                                        modifier = Modifier.size(16.dp)
+                                                                        contentDescription = "Adicionar Traço",
+                                                                        modifier = Modifier.size(18.dp)
                                                                     )
-                                                                    Spacer(Modifier.width(4.dp))
-                                                                    Text("Adicionar Traço", fontSize = 12.sp)
                                                                 }
                                                             }
 
