@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.foundation.clickable
@@ -27,6 +28,9 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.text.style.TextAlign
+import com.example.swadebuilder.toDiceString
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -924,6 +928,7 @@ fun SettingsDialog(
                         // Requirement Selector Modals
                         if (showAttrDialog) {
                             val attrs = listOf("AGILIDADE" to "Agilidade", "ASTUCIA" to "Astúcia", "ESPIRITO" to "Espírito", "FORCA" to "Força", "VIGOR" to "Vigor")
+                            val steps = listOf(0, 4, 6, 8, 10, 12, 13)
                             AlertDialog(
                                 onDismissRequest = { showAttrDialog = false },
                                 title = { Text("Atributos Mínimos") },
@@ -931,24 +936,52 @@ fun SettingsDialog(
                                     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                                         attrs.forEach { (key, name) ->
                                             val currentDie = customAttrMin[key] ?: 0
+                                            val currentIndex = steps.indexOf(currentDie).coerceAtLeast(0)
                                             Row(
                                                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                                                 horizontalArrangement = Arrangement.SpaceBetween,
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Text(name, style = MaterialTheme.typography.bodyMedium)
-                                                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                    listOf(0, 4, 6, 8, 10, 12).forEach { die ->
-                                                        val label = if (die == 0) "-" else "d$die"
-                                                        androidx.compose.material3.FilterChip(
-                                                            selected = currentDie == die,
-                                                            onClick = {
+                                                Text(
+                                                    text = name,
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                                ) {
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex > 0) {
+                                                                val newDie = steps[currentIndex - 1]
                                                                 val mut = customAttrMin.toMutableMap()
-                                                                if (die == 0) mut.remove(key) else mut[key] = die
+                                                                if (newDie == 0) mut.remove(key) else mut[key] = newDie
                                                                 customAttrMin = mut
-                                                            },
-                                                            label = { Text(label, style = MaterialTheme.typography.labelSmall) }
-                                                        )
+                                                            }
+                                                        },
+                                                        enabled = currentIndex > 0
+                                                    ) {
+                                                        Icon(Icons.Default.Remove, contentDescription = "Diminuir")
+                                                    }
+                                                    Text(
+                                                        text = currentDie.toDiceString(),
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        modifier = Modifier.width(48.dp),
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex < steps.lastIndex) {
+                                                                val newDie = steps[currentIndex + 1]
+                                                                val mut = customAttrMin.toMutableMap()
+                                                                mut[key] = newDie
+                                                                customAttrMin = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex < steps.lastIndex
+                                                    ) {
+                                                        Icon(Icons.Default.Add, contentDescription = "Aumentar")
                                                     }
                                                 }
                                             }
@@ -961,6 +994,7 @@ fun SettingsDialog(
 
                         if (showSkillDialog) {
                             val allSkillsList = state.listaPericias.map { it.nome }.distinct().sorted()
+                            val steps = listOf(0, 4, 6, 8, 10, 12, 13)
                             var filterSkillText by remember { mutableStateOf("") }
                             AlertDialog(
                                 onDismissRequest = { showSkillDialog = false },
@@ -975,24 +1009,52 @@ fun SettingsDialog(
                                         )
                                         allSkillsList.filter { it.contains(filterSkillText, ignoreCase = true) }.forEach { skillName ->
                                             val currentDie = customSkillMin[skillName] ?: 0
+                                            val currentIndex = steps.indexOf(currentDie).coerceAtLeast(0)
                                             Row(
                                                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                                                 horizontalArrangement = Arrangement.SpaceBetween,
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Text(skillName, style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
-                                                Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                                                    listOf(0, 4, 6, 8, 10, 12).forEach { die ->
-                                                        val label = if (die == 0) "-" else "d$die"
-                                                        androidx.compose.material3.FilterChip(
-                                                            selected = currentDie == die,
-                                                            onClick = {
+                                                Text(
+                                                    text = skillName,
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    modifier = Modifier.weight(1f)
+                                                )
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                                ) {
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex > 0) {
+                                                                val newDie = steps[currentIndex - 1]
                                                                 val mut = customSkillMin.toMutableMap()
-                                                                if (die == 0) mut.remove(skillName) else mut[skillName] = die
+                                                                if (newDie == 0) mut.remove(skillName) else mut[skillName] = newDie
                                                                 customSkillMin = mut
-                                                            },
-                                                            label = { Text(label, style = MaterialTheme.typography.labelSmall) }
-                                                        )
+                                                            }
+                                                        },
+                                                        enabled = currentIndex > 0
+                                                    ) {
+                                                        Icon(Icons.Default.Remove, contentDescription = "Diminuir")
+                                                    }
+                                                    Text(
+                                                        text = currentDie.toDiceString(),
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        modifier = Modifier.width(48.dp),
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex < steps.lastIndex) {
+                                                                val newDie = steps[currentIndex + 1]
+                                                                val mut = customSkillMin.toMutableMap()
+                                                                mut[skillName] = newDie
+                                                                customSkillMin = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex < steps.lastIndex
+                                                    ) {
+                                                        Icon(Icons.Default.Add, contentDescription = "Aumentar")
                                                     }
                                                 }
                                             }
