@@ -162,9 +162,6 @@ object DataLoader {
         val assets = context.assets
 
         val replacementBookKeys = setOf(
-            "FANTASIA",
-            "HORROR",
-            "SCI_FI",
             "PATHFINDER",
             "DEADLANDS",
             "CRYSTAL_HEART",
