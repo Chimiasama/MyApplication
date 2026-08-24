@@ -86,18 +86,28 @@ object DataLoader {
         ModuleFile("basico_complicacoes.json")
     )
 
-    private val ancestryModules = listOf(
-        ModuleFile("fantasia_ancestralidades.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_ancestralidades.json", originOverride = "HORROR"),
-        ModuleFile("scifi_ancestralidades.json", originOverride = "SCI_FI"),
-        ModuleFile("wiseguys_ancestralidades.json", originOverride = "WISEGUYS"),
-        ModuleFile("crystal_ancestralidades.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("adg_ancestralidades.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_ancestralidades.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_ancestralidades.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_ancestralidades.json", originOverride = "PATHFINDER"),
-        ModuleFile("super_ancestralidades.json", originOverride = "SUPER"),
-        ModuleFile("basico_ancestralidades.json")
+    // Ancestralidades vivem em um único arquivo consolidado (ancestralidades.json). Ao
+    // contrário de Perícias, quase todo nome de raça compartilhado entre livros tem dados
+    // DIFERENTES de propósito (ex.: "Anões" do Sci-Fi tem variantes Ciber que o Básico não
+    // tem) — nenhum dos 14 nomes repetidos entre livros é idêntico campo a campo. Por isso,
+    // como em Equipamentos, cada registro carrega apenas o(s) livro(s) exatos aos quais
+    // pertence, sem fundir raças com conteúdo diferente.
+    @Serializable
+    private data class RacialModifierFonte(
+        val id: String? = null,
+        val nome: String,
+        val originalName: String? = null,
+        val originalDescription: String? = null,
+        val descricao: String? = null,
+        val atributos: Map<String, Int>,
+        val pericias: Map<String, Int>,
+        val vantagensGratis: List<String> = emptyList(),
+        val desvantagens: List<String> = emptyList(),
+        val habilidades: List<RacialAbility> = emptyList(),
+        val movimentacao: Int = 0,
+        val tags: List<String> = emptyList(),
+        val opcoes: List<String> = emptyList(),
+        val livros: List<String>
     )
 
     private val powerModules = listOf(
@@ -389,13 +399,39 @@ object DataLoader {
         }
 
         // 9. Ancestralidades
-        val ancestriesToLoad = if (shouldReplaceBasico) {
-            ancestryModules.filter { it.fileName != "basico_ancestralidades.json" }
-        } else {
-            ancestryModules
-        }
-        val localListaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestriesToLoad, keys) { item, override ->
-            if (override != null) item.copy(origem = override) else item
+        // Mesma regra de visibilidade das demais categorias: livro autônomo vê só o próprio
+        // conteúdo, livro companheiro soma ao Básico, Modo Livre vê tudo.
+        val ancestryVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
+
+        @Suppress("UNCHECKED_CAST")
+        val ancestriasFonte = dataCache.getOrPut("ancestralidades.json") {
+            runCatching {
+                loadJsonAsset<List<RacialModifierFonte>>(context, "ancestralidades.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar ancestralidades.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<RacialModifierFonte>
+
+        val localListaAncestralidadesJson = ancestriasFonte.flatMap { fonte ->
+            fonte.livros.filter { it in ancestryVisibleOrigins }.map { livro ->
+                RacialModifier(
+                    id = fonte.id,
+                    nome = fonte.nome,
+                    originalName = fonte.originalName,
+                    originalDescription = fonte.originalDescription,
+                    descricao = fonte.descricao,
+                    atributos = fonte.atributos,
+                    pericias = fonte.pericias,
+                    vantagensGratis = fonte.vantagensGratis,
+                    desvantagens = fonte.desvantagens,
+                    habilidades = fonte.habilidades,
+                    origem = livro,
+                    movimentacao = fonte.movimentacao,
+                    tags = fonte.tags,
+                    opcoes = fonte.opcoes
+                )
+            }
         }
 
         // 10. Monstros
