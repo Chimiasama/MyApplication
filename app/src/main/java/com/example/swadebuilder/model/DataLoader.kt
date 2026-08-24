@@ -169,12 +169,21 @@ object DataLoader {
             "CIDADE_SOL_VAPOR",
             "WISEGUYS"
         )
-        val shouldReplaceBasico = keys.any { it in replacementBookKeys }
+        // O Básico só é substituído quando exatamente um livro autônomo está ativo sozinho
+        // (regra real de mesa: aquele livro passa a ser o "corebook" da mesa). Quando mais de
+        // uma origem não-básica está ativa ao mesmo tempo — hoje isso só acontece no Modo Livre,
+        // que ativa todos os livros simultaneamente — não há um único "substituto", então o
+        // Básico continua disponível junto com tudo, como já é o contrato de getActiveOrigins().
+        val nonBasicActiveKeys = keys - "BASICO"
+        val shouldReplaceBasico = nonBasicActiveKeys.size == 1 && nonBasicActiveKeys.first() in replacementBookKeys
 
         // 1. Equipamentos
-        val equipmentModulesToLoad = if ("CRYSTAL_HEART" in keys) {
-            equipmentModules.filter { it.fileName == "crystal_equipamentos.json" }
-        } else if (shouldReplaceBasico) {
+        // Livros de cenário autônomos (ex.: Crystal Heart, Deadlands) trazem seu próprio
+        // catálogo de equipamentos, coerente com o gênero (sem viaturas/armas modernas fora
+        // de contexto), e não herdam o Básico. Como a seleção de livro na tela inicial é
+        // exclusiva (um único livro ativo por vez), essa regra é suficiente também para
+        // Crystal Heart: não é preciso um caso especial só para ele.
+        val equipmentModulesToLoad = if (shouldReplaceBasico) {
             equipmentModules.filter { it.fileName != "basico_equipamentos.json" }
         } else {
             equipmentModules

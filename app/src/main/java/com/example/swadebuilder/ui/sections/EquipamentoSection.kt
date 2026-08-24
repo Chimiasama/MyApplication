@@ -353,7 +353,6 @@ fun EquipamentoSection(
                 .filter { categoria ->
                     val origem = categoria.origem?.ifBlank { "BASICO" }?.uppercase() ?: "BASICO"
                     if (origem == "SUPLEMENTO") false
-                    else if (compendioFantasiaAtivo && origem == "BASICO") false
                     else if (state.compendioScifiMechasCiberneticosAtivo && origem == "SCI_FI") true
                     else origem in activeOrigins
                 }

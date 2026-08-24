@@ -25,7 +25,6 @@ junit = "4.13.2"
 junitVersion = "1.3.0"
 kotlinxSerializationJson = "1.11.0"
 protoliteWellKnownTypes = "18.0.1"
-roomCompiler = "2.8.4"
 engageCore = "1.6.0"
 
 # Wear Compose (NOT covered by Compose BOM)
@@ -72,7 +71,6 @@ itextg = { module = "com.itextpdf:itextg", version.ref = "itextg" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protoliteWellKnownTypes" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 engage-core = { group = "com.google.android.engage", name = "engage-core", version.ref = "engageCore" }
 androidx-navigation-common-android = { group = "androidx.navigation", name = "navigation-common-android", version.ref = "navigationCommonAndroid" }
 androidx-navigation-compose-android = { group = "androidx.navigation", name = "navigation-compose-android", version.ref = "navigationComposeAndroid" }
