@@ -96,11 +96,16 @@ object DataLoader {
         val originalDescription: String? = null,
         val severity: String,
         val description: String,
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        val descricaoLite: String? = null,
         val observacoes: String = "",
         @kotlinx.serialization.SerialName("vantagens_previas")
         val vantagensPrevias: List<String> = emptyList(),
         val livros: List<String>
-    )
+    ) {
+        fun descricaoExibida(): String =
+            if (!EditionConfig.isFullEdition) descricaoLite?.takeIf { it.isNotBlank() } ?: description else description
+    }
 
     // Ancestralidades vivem em um único arquivo consolidado (ancestralidades.json). Ao
     // contrário de Perícias, quase todo nome de raça compartilhado entre livros tem dados
@@ -422,7 +427,7 @@ object DataLoader {
                     originalName = fonte.originalName,
                     originalDescription = fonte.originalDescription,
                     severity = fonte.severity,
-                    description = fonte.description,
+                    description = fonte.descricaoExibida(),
                     origem = livro,
                     observacoes = fonte.observacoes,
                     vantagensPrevias = fonte.vantagensPrevias
