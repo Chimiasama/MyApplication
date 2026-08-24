@@ -150,9 +150,14 @@ object DataLoader {
         val duracao: String,
         val manifestacoes: List<String> = emptyList(),
         val descricao: String,
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        val descricaoLite: String? = null,
         val modificadores: List<Modificador> = emptyList(),
         val livros: List<String>
     )
+
+    private fun PoderFonte.descricaoExibida(): String =
+        if (!EditionConfig.isFullEdition) descricaoLite?.takeIf { it.isNotBlank() } ?: descricao else descricao
 
     // --- Loading Logic ---
 
@@ -517,7 +522,7 @@ object DataLoader {
                     distancia = fonte.distancia,
                     duracao = fonte.duracao,
                     manifestacoes = fonte.manifestacoes,
-                    descricao = fonte.descricao,
+                    descricao = fonte.descricaoExibida(),
                     modificadores = fonte.modificadores
                 )
             }
@@ -627,7 +632,7 @@ object DataLoader {
                         distancia = f.distancia,
                         duracao = f.duracao,
                         manifestacoes = f.manifestacoes,
-                        descricao = f.descricao,
+                        descricao = f.descricaoExibida(),
                         modificadores = f.modificadores
                     )
                 )
