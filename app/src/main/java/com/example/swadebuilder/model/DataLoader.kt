@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.util.Log
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
@@ -28,8 +27,6 @@ object DataLoader {
     // Cache for loaded file content (FileName -> Any)
     // Stores List<T> or specific wrapper types (AtributoList, PericiaList)
     private val dataCache = mutableMapOf<String, Any>()
-
-    private data class ModuleFile(val fileName: String, val originOverride: String? = null)
 
     // --- Module Definitions ---
 
@@ -78,18 +75,22 @@ object DataLoader {
     private fun livrosDe(raw: JsonObject): List<String> =
         (raw["livros"] as? JsonArray)?.mapNotNull { (it as? JsonPrimitive)?.content } ?: emptyList()
 
-    private val complicationModules = listOf(
-        ModuleFile("fantasia_complicacoes.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_complicacoes.json", originOverride = "HORROR"),
-        ModuleFile("scifi_complicacoes.json", originOverride = "SCI_FI"),
-        ModuleFile("super_complicacoes.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_complicacoes.json", originOverride = "WISEGUYS"),
-        ModuleFile("crystal_complicacoes.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("adg_complicacoes.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_complicacoes.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_complicacoes.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_complicacoes.json", originOverride = "PATHFINDER"),
-        ModuleFile("basico_complicacoes.json")
+    // Complicações vivem em um único arquivo consolidado (complicacoes.json). Como em
+    // Equipamentos/Ancestralidades/Poderes, quase nenhum id compartilhado entre livros tem
+    // dados idênticos, então cada registro carrega apenas o(s) livro(s) exatos aos quais
+    // pertence.
+    @Serializable
+    private data class ComplicacaoFonte(
+        val id: String,
+        val name: String,
+        val originalName: String? = null,
+        val originalDescription: String? = null,
+        val severity: String,
+        val description: String,
+        val observacoes: String = "",
+        @kotlinx.serialization.SerialName("vantagens_previas")
+        val vantagensPrevias: List<String> = emptyList(),
+        val livros: List<String>
     )
 
     // Ancestralidades vivem em um único arquivo consolidado (ancestralidades.json). Ao
@@ -145,38 +146,6 @@ object DataLoader {
     )
 
     // --- Loading Logic ---
-
-    @OptIn(ExperimentalSerializationApi::class)
-    private inline fun <reified T> AssetManager.loadAndMerge(
-        modules: List<ModuleFile>,
-        activeKeys: Set<String>,
-        noinline transform: (T, String?) -> T = { item, _ -> item }
-    ): List<T> {
-        return modules.filter {
-            val key = it.originOverride?.uppercase() ?: "BASICO"
-            key in activeKeys
-        }.flatMap { module ->
-            @Suppress("UNCHECKED_CAST")
-            val cached = dataCache.getOrPut(module.fileName) {
-                try {
-                    open(module.fileName).use { input ->
-                        json.decodeFromStream<List<T>>(input)
-                    }
-                } catch (e: Exception) {
-                    Log.e(
-                        "SWADE_DEBUG",
-                        "[DataLoader] falha ao carregar ${module.fileName} (originOverride=${module.originOverride}): ${e::class.simpleName}: ${e.message}",
-                        e
-                    )
-                    emptyList<T>()
-                }
-            } as List<T>
-
-            cached.map { item ->
-                if (module.originOverride != null) transform(item, module.originOverride) else item
-            }
-        }
-    }
 
     private var loadedArcanoInfoList: List<ArcanoInfo> = emptyList()
 
@@ -405,14 +374,32 @@ object DataLoader {
 
         val localListaTropos = adgTropos + chTropos
 
-        val complicationModulesToLoad = if (shouldReplaceBasico) {
-            complicationModules.filter { it.fileName != "basico_complicacoes.json" }
-        } else {
-            complicationModules
-        }
+        val complicationVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val localListaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModulesToLoad, keys) { item, override ->
-            if (override != null) item.copy(origem = override) else item
+        @Suppress("UNCHECKED_CAST")
+        val complicacoesFonte = dataCache.getOrPut("complicacoes.json") {
+            runCatching {
+                loadJsonAsset<List<ComplicacaoFonte>>(context, "complicacoes.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar complicacoes.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<ComplicacaoFonte>
+
+        val localListaComplicacoes = complicacoesFonte.flatMap { fonte ->
+            fonte.livros.filter { it in complicationVisibleOrigins }.map { livro ->
+                Complicacao(
+                    id = fonte.id,
+                    name = fonte.name,
+                    originalName = fonte.originalName,
+                    originalDescription = fonte.originalDescription,
+                    severity = fonte.severity,
+                    description = fonte.description,
+                    origem = livro,
+                    observacoes = fonte.observacoes,
+                    vantagensPrevias = fonte.vantagensPrevias
+                )
+            }
         }
 
         // 9. Ancestralidades
