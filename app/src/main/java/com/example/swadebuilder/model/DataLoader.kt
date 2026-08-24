@@ -9,6 +9,10 @@ import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.decodeFromStream
 
 /**
@@ -58,19 +62,21 @@ object DataLoader {
         val livros: List<String>
     )
 
-    private val advantageModules = listOf(
-        ModuleFile("fantasia_vantagens.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_vantagens.json", originOverride = "HORROR"),
-        ModuleFile("scifi_vantagens.json", originOverride = "SCI_FI"),
-        ModuleFile("crystal_vantagens.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("super_vantagens.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_vantagens.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_vantagens.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_vantagens.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_vantagens.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_vantagens.json", originOverride = "PATHFINDER"),
-        ModuleFile("basico_vantagens.json")
-    )
+    // Vantagens vivem em um único arquivo consolidado (vantagens.json), com cada registro
+    // marcado por "livros". Vantagem tem muitos campos (grupoId, subtipoArcano, choiceOptions,
+    // maxSelections, etc.) e pode ganhar novos com o tempo, então em vez de espelhar cada
+    // campo em um tipo "Fonte" paralelo (arriscado — um campo esquecido silenciosamente vira
+    // valor padrão), o arquivo é lido como JSON genérico: remove-se apenas "livros" e injeta-
+    // se "origem", e o restante do objeto é decodificado direto pelo parser real de Vantagem.
+    private fun vantagemFromRaw(raw: JsonObject, origin: String): Vantagem {
+        val content = raw.toMutableMap()
+        content.remove("livros")
+        content["origem"] = JsonPrimitive(origin)
+        return json.decodeFromJsonElement(Vantagem.serializer(), JsonObject(content))
+    }
+
+    private fun livrosDe(raw: JsonObject): List<String> =
+        (raw["livros"] as? JsonArray)?.mapNotNull { (it as? JsonPrimitive)?.content } ?: emptyList()
 
     private val complicationModules = listOf(
         ModuleFile("fantasia_complicacoes.json", originOverride = "FANTASIA"),
@@ -339,31 +345,29 @@ object DataLoader {
         }
 
         // 7. Vantagens
-        val advantagesToLoad = if (shouldReplaceBasico) {
-            advantageModules.filter { it.fileName != "basico_vantagens.json" }
-        } else {
-            advantageModules
-        }
+        val advantageVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val todasVantagens = assets.loadAndMerge<Vantagem>(advantagesToLoad, keys) { item, override ->
-             if (override != null) item.copy(origem = override) else item
+        @Suppress("UNCHECKED_CAST")
+        val vantagensRawJson = dataCache.getOrPut("vantagens.json") {
+            runCatching {
+                assets.open("vantagens.json").use { input -> json.decodeFromStream<List<JsonObject>>(input) }
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar vantagens.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<JsonObject>
+
+        val todasVantagens = vantagensRawJson.flatMap { raw ->
+            livrosDe(raw).filter { it in advantageVisibleOrigins }.map { livro -> vantagemFromRaw(raw, livro) }
         }
 
         val localListaVantagens = buildList {
             addAll(todasVantagens)
 
             if (shouldReplaceBasico && none { it.id == "antecedente_arcano" }) {
-                @Suppress("UNCHECKED_CAST")
-                val basicoVantagens = dataCache.getOrPut("basico_vantagens.json") {
-                    runCatching {
-                        assets.open("basico_vantagens.json")
-                            .use { input -> json.decodeFromStream<List<Vantagem>>(input) }
-                    }.getOrElse { emptyList<Vantagem>() }
-                } as List<Vantagem>
-
-                basicoVantagens
-                    .firstOrNull { it.id == "antecedente_arcano" }
-                    ?.let { add(it) }
+                vantagensRawJson
+                    .firstOrNull { raw -> raw["id"]?.let { (it as? JsonPrimitive)?.content } == "antecedente_arcano" && "BASICO" in livrosDe(raw) }
+                    ?.let { add(vantagemFromRaw(it, "BASICO")) }
             }
         }
 
