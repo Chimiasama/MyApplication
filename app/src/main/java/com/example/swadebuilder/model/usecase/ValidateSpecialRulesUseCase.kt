@@ -134,7 +134,7 @@ class ValidateSpecialRulesUseCase {
         fun shouldIgnoreLeadershipStage(v: Vantagem): Boolean {
             if (!input.compendioArteDaGuerraAtivo || input.tropoSelecionadoId != "tropo_samurai") return false
             if (v.categoria != Categoria.LIDERANCA) return false
-            val pericia = input.getBestPericia("Conhecimento Batalha") ?: return false
+            val pericia = input.getBestPericia("Conhecimento de Batalha") ?: return false
             return input.rawTotalPericia(pericia) >= 8
         }
 

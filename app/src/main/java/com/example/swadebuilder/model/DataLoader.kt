@@ -43,18 +43,19 @@ object DataLoader {
         val itens: List<EquipamentoItem>
     )
 
-    private val skillModules = listOf(
-        ModuleFile("adg_pericias.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("fantasia_pericias.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_pericias.json", originOverride = "HORROR"),
-        ModuleFile("wiseguys_pericias.json", originOverride = "WISEGUYS"),
-        ModuleFile("scifi_pericias.json", originOverride = "SCI_FI"),
-        ModuleFile("deadlands_pericias.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_pericias.json", originOverride = "PATHFINDER"),
-        ModuleFile("sol_vapor_pericias.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("crystal_pericias.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("super_pericias.json", originOverride = "SUPER"),
-        ModuleFile("basico_pericias.json")
+    // Perícias vivem em um único arquivo consolidado (pericias.json). Diferente do
+    // equipamentos.json, aqui a maioria das perícias é idêntica entre livros (mesmo
+    // atributo, mesma regra de "básica", mesma descrição), então cada registro carrega a
+    // lista de livros que a possuem — sem duplicar o mesmo conteúdo 10 vezes. Onde um livro
+    // diverge de verdade (ex.: Crystal Heart reescreve a descrição de quase toda perícia, ou
+    // "Lutar" é básica só em Crystal Heart), esse livro fica com seu próprio registro.
+    @Serializable
+    private data class PericiaFonte(
+        val nome: String,
+        val atributo: String = "",
+        val basica: Boolean = false,
+        val descricao: String? = null,
+        val livros: List<String>
     )
 
     private val advantageModules = listOf(
@@ -271,43 +272,29 @@ object DataLoader {
         val localMapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val skillModulesToLoad = if (shouldReplaceBasico) {
-            skillModules.filter { it.fileName != "basico_pericias.json" }
-        } else {
-            skillModules
-        }
+        // Mesma regra de visibilidade dos equipamentos: livro autônomo vê só o próprio
+        // conteúdo, livro companheiro soma ao Básico, Modo Livre vê tudo.
+        val skillVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val todasPericiasJson = skillModulesToLoad.filter {
-            val key = it.originOverride?.uppercase() ?: "BASICO"
-            key in keys
-        }.flatMap { module ->
-            val pListWrapper = dataCache.getOrPut(module.fileName) {
-                // Try loading as PericiaList (wrapped)
-                val asWrapper = runCatching {
-                    loadJsonAsset<PericiaList>(context, module.fileName)
-                }.getOrNull()
+        @Suppress("UNCHECKED_CAST")
+        val periciasFonte = dataCache.getOrPut("pericias.json") {
+            runCatching {
+                loadJsonAsset<List<PericiaFonte>>(context, "pericias.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar pericias.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<PericiaFonte>
 
-                if (asWrapper != null) {
-                    asWrapper
-                } else {
-                    // Try loading as List<PericiaJson> (direct)
-                    val asList = runCatching {
-                        loadJsonAsset<List<PericiaJson>>(context, module.fileName)
-                    }.getOrNull()
-
-                    if (asList != null) {
-                        PericiaList(asList)
-                    } else {
-                        PericiaList(emptyList())
-                    }
-                }
-            } as PericiaList
-
-            val pList = pListWrapper.pericias
-            if (module.originOverride != null) {
-                pList.map { it.copy(origem = module.originOverride) }
-            } else {
-                pList
+        val todasPericiasJson = periciasFonte.flatMap { fonte ->
+            fonte.livros.filter { it in skillVisibleOrigins }.map { livro ->
+                PericiaJson(
+                    nome = fonte.nome,
+                    atributo = fonte.atributo,
+                    basica = fonte.basica,
+                    origem = livro,
+                    descricao = fonte.descricao
+                )
             }
         }
 

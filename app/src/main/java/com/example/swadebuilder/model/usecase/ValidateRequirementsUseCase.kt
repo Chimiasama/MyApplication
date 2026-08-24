@@ -15,7 +15,15 @@ class ValidateRequirementsUseCase {
         val rawTotalPericia: (Pericia) -> Int,
         val ancestralidadeDef: RacialModifier?,
         val tipoMonstroSelecionado: String?,
-        val cartaSelvagem: Boolean
+        val cartaSelvagem: Boolean,
+        // Resolve o nome de um requisito para a "melhor" perícia equivalente do personagem
+        // (ex.: em Arte da Guerra, um requisito de "Lutar nível X" deve poder ser satisfeito
+        // pela melhor categoria de Jutsu do personagem, não só pelo slot base). Por padrão
+        // cai para uma busca simples por nome dentro de `pericias`.
+        val getBestPericia: (String) -> Pericia? = { nome ->
+            val key = nome.keyify()
+            pericias.firstOrNull { it.nome.keyify() == key }
+        }
     )
 
     fun execute(input: Input): Boolean {
@@ -36,13 +44,13 @@ class ValidateRequirementsUseCase {
         val periciaMinMap = v.requisitos.periciaMin
         if (v.vinculadoPericia && periciaMinMap.isNotEmpty()) {
             val atendeUma = periciaMinMap.any { (perNome, minRaw) ->
-                val per = getBestPericia(perNome, input.pericias)
+                val per = input.getBestPericia(perNome)
                 per != null && input.rawTotalPericia(per) >= minRaw
             }
             if (!atendeUma) return false
         } else {
             if (periciaMinMap.any { (perNome, minRaw) ->
-                    val per = getBestPericia(perNome, input.pericias) ?: return@any false
+                    val per = input.getBestPericia(perNome) ?: return@any false
                     input.rawTotalPericia(per) < minRaw
                 }) {
                 return false
@@ -57,11 +65,11 @@ class ValidateRequirementsUseCase {
                 val choiceKey = choice.keyify()
                 val matchEntry = periciaMinOpcMap.entries.firstOrNull { it.key.keyify() == choiceKey }
                 if (matchEntry == null) return false
-                val per = getBestPericia(choiceKey, input.pericias) ?: return false
+                val per = input.getBestPericia(choiceKey) ?: return false
                 if (input.rawTotalPericia(per) < matchEntry.value) return false
             } else {
                 val atendeUmaOpc = periciaMinOpcMap.any { (perNome, minRaw) ->
-                    val per = getBestPericia(perNome, input.pericias)
+                    val per = input.getBestPericia(perNome)
                     per != null && input.rawTotalPericia(per) >= minRaw
                 }
                 if (!atendeUmaOpc) return false
@@ -88,10 +96,5 @@ class ValidateRequirementsUseCase {
         }
 
         return true
-    }
-
-    private fun getBestPericia(nome: String, pericias: List<Pericia>): Pericia? {
-        val key = nome.keyify()
-        return pericias.firstOrNull { it.nome.keyify() == key }
     }
 }

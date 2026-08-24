@@ -1423,9 +1423,13 @@ class CriadorState {
 
     fun valorAparar(): Int {
         val perLutar = mapaPericias["LUTAR"]
-        val perJutsu = mapaPericias["JUTSU"]
         val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
-        val jutsuRaw = perJutsu?.let { rawTotalComSupers(it) } ?: 0
+        // "Jutsu" não existe como perícia própria no catálogo (mapaPericias["JUTSU"] nunca
+        // resolvia nada) — as categorias extras vivem em jutsuExtras, uma por especialização
+        // de arma além do slot base (que é a própria perícia Lutar).
+        val jutsuRaw = if (compendioArteDaGuerraAtivo) {
+            jutsuExtras.maxOfOrNull { rawTotalComSupers(it) } ?: 0
+        } else 0
         val melhorLuta = maxOf(lutarRaw, jutsuRaw)
         val base     = 2 + (melhorLuta / 2)
 
@@ -3902,8 +3906,17 @@ class CriadorState {
 
     fun getBestPericia(nome: String): Pericia? {
         val key = nome.keyify()
-        return periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
+        val direct = periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
             ?: mapaPericias[key]
+
+        // Em Arte da Guerra, "Jutsu" é Lutar com Especialização de Perícia: cada categoria
+        // (Jutsu 2, Jutsu 3, ...) é uma perícia própria, mas qualquer uma delas deve poder
+        // satisfazer um requisito de "Lutar nível X" usando a categoria mais alta do
+        // personagem, não só o slot base (que é literalmente a perícia "Lutar").
+        if (key == "LUTAR" && compendioArteDaGuerraAtivo && jutsuExtras.isNotEmpty()) {
+            return (listOfNotNull(direct) + jutsuExtras).maxByOrNull { rawTotal(it) }
+        }
+        return direct
     }
 
     fun podeRemoverPoderDoSlot(poderId: String): Pair<Boolean, String?> {
@@ -4072,7 +4085,7 @@ class CriadorState {
     private fun shouldIgnoreLeadershipStage(v: Vantagem): Boolean {
         if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_samurai") return false
         if (v.categoria != Categoria.LIDERANCA) return false
-        val pericia = getBestPericia("Conhecimento Batalha") ?: return false
+        val pericia = getBestPericia("Conhecimento de Batalha") ?: return false
         return rawTotal(pericia) >= 8
     }
 
