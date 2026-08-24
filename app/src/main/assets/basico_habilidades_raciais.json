@@ -8,6 +8,22 @@
     "origem": "BASICO"
   },
   {
+    "id": "acao_adicional_4",
+    "nome": "Ação Adicional (Física/Mental)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem físicas ou mentais.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "acao_adicional_10",
+    "nome": "Ações Adicionais (Maior)",
+    "custo": 10,
+    "categoria": "racial_trait_positive",
+    "descricao": "Reduz as penalidades de Ações Múltiplas em 4 para qualquer tipo de ação.",
+    "origem": "BASICO"
+  },
+  {
     "id": "adaptavel",
     "nome": "Adaptável",
     "custo": 2,
@@ -40,6 +56,14 @@
     "origem": "BASICO"
   },
   {
+    "id": "arma_de_sopro",
+    "nome": "Arma de Sopro",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode cuspir fogo, frio, ácido ou outra energia (Modelo de Cone, rolagem de Atletismo, causa 2d6 de dano, 3d6 com ampliação).",
+    "origem": "BASICO"
+  },
+  {
     "id": "semi_aquatico",
     "nome": "Semi-Aquático",
     "custo": 1,
@@ -64,11 +88,27 @@
     "origem": "BASICO"
   },
   {
+    "id": "atordoar",
+    "nome": "Atordoar",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Ataque desarmado força o alvo a teste de Vigor ou fica Atordoado. Pode impor -2 no teste recebendo 1 nível de Fadiga.",
+    "origem": "BASICO"
+  },
+  {
     "id": "aumento_atributo",
     "nome": "Aumento de Atributo",
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Aumenta um atributo específico em um tipo de dado e seu máximo em um.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "biologia_acida",
+    "nome": "Biologia Ácida",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Ao sofrer Ferimentos, libera ácido em Modelo Pequeno de Explosão (2d6/3d6 de dano). Imune a ataques ácidos.",
     "origem": "BASICO"
   },
   {
@@ -85,6 +125,30 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Concede bônus de +2 em testes de uma Perícia específica.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "camuflagem_1",
+    "nome": "Camuflagem (Terreno Específico)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Mistura-se com um tipo de terreno natural (+2 Furtividade, +4 se completamente imóvel).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "camuflagem_2",
+    "nome": "Camuflagem (Adaptável)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Muda de cor para se misturar em qualquer ambiente natural (+2 Furtividade, +4 se imóvel).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "casca",
+    "nome": "Casca",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Habita um corpo hospedeiro, ignorando 1 ponto de penalidade por Ferimentos. Pode transferir para nova casca em 24h se destruído.",
     "origem": "BASICO"
   },
   {
@@ -112,11 +176,91 @@
     "origem": "BASICO"
   },
   {
+    "id": "comunitario",
+    "nome": "Comunitário",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "+2 em rolagens de Espírito quando outros da mesma espécie estiverem presentes a até 12 quadros (24m).",
+    "origem": "BASICO"
+  },
+  {
     "id": "construto",
     "nome": "Construto",
     "custo": 8,
     "categoria": "racial_trait_positive",
     "descricao": "+2 para se recuperar de Abalado, ignora 1 nível de Ferimento, não respira, imune a doenças e venenos.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "diminuto_pequeno",
+    "nome": "Diminuto (Pequeno - Tamanho -2)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Tamanho -2, Força máxima d8, -2 Resistência e rolagens de dano. Modificadores de escala dificultam ser atingido.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "diminuto_muito_pequeno",
+    "nome": "Diminuto (Muito Pequeno - Tamanho -3)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Tamanho -3, Força máxima d6, -3 Resistência e rolagens de dano. Modificadores de escala dificultam ser atingido.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "diminuto_minusculo",
+    "nome": "Diminuto (Minúsculo - Tamanho -4)",
+    "custo": 6,
+    "categoria": "racial_trait_positive",
+    "descricao": "Tamanho -4, Força máxima d4, -4 Resistência e rolagens de dano. Modificadores de escala dificultam ser atingido.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "ecolocalizacao",
+    "nome": "Ecolocalização",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Ignora penalidades de Iluminação e até 4 pontos de cegueira ou invisibilidade a até 10 quadros emitindo eco.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "espacial",
+    "nome": "Espacial",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Sobrevive no espaço sem meios artificiais: possui Não Respira, ignora descompressão e radiação de fundo.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "estavel",
+    "nome": "Estável",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Possui pernas extras, corpo serpentino ou esteira; ignora penalidades por Terreno Difícil.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "forma_energia",
+    "nome": "Forma de Energia",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Corpo de energia: imune a armas físicas, projéteis, quedas e ataques localizados; passa por frestas.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "fosforescencia_1",
+    "nome": "Fosforescência",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Gera luz que elimina até 2 pontos de penalidades por Iluminação (-4 em Furtividade baseada na visão).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "fosforescencia_2",
+    "nome": "Fosforescência (Estroboscópica)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Gera luz estroboscópica que impõe -1 nos ataques corpo a corpo dos oponentes contra ele.",
     "origem": "BASICO"
   },
   {
@@ -144,6 +288,22 @@
     "origem": "BASICO"
   },
   {
+    "id": "gelatinoso_2",
+    "nome": "Gelatinoso",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Corpo amorfo: metade do dano por quedas e colisões, sem dano extra por Ataques Localizados.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "gelatinoso_3",
+    "nome": "Gelatinoso (Atravessar Frestas)",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Corpo amorfo: metade do dano por quedas, sem dano extra por Ataques Localizados e atravessa frestas/grades.",
+    "origem": "BASICO"
+  },
+  {
     "id": "imune_doencas_venenos",
     "nome": "Imunidade a Doenças ou Venenos",
     "custo": 1,
@@ -160,6 +320,46 @@
     "origem": "BASICO"
   },
   {
+    "id": "interface",
+    "nome": "Interface",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Conecta-se diretamente a dispositivos eletrônicos, concedendo +2 em testes de Eletrônica e Hackear.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "invisibilidade_translucido",
+    "nome": "Invisibilidade (Translúcido)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Translúcido: impõe -2 nas rolagens inimigas para ver ou atacar.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "invisibilidade_total",
+    "nome": "Invisibilidade (Total)",
+    "custo": 8,
+    "categoria": "racial_trait_positive",
+    "descricao": "Invisibilidade Total: impõe -4 nas rolagens inimigas para ver ou atacar.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "membros_extras",
+    "nome": "Membros Extras",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Conjunto adicional de braços: +1 em Agrupar, +1 em Atletismo (escalar/agarrar) e permite segurar objetos/armas adicionais.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "mods_roboticos",
+    "nome": "Mods Robóticos",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Possui três espaços de Mods Robóticos (ajustados pelo Tamanho do ser).",
+    "origem": "BASICO"
+  },
+  {
     "id": "mordida",
     "nome": "Mordida (For+d4)",
     "custo": 1,
@@ -168,11 +368,43 @@
     "origem": "BASICO"
   },
   {
+    "id": "mordida_d6",
+    "nome": "Mordida Aprimorada (For+d6)",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Presas naturais causando For+d6 de dano.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "mordida_pa",
+    "nome": "Mordida Penetrante (For+d6, PA 2)",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Presas naturais causando For+d6 de dano com PA 2.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "morto_vivo",
+    "nome": "Morto-Vivo",
+    "custo": 8,
+    "categoria": "racial_trait_positive",
+    "descricao": "Resistência +2, +2 para recuperar de Abalado, ignora 1 ponto de Ferimentos, não respira e imune a doenças/venenos.",
+    "origem": "BASICO"
+  },
+  {
     "id": "movimentacao_bonus",
     "nome": "Movimentação Aumentada (+2)",
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "+2 na Movimentação e aumenta o dado de corrida em um tipo.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "mudanca_forma",
+    "nome": "Mudança de Forma",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Muda de forma para a aparência de outro ser (variação de até 2 no Tamanho); teste resistido de Astúcia imita voz e memórias.",
     "origem": "BASICO"
   },
   {
@@ -248,6 +480,14 @@
     "origem": "BASICO"
   },
   {
+    "id": "robo",
+    "nome": "Robô",
+    "custo": 6,
+    "categoria": "racial_trait_positive",
+    "descricao": "Entidade mecânica: não respira, imune a doenças/venenos/radiação, reparado via Conserto em vez de Cura.",
+    "origem": "BASICO"
+  },
+  {
     "id": "robusto",
     "nome": "Robusto",
     "custo": 2,
@@ -272,6 +512,38 @@
     "origem": "BASICO"
   },
   {
+    "id": "sem_sangue",
+    "nome": "Sem Sangue",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Estabiliza automaticamente ao ficar Sangrando e ignora dano extra de armas dilacerantes.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "sentidos_agucados_visao",
+    "nome": "Sentidos Aguçados (Visão de Águia)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode ler a 1,5km de distância e reduz penalidades de Distância em 1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "sentidos_agucados_audicao",
+    "nome": "Sentidos Aguçados (Audição)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Pode escutar um sussurro a 1,5km e ganha +2 em Perceber baseado em audição.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "sentidos_agucados_olfato",
+    "nome": "Sentidos Aguçados (Olfato)",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "+2 em Sobrevivência para rastrear um alvo pelo odor.",
+    "origem": "BASICO"
+  },
+  {
     "id": "tamanho_mais_1",
     "nome": "Tamanho +1",
     "custo": 1,
@@ -280,11 +552,51 @@
     "origem": "BASICO"
   },
   {
+    "id": "telepatia",
+    "nome": "Telepatia",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Comunicação mental com qualquer forma de vida inteligente a até 12 quadros (24m), independente de idioma.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "tentaculos_2",
+    "nome": "Tentáculos",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "+2 nas jogadas para agarrar oponentes.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "tentaculos_4",
+    "nome": "Tentáculos (Duas Ações)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "+2 para agarrar e ganha duas Ações de Tentáculos por turno.",
+    "origem": "BASICO"
+  },
+  {
     "id": "toque_venenoso",
     "nome": "Toque Venenoso (Moderado)",
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Ataque de toque força Vigor ou sofre Veneno Moderado.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "toque_venenoso_paralisante",
+    "nome": "Toque Venenoso (Paralisante)",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Ataque de toque força Vigor ou sofre efeito de Veneno Paralisante.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "toque_venenoso_projetado",
+    "nome": "Toque Venenoso (Projetado/Cusparada)",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Cusparada de veneno Moderado a até 6 quadros (12m) via Atletismo.",
     "origem": "BASICO"
   },
   {
@@ -304,11 +616,27 @@
     "origem": "BASICO"
   },
   {
+    "id": "visao_360",
+    "nome": "Visão de 360°",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Campo de visão de 360 graus desimpedido; ignora 1 ponto de bônus de Agrupar dos inimigos.",
+    "origem": "BASICO"
+  },
+  {
     "id": "visao_escuro",
     "nome": "Visão no Escuro",
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Ignora penalidades por Penumbra e Escuridão.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "visao_total_escuro",
+    "nome": "Visão Total no Escuro",
+    "custo": 1,
+    "categoria": "racial_trait_positive",
+    "descricao": "Ignora todas as penalidades de Iluminação e até 2 pontos de invisibilidade a até 10 quadros.",
     "origem": "BASICO"
   },
   {
@@ -368,6 +696,54 @@
     "origem": "BASICO"
   },
   {
+    "id": "dependencia_atmosferica_1",
+    "nome": "Dependência Atmosférica (Horas)",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Necessita de atmosfera rara; teste de Vigor a cada hora em outra atmosfera ou sofre Fadiga.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "dependencia_atmosferica_2",
+    "nome": "Dependência Atmosférica (Minutos)",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "Necessita de atmosfera rara; teste de Vigor a cada minuto em outra atmosfera ou sofre Fadiga.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "dependencia_atmosferica_4",
+    "nome": "Dependência Atmosférica (Rodadas)",
+    "custo": -4,
+    "categoria": "racial_trait_negative",
+    "descricao": "Necessita de atmosfera rara; teste de Vigor a cada rodada em outra atmosfera ou sofre Fadiga.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "doente_1",
+    "nome": "Doente",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Sofre -2 em rolagens de Vigor feitas para resistir ou se recuperar de doenças.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "doente_2",
+    "nome": "Doente (Infeccioso ao Ferir)",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "Sofre -2 em Vigor contra doenças e deve rolar Vigor ao sofrer Ferimento ou é infectado por Doença Debilitante.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "forma_alienigena",
+    "nome": "Forma Alienígena",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Tamanho/forma incompatível: requer equipamentos personalizados (+100% custo) ou sofre -1 em rolagens de Característica.",
+    "origem": "BASICO"
+  },
+  {
     "id": "fragil",
     "nome": "Frágil",
     "custo": -1,
@@ -416,6 +792,14 @@
     "origem": "BASICO"
   },
   {
+    "id": "nao_pode_curar",
+    "nome": "Não Pode Curar",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Sem capacidade de cura natural ou autorreparo (exige cura ativa ou conserto).",
+    "origem": "BASICO"
+  },
+  {
     "id": "penalidade_atributo_1",
     "nome": "Penalidade em Atributo (-1)",
     "custo": -2,
@@ -456,11 +840,43 @@
     "origem": "BASICO"
   },
   {
+    "id": "repugnante",
+    "nome": "Repugnante",
+    "custo": -1,
+    "categoria": "racial_trait_negative",
+    "descricao": "Aparência ou odor repulsivo; reações de terceiros começam sempre Hostis (ou 1d6 na Tabela de Reação).",
+    "origem": "BASICO"
+  },
+  {
+    "id": "sangue_frio",
+    "nome": "Sangue Frio",
+    "custo": -3,
+    "categoria": "racial_trait_negative",
+    "descricao": "Subtrai 1 das rolagens de Agilidade, Força e Vigor após passar mais de 10 minutos em temperaturas abaixo de 18°C.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "sem_manipuladores",
+    "nome": "Sem Manipuladores",
+    "custo": -4,
+    "categoria": "racial_trait_negative",
+    "descricao": "Sem mãos ou dedos; não pode usar equipamentos comuns nem vestir/tirar roupas sem ajuda.",
+    "origem": "BASICO"
+  },
+  {
     "id": "tamanho_menos_1",
     "nome": "Tamanho -1",
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Reduz o Tamanho e a Resistência em 1.",
+    "origem": "BASICO"
+  },
+  {
+    "id": "transtorno_separacao",
+    "nome": "Transtorno de Separação",
+    "custo": -2,
+    "categoria": "racial_trait_negative",
+    "descricao": "Subtrai 2 das rolagens de Espírito quando nenhum outro membro da própria espécie estiver na linha de visão.",
     "origem": "BASICO"
   },
   {
