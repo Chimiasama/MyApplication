@@ -57,6 +57,8 @@ object DataLoader {
         val atributo: String = "",
         val basica: Boolean = false,
         val descricao: String? = null,
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        val descricaoLite: String? = null,
         val livros: List<String>
     )
 
@@ -287,12 +289,19 @@ object DataLoader {
 
         val todasPericiasJson = periciasFonte.flatMap { fonte ->
             fonte.livros.filter { it in skillVisibleOrigins }.map { livro ->
+                // Na edição Lite, mostra o resumo genérico quando ele já foi escrito; enquanto
+                // não for, cai para a descrição original (sem regressão visual).
+                val descricao = if (!EditionConfig.isFullEdition) {
+                    fonte.descricaoLite ?: fonte.descricao
+                } else {
+                    fonte.descricao
+                }
                 PericiaJson(
                     nome = fonte.nome,
                     atributo = fonte.atributo,
                     basica = fonte.basica,
                     origem = livro,
-                    descricao = fonte.descricao
+                    descricao = descricao
                 )
             }
         }
