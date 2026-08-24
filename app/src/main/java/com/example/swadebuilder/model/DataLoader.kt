@@ -71,6 +71,12 @@ object DataLoader {
     private fun vantagemFromRaw(raw: JsonObject, origin: String): Vantagem {
         val content = raw.toMutableMap()
         content.remove("livros")
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        // Cai para "descricao" enquanto não for escrito, e nunca é usado na Full edition.
+        val descricaoLite = (content.remove("descricaoLite") as? JsonPrimitive)?.takeIf { it.isString }?.content
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) {
+            content["descricao"] = JsonPrimitive(descricaoLite)
+        }
         content["origem"] = JsonPrimitive(origin)
         return json.decodeFromJsonElement(Vantagem.serializer(), JsonObject(content))
     }
