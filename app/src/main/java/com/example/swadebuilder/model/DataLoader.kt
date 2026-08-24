@@ -110,19 +110,32 @@ object DataLoader {
         val livros: List<String>
     )
 
-    private val powerModules = listOf(
-        ModuleFile("fantasia_poderes.json", originOverride = "FANTASIA"),
-        ModuleFile("scifi_poderes.json", originOverride = "SCI_FI"),
-        ModuleFile("horror_poderes.json", originOverride = "HORROR"),
-        ModuleFile("deadlands_poderes.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_poderes.json", originOverride = "PATHFINDER"),
-        ModuleFile("crystal_poderes.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("sol_vapor_poderes.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("wiseguys_poderes.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_poderes.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("adg_tecnicas_chi.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("super_poderes_base.json", originOverride = "SUPER"),
-        ModuleFile("basico_poderes.json")
+    // Poderes vivem em um único arquivo consolidado (poderes.json). Como em Equipamentos e
+    // Ancestralidades, cada nome de poder compartilhado entre livros tem dados diferentes
+    // (descrições e modificadores próprios por cenário), então cada registro carrega apenas
+    // o(s) livro(s) exatos aos quais pertence.
+    //
+    // A consolidação também corrigiu um bug de dados grave: os poderes exclusivos de
+    // scifi_poderes.json, horror_poderes.json e deadlands_poderes.json usavam campos errados
+    // ("custo"/"alcance" em vez de "pontosDePoder"/"distancia") e não tinham "id". Como esses
+    // campos são obrigatórios em Poder, a desserialização do arquivo INTEIRO falhava e o
+    // DataLoader silenciosamente descartava todos os poderes daquele livro (não só os
+    // quebrados) — ou seja, Sci-Fi e Horror perdiam os poderes exclusivos deles, e Deadlands
+    // (que não herda o Básico) ficava sem NENHUM poder disponível. Os 51 registros afetados
+    // foram corrigidos (campos renomeados, id gerado a partir do nome) antes da consolidação.
+    @Serializable
+    private data class PoderFonte(
+        val id: String,
+        val nome: String,
+        val estagio: String,
+        @Serializable(with = StringOrIntSerializer::class)
+        val pontosDePoder: String,
+        val distancia: String,
+        val duracao: String,
+        val manifestacoes: List<String> = emptyList(),
+        val descricao: String,
+        val modificadores: List<Modificador> = emptyList(),
+        val livros: List<String>
     )
 
     // --- Loading Logic ---
@@ -467,16 +480,34 @@ object DataLoader {
         // Kept for consistency if needed later
 
         // 13. Poderes
-        val powerModulesToLoad = if (shouldReplaceBasico) {
-            powerModules.filter { it.fileName != "basico_poderes.json" }
-        } else {
-            powerModules
-        }
-        val todosPoderes = assets.loadAndMerge<Poder>(powerModulesToLoad, keys) { item, override ->
-            if (override != null) item.copy(origem = override) else item
-        }
+        val powerVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val localListaPoderes = todosPoderes
+        @Suppress("UNCHECKED_CAST")
+        val poderesFonte = dataCache.getOrPut("poderes.json") {
+            runCatching {
+                loadJsonAsset<List<PoderFonte>>(context, "poderes.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar poderes.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<PoderFonte>
+
+        val localListaPoderes = poderesFonte.flatMap { fonte ->
+            fonte.livros.filter { it in powerVisibleOrigins }.map { livro ->
+                Poder(
+                    id = fonte.id,
+                    nome = fonte.nome,
+                    origem = livro,
+                    estagio = fonte.estagio,
+                    pontosDePoder = fonte.pontosDePoder,
+                    distancia = fonte.distancia,
+                    duracao = fonte.duracao,
+                    manifestacoes = fonte.manifestacoes,
+                    descricao = fonte.descricao,
+                    modificadores = fonte.modificadores
+                )
+            }
+        }
 
         // 14. Custom Local Content per active book
         val customStorageManager = com.example.swadebuilder.util.CustomStorageManager()
@@ -544,6 +575,51 @@ object DataLoader {
             listaSuperPoderes = localListaSuperPoderes,
             arcanoInfo = loadedArcanoInfoList
         )
+    }
+
+    // Usado por telas que precisam do catálogo de poderes de um livro específico
+    // independentemente de qual livro está ativo no momento (ex.: a tela de Poderes mostra
+    // as opções de um Antecedente Arcano concedido por uma vantagem de origem X, mesmo que o
+    // personagem tenha outra origem ativa). Substitui a antiga leitura direta de
+    // "${livro}_poderes.json" arquivo por arquivo — que quebrou quando os arquivos por livro
+    // foram consolidados em poderes.json, e que já vinha com um bug próprio: as chaves do
+    // mapa eram geradas a partir do nome do arquivo (ex.: "SCIFI", "CRYSTAL", "ARTE DA
+    // GUERRA" com espaço) enquanto a busca usa a forma canônica (ex.: "SCI_FI",
+    // "CRYSTAL_HEART", "ARTE_DA_GUERRA" com underscore) — a maioria das buscas por origem
+    // nunca batia com o mapa. Aqui as chaves já nascem no formato canônico usado por
+    // powerAssetOriginKey().
+    fun poderesPorOrigem(context: Context): Map<String, List<Poder>> {
+        @Suppress("UNCHECKED_CAST")
+        val fonte = dataCache.getOrPut("poderes.json") {
+            runCatching {
+                loadJsonAsset<List<PoderFonte>>(context, "poderes.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar poderes.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<PoderFonte>
+
+        val map = mutableMapOf<String, MutableList<Poder>>()
+        fonte.forEach { f ->
+            f.livros.forEach { livroRaw ->
+                val livro = powerAssetOriginKey(livroRaw)
+                map.getOrPut(livro) { mutableListOf() }.add(
+                    Poder(
+                        id = f.id,
+                        nome = f.nome,
+                        origem = livro,
+                        estagio = f.estagio,
+                        pontosDePoder = f.pontosDePoder,
+                        distancia = f.distancia,
+                        duracao = f.duracao,
+                        manifestacoes = f.manifestacoes,
+                        descricao = f.descricao,
+                        modificadores = f.modificadores
+                    )
+                )
+            }
+        }
+        return map
     }
 
     private fun deduplicarEquipamentoCategorias(

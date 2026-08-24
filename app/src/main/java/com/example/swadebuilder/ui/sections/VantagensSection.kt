@@ -69,7 +69,6 @@ import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.model.explainVantagemVisibility
 import com.example.swadebuilder.model.isVantagemVisible
-import com.example.swadebuilder.model.loadJsonAsset
 import com.example.swadebuilder.toArcanoKey
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
@@ -178,25 +177,7 @@ fun VantagensContent(
     val context = LocalContext.current
     val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
         withContext(Dispatchers.IO) {
-            val origins = listOf("basico", "fantasia", "scifi", "horror", "deadlands", "pathfinder", "crystal", "sol_vapor", "wiseguys", "adg")
-            val map = mutableMapOf<String, List<Poder>>()
-
-            origins.forEach { org ->
-                val list = runCatching { context.loadJsonAsset<List<Poder>>("${org}_poderes.json") }.getOrElse { emptyList() }
-                map[org.uppercase()] = list
-            }
-
-            val superBaseList = runCatching { context.loadJsonAsset<List<Poder>>("super_poderes_base.json") }.getOrElse { emptyList() }
-            map["SUPER"] = superBaseList
-
-            val adgChiList = runCatching { context.loadJsonAsset<List<Poder>>("adg_tecnicas_chi.json") }.getOrElse { emptyList() }
-            val adgStandardList = map["ADG"] ?: emptyList()
-            val combinedAdg = (adgStandardList + adgChiList).distinctBy { it.id }
-
-            map["ADG"] = combinedAdg
-            map["ARTE DA GUERRA"] = combinedAdg
-
-            value = map
+            value = com.example.swadebuilder.model.DataLoader.poderesPorOrigem(context)
         }
     }
 
