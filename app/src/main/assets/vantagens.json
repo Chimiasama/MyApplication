@@ -23857,10 +23857,10 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "description": "Os chifres do Onigem são a chave para canalizar o Chi. Desbloquear um talento sobrenatural leva tempo para dominar. Esta vantagem permite que o personagem ative Técnicas sem depender dos requisitos de canalização como Mãos Livres e Sem Fala, pois o foco vem do chifre. No entanto, o(s) chifre(s) brilha(m) com poder (ou qualquer cor da manifestação) ao ativar, canalizar ou manter Técnicas. Caso o(s) chifre(s) sejam removidos, o Onigem não conseguem usar as Técnicas conhecidas até que consiga uma nova maneira de usá-las (ou seja, o Jogador deve aplicar um componente para ativar uma Técnica). Isso pode ser facilmente redescoberto com um interlúdio ou atividade no tempo de pausa.",
     "livros": [
       "ARTE_DA_GUERRA"
-    ]
+    ],
+    "descricao": "Os chifres do Onigem são a chave para canalizar o Chi. Desbloquear um talento sobrenatural leva tempo para dominar. Esta vantagem permite que o personagem ative Técnicas sem depender dos requisitos de canalização como Mãos Livres e Sem Fala, pois o foco vem do chifre. No entanto, o(s) chifre(s) brilha(m) com poder (ou qualquer cor da manifestação) ao ativar, canalizar ou manter Técnicas. Caso o(s) chifre(s) sejam removidos, o Onigem não conseguem usar as Técnicas conhecidas até que consiga uma nova maneira de usá-las (ou seja, o Jogador deve aplicar um componente para ativar uma Técnica). Isso pode ser facilmente redescoberto com um interlúdio ou atividade no tempo de pausa."
   },
   {
     "id": "transformacao",
