@@ -282,7 +282,16 @@ fun SettingsDialog(
                             }.getOrElse { emptyList() }
                         }
 
-                        val categories = listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça", "Traço Racial")
+                        val categories = remember(isHomeScreen) {
+                            if (isHomeScreen) {
+                                listOf("Vantagem", "Complicação", "Poder", "Raça", "Traço Racial")
+                            } else {
+                                listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça", "Traço Racial")
+                            }
+                        }
+                        if (selectedCategory !in categories) {
+                            selectedCategory = categories.first()
+                        }
                         val activeBookCustomData = remember(activeBookKey, refreshTrigger) {
                             customStorageManager.loadCustomContent(context, activeBookKey)
                         }
@@ -719,11 +728,13 @@ fun SettingsDialog(
                                         fontWeight = FontWeight.Bold
                                     )
 
-                                    val allCustomItems = remember(activeBookCustomData) {
+                                    val allCustomItems = remember(activeBookCustomData, isHomeScreen) {
                                         buildList {
                                             activeBookCustomData.vantagens.forEach { add("Vantagem" to it.nome) }
                                             activeBookCustomData.complicacoes.forEach { add("Complicação" to it.name) }
-                                            activeBookCustomData.equipamentos.forEach { add("Equipamento" to it.nome) }
+                                            if (!isHomeScreen) {
+                                                activeBookCustomData.equipamentos.forEach { add("Equipamento" to it.nome) }
+                                            }
                                             activeBookCustomData.poderes.forEach { add("Poder" to it.nome) }
                                             activeBookCustomData.racas.forEach { add("Raça" to it.nome) }
                                             activeBookCustomData.habilidadesRaciais.forEach { add("Traço Racial" to it.nome) }
