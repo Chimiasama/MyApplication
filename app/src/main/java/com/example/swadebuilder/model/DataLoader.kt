@@ -2,6 +2,7 @@ package com.example.swadebuilder.model
 
 import android.content.Context
 import android.util.Log
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -309,8 +310,15 @@ object DataLoader {
         val localListaPericias = rawPericias
         val localMapaPericias = localListaPericias.associateBy { it.nome.keyify() }
 
+        // Na edição Lite, mostra o resumo genérico (sem reproduzir o texto do livro original)
+        // quando ele já foi escrito; enquanto não for, cai para a descrição original.
         val localMapaAtributosDescricao = atributosData.atributos.associate {
-            it.nome.keyify() to (it.descricao ?: "")
+            val texto = if (!EditionConfig.isFullEdition) {
+                it.descricaoLite ?: it.descricao
+            } else {
+                it.descricao
+            }
+            it.nome.keyify() to (texto ?: "")
         }
 
         // 7. Vantagens
