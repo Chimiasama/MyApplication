@@ -7,6 +7,7 @@ import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
@@ -28,18 +29,18 @@ object DataLoader {
 
     // --- Module Definitions ---
 
-    private val equipmentModules = listOf(
-        ModuleFile("fantasia_equipamentos.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_equipamentos.json", originOverride = "HORROR"),
-        ModuleFile("scifi_equipamentos.json", originOverride = "SCI_FI"),
-        ModuleFile("crystal_equipamentos.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("pathfinder_equipamentos.json", originOverride = "PATHFINDER"),
-        ModuleFile("super_equipamentos.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_equipamentos.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_equipamentos.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_equipamentos.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_equipamentos.json", originOverride = "DEADLANDS"),
-        ModuleFile("basico_equipamentos.json")
+    // Equipamentos vivem em um único arquivo consolidado (equipamentos.json), com cada
+    // categoria marcada por "livros" (quais livros a enxergam), em vez de um arquivo por
+    // livro. Isso elimina a necessidade de uma lista de módulos e de regras especiais por
+    // livro (ex.: o antigo caso especial do Crystal Heart) — a visibilidade é resolvida
+    // diretamente em updateActiveModules() a partir de equipVisibleOrigins.
+    @Serializable
+    private data class EquipamentoCategoriaFonte(
+        val tipo: String,
+        val subtipo: String,
+        val subsubtipo: String? = null,
+        val livros: List<String>,
+        val itens: List<EquipamentoItem>
     )
 
     private val skillModules = listOf(
@@ -180,17 +181,30 @@ object DataLoader {
         // 1. Equipamentos
         // Livros de cenário autônomos (ex.: Crystal Heart, Deadlands) trazem seu próprio
         // catálogo de equipamentos, coerente com o gênero (sem viaturas/armas modernas fora
-        // de contexto), e não herdam o Básico. Como a seleção de livro na tela inicial é
-        // exclusiva (um único livro ativo por vez), essa regra é suficiente também para
-        // Crystal Heart: não é preciso um caso especial só para ele.
-        val equipmentModulesToLoad = if (shouldReplaceBasico) {
-            equipmentModules.filter { it.fileName != "basico_equipamentos.json" }
-        } else {
-            equipmentModules
-        }
+        // de contexto), e não herdam o Básico. Livros companheiros (Fantasia, Horror, Sci-Fi,
+        // Supers) somam o próprio conteúdo ao Básico. No Modo Livre (mais de uma origem não-
+        // básica ativa ao mesmo tempo) tudo fica visível.
+        val equipVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModulesToLoad, keys) { item, override ->
-            if (override != null) item.copy(origem = override) else item
+        @Suppress("UNCHECKED_CAST")
+        val equipCategoriasFonte = dataCache.getOrPut("equipamentos.json") {
+            runCatching {
+                loadJsonAsset<List<EquipamentoCategoriaFonte>>(context, "equipamentos.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar equipamentos.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<EquipamentoCategoriaFonte>
+
+        val allEquip = equipCategoriasFonte.mapNotNull { cat ->
+            if (cat.livros.none { it in equipVisibleOrigins }) return@mapNotNull null
+            EquipamentoCategoria(
+                tipo = cat.tipo,
+                subtipo = cat.subtipo,
+                subsubtipo = cat.subsubtipo,
+                origem = cat.livros.first(),
+                itens = cat.itens
+            )
         }
         val localListaEquipamentos = allEquip.flatMap { it.itens }
 
