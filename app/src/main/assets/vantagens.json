@@ -23718,11 +23718,11 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "O que não matou um herói, o fortaleceu. Seu herói pode ter tido uma infância difícil ou um treinamento de resistência extenso; o personagem sabe que não há ganho sem dor. Vários ossos quebrados e contusões aumentaram o limiar de dor a um novo nível, criando um herói resistente. O herói ganha um -1 adicional por nível de Ferimento.",
+    "descricao": "O que não matou um herói, o fortaleceu. Seu herói pode ter tido uma infância difícil ou um treinamento de resistência extenso; o personagem sabe que não há ganho sem dor. Vários ossos quebrados e contusões aumentaram o limiar de dor a um novo nível, criando um herói resistente. O herói pode sofrer até 4 Ferimentos antes de ficar Incapacitado, em vez do limite normal de 3.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Aumenta em -1 adicional a penalidade sofrida por nível de Ferimento."
+    "descricaoLite": "Eleva de 3 para 4 o número de Ferimentos que o personagem suporta antes de ficar Incapacitado."
   },
   {
     "id": "legado",
