@@ -35,8 +35,13 @@ data class RacialModifier(
 data class HabilidadeCriacao(
     val nome: String,
     val custo: Int,
-    val descricao: String
-)
+    val descricao: String,
+    // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+    val descricaoLite: String? = null
+) {
+    fun exibida(): HabilidadeCriacao =
+        if (!com.example.swadebuilder.EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this
+}
 
 @Serializable
 data class TabelaCriacaoRaca(

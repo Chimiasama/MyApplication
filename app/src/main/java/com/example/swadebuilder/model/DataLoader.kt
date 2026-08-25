@@ -260,7 +260,7 @@ object DataLoader {
                 }.getOrElse { emptyList<CrystalHeart>() }
             } as List<CrystalHeart>
             val customHearts = CustomCrystalHeartStorage.load(context)
-            (hearts + customHearts).distinctBy { it.id }
+            (hearts.map { it.exibido() } + customHearts).distinctBy { it.id }
         } else {
             emptyList()
         }
@@ -274,7 +274,7 @@ object DataLoader {
                         .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
                 }.getOrElse { emptyList<SuperPoder>() }
             } as List<SuperPoder>
-            supers
+            supers.map { it.exibido() }
         } else {
             emptyList()
         }
@@ -407,7 +407,7 @@ object DataLoader {
             val cached = dataCache.getOrPut("adg_tropos.json") {
                 runCatching { loadJsonAsset<List<Tropo>>(context, "adg_tropos.json") }.getOrElse { emptyList<Tropo>() }
             } as List<Tropo>
-            cached
+            cached.map { it.exibido() }
         } else emptyList()
 
         val chTropos = if ("CRYSTAL_HEART" in keys) {
@@ -415,7 +415,7 @@ object DataLoader {
             val cached = dataCache.getOrPut("crystal_tropos.json") {
                 runCatching { loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json") }.getOrElse { emptyList<Tropo>() }
             } as List<Tropo>
-            cached
+            cached.map { it.exibido() }
         } else emptyList()
 
         val localListaTropos = adgTropos + chTropos
@@ -493,7 +493,7 @@ object DataLoader {
                         .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
                 }.getOrElse { emptyList<MonstroTemplate>() }
             } as List<MonstroTemplate>
-            monstros
+            monstros.map { it.exibido() }
         } else {
             emptyList()
         }

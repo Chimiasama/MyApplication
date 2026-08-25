@@ -92,7 +92,7 @@ fun MechasSection(
             context.assets.open("scifi_mecha_mods.json").use { input ->
                 Json { ignoreUnknownKeys = true }.decodeFromStream<MechaModCatalogWrapper>(input).modificadores
             }
-        }.getOrElse { emptyList() }
+        }.getOrElse { emptyList() }.map { it.exibido() }
     }
 
     val weaponCatalog = remember(context) {
@@ -100,7 +100,7 @@ fun MechasSection(
             context.assets.open("scifi_mecha_weapons.json").use { input ->
                 Json { ignoreUnknownKeys = true }.decodeFromStream<MechaWeaponCatalogWrapper>(input).armas
             }
-        }.getOrElse { emptyList() }
+        }.getOrElse { emptyList() }.map { it.exibido() }
     }
 
     var showCreateCustomDialog by remember { mutableStateOf(false) }

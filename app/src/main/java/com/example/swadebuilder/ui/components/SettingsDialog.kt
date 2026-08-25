@@ -279,7 +279,7 @@ fun SettingsDialog(
                         val baseRacialCatalog: List<com.example.swadebuilder.model.HabilidadeCriacao> = remember {
                             runCatching {
                                 context.loadJsonAsset<List<com.example.swadebuilder.model.HabilidadeCriacao>>("basico_habilidades_raciais.json")
-                            }.getOrElse { emptyList() }
+                            }.getOrElse { emptyList() }.map { it.exibida() }
                         }
 
                         val categories = remember(isHomeScreen) {

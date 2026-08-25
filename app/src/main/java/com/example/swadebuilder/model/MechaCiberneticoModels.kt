@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.EditionConfig
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,16 +17,26 @@ data class MechaModItem(
     val categoria: String = "",
     val mods_cost: Int = 0,
     val max_uses: Int = 1,
-    val descricao: String = ""
-)
+    val descricao: String = "",
+    // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+    val descricaoLite: String? = null
+) {
+    fun exibido(): MechaModItem =
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this
+}
 
 @Serializable
 data class MechaWeaponItem(
     val id: String,
     val nome: String,
     val mods_cost: Int = 1,
-    val descricao: String = ""
-)
+    val descricao: String = "",
+    // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+    val descricaoLite: String? = null
+) {
+    fun exibido(): MechaWeaponItem =
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this
+}
 
 @Serializable
 data class MechaItem(
@@ -53,8 +64,13 @@ data class CiberneticoItem(
     val nome: String,
     val strain_custo: Int = 0,
     val efeito: String = "",
+    // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+    val efeitoLite: String? = null,
     val modificacoes: List<String> = emptyList()
-)
+) {
+    fun exibido(): CiberneticoItem =
+        if (!EditionConfig.isFullEdition && !efeitoLite.isNullOrBlank()) copy(efeito = efeitoLite) else this
+}
 
 @Serializable
 data class MechaCatalogWrapper(
