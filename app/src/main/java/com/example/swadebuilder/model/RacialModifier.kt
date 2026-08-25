@@ -42,14 +42,3 @@ data class HabilidadeCriacao(
     fun exibida(): HabilidadeCriacao =
         if (!com.example.swadebuilder.EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this
 }
-
-@Serializable
-data class TabelaCriacaoRaca(
-    val pontos_iniciais: Int,
-    val habilidades: List<HabilidadeCriacao>
-)
-
-@Serializable
-data class RegrasCriacaoRacaJson(
-    val tabela_criacao: TabelaCriacaoRaca
-)
