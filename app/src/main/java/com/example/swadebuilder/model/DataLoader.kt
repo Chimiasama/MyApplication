@@ -563,11 +563,16 @@ object DataLoader {
             customRacas += customData.racas
         }
 
-        val mergedVantagens = (localListaVantagens + customVantagens).distinctBy { it.id }
-        val mergedComplicacoes = (localListaComplicacoes + customComplicacoes).distinctBy { it.id }
-        val mergedEquipamentos = (localListaEquipamentos + customEquipamentos).distinctBy { it.nome.keyify() }
-        val mergedPoderes = (localListaPoderes + customPoderes).distinctBy { it.id }
-        val mergedAncestralidades = (localListaAncestralidadesJson + customRacas).distinctBy { it.nome.keyify() }
+        // Usa distinctByOriginPriority (não distinctBy simples) porque um mesmo id/nome pode
+        // existir em mais de um livro ativo ao mesmo tempo (Modo Livre, ou um livro
+        // companheiro somado ao Básico) com conteúdo DIFERENTE por livro — distinctBy() ficaria
+        // com a primeira ocorrência do arquivo (normalmente a do Básico), descartando em
+        // silêncio a versão mais específica do outro livro.
+        val mergedVantagens = (localListaVantagens + customVantagens).distinctByOriginPriority({ it.origem }, { it.id })
+        val mergedComplicacoes = (localListaComplicacoes + customComplicacoes).distinctByOriginPriority({ it.origem }, { it.id })
+        val mergedEquipamentos = (localListaEquipamentos + customEquipamentos).distinctByOriginPriority({ it.origem }, { it.nome.keyify() })
+        val mergedPoderes = (localListaPoderes + customPoderes).distinctByOriginPriority({ it.origem }, { it.id })
+        val mergedAncestralidades = (localListaAncestralidadesJson + customRacas).distinctByOriginPriority({ it.origem }, { it.nome.keyify() })
 
         // Inject custom equipment into categories so they appear in EquipamentoSection
         val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {

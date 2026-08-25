@@ -221,28 +221,17 @@ fun AncestralidadesSection(
         val prioritized = filtered.groupBy { it.nome.keyify() }
             .map { (_, duplicates) ->
                 if (duplicates.size == 1) return@map duplicates.first()
+                duplicates.maxBy { com.example.swadebuilder.model.originPriority(it.origem) }
+            }
 
-                fun priority(origin: String?): Int {
-                    val o = canonicalOriginKey(origin)
-                    return when {
-                        o == "HORROR" -> 1000
-                        o == "FANTASIA" -> 900
-                        o == "ARTE_DA_GUERRA" -> 800
-                        o == "DEADLANDS" -> 800
-                        o == "WISEGUYS" -> 800
-                        o == "CIDADE_SOL_VAPOR" -> 800
-                        o.contains("TRILHADOR") || o.contains("PATHFINDER") -> 800
-                        o == "FC" || o == "SCIFI" || o == "SCI_FI" -> 800
-                        o == "CRYSTAL_HEART" -> 800
-                        o == "BASICO" -> 0
-                        else -> 100
-                    }
-                }
-            duplicates.maxBy { priority(it.origem) }
-        }
-
+        // Agrupa por (nome-base, assinatura) — nunca só por assinatura. Duas raças DIFERENTES
+        // podem coincidir em atributos/perícias/habilidades (ex.: Kalianos reaproveita o mesmo
+        // bloco de Quadroides) sem serem a mesma raça; agrupar só por assinatura as fundia em
+        // uma única linha, escondendo uma delas da lista de seleção. Usa o nome sem sufixo de
+        // cenário (ex.: "Humano" de "Humano (Buscatrilha)") para preservar a fusão legítima de
+        // variantes de nome da MESMA raça entre livros.
         val deduped = prioritized
-            .groupBy { it.signature() }
+            .groupBy { stripScenarioSuffix(it.nome).keyify() to it.signature() }
             .values
             .map { group ->
                 val representative = group.first()
