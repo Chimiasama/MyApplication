@@ -21,6 +21,8 @@ data class EquipamentoItem(
     val armadura: JsonElement? = null,
     val aparar: JsonElement? = null,
     val observacoes: JsonElement? = null,
+    // Resumo genérico para "observacoes" na edição Lite (não reproduz o texto do livro original).
+    val descricaoLite: String? = null,
     val dano: JsonElement? = null,
     val pa: JsonElement? = null,
     val cdt: JsonElement? = null,

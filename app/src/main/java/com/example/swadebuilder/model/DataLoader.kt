@@ -45,6 +45,11 @@ object DataLoader {
         val itens: List<EquipamentoItem>
     )
 
+    private fun EquipamentoItem.comObservacoesExibidas(): EquipamentoItem =
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) {
+            copy(observacoes = JsonPrimitive(descricaoLite!!))
+        } else this
+
     // Perícias vivem em um único arquivo consolidado (pericias.json). Diferente do
     // equipamentos.json, aqui a maioria das perícias é idêntica entre livros (mesmo
     // atributo, mesma regra de "básica", mesma descrição), então cada registro carrega a
@@ -229,7 +234,7 @@ object DataLoader {
                 subtipo = cat.subtipo,
                 subsubtipo = cat.subsubtipo,
                 origem = cat.livros.first(),
-                itens = cat.itens
+                itens = cat.itens.map { it.comObservacoesExibidas() }
             )
         }
         val localListaEquipamentos = allEquip.flatMap { it.itens }
