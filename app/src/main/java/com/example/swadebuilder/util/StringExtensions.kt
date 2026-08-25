@@ -107,7 +107,7 @@ fun String.toSentenceCase(): String {
  * Colator para ordenação em Português do Brasil (sensível a acentos).
  */
 val ptBrCollator: Collator by lazy {
-    val collator = Collator.getInstance(Locale("pt", "BR"))
+    val collator = Collator.getInstance(Locale.Builder().setLanguage("pt").setRegion("BR").build())
     collator.strength = Collator.TERTIARY // Diferencia 'a', 'á', 'à', 'A'
     collator
 }
