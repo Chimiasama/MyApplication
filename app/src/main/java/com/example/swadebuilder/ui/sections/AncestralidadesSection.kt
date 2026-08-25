@@ -52,6 +52,8 @@ import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
+import com.example.swadebuilder.model.groupAncestralidadesForDisplay
+import com.example.swadebuilder.model.stripAncestralidadeScenarioSuffix
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -194,7 +196,7 @@ fun AncestralidadesSection(
         // variantes de nome da mesma raça entre livros sem fundir raças diferentes que
         // coincidem em mecânica) vive em com.example.swadebuilder.model.RacialModifier.kt
         // (groupAncestralidadesForDisplay), testada por unit test puro.
-        val deduped = com.example.swadebuilder.model.groupAncestralidadesForDisplay(filtered)
+        val deduped = groupAncestralidadesForDisplay(filtered)
             .map { group ->
                 val representative = group.first()
                 val originsInGroup = group.map { canonicalOriginKey(it.origem) }.toSet()
