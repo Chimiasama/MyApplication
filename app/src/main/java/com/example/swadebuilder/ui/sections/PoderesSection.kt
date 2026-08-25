@@ -90,7 +90,7 @@ fun PoderesSection(
     onShowMessage: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
 
     val locked = state.criacaoBasicaCongeladaComXp
 
@@ -136,32 +136,7 @@ fun PoderesSection(
     }
 
     val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
-        val origins = listOf("basico", "fantasia", "scifi", "horror", "deadlands", "pathfinder", "crystal", "sol_vapor", "wiseguys", "adg")
-        val map = mutableMapOf<String, List<Poder>>()
-
-        origins.forEach { org ->
-            val list = runCatching { context.loadJsonAsset<List<Poder>>("${org}_poderes.json") }.getOrElse { emptyList() }
-            map[org.uppercase()] = list
-        }
-
-        // SUPER special case: avoid conflict with specialized Super Powers file
-        val superBaseList = runCatching { context.loadJsonAsset<List<Poder>>("super_poderes_base.json") }.getOrElse { emptyList() }
-        map["SUPER"] = superBaseList
-
-        // ADG special case (if adg_tecnicas_chi is preferred but adg_poderes also exists now, we might want to merge or prefer one)
-        // Keeping existing logic but ensuring "ARTE DA GUERRA" key is set.
-        // If adg_poderes.json was loaded above into map["ADG"], this might overwrite it with tecnicas_chi or vice versa depending on intent.
-        // The prompt implies strict referencing. ADG usually means Tecnicas Chi.
-        // However, if we created adg_poderes.json, maybe we should load it too?
-        // Let's load tecnicas_chi separate and merge if needed, or just prioritize tecnicas_chi as it is the setting specific power set.
-        val adgChiList = runCatching { context.loadJsonAsset<List<Poder>>("adg_tecnicas_chi.json") }.getOrElse { emptyList() }
-        val adgStandardList = map["ADG"] ?: emptyList()
-        val combinedAdg = (adgStandardList + adgChiList).distinctBy { it.id }
-
-        map["ADG"] = combinedAdg
-        map["ARTE DA GUERRA"] = combinedAdg
-
-        value = map
+        value = com.example.swadebuilder.model.DataLoader.poderesPorOrigem(context)
     }
 
     val dominiosCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {

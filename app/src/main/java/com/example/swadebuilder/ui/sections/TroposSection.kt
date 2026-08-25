@@ -103,7 +103,7 @@ fun TroposSection(
 
     val tropos = remember(listaTropos) { listaTropos }
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
-    val allowLongTexts = EditionConfig.isFullEdition
+    val allowLongTexts = true
     val idParaNome = remember(showOfficialNames, listaVantagens) {
         listaVantagens.associate { vant ->
             val nome = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName else vant.nome

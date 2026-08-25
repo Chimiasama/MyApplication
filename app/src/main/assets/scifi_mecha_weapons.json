@@ -4,109 +4,127 @@
       "id": "w_canhao_auto_leve",
       "nome": "Canhão Automático Leve (3d8, PA 4)",
       "mods_cost": 1,
-      "descricao": "Distância 50/100/200, CdT 4. Defesa de Ponto, Tiro de Reação."
+      "descricao": "Distância 50/100/200, CdT 4. Defesa de Ponto, Tiro de Reação.",
+      "descricaoLite": "Distância 50/100/200, CdT 4. Defesa de Ponto, Tiro de Reação."
     },
     {
       "id": "w_canhao_auto_medio",
       "nome": "Canhão Automático Médio (4d8, PA 6)",
       "mods_cost": 2,
-      "descricao": "Distância 50/100/200, CdT 4."
+      "descricao": "Distância 50/100/200, CdT 4.",
+      "descricaoLite": "Distância 50/100/200, CdT 4."
     },
     {
       "id": "w_canhao_auto_pesado",
       "nome": "Canhão Automático Pesado (5d8, PA 8)",
       "mods_cost": 3,
-      "descricao": "Distância 75/150/300, CdT 4."
+      "descricao": "Distância 75/150/300, CdT 4.",
+      "descricaoLite": "Distância 75/150/300, CdT 4."
     },
     {
       "id": "w_canhao_leve",
       "nome": "Canhão Leve (3d10, PA 5)",
       "mods_cost": 1,
-      "descricao": "Distância 50/100/200, MPE."
+      "descricao": "Distância 50/100/200, MPE.",
+      "descricaoLite": "Distância 50/100/200, MPE."
     },
     {
       "id": "w_canhao_medio",
       "nome": "Canhão Médio (4d10, PA 10)",
       "mods_cost": 3,
-      "descricao": "Distância 75/150/300, MPE."
+      "descricao": "Distância 75/150/300, MPE.",
+      "descricaoLite": "Distância 75/150/300, MPE."
     },
     {
       "id": "w_canhao_pesado",
       "nome": "Canhão Pesado (5d10, PA 20)",
       "mods_cost": 5,
-      "descricao": "Distância 100/200/400, MPE."
+      "descricao": "Distância 100/200/400, MPE.",
+      "descricaoLite": "Distância 100/200/400, MPE."
     },
     {
       "id": "w_laser_gatling",
       "nome": "Laser Gatling (3d6+4, PA 4)",
       "mods_cost": 1,
-      "descricao": "Distância 50/100/200, CdT 4, Cauterizante, Sobrecarga."
+      "descricao": "Distância 50/100/200, CdT 4, Cauterizante, Sobrecarga.",
+      "descricaoLite": "Distância 50/100/200, CdT 4, Cauterizante, Sobrecarga."
     },
     {
       "id": "w_laser_leve",
       "nome": "Laser Leve (2d10, PA 10)",
       "mods_cost": 1,
-      "descricao": "Distância 150/300/600, CdT 3, Cauterizante, Sobrecarga."
+      "descricao": "Distância 150/300/600, CdT 3, Cauterizante, Sobrecarga.",
+      "descricaoLite": "Distância 150/300/600, CdT 3, Cauterizante, Sobrecarga."
     },
     {
       "id": "w_laser_medio",
       "nome": "Laser Médio (3d10, PA 20)",
       "mods_cost": 3,
-      "descricao": "Distância 150/300/600, CdT 2, Cauterizante, Sobrecarga."
+      "descricao": "Distância 150/300/600, CdT 2, Cauterizante, Sobrecarga.",
+      "descricaoLite": "Distância 150/300/600, CdT 2, Cauterizante, Sobrecarga."
     },
     {
       "id": "w_laser_pesado",
       "nome": "Laser Pesado (4d10, PA 30)",
       "mods_cost": 5,
-      "descricao": "Distância 150/300/600, CdT 1, Cauterizante, Sobrecarga."
+      "descricao": "Distância 150/300/600, CdT 1, Cauterizante, Sobrecarga.",
+      "descricaoLite": "Distância 150/300/600, CdT 1, Cauterizante, Sobrecarga."
     },
     {
       "id": "w_lanca_misseis_leve",
       "nome": "Lança-Mísseis Leve (6d6, PA 16)",
       "mods_cost": 1,
-      "descricao": "Distância 100/200/400, CdT 4, Guiado, MPE."
+      "descricao": "Distância 100/200/400, CdT 4, Guiado, MPE.",
+      "descricaoLite": "Distância 100/200/400, CdT 4, Guiado, MPE."
     },
     {
       "id": "w_lanca_misseis_medio",
       "nome": "Lança-Mísseis Médio (7d6, PA 24)",
       "mods_cost": 1,
-      "descricao": "Distância 150/300/600, CdT 2, Guiado, MME."
+      "descricao": "Distância 150/300/600, CdT 2, Guiado, MME.",
+      "descricaoLite": "Distância 150/300/600, CdT 2, Guiado, MME."
     },
     {
       "id": "w_lanca_misseis_pesado",
       "nome": "Lança-Mísseis Pesado (8d6, PA 32)",
       "mods_cost": 1,
-      "descricao": "Distância 200/400/800, CdT 1, Guiado, MGE."
+      "descricao": "Distância 200/400/800, CdT 1, Guiado, MGE.",
+      "descricaoLite": "Distância 200/400/800, CdT 1, Guiado, MGE."
     },
     {
       "id": "w_lanca_projetil_medio",
       "nome": "Lança-Projéteis Médio (2d8+1, PA 2)",
       "mods_cost": 1,
-      "descricao": "Distância 30/60/120, CdT 3, Defesa de Ponto, Tiro de Reação."
+      "descricao": "Distância 30/60/120, CdT 3, Defesa de Ponto, Tiro de Reação.",
+      "descricaoLite": "Distância 30/60/120, CdT 3, Defesa de Ponto, Tiro de Reação."
     },
     {
       "id": "w_lamina_braco",
       "nome": "Lâmina de Braço (For+d12, PA 6)",
       "mods_cost": 2,
-      "descricao": "Espada de corte para combate corpo a corpo de mechas."
+      "descricao": "Espada de corte para combate corpo a corpo de mechas.",
+      "descricaoLite": "Lâmina fixada no braço do mecha, feita para golpes corpo a corpo contra outros mechas (For+d12, PA 6)."
     },
     {
       "id": "w_lamina_energia",
       "nome": "Lâmina de Energia (For+d12, PA 12)",
       "mods_cost": 2,
-      "descricao": "Lâmina de plasma/energia com PA 12 como Arma Pesada."
+      "descricao": "Lâmina de plasma/energia com PA 12 como Arma Pesada.",
+      "descricaoLite": "Lâmina de plasma ou energia concentrada, classificada como Arma Pesada (For+d12, PA 12)."
     },
     {
       "id": "w_canhao_particulas_medio",
       "nome": "Canhão de Partículas Médio (6d6+6, PA 10)",
       "mods_cost": 4,
-      "descricao": "Distância 100/200/400, CdT 3."
+      "descricao": "Distância 100/200/400, CdT 3.",
+      "descricaoLite": "Distância 100/200/400, CdT 3."
     },
     {
       "id": "w_lanca_chamas_pesado",
       "nome": "Lança-Chamas Pesado (3d12, Cone)",
       "mods_cost": 1,
-      "descricao": "Cauterizante, Incendiária, Cone ou MME."
+      "descricao": "Cauterizante, Incendiária, Cone ou MME.",
+      "descricaoLite": "Cauterizante, Incendiária, Cone ou MME."
     }
   ]
 }

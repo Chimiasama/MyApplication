@@ -1,13 +1,18 @@
 package com.example.swadebuilder.model
 
 import android.content.Context
-import android.content.res.AssetManager
 import android.util.Log
+import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.decodeFromStream
 
 /**
@@ -24,128 +29,155 @@ object DataLoader {
     // Stores List<T> or specific wrapper types (AtributoList, PericiaList)
     private val dataCache = mutableMapOf<String, Any>()
 
-    private data class ModuleFile(val fileName: String, val originOverride: String? = null)
-
     // --- Module Definitions ---
 
-    private val equipmentModules = listOf(
-        ModuleFile("fantasia_equipamentos.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_equipamentos.json", originOverride = "HORROR"),
-        ModuleFile("scifi_equipamentos.json", originOverride = "SCI_FI"),
-        ModuleFile("crystal_equipamentos.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("pathfinder_equipamentos.json", originOverride = "PATHFINDER"),
-        ModuleFile("super_equipamentos.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_equipamentos.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_equipamentos.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_equipamentos.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_equipamentos.json", originOverride = "DEADLANDS"),
-        ModuleFile("basico_equipamentos.json")
+    // Equipamentos vivem em um único arquivo consolidado (equipamentos.json), com cada
+    // categoria marcada por "livros" (quais livros a enxergam), em vez de um arquivo por
+    // livro. Isso elimina a necessidade de uma lista de módulos e de regras especiais por
+    // livro (ex.: o antigo caso especial do Crystal Heart) — a visibilidade é resolvida
+    // diretamente em updateActiveModules() a partir de equipVisibleOrigins.
+    @Serializable
+    private data class EquipamentoCategoriaFonte(
+        val tipo: String,
+        val subtipo: String,
+        val subsubtipo: String? = null,
+        val livros: List<String>,
+        val itens: List<EquipamentoItem>
     )
 
-    private val skillModules = listOf(
-        ModuleFile("adg_pericias.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("fantasia_pericias.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_pericias.json", originOverride = "HORROR"),
-        ModuleFile("wiseguys_pericias.json", originOverride = "WISEGUYS"),
-        ModuleFile("scifi_pericias.json", originOverride = "SCI_FI"),
-        ModuleFile("deadlands_pericias.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_pericias.json", originOverride = "PATHFINDER"),
-        ModuleFile("sol_vapor_pericias.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("crystal_pericias.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("super_pericias.json", originOverride = "SUPER"),
-        ModuleFile("basico_pericias.json")
+    private fun EquipamentoItem.comObservacoesExibidas(): EquipamentoItem =
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) {
+            copy(observacoes = JsonPrimitive(descricaoLite!!))
+        } else this
+
+    // Perícias vivem em um único arquivo consolidado (pericias.json). Diferente do
+    // equipamentos.json, aqui a maioria das perícias é idêntica entre livros (mesmo
+    // atributo, mesma regra de "básica", mesma descrição), então cada registro carrega a
+    // lista de livros que a possuem — sem duplicar o mesmo conteúdo 10 vezes. Onde um livro
+    // diverge de verdade (ex.: Crystal Heart reescreve a descrição de quase toda perícia, ou
+    // "Lutar" é básica só em Crystal Heart), esse livro fica com seu próprio registro.
+    @Serializable
+    private data class PericiaFonte(
+        val nome: String,
+        val atributo: String = "",
+        val basica: Boolean = false,
+        val descricao: String? = null,
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        val descricaoLite: String? = null,
+        val livros: List<String>
     )
 
-    private val advantageModules = listOf(
-        ModuleFile("fantasia_vantagens.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_vantagens.json", originOverride = "HORROR"),
-        ModuleFile("scifi_vantagens.json", originOverride = "SCI_FI"),
-        ModuleFile("crystal_vantagens.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("super_vantagens.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_vantagens.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_vantagens.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_vantagens.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_vantagens.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_vantagens.json", originOverride = "PATHFINDER"),
-        ModuleFile("basico_vantagens.json")
+    // Vantagens vivem em um único arquivo consolidado (vantagens.json), com cada registro
+    // marcado por "livros". Vantagem tem muitos campos (grupoId, subtipoArcano, choiceOptions,
+    // maxSelections, etc.) e pode ganhar novos com o tempo, então em vez de espelhar cada
+    // campo em um tipo "Fonte" paralelo (arriscado — um campo esquecido silenciosamente vira
+    // valor padrão), o arquivo é lido como JSON genérico: remove-se apenas "livros" e injeta-
+    // se "origem", e o restante do objeto é decodificado direto pelo parser real de Vantagem.
+    private fun vantagemFromRaw(raw: JsonObject, origin: String): Vantagem {
+        val content = raw.toMutableMap()
+        content.remove("livros")
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        // Cai para "descricao" enquanto não for escrito, e nunca é usado na Full edition.
+        val descricaoLite = (content.remove("descricaoLite") as? JsonPrimitive)?.takeIf { it.isString }?.content
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) {
+            content["descricao"] = JsonPrimitive(descricaoLite)
+        }
+        content["origem"] = JsonPrimitive(origin)
+        return json.decodeFromJsonElement(Vantagem.serializer(), JsonObject(content))
+    }
+
+    private fun livrosDe(raw: JsonObject): List<String> =
+        (raw["livros"] as? JsonArray)?.mapNotNull { (it as? JsonPrimitive)?.content } ?: emptyList()
+
+    // Complicações vivem em um único arquivo consolidado (complicacoes.json). Como em
+    // Equipamentos/Ancestralidades/Poderes, quase nenhum id compartilhado entre livros tem
+    // dados idênticos, então cada registro carrega apenas o(s) livro(s) exatos aos quais
+    // pertence.
+    @Serializable
+    private data class ComplicacaoFonte(
+        val id: String,
+        val name: String,
+        val originalName: String? = null,
+        val originalDescription: String? = null,
+        val severity: String,
+        val description: String,
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        val descricaoLite: String? = null,
+        val observacoes: String = "",
+        @kotlinx.serialization.SerialName("vantagens_previas")
+        val vantagensPrevias: List<String> = emptyList(),
+        val livros: List<String>
+    ) {
+        fun descricaoExibida(): String =
+            if (!EditionConfig.isFullEdition) descricaoLite?.takeIf { it.isNotBlank() } ?: description else description
+    }
+
+    // Ancestralidades vivem em um único arquivo consolidado (ancestralidades.json). Ao
+    // contrário de Perícias, quase todo nome de raça compartilhado entre livros tem dados
+    // DIFERENTES de propósito (ex.: "Anões" do Sci-Fi tem variantes Ciber que o Básico não
+    // tem) — nenhum dos 14 nomes repetidos entre livros é idêntico campo a campo. Por isso,
+    // como em Equipamentos, cada registro carrega apenas o(s) livro(s) exatos aos quais
+    // pertence, sem fundir raças com conteúdo diferente.
+    @Serializable
+    private data class RacialModifierFonte(
+        val id: String? = null,
+        val nome: String,
+        val originalName: String? = null,
+        val originalDescription: String? = null,
+        val descricao: String? = null,
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        val descricaoLite: String? = null,
+        val atributos: Map<String, Int>,
+        val pericias: Map<String, Int>,
+        val vantagensGratis: List<String> = emptyList(),
+        val desvantagens: List<String> = emptyList(),
+        val habilidades: List<RacialAbility> = emptyList(),
+        val movimentacao: Int = 0,
+        val tags: List<String> = emptyList(),
+        val opcoes: List<String> = emptyList(),
+        val livros: List<String>
+    ) {
+        fun descricaoExibida(): String? =
+            if (!EditionConfig.isFullEdition) descricaoLite?.takeIf { it.isNotBlank() } ?: descricao else descricao
+    }
+
+    private fun RacialAbility.exibida(): RacialAbility =
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite!!) else this
+
+    // Poderes vivem em um único arquivo consolidado (poderes.json). Como em Equipamentos e
+    // Ancestralidades, cada nome de poder compartilhado entre livros tem dados diferentes
+    // (descrições e modificadores próprios por cenário), então cada registro carrega apenas
+    // o(s) livro(s) exatos aos quais pertence.
+    //
+    // A consolidação também corrigiu um bug de dados grave: os poderes exclusivos de
+    // scifi_poderes.json, horror_poderes.json e deadlands_poderes.json usavam campos errados
+    // ("custo"/"alcance" em vez de "pontosDePoder"/"distancia") e não tinham "id". Como esses
+    // campos são obrigatórios em Poder, a desserialização do arquivo INTEIRO falhava e o
+    // DataLoader silenciosamente descartava todos os poderes daquele livro (não só os
+    // quebrados) — ou seja, Sci-Fi e Horror perdiam os poderes exclusivos deles, e Deadlands
+    // (que não herda o Básico) ficava sem NENHUM poder disponível. Os 51 registros afetados
+    // foram corrigidos (campos renomeados, id gerado a partir do nome) antes da consolidação.
+    @Serializable
+    private data class PoderFonte(
+        val id: String,
+        val nome: String,
+        val estagio: String,
+        @Serializable(with = StringOrIntSerializer::class)
+        val pontosDePoder: String,
+        val distancia: String,
+        val duracao: String,
+        val manifestacoes: List<String> = emptyList(),
+        val descricao: String,
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        val descricaoLite: String? = null,
+        val modificadores: List<Modificador> = emptyList(),
+        val livros: List<String>
     )
 
-    private val complicationModules = listOf(
-        ModuleFile("fantasia_complicacoes.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_complicacoes.json", originOverride = "HORROR"),
-        ModuleFile("scifi_complicacoes.json", originOverride = "SCI_FI"),
-        ModuleFile("super_complicacoes.json", originOverride = "SUPER"),
-        ModuleFile("wiseguys_complicacoes.json", originOverride = "WISEGUYS"),
-        ModuleFile("crystal_complicacoes.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("adg_complicacoes.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_complicacoes.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_complicacoes.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_complicacoes.json", originOverride = "PATHFINDER"),
-        ModuleFile("basico_complicacoes.json")
-    )
-
-    private val ancestryModules = listOf(
-        ModuleFile("fantasia_ancestralidades.json", originOverride = "FANTASIA"),
-        ModuleFile("horror_ancestralidades.json", originOverride = "HORROR"),
-        ModuleFile("scifi_ancestralidades.json", originOverride = "SCI_FI"),
-        ModuleFile("wiseguys_ancestralidades.json", originOverride = "WISEGUYS"),
-        ModuleFile("crystal_ancestralidades.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("adg_ancestralidades.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("sol_vapor_ancestralidades.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("deadlands_ancestralidades.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_ancestralidades.json", originOverride = "PATHFINDER"),
-        ModuleFile("super_ancestralidades.json", originOverride = "SUPER"),
-        ModuleFile("basico_ancestralidades.json")
-    )
-
-    private val powerModules = listOf(
-        ModuleFile("fantasia_poderes.json", originOverride = "FANTASIA"),
-        ModuleFile("scifi_poderes.json", originOverride = "SCI_FI"),
-        ModuleFile("horror_poderes.json", originOverride = "HORROR"),
-        ModuleFile("deadlands_poderes.json", originOverride = "DEADLANDS"),
-        ModuleFile("pathfinder_poderes.json", originOverride = "PATHFINDER"),
-        ModuleFile("crystal_poderes.json", originOverride = "CRYSTAL_HEART"),
-        ModuleFile("sol_vapor_poderes.json", originOverride = "CIDADE_SOL_VAPOR"),
-        ModuleFile("wiseguys_poderes.json", originOverride = "WISEGUYS"),
-        ModuleFile("adg_poderes.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("adg_tecnicas_chi.json", originOverride = "ARTE_DA_GUERRA"),
-        ModuleFile("super_poderes_base.json", originOverride = "SUPER"),
-        ModuleFile("basico_poderes.json")
-    )
+    private fun PoderFonte.descricaoExibida(): String =
+        if (!EditionConfig.isFullEdition) descricaoLite?.takeIf { it.isNotBlank() } ?: descricao else descricao
 
     // --- Loading Logic ---
-
-    @OptIn(ExperimentalSerializationApi::class)
-    private inline fun <reified T> AssetManager.loadAndMerge(
-        modules: List<ModuleFile>,
-        activeKeys: Set<String>,
-        noinline transform: (T, String?) -> T = { item, _ -> item }
-    ): List<T> {
-        return modules.filter {
-            val key = it.originOverride?.uppercase() ?: "BASICO"
-            key in activeKeys
-        }.flatMap { module ->
-            @Suppress("UNCHECKED_CAST")
-            val cached = dataCache.getOrPut(module.fileName) {
-                try {
-                    open(module.fileName).use { input ->
-                        json.decodeFromStream<List<T>>(input)
-                    }
-                } catch (e: Exception) {
-                    Log.e(
-                        "SWADE_DEBUG",
-                        "[DataLoader] falha ao carregar ${module.fileName} (originOverride=${module.originOverride}): ${e::class.simpleName}: ${e.message}",
-                        e
-                    )
-                    emptyList<T>()
-                }
-            } as List<T>
-
-            cached.map { item ->
-                if (module.originOverride != null) transform(item, module.originOverride) else item
-            }
-        }
-    }
 
     private var loadedArcanoInfoList: List<ArcanoInfo> = emptyList()
 
@@ -169,19 +201,41 @@ object DataLoader {
             "CIDADE_SOL_VAPOR",
             "WISEGUYS"
         )
-        val shouldReplaceBasico = keys.any { it in replacementBookKeys }
+        // O Básico só é substituído quando exatamente um livro autônomo está ativo sozinho
+        // (regra real de mesa: aquele livro passa a ser o "corebook" da mesa). Quando mais de
+        // uma origem não-básica está ativa ao mesmo tempo — hoje isso só acontece no Modo Livre,
+        // que ativa todos os livros simultaneamente — não há um único "substituto", então o
+        // Básico continua disponível junto com tudo, como já é o contrato de getActiveOrigins().
+        val nonBasicActiveKeys = keys - "BASICO"
+        val shouldReplaceBasico = nonBasicActiveKeys.size == 1 && nonBasicActiveKeys.first() in replacementBookKeys
 
         // 1. Equipamentos
-        val equipmentModulesToLoad = if ("CRYSTAL_HEART" in keys) {
-            equipmentModules.filter { it.fileName == "crystal_equipamentos.json" }
-        } else if (shouldReplaceBasico) {
-            equipmentModules.filter { it.fileName != "basico_equipamentos.json" }
-        } else {
-            equipmentModules
-        }
+        // Livros de cenário autônomos (ex.: Crystal Heart, Deadlands) trazem seu próprio
+        // catálogo de equipamentos, coerente com o gênero (sem viaturas/armas modernas fora
+        // de contexto), e não herdam o Básico. Livros companheiros (Fantasia, Horror, Sci-Fi,
+        // Supers) somam o próprio conteúdo ao Básico. No Modo Livre (mais de uma origem não-
+        // básica ativa ao mesmo tempo) tudo fica visível.
+        val equipVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val allEquip = assets.loadAndMerge<EquipamentoCategoria>(equipmentModulesToLoad, keys) { item, override ->
-            if (override != null) item.copy(origem = override) else item
+        @Suppress("UNCHECKED_CAST")
+        val equipCategoriasFonte = dataCache.getOrPut("equipamentos.json") {
+            runCatching {
+                loadJsonAsset<List<EquipamentoCategoriaFonte>>(context, "equipamentos.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar equipamentos.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<EquipamentoCategoriaFonte>
+
+        val allEquip = equipCategoriasFonte.mapNotNull { cat ->
+            if (cat.livros.none { it in equipVisibleOrigins }) return@mapNotNull null
+            EquipamentoCategoria(
+                tipo = cat.tipo,
+                subtipo = cat.subtipo,
+                subsubtipo = cat.subsubtipo,
+                origem = cat.livros.first(),
+                itens = cat.itens.map { it.comObservacoesExibidas() }
+            )
         }
         val localListaEquipamentos = allEquip.flatMap { it.itens }
 
@@ -206,7 +260,7 @@ object DataLoader {
                 }.getOrElse { emptyList<CrystalHeart>() }
             } as List<CrystalHeart>
             val customHearts = CustomCrystalHeartStorage.load(context)
-            (hearts + customHearts).distinctBy { it.id }
+            (hearts.map { it.exibido() } + customHearts).distinctBy { it.id }
         } else {
             emptyList()
         }
@@ -220,7 +274,7 @@ object DataLoader {
                         .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
                 }.getOrElse { emptyList<SuperPoder>() }
             } as List<SuperPoder>
-            supers
+            supers.map { it.exibido() }
         } else {
             emptyList()
         }
@@ -248,43 +302,36 @@ object DataLoader {
         val localMapaAtributosDisplay = atributosData.atributos.associate { it.nome.keyify() to it.nome }
 
         // 6. Pericias
-        val skillModulesToLoad = if (shouldReplaceBasico) {
-            skillModules.filter { it.fileName != "basico_pericias.json" }
-        } else {
-            skillModules
-        }
+        // Mesma regra de visibilidade dos equipamentos: livro autônomo vê só o próprio
+        // conteúdo, livro companheiro soma ao Básico, Modo Livre vê tudo.
+        val skillVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val todasPericiasJson = skillModulesToLoad.filter {
-            val key = it.originOverride?.uppercase() ?: "BASICO"
-            key in keys
-        }.flatMap { module ->
-            val pListWrapper = dataCache.getOrPut(module.fileName) {
-                // Try loading as PericiaList (wrapped)
-                val asWrapper = runCatching {
-                    loadJsonAsset<PericiaList>(context, module.fileName)
-                }.getOrNull()
+        @Suppress("UNCHECKED_CAST")
+        val periciasFonte = dataCache.getOrPut("pericias.json") {
+            runCatching {
+                loadJsonAsset<List<PericiaFonte>>(context, "pericias.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar pericias.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<PericiaFonte>
 
-                if (asWrapper != null) {
-                    asWrapper
+        val todasPericiasJson = periciasFonte.flatMap { fonte ->
+            fonte.livros.filter { it in skillVisibleOrigins }.map { livro ->
+                // Na edição Lite, mostra o resumo genérico quando ele já foi escrito; enquanto
+                // não for, cai para a descrição original (sem regressão visual).
+                val descricao = if (!EditionConfig.isFullEdition) {
+                    fonte.descricaoLite ?: fonte.descricao
                 } else {
-                    // Try loading as List<PericiaJson> (direct)
-                    val asList = runCatching {
-                        loadJsonAsset<List<PericiaJson>>(context, module.fileName)
-                    }.getOrNull()
-
-                    if (asList != null) {
-                        PericiaList(asList)
-                    } else {
-                        PericiaList(emptyList())
-                    }
+                    fonte.descricao
                 }
-            } as PericiaList
-
-            val pList = pListWrapper.pericias
-            if (module.originOverride != null) {
-                pList.map { it.copy(origem = module.originOverride) }
-            } else {
-                pList
+                PericiaJson(
+                    nome = fonte.nome,
+                    atributo = fonte.atributo,
+                    basica = fonte.basica,
+                    origem = livro,
+                    descricao = descricao
+                )
             }
         }
 
@@ -301,36 +348,41 @@ object DataLoader {
         val localListaPericias = rawPericias
         val localMapaPericias = localListaPericias.associateBy { it.nome.keyify() }
 
+        // Na edição Lite, mostra o resumo genérico (sem reproduzir o texto do livro original)
+        // quando ele já foi escrito; enquanto não for, cai para a descrição original.
         val localMapaAtributosDescricao = atributosData.atributos.associate {
-            it.nome.keyify() to (it.descricao ?: "")
+            val texto = if (!EditionConfig.isFullEdition) {
+                it.descricaoLite ?: it.descricao
+            } else {
+                it.descricao
+            }
+            it.nome.keyify() to (texto ?: "")
         }
 
         // 7. Vantagens
-        val advantagesToLoad = if (shouldReplaceBasico) {
-            advantageModules.filter { it.fileName != "basico_vantagens.json" }
-        } else {
-            advantageModules
-        }
+        val advantageVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val todasVantagens = assets.loadAndMerge<Vantagem>(advantagesToLoad, keys) { item, override ->
-             if (override != null) item.copy(origem = override) else item
+        @Suppress("UNCHECKED_CAST")
+        val vantagensRawJson = dataCache.getOrPut("vantagens.json") {
+            runCatching {
+                assets.open("vantagens.json").use { input -> json.decodeFromStream<List<JsonObject>>(input) }
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar vantagens.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<JsonObject>
+
+        val todasVantagens = vantagensRawJson.flatMap { raw ->
+            livrosDe(raw).filter { it in advantageVisibleOrigins }.map { livro -> vantagemFromRaw(raw, livro) }
         }
 
         val localListaVantagens = buildList {
             addAll(todasVantagens)
 
             if (shouldReplaceBasico && none { it.id == "antecedente_arcano" }) {
-                @Suppress("UNCHECKED_CAST")
-                val basicoVantagens = dataCache.getOrPut("basico_vantagens.json") {
-                    runCatching {
-                        assets.open("basico_vantagens.json")
-                            .use { input -> json.decodeFromStream<List<Vantagem>>(input) }
-                    }.getOrElse { emptyList<Vantagem>() }
-                } as List<Vantagem>
-
-                basicoVantagens
-                    .firstOrNull { it.id == "antecedente_arcano" }
-                    ?.let { add(it) }
+                vantagensRawJson
+                    .firstOrNull { raw -> raw["id"]?.let { (it as? JsonPrimitive)?.content } == "antecedente_arcano" && "BASICO" in livrosDe(raw) }
+                    ?.let { add(vantagemFromRaw(it, "BASICO")) }
             }
         }
 
@@ -355,7 +407,7 @@ object DataLoader {
             val cached = dataCache.getOrPut("adg_tropos.json") {
                 runCatching { loadJsonAsset<List<Tropo>>(context, "adg_tropos.json") }.getOrElse { emptyList<Tropo>() }
             } as List<Tropo>
-            cached
+            cached.map { it.exibido() }
         } else emptyList()
 
         val chTropos = if ("CRYSTAL_HEART" in keys) {
@@ -363,29 +415,73 @@ object DataLoader {
             val cached = dataCache.getOrPut("crystal_tropos.json") {
                 runCatching { loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json") }.getOrElse { emptyList<Tropo>() }
             } as List<Tropo>
-            cached
+            cached.map { it.exibido() }
         } else emptyList()
 
         val localListaTropos = adgTropos + chTropos
 
-        val complicationModulesToLoad = if (shouldReplaceBasico) {
-            complicationModules.filter { it.fileName != "basico_complicacoes.json" }
-        } else {
-            complicationModules
-        }
+        val complicationVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val localListaComplicacoes = assets.loadAndMerge<Complicacao>(complicationModulesToLoad, keys) { item, override ->
-            if (override != null) item.copy(origem = override) else item
+        @Suppress("UNCHECKED_CAST")
+        val complicacoesFonte = dataCache.getOrPut("complicacoes.json") {
+            runCatching {
+                loadJsonAsset<List<ComplicacaoFonte>>(context, "complicacoes.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar complicacoes.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<ComplicacaoFonte>
+
+        val localListaComplicacoes = complicacoesFonte.flatMap { fonte ->
+            fonte.livros.filter { it in complicationVisibleOrigins }.map { livro ->
+                Complicacao(
+                    id = fonte.id,
+                    name = fonte.name,
+                    originalName = fonte.originalName,
+                    originalDescription = fonte.originalDescription,
+                    severity = fonte.severity,
+                    description = fonte.descricaoExibida(),
+                    origem = livro,
+                    observacoes = fonte.observacoes,
+                    vantagensPrevias = fonte.vantagensPrevias
+                )
+            }
         }
 
         // 9. Ancestralidades
-        val ancestriesToLoad = if (shouldReplaceBasico) {
-            ancestryModules.filter { it.fileName != "basico_ancestralidades.json" }
-        } else {
-            ancestryModules
-        }
-        val localListaAncestralidadesJson = assets.loadAndMerge<RacialModifier>(ancestriesToLoad, keys) { item, override ->
-            if (override != null) item.copy(origem = override) else item
+        // Mesma regra de visibilidade das demais categorias: livro autônomo vê só o próprio
+        // conteúdo, livro companheiro soma ao Básico, Modo Livre vê tudo.
+        val ancestryVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
+
+        @Suppress("UNCHECKED_CAST")
+        val ancestriasFonte = dataCache.getOrPut("ancestralidades.json") {
+            runCatching {
+                loadJsonAsset<List<RacialModifierFonte>>(context, "ancestralidades.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar ancestralidades.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<RacialModifierFonte>
+
+        val localListaAncestralidadesJson = ancestriasFonte.flatMap { fonte ->
+            fonte.livros.filter { it in ancestryVisibleOrigins }.map { livro ->
+                RacialModifier(
+                    id = fonte.id,
+                    nome = fonte.nome,
+                    originalName = fonte.originalName,
+                    originalDescription = fonte.originalDescription,
+                    descricao = fonte.descricaoExibida(),
+                    atributos = fonte.atributos,
+                    pericias = fonte.pericias,
+                    vantagensGratis = fonte.vantagensGratis,
+                    desvantagens = fonte.desvantagens,
+                    habilidades = fonte.habilidades.map { it.exibida() },
+                    origem = livro,
+                    movimentacao = fonte.movimentacao,
+                    tags = fonte.tags,
+                    opcoes = fonte.opcoes
+                )
+            }
         }
 
         // 10. Monstros
@@ -397,7 +493,7 @@ object DataLoader {
                         .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
                 }.getOrElse { emptyList<MonstroTemplate>() }
             } as List<MonstroTemplate>
-            monstros
+            monstros.map { it.exibido() }
         } else {
             emptyList()
         }
@@ -421,16 +517,34 @@ object DataLoader {
         // Kept for consistency if needed later
 
         // 13. Poderes
-        val powerModulesToLoad = if (shouldReplaceBasico) {
-            powerModules.filter { it.fileName != "basico_poderes.json" }
-        } else {
-            powerModules
-        }
-        val todosPoderes = assets.loadAndMerge<Poder>(powerModulesToLoad, keys) { item, override ->
-            if (override != null) item.copy(origem = override) else item
-        }
+        val powerVisibleOrigins = if (shouldReplaceBasico) nonBasicActiveKeys else keys
 
-        val localListaPoderes = todosPoderes
+        @Suppress("UNCHECKED_CAST")
+        val poderesFonte = dataCache.getOrPut("poderes.json") {
+            runCatching {
+                loadJsonAsset<List<PoderFonte>>(context, "poderes.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar poderes.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<PoderFonte>
+
+        val localListaPoderes = poderesFonte.flatMap { fonte ->
+            fonte.livros.filter { it in powerVisibleOrigins }.map { livro ->
+                Poder(
+                    id = fonte.id,
+                    nome = fonte.nome,
+                    origem = livro,
+                    estagio = fonte.estagio,
+                    pontosDePoder = fonte.pontosDePoder,
+                    distancia = fonte.distancia,
+                    duracao = fonte.duracao,
+                    manifestacoes = fonte.manifestacoes,
+                    descricao = fonte.descricaoExibida(),
+                    modificadores = fonte.modificadores
+                )
+            }
+        }
 
         // 14. Custom Local Content per active book
         val customStorageManager = com.example.swadebuilder.util.CustomStorageManager()
@@ -449,11 +563,16 @@ object DataLoader {
             customRacas += customData.racas
         }
 
-        val mergedVantagens = (localListaVantagens + customVantagens).distinctBy { it.id }
-        val mergedComplicacoes = (localListaComplicacoes + customComplicacoes).distinctBy { it.id }
-        val mergedEquipamentos = (localListaEquipamentos + customEquipamentos).distinctBy { it.nome.keyify() }
-        val mergedPoderes = (localListaPoderes + customPoderes).distinctBy { it.id }
-        val mergedAncestralidades = (localListaAncestralidadesJson + customRacas).distinctBy { it.nome.keyify() }
+        // Usa distinctByOriginPriority (não distinctBy simples) porque um mesmo id/nome pode
+        // existir em mais de um livro ativo ao mesmo tempo (Modo Livre, ou um livro
+        // companheiro somado ao Básico) com conteúdo DIFERENTE por livro — distinctBy() ficaria
+        // com a primeira ocorrência do arquivo (normalmente a do Básico), descartando em
+        // silêncio a versão mais específica do outro livro.
+        val mergedVantagens = (localListaVantagens + customVantagens).distinctByOriginPriority({ it.origem }, { it.id })
+        val mergedComplicacoes = (localListaComplicacoes + customComplicacoes).distinctByOriginPriority({ it.origem }, { it.id })
+        val mergedEquipamentos = (localListaEquipamentos + customEquipamentos).distinctByOriginPriority({ it.origem }, { it.nome.keyify() })
+        val mergedPoderes = (localListaPoderes + customPoderes).distinctByOriginPriority({ it.origem }, { it.id })
+        val mergedAncestralidades = (localListaAncestralidadesJson + customRacas).distinctByOriginPriority({ it.origem }, { it.nome.keyify() })
 
         // Inject custom equipment into categories so they appear in EquipamentoSection
         val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {
@@ -498,6 +617,51 @@ object DataLoader {
             listaSuperPoderes = localListaSuperPoderes,
             arcanoInfo = loadedArcanoInfoList
         )
+    }
+
+    // Usado por telas que precisam do catálogo de poderes de um livro específico
+    // independentemente de qual livro está ativo no momento (ex.: a tela de Poderes mostra
+    // as opções de um Antecedente Arcano concedido por uma vantagem de origem X, mesmo que o
+    // personagem tenha outra origem ativa). Substitui a antiga leitura direta de
+    // "${livro}_poderes.json" arquivo por arquivo — que quebrou quando os arquivos por livro
+    // foram consolidados em poderes.json, e que já vinha com um bug próprio: as chaves do
+    // mapa eram geradas a partir do nome do arquivo (ex.: "SCIFI", "CRYSTAL", "ARTE DA
+    // GUERRA" com espaço) enquanto a busca usa a forma canônica (ex.: "SCI_FI",
+    // "CRYSTAL_HEART", "ARTE_DA_GUERRA" com underscore) — a maioria das buscas por origem
+    // nunca batia com o mapa. Aqui as chaves já nascem no formato canônico usado por
+    // powerAssetOriginKey().
+    fun poderesPorOrigem(context: Context): Map<String, List<Poder>> {
+        @Suppress("UNCHECKED_CAST")
+        val fonte = dataCache.getOrPut("poderes.json") {
+            runCatching {
+                loadJsonAsset<List<PoderFonte>>(context, "poderes.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar poderes.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<PoderFonte>
+
+        val map = mutableMapOf<String, MutableList<Poder>>()
+        fonte.forEach { f ->
+            f.livros.forEach { livroRaw ->
+                val livro = powerAssetOriginKey(livroRaw)
+                map.getOrPut(livro) { mutableListOf() }.add(
+                    Poder(
+                        id = f.id,
+                        nome = f.nome,
+                        origem = livro,
+                        estagio = f.estagio,
+                        pontosDePoder = f.pontosDePoder,
+                        distancia = f.distancia,
+                        duracao = f.duracao,
+                        manifestacoes = f.manifestacoes,
+                        descricao = f.descricaoExibida(),
+                        modificadores = f.modificadores
+                    )
+                )
+            }
+        }
+        return map
     }
 
     private fun deduplicarEquipamentoCategorias(

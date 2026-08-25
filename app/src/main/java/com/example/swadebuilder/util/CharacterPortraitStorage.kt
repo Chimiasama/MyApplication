@@ -20,6 +20,12 @@ object CharacterPortraitStorage {
         return File(context.filesDir, PORTRAIT_DIR).apply { mkdirs() }
     }
 
+    // androidx.security.crypto (MasterKey/EncryptedFile) foi descontinuada pelo Google sem um
+    // substituto direto. Usada aqui só para LER retratos criptografados por versões antigas do
+    // app — todo salvamento novo já é em texto puro (ver "1. Try Plaintext (Preferred)" abaixo).
+    // Migrar arriscaria quebrar a leitura de retratos já salvos, então mantemos o uso legado
+    // suprimindo o aviso em vez de trocar a implementação.
+    @Suppress("DEPRECATION")
     private fun getMasterKey(context: Context): MasterKey {
         return MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -36,6 +42,7 @@ object CharacterPortraitStorage {
         }
     }
 
+    @Suppress("DEPRECATION")
     suspend fun loadPortrait(
         context: Context,
         fileName: String,

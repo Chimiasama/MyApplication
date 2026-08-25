@@ -69,13 +69,14 @@ class ValidateSelectionUseCase(
         // 2. Requirements (Attributes, Skills, Rank via Special, etc)
         if (!validateRequirementsUseCase.execute(
                 ValidateRequirementsUseCase.Input(
-                    vantagem,
-                    context.valoresAtributos,
-                    context.pericias,
-                    context.rawTotalPericia,
-                    context.ancestralidadeDef,
-                    context.tipoMonstroSelecionado,
-                    context.cartaSelvagem
+                    vantagem = vantagem,
+                    valoresAtributos = context.valoresAtributos,
+                    pericias = context.pericias,
+                    rawTotalPericia = context.rawTotalPericia,
+                    ancestralidadeDef = context.ancestralidadeDef,
+                    tipoMonstroSelecionado = context.tipoMonstroSelecionado,
+                    cartaSelvagem = context.cartaSelvagem,
+                    getBestPericia = context.getBestPericia
                 )
             )) return false
 

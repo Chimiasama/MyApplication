@@ -20,7 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Vibration
-import androidx.compose.material.icons.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
@@ -279,7 +279,7 @@ fun SettingsDialog(
                         val baseRacialCatalog: List<com.example.swadebuilder.model.HabilidadeCriacao> = remember {
                             runCatching {
                                 context.loadJsonAsset<List<com.example.swadebuilder.model.HabilidadeCriacao>>("basico_habilidades_raciais.json")
-                            }.getOrElse { emptyList() }
+                            }.getOrElse { emptyList() }.map { it.exibida() }
                         }
 
                         val categories = remember(isHomeScreen) {
@@ -1447,7 +1447,7 @@ fun SettingsDialog(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.VolumeUp,
+                                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
                                     contentDescription = null,
                                     tint = MaterialTheme.colorScheme.primary
                                 )

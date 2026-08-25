@@ -62,6 +62,13 @@ object CharacterStorage {
         return SecurityUtils.getSafeChildFile(savesDirectory(context), "$id.json")
     }
 
+    // androidx.security.crypto (MasterKey/EncryptedFile) foi descontinuada pelo Google sem um
+    // substituto direto (a alternativa é reimplementar a criptografia com Tink puro). Esta classe
+    // só usa essas APIs para LER arquivos criptografados salvos por versões antigas do app — todo
+    // salvamento novo já é em texto puro (ver comentários "1. Try Plaintext (Preferred)" abaixo).
+    // Migrar arriscaria quebrar a leitura de personagens já salvos por usuários, então mantemos o
+    // uso legado suprimindo o aviso em vez de trocar a implementação.
+    @Suppress("DEPRECATION")
     private fun getMasterKey(context: Context): MasterKey {
         return MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -128,6 +135,7 @@ object CharacterStorage {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun rebuildIndexFromSaveFiles(context: Context, masterKey: MasterKey): List<SaveEntry> {
         val dir = savesDirectory(context)
         val entries = dir.listFiles()
@@ -181,6 +189,7 @@ object CharacterStorage {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
+    @Suppress("DEPRECATION")
     private fun decodeMetadataSafely(context: Context, file: File, masterKey: MasterKey): MetadataSnapshot? {
         // 1. Try Plaintext (Preferred)
         try {
@@ -210,6 +219,7 @@ object CharacterStorage {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
+    @Suppress("DEPRECATION")
     private fun decodeSnapshotSafely(context: Context, file: File, masterKey: MasterKey): PersonagemSnapshot? {
         // 1. Try Plaintext (Preferred)
         try {
@@ -239,6 +249,7 @@ object CharacterStorage {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
+    @Suppress("DEPRECATION")
     suspend fun load(context: Context, id: String): LoadResult = withContext(Dispatchers.IO) {
         try {
             val file = getSafeFile(context, id)

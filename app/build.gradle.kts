@@ -55,11 +55,14 @@ android {
 
             // Flags de build (para controle dentro do app)
             buildConfigField("boolean", "SHOW_LISTA_COMPLETA", "false")
-            buildConfigField("boolean", "ENABLE_LONG_TEXTS", "false")
+            // Descrições longas agora existem também na Lite (descricaoLite, genéricas e sem
+            // reproduzir o texto do livro original) — não há mais motivo para esconder o botão
+            // "Ver detalhes" nesta flavor.
+            buildConfigField("boolean", "ENABLE_LONG_TEXTS", "true")
             buildConfigField("boolean", "ENABLE_PB_WALLET_REDESIGN", "true")
 
             resValue("string", "app_name", "SWADEbuilder")
-            resValue("bool", "enable_long_texts", "false")
+            resValue("bool", "enable_long_texts", "true")
             resValue("bool", "enable_pb_wallet_redesign", "true")
         }
 

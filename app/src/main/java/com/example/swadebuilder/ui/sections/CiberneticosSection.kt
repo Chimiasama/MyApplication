@@ -56,7 +56,7 @@ fun CiberneticosSection(
             context.assets.open("scifi_ciberneticos.json").use { input ->
                 Json { ignoreUnknownKeys = true }.decodeFromStream<CiberneticoCatalogWrapper>(input).ciberneticos
             }
-        }.getOrElse { emptyList() }
+        }.getOrElse { emptyList() }.map { it.exibido() }
     }
 
     val tensaoTotal = state.totalTensaoCibernetica()

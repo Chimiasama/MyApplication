@@ -52,6 +52,8 @@ import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
+import com.example.swadebuilder.model.groupAncestralidadesForDisplay
+import com.example.swadebuilder.model.stripAncestralidadeScenarioSuffix
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -91,38 +93,10 @@ private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
     }
 }
 
-private data class RacialAbilitySignature(
-    val nome: String,
-    val descricao: String
-)
-
-private data class RacialSignature(
-    val atributos: Map<String, Int>,
-    val pericias: Map<String, Int>,
-    val vantagensGratis: List<String>,
-    val desvantagens: List<String>,
-    val habilidades: List<RacialAbilitySignature>
-)
-
-private fun RacialModifier.signature(): RacialSignature {
-    fun normalizeList(values: List<String>): List<String> {
-        return values.sortedBy { it.uppercase().semAcentos() }
-    }
-
-    return RacialSignature(
-        atributos = atributos,
-        pericias = pericias,
-        vantagensGratis = normalizeList(vantagensGratis),
-        desvantagens = normalizeList(desvantagens),
-        habilidades = habilidades
-            .map { RacialAbilitySignature(it.nome, it.descricao) }
-            .sortedWith(compareBy({ it.nome.uppercase().semAcentos() }, { it.descricao.uppercase().semAcentos() }))
-    )
-}
-
-private fun stripScenarioSuffix(nome: String): String {
-    return nome.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "").trim()
-}
+// RacialSignature/RacialModifier.signature() e o agrupamento por (nome-base, assinatura)
+// vivem em com.example.swadebuilder.model.RacialModifier.kt (groupAncestralidadesForDisplay),
+// para serem testáveis por unit test puro sem depender do Compose.
+private fun stripScenarioSuffix(nome: String): String = stripAncestralidadeScenarioSuffix(nome)
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -138,7 +112,7 @@ fun AncestralidadesSection(
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
-    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
@@ -217,33 +191,12 @@ fun AncestralidadesSection(
             origin in allowedOrigins
         }
 
-        // Deduplicate by Name first, prioritizing Settings over Basic
-        val prioritized = filtered.groupBy { it.nome.keyify() }
-            .map { (_, duplicates) ->
-                if (duplicates.size == 1) return@map duplicates.first()
-
-                fun priority(origin: String?): Int {
-                    val o = canonicalOriginKey(origin)
-                    return when {
-                        o == "HORROR" -> 1000
-                        o == "FANTASIA" -> 900
-                        o == "ARTE_DA_GUERRA" -> 800
-                        o == "DEADLANDS" -> 800
-                        o == "WISEGUYS" -> 800
-                        o == "CIDADE_SOL_VAPOR" -> 800
-                        o.contains("TRILHADOR") || o.contains("PATHFINDER") -> 800
-                        o == "FC" || o == "SCIFI" || o == "SCI_FI" -> 800
-                        o == "CRYSTAL_HEART" -> 800
-                        o == "BASICO" -> 0
-                        else -> 100
-                    }
-                }
-            duplicates.maxBy { priority(it.origem) }
-        }
-
-        val deduped = prioritized
-            .groupBy { it.signature() }
-            .values
+        // Deduplicação (por nome, priorizando o livro de cenário/companheiro sobre o Básico
+        // quando os dois estão ativos; e por nome-base + assinatura mecânica, para tratar
+        // variantes de nome da mesma raça entre livros sem fundir raças diferentes que
+        // coincidem em mecânica) vive em com.example.swadebuilder.model.RacialModifier.kt
+        // (groupAncestralidadesForDisplay), testada por unit test puro.
+        val deduped = groupAncestralidadesForDisplay(filtered)
             .map { group ->
                 val representative = group.first()
                 val originsInGroup = group.map { canonicalOriginKey(it.origem) }.toSet()
@@ -449,8 +402,12 @@ fun AncestralidadesSection(
                                 val selectedSign = state.signoAdgSelecionado
                                 if (selectedSign != null) {
                                     Spacer(Modifier.height(4.dp))
-                                    val signDesc = CriadorState.SIGNOS_ADG_DESC[selectedSign]
-                                    if (signDesc != null && EditionConfig.isFullEdition) {
+                                    val signDesc = if (EditionConfig.isFullEdition) {
+                                        CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                    } else {
+                                        CriadorState.SIGNOS_ADG_DESC_LITE[selectedSign] ?: CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                    }
+                                    if (signDesc != null) {
                                         Text(
                                             text = signDesc,
                                             style = MaterialTheme.typography.bodySmall,
@@ -601,8 +558,13 @@ fun AncestralidadesSection(
                                 }
 
                                 Spacer(Modifier.height(4.dp))
-                                val packageDesc = CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
-                                if (packageDesc != null && EditionConfig.isFullEdition) {
+                                val packageDesc = if (EditionConfig.isFullEdition) {
+                                    CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                } else {
+                                    CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC_LITE[state.pacoteCulturalFantasiaSelecionado]
+                                        ?: CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                }
+                                if (packageDesc != null) {
                                     Text(
                                         text = packageDesc,
                                         style = MaterialTheme.typography.bodySmall,

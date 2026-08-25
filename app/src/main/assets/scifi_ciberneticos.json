@@ -7,7 +7,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Guelras e membranas retráteis. Não se afoga em águas oxigenadas e nada na Movimentação máxima."
+      "efeito": "Guelras e membranas retráteis. Não se afoga em águas oxigenadas e nada na Movimentação máxima.",
+      "efeitoLite": "Adaptação respiratória e membranas retráteis que impedem o afogamento em ambientes aquáticos oxigenados, permitindo nadar na Movimentação máxima."
     },
     {
       "id": "ciber_corpo_atraente",
@@ -16,7 +17,8 @@
       "strain_custo": 2,
       "max_uses": 2,
       "custo": "$5K",
-      "efeito": "+1 em Performance e Persuadir (máx +2 com 2º nível ou Vantagem Atraente)."
+      "efeito": "+1 em Performance e Persuadir (máx +2 com 2º nível ou Vantagem Atraente).",
+      "efeitoLite": "+1 em Performance e Persuadir (máx +2 com 2º nível ou Vantagem Atraente)."
     },
     {
       "id": "ciber_corpo_audicao_aprimorada",
@@ -25,7 +27,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "+2 em testes de Perceber baseados em audição e escuta de sussurros a até 200 metros."
+      "efeito": "+2 em testes de Perceber baseados em audição e escuta de sussurros a até 200 metros.",
+      "efeitoLite": "+2 em testes de Perceber baseados em audição e escuta de sussurros a até 200 metros."
     },
     {
       "id": "ciber_corpo_aumento_atributo",
@@ -34,7 +37,8 @@
       "strain_custo": 2,
       "max_uses": 99,
       "custo": "$5K",
-      "efeito": "Aumenta um atributo em um tipo de dado (+2 de Tensão por passo acima do máximo)."
+      "efeito": "Aumenta um atributo em um tipo de dado (+2 de Tensão por passo acima do máximo).",
+      "efeitoLite": "Aumenta um atributo em um tipo de dado (+2 de Tensão por passo acima do máximo)."
     },
     {
       "id": "ciber_corpo_bonus_pericia",
@@ -43,7 +47,8 @@
       "strain_custo": 1,
       "max_uses": 99,
       "custo": "$5K",
-      "efeito": "+1 em uma perícia (+2 se comprado duas vezes; máx +2 acumulado por perícia)."
+      "efeito": "+1 em uma perícia (+2 se comprado duas vezes; máx +2 acumulado por perícia).",
+      "efeitoLite": "+1 em uma perícia (+2 se comprado duas vezes; máx +2 acumulado por perícia)."
     },
     {
       "id": "ciber_corpo_chip_pericia",
@@ -52,7 +57,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$15K",
-      "efeito": "Concede d6 em qualquer perícia. Chips trocáveis como uma ação."
+      "efeito": "Concede d6 em qualquer perícia. Chips trocáveis como uma ação.",
+      "efeitoLite": "Concede d6 em qualquer perícia. Chips trocáveis como uma ação."
     },
     {
       "id": "ciber_corpo_compartimento_oculto",
@@ -61,7 +67,8 @@
       "strain_custo": 1,
       "max_uses": 99,
       "custo": "$2K",
-      "efeito": "Espaço interno oculto para até 1kg de objetos (Perceber -4 para detectar)."
+      "efeito": "Espaço interno oculto para até 1kg de objetos (Perceber -4 para detectar).",
+      "efeitoLite": "Espaço interno oculto para até 1kg de objetos (Perceber -4 para detectar)."
     },
     {
       "id": "ciber_corpo_comunicadores",
@@ -70,7 +77,8 @@
       "strain_custo": 0,
       "max_uses": 1,
       "custo": "$1K",
-      "efeito": "Comunicador integrado com raio de alcance de 35 km."
+      "efeito": "Comunicador integrado com raio de alcance de 35 km.",
+      "efeitoLite": "Comunicador integrado com raio de alcance de 35 km."
     },
     {
       "id": "ciber_corpo_conector_dados",
@@ -79,7 +87,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Conecta diretamente a eletrônicos. Rerrolagem para falha em Eletrônica ou Hackear."
+      "efeito": "Conecta diretamente a eletrônicos. Rerrolagem para falha em Eletrônica ou Hackear.",
+      "efeitoLite": "Conecta diretamente a eletrônicos. Rerrolagem para falha em Eletrônica ou Hackear."
     },
     {
       "id": "ciber_corpo_escaner",
@@ -88,7 +97,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$1K",
-      "efeito": "Detecta composição de matéria ou energia a até 50 metros de distância."
+      "efeito": "Detecta composição de matéria ou energia a até 50 metros de distância.",
+      "efeitoLite": "Detecta composição de matéria ou energia a até 50 metros de distância."
     },
     {
       "id": "ciber_corpo_membro_substituto",
@@ -97,7 +107,8 @@
       "strain_custo": 1,
       "max_uses": 99,
       "custo": "$2K",
-      "efeito": "Substitui um braço ou perna perdido, corrigindo Lesão Permanente. Permite 1 Tensão de aprimoramento embutido grátis."
+      "efeito": "Substitui um braço ou perna perdido, corrigindo Lesão Permanente. Permite 1 Tensão de aprimoramento embutido grátis.",
+      "efeitoLite": "Prótese que ocupa o lugar de um braço ou perna amputado, corrigindo a Lesão Permanente correspondente e liberando 1 Tensão gratuita para aprimoramento embutido."
     },
     {
       "id": "ciber_corpo_membros_extras",
@@ -106,7 +117,8 @@
       "strain_custo": 2,
       "max_uses": 2,
       "custo": "$5K",
-      "efeito": "Par adicional de braços. +1 de Agrupar em corpo a corpo e +1 em Atletismo."
+      "efeito": "Par adicional de braços. +1 de Agrupar em corpo a corpo e +1 em Atletismo.",
+      "efeitoLite": "Par adicional de braços. +1 de Agrupar em corpo a corpo e +1 em Atletismo."
     },
     {
       "id": "ciber_corpo_mudanca_rosto",
@@ -115,7 +127,8 @@
       "strain_custo": 3,
       "max_uses": 1,
       "custo": "$15K",
-      "efeito": "Altera características faciais e voz para duplicar pessoas específicas."
+      "efeito": "Altera características faciais e voz para duplicar pessoas específicas.",
+      "efeitoLite": "Implante que remodela o rosto e a voz do usuário, permitindo imitar a aparência e o timbre de uma pessoa específica."
     },
     {
       "id": "ciber_corpo_olho_destacavel",
@@ -124,7 +137,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Órgão ocular removível que transmite áudio/vídeo gravado a até 1,5 km por 10 horas."
+      "efeito": "Órgão ocular removível que transmite áudio/vídeo gravado a até 1,5 km por 10 horas.",
+      "efeitoLite": "Olho artificial destacável que continua gravando e transmitindo áudio e vídeo a até 1,5 km de distância por 10 horas."
     },
     {
       "id": "ciber_corpo_reforco_esqueleto",
@@ -133,7 +147,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Trata a Força como 1 passo acima para Sobrecarga e Força Mínima de equipamentos."
+      "efeito": "Trata a Força como 1 passo acima para Sobrecarga e Força Mínima de equipamentos.",
+      "efeitoLite": "Trata a Força como 1 passo acima para Sobrecarga e Força Mínima de equipamentos."
     },
     {
       "id": "ciber_corpo_tamanho",
@@ -142,7 +157,8 @@
       "strain_custo": 1,
       "max_uses": 3,
       "custo": "$5K",
-      "efeito": "Aumenta o Tamanho (e Resistência) do personagem em +1 (máximo +3)."
+      "efeito": "Aumenta o Tamanho (e Resistência) do personagem em +1 (máximo +3).",
+      "efeitoLite": "Aumenta o Tamanho (e Resistência) do personagem em +1 (máximo +3)."
     },
     {
       "id": "ciber_corpo_visao_aprimorada",
@@ -151,7 +167,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$10K",
-      "efeito": "Ampliação 50x. Anula até 4 pontos de penalidades por Iluminação e +2 em Perceber visual."
+      "efeito": "Ampliação 50x. Anula até 4 pontos de penalidades por Iluminação e +2 em Perceber visual.",
+      "efeitoLite": "Ampliação 50x. Anula até 4 pontos de penalidades por Iluminação e +2 em Perceber visual."
     },
     {
       "id": "ciber_def_analisador_ameacas",
@@ -160,7 +177,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Microssensores neurais concedem a Vantagem Noção do Perigo."
+      "efeito": "Microssensores neurais concedem a Vantagem Noção do Perigo.",
+      "efeitoLite": "Rede de microssensores neurais implantados que concede automaticamente a Vantagem Noção do Perigo."
     },
     {
       "id": "ciber_def_armadura",
@@ -169,7 +187,8 @@
       "strain_custo": 1,
       "max_uses": 3,
       "custo": "$5K",
-      "efeito": "+2 de Armadura natural no corpo todo (acumula até +10)."
+      "efeito": "+2 de Armadura natural no corpo todo (acumula até +10).",
+      "efeitoLite": "+2 de Armadura natural no corpo todo (acumula até +10)."
     },
     {
       "id": "ciber_def_autorrecuperacao",
@@ -178,7 +197,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$10K",
-      "efeito": "Rolagem de cura natural 1x/dia. Remove penalidades contra Sangramento."
+      "efeito": "Rolagem de cura natural 1x/dia. Remove penalidades contra Sangramento.",
+      "efeitoLite": "Rolagem de cura natural 1x/dia. Remove penalidades contra Sangramento."
     },
     {
       "id": "ciber_def_blindagem_pem",
@@ -187,7 +207,8 @@
       "strain_custo": 0,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Ignora 2 pontos de penalidade ao reiniciar/operar após ataque PEM."
+      "efeito": "Ignora 2 pontos de penalidade ao reiniciar/operar após ataque PEM.",
+      "efeitoLite": "Ignora 2 pontos de penalidade ao reiniciar/operar após ataque PEM."
     },
     {
       "id": "ciber_def_editor_dor",
@@ -195,7 +216,8 @@
       "categoria": "DEFENSIVO",
       "strain_custo": 2,
       "max_uses": 3,
-      "efeito": "Ignora 1 ponto de penalidade de Fadiga ou Ferimento por nível."
+      "efeito": "Ignora 1 ponto de penalidade de Fadiga ou Ferimento por nível.",
+      "efeitoLite": "Ignora 1 ponto de penalidade de Fadiga ou Ferimento por nível."
     },
     {
       "id": "ciber_def_filtros_toxinas",
@@ -204,7 +226,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$3K",
-      "efeito": "+4 em rolagens para resistir a doenças, venenos inaláveis e atmosferas perigosas."
+      "efeito": "+4 em rolagens para resistir a doenças, venenos inaláveis e atmosferas perigosas.",
+      "efeitoLite": "+4 em rolagens para resistir a doenças, venenos inaláveis e atmosferas perigosas."
     },
     {
       "id": "ciber_def_orgãos_redundantes",
@@ -213,7 +236,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Ataques Localizados na cabeça ou órgãos vitais não causam dano adicional."
+      "efeito": "Ataques Localizados na cabeça ou órgãos vitais não causam dano adicional.",
+      "efeitoLite": "Ataques Localizados na cabeça ou órgãos vitais não causam dano adicional."
     },
     {
       "id": "ciber_def_resistencia",
@@ -222,7 +246,8 @@
       "strain_custo": 1,
       "max_uses": 3,
       "custo": "$5K",
-      "efeito": "+1 na Resistência base a cada nível."
+      "efeito": "+1 na Resistência base a cada nível.",
+      "efeitoLite": "+1 na Resistência base a cada nível."
     },
     {
       "id": "ciber_def_robusto",
@@ -231,7 +256,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Segundo resultado Abalado em combate não resulta em Ferimento."
+      "efeito": "Segundo resultado Abalado em combate não resulta em Ferimento.",
+      "efeitoLite": "Segundo resultado Abalado em combate não resulta em Ferimento."
     },
     {
       "id": "ciber_def_sentidos_fortalecidos",
@@ -240,7 +266,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "+4 em testes de Vigor para se recuperar de Atordoado."
+      "efeito": "+4 em testes de Vigor para se recuperar de Atordoado.",
+      "efeitoLite": "+4 em testes de Vigor para se recuperar de Atordoado."
     },
     {
       "id": "ciber_def_surto_adrenalina",
@@ -249,7 +276,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "+2 para se recuperar de Abalado ou Atordoado (acumula com Reflexos de Combate)."
+      "efeito": "+2 para se recuperar de Abalado ou Atordoado (acumula com Reflexos de Combate).",
+      "efeitoLite": "+2 para se recuperar de Abalado ou Atordoado (acumula com Reflexos de Combate)."
     },
     {
       "id": "ciber_def_visao_combate",
@@ -258,7 +286,8 @@
       "strain_custo": 1,
       "max_uses": 2,
       "custo": "$5K",
-      "efeito": "Cancela 1 ponto do bônus de Agrupar dos inimigos (ou 2 pontos se instalado 2x)."
+      "efeito": "Cancela 1 ponto do bônus de Agrupar dos inimigos (ou 2 pontos se instalado 2x).",
+      "efeitoLite": "Cancela 1 ponto do bônus de Agrupar dos inimigos (ou 2 pontos se instalado 2x)."
     },
     {
       "id": "ciber_of_acao_adicional",
@@ -267,7 +296,8 @@
       "strain_custo": 5,
       "max_uses": 1,
       "custo": "$10K",
-      "efeito": "Ignore 2 pontos de penalidade por Ações Múltiplas por turno."
+      "efeito": "Ignore 2 pontos de penalidade por Ações Múltiplas por turno.",
+      "efeitoLite": "Ignore 2 pontos de penalidade por Ações Múltiplas por turno."
     },
     {
       "id": "ciber_of_alcance",
@@ -276,7 +306,8 @@
       "strain_custo": 1,
       "max_uses": 3,
       "custo": "$2,5K",
-      "efeito": "Membros extensíveis concedem +1 de Alcance (2 metros)."
+      "efeito": "Membros extensíveis concedem +1 de Alcance (2 metros).",
+      "efeitoLite": "Membros extensíveis concedem +1 de Alcance (2 metros)."
     },
     {
       "id": "ciber_of_equipamento_integrado",
@@ -285,7 +316,8 @@
       "strain_custo": 1,
       "max_uses": 99,
       "custo": "$5K",
-      "efeito": "Incorpora até 5kg de equipamento ou arma ao corpo (estende/retrai como ação livre)."
+      "efeito": "Incorpora até 5kg de equipamento ou arma ao corpo (estende/retrai como ação livre).",
+      "efeitoLite": "Compartimento embutido que abriga até 5 kg de equipamento ou arma, podendo ser estendido ou recolhido como ação livre."
     },
     {
       "id": "ciber_of_garras",
@@ -294,7 +326,8 @@
       "strain_custo": 2,
       "max_uses": 2,
       "custo": "$5K",
-      "efeito": "Garras causam For+d4. Se instalado 2x, aumenta para For+d6, PA 2."
+      "efeito": "Garras causam For+d4. Se instalado 2x, aumenta para For+d6, PA 2.",
+      "efeitoLite": "Garras causam For+d4. Se instalado 2x, aumenta para For+d6, PA 2."
     },
     {
       "id": "ciber_of_ponto_fixacao",
@@ -303,7 +336,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$10K",
-      "efeito": "Suporte expansível para acoplar armas veiculares pesadas."
+      "efeito": "Suporte expansível para acoplar armas veiculares pesadas.",
+      "efeitoLite": "Estrutura de fixação retrátil que permite acoplar ao corpo armas pesadas de uso veicular."
     },
     {
       "id": "ciber_of_sistema_mira",
@@ -312,7 +346,8 @@
       "strain_custo": 1,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "Reduz 2 pontos de penalidades por Atirar (Ataque Localizado, Cobertura, Alcance, Escala)."
+      "efeito": "Reduz 2 pontos de penalidades por Atirar (Ataque Localizado, Cobertura, Alcance, Escala).",
+      "efeitoLite": "Reduz 2 pontos de penalidades por Atirar (Ataque Localizado, Cobertura, Alcance, Escala)."
     },
     {
       "id": "ciber_of_soco_poderoso",
@@ -321,7 +356,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$5K",
-      "efeito": "+4 de dano a ataques desarmados/corpo a corpo e repele o alvo 1d6 quadros caindo prostrado."
+      "efeito": "+4 de dano a ataques desarmados/corpo a corpo e repele o alvo 1d6 quadros caindo prostrado.",
+      "efeitoLite": "+4 de dano a ataques desarmados/corpo a corpo e repele o alvo 1d6 quadros caindo prostrado."
     },
     {
       "id": "ciber_of_vantagem_combate",
@@ -330,7 +366,8 @@
       "strain_custo": 2,
       "max_uses": 99,
       "custo": "$5K x Estágio",
-      "efeito": "Concede uma Vantagem de Combate do seu Estágio ou inferior, ignorando Requisitos."
+      "efeito": "Concede uma Vantagem de Combate do seu Estágio ou inferior, ignorando Requisitos.",
+      "efeitoLite": "Concede uma Vantagem de Combate do seu Estágio ou inferior, ignorando Requisitos."
     },
     {
       "id": "ciber_loc_andar_paredes",
@@ -339,7 +376,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$3K",
-      "efeito": "Move-se em superfícies horizontais na Movimentação e verticais em metade da Movimentação."
+      "efeito": "Move-se em superfícies horizontais na Movimentação e verticais em metade da Movimentação.",
+      "efeitoLite": "Move-se em superfícies horizontais na Movimentação e verticais em metade da Movimentação."
     },
     {
       "id": "ciber_loc_melhoria_perna",
@@ -348,7 +386,8 @@
       "strain_custo": 2,
       "max_uses": 99,
       "custo": "$10K",
-      "efeito": "+2 na Movimentação e aumenta o dado de corrida em um tipo de dado."
+      "efeito": "+2 na Movimentação e aumenta o dado de corrida em um tipo de dado.",
+      "efeitoLite": "+2 na Movimentação e aumenta o dado de corrida em um tipo de dado."
     },
     {
       "id": "ciber_loc_saltador",
@@ -357,7 +396,8 @@
       "strain_custo": 2,
       "max_uses": 1,
       "custo": "$10K",
-      "efeito": "Pula 16 metros horizontalmente ou 8 metros verticalmente (+2 dano em Ataque Selvagem)."
+      "efeito": "Pula 16 metros horizontalmente ou 8 metros verticalmente (+2 dano em Ataque Selvagem).",
+      "efeitoLite": "Pula 16 metros horizontalmente ou 8 metros verticalmente (+2 dano em Ataque Selvagem)."
     }
   ]
 }

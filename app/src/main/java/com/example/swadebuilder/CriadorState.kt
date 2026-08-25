@@ -993,6 +993,14 @@ class CriadorState {
             "Povo do Mar" to "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.",
             "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Sem Escrúpulos e Analfabeto, a critério do Mestre."
         )
+        // Resumos genéricos para a edição Lite (não reproduzem o texto do livro original).
+        val PACOTES_CULTURAIS_FANTASIA_DESC_LITE = mapOf(
+            "Humano padrão" to "Segue o pacote humano genérico: recebe uma Vantagem de Novato à sua escolha.",
+            "Nômades do Deserto" to "Iniciam com Sobrevivência d6 e resistência a ambientes quentes, mas sofrem penalidade em climas frios.",
+            "Povo da Montanha" to "Vigor inicial d6 e tolerância ao frio, compensados por uma fraqueza a ambientes quentes.",
+            "Povo do Mar" to "Atletismo e Navegar iniciam em d6; dependendo da campanha, o Mestre pode aplicar penalidade em Cavalgar ou a Complicação Procurado (Maior).",
+            "Senhores dos Cavalos" to "Cavalgar inicial d6; a critério do Mestre, o grupo pode ainda conceder Nascido na Sela ou complicações culturais como Código de Honra, Sem Escrúpulos ou Analfabeto."
+        )
         val SIGNOS_ADG_DESC = mapOf(
             "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e slot gratuito de Adaptável).",
             "Basabasa" to "Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói.",
@@ -1008,6 +1016,23 @@ class CriadorState {
             "Lobo" to "Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial..",
             "Tartaruga" to "Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa.",
             "Urso" to "Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2."
+        )
+        // Resumos genéricos para a edição Lite (não reproduzem o texto do livro original).
+        val SIGNOS_ADG_DESC_LITE = mapOf(
+            "Nenhum" to "Não possui signo; conserva os benefícios padrão do humano Adaptável (15 pontos de perícia e um slot gratuito de Adaptável).",
+            "Basabasa" to "Concede a Vantagem Atraente; na criação, escolha +1 em Provocar ou em Intimidar contra alvos que se sintam atraídos ou enojados pelo herói.",
+            "Boi" to "Dá +1 em Atletismo em testes baseados em Força (ou em todos os testes de Atletismo, com a Vantagem Brutamontes); também eleva a Força em um tipo de dado, com máximo em d12+1.",
+            "Tigre" to "Aumenta o Raio de Comando em +4 quadros e concede +1 em testes de Medo, reduzindo em 1 o resultado na Tabela de Medo (cumulativo com Corajoso).",
+            "Lebre" to "Começa com Cura d6 e pode gastar um Bene, uma vez por aventura, para tratar um Ferimento até 4 dias depois como se ainda estivesse dentro da Hora de Ouro (com os suprimentos médicos certos).",
+            "Garça" to "Concede +1 em Aparar, Acrobacia inicial d4 e eleva Atletismo em um tipo de dado.",
+            "Serpente" to "Escolha entre Jogar d6 ou Performance d6 iniciais; em Jogar, soma +1 ao saldo se vencer e -1 se perder, e em Performance para arrecadar fundos, os percentuais sobem para 30%/40% em caso de sucesso.",
+            "Dragão" to "Eleva o Espírito em um tipo de dado (máximo d12+1) e concede +1 em Conhecimento Geral em situações desconhecidas.",
+            "Kirin" to "Começa com +1 na Reserva de Chi e recebe um Bene extra a cada sessão.",
+            "Macaco" to "Eleva a Astúcia em um tipo de dado (máximo d12+1) e usa d4+1, em vez do padrão, em perícias não treinadas baseadas em Astúcia (o Dado Selvagem não recebe esse bônus).",
+            "Raposa" to "Concede a Vantagem Elevar a Moral, além de +1 em Persuadir e nos testes da Tabela de Reação.",
+            "Lobo" to "Concede a Vantagem Elo Comum e +1 na Tabela de Reação usada na Reação Inicial.",
+            "Tartaruga" to "Concede +1 na Resistência; quem tentar a manobra Finalização contra esse personagem sofre -1 no ataque e no dano dessa tentativa.",
+            "Urso" to "Eleva o Vigor em um tipo de dado (máximo d12+1) e reduz a penalidade de Exausto para -1 em vez de -2."
         )
     }
     var maisPontosPericias by mutableStateOf(true)
@@ -1423,9 +1448,13 @@ class CriadorState {
 
     fun valorAparar(): Int {
         val perLutar = mapaPericias["LUTAR"]
-        val perJutsu = mapaPericias["JUTSU"]
         val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
-        val jutsuRaw = perJutsu?.let { rawTotalComSupers(it) } ?: 0
+        // "Jutsu" não existe como perícia própria no catálogo (mapaPericias["JUTSU"] nunca
+        // resolvia nada) — as categorias extras vivem em jutsuExtras, uma por especialização
+        // de arma além do slot base (que é a própria perícia Lutar).
+        val jutsuRaw = if (compendioArteDaGuerraAtivo) {
+            jutsuExtras.maxOfOrNull { rawTotalComSupers(it) } ?: 0
+        } else 0
         val melhorLuta = maxOf(lutarRaw, jutsuRaw)
         val base     = 2 + (melhorLuta / 2)
 
@@ -3902,8 +3931,17 @@ class CriadorState {
 
     fun getBestPericia(nome: String): Pericia? {
         val key = nome.keyify()
-        return periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
+        val direct = periciasComIdiomas().firstOrNull { it.nome.keyify() == key }
             ?: mapaPericias[key]
+
+        // Em Arte da Guerra, "Jutsu" é Lutar com Especialização de Perícia: cada categoria
+        // (Jutsu 2, Jutsu 3, ...) é uma perícia própria, mas qualquer uma delas deve poder
+        // satisfazer um requisito de "Lutar nível X" usando a categoria mais alta do
+        // personagem, não só o slot base (que é literalmente a perícia "Lutar").
+        if (key == "LUTAR" && compendioArteDaGuerraAtivo && jutsuExtras.isNotEmpty()) {
+            return (listOfNotNull(direct) + jutsuExtras).maxByOrNull { rawTotal(it) }
+        }
+        return direct
     }
 
     fun podeRemoverPoderDoSlot(poderId: String): Pair<Boolean, String?> {
@@ -4072,7 +4110,7 @@ class CriadorState {
     private fun shouldIgnoreLeadershipStage(v: Vantagem): Boolean {
         if (!compendioArteDaGuerraAtivo || tropoSelecionado?.id != "tropo_samurai") return false
         if (v.categoria != Categoria.LIDERANCA) return false
-        val pericia = getBestPericia("Conhecimento Batalha") ?: return false
+        val pericia = getBestPericia("Conhecimento de Batalha") ?: return false
         return rawTotal(pericia) >= 8
     }
 
