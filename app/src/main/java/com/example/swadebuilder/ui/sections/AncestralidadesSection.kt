@@ -138,7 +138,7 @@ fun AncestralidadesSection(
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
-    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
@@ -449,8 +449,12 @@ fun AncestralidadesSection(
                                 val selectedSign = state.signoAdgSelecionado
                                 if (selectedSign != null) {
                                     Spacer(Modifier.height(4.dp))
-                                    val signDesc = CriadorState.SIGNOS_ADG_DESC[selectedSign]
-                                    if (signDesc != null && EditionConfig.isFullEdition) {
+                                    val signDesc = if (EditionConfig.isFullEdition) {
+                                        CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                    } else {
+                                        CriadorState.SIGNOS_ADG_DESC_LITE[selectedSign] ?: CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                    }
+                                    if (signDesc != null) {
                                         Text(
                                             text = signDesc,
                                             style = MaterialTheme.typography.bodySmall,
@@ -601,8 +605,13 @@ fun AncestralidadesSection(
                                 }
 
                                 Spacer(Modifier.height(4.dp))
-                                val packageDesc = CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
-                                if (packageDesc != null && EditionConfig.isFullEdition) {
+                                val packageDesc = if (EditionConfig.isFullEdition) {
+                                    CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                } else {
+                                    CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC_LITE[state.pacoteCulturalFantasiaSelecionado]
+                                        ?: CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                }
+                                if (packageDesc != null) {
                                     Text(
                                         text = packageDesc,
                                         style = MaterialTheme.typography.bodySmall,

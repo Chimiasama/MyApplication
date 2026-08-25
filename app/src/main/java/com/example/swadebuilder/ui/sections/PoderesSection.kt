@@ -90,7 +90,7 @@ fun PoderesSection(
     onShowMessage: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(R.bool.enable_long_texts)
+    val allowLongTexts = booleanResource(R.bool.enable_long_texts)
 
     val locked = state.criacaoBasicaCongeladaComXp
 

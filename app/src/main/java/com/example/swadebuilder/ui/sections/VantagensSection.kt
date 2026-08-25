@@ -296,7 +296,7 @@ fun VantagensContent(
     }
 
     val locked = state.criacaoBasicaCongeladaComXp
-    val allowLongTexts = EditionConfig.isFullEdition && booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
+    val allowLongTexts = booleanResource(com.example.swadebuilder.R.bool.enable_long_texts)
     val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
     val pcTotal = state.pontosComplicacao
