@@ -10,7 +10,8 @@
       "artista_marcial",
       "estudante_artes_marciais"
     ],
-    "pericias_gratuitas": {}
+    "pericias_gratuitas": {},
+    "descricaoLite": "Todo Artista Marcial ganha as Vantagens Artista Marcial e Estudante de Artes Marciais, começando com Jutsu (Desarmado) d6 (ou d4, somando outro Jutsu em d4).\nPotencial Físico: escolha Agilidade, Força ou Vigor e suba um desses atributos que ainda não esteja no máximo. O atributo escolhido também concede uma Vantagem extra: Agilidade -> Esquiva; Força -> Bloquear; Vigor -> Reflexos de Combate."
   },
   {
     "id": "tropo_buxista",
@@ -23,7 +24,8 @@
     "pericias_gratuitas": {
       "Ocultismo": 4,
       "Convenção": 4
-    }
+    },
+    "descricaoLite": "Começa com Convenção e Ocultismo d4, ou sobe um dado destas perícias se já as possuir.\nEscolhe um Caminho ligado a uma seita (exceto eremitas/autodidatas), com efeito ativo apenas em transe:\n- Equilibrado: +2 para resistir Intimidar, em testes de Medo e para sair de Abalado.\n- Círculo: gasta 1 Chi para curar um Ferimento na hora (até 1h após recebê-lo).\n- Exterior: +2 em Força para empurrar/resistir empurrão; +1 em Atletismo/Acrobacia (saltar, escalar, arremessar etc.).\n- Interno: +2 em Vigor para sair de Atordoado e resistir venenos.\n- Nascente: +1 em rolagens de Suporte; pode gastar 1 Chi para rerrolar Intimidar, Persuadir, Performance ou Provocar.\n- Torre: gasta 1 Chi para ganhar aura que dá +4 de Armadura enquanto o transe durar (não acumula com armadura vestida)."
   },
   {
     "id": "tropo_elementalista",
@@ -38,7 +40,8 @@
     "pericias_gratuitas": {
       "Jutsu": 4,
       "Transição": 4
-    }
+    },
+    "descricaoLite": "Treina em escolas, ganhando a Vantagem Estudante de Artes Marciais, e começa com Jutsu (Desarmado) d4 e Transição (Vigor) d4. Escolhe um elemento com suas manobras próprias:\n- Fogo: iluminar, aquecer, criar chama do tamanho de uma tocha, apagar chama pequena, gerar chama sem calor.\n- Metal: limpar/afiar lâminas, ajustar ponto de fusão, dobrar estruturas, magnetizar, repelir, consertar eixos quebrados, forjar pregos/ferraduras, arremessar moedas em alta velocidade.\n- Rocha: prender pés, erguer colunas, criar terreno rochoso, clarear/escurecer gemas, criar pontes de barro, moldar argila, derrubar rochas, desequilibrar oponentes.\n- Água: extrair água do solo, formar poças, caminhar sobre ondas leves, purificar água, ajustar temperatura, congelar/derreter gelo, transformar água em vapor, controlar fluxo de riachos.\n- Madeira: florescer plantas, mudar cores, falar com animais, convocar enxames, murchar vinhas, prender com raízes, auxiliar recuperação, remover náusea, secretar veneno natural ou criar antídoto."
   },
   {
     "id": "tropo_kui",
@@ -48,7 +51,8 @@
     "tecnicas_iniciais": 2,
     "descricao": "Caçador de espíritos e demônios. Ganha Exorcizar, Sentido Espiritual e escolhe Ferramentas do Ofício.\nArmas Abençoadas: Focando no invisível, um Kui usa a bênção do Chi para atacar seres incorpóreos. Usando uma ação, um Kui pode focar em uma arma (ataque desarmado ou não), encantando-a com a capacidade de ferir seres etéreos ou de qualidade semelhante. Itens encantados com esta ferramenta são abençoados por 10 minutos. Gastando um ponto de Chi, o Kui pode abençoar um número de objetos equivalente ao valor do seu dado de Espírito.\nVínculo Espiritual: Kui e Enjin que buscam seres a serem dispensados podem usá-los como uma ferramenta. Seja um kappa, oni ou a besta espiritual de um lobo, um ritual de ligação com este espírito é reduzido em tamanho e diminuído em poder. Serve como um companheiro leal (Extra) com conhecimento para realizar as tarefas mais básicas com a Astúcia de um animal inteligente. Caso um espírito \"morra\", ele pode ser convocado após 24 horas com um ritual de uma hora que exige o gasto de 3 pontos de Chi.\nTalismãs: Kui podem criar talismãs empoderados pelo Chi (veja Talismãs). Eles também podem criar talismãs aprimorados a um custo reduzido. Realizando um ritual de um minuto, pode-se criar um talismã que imita qualquer Técnica Chi que um Kui tenha visto nas últimas 48 horas. Criar um talismã requer uma rolagem de Foco com penalidade de −2 para cada Estágio que a técnica esteja acima da sua própria e gastar um número de pontos de Chi equivalente ao custo de ativação. Fazer isso não tem um custo monetário. Nenhuma assistência pode ser oferecida na criação. Este talismã possui a forma menor da técnica (sem modificadores). A ativação requer uma rolagem de Foco ou Ocultismo e tem apenas um uso. Kui não podem ter mais talismãs ativos do que a metade de seu valor de Espírito. Os talismãs devem ser usados dentro de um dia ou até o final da sessão antes de perderem a utilidade.",
     "ganha_ao_comprar": [],
-    "pericias_gratuitas": {}
+    "pericias_gratuitas": {},
+    "descricaoLite": "Ganha Exorcizar, Sentido Espiritual e escolhe Ferramentas do Ofício.\nArmas Abençoadas: como ação, encanta uma arma (ou ataque desarmado) para ferir seres etéreos por 10 minutos; gastando 1 Chi, abençoa tantos itens quanto o valor do seu dado de Espírito.\nVínculo Espiritual: liga a si um espírito reduzido em tamanho e poder (kappa, oni, besta espiritual etc.), que age como companheiro Extra leal com a Astúcia de um animal inteligente; se \"morrer\", volta após 24h com ritual de 1h e gasto de 3 Chi.\nTalismãs: cria talismãs de Chi, inclusive aprimorados a custo reduzido. Com ritual de 1 minuto, pode replicar qualquer Técnica Chi vista nas últimas 48h: rolagem de Foco com -2 por Estágio acima do seu, gastando Chi igual ao custo de ativação da técnica, sem custo monetário e sem ajuda de terceiros. O talismã reproduz a versão básica da técnica (sem modificadores), ativa com Foco ou Ocultismo, uso único. Talismãs ativos no máximo = metade do valor de Espírito; validade de 1 dia ou até o fim da sessão."
   },
   {
     "id": "tropo_protagonista",
@@ -58,7 +62,8 @@
     "tecnicas_iniciais": 0,
     "descricao": "Herói versátil. Role nas tabelas de Técnicas de Chi, Perícia Básica, Vantagem, Qualidades de Herói e Habilidades, podendo escolher resultados conforme os dados indicarem.",
     "ganha_ao_comprar": [],
-    "pericias_gratuitas": {}
+    "pericias_gratuitas": {},
+    "descricaoLite": "Herói versátil: role nas tabelas de Técnicas de Chi, Perícia Básica, Vantagens, Qualidades de Herói e Habilidades, escolhendo entre os resultados obtidos."
   },
   {
     "id": "tropo_samurai",
@@ -73,7 +78,8 @@
     ],
     "pericias_gratuitas": {
       "Conhecimento Batalha": 6
-    }
+    },
+    "descricaoLite": "Soldado de elite: começa com Conhecimento (Batalha) d6, escolhe Jutsu ou Atirar em d6, ganha Comando (ou uma Vantagem de Combate) e aprende Posturas de combate."
   },
   {
     "id": "tropo_shinobi",
@@ -83,7 +89,8 @@
     "tecnicas_iniciais": 2,
     "descricao": "SHINOBI\nQuando um Samurai precisa sabotar as máquinas de cerco antes que elas cheguem às muralhas do castelo, você é chamado para a ação. Você é um caçador das sombras, mestre da infiltração, sabotagem e assassinato, usando habilidades e poderes místicos para realizar sua missão. Você cuida de situações que um Samurai ou Youxia perderia a face por fazer. O trabalho é considerado sem honra, mas você sabe que não é verdade. Se você não estivesse presente, muitos pereceriam desnecessariamente. Não há maior honra do que salvar as vidas de centenas com a morte de um único indivíduo. Você trabalha nas sombras para que aqueles na luz possam viver sem medo.\nTradicionalmente envoltos em escuridão e imersos em mistério, as histórias dos shinobi cativam o povo do Império. O início dos shinobi se dá nas montanhas próximas às encostas do Monte Rinzai. Na primeira dinastia, Dongbin, o Alquimista famoso das Sete Raposas, viajou até o cume em busca de iluminação. Dongbin adquiriu conhecimentos de sobrevivência com os eremitas locais. Rumores afirmam que Dongbin seguiu para o norte, cruzando as Costas da Serpente e chegou a um vale escondido onde seres se moviam sem fazer som. Esses seres testaram o poder espiritual de Dongbin, que ao passar, foi aceito na cultura. Ele passou meses vivendo entre as criaturas e buscou aprender suas habilidades místicas.\nHistória, lenda e fábulas tornam-se turvas ao longo dos séculos, sem detalhes claros sobre os eventos que ocorreram dentro deste período. Mas os registros indicam que, após o retorno de Dongbin ao Monte Rinzai, paranóico por roubar textos sagrados, ele compartilhou o conhecimento adquirido com os eremitas, que passariam a ensinar aos outros. Esses ensinamentos foram secretamente transmitidos de família para família, de geração em geração, escondidos à vista de todos. O segredo foi até a Resolução da Tríade, onde as práticas foram moldadas em seus ensinamentos atuais, levando os Shinobi aos tempos modernos.\nEm uma era pós-guerra civil, de relativa paz, os shinobi são mais requisitados do que nunca. Quando uma figura importante está disposta a pagar para ver um rival ser afastado, os Shinobi são convocados para removê-lo silenciosamente. Uma facção que precisa espionar uma guilda rival contratará um shinobi para infiltrar-se. Contratados como guarda-costas secretos, os shinobi trabalham para proteger um cliente de outros shinobi. Conflitos oriundos de incidentes semelhantes deram origem a uma guerra secreta de escolas rivais. Essas rivalidades se estendem além da terra das Serpentes, já que cada clã estabeleceu escolas de batedores e tropas renegadas. No entanto, nenhuma delas ousa reconhecer a existência ou o financiamento das redes de informação shinobi.\nCom uma guerra nas sombras em pleno vapor, relatos de testemunhas afirmam que indivíduos se enfrentam em conflitos um a um, atentos para não colocar inocentes em perigo. No centro desta guerra estão shinobi mercenários que trabalham por lucro, contratados para resolver questões que exigem sigilo para uma escola das sombras. Os shinobi autônomos estão se tornando mais ousados e mirabolantes ao executar um contrato, exibindo gestos elaborados para ganhar notoriedade e fama.\nBenefícios de Tropo\n• Técnicas Chi: 2\n• Talento Shinobi: Escolha uma das seguintes opções:\nAlteração: A habilidade sagrada conhecida apenas por artistas cênicos e shinobi de alterar a própria aparência para se tornar outra pessoa. Ao gastar um ponto de Chi, o shinobi assume a aparência de outra pessoa. Esta é uma ação livre que atua como o poder disfarce, mas não é uma Técnica Chi.\nPés Leves: Talento de anciãos que se especializaram em viajar em condições úmidas ou nevadas. Os shinobi, independentemente do tamanho ou do peso carregado, caminham por estradas lamacentas e deslizam sobre uma neve recém-caída sem deixar pegadas pesadas. Os rastreadores que seguem os shinobi têm uma penalidade de -4 na rolagem de Sobrevivência.\nMístico: Um shinobi é ensinado conhecimentos avançados no caminho do Chi e começa com uma Técnica Chi adicional.\nPasso das Sombras: reconhecidos por sua velocidade e furtividade sobrenaturais, os shinobi aparecem e desaparecem à vontade. Ao gastar um ponto de Chi, um shinobi pode executar uma ação de Movimentação adicional sem fazer barulho ou ser notado, mesmo sendo visto. Inimigos que estão alertas e ativos tentando encontrar ou seguir o shinobi sofrem uma penalidade de -2 nas rolagens de Perceber. Quando usado para realizar um Ataque Furtivo (ver Furtividade), e é bem-sucedido, o sucesso é tratado como uma Ampliação.\n• Caçador Silencioso: Os shinobi adicionam +1d6 de dano quando têm \"a Finalização\" sobre um alvo.\n• Tipo de Treinamento: O shinobi deve escolher um tipo de treinamento: Infiltrador, Batedor ou Espião.\nInfiltrador: A arte da espionagem e sigilo. Ao gastar um Chi o shinobi pode rerrolar uma falha em Acrobacia, Pesquisar, Furtividade ou Ladinagem.\nBatedor: O tempo passado em vilarejos montanhosos isolados ensinou ao shinobi habilidades básicas de sobrevivência. Ao gastar um Chi o shinobi pode rerrolar uma falha em Atletismo, Curar ou Sobrevivência.\nEspião: A socialização e o conhecimento são perigosos. Ao gastar um Chi o shinobi pode rerrolar uma falha em Convenção, Intimidar, Performance, Persuadir ou Idioma.",
     "ganha_ao_comprar": [],
-    "pericias_gratuitas": {}
+    "pericias_gratuitas": {},
+    "descricaoLite": "Ganha 2 Técnicas Chi.\nTalento Shinobi (escolha um):\n- Alteração: por 1 Chi, ação livre, muda a própria aparência para a de outra pessoa (funciona como disfarce, mas não é Técnica Chi).\n- Pés Leves: caminha sobre lama ou neve sem deixar rastro pesado; quem tenta rastreá-lo sofre -4 em Sobrevivência.\n- Místico: ganha 1 Técnica Chi adicional.\n- Passo das Sombras: por 1 Chi, faz uma ação extra de Movimentação sem ser percebido, mesmo estando à vista; inimigos alertas sofrem -2 em Perceber para localizá-lo/segui-lo; se resultar em Ataque Furtivo bem-sucedido, conta como uma Ampliação.\nCaçador Silencioso: causa +1d6 de dano contra um alvo sob \"a Finalização\".\nTipo de Treinamento (escolha um):\n- Infiltrador: por 1 Chi, rerrola falha em Acrobacia, Pesquisar, Furtividade ou Ladinagem.\n- Batedor: por 1 Chi, rerrola falha em Atletismo, Curar ou Sobrevivência.\n- Espião: por 1 Chi, rerrola falha em Convenção, Intimidar, Performance, Persuadir ou Idioma."
   },
   {
     "id": "tropo_youxia",
@@ -95,7 +102,8 @@
     "ganha_ao_comprar": [
       "arma_predileta"
     ],
-    "pericias_gratuitas": {}
+    "pericias_gratuitas": {},
+    "descricaoLite": "Ganha 2 Técnicas Chi.\nKensai: escolhe uma arma (pode ser as próprias mãos/pés) como Arma Predileta (Vantagem) e sobe o Jutsu associado a ela em um tipo de dado.\nProtetor: por 1 Chi, uma vez por rodada, faz um ataque contra si ou um aliado adjacente falhar automaticamente.\nHistórico da Arma: a arma Kensai ganha uma característica especial, à escolha:\n- Ancestral: possui a qualidade Ancestral.\n- Carregada: por 1 Chi, a arma detona ao acertar, causando uma explosão de Chi (qualidade Alta Explosão, Modelo Médio de Explosão) sem ferir o usuário ou a própria arma.\n- Penetrante: PA 4 nas mãos do Youxia; por 1 Chi, o PA sobe para 10 até o início da próxima ação dele.\n- Afiada: conta como Arma Pesada; por 1 Chi, o dado de dano sobe um tipo até o início do próximo turno."
   },
   {
     "id": "tropo_mon",
@@ -108,6 +116,7 @@
       "treinamento_mon",
       "vinculo_mon"
     ],
-    "pericias_gratuitas": {}
+    "pericias_gratuitas": {},
+    "descricaoLite": "Forma um vínculo com um Mon: ganha Forma Bestial (restrita ao Mon), vínculo bestial e sentidos compartilhados. O Mon é um companheiro Carta Selvagem que evolui por meio de avanços dedicados a ele."
   }
 ]

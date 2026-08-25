@@ -5,7 +5,8 @@
     "custo": 5,
     "categoria": "racial_trait_positive",
     "descricao": "Pode ignorar 2 pontos de penalidades por Ações Múltiplas a cada turno.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A cada turno, 2 pontos das penalidades geradas por Ações Múltiplas deixam de ser aplicados."
   },
   {
     "id": "acao_adicional_4",
@@ -13,7 +14,8 @@
     "custo": 4,
     "categoria": "racial_trait_positive",
     "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem físicas ou mentais.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Quando todas as ações do turno são físicas ou todas mentais, a penalidade de Ações Múltiplas cai em 2 pontos."
   },
   {
     "id": "acao_adicional_10",
@@ -21,7 +23,8 @@
     "custo": 10,
     "categoria": "racial_trait_positive",
     "descricao": "Reduz as penalidades de Ações Múltiplas em 4 para qualquer tipo de ação.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Qualquer combinação de ações no turno tem sua penalidade de Ações Múltiplas reduzida em 4 pontos."
   },
   {
     "id": "adaptavel",
@@ -29,7 +32,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Personagens começam com uma Vantagem de nível Novato de sua escolha (atendendo aos requisitos).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Já na criação, o personagem escolhe e recebe gratuitamente uma Vantagem de nível Novato, desde que cumpra os requisitos normais."
   },
   {
     "id": "alcance",
@@ -37,7 +41,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Membros alongados ou tentáculos concedem Alcance +1.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Braços ou tentáculos incomumente longos somam +1 de Alcance em ataques corpo a corpo."
   },
   {
     "id": "andar_paredes",
@@ -45,7 +50,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pode andar em superfícies verticais normalmente ou invertidas com metade da Movimentação.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Paredes e tetos podem ser percorridos como se fossem chão plano, gastando o dobro do custo normal de Movimentação."
   },
   {
     "id": "aparar_positivo",
@@ -53,7 +59,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "O Aparar natural é aumentado em +1.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A Aparar básica do personagem sobe em +1."
   },
   {
     "id": "arma_de_sopro",
@@ -61,7 +68,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Pode cuspir fogo, frio, ácido ou outra energia (Modelo de Cone, rolagem de Atletismo, causa 2d6 de dano, 3d6 com ampliação).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma rolagem de Atletismo permite expelir fogo, frio, ácido ou outra energia em Modelo de Cone, causando 2d6 de dano (3d6 se ampliada)."
   },
   {
     "id": "semi_aquatico",
@@ -69,7 +77,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pode prender a respiração por 15 minutos antes de testes de afogamento.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Testes para evitar afogamento só passam a ser exigidos depois de 15 minutos sem respirar."
   },
   {
     "id": "aquatico",
@@ -77,7 +86,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Natural da Água, não pode se afogar em líquido oxigenado e se move com Movimentação completa ao nadar.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Adaptado à vida aquática, o personagem nada com Movimentação total e nunca corre risco de afogamento em água ou outro líquido oxigenado."
   },
   {
     "id": "armadura_racial",
@@ -85,7 +95,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pele grossa, placas ou carapaça garantem Armadura +2.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma cobertura natural resistente — pele grossa, placas ou carapaça — soma +2 de Armadura ao corpo."
   },
   {
     "id": "atordoar",
@@ -93,7 +104,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Ataque desarmado força o alvo a teste de Vigor ou fica Atordoado. Pode impor -2 no teste recebendo 1 nível de Fadiga.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um golpe desarmado obriga o alvo a um teste de Vigor sob risco de ficar Atordoado; o atacante pode aceitar 1 nível de Fadiga para impor -2 nesse teste."
   },
   {
     "id": "aumento_atributo",
@@ -101,7 +113,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Aumenta um atributo específico em um tipo de dado e seu máximo em um.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um atributo escolhido sobe um tipo de dado, e seu limite máximo também aumenta em um."
   },
   {
     "id": "biologia_acida",
@@ -109,7 +122,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Ao sofrer Ferimentos, libera ácido em Modelo Pequeno de Explosão (2d6/3d6 de dano). Imune a ataques ácidos.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Sempre que sofre um Ferimento, o corpo libera ácido corrosivo em Modelo Pequeno de Explosão (2d6 de dano, 3d6 se ampliado); ataques ácidos contra ele não têm efeito."
   },
   {
     "id": "bonus_pericia_1",
@@ -117,7 +131,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Concede bônus de +1 em testes de uma Perícia específica.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma Perícia à escolha passa a receber +1 em todos os seus testes."
   },
   {
     "id": "bonus_pericia_2",
@@ -125,7 +140,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Concede bônus de +2 em testes de uma Perícia específica.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma Perícia à escolha passa a receber +2 em todos os seus testes."
   },
   {
     "id": "camuflagem_1",
@@ -133,7 +149,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Mistura-se com um tipo de terreno natural (+2 Furtividade, +4 se completamente imóvel).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Em um tipo específico de terreno natural, testes de Furtividade ganham +2, chegando a +4 quando o personagem permanece totalmente parado."
   },
   {
     "id": "camuflagem_2",
@@ -141,7 +158,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Muda de cor para se misturar em qualquer ambiente natural (+2 Furtividade, +4 se imóvel).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A cor da pele se adapta a qualquer ambiente natural, somando +2 em Furtividade (+4 estando parado)."
   },
   {
     "id": "casca",
@@ -149,7 +167,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Habita um corpo hospedeiro, ignorando 1 ponto de penalidade por Ferimentos. Pode transferir para nova casca em 24h se destruído.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Vivendo dentro de um corpo hospedeiro, 1 ponto das penalidades por Ferimentos é ignorado; se essa casca for destruída, uma nova pode ser ocupada em até 24 horas."
   },
   {
     "id": "cavar",
@@ -157,7 +176,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pode se mover sob a terra com metade da Movimentação.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Deslocar-se por baixo da terra é possível, gastando o dobro do custo normal de Movimentação."
   },
   {
     "id": "chifres",
@@ -165,7 +185,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Arma natural de chifres causando For+d4 de dano.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Chifres funcionam como arma natural, causando dano For+d4."
   },
   {
     "id": "chifres_maior",
@@ -173,7 +194,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Arma natural de chifres causando For+d6 de dano.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Chifres mais desenvolvidos funcionam como arma natural, causando dano For+d6."
   },
   {
     "id": "comunitario",
@@ -181,7 +203,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "+2 em rolagens de Espírito quando outros da mesma espécie estiverem presentes a até 12 quadros (24m).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Ter indivíduos da mesma espécie a até 12 quadros (24m) de distância concede +2 em rolagens de Espírito."
   },
   {
     "id": "construto",
@@ -189,7 +212,8 @@
     "custo": 8,
     "categoria": "racial_trait_positive",
     "descricao": "+2 para se recuperar de Abalado, ignora 1 nível de Ferimento, não respira, imune a doenças e venenos.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A recuperação de Abalado ganha +2, um nível de Ferimento é sempre ignorado, e o personagem não respira nem é afetado por doenças ou venenos."
   },
   {
     "id": "diminuto_pequeno",
@@ -197,7 +221,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Tamanho -2, Força máxima d8, -2 Resistência e rolagens de dano. Modificadores de escala dificultam ser atingido.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O personagem tem Tamanho -2, limite de Força em d8, sofre -2 em Resistência e nas rolagens de dano causado, além de se beneficiar dos modificadores de escala que dificultam ser atingido."
   },
   {
     "id": "diminuto_muito_pequeno",
@@ -205,7 +230,8 @@
     "custo": 4,
     "categoria": "racial_trait_positive",
     "descricao": "Tamanho -3, Força máxima d6, -3 Resistência e rolagens de dano. Modificadores de escala dificultam ser atingido.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O personagem tem Tamanho -3, limite de Força em d6, sofre -3 em Resistência e nas rolagens de dano causado, além de se beneficiar dos modificadores de escala que dificultam ser atingido."
   },
   {
     "id": "diminuto_minusculo",
@@ -213,7 +239,8 @@
     "custo": 6,
     "categoria": "racial_trait_positive",
     "descricao": "Tamanho -4, Força máxima d4, -4 Resistência e rolagens de dano. Modificadores de escala dificultam ser atingido.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O personagem tem Tamanho -4, limite de Força em d4, sofre -4 em Resistência e nas rolagens de dano causado, além de se beneficiar dos modificadores de escala que dificultam ser atingido."
   },
   {
     "id": "ecolocalizacao",
@@ -221,7 +248,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Ignora penalidades de Iluminação e até 4 pontos de cegueira ou invisibilidade a até 10 quadros emitindo eco.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Emitindo ecos, o personagem percebe alvos a até 10 quadros sem sofrer penalidades de Iluminação e anulando até 4 pontos de cegueira ou invisibilidade."
   },
   {
     "id": "espacial",
@@ -229,7 +257,8 @@
     "custo": 3,
     "categoria": "racial_trait_positive",
     "descricao": "Sobrevive no espaço sem meios artificiais: possui Não Respira, ignora descompressão e radiação de fundo.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O vácuo do espaço não representa perigo: sem depender de equipamento, o personagem não respira e não é afetado por descompressão nem radiação de fundo."
   },
   {
     "id": "estavel",
@@ -237,7 +266,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Possui pernas extras, corpo serpentino ou esteira; ignora penalidades por Terreno Difícil.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Graças a pernas extras, corpo serpentino ou esteiras, as penalidades de Terreno Difícil não se aplicam ao personagem."
   },
   {
     "id": "forma_energia",
@@ -245,7 +275,8 @@
     "custo": 4,
     "categoria": "racial_trait_positive",
     "descricao": "Corpo de energia: imune a armas físicas, projéteis, quedas e ataques localizados; passa por frestas.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Sendo composto de energia pura, o personagem não sofre dano de armas físicas, projéteis, quedas ou Ataques Localizados, e consegue atravessar frestas e aberturas estreitas."
   },
   {
     "id": "fosforescencia_1",
@@ -253,7 +284,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Gera luz que elimina até 2 pontos de penalidades por Iluminação (-4 em Furtividade baseada na visão).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma luminosidade própria reduz em até 2 pontos as penalidades de Iluminação ao redor, mas custa -4 em testes de Furtividade que dependam de visão."
   },
   {
     "id": "fosforescencia_2",
@@ -261,7 +293,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Gera luz estroboscópica que impõe -1 nos ataques corpo a corpo dos oponentes contra ele.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um brilho estroboscópico emitido pelo corpo impõe -1 nos ataques corpo a corpo de oponentes contra o personagem."
   },
   {
     "id": "garras_d4",
@@ -269,7 +302,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Garras naturais causando For+d4 de dano.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Garras naturais servem de arma, causando dano For+d4."
   },
   {
     "id": "garras_d6",
@@ -277,7 +311,8 @@
     "custo": 3,
     "categoria": "racial_trait_positive",
     "descricao": "Garras naturais causando For+d6 de dano.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Garras naturais mais afiadas servem de arma, causando dano For+d6."
   },
   {
     "id": "garras_pa",
@@ -285,7 +320,8 @@
     "custo": 4,
     "categoria": "racial_trait_positive",
     "descricao": "Garras naturais causando For+d6 de dano com PA 2.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Garras naturais servem de arma perfurante, causando dano For+d6 com PA 2."
   },
   {
     "id": "gelatinoso_2",
@@ -293,7 +329,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Corpo amorfo: metade do dano por quedas e colisões, sem dano extra por Ataques Localizados.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um corpo sem forma fixa absorve melhor impactos: quedas e colisões causam metade do dano normal, e Ataques Localizados não geram dano extra."
   },
   {
     "id": "gelatinoso_3",
@@ -301,7 +338,8 @@
     "custo": 3,
     "categoria": "racial_trait_positive",
     "descricao": "Corpo amorfo: metade do dano por quedas, sem dano extra por Ataques Localizados e atravessa frestas/grades.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um corpo sem forma fixa sofre metade do dano em quedas, não recebe dano extra por Ataques Localizados e consegue se espremer por frestas e grades."
   },
   {
     "id": "imune_doencas_venenos",
@@ -309,7 +347,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Imune a doenças ou venenos (pode ser comprado duas vezes).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O personagem se torna completamente imune a doenças ou a venenos; essa proteção pode ser adquirida uma segunda vez para cobrir a outra categoria."
   },
   {
     "id": "infravisao",
@@ -317,7 +356,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Reduz pela metade penalidades de Iluminação contra alvos quentes.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Contra alvos que emitem calor, as penalidades de Iluminação incidem em apenas metade do valor."
   },
   {
     "id": "interface",
@@ -325,7 +365,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Conecta-se diretamente a dispositivos eletrônicos, concedendo +2 em testes de Eletrônica e Hackear.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma conexão direta com dispositivos eletrônicos garante +2 em testes de Eletrônica e de Hackear."
   },
   {
     "id": "invisibilidade_translucido",
@@ -333,7 +374,8 @@
     "custo": 4,
     "categoria": "racial_trait_positive",
     "descricao": "Translúcido: impõe -2 nas rolagens inimigas para ver ou atacar.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um corpo translúcido faz com que inimigos sofram -2 em rolagens para enxergar ou atacar o personagem."
   },
   {
     "id": "invisibilidade_total",
@@ -341,7 +383,8 @@
     "custo": 8,
     "categoria": "racial_trait_positive",
     "descricao": "Invisibilidade Total: impõe -4 nas rolagens inimigas para ver ou atacar.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Tornando-se totalmente invisível, o personagem impõe -4 nas rolagens de inimigos para enxergá-lo ou atacá-lo."
   },
   {
     "id": "membros_extras",
@@ -349,7 +392,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Conjunto adicional de braços: +1 em Agrupar, +1 em Atletismo (escalar/agarrar) e permite segurar objetos/armas adicionais.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um par extra de braços permite segurar objetos ou armas adicionais e concede +1 em Agrupar e +1 em Atletismo quando usado para escalar ou agarrar."
   },
   {
     "id": "mods_roboticos",
@@ -357,7 +401,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Possui três espaços de Mods Robóticos (ajustados pelo Tamanho do ser).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Três espaços para instalar Mods Robóticos ficam disponíveis, com a capacidade ajustada conforme o Tamanho do personagem."
   },
   {
     "id": "mordida",
@@ -365,7 +410,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Presas naturais causando For+d4 de dano.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Presas naturais servem como arma de mordida, causando dano For+d4."
   },
   {
     "id": "mordida_d6",
@@ -373,7 +419,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Presas naturais causando For+d6 de dano.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Presas naturais mais desenvolvidas servem como arma de mordida, causando dano For+d6."
   },
   {
     "id": "mordida_pa",
@@ -381,7 +428,8 @@
     "custo": 3,
     "categoria": "racial_trait_positive",
     "descricao": "Presas naturais causando For+d6 de dano com PA 2.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Presas naturais perfurantes servem como arma de mordida, causando dano For+d6 com PA 2."
   },
   {
     "id": "morto_vivo",
@@ -389,7 +437,8 @@
     "custo": 8,
     "categoria": "racial_trait_positive",
     "descricao": "Resistência +2, +2 para recuperar de Abalado, ignora 1 ponto de Ferimentos, não respira e imune a doenças/venenos.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A Resistência sobe em +2, assim como a recuperação de Abalado; além disso, 1 ponto de Ferimentos é ignorado e o personagem não respira nem sofre com doenças ou venenos."
   },
   {
     "id": "movimentacao_bonus",
@@ -397,7 +446,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "+2 na Movimentação e aumenta o dado de corrida em um tipo.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A Movimentação sobe +2 e o dado usado para correr avança um tipo."
   },
   {
     "id": "mudanca_forma",
@@ -405,7 +455,8 @@
     "custo": 4,
     "categoria": "racial_trait_positive",
     "descricao": "Muda de forma para a aparência de outro ser (variação de até 2 no Tamanho); teste resistido de Astúcia imita voz e memórias.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "É possível assumir a aparência de outro ser com Tamanho até 2 pontos diferente do próprio; imitar voz e memórias exige um teste resistido de Astúcia."
   },
   {
     "id": "nao_respira",
@@ -413,7 +464,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Não respira, imune a toxinas inaladas, afogamento e sufocamento.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Sem necessidade de respirar, o personagem não é afetado por toxinas inaladas, afogamento ou sufocamento."
   },
   {
     "id": "pericia_racial_d4",
@@ -421,7 +473,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Começa com d4 em uma perícia inerente.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma perícia inerente à espécie já começa em d4."
   },
   {
     "id": "pericia_racial_d6",
@@ -429,7 +482,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Começa com d6 em uma perícia inerente e aumenta máximo para d12+1.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma perícia inerente à espécie já começa em d6, podendo ser treinada até d12+1."
   },
   {
     "id": "poder_racial",
@@ -437,7 +491,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Concede Antecedente Arcano (Dom) e um poder inato.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O Antecedente Arcano (Dom) e um poder inato são concedidos automaticamente."
   },
   {
     "id": "reducao_sono",
@@ -445,7 +500,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Precisa de metade do tempo de sono (ou nenhum sono se comprado 2x).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O tempo necessário de sono cai pela metade, podendo chegar a zero se essa habilidade for adquirida duas vezes."
   },
   {
     "id": "regeneracao",
@@ -453,7 +509,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Rolagem de Cura natural uma vez por dia.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma vez a cada dia, o corpo faz naturalmente uma rolagem de Cura."
   },
   {
     "id": "regeneracao_maior",
@@ -461,7 +518,8 @@
     "custo": 3,
     "categoria": "racial_trait_positive",
     "descricao": "Regenera lesões permanentes após todos os ferimentos curados.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Depois que todos os Ferimentos estiverem curados, até lesões permanentes acabam se regenerando."
   },
   {
     "id": "resistencia_racial",
@@ -469,7 +527,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pele endurecida ou músculos densos aumentam a Resistência em +1.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma constituição física mais resistente — pele endurecida ou músculos densos — soma +1 à Resistência."
   },
   {
     "id": "resistencia_ambiental",
@@ -477,7 +536,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "+4 em rolagens de resistência e -4 de dano contra um efeito ambiental.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Contra um efeito ambiental específico, rolagens de resistência recebem +4 e o dano sofrido é reduzido em 4."
   },
   {
     "id": "robo",
@@ -485,7 +545,8 @@
     "custo": 6,
     "categoria": "racial_trait_positive",
     "descricao": "Entidade mecânica: não respira, imune a doenças/venenos/radiação, reparado via Conserto em vez de Cura.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Sendo uma entidade mecânica, o personagem não respira, não é afetado por doenças, venenos ou radiação, e se recupera por meio de testes de Conserto em vez de Cura."
   },
   {
     "id": "robusto",
@@ -493,7 +554,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Um segundo resultado Abalado não causa Ferimento.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Ficar Abalado uma segunda vez deixa de resultar em Ferimento."
   },
   {
     "id": "saltador",
@@ -501,7 +563,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Pula o dobro da distância normal e +4 no dano em Ataque Selvagem com salto.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A distância de salto dobra, e um Ataque Selvagem realizado durante o salto causa +4 de dano."
   },
   {
     "id": "sem_orgaos_vitais",
@@ -509,7 +572,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Ataques Localizados não provocam dano extra.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Sem órgãos vitais para atingir, Ataques Localizados deixam de causar dano extra."
   },
   {
     "id": "sem_sangue",
@@ -517,7 +581,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Estabiliza automaticamente ao ficar Sangrando e ignora dano extra de armas dilacerantes.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Ao ficar Sangrando, o personagem se estabiliza automaticamente, e armas dilacerantes não causam dano extra contra ele."
   },
   {
     "id": "sentidos_agucados_visao",
@@ -525,7 +590,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pode ler a 1,5km de distância e reduz penalidades de Distância em 1.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma visão excepcionalmente aguçada permite ler a 1,5 km de distância e reduz em 1 as penalidades de Distância."
   },
   {
     "id": "sentidos_agucados_audicao",
@@ -533,7 +599,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pode escutar um sussurro a 1,5km e ganha +2 em Perceber baseado em audição.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um sussurro pode ser ouvido a até 1,5 km, e testes de Perceber baseados em audição recebem +2."
   },
   {
     "id": "sentidos_agucados_olfato",
@@ -541,7 +608,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "+2 em Sobrevivência para rastrear um alvo pelo odor.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Rastrear um alvo pelo odor concede +2 em testes de Sobrevivência."
   },
   {
     "id": "tamanho_mais_1",
@@ -549,7 +617,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "+1 na Resistência e +1 no máximo de Força.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A Resistência e o limite máximo de Força sobem +1 cada."
   },
   {
     "id": "telepatia",
@@ -557,7 +626,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Comunicação mental com qualquer forma de vida inteligente a até 12 quadros (24m), independente de idioma.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Qualquer forma de vida inteligente a até 12 quadros (24m) pode ser contatada pela mente, sem barreira de idioma."
   },
   {
     "id": "tentaculos_2",
@@ -565,7 +635,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "+2 nas jogadas para agarrar oponentes.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Tentativas de agarrar um oponente recebem +2."
   },
   {
     "id": "tentaculos_4",
@@ -573,7 +644,8 @@
     "custo": 4,
     "categoria": "racial_trait_positive",
     "descricao": "+2 para agarrar e ganha duas Ações de Tentáculos por turno.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Agarrar oponentes concede +2, e até duas Ações de Tentáculos podem ser feitas no mesmo turno."
   },
   {
     "id": "toque_venenoso",
@@ -581,7 +653,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Ataque de toque força Vigor ou sofre Veneno Moderado.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um simples toque obriga o alvo a um teste de Vigor, sob risco de sofrer os efeitos de um Veneno Moderado."
   },
   {
     "id": "toque_venenoso_paralisante",
@@ -589,7 +662,8 @@
     "custo": 3,
     "categoria": "racial_trait_positive",
     "descricao": "Ataque de toque força Vigor ou sofre efeito de Veneno Paralisante.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um simples toque obriga o alvo a um teste de Vigor, sob risco de ser afetado por um Veneno Paralisante."
   },
   {
     "id": "toque_venenoso_projetado",
@@ -597,7 +671,8 @@
     "custo": 3,
     "categoria": "racial_trait_positive",
     "descricao": "Cusparada de veneno Moderado a até 6 quadros (12m) via Atletismo.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Usando Atletismo, é possível cuspir veneno Moderado em um alvo a até 6 quadros (12m) de distância."
   },
   {
     "id": "toque_venenoso_letal",
@@ -605,7 +680,8 @@
     "custo": 3,
     "categoria": "racial_trait_positive",
     "descricao": "Veneno aprimorado provoca Fadiga ao usar.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O veneno usado é mais potente e causa Fadiga em quem for atingido."
   },
   {
     "id": "vantagem_racial",
@@ -613,7 +689,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Começa com uma Vantagem inata do cenário ignorando requisitos de Estágio.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma Vantagem inata prevista pelo cenário é concedida desde o início, mesmo sem cumprir os requisitos normais de Estágio."
   },
   {
     "id": "visao_360",
@@ -621,7 +698,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Campo de visão de 360 graus desimpedido; ignora 1 ponto de bônus de Agrupar dos inimigos.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Enxergando em 360 graus sem pontos cegos, o personagem anula 1 ponto do bônus que inimigos ganhariam por Agrupar."
   },
   {
     "id": "visao_escuro",
@@ -629,7 +707,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Ignora penalidades por Penumbra e Escuridão.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Penumbra e Escuridão deixam de impor qualquer penalidade ao personagem."
   },
   {
     "id": "visao_total_escuro",
@@ -637,7 +716,8 @@
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Ignora todas as penalidades de Iluminação e até 2 pontos de invisibilidade a até 10 quadros.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A até 10 quadros de distância, todas as penalidades de Iluminação são ignoradas, assim como até 2 pontos de invisibilidade."
   },
   {
     "id": "voo_6",
@@ -645,7 +725,8 @@
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "Pode voar com Movimentação 6.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O personagem ganha a capacidade de voar, com Movimentação 6."
   },
   {
     "id": "voo_12",
@@ -653,7 +734,8 @@
     "custo": 4,
     "categoria": "racial_trait_positive",
     "descricao": "Pode voar com Movimentação 12.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O personagem ganha a capacidade de voar, com Movimentação 12."
   },
   {
     "id": "voo_24",
@@ -661,7 +743,8 @@
     "custo": 6,
     "categoria": "racial_trait_positive",
     "descricao": "Pode voar com Movimentação 24 e correr com +2d6.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O personagem ganha a capacidade de voar, com Movimentação 24, correndo com +2d6 adicionais."
   },
   {
     "id": "aparar_baixo",
@@ -669,7 +752,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Aparar -1.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O valor de Aparar do personagem sofre -1."
   },
   {
     "id": "complicacao_racial_menor",
@@ -677,7 +761,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Possui uma Complicação Menor inerente.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma Complicação Menor faz parte da natureza do personagem."
   },
   {
     "id": "complicacao_racial_maior",
@@ -685,7 +770,8 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "Possui uma Complicação Maior inerente.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma Complicação Maior faz parte da natureza do personagem."
   },
   {
     "id": "dependencia",
@@ -693,7 +779,8 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "Precisa ter contato com uma substância por 1h a cada 24h ou sofre Fadiga.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A cada 24 horas, é preciso passar 1 hora em contato com determinada substância, sob pena de sofrer Fadiga."
   },
   {
     "id": "dependencia_atmosferica_1",
@@ -701,7 +788,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Necessita de atmosfera rara; teste de Vigor a cada hora em outra atmosfera ou sofre Fadiga.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Fora de sua atmosfera rara de origem, um teste de Vigor deve ser feito a cada hora, sob pena de sofrer Fadiga."
   },
   {
     "id": "dependencia_atmosferica_2",
@@ -709,7 +797,8 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "Necessita de atmosfera rara; teste de Vigor a cada minuto em outra atmosfera ou sofre Fadiga.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Fora de sua atmosfera rara de origem, um teste de Vigor deve ser feito a cada minuto, sob pena de sofrer Fadiga."
   },
   {
     "id": "dependencia_atmosferica_4",
@@ -717,7 +806,8 @@
     "custo": -4,
     "categoria": "racial_trait_negative",
     "descricao": "Necessita de atmosfera rara; teste de Vigor a cada rodada em outra atmosfera ou sofre Fadiga.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Fora de sua atmosfera rara de origem, um teste de Vigor deve ser feito a cada rodada, sob pena de sofrer Fadiga."
   },
   {
     "id": "doente_1",
@@ -725,7 +815,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Sofre -2 em rolagens de Vigor feitas para resistir ou se recuperar de doenças.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Resistir a doenças ou se recuperar delas custa -2 nas rolagens de Vigor envolvidas."
   },
   {
     "id": "doente_2",
@@ -733,7 +824,8 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "Sofre -2 em Vigor contra doenças e deve rolar Vigor ao sofrer Ferimento ou é infectado por Doença Debilitante.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Além de sofrer -2 em Vigor contra doenças, o personagem precisa rolar Vigor sempre que sofrer um Ferimento, sob risco de contrair uma Doença Debilitante."
   },
   {
     "id": "forma_alienigena",
@@ -741,7 +833,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Tamanho/forma incompatível: requer equipamentos personalizados (+100% custo) ou sofre -1 em rolagens de Característica.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um corpo de tamanho ou forma incomum exige equipamentos personalizados, custando o dobro do preço normal — sem eles, rolagens de Característica sofrem -1."
   },
   {
     "id": "fragil",
@@ -749,7 +842,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Reduz a Resistência em 1.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A Resistência do personagem cai em 1."
   },
   {
     "id": "fraqueza_ambiental",
@@ -757,7 +851,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "-4 para resistir a um efeito ambiental e sofre +4 de dano dele.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Contra um efeito ambiental específico, a resistência sofre -4 e o dano recebido aumenta em 4."
   },
   {
     "id": "inimigo_racial",
@@ -765,7 +860,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "-2 em Persuadir ao lidar com a espécie rival.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Negociar com a espécie rival impõe -2 em testes de Persuadir."
   },
   {
     "id": "movimentacao_reduzida_1",
@@ -773,7 +869,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "-1 na Movimentação e reduz dado de corrida em um tipo.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A Movimentação cai -1 e o dado usado para correr diminui um tipo."
   },
   {
     "id": "movimentacao_reduzida_2",
@@ -781,7 +878,8 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "-3 na Movimentação e -2 em testes de Atletismo móveis.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A Movimentação cai -3, e testes de Atletismo que envolvam deslocamento sofrem -2."
   },
   {
     "id": "nao_fala",
@@ -789,7 +887,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Não pode formar sons comuns. Comunica-se por gestos, música ou linguagem própria.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Sons de fala comuns não podem ser produzidos; a comunicação depende de gestos, música ou uma linguagem própria."
   },
   {
     "id": "nao_pode_curar",
@@ -797,7 +896,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Sem capacidade de cura natural ou autorreparo (exige cura ativa ou conserto).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "O corpo não se recupera sozinho nem se autorrepara — apenas cura ativa ou testes de Conserto funcionam."
   },
   {
     "id": "penalidade_atributo_1",
@@ -805,7 +905,8 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "Um Atributo sofre penalidade de -1 em seus testes.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um Atributo escolhido tem seus testes penalizados em -1."
   },
   {
     "id": "penalidade_atributo_2",
@@ -813,7 +914,8 @@
     "custo": -3,
     "categoria": "racial_trait_negative",
     "descricao": "Um Atributo sofre penalidade de -2 em seus testes.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Um Atributo escolhido tem seus testes penalizados em -2."
   },
   {
     "id": "penalidade_pericia_1",
@@ -821,7 +923,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Sofre -1 em uma perícia comum (ou -2 se incomum).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma perícia escolhida sofre -1, valor que dobra para -2 caso seja uma perícia incomum."
   },
   {
     "id": "penalidade_pericia_2",
@@ -829,7 +932,8 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "Sofre -2 em uma perícia comum (ou -4 se incomum).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma perícia escolhida sofre -2, valor que dobra para -4 caso seja uma perícia incomum."
   },
   {
     "id": "pericias_basicas_reduzidas",
@@ -837,7 +941,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Começa o jogo com uma perícia básica a menos.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma das perícias básicas normais não é recebida na criação do personagem."
   },
   {
     "id": "repugnante",
@@ -845,7 +950,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Aparência ou odor repulsivo; reações de terceiros começam sempre Hostis (ou 1d6 na Tabela de Reação).",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Uma aparência ou odor repulsivo faz com que outros reajam sempre de forma Hostil, ou role 1d6 na Tabela de Reação."
   },
   {
     "id": "sangue_frio",
@@ -853,7 +959,8 @@
     "custo": -3,
     "categoria": "racial_trait_negative",
     "descricao": "Subtrai 1 das rolagens de Agilidade, Força e Vigor após passar mais de 10 minutos em temperaturas abaixo de 18°C.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Depois de mais de 10 minutos exposto a temperaturas abaixo de 18°C, Agilidade, Força e Vigor sofrem -1 em suas rolagens."
   },
   {
     "id": "sem_manipuladores",
@@ -861,7 +968,8 @@
     "custo": -4,
     "categoria": "racial_trait_negative",
     "descricao": "Sem mãos ou dedos; não pode usar equipamentos comuns nem vestir/tirar roupas sem ajuda.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "A ausência de mãos ou dedos impede o uso de equipamentos comuns e o ato de vestir ou tirar roupas sozinho."
   },
   {
     "id": "tamanho_menos_1",
@@ -869,7 +977,8 @@
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Reduz o Tamanho e a Resistência em 1.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Tamanho e Resistência caem 1 ponto cada."
   },
   {
     "id": "transtorno_separacao",
@@ -877,7 +986,8 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "Subtrai 2 das rolagens de Espírito quando nenhum outro membro da própria espécie estiver na linha de visão.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Estando sem nenhum membro da própria espécie à vista, as rolagens de Espírito sofrem -2."
   },
   {
     "id": "volumoso",
@@ -885,6 +995,7 @@
     "custo": -2,
     "categoria": "racial_trait_negative",
     "descricao": "-2 em Características ao usar equipamento comum; custos de itens dobrados.",
-    "origem": "BASICO"
+    "origem": "BASICO",
+    "descricaoLite": "Usar equipamentos comuns impõe -2 em Características, e o custo de qualquer item é dobrado."
   }
 ]
