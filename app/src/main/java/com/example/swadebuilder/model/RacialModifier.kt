@@ -1,5 +1,7 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -41,4 +43,59 @@ data class HabilidadeCriacao(
 ) {
     fun exibida(): HabilidadeCriacao =
         if (!com.example.swadebuilder.EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this
+}
+
+data class RacialAbilitySignature(val nome: String, val descricao: String)
+
+data class RacialSignature(
+    val atributos: Map<String, Int>,
+    val pericias: Map<String, Int>,
+    val vantagensGratis: List<String>,
+    val desvantagens: List<String>,
+    val habilidades: List<RacialAbilitySignature>
+)
+
+fun RacialModifier.signature(): RacialSignature {
+    fun normalizeList(values: List<String>): List<String> = values.sortedBy { it.uppercase().semAcentos() }
+
+    return RacialSignature(
+        atributos = atributos,
+        pericias = pericias,
+        vantagensGratis = normalizeList(vantagensGratis),
+        desvantagens = normalizeList(desvantagens),
+        habilidades = habilidades
+            .map { RacialAbilitySignature(it.nome, it.descricao) }
+            .sortedWith(compareBy({ it.nome.uppercase().semAcentos() }, { it.descricao.uppercase().semAcentos() }))
+    )
+}
+
+fun stripAncestralidadeScenarioSuffix(nome: String): String =
+    nome.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "").trim()
+
+/**
+ * Colapsa candidatos de ancestralidade — possivelmente vindos de múltiplos livros ativos ao
+ * mesmo tempo (Modo Livre, ou um livro companheiro somado ao Básico) — em grupos prontos para
+ * exibição em uma lista de seleção de raça.
+ *
+ * Duas etapas:
+ * 1. Por nome exato: quando o mesmo nome existe em mais de um livro ativo, mantém a versão do
+ *    livro de maior [originPriority] (em vez da primeira do arquivo), já que livros de
+ *    cenário/companheiros costumam trazer uma versão mais específica que o Básico.
+ * 2. Por (nome-base sem sufixo de cenário, assinatura mecânica): funde apenas quando AMBOS
+ *    coincidem, nunca só a assinatura — duas raças diferentes podem ter atributos/perícias/
+ *    habilidades idênticos por coincidência (ex.: Kalianos reaproveita o mesmo bloco de
+ *    habilidades de Quadroides no Sci-Fi) sem serem a mesma raça. Exigir o nome-base também
+ *    preserva a fusão legítima de variantes de nome da mesma raça entre livros (ex.: "Humano"
+ *    e "Humano (Buscatrilha)").
+ */
+fun groupAncestralidadesForDisplay(items: List<RacialModifier>): List<List<RacialModifier>> {
+    val prioritized = items.groupBy { it.nome.keyify() }
+        .map { (_, duplicates) ->
+            if (duplicates.size == 1) duplicates.first() else duplicates.maxBy { originPriority(it.origem) }
+        }
+
+    return prioritized
+        .groupBy { stripAncestralidadeScenarioSuffix(it.nome).keyify() to it.signature() }
+        .values
+        .toList()
 }

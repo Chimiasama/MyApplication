@@ -91,38 +91,10 @@ private fun RacialModifierLite.displayName(showOfficialNames: Boolean): String {
     }
 }
 
-private data class RacialAbilitySignature(
-    val nome: String,
-    val descricao: String
-)
-
-private data class RacialSignature(
-    val atributos: Map<String, Int>,
-    val pericias: Map<String, Int>,
-    val vantagensGratis: List<String>,
-    val desvantagens: List<String>,
-    val habilidades: List<RacialAbilitySignature>
-)
-
-private fun RacialModifier.signature(): RacialSignature {
-    fun normalizeList(values: List<String>): List<String> {
-        return values.sortedBy { it.uppercase().semAcentos() }
-    }
-
-    return RacialSignature(
-        atributos = atributos,
-        pericias = pericias,
-        vantagensGratis = normalizeList(vantagensGratis),
-        desvantagens = normalizeList(desvantagens),
-        habilidades = habilidades
-            .map { RacialAbilitySignature(it.nome, it.descricao) }
-            .sortedWith(compareBy({ it.nome.uppercase().semAcentos() }, { it.descricao.uppercase().semAcentos() }))
-    )
-}
-
-private fun stripScenarioSuffix(nome: String): String {
-    return nome.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "").trim()
-}
+// RacialSignature/RacialModifier.signature() e o agrupamento por (nome-base, assinatura)
+// vivem em com.example.swadebuilder.model.RacialModifier.kt (groupAncestralidadesForDisplay),
+// para serem testáveis por unit test puro sem depender do Compose.
+private fun stripScenarioSuffix(nome: String): String = stripAncestralidadeScenarioSuffix(nome)
 
 @OptIn(ExperimentalMaterial3Api::class)
 
@@ -217,22 +189,12 @@ fun AncestralidadesSection(
             origin in allowedOrigins
         }
 
-        // Deduplicate by Name first, prioritizing Settings over Basic
-        val prioritized = filtered.groupBy { it.nome.keyify() }
-            .map { (_, duplicates) ->
-                if (duplicates.size == 1) return@map duplicates.first()
-                duplicates.maxBy { com.example.swadebuilder.model.originPriority(it.origem) }
-            }
-
-        // Agrupa por (nome-base, assinatura) — nunca só por assinatura. Duas raças DIFERENTES
-        // podem coincidir em atributos/perícias/habilidades (ex.: Kalianos reaproveita o mesmo
-        // bloco de Quadroides) sem serem a mesma raça; agrupar só por assinatura as fundia em
-        // uma única linha, escondendo uma delas da lista de seleção. Usa o nome sem sufixo de
-        // cenário (ex.: "Humano" de "Humano (Buscatrilha)") para preservar a fusão legítima de
-        // variantes de nome da MESMA raça entre livros.
-        val deduped = prioritized
-            .groupBy { stripScenarioSuffix(it.nome).keyify() to it.signature() }
-            .values
+        // Deduplicação (por nome, priorizando o livro de cenário/companheiro sobre o Básico
+        // quando os dois estão ativos; e por nome-base + assinatura mecânica, para tratar
+        // variantes de nome da mesma raça entre livros sem fundir raças diferentes que
+        // coincidem em mecânica) vive em com.example.swadebuilder.model.RacialModifier.kt
+        // (groupAncestralidadesForDisplay), testada por unit test puro.
+        val deduped = com.example.swadebuilder.model.groupAncestralidadesForDisplay(filtered)
             .map { group ->
                 val representative = group.first()
                 val originsInGroup = group.map { canonicalOriginKey(it.origem) }.toSet()
