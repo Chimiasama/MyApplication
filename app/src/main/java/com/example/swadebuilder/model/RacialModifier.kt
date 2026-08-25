@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 data class RacialAbility(
     val nome: String,
     val descricao: String,
+    // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+    val descricaoLite: String? = null,
     val id: String? = null,
     val category: String? = null,
     val severity: String? = null

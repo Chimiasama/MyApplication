@@ -120,6 +120,8 @@ object DataLoader {
         val originalName: String? = null,
         val originalDescription: String? = null,
         val descricao: String? = null,
+        // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
+        val descricaoLite: String? = null,
         val atributos: Map<String, Int>,
         val pericias: Map<String, Int>,
         val vantagensGratis: List<String> = emptyList(),
@@ -129,7 +131,13 @@ object DataLoader {
         val tags: List<String> = emptyList(),
         val opcoes: List<String> = emptyList(),
         val livros: List<String>
-    )
+    ) {
+        fun descricaoExibida(): String? =
+            if (!EditionConfig.isFullEdition) descricaoLite?.takeIf { it.isNotBlank() } ?: descricao else descricao
+    }
+
+    private fun RacialAbility.exibida(): RacialAbility =
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite!!) else this
 
     // Poderes vivem em um único arquivo consolidado (poderes.json). Como em Equipamentos e
     // Ancestralidades, cada nome de poder compartilhado entre livros tem dados diferentes
@@ -457,12 +465,12 @@ object DataLoader {
                     nome = fonte.nome,
                     originalName = fonte.originalName,
                     originalDescription = fonte.originalDescription,
-                    descricao = fonte.descricao,
+                    descricao = fonte.descricaoExibida(),
                     atributos = fonte.atributos,
                     pericias = fonte.pericias,
                     vantagensGratis = fonte.vantagensGratis,
                     desvantagens = fonte.desvantagens,
-                    habilidades = fonte.habilidades,
+                    habilidades = fonte.habilidades.map { it.exibida() },
                     origem = livro,
                     movimentacao = fonte.movimentacao,
                     tags = fonte.tags,
