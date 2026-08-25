@@ -198,11 +198,15 @@ object ModifierEngine {
                 val k = it.keyify()
                 k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
             } || anc.habilidades.any {
-                val k = it.nome.keyify()
-                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
+                val k = it.canonicalId ?: it.nome.keyify()
+                k == "movimentacao_reduzida_1" || (k.contains("MOVIMENTACAO") && k.contains("REDUZIDA"))
             }
             if (hasMovReduzida) {
                 modifiers.add(Modifier("racial_pace_reduced", SourceType.ANCESTRALIDADE, "Movimentação Reduzida", ModifierTarget.PACE, -1))
+            }
+            val hasMovReduzidaMaior = anc.habilidades.any { (it.canonicalId ?: it.nome.keyify()) == "movimentacao_reduzida_2" }
+            if (hasMovReduzidaMaior) {
+                modifiers.add(Modifier("racial_pace_reduced_maior", SourceType.ANCESTRALIDADE, "Movimentação Reduzida (-3)", ModifierTarget.PACE, -3))
             }
 
             val hasLentoRacial = sources.any {

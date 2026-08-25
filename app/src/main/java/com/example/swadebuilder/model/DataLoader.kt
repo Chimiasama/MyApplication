@@ -463,8 +463,30 @@ object DataLoader {
             }
         } as List<RacialModifierFonte>
 
+        @Suppress("UNCHECKED_CAST")
+        val habilidadesRaciaisCatalogo = dataCache.getOrPut("basico_habilidades_raciais.json") {
+            runCatching {
+                loadJsonAsset<List<HabilidadeCriacao>>(context, "basico_habilidades_raciais.json")
+            }.getOrElse { e ->
+                Log.e("SWADE_DEBUG", "[DataLoader] falha ao carregar basico_habilidades_raciais.json: ${e::class.simpleName}: ${e.message}", e)
+                emptyList()
+            }
+        } as List<HabilidadeCriacao>
+
+        val catalogoHabilidadesMap = habilidadesRaciaisCatalogo.associateBy { it.nome.keyify() }
+
         val localListaAncestralidadesJson = ancestriasFonte.flatMap { fonte ->
             fonte.livros.filter { it in ancestryVisibleOrigins }.map { livro ->
+                val habilidadesResolvidas = fonte.habilidades.map { hab ->
+                    val habExibida = hab.exibida()
+                    val cId = habExibida.canonicalId ?: habExibida.id
+                    val catTrait = catalogoHabilidadesMap[habExibida.nome.keyify()]
+                    habExibida.copy(
+                        id = cId,
+                        category = habExibida.category ?: if (catTrait != null && catTrait.custo < 0) "racial_trait_negative" else "racial_trait_positive"
+                    )
+                }
+
                 RacialModifier(
                     id = fonte.id,
                     nome = fonte.nome,
@@ -475,7 +497,7 @@ object DataLoader {
                     pericias = fonte.pericias,
                     vantagensGratis = fonte.vantagensGratis,
                     desvantagens = fonte.desvantagens,
-                    habilidades = fonte.habilidades.map { it.exibida() },
+                    habilidades = habilidadesResolvidas,
                     origem = livro,
                     movimentacao = fonte.movimentacao,
                     tags = fonte.tags,

@@ -3861,20 +3861,20 @@ class CriadorState {
         }
 
         // 2. Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
-        if (ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) {
+        if (ancDef.habilidades.any { (it.canonicalId ?: it.id)?.keyify() == "ADAPTAVEL" || (it.canonicalId ?: it.id) == "adaptavel" || it.nome.keyify() == "ADAPTAVEL" }) {
             return true
         }
 
         // 3. Half-Elves Special Logic: "Herança" acts as Adaptable if Agility d6 is NOT selected
         val isMeioElfo = ancestralidade.keyify().contains("MEIO-ELFO") ||
-                ancDef.habilidades.any { it.id?.keyify() == "HERANCA" }
+                ancDef.habilidades.any { (it.canonicalId ?: it.id)?.keyify() == "HERANCA" || it.nome.keyify() == "HERANCA" }
 
         if (isMeioElfo && !meioElfoAgil) {
             return true
         }
 
         // 4. Arte da Guerra Human: "Nenhum" sign grants Adaptável
-        if (compendioArteDaGuerraAtivo && ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }) {
+        if (compendioArteDaGuerraAtivo && ancDef.habilidades.any { (it.canonicalId ?: it.id)?.keyify() == "ADAPTAVEL_OU_SIGNO" || it.nome.keyify() == "ADAPTAVEL_OU_SIGNO" }) {
             if (signoAdgSelecionado == null || signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) {
                 return true
             }
