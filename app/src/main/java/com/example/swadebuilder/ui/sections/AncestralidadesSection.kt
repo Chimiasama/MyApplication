@@ -447,6 +447,9 @@ fun AncestralidadesSection(
                             if (isSelected) {
                                 val opcoesValidas = item.opcoes
 
+                                // Feral não tem mais "opcoes" (raça própria, ver Tarefa #7) — o
+                                // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
+                                val isFeral = item.nome.keyify() == "FERAL"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
                                 // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
@@ -633,6 +636,54 @@ fun AncestralidadesSection(
                                                 }
                                             }
                                         }
+                                    }
+                                }
+
+                                // Variantes custom (Tarefa #20): reconfigurações da raça criadas em
+                                // "Conteúdo Customizado" (ver CustomAncestryVariant/SettingsDialog.kt).
+                                // É uma Variante de verdade, não uma Seleção, então só aparece com a
+                                // regra de livro "Variantes de Raça" ligada — igual às oficiais acima.
+                                val customVariantesDaRaca = remember(state.listaVariantesRaciaisCustom, item.nome) {
+                                    state.listaVariantesRaciaisCustom.filter { it.ancestralidadeId == item.nome.keyify() }
+                                }
+                                if (state.optVariantesDeRacaAtivo && customVariantesDaRaca.isNotEmpty()) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Variante Custom:", style = MaterialTheme.typography.labelMedium)
+
+                                    var customVarianteExpanded by remember { mutableStateOf(false) }
+                                    val selectedCustomVariant = customVariantesDaRaca.firstOrNull { it.id == state.customVarianteRacialSelecionadaId }
+
+                                    Box {
+                                        OutlinedButton(onClick = { customVarianteExpanded = true }) {
+                                            Text(selectedCustomVariant?.nome ?: "Nenhuma (Padrão)")
+                                        }
+                                        DropdownMenu(expanded = customVarianteExpanded, onDismissRequest = { customVarianteExpanded = false }) {
+                                            DropdownMenuItem(
+                                                text = { Text("Nenhuma (Padrão)") },
+                                                onClick = {
+                                                    state.selecionarVarianteRacialCustom(null)
+                                                    customVarianteExpanded = false
+                                                }
+                                            )
+                                            customVariantesDaRaca.forEach { variant ->
+                                                DropdownMenuItem(
+                                                    text = { Text(variant.nome) },
+                                                    onClick = {
+                                                        state.selecionarVarianteRacialCustom(variant.id)
+                                                        customVarianteExpanded = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    if (selectedCustomVariant != null && selectedCustomVariant.descricao.isNotBlank()) {
+                                        Spacer(Modifier.height(4.dp))
+                                        Text(
+                                            text = selectedCustomVariant.descricao,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
                                     }
                                 }
 

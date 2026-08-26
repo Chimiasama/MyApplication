@@ -5263,6 +5263,18 @@ class CriadorState {
         aplicarAncestralidade(ancestralidade, msgs)
     }
 
+    /**
+     * Seleciona (ou limpa, com `variantId = null`) a CustomAncestryVariant ativa pra raça
+     * atual e reaplica a ancestralidade pra recomputar tudo que depende de currentAncestryDef
+     * (vantagensRaciais/desvantagensRaciais, atributos iniciais, etc — ver selecionarScifiVariant).
+     */
+    fun selecionarVarianteRacialCustom(variantId: String?) {
+        if (customVarianteRacialSelecionadaId == variantId) return
+        customVarianteRacialSelecionadaId = variantId
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+    }
+
     fun selecionarHumanoMineradorAtributo(atributo: String?) {
         if (humanoMineradorAtributo == atributo) return
         humanoMineradorAtributo = atributo
