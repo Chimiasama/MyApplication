@@ -441,13 +441,17 @@ class MainActivity : ComponentActivity() {
                             onClick = {
                                 triggerFeedback()
                                 scope.launch {
-                                    val entry = criadorViewModel.salvarPersonagem(
-                                        context,
-                                        saveName,
-                                        criarCopia = saveAsNew
-                                    )
-                                    showSaveDialog = false
-                                    snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                    try {
+                                        val entry = criadorViewModel.salvarPersonagem(
+                                            context,
+                                            saveName,
+                                            criarCopia = saveAsNew
+                                        )
+                                        showSaveDialog = false
+                                        snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                    } catch (e: Exception) {
+                                        snackHost.showSnackbar("Erro ao salvar personagem: ${e.message}")
+                                    }
                                 }
                             },
                             enabled = isValid
@@ -485,16 +489,22 @@ class MainActivity : ComponentActivity() {
                             TextButton(onClick = {
                                 triggerFeedback()
                                 scope.launch {
-                                    val entry = criadorViewModel.salvarPersonagem(
-                                        context,
-                                        state.nomePersonagem
-                                    )
-                                    showSaveBeforeNavigateDialog = false
-                                    pendingNavigationAction = null
-                                    executePendingNavigation(action)
+                                    try {
+                                        val entry = criadorViewModel.salvarPersonagem(
+                                            context,
+                                            state.nomePersonagem
+                                        )
+                                        showSaveBeforeNavigateDialog = false
+                                        pendingNavigationAction = null
+                                        executePendingNavigation(action)
 
-                                    launch {
-                                        snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                        launch {
+                                            snackHost.showSnackbar("Personagem salvo: ${entry.nome}")
+                                        }
+                                    } catch (e: Exception) {
+                                        // Não navega em caso de falha: o usuário decide se
+                                        // quer tentar de novo ou seguir sem salvar.
+                                        snackHost.showSnackbar("Erro ao salvar personagem: ${e.message}")
                                     }
                                 }
                             }) {

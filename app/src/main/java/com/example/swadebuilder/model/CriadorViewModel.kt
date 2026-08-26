@@ -213,6 +213,9 @@ class CriadorViewModel(
         state.equipSelectedSuperTypes.clear()
         state.equipFilter = EquipFilter()
         state.equipExpandedTypes.clear()
+        state.equipSectionFilters.clear()
+        state.superPoderEmFoco = null
+        state.ancestralidadeEmFoco = null
     }
 
     fun resetToEmptyState() {
@@ -481,10 +484,20 @@ class CriadorViewModel(
 
         state.nasceUmHeroi = false // Fix: reset flag
 
-        state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
         state.tropoSelecionado = null
         state.signoAdgSelecionado = null
         state.pacoteCulturalFantasiaSelecionado = "Humano padrão"
+        state.povoDoMarOpcao = null
+        state.senhoresCavalosExtra = false
+        state.senhoresCavalosCompensacao = null
+        state.protagonistaRollTecnicas = null
+        state.protagonistaRollPericia = null
+        state.protagonistaRollVantagem = null
+        state.protagonistaRollQualidade = null
+        state.protagonistaRollHabilidade = null
+        state.protagonistaBonusPv = false
+        state.vantagensAutomaticasDoProtagonista.clear()
+        state.vantagensSlotProtagonista.clear()
         state.artistaMarcialJutsuOpcao = CriadorState.ARTISTA_MARCIAL_JUTSU_D6
         state.artistaMarcialPotencialFisico = null
         state.artistaMarcialTecnicasSelecionadas.clear()
@@ -513,6 +526,10 @@ class CriadorViewModel(
         state.humanoMineradorAtributo = null
         state.vantagemAdaptavelSelecionadaId = null
         state.pathfinderFreeSlotId = null
+        state.modoOficialAtivo = false
+        state.permiteMultiAntecedenteArcano = false
+        state.requisicao = 1
+        state.resetComplicationDerivedModifiers()
 
         state.cartaSelvagem = cartaSelvagem
         state.maisPontosPericias = maisPontosPericias
@@ -561,6 +578,7 @@ class CriadorViewModel(
         state.spCostStackPorPericia.values.forEach   { it.clear() }
         state.poderSlotsPorArcano.clear()
         state.novosPoderesStacksPorArcano.clear()
+        state.poderesSelecionados.clear()
         state.attributeAdvancementInProgress = false
         state.attributeStageForCurrentAdvancement = null
         state.attributeStacksBeforeAdvancement = null

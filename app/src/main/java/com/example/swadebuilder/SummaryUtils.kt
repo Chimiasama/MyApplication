@@ -293,6 +293,15 @@ fun buildSummaryLines(
     if (personagem.dominio != null) {
         lines += "Domínio: ${personagem.dominio}"
     }
+    if (!personagem.scifiVariant.isNullOrBlank()) {
+        lines += "Variante Racial: ${personagem.scifiVariant}"
+    }
+    if (personagem.samuraiPosturasSelecionadas.isNotEmpty()) {
+        lines += "Posturas de Samurai: ${personagem.samuraiPosturasSelecionadas.joinToString(", ")}"
+    }
+    (personagem.dominioClerigoSelecionado ?: personagem.dominioClerigoPathfinderSelecionado)?.let {
+        lines += "Domínio do Clérigo: $it"
+    }
     lines += "Tamanho: $tamanho"
     lines += "Movimento: $mov"
     lines += ""

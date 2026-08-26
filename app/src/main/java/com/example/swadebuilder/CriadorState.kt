@@ -923,7 +923,15 @@ class CriadorState {
     fun isAttributeFreeForMonster(attr: String): Boolean {
         if (!modoMonstroAtivo) return false
         val key = attr.keyify()
-        return key == "AGILIDADE" || key == "FORCA" || key == "VIGOR"
+        // Antes: lista fixa (Agilidade/Força/Vigor) que só batia com os templates
+        // Lobisomem/Monstro de Retalhos/Múmia/Vampiro. Anjo, Demônio, Fantasma e
+        // Revivido bonificam Espírito (ou nem tocam os 3 atributos da lista), e
+        // ficavam sem o benefício — ou ganhavam à toa em atributos que o
+        // template escolhido nem bonifica. Agora deriva do template selecionado.
+        val validAttrKeys = setOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
+        if (key !in validAttrKeys) return false
+        val monstro = getMonstroSelecionado() ?: return false
+        return monstro.atributos_bonus.keys.any { it.keyify() == key }
     }
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
@@ -1914,19 +1922,11 @@ class CriadorState {
     }
 
     fun valorArmaduraEfetiva(): Int {
-        // Agora usa o Engine para somar armadura de equipamentos (filtrando Mechas)
-        // A variável 'armadura' permanece como fallback ou armadura base manual se houver
+        // Soma armadura de equipamentos (via Engine, já filtrando Mechas) com a
+        // variável 'armadura' de estado (override manual/legado usado por raças
+        // como Sáurios), usa o maior entre isso e a armadura de Poderes, e soma
+        // a armadura natural da raça.
         val armorFromEquipment = ModifierEngine.sum(this, ModifierTarget.ARMOR)
-        kotlin.math.max(armorFromPower, armorFromEquipment)
-        // 'armadura' variável de estado ainda pode ser usada se setada manualmente por raças (ex: Saurios)
-        // Mas Saurios setam naturalArmorFromRace = 2 e armadura = 0 no código atual.
-        // Se houver algum caso de uso para 'armadura' (variável), ela deveria ser somada?
-        // No código original: val armorFromEquipment = armadura.
-        // Assumimos que 'armadura' state var era SÓ para equipamento ou manual override.
-        // Se o Engine já pega equipment, e 'armadura' é 0 na maioria dos casos, ok.
-        // Se 'armadura' for usada para outra coisa, precisamos somar ou max.
-        // Vamos somar 'armadura' (state var) com o do Engine por segurança,
-        // caso algum sistema legado use 'armadura' para "Armadura Mágica Permanente" não listada em itens.
         val totalEquipmentArmor = armorFromEquipment + armadura
 
         val bestArmor = kotlin.math.max(armorFromPower, totalEquipmentArmor)
@@ -5999,6 +5999,24 @@ class CriadorState {
         desvantagensAutomaticas.remove(pequComp.id.substringBefore("(").trim())
         complicacoesSelecionadas.remove(pequComp)
         recalcularPontosAtributo()
+    }
+
+    /**
+     * Zera os modificadores derivados de Complicações de idade/peso e o bônus
+     * de Ponto de Poder de trópicos. `jovemMalusPa`/`jovemMalusSp` são private,
+     * então isso precisa viver aqui (não dá pra zerar direto de fora) — usado ao
+     * iniciar um personagem novo, já que a mesma instância de [CriadorState] é
+     * reaproveitada entre personagens e esses campos não voltam ao padrão
+     * sozinhos.
+     */
+    fun resetComplicationDerivedModifiers() {
+        jovemAutoPequeno = false
+        jovemMalusPa = 0
+        jovemMalusSp = 0
+        idosoBonusSp = 0
+        obesoBonusSize = 0
+        obesoMalusMov = 0
+        bonusPoderExtra = 0
     }
 
     var emProgresso by mutableStateOf(false)
