@@ -11,6 +11,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import com.example.swadebuilder.model.AdvantageSnapshot
+import com.example.swadebuilder.model.AnaoCiberTraitCatalog
+import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CiberneticoItem
@@ -306,6 +308,7 @@ class CriadorState {
     var anoesScifiSelecionado by mutableStateOf<String?>(null)
     var scifiVariant by mutableStateOf<String?>(null)
     var humanoMineradorAtributo by mutableStateOf<String?>(null)
+    var anaoCiberTracosSelecionados by mutableStateOf<List<AnaoCiberTraitSelection>>(emptyList())
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var kitsunemimiPericiaEscolhida by mutableStateOf<String?>(null)
     var usagimimiPericiaEscolhida by mutableStateOf<String?>(null)
@@ -4500,6 +4503,14 @@ class CriadorState {
             scifiVariant = effectiveScifiVariant
         }
 
+        // Traços negativos escolhidos só fazem sentido para Anões (Ciber); limpa a
+        // seleção sempre que o jogador troca de raça OU muda de variante (inclusive
+        // Ciber -> Básico dentro da mesma raça), para não vazar escolha entre raças.
+        val isAnoesCiberAgora = anc.keyify().contains("ANOES") && effectiveScifiVariant == "Ciber"
+        if (!isAnoesCiberAgora && anaoCiberTracosSelecionados.isNotEmpty()) {
+            anaoCiberTracosSelecionados = emptyList()
+        }
+
         val paAntes = pontosAtributo
         val spAntes = pontosPericia
         val pvAntes = pontosVantagem
@@ -4541,7 +4552,8 @@ class CriadorState {
                 meioElfoAgil = meioElfoAgil,
                 anoesScifiSelecionado = anoesScifiSelecionado,
                 scifiVariant = effectiveScifiVariant,
-                humanoMineradorAtributo = humanoMineradorAtributo
+                humanoMineradorAtributo = humanoMineradorAtributo,
+                anaoCiberTracosSelecionados = anaoCiberTracosSelecionados
             )
         )
 
@@ -5121,6 +5133,20 @@ class CriadorState {
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
         recalcularPontosAtributo(msgs) // Ensure re-calc happens as attribute base changes
+    }
+
+    /**
+     * Atualiza os traços raciais negativos escolhidos para Anões (variante Ciber).
+     * Rejeita silenciosamente qualquer seleção que estoure o orçamento de
+     * [AnaoCiberTraitCatalog.MAX_PONTOS] pontos — a UI já deve impedir isso, mas a
+     * checagem aqui garante que o estado nunca fique inconsistente com a regra.
+     */
+    fun selecionarAnaoCiberTracos(novosTracos: List<AnaoCiberTraitSelection>) {
+        if (AnaoCiberTraitCatalog.pontosUsados(novosTracos) > AnaoCiberTraitCatalog.MAX_PONTOS) return
+        if (anaoCiberTracosSelecionados == novosTracos) return
+        anaoCiberTracosSelecionados = novosTracos
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
     }
 
     fun isFeralAdgSelecionado(): Boolean =
@@ -6318,6 +6344,7 @@ class CriadorState {
                 anoesScifiSelecionado = anoesScifiSelecionado,
                 scifiVariant = scifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo,
+                anaoCiberTracosSelecionados = anaoCiberTracosSelecionados,
                 vantagemAdaptavelSelecionadaId = vantagemAdaptavelSelecionadaId
             ),
             progresso = SnapshotProgresso(
@@ -6474,6 +6501,7 @@ class CriadorState {
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
         humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
+        anaoCiberTracosSelecionados = snapshot.selecoes.anaoCiberTracosSelecionados
         vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
 
         dinheiro = snapshot.recursos.dinheiro

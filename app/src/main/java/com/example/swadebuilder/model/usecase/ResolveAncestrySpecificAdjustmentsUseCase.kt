@@ -1,5 +1,7 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.AnaoCiberTraitCatalog
+import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.util.keyify
 
@@ -32,6 +34,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         anoesScifiSelecionado: String? = null,
         scifiVariant: String? = null,
         humanoMineradorAtributo: String? = null,
+        anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
         ancestryOptions: List<String> = emptyList(),
         isSciFiActive: Boolean = false,
         isSciFiMechasActive: Boolean = false,
@@ -65,13 +68,24 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
             if (ancKey == "ANOES") {
                 return if (effectiveVariant == "Ciber") {
+                    val pontosUsados = AnaoCiberTraitCatalog.pontosUsados(anaoCiberTracosSelecionados)
+                    val tracosValidos = if (pontosUsados <= AnaoCiberTraitCatalog.MAX_PONTOS) {
+                        anaoCiberTracosSelecionados
+                    } else {
+                        // Segurança: nunca aplicar uma seleção que estoure o orçamento de
+                        // pontos, mesmo que algo upstream falhe em validar antes de chegar aqui.
+                        emptyList()
+                    }
+                    val racialDisadvantages = AnaoCiberTraitCatalog.buildDesvantagens(tracosValidos).ifEmpty {
+                        listOf("Anões Ciber: escolha até 2 pontos de traços raciais negativos (nenhum maior que -2) na ficha.")
+                    }
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
                         ensureAdvantageNames = listOf("CIBERTOLERÂNCIA"),
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
-                        ensureRacialDisadvantages = listOf("Anões Ciber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
+                        ensureRacialDisadvantages = racialDisadvantages,
                         elementalAction = ElementalAction.NONE,
                         anotacoesToAdd = emptyList()
                     )

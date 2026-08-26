@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
@@ -119,6 +120,82 @@ class ResolveAncestryRacialPackageUseCaseTest {
         assertFalse(result.vantagensRaciais.any { it.equals("Não Sabe Nadar", ignoreCase = true) })
         assertTrue(result.desvantagensRaciais.any { it.contains("FORMA ALIEN", ignoreCase = true) })
         assertTrue(result.desvantagensRaciais.any { it.contains("HABITANTE DE GRAVIDADE", ignoreCase = true) })
+    }
+
+    @Test
+    fun `anoes ciber sem selecao usa mensagem padrao de escolha pendente`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "ANOES",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Ciber",
+                ancestryOptions = listOf("Básico", "Ciber"),
+                isSciFiActive = true,
+                anaoCiberTracosSelecionados = emptyList(),
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = emptyList(),
+                ancestryAutomaticDisadvantages = emptyList()
+            )
+        )
+
+        assertTrue(result.vantagensRaciais.any { it.equals("CIBERTOLERÂNCIA", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.contains("escolha até 2 pontos", ignoreCase = true) })
+    }
+
+    @Test
+    fun `anoes ciber aplica tracos mecanicos escolhidos dentro do orcamento`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "ANOES",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Ciber",
+                ancestryOptions = listOf("Básico", "Ciber"),
+                isSciFiActive = true,
+                anaoCiberTracosSelecionados = listOf(
+                    AnaoCiberTraitSelection(traitId = "fragil"),
+                    AnaoCiberTraitSelection(traitId = "aparar_baixo")
+                ),
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = emptyList(),
+                ancestryAutomaticDisadvantages = emptyList()
+            )
+        )
+
+        assertTrue(result.desvantagensRaciais.any { it.equals("Frágil", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.equals("Aparar -1", ignoreCase = true) })
+        assertFalse(result.desvantagensRaciais.any { it.contains("escolha até 2 pontos", ignoreCase = true) })
+    }
+
+    @Test
+    fun `anoes ciber ignora selecao que estoura o orcamento de pontos`() {
+        val result = useCase.execute(
+            ResolveAncestryRacialPackageUseCase.Params(
+                anc = "ANOES",
+                descendenteElementalSelecionado = null,
+                scifiVariant = "Ciber",
+                ancestryOptions = listOf("Básico", "Ciber"),
+                isSciFiActive = true,
+                anaoCiberTracosSelecionados = listOf(
+                    AnaoCiberTraitSelection(traitId = "fragil"),
+                    AnaoCiberTraitSelection(traitId = "aparar_baixo"),
+                    AnaoCiberTraitSelection(traitId = "tamanho_menos_1")
+                ),
+                allAdvantages = emptyList(),
+                selectedAdvantages = emptyList(),
+                previousFreeAdvantageKeys = emptySet(),
+                ancestryGrantedAdvantages = emptyList(),
+                ancestryAutomaticDisadvantages = emptyList()
+            )
+        )
+
+        assertFalse(result.desvantagensRaciais.any { it.equals("Frágil", ignoreCase = true) })
+        assertFalse(result.desvantagensRaciais.any { it.equals("Aparar -1", ignoreCase = true) })
+        assertFalse(result.desvantagensRaciais.any { it.equals("Tamanho -1", ignoreCase = true) })
+        assertTrue(result.desvantagensRaciais.any { it.contains("escolha até 2 pontos", ignoreCase = true) })
     }
 
 
