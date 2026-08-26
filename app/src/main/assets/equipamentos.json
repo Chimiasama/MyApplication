@@ -17337,6 +17337,51 @@
         "nome": "Manopla fechada",
         "custo": "8 po",
         "peso": "2,5"
+      },
+      {
+        "nome": "Placa de Peito do Cavaleiro Infernal (Tronco)",
+        "custo": "500 po",
+        "peso": "15",
+        "forcaMin": "d10",
+        "armadura": 4,
+        "observacoes": "Parte da armadura do Cavaleiro Infernal. Usada em conjunto por um personagem com a Vantagem de Prestígio Cavaleiro Infernal, concede Temor (+2 em Intimidar), Visão Infernal (ignora penalidades de Iluminação) e Vigilância (-4 de dano de ácido, frio e fogo).",
+        "descricaoLite": "Peça de tronco da armadura de placas do Cavaleiro Infernal (+4 de Armadura); concede benefícios especiais a quem tem a Vantagem Cavaleiro Infernal."
+      },
+      {
+        "nome": "Braçadeiras do Cavaleiro Infernal (Braços)",
+        "custo": "250 po",
+        "peso": "5",
+        "forcaMin": "d10",
+        "armadura": 4,
+        "observacoes": "Parte da armadura do Cavaleiro Infernal (veja Placa de Peito do Cavaleiro Infernal).",
+        "descricaoLite": "Peça de braços da armadura de placas do Cavaleiro Infernal (+4 de Armadura)."
+      },
+      {
+        "nome": "Grevas do Cavaleiro Infernal (Pernas)",
+        "custo": "500 po",
+        "peso": "5",
+        "forcaMin": "d10",
+        "armadura": 4,
+        "observacoes": "Parte da armadura do Cavaleiro Infernal (veja Placa de Peito do Cavaleiro Infernal).",
+        "descricaoLite": "Peça de pernas da armadura de placas do Cavaleiro Infernal (+4 de Armadura)."
+      },
+      {
+        "nome": "Elmo Pesado do Cavaleiro Infernal (Cabeça)",
+        "custo": "250 po",
+        "peso": "2",
+        "forcaMin": "d10",
+        "armadura": 4,
+        "observacoes": "Parte da armadura do Cavaleiro Infernal (veja Placa de Peito do Cavaleiro Infernal).",
+        "descricaoLite": "Elmo pesado da armadura do Cavaleiro Infernal (+4 de Armadura)."
+      },
+      {
+        "nome": "Elmo Pesado Fechado do Cavaleiro Infernal (Cabeça)",
+        "custo": "300 po",
+        "peso": "4",
+        "forcaMin": "d10",
+        "armadura": 4,
+        "observacoes": "-1 em rolagens de Perceber baseadas em visão. Parte da armadura do Cavaleiro Infernal (veja Placa de Peito do Cavaleiro Infernal).",
+        "descricaoLite": "Elmo fechado da armadura do Cavaleiro Infernal (+4 de Armadura; -1 em Perceber por visão)."
       }
     ]
   },
@@ -17560,6 +17605,54 @@
         "nome": "Tridente",
         "custo": "15 po",
         "peso": "2"
+      },
+      {
+        "nome": "Cachecol Laminado",
+        "custo": "12 po",
+        "peso": "0,5",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "pa": 1,
+        "observacoes": "Duas Mãos. Causa For+d4 de dano a qualquer criatura agarrada com sucesso enquanto o usuário estiver usando o cachecol.",
+        "descricaoLite": "Cachecol com lâminas costuradas: PA 1, Duas Mãos, e causa dano a quem for agarrado com sucesso enquanto o usuário o veste."
+      },
+      {
+        "nome": "Gancho Ogro",
+        "custo": "24 po",
+        "peso": "5",
+        "dano": "For+d10",
+        "forcaMin": "d10",
+        "pa": 2,
+        "observacoes": "Duas Mãos, Ataque Dilacerante. Dilacerar: qualquer um Abalado ou Ferido por este ataque (de uma criatura Tamanho 1 ou maior) começa a sangrar e deve fazer uma rolagem de Vigor no início de seu próximo turno — falha causa um Ferimento, sucesso evita mas exige nova rolagem no turno seguinte; uma ampliação ou cura bem-sucedida interrompe o sangramento.",
+        "descricaoLite": "Gancho enorme (PA 2, Duas Mãos) que causa sangramento contínuo: a vítima Abalada ou Ferida testa Vigor a cada turno ou sofre um Ferimento, até ser curada ou até um sucesso com ampliação estancar o sangue."
+      },
+      {
+        "nome": "Kusarigama",
+        "custo": "12 po",
+        "peso": "1,5",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "pa": 1,
+        "observacoes": "Duas Mãos, Alcance 1, ignora bônus de escudo. Uma kama presa por 3 metros de corrente a uma bola de metal pesado; a corrente também pode ser usada para emaranhar a arma do oponente.",
+        "descricaoLite": "Kama presa a uma corrente de 3 m com bola de metal na ponta: PA 1, Duas Mãos, Alcance 1, ignora bônus de escudo, e pode emaranhar a arma do oponente."
+      },
+      {
+        "nome": "Navalha de Guerra",
+        "custo": "25 po",
+        "peso": "1,5",
+        "dano": "For+d4",
+        "forcaMin": "d4",
+        "observacoes": "+1 nas rolagens de Furtividade para ocultar a arma (dobra-se no cabo, dispensando bainha).",
+        "descricaoLite": "Navalha dobrável fácil de esconder: +1 em Furtividade para ocultá-la."
+      },
+      {
+        "nome": "Sabre Serrilhado",
+        "custo": "35 po",
+        "peso": "2",
+        "dano": "For+d6",
+        "forcaMin": "d6",
+        "observacoes": "-1 na rolagem de Incapacitação de quem for atingido por este sabre serrilhado.",
+        "descricaoLite": "Lâmina curva serrilhada: quem for Incapacitado por ela sofre -1 na rolagem de Incapacitação."
       }
     ]
   },
@@ -32940,6 +33033,36 @@
         "peso": "—",
         "observacoes": "Vela de chama vermelha que, acesa, brilha por 2d4 horas em um raio de 5 quadros (10m), repelindo criaturas etéreas e eliminando sombras normais — as sombras de quem está na luz se tornam sombras assassinas hostis que rondam a área até a vela se apagar. Quem dorme sob a luz de uma vela sombria sonha ser sua própria sombra assassina e não pode ser acordado até todas as velas se apagarem.",
         "descricaoLite": "Vela amaldiçoada que transforma as sombras de quem está perto em sombras assassinas hostis enquanto arder."
+      }
+    ]
+  },
+  {
+    "tipo": "Itens Especiais",
+    "subtipo": "Itens Mágicos (Mar Interior)",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "itens": [
+      {
+        "nome": "Acha-Caminho",
+        "custo": "500 po",
+        "peso": "0,5",
+        "observacoes": "Bússola compacta mágica (prata com detalhes em ouro), símbolo dos agentes da Sociedade Desbravadora. Com uma palavra de comando, brilha como o poder iluminar; também funciona como bússola comum, concedendo uma rerrolagem gratuita em testes de Sobrevivência (navegação). Possui um encaixe para uma única pedra iônica, que passa a conceder seus benefícios como se estivesse orbitando a cabeça do usuário. Algumas pedras iônicas ganham um poder adicional quando encaixadas desta forma: Fuso Transparente (1x/dia, ação limitada, lança deflexão menor em si mesmo); Esfera Vermelha Escura (concede a Vantagem Brigão enquanto encaixada); Esfera Azul Luminosa (1x/dia, ação limitada, lança visão sombria menor em si mesmo); Romboide Azul Escuro (sem penalidades em Perceber enquanto dorme); Fuso Iridescente (beneficia-se de proteção ambiental enquanto encaixada); Prisma Verde Pálido (1x/dia, ação limitada, remove 1 nível de Fadiga); Prisma Púrpura Brilhante (1x/dia, ação limitada, ganha 2 Pontos de Poder).",
+        "descricaoLite": "Bússola mágica com rerrolagem grátis de Sobrevivência (navegação) e um encaixe para uma pedra iônica, que ganha um poder extra ao ser acoplada."
+      },
+      {
+        "nome": "Máscara do Louva-a-Deus",
+        "custo": "6.000 po",
+        "peso": "0,5",
+        "observacoes": "Capacete tradicional das assassinas Louva-a-Deus Vermelhas, que também esconde a identidade e acentua a aparência feroz de quem a usa. Tem três cargas diárias, cada uma gastável como ação livre para: visão no escuro a 10 quadros (20 metros), detectar arcano, ou uma rerrolagem grátis em Perceber. Cada efeito dura cinco rodadas e vários podem estar ativos ao mesmo tempo; as cargas se recuperam automaticamente a cada 24 horas.",
+        "descricaoLite": "Máscara com 3 cargas diárias (recarregam em 24h) para ativar, por 5 rodadas cada: visão no escuro (10 quadros), detectar arcano ou rerrolagem grátis de Perceber."
+      },
+      {
+        "nome": "Unguento da Revivificação",
+        "custo": "300 po",
+        "peso": "0,5",
+        "observacoes": "Pasta cinzenta fétida guardada em recipiente de osso. Espalhada em um cadáver, preserva seu estado de decomposição por cinco dias. Espalhada em uma criatura morta-viva corpórea, restaura sua aparência de ser vivo por cinco dias — sem afetar suas habilidades, mas concedendo -2 em testes de Ocultismo de terceiros para identificar que tipo de morto-vivo ela é. Popular em Geb, onde é usado como item de vaidade para mascarar a verdade da carne morta-viva.",
+        "descricaoLite": "Unguento que preserva um cadáver por 5 dias ou faz um morto-vivo corpóreo parecer vivo por 5 dias (com -2 em Ocultismo para descobrir a verdade)."
       }
     ]
   }

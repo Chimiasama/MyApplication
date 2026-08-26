@@ -39115,5 +39115,157 @@
       "BASICO"
     ],
     "descricaoLite": "Dá +1 para Aparar e aumenta para d10 o dado extra de dano em ataques de Lutar."
+  },
+  {
+    "id": "agoureiro",
+    "nome": "AGOUREIRO",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "pericias": {
+        "Ocultismo": 6,
+        "Performance": 6
+      },
+      "observacoes": "Antecedente Arcano (Qualquer) ou Poderes Místicos (Qualquer)"
+    },
+    "descricao": "Agoureiros usam sua habilidade de adivinhação para ver o futuro, aplicando essa visão para influenciar o curso da batalha. Uma vez por encontro, como uma ação livre, um agoureiro ganha um benefício baseado no naipe de sua Carta de Ação, com duração de cinco rodadas: Espadas (escolha um inimigo na linha de visão; +2 nos ataques contra o alvo), Copas (+2 em testes de Suporte), Ouros (Aparar +2), Paus (rerrolagem grátis em rolagens de Absorção).",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Uma vez por encontro, ganha (de graça) um bônus de cinco rodadas conforme o naipe da sua Carta de Ação: Espadas dá +2 para atacar um inimigo escolhido, Copas dá +2 em Suporte, Ouros dá Aparar +2, e Paus dá uma rerrolagem grátis de Absorção."
+  },
+  {
+    "id": "agoureiro_2",
+    "nome": "AGOUREIRO II",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens_previas": [
+        "agoureiro"
+      ]
+    },
+    "descricao": "Agoureiros podem convocar um baralho de agouro brilhante e translúcido feito de energia que pode manipular e usar para atacar. Como uma ação, faz um ataque à distância usando Atletismo (arremesso) para arremessar uma carta de energia (Distância 4/8/16, Dano 2d6, PA 1). Uma vez por encontro, como uma ação livre limitada, pode modificar seus ataques de cartas de energia com base no naipe de sua Carta de Ação (duração de cinco rodadas): Espadas (se acertar, Modelo Pequeno de Explosão causando 2d6 de dano a todos dentro), Copas (ignora 2 pontos de penalidade no primeiro ataque com carta de energia), Ouros (a carta de energia tem PA 4), Paus (a rolagem de dano da carta de energia pode ser rerrolada uma vez de graça).",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Ganha um ataque à distância de cartas de energia (Distância 4/8/16, Dano 2d6, PA 1, usando Atletismo). Uma vez por encontro pode ainda aplicar um bônus de cinco rodadas conforme o naipe: Espadas causa explosão em área no alvo acertado, Copas ignora 2 de penalidade no primeiro disparo, Ouros dá PA 4 à carta, e Paus permite rerrolar o dano uma vez de graça."
+  },
+  {
+    "id": "agoureiro_3",
+    "nome": "AGOUREIRO III",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens_previas": [
+        "agoureiro_2"
+      ]
+    },
+    "descricao": "Agoureiros mais poderosos são capazes de manipular o cosmos e ajustar o resultado dos eventos a seu favor. Antes que as cartas sejam distribuídas na primeira rodada de um encontro, o agoureiro pode olhar as cinco primeiras cartas do baralho e descartar qualquer número delas antes de colocar o resto de volta em qualquer ordem. O agoureiro decide em que ordem as Cartas de Ação devem ser distribuídas nesta rodada.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Antes da primeira rodada de um encontro, olha as cinco primeiras cartas do baralho, descarta quantas quiser e recoloca o restante na ordem que preferir, decidindo assim a distribuição das Cartas de Ação daquela rodada."
+  },
+  {
+    "id": "cavaleiro_infernal",
+    "nome": "CAVALEIRO INFERNAL",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "pericias": {
+        "Intimidar": 8,
+        "Perceber": 6,
+        "Ocultismo": 8
+      },
+      "observacoes": "Deve ter matado um demônio. Ao ingressar na ordem, recebe a armadura do Cavaleiro Infernal e deve usá-la enquanto for parte da ordem."
+    },
+    "descricao": "Ao ingressar nos Cavaleiros Infernais, o iniciado recebe uma armadura especial conhecida como armadura do Cavaleiro Infernal, que deve usar enquanto fizer parte da ordem. Enquanto estiver usando essa armadura, a personagem ganha: Temor (+2 em rolagens de Intimidar), Visão Infernal (ignora todas as penalidades de Iluminação) e Vigilância (-4 de dano de ácido, frio e fogo).",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Enquanto vestir a armadura do Cavaleiro Infernal (obrigatória na ordem), ganha +2 em Intimidar, ignora penalidades de Iluminação e reduz em 4 o dano de ácido, frio e fogo."
+  },
+  {
+    "id": "cavaleiro_infernal_2",
+    "nome": "CAVALEIRO INFERNAL II",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens_previas": [
+        "cavaleiro_infernal"
+      ]
+    },
+    "descricao": "O Cavaleiro Infernal ganha a ajuda de um cão infernal fiel, que é Muito Resiliente, para auxiliá-lo em sua busca por justiça. Se este companheiro for morto, o Cavaleiro Infernal pode convocar outro gratuitamente em seu próximo Progresso.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Ganha um cão infernal companheiro, Muito Resiliente; se ele morrer, pode convocar outro de graça no próximo Progresso."
+  },
+  {
+    "id": "cavaleiro_infernal_3",
+    "nome": "CAVALEIRO INFERNAL III",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens_previas": [
+        "cavaleiro_infernal_2"
+      ]
+    },
+    "descricao": "Como uma ação limitada, o Cavaleiro Infernal pode conceder a qualquer arma que empunhar o encantamento Elemental (fogo), Perversa ou Brutal (isso não se acumula com encantamentos de mesmo nome que a arma já tenha). Pode manter qualquer um desses encantamentos por qualquer período desejado, desde que esteja a até 30 metros da arma, e pode alterar o encantamento concedido como uma ação limitada. Além disso, enquanto estiver usando sua armadura, ganha Imunidade a Fogo.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Como ação limitada, concede a uma arma que empunhe o encantamento Elemental (fogo), Perversa ou Brutal (trocável, mantido enquanto estiver a até 30 m dela); enquanto usa a armadura do Cavaleiro Infernal, também ganha Imunidade a Fogo."
+  },
+  {
+    "id": "louva_a_deus_vermelha",
+    "nome": "LOUVA-A-DEUS VERMELHA",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "pericias": {
+        "Intimidar": 6,
+        "Perceber": 6,
+        "Furtividade": 8
+      },
+      "observacoes": "Arma Predileta (sabre serrilhado), Lutar com Duas Armas"
+    },
+    "descricao": "Assassinas louva-a-deus vermelhas matam com o \"ataque louvador\": segurando o(s) sabre(s) serrilhado(s) apontado(s) para baixo e entrelaçando as lâminas no ar, a até 5 quadros (10 metros) e visível para a vítima. Uma vez por encontro, como ação limitada, a assassina faz um Desafio com Lutar resistido pelo Espírito do alvo. Sucesso deixa o alvo Atordoado (ou Paralisado com uma ampliação). Criaturas Atordoadas desta forma não são consideradas indefesas e não podem ser atingidas com um Golpe de Misericórdia.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Uma vez por encontro, como ação limitada, faz um Desafio de Lutar (a até 5 quadros/10 metros, visível ao alvo) resistido por Espírito: sucesso deixa o alvo Atordoado (Paralisado com ampliação), sem que isso o torne elegível a um Golpe de Misericórdia."
+  },
+  {
+    "id": "louva_a_deus_vermelha_2",
+    "nome": "LOUVA-A-DEUS VERMELHA II",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens_previas": [
+        "louva_a_deus_vermelha"
+      ]
+    },
+    "descricao": "A assassina recebe a habilidade de se cobrir em um véu de névoa vermelha uma vez por encontro, como ação livre limitada. A mortalha permanece mesmo com ventos fortes e dura cinco rodadas; enquanto protegida, pode fazer uma rolagem grátis de Absorção sempre que for Ferida. Se morrer enquanto esta habilidade estiver ativa, pode escolher permanecer corpórea ou se desintegrar em uma nuvem de névoa vermelha, deixando para trás apenas seu equipamento.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Uma vez por encontro, como ação livre limitada, cobre-se por cinco rodadas em uma névoa vermelha que resiste a ventos fortes e concede uma rolagem grátis de Absorção sempre que for Ferida; se morrer nesse estado, pode optar por se desintegrar em névoa, deixando só o equipamento para trás."
+  },
+  {
+    "id": "louva_a_deus_vermelha_3",
+    "nome": "LOUVA-A-DEUS VERMELHA III",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens_previas": [
+        "louva_a_deus_vermelha_2"
+      ]
+    },
+    "descricao": "Poderes Místicos (Louva-a-deus Vermelha): como ação livre limitada, pode invocar um dos seguintes poderes: disfarce, intangibilidade, limpeza mental e teleporte. Todos, exceto limpeza mental, são apenas pessoais, mas a Louva-a-deus Vermelha não ganha nenhum benefício da Limitação. Possui 10 Pontos de Poder dedicados que recarregam normalmente; o poder é ativado automaticamente com sucesso pelo seu custo normal, ou com uma ampliação por 2 Pontos de Poder adicionais, podendo usar Modificadores de Poder aplicáveis. Poderes Místicos não concedem acesso a Vantagens que requerem Antecedente Arcano; se a personagem também tiver um Antecedente Arcano, nenhuma de suas Vantagens ou habilidades pode ser usada com Poderes Místicos (e vice-versa).",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Ganha Poderes Místicos com 10 Pontos de Poder dedicados, podendo invocar disfarce, intangibilidade, limpeza mental ou teleporte (automaticamente bem-sucedidos pelo custo normal, ou com ampliação por +2 PP); incompatível com um Antecedente Arcano que a personagem já possua."
   }
 ]
