@@ -68,6 +68,7 @@ import com.example.swadebuilder.model.usecase.ResolveAncestryTransitionContextUs
 import com.example.swadebuilder.model.usecase.ResolveAncestryVariantUseCase
 import com.example.swadebuilder.model.usecase.ResolveGrantedAncestryAdvantagesUseCase
 import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplicationsUseCase
+import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.debugLog
@@ -271,6 +272,12 @@ class CriadorState {
     var optRegraRiqueza by mutableStateOf(false)
     var optRegraCosaNostra by mutableStateOf(false)
     var optRegraFama by mutableStateOf(false)
+    // Regra de livro: mostra as Variantes de raça (reconfiguração de cenário
+    // feita pelo mestre, ex.: Anões "Ciber") na seleção de ancestralidade.
+    // Desligada por padrão. Seleções (escolhas do próprio jogador dentro da
+    // raça, ex.: Umvee "Dom da Natureza") não são afetadas por este toggle —
+    // continuam sempre visíveis.
+    var optVariantesDeRacaAtivo by mutableStateOf(false)
     var modoOficialAtivo by mutableStateOf(false)
     var modoLivre by mutableStateOf(false)
     var isNpcExibicao by mutableStateOf(false)
@@ -6307,6 +6314,7 @@ class CriadorState {
                 compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
                 compendioWiseguysAtivo = compendioWiseguysAtivo,
                 optRegraFama = optRegraFama,
+                optVariantesDeRacaAtivo = optVariantesDeRacaAtivo,
                 modoOficialAtivo = modoOficialAtivo,
                 modoMonstroAtivo = modoMonstroAtivo,
                 tipoMonstroSelecionado = tipoMonstroSelecionado,
@@ -6499,6 +6507,7 @@ class CriadorState {
         compendioCidadeSolVaporAtivo = flags.compendioCidadeSolVaporAtivo
         compendioWiseguysAtivo = flags.compendioWiseguysAtivo
         optRegraFama = flags.optRegraFama
+        optVariantesDeRacaAtivo = flags.optVariantesDeRacaAtivo
         optRegraRiqueza = flags.optRegraRiqueza
         optRegraCosaNostra = flags.optRegraCosaNostra
         modoLivre = flags.modoLivre
@@ -6614,6 +6623,25 @@ class CriadorState {
         }
 
         aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages, autoRefund = false)
+
+        // Compatibilidade com saves salvos antes da regra "Variantes de Raça"
+        // existir: se o personagem já tinha uma Variante de verdade escolhida
+        // (não Seleção — Terracota/Umvee/Elementais guardam a resposta da
+        // Seleção nesses mesmos campos hoje, mas essas ficam sempre visíveis
+        // independente do toggle, então não precisam forçar nada aqui), liga
+        // o toggle automaticamente pra não esconder a escolha que o jogador
+        // já tinha feito.
+        if (!optVariantesDeRacaAtivo) {
+            val config = AncestryVariantRegistry.get(snapshot.atributos.ancestralidade.keyify())
+            val isSelecaoPura = config != null && config.grupoVariante == null
+            if (!isSelecaoPura) {
+                val scifiVariantJaEscolhida = scifiVariant != null && scifiVariant !in setOf("Básico", "Padrão")
+                val anoesLegadoJaEscolhido = anoesScifiSelecionado != null && anoesScifiSelecionado != "Básico"
+                if (scifiVariantJaEscolhida || anoesLegadoJaEscolhido) {
+                    optVariantesDeRacaAtivo = true
+                }
+            }
+        }
 
         cpPaStack.apply { clear(); addAll(snapshot.recursos.cpPaStack) }
         cpSpStack.apply { clear(); repeat(snapshot.recursos.cpSpStack.size) { add(Unit) } }

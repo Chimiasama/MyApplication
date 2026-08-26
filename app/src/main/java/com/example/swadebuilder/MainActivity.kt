@@ -705,7 +705,7 @@ class MainActivity : ComponentActivity() {
                                                 nasceUmHeroi, usarEspecializacaoPer,
                                                 semPontosDePoder, multiplosIdiomas, grandesResponsabilidades,
                                                 optRegraFama, optRegraRiqueza, optRegraCosaNostra,
-                                                optRegraMechas, optRegraCiberneticos ->
+                                                optRegraMechas, optRegraCiberneticos, optVariantesDeRaca ->
 
                                     creationSession++
 
@@ -729,7 +729,8 @@ class MainActivity : ComponentActivity() {
                                         regraMultiplosIdiomas = multiplosIdiomas,
                                         optRegraFama = optRegraFama,
                                         optRegraRiqueza = optRegraRiqueza,
-                                        optRegraCosaNostra = optRegraCosaNostra
+                                        optRegraCosaNostra = optRegraCosaNostra,
+                                        optVariantesDeRacaAtivo = optVariantesDeRaca
                                     )
                                     scope.launch {
                                         criadorViewModel.prepararNomeInicial(context)

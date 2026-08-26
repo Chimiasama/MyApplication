@@ -92,7 +92,8 @@ fun TelaInicial(
         optRegraRiqueza: Boolean,
         optRegraCosaNostra: Boolean,
         optRegraMechas: Boolean,
-        optRegraCiberneticos: Boolean
+        optRegraCiberneticos: Boolean,
+        optVariantesDeRaca: Boolean
     ) -> Unit,
     onCarregarPersonagem: () -> Unit,
     onOpenSettings: () -> Unit,
@@ -132,6 +133,7 @@ fun TelaInicial(
     var optCompendioWiseguys by rememberSaveable { mutableStateOf(false) }
     var optRegraRiqueza by rememberSaveable { mutableStateOf(false) }
     var optRegraCosaNostra by rememberSaveable { mutableStateOf(false) }
+    var optVariantesDeRaca by rememberSaveable { mutableStateOf(false) }
 
     // SciFi
     var optCompendioSciFi by rememberSaveable { mutableStateOf(false) }
@@ -158,6 +160,7 @@ fun TelaInicial(
         optRegraCosaNostra = false
         optRegraMechas = false
         optRegraCiberneticos = false
+        optVariantesDeRaca = false
     }
 
     // Helper for applying rules presets
@@ -385,7 +388,8 @@ fun TelaInicial(
                 optRegraRiqueza,
                 optRegraCosaNostra,
                 optRegraMechas,
-                optRegraCiberneticos
+                optRegraCiberneticos,
+                optVariantesDeRaca
             )
             viewModel.state.compendioPathfinderAtivo = optCompendioPathfinder
             viewModel.state.compendioDeadlandsAtivo = optCompendioDeadlands
@@ -567,6 +571,12 @@ fun TelaInicial(
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
                         SimpleCheckRow("Especialização de Perícias", "Regra opcional de especialização.", optEspecializacaoPer) { optEspecializacaoPer = it }
+                        SimpleCheckRow(
+                            title = "Variantes de Raça",
+                            description = "Mostra variantes de cenário definidas pelo mestre para raças que possuem (ex.: Anões Ciber).",
+                            checked = optVariantesDeRaca,
+                            onCheckedChange = { optVariantesDeRaca = it }
+                        )
                     } else if (optCompendioArteDaGuerra) {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }
@@ -576,9 +586,21 @@ fun TelaInicial(
                             checked = optRegraFama,
                             onCheckedChange = { optRegraFama = it }
                         )
+                        SimpleCheckRow(
+                            title = "Variantes de Raça",
+                            description = "Mostra variantes de cenário definidas pelo mestre para raças que possuem (ex.: Anões Ciber).",
+                            checked = optVariantesDeRaca,
+                            onCheckedChange = { optVariantesDeRaca = it }
+                        )
                     } else {
                         SimpleCheckRow("Carta Selvagem", "Personagem principal (Benes, Dado Selvagem).", optCartaSelvagem) { optCartaSelvagem = it }
                         SimpleCheckRow("Mais Pontos de Perícia", "Customização avançada (Regra da Casa).", optMaisPontosPericias) { optMaisPontosPericias = it }
+                        SimpleCheckRow(
+                            title = "Variantes de Raça",
+                            description = "Mostra variantes de cenário definidas pelo mestre para raças que possuem (ex.: Anões Ciber, Sáurios Cuspidor).",
+                            checked = optVariantesDeRaca,
+                            onCheckedChange = { optVariantesDeRaca = it }
+                        )
 
                         if (!optCompendioWiseguys) {
                             if (!optCompendioFantasia && !optCompendioHorror) {

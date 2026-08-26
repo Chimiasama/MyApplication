@@ -57,6 +57,7 @@ import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
 import com.example.swadebuilder.model.stripAncestralidadeScenarioSuffix
+import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -447,10 +448,24 @@ fun AncestralidadesSection(
                                 val opcoesValidas = item.opcoes
 
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
-                                if (opcoesValidas.size > 1) {
+                                // Seleção (o jogador escolhe entre opções que a própria raça já
+                                // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
+                                // Variante (o mestre reconfigura a raça pro cenário, ex.: Anões
+                                // Ciber) só aparece com a regra de livro "Variantes de Raça"
+                                // ligada. Raças ainda não migradas pro AncestryVariantRegistry
+                                // são tratadas como Variante (todas têm Básico/Padrão entre as
+                                // opções, o sinal que o próprio usuário definiu para o caso).
+                                val variantConfig = AncestryVariantRegistry.get(item.nome.keyify())
+                                val isSelecaoPura = variantConfig != null && variantConfig.grupoVariante == null
+                                val showOpcoesPicker = opcoesValidas.size > 1 && (isSelecaoPura || state.optVariantesDeRacaAtivo)
+                                if (showOpcoesPicker) {
                                     Spacer(Modifier.height(8.dp))
                                     Text(
-                                        if (isUmvee) "Dons da Natureza:" else "Variante:",
+                                        when {
+                                            isUmvee -> "Dons da Natureza:"
+                                            isSelecaoPura -> "Seleção:"
+                                            else -> "Variante:"
+                                        },
                                         style = MaterialTheme.typography.labelMedium
                                     )
 

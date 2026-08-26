@@ -41,6 +41,7 @@ data class SnapshotFlags(
     val compendioCidadeSolVaporAtivo: Boolean = false,
     val compendioWiseguysAtivo: Boolean = false,
     val optRegraFama: Boolean = false,
+    val optVariantesDeRacaAtivo: Boolean = false,
     val modoOficialAtivo: Boolean = false,
     val modoMonstroAtivo: Boolean,
     val tipoMonstroSelecionado: String?,

@@ -448,7 +448,8 @@ class CriadorViewModel(
         regraMultiplosIdiomas: Boolean = false,
         optRegraFama: Boolean = false,
         optRegraRiqueza: Boolean = false,
-        optRegraCosaNostra: Boolean = false
+        optRegraCosaNostra: Boolean = false,
+        optVariantesDeRacaAtivo: Boolean = false
     ) {
 
         state.modoSupers = modoSupers
@@ -468,6 +469,7 @@ class CriadorViewModel(
         state.optRegraRiqueza = optRegraRiqueza
         state.optRegraCosaNostra = optRegraCosaNostra
         state.optRegraFama = optRegraFama
+        state.optVariantesDeRacaAtivo = optVariantesDeRacaAtivo
         state.famaManual = 0
         state.modoMonstroAtivo = modoMonstroAtivo
         state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
