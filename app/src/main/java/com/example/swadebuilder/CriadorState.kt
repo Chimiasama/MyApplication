@@ -621,6 +621,16 @@ class CriadorState {
                             )
                         )
                     }
+                    if (newHabilidades.none { it.id == "OCULTISMO_D4" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Ocultismo d4",
+                                descricao = "Gatoruja aumenta o valor inicial de Ocultismo para d4.",
+                                id = "OCULTISMO_D4",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
                 }
                 "Correnteza" -> if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +2" }) {
                     newHabilidades.add(
@@ -804,6 +814,49 @@ class CriadorState {
                     )
                 }
             }
+        }
+
+        // Humanos (Sci-Fi): as variantes não têm traço estruturado no JSON base
+        // (só o texto livre "variantes"), então o bônus de atributo virava hardcode
+        // de nome de raça em atributoBaseRacial(). Injeta o traço aqui para que o
+        // cálculo de atributo possa ler o traço em vez do nome.
+        if (key.contains("HUMANO")) {
+            if (variant.equals("Baixa Gravidade", ignoreCase = true)) {
+                if (newHabilidades.none { it.id == "BAIXA_GRAVIDADE_AGIL" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Habitante de Gravidade Baixa",
+                            descricao = "Habitantes de estações espaciais começam com d6 em Agilidade em vez de d4. Isso aumenta o máximo de Agilidade para d12+1.",
+                            id = "BAIXA_GRAVIDADE_AGIL",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+            } else if (variant.equals("Minerador", ignoreCase = true)) {
+                if (newHabilidades.none { it.id == "MINERADOR_ATRIBUTO" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Planeta de Mineração",
+                            descricao = "Habitantes de planetas de mineração começam com d6 em Força ou Vigor (à escolha) em vez de d4. Isso aumenta o máximo do atributo escolhido para d12+1.",
+                            id = "MINERADOR_ATRIBUTO",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+            }
+        }
+
+        // Mineradores Genéticos "Zero G": a variante Padrão tem "FORTE" (Força d6)
+        // fixo no JSON; a variante Zero G não deveria ter esse bônus. Remove aqui
+        // em vez de resetar a base em Kotlin por nome de raça.
+        if (key.contains("MINERADOR") && key.contains("GENETICO") && variant.equals("Zero G", ignoreCase = true)) {
+            removeByIdOrName("FORTE", "FORTE")
+        }
+
+        // Ferais (Sci-Fi): "ESPIRITUOSO" (Espírito d6) é fixo no JSON da raça, mas
+        // só vale para a variante Padrão.
+        if (key == "FERAIS" && variant.equals("Menor", ignoreCase = true)) {
+            removeByIdOrName("ESPIRITUOSO", "ESPIRITUOSO")
         }
 
         return base.copy(habilidades = newHabilidades)
@@ -2734,8 +2787,18 @@ class CriadorState {
             }
         }
 
+        // Traços que concedem d4/d6 inicial numa perícia à escolha do jogador, ou
+        // numa perícia fixa — lidos de habilidades[] (id do traço), não do nome da
+        // raça. O traço só decide QUE a raça tem o bônus; qual perícia foi
+        // escolhida continua vindo do state dedicado, como antes.
+        val habilidadeIdsPericia = (if (anc == ancestralidade) currentAncestryDef else getAncestralidadeDef(anc))
+            ?.habilidades
+            ?.mapNotNull { it.id?.keyify() }
+            ?.toSet()
+            ?: emptySet()
+
         // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
-        if (compendioPathfinderAtivo && ancKey.contains("GNOMO")) {
+        if (habilidadeIdsPericia.contains("OBSESSIVOS")) {
             val chosen = gnomoPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 4)
@@ -2743,7 +2806,7 @@ class CriadorState {
         }
 
         // Kitsunemimi (ADG) - Preparado (d4 em 1 perícia à escolha)
-        if (compendioArteDaGuerraAtivo && ancKey.contains("KITSUNEMIMI")) {
+        if (habilidadeIdsPericia.contains("PREPARADO")) {
             val chosen = kitsunemimiPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 4)
@@ -2751,20 +2814,26 @@ class CriadorState {
         }
 
         if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
-            val variant = resolveCurrentSciFiVariantSelection(anc)
-            if (perKey == "SOBREVIVENCIA" && ancKey.contains("UMVEE")) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-            if (perKey == "PERCEBER" && variant.equals("Gatoruja", ignoreCase = true)) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-            if (perKey == "OCULTISMO" && variant.equals("Gatoruja", ignoreCase = true) && ancKey.contains("UMVEE")) {
+            // Guarantia base de Sobrevivência d4 para Umvee (não é um traço à
+            // parte em habilidades[], é característico da raça em si).
+            if (perKey == "SOBREVIVENCIA") {
                 modifiedBase = maxOf(modifiedBase, 4)
             }
         }
+        // Gatoruja (Dom da Natureza de Umvee OU Feral): Perceber d6 + Ocultismo d4.
+        // Antes só funcionava para Umvee porque o código comparava o nome da raça;
+        // como Feral compartilha o mesmo Dom da Natureza, ele nunca recebia o
+        // bônus mesmo escolhendo Gatoruja. Ler o traço em vez do nome corrige isso
+        // para as duas raças automaticamente.
+        if (habilidadeIdsPericia.contains("PERCEBER_D6") && perKey == "PERCEBER") {
+            modifiedBase = maxOf(modifiedBase, 6)
+        }
+        if (habilidadeIdsPericia.contains("OCULTISMO_D4") && perKey == "OCULTISMO") {
+            modifiedBase = maxOf(modifiedBase, 4)
+        }
 
         // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
-        if (compendioArteDaGuerraAtivo && ancKey.contains("USAGIMIMI")) {
+        if (habilidadeIdsPericia.contains("DEFINIDO_PELO_OFICIO")) {
             val chosen = usagimimiPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 6)
@@ -3868,11 +3937,13 @@ class CriadorState {
             return true
         }
 
-        // 3. Half-Elves Special Logic: "Herança" acts as Adaptable if Agility d6 is NOT selected
-        val isMeioElfo = ancestralidade.keyify().contains("MEIO-ELFO") ||
-                ancDef.habilidades.any { it.id?.keyify() == "HERANCA" }
+        // 3. Half-Elves Special Logic: "Herança" acts as Adaptable if Agility d6 is
+        // NOT selected. Lido só pelo traço (id "HERANCA"), não mais pelo nome da
+        // raça — Meio-Elfo (Pathfinder) tem "Flexibilidade" em vez de "Herança" e
+        // não deveria cair aqui (antes caía, por engano, via checagem de nome).
+        val temHeranca = ancDef.habilidades.any { it.id?.keyify() == "HERANCA" }
 
-        if (isMeioElfo && !meioElfoAgil) {
+        if (temHeranca && !meioElfoAgil) {
             return true
         }
 
@@ -4202,10 +4273,19 @@ class CriadorState {
         val base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
 
         var modifiedBase = base
+        val attrKey = a.keyify()
+
+        // Traços que concedem d6 inicial num atributo específico, lidos direto de
+        // habilidades[] da raça (já com os ajustes de variante aplicados por
+        // applyAncestryVariantAdjustments/getAncestralidadeDef) em vez de comparar
+        // o nome da raça — assim o bônus segue o traço, não o rótulo da raça.
+        val habilidadeIds = currentAncestryDef?.habilidades
+            ?.mapNotNull { it.id?.keyify() }
+            ?.toSet()
+            ?: emptySet()
 
         // Monster Bonus
         getMonstroSelecionado()?.let { monstro ->
-            val attrKey = a.keyify()
             val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
                 it.key.keyify() == attrKey
             }
@@ -4220,46 +4300,55 @@ class CriadorState {
             }
         }
 
-        // Meio-Elfo Ágil
-        if (a.keyify() == "AGILIDADE" && meioElfoAgil) {
+        // Traços de alvo fixo (a raça sempre sobe o mesmo atributo quando o traço
+        // está presente): Ágil (Elfos/Rakashanos/Meio-Elfo "Herança" escolhendo
+        // Ágil), Sólido como Rocha (Descendente Elemental - Terra), Forte
+        // (Mineradores Genéticos, exceto variante Zero G), Espirituoso (Ferais
+        // Sci-Fi, exceto variante Menor), Habitante de Gravidade Baixa (Humanos
+        // Sci-Fi, variante Baixa Gravidade).
+        if (habilidadeIds.contains("AGIL") && attrKey == "AGILIDADE") {
             modifiedBase = maxOf(modifiedBase, 6)
+        }
+        if (habilidadeIds.contains("SOLIDO_COMO_ROCHA") && attrKey == "VIGOR") {
+            modifiedBase = maxOf(modifiedBase, 6)
+        }
+        if (habilidadeIds.contains("FORTE") && attrKey == "FORCA") {
+            modifiedBase = maxOf(modifiedBase, 6)
+        }
+        if (habilidadeIds.contains("ESPIRITUOSO") && attrKey == "ESPIRITO") {
+            modifiedBase = maxOf(modifiedBase, 6)
+        }
+        if (habilidadeIds.contains("BAIXA_GRAVIDADE_AGIL") && attrKey == "AGILIDADE") {
+            modifiedBase = maxOf(modifiedBase, 6)
+        }
+
+        // Traços de alvo escolhido pelo jogador entre 2-3 atributos: o traço só
+        // decide QUE a raça tem a escolha; qual atributo foi escolhido continua
+        // vindo do state dedicado (mesmo padrão usado no restante do app).
+        if (habilidadeIds.contains("ENDURECIDO")) {
+            // Meio-Orc: escolha entre Vigor d6 ou Força d6
+            if (attrKey == "VIGOR") {
+                modifiedBase = if (meioOrcForca) 4 else 6
+            }
+            if (attrKey == "FORCA") {
+                modifiedBase = if (meioOrcForca) 6 else 4
+            }
+        }
+        if (habilidadeIds.contains("PRIMITIVO") || habilidadeIds.contains("MINERADOR_ATRIBUTO")) {
+            // Feral (Arte da Guerra): escolha entre Força/Vigor/Agilidade.
+            // Humano Sci-Fi "Minerador": escolha entre Força/Vigor.
+            val chosen = humanoMineradorAtributo ?: "Força"
+            if (attrKey == chosen.keyify()) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
         }
 
         val currentSciFiVariant = if (compendioSciFiAtivo) resolveCurrentSciFiVariantSelection() else scifiVariant
 
-        // Human Sci-Fi Variants
-        if (ancestralidade.keyify().contains("HUMANO") && compendioSciFiAtivo) {
-            // "Habitantes de Gravidade Baixa começam com d6 em Agilidade"
-            if (currentSciFiVariant == "Baixa Gravidade" && a.keyify() == "AGILIDADE") {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-            // "podem escolher entre d6 inicial em Força ou Vigor" (Minerador)
-            if (currentSciFiVariant == "Minerador") {
-                val chosen = humanoMineradorAtributo ?: "Força"
-                if (a.keyify() == chosen.keyify()) {
-                    modifiedBase = maxOf(modifiedBase, 6)
-                }
-            }
-        }
-
-        // Meio-Orc: Escolha entre Vigor d6 ou Força d6
-        if (ancestralidade.equals("MEIO-ORCS", ignoreCase = true)) {
-            if (a.keyify() == "VIGOR") {
-                modifiedBase = if (meioOrcForca) 4 else 6
-            }
-            if (a.keyify() == "FORCA") {
-                modifiedBase = if (meioOrcForca) 6 else 4
-            }
-        }
-
-        if (compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL") {
-            val chosen = humanoMineradorAtributo ?: "Força"
-            if (a.keyify() == chosen.keyify()) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
-
-        // Sci-Fi Attribute Variants (Padrão vs Variant)
+        // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens e Elementais
+        // ainda não têm o traço "Forte"/substituto estruturado no JSON (a
+        // ambientação só descreve a troca em texto livre), então continuam
+        // hardcoded por nome de raça por enquanto; ver nota na revisão.
         if (compendioSciFiAtivo) {
             val ancKey = ancestralidade.keyify()
 
@@ -4308,33 +4397,17 @@ class CriadorState {
                 }
             }
 
-            // Mineradores Genéticos: Padrão (Forte - Str d6). Zero G (No Forte - Str d4).
-            if (ancKey.contains("MINERADOR") && ancKey.contains("GENETICO")) {
-                if (a.keyify() == "FORCA") {
-                    val variant = currentSciFiVariant ?: "Padrão"
-                    if (variant == "Zero G") {
-                        modifiedBase = 4
-                    }
-                }
-            }
-
-            // Ferais: Padrão (Espirituoso - Spi d6). Menor (No Espirituoso - Spi d4).
-            if (ancKey == "FERAIS") {
-                if (a.keyify() == "ESPIRITO") {
-                    val variant = currentSciFiVariant ?: "Padrão"
-                    if (variant == "Padrão") {
-                        modifiedBase = maxOf(modifiedBase, 6)
-                    }
-                }
-            }
+            // Mineradores Genéticos (FORTE) e Ferais Sci-Fi (ESPIRITUOSO) agora são
+            // resolvidos genericamente acima via habilidadeIds — a remoção do
+            // traço nas variantes Zero G / Menor acontece em
+            // applyAncestryVariantAdjustments, então não precisa de hardcode aqui.
         }
 
-        // Descendente Elemental (Terra)
-        if (ancestralidade.keyify() == "DESCENDENTE ELEMENTAL" || ancestralidade.keyify() == "DESC_ELEMENTAL") {
-            if (descendenteElementalSelecionado.equals("Terra", ignoreCase = true) && a.keyify() == "VIGOR") {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
+        // Descendente Elemental (Terra) agora é resolvido genericamente acima via
+        // habilidadeIds.contains("SOLIDO_COMO_ROCHA") — esse traço já só existe em
+        // habilidades[] quando "Terra" está selecionado (ver
+        // applyAncestryVariantAdjustments), então não precisa comparar o nome da
+        // raça nem reler descendenteElementalSelecionado aqui.
 
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")) {
@@ -4382,7 +4455,10 @@ class CriadorState {
         if (modoLivre && !forceStandard) return 100
         val baseCap = atributoMaxRaw(a, forceStandard)
         if (modoProgressaoAtivo) return baseCap
-        if (compendioArteDaGuerraAtivo && ancestralidade.keyify() == "FERAL" && a.keyify() == "ASTUCIA") {
+        // Feral (Arte da Guerra) "Mente Primitiva": teto de Astúcia travado em d6 na
+        // criação. Lido do traço em habilidades[], não do nome da raça.
+        val temMentePrimitiva = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "MENTE_PRIMITIVA" } == true
+        if (temMentePrimitiva && a.keyify() == "ASTUCIA") {
             return minOf(baseCap, 6)
         }
         return baseCap
