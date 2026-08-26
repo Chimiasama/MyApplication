@@ -32541,5 +32541,406 @@
         "descricaoLite": "Tabela de sorteio (d20) de que tipo de item mágico aparece num tesouro, mais as regras gerais de uso de itens mágicos (ativação, maldição, acúmulo, varinhas, um item por local do corpo etc.)."
       }
     ]
+  },
+  {
+    "tipo": "Equipamento Mundano",
+    "subtipo": "Itens Arcanos",
+    "livros": [
+      "HORROR"
+    ],
+    "itens": [
+      {
+        "nome": "Algema da Inquisição",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Pesada algema de ferro usada pela Inquisição Espanhola. Uma vez encaixada no pulso de um ser vivo, trava magicamente e não pode ser removida até liberar a vítima. Ao fazer uma rolagem de Característica, o usuário pode escolher o resultado de um dos dados em vez de rolá-lo, mas a cada uso a algema crava espinhos no pulso, causando um Ferimento que não pode ser Absorvido nem curado enquanto ela estiver presa. Se a vítima for Incapacitada ou tirar uma Falha Crítica, a algema a libera e não funciona mais para ela.",
+        "descricaoLite": "Permite escolher o resultado de um dado em uma rolagem de Característica, mas cada uso causa um Ferimento incurável enquanto a algema estiver presa; libera a vítima se ela for Incapacitada ou tirar Falha Crítica."
+      },
+      {
+        "nome": "Anel da Irmandade Eterna",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Anel amaldiçoado ligado a uma ordem fraternal, culto ou organização fanática. O usuário ganha rerrolagem gratuita em Persuadir contra membros da ordem (e +2 contra membros de posto inferior). Sempre que sofrer um ou mais Ferimentos, pode rolar Espírito -2; com sucesso, sai ileso e um membro aleatório de posto inferior da ordem sofre os Ferimentos em seu lugar.",
+        "descricaoLite": "Dá vantagem social sobre membros da ordem e permite, com uma rolagem de Espírito -2, transferir Ferimentos sofridos para um membro de posto inferior da organização."
+      },
+      {
+        "nome": "Anel de Proteção Mágica",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Anel de prata com um topázio que afasta magia. Concede 4 pontos de Armadura contra poderes arcanos causadores de dano e +4 em rolagens de Característica ao resistir a poderes resistidos (mesmo de aliados). Acumula com Resistência Arcana e Resistência Arcana Aprimorada.",
+        "descricaoLite": "Concede Armadura +4 contra dano arcano e +4 para resistir a poderes; acumula com Resistência Arcana."
+      },
+      {
+        "nome": "Arma Matadora de Alma",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Artefato único: pistola de cano múltiplo do século XV com runas malignas, Alcance 12/24/48. Não causa dano, mas destrói permanentemente o que atinge. O alvo pode Evadir a menos que seja atingido com uma ampliação; mesmo evadindo, fica Atordoado. Sua principal limitação é a munição: existe apenas de uma a três balas únicas para ela.",
+        "descricaoLite": "Arma rara que não causa dano, mas aniquila permanentemente o alvo atingido; extremamente limitada em munição (1 a 3 balas únicas existentes)."
+      },
+      {
+        "nome": "Bandagens de Anúbis",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Rolos de bandagem necromânticos criados pelos sacerdotes de Anúbis, aplicados em uma pessoa viva. Em um número de horas igual ao dado de Vigor da vítima, as bandagens se fundem à carne e a transformam irreversivelmente em uma múmia guardiã (livre-arbítrio preservado em usos antigos; sem mente em usos modernos por necromantes). Se retiradas antes do prazo, a transformação se reverte no mesmo período.",
+        "descricaoLite": "Transforma lentamente quem as veste em uma múmia guardiã se completarem o prazo (horas iguais ao Vigor da vítima); removidas a tempo, o efeito se reverte."
+      },
+      {
+        "nome": "Bengala de Lobo",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Bengala de cavalheiro com cabo de prata pura em formato de lobo; funciona como Arma Improvisada e explora a Fraqueza de licantropos à prata. É amaldiçoada: quem a possui deve testar Espírito -2 ou será afligido pela licantropia na próxima lua cheia. Só se quebra a maldição presenteando (não vendendo) a bengala a outra pessoa.",
+        "descricaoLite": "Bengala com cabo de prata pura eficaz contra licantropos, mas amaldiçoada: pode transformar o portador em lobisomem; a maldição só passa adiante se a bengala for dada a outra pessoa."
+      },
+      {
+        "nome": "Bisturi de Jack",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Bisturi possivelmente ligado a Jack, o Estripador. O portador testa Espírito -2 ou sofre -4 em Persuadir com mulheres e, uma vez por mês, entra em fúria homicida do anoitecer ao amanhecer sob controle do Mestre, com Força +2 tipos de dado e dano For+d4 (For+d10 contra mulheres). Só solta a lâmina se a mão for amputada ou destruída. A maldição só é removida destruindo o bisturi (normalmente derretendo-o).",
+        "descricaoLite": "Bisturi amaldiçoado que induz misoginia e, uma vez por mês, uma fúria homicida noturna incontrolável; só é neutralizado destruindo o objeto."
+      },
+      {
+        "nome": "Boneca Possuída",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Manequim, boneca ou figura de ação que abriga uma entidade (fantasma, demônio menor ou outro espírito do Capítulo Seis, ou um golem marionete) e cria ilusões pela casa onde habita, de forma limitada se removida do local. Enquanto os 'inimigos' da boneca estiverem dentro de seu domínio (ou a até 12 quadros/24m fora de casa), qualquer resultado 2 (total) em uma rolagem se torna uma Falha Crítica.",
+        "descricaoLite": "Objeto habitado por uma entidade que gera ilusões na casa e torna resultados baixos em Falhas Críticas para seus inimigos próximos."
+      },
+      {
+        "nome": "Bonecos Vodu",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Efígie de cera, lama ou palha feita com algo pertencente à vítima (cabelo, tecido, joia). Permite lançar contra ela, a Distância igual a Astúcia em quilômetros, apenas os poderes atordoar, aumentar/reduzir Característica, enredar, fantoche, maldição, medo e telecinese (outros a critério do Mestre).",
+        "descricaoLite": "Efígie ritual que permite conjurar um conjunto restrito de poderes contra a vítima ligada a ela, a longa distância."
+      },
+      {
+        "nome": "Braseiro da Conjuração",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Braseiro de ferro preto de um metro de altura gravado com runas de abertura. Preenchido com ao menos dois litros de sangue humano (além dos componentes normais do ritual), adiciona +2 aos testes de perícia arcana ou Ocultismo do conjurador durante qualquer ritual.",
+        "descricaoLite": "Braseiro ritual que, abastecido com sangue humano, dá +2 em testes de perícia arcana/Ocultismo durante rituais."
+      },
+      {
+        "nome": "Caixão Vampírico",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Caixão cheio de terra do lar de um vampiro. Dá +2 em Perceber para evitar Surpresa e regenera um Ferimento por hora dormindo nele. Caixões comuns têm Resistência 4 (inutilizáveis com água benta ou uma cruz dentro); versões reforçadas têm Resistência 8.",
+        "descricaoLite": "Caixão que acelera a cura de um vampiro e melhora sua percepção contra surpresas; frágil a água benta e símbolos sagrados, mas existem versões reforçadas."
+      },
+      {
+        "nome": "Cajado do Necromante",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Cajado de madeira preta retorcida com uma mão humana murcha segurando um orbe com almas presas. Tem 20 Pontos de Poder e concede os poderes medo e zumbi, ativados com a perícia Conjurar.",
+        "descricaoLite": "Cajado que concede acesso aos poderes medo e zumbi com uma reserva própria de 20 Pontos de Poder."
+      },
+      {
+        "nome": "Carranca de Navio",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Ornamento de proa que concede rerrolagem em Navegar ao navio. Em troca, prende a bordo os espíritos de quem morreu na embarcação, gerando fenômenos estranhos; se o navio afundar, a carranca busca um novo hospedeiro e, uma vez por ano, a tripulação fantasma a persegue para matar quem a possui e devolvê-la ao mar.",
+        "descricaoLite": "Ornamento de navio que dá rerrolagem em Navegar, mas aprisiona os espíritos dos mortos a bordo e atrai perseguições fantasmagóricas anuais."
+      },
+      {
+        "nome": "Casa de Bonecas Assombrada",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Miniatura habitada por um espírito. Quem dorme perto acorda encontrando uma nova boneca parecida consigo (exige teste de Medo na primeira vez). A cada 2d12 horas sem observação, o espírito reorganiza os bonecos, às vezes recriando tragédias passadas ou eventos futuros; ver a própria boneca sendo ferida ou morta exige teste de Medo -2 e impede gastar Benes no dia seguinte se a cena se repetir na realidade. Destruir uma boneca causa Fadiga automática a quem representa, mas ela reaparece na manhã seguinte.",
+        "descricaoLite": "Casa de brinquedo assombrada que prevê ou reencena eventos através de suas miniaturas, provocando testes de Medo e possíveis Fadigas proféticas."
+      },
+      {
+        "nome": "Conhecimento Proibido",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Tomo, tratado ou texto sobre algum mal antigo, cuja leitura toma 2d6+2 horas de estudo obsessivo. Ao terminar, testa-se Astúcia -2 (ou -4 se especialmente perturbador). Sucesso: leitor fica perturbado, sem sequelas. Falha: Psicose Menor permanente (Maior em Falha Crítica). Em troca, quem leu ignora testes de Medo relacionados ao assunto do texto e conhece detalhes (pontos fortes, fracos e vulnerabilidades) de uma criatura ou tipo de criatura descrito nele.",
+        "descricaoLite": "Livro sobre um horror específico: sua leitura arrisca uma Psicose, mas concede imunidade a Medo daquele tema e conhecimento de suas fraquezas."
+      },
+      {
+        "nome": "Cota de Malha de Ferro Frio",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Armadura forjada contra demônios, cobrindo torso, braços e pernas. Concede Armadura +3 normal e +3 adicional (total +6) contra ataques de demônios, sejam mundanos (garras) ou mágicos.",
+        "descricaoLite": "Armadura que soma proteção extra especificamente contra ataques demoníacos, além da Armadura +3 normal."
+      },
+      {
+        "nome": "Cutelo Primordial",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Machadinha amaldiçoada ligada a crimes históricos. Ao pegá-la, testa-se Espírito -4; falha torna a personagem hospedeira, ganhando rerrolagem gratuita em Lutar malsucedido enquanto a empunha, mas também a Complicação Sanguinário até matar um familiar ou amigo próximo, quando a arma perde o poder até ser empunhada por outra pessoa. A Complicação permanece mesmo se o cutelo for descartado ou destruído, e ele retorna à mão do hospedeiro quando o perigo se aproxima.",
+        "descricaoLite": "Machadinha amaldiçoada que dá rerrolagens em Lutar mas impõe Sanguinário até que o hospedeiro mate um ente querido; sempre retorna à mão de quem a empunhou."
+      },
+      {
+        "nome": "Diadema Penumbral",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Tiara de metal escuro que concede visão sobrenatural do reino espiritual. No início do combate e sempre que o baralho de Ação for embaralhado, o usuário olha as 10 primeiras cartas e as recoloca em qualquer ordem. Se receber a carta mais baixa em uma rodada, rola automaticamente na tabela de Efeitos de Medo (+2) e então o diadema o rejeita, encerrando o benefício.",
+        "descricaoLite": "Permite reorganizar as primeiras 10 Cartas de Ação do baralho a seu favor, mas pune com um efeito de Medo se o usuário tirar a carta mais baixa."
+      },
+      {
+        "nome": "Diário de um Louco",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Coletânea de escritos insanos de vários autores. Concede um bônus de +1 a +6 (à escolha) em um teste de perícia baseada em Astúcia; após a rolagem, testa-se Espírito com penalidade igual ao bônus escolhido. Falha exige rolagem na tabela Efeitos de Medo (+2); Falha Crítica, com +4.",
+        "descricaoLite": "Livro que concede um bônus escolhido (+1 a +6) em testes de Astúcia ao custo de arriscar um efeito de Medo proporcional ao bônus."
+      },
+      {
+        "nome": "Dinheiro de Sangue",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Moeda paga a quem traiu alguém próximo, resultando em sua morte (as 30 moedas de Judas são o exemplo mais famoso). Sempre que o traidor agir direta e negativamente contra um aliado (ataque, rolagem resistida, persuadir terceiros a prejudicá-lo), adiciona +4 ao teste, desde que carregue consigo notas ou moedas reais (ou equivalente moderno). Usar o bônus uma única vez faz o portador ser tratado como criatura sobrenaturalmente maligna para Vantagens como Campeão, relíquias sagradas e poderes correlatos.",
+        "descricaoLite": "Dinheiro amaldiçoado que dá +4 em ações que prejudiquem um aliado, mas marca quem o usa como criatura maligna para efeitos de jogo."
+      },
+      {
+        "nome": "Espelho de Jade",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Espelho asteca de vários tamanhos (15cm a mais de 1,80m) dedicado a Tezcatlipoca. Banhado em sangue de um sacrifício senciente sob lua cheia, responde perguntas de Ocultismo com bônus de +2, +4 ou +6 conforme o tamanho (uma pergunta a cada 24h); também serve para adivinhar o futuro (Sinais e Presságios). Se quebrado, a última pessoa a usá-lo sofre 4d10 de dano.",
+        "descricaoLite": "Espelho ritual que responde perguntas de Ocultismo com bônus conforme o tamanho, mas explode em dano se for quebrado."
+      },
+      {
+        "nome": "Espelho do Doppelganger",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Espelho de corpo inteiro de origem desconhecida que atrai o olhar de quem está na sala. Após 10 minutos observando o reflexo, concede +2 temporário em Persuadir e Intimidar até a meia-noite (acumulável), mas causa uma Psicose Menor (Maior se já houver uma), removível apenas com rolagem de Espírito à meia-noite. Repetir o benefício exige dobrar o tempo de observação a cada vez. Se o usuário acumular uma Psicose Maior sem superá-la à meia-noite, o espelho manifesta um doppelganger que assume sua forma e trava um reinado de terror até que um dos dois morra.",
+        "descricaoLite": "Espelho que concede bônus sociais temporários em troca de Psicoses crescentes, podendo eventualmente gerar um doppelganger hostil do usuário."
+      },
+      {
+        "nome": "Elixir do Amor",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Poção que faz quem a bebe se apaixonar de forma obsessiva pela primeira pessoa que vir, dando +2 em Suporte para ajudá-la, mas tornando a vítima ciumenta e violenta em defesa dela até o efeito ser dissipado (dissipar com -4, uma tentativa por alvo).",
+        "descricaoLite": "Poção que causa paixão obsessiva e violenta pela primeira pessoa vista, removível apenas com dissipar (-4)."
+      },
+      {
+        "nome": "Escada de Bruxa",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Corda tecida com cabelo humano e linha preta, amarrada a itens pessoais das vítimas (indivíduo ou grupo confinado, como uma aldeia). As vítimas testam Vigor ao pôr do sol ou sofrem um nível de Fadiga; após Exaustão, uma nova falha significa morte em dias iguais ao dado de Vigor da vítima. Só pode ser desfeita destruindo a escada (dissipar não funciona); o criador só pode manter uma ativa por vez, e uma rolagem de Conjurar malsucedida ao criá-la custa um dado permanente de Vigor do criador (podendo matá-lo se cair abaixo de d4).",
+        "descricaoLite": "Amaldiçoamento em massa que causa Fadiga progressiva até a morte nas vítimas ligadas a ele; só é desfeito destruindo a corda, e falhar ao criá-lo custa Vigor permanente do feiticeiro."
+      },
+      {
+        "nome": "Faca de Sacrifício",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Lâmina curva ritual, mágica (fere seres etéreos e imunes a dano não mágico) e com dano For+d4+2. Cada Ferimento causado por ela armazena 1d6 Pontos de Poder em suas runas (até 15), que o conjurador que a empunha pode gastar para fortalecer seus próprios feitiços.",
+        "descricaoLite": "Adaga ritual mágica que acumula Pontos de Poder a cada Ferimento causado, utilizáveis pelo conjurador que a porta."
+      },
+      {
+        "nome": "Garras de Prata",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Luvas de couro com garras de prata feitas para mãos de lobisomem. Tratam os ataques de garra do usuário como arma de prata, mas uma Falha Crítica em Lutar faz o licantropo se ferir com as próprias garras.",
+        "descricaoLite": "Luvas com garras de prata que tornam os ataques de garra de um lobisomem eficazes contra outros licantropos, com risco de autoferimento em Falha Crítica."
+      },
+      {
+        "nome": "Giz de Proteção",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Giz abençoado por um sacerdote devoto. Usado para desenhar um círculo de aprisionamento, adiciona +2 à rolagem de Ocultismo do usuário contra qualquer ser convocado dentro dele.",
+        "descricaoLite": "Giz sagrado que reforça em +2 os círculos de aprisionamento desenhados com ele."
+      },
+      {
+        "nome": "Grimório",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Livro, pergaminho ou texto com 1d6 poderes (a critério do Mestre). Uma personagem com Antecedente Arcano que adquira a Vantagem Novos Poderes pode escolher um poder bônus do grimório, igual ou inferior ao seu Estágio e disponível para seu Antecedente Arcano. Alguns grimórios podem ser encantados como pergaminhos, geralmente se destruindo ou ficando inertes após o uso até recarregarem.",
+        "descricaoLite": "Tomo de poderes que concede acesso a um poder extra ao adquirir Novos Poderes, respeitando Estágio e Antecedente Arcano do leitor."
+      },
+      {
+        "nome": "Lâmina Infernal",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Espada de metal negro forjada no Inferno, envolta em fogo verde. Concede +2 em Lutar e +4 de dano (+8 contra criaturas angelicais/sagradas), com chance de incendiar o alvo. Criaturas boas que a empunham ficam Distraídas e sofrem 2d6 de dano por rodada. Costuma atrair a atenção de demônios poderosos.",
+        "descricaoLite": "Espada demoníaca flamejante com grandes bônus de combate contra o bem, mas que fere gravemente qualquer criatura benigna que ouse empunhá-la."
+      },
+      {
+        "nome": "Laboratório de Frankenstein",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Equipamento completo (gerador, placa, químicos) usado para criar um golem de cadáveres. Exige $100.000, nove meses de trabalho e uma rolagem de Cura; sucesso cria a criatura (livre-arbítrio, inteligência quase animal), cada ampliação aumenta sua Astúcia em um dado (máx. d12); uma Falha Crítica ainda dá vida à criatura, mas com a Complicação Desconfiado (Maior) e tendências psicopáticas.",
+        "descricaoLite": "Laboratório caro e demorado que permite construir um golem de cadáveres com uma rolagem de Cura."
+      },
+      {
+        "nome": "Lâmina Lunar",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Arma branca com um dente de lobisomem arrancado sob lua cheia embutido no punho. Se uma vítima humana viva sofrer ao menos um Ferimento dela, ficar Incapacitada e sobreviver, se transformará em lobisomem na próxima lua cheia.",
+        "descricaoLite": "Arma amaldiçoada que transmite licantropia a vítimas humanas feridas por ela que sobrevivam Incapacitadas."
+      },
+      {
+        "nome": "Lâmina Templária",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Espada longa de ferro frio gravada com runas sagradas usada pelos templários contra cultos. Concede Lutar +2 e +2 de dano contra demônios; seus símbolos brilham em vermelho quando há presença ou magia demoníaca a 5 quadros (10m) ou menos.",
+        "descricaoLite": "Espada sagrada com bônus de combate contra demônios e que detecta presença demoníaca próxima."
+      },
+      {
+        "nome": "Mão da Glória",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Mão decepada e mumificada de um enforcado, guardada em uma caixa de madeira. Com os cinco dedos acesos como velas, concede o poder atordoar e 10 Pontos de Poder, usando Espírito como perícia arcana; apaga-se quando os Pontos de Poder se esgotam e só reacende no anoitecer seguinte.",
+        "descricaoLite": "Mão macabra que funciona como foco arcano para o poder atordoar, com uma reserva própria de 10 Pontos de Poder recarregada a cada noite."
+      },
+      {
+        "nome": "Mão do Destino",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Mão humana mumificada que joga o portador nas correntes do destino. Sempre que gastar um Bene para rerrolar, joga-se 1d6: com 5–6 recupera o Bene gasto; com 1, perde todos os Benes restantes.",
+        "descricaoLite": "Item de sorte instável: pode devolver o Bene gasto em uma rerrolagem, mas também pode custar todos os Benes restantes do portador."
+      },
+      {
+        "nome": "Mangual de Carne Incurável",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Arma amaldiçoada em forma de gato de nove caudas com pontas de metal, agindo como um mangual. Os ferimentos que causa não podem ser tratados por primeiros socorros nem magia — apenas a cura natural funciona.",
+        "descricaoLite": "Mangual amaldiçoado cujos ferimentos só cicatrizam por cura natural, resistindo a primeiros socorros e magia."
+      },
+      {
+        "nome": "Marca do Demônio",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Pergaminho em branco que só revela escrita prateada sob luz da lua. Na meia-noite seguinte, invoca um coletor demoníaco cujo único propósito é encontrar e matar o portador da marca. Destruir o papel encerra o feitiço, desde que o demônio ainda não tenha se materializado.",
+        "descricaoLite": "Marca amaldiçoada que invoca um demônio assassino contra quem a carrega; destruí-la a tempo impede a invocação."
+      },
+      {
+        "nome": "Máscara Canibal",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Máscara de madeira que, ao ser vestida, exige teste de Espírito -8; falha faz com que ela se funda à carne do usuário, criando um desejo incontrolável por carne humana (meio quilo a cada 24h, ou entra em fúria com Força +2 tipos de dado e mordida For+d4 até consumir cinco quilos). Só é removida com um Ferimento do poder banir, com nova chance de libertação na primeira noite de cada lua cheia.",
+        "descricaoLite": "Máscara que se funde à pele e impõe fome canibal ao usuário, removível apenas com o poder banir ou repetidas tentativas em luas cheias."
+      },
+      {
+        "nome": "Máscara de Cerâmica",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Máscara de porcelana ao estilo kabuki sem efeito nos vivos, mas que concede Invulnerabilidade total a usuários mortos-vivos enquanto vestida. Só pode ser retirada à mão (agarrar bem-sucedido seguido de rolagem resistida de Força -2); ataques à distância nunca a removem.",
+        "descricaoLite": "Máscara que torna um morto-vivo invulnerável a qualquer dano enquanto a estiver usando; só é removida à força, corpo a corpo."
+      },
+      {
+        "nome": "Máscara de Hóquei do Terror",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Máscara de hóquei manchada de sangue que concede Regeneração (Rápida) — exceto contra fogo — e a Complicação Sanguinário. A cura funciona normalmente, mas cicatrizes visuais permanecem por estética. Só é removida à força (agarrar bem-sucedido e rolagem resistida de Força -2).",
+        "descricaoLite": "Máscara de assassino em série que concede Regeneração Rápida (exceto contra fogo) junto da Complicação Sanguinário."
+      },
+      {
+        "nome": "Música Infernalis",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Partitura musical atribuída a Lúcifer. Tocá-la exige uma rolagem de Performance -6; sucesso invoca um demônio à escolha do Mestre, que aparece dentro de um círculo de aprisionamento a até 12 quadros (24m) do músico, se houver um.",
+        "descricaoLite": "Partitura amaldiçoada cuja execução bem-sucedida invoca um demônio dentro de um círculo de aprisionamento próximo."
+      },
+      {
+        "nome": "O Necronomicon",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "O lendário 'livro dos mortos' de Abdul Alhazred: um Conhecimento Proibido (2d6+2 horas de leitura, teste de Astúcia -4). Com sucesso, além dos benefícios de Conhecimento Proibido, o leitor pode escolher: aprender um poder extra ao adquirir Novos Poderes; obter acesso a um poder de qualquer Estágio para um ritual; ou aumentar Ocultismo em um tipo de dado (dois com ampliação) até a próxima vez que dormir. Enquanto alguém o possuir, não pode remover Psicoses durante a Pausa.",
+        "descricaoLite": "O grimório mais poderoso e perigoso do gênero: concede grandes benefícios arcanos de leitura, mas impede a remoção de Psicoses enquanto estiver na posse de alguém."
+      },
+      {
+        "nome": "Optógrafo",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Câmera portátil que captura a última imagem vista pela retina de um cadáver fresco (a visão se degrada em 3d6 horas). Um acessório converte o aparelho em câmera escura, projetando os últimos 1d10 minutos de vida da vítima (sem poder ser gravado).",
+        "descricaoLite": "Dispositivo que revela a última cena vista por um cadáver recente, útil para investigar mortes."
+      },
+      {
+        "nome": "Pata do Macaco",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Mão decepada e mumificada de macaco que concede três desejos, sempre pervertidos de forma irônica e cruel (embora cumpridos ao pé da letra); o terceiro desejo costuma resultar em morte ou colapso mental do dono. Pode ser destruída, mas sempre retorna para atormentar outra pessoa.",
+        "descricaoLite": "Item clássico de três desejos, cada um distorcido de forma trágica; o terceiro é quase sempre fatal para quem o faz."
+      },
+      {
+        "nome": "Pedra dos Pesadelos",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Pedra amaldiçoada normalmente colocada no bolso da vítima. Ativa-se toda noite ao dormir, causando o efeito do poder pesadelos (com o modificador Tema Específico) até ser encontrada e descartada.",
+        "descricaoLite": "Pedra que impõe pesadelos noturnos direcionados à vítima que a carrega, até ser encontrada e descartada."
+      },
+      {
+        "nome": "Pergaminho",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Contém um único poder (definido pelo Mestre, com Modificadores de Poder se aplicável). Ler é uma ação com rolagem de Astúcia ou perícia arcana (à escolha); sucesso ativa o poder e consome o pergaminho. Uma Falha Crítica faz o pergaminho virar pó sem ativar o poder.",
+        "descricaoLite": "Item consumível de uso único que ativa um poder pré-definido com uma rolagem de Astúcia ou perícia arcana."
+      },
+      {
+        "nome": "Poção",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Elixir mágico bebido como uma ação, com efeito conforme o tipo: Cura (cura um Ferimento e toda a Fadiga), Força (Força +2 tipos de dado por uma hora), Poder (recupera 10 Pontos de Poder), Rapidez (Vantagem Rápido por um minuto) ou Visão Sombria (ignora penalidades de Iluminação por uma hora).",
+        "descricaoLite": "Frasco mágico de uso único com efeitos variados (Cura, Força, Poder, Rapidez ou Visão Sombria)."
+      },
+      {
+        "nome": "Pó de Cadáver",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Pó de ossos moídos com energia necromântica que anima um cadáver por pitada (zumbi ou esqueleto, conforme o estado do corpo). Encontrado normalmente em bolsas de 1d6 pitadas; os mortos-vivos criados permanecem ativos por 12 horas ou até serem destruídos, obedecendo instruções verbais sem questionar.",
+        "descricaoLite": "Pó necromântico que anima cadáveres como zumbis ou esqueletos temporários e obedientes."
+      },
+      {
+        "nome": "Pó de Tumba",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Pó de ossos queimados de esqueletos, energizado para comunicação com os mortos (não os anima). Espalhado sobre restos, item pessoal ou lápide, seguido de uma rolagem de Espírito, funciona como o poder sessão espírita conjurado com ampliação. Encontrado em lotes de 1d4 pitadas; pode ser fabricado com a receita certa em 6 horas e uma rolagem de Ocultismo -4 (cada sucesso/ampliação gera uma pitada).",
+        "descricaoLite": "Pó ritual que permite conversar com os mortos como uma sessão espírita ampliada; pode ser fabricado com Ocultismo."
+      },
+      {
+        "nome": "Quebra-Cabeças",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Caixa de quebra-cabeça que funciona como chave do Inferno. Resolvê-la exige um minuto de manipulação e uma rolagem de Astúcia -6: falha liberta um demônio aleatório e hostil (Falha Crítica abre um portal com d6 demônios); sucesso invoca um demônio aleatório que deve servir o invocador por um dia (cinco dias com ampliação).",
+        "descricaoLite": "Caixa-quebra-cabeça que invoca um demônio aleatório — obediente em caso de sucesso, hostil e livre em caso de falha."
+      },
+      {
+        "nome": "Relógio de Bolso da Batida de Coração",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Relógio de prata do século XIX que concede rerrolagem em Curar. Quando o portador fica Incapacitado, atrasa por cinco rodadas a rolagem para sobreviver.",
+        "descricaoLite": "Relógio que melhora testes de Curar e dá tempo extra antes de uma rolagem de sobrevivência quando o portador fica Incapacitado."
+      },
+      {
+        "nome": "Relógio de Pêndulo",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Relógio cujo tique-taque impõe -2 em Espírito a quem está a até 6 quadros (12m). Versões mais poderosas criam uma dimensão de bolso: após a meia-noite, quem está no alcance auditivo deve testar Espírito ou é transportado por uma hora para um mundo espelhado, vazio exceto por mortos-vivos e monstros, retornando (vivo ou morto) quando o relógio bate uma hora.",
+        "descricaoLite": "Relógio amaldiçoado que enerva quem o ouve e, em versões mais fortes, transporta pessoas para uma dimensão sombria por uma hora."
+      },
+      {
+        "nome": "Retrato da Imortalidade",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Pintura profana que transfere para si todo dano, doença, veneno e envelhecimento sofridos pelo dono, tornando-o imune a tudo isso e invulnerável a qualquer dano — exceto o causado diretamente ao retrato. Ferir a pintura (Resistência 4) causa o mesmo Ferimento ao dono; destruí-la o mata. O dono pode gastar Benes para Absorver como de costume, mas não sobrevive à destruição total da pintura.",
+        "descricaoLite": "Retrato amaldiçoado que torna o dono praticamente invulnerável, desde que a própria pintura permaneça intacta — destruí-la mata o dono."
+      },
+      {
+        "nome": "Sangue de Lobisomem",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Frasco do sangue de um licantropo. Quem o bebe testa Vigor -4: sucesso cura instantaneamente todas as doenças, enfermidades e venenos (mágicos ou mundanos); falha transforma a vítima em lobisomem na próxima lua cheia (a doença original só é curada quando a transformação ocorrer, ou nunca, se a vítima morrer antes).",
+        "descricaoLite": "Cura poderosa contra doenças e venenos, mas arrisca transformar quem a bebe em lobisomem."
+      },
+      {
+        "nome": "Talismã de Proteção",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Item abençoado por um sacerdote devoto, dado a quem deve enfrentar uma tarefa terrível. Concede Resistência +2 contra ataques diretos, poderes e feitiços de criaturas sobrenaturalmente malignas.",
+        "descricaoLite": "Talismã sagrado que reforça a Resistência do portador contra ataques e magia de criaturas malignas."
+      },
+      {
+        "nome": "Vela da Alma",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Vela vinculada a um indivíduo específico na criação (cabelo ou sangue na cera). Uma vez acesa, queima por 2d4 horas, concedendo ao beneficiário as Vantagens Nervos de Aço Aprimorado e Duro de Matar. Acender uma nova vela antes que a anterior se apague estende a duração do efeito.",
+        "descricaoLite": "Vela ritual que concede Nervos de Aço Aprimorado e Duro de Matar a quem foi vinculado a ela, enquanto arder."
+      },
+      {
+        "nome": "Vela Sombria",
+        "custo": "—",
+        "peso": "—",
+        "observacoes": "Vela de chama vermelha que, acesa, brilha por 2d4 horas em um raio de 5 quadros (10m), repelindo criaturas etéreas e eliminando sombras normais — as sombras de quem está na luz se tornam sombras assassinas hostis que rondam a área até a vela se apagar. Quem dorme sob a luz de uma vela sombria sonha ser sua própria sombra assassina e não pode ser acordado até todas as velas se apagarem.",
+        "descricaoLite": "Vela amaldiçoada que transforma as sombras de quem está perto em sombras assassinas hostis enquanto arder."
+      }
+    ]
   }
 ]
