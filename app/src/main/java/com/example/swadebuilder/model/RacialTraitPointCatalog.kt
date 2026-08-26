@@ -37,7 +37,66 @@ import com.example.swadebuilder.util.keyify
  * no traço injetado pela escolha — Terracota/Umvee/Elementais já são
  * resolvidos assim em AncestryVariantRegistry.
  */
+/**
+ * Efeito mecânico estruturado de um traço racial, quando ele sobe um
+ * atributo ou perícia de alvo FIXO (a raça sempre sobe o mesmo, ex.: Ágil
+ * sempre é Agilidade) — não cobre traços de alvo à ESCOLHA do jogador (ex.:
+ * Meio-Orc escolhe Força ou Vigor; Feral escolhe entre 3 atributos), que
+ * continuam resolvidos pelo state dedicado de cada raça, como já eram.
+ *
+ * É isso que substitui os `if (habilidadeIds.contains("AGIL") && attrKey ==
+ * "AGILIDADE")` fixos que existiam em `atributoBaseRacial()`: em vez do
+ * código saber "de cor" qual atributo cada id sobe, o dado já vem com essa
+ * informação — o traço só precisa estar presente, o próprio `RacialTraitEffect`
+ * diz o quê e quanto.
+ */
+sealed class RacialTraitEffect {
+    data class AtributoStep(val atributo: String, val passos: Int = 1) : RacialTraitEffect()
+    data class PericiaStep(val pericia: String, val passos: Int = 1) : RacialTraitEffect()
+    data object Nenhum : RacialTraitEffect()
+}
+
 object RacialTraitPointCatalog {
+
+    /**
+     * Só os traços com efeito de alvo fixo num atributo/perícia (ver
+     * `RacialTraitEffect`). Ausência aqui = `Nenhum`: ou o traço não tem
+     * gancho mecânico numérico modelável, ou já é coberto pelo mecanismo de
+     * injeção de texto que o ModifierEngine lê (Aparar/Resistência/
+     * Movimentação, genérico desde o início desta unificação).
+     */
+    val EFEITOS: Map<String, RacialTraitEffect> = mapOf(
+        "AGIL" to RacialTraitEffect.AtributoStep("Agilidade"),
+        "ASTUCIA" to RacialTraitEffect.AtributoStep("Astúcia"),
+        "ASTUTO" to RacialTraitEffect.AtributoStep("Astúcia"),
+        "BAIXA_GRAVIDADE_AGIL" to RacialTraitEffect.AtributoStep("Agilidade"), // sintético, injetado por Humanos Sci-Fi "Baixa Gravidade" (ver applyAncestryVariantAdjustments)
+        "DURAO" to RacialTraitEffect.AtributoStep("Vigor"),
+        "EM_FORMA" to RacialTraitEffect.AtributoStep("Vigor"),
+        "ESPIRITUAL" to RacialTraitEffect.AtributoStep("Espírito"),
+        "ESPIRITUOSO" to RacialTraitEffect.AtributoStep("Espírito"),
+        "FELIZES_POR_NATUREZA" to RacialTraitEffect.AtributoStep("Espírito"),
+        "FORCA_SOBRENATURAL" to RacialTraitEffect.AtributoStep("Força"),
+        "FORTE" to RacialTraitEffect.AtributoStep("Força"),
+        "INTELIGENCIA" to RacialTraitEffect.AtributoStep("Astúcia"),
+        "MUITO_FORTE" to RacialTraitEffect.AtributoStep("Força", passos = 2),
+        "MUITO_RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor", passos = 2),
+        "RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor"),
+        "ROBUSTO" to RacialTraitEffect.AtributoStep("Vigor"),
+        "SOLIDO_COMO_ROCHA" to RacialTraitEffect.AtributoStep("Vigor"),
+        "VIGOROSO" to RacialTraitEffect.AtributoStep("Vigor"),
+
+        "CAES_DE_GUARDA" to RacialTraitEffect.PericiaStep("Perceber"),
+        "FE" to RacialTraitEffect.PericiaStep("Fé"),
+        "INTEGRADO_A_NATUREZA" to RacialTraitEffect.PericiaStep("Sobrevivência"),
+        "PESFIRMES" to RacialTraitEffect.PericiaStep("Atletismo"),
+        "SENTIDOS_AGUCADOS" to RacialTraitEffect.PericiaStep("Perceber"),
+        "SENTIDOS_APRIMORADOS" to RacialTraitEffect.PericiaStep("Perceber"),
+        "SENTIDOS_APURADOS" to RacialTraitEffect.PericiaStep("Perceber"),
+        "SORRATEIRO" to RacialTraitEffect.PericiaStep("Furtividade"),
+        "TRAPALHOES_TRAVESSOS" to RacialTraitEffect.PericiaStep("Furtividade")
+    )
+
+    fun efeitoDe(id: String?): RacialTraitEffect = id?.let { EFEITOS[it.keyify()] } ?: RacialTraitEffect.Nenhum
 
     val CUSTOS: Map<String, Int> = mapOf(
         "ACAO_ADICIONAL" to 2, // ignora 2 pts de penalidade de ações múltiplas
@@ -67,6 +126,7 @@ object RacialTraitPointCatalog {
         "ATRAENTE" to 2, // Vantagem Atraente grátis
         "AVERSAO_ANIMAL" to -1, // animais evitam + -2 pra controlar/montar animais
         "AZARADO" to -2, // Complicação Maior no catálogo real (complicacoes.json) — a severidade "Menor" anotada em ancestralidades.json pra Nekomimi não existe pra essa Complicação, corrigido pra bater com o catálogo
+        "BAIXA_GRAVIDADE_AGIL" to 2, // sintético (Humanos Sci-Fi "Baixa Gravidade"): Agilidade d4->d6, mesmo custo de AGIL
         "BAIXA_TECNOLOGIA" to -2, // Complicação Maior
         "BEBEDOR_DE_SANGUE" to 1, // cura natural extra 1x/sessão, condicional
         "BOCA_GRANDE" to -1, // Complicação Menor

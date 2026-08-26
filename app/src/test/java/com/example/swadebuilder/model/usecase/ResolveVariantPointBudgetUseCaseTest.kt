@@ -36,14 +36,14 @@ class ResolveVariantPointBudgetUseCaseTest {
     )
 
     @Test
-    fun `nenhuma mudanca fica dentro do orcamento com saldo zero`() {
+    fun `nenhuma mudanca (saldo zero) nao fecha o orcamento padrao - precisa ser exato em 2`() {
         val result = useCase.resolve(emptyList(), emptyList())
         assertEquals(0, result.saldo)
-        assertTrue(result.dentroDoOrcamento)
+        assertFalse(result.dentroDoOrcamento)
     }
 
     @Test
-    fun `remover um traco positivo devolve pontos (saldo negativo)`() {
+    fun `remover sozinho um traco positivo de custo 2 fecha exato no orcamento`() {
         val forte = VariantBudgetItem(label = "Forte", custo = 2, habilidadeId = "FORTE")
         val result = useCase.resolve(itensRemovidos = listOf(forte), itensAdicionados = emptyList())
         assertEquals(-2, result.saldo)
@@ -51,31 +51,31 @@ class ResolveVariantPointBudgetUseCaseTest {
     }
 
     @Test
-    fun `remover uma desvantagem custa pontos (saldo positivo)`() {
+    fun `remover uma unica desvantagem de custo -1 nao fecha o orcamento padrao`() {
+        // saldo vira +1 (devolve 1 ponto ao "comprar de volta" a Complicação) —
+        // não bate nos 2 pontos exatos, então não fecha sozinho.
         val fragil = VariantBudgetItem(label = "Frágil", custo = -1, habilidadeId = "FRAGIL")
         val result = useCase.resolve(itensRemovidos = listOf(fragil), itensAdicionados = emptyList())
         assertEquals(1, result.saldo)
-        assertTrue(result.dentroDoOrcamento)
+        assertFalse(result.dentroDoOrcamento)
     }
 
     @Test
-    fun `adicionar vantagem novato e compensar com complicacao maior fecha dentro do orcamento`() {
-        val vantagem = vantagemNovato("dom", "Dom")
-        val complicacaoMaior = complicacao("obrigacao_maior", "Obrigação", "maior")
-
+    fun `duas vantagens novato compensadas por uma complicacao maior fecham exato em 2`() {
+        // +2 +2 (duas Vantagens Novato) + (-2) (uma Complicação Maior) = +2 exato
         val adicionados = listOf(
-            vantagemComoItemAdicionado(vantagem),
-            complicacaoComoItemAdicionado(complicacaoMaior, comoMaior = true)
+            vantagemComoItemAdicionado(vantagemNovato("dom", "Dom")),
+            vantagemComoItemAdicionado(vantagemNovato("poder", "Novos Poderes")),
+            complicacaoComoItemAdicionado(complicacao("obrigacao_maior", "Obrigação", "maior"), comoMaior = true)
         )
         val result = useCase.resolve(itensRemovidos = emptyList(), itensAdicionados = adicionados)
 
-        // +2 (Vantagem Novato) + (-2) (Complicação Maior) = 0
-        assertEquals(0, result.saldo)
+        assertEquals(2, result.saldo)
         assertTrue(result.dentroDoOrcamento)
     }
 
     @Test
-    fun `adicionar duas vantagens sem compensar estoura o orcamento padrao`() {
+    fun `adicionar duas vantagens sem compensar nao fecha o orcamento padrao`() {
         val adicionados = listOf(
             vantagemComoItemAdicionado(vantagemNovato("dom", "Dom")),
             vantagemComoItemAdicionado(vantagemNovato("poder", "Novos Poderes"))
@@ -84,6 +84,18 @@ class ResolveVariantPointBudgetUseCaseTest {
 
         assertEquals(4, result.saldo)
         assertFalse(result.dentroDoOrcamento)
+    }
+
+    @Test
+    fun `sem limite aceita qualquer saldo, incluindo o que nao fecharia no orcamento padrao`() {
+        val adicionados = listOf(vantagemComoItemAdicionado(vantagemNovato("dom", "Dom")))
+        val result = useCase.resolve(itensRemovidos = emptyList(), itensAdicionados = adicionados, semLimite = true)
+
+        assertEquals(2, result.saldo)
+        assertTrue(result.dentroDoOrcamento)
+
+        val vazio = useCase.resolve(itensRemovidos = emptyList(), itensAdicionados = emptyList(), semLimite = true)
+        assertTrue(vazio.dentroDoOrcamento)
     }
 
     @Test

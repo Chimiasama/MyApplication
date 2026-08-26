@@ -34,6 +34,8 @@ import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.RacialTraitEffect
+import com.example.swadebuilder.model.RacialTraitPointCatalog
 import com.example.swadebuilder.model.SnapshotAtributos
 import com.example.swadebuilder.model.SnapshotFlags
 import com.example.swadebuilder.model.SnapshotPericias
@@ -4310,25 +4312,16 @@ class CriadorState {
         }
 
         // Traços de alvo fixo (a raça sempre sobe o mesmo atributo quando o traço
-        // está presente): Ágil (Elfos/Rakashanos/Meio-Elfo "Herança" escolhendo
-        // Ágil), Sólido como Rocha (Descendente Elemental - Terra), Forte
-        // (Mineradores Genéticos, exceto variante Zero G), Espirituoso (Ferais
-        // Sci-Fi, exceto variante Menor), Habitante de Gravidade Baixa (Humanos
-        // Sci-Fi, variante Baixa Gravidade).
-        if (habilidadeIds.contains("AGIL") && attrKey == "AGILIDADE") {
-            modifiedBase = maxOf(modifiedBase, 6)
-        }
-        if (habilidadeIds.contains("SOLIDO_COMO_ROCHA") && attrKey == "VIGOR") {
-            modifiedBase = maxOf(modifiedBase, 6)
-        }
-        if (habilidadeIds.contains("FORTE") && attrKey == "FORCA") {
-            modifiedBase = maxOf(modifiedBase, 6)
-        }
-        if (habilidadeIds.contains("ESPIRITUOSO") && attrKey == "ESPIRITO") {
-            modifiedBase = maxOf(modifiedBase, 6)
-        }
-        if (habilidadeIds.contains("BAIXA_GRAVIDADE_AGIL") && attrKey == "AGILIDADE") {
-            modifiedBase = maxOf(modifiedBase, 6)
+        // está presente): o traço só precisa estar na raça, quem diz QUAL
+        // atributo sobe e QUANTOS passos é o próprio RacialTraitEffect.AtributoStep
+        // do catálogo — não mais um "if" por traço/atributo (Ágil, Sólido como
+        // Rocha, Forte, Espirituoso, Habitante de Gravidade Baixa etc. e
+        // qualquer novo traço desse tipo já entram automaticamente).
+        habilidadeIds.forEach { id ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(id)
+            if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                modifiedBase = maxOf(modifiedBase, 4 + 2 * efeito.passos)
+            }
         }
 
         // Traços de alvo escolhido pelo jogador entre 2-3 atributos: o traço só

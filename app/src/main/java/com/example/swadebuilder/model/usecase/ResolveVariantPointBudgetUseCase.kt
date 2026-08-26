@@ -26,9 +26,16 @@ data class VariantBudgetItem(
  * Calcula o saldo em pontos de uma Variante custom de raça: o que foi
  * REMOVIDO da raça base devolve o custo dele ao orçamento (tirar um traço
  * forte libera pontos; tirar uma desvantagem custa pontos, "comprando de
- * volta" a Complicação); o que foi ADICIONADO gasta o custo dele. O saldo
- * líquido precisa caber no mesmo orçamento simétrico já usado pelos Anões
- * Ciber (2 pontos pra mais ou pra menos).
+ * volta" a Complicação); o que foi ADICIONADO gasta o custo dele.
+ *
+ * Por padrão o saldo final precisa fechar EXATO em ±2 pontos (mesma escala
+ * do Anão Ciber) pra poder salvar — não é um teto "até 2", é o valor exato:
+ * ficar em 0 ou passar de 2 é igualmente inválido. Durante a edição (ir
+ * adicionando/removendo itens) o saldo pode passar por qualquer valor
+ * livremente — só a validação final de salvar usa essa regra. Passando
+ * `semLimite = true` (a opção de "sem limite" pra raças mais fortes, tipo
+ * Pathfinder) a validação sempre passa, qualquer saldo, positivo ou
+ * negativo.
  *
  * Não decide SE algo pode ser removido/adicionado (isso é responsabilidade
  * da UI/fluxo de criação) — só soma e valida o saldo dos itens que já
@@ -39,19 +46,22 @@ class ResolveVariantPointBudgetUseCase {
     data class Result(
         val saldo: Int,
         val orcamento: Int,
+        val semLimite: Boolean,
         val dentroDoOrcamento: Boolean
     )
 
     fun resolve(
         itensRemovidos: List<VariantBudgetItem>,
         itensAdicionados: List<VariantBudgetItem>,
-        orcamento: Int = DEFAULT_ORCAMENTO
+        orcamento: Int = DEFAULT_ORCAMENTO,
+        semLimite: Boolean = false
     ): Result {
         val saldo = itensAdicionados.sumOf { it.custo } - itensRemovidos.sumOf { it.custo }
         return Result(
             saldo = saldo,
             orcamento = orcamento,
-            dentroDoOrcamento = abs(saldo) <= orcamento
+            semLimite = semLimite,
+            dentroDoOrcamento = semLimite || abs(saldo) == orcamento
         )
     }
 

@@ -32,6 +32,29 @@ class RacialTraitPointCatalogTest {
     }
 
     @Test
+    fun `efeitoDe retorna AtributoStep pros tracos de atributo de alvo fixo`() {
+        val efeito = RacialTraitPointCatalog.efeitoDe("AGIL")
+        assertTrue(efeito is RacialTraitEffect.AtributoStep)
+        assertEquals("Agilidade", (efeito as RacialTraitEffect.AtributoStep).atributo)
+        assertEquals(1, efeito.passos)
+    }
+
+    @Test
+    fun `efeitoDe retorna dois passos pra muito forte e muito resistente`() {
+        val forte = RacialTraitPointCatalog.efeitoDe("MUITO_FORTE") as RacialTraitEffect.AtributoStep
+        val resistente = RacialTraitPointCatalog.efeitoDe("MUITO_RESISTENTE") as RacialTraitEffect.AtributoStep
+        assertEquals(2, forte.passos)
+        assertEquals(2, resistente.passos)
+    }
+
+    @Test
+    fun `efeitoDe retorna Nenhum pra tracos sem gancho mecanico numerico ou id desconhecido`() {
+        assertEquals(RacialTraitEffect.Nenhum, RacialTraitPointCatalog.efeitoDe("FRAGIL"))
+        assertEquals(RacialTraitEffect.Nenhum, RacialTraitPointCatalog.efeitoDe(null))
+        assertEquals(RacialTraitEffect.Nenhum, RacialTraitPointCatalog.efeitoDe("ID_QUE_NAO_EXISTE"))
+    }
+
+    @Test
     fun `placeholders de selecao tem custo zero`() {
         assertEquals(0, RacialTraitPointCatalog.custoDe("DONS_DA_NATUREZA"))
         assertEquals(0, RacialTraitPointCatalog.custoDe("SIGNOS_DE_NASCENCA"))

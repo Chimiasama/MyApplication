@@ -87,6 +87,24 @@ class CriadorStateRacialTraitDrivenAttributesTest {
     }
 
     @Test
+    fun `astucia concede Astucia d6 pelo efeito estruturado do catalogo, sem if dedicado`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotWith(listOf(racaComTraco("RACA_QUALQUER", "ASTUCIA"))))
+        state.ancestralidade = "RACA_QUALQUER"
+
+        assertEquals(6, state.atributoMinRaw("Astúcia"))
+    }
+
+    @Test
+    fun `muito forte concede Forca d8 (dois passos) pelo efeito estruturado do catalogo`() {
+        val state = CriadorState()
+        state.updateGameData(snapshotWith(listOf(racaComTraco("RACA_QUALQUER", "MUITO_FORTE"))))
+        state.ancestralidade = "RACA_QUALQUER"
+
+        assertEquals(8, state.atributoMinRaw("Força"))
+    }
+
+    @Test
     fun `endurecido aplica escolha entre Forca e Vigor conforme meioOrcForca`() {
         val state = CriadorState()
         state.updateGameData(snapshotWith(listOf(racaComTraco("MEIO-ORCS", "ENDURECIDO"))))
