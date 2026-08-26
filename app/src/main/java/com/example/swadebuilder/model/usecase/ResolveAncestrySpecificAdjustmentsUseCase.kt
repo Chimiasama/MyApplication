@@ -794,13 +794,9 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
 
         if (ancKey.contains("TERRACOTA")) {
-            val effectiveVariant = resolveAncestryVariantUseCase.execute(
-                ResolveAncestryVariantUseCase.Input(
-                    selectedVariant = scifiVariant,
-                    availableOptions = ancestryOptions
-                )
-            ).normalizedSelection
-
+            // Reusa o effectiveVariant já calculado no topo da função (mesmos
+            // parâmetros) em vez de recalcular aqui — evitar que essa cópia
+            // divirja silenciosamente da versão canônica se algum dia ela mudar.
             val comp = if (effectiveVariant?.contains("Obriga", ignoreCase = true) == true) "OBRIGAÇÃO (Maior)" else "VOTO (Maior)"
 
             return Result(

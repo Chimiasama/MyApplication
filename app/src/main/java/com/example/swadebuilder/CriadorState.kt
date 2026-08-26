@@ -870,7 +870,14 @@ class CriadorState {
     ): String? {
         if (availableOptions.isEmpty()) return null
         val selected = overrideSelection ?: scifiVariant
-        val legacySelection: String? = null
+        // Mesmo fallback usado por ResolveAncestrySpecificAdjustmentsUseCase.execute()
+        // (que recebe anoesScifiSelecionado como legacySelectedVariant) — antes esta
+        // função sempre passava null aqui, então os dois cálculos da "variante
+        // efetiva" podiam divergir se scifiVariant e anoesScifiSelecionado nunca
+        // estivessem 100% sincronizados (ex.: logo após restaurar um save).
+        // Para raças que não são Anões, anoesScifiSelecionado normalmente é null,
+        // então isso não muda nada além do caso relevante.
+        val legacySelection: String? = anoesScifiSelecionado
         return resolveAncestryVariantUseCase.execute(
             ResolveAncestryVariantUseCase.Input(
                 selectedVariant = selected,
@@ -6698,6 +6705,12 @@ class CriadorState {
             }
         }
 
+        // Proposital: sobrescreve o que aplicarAncestralidade() acabou de recalcular
+        // (linha acima) com os valores exatos gravados no save. Decisão de produto
+        // confirmada: um personagem salvo deve continuar exatamente como estava
+        // quando salvo, mesmo que a mecânica da raça tenha mudado depois — não
+        // "migrar" silenciosamente vantagens/desvantagens automáticas para a regra
+        // atual só por reabrir o personagem. Não remover isto achando que é bug.
         vantagensAutomaticas.apply { clear(); addAll(snapshot.selecoes.vantagensAutomaticas) }
         vantagensRaciais.apply { clear(); addAll(snapshot.selecoes.vantagensRaciais) }
         desvantagensAutomaticas.apply { clear(); addAll(snapshot.selecoes.desvantagensAutomaticas) }

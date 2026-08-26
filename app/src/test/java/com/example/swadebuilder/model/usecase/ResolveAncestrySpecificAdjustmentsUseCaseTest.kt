@@ -380,6 +380,30 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
+    fun `terracota voto concede complicacao voto maior`() {
+        val result = useCase.execute(
+            anc = "TERRACOTA",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Voto (Maior)",
+            ancestryOptions = listOf("Voto (Maior)", "Obrigação (Maior)")
+        )
+
+        assertEquals(listOf("VOTO (Maior)"), result.ensureRacialDisadvantages)
+    }
+
+    @Test
+    fun `terracota obrigacao concede complicacao obrigacao maior`() {
+        val result = useCase.execute(
+            anc = "TERRACOTA",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Obrigação (Maior)",
+            ancestryOptions = listOf("Voto (Maior)", "Obrigação (Maior)")
+        )
+
+        assertEquals(listOf("OBRIGAÇÃO (Maior)"), result.ensureRacialDisadvantages)
+    }
+
+    @Test
     fun `returns fallback for unknown ancestry`() {
         val result = useCase.execute("QUALQUER", null)
 
