@@ -34,3 +34,19 @@ jobs:
       uses: android-actions/setup-android@v4
       with:
         cmdline-tools-version: 11076708
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+
+    # ------------------------------------------------------------
+    # Checagens estáticas rápidas do plano unificado (Fase 6)
+    # ------------------------------------------------------------
+    - name: Run reliability gate (Fase 6)
+      run: ./scripts/phase6_reliability_gate.sh
+
+    # ------------------------------------------------------------
+    # Compila e roda os testes de verdade — sem isso o workflow só
+    # validava checkout/setup e nunca pegava erro de compilação.
+    # ------------------------------------------------------------
+    - name: Run tests and build
+      run: ./gradlew build --stacktrace
