@@ -67,7 +67,7 @@ class CriadorViewModelNewCharacterResetTest {
         state.modoOficialAtivo = true
         state.permiteMultiAntecedenteArcano = true
         state.poderesSelecionados.add("poder_fantasma")
-        state.equipSectionFilters["ARMAS"] = setOf("filtro")
+        state.equipSectionFilters[EquipSuperType.ARMAS] = setOf("filtro")
         state.superPoderEmFoco = "algum_poder"
         state.ancestralidadeEmFoco = "ALGUMA_RACA"
         state.applyYoungMajor(
