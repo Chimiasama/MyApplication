@@ -4816,11 +4816,11 @@
         "descricaoLite": "Concede a Vantagem Furioso junto com a Complicação Sanguinário."
       },
       {
-        "nome": "Dons da Natureza",
-        "descricao": "Feral escolhe exatamente um dos mesmos dons da natureza disponíveis para os Umvee: Ápice, Vínculo Bestial, Pele Iluminada pela Lua, Gatoruja, Correnteza ou Pedregoso.",
+        "nome": "Garras",
+        "descricao": "Ápice concede garras naturais que causam For+d4 de dano.",
         "category": "racial_trait_positive",
-        "id": "DONS_DA_NATUREZA",
-        "descricaoLite": "Escolhe um entre os mesmos seis dons de natureza disponíveis aos Umvee: Ápice, Vínculo Bestial, Pele Iluminada pela Lua, Gatoruja, Correnteza ou Pedregoso."
+        "id": "GARRAS",
+        "descricaoLite": "Garras naturais causam For+d4 de dano."
       },
       {
         "nome": "Primitivo",
@@ -4858,9 +4858,6 @@
     },
     "vantagensGratis": [],
     "desvantagens": [],
-    "opcoes": [
-      "Ápice"
-    ],
     "livros": [
       "ARTE_DA_GUERRA"
     ],

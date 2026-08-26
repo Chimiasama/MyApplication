@@ -446,9 +446,8 @@ fun AncestralidadesSection(
                             if (isSelected) {
                                 val opcoesValidas = item.opcoes
 
-                                val isFeral = item.nome.keyify() == "FERAL"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
-                                if (opcoesValidas.size > 1 && !isFeral) {
+                                if (opcoesValidas.size > 1) {
                                     Spacer(Modifier.height(8.dp))
                                     Text(
                                         if (isUmvee) "Dons da Natureza:" else "Variante:",

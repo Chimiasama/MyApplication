@@ -114,12 +114,15 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
-    fun `feral recebe furioso garras sanguinario e bloqueio de chi`() {
+    fun `feral recebe furioso garras sanguinario e bloqueio de chi sem nenhuma opcao de variante`() {
+        // Feral não tem Variante nem Seleção de dom da natureza (diferente do
+        // Umvee) — é uma raça própria com traços fixos, por isso o teste não
+        // passa nenhuma ancestryOptions.
         val result = useCase.execute(
             anc = "Feral",
             descendenteElementalSelecionado = null,
-            scifiVariant = "Correnteza",
-            ancestryOptions = listOf("Ápice", "Vínculo Bestial", "Pele Iluminada pela Lua", "Gatoruja", "Correnteza", "Pedregoso"),
+            scifiVariant = null,
+            ancestryOptions = emptyList(),
             ancestryOrigin = "ARTE_DA_GUERRA"
         )
 
@@ -219,6 +222,20 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
+        assertEquals(0, result.naturalArmorFromRace)
+    }
+
+    @Test
+    fun `elementais scifi ar fogo ou agua troca forte por forma de energia`() {
+        val result = useCase.execute(
+            anc = "ELEMENTAIS",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Ar, Fogo ou Água",
+            ancestryOptions = listOf("Padrão", "Ar, Fogo ou Água"),
+            isSciFiActive = true
+        )
+
+        assertEquals(listOf("FORMA DE ENERGIA"), result.ensureAutomaticAdvantages)
         assertEquals(0, result.naturalArmorFromRace)
     }
 
