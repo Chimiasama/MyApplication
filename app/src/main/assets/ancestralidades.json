@@ -304,7 +304,7 @@
       {
         "nome": "Tamanho -1",
         "descricao": "Medem cerca de um metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MENOS_1",
         "category": "racial_trait_negative",
         "descricaoLite": "Com pouco mais de um metro de altura, tem Tamanho e Resistência reduzidos em 1 ponto cada."
       }
@@ -767,7 +767,7 @@
       {
         "nome": "TAMANHO +1",
         "descricao": "Centauros normalmente têm o tamanho humano com os quartos traseiros adicionais de um cavalo. Adicione +1 a sua Resistência.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
         "descricaoLite": "O corpo maior concede +1 de Resistência."
       }
@@ -1051,7 +1051,7 @@
       {
         "nome": "TAMANHO -1",
         "descricao": "Gnomos adultos medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MENOS_1",
         "category": "racial_trait_negative",
         "descricaoLite": "Com cerca de 1,20 m de altura: -1 em Tamanho e, por consequência, -1 em Resistência."
       },
@@ -1574,7 +1574,7 @@
       {
         "nome": "TAMANHO +1",
         "descricao": "Minotauros são altos e largos, adicionando +1 à sua Resistência.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
         "descricaoLite": "Porte alto e largo: +1 de Resistência."
       }
@@ -1657,7 +1657,7 @@
       {
         "nome": "TAMANHO +1",
         "descricao": "Ogros medem cerca de 2,70 metros de altura. Isso confere Resistência +1.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
         "descricaoLite": "Com cerca de 2,70 m de altura: +1 de Resistência."
       }
@@ -1718,7 +1718,7 @@
       {
         "nome": "TAMANHO +1",
         "descricao": "Orcs medem cerca de 2,40 metros de altura. Isso confere Resistência +1.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
         "descricaoLite": "Com cerca de 2,40 m de altura: +1 de Resistência."
       }
@@ -1763,7 +1763,7 @@
       {
         "nome": "TAMANHO -1",
         "descricao": "Pequeninos medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MENOS_1",
         "category": "racial_trait_negative",
         "descricaoLite": "Com cerca de 1,20 m de altura: -1 em Tamanho e Resistência."
       }
@@ -1837,7 +1837,7 @@
       {
         "nome": "TAMANHO -1",
         "descricao": "Membros do povo ratazana medem cerca de 1,20 metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MENOS_1",
         "category": "racial_trait_negative",
         "descricaoLite": "Com cerca de 1,20 m de altura: -1 em Tamanho e Resistência."
       },
@@ -2542,7 +2542,7 @@
         "nome": "Tamanho -1",
         "descricao": "Medem cerca de um metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
         "category": "racial_trait_negative",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MENOS_1",
         "descricaoLite": "Com pouco mais de um metro de altura, tem Tamanho e Resistência reduzidos em 1 ponto cada."
       }
     ],
@@ -3074,7 +3074,7 @@
       {
         "nome": "CABEÇA DURA",
         "descricao": "A crista da cabeça desses drakens permite que deem cabeçadas com força extrema. Isso conta como Chifres e causa For+d4 de dano. Veja Armas Naturais em Savage Worlds Edição Aventura.",
-        "id": "CABECA_DURA",
+        "id": "CABECADA",
         "category": "racial_trait_positive",
         "descricaoLite": "A crista craniana funciona como arma natural do tipo Chifres, permitindo cabeçadas que causam For+d4 de dano."
       },
@@ -3147,7 +3147,7 @@
       {
         "nome": "TAMANHO +1",
         "descricao": "Elementais medem 2,1 metros de altura. Adicionam +1 à sua Resistência.",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
         "descricaoLite": "Com mais de dois metros de altura, ganham +1 de Resistência."
       }
@@ -5177,7 +5177,7 @@
         "nome": "Tamanho -1",
         "descricao": "Reduz Tamanho e Resistência em 1.",
         "category": "racial_trait_negative",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MENOS_1",
         "descricaoLite": "Tamanho e Resistência caem 1 ponto cada."
       },
       {
@@ -5248,7 +5248,7 @@
         "nome": "Tamanho -1",
         "descricao": "Reduz Tamanho e Resistência em 1.",
         "category": "racial_trait_negative",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MENOS_1",
         "descricaoLite": "Tamanho e Resistência caem 1 ponto cada."
       }
     ],
@@ -5690,7 +5690,7 @@
         "nome": "Tamanho -1",
         "descricao": "Medem cerca de um metro de altura, reduzindo seu Tamanho (e também sua Resistência) em 1.",
         "category": "racial_trait_negative",
-        "id": "TAMANHO_1",
+        "id": "TAMANHO_MENOS_1",
         "descricaoLite": "Com pouco mais de um metro de altura, tem Tamanho e Resistência reduzidos em 1 ponto cada."
       }
     ],
@@ -5843,7 +5843,7 @@
       {
         "nome": "Antecedente Arcano (Milagres)",
         "descricao": "Celestiais podem invocar uma grande variedade de milagres.",
-        "category": "racial_trait_positive",
+        "category": "racial_edge",
         "id": "ANTECEDENTE_ARCANO_MILAGRES",
         "descricaoLite": "Tem acesso ao Antecedente Arcano de Milagres, podendo conjurar poderes dessa lista."
       },
