@@ -10,7 +10,7 @@ class RacialTraitPointCatalogTest {
     fun `custoDe eh case e acento insensivel via keyify`() {
         assertEquals(-1, RacialTraitPointCatalog.custoDe("fragil"))
         assertEquals(-1, RacialTraitPointCatalog.custoDe("FRAGIL"))
-        assertEquals(2, RacialTraitPointCatalog.custoDe("cabecada"))
+        assertEquals(1, RacialTraitPointCatalog.custoDe("cabecada"))
     }
 
     @Test
@@ -21,14 +21,28 @@ class RacialTraitPointCatalogTest {
 
     @Test
     fun `tamanho mais e menos 1 tem sinais opostos apos a correcao da colisao de id`() {
-        assertEquals(2, RacialTraitPointCatalog.custoDe("TAMANHO_MAIS_1"))
+        assertEquals(1, RacialTraitPointCatalog.custoDe("TAMANHO_MAIS_1"))
         assertEquals(-1, RacialTraitPointCatalog.custoDe("TAMANHO_MENOS_1"))
     }
 
     @Test
     fun `cabecada e cabeca dura sao traços diferentes com custos diferentes`() {
-        assertEquals(2, RacialTraitPointCatalog.custoDe("CABECADA"))
-        assertEquals(-1, RacialTraitPointCatalog.custoDe("CABECA_DURA"))
+        assertEquals(1, RacialTraitPointCatalog.custoDe("CABECADA"))
+        assertEquals(-2, RacialTraitPointCatalog.custoDe("CABECA_DURA"))
+    }
+
+    @Test
+    fun `custos batem com o catalogo oficial de criacao de racas quando ha equivalente`() {
+        // basico_habilidades_raciais.json é a fonte de verdade; conferindo
+        // alguns casos que mudaram na recalibração (a correção mais comum:
+        // penalidade num ATRIBUTO vale -2, não -1 como penalidade de perícia).
+        assertEquals(5, RacialTraitPointCatalog.custoDe("ACAO_ADICIONAL")) // oficial: acao_adicional
+        assertEquals(8, RacialTraitPointCatalog.custoDe("CONSTRUTO")) // oficial: construto
+        assertEquals(8, RacialTraitPointCatalog.custoDe("MORTO_VIVO")) // oficial: morto_vivo
+        assertEquals(1, RacialTraitPointCatalog.custoDe("MORDIDA")) // oficial: mordida (For+d4)
+        assertEquals(1, RacialTraitPointCatalog.custoDe("RESISTENCIA")) // oficial: resistencia_racial (+1)
+        assertEquals(-2, RacialTraitPointCatalog.custoDe("SEM_INSTRUCAO")) // -1 Astúcia é penalidade de ATRIBUTO (oficial penalidade_atributo_1 = -2)
+        assertEquals(-1, RacialTraitPointCatalog.custoDe("OBVIO")) // -1 Furtividade é penalidade de PERÍCIA (oficial penalidade_pericia_1 = -1)
     }
 
     @Test
@@ -63,9 +77,10 @@ class RacialTraitPointCatalogTest {
     @Test
     fun `todo id usado em ancestralidades tem entrada no catalogo`() {
         // Assinatura mínima de sanidade: nenhum custo positivo nem negativo
-        // extrapola a escala documentada (-4..4).
+        // extrapola a escala documentada (-4..8, mesma faixa do catálogo
+        // oficial — Construto e Morto-Vivo chegam a 8).
         RacialTraitPointCatalog.CUSTOS.values.forEach { custo ->
-            assertTrue("custo $custo fora da escala documentada", custo in -4..4)
+            assertTrue("custo $custo fora da escala documentada", custo in -4..8)
         }
     }
 }
