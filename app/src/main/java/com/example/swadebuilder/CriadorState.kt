@@ -320,6 +320,8 @@ class CriadorState {
     var anoesScifiSelecionado by mutableStateOf<String?>(null)
     var scifiVariant by mutableStateOf<String?>(null)
     var humanoMineradorAtributo by mutableStateOf<String?>(null)
+    /** Id de CustomAncestryVariant selecionada pra raça atual (Variante custom, ver Tarefa #18). */
+    var customVarianteRacialSelecionadaId by mutableStateOf<String?>(null)
     var anaoCiberTracosSelecionados by mutableStateOf<List<AnaoCiberTraitSelection>>(emptyList())
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var kitsunemimiPericiaEscolhida by mutableStateOf<String?>(null)
@@ -423,7 +425,7 @@ class CriadorState {
         if (lookupKeys.first() != lookupKeys.firstOrNull { ancestryMap[it] != null }) {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
-        if (candidates.size == 1) return candidates.first()
+        if (candidates.size == 1) return applyCustomAncestryVariantIfSelected(candidates.first())
 
         val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
             compendioFantasiaAtivo = compendioFantasiaAtivo,
@@ -457,7 +459,68 @@ class CriadorState {
             selected
         }
 
-        return withVariant
+        return applyCustomAncestryVariantIfSelected(withVariant)
+    }
+
+    /**
+     * Aplica, se houver, a CustomAncestryVariant selecionada pra raça `base`: remove os
+     * traços/vantagens-grátis/desvantagens indicados e adiciona os traços bespoke, Vantagens
+     * e Complicações escolhidos na criação da Variante. Roda por cima do RacialModifier já
+     * resolvido (após applyAncestryVariantAdjustments), então todo o resto do app — que lê
+     * habilidades/vantagensGratis/desvantagens de currentAncestryDef — passa a refletir a
+     * Variante automaticamente, sem precisar tocar em ResolveAncestrySpecificAdjustmentsUseCase.
+     */
+    private fun applyCustomAncestryVariantIfSelected(base: RacialModifier): RacialModifier {
+        val variantId = customVarianteRacialSelecionadaId ?: return base
+        val variant = listaVariantesRaciaisCustom.firstOrNull { it.id == variantId } ?: return base
+        if (variant.ancestralidadeId != base.nome.keyify()) return base
+
+        val tracosRemovidosKeys = variant.tracosRemovidosIds.map { it.keyify() }.toSet()
+        val newHabilidades = base.habilidades.filterNot { hab ->
+            val idKey = hab.id?.keyify()
+            idKey != null && idKey in tracosRemovidosKeys
+        }.toMutableList()
+
+        val vantagensGratisRemovidasKeys = variant.vantagensGratisRemovidas.map { it.keyify() }.toSet()
+        val newVantagensGratis = base.vantagensGratis.filterNot { it.keyify() in vantagensGratisRemovidasKeys }.toMutableList()
+
+        val desvantagensRemovidasKeys = variant.desvantagensRemovidas.map { it.keyify() }.toSet()
+        val newDesvantagens = base.desvantagens.filterNot { entry ->
+            entry.keyify() in desvantagensRemovidasKeys || entry.substringBefore("(").trim().keyify() in desvantagensRemovidasKeys
+        }.toMutableList()
+
+        variant.tracosAdicionados.forEach { trait ->
+            newHabilidades.add(
+                com.example.swadebuilder.model.RacialAbility(
+                    nome = trait.nome,
+                    descricao = trait.descricao,
+                    id = trait.nome.lowercase().replace(" ", "_"),
+                    category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative"
+                )
+            )
+        }
+
+        variant.vantagensAdicionadasIds.forEach { vantagemId ->
+            val grant = listaVantagens.firstOrNull { it.id == vantagemId }?.id ?: vantagemId
+            if (newVantagensGratis.none { it.keyify() == grant.keyify() }) {
+                newVantagensGratis.add(grant)
+            }
+        }
+
+        variant.complicacoesAdicionadas.forEach { escolha ->
+            val complicacao = listaComplicacoes.firstOrNull { it.id == escolha.complicacaoId } ?: return@forEach
+            val severidade = if (escolha.comoMaior) "Maior" else "Menor"
+            val entry = "${complicacao.name} ($severidade)"
+            if (newDesvantagens.none { it.keyify() == entry.keyify() }) {
+                newDesvantagens.add(entry)
+            }
+        }
+
+        return base.copy(
+            habilidades = newHabilidades,
+            vantagensGratis = newVantagensGratis,
+            desvantagens = newDesvantagens
+        )
     }
 
     private fun applyAncestryVariantAdjustments(base: RacialModifier, key: String): RacialModifier {
@@ -4576,6 +4639,14 @@ class CriadorState {
             anaoCiberTracosSelecionados = emptyList()
         }
 
+        // Limpa a Variante custom selecionada se ela não pertencer à raça de destino.
+        if (customVarianteRacialSelecionadaId != null) {
+            val selectedVariant = listaVariantesRaciaisCustom.firstOrNull { it.id == customVarianteRacialSelecionadaId }
+            if (selectedVariant == null || selectedVariant.ancestralidadeId != anc.keyify()) {
+                customVarianteRacialSelecionadaId = null
+            }
+        }
+
         val paAntes = pontosAtributo
         val spAntes = pontosPericia
         val pvAntes = pontosVantagem
@@ -6429,7 +6500,8 @@ class CriadorState {
                 scifiVariant = scifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo,
                 anaoCiberTracosSelecionados = anaoCiberTracosSelecionados,
-                vantagemAdaptavelSelecionadaId = vantagemAdaptavelSelecionadaId
+                vantagemAdaptavelSelecionadaId = vantagemAdaptavelSelecionadaId,
+                customVarianteRacialSelecionadaId = customVarianteRacialSelecionadaId
             ),
             progresso = SnapshotProgresso(
                 progresso = progresso,
@@ -6588,6 +6660,7 @@ class CriadorState {
         humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
         anaoCiberTracosSelecionados = snapshot.selecoes.anaoCiberTracosSelecionados
         vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
+        customVarianteRacialSelecionadaId = snapshot.selecoes.customVarianteRacialSelecionadaId
 
         dinheiro = snapshot.recursos.dinheiro
         requisicao = snapshot.recursos.requisicao
