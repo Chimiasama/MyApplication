@@ -80,29 +80,4 @@ object AppPreferences {
             }
     }
 
-    // Legacy support to avoid breaking existing calls if any
-    fun loadFeedbackPrefs(context: Context, defaultHaptics: Int, defaultSound: Int): FeedbackPrefs {
-        val p = loadPrefs(context, defaultHaptics, defaultSound)
-        return FeedbackPrefs(p.hapticStrength, p.soundVolume)
-    }
-
-    fun saveFeedbackPrefs(context: Context, hapticStrength: Int, soundVolume: Int) {
-         // This partial save is tricky because we need the other values.
-         // However, in the current architecture, state holds the source of truth.
-         // We should use savePrefs passing all values from state.
-         // For now, we update only what we have, but SharedPreferences.Editor is not persistent across calls.
-         // This legacy method might overwrite others with defaults if we are not careful,
-         // but since we are replacing the usage in MainActivity, it should be fine.
-         // To be safe, we read first.
-         val prefs = context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
-         prefs.edit {
-            putInt(KEY_HAPTIC, hapticStrength)
-            putInt(KEY_SOUND, soundVolume)
-         }
-    }
-
-    data class FeedbackPrefs(
-        val hapticStrength: Int,
-        val soundVolume: Int
-    )
 }

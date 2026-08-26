@@ -221,7 +221,9 @@ fun UnifiedScreen(
             viewModel.salvarPersonagem(context, state.nomePersonagem, silent = true)
             lastAutoSavedDigest = snapshotDigest
         } catch (e: Exception) {
-            // Auto-save falhou silenciosamente para evitar interrupção do fluxo.
+            // Não interrompe o fluxo com UI (é autosave em segundo plano), mas
+            // registra no Logcat para não mascarar falhas reais de gravação.
+            android.util.Log.w("AutoSave", "Falha ao salvar automaticamente o personagem", e)
         }
     }
 

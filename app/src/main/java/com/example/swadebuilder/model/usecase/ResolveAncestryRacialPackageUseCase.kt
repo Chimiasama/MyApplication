@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
 
@@ -14,6 +15,7 @@ class ResolveAncestryRacialPackageUseCase(
         val anoesScifiSelecionado: String? = null,
         val scifiVariant: String? = null,
         val humanoMineradorAtributo: String? = null,
+        val anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
         val ancestryOptions: List<String> = emptyList(),
         val isSciFiActive: Boolean = false,
         val isSciFiMechasActive: Boolean = false,
@@ -73,6 +75,7 @@ class ResolveAncestryRacialPackageUseCase(
             anoesScifiSelecionado = params.anoesScifiSelecionado,
             scifiVariant = params.scifiVariant,
             humanoMineradorAtributo = params.humanoMineradorAtributo,
+            anaoCiberTracosSelecionados = params.anaoCiberTracosSelecionados,
             ancestryOptions = params.ancestryOptions,
             isSciFiActive = params.isSciFiActive,
             isSciFiMechasActive = params.isSciFiMechasActive,

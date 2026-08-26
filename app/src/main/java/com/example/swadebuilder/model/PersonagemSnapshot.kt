@@ -41,6 +41,7 @@ data class SnapshotFlags(
     val compendioCidadeSolVaporAtivo: Boolean = false,
     val compendioWiseguysAtivo: Boolean = false,
     val optRegraFama: Boolean = false,
+    val optVariantesDeRacaAtivo: Boolean = false,
     val modoOficialAtivo: Boolean = false,
     val modoMonstroAtivo: Boolean,
     val tipoMonstroSelecionado: String?,
@@ -173,7 +174,9 @@ data class SnapshotSelecoes(
     val anoesScifiSelecionado: String? = null,
     val scifiVariant: String? = null,
     val humanoMineradorAtributo: String? = null,
+    val anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
     val vantagemAdaptavelSelecionadaId: String? = null,
+    val customVarianteRacialSelecionadaId: String? = null,
     val mechasSelecionados: List<MechaItem> = emptyList(),
     val ciberneticosInstalados: List<CiberneticoItem> = emptyList()
 )

@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.util.keyify
 
 class ApplyHumanAncestryTransitionUseCase {
 
@@ -23,28 +22,4 @@ class ApplyHumanAncestryTransitionUseCase {
         // Legacy +1 PV logic for Humans disabled in favor of Adaptable Slot logic in CriadorState.
         return Result(novosPontosVantagem = params.pontosVantagemAtuais)
     }
-
-    private fun isRacialFree(vantagem: Vantagem, prevFreeKeys: Set<String>): Boolean =
-        vantagem.nome.keyify() in prevFreeKeys
-
-    private fun isUsedAsPrereq(vantagem: Vantagem, selecionadas: List<Vantagem>): Boolean =
-        selecionadas.any { other ->
-            other != vantagem && other.requisitos.vantagensPrevias.any { prevId ->
-                when (prevId.keyify().replace(" ", "_")) {
-                    "ANTECEDENTE_ARCANO", "ANTECEDENTE_ARCANO:*" -> {
-                        other.id.startsWith("antecedente_arcano_") ||
-                            other.id.startsWith("aa_") ||
-                            (other.id == "antecedente_arcano" && !other.choice.isNullOrBlank())
-                    }
-
-                    else -> other.id.keyify().replace(" ", "_") == prevId.keyify().replace(" ", "_")
-                }
-            }
-        }
-
-    private fun isScenarioEdge(vantagem: Vantagem): Boolean =
-        vantagem.id == "superpoderes" ||
-            vantagem.id == "agente_syn" ||
-            vantagem.id == "aa_agente_syn" ||
-            (vantagem.id == "conexoes" && vantagem.choice?.equals("Máfia", ignoreCase = true) == true)
 }

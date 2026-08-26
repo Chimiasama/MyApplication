@@ -104,5 +104,13 @@ data class MeuPersonagem(
     val modoProgressaoAtivo: Boolean = false,
     val complicacoesTipos: Map<String, String> = emptyMap(),
     val mechasSelecionados: List<MechaItem> = emptyList(),
-    val ciberneticosInstalados: List<CiberneticoItem> = emptyList()
+    val ciberneticosInstalados: List<CiberneticoItem> = emptyList(),
+
+    // Escolhas de Trópico/variante racial que tinham efeito mecânico (via
+    // ModifierEngine/atributoBaseRacial/periciaStartRawInternal) mas nunca
+    // chegavam à ficha impressa/resumo por não existirem aqui.
+    val samuraiPosturasSelecionadas: List<String> = emptyList(),
+    val dominioClerigoSelecionado: String? = null,
+    val dominioClerigoPathfinderSelecionado: String? = null,
+    val scifiVariant: String? = null
 )

@@ -121,7 +121,11 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         usaRequisicao = this.usaRequisicao,
         modoProgressaoAtivo = this.modoProgressaoAtivo,
         mechasSelecionados = this.mechasSelecionados.toList(),
-        ciberneticosInstalados = this.ciberneticosInstalados.toList()
+        ciberneticosInstalados = this.ciberneticosInstalados.toList(),
+        samuraiPosturasSelecionadas = this.samuraiPosturasSelecionadas.toList(),
+        dominioClerigoSelecionado = this.dominioClerigoSelecionado,
+        dominioClerigoPathfinderSelecionado = this.dominioClerigoPathfinderSelecionado,
+        scifiVariant = if (this.compendioSciFiAtivo) this.scifiVariant else null
     )
 }
 

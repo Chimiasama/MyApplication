@@ -56,6 +56,7 @@ import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CustomContentType
 import com.example.swadebuilder.util.loadJsonAsset
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.getDisplayName
@@ -276,6 +277,22 @@ fun SettingsDialog(
                         var selectedRacialTraits by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
                         var showTraitSelectDialog by remember { mutableStateOf(false) }
 
+                        // Estado da Variante de Raça custom (ver ResolveVariantPointBudgetUseCase / CustomAncestryVariant).
+                        var varianteBaseRacaId by remember { mutableStateOf<String?>(null) }
+                        var showVarianteBaseRacaDialog by remember { mutableStateOf(false) }
+                        var varianteTracosRemovidos by remember { mutableStateOf(listOf<String>()) }
+                        var varianteVantagensGratisRemovidas by remember { mutableStateOf(listOf<String>()) }
+                        var varianteDesvantagensRemovidas by remember { mutableStateOf(listOf<String>()) }
+                        var varianteTracosAdicionados by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
+                        var showVarianteTraitAddDialog by remember { mutableStateOf(false) }
+                        var varianteVantagensAdicionadas by remember { mutableStateOf(listOf<String>()) }
+                        var showVarianteVantagemAddDialog by remember { mutableStateOf(false) }
+                        var varianteComplicacoesAdicionadas by remember { mutableStateOf(listOf<com.example.swadebuilder.model.CustomVariantComplicacaoEscolhida>()) }
+                        var showVarianteComplicacaoSeveridadeDialog by remember { mutableStateOf(false) }
+                        var showVarianteComplicacaoPickDialog by remember { mutableStateOf(false) }
+                        var varianteComplicacaoComoMaiorEscolhido by remember { mutableStateOf(false) }
+                        var varianteSemLimite by remember { mutableStateOf(false) }
+
                         val baseRacialCatalog: List<com.example.swadebuilder.model.HabilidadeCriacao> = remember {
                             runCatching {
                                 context.loadJsonAsset<List<com.example.swadebuilder.model.HabilidadeCriacao>>("basico_habilidades_raciais.json")
@@ -284,9 +301,9 @@ fun SettingsDialog(
 
                         val categories = remember(isHomeScreen) {
                             if (isHomeScreen) {
-                                listOf("Vantagem", "Complicação", "Poder", "Raça", "Traço Racial")
+                                listOf("Vantagem", "Complicação", "Poder", "Raça", "Traço Racial", "Variante de Raça")
                             } else {
-                                listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça", "Traço Racial")
+                                listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça", "Traço Racial", "Variante de Raça")
                             }
                         }
                         if (selectedCategory !in categories) {
@@ -692,6 +709,201 @@ fun SettingsDialog(
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
                                                 }
+                                                "Variante de Raça" -> {
+                                                    val baseRacaOptions = remember(state.listaAncestralidadesJson) {
+                                                        state.listaAncestralidadesJson.distinctBy { it.nome.keyify() }.sortedBy { it.nome }
+                                                    }
+                                                    val varianteBaseRaca = remember(varianteBaseRacaId, baseRacaOptions) {
+                                                        baseRacaOptions.firstOrNull { it.nome.keyify() == varianteBaseRacaId }
+                                                    }
+
+                                                    OutlinedButton(
+                                                        onClick = { showVarianteBaseRacaDialog = true },
+                                                        modifier = Modifier.fillMaxWidth()
+                                                    ) {
+                                                        Text(varianteBaseRaca?.nome ?: "Selecionar Raça Base")
+                                                    }
+
+                                                    if (varianteBaseRaca == null) {
+                                                        Text(
+                                                            text = "Escolha a raça base pra começar a montar a Variante.",
+                                                            style = MaterialTheme.typography.bodySmall,
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                    } else {
+                                                        val itensRemoviveis = remember(varianteBaseRaca) {
+                                                            com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca)
+                                                        }
+                                                        val nHab = varianteBaseRaca.habilidades.size
+                                                        val nVant = varianteBaseRaca.vantagensGratis.size
+                                                        val habilidadeItems = itensRemoviveis.take(nHab).filter { it.habilidadeId != null }
+                                                        val vantagemGratisItems = itensRemoviveis.drop(nHab).take(nVant)
+                                                        val desvantagemItems = itensRemoviveis.drop(nHab + nVant)
+
+                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos } +
+                                                            vantagemGratisItems.filter { it.label in varianteVantagensGratisRemovidas } +
+                                                            desvantagemItems.filter { it.label in varianteDesvantagensRemovidas }
+
+                                                        val itensAdicionadosSelecionados = buildList {
+                                                            varianteTracosAdicionados.forEach { trait ->
+                                                                add(com.example.swadebuilder.model.usecase.VariantBudgetItem(label = trait.nome, custo = trait.custo, habilidadeId = trait.nome.lowercase().replace(" ", "_")))
+                                                            }
+                                                            varianteVantagensAdicionadas.forEach { vid ->
+                                                                state.listaVantagens.firstOrNull { it.id == vid }?.let {
+                                                                    add(com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.vantagemComoItemAdicionado(it))
+                                                                }
+                                                            }
+                                                            varianteComplicacoesAdicionadas.forEach { esc ->
+                                                                state.listaComplicacoes.firstOrNull { it.id == esc.complicacaoId }?.let {
+                                                                    add(com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.complicacaoComoItemAdicionado(it, esc.comoMaior))
+                                                                }
+                                                            }
+                                                        }
+
+                                                        val budgetResult = remember(itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
+                                                            com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
+                                                                itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                            )
+                                                        }
+
+                                                        OutlinedCard(
+                                                            modifier = Modifier.fillMaxWidth(),
+                                                            colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)
+                                                        ) {
+                                                            Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                                                val saldoColor = if (budgetResult.dentroDoOrcamento) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                                                                Text(
+                                                                    text = if (varianteSemLimite) "Saldo: ${budgetResult.saldo} (sem limite)" else "Saldo: ${budgetResult.saldo} / ±${budgetResult.orcamento}",
+                                                                    style = MaterialTheme.typography.labelSmall,
+                                                                    fontWeight = FontWeight.SemiBold,
+                                                                    color = saldoColor
+                                                                )
+                                                                Row(
+                                                                    modifier = Modifier.fillMaxWidth(),
+                                                                    verticalAlignment = Alignment.CenterVertically
+                                                                ) {
+                                                                    Checkbox(checked = varianteSemLimite, onCheckedChange = { varianteSemLimite = it })
+                                                                    Spacer(Modifier.width(4.dp))
+                                                                    Text("Sem limite de pontos (raças mais fortes)", style = MaterialTheme.typography.labelSmall)
+                                                                }
+
+                                                                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                                                                Text("Remover da raça base:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+
+                                                                if (habilidadeItems.isEmpty() && vantagemGratisItems.isEmpty() && desvantagemItems.isEmpty()) {
+                                                                    Text("Esta raça não tem traços removíveis.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                                                } else {
+                                                                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                                                        habilidadeItems.forEach { item ->
+                                                                            val isSel = item.habilidadeId in varianteTracosRemovidos
+                                                                            Row(
+                                                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                                                    varianteTracosRemovidos = if (isSel) varianteTracosRemovidos - item.habilidadeId!! else varianteTracosRemovidos + item.habilidadeId!!
+                                                                                },
+                                                                                verticalAlignment = Alignment.CenterVertically
+                                                                            ) {
+                                                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                                                    varianteTracosRemovidos = if (it) varianteTracosRemovidos + item.habilidadeId!! else varianteTracosRemovidos - item.habilidadeId!!
+                                                                                })
+                                                                                Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                                                                            }
+                                                                        }
+                                                                        vantagemGratisItems.forEach { item ->
+                                                                            val isSel = item.label in varianteVantagensGratisRemovidas
+                                                                            Row(
+                                                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                                                    varianteVantagensGratisRemovidas = if (isSel) varianteVantagensGratisRemovidas - item.label else varianteVantagensGratisRemovidas + item.label
+                                                                                },
+                                                                                verticalAlignment = Alignment.CenterVertically
+                                                                            ) {
+                                                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                                                    varianteVantagensGratisRemovidas = if (it) varianteVantagensGratisRemovidas + item.label else varianteVantagensGratisRemovidas - item.label
+                                                                                })
+                                                                                Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                                                                            }
+                                                                        }
+                                                                        desvantagemItems.forEach { item ->
+                                                                            val isSel = item.label in varianteDesvantagensRemovidas
+                                                                            Row(
+                                                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                                                    varianteDesvantagensRemovidas = if (isSel) varianteDesvantagensRemovidas - item.label else varianteDesvantagensRemovidas + item.label
+                                                                                },
+                                                                                verticalAlignment = Alignment.CenterVertically
+                                                                            ) {
+                                                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                                                    varianteDesvantagensRemovidas = if (it) varianteDesvantagensRemovidas + item.label else varianteDesvantagensRemovidas - item.label
+                                                                                })
+                                                                                Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                                                                Text("Adicionar à Variante:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+
+                                                                @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                                androidx.compose.foundation.layout.FlowRow(
+                                                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                                ) {
+                                                                    OutlinedButton(onClick = { showVarianteTraitAddDialog = true }) {
+                                                                        Text("+ Traço Racial", style = MaterialTheme.typography.labelSmall)
+                                                                    }
+                                                                    OutlinedButton(onClick = { showVarianteVantagemAddDialog = true }) {
+                                                                        Text("+ Vantagem", style = MaterialTheme.typography.labelSmall)
+                                                                    }
+                                                                    OutlinedButton(onClick = { showVarianteComplicacaoSeveridadeDialog = true }) {
+                                                                        Text("+ Complicação", style = MaterialTheme.typography.labelSmall)
+                                                                    }
+                                                                }
+
+                                                                if (itensAdicionadosSelecionados.isNotEmpty()) {
+                                                                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                                                                        varianteTracosAdicionados.forEach { trait ->
+                                                                            Row(
+                                                                                modifier = Modifier.fillMaxWidth(),
+                                                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                                                verticalAlignment = Alignment.CenterVertically
+                                                                            ) {
+                                                                                Text("• ${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                                                                                TextButton(onClick = { varianteTracosAdicionados = varianteTracosAdicionados - trait }, contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp)) {
+                                                                                    Text("Remover", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        varianteVantagensAdicionadas.forEach { vid ->
+                                                                            val vant = state.listaVantagens.firstOrNull { it.id == vid }
+                                                                            Row(
+                                                                                modifier = Modifier.fillMaxWidth(),
+                                                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                                                verticalAlignment = Alignment.CenterVertically
+                                                                            ) {
+                                                                                Text("• ${vant?.nome ?: vid}", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                                                                                TextButton(onClick = { varianteVantagensAdicionadas = varianteVantagensAdicionadas - vid }, contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp)) {
+                                                                                    Text("Remover", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        varianteComplicacoesAdicionadas.forEach { esc ->
+                                                                            val comp = state.listaComplicacoes.firstOrNull { it.id == esc.complicacaoId }
+                                                                            Row(
+                                                                                modifier = Modifier.fillMaxWidth(),
+                                                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                                                verticalAlignment = Alignment.CenterVertically
+                                                                            ) {
+                                                                                Text("• ${comp?.name ?: esc.complicacaoId} (${if (esc.comoMaior) "Maior" else "Menor"})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
+                                                                                TextButton(onClick = { varianteComplicacoesAdicionadas = varianteComplicacoesAdicionadas - esc }, contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp)) {
+                                                                                    Text("Remover", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
 
                                             // Common Description field
@@ -738,6 +950,7 @@ fun SettingsDialog(
                                             activeBookCustomData.poderes.forEach { add("Poder" to it.nome) }
                                             activeBookCustomData.racas.forEach { add("Raça" to it.nome) }
                                             activeBookCustomData.habilidadesRaciais.forEach { add("Traço Racial" to it.nome) }
+                                            activeBookCustomData.variantesRaciais.forEach { add("Variante de Raça" to it.nome) }
                                         }
                                     }
 
@@ -777,6 +990,13 @@ fun SettingsDialog(
                                                             }
                                                             "Raça" -> customStorageManager.deleteRaca(context, activeBookKey, name)
                                                             "Traço Racial" -> customStorageManager.deleteHabilidadeRacial(context, activeBookKey, name)
+                                                            "Variante de Raça" -> {
+                                                                val item = activeBookCustomData.variantesRaciais.firstOrNull { it.nome == name }
+                                                                item?.let {
+                                                                    customStorageManager.deleteVarianteRacial(context, activeBookKey, it.id)
+                                                                    state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom.filterNot { v -> v.id == it.id }
+                                                                }
+                                                            }
                                                         }
                                                         refreshTrigger++
                                                     }) {
@@ -907,6 +1127,72 @@ fun SettingsDialog(
                                                     )
                                                     customStorageManager.addHabilidadeRacial(context, activeBookKey, newTrait)
                                                     statusMessage = "Traço racial '$customItemName' salvo no livro $activeBookKey!"
+                                                }
+                                                "Variante de Raça" -> {
+                                                    val baseRaca = varianteBaseRacaId?.let { bid -> state.listaAncestralidadesJson.firstOrNull { it.nome.keyify() == bid } }
+                                                    if (baseRaca == null) {
+                                                        statusMessage = "Selecione a raça base da Variante."
+                                                    } else {
+                                                        val itensRemoviveis = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca)
+                                                        val nHab = baseRaca.habilidades.size
+                                                        val nVant = baseRaca.vantagensGratis.size
+                                                        val habilidadeItems = itensRemoviveis.take(nHab).filter { it.habilidadeId != null }
+                                                        val vantagemGratisItems = itensRemoviveis.drop(nHab).take(nVant)
+                                                        val desvantagemItems = itensRemoviveis.drop(nHab + nVant)
+
+                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos } +
+                                                            vantagemGratisItems.filter { it.label in varianteVantagensGratisRemovidas } +
+                                                            desvantagemItems.filter { it.label in varianteDesvantagensRemovidas }
+
+                                                        val itensAdicionadosSelecionados = buildList {
+                                                            varianteTracosAdicionados.forEach { trait ->
+                                                                add(com.example.swadebuilder.model.usecase.VariantBudgetItem(label = trait.nome, custo = trait.custo, habilidadeId = trait.nome.lowercase().replace(" ", "_")))
+                                                            }
+                                                            varianteVantagensAdicionadas.forEach { vid ->
+                                                                state.listaVantagens.firstOrNull { it.id == vid }?.let {
+                                                                    add(com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.vantagemComoItemAdicionado(it))
+                                                                }
+                                                            }
+                                                            varianteComplicacoesAdicionadas.forEach { esc ->
+                                                                state.listaComplicacoes.firstOrNull { it.id == esc.complicacaoId }?.let {
+                                                                    add(com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.complicacaoComoItemAdicionado(it, esc.comoMaior))
+                                                                }
+                                                            }
+                                                        }
+
+                                                        val budgetResult = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
+                                                            itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                        )
+
+                                                        if (!budgetResult.dentroDoOrcamento) {
+                                                            statusMessage = "A Variante precisa fechar em exatamente ±${budgetResult.orcamento} pontos (saldo atual: ${budgetResult.saldo}), ou marque 'Sem limite de pontos'."
+                                                        } else {
+                                                            val newVariant = com.example.swadebuilder.model.CustomAncestryVariant(
+                                                                id = id,
+                                                                ancestralidadeId = varianteBaseRacaId!!,
+                                                                nome = customItemName,
+                                                                descricao = safeDesc,
+                                                                tracosRemovidosIds = varianteTracosRemovidos,
+                                                                vantagensGratisRemovidas = varianteVantagensGratisRemovidas,
+                                                                desvantagensRemovidas = varianteDesvantagensRemovidas,
+                                                                tracosAdicionados = varianteTracosAdicionados,
+                                                                vantagensAdicionadasIds = varianteVantagensAdicionadas,
+                                                                complicacoesAdicionadas = varianteComplicacoesAdicionadas,
+                                                                semLimiteDePontos = varianteSemLimite
+                                                            )
+                                                            customStorageManager.addVarianteRacial(context, activeBookKey, newVariant)
+                                                            state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom + newVariant
+                                                            statusMessage = "Variante '$customItemName' salva no livro $activeBookKey!"
+                                                            varianteBaseRacaId = null
+                                                            varianteTracosRemovidos = emptyList()
+                                                            varianteVantagensGratisRemovidas = emptyList()
+                                                            varianteDesvantagensRemovidas = emptyList()
+                                                            varianteTracosAdicionados = emptyList()
+                                                            varianteVantagensAdicionadas = emptyList()
+                                                            varianteComplicacoesAdicionadas = emptyList()
+                                                            varianteSemLimite = false
+                                                        }
+                                                    }
                                                 }
                                             }
                                                     refreshTrigger++
@@ -1183,6 +1469,194 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { showTraitSelectDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        if (showVarianteBaseRacaDialog) {
+                            val baseRacaOptions = state.listaAncestralidadesJson.distinctBy { it.nome.keyify() }.sortedBy { it.nome }
+                            var filterBaseRacaText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showVarianteBaseRacaDialog = false },
+                                title = { Text("Raça Base da Variante") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterBaseRacaText,
+                                            onValueChange = { filterBaseRacaText = it },
+                                            label = { Text("Filtrar Raça") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        baseRacaOptions.filter { it.nome.contains(filterBaseRacaText, ignoreCase = true) }.forEach { raca ->
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    varianteBaseRacaId = raca.nome.keyify()
+                                                    varianteTracosRemovidos = emptyList()
+                                                    varianteVantagensGratisRemovidas = emptyList()
+                                                    varianteDesvantagensRemovidas = emptyList()
+                                                    showVarianteBaseRacaDialog = false
+                                                }.padding(vertical = 6.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(raca.nome, style = MaterialTheme.typography.bodyMedium)
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showVarianteBaseRacaDialog = false }) { Text("Fechar") } }
+                            )
+                        }
+
+                        if (showVarianteTraitAddDialog) {
+                            val allVarianteTraitsCatalog = (baseRacialCatalog + activeBookCustomData.habilidadesRaciais).distinctBy { it.nome }
+                            var filterVarianteTraitText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showVarianteTraitAddDialog = false },
+                                title = { Text("Adicionar Traço Racial") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterVarianteTraitText,
+                                            onValueChange = { filterVarianteTraitText = it },
+                                            label = { Text("Filtrar Traço") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        allVarianteTraitsCatalog.filter { it.nome.contains(filterVarianteTraitText, ignoreCase = true) }.forEach { trait ->
+                                            val isSel = varianteTracosAdicionados.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    varianteTracosAdicionados = if (isSel) varianteTracosAdicionados.filterNot { it.nome.equals(trait.nome, ignoreCase = true) } else varianteTracosAdicionados + trait
+                                                }.padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                    varianteTracosAdicionados = if (it) varianteTracosAdicionados + trait else varianteTracosAdicionados.filterNot { t -> t.nome.equals(trait.nome, ignoreCase = true) }
+                                                })
+                                                Spacer(Modifier.width(8.dp))
+                                                Column {
+                                                    Text("${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                    if (trait.descricao.isNotBlank()) {
+                                                        Text(trait.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showVarianteTraitAddDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        if (showVarianteVantagemAddDialog) {
+                            val availableVarianteVantagens = state.listaVantagens.distinctBy { it.id }.sortedBy { it.nome }
+                            var filterVarianteVantagemText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showVarianteVantagemAddDialog = false },
+                                title = { Text("Adicionar Vantagem Grátis") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterVarianteVantagemText,
+                                            onValueChange = { filterVarianteVantagemText = it },
+                                            label = { Text("Filtrar Vantagem") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        availableVarianteVantagens.filter { it.nome.contains(filterVarianteVantagemText, ignoreCase = true) }.forEach { vant ->
+                                            val isSel = vant.id in varianteVantagensAdicionadas
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    varianteVantagensAdicionadas = if (isSel) varianteVantagensAdicionadas - vant.id else varianteVantagensAdicionadas + vant.id
+                                                }.padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                    varianteVantagensAdicionadas = if (it) varianteVantagensAdicionadas + vant.id else varianteVantagensAdicionadas - vant.id
+                                                })
+                                                Spacer(Modifier.width(8.dp))
+                                                Text("${vant.nome} (${vant.requisitos.estagio})", style = MaterialTheme.typography.bodySmall)
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showVarianteVantagemAddDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        if (showVarianteComplicacaoSeveridadeDialog) {
+                            AlertDialog(
+                                onDismissRequest = { showVarianteComplicacaoSeveridadeDialog = false },
+                                title = { Text("Severidade da Complicação") },
+                                text = {
+                                    Text(
+                                        "Escolha a severidade da Complicação a adicionar. Isso filtra quais Complicações do(s) livro(s) ativo(s) ficam disponíveis.",
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                },
+                                confirmButton = {
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        TextButton(onClick = {
+                                            varianteComplicacaoComoMaiorEscolhido = false
+                                            showVarianteComplicacaoSeveridadeDialog = false
+                                            showVarianteComplicacaoPickDialog = true
+                                        }) { Text("Menor (-1)") }
+                                        TextButton(onClick = {
+                                            varianteComplicacaoComoMaiorEscolhido = true
+                                            showVarianteComplicacaoSeveridadeDialog = false
+                                            showVarianteComplicacaoPickDialog = true
+                                        }) { Text("Maior (-2)") }
+                                    }
+                                },
+                                dismissButton = { TextButton(onClick = { showVarianteComplicacaoSeveridadeDialog = false }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        if (showVarianteComplicacaoPickDialog) {
+                            val comoMaior = varianteComplicacaoComoMaiorEscolhido
+                            val availableVarianteComps = state.listaComplicacoes.distinctBy { it.id }.filter { comp ->
+                                val sev = comp.severity.trim().lowercase()
+                                if (comoMaior) {
+                                    sev == "maior" || (sev.contains("menor") && sev.contains("maior"))
+                                } else {
+                                    sev == "menor" || (sev.contains("menor") && sev.contains("maior"))
+                                }
+                            }.sortedBy { it.name }
+                            var filterVarianteCompText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showVarianteComplicacaoPickDialog = false },
+                                title = { Text(if (comoMaior) "Complicações Maiores" else "Complicações Menores") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterVarianteCompText,
+                                            onValueChange = { filterVarianteCompText = it },
+                                            label = { Text("Filtrar Complicação") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        availableVarianteComps.filter { it.name.contains(filterVarianteCompText, ignoreCase = true) }.forEach { comp ->
+                                            val isSel = varianteComplicacoesAdicionadas.any { it.complicacaoId == comp.id && it.comoMaior == comoMaior }
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    varianteComplicacoesAdicionadas = if (isSel) {
+                                                        varianteComplicacoesAdicionadas.filterNot { it.complicacaoId == comp.id && it.comoMaior == comoMaior }
+                                                    } else {
+                                                        varianteComplicacoesAdicionadas + com.example.swadebuilder.model.CustomVariantComplicacaoEscolhida(comp.id, comoMaior)
+                                                    }
+                                                }.padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                    varianteComplicacoesAdicionadas = if (it) {
+                                                        varianteComplicacoesAdicionadas + com.example.swadebuilder.model.CustomVariantComplicacaoEscolhida(comp.id, comoMaior)
+                                                    } else {
+                                                        varianteComplicacoesAdicionadas.filterNot { e -> e.complicacaoId == comp.id && e.comoMaior == comoMaior }
+                                                    }
+                                                })
+                                                Spacer(Modifier.width(8.dp))
+                                                Text(comp.name, style = MaterialTheme.typography.bodySmall)
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showVarianteComplicacaoPickDialog = false }) { Text("OK") } }
                             )
                         }
                     }

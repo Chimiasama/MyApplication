@@ -11,6 +11,7 @@ import kotlinx.serialization.json.Json
 import java.io.File
 
 import com.example.swadebuilder.model.HabilidadeCriacao
+import com.example.swadebuilder.model.CustomAncestryVariant
 
 @Serializable
 data class BookCustomContent(
@@ -20,7 +21,8 @@ data class BookCustomContent(
     val equipamentos: List<EquipamentoItem> = emptyList(),
     val poderes: List<Poder> = emptyList(),
     val racas: List<RacialModifier> = emptyList(),
-    val habilidadesRaciais: List<HabilidadeCriacao> = emptyList()
+    val habilidadesRaciais: List<HabilidadeCriacao> = emptyList(),
+    val variantesRaciais: List<CustomAncestryVariant> = emptyList()
 )
 
 class CustomStorageManager(
@@ -186,6 +188,28 @@ class CustomStorageManager(
 
     fun deleteHabilidadeRacial(context: Context, bookKey: String, itemNome: String) {
         deleteHabilidadeRacial(context.filesDir, bookKey, itemNome)
+    }
+
+    fun addVarianteRacial(baseDir: File, bookKey: String, item: CustomAncestryVariant) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            variantesRaciais = (current.variantesRaciais.filterNot { it.id == item.id } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addVarianteRacial(context: Context, bookKey: String, item: CustomAncestryVariant) {
+        addVarianteRacial(context.filesDir, bookKey, item)
+    }
+
+    fun deleteVarianteRacial(baseDir: File, bookKey: String, itemId: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(variantesRaciais = current.variantesRaciais.filterNot { it.id == itemId })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteVarianteRacial(context: Context, bookKey: String, itemId: String) {
+        deleteVarianteRacial(context.filesDir, bookKey, itemId)
     }
 
     fun importItemFromAnotherBook(baseDir: File, targetBookKey: String, sourceBookKey: String, itemType: String, itemIdOrName: String): Boolean {

@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
@@ -31,6 +32,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val anoesScifiSelecionado: String? = null,
         val scifiVariant: String? = null,
         val humanoMineradorAtributo: String? = null,
+        val anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
         val allAdvantages: List<Vantagem>,
         val availableComplications: List<Complicacao>,
         val selectedComplications: Map<Complicacao, String?>,
@@ -105,6 +107,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 anoesScifiSelecionado = params.anoesScifiSelecionado,
                 scifiVariant = params.scifiVariant,
                 humanoMineradorAtributo = params.humanoMineradorAtributo,
+                anaoCiberTracosSelecionados = params.anaoCiberTracosSelecionados,
                 ancestryOptions = params.targetAncestryDef?.opcoes ?: emptyList(),
                 isSciFiActive = params.compendioSciFiAtivo,
                 isSciFiMechasActive = params.compendioScifiMechasCiberneticosAtivo,

@@ -28,10 +28,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.model.MENSAGEM_EXCLUSIVIDADE_CLASSE
-import com.example.swadebuilder.model.Vantagem
-import com.example.swadebuilder.model.classeExclusivaBloqueada
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
 
 /* ===========================================================
@@ -131,62 +127,7 @@ private fun <T> SelectDialog(
 }
 
 /* ===========================================================
-   2) MANTÉM o nome/assinatura ORIGINAL: AdvantageSelectionDialog
-      (usa o genérico por baixo)
-   =========================================================== */
-@Composable
-fun AdvantageSelectionDialog(
-    state: CriadorState,
-    allAdvantages: List<Vantagem>,
-    onSelect: (Vantagem) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val candidatas = allAdvantages.filter { state.podeSelecionar(it) }
-
-    SelectDialog(
-        title = "Escolha sua Vantagem",
-        items = candidatas,
-        singleSelection = true,
-        label = { v -> "${v.nome} (${v.requisitos.estagio})" },
-        enabled = { _ -> true },
-        onValidateSelection = { selection ->
-            val vantagem = selection.firstOrNull() ?: return@SelectDialog null
-            if (state.vantagensSelecionadas.classeExclusivaBloqueada(vantagem)) {
-                MENSAGEM_EXCLUSIVIDADE_CLASSE
-            } else {
-                null
-            }
-        },
-        onConfirm = { sel -> onSelect(sel.first()) },
-        onDismiss = onDismiss
-    )
-}
-
-/* ===========================================================
-   3) MANTÉM o nome/assinatura ORIGINAL: MultipleSelectionDialog
-      (checkbox com limite)
-   =========================================================== */
-@Composable
-fun MultipleSelectionDialog(
-    title: String,
-    options: List<String>,
-    maxSelections: Int,
-    onConfirm: (List<String>) -> Unit,
-    onDismiss: () -> Unit
-) {
-    SelectDialog(
-        title = title,
-        items = options,
-        singleSelection = false,
-        maxSelections = maxSelections,
-        label = { it },
-        onConfirm = onConfirm,
-        onDismiss = onDismiss
-    )
-}
-
-/* ===========================================================
-   4) MANTÉM o nome/assinatura ORIGINAL: ChoiceDialog
+   2) MANTÉM o nome/assinatura ORIGINAL: ChoiceDialog
       (seleção única simples; sem depender de DropdownField)
    =========================================================== */
 @Composable

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,12 +49,15 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
+import com.example.swadebuilder.model.AnaoCiberTraitCatalog
+import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
 import com.example.swadebuilder.model.stripAncestralidadeScenarioSuffix
+import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
@@ -443,12 +447,28 @@ fun AncestralidadesSection(
                             if (isSelected) {
                                 val opcoesValidas = item.opcoes
 
+                                // Feral não tem mais "opcoes" (raça própria, ver Tarefa #7) — o
+                                // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
                                 val isFeral = item.nome.keyify() == "FERAL"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
-                                if (opcoesValidas.size > 1 && !isFeral) {
+                                // Seleção (o jogador escolhe entre opções que a própria raça já
+                                // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
+                                // Variante (o mestre reconfigura a raça pro cenário, ex.: Anões
+                                // Ciber) só aparece com a regra de livro "Variantes de Raça"
+                                // ligada. Raças ainda não migradas pro AncestryVariantRegistry
+                                // são tratadas como Variante (todas têm Básico/Padrão entre as
+                                // opções, o sinal que o próprio usuário definiu para o caso).
+                                val variantConfig = AncestryVariantRegistry.get(item.nome.keyify())
+                                val isSelecaoPura = variantConfig != null && variantConfig.grupoVariante == null
+                                val showOpcoesPicker = opcoesValidas.size > 1 && (isSelecaoPura || state.optVariantesDeRacaAtivo)
+                                if (showOpcoesPicker) {
                                     Spacer(Modifier.height(8.dp))
                                     Text(
-                                        if (isUmvee) "Dons da Natureza:" else "Variante:",
+                                        when {
+                                            isUmvee -> "Dons da Natureza:"
+                                            isSelecaoPura -> "Seleção:"
+                                            else -> "Variante:"
+                                        },
                                         style = MaterialTheme.typography.labelMedium
                                     )
 
@@ -501,6 +521,169 @@ fun AncestralidadesSection(
                                                 }
                                             }
                                         }
+                                    }
+
+                                    // Anões Ciber: até 2 pontos de traços raciais negativos (nenhum maior que -2)
+                                    if (item.nome.keyify() == "ANOES" && currentSelection == "Ciber") {
+                                        Spacer(Modifier.height(12.dp))
+                                        val pontosUsados = AnaoCiberTraitCatalog.pontosUsados(state.anaoCiberTracosSelecionados)
+                                        Text(
+                                            "Traços Raciais Negativos (até 2 pontos, nenhum maior que -2):",
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                        Text(
+                                            "Pontos usados: $pontosUsados / ${AnaoCiberTraitCatalog.MAX_PONTOS}",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                        Spacer(Modifier.height(4.dp))
+                                        Column {
+                                            AnaoCiberTraitCatalog.TRACOS.forEach { trait ->
+                                                val selecaoAtual = state.anaoCiberTracosSelecionados.firstOrNull { it.traitId == trait.id }
+                                                val marcado = selecaoAtual != null
+                                                val custoAbs = -trait.custo
+                                                val cabeNoOrcamento = pontosUsados + custoAbs <= AnaoCiberTraitCatalog.MAX_PONTOS
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    modifier = Modifier.alpha(if (marcado || cabeNoOrcamento) 1f else 0.4f)
+                                                ) {
+                                                    Checkbox(
+                                                        checked = marcado,
+                                                        enabled = marcado || cabeNoOrcamento,
+                                                        onCheckedChange = { checked ->
+                                                            val atualizados = if (checked) {
+                                                                // Traços paramétricos já entram com um alvo padrão
+                                                                // (o primeiro disponível), senão a desvantagem fica
+                                                                // "muda" na ficha até o jogador abrir o dropdown.
+                                                                val novaSelecao = AnaoCiberTraitSelection(
+                                                                    traitId = trait.id,
+                                                                    escolhaAtributo = if (trait.exigeEscolhaAtributo) {
+                                                                        state.listaAtributos.firstOrNull()
+                                                                    } else null,
+                                                                    escolhaPericia = if (trait.exigeEscolhaPericia) {
+                                                                        state.periciasFiltradasPorCompendio.minByOrNull { it.nome }?.nome
+                                                                    } else null
+                                                                )
+                                                                state.anaoCiberTracosSelecionados + novaSelecao
+                                                            } else {
+                                                                state.anaoCiberTracosSelecionados.filterNot { it.traitId == trait.id }
+                                                            }
+                                                            state.selecionarAnaoCiberTracos(atualizados)
+                                                        }
+                                                    )
+                                                    Text("${trait.nome} (${trait.custo})", style = MaterialTheme.typography.bodyMedium)
+                                                }
+
+                                                if (marcado && trait.exigeEscolhaAtributo) {
+                                                    var atributoExpanded by remember { mutableStateOf(false) }
+                                                    val atributoEscolhido = selecaoAtual?.escolhaAtributo ?: state.listaAtributos.firstOrNull().orEmpty()
+                                                    Row(
+                                                        modifier = Modifier.padding(start = 32.dp),
+                                                        verticalAlignment = Alignment.CenterVertically
+                                                    ) {
+                                                        Text("Atributo: ", style = MaterialTheme.typography.bodySmall)
+                                                        Box {
+                                                            OutlinedButton(onClick = { atributoExpanded = true }) {
+                                                                Text(atributoEscolhido)
+                                                            }
+                                                            DropdownMenu(expanded = atributoExpanded, onDismissRequest = { atributoExpanded = false }) {
+                                                                state.listaAtributos.forEach { atributoOpcao ->
+                                                                    DropdownMenuItem(
+                                                                        text = { Text(atributoOpcao) },
+                                                                        onClick = {
+                                                                            val atualizados = state.anaoCiberTracosSelecionados.map {
+                                                                                if (it.traitId == trait.id) it.copy(escolhaAtributo = atributoOpcao) else it
+                                                                            }
+                                                                            state.selecionarAnaoCiberTracos(atualizados)
+                                                                            atributoExpanded = false
+                                                                        }
+                                                                    )
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                                if (marcado && trait.exigeEscolhaPericia) {
+                                                    var periciaExpanded by remember { mutableStateOf(false) }
+                                                    val periciasDisponiveis = state.periciasFiltradasPorCompendio.sortedBy { it.nome }
+                                                    val periciaEscolhida = selecaoAtual?.escolhaPericia
+                                                        ?: periciasDisponiveis.firstOrNull()?.nome.orEmpty()
+                                                    Row(
+                                                        modifier = Modifier.padding(start = 32.dp),
+                                                        verticalAlignment = Alignment.CenterVertically
+                                                    ) {
+                                                        Text("Perícia: ", style = MaterialTheme.typography.bodySmall)
+                                                        Box {
+                                                            OutlinedButton(onClick = { periciaExpanded = true }) {
+                                                                Text(periciaEscolhida)
+                                                            }
+                                                            DropdownMenu(expanded = periciaExpanded, onDismissRequest = { periciaExpanded = false }) {
+                                                                periciasDisponiveis.forEach { periciaOpcao ->
+                                                                    DropdownMenuItem(
+                                                                        text = { Text(periciaOpcao.nome) },
+                                                                        onClick = {
+                                                                            val atualizados = state.anaoCiberTracosSelecionados.map {
+                                                                                if (it.traitId == trait.id) it.copy(escolhaPericia = periciaOpcao.nome) else it
+                                                                            }
+                                                                            state.selecionarAnaoCiberTracos(atualizados)
+                                                                            periciaExpanded = false
+                                                                        }
+                                                                    )
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Variantes custom (Tarefa #20): reconfigurações da raça criadas em
+                                // "Conteúdo Customizado" (ver CustomAncestryVariant/SettingsDialog.kt).
+                                // É uma Variante de verdade, não uma Seleção, então só aparece com a
+                                // regra de livro "Variantes de Raça" ligada — igual às oficiais acima.
+                                val customVariantesDaRaca = remember(state.listaVariantesRaciaisCustom, item.nome) {
+                                    state.listaVariantesRaciaisCustom.filter { it.ancestralidadeId == item.nome.keyify() }
+                                }
+                                if (state.optVariantesDeRacaAtivo && customVariantesDaRaca.isNotEmpty()) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Variante Custom:", style = MaterialTheme.typography.labelMedium)
+
+                                    var customVarianteExpanded by remember { mutableStateOf(false) }
+                                    val selectedCustomVariant = customVariantesDaRaca.firstOrNull { it.id == state.customVarianteRacialSelecionadaId }
+
+                                    Box {
+                                        OutlinedButton(onClick = { customVarianteExpanded = true }) {
+                                            Text(selectedCustomVariant?.nome ?: "Nenhuma (Padrão)")
+                                        }
+                                        DropdownMenu(expanded = customVarianteExpanded, onDismissRequest = { customVarianteExpanded = false }) {
+                                            DropdownMenuItem(
+                                                text = { Text("Nenhuma (Padrão)") },
+                                                onClick = {
+                                                    state.selecionarVarianteRacialCustom(null)
+                                                    customVarianteExpanded = false
+                                                }
+                                            )
+                                            customVariantesDaRaca.forEach { variant ->
+                                                DropdownMenuItem(
+                                                    text = { Text(variant.nome) },
+                                                    onClick = {
+                                                        state.selecionarVarianteRacialCustom(variant.id)
+                                                        customVarianteExpanded = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    if (selectedCustomVariant != null && selectedCustomVariant.descricao.isNotBlank()) {
+                                        Spacer(Modifier.height(4.dp))
+                                        Text(
+                                            text = selectedCustomVariant.descricao,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
                                     }
                                 }
 

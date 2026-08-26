@@ -1,11 +1,31 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.AnaoCiberTraitCatalog
+import com.example.swadebuilder.model.AnaoCiberTraitSelection
+import com.example.swadebuilder.model.ResolvedTraitPackage
+import com.example.swadebuilder.model.SelectionAnswer
+import com.example.swadebuilder.model.SelectionDef
 import com.example.swadebuilder.model.canonicalOriginKey
+import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.util.keyify
 
 class ResolveAncestrySpecificAdjustmentsUseCase(
-    private val resolveAncestryVariantUseCase: ResolveAncestryVariantUseCase = ResolveAncestryVariantUseCase()
+    private val resolveAncestryVariantUseCase: ResolveAncestryVariantUseCase = ResolveAncestryVariantUseCase(),
+    private val resolveAncestryVariantPackageUseCase: ResolveAncestryVariantPackageUseCase = ResolveAncestryVariantPackageUseCase()
 ) {
+
+    /**
+     * Ponte temporária entre o texto de variante hoje armazenado em
+     * `scifiVariant` (ex.: "Voto (Maior)") e o id estável do pacote fixo no
+     * AncestryVariantRegistry (ex.: "voto") — casa pelo `nome` cadastrado no
+     * registro, sem precisar de uma tabela de tradução separada. Isso é só
+     * enquanto a Seleção ainda usa o mesmo armazenamento/UI da Variante
+     * (unificar isso de vez é um passo à parte, ainda não feito).
+     */
+    private fun fixedPackageAnswerFrom(def: SelectionDef, displayValue: String?): SelectionAnswer {
+        val matchId = def.pacotesFixos?.firstOrNull { it.nome.equals(displayValue, ignoreCase = true) }?.id
+        return SelectionAnswer(selectionId = def.id, fixedPackageChoiceId = matchId)
+    }
 
     enum class ElementalAction {
         NONE,
@@ -32,6 +52,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         anoesScifiSelecionado: String? = null,
         scifiVariant: String? = null,
         humanoMineradorAtributo: String? = null,
+        anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
         ancestryOptions: List<String> = emptyList(),
         isSciFiActive: Boolean = false,
         isSciFiMechasActive: Boolean = false,
@@ -64,14 +85,45 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
 
             if (ancKey == "ANOES") {
+                // Anões "Ciber" é Variante de verdade (o mestre reconfigura a
+                // raça pro cenário) com Seleção aninhada (até 2 pontos de
+                // traços negativos, catálogo em AnaoCiberTraitCatalog).
+                // Resolvido via AncestryVariantRegistry em vez do "when" fixo
+                // que existia aqui antes.
                 return if (effectiveVariant == "Ciber") {
+                    val pontosUsados = AnaoCiberTraitCatalog.pontosUsados(anaoCiberTracosSelecionados)
+                    val tracosValidos = if (pontosUsados <= AnaoCiberTraitCatalog.MAX_PONTOS) {
+                        anaoCiberTracosSelecionados
+                    } else {
+                        // Segurança: nunca aplicar uma seleção que estoure o orçamento de
+                        // pontos, mesmo que algo upstream falhe em validar antes de chegar aqui.
+                        emptyList()
+                    }
+                    val racialDisadvantages = AnaoCiberTraitCatalog.buildDesvantagens(tracosValidos).ifEmpty {
+                        listOf("Anões Ciber: escolha até 2 pontos de traços raciais negativos (nenhum maior que -2) na ficha.")
+                    }
+                    val catalogSelection = AncestryVariantRegistry.get("ANOES")
+                        ?.grupoVariante?.opcoes?.firstOrNull { it.id == "ciber" }
+                        ?.selecoes?.firstOrNull { it.id == "anao_ciber_tracos_negativos" }
+                    val resolved = if (catalogSelection != null) {
+                        resolveAncestryVariantPackageUseCase.resolve(
+                            ancestralidadeId = "ANOES",
+                            variantOptionId = "ciber",
+                            selectionAnswers = emptyList(),
+                            catalogPackages = mapOf(
+                                catalogSelection.id to ResolvedTraitPackage(desvantagensParaAdicionar = racialDisadvantages)
+                            )
+                        )
+                    } else {
+                        ResolvedTraitPackage()
+                    }
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
-                        ensureAdvantageNames = listOf("CIBERTOLERÂNCIA"),
+                        ensureAdvantageNames = resolved.vantagensGratisParaAdicionar,
                         ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("CIBERTOLERÂNCIA"),
-                        ensureRacialDisadvantages = listOf("Anões Ciber: Combinar com o Mestre 2 pontos em habilidades negativas apropriadas ao cenário."),
+                        ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar,
+                        ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
                         elementalAction = ElementalAction.NONE,
                         anotacoesToAdd = emptyList()
                     )
@@ -315,28 +367,30 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             }
 
             if (ancKey == "ELEMENTAIS") {
-                return if (effectiveVariant == "Ar, Fogo ou Água") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FORMA DE ENERGIA"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
+                // Elementais não tem Variante — é Seleção de elemento (todo
+                // elemental é de algum elemento). Resolvido via
+                // AncestryVariantRegistry em vez do "when" fixo que existia
+                // aqui antes.
+                val def = AncestryVariantRegistry.get("ELEMENTAIS")
+                    ?.selecoes?.firstOrNull { it.id == "elementais_scifi_elemento" }
+                val resolved = if (def != null) {
+                    resolveAncestryVariantPackageUseCase.resolve(
+                        ancestralidadeId = "ELEMENTAIS",
+                        variantOptionId = null,
+                        selectionAnswers = listOf(fixedPackageAnswerFrom(def, effectiveVariant))
                     )
                 } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FORTE", "RESISTÊNCIA +2"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
+                    ResolvedTraitPackage()
                 }
+                return Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = resolved.tracosParaAdicionar,
+                    ensureRacialDisadvantages = emptyList(),
+                    elementalAction = ElementalAction.NONE
+                )
             }
 
             if (ancKey == "FERAIS") {
@@ -698,71 +752,30 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         }
 
         if (canonicalOriginKey(ancestryOrigin) == "ARTE_DA_GUERRA" && ancKey.contains("UMVEE")) {
-            return when (effectiveVariant) {
-                "Ápice" -> Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = emptyList(),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("GARRAS"),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
+            // Umvee não tem Variante nenhuma — "Dom da Natureza" é Seleção de
+            // pacote fixo (o jogador escolhe 1 de 6, não o mestre reconfigura
+            // a raça). Resolvido via AncestryVariantRegistry em vez do "when"
+            // fixo que existia aqui antes.
+            val def = AncestryVariantRegistry.get("UMVEE (FILHOS DA LUA)")
+                ?.selecoes?.firstOrNull { it.id == "umvee_dom_da_natureza" }
+            val resolved = if (def != null) {
+                resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "UMVEE (FILHOS DA LUA)",
+                    variantOptionId = null,
+                    selectionAnswers = listOf(fixedPackageAnswerFrom(def, effectiveVariant))
                 )
-                "Vínculo Bestial" -> Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = listOf("SENHOR DAS FERAS"),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("SENHOR DAS FERAS"),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
-                )
-                "Pele Iluminada pela Lua" -> Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = emptyList(),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("APARAR +1"),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
-                )
-                "Gatoruja" -> Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = emptyList(),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("VISÃO NO ESCURO"),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
-                )
-                "Correnteza" -> Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = emptyList(),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("MOVIMENTAÇÃO +2"),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
-                )
-                "Pedregoso" -> Result(
-                    naturalArmorFromRace = 2,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = emptyList(),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("RESISTÊNCIA +1"),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
-                )
-                else -> Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = emptyList(),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("GARRAS"),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
-                )
+            } else {
+                ResolvedTraitPackage()
             }
+            return Result(
+                naturalArmorFromRace = if (effectiveVariant == "Pedregoso") 2 else 0,
+                forceArmorZero = true,
+                ensureAdvantageNames = resolved.vantagensGratisParaAdicionar,
+                ensureAdvantageIds = emptyList(),
+                ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
+                ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
+                elementalAction = ElementalAction.NONE
+            )
         }
 
         if (canonicalOriginKey(ancestryOrigin) == "ARTE_DA_GUERRA" && ancKey == "FERAL") {
@@ -780,14 +793,20 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
 
 
         if (ancKey.contains("TERRACOTA")) {
-            val effectiveVariant = resolveAncestryVariantUseCase.execute(
-                ResolveAncestryVariantUseCase.Input(
-                    selectedVariant = scifiVariant,
-                    availableOptions = ancestryOptions
+            // Terracota não tem Variante — é Seleção de pacote fixo: todo
+            // Terracota nasce com Voto OU Obrigação (Maior), o jogador só
+            // escolhe qual das duas. Resolvido via AncestryVariantRegistry.
+            val def = AncestryVariantRegistry.get("TERRACOTA")
+                ?.selecoes?.firstOrNull { it.id == "terracota_complicacao" }
+            val resolved = if (def != null) {
+                resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "TERRACOTA",
+                    variantOptionId = null,
+                    selectionAnswers = listOf(fixedPackageAnswerFrom(def, effectiveVariant))
                 )
-            ).normalizedSelection
-
-            val comp = if (effectiveVariant?.contains("Obriga", ignoreCase = true) == true) "OBRIGAÇÃO (Maior)" else "VOTO (Maior)"
+            } else {
+                ResolvedTraitPackage()
+            }
 
             return Result(
                 naturalArmorFromRace = 0,
@@ -795,7 +814,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
-                ensureRacialDisadvantages = listOf(comp),
+                ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
                 racialDisadvantagesToRemove = listOf("Voto ou Obrigação", "VOTO_OU_OBRIGACAO", "VOTO OU OBRIGACAO"),
                 elementalAction = ElementalAction.NONE
             )
