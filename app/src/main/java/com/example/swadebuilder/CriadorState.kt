@@ -19,6 +19,7 @@ import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
 import com.example.swadebuilder.model.CrystalHeart
+import com.example.swadebuilder.model.CustomAncestryVariant
 import com.example.swadebuilder.model.EquipFilter
 import com.example.swadebuilder.model.EquipSuperType
 import com.example.swadebuilder.model.EquipamentoCategoria
@@ -122,6 +123,7 @@ class CriadorState {
     var listaPoderes by mutableStateOf<List<Poder>>(emptyList())
     var listaSuperPoderes by mutableStateOf<List<SuperPoder>>(emptyList())
     var listaAncestralidadesJson by mutableStateOf<List<RacialModifier>>(emptyList())
+    var listaVariantesRaciaisCustom by mutableStateOf<List<CustomAncestryVariant>>(emptyList())
     var listaMonstroTemplates by mutableStateOf<List<MonstroTemplate>>(emptyList())
     var listaCoracoesCrystal by mutableStateOf<List<CrystalHeart>>(emptyList())
 
@@ -176,6 +178,7 @@ class CriadorState {
         this.listaPoderes = snapshot.listaPoderes
         this.listaSuperPoderes = snapshot.listaSuperPoderes
         this.listaAncestralidadesJson = snapshot.listaAncestralidadesJson
+        this.listaVariantesRaciaisCustom = snapshot.listaVariantesRaciaisCustom
         // Build the cache once when data loads.
         this.ancestryMap = this.listaAncestralidadesJson.groupBy { it.nome.keyify() }
         this.listaMonstroTemplates = snapshot.listaMonstroTemplates

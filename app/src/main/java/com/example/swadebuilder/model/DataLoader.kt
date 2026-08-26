@@ -553,6 +553,7 @@ object DataLoader {
         val customEquipamentos = mutableListOf<EquipamentoItem>()
         val customPoderes = mutableListOf<Poder>()
         val customRacas = mutableListOf<RacialModifier>()
+        val customVariantesRaciais = mutableListOf<CustomAncestryVariant>()
 
         keys.forEach { bookKey ->
             val customData = customStorageManager.loadCustomContent(context, bookKey)
@@ -561,6 +562,7 @@ object DataLoader {
             customEquipamentos += customData.equipamentos
             customPoderes += customData.poderes
             customRacas += customData.racas
+            customVariantesRaciais += customData.variantesRaciais
         }
 
         // Usa distinctByOriginPriority (não distinctBy simples) porque um mesmo id/nome pode
@@ -615,7 +617,8 @@ object DataLoader {
             equipamentoCategorias = updatedEquipamentoCategorias,
             superequipCategorias = localSuperequipCategorias,
             listaSuperPoderes = localListaSuperPoderes,
-            arcanoInfo = loadedArcanoInfoList
+            arcanoInfo = loadedArcanoInfoList,
+            listaVariantesRaciaisCustom = customVariantesRaciais
         )
     }
 
