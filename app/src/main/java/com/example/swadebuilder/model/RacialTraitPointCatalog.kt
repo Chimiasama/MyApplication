@@ -66,7 +66,7 @@ object RacialTraitPointCatalog {
         "ASTUTO" to 2, // Astúcia d4->d6
         "ATRAENTE" to 2, // Vantagem Atraente grátis
         "AVERSAO_ANIMAL" to -1, // animais evitam + -2 pra controlar/montar animais
-        "AZARADO" to -1, // Complicação Menor
+        "AZARADO" to -2, // Complicação Maior no catálogo real (complicacoes.json) — a severidade "Menor" anotada em ancestralidades.json pra Nekomimi não existe pra essa Complicação, corrigido pra bater com o catálogo
         "BAIXA_TECNOLOGIA" to -2, // Complicação Maior
         "BEBEDOR_DE_SANGUE" to 1, // cura natural extra 1x/sessão, condicional
         "BOCA_GRANDE" to -1, // Complicação Menor
