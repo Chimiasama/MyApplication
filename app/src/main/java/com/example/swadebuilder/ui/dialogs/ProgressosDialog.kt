@@ -177,9 +177,16 @@ fun ProgressosDialog(
 
     val canBuyAttr = creditsLeft > 0 && hasReservedProgress &&
             (remainingBaseAttrs > 0 || canUseReservation || state.modoMonstroAtivo)
+    // Regra de Savage Pathfinder (Lendário): um atributo só pode aumentar uma vez
+    // a cada quatro Progressos. A primeira compra em Lendário fica disponível de
+    // imediato (mesmo padrão usado para os demais Estágios); a partir da segunda,
+    // é exigido um intervalo de 4 Progressos gastos em Lendário desde a compra anterior.
+    val legendaryRaisesDone = state.comprasAttrPorEstagio[est.nome] ?: 0
+    val legendaryProgressRequired = 4 * legendaryRaisesDone
     val canReserveLegendary = isLendarioStage &&
             totalAttrPurchases >= lendarioIndex && creditsLeft > 0 &&
-            hasReservedProgress && state.legendaryAttrReservations == 0
+            hasReservedProgress && state.legendaryAttrReservations == 0 &&
+            spentHere >= legendaryProgressRequired
 
     // ── Requisitos de vantagens (mesma lógica, sem logs) ──────────────────────
     fun strictRequirementsOk(v: Vantagem, estIndex: Int): Boolean {
