@@ -37,7 +37,15 @@ jobs:
         run: |
           ./gradlew :app:clean \
                     :app:assembleLite${{ github.event.inputs.buildType }} \
-                    --stacktrace
+                    -q --console=plain
+
+      - name: Report Kotlin Errors to Summary
+        if: failure()
+        run: |
+          echo "### ❌ Erros de Compilação Encontrados" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          ./gradlew :app:assembleLite${{ github.event.inputs.buildType }} --console=plain 2>&1 \vert{} grep "e: file://" >> $GITHUB_STEP_SUMMARY || echo "Não foi possível isolar a linha exata. Abra a etapa de build para conferir o log." >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Sanitize artifact name
         run: echo "ARTIFACT_NAME=$(echo '${{ github.event.inputs.branch }}' | tr '/' '-')" >> $GITHUB_ENV
