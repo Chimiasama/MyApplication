@@ -556,7 +556,10 @@ object DataLoader {
         val customRacas = mutableListOf<RacialModifier>()
         val customVariantesRaciais = mutableListOf<CustomAncestryVariant>()
 
-        keys.forEach { bookKey ->
+        // TAG_GERAL sempre entra, além dos livros realmente ativos: é onde fica
+        // o conteúdo customizado que o jogador marcou como "Geral" na criação,
+        // pra aparecer em qualquer combinação de livros.
+        (keys + com.example.swadebuilder.util.TAG_GERAL).forEach { bookKey ->
             val customData = customStorageManager.loadCustomContent(context, bookKey)
             customVantagens += customData.vantagens
             customComplicacoes += customData.complicacoes

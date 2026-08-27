@@ -14,6 +14,31 @@ import java.io.File
 import com.example.swadebuilder.model.HabilidadeCriacao
 import com.example.swadebuilder.model.CustomAncestryVariant
 
+// Tag especial de "livro": conteúdo salvo sob essa chave aparece em qualquer
+// combinação de livros ativos, em vez de só num cenário específico. É só mais
+// um bookKey normal do ponto de vista do armazenamento (seu próprio arquivo
+// custom_content_GERAL.json) — quem trata o significado de "sempre visível" é
+// o carregador (DataLoader), que sempre inclui essa chave além dos livros
+// realmente ativos.
+const val TAG_GERAL = "GERAL"
+
+// Livros reais que o app conhece hoje (sem contar TAG_GERAL), na mesma grafia
+// usada em `livros`/`origem` pelo catálogo oficial. Usado pra montar o seletor
+// de livros na criação de conteúdo customizado.
+val TODOS_OS_LIVROS: List<String> = listOf(
+    "BASICO",
+    "FANTASIA",
+    "SCI_FI",
+    "HORROR",
+    "SUPER",
+    "PATHFINDER",
+    "DEADLANDS",
+    "ARTE_DA_GUERRA",
+    "CRYSTAL_HEART",
+    "CIDADE_SOL_VAPOR",
+    "WISEGUYS"
+)
+
 @Serializable
 data class BookCustomContent(
     val bookKey: String,

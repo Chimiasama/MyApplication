@@ -71,6 +71,13 @@ fun Vantagem.toArcanoKey(): String? {
         "MISTICO" in n -> "MISTICO"
         "VODUISTA" in n || "VUDUISMO" in n -> "VODUISTA"
         "DEMONIO" in n -> "DEMONIO"
+        // Antecedente Arcano Customizado (ver categoria "Antecedente Arcano" no
+        // criador de conteúdo em SettingsDialog.kt): nenhum dos nomes oficiais
+        // acima bateu, mas o padrão "ANTECEDENTE ARCANO (Nome)" ainda é
+        // reconhecível — usa o nome entre parênteses como chave. Fica por
+        // último de propósito, só serve de rede pra AAs que o jogador criou,
+        // nunca compete com um nome oficial.
+        isGenericAB && "(" in n && n.endsWith(")") -> n.substringAfter("(").removeSuffix(")").trim()
         else -> null
     }
 }

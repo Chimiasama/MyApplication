@@ -3694,7 +3694,13 @@ class CriadorState {
             arcKeyNorm == "MESTRE DO CHI" &&
             !hasArcanoVantagem &&
             (tropoSelecionado?.tecnicasIniciais ?: 0) > 0
-        val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 0)
+        // Todos os 45 Antecedentes Arcanos oficiais têm entrada em geral_arcano_info.json,
+        // então esse "?: 3" só é alcançado por um Antecedente Arcano Customizado (categoria
+        // "Antecedente Arcano" no criador de conteúdo) sem entrada própria — 3 poderes
+        // iniciais é a regra padrão do livro básico pra Antecedente Arcano, então serve de
+        // fallback razoável em vez de deixar a vantagem customizada sem nenhum poder pra
+        // escolher.
+        val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 3)
         var bonusSlots = 0
 
         vantagensSelecionadas
