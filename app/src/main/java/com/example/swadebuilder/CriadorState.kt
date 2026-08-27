@@ -426,16 +426,20 @@ class CriadorState {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
 
-        // Umvee tem uma única entrada no catálogo mas ainda assim precisa passar
-        // por applyAncestryVariantAdjustments: o Dom da Natureza "Gatoruja" injeta
-        // PERCEBER_D6/OCULTISMO_D4 ali, e cair fora antes disso deixava esse
-        // traço de fora (bug real, pego pelo ScifiAncestryVariantSyncTest).
-        // Outras raças de candidato único (ex.: Meio-Elfo do Pathfinder) dependem
-        // do contrário — do curto-circuito abaixo — pra NÃO entrar no ramo
-        // Herança/Adaptável de applyAncestryVariantAdjustments, que é pensado
-        // pra variante Meio-Elfo de outros livros; por isso o desvio fica restrito
-        // à raça que realmente precisa dele, em vez de valer pra todo candidato único.
-        val selected = if (candidates.size == 1 && !key.contains("UMVEE")) {
+        // Toda raça de candidato único, EXCETO Umvee, mantém o curto-circuito
+        // original: sai aqui sem passar por applyAncestryVariantAdjustments.
+        // Umvee precisa passar por ele mesmo tendo um candidato só — o Dom da
+        // Natureza "Gatoruja" injeta PERCEBER_D6/OCULTISMO_D4 ali, e cair fora
+        // antes disso deixava esse traço de fora (bug real, pego pelo
+        // ScifiAncestryVariantSyncTest). Já o Meio-Elfo do Pathfinder (também
+        // candidato único) depende do contrário — de sair aqui — pra NÃO entrar
+        // no ramo Herança/Adaptável de applyAncestryVariantAdjustments, pensado
+        // pra variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
+        if (candidates.size == 1 && !key.contains("UMVEE")) {
+            return applyCustomAncestryVariantIfSelected(candidates.first())
+        }
+
+        val selected = if (candidates.size == 1) {
             candidates.first()
         } else {
             val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
