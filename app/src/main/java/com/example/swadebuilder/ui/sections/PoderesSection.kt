@@ -136,7 +136,7 @@ fun PoderesSection(
     }
 
     val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
-        value = com.example.swadebuilder.model.DataLoader.poderesPorOrigem(context)
+        value = com.example.swadebuilder.model.poderesPorOrigem(context)
     }
 
     val dominiosCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {

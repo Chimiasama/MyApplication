@@ -41,6 +41,17 @@ interface GameDataRepository {
     suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot
 }
 
+/**
+ * Ponto de acesso sancionado para o catálogo de poderes agrupado por livro de
+ * origem, independentemente de quais módulos estão ativos no momento (ver
+ * comentário de [DataLoader.poderesPorOrigem]). Fica aqui — e não em
+ * DataLoader chamado direto pela UI — porque o gate de confiabilidade
+ * (scripts/phase6_reliability_gate.sh) exige que todo uso de DataLoader
+ * passe por este arquivo.
+ */
+fun poderesPorOrigem(context: Context): Map<String, List<Poder>> =
+    DataLoader.poderesPorOrigem(context)
+
 internal class ModuleSnapshotCache(private val maxSize: Int = 3) {
     private val cache = LinkedHashMap<String, GameDataSnapshot>(maxSize, 0.75f, true)
 
