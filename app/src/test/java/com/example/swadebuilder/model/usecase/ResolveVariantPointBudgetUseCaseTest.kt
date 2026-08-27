@@ -36,10 +36,14 @@ class ResolveVariantPointBudgetUseCaseTest {
     )
 
     @Test
-    fun `nenhuma mudanca (saldo zero) nao fecha o orcamento padrao - precisa ser exato em 2`() {
+    fun `nenhuma mudanca (saldo zero) fecha o orcamento padrao - e um teto, nao um valor exato`() {
+        // Mesma semântica do teto de 2 pontos da Seleção de traços negativos do
+        // Anão Ciber (AnaoCiberTraitCatalog.MAX_PONTOS): "até 2", não "exatamente
+        // 2" — uma Variante que não muda nada (ou cuja remoção/adição se cancela)
+        // é tão válida quanto uma que usa o teto inteiro.
         val result = useCase.resolve(emptyList(), emptyList())
         assertEquals(0, result.saldo)
-        assertFalse(result.dentroDoOrcamento)
+        assertTrue(result.dentroDoOrcamento)
     }
 
     @Test
@@ -51,13 +55,13 @@ class ResolveVariantPointBudgetUseCaseTest {
     }
 
     @Test
-    fun `remover uma unica desvantagem de custo -1 nao fecha o orcamento padrao`() {
+    fun `remover uma unica desvantagem de custo -1 fecha o orcamento padrao (dentro do teto)`() {
         // saldo vira +1 (devolve 1 ponto ao "comprar de volta" a Complicação) —
-        // não bate nos 2 pontos exatos, então não fecha sozinho.
+        // não bate os 2 pontos do teto, mas fica dentro dele (teto, não valor exato).
         val fragil = VariantBudgetItem(label = "Frágil", custo = -1, habilidadeId = "FRAGIL")
         val result = useCase.resolve(itensRemovidos = listOf(fragil), itensAdicionados = emptyList())
         assertEquals(1, result.saldo)
-        assertFalse(result.dentroDoOrcamento)
+        assertTrue(result.dentroDoOrcamento)
     }
 
     @Test

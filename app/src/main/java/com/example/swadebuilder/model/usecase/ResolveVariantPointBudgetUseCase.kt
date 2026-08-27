@@ -28,14 +28,15 @@ data class VariantBudgetItem(
  * forte libera pontos; tirar uma desvantagem custa pontos, "comprando de
  * volta" a Complicação); o que foi ADICIONADO gasta o custo dele.
  *
- * Por padrão o saldo final precisa fechar EXATO em ±2 pontos (mesma escala
- * do Anão Ciber) pra poder salvar — não é um teto "até 2", é o valor exato:
- * ficar em 0 ou passar de 2 é igualmente inválido. Durante a edição (ir
- * adicionando/removendo itens) o saldo pode passar por qualquer valor
- * livremente — só a validação final de salvar usa essa regra. Passando
- * `semLimite = true` (a opção de "sem limite" pra raças mais fortes, tipo
- * Pathfinder) a validação sempre passa, qualquer saldo, positivo ou
- * negativo.
+ * Por padrão o saldo final precisa ficar dentro de ±2 pontos (mesmo teto da
+ * Seleção de traços negativos do Anão Ciber — lá também é "até 2 pontos",
+ * não "exatamente 2": ver AnaoCiberTraitCatalog.MAX_PONTOS e seu uso em
+ * ResolveAncestrySpecificAdjustmentsUseCase, que aceita `pontosUsados <=
+ * MAX_PONTOS`). Saldo 0 (nada adicionado além do que foi removido, ou
+ * nenhuma mudança) é válido; só passar de 2 pra qualquer lado é inválido.
+ * Passando `semLimite = true` (a opção de "sem limite" pra raças mais
+ * fortes, tipo Pathfinder) a validação sempre passa, qualquer saldo,
+ * positivo ou negativo.
  *
  * Não decide SE algo pode ser removido/adicionado (isso é responsabilidade
  * da UI/fluxo de criação) — só soma e valida o saldo dos itens que já
@@ -61,7 +62,7 @@ class ResolveVariantPointBudgetUseCase {
             saldo = saldo,
             orcamento = orcamento,
             semLimite = semLimite,
-            dentroDoOrcamento = semLimite || abs(saldo) == orcamento
+            dentroDoOrcamento = semLimite || abs(saldo) <= orcamento
         )
     }
 

@@ -1393,7 +1393,7 @@ fun SettingsDialog(
                                                         )
 
                                                         if (!budgetResult.dentroDoOrcamento) {
-                                                            statusMessage = "A Variante precisa fechar em exatamente ±${budgetResult.orcamento} pontos (saldo atual: ${budgetResult.saldo}), ou marque 'Sem limite de pontos'."
+                                                            statusMessage = "A Variante não pode passar de ±${budgetResult.orcamento} pontos de diferença (saldo atual: ${budgetResult.saldo}), ou marque 'Sem limite de pontos'."
                                                         } else {
                                                             val newVariant = com.example.swadebuilder.model.CustomAncestryVariant(
                                                                 id = id,
