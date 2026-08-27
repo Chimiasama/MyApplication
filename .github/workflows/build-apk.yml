@@ -30,7 +30,15 @@ jobs:
           cmdline-tools-version: 11076708
 
       - name: Build APK (FullDebug)
-        run: ./gradlew :app:assembleFullDebug --stacktrace
+        run: ./gradlew :app:assembleFullDebug -q --console=plain
+
+      - name: Report Kotlin Errors to Summary
+        if: failure()
+        run: |
+          echo "### ❌ Erros de Compilação Encontrados" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          ./gradlew :app:assembleFullDebug --console=plain 2>&1 | grep "e: file://" >> $GITHUB_STEP_SUMMARY || echo "Não foi possível isolar a linha exata. Abra a etapa de build para conferir o log." >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
 
       - name: Sanitize artifact name
         run: echo "ARTIFACT_NAME=$(echo '${{ github.event.inputs.branch }}' | tr '/' '-')" >> $GITHUB_ENV
