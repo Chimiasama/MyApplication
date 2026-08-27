@@ -35,4 +35,12 @@ jobs:
         run: ./scripts/phase6_reliability_gate.sh
 
       - name: Run tests and build
-        run: ./gradlew build --stacktrace
+        run: ./gradlew build -q --console=plain
+
+      - name: Report Kotlin Errors to Summary
+        if: failure()
+        run: |
+          echo "### ❌ Erros de Compilação Encontrados" >> $GITHUB_STEP_SUMMARY
+          echo '```text' >> $GITHUB_STEP_SUMMARY
+          ./gradlew build --console=plain 2>&1 | grep "e: file://" >> $GITHUB_STEP_SUMMARY || echo "Não foi possível isolar a linha exata. Abra a etapa 'Run tests and build' para conferir o log." >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
