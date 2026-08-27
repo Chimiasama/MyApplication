@@ -4746,6 +4746,42 @@
         "custo": 5000,
         "observacoes": "Para Montaria Tamanho 2",
         "descricaoLite": "Para Montaria Tamanho 2"
+      },
+      {
+        "nome": "Espinhos (Armadura)",
+        "armadura": "—",
+        "forcaMin": "—",
+        "peso": "5",
+        "custo": 50,
+        "observacoes": "Pode ser adicionado a qualquer armadura; causa dano +1 quando Esmagar em um Agarrão.",
+        "descricaoLite": "Soma +1 de dano ao Esmagar durante um Agarrão."
+      },
+      {
+        "nome": "Manopla Travada",
+        "armadura": "—",
+        "forcaMin": "—",
+        "peso": "2,5",
+        "custo": 8,
+        "observacoes": "+1 na rolagem de Força contra Desarme; requer uma ação para prender/soltar.",
+        "descricaoLite": "+1 em Força contra Desarme; precisa de uma ação para travar/soltar."
+      },
+      {
+        "nome": "Trava (Escudo)",
+        "aparar": "—",
+        "forcaMin": "—",
+        "peso": "—",
+        "custo": 10,
+        "observacoes": "Personagens adjacentes com escudos com travas podem combinar seu bônus de cobertura contra ataques à distância até um máximo de -6.",
+        "descricaoLite": "Combina cobertura com escudos travados adjacentes (até -6)."
+      },
+      {
+        "nome": "Espinhos (Escudo)",
+        "aparar": "—",
+        "forcaMin": "—",
+        "peso": "2,5",
+        "custo": 20,
+        "observacoes": "Dano +1 quando atacar com o escudo.",
+        "descricaoLite": "+1 de dano ao bater com o escudo."
       }
     ]
   },
