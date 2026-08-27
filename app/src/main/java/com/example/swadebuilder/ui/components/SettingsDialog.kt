@@ -57,6 +57,7 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CustomContentType
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.getDisplayName
@@ -492,7 +493,7 @@ fun SettingsDialog(
                                                                     selectedBookTags + bookKey
                                                                 }
                                                             },
-                                                            label = { Text(com.example.swadebuilder.util.toEditionDisplayName(bookKey), style = MaterialTheme.typography.labelSmall) }
+                                                            label = { Text(bookKey.toEditionDisplayName(), style = MaterialTheme.typography.labelSmall) }
                                                         )
                                                     }
                                                 }
@@ -771,7 +772,7 @@ fun SettingsDialog(
                                                             if (com.example.swadebuilder.util.TAG_GERAL in selectedBookTags) {
                                                                 "Vai liberar todos os poderes de todos os livros."
                                                             } else {
-                                                                "Vai liberar todos os poderes de: ${selectedBookTags.joinToString(", ") { com.example.swadebuilder.util.toEditionDisplayName(it) }.ifBlank { "(marque um livro acima)" }}"
+                                                                "Vai liberar todos os poderes de: ${selectedBookTags.joinToString(", ") { it.toEditionDisplayName() }.ifBlank { "(marque um livro acima)" }}"
                                                             },
                                                             style = MaterialTheme.typography.labelSmall,
                                                             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -1195,7 +1196,7 @@ fun SettingsDialog(
                                                 setOf(state.getActiveOrigins().firstOrNull() ?: "BASICO")
                                             }
                                             val tagsLabel = tags.joinToString(", ") {
-                                                if (it == com.example.swadebuilder.util.TAG_GERAL) "Geral" else com.example.swadebuilder.util.toEditionDisplayName(it)
+                                                if (it == com.example.swadebuilder.util.TAG_GERAL) "Geral" else it.toEditionDisplayName()
                                             }
                                             when (selectedCategory) {
                                                 "Vantagem" -> {
