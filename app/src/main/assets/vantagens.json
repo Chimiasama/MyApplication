@@ -3788,10 +3788,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -3938,10 +3938,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -4246,10 +4246,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -5560,22 +5560,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -9374,10 +9374,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -9524,10 +9524,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -9832,10 +9832,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -11192,22 +11192,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -12477,10 +12477,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -12627,10 +12627,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -12935,10 +12935,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -14295,22 +14295,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -16250,10 +16250,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -16400,10 +16400,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -17656,22 +17656,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "CRYSTAL_HEART"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -17760,28 +17760,6 @@
       "CRYSTAL_HEART"
     ],
     "descricaoLite": "Dá +1 para Aparar e aumenta para d10 o dado extra de dano em ataques de Lutar."
-  },
-  {
-    "id": "parceiro",
-    "nome": "PARCEIRO",
-    "categoria": "SOCIAIS",
-    "requisitos": {
-      "estagio": "Lendário",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
-    "livros": [
-      "SUPER"
-    ],
-    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "superpoderes",
@@ -18867,10 +18845,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -19017,10 +18995,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -19305,10 +19283,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -20295,22 +20273,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "WISEGUYS"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -22131,10 +22109,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -22281,10 +22259,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -22589,10 +22567,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -23557,22 +23535,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -26164,10 +26142,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -26314,10 +26292,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -26622,10 +26600,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -27702,22 +27680,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -29560,10 +29538,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -29710,10 +29688,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -30018,10 +29996,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -31354,22 +31332,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -37193,10 +37171,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -37343,10 +37321,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -37651,10 +37629,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -39011,22 +38989,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",

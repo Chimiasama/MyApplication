@@ -2440,6 +2440,17 @@
         "cdt": 4,
         "custo": 1000,
         "origem": "BASICO"
+      },
+      {
+        "nome": "Torpedo",
+        "distancia": "300/600/1200",
+        "dano": "8d10",
+        "pa": 22,
+        "cdt": 1,
+        "custo": 500000,
+        "observacoes": "Explosão MGE.",
+        "origem": "BASICO",
+        "descricaoLite": "Explosão MGE."
       }
     ]
   },

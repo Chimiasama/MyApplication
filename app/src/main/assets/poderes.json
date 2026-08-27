@@ -1430,40 +1430,6 @@
     "descricaoLite": "Exige um corpo razoavelmente íntegro de alguém morto há no máximo um ano e quatro horas de ritual concentrado, unindo prece, canto ou meditação para religar corpo e espírito; ao final, faz-se a rolagem de conjuração com -8. Um sucesso faz a pessoa voltar à vida carregando três Ferimentos e Exausta; uma ampliação a traz de volta só Exausta."
   },
   {
-    "id": "santuario",
-    "nome": "SANTUÁRIO",
-    "estagio": "Novato",
-    "pontosDePoder": 2,
-    "distancia": "Toque",
-    "duracao": "5",
-    "manifestacoes": [
-      "Símbolo sagrado",
-      "luz"
-    ],
-    "descricao": "Criaturas sobrenaturais devem fazer Espírito (-2 ampliação) para atacar alvo. Encerra se alvo atacar.",
-    "modificadores": [
-      {
-        "nome": "Afeta Área",
-        "custo": "+2/+3",
-        "descricao": "Modelo Médio (+2) ou Grande (+3)."
-      },
-      {
-        "nome": "Forte",
-        "custo": "+1",
-        "descricao": "Penalidade adicional de -2."
-      }
-    ],
-    "tags": [
-      "stage:novato",
-      "tipo:defesa",
-      "protecao"
-    ],
-    "livros": [
-      "BASICO"
-    ],
-    "descricaoLite": "Para agredir o protegido, seres sobrenaturais precisam passar num teste de Espírito (a -2 se a conjuração teve ampliação); o efeito se rompe assim que o próprio protegido atacar alguém."
-  },
-  {
     "id": "som_silencio",
     "nome": "SOM/SILÊNCIO",
     "estagio": "Novato",
