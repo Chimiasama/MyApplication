@@ -4375,10 +4375,31 @@ class CriadorState {
 
     private fun atributoBaseRacial(a: String): Int {
         // Fix: Use keyified ancestry to match DataLoader map keys
-        val base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
+        var base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
+        val attrKey = a.keyify()
+
+        // Se uma Variante custom de raça está ativa e removeu um traço que,
+        // segundo RacialTraitPointCatalog, concedia esse mesmo passo de
+        // atributo (ex.: Anões perdendo Resistente/ROBUSTO = Vigor d6), desconta
+        // o mesmo delta do `base` estático. Sem isso, o bônus continuava vindo
+        // do campo numérico `atributos` da raça (usado pra montar
+        // racialAttrMinMap uma única vez, pro app inteiro, na carga dos dados) —
+        // que nunca é tocado pela Variante, só o habilidades[] descritivo é
+        // (ver applyCustomAncestryVariantIfSelected). Resultado sem este ajuste:
+        // o ponto da Variante fecha (o traço "sai" da lista e devolve o custo),
+        // mas o dado do atributo continua alto de graça.
+        customVarianteRacialSelecionadaId
+            ?.let { id -> listaVariantesRaciaisCustom.firstOrNull { it.id == id } }
+            ?.takeIf { it.ancestralidadeId == ancestralidade.keyify() }
+            ?.tracosRemovidosIds
+            ?.forEach { removedId ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(removedId)
+                if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                    base = maxOf(4, base - 2 * efeito.passos)
+                }
+            }
 
         var modifiedBase = base
-        val attrKey = a.keyify()
 
         // Traços que concedem d6 inicial num atributo específico, lidos direto de
         // habilidades[] da raça (já com os ajustes de variante aplicados por

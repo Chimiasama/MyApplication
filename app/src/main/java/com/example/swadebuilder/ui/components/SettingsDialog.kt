@@ -1173,19 +1173,27 @@ fun SettingsDialog(
                                             }
                                         }
                                     }
-
-                                    if (statusMessage != null) {
-                                        Text(
-                                            text = statusMessage!!,
-                                            color = MaterialTheme.colorScheme.primary,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    }
                                 }
                             },
                             confirmButton = {
-                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Column(horizontalAlignment = Alignment.End) {
+                                    // Fora da área rolável (diferente de onde estava antes, dentro do
+                                    // Column de `text`): fica sempre visível colado nos botões, sem
+                                    // precisar rolar a tela pra descobrir se salvou ou por que não salvou.
+                                    if (statusMessage != null) {
+                                        val isErro = statusMessage!!.let {
+                                            it.startsWith("Erro") || it.startsWith("Preencha") ||
+                                                it.startsWith("Selecione") || it.contains("precisa fechar")
+                                        }
+                                        Text(
+                                            text = statusMessage!!,
+                                            color = if (isErro) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            fontWeight = FontWeight.SemiBold,
+                                            modifier = Modifier.padding(bottom = 4.dp, end = 4.dp)
+                                        )
+                                    }
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     TextButton(onClick = {
                                                 val safeDesc = customItemDesc.ifBlank { "-" }
                                                 if (customItemName.isNotBlank()) {
@@ -1430,6 +1438,7 @@ fun SettingsDialog(
                                         }
                                             }) { Text("Salvar Item") }
                                     TextButton(onClick = { showCustomContentDialog = false }) { Text("Fechar") }
+                                }
                                 }
                             }
                         )
