@@ -14,25 +14,24 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.inputs.branch }}
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '21'
 
       - name: Install Android SDK
-        uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@v3
         with:
           cmdline-tools-version: 11076708
 
       - name: Build APK (FullDebug)
         run: ./gradlew :app:assembleFullDebug --stacktrace
 
-      # --- NOVO: Sanitiza nome do artifact ---
       - name: Sanitize artifact name
         run: echo "ARTIFACT_NAME=$(echo '${{ github.event.inputs.branch }}' | tr '/' '-')" >> $GITHUB_ENV
 
