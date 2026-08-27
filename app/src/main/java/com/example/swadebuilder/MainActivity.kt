@@ -350,7 +350,8 @@ class MainActivity : ComponentActivity() {
                         isCreationPhase = (!mostrouTelaInicial && !state.modoProgressaoAtivo && !state.isNpcExibicao),
                         onDismiss = { showSettingsDialog = false },
                         persistPrefs = { persistPrefs() },
-                        feedbackController = feedbackController
+                        feedbackController = feedbackController,
+                        onCustomContentChanged = { criadorViewModel.invalidateGameDataCache() }
                     ) { theme ->
                         criadorViewModel.setAppTheme(theme)
                     }

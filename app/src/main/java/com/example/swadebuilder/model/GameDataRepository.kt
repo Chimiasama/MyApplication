@@ -39,6 +39,17 @@ data class GameDataSnapshot(
 
 interface GameDataRepository {
     suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot
+
+    /**
+     * Descarta qualquer GameDataSnapshot em cache. Precisa ser chamado depois
+     * de qualquer alteração em conteúdo customizado (Vantagem, Complicação,
+     * Equipamento, Poder, Raça, Variante de Raça etc. salvos via
+     * CustomStorageManager) — sem isso, o próximo load() com a mesma
+     * combinação de livros devolveria o snapshot antigo direto do cache,
+     * sem a alteração recém-salva no disco. Default vazio pra não quebrar
+     * outras implementações (ex.: fakes de teste).
+     */
+    fun invalidateCache() {}
 }
 
 /**
@@ -107,6 +118,10 @@ class AssetGameDataRepository : GameDataRepository {
     private val cache = ModuleSnapshotCache(maxSize = 4)
     private val cacheMutex = Mutex()
     private val inFlightLoads = mutableMapOf<String, CompletableDeferred<GameDataSnapshot>>()
+
+    override fun invalidateCache() {
+        cache.clear()
+    }
 
     override suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot =
         withContext(Dispatchers.IO) {

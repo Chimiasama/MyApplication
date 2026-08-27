@@ -985,9 +985,13 @@ fun AncestralidadesSection(
                                             Spacer(Modifier.height(8.dp))
                                         }
 
-                                        // Attributes
-                                        if (atributosEfetivos.isNotEmpty()) {
-                                            val attrsText = atributosEfetivos.entries.joinToString(", ") { (k, v) ->
+                                        // Attributes. Um valor 0 é d4 (o padrão de qualquer personagem) —
+                                        // omite da lista pra só mostrar o que a raça/variante realmente
+                                        // altera (ex.: depois de remover Resistente de uma Variante,
+                                        // Vigor volta a 0/d4 e simplesmente some daqui).
+                                        val atributosParaExibir = atributosEfetivos.filterValues { it != 0 }
+                                        if (atributosParaExibir.isNotEmpty()) {
+                                            val attrsText = atributosParaExibir.entries.joinToString(", ") { (k, v) ->
                                                 val dieVal = 4 + v
                                                 "${k.toFancyTitleCase()} ${dieVal.toDiceString()}"
                                             }

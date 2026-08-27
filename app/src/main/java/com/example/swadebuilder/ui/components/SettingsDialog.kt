@@ -92,6 +92,13 @@ fun SettingsDialog(
     persistPrefs: () -> Unit,
     feedbackController: FeedbackController,
     onResetRulesToDefaults: (() -> Unit)? = null,
+    // Chamado depois de qualquer criação/edição/exclusão de conteúdo customizado
+    // (Vantagem, Complicação, Equipamento, Poder, Raça, Variante de Raça etc.):
+    // invalida o cache de GameDataSnapshot por combinação de livros
+    // (GameDataRepository/ModuleSnapshotCache), que senão continuaria devolvendo
+    // um snapshot desatualizado — sem o conteúdo recém-criado — na próxima vez
+    // que um personagem NOVO for criado com a mesma combinação de livros.
+    onCustomContentChanged: () -> Unit = {},
     onThemeSelected: (AppTheme) -> Unit
 ) {
     var showNpcWarning by remember { mutableStateOf(false) }
@@ -1166,6 +1173,7 @@ fun SettingsDialog(
                                                             }
                                                         }
                                                         refreshTrigger++
+                                                        onCustomContentChanged()
                                                     }) {
                                                         Text("Deletar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
                                                     }
@@ -1416,6 +1424,7 @@ fun SettingsDialog(
                                                 }
                                             }
                                                     refreshTrigger++
+                                            onCustomContentChanged()
                                             customItemName = ""
                                             customItemDesc = ""
                                             customRequirements = ""
@@ -1430,6 +1439,7 @@ fun SettingsDialog(
                                             if (importRes.isSuccess) {
                                                 statusMessage = "Pacote '${importRes.getOrNull()?.packageName}' importado com sucesso!"
                                                 customPackageJson = ""
+                                                onCustomContentChanged()
                                             } else {
                                                 statusMessage = "Erro ao importar: ${importRes.exceptionOrNull()?.message}"
                                             }
