@@ -168,6 +168,12 @@ class CriadorState {
         }
     }
 
+    fun addCustomSuperPoder(superPoder: SuperPoder) {
+        if (listaSuperPoderes.none { it.nome.equals(superPoder.nome, ignoreCase = true) }) {
+            listaSuperPoderes = listaSuperPoderes + superPoder
+        }
+    }
+
     fun updateGameData(snapshot: GameDataSnapshot) {
         this.listaAtributos = snapshot.listaAtributos
         this.listaPericias = snapshot.listaPericias

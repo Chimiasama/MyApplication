@@ -68,6 +68,19 @@ import kotlin.math.roundToInt
 
 import androidx.compose.material3.OutlinedButton
 
+// Livro Básico: "Super Poderes (2+X)... o custo é 2 — pelo Antecedente Arcano
+// (Super Poderes) — mais o custo do poder selecionado (X)." Muitos poderes do
+// Compêndio de Super Poderes têm custo em escada por nível (ex.: "1/2/3/4/5"),
+// então X aqui é o primeiro degrau (a compra mínima do poder).
+private fun primeiroCustoSuperPoder(custoBase: String?): Int =
+    custoBase
+        ?.split("/")
+        ?.firstOrNull()
+        ?.trim()
+        ?.replace('–', '-')
+        ?.toIntOrNull()
+        ?: 1
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
@@ -267,6 +280,10 @@ fun SettingsDialog(
                         var customWeight by remember { mutableStateOf("0") }
                         var customDamage by remember { mutableStateOf("") }
                         var customPp by remember { mutableStateOf("1") }
+                        var customSuperPoderCustoBase by remember { mutableStateOf("2") }
+                        // Um modificador por linha, no mesmo formato usado pelo catálogo oficial
+                        // ("Nome (+custo): descrição"), ex.: "Área (+2): Modelo Médio de Explosão".
+                        var customSuperPoderModificadores by remember { mutableStateOf("") }
                         var customRange by remember { mutableStateOf("Toque") }
                         var customDuration by remember { mutableStateOf("3 turnos") }
                         var customRacialTrait by remember { mutableStateOf("") }
@@ -299,11 +316,25 @@ fun SettingsDialog(
                             }.getOrElse { emptyList() }.map { it.exibida() }
                         }
 
+                        // "Super Poderes (2+X)": o traço racial em si custa 2 pontos, mais o
+                        // custo do Super Poder do Compêndio de Super Poderes escolhido pelo
+                        // Mestre (X). Como X varia por poder, a entrada de HabilidadeCriacao
+                        // final é montada dinamicamente (ver superPoderRacialPickerTarget),
+                        // não é um custo fixo de catálogo como os outros traços.
+                        val superPoderesCatalog: List<com.example.swadebuilder.model.SuperPoder> = remember {
+                            runCatching {
+                                context.loadJsonAsset<List<com.example.swadebuilder.model.SuperPoder>>("super_poderes.json")
+                            }.getOrElse { emptyList() }
+                        }
+                        var superPoderRacialPickerTarget by remember {
+                            mutableStateOf<((com.example.swadebuilder.model.HabilidadeCriacao) -> Unit)?>(null)
+                        }
+
                         val categories = remember(isHomeScreen) {
                             if (isHomeScreen) {
-                                listOf("Vantagem", "Complicação", "Poder", "Raça", "Traço Racial", "Variante de Raça")
+                                listOf("Vantagem", "Complicação", "Poder", "Super Poder", "Raça", "Traço Racial", "Variante de Raça")
                             } else {
-                                listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça", "Traço Racial", "Variante de Raça")
+                                listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Super Poder", "Raça", "Traço Racial", "Variante de Raça")
                             }
                         }
                         if (selectedCategory !in categories) {
@@ -621,6 +652,21 @@ fun SettingsDialog(
                                                         label = { Text("Duração (ex: 3 turnos)") },
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
+                                                    )
+                                                }
+                                                "Super Poder" -> {
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customSuperPoderCustoBase,
+                                                        onValueChange = { customSuperPoderCustoBase = it },
+                                                        label = { Text("Custo Base (ex: 2 ou 1/2/3/4/5)") },
+                                                        singleLine = true,
+                                                        modifier = Modifier.fillMaxWidth()
+                                                    )
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customSuperPoderModificadores,
+                                                        onValueChange = { customSuperPoderModificadores = it },
+                                                        label = { Text("Modificadores (1 por linha, ex: Área (+2): Modelo Médio de Explosão)") },
+                                                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
                                                     )
                                                 }
                                                 "Raça" -> {
@@ -948,6 +994,7 @@ fun SettingsDialog(
                                                 activeBookCustomData.equipamentos.forEach { add("Equipamento" to it.nome) }
                                             }
                                             activeBookCustomData.poderes.forEach { add("Poder" to it.nome) }
+                                            activeBookCustomData.superPoderes.forEach { add("Super Poder" to it.nome) }
                                             activeBookCustomData.racas.forEach { add("Raça" to it.nome) }
                                             activeBookCustomData.habilidadesRaciais.forEach { add("Traço Racial" to it.nome) }
                                             activeBookCustomData.variantesRaciais.forEach { add("Variante de Raça" to it.nome) }
@@ -988,6 +1035,7 @@ fun SettingsDialog(
                                                                 val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
                                                                 item?.let { customStorageManager.deletePoder(context, activeBookKey, it.id) }
                                                             }
+                                                            "Super Poder" -> customStorageManager.deleteSuperPoder(context, activeBookKey, name)
                                                             "Raça" -> customStorageManager.deleteRaca(context, activeBookKey, name)
                                                             "Traço Racial" -> customStorageManager.deleteHabilidadeRacial(context, activeBookKey, name)
                                                             "Variante de Raça" -> {
@@ -1085,6 +1133,21 @@ fun SettingsDialog(
                                                             customStorageManager.addPoder(context, activeBookKey, newPoder)
                                                     state.addCustomPoder(newPoder)
                                                             statusMessage = "Poder '$customItemName' salvo no livro $activeBookKey!"
+                                                }
+                                                "Super Poder" -> {
+                                                    val modificadoresList = customSuperPoderModificadores
+                                                        .lines()
+                                                        .map { it.trim() }
+                                                        .filter { it.isNotBlank() }
+                                                    val newSuperPoder = com.example.swadebuilder.model.SuperPoder(
+                                                        nome = customItemName,
+                                                        custoBase = customSuperPoderCustoBase.ifBlank { "2" },
+                                                        descricao = safeDesc,
+                                                        modificadores = modificadoresList.ifEmpty { null }
+                                                    )
+                                                    customStorageManager.addSuperPoder(context, activeBookKey, newSuperPoder)
+                                                    state.addCustomSuperPoder(newSuperPoder)
+                                                    statusMessage = "Super Poder '$customItemName' salvo no livro $activeBookKey!"
                                                 }
                                                 "Raça" -> {
                                                     val raceAbilities = if (selectedRacialTraits.isNotEmpty()) {
@@ -1447,16 +1510,30 @@ fun SettingsDialog(
                                             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                                         )
                                         allTraitsCatalog.filter { it.nome.contains(filterTraitText, ignoreCase = true) }.forEach { trait ->
-                                            val isSel = selectedRacialTraits.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isSel = if (isSuperPoderesRow) {
+                                                selectedRacialTraits.any { it.nome.startsWith("Super Poderes (") }
+                                            } else {
+                                                selectedRacialTraits.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            }
+                                            val onToggle: (Boolean) -> Unit = { checked ->
+                                                if (isSuperPoderesRow) {
+                                                    if (checked) {
+                                                        superPoderRacialPickerTarget = { escolhido ->
+                                                            selectedRacialTraits = selectedRacialTraits + escolhido
+                                                        }
+                                                    } else {
+                                                        selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else {
+                                                    selectedRacialTraits = if (checked) selectedRacialTraits + trait else selectedRacialTraits.filterNot { it.nome.equals(trait.nome, ignoreCase = true) }
+                                                }
+                                            }
                                             Row(
-                                                modifier = Modifier.fillMaxWidth().clickable {
-                                                    selectedRacialTraits = if (isSel) selectedRacialTraits.filterNot { it.nome.equals(trait.nome, ignoreCase = true) } else selectedRacialTraits + trait
-                                                }.padding(vertical = 4.dp),
+                                                modifier = Modifier.fillMaxWidth().clickable { onToggle(!isSel) }.padding(vertical = 4.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Checkbox(checked = isSel, onCheckedChange = {
-                                                    selectedRacialTraits = if (it) selectedRacialTraits + trait else selectedRacialTraits.filterNot { t -> t.nome.equals(trait.nome, ignoreCase = true) }
-                                                })
+                                                Checkbox(checked = isSel, onCheckedChange = onToggle)
                                                 Spacer(Modifier.width(8.dp))
                                                 Column {
                                                     Text("${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
@@ -1521,16 +1598,30 @@ fun SettingsDialog(
                                             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                                         )
                                         allVarianteTraitsCatalog.filter { it.nome.contains(filterVarianteTraitText, ignoreCase = true) }.forEach { trait ->
-                                            val isSel = varianteTracosAdicionados.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isSel = if (isSuperPoderesRow) {
+                                                varianteTracosAdicionados.any { it.nome.startsWith("Super Poderes (") }
+                                            } else {
+                                                varianteTracosAdicionados.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            }
+                                            val onToggle: (Boolean) -> Unit = { checked ->
+                                                if (isSuperPoderesRow) {
+                                                    if (checked) {
+                                                        superPoderRacialPickerTarget = { escolhido ->
+                                                            varianteTracosAdicionados = varianteTracosAdicionados + escolhido
+                                                        }
+                                                    } else {
+                                                        varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else {
+                                                    varianteTracosAdicionados = if (checked) varianteTracosAdicionados + trait else varianteTracosAdicionados.filterNot { it.nome.equals(trait.nome, ignoreCase = true) }
+                                                }
+                                            }
                                             Row(
-                                                modifier = Modifier.fillMaxWidth().clickable {
-                                                    varianteTracosAdicionados = if (isSel) varianteTracosAdicionados.filterNot { it.nome.equals(trait.nome, ignoreCase = true) } else varianteTracosAdicionados + trait
-                                                }.padding(vertical = 4.dp),
+                                                modifier = Modifier.fillMaxWidth().clickable { onToggle(!isSel) }.padding(vertical = 4.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Checkbox(checked = isSel, onCheckedChange = {
-                                                    varianteTracosAdicionados = if (it) varianteTracosAdicionados + trait else varianteTracosAdicionados.filterNot { t -> t.nome.equals(trait.nome, ignoreCase = true) }
-                                                })
+                                                Checkbox(checked = isSel, onCheckedChange = onToggle)
                                                 Spacer(Modifier.width(8.dp))
                                                 Column {
                                                     Text("${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
@@ -1543,6 +1634,58 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { showVarianteTraitAddDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        superPoderRacialPickerTarget?.let { onEscolhido ->
+                            var filterSuperPoderText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { superPoderRacialPickerTarget = null },
+                                title = { Text("Escolher Super Poder") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        Text(
+                                            "O traço Super Poderes custa 2 pontos pelo Antecedente Arcano (Super Poderes) mais o custo do poder escolhido.",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterSuperPoderText,
+                                            onValueChange = { filterSuperPoderText = it },
+                                            label = { Text("Filtrar Super Poder") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        superPoderesCatalog
+                                            .filter { it.nome.contains(filterSuperPoderText, ignoreCase = true) }
+                                            .forEach { poder ->
+                                                val custoPoder = primeiroCustoSuperPoder(poder.custoBase)
+                                                val custoTotal = 2 + custoPoder
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth().clickable {
+                                                        onEscolhido(
+                                                            com.example.swadebuilder.model.HabilidadeCriacao(
+                                                                nome = "Super Poderes (${poder.nome})",
+                                                                custo = custoTotal,
+                                                                descricao = "Antecedente Arcano (Super Poderes) + poder \"${poder.nome}\" (custo base ${poder.custoBase ?: custoPoder}).",
+                                                                descricaoLite = "Concede o Antecedente Arcano (Super Poderes) e o poder \"${poder.nome}\" do Compêndio de Super Poderes."
+                                                            )
+                                                        )
+                                                        superPoderRacialPickerTarget = null
+                                                    }.padding(vertical = 6.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Column {
+                                                        Text("${poder.nome} (2+$custoPoder = $custoTotal pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                        if (!poder.descricao.isNullOrBlank()) {
+                                                            Text(poder.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { superPoderRacialPickerTarget = null }) { Text("Cancelar") } }
                             )
                         }
 

@@ -495,6 +495,15 @@
     "descricaoLite": "O Antecedente Arcano (Dom) e um poder inato são concedidos automaticamente."
   },
   {
+    "id": "super_poderes_racial",
+    "nome": "Super Poderes",
+    "custo": 2,
+    "categoria": "racial_trait_positive",
+    "descricao": "Possui habilidades extraordinárias tiradas do Compêndio de Super Poderes. O custo é 2 pelo Antecedente Arcano (Super Poderes) mais o custo do poder selecionado (X) — exige permissão do Mestre.",
+    "origem": "BASICO",
+    "descricaoLite": "Concede o Antecedente Arcano (Super Poderes) e um poder do Compêndio de Super Poderes; o custo final soma 2 pontos ao custo do poder escolhido, e depende de permissão do Mestre."
+  },
+  {
     "id": "reducao_sono",
     "nome": "Redução de Sono",
     "custo": 1,
@@ -685,12 +694,39 @@
   },
   {
     "id": "vantagem_racial",
-    "nome": "Vantagem Inata",
+    "nome": "Vantagem Inata (Novato)",
     "custo": 2,
     "categoria": "racial_trait_positive",
-    "descricao": "Começa com uma Vantagem inata do cenário ignorando requisitos de Estágio.",
+    "descricao": "Começa com uma Vantagem inata de Estágio Novato do cenário, ignorando os requisitos normais de Estágio.",
     "origem": "BASICO",
-    "descricaoLite": "Uma Vantagem inata prevista pelo cenário é concedida desde o início, mesmo sem cumprir os requisitos normais de Estágio."
+    "descricaoLite": "Uma Vantagem inata de Estágio Novato prevista pelo cenário é concedida desde o início, mesmo sem cumprir os requisitos normais de Estágio."
+  },
+  {
+    "id": "vantagem_racial_experiente",
+    "nome": "Vantagem Inata (Experiente)",
+    "custo": 3,
+    "categoria": "racial_trait_positive",
+    "descricao": "Começa com uma Vantagem inata de Estágio Experiente do cenário, ignorando os requisitos normais de Estágio.",
+    "origem": "BASICO",
+    "descricaoLite": "Uma Vantagem inata de Estágio Experiente prevista pelo cenário é concedida desde o início, mesmo sem cumprir os requisitos normais de Estágio."
+  },
+  {
+    "id": "vantagem_racial_veterano",
+    "nome": "Vantagem Inata (Veterano)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Começa com uma Vantagem inata de Estágio Veterano do cenário, ignorando os requisitos normais de Estágio.",
+    "origem": "BASICO",
+    "descricaoLite": "Uma Vantagem inata de Estágio Veterano prevista pelo cenário é concedida desde o início, mesmo sem cumprir os requisitos normais de Estágio."
+  },
+  {
+    "id": "vantagem_racial_heroico",
+    "nome": "Vantagem Inata (Heroico)",
+    "custo": 5,
+    "categoria": "racial_trait_positive",
+    "descricao": "Começa com uma Vantagem inata de Estágio Heroico do cenário, ignorando os requisitos normais de Estágio.",
+    "origem": "BASICO",
+    "descricaoLite": "Uma Vantagem inata de Estágio Heroico prevista pelo cenário é concedida desde o início, mesmo sem cumprir os requisitos normais de Estágio."
   },
   {
     "id": "visao_360",
