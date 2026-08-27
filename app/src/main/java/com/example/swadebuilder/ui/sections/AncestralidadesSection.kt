@@ -960,6 +960,21 @@ fun AncestralidadesSection(
 
                                 AnimatedVisibility(visible = detalhesExpandidos[itemKey] == true) {
                                     Column(modifier = Modifier.padding(top = 4.dp)) {
+                                        // Quando esta é a raça atualmente selecionada, currentAncestryDef já
+                                        // vem com os ajustes de uma eventual Variante custom aplicados
+                                        // (traços/atributos/perícias/vantagens/desvantagens) — usa esses
+                                        // valores em vez dos crus de `item` pra não mostrar, por exemplo,
+                                        // "Resistente"/Vigor d6 aqui enquanto o Resumo já mostra o traço
+                                        // removido e Vigor d4.
+                                        val ancestryDefAtivo = if (isSelected) state.currentAncestryDef else null
+                                        val atributosEfetivos = ancestryDefAtivo?.atributos ?: item.atributos
+                                        val periciasEfetivas = ancestryDefAtivo?.pericias ?: item.pericias
+                                        val vantagensGratisEfetivas = ancestryDefAtivo?.vantagensGratis ?: item.vantagensGratis
+                                        val desvantagensEfetivas = ancestryDefAtivo?.desvantagens ?: item.desvantagens
+                                        val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
+                                            RacialAbilityLite(nome = it.nome, descricao = it.descricao)
+                                        } ?: item.habilidades
+
                                         // Description
                                         if (descricao.isNotBlank()) {
                                             Text(
@@ -971,8 +986,8 @@ fun AncestralidadesSection(
                                         }
 
                                         // Attributes
-                                        if (item.atributos.isNotEmpty()) {
-                                            val attrsText = item.atributos.entries.joinToString(", ") { (k, v) ->
+                                        if (atributosEfetivos.isNotEmpty()) {
+                                            val attrsText = atributosEfetivos.entries.joinToString(", ") { (k, v) ->
                                                 val dieVal = 4 + v
                                                 "${k.toFancyTitleCase()} ${dieVal.toDiceString()}"
                                             }
@@ -985,8 +1000,8 @@ fun AncestralidadesSection(
                                         }
 
                                         // Skills
-                                        if (item.pericias.isNotEmpty()) {
-                                            val skillsText = item.pericias.entries.joinToString(", ") { (k, v) ->
+                                        if (periciasEfetivas.isNotEmpty()) {
+                                            val skillsText = periciasEfetivas.entries.joinToString(", ") { (k, v) ->
                                                 val die = if (v == 0) "d4-2" else (4 + (v - 1) * 2).toDiceString()
                                                 "${k.toFancyTitleCase()} $die"
                                             }
@@ -999,7 +1014,7 @@ fun AncestralidadesSection(
                                         }
 
                                         // Free Advantages
-                                        val vantagensGratisVisiveis = item.vantagensGratis.filterNot {
+                                        val vantagensGratisVisiveis = vantagensGratisEfetivas.filterNot {
                                             it.keyify() == Constants.ID_AA_AGENT_SYN.keyify()
                                         }
                                         if (vantagensGratisVisiveis.isNotEmpty()) {
@@ -1013,8 +1028,8 @@ fun AncestralidadesSection(
                                         }
 
                                         // Hindrances
-                                        if (item.desvantagens.isNotEmpty()) {
-                                            val hindsText = item.desvantagens.joinToString(", ") { it.toFancyTitleCase() }
+                                        if (desvantagensEfetivas.isNotEmpty()) {
+                                            val hindsText = desvantagensEfetivas.joinToString(", ") { it.toFancyTitleCase() }
                                             Text(
                                                 text = "Complicações: $hindsText",
                                                 style = MaterialTheme.typography.bodySmall,
@@ -1025,7 +1040,7 @@ fun AncestralidadesSection(
 
                                         // Abilities
                                         val habilidadesExibidas = buildList {
-                                            addAll(item.habilidades)
+                                            addAll(habilidadesEfetivas)
                                             if (
                                                 isSelected &&
                                                 compendioSciFiAtivo &&

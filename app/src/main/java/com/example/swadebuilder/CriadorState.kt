@@ -538,10 +538,39 @@ class CriadorState {
             }
         }
 
+        // Desconta de base.atributos/base.pericias (mapas numéricos "passos*2
+        // acima de d4", independentes de habilidades[]) o mesmo passo que
+        // RacialTraitPointCatalog atribui a cada traço removido — mesma lógica
+        // de atributoBaseRacial(), mas aplicada aqui pra que currentAncestryDef
+        // já saia correto pra qualquer tela que leia .atributos/.pericias
+        // direto (ex.: o "Ver detalhes" de AncestralidadesSection), não só o
+        // cálculo ao vivo do atributo do personagem.
+        val newAtributos = base.atributos.toMutableMap()
+        val newPericias = base.pericias.toMutableMap()
+        variant.tracosRemovidosIds.forEach { removedId ->
+            when (val efeito = RacialTraitPointCatalog.efeitoDe(removedId)) {
+                is RacialTraitEffect.AtributoStep -> {
+                    val key = newAtributos.keys.firstOrNull { it.keyify() == efeito.atributo.keyify() }
+                    if (key != null) {
+                        newAtributos[key] = maxOf(0, (newAtributos[key] ?: 0) - 2 * efeito.passos)
+                    }
+                }
+                is RacialTraitEffect.PericiaStep -> {
+                    val key = newPericias.keys.firstOrNull { it.keyify() == efeito.pericia.keyify() }
+                    if (key != null) {
+                        newPericias[key] = maxOf(0, (newPericias[key] ?: 0) - efeito.passos)
+                    }
+                }
+                RacialTraitEffect.Nenhum -> Unit
+            }
+        }
+
         return base.copy(
             habilidades = newHabilidades,
             vantagensGratis = newVantagensGratis,
-            desvantagens = newDesvantagens
+            desvantagens = newDesvantagens,
+            atributos = newAtributos,
+            pericias = newPericias
         )
     }
 
