@@ -425,29 +425,36 @@ class CriadorState {
         if (lookupKeys.first() != lookupKeys.firstOrNull { ancestryMap[it] != null }) {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
-        if (candidates.size == 1) return applyCustomAncestryVariantIfSelected(candidates.first())
 
-        val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
-            compendioFantasiaAtivo = compendioFantasiaAtivo,
-            compendioHorrorAtivo = compendioHorrorAtivo,
-            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-            compendioWiseguysAtivo = compendioWiseguysAtivo,
-            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-            compendioSciFiAtivo = compendioSciFiAtivo,
-            compendioPathfinderAtivo = compendioPathfinderAtivo
-        )
-
-        val activeCandidates = candidates.filter { item ->
-            resolveActiveAncestryCandidatesUseCase.isOriginActive(item.origem, ancestryFlags)
-        }
-
-        val selected = if (activeCandidates.isEmpty()) {
-            candidates.firstOrNull()
+        // Uma raça com uma única entrada no catálogo (ex.: Umvee) ainda pode ter
+        // ajustes de variante a aplicar (ex.: Dom da Natureza "Gatoruja" injeta
+        // PERCEBER_D6/OCULTISMO_D4) — cair fora aqui sem passar por
+        // applyAncestryVariantAdjustments deixava esses traços de fora.
+        val selected = if (candidates.size == 1) {
+            candidates.first()
         } else {
-            activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
-        } ?: return null
+            val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
+                compendioFantasiaAtivo = compendioFantasiaAtivo,
+                compendioHorrorAtivo = compendioHorrorAtivo,
+                compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                compendioWiseguysAtivo = compendioWiseguysAtivo,
+                compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                compendioSciFiAtivo = compendioSciFiAtivo,
+                compendioPathfinderAtivo = compendioPathfinderAtivo
+            )
+
+            val activeCandidates = candidates.filter { item ->
+                resolveActiveAncestryCandidatesUseCase.isOriginActive(item.origem, ancestryFlags)
+            }
+
+            (if (activeCandidates.isEmpty()) {
+                candidates.firstOrNull()
+            } else {
+                activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
+            }) ?: return null
+        }
 
         val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE")) {
             applyAncestryVariantAdjustments(selected, key)

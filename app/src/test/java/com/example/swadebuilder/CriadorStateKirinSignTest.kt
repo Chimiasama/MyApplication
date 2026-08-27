@@ -187,9 +187,64 @@ class CriadorStateKirinSignTest {
     }
 
 
+    // periciaStartRaw() lê o traço concedido (PREPARADO/DEFINIDO_PELO_OFICIO) a
+    // partir de habilidades[] da ancestralidade, não mais do nome da raça (ver
+    // commit 3763728) — por isso precisa de uma ancestralidade injetada aqui,
+    // igual ao real ancestralidades.json, em vez de confiar num CriadorState() cru.
+    private fun injectKitsuneUsagiAncestries(state: CriadorState) {
+        state.listaAncestralidadesJson = listOf(
+            RacialModifier(
+                nome = "Kitsunemimi (Raposa)", origem = "ARTE_DA_GUERRA",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = listOf(
+                    RacialAbility("Visão no Escuro", "", id = "VISAO_NO_ESCURO"),
+                    RacialAbility("Excessivamente Detalhistas", "", id = "EXCESSIVAMENTE_DETALHISTAS"),
+                    RacialAbility("Preparado", "", id = "PREPARADO"),
+                    RacialAbility("Socialmente Sofisticados", "", id = "SOCIALMENTE_SOFISTICADOS")
+                )
+            ),
+            RacialModifier(
+                nome = "Usagimimi (Coelho)", origem = "ARTE_DA_GUERRA",
+                atributos = emptyMap(), pericias = emptyMap(),
+                vantagensGratis = emptyList(), desvantagens = emptyList(),
+                habilidades = listOf(
+                    RacialAbility("Definido pelo Ofício", "", id = "DEFINIDO_PELO_OFICIO"),
+                    RacialAbility("Visão no Escuro", "", id = "VISAO_NO_ESCURO"),
+                    RacialAbility("Velocidade da Lebre", "", id = "VELOCIDADE_DA_LEBRE"),
+                    RacialAbility("Ariscos", "", id = "ARISCOS")
+                )
+            )
+        )
+        state.updateGameData(
+            GameDataSnapshot(
+                listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
+                listaAncestralidadesJson = state.listaAncestralidadesJson,
+                listaPericias = emptyList(),
+                listaVantagens = emptyList(),
+                listaComplicacoes = emptyList(),
+                listaTropos = emptyList(),
+                listaEquipamentos = emptyList(),
+                listaPoderes = emptyList(),
+                listaSuperPoderes = emptyList(),
+                listaMonstroTemplates = emptyList(),
+                listaCoracoesCrystal = emptyList(),
+                equipamentoCategorias = emptyList(),
+                superequipCategorias = emptyList(),
+                mapaAtributosDisplay = emptyMap(),
+                mapaPericias = emptyMap(),
+                racialAttrMinMap = emptyMap(),
+                racialSkillStartMap = emptyMap(),
+                arcanoInfo = emptyList(),
+                mapaAtributosDescricao = emptyMap()
+            )
+        )
+    }
+
     @Test
     fun `kitsunemimi permite escolher uma pericia para iniciar em d4`() {
         val state = CriadorState().apply {
+            injectKitsuneUsagiAncestries(this)
             compendioArteDaGuerraAtivo = true
             ancestralidade = "Kitsunemimi (Raposa)"
             kitsunemimiPericiaEscolhida = "Pesquisar"
@@ -205,6 +260,7 @@ class CriadorStateKirinSignTest {
     @Test
     fun `usagimimi permite escolher pericia da adg para iniciar em d6`() {
         val state = CriadorState().apply {
+            injectKitsuneUsagiAncestries(this)
             compendioArteDaGuerraAtivo = true
             ancestralidade = "Usagimimi (Coelho)"
             usagimimiPericiaEscolhida = "Provocar"
