@@ -426,11 +426,16 @@ class CriadorState {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
 
-        // Uma raça com uma única entrada no catálogo (ex.: Umvee) ainda pode ter
-        // ajustes de variante a aplicar (ex.: Dom da Natureza "Gatoruja" injeta
-        // PERCEBER_D6/OCULTISMO_D4) — cair fora aqui sem passar por
-        // applyAncestryVariantAdjustments deixava esses traços de fora.
-        val selected = if (candidates.size == 1) {
+        // Umvee tem uma única entrada no catálogo mas ainda assim precisa passar
+        // por applyAncestryVariantAdjustments: o Dom da Natureza "Gatoruja" injeta
+        // PERCEBER_D6/OCULTISMO_D4 ali, e cair fora antes disso deixava esse
+        // traço de fora (bug real, pego pelo ScifiAncestryVariantSyncTest).
+        // Outras raças de candidato único (ex.: Meio-Elfo do Pathfinder) dependem
+        // do contrário — do curto-circuito abaixo — pra NÃO entrar no ramo
+        // Herança/Adaptável de applyAncestryVariantAdjustments, que é pensado
+        // pra variante Meio-Elfo de outros livros; por isso o desvio fica restrito
+        // à raça que realmente precisa dele, em vez de valer pra todo candidato único.
+        val selected = if (candidates.size == 1 && !key.contains("UMVEE")) {
             candidates.first()
         } else {
             val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
