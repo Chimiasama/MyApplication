@@ -334,5 +334,23 @@
     "slots": 2,
     "pp": 15,
     "foco": "Foco"
+  },
+  {
+    "key": "ANJO",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Fé"
+  },
+  {
+    "key": "DEMONIO",
+    "slots": 4,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "TECNOMAGIA",
+    "slots": 3,
+    "pp": 0,
+    "foco": "Tecnomagia"
   }
 ]
