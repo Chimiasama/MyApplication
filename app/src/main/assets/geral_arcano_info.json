@@ -352,5 +352,11 @@
     "slots": 3,
     "pp": 0,
     "foco": "Tecnomagia"
+  },
+  {
+    "key": "XAMA_FANTASIA",
+    "slots": 5,
+    "pp": 10,
+    "foco": "Fé"
   }
 ]

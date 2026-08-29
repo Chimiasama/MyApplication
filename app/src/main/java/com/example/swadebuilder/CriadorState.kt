@@ -1082,7 +1082,7 @@ class CriadorState {
         "INVOCADOR" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "conjurar_aliado"),
         "MAGO" to listOf("detectar_ocultar_arcano", "dissipar", "trancar_destrancar"),
         "NECROMANTE" to listOf("detectar_ocultar_arcano", "dissipar", "zumbi"),
-        "XAMA" to listOf("protecao_arcana", "ajuda"),
+        "XAMA_FANTASIA" to listOf("protecao_arcana", "ajuda"),
         "MISTICO_BARBARO" to listOf("aumentar_reduzir_caracteristica", "ferir", "morosidade_velocidade"),
         "MISTICO_GUERREIRO" to listOf("aumentar_reduzir_caracteristica", "ferir", "protecao"),
         "MISTICO_LADRAO" to listOf("andar_nas_paredes", "aumentar_reduzir_caracteristica", "trancar_destrancar", "visao_sombria"),
@@ -3886,7 +3886,7 @@ class CriadorState {
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
         return when (normalizedKey) {
-            "FEITICEIRO" -> id == "aa_magia_negra"
+            "FEITICEIRO" -> id == "aa_magia_negra" || id == "aa_magia_das_trevas"
             "DEMONIO" -> id == "aa_demonio" && !isCidadeSolVaporDemonAncestry
             "MILAGRES" -> {
                 id == "aa_milagres" ||

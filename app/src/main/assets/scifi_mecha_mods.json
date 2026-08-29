@@ -374,7 +374,7 @@
       "nome": "Velocidade Ampliada",
       "categoria": "LOCOMOÇÃO",
       "mods_cost": 2,
-      "max_uses": 3,
+      "max_uses": 99,
       "descricao": "+1 na Classificação de Velocidade Máxima.",
       "descricaoLite": "+1 na Classificação de Velocidade Máxima."
     },
