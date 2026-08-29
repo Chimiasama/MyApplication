@@ -39902,7 +39902,7 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "MISTICO",
+    "subtipoArcano": "MISTICO_ESTELAR",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
