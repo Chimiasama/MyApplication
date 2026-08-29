@@ -6,7 +6,6 @@ import com.example.swadebuilder.model.RacialGrantResolver
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.RacialTraitPointCatalog
 import com.example.swadebuilder.model.Vantagem
-import kotlin.math.abs
 
 /**
  * Item já resolvido (traço racial, Vantagem ou Complicação, oficial ou
@@ -23,20 +22,21 @@ data class VariantBudgetItem(
 )
 
 /**
- * Calcula o saldo em pontos de uma Variante custom de raça: o que foi
- * REMOVIDO da raça base devolve o custo dele ao orçamento (tirar um traço
- * forte libera pontos; tirar uma desvantagem custa pontos, "comprando de
- * volta" a Complicação); o que foi ADICIONADO gasta o custo dele.
+ * Calcula o saldo TOTAL em pontos de uma Variante custom de raça: começa do
+ * valor de livro da própria raça base (soma do custo de TODOS os seus
+ * traços/vantagensGratis/desvantagens, tocados ou não — ver [valorTotalDe]),
+ * subtrai o custo de cada item removido e soma o custo de cada item
+ * adicionado. Não é o delta só das mudanças: é quanto a raça resultante
+ * vale no total, do mesmo jeito que se estivesse sendo construída do zero.
  *
- * Por padrão o saldo final precisa ficar dentro de ±2 pontos (mesmo teto da
- * Seleção de traços negativos do Anão Ciber — lá também é "até 2 pontos",
- * não "exatamente 2": ver AnaoCiberTraitCatalog.MAX_PONTOS e seu uso em
- * ResolveAncestrySpecificAdjustmentsUseCase, que aceita `pontosUsados <=
- * MAX_PONTOS`). Saldo 0 (nada adicionado além do que foi removido, ou
- * nenhuma mudança) é válido; só passar de 2 pra qualquer lado é inválido.
- * Passando `semLimite = true` (a opção de "sem limite" pra raças mais
- * fortes, tipo Pathfinder) a validação sempre passa, qualquer saldo,
- * positivo ou negativo.
+ * Toda raça oficial do livro já fecha exatamente em [DEFAULT_ORCAMENTO] (2)
+ * pontos — é assim que o próprio livro básico calibra as raças (Humanos:
+ * só Adaptável, 2; Anões: -1+2+1, também 2). Por isso, sem mexer em nada, a
+ * Variante de uma raça-livro já nasce fechada em 2 e pode ser salva
+ * imediatamente; ela só sai do orçamento quando o jogador começa a
+ * remover/adicionar coisas sem compensar. Passando `semLimite = true` (a
+ * opção de "sem limite" pra raças mais fortes ou mais fracas) a validação
+ * sempre passa, qualquer saldo.
  *
  * Não decide SE algo pode ser removido/adicionado (isso é responsabilidade
  * da UI/fluxo de criação) — só soma e valida o saldo dos itens que já
@@ -52,22 +52,23 @@ class ResolveVariantPointBudgetUseCase {
     )
 
     fun resolve(
+        valorBaseRaca: Int,
         itensRemovidos: List<VariantBudgetItem>,
         itensAdicionados: List<VariantBudgetItem>,
         orcamento: Int = DEFAULT_ORCAMENTO,
         semLimite: Boolean = false
     ): Result {
-        val saldo = itensAdicionados.sumOf { it.custo } - itensRemovidos.sumOf { it.custo }
+        val saldo = valorBaseRaca - itensRemovidos.sumOf { it.custo } + itensAdicionados.sumOf { it.custo }
         return Result(
             saldo = saldo,
             orcamento = orcamento,
             semLimite = semLimite,
-            dentroDoOrcamento = semLimite || abs(saldo) <= orcamento
+            dentroDoOrcamento = semLimite || saldo == orcamento
         )
     }
 
     companion object {
-        /** Mesmo teto usado na Seleção de traços negativos do Anão Ciber. */
+        /** Valor de livro que toda raça oficial fecha — ver o comentário da classe. */
         const val DEFAULT_ORCAMENTO = 2
 
         /** Todos os itens removíveis da raça base: habilidades[], vantagensGratis e desvantagens. */
@@ -83,6 +84,9 @@ class ResolveVariantPointBudgetUseCase {
             }
             return doHabilidades + doVantagensGratis + doDesvantagens
         }
+
+        /** Valor de livro total da raça base: soma do custo de TODOS os itens removíveis dela. */
+        fun valorTotalDe(base: RacialModifier): Int = itensRemoviveisDe(base).sumOf { it.custo }
 
         private fun habilidadeComoItem(habilidade: RacialAbility): VariantBudgetItem =
             VariantBudgetItem(label = habilidade.nome, custo = RacialTraitPointCatalog.custoDe(habilidade.id), habilidadeId = habilidade.id)

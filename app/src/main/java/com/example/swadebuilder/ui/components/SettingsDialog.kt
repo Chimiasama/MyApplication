@@ -930,9 +930,12 @@ fun SettingsDialog(
                                                             }
                                                         }
 
-                                                        val budgetResult = remember(itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
+                                                        val valorBaseRaca = remember(varianteBaseRaca) {
+                                                            com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(varianteBaseRaca)
+                                                        }
+                                                        val budgetResult = remember(valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                                itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                                valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
                                                             )
                                                         }
 
@@ -943,7 +946,7 @@ fun SettingsDialog(
                                                             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                                                 val saldoColor = if (budgetResult.dentroDoOrcamento) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                                                                 Text(
-                                                                    text = if (varianteSemLimite) "Saldo: ${budgetResult.saldo} (sem limite)" else "Saldo: ${budgetResult.saldo} / ±${budgetResult.orcamento}",
+                                                                    text = if (varianteSemLimite) "Pontos da raça: ${budgetResult.saldo} (sem limite)" else "Pontos da raça: ${budgetResult.saldo} / ${budgetResult.orcamento}",
                                                                     style = MaterialTheme.typography.labelSmall,
                                                                     fontWeight = FontWeight.SemiBold,
                                                                     color = saldoColor
@@ -1388,12 +1391,13 @@ fun SettingsDialog(
                                                             }
                                                         }
 
+                                                        val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca)
                                                         val budgetResult = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                            itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                            valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
                                                         )
 
                                                         if (!budgetResult.dentroDoOrcamento) {
-                                                            statusMessage = "A Variante não pode passar de ±${budgetResult.orcamento} pontos de diferença (saldo atual: ${budgetResult.saldo}), ou marque 'Sem limite de pontos'."
+                                                            statusMessage = "A Variante precisa fechar em exatamente ${budgetResult.orcamento} pontos (pontos atuais: ${budgetResult.saldo}), ou marque 'Sem limite de pontos'."
                                                         } else {
                                                             val newVariant = com.example.swadebuilder.model.CustomAncestryVariant(
                                                                 id = id,
