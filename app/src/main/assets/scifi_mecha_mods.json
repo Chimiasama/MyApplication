@@ -100,6 +100,15 @@
       "descricaoLite": "Penalidade de Plataforma Instável é -4. Devolve 2 MODs."
     },
     {
+      "id": "mod_neg_pilotagem_dupla",
+      "nome": "Pilotagem Dupla",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "Requer dois pilotos, que compartilham uma Carta de Ação e usam a menor rolagem de Pilotar da dupla. Devolve 2 MODs.",
+      "descricaoLite": "O mecha exige uma tripulação de dois pilotos, que compartilham uma única Carta de Ação em combate e usam a menor das duas rolagens de Pilotar. Devolve 2 espaços de MODs."
+    },
+    {
       "id": "mod_neg_sem_maos",
       "nome": "Sem Mãos",
       "categoria": "QUALIDADES NEGATIVAS",
@@ -107,6 +116,15 @@
       "max_uses": 1,
       "descricao": "Não pode agarrar ou usar armas manuais. Devolve 2 MODs.",
       "descricaoLite": "Não pode agarrar ou usar armas manuais. Devolve 2 MODs."
+    },
+    {
+      "id": "mod_neg_tripulacao_exposta",
+      "nome": "Tripulação Exposta",
+      "categoria": "QUALIDADES NEGATIVAS",
+      "mods_cost": -2,
+      "max_uses": 1,
+      "descricao": "O piloto fica exposto às condições atmosféricas, pode ser alvejado individualmente e não recebe bônus de Armadura. Devolve 2 MODs.",
+      "descricaoLite": "O mecha é aberto ou deixa o piloto exposto às condições atmosféricas: ele pode ser alvejado individualmente e não recebe o bônus de Armadura do mecha, mesmo em um Acerto Crítico de Tripulação. Devolve 2 espaços de MODs."
     },
     {
       "id": "mod_neg_vel_reduzida",
@@ -190,6 +208,15 @@
       "descricaoLite": "Display integrado que sincroniza os sinais vitais da equipe e amplia o alcance de comando do mecha."
     },
     {
+      "id": "mod_cent_sensores_aprimorados",
+      "nome": "Sensores Aprimorados",
+      "categoria": "SISTEMAS CENTRAIS",
+      "mods_cost": 1,
+      "max_uses": 1,
+      "descricao": "Sensores óticos ampliados para 100× e adiciona sensores químicos e de movimento (+2 em Surpresa e Perceber relevantes).",
+      "descricaoLite": "Amplia os sensores óticos para 100× e adiciona sensores químicos, de movimento e outros, concedendo +2 aos testes de Surpresa e rolagens de Perceber relevantes."
+    },
+    {
       "id": "mod_def_armadura_inclinada",
       "nome": "Armadura Inclinada",
       "categoria": "SISTEMAS DEFENSIVOS",
@@ -253,6 +280,15 @@
       "descricaoLite": "Gerador de campo de força que se recarrega com o tempo e pode ser usado para Absorção de dano."
     },
     {
+      "id": "mod_def_nanomaquinas",
+      "nome": "Nanomáquinas (Reparo)",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 3,
+      "max_uses": 1,
+      "descricao": "Nanorrobôs tentam Consertar como ação limitada (1x/rodada); cada sucesso e ampliação remove um Ferimento. Após reparar 3 Ferimentos, ficam dispersos por 24h.",
+      "descricaoLite": "Enxame de nanorrobôs que tenta uma rolagem de Consertar como ação limitada uma vez por rodada, removendo um Ferimento a cada sucesso ou ampliação; após reparar três Ferimentos, os nanorrobôs ficam muito dispersos e não oferecem mais benefícios até se recuperarem 24 horas depois."
+    },
+    {
       "id": "mod_def_resistencia",
       "nome": "Resistência Extra",
       "categoria": "SISTEMAS DEFENSIVOS",
@@ -271,6 +307,15 @@
       "descricaoLite": "Camuflagem e absorção de radar (-4 em rolagens para detectar/travar)."
     },
     {
+      "id": "mod_def_antiteleporte",
+      "nome": "Tecnologia Antiteleporte",
+      "categoria": "SISTEMAS DEFENSIVOS",
+      "mods_cost": 4,
+      "max_uses": 1,
+      "descricao": "Embaralhadores eletrônicos impedem que pessoas ou materiais sejam teleportados para dentro do mecha.",
+      "descricaoLite": "Embaralhadores eletrônicos impedem que pessoas ou materiais sejam teleportados para dentro do mecha."
+    },
+    {
       "id": "mod_loc_anfibio",
       "nome": "Anfíbio",
       "categoria": "LOCOMOÇÃO",
@@ -278,6 +323,15 @@
       "max_uses": 2,
       "descricao": "Permite operação e deslocamento sob a água.",
       "descricaoLite": "Permite operação e deslocamento sob a água."
+    },
+    {
+      "id": "mod_loc_capsula_energia",
+      "nome": "Cápsula de Energia",
+      "categoria": "LOCOMOÇÃO",
+      "mods_cost": 2,
+      "max_uses": 99,
+      "descricao": "Cada cápsula adiciona à capacidade máxima do mecha o dobro da sua Classificação de Energia em combustível ou potência.",
+      "descricaoLite": "Cada cápsula de energia adicional adiciona à capacidade máxima do mecha o dobro da sua Classificação de Energia em combustível ou potência armazenada."
     },
     {
       "id": "mod_loc_manobrabilidade",
@@ -307,6 +361,15 @@
       "descricaoLite": "Permite voo com Classificação de Velocidade 8."
     },
     {
+      "id": "mod_loc_quadrupede",
+      "nome": "Quadrúpede",
+      "categoria": "LOCOMOÇÃO",
+      "mods_cost": 2,
+      "max_uses": 1,
+      "descricao": "O mecha tem quatro pernas em vez de bípede; ganha rerrolagem de Pilotar contra Fora de Controle.",
+      "descricaoLite": "O mecha tem quatro pernas em vez de ser bípede, ganhando uma rerrolagem de Pilotar sempre que fizer um teste para evitar ficar Fora de Controle."
+    },
+    {
       "id": "mod_loc_velocidade_ampliada",
       "nome": "Velocidade Ampliada",
       "categoria": "LOCOMOÇÃO",
@@ -316,6 +379,15 @@
       "descricaoLite": "+1 na Classificação de Velocidade Máxima."
     },
     {
+      "id": "mod_of_acessorios_extras",
+      "nome": "Acessórios Extras",
+      "categoria": "SISTEMAS OFENSIVOS",
+      "mods_cost": 1,
+      "max_uses": 3,
+      "descricao": "Cada aquisição adiciona um conjunto extra de membros com mãos para segurar itens/armas, com +1 de bônus de Agrupar contra um único inimigo.",
+      "descricaoLite": "Cada vez que for adquirido, o mecha ganha um conjunto adicional de membros com mãos capazes de segurar itens ou armas, concedendo +1 de bônus de Agrupar se todos forem focados em um único inimigo."
+    },
+    {
       "id": "mod_of_arma_transportada",
       "nome": "Arma Transportada (Rifle Mecha)",
       "categoria": "SISTEMAS OFENSIVOS",
@@ -323,6 +395,15 @@
       "max_uses": 2,
       "descricao": "Configura uma arma grande empunhada pelas duas mãos.",
       "descricaoLite": "Suporte que permite empunhar com as duas mãos uma arma de grande porte destinada a mechas."
+    },
+    {
+      "id": "mod_of_controle_remoto",
+      "nome": "Controle Remoto",
+      "categoria": "SISTEMAS OFENSIVOS",
+      "mods_cost": 1,
+      "max_uses": 1,
+      "descricao": "Um operador com os códigos de acesso e um transmissor pode controlar o mecha à distância, usando Eletrônica -2 no lugar da perícia de manobra usual.",
+      "descricaoLite": "Um operador com os códigos de acesso adequados e um transmissor (como um dispositivo móvel) pode controlar o mecha de longe, usando Eletrônica -2 no lugar da perícia de manobra usual."
     },
     {
       "id": "mod_of_estabilizador",
