@@ -136,6 +136,10 @@ fun SettingsDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        // Um toque sem querer fora da área do diálogo (comum numa tela cheia de
+        // opções) não deve fechar tudo e voltar pra ficha — só o botão
+        // "Fechar"/voltar do sistema fecha.
+        properties = androidx.compose.ui.window.DialogProperties(dismissOnClickOutside = false),
         title = { Text("Configurações", style = MaterialTheme.typography.headlineSmall) },
         text = {
             Column(
@@ -385,6 +389,10 @@ fun SettingsDialog(
 
                         AlertDialog(
                             onDismissRequest = { showCustomContentDialog = false },
+                            // Mesmo motivo do diálogo de Configurações: essa tela tem
+                            // formulário longo, um toque de leve fora da área não pode
+                            // derrubar o que já foi digitado.
+                            properties = androidx.compose.ui.window.DialogProperties(dismissOnClickOutside = false),
                             title = { Text("Criar Conteúdo Customizado", style = MaterialTheme.typography.titleMedium) },
                             text = {
                                 Column(
