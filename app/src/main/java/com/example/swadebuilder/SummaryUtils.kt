@@ -71,7 +71,13 @@ fun buildSummaryLines(
     mapaAtributosDisplay: Map<String, String>,
     listaPericias: List<Pericia>,
     listaPoderes: List<Poder>,
-    arcanoInfo: Map<String, Triple<Int, Int, String>>
+    arcanoInfo: Map<String, Triple<Int, Int, String>>,
+    // Ancestralidade já resolvida (getAncestralidadeDef/currentAncestryDef), com os
+    // ajustes de uma eventual Variante custom de raça já aplicados (traços
+    // removidos já fora de .habilidades). Opcional pra não quebrar outro
+    // caller que ainda não a tenha à mão; quando ausente, cai de volta pro
+    // lookup cru por nome (não reflete Variante, comportamento de antes).
+    ancestralidadeAtual: RacialModifier? = null
 ): List<String> {
     val lines = mutableListOf<String>()
 
@@ -505,7 +511,7 @@ fun buildSummaryLines(
             }
         }
     }
-    val habilidadesRaciaisBaseRaw = ancestralidadeNomeObj?.habilidades?.filter { it.category != "racial_hindrance" }?.map { it.nome } ?: emptyList()
+    val habilidadesRaciaisBaseRaw = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades?.filter { it.category != "racial_hindrance" }?.map { it.nome } ?: emptyList()
     val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
         personagem.ancestralidade.keyify() == "AVIANOS" &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
@@ -659,7 +665,7 @@ fun buildSummaryLines(
     }
     // Prioritize manual entries (habilidadesRaciais) over IDs (vantagensRaciais) to preserve formatting (e.g. "Adaptável" vs "ADAPTÁVEL")
     // Fix: Normalize IDs to Names using Ancestry Definition to prevent duplicates (e.g. "Armadura +2" vs "Armadura 2") and fix formatting (e.g. "Mordida/Garras")
-    val racialAbilityMap = ancestralidadeNomeObj?.habilidades?.associateBy { it.id?.keyify() ?: it.nome.keyify() } ?: emptyMap()
+    val racialAbilityMap = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades?.associateBy { it.id?.keyify() ?: it.nome.keyify() } ?: emptyMap()
 
     val isAdgHuman = personagem.compendioArteDaGuerraAtivo && personagem.ancestralidade.keyify().contains("HUMANO")
     val adgHumanSignTrait = if (isAdgHuman) {

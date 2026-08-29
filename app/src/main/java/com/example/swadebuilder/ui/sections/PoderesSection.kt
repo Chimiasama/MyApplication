@@ -136,7 +136,7 @@ fun PoderesSection(
     }
 
     val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
-        value = com.example.swadebuilder.model.DataLoader.poderesPorOrigem(context)
+        value = com.example.swadebuilder.model.poderesPorOrigem(context)
     }
 
     val dominiosCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
@@ -236,6 +236,11 @@ fun PoderesSection(
             val specificList = powerCache[normalizedOrigin] ?: emptyList()
             val basicList = powerCache["BASICO"] ?: emptyList()
             var sourceList = when {
+                // Antecedente Arcano Customizado tageado "Geral" (ver criador em
+                // SettingsDialog): lista aberta = todos os poderes de todos os
+                // livros, não só o balde vazio de um "livro" GERAL que não existe
+                // em powerCache.
+                normalizedOrigin == com.example.swadebuilder.util.TAG_GERAL -> allPoderes
                 usaListaChi -> specificList
                 normalizedOrigin == "BASICO" -> basicList
                 includeBasicPowers -> (specificList + basicList).distinctBy { it.id }

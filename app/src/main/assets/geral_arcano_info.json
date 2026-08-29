@@ -268,5 +268,95 @@
     "slots": 2,
     "pp": 15,
     "foco": "Fé"
+  },
+  {
+    "key": "CAPELAO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  },
+  {
+    "key": "CAVALEIRO_ESTELAR",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Foco"
+  },
+  {
+    "key": "CONTROLADOR_LUZ_SOLIDA",
+    "slots": 3,
+    "pp": 15,
+    "foco": "Ciência"
+  },
+  {
+    "key": "CRONOMANTE",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Foco"
+  },
+  {
+    "key": "DOBRADOR",
+    "slots": 3,
+    "pp": 15,
+    "foco": "Foco"
+  },
+  {
+    "key": "GRAVCON",
+    "slots": 2,
+    "pp": 10,
+    "foco": "Foco"
+  },
+  {
+    "key": "MISTICO_ESTELAR",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Foco"
+  },
+  {
+    "key": "PASTOR",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Fé"
+  },
+  {
+    "key": "PSIONISTA",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Psiônicos"
+  },
+  {
+    "key": "TECNOMANTE",
+    "slots": 2,
+    "pp": 10,
+    "foco": "Ciência Estranha"
+  },
+  {
+    "key": "TRANSMORFO",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Foco"
+  },
+  {
+    "key": "ANJO",
+    "slots": 2,
+    "pp": 15,
+    "foco": "Fé"
+  },
+  {
+    "key": "DEMONIO",
+    "slots": 4,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
+    "key": "TECNOMAGIA",
+    "slots": 3,
+    "pp": 0,
+    "foco": "Tecnomagia"
+  },
+  {
+    "key": "XAMA_FANTASIA",
+    "slots": 5,
+    "pp": 10,
+    "foco": "Fé"
   }
 ]

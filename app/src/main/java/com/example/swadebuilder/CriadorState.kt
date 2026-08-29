@@ -168,6 +168,12 @@ class CriadorState {
         }
     }
 
+    fun addCustomSuperPoder(superPoder: SuperPoder) {
+        if (listaSuperPoderes.none { it.nome.equals(superPoder.nome, ignoreCase = true) }) {
+            listaSuperPoderes = listaSuperPoderes + superPoder
+        }
+    }
+
     fun updateGameData(snapshot: GameDataSnapshot) {
         this.listaAtributos = snapshot.listaAtributos
         this.listaPericias = snapshot.listaPericias
@@ -425,29 +431,45 @@ class CriadorState {
         if (lookupKeys.first() != lookupKeys.firstOrNull { ancestryMap[it] != null }) {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
-        if (candidates.size == 1) return applyCustomAncestryVariantIfSelected(candidates.first())
 
-        val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
-            compendioFantasiaAtivo = compendioFantasiaAtivo,
-            compendioHorrorAtivo = compendioHorrorAtivo,
-            compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
-            compendioDeadlandsAtivo = compendioDeadlandsAtivo,
-            compendioWiseguysAtivo = compendioWiseguysAtivo,
-            compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
-            compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
-            compendioSciFiAtivo = compendioSciFiAtivo,
-            compendioPathfinderAtivo = compendioPathfinderAtivo
-        )
-
-        val activeCandidates = candidates.filter { item ->
-            resolveActiveAncestryCandidatesUseCase.isOriginActive(item.origem, ancestryFlags)
+        // Toda raça de candidato único, EXCETO Umvee, mantém o curto-circuito
+        // original: sai aqui sem passar por applyAncestryVariantAdjustments.
+        // Umvee precisa passar por ele mesmo tendo um candidato só — o Dom da
+        // Natureza "Gatoruja" injeta PERCEBER_D6/OCULTISMO_D4 ali, e cair fora
+        // antes disso deixava esse traço de fora (bug real, pego pelo
+        // ScifiAncestryVariantSyncTest). Já o Meio-Elfo do Pathfinder (também
+        // candidato único) depende do contrário — de sair aqui — pra NÃO entrar
+        // no ramo Herança/Adaptável de applyAncestryVariantAdjustments, pensado
+        // pra variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
+        if (candidates.size == 1 && !key.contains("UMVEE")) {
+            return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
-        val selected = if (activeCandidates.isEmpty()) {
-            candidates.firstOrNull()
+        val selected = if (candidates.size == 1) {
+            candidates.first()
         } else {
-            activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
-        } ?: return null
+            val ancestryFlags = ResolveActiveAncestryCandidatesUseCase.Flags(
+                compendioFantasiaAtivo = compendioFantasiaAtivo,
+                compendioHorrorAtivo = compendioHorrorAtivo,
+                compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
+                compendioDeadlandsAtivo = compendioDeadlandsAtivo,
+                compendioWiseguysAtivo = compendioWiseguysAtivo,
+                compendioCidadeSolVaporAtivo = compendioCidadeSolVaporAtivo,
+                compendioCrystalHeartAtivo = compendioCrystalHeartAtivo,
+                compendioSciFiAtivo = compendioSciFiAtivo,
+                compendioPathfinderAtivo = compendioPathfinderAtivo
+            )
+
+            val activeCandidates = candidates.filter { item ->
+                resolveActiveAncestryCandidatesUseCase.isOriginActive(item.origem, ancestryFlags)
+            }
+
+            (if (activeCandidates.isEmpty()) {
+                candidates.firstOrNull()
+            } else {
+                activeCandidates.maxByOrNull { getOriginPriority(it.origem) }
+            }) ?: return null
+        }
 
         val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE")) {
             applyAncestryVariantAdjustments(selected, key)
@@ -516,10 +538,39 @@ class CriadorState {
             }
         }
 
+        // Desconta de base.atributos/base.pericias (mapas numéricos "passos*2
+        // acima de d4", independentes de habilidades[]) o mesmo passo que
+        // RacialTraitPointCatalog atribui a cada traço removido — mesma lógica
+        // de atributoBaseRacial(), mas aplicada aqui pra que currentAncestryDef
+        // já saia correto pra qualquer tela que leia .atributos/.pericias
+        // direto (ex.: o "Ver detalhes" de AncestralidadesSection), não só o
+        // cálculo ao vivo do atributo do personagem.
+        val newAtributos = base.atributos.toMutableMap()
+        val newPericias = base.pericias.toMutableMap()
+        variant.tracosRemovidosIds.forEach { removedId ->
+            when (val efeito = RacialTraitPointCatalog.efeitoDe(removedId)) {
+                is RacialTraitEffect.AtributoStep -> {
+                    val key = newAtributos.keys.firstOrNull { it.keyify() == efeito.atributo.keyify() }
+                    if (key != null) {
+                        newAtributos[key] = maxOf(0, (newAtributos[key] ?: 0) - 2 * efeito.passos)
+                    }
+                }
+                is RacialTraitEffect.PericiaStep -> {
+                    val key = newPericias.keys.firstOrNull { it.keyify() == efeito.pericia.keyify() }
+                    if (key != null) {
+                        newPericias[key] = maxOf(0, (newPericias[key] ?: 0) - efeito.passos)
+                    }
+                }
+                RacialTraitEffect.Nenhum -> Unit
+            }
+        }
+
         return base.copy(
             habilidades = newHabilidades,
             vantagensGratis = newVantagensGratis,
-            desvantagens = newDesvantagens
+            desvantagens = newDesvantagens,
+            atributos = newAtributos,
+            pericias = newPericias
         )
     }
 
@@ -1031,7 +1082,7 @@ class CriadorState {
         "INVOCADOR" to listOf("amigo_das_feras", "aumentar_reduzir_caracteristica", "conjurar_aliado"),
         "MAGO" to listOf("detectar_ocultar_arcano", "dissipar", "trancar_destrancar"),
         "NECROMANTE" to listOf("detectar_ocultar_arcano", "dissipar", "zumbi"),
-        "XAMA" to listOf("protecao_arcana", "ajuda"),
+        "XAMA_FANTASIA" to listOf("protecao_arcana", "ajuda"),
         "MISTICO_BARBARO" to listOf("aumentar_reduzir_caracteristica", "ferir", "morosidade_velocidade"),
         "MISTICO_GUERREIRO" to listOf("aumentar_reduzir_caracteristica", "ferir", "protecao"),
         "MISTICO_LADRAO" to listOf("andar_nas_paredes", "aumentar_reduzir_caracteristica", "trancar_destrancar", "visao_sombria"),
@@ -3672,7 +3723,13 @@ class CriadorState {
             arcKeyNorm == "MESTRE DO CHI" &&
             !hasArcanoVantagem &&
             (tropoSelecionado?.tecnicasIniciais ?: 0) > 0
-        val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 0)
+        // Todos os 45 Antecedentes Arcanos oficiais têm entrada em geral_arcano_info.json,
+        // então esse "?: 3" só é alcançado por um Antecedente Arcano Customizado (categoria
+        // "Antecedente Arcano" no criador de conteúdo) sem entrada própria — 3 poderes
+        // iniciais é a regra padrão do livro básico pra Antecedente Arcano, então serve de
+        // fallback razoável em vez de deixar a vantagem customizada sem nenhum poder pra
+        // escolher.
+        val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 3)
         var bonusSlots = 0
 
         vantagensSelecionadas
@@ -3829,7 +3886,7 @@ class CriadorState {
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
         return when (normalizedKey) {
-            "FEITICEIRO" -> id == "aa_magia_negra"
+            "FEITICEIRO" -> id == "aa_magia_negra" || id == "aa_magia_das_trevas"
             "DEMONIO" -> id == "aa_demonio" && !isCidadeSolVaporDemonAncestry
             "MILAGRES" -> {
                 id == "aa_milagres" ||
@@ -4347,10 +4404,31 @@ class CriadorState {
 
     private fun atributoBaseRacial(a: String): Int {
         // Fix: Use keyified ancestry to match DataLoader map keys
-        val base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
+        var base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
+        val attrKey = a.keyify()
+
+        // Se uma Variante custom de raça está ativa e removeu um traço que,
+        // segundo RacialTraitPointCatalog, concedia esse mesmo passo de
+        // atributo (ex.: Anões perdendo Resistente/ROBUSTO = Vigor d6), desconta
+        // o mesmo delta do `base` estático. Sem isso, o bônus continuava vindo
+        // do campo numérico `atributos` da raça (usado pra montar
+        // racialAttrMinMap uma única vez, pro app inteiro, na carga dos dados) —
+        // que nunca é tocado pela Variante, só o habilidades[] descritivo é
+        // (ver applyCustomAncestryVariantIfSelected). Resultado sem este ajuste:
+        // o ponto da Variante fecha (o traço "sai" da lista e devolve o custo),
+        // mas o dado do atributo continua alto de graça.
+        customVarianteRacialSelecionadaId
+            ?.let { id -> listaVariantesRaciaisCustom.firstOrNull { it.id == id } }
+            ?.takeIf { it.ancestralidadeId == ancestralidade.keyify() }
+            ?.tracosRemovidosIds
+            ?.forEach { removedId ->
+                val efeito = RacialTraitPointCatalog.efeitoDe(removedId)
+                if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                    base = maxOf(4, base - 2 * efeito.passos)
+                }
+            }
 
         var modifiedBase = base
-        val attrKey = a.keyify()
 
         // Traços que concedem d6 inicial num atributo específico, lidos direto de
         // habilidades[] da raça (já com os ajustes de variante aplicados por

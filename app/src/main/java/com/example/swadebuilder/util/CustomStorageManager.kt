@@ -5,6 +5,7 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -13,6 +14,31 @@ import java.io.File
 import com.example.swadebuilder.model.HabilidadeCriacao
 import com.example.swadebuilder.model.CustomAncestryVariant
 
+// Tag especial de "livro": conteúdo salvo sob essa chave aparece em qualquer
+// combinação de livros ativos, em vez de só num cenário específico. É só mais
+// um bookKey normal do ponto de vista do armazenamento (seu próprio arquivo
+// custom_content_GERAL.json) — quem trata o significado de "sempre visível" é
+// o carregador (DataLoader), que sempre inclui essa chave além dos livros
+// realmente ativos.
+const val TAG_GERAL = "GERAL"
+
+// Livros reais que o app conhece hoje (sem contar TAG_GERAL), na mesma grafia
+// usada em `livros`/`origem` pelo catálogo oficial. Usado pra montar o seletor
+// de livros na criação de conteúdo customizado.
+val TODOS_OS_LIVROS: List<String> = listOf(
+    "BASICO",
+    "FANTASIA",
+    "SCI_FI",
+    "HORROR",
+    "SUPER",
+    "PATHFINDER",
+    "DEADLANDS",
+    "ARTE_DA_GUERRA",
+    "CRYSTAL_HEART",
+    "CIDADE_SOL_VAPOR",
+    "WISEGUYS"
+)
+
 @Serializable
 data class BookCustomContent(
     val bookKey: String,
@@ -20,6 +46,7 @@ data class BookCustomContent(
     val complicacoes: List<Complicacao> = emptyList(),
     val equipamentos: List<EquipamentoItem> = emptyList(),
     val poderes: List<Poder> = emptyList(),
+    val superPoderes: List<SuperPoder> = emptyList(),
     val racas: List<RacialModifier> = emptyList(),
     val habilidadesRaciais: List<HabilidadeCriacao> = emptyList(),
     val variantesRaciais: List<CustomAncestryVariant> = emptyList()
@@ -146,6 +173,28 @@ class CustomStorageManager(
         deletePoder(context.filesDir, bookKey, itemId)
     }
 
+    fun addSuperPoder(baseDir: File, bookKey: String, item: SuperPoder) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            superPoderes = (current.superPoderes.filterNot { it.nome.equals(item.nome, ignoreCase = true) } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addSuperPoder(context: Context, bookKey: String, item: SuperPoder) {
+        addSuperPoder(context.filesDir, bookKey, item)
+    }
+
+    fun deleteSuperPoder(baseDir: File, bookKey: String, itemNome: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(superPoderes = current.superPoderes.filterNot { it.nome.equals(itemNome, ignoreCase = true) })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteSuperPoder(context: Context, bookKey: String, itemNome: String) {
+        deleteSuperPoder(context.filesDir, bookKey, itemNome)
+    }
+
     fun addRaca(baseDir: File, bookKey: String, item: RacialModifier) {
         val current = loadCustomContent(baseDir, bookKey)
         val updated = current.copy(
@@ -232,6 +281,10 @@ class CustomStorageManager(
             "poder" -> {
                 val item = sourceContent.poderes.firstOrNull { it.id == itemIdOrName } ?: return false
                 addPoder(baseDir, targetBookKey, item.copy(origem = targetBookKey.uppercase()))
+            }
+            "super poder", "superpoder", "super_poder" -> {
+                val item = sourceContent.superPoderes.firstOrNull { it.nome.equals(itemIdOrName, ignoreCase = true) } ?: return false
+                addSuperPoder(baseDir, targetBookKey, item)
             }
             "raça", "raca" -> {
                 val item = sourceContent.racas.firstOrNull { it.nome.equals(itemIdOrName, ignoreCase = true) } ?: return false

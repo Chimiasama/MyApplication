@@ -144,15 +144,19 @@ fun TelaInicial(
     var showCreditsDialog by remember { mutableStateOf(false) }
     var showRulesDialog by remember { mutableStateOf(false) }
 
-    // Reset all rule flags to clean slate
+    // Reset all rule flags to clean slate. Só reseta o que CreationPreset
+    // realmente controla (tem um default*Xxx correspondente) — Múltiplos Ant.
+    // Arcanos, Especialização de Perícias, Múltiplos Idiomas, Sem Pontos de
+    // Poder e Variantes de Raça são regras independentes, sem contrapartida
+    // em preset nenhum: incluí-las aqui as zerava sempre que o jogador
+    // trocava de livro OU tocava em "CRIAR PERSONAGEM" (que chama
+    // resetAllBookRulesToDefaults -> applyRulesPreset -> este método), sem
+    // nunca devolver o valor marcado — applyRulesPreset só reaplica os
+    // campos que o preset de fato tem.
     fun resetAllRuleFlags() {
         optCartaSelvagem = true
         optMaisPontosPericias = true
-        optMultiAntecedenteArcano = false
-        optEspecializacaoPer = false
-        optMultiplosIdiomas = false
         optNasceUmHeroi = false
-        optSemPontosPoder = false
         optGrandesResponsabilidades = false
         optModoMonstro = false
         optRegraFama = false
@@ -160,7 +164,6 @@ fun TelaInicial(
         optRegraCosaNostra = false
         optRegraMechas = false
         optRegraCiberneticos = false
-        optVariantesDeRaca = false
     }
 
     // Helper for applying rules presets

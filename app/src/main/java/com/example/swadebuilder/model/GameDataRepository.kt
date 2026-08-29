@@ -39,7 +39,29 @@ data class GameDataSnapshot(
 
 interface GameDataRepository {
     suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot
+
+    /**
+     * Descarta qualquer GameDataSnapshot em cache. Precisa ser chamado depois
+     * de qualquer alteração em conteúdo customizado (Vantagem, Complicação,
+     * Equipamento, Poder, Raça, Variante de Raça etc. salvos via
+     * CustomStorageManager) — sem isso, o próximo load() com a mesma
+     * combinação de livros devolveria o snapshot antigo direto do cache,
+     * sem a alteração recém-salva no disco. Default vazio pra não quebrar
+     * outras implementações (ex.: fakes de teste).
+     */
+    fun invalidateCache() {}
 }
+
+/**
+ * Ponto de acesso sancionado para o catálogo de poderes agrupado por livro de
+ * origem, independentemente de quais módulos estão ativos no momento (ver
+ * comentário de [DataLoader.poderesPorOrigem]). Fica aqui — e não em
+ * DataLoader chamado direto pela UI — porque o gate de confiabilidade
+ * (scripts/phase6_reliability_gate.sh) exige que todo uso de DataLoader
+ * passe por este arquivo.
+ */
+fun poderesPorOrigem(context: Context): Map<String, List<Poder>> =
+    DataLoader.poderesPorOrigem(context)
 
 internal class ModuleSnapshotCache(private val maxSize: Int = 3) {
     private val cache = LinkedHashMap<String, GameDataSnapshot>(maxSize, 0.75f, true)
@@ -96,6 +118,10 @@ class AssetGameDataRepository : GameDataRepository {
     private val cache = ModuleSnapshotCache(maxSize = 4)
     private val cacheMutex = Mutex()
     private val inFlightLoads = mutableMapOf<String, CompletableDeferred<GameDataSnapshot>>()
+
+    override fun invalidateCache() {
+        cache.clear()
+    }
 
     override suspend fun load(context: Context, activeModules: Set<String>): GameDataSnapshot =
         withContext(Dispatchers.IO) {

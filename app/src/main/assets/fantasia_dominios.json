@@ -102,6 +102,16 @@
     ]
   },
   {
+    "nome": "Frio",
+    "poderes": [
+      "adivinhacao", "ajuda", "amigo_das_feras", "aumentar_reduzir_caracteristica", "barreira",
+      "campo_de_dano", "conjurar_aliado", "conjurar_animal", "cura", "deflexao", "dissipar",
+      "explosao", "ferir", "iluminar_obscurecer", "intervencao_mistica", "manipulacao_elemental",
+      "morosidade_velocidade", "mudanca_de_forma", "protecao", "protecao_ambiental",
+      "protecao_arcana", "raio", "rajada", "santuario", "som_silencio", "visao_distante"
+    ]
+  },
+  {
     "nome": "Vida",
     "poderes": [
       "adivinhacao", "ajuda", "amigo_das_feras", "atordoar", "aumentar_reduzir_caracteristica",

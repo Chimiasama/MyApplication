@@ -57,6 +57,7 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CustomContentType
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.getDisplayName
@@ -68,6 +69,19 @@ import kotlin.math.roundToInt
 
 import androidx.compose.material3.OutlinedButton
 
+// Livro Básico: "Super Poderes (2+X)... o custo é 2 — pelo Antecedente Arcano
+// (Super Poderes) — mais o custo do poder selecionado (X)." Muitos poderes do
+// Compêndio de Super Poderes têm custo em escada por nível (ex.: "1/2/3/4/5"),
+// então X aqui é o primeiro degrau (a compra mínima do poder).
+private fun primeiroCustoSuperPoder(custoBase: String?): Int =
+    custoBase
+        ?.split("/")
+        ?.firstOrNull()
+        ?.trim()
+        ?.replace('–', '-')
+        ?.toIntOrNull()
+        ?: 1
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
@@ -78,6 +92,13 @@ fun SettingsDialog(
     persistPrefs: () -> Unit,
     feedbackController: FeedbackController,
     onResetRulesToDefaults: (() -> Unit)? = null,
+    // Chamado depois de qualquer criação/edição/exclusão de conteúdo customizado
+    // (Vantagem, Complicação, Equipamento, Poder, Raça, Variante de Raça etc.):
+    // invalida o cache de GameDataSnapshot por combinação de livros
+    // (GameDataRepository/ModuleSnapshotCache), que senão continuaria devolvendo
+    // um snapshot desatualizado — sem o conteúdo recém-criado — na próxima vez
+    // que um personagem NOVO for criado com a mesma combinação de livros.
+    onCustomContentChanged: () -> Unit = {},
     onThemeSelected: (AppTheme) -> Unit
 ) {
     var showNpcWarning by remember { mutableStateOf(false) }
@@ -115,6 +136,10 @@ fun SettingsDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        // Um toque sem querer fora da área do diálogo (comum numa tela cheia de
+        // opções) não deve fechar tudo e voltar pra ficha — só o botão
+        // "Fechar"/voltar do sistema fecha.
+        properties = androidx.compose.ui.window.DialogProperties(dismissOnClickOutside = false),
         title = { Text("Configurações", style = MaterialTheme.typography.headlineSmall) },
         text = {
             Column(
@@ -245,8 +270,12 @@ fun SettingsDialog(
                         val context = androidx.compose.ui.platform.LocalContext.current
                         val customStorageManager = remember { com.example.swadebuilder.util.CustomStorageManager() }
                         val manager = remember { com.example.swadebuilder.util.CustomContentManager() }
-                        val activeBookKey = remember(state) {
-                            state.getActiveOrigins().firstOrNull() ?: "BASICO"
+                        // Livro(s) a que o item sendo criado vai ficar vinculado — o jogador
+                        // escolhe isso na hora de salvar (ver "Seletor de Livros" abaixo), não
+                        // fica mais preso ao livro que estava ativo quando abriu essa tela.
+                        // Por padrão já vem com o livro atualmente ativo marcado.
+                        var selectedBookTags by remember(state) {
+                            mutableStateOf(setOf(state.getActiveOrigins().firstOrNull() ?: "BASICO"))
                         }
                         var selectedCategory by remember { mutableStateOf("Vantagem") }
                         var customRequirements by remember { mutableStateOf("") }
@@ -267,6 +296,17 @@ fun SettingsDialog(
                         var customWeight by remember { mutableStateOf("0") }
                         var customDamage by remember { mutableStateOf("") }
                         var customPp by remember { mutableStateOf("1") }
+                        var customSuperPoderCustoBase by remember { mutableStateOf("2") }
+                        // Um modificador por linha, no mesmo formato usado pelo catálogo oficial
+                        // ("Nome (+custo): descrição"), ex.: "Área (+2): Modelo Médio de Explosão".
+                        var customSuperPoderModificadores by remember { mutableStateOf("") }
+                        // Antecedente Arcano customizado: "lista aberta" usa todos os poderes
+                        // do(s) livro(s) marcado(s) no Seletor de Livros (ou de todos, se for
+                        // "Geral") — ver Vantagem.poderesPermitidos/origem e o hook em
+                        // PoderesSection.kt. Desmarcando, o Mestre escolhe poderes específicos.
+                        var customAaListaAberta by remember { mutableStateOf(true) }
+                        var customAaPoderesEspecificos by remember { mutableStateOf(setOf<String>()) }
+                        var showAaPoderesPickerDialog by remember { mutableStateOf(false) }
                         var customRange by remember { mutableStateOf("Toque") }
                         var customDuration by remember { mutableStateOf("3 turnos") }
                         var customRacialTrait by remember { mutableStateOf("") }
@@ -299,22 +339,60 @@ fun SettingsDialog(
                             }.getOrElse { emptyList() }.map { it.exibida() }
                         }
 
-                        val categories = remember(isHomeScreen) {
-                            if (isHomeScreen) {
-                                listOf("Vantagem", "Complicação", "Poder", "Raça", "Traço Racial", "Variante de Raça")
-                            } else {
-                                listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Raça", "Traço Racial", "Variante de Raça")
-                            }
+                        // "Super Poderes (2+X)": o traço racial em si custa 2 pontos, mais o
+                        // custo do Super Poder do Compêndio de Super Poderes escolhido pelo
+                        // Mestre (X). Como X varia por poder, a entrada de HabilidadeCriacao
+                        // final é montada dinamicamente (ver superPoderRacialPickerTarget),
+                        // não é um custo fixo de catálogo como os outros traços.
+                        val superPoderesCatalog: List<com.example.swadebuilder.model.SuperPoder> = remember {
+                            runCatching {
+                                context.loadJsonAsset<List<com.example.swadebuilder.model.SuperPoder>>("super_poderes.json")
+                            }.getOrElse { emptyList() }
+                        }
+                        var superPoderRacialPickerTarget by remember {
+                            mutableStateOf<((com.example.swadebuilder.model.HabilidadeCriacao) -> Unit)?>(null)
+                        }
+
+                        // Todas as categorias sempre disponíveis, em qualquer tela — a engrenagem
+                        // já é global (tela inicial, criação, fase de XP), então não há mais
+                        // motivo pra esconder categorias por causa de "isHomeScreen".
+                        val categories = remember {
+                            listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Super Poder", "Antecedente Arcano", "Raça", "Traço Racial", "Variante de Raça")
                         }
                         if (selectedCategory !in categories) {
                             selectedCategory = categories.first()
                         }
-                        val activeBookCustomData = remember(activeBookKey, refreshTrigger) {
-                            customStorageManager.loadCustomContent(context, activeBookKey)
+                        // Todos os "livros" de armazenamento que existem (livros reais + Geral).
+                        // Conteúdo customizado não fica mais preso a um livro só: é gravado sob
+                        // cada tag escolhida (ver selectedBookTags), então pra ler/listar/apagar
+                        // é preciso varrer todos eles, não só o que estava ativo quando abriu.
+                        val todosOsLivrosDeArmazenamento = remember {
+                            com.example.swadebuilder.util.TODOS_OS_LIVROS + com.example.swadebuilder.util.TAG_GERAL
+                        }
+                        val allCustomDataByBook = remember(refreshTrigger) {
+                            todosOsLivrosDeArmazenamento.associateWith { customStorageManager.loadCustomContent(context, it) }
+                        }
+                        val activeBookCustomData = remember(allCustomDataByBook) {
+                            val all = allCustomDataByBook.values
+                            com.example.swadebuilder.util.BookCustomContent(
+                                bookKey = "TODOS",
+                                vantagens = all.flatMap { it.vantagens }.distinctBy { it.id },
+                                complicacoes = all.flatMap { it.complicacoes }.distinctBy { it.id },
+                                equipamentos = all.flatMap { it.equipamentos }.distinctBy { it.nome.lowercase() },
+                                poderes = all.flatMap { it.poderes }.distinctBy { it.id },
+                                superPoderes = all.flatMap { it.superPoderes }.distinctBy { it.nome.lowercase() },
+                                racas = all.flatMap { it.racas }.distinctBy { it.nome.lowercase() },
+                                habilidadesRaciais = all.flatMap { it.habilidadesRaciais }.distinctBy { it.nome.lowercase() },
+                                variantesRaciais = all.flatMap { it.variantesRaciais }.distinctBy { it.id }
+                            )
                         }
 
                         AlertDialog(
                             onDismissRequest = { showCustomContentDialog = false },
+                            // Mesmo motivo do diálogo de Configurações: essa tela tem
+                            // formulário longo, um toque de leve fora da área não pode
+                            // derrubar o que já foi digitado.
+                            properties = androidx.compose.ui.window.DialogProperties(dismissOnClickOutside = false),
                             title = { Text("Criar Conteúdo Customizado", style = MaterialTheme.typography.titleMedium) },
                             text = {
                                 Column(
@@ -398,6 +476,51 @@ fun SettingsDialog(
                                                 modifier = Modifier.fillMaxWidth()
                                             )
 
+                                            // Seletor de Livros: em quais livros esse item vai aparecer. "Geral"
+                                            // funciona em qualquer combinação de livros ativos; os demais são
+                                            // específicos. Vale pra todas as categorias, é escolhido uma vez só
+                                            // aqui e usado na hora de salvar.
+                                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                Text("Vincular a quais livros:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                androidx.compose.foundation.layout.FlowRow(
+                                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                ) {
+                                                    androidx.compose.material3.FilterChip(
+                                                        selected = com.example.swadebuilder.util.TAG_GERAL in selectedBookTags,
+                                                        onClick = {
+                                                            selectedBookTags = if (com.example.swadebuilder.util.TAG_GERAL in selectedBookTags) {
+                                                                selectedBookTags - com.example.swadebuilder.util.TAG_GERAL
+                                                            } else {
+                                                                selectedBookTags + com.example.swadebuilder.util.TAG_GERAL
+                                                            }
+                                                        },
+                                                        label = { Text("Geral", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold) }
+                                                    )
+                                                    com.example.swadebuilder.util.TODOS_OS_LIVROS.forEach { bookKey ->
+                                                        androidx.compose.material3.FilterChip(
+                                                            selected = bookKey in selectedBookTags,
+                                                            onClick = {
+                                                                selectedBookTags = if (bookKey in selectedBookTags) {
+                                                                    selectedBookTags - bookKey
+                                                                } else {
+                                                                    selectedBookTags + bookKey
+                                                                }
+                                                            },
+                                                            label = { Text(bookKey.toEditionDisplayName(), style = MaterialTheme.typography.labelSmall) }
+                                                        )
+                                                    }
+                                                }
+                                                if (selectedBookTags.isEmpty()) {
+                                                    Text(
+                                                        "Nenhum livro marcado — vai salvar no livro ativo no momento.",
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        color = MaterialTheme.colorScheme.error
+                                                    )
+                                                }
+                                            }
+
                                             // Category-specific fields
                                             when (selectedCategory) {
                                                 "Vantagem" -> {
@@ -449,7 +572,7 @@ fun SettingsDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
-                                                    val availableAdvCategories = remember(state.listaVantagens, activeBookKey, state.compendioArteDaGuerraAtivo, state.compendioPathfinderAtivo, state.compendioDeadlandsAtivo, state.compendioHorrorAtivo, state.modoMonstroAtivo, state.modoSupers) {
+                                                    val availableAdvCategories = remember(state.listaVantagens, selectedBookTags, state.compendioArteDaGuerraAtivo, state.compendioPathfinderAtivo, state.compendioDeadlandsAtivo, state.compendioHorrorAtivo, state.modoMonstroAtivo, state.modoSupers) {
                                                         val baseCategories = mutableSetOf(
                                                             Categoria.ANTECEDENTE,
                                                             Categoria.COMBATE,
@@ -463,16 +586,16 @@ fun SettingsDialog(
                                                         if (state.listaVantagens.isNotEmpty()) {
                                                             baseCategories.addAll(state.listaVantagens.map { it.categoria })
                                                         }
-                                                        if (activeBookKey == "ARTE_DA_GUERRA" || state.compendioArteDaGuerraAtivo) {
+                                                        if ("ARTE_DA_GUERRA" in selectedBookTags || state.compendioArteDaGuerraAtivo) {
                                                             baseCategories.addAll(listOf(Categoria.CHI, Categoria.TROPO, Categoria.ESTILO_MARCIAL))
                                                         }
-                                                        if (activeBookKey == "PATHFINDER" || state.compendioPathfinderAtivo) {
+                                                        if ("PATHFINDER" in selectedBookTags || state.compendioPathfinderAtivo) {
                                                             baseCategories.addAll(listOf(Categoria.CLASSE, Categoria.VANTAGEM_DE_CLASSE, Categoria.PRESTIGIO, Categoria.ANCESTRALIDADE))
                                                         }
-                                                        if (activeBookKey == "DEADLANDS" || state.compendioDeadlandsAtivo) {
+                                                        if ("DEADLANDS" in selectedBookTags || state.compendioDeadlandsAtivo) {
                                                             baseCategories.addAll(listOf(Categoria.ATORMENTADO, Categoria.ANCESTRALIDADE))
                                                         }
-                                                        if (activeBookKey == "HORROR" || state.compendioHorrorAtivo || state.modoMonstroAtivo) {
+                                                        if ("HORROR" in selectedBookTags || state.compendioHorrorAtivo || state.modoMonstroAtivo) {
                                                             baseCategories.add(Categoria.MONSTRUOSAS)
                                                         }
                                                         if (state.modoSupers) {
@@ -623,6 +746,61 @@ fun SettingsDialog(
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
                                                 }
+                                                "Super Poder" -> {
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customSuperPoderCustoBase,
+                                                        onValueChange = { customSuperPoderCustoBase = it },
+                                                        label = { Text("Custo Base (ex: 2 ou 1/2/3/4/5)") },
+                                                        singleLine = true,
+                                                        modifier = Modifier.fillMaxWidth()
+                                                    )
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customSuperPoderModificadores,
+                                                        onValueChange = { customSuperPoderModificadores = it },
+                                                        label = { Text("Modificadores (1 por linha, ex: Área (+2): Modelo Médio de Explosão)") },
+                                                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
+                                                    )
+                                                }
+                                                "Antecedente Arcano" -> {
+                                                    Text(
+                                                        "Cria a vantagem \"ANTECEDENTE ARCANO ($customItemName)\". Os livros marcados acima no Seletor de Livros também decidem de qual livro vêm os poderes na lista aberta.",
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                    Row(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                                    ) {
+                                                        androidx.compose.material3.FilterChip(
+                                                            selected = customAaListaAberta,
+                                                            onClick = { customAaListaAberta = true },
+                                                            label = { Text("Lista aberta", style = MaterialTheme.typography.labelSmall) }
+                                                        )
+                                                        androidx.compose.material3.FilterChip(
+                                                            selected = !customAaListaAberta,
+                                                            onClick = { customAaListaAberta = false },
+                                                            label = { Text("Poderes específicos", style = MaterialTheme.typography.labelSmall) }
+                                                        )
+                                                    }
+                                                    if (customAaListaAberta) {
+                                                        Text(
+                                                            if (com.example.swadebuilder.util.TAG_GERAL in selectedBookTags) {
+                                                                "Vai liberar todos os poderes de todos os livros."
+                                                            } else {
+                                                                "Vai liberar todos os poderes de: ${selectedBookTags.joinToString(", ") { it.toEditionDisplayName() }.ifBlank { "(marque um livro acima)" }}"
+                                                            },
+                                                            style = MaterialTheme.typography.labelSmall,
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                    } else {
+                                                        OutlinedButton(onClick = { showAaPoderesPickerDialog = true }) {
+                                                            Text(
+                                                                if (customAaPoderesEspecificos.isEmpty()) "+ Escolher Poderes" else "Poderes (${customAaPoderesEspecificos.size})",
+                                                                style = MaterialTheme.typography.labelSmall
+                                                            )
+                                                        }
+                                                    }
+                                                }
                                                 "Raça" -> {
                                                     val netRacePoints = selectedRacialTraits.sumOf { it.custo }
                                                     val pointColor = if (netRacePoints == 2) MaterialTheme.colorScheme.primary else if (netRacePoints < 2) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error
@@ -760,9 +938,12 @@ fun SettingsDialog(
                                                             }
                                                         }
 
-                                                        val budgetResult = remember(itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
+                                                        val valorBaseRaca = remember(varianteBaseRaca) {
+                                                            com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(varianteBaseRaca)
+                                                        }
+                                                        val budgetResult = remember(valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                                itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                                valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
                                                             )
                                                         }
 
@@ -773,7 +954,7 @@ fun SettingsDialog(
                                                             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                                                 val saldoColor = if (budgetResult.dentroDoOrcamento) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                                                                 Text(
-                                                                    text = if (varianteSemLimite) "Saldo: ${budgetResult.saldo} (sem limite)" else "Saldo: ${budgetResult.saldo} / ±${budgetResult.orcamento}",
+                                                                    text = if (varianteSemLimite) "Pontos da raça: ${budgetResult.saldo} (sem limite)" else "Pontos da raça: ${budgetResult.saldo} / ${budgetResult.orcamento}",
                                                                     style = MaterialTheme.typography.labelSmall,
                                                                     fontWeight = FontWeight.SemiBold,
                                                                     color = saldoColor
@@ -931,23 +1112,22 @@ fun SettingsDialog(
                                         )
                                     }
 
-                                    // Custom Content Items Manager List for the active book
+                                    // Custom Content Items Manager List (todos os livros)
                                     HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
                                     Text(
-                                        text = "Itens Customizados do Livro ($activeBookKey)",
+                                        text = "Itens Customizados (todos os livros)",
                                         style = MaterialTheme.typography.titleSmall,
                                         color = MaterialTheme.colorScheme.primary,
                                         fontWeight = FontWeight.Bold
                                     )
 
-                                    val allCustomItems = remember(activeBookCustomData, isHomeScreen) {
+                                    val allCustomItems = remember(activeBookCustomData) {
                                         buildList {
                                             activeBookCustomData.vantagens.forEach { add("Vantagem" to it.nome) }
                                             activeBookCustomData.complicacoes.forEach { add("Complicação" to it.name) }
-                                            if (!isHomeScreen) {
-                                                activeBookCustomData.equipamentos.forEach { add("Equipamento" to it.nome) }
-                                            }
+                                            activeBookCustomData.equipamentos.forEach { add("Equipamento" to it.nome) }
                                             activeBookCustomData.poderes.forEach { add("Poder" to it.nome) }
+                                            activeBookCustomData.superPoderes.forEach { add("Super Poder" to it.nome) }
                                             activeBookCustomData.racas.forEach { add("Raça" to it.nome) }
                                             activeBookCustomData.habilidadesRaciais.forEach { add("Traço Racial" to it.nome) }
                                             activeBookCustomData.variantesRaciais.forEach { add("Variante de Raça" to it.nome) }
@@ -974,31 +1154,37 @@ fun SettingsDialog(
                                                         fontWeight = FontWeight.Medium
                                                     )
                                                     TextButton(onClick = {
+                                                        // Apaga em TODOS os livros de armazenamento: o mesmo item pode ter
+                                                        // sido salvo sob várias tags (ver selectedBookTags na criação), e
+                                                        // cada chamada de delete é um no-op inofensivo nos livros onde o
+                                                        // item não existe.
                                                         when (type) {
                                                             "Vantagem" -> {
                                                                 val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
-                                                                item?.let { customStorageManager.deleteVantagem(context, activeBookKey, it.id) }
+                                                                item?.let { i -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVantagem(context, it, i.id) } }
                                                             }
                                                             "Complicação" -> {
                                                                 val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
-                                                                item?.let { customStorageManager.deleteComplicacao(context, activeBookKey, it.id) }
+                                                                item?.let { i -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteComplicacao(context, it, i.id) } }
                                                             }
-                                                            "Equipamento" -> customStorageManager.deleteEquipamento(context, activeBookKey, name)
+                                                            "Equipamento" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteEquipamento(context, it, name) }
                                                             "Poder" -> {
                                                                 val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
-                                                                item?.let { customStorageManager.deletePoder(context, activeBookKey, it.id) }
+                                                                item?.let { i -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePoder(context, it, i.id) } }
                                                             }
-                                                            "Raça" -> customStorageManager.deleteRaca(context, activeBookKey, name)
-                                                            "Traço Racial" -> customStorageManager.deleteHabilidadeRacial(context, activeBookKey, name)
+                                                            "Super Poder" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteSuperPoder(context, it, name) }
+                                                            "Raça" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteRaca(context, it, name) }
+                                                            "Traço Racial" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteHabilidadeRacial(context, it, name) }
                                                             "Variante de Raça" -> {
                                                                 val item = activeBookCustomData.variantesRaciais.firstOrNull { it.nome == name }
-                                                                item?.let {
-                                                                    customStorageManager.deleteVarianteRacial(context, activeBookKey, it.id)
-                                                                    state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom.filterNot { v -> v.id == it.id }
+                                                                item?.let { i ->
+                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVarianteRacial(context, it, i.id) }
+                                                                    state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom.filterNot { v -> v.id == i.id }
                                                                 }
                                                             }
                                                         }
                                                         refreshTrigger++
+                                                        onCustomContentChanged()
                                                     }) {
                                                         Text("Deletar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
                                                     }
@@ -1006,23 +1192,39 @@ fun SettingsDialog(
                                             }
                                         }
                                     }
-
-                                    if (statusMessage != null) {
-                                        Text(
-                                            text = statusMessage!!,
-                                            color = MaterialTheme.colorScheme.primary,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    }
                                 }
                             },
                             confirmButton = {
-                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Column(horizontalAlignment = Alignment.End) {
+                                    // Fora da área rolável (diferente de onde estava antes, dentro do
+                                    // Column de `text`): fica sempre visível colado nos botões, sem
+                                    // precisar rolar a tela pra descobrir se salvou ou por que não salvou.
+                                    if (statusMessage != null) {
+                                        val isErro = statusMessage!!.let {
+                                            it.startsWith("Erro") || it.startsWith("Preencha") ||
+                                                it.startsWith("Selecione") || it.contains("precisa fechar")
+                                        }
+                                        Text(
+                                            text = statusMessage!!,
+                                            color = if (isErro) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            fontWeight = FontWeight.SemiBold,
+                                            modifier = Modifier.padding(bottom = 4.dp, end = 4.dp)
+                                        )
+                                    }
+                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     TextButton(onClick = {
                                                 val safeDesc = customItemDesc.ifBlank { "-" }
                                                 if (customItemName.isNotBlank()) {
                                             val id = "custom:${customItemName.lowercase().replace(" ", "_")}"
+                                            // Livro(s) escolhidos no Seletor de Livros; se nada foi marcado, cai no
+                                            // livro atualmente ativo pra não perder a criação.
+                                            val tags = selectedBookTags.ifEmpty {
+                                                setOf(state.getActiveOrigins().firstOrNull() ?: "BASICO")
+                                            }
+                                            val tagsLabel = tags.joinToString(", ") {
+                                                if (it == com.example.swadebuilder.util.TAG_GERAL) "Geral" else it.toEditionDisplayName()
+                                            }
                                             when (selectedCategory) {
                                                 "Vantagem" -> {
                                                     val combinedPrevEdges = customPrereqEdges + customPrereqComps
@@ -1038,12 +1240,12 @@ fun SettingsDialog(
                                                         nome = customItemName,
                                                         categoria = customAdvCategory,
                                                         descricao = safeDesc,
-                                                        origem = activeBookKey,
+                                                        origem = tags.first(),
                                                         requisitos = reqObj
                                                     )
-                                                    customStorageManager.addVantagem(context, activeBookKey, newAdv)
+                                                    tags.forEach { tag -> customStorageManager.addVantagem(context, tag, newAdv.copy(origem = tag)) }
                                                     state.addCustomVantagem(newAdv)
-                                                            statusMessage = "Vantagem '$customItemName' salva no livro $activeBookKey!"
+                                                            statusMessage = "Vantagem '$customItemName' salva em: $tagsLabel"
                                                 }
                                                 "Complicação" -> {
                                                     val newComp = com.example.swadebuilder.model.Complicacao(
@@ -1051,11 +1253,11 @@ fun SettingsDialog(
                                                         name = customItemName,
                                                         severity = customSeverity,
                                                                 description = safeDesc,
-                                                                origem = activeBookKey
+                                                                origem = tags.first()
                                                     )
-                                                            customStorageManager.addComplicacao(context, activeBookKey, newComp)
+                                                            tags.forEach { tag -> customStorageManager.addComplicacao(context, tag, newComp.copy(origem = tag)) }
                                                     state.addCustomComplicacao(newComp)
-                                                            statusMessage = "Complicação '$customItemName' salva no livro $activeBookKey!"
+                                                            statusMessage = "Complicação '$customItemName' salva em: $tagsLabel"
                                                 }
                                                 "Equipamento" -> {
                                                     val newEquip = com.example.swadebuilder.model.EquipamentoItem(
@@ -1064,12 +1266,12 @@ fun SettingsDialog(
                                                         peso = kotlinx.serialization.json.JsonPrimitive(customWeight.toFloatOrNull() ?: 0f),
                                                         dano = if (customDamage.isNotBlank()) kotlinx.serialization.json.JsonPrimitive(customDamage) else null,
                                                                 observacoes = kotlinx.serialization.json.JsonPrimitive(safeDesc),
-                                                                origem = activeBookKey,
+                                                                origem = tags.first(),
                                                                 subtipo = customEquipSubtype
                                                     )
-                                                            customStorageManager.addEquipamento(context, activeBookKey, newEquip)
+                                                            tags.forEach { tag -> customStorageManager.addEquipamento(context, tag, newEquip.copy(origem = tag)) }
                                                     state.addCustomEquipamento(newEquip)
-                                                            statusMessage = "Equipamento '$customItemName' salvo no livro $activeBookKey!"
+                                                            statusMessage = "Equipamento '$customItemName' salvo em: $tagsLabel"
                                                 }
                                                 "Poder" -> {
                                                     val newPoder = com.example.swadebuilder.model.Poder(
@@ -1080,11 +1282,48 @@ fun SettingsDialog(
                                                         duracao = customDuration.ifBlank { "3 turnos" },
                                                                 descricao = safeDesc,
                                                         estagio = "Novato",
-                                                                origem = activeBookKey
+                                                                origem = tags.first()
                                                     )
-                                                            customStorageManager.addPoder(context, activeBookKey, newPoder)
+                                                            tags.forEach { tag -> customStorageManager.addPoder(context, tag, newPoder.copy(origem = tag)) }
                                                     state.addCustomPoder(newPoder)
-                                                            statusMessage = "Poder '$customItemName' salvo no livro $activeBookKey!"
+                                                            statusMessage = "Poder '$customItemName' salvo em: $tagsLabel"
+                                                }
+                                                "Super Poder" -> {
+                                                    val modificadoresList = customSuperPoderModificadores
+                                                        .lines()
+                                                        .map { it.trim() }
+                                                        .filter { it.isNotBlank() }
+                                                    val newSuperPoder = com.example.swadebuilder.model.SuperPoder(
+                                                        nome = customItemName,
+                                                        custoBase = customSuperPoderCustoBase.ifBlank { "2" },
+                                                        descricao = safeDesc,
+                                                        modificadores = modificadoresList.ifEmpty { null }
+                                                    )
+                                                    tags.forEach { tag -> customStorageManager.addSuperPoder(context, tag, newSuperPoder) }
+                                                    state.addCustomSuperPoder(newSuperPoder)
+                                                    statusMessage = "Super Poder '$customItemName' salvo em: $tagsLabel"
+                                                }
+                                                "Antecedente Arcano" -> {
+                                                    // Vira uma Vantagem categoria ANTECEDENTE de verdade — reaproveita
+                                                    // 100% do pipeline de Vantagem customizada (armazenamento, merge,
+                                                    // seleção na ficha). O nome "ANTECEDENTE ARCANO (X)" é reconhecido
+                                                    // por Vantagem.toArcanoKey() (ver ArcanoExtensions.kt, fallback
+                                                    // adicionado pra AAs customizados), e poderesPermitidos vazio =
+                                                    // lista aberta (todos os poderes do `origem`), ou preenchido =
+                                                    // só os poderes escolhidos — os dois lidos nativamente por
+                                                    // PoderesSection.kt sem precisar de nenhum código novo lá.
+                                                    val newAA = com.example.swadebuilder.model.Vantagem(
+                                                        id = id,
+                                                        nome = "ANTECEDENTE ARCANO ($customItemName)",
+                                                        categoria = Categoria.ANTECEDENTE,
+                                                        descricao = safeDesc,
+                                                        origem = tags.first(),
+                                                        requisitos = Requisito(estagio = "Novato"),
+                                                        poderesPermitidos = if (customAaListaAberta) emptyList() else customAaPoderesEspecificos.toList()
+                                                    )
+                                                    tags.forEach { tag -> customStorageManager.addVantagem(context, tag, newAA.copy(origem = tag)) }
+                                                    state.addCustomVantagem(newAA)
+                                                    statusMessage = "Antecedente Arcano '$customItemName' salvo em: $tagsLabel"
                                                 }
                                                 "Raça" -> {
                                                     val raceAbilities = if (selectedRacialTraits.isNotEmpty()) {
@@ -1111,12 +1350,12 @@ fun SettingsDialog(
                                                         descricao = safeDesc,
                                                         atributos = emptyMap(),
                                                         pericias = emptyMap(),
-                                                        origem = activeBookKey,
+                                                        origem = tags.first(),
                                                         habilidades = raceAbilities
                                                     )
-                                                    customStorageManager.addRaca(context, activeBookKey, newRace)
+                                                    tags.forEach { tag -> customStorageManager.addRaca(context, tag, newRace.copy(origem = tag)) }
                                                     state.listaAncestralidadesJson = state.listaAncestralidadesJson + newRace
-                                                    statusMessage = "Raça '$customItemName' salva no livro $activeBookKey!"
+                                                    statusMessage = "Raça '$customItemName' salva em: $tagsLabel"
                                                 }
                                                 "Traço Racial" -> {
                                                     val costInt = customTraitCost.toIntOrNull() ?: 1
@@ -1125,8 +1364,8 @@ fun SettingsDialog(
                                                         custo = costInt,
                                                         descricao = safeDesc
                                                     )
-                                                    customStorageManager.addHabilidadeRacial(context, activeBookKey, newTrait)
-                                                    statusMessage = "Traço racial '$customItemName' salvo no livro $activeBookKey!"
+                                                    tags.forEach { tag -> customStorageManager.addHabilidadeRacial(context, tag, newTrait) }
+                                                    statusMessage = "Traço racial '$customItemName' salvo em: $tagsLabel"
                                                 }
                                                 "Variante de Raça" -> {
                                                     val baseRaca = varianteBaseRacaId?.let { bid -> state.listaAncestralidadesJson.firstOrNull { it.nome.keyify() == bid } }
@@ -1160,12 +1399,13 @@ fun SettingsDialog(
                                                             }
                                                         }
 
+                                                        val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca)
                                                         val budgetResult = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                            itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                            valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
                                                         )
 
                                                         if (!budgetResult.dentroDoOrcamento) {
-                                                            statusMessage = "A Variante precisa fechar em exatamente ±${budgetResult.orcamento} pontos (saldo atual: ${budgetResult.saldo}), ou marque 'Sem limite de pontos'."
+                                                            statusMessage = "A Variante precisa fechar em exatamente ${budgetResult.orcamento} pontos (pontos atuais: ${budgetResult.saldo}), ou marque 'Sem limite de pontos'."
                                                         } else {
                                                             val newVariant = com.example.swadebuilder.model.CustomAncestryVariant(
                                                                 id = id,
@@ -1180,9 +1420,9 @@ fun SettingsDialog(
                                                                 complicacoesAdicionadas = varianteComplicacoesAdicionadas,
                                                                 semLimiteDePontos = varianteSemLimite
                                                             )
-                                                            customStorageManager.addVarianteRacial(context, activeBookKey, newVariant)
+                                                            tags.forEach { tag -> customStorageManager.addVarianteRacial(context, tag, newVariant) }
                                                             state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom + newVariant
-                                                            statusMessage = "Variante '$customItemName' salva no livro $activeBookKey!"
+                                                            statusMessage = "Variante '$customItemName' salva em: $tagsLabel"
                                                             varianteBaseRacaId = null
                                                             varianteTracosRemovidos = emptyList()
                                                             varianteVantagensGratisRemovidas = emptyList()
@@ -1196,6 +1436,7 @@ fun SettingsDialog(
                                                 }
                                             }
                                                     refreshTrigger++
+                                            onCustomContentChanged()
                                             customItemName = ""
                                             customItemDesc = ""
                                             customRequirements = ""
@@ -1210,6 +1451,7 @@ fun SettingsDialog(
                                             if (importRes.isSuccess) {
                                                 statusMessage = "Pacote '${importRes.getOrNull()?.packageName}' importado com sucesso!"
                                                 customPackageJson = ""
+                                                onCustomContentChanged()
                                             } else {
                                                 statusMessage = "Erro ao importar: ${importRes.exceptionOrNull()?.message}"
                                             }
@@ -1218,6 +1460,7 @@ fun SettingsDialog(
                                         }
                                             }) { Text("Salvar Item") }
                                     TextButton(onClick = { showCustomContentDialog = false }) { Text("Fechar") }
+                                }
                                 }
                             }
                         )
@@ -1447,16 +1690,30 @@ fun SettingsDialog(
                                             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                                         )
                                         allTraitsCatalog.filter { it.nome.contains(filterTraitText, ignoreCase = true) }.forEach { trait ->
-                                            val isSel = selectedRacialTraits.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isSel = if (isSuperPoderesRow) {
+                                                selectedRacialTraits.any { it.nome.startsWith("Super Poderes (") }
+                                            } else {
+                                                selectedRacialTraits.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            }
+                                            val onToggle: (Boolean) -> Unit = { checked ->
+                                                if (isSuperPoderesRow) {
+                                                    if (checked) {
+                                                        superPoderRacialPickerTarget = { escolhido ->
+                                                            selectedRacialTraits = selectedRacialTraits + escolhido
+                                                        }
+                                                    } else {
+                                                        selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else {
+                                                    selectedRacialTraits = if (checked) selectedRacialTraits + trait else selectedRacialTraits.filterNot { it.nome.equals(trait.nome, ignoreCase = true) }
+                                                }
+                                            }
                                             Row(
-                                                modifier = Modifier.fillMaxWidth().clickable {
-                                                    selectedRacialTraits = if (isSel) selectedRacialTraits.filterNot { it.nome.equals(trait.nome, ignoreCase = true) } else selectedRacialTraits + trait
-                                                }.padding(vertical = 4.dp),
+                                                modifier = Modifier.fillMaxWidth().clickable { onToggle(!isSel) }.padding(vertical = 4.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Checkbox(checked = isSel, onCheckedChange = {
-                                                    selectedRacialTraits = if (it) selectedRacialTraits + trait else selectedRacialTraits.filterNot { t -> t.nome.equals(trait.nome, ignoreCase = true) }
-                                                })
+                                                Checkbox(checked = isSel, onCheckedChange = onToggle)
                                                 Spacer(Modifier.width(8.dp))
                                                 Column {
                                                     Text("${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
@@ -1521,16 +1778,30 @@ fun SettingsDialog(
                                             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                                         )
                                         allVarianteTraitsCatalog.filter { it.nome.contains(filterVarianteTraitText, ignoreCase = true) }.forEach { trait ->
-                                            val isSel = varianteTracosAdicionados.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isSel = if (isSuperPoderesRow) {
+                                                varianteTracosAdicionados.any { it.nome.startsWith("Super Poderes (") }
+                                            } else {
+                                                varianteTracosAdicionados.any { it.nome.equals(trait.nome, ignoreCase = true) }
+                                            }
+                                            val onToggle: (Boolean) -> Unit = { checked ->
+                                                if (isSuperPoderesRow) {
+                                                    if (checked) {
+                                                        superPoderRacialPickerTarget = { escolhido ->
+                                                            varianteTracosAdicionados = varianteTracosAdicionados + escolhido
+                                                        }
+                                                    } else {
+                                                        varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else {
+                                                    varianteTracosAdicionados = if (checked) varianteTracosAdicionados + trait else varianteTracosAdicionados.filterNot { it.nome.equals(trait.nome, ignoreCase = true) }
+                                                }
+                                            }
                                             Row(
-                                                modifier = Modifier.fillMaxWidth().clickable {
-                                                    varianteTracosAdicionados = if (isSel) varianteTracosAdicionados.filterNot { it.nome.equals(trait.nome, ignoreCase = true) } else varianteTracosAdicionados + trait
-                                                }.padding(vertical = 4.dp),
+                                                modifier = Modifier.fillMaxWidth().clickable { onToggle(!isSel) }.padding(vertical = 4.dp),
                                                 verticalAlignment = Alignment.CenterVertically
                                             ) {
-                                                Checkbox(checked = isSel, onCheckedChange = {
-                                                    varianteTracosAdicionados = if (it) varianteTracosAdicionados + trait else varianteTracosAdicionados.filterNot { t -> t.nome.equals(trait.nome, ignoreCase = true) }
-                                                })
+                                                Checkbox(checked = isSel, onCheckedChange = onToggle)
                                                 Spacer(Modifier.width(8.dp))
                                                 Column {
                                                     Text("${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
@@ -1543,6 +1814,93 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { showVarianteTraitAddDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        superPoderRacialPickerTarget?.let { onEscolhido ->
+                            var filterSuperPoderText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { superPoderRacialPickerTarget = null },
+                                title = { Text("Escolher Super Poder") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        Text(
+                                            "O traço Super Poderes custa 2 pontos pelo Antecedente Arcano (Super Poderes) mais o custo do poder escolhido.",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterSuperPoderText,
+                                            onValueChange = { filterSuperPoderText = it },
+                                            label = { Text("Filtrar Super Poder") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        superPoderesCatalog
+                                            .filter { it.nome.contains(filterSuperPoderText, ignoreCase = true) }
+                                            .forEach { poder ->
+                                                val custoPoder = primeiroCustoSuperPoder(poder.custoBase)
+                                                val custoTotal = 2 + custoPoder
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth().clickable {
+                                                        onEscolhido(
+                                                            com.example.swadebuilder.model.HabilidadeCriacao(
+                                                                nome = "Super Poderes (${poder.nome})",
+                                                                custo = custoTotal,
+                                                                descricao = "Antecedente Arcano (Super Poderes) + poder \"${poder.nome}\" (custo base ${poder.custoBase ?: custoPoder}).",
+                                                                descricaoLite = "Concede o Antecedente Arcano (Super Poderes) e o poder \"${poder.nome}\" do Compêndio de Super Poderes."
+                                                            )
+                                                        )
+                                                        superPoderRacialPickerTarget = null
+                                                    }.padding(vertical = 6.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Column {
+                                                        Text("${poder.nome} (2+$custoPoder = $custoTotal pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                        if (!poder.descricao.isNullOrBlank()) {
+                                                            Text(poder.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { superPoderRacialPickerTarget = null }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        if (showAaPoderesPickerDialog) {
+                            val availablePoderes = state.listaPoderes.distinctBy { it.id }.sortedBy { it.nome }
+                            var filterAaPoderText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showAaPoderesPickerDialog = false },
+                                title = { Text("Poderes do Antecedente Arcano") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterAaPoderText,
+                                            onValueChange = { filterAaPoderText = it },
+                                            label = { Text("Filtrar Poder") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        availablePoderes.filter { it.nome.contains(filterAaPoderText, ignoreCase = true) }.forEach { poder ->
+                                            val isSel = poder.id in customAaPoderesEspecificos
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    customAaPoderesEspecificos = if (isSel) customAaPoderesEspecificos - poder.id else customAaPoderesEspecificos + poder.id
+                                                }.padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Checkbox(checked = isSel, onCheckedChange = {
+                                                    customAaPoderesEspecificos = if (it) customAaPoderesEspecificos + poder.id else customAaPoderesEspecificos - poder.id
+                                                })
+                                                Spacer(Modifier.width(8.dp))
+                                                Text("${poder.nome} (${poder.origem})", style = MaterialTheme.typography.bodySmall)
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showAaPoderesPickerDialog = false }) { Text("OK") } }
                             )
                         }
 

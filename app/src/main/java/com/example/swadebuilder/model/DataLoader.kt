@@ -552,15 +552,20 @@ object DataLoader {
         val customComplicacoes = mutableListOf<Complicacao>()
         val customEquipamentos = mutableListOf<EquipamentoItem>()
         val customPoderes = mutableListOf<Poder>()
+        val customSuperPoderes = mutableListOf<SuperPoder>()
         val customRacas = mutableListOf<RacialModifier>()
         val customVariantesRaciais = mutableListOf<CustomAncestryVariant>()
 
-        keys.forEach { bookKey ->
+        // TAG_GERAL sempre entra, além dos livros realmente ativos: é onde fica
+        // o conteúdo customizado que o jogador marcou como "Geral" na criação,
+        // pra aparecer em qualquer combinação de livros.
+        (keys + com.example.swadebuilder.util.TAG_GERAL).forEach { bookKey ->
             val customData = customStorageManager.loadCustomContent(context, bookKey)
             customVantagens += customData.vantagens
             customComplicacoes += customData.complicacoes
             customEquipamentos += customData.equipamentos
             customPoderes += customData.poderes
+            customSuperPoderes += customData.superPoderes
             customRacas += customData.racas
             customVariantesRaciais += customData.variantesRaciais
         }
@@ -575,6 +580,15 @@ object DataLoader {
         val mergedEquipamentos = (localListaEquipamentos + customEquipamentos).distinctByOriginPriority({ it.origem }, { it.nome.keyify() })
         val mergedPoderes = (localListaPoderes + customPoderes).distinctByOriginPriority({ it.origem }, { it.id })
         val mergedAncestralidades = (localListaAncestralidadesJson + customRacas).distinctByOriginPriority({ it.origem }, { it.nome.keyify() })
+        // Só mescla Super Poderes customizados quando SUPER está ativo — mesmo
+        // gate que já vale pro catálogo oficial (super_poderes.json só carrega
+        // com "SUPER" em keys), já que o traço só faz sentido junto com o
+        // Antecedente Arcano (Super Poderes) desse cenário.
+        val mergedSuperPoderes = if ("SUPER" in keys) {
+            (localListaSuperPoderes + customSuperPoderes).distinctBy { it.nome.keyify() }
+        } else {
+            localListaSuperPoderes
+        }
 
         // Inject custom equipment into categories so they appear in EquipamentoSection
         val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {
@@ -616,7 +630,7 @@ object DataLoader {
             listaEquipamentos = mergedEquipamentos,
             equipamentoCategorias = updatedEquipamentoCategorias,
             superequipCategorias = localSuperequipCategorias,
-            listaSuperPoderes = localListaSuperPoderes,
+            listaSuperPoderes = mergedSuperPoderes,
             arcanoInfo = loadedArcanoInfoList,
             listaVariantesRaciaisCustom = customVariantesRaciais
         )

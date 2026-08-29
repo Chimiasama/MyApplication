@@ -716,7 +716,8 @@ private fun rememberSummarySections(state: CriadorState, viewModel: CriadorViewM
         mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
         listaPericias = viewModel.gameDataStore.getPericias(),
         listaPoderes = viewModel.gameDataStore.getPoderes(),
-        arcanoInfo = viewModel.gameDataStore.getArcanoInfoMap()
+        arcanoInfo = viewModel.gameDataStore.getArcanoInfoMap(),
+        ancestralidadeAtual = state.currentAncestryDef
     )
     val anotIndex = allLines.indexOf("Anotações")
     val lines = if (anotIndex >= 0) allLines.take(anotIndex) else allLines

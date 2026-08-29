@@ -101,6 +101,26 @@
       "efeitoLite": "Detecta composição de matéria ou energia a até 50 metros de distância."
     },
     {
+      "id": "ciber_corpo_melhorias_cosmeticas",
+      "nome": "Melhorias Cosméticas",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 99,
+      "custo": "$5K",
+      "efeito": "Pele colorida, cabelo metálico ou outras alterações superficiais puramente estéticas, sem função mecânica.",
+      "efeitoLite": "Implantes puramente estéticos (pele colorida, cabelo metálico etc.) que mostram riqueza e estilo, sem nenhuma função mecânica no jogo."
+    },
+    {
+      "id": "ciber_corpo_membro_substituto_clonado",
+      "nome": "Membro Substituto Clonado",
+      "categoria": "CORPO",
+      "strain_custo": 0,
+      "max_uses": 99,
+      "custo": "$5K",
+      "efeito": "Membro clonado cultivado em tanque que substitui um braço ou perna perdido; mais caro que a prótese eletrônica, mas não causa Tensão.",
+      "efeitoLite": "Membro clonado cultivado em tanque que substitui um braço ou perna perdido; mais caro que a prótese eletrônica, mas não causa Tensão."
+    },
+    {
       "id": "ciber_corpo_membro_substituto",
       "nome": "Membro Substituto Protético",
       "categoria": "CORPO",
@@ -139,6 +159,16 @@
       "custo": "$5K",
       "efeito": "Órgão ocular removível que transmite áudio/vídeo gravado a até 1,5 km por 10 horas.",
       "efeitoLite": "Olho artificial destacável que continua gravando e transmitindo áudio e vídeo a até 1,5 km de distância por 10 horas."
+    },
+    {
+      "id": "ciber_corpo_orgaos_substitutos",
+      "nome": "Órgãos Substitutos",
+      "categoria": "CORPO",
+      "strain_custo": 1,
+      "max_uses": 99,
+      "custo": "$5K",
+      "efeito": "Órgãos internos cibernéticos que corrigem automaticamente qualquer Lesão ou Complicação Permanente equivalente (Um Olho Só, Um Braço Só etc.).",
+      "efeitoLite": "Órgãos internos cibernéticos que substituem ou reforçam órgãos danificados, corrigindo automaticamente qualquer Lesão ou Complicação Permanente equivalente (Um Olho Só, Um Braço Só etc.)."
     },
     {
       "id": "ciber_corpo_reforco_esqueleto",
@@ -216,6 +246,7 @@
       "categoria": "DEFENSIVO",
       "strain_custo": 2,
       "max_uses": 3,
+      "custo": "$5K",
       "efeito": "Ignora 1 ponto de penalidade de Fadiga ou Ferimento por nível.",
       "efeitoLite": "Ignora 1 ponto de penalidade de Fadiga ou Ferimento por nível."
     },

@@ -129,6 +129,11 @@ class CriadorViewModel(
         gameDataStore.updateSnapshot(snapshot)
         state.updateGameData(snapshot)
     }
+
+    /** Ver [GameDataRepository.invalidateCache]. */
+    fun invalidateGameDataCache() {
+        gameDataRepository.invalidateCache()
+    }
     fun logFeedback(message: String) {
         _feedbackMessages.add(message)
     }

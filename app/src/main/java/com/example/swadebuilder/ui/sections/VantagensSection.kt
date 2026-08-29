@@ -177,7 +177,7 @@ fun VantagensContent(
     val context = LocalContext.current
     val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
         withContext(Dispatchers.IO) {
-            value = com.example.swadebuilder.model.DataLoader.poderesPorOrigem(context)
+            value = com.example.swadebuilder.model.poderesPorOrigem(context)
         }
     }
 

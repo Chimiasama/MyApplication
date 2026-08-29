@@ -1870,29 +1870,39 @@
     "ganha_ao_comprar": [],
     "descricao": "Protetores da natureza. Possuem Interferência de Armadura (Menor), Componentes Materiais e Voto (Maior). Duração de Conjurar Animal e Mudança de Forma (animal) aumentada para 1h. Ignoram terreno acidentado natural. Perícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e 5 Poderes (Amigo das Feras, Proteção Ambiental, Mudança de Forma e dois de livre escolha).",
     "poderes_permitidos": [
+      "adivinhacao",
+      "ajuda",
       "amigo_das_feras",
-      "protecao",
+      "andar_nas_paredes",
       "atordoar",
       "aumentar_reduzir_caracteristica",
       "barreira",
+      "bencao",
+      "campo_de_dano",
       "cavar",
+      "conjurar_animal",
+      "conjurar_item",
+      "conjurar_monstro",
       "crescimento_encolhimento",
       "cura",
-      "detectar_ocultar_arcano",
-      "dissipar",
-      "enredar",
-      "falar_idioma",
       "dadiva_do_guerreiro",
-      "iluminar_obscurecer",
-      "manipulacao_elemental",
-      "mudanca_de_forma",
-      "protecao_ambiental",
-      "rajada",
-      "ressurreicao",
-      "som_silencio",
-      "teleporte",
-      "morosidade_velocidade",
+      "deflexao",
       "devastacao",
+      "disfarce",
+      "enredar",
+      "ferir",
+      "intervencao_mistica",
+      "manipulacao_elemental",
+      "medo",
+      "morosidade_velocidade",
+      "mudanca_de_forma",
+      "protecao",
+      "protecao_ambiental",
+      "protecao_arcana",
+      "raio",
+      "santuario",
+      "som_silencio",
+      "visao_distante",
       "visao_sombria",
       "voar"
     ],
@@ -2691,7 +2701,7 @@
       "observacoes": ""
     },
     "grupoId": "antecedente_arcano",
-    "subtipoArcano": "XAMÃ",
+    "subtipoArcano": "XAMA_FANTASIA",
     "isGrupoSelector": false,
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -3788,10 +3798,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -3938,10 +3948,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -4246,10 +4256,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -5560,22 +5570,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -9374,10 +9384,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -9524,10 +9534,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -9832,10 +9842,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -11192,22 +11202,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -12477,10 +12487,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -12627,10 +12637,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -12935,10 +12945,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -14295,22 +14305,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -16250,10 +16260,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -16400,10 +16410,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -17656,22 +17666,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "CRYSTAL_HEART"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -17760,28 +17770,6 @@
       "CRYSTAL_HEART"
     ],
     "descricaoLite": "Dá +1 para Aparar e aumenta para d10 o dado extra de dano em ataques de Lutar."
-  },
-  {
-    "id": "parceiro",
-    "nome": "PARCEIRO",
-    "categoria": "SOCIAIS",
-    "requisitos": {
-      "estagio": "Lendário",
-      "atributos": {},
-      "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
-    },
-    "limite_compra": "uma_vez",
-    "vinculado_pericia": false,
-    "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
-    "livros": [
-      "SUPER"
-    ],
-    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "superpoderes",
@@ -18867,10 +18855,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -19017,10 +19005,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -19305,10 +19293,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -20295,22 +20283,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "WISEGUYS"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -22131,10 +22119,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -22281,10 +22269,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -22589,10 +22577,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -23557,22 +23545,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -26164,10 +26152,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -26314,10 +26302,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -26622,10 +26610,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -27702,22 +27690,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -27822,7 +27810,7 @@
     "id": "aa_anjo",
     "nome": "ANTECEDENTE ARCANO (Anjo)",
     "categoria": "PODER",
-    "requisitos": "Anjo, Experiente",
+    "requisitos": "Experiente, Anjo",
     "descricao": "Habilidade: Fé (Espírito)\nPoderes Iniciais: 2\nPontos de Poder Iniciais: 15\nDiferente dos demônios, nem todos os anjos são capazes de ter habilidades mágicas, mas os sacerdotes anjos podem realizar milagres. O conjunto de poderes disponíveis para os anjos e seus efeitos são os mesmos que o dos abençoados, e anjos sem vantagens adicionais podem usar poderes que abençoados só podem usar com as Vantagens Guerreiro do Senhor ou Ira do Senhor. Esta Vantagem não pode ser escolhida junto com a Vantagem Guerreiro Celestial.",
     "livros": [
       "CIDADE_SOL_VAPOR"
@@ -27844,7 +27832,7 @@
     "id": "guerreiro_celestial",
     "nome": "GUERREIRO CELESTIAL",
     "categoria": "ANCESTRALIDADE",
-    "requisitos": "Anjo, Experiente",
+    "requisitos": "Experiente, Anjo",
     "descricao": "Anjos guerreiros elevaram o controle sobre seus corpos a patamares incríveis. Eles podem lançar em si mesmos poderes como proteção arcana, aumentar característica, proteção ambiental, proteção, velocidade e dádiva do guerreiro rolando o Atributo ao invés da perícia Arcana. Não é possível prolongar o efeito dos poderes, mas uma ampliação dobrará a duração destes poderes. Estes poderes não podem ser usados simultaneamente com Modificadores de Poder aplicados neles. Esta Vantagem não pode ser escolhida junto com a Vantagem Antecedente Arcano (Anjo).",
     "livros": [
       "CIDADE_SOL_VAPOR"
@@ -29560,10 +29548,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -29710,10 +29698,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -30018,10 +30006,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -31354,22 +31342,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -33189,22 +33177,37 @@
     ],
     "descricao": "• ANTECEDENTES ARCANO (Druida): Druidas usam Fé como perícia arcana. Recebe 3 poderes iniciais e 10 Pontos de Poder. • ELO COM A NATUREZA: Druidas podem sintonizar com a natureza ou com um companheiro animal especial. Escolha uma destas habilidades: Sintonizado (recebe uma rerrolagem gratuita sempre que falhar em um teste de Fé para ativar uma magia) ou Senhor das Feras (recebe a Vantagem Senhor das Feras, ganhando um companheiro animal Carta Selvagem). • IDIOMA SECRETO: Todos os druidas sabem um idioma secreto conhecido como Druídico. • INTERFERÊNCIA DA ARMADURA (leve): Subtraem 4 de suas rolagens de Fé, Agilidade e de perícias baseadas em Agilidade se estiverem usando armaduras e escudos médios ou pesados. Druidas não podem usar armaduras de metal. • SENTIDO NATURAL: Sobrevivência é ligada a seu Espírito em vez de Astúcia. • TRAVESSIA DE FLORESTA: Ignoram as penalidades de Terreno Acidentado. • VOTO (Maior): Druidas tem um voto maior de proteger a natureza.",
     "poderes_permitidos": [
+      "adivinhacao_pf",
+      "ajuda_pf",
       "amigo_das_feras_pf",
       "andar_nas_paredes_pf",
+      "aumentar_reduzir_caracteristica_pf",
+      "banir_pf",
       "barreira_pf",
       "conjurar_aliado_pf",
+      "conjurar_item_pf",
+      "cura_pf",
+      "dissipar_pf",
+      "empatia_pf",
       "enredar_pf",
       "explosao_pf",
+      "ferir_pf",
+      "iluminar_obscurecer_pf",
       "manipulacao_elemental_pf",
       "mudanca_de_forma_pf",
       "polimorfia_perniciosa_pf",
       "protecao_pf",
-      "protecao_ambiental_pf"
+      "protecao_ambiental_pf",
+      "ressurreicao_pf",
+      "santuario_pf",
+      "som_silencio_pf",
+      "sono_pf",
+      "visao_sombria_pf"
     ],
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Antecedente arcano que usa Fé como perícia arcana, com 10 Pontos de Poder e três poderes iniciais; escolhe entre Sintonizado (rerrolagem gratuita ao falhar um teste de Fé para ativar uma magia) ou receber a Vantagem Senhor das Feras. Conhece o idioma secreto Druídico, liga Sobrevivência a Espírito em vez de Astúcia, ignora penalidades de Terreno Acidentado, não pode usar armadura de metal e sofre -4 em Fé, Agilidade e perícias baseadas em Agilidade com armadura ou escudo médio/pesado; inclui a desvantagem Voto (Maior) de proteger a natureza."
+    "descricaoLite": "Antecedente arcano que usa Fé como perícia arcana, com 10 Pontos de Poder e três poderes iniciais, escolhidos entre os poderes-base de Clérigo e do Domínio da Natureza; escolhe entre Sintonizado (rerrolagem gratuita ao falhar um teste de Fé para ativar uma magia) ou receber a Vantagem Senhor das Feras. Conhece o idioma secreto Druídico, liga Sobrevivência a Espírito em vez de Astúcia, ignora penalidades de Terreno Acidentado, não pode usar armadura de metal e sofre -4 em Fé, Agilidade e perícias baseadas em Agilidade com armadura ou escudo médio/pesado; inclui a desvantagem Voto (Maior) de proteger a natureza."
   },
   {
     "id": "forma_selvagem",
@@ -37193,10 +37196,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 8
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -37343,10 +37346,10 @@
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Experiente",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -37651,10 +37654,10 @@
     "categoria": "LIDERANCA",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
-      "pericias": {
+      "atributos": {
         "Astúcia": 6
       },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": ""
     },
@@ -39011,22 +39014,22 @@
     "nome": "PARCEIRO",
     "categoria": "LENDARIAS",
     "requisitos": {
-      "estagio": "Veterano",
-      "atributos": {
-        "Espirito": 8
-      },
+      "estagio": "Lendário",
+      "atributos": {},
       "pericias": {},
-      "vantagens_previas": [],
-      "observacoes": "Carta Selvagem"
+      "vantagens_previas": [
+        "carta_selvagem"
+      ],
+      "observacoes": ""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Em um cenário de supers, a Vantagem Parceiro (veja Savage Worlds Edição Aventura) pode ser adquirida quando o super alcança o Estágio Veterano.\nSiga as regras usuais, exceto pelo fato de que o parceiro tem uma quantidade de Pontos de Poder igual ao Limite de Poder do seu mentor (mas sem limite)",
+    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Em cenários de super-heróis, permite adquirir um parceiro (mesma vantagem de Savage Worlds Edição Aventura) ao atingir o Estágio Veterano; o parceiro tem Pontos de Poder iguais ao Limite de Poder do personagem, sem teto máximo."
+    "descricaoLite": "Um NPC Carta Selvagem de nível Novato (2 Benes, que evolui por Progresso) se junta ao personagem como parceiro, e os dois podem repartir Benes como na Vantagem Elo Comum."
   },
   {
     "id": "duro_na_queda",
@@ -39115,5 +39118,1296 @@
       "BASICO"
     ],
     "descricaoLite": "Dá +1 para Aparar e aumenta para d10 o dado extra de dano em ataques de Lutar."
+  },
+  {
+    "id": "agoureiro",
+    "nome": "AGOUREIRO",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "pericias": {
+        "Ocultismo": 6,
+        "Performance": 6
+      },
+      "observacoes": "Antecedente Arcano (Qualquer) ou Poderes Místicos (Qualquer)"
+    },
+    "descricao": "Agoureiros usam sua habilidade de adivinhação para ver o futuro, aplicando essa visão para influenciar o curso da batalha. Uma vez por encontro, como uma ação livre, um agoureiro ganha um benefício baseado no naipe de sua Carta de Ação, com duração de cinco rodadas: Espadas (escolha um inimigo na linha de visão; +2 nos ataques contra o alvo), Copas (+2 em testes de Suporte), Ouros (Aparar +2), Paus (rerrolagem grátis em rolagens de Absorção).",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Uma vez por encontro, ganha (de graça) um bônus de cinco rodadas conforme o naipe da sua Carta de Ação: Espadas dá +2 para atacar um inimigo escolhido, Copas dá +2 em Suporte, Ouros dá Aparar +2, e Paus dá uma rerrolagem grátis de Absorção."
+  },
+  {
+    "id": "agoureiro_2",
+    "nome": "AGOUREIRO II",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens_previas": [
+        "agoureiro"
+      ]
+    },
+    "descricao": "Agoureiros podem convocar um baralho de agouro brilhante e translúcido feito de energia que pode manipular e usar para atacar. Como uma ação, faz um ataque à distância usando Atletismo (arremesso) para arremessar uma carta de energia (Distância 4/8/16, Dano 2d6, PA 1). Uma vez por encontro, como uma ação livre limitada, pode modificar seus ataques de cartas de energia com base no naipe de sua Carta de Ação (duração de cinco rodadas): Espadas (se acertar, Modelo Pequeno de Explosão causando 2d6 de dano a todos dentro), Copas (ignora 2 pontos de penalidade no primeiro ataque com carta de energia), Ouros (a carta de energia tem PA 4), Paus (a rolagem de dano da carta de energia pode ser rerrolada uma vez de graça).",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Ganha um ataque à distância de cartas de energia (Distância 4/8/16, Dano 2d6, PA 1, usando Atletismo). Uma vez por encontro pode ainda aplicar um bônus de cinco rodadas conforme o naipe: Espadas causa explosão em área no alvo acertado, Copas ignora 2 de penalidade no primeiro disparo, Ouros dá PA 4 à carta, e Paus permite rerrolar o dano uma vez de graça."
+  },
+  {
+    "id": "agoureiro_3",
+    "nome": "AGOUREIRO III",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens_previas": [
+        "agoureiro_2"
+      ]
+    },
+    "descricao": "Agoureiros mais poderosos são capazes de manipular o cosmos e ajustar o resultado dos eventos a seu favor. Antes que as cartas sejam distribuídas na primeira rodada de um encontro, o agoureiro pode olhar as cinco primeiras cartas do baralho e descartar qualquer número delas antes de colocar o resto de volta em qualquer ordem. O agoureiro decide em que ordem as Cartas de Ação devem ser distribuídas nesta rodada.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Antes da primeira rodada de um encontro, olha as cinco primeiras cartas do baralho, descarta quantas quiser e recoloca o restante na ordem que preferir, decidindo assim a distribuição das Cartas de Ação daquela rodada."
+  },
+  {
+    "id": "cavaleiro_infernal",
+    "nome": "CAVALEIRO INFERNAL",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "pericias": {
+        "Intimidar": 8,
+        "Perceber": 6,
+        "Ocultismo": 8
+      },
+      "observacoes": "Deve ter matado um demônio. Ao ingressar na ordem, recebe a armadura do Cavaleiro Infernal e deve usá-la enquanto for parte da ordem."
+    },
+    "descricao": "Ao ingressar nos Cavaleiros Infernais, o iniciado recebe uma armadura especial conhecida como armadura do Cavaleiro Infernal, que deve usar enquanto fizer parte da ordem. Enquanto estiver usando essa armadura, a personagem ganha: Temor (+2 em rolagens de Intimidar), Visão Infernal (ignora todas as penalidades de Iluminação) e Vigilância (-4 de dano de ácido, frio e fogo).",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Enquanto vestir a armadura do Cavaleiro Infernal (obrigatória na ordem), ganha +2 em Intimidar, ignora penalidades de Iluminação e reduz em 4 o dano de ácido, frio e fogo."
+  },
+  {
+    "id": "cavaleiro_infernal_2",
+    "nome": "CAVALEIRO INFERNAL II",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens_previas": [
+        "cavaleiro_infernal"
+      ]
+    },
+    "descricao": "O Cavaleiro Infernal ganha a ajuda de um cão infernal fiel, que é Muito Resiliente, para auxiliá-lo em sua busca por justiça. Se este companheiro for morto, o Cavaleiro Infernal pode convocar outro gratuitamente em seu próximo Progresso.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Ganha um cão infernal companheiro, Muito Resiliente; se ele morrer, pode convocar outro de graça no próximo Progresso."
+  },
+  {
+    "id": "cavaleiro_infernal_3",
+    "nome": "CAVALEIRO INFERNAL III",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens_previas": [
+        "cavaleiro_infernal_2"
+      ]
+    },
+    "descricao": "Como uma ação limitada, o Cavaleiro Infernal pode conceder a qualquer arma que empunhar o encantamento Elemental (fogo), Perversa ou Brutal (isso não se acumula com encantamentos de mesmo nome que a arma já tenha). Pode manter qualquer um desses encantamentos por qualquer período desejado, desde que esteja a até 30 metros da arma, e pode alterar o encantamento concedido como uma ação limitada. Além disso, enquanto estiver usando sua armadura, ganha Imunidade a Fogo.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Como ação limitada, concede a uma arma que empunhe o encantamento Elemental (fogo), Perversa ou Brutal (trocável, mantido enquanto estiver a até 30 m dela); enquanto usa a armadura do Cavaleiro Infernal, também ganha Imunidade a Fogo."
+  },
+  {
+    "id": "louva_a_deus_vermelha",
+    "nome": "LOUVA-A-DEUS VERMELHA",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "pericias": {
+        "Intimidar": 6,
+        "Perceber": 6,
+        "Furtividade": 8
+      },
+      "observacoes": "Arma Predileta (sabre serrilhado), Lutar com Duas Armas"
+    },
+    "descricao": "Assassinas louva-a-deus vermelhas matam com o \"ataque louvador\": segurando o(s) sabre(s) serrilhado(s) apontado(s) para baixo e entrelaçando as lâminas no ar, a até 5 quadros (10 metros) e visível para a vítima. Uma vez por encontro, como ação limitada, a assassina faz um Desafio com Lutar resistido pelo Espírito do alvo. Sucesso deixa o alvo Atordoado (ou Paralisado com uma ampliação). Criaturas Atordoadas desta forma não são consideradas indefesas e não podem ser atingidas com um Golpe de Misericórdia.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Uma vez por encontro, como ação limitada, faz um Desafio de Lutar (a até 5 quadros/10 metros, visível ao alvo) resistido por Espírito: sucesso deixa o alvo Atordoado (Paralisado com ampliação), sem que isso o torne elegível a um Golpe de Misericórdia."
+  },
+  {
+    "id": "louva_a_deus_vermelha_2",
+    "nome": "LOUVA-A-DEUS VERMELHA II",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "vantagens_previas": [
+        "louva_a_deus_vermelha"
+      ]
+    },
+    "descricao": "A assassina recebe a habilidade de se cobrir em um véu de névoa vermelha uma vez por encontro, como ação livre limitada. A mortalha permanece mesmo com ventos fortes e dura cinco rodadas; enquanto protegida, pode fazer uma rolagem grátis de Absorção sempre que for Ferida. Se morrer enquanto esta habilidade estiver ativa, pode escolher permanecer corpórea ou se desintegrar em uma nuvem de névoa vermelha, deixando para trás apenas seu equipamento.",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Uma vez por encontro, como ação livre limitada, cobre-se por cinco rodadas em uma névoa vermelha que resiste a ventos fortes e concede uma rolagem grátis de Absorção sempre que for Ferida; se morrer nesse estado, pode optar por se desintegrar em névoa, deixando só o equipamento para trás."
+  },
+  {
+    "id": "louva_a_deus_vermelha_3",
+    "nome": "LOUVA-A-DEUS VERMELHA III",
+    "categoria": "PRESTIGIO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "vantagens_previas": [
+        "louva_a_deus_vermelha_2"
+      ]
+    },
+    "descricao": "Poderes Místicos (Louva-a-deus Vermelha): como ação livre limitada, pode invocar um dos seguintes poderes: disfarce, intangibilidade, limpeza mental e teleporte. Todos, exceto limpeza mental, são apenas pessoais, mas a Louva-a-deus Vermelha não ganha nenhum benefício da Limitação. Possui 10 Pontos de Poder dedicados que recarregam normalmente; o poder é ativado automaticamente com sucesso pelo seu custo normal, ou com uma ampliação por 2 Pontos de Poder adicionais, podendo usar Modificadores de Poder aplicáveis. Poderes Místicos não concedem acesso a Vantagens que requerem Antecedente Arcano; se a personagem também tiver um Antecedente Arcano, nenhuma de suas Vantagens ou habilidades pode ser usada com Poderes Místicos (e vice-versa).",
+    "livros": [
+      "PATHFINDER"
+    ],
+    "descricaoLite": "Ganha Poderes Místicos com 10 Pontos de Poder dedicados, podendo invocar disfarce, intangibilidade, limpeza mental ou teleporte (automaticamente bem-sucedidos pelo custo normal, ou com ampliação por +2 PP); incompatível com um Antecedente Arcano que a personagem já possua."
+  },
+  {
+    "id": "antecedente_arcano_capelao",
+    "nome": "ANTECEDENTE ARCANO (Capelão)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "CAPELAO",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Capelães são pessoal de apoio designado para fuzileiros navais espaciais, milícias planetárias ou equipes de exploração, encarregados de manter o moral em situações difíceis. Lideram vestindo armaduras de batalha para encorajar suas tropas contra as piores ameaças da galáxia. Seus poderes geralmente se manifestam por meio de mantras, gritos de slogans, iconografia, luz brilhante sutil ou um suave zumbido de energia.\nVariante Psiônica: nem todos os capelães extraem poder de entidades divinas ou sobrenaturais — alguns são, na verdade, poderosos psiônicos. Nesse caso, substitua todas as referências a Espírito por Astúcia e Fé por Psiônicos, podendo adquirir Vantagens que requerem Antecedente Arcano (Psiônicos).\nPerícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e os Poderes Iniciais Aumentar Característica, cura e mais um outro poder da lista de Poderes Disponíveis.\nMISERICÓRDIA: como uma ação, o capelão pode gastar 1 Ponto de Poder e conceder \"misericórdia\" a qualquer personagem dentro de uma Distância igual ao seu Espírito, removendo automaticamente um dos seguintes Estados: Distraído, Vulnerável ou Abalado. Pode remover efeitos de Atordoar por 2 pontos.\nMILAGRES: capelães podem adquirir Vantagens que requeiram Antecedente Arcano (Milagres).\nVOTO: capelães devem fazer um Voto (Maior) de servir à sua causa e seus princípios — quaisquer que sejam — até o último suspiro. Uma quebra de fé, voluntária ou não, faz com que subtraiam 2 das rolagens de Fé por uma semana. Sacrilégios podem retirar completamente seus poderes até os expiarem de alguma forma.",
+    "poderes_permitidos": [
+      "adivinhacao",
+      "ajuda",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "banir",
+      "barreira",
+      "confusao",
+      "cura",
+      "dadiva_do_guerreiro",
+      "deflexao",
+      "detectar_ocultar_arcano",
+      "devastacao",
+      "dissipar",
+      "drenar_pontos_de_poder",
+      "empatia",
+      "enredar",
+      "falar_idioma",
+      "ferir",
+      "iluminar_obscurecer",
+      "medo",
+      "morosidade_velocidade",
+      "protecao",
+      "protecao_ambiental",
+      "protecao_arcana",
+      "visao_distante",
+      "visao_sombria"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano de apoio militar que usa Fé (Espírito) como perícia arcana, começando com 10 Pontos de Poder e os poderes Aumentar Característica, cura e mais um à escolha. Pode gastar 1 Ponto de Poder para conceder \"Misericórdia\" (remove Distraído, Vulnerável ou Abalado, ou 2 pontos de Atordoar) e faz um Voto (Maior) à sua causa. Uma variante psiônica troca Espírito por Astúcia e Fé por Psiônicos."
+  },
+  {
+    "id": "litania_da_furia",
+    "nome": "LITANIA DA FÚRIA",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_capelao"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O capelão recita ressentimentos antigos, erros terríveis ou feitos inspiradores relacionados à sua unidade. Enquanto puder se comunicar com aqueles em seu Raio de Comando, todos adicionam +2 ao dano.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Enquanto comunica-se com aliados dentro do Raio de Comando, todos eles somam +2 ao dano."
+  },
+  {
+    "id": "reprovacao",
+    "nome": "REPROVAÇÃO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Intimidar": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_capelao"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Capelães com essa Vantagem são severos e exigem subserviência absoluta daqueles sob seus cuidados. O capelão pode gastar 2 Pontos de Poder para conceder a qualquer outra personagem ou grupo dentro de 12 quadros (24 metros) uma nova rerrolagem, como se tivesse gasto um Bene. Isso acontece no turno da personagem ou grupo-alvo, mesmo que o capelão já tenha agido nesta rodada.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Por 2 Pontos de Poder, concede a um alvo ou grupo a até 12 quadros uma rerrolagem gratuita, como se tivesse gasto um Bene, mesmo fora do próprio turno do capelão."
+  },
+  {
+    "id": "antecedente_arcano_cavaleiro_estelar",
+    "nome": "ANTECEDENTE ARCANO (Cavaleiro Estelar)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "CAVALEIRO_ESTELAR",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cavaleiros estelares são indivíduos raros e poderosos que dominam habilidades marciais e místicas. Servem a uma causa ou ordem e são conhecidos por muitos outros nomes, dependendo do cenário, de seus mestres ou de suas manifestações, mas o termo \"cavaleiro\" incorpora a combinação única de seus serviços.\nPerícia Arcana: Foco (Espírito). Começam com 10 Pontos de Poder e os Poderes Iniciais deflexão, proteção e mais um outro poder disponível da lista a seguir.\nARMA DE ENERGIA: cavaleiros estelares se dedicam ao domínio de armas de combate corpo a corpo energéticas. Começam automaticamente com a Vantagem Arma Predileta e uma espada de energia. Podem trocá-la por uma arma laser diferente, se desejarem, pagando a diferença de custo com fundos iniciais.\nINTERFERÊNCIA DE ARMADURA: cavaleiros estelares tentam passar silenciosamente entre as populações que servem e, portanto, treinam sem armaduras. Subtraem 4 das rolagens de Foco ao usar qualquer tipo de armadura que adicione mais de +2 de proteção.\nCÓDIGO DE HONRA: cavaleiros estelares são conhecidos por viver de acordo com sua palavra. Possuem a Complicação Código de Honra.",
+    "poderes_permitidos": [
+      "ajuda",
+      "amigo_das_feras",
+      "aumentar_reduzir_caracteristica",
+      "confusao",
+      "dadiva_do_guerreiro",
+      "deflexao",
+      "detectar_ocultar_arcano",
+      "devastacao",
+      "elo_mental",
+      "empatia",
+      "fantoche",
+      "ferir",
+      "previsao",
+      "protecao",
+      "protecao_arcana",
+      "telecinese"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano marcial-místico que usa Foco (Espírito) como perícia arcana, começa com 10 Pontos de Poder, os poderes deflexão, proteção e mais um à escolha, e recebe automaticamente Arma Predileta com uma espada de energia. Treina sem armadura (-4 em Foco com armaduras de proteção maior que +2) e segue um Código de Honra."
+  },
+  {
+    "id": "aparar_laser",
+    "nome": "APARAR LASER",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_cavaleiro_estelar"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cavaleiros estelares são famosos por aparar ataques de projéteis com suas armas laser características. Desde que o cavaleiro esteja ciente de um ataque e esteja armado com uma arma corpo a corpo de energia, os atacantes subtraem 2 das rolagens de Atirar para acertá-los. Se o cavaleiro escolher a ação Defender, os atacantes subtraem 4 de suas rolagens de Atirar. Isso não é cumulativo com Cobertura — use apenas a penalidade mais alta. Esta Vantagem acumula com Esquiva.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Armado com arma corpo a corpo de energia e ciente do ataque, impõe -2 nas rolagens de Atirar contra si (-4 se usar a ação Defender); não cumula com Cobertura (usa a penalidade maior), mas acumula com Esquiva."
+  },
+  {
+    "id": "refletir_laser",
+    "nome": "REFLETIR LASER",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "aparar_laser"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "A técnica do cavaleiro estelar melhorou a ponto de conseguir mirar os tiros que defende. Quando fizer a ação Defender, ele pode tentar redirecionar um ataque à distância que não o acerta a cada rodada. Ele escolhe um novo alvo (geralmente, mas não necessariamente, o atacante original) e faz uma rolagem de Lutar. A Distância é sempre 6/12/24, contado a partir do cavaleiro. Em caso de falha, o tiro é desviado inofensivamente como antes. Com sucesso, o novo alvo sofre o dano da arma, incluindo dano bônus com uma ampliação.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Ao usar Defender, pode redirecionar um ataque à distância que errou, fazendo Lutar contra um novo alvo (Distância 6/12/24) para causar o dano da arma nele."
+  },
+  {
+    "id": "refletir_laser_aprimorado",
+    "nome": "REFLETIR LASER APRIMORADO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "refletir_laser"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O cavaleiro estelar pode tentar desviar até três ataques à distância que errarem o alvo a cada rodada.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Expande Refletir Laser para permitir redirecionar até três ataques à distância que erraram o alvo em cada rodada."
+  },
+  {
+    "id": "renegado_estelar",
+    "nome": "RENEGADO ESTELAR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_cavaleiro_estelar"
+      ],
+      "observacoes": "Não pode ter a Vantagem Mago Estelar"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Nem todos os cavaleiros se dedicam à justiça e à misericórdia. Alguns são indivíduos realmente desventurados, mas ainda têm a diligência e a persistência necessárias para dominar essas artes arcanas. Outros podem ser almas nobres, mas equivocadas, que acreditam que suas obras servem ao bem maior, apesar de custos ocasionalmente terríveis.\nRenegados estelares adicionam os seguintes Poderes Disponíveis e ganham um deles imediatamente: Rajada (relâmpago), disfarce, drenar Pontos de Poder, intangibilidade, limpeza mental, ressurreição e aperto telecinético.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Adiciona rajada (relâmpago), disfarce, drenar Pontos de Poder, intangibilidade, limpeza mental, ressurreição e aperto telecinético aos Poderes Disponíveis, ganhando um deles de imediato; exclui Mago Estelar."
+  },
+  {
+    "id": "mago_estelar",
+    "nome": "MAGO ESTELAR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_cavaleiro_estelar"
+      ],
+      "observacoes": "Não pode ter a Vantagem Renegado Estelar"
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Enquanto a maioria dos cavaleiros estelares se concentra em suas proezas marciais, alguns exploram os aspectos mais místicos da galáxia e expandem os poderes que podem assumir.\nMagos estelares adicionam os seguintes Poderes Disponíveis e ganham um deles imediatamente: cegar, visão sombria, disfarce, dissipar, medo, voar, cura, ilusão, iluminar/obscurecer, ajuda, morosidade/velocidade, som/silêncio.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Adiciona cegar, visão sombria, disfarce, dissipar, medo, voar, cura, ilusão, iluminar/obscurecer, ajuda, morosidade/velocidade e som/silêncio aos Poderes Disponíveis, ganhando um deles de imediato; exclui Renegado Estelar."
+  },
+  {
+    "id": "ascensao_estelar",
+    "nome": "ASCENSÃO ESTELAR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Lendário",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "mago_estelar"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Os maiores cavaleiros estelares não morrem, eles transcendem para lutar contra o mal em uma forma superior. Quando o cavaleiro enfim perecer, ele se ergue em uma Forma de Energia e a Habilidade Especial Etéreo. Ele não pode mais afetar o mundo fisicamente, mas ainda pode usar poderes. Poderes também o afetam e, se for morto novamente, será permanentemente disperso.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Quando morre, o cavaleiro se ergue como Forma de Energia com a Habilidade Especial Etéreo, não podendo mais afetar o mundo fisicamente (mas ainda usando poderes) até ser permanentemente disperso, se morto novamente."
+  },
+  {
+    "id": "antecedente_arcano_luz_solida",
+    "nome": "ANTECEDENTE ARCANO (Controlador de Luz Sólida)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "CONTROLADOR_LUZ_SOLIDA",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Controladores de luz sólida são especializados em tecnologia avançada que cria objetos físicos sólidos a partir da própria luz. Eles fazem isso por meio de um dispositivo de luz sólida que geralmente é usado como uma manopla ou pulseira. A ativação requer um comando de voz ou manipulação do painel de controle com a outra mão. A luz então é projetada do dispositivo e instantaneamente assume qualquer forma que o controlador desejar.\nPerícia Arcana: Ciência (Astúcia). Começam com 15 Pontos de Poder e os Poderes Iniciais criar item, ilusão e mais um outro poder disponível da lista a seguir.\nENCAPSULADO: o controlador pode manter um escudo brilhante ao redor de seu corpo que lhe permite gastar 2 Pontos de Poder em vez de um Bene para fazer uma rolagem de Absorção. É possível ligar ou desligar o escudo como uma ação livre em seu turno, mas, se ele estiver desligado quando sofrer dano, não poderá usar esta habilidade.\nDEPENDENTE DE TECNOLOGIA: controladores de luz sólida precisam ter acesso aos seus emissores de luz sólida para ativar seus poderes. As criações sempre emitem luz, tornando a Furtividade baseada em visão difícil (-4) enquanto estiverem ativas.\nFALHA CRÍTICA: quando um controlador de luz sólida obtiver uma Falha Crítica em sua rolagem de Ciência, o dispositivo entra em curto temporariamente e drena todos os Pontos de Poder restantes.",
+    "poderes_permitidos": [
+      "barreira",
+      "cegar",
+      "confusao",
+      "conjurar_aliado",
+      "criar_item",
+      "deflexao",
+      "enredar",
+      "explosao",
+      "iluminar_obscurecer",
+      "ilusao",
+      "protecao",
+      "raio",
+      "telecinese"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano tecnológico que usa Ciência (Astúcia) para projetar construtos de luz sólida a partir de um emissor. Começa com 15 Pontos de Poder e os poderes criar item, ilusão e mais um à escolha. Pode gastar 2 Pontos de Poder para fazer Absorção (Encapsulado), depende do emissor para ativar poderes (Furtividade visual -4 enquanto suas criações estiverem ativas) e uma Falha Crítica em Ciência drena todos os seus Pontos de Poder."
+  },
+  {
+    "id": "melhoria_de_equipamento",
+    "nome": "MELHORIA DE EQUIPAMENTO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_luz_solida"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O usuário atualiza seu controlador de luz sólida. Isso adiciona +1 às suas rolagens de Ciência ao ativar poderes e perde apenas 1d6 Pontos de Poder com uma Falha Crítica, em vez de todos eles.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Soma +1 às rolagens de Ciência ao ativar poderes e reduz a perda de Pontos de Poder em uma Falha Crítica para apenas 1d6, em vez de todos."
+  },
+  {
+    "id": "infundido",
+    "nome": "INFUNDIDO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_luz_solida"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Por um Ponto de Poder extra, qualquer criação ou poder que cause dano é infundido com energia e adiciona +2 ao seu total de dano (isso inclui qualquer dano causado por aliados conjurados).",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Por 1 Ponto de Poder extra, qualquer criação ou poder que cause dano soma +2 ao total de dano, incluindo o de aliados conjurados."
+  },
+  {
+    "id": "antecedente_arcano_cronomante",
+    "nome": "ANTECEDENTE ARCANO (Cronomante)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "CRONOMANTE",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Na vasta extensão do tempo, existem aqueles cujo domínio sobre suas correntes transcende a mera compreensão mortal. Estes são os cronomantes, detentores da magia temporal que navegam no fluxo e refluxo da história com sutileza e propósito. Esse poder sempre tem um preço, pois a manipulação do tempo é um esforço delicado e perigoso: cronomantes devem agir com cautela, para não desemaranhar os fios da história e causar consequências imprevistas. Cronomantes tendem a carregar vários relógios ou cronômetros para cronometragem e sincronização, e também sofrem frequentemente de déjà-vu ou ficam confusos sobre a ordem dos eventos ou onde deixaram um item, pois viram várias linhas do tempo ocorrerem de várias maneiras.\nPerícia Arcana: Foco (Espírito). Começam com 15 Pontos de Poder e quaisquer dois Poderes Iniciais da lista de Poderes Disponíveis.\nEFEITO BORBOLETA: quando uma rolagem de Foco de cronomantes resultar em Falha Crítica, é necessário rolar 2d6 na tabela Efeito Borboleta: (2) Mudança Fundamental — o erro retrocede no tempo, mudando fundamentalmente algum aspecto do mundo (a critério do Mestre); (3–4) Gagueira Temporal — em combate, descarte todas as Cartas de Ação aliadas restantes (os antagonistas ficam com as deles); fora de combate, o cronomante e seus aliados ficam presos em um loop recursivo até que o fluxo do tempo se cure, ficando Exaustos pelas 24 horas seguintes; (5–9) Visões — o cronomante fica Atordoado; (10–11) Ruptura Temporal — uma entidade hostil (a critério do Mestre) atravessa uma ruptura no espaço-tempo; (12) De Volta no Tempo — recomece o encontro desde o início, sendo que só o cronomante sabe o que aconteceu na realidade anterior.\nDOTADO: cronomantes podem escolher Vantagens que exijam Antecedente Arcano (Dom).",
+    "poderes_permitidos": [
+      "adivinhacao",
+      "atordoar",
+      "confusao",
+      "deflexao",
+      "detectar_ocultar_arcano",
+      "dissipar",
+      "leitura_de_objeto",
+      "morosidade_velocidade",
+      "parar_o_tempo",
+      "previsao",
+      "protecao",
+      "protecao_arcana",
+      "teleporte",
+      "videncia",
+      "visao_distante"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano que manipula o fluxo temporal usando Foco (Espírito), começando com 15 Pontos de Poder e dois poderes iniciais à escolha. Uma Falha Crítica em Foco obriga uma rolagem na tabela Efeito Borboleta (2d6), que pode causar mudanças na realidade, perda de cartas de ação, Atordoamento, a chegada de uma ameaça ou o reinício do encontro. Também pode escolher Vantagens de Antecedente Arcano (Dom)."
+  },
+  {
+    "id": "premonicao",
+    "nome": "PREMONIÇÃO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_cronomante"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cronomantes veem perigos imediatos apresentados a eles e a seus aliados. Pode gastar 2 Pontos de Poder para adicionar +1 (ou 3 Pontos de Poder para +2) à sua rolagem de Evasão ou Absorção depois de rolagem. Também pode afetar aliados, desde que estejam dentro de uma Distância igual ao seu dado de Astúcia.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Depois de rolar Evasão ou Absorção, pode gastar 2 Pontos de Poder para +1 (ou 3 para +2) no resultado, para si ou para um aliado dentro do alcance de seu dado de Astúcia."
+  },
+  {
+    "id": "reorganizar_tempo",
+    "nome": "REORGANIZAR TEMPO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_cronomante"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cronomantes distorcem o fluxo do tempo, permitindo que afetem a iniciativa de seus inimigos em combate. No início da rodada, depois que todos tiverem recebido Cartas de Ação e todas as Vantagens, Benes, poderes e outras habilidades tiverem sido contabilizadas, o cronomante pode gastar um Bene para forçar qualquer alvo — amigo ou inimigo — a comprar uma nova Carta de Ação. Então, escolhe se quer manter a carta escolhida anteriormente ou a nova. A carta escolhida não pode ser alterada novamente nesta rodada em nenhuma circunstância (nem mesmo por outros cronomantes). Não é possível afetar um alvo se sua Carta de Ação for um Curinga e, se a nova carta for um Curinga, o alvo a mantém.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Gastando um Bene após as Cartas de Ação serem distribuídas, força qualquer alvo (aliado ou inimigo, exceto quem tem Curinga) a comprar uma nova carta e escolhe entre a antiga ou a nova, resultado que não pode mais ser alterado na rodada."
+  },
+  {
+    "id": "mestre_do_tempo",
+    "nome": "MESTRE DO TEMPO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_cronomante"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Após receber sua Carta de Ação no início de um turno, o cronomante pode gastar um Bene para obter uma Carta de Ação adicional — e agir em ambas! A Carta de Ação bônus é distribuída depois que sua Carta de Ação inicial for distribuída e definida (como por poderes, Rápido, Focado, gastando um Bene para substituí-la etc.) e não pode ser afetada por nenhuma outra habilidade. A carta bônus permanece como comprada e nada pode alterá-la.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Gastando um Bene, recebe uma Carta de Ação adicional e age em ambas na mesma rodada; a carta bônus é fixa e não pode ser alterada por nenhuma outra habilidade."
+  },
+  {
+    "id": "antecedente_arcano_dobrador",
+    "nome": "ANTECEDENTE ARCANO (Dobrador)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "DOBRADOR",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Não há indivíduo mais perigoso na grande vastidão do espaço do que um dobrador, pois canalizam o poder bruto do próprio universo. Dobradores, ou \"magos da dobra\", são seres imprudentes que ousam abrir conexões com o hiperespaço, a dobra ou outras energias cósmicas que lhes conferem um poder fenomenal — e incrivelmente perigoso.\nPerícia Arcana: Foco (Espírito). Começam com 15 Pontos de Poder e quaisquer três Poderes Iniciais da lista de Poderes Disponíveis.\nDOTADO: dobradores podem escolher Vantagens que exijam Antecedente Arcano (Dom).\nASTRONAVEGAÇÃO: dobradores adicionam +2 às rolagens de Ciência (astronavegação).\nHIPERESPAÇO: dobradores podem entrar e sair de uma microversão do hiperespaço como uma ação limitada, permitindo que se teleportem a até 12 quadros (24 metros) sem precisar fazer uma rolagem de perícia arcana ou gastar Pontos de Poder. Se desejarem se teleportar mais longe ou adicionar modificadores, devem ativá-lo normalmente (como um poder, usando teleporte).\nFALHA CRÍTICA: dobradores canalizam energia perigosa. Sempre que rolarem uma Falha Crítica em um teste de Foco, um microburaco negro se abre sobre si mesmos (veja o poder buraco negro).",
+    "poderes_permitidos": [
+      "atordoar",
+      "buraco_negro",
+      "campo_de_dano",
+      "confusao",
+      "deflexao",
+      "devastacao",
+      "drenar_pontos_de_poder",
+      "enredar",
+      "explosao",
+      "iluminar_obscurecer",
+      "protecao",
+      "raio",
+      "rajada",
+      "som_silencio",
+      "teleporte",
+      "visao_distante"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano que canaliza a energia do hiperespaço usando Foco (Espírito), começando com 15 Pontos de Poder e três poderes iniciais à escolha. Soma +2 em Ciência (astronavegação), pode se teleportar até 12 quadros como ação limitada e sem custo de Pontos de Poder (Hiperespaço) e pode adquirir Vantagens de Antecedente Arcano (Dom); uma Falha Crítica em Foco abre um microburaco negro sobre si mesmo."
+  },
+  {
+    "id": "canalizar_dobra",
+    "nome": "CANALIZAR DOBRA",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_dobrador"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O dobrador abre um canal para o hiperespaço e extrai energia dele. Quando gastar um Bene para recuperar Pontos de Poder, pode fazer uma rolagem de Foco. Se for bem-sucedido, recupera 5 Pontos de Poder, como de costume. Com uma ampliação, recupera 10. Uma falha significa que recupera apenas 3 Pontos de Poder, e uma Falha Crítica significa que não ganha nenhum e é tratada como se tivesse falhado criticamente em uma rolagem de perícia arcana (veja acima).",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Ao gastar um Bene para recuperar Pontos de Poder, rola Foco: sucesso recupera 5 (10 com ampliação), falha recupera apenas 3, e Falha Crítica não recupera nada e aciona o efeito de Falha Crítica do Dobrador."
+  },
+  {
+    "id": "surto_de_dobra",
+    "nome": "SURTO DE DOBRA",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_dobrador"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O dobrador traz consigo um pouco da energia da dobra quando usa seu poder de teleporte ou a habilidade hiperespaço. Ao chegar, causa 2d6 de dano em um Modelo Pequeno de Explosão centrado nele (não causa dano ao dobrador).",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Ao chegar de um teleporte ou do uso da habilidade Hiperespaço, causa 2d6 de dano em um Modelo Pequeno de Explosão centrado em si mesmo, sem se ferir."
+  },
+  {
+    "id": "antecedente_arcano_gravcon",
+    "nome": "ANTECEDENTE ARCANO (Gravcon)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "GRAVCON",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "\"Conjuradores da gravidade\" aprenderam a dominar a gravidade, usando-a para erguer a si mesmos, outros ou até mesmo equipamentos com suas incríveis habilidades. A maioria parece atraída por um destes dois caminhos: serviço corporativo ou empreendimento criminoso. São muito valorizados para levantar itens pesados e são uma grande vantagem quando o equipamento pesado é escasso, difícil de manobrar ou ainda não chegou.\nLadrões são frequentemente chamados de \"Corredores\" por causa de sua capacidade de, literalmente, correr para cima e para baixo nas paredes. Isso os torna ladrões e espiões experientes que usam seus poderes para entrar em lugares de difícil acesso e roubar bens adquiridos de forma ilícita em locais supostamente seguros. Os poderes do Gravcon se manifestam como ondas de energia gravitacional.\nPerícia Arcana: Foco (Espírito). Começam com 10 Pontos de Poder e os Poderes Iniciais Telecinese e andar nas paredes.\nGERENCIAMENTO DE MASSA: Gravcons tratam sua Força como um tipo de dado maior ao determinar Sobrecarga e Força Mínima. Isso se acumula com outras Vantagens que fazem o mesmo, como Soldado e Musculoso.",
+    "poderes_permitidos": [
+      "andar_nas_paredes",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "barreira",
+      "buraco_negro",
+      "confusao",
+      "deflexao",
+      "devastacao",
+      "enredar",
+      "ferir",
+      "gravidade",
+      "iluminar_obscurecer",
+      "morosidade_velocidade",
+      "protecao",
+      "telecinese",
+      "voar"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano que domina energia gravitacional usando Foco (Espírito), começando com 10 Pontos de Poder e os poderes fixos Telecinese e andar nas paredes. Trata sua Força como um tipo de dado maior para Sobrecarga e Força Mínima, cumulativo com Soldado e Musculoso."
+  },
+  {
+    "id": "mestre_da_gravidade",
+    "nome": "MESTRE DA GRAVIDADE",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_gravcon"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Gravcons são mestres da gravidade e podem aumentar ou diminuir seu campo gravitacional pessoal em um nível em relação ao seu ambiente atual.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Permite aumentar ou diminuir em um nível o próprio campo gravitacional pessoal em relação ao ambiente atual."
+  },
+  {
+    "id": "levantador",
+    "nome": "LEVANTADOR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_gravcon"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "A força do poder telecinese do Gravcon é aumentada para d12+2, ou d12+4 com uma ampliação. Isso permite levantar pesos de até 120 kg (500 kg com uma ampliação). Também ganha os seguintes modificadores para o poder telecinese:\nÁREA (+2/+3): por +2 pontos, o poder afeta tudo dentro de um Modelo Médio de Explosão (alvos sencientes resistem separadamente). Por +3 pontos, a área de efeito é aumentada para um Modelo Grande de Explosão.\nFORTE (+2/nível): o gravcon pode aumentar a Força de sua telecinese em um tipo de dado adicional para cada 2 Pontos de Poder que investir nela. Isso requer concentração intensa e diminui suas habilidades motoras finas, então sofre uma penalidade de -2 em todas as outras ações enquanto o poder estiver ativo. Quando encerrar o poder, deve fazer uma rolagem de Vigor -2. Fracasso significa que está Exausto, Sucesso significa que está Fatigado e, com uma ampliação, não há mais efeitos nocivos.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Eleva a Força da telecinese do Gravcon para d12+2 (d12+4 com ampliação), levantando até 120 kg (500 kg com ampliação), e adiciona os modificadores Área (+2/+3) e Forte (+2/nível, com -2 em outras ações enquanto ativo e teste de Vigor -2 ao encerrar)."
+  },
+  {
+    "id": "antecedente_arcano_mistico",
+    "nome": "ANTECEDENTE ARCANO (Místico)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "MISTICO_ESTELAR",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Místicos combinam conhecimento espiritual e científico, com grande ênfase em uma estranha mistura de astrologia e astronomia. Eles servem como líderes culturais, conselheiros eruditos de imperadores ou eremitas sábios, porém solitários, vivendo em planetas distantes das rotas espaciais. A única coisa que todos têm em comum é a sintonia com a \"música das esferas\", a sinfonia cósmica dos corpos planetários e seu lugar no cosmos maior. O universo fala com eles e informa suas decisões — conselhos que eles transmitem àqueles que empregam seus serviços ou às comunidades que lideram.\nPerícia Arcana: Foco (Espírito). Começam com 10 Pontos de Poder e quaisquer três Poderes Iniciais da lista de Poderes Disponíveis.\nDOTADO: místicos podem escolher Vantagens que exijam Antecedente Arcano (Dom).\nRESSONÂNCIA HARMÔNICA: antes de rolar para ativar um poder, compre uma carta do Baralho de Ação (esta é separada da Carta de Ação da Iniciativa, se estiver em combate). Se for de Ouros, representando as estrelas, a personagem está em ressonância com o universo e adiciona +2 a sua rolagem de Foco. Se for de Paus, está em dissonância e custa um Ponto de Poder adicional (se estiver sem PPs, deve usar a opção Reduzindo).\nORIENTAÇÃO CÓSMICA: místicos ganham uma rerrolagem gratuita ao fazer testes de Conhecimento Acadêmico, Conhecimento Geral, Ocultismo ou Ciência.",
+    "poderes_permitidos": [
+      "adivinhacao",
+      "ajuda",
+      "amigo_das_feras",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "cegar",
+      "confusao",
+      "dadiva_do_guerreiro",
+      "deflexao",
+      "detectar_ocultar_arcano",
+      "dissipar",
+      "empatia",
+      "falar_idioma",
+      "iluminar_obscurecer",
+      "leitura_de_objeto",
+      "medo",
+      "morosidade_velocidade",
+      "protecao",
+      "protecao_arcana",
+      "som_silencio",
+      "sono",
+      "telecinese",
+      "visao_distante",
+      "visao_sombria"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano que combina astrologia e astronomia usando Foco (Espírito), começando com 10 Pontos de Poder e três poderes iniciais à escolha. Antes de ativar um poder compra uma carta do Baralho de Ação (Ressonância Harmônica): Ouros dá +2 em Foco, Paus custa 1 Ponto de Poder extra. Também ganha rerrolagem gratuita em Conhecimento Acadêmico, Conhecimento Geral, Ocultismo ou Ciência (Orientação Cósmica) e pode escolher Vantagens de Antecedente Arcano (Dom)."
+  },
+  {
+    "id": "harmonizado",
+    "nome": "HARMONIZADO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_mistico"
+      ],
+      "observacoes": "O livro não especifica um estágio explícito para esta Vantagem além de exigir o Antecedente Arcano (Místico)."
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O místico está mais sintonizado com os movimentos das esferas celestes do que a maioria. Quando está em Ressonância Harmônica, adiciona +d6 à rolagem em vez de +2. Isso acumula com Convicção!",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Quando em Ressonância Harmônica, o bônus passa de +2 para +d6; acumula com Convicção."
+  },
+  {
+    "id": "sinfonia_celestial",
+    "nome": "SINFONIA CELESTIAL",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_mistico"
+      ],
+      "observacoes": "Pode ser adquirida até quatro vezes, recebendo uma dádiva diferente a cada vez."
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O místico está em harmonia com o universo e pode escolher uma das bênçãos a seguir. É possível fazer isso até quatro vezes, recebendo uma dádiva diferente a cada vez.\nLUA: depois de comprar uma carta para ver se está em ressonância, o místico pode gastar um Ponto de Poder para comprar mais uma carta, que substitui a primeira.\nSOL: o místico ganha os poderes raio, explosão e rajada com uma Manifestação de estrela e fogo.\nESTRELAS: o místico deve receber a bênção do Sol primeiro. Quando raio, explosão ou rajada forem conjurados com uma ampliação, o dano bônus é +2d6 em vez de +1d6.\nPLANETAS: a Resistência do místico aumenta permanentemente em +2.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Escolhe uma entre quatro bênçãos (até quatro vezes, uma diferente por vez): Lua (compra carta extra de ressonância por 1 PP), Sol (ganha raio, explosão e rajada com manifestação estelar/ígnea), Estrelas (requer Sol; ampliações nesses poderes causam +2d6 em vez de +1d6) ou Planetas (+2 de Resistência permanente)."
+  },
+  {
+    "id": "antecedente_arcano_pastor",
+    "nome": "ANTECEDENTE ARCANO (Pastor)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "PASTOR",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Exploradores, colonos e cidadãos precisam de esperança e orientação na vasta extensão do vazio. Entre eles caminham os pastores, indivíduos que guiam e protegem os rebanhos em que vivem. Padres, missionários, evangelistas ou simplesmente líderes silenciosos e reflexivos de suas comunidades. São os primeiros a quem as pessoas desesperadas recorrem e os últimos a recuar diante da opressão. Os pastores recorrem a uma presença de algum tipo — algo maior que eles e, muitas vezes, desconhecida pela ciência e pelas leis da física. Seja essa presença uma divindade real, uma força sempre presente ou algum poder ainda desconhecido do universo, é a crença dos pastores em seu poder — e a crença de seus rebanhos neles — que alimenta suas habilidades. Pastores são líderes natos, então a maioria tem várias Vantagens de Liderança, o que os torna ilhas estoicas no oceano caótico do combate.\nPerícia Arcana: Fé (Espírito). Começam com 10 Pontos de Poder e os Poderes Iniciais Aumentar Característica, cura e mais um outro poder da lista de Poderes Disponíveis.\nMILAGRES: pastores podem adquirir Vantagens que requeiram Antecedente Arcano (Milagres).\nAURA DE CORAGEM: uma aura de fé e esperança envolve o pastor. Aliados dentro de um raio de 10 quadros (20 metros) são inspirados, adicionando +1 às rolagens de Medo e subtraindo 1 dos resultados da Tabela de Medo.\nVOTO: pastores têm uma crença inabalável na fonte de seu poder. Devem fazer um Voto (Maior) de servir à sua causa e seus princípios — quaisquer que sejam. Se falharem em defender esses valores, subtraem 2 de suas rolagens de Fé por uma semana. Sacrilégios podem retirar completamente seus poderes até os expiarem de alguma forma.",
+    "poderes_permitidos": [
+      "adivinhacao",
+      "ajuda",
+      "amigo_das_feras",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "banir",
+      "cegar",
+      "confusao",
+      "cura",
+      "dadiva_do_guerreiro",
+      "deflexao",
+      "detectar_ocultar_arcano",
+      "devastacao",
+      "dissipar",
+      "empatia",
+      "enredar",
+      "falar_idioma",
+      "ferir",
+      "iluminar_obscurecer",
+      "manipulacao_elemental",
+      "morosidade_velocidade",
+      "protecao",
+      "protecao_ambiental",
+      "protecao_arcana",
+      "ressurreicao",
+      "som_silencio",
+      "sono",
+      "videncia",
+      "visao_distante",
+      "visao_sombria"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano de liderança espiritual que usa Fé (Espírito), começando com 10 Pontos de Poder e os poderes Aumentar Característica, cura e mais um à escolha. Aliados a até 10 quadros ganham +1 em rolagens de Medo e -1 na Tabela de Medo (Aura de Coragem), pode adquirir Vantagens de Antecedente Arcano (Milagres) e faz um Voto (Maior) à sua causa."
+  },
+  {
+    "id": "sozinho_contra_os_lobos",
+    "nome": "SOZINHO CONTRA OS LOBOS",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_pastor"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Pastores muitas vezes precisam enfrentar seus inimigos sozinhos, cercados por aliens cruéis, feras selvagens ou inimigos opressivos. A Resistência do pastor é aumentada por qualquer bônus de Agrupar aplicado contra ele. Se três xenos o cercarem e ganharem um bônus de Agrupar de +2, por exemplo, sua Resistência também aumentará em +2.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "A Resistência do pastor aumenta na mesma proporção do bônus de Agrupar que os inimigos ganham contra ele (ex.: +2 de Agrupar dá também +2 de Resistência)."
+  },
+  {
+    "id": "misericordia_pastor",
+    "nome": "MISERICÓRDIA",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_pastor"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Um pastor lidera seu rebanho. Uma palavra de encorajamento, um aceno no momento certo ou o cantarolar de um hino inspirador podem fortalecer os nervos daqueles ao seu lado. Como uma ação, a personagem pode gastar 1 Ponto de Poder e conceder \"Misericórdia\" a uma personagem dentro de uma Distância igual a seu Espírito, removendo automaticamente um dos seguintes estados: Distraído, Vulnerável ou Abalado. Pode remover efeitos de Atordoar por 2 pontos.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Como uma ação, gasta 1 Ponto de Poder para conceder \"Misericórdia\" a alguém dentro de uma Distância igual ao seu Espírito, removendo Distraído, Vulnerável, Abalado, ou 2 pontos de Atordoar."
+  },
+  {
+    "id": "antecedente_arcano_psionista",
+    "nome": "ANTECEDENTE ARCANO (Psionista)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "PSIONISTA",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O futuro guarda muitos segredos. Um deles é liberar o poder da mente e sua capacidade de manipular a potente energia psíquica do cosmos. Psionistas, \"psis\" ou, ainda, psiônicos, são aqueles que aprenderam a explorar essa energia e usá-la para manipular a si mesmos e ao mundo ao seu redor. São capazes de ler mentes, mover objetos ou até mesmo conjurar fogo e gelo da atmosfera.\nPerícia Arcana: Psiônicos (Astúcia). Começam com 10 Pontos de Poder e quaisquer três Poderes Iniciais da lista de Poderes Disponíveis.\nPSIÔNICOS: psionistas podem adquirir Vantagens que requeiram Antecedente Arcano (Psiônicos).",
+    "poderes_permitidos": [
+      "adivinhacao",
+      "ajuda",
+      "amigo_das_feras",
+      "andar_nas_paredes",
+      "aperto_telecinetico",
+      "atordoar",
+      "aumentar_reduzir_caracteristica",
+      "barreira",
+      "cegar",
+      "confusao",
+      "contra_ataque_mental",
+      "cura",
+      "dadiva_do_guerreiro",
+      "deflexao",
+      "detectar_ocultar_arcano",
+      "devastacao",
+      "disfarce",
+      "dissipar",
+      "drenar_pontos_de_poder",
+      "elo_mental",
+      "empatia",
+      "enredar",
+      "explosao",
+      "falar_idioma",
+      "fantoche",
+      "ferir",
+      "ilusao",
+      "invisibilidade",
+      "leitura_de_objeto",
+      "leitura_mental",
+      "limpeza_mental",
+      "medo",
+      "morosidade_velocidade",
+      "protecao",
+      "protecao_arcana",
+      "raio",
+      "rajada",
+      "som_silencio",
+      "sono",
+      "telecinese",
+      "visao_distante"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano psíquico que usa Psiônicos (Astúcia), começando com 10 Pontos de Poder e três poderes iniciais à escolha, entre um vasto leque de poderes mentais e cinéticos (o poder cura só pode ser usado em si mesmo). Pode adquirir Vantagens que exigem Antecedente Arcano (Psiônicos)."
+  },
+  {
+    "id": "escanear_psionista",
+    "nome": "ESCANEAR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_psionista"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O psionista pode sentir todas as mentes sencientes dentro de um raio de 10 quadros (20 metros), quer possa vê-las ou não. Não pode ler estas mentes, mas sim detectar a direção e distância de cada uma e qualquer emoção especialmente forte – raiva, medo, alegria etc. Isso pode ser uma ferramenta útil se deseja identificar um inimigo escondido, detectar a localização de uma vítima presa ou desaparecida, identificar o líder de um grupo ou até mesmo navegar rapidamente na melhor rota através de uma multidão. A varredura dura enquanto o psionista estiver concentrado, mas fica Distraído enquanto estiver ativa.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Enquanto se concentra (ficando Distraído), sente a direção, distância e emoções fortes de todas as mentes sencientes num raio de 10 quadros, sem poder lê-las."
+  },
+  {
+    "id": "torre_de_determinacao_psionista",
+    "nome": "TORRE DE DETERMINAÇÃO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Psiônicos": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_psionista"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Psionistas que treinaram suas mentes para resistir a invasões mentais. Adicionam +4 em qualquer rolagem feita para resistir ou se recuperar de invasões mentais como leitura mental, limpeza mental, fantoche ou habilidades baseadas ou similares. Isso se acumula com todos os outros bônus e penalidades para resistir a tais efeitos.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Soma +4 em qualquer rolagem para resistir ou se recuperar de invasões mentais (leitura mental, limpeza mental, fantoche e similares), cumulativo com outros bônus e penalidades."
+  },
+  {
+    "id": "antecedente_arcano_tecnomante",
+    "nome": "ANTECEDENTE ARCANO (Tecnomante)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "TECNOMANTE",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Tecnomantes desvendaram os segredos do domínio digital e podem controlar as forças da tecnologia conforme sua vontade. Circuitos complexos e linhas de código servem como símbolos arcanos, e o zumbido das máquinas é seu encantamento. Seu poder pode vir de fontes misteriosas, nanorrobôs ou até mesmo de uma afinidade não natural com máquinas. Podem manipular dispositivos eletrônicos, interagir com sistemas de computador e até mesmo remodelar a própria estrutura da realidade virtual.\nPerícia Arcana: Ciência Estranha (Astúcia). Começam com 10 Pontos de Poder e quaisquer dois Poderes Iniciais da lista de Poderes Disponíveis.\nINTERFACE: tecnomantes adicionam +2 as rolagens de Eletrônica e Hackear.",
+    "poderes_permitidos": [
+      "andar_nas_paredes",
+      "aumentar_reduzir_caracteristica",
+      "barreira",
+      "campo_de_dano",
+      "cegar",
+      "confusao",
+      "conjurar_aliado",
+      "controlar_maquina",
+      "criar_item",
+      "curto_circuito",
+      "deflexao",
+      "detectar_ocultar_arcano",
+      "disfarce",
+      "drenar_pontos_de_poder",
+      "enredar",
+      "explosao",
+      "fantasma_na_maquina",
+      "ferir",
+      "iluminar_obscurecer",
+      "ilusao",
+      "invisibilidade",
+      "morosidade_velocidade",
+      "protecao",
+      "raio",
+      "rajada",
+      "sono",
+      "telecinese",
+      "teleporte",
+      "trancar_destrancar",
+      "visao_distante",
+      "voar"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano que manipula tecnologia digital usando Ciência Estranha (Astúcia), começando com 10 Pontos de Poder e dois poderes iniciais à escolha. Soma +2 nas rolagens de Eletrônica e Hackear (Interface)."
+  },
+  {
+    "id": "disjuntor",
+    "nome": "DISJUNTOR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_tecnomante"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aqueles que sabem como fazer dispositivos de alta tecnologia também sabem como quebrá-los. Danos contra um objeto com um valor de Dureza geralmente não podem abrir Ases, mas, para um tecnomante ao usar qualquer poder de dano, sim. Objetos com Armadura Pesada ainda precisam do Modificador de Poder da Arma Pesada para serem afetados.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Quando usa qualquer poder de dano contra um objeto com Dureza, seus dados de dano podem abrir Ases (algo normalmente vedado); objetos com Armadura Pesada ainda exigem o modificador Arma Pesada."
+  },
+  {
+    "id": "drones",
+    "nome": "DRONES",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_tecnomante"
+      ],
+      "observacoes": "Pode ser adquirida até quatro vezes para ganhar drones adicionais."
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O tecnomante tem um ou mais drones que agem como uma extensão de seu próprio corpo. É possível ver através deles, ativar seus poderes através deles como se estivesse lá, e dar a cada drone um dos aprimoramentos listados abaixo. O drone tem Resistência 5 (2), Pequeno e voa com Movimentação 12. Esta Vantagem pode ser adquirida até quatro vezes para ganhar drones adicionais. Se um drone for destruído, ele explode em um Modelo Médio de Explosão, causando 2d6 de dano. O tecnomante pode criar (ou consertar) drones substitutos com peças de reposição (a critério do Mestre) e uma hora de trabalho.\nPLATAFORMA DE TIRO: o drone é equipado com um pequeno blaster e a perícia Atirar d6. O blaster tem Distância 5/10/20, dano 2d6, CdT 3 e ignora Recuo. Possui 50 tiros antes de precisar ser recarregado por uma hora.\nARMA DE CHOQUE: o drone contém uma arma de choque com Distância 5/10/20, tem a perícia Atirar d6 e qualquer um atingido pela arma deve fazer uma rolagem de Vigor (-2 com uma ampliação) ou ficará atordoado. Ele tem 10 tiros antes de precisar recarregar por uma hora.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Concede um drone (Resistência 5(2), Pequeno, Movimentação 12 voando) que serve de extensão do corpo do tecnomante e pode ativar poderes através dele; ao ser destruído explode causando 2d6 de dano. Escolha entre Plataforma de Tiro (blaster 2d6) ou Arma de Choque (atordoa com falha em Vigor); pode ser comprada até quatro vezes para múltiplos drones."
+  },
+  {
+    "id": "antecedente_arcano_transmorfo",
+    "nome": "ANTECEDENTE ARCANO (Transmorfo)",
+    "categoria": "ANTECEDENTE",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {},
+      "vantagens_previas": [],
+      "observacoes": ""
+    },
+    "grupoId": "antecedente_arcano",
+    "subtipoArcano": "TRANSMORFO",
+    "isGrupoSelector": false,
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Transmorfos são seres que usam meios arcanos ou tecnologia poderosa para \"transformar\" sua carne e características, seja reorganizando seus tecidos e ossos ou, talvez, alterando suas próprias moléculas. São altamente valorizados como espiões e infiltradores, tanto por organizações criminosas e autoridades, quanto por agências de espionagem corporativa e contraespionagem.\nPerícia Arcana: Foco (Espírito). Começam com 15 Pontos de Poder e os Poderes Iniciais disfarce e mudança de forma.\nDOTADO: transmorfos podem escolher Vantagens que exijam Antecedente Arcano (Dom).\nFOCO INTERNO: transmorfos manipulam seus próprios corpos, então todos os seus poderes têm a Limitação Pessoal em vez da Distância listada e não podem afetar os outros. Isso não concede o bônus de Limitação para Pessoal.\nREGENERAÇÃO (Lenta): podem fazer uma rolagem de cura natural uma vez por dia.\nObservação: entre os Poderes Disponíveis, o poder morosidade/velocidade só pode ser usado em sua metade \"velocidade\" (mas não \"morosidade\") e o poder ferir considera mãos e pés como armas.",
+    "poderes_permitidos": [
+      "ajuda",
+      "andar_nas_paredes",
+      "aumentar_reduzir_caracteristica",
+      "cura",
+      "disfarce",
+      "ferir",
+      "mudanca_de_forma",
+      "protecao",
+      "protecao_ambiental",
+      "morosidade_velocidade",
+      "visao_distante",
+      "visao_sombria"
+    ],
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Antecedente arcano de infiltração que usa Foco (Espírito), começando com 15 Pontos de Poder e os poderes fixos disfarce e mudança de forma. Todos os seus poderes têm Limitação Pessoal (não afetam outros, sem o bônus de custo correspondente), pode se curar naturalmente uma vez por dia (Regeneração Lenta) e pode escolher Vantagens de Antecedente Arcano (Dom)."
+  },
+  {
+    "id": "gelatinoso",
+    "nome": "GELATINOSO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_transmorfo"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Transmorfos com esta Vantagem aprenderam a manipular seus corpos para uma forma gelatinosa. Não possuem órgãos internos, sofrendo apenas metade do dano causado por quedas ou colisões, e Ataques Localizados não causam dano extra. Transmorfos gelatinosos podem fazer uma rolagem de Atletismo como uma ação para atravessar grades ou grandes aberturas como se fossem Terreno Difícil. Rachaduras pequenas e similares levam 1d6 rodadas para serem atravessadas, deixando a personagem Vulnerável até que se recomponha.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Assume forma gelatinosa: sofre metade do dano de quedas/colisões, ignora dano extra de Ataques Localizados e pode atravessar grades e aberturas grandes (Atletismo, como Terreno Difícil) ou frestas pequenas (1d6 rodadas, Vulnerável até se recompor)."
+  },
+  {
+    "id": "transformar",
+    "nome": "TRANSFORMAR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_transmorfo"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O ser tem a capacidade de manifestar certas habilidades extraídas de características genéticas de outras espécies. Como uma ação limitada, pode mudar parte de sua forma para manifestar uma das seguintes habilidades. A mudança dura até que fique Incapacitado ou escolha outra vantagem:\nCAMUFLAGEM: Furtividade +2, +4 enquanto completamente imóvel.\nGARRAS: Força +d4 de dano.\nLIGEIRO: Movimentação +2, aumenta o dado de corrida em um dado.\nROBUSTO: um segundo resultado Abalado não causa Ferimento.\nALCANCE 1: os braços da personagem crescem ou podem se esticar, concedendo Alcance 1 em ataques corpo a corpo.",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Como ação limitada, manifesta uma entre cinco habilidades genéticas (dura até ficar Incapacitado ou trocar por outra): Camuflagem (+2 Furtividade, +4 se imóvel), Garras (Força+d4 de dano), Ligeiro (Movimentação +2 e corrida maior), Robusto (segundo Abalado não gera Ferimento) ou Alcance 1 (braços que se esticam)."
   }
 ]
