@@ -105,31 +105,46 @@ mesmo cenário compartilham a tag):
 
 ## Índices por livro
 
-> Preenchido pelos agentes de mapeamento. Ao terminar cada um, a linha vira
-> um link + um resumo de 1 linha (contagem de entradas / faltas).
+Todos os 11 índices concluídos. Contagem por status de cada entrada mapeada
+(`[OK]` já existe corretamente no app / `[FALTA]` não existe / `[CONFERIR]`
+existe mas precisa validação linha a linha):
 
-| BookId | Índice | Status |
-|---|---|---|
-| `BASICO` | [`book_index/basico.md`](reports/book_index/basico.md) | em processamento |
-| `FANTASIA` | [`book_index/fantasia.md`](reports/book_index/fantasia.md) | em processamento |
-| `SCIFI` | [`book_index/scifi.md`](reports/book_index/scifi.md) | em processamento |
-| `HORROR` | [`book_index/horror.md`](reports/book_index/horror.md) | em processamento |
-| `SUPERPODERES` | [`book_index/superpoderes.md`](reports/book_index/superpoderes.md) | em processamento |
-| `PATHFINDER_BASICO` / `PATHFINDER_COMPENDIO` | [`book_index/pathfinder.md`](reports/book_index/pathfinder.md) | em processamento |
-| `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | em processamento |
-| `ADG_BASICO` / `ADG_DIARIO_KUI` | [`book_index/adg.md`](reports/book_index/adg.md) | em processamento |
-| `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | em processamento |
-| `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | em processamento |
-| `WISEGUYS` | [`book_index/wiseguys.md`](reports/book_index/wiseguys.md) | em processamento |
+| BookId | Índice | OK | FALTA | CONFERIR |
+|---|---|--:|--:|--:|
+| `BASICO` | [`book_index/basico.md`](reports/book_index/basico.md) | 319 | 1 | 4 |
+| `FANTASIA` | [`book_index/fantasia.md`](reports/book_index/fantasia.md) | 158 | 1 | 7 |
+| `SCIFI` | [`book_index/scifi.md`](reports/book_index/scifi.md) | 122 | **57** | 9 |
+| `HORROR` | [`book_index/horror.md`](reports/book_index/horror.md) | 179 | 7 | 3 |
+| `SUPERPODERES` | [`book_index/superpoderes.md`](reports/book_index/superpoderes.md) | 125 | 3 | 3 |
+| `PATHFINDER_BASICO` / `PATHFINDER_COMPENDIO` | [`book_index/pathfinder.md`](reports/book_index/pathfinder.md) | 67 | 1 | 2 |
+| `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | 88 | **36** | 4 |
+| `ADG_BASICO` / `ADG_DIARIO_KUI` | [`book_index/adg.md`](reports/book_index/adg.md) | 171 | 1 | 0 |
+| `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 83 | **33** | 8 |
+| `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 62 | 14 | 6 |
+| `WISEGUYS` | [`book_index/wiseguys.md`](reports/book_index/wiseguys.md) | 99 | 1 | 0 |
+| **Total** | | **1473** | **155** | **46** |
+
+**Leitura rápida:** o Livro Básico, Fantasia, Arte da Guerra e Wiseguys estão
+praticamente 100% cobertos (0-1 `[FALTA]`, os módulos mais antigos/maduros do
+app). As maiores lacunas de conteúdo real estão em **Sci-Fi (57 faltando)**,
+**Deadlands (36 faltando)** e **Crystal Heart (33 faltando)** — ver o motivo
+resumido em cada arquivo de índice antes de decidir prioridade.
 
 ## Auditoria de hardcode (nome-texto em vez de ID)
 
-Relatórios separados, cobrindo o código Kotlin de domínio:
+Relatórios separados, cobrindo o código Kotlin de domínio (leitura/análise
+apenas, nenhum código foi alterado):
 
-| Relatório | Escopo | Status |
-|---|---|---|
-| [`reports/hardcode_audit_vantagens_complicacoes.md`](reports/hardcode_audit_vantagens_complicacoes.md) | Vantagens, Complicações, Antecedente Arcano (incl. variantes por livro) | em processamento |
-| [`reports/hardcode_audit_atributos_pericias_equipamento_ancestralidade.md`](reports/hardcode_audit_atributos_pericias_equipamento_ancestralidade.md) | Atributos, Perícias, Equipamento, Ancestralidade | em processamento |
+| Relatório | Escopo | Achados |
+|---|---|--:|
+| [`reports/hardcode_audit_vantagens_complicacoes.md`](reports/hardcode_audit_vantagens_complicacoes.md) | Vantagens, Complicações, Antecedente Arcano (incl. variantes por livro) | 39 (21 ALTA, 13 MÉDIA, 5 BAIXA) |
+| [`reports/hardcode_audit_atributos_pericias_equipamento_ancestralidade.md`](reports/hardcode_audit_atributos_pericias_equipamento_ancestralidade.md) | Atributos, Perícias, Equipamento, Ancestralidade | 47 (27 ALTA, 17 MÉDIA, 3 BAIXA) |
+
+**Achado estrutural (não é só um bug de código):** `pericias.json` e
+`equipamentos.json` não têm campo `id` nenhum — só `nome`. Isso significa que
+parte do hardcode nessas duas categorias não pode ser corrigida só trocando
+a comparação no Kotlin; o catálogo JSON precisa ganhar um `id` estável
+primeiro, do mesmo jeito que `vantagens.json`/`complicacoes.json` já têm.
 
 ### Padrão-alvo confirmado (exemplo de referência)
 
@@ -142,6 +157,33 @@ exato que os relatórios de auditoria acima devem catalogar em todo o
 domínio de Vantagens/Complicações/Perícias/Atributos/Equipamento/
 Ancestralidade: qualquer decisão mecânica que hoje lê `nome`/texto livre
 deveria passar a ler `id`.
+
+## Prioridades sugeridas
+
+Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
+
+1. **Terminar migrações "meio feitas"** (mais barato, menor risco): em
+   `ModifierEngine.kt` já existem 4 vantagens comparadas por `id` no mesmo
+   bloco onde 6 outras (Musculoso, Brutamontes, Brigão, Ligeiro, Bloquear,
+   Bloquear Aprimorado) ainda comparam por nome — e o mesmo padrão se repete
+   em `DerivedAttributesCalculator.kt`/`CriadorState.kt` para
+   Profissional/Especialista. Trocar essas linhas não muda nenhum
+   comportamento visível, só remove o risco de quebra silenciosa.
+2. **Investigar o possível bug em `RequirementValidator.kt:28`** (regra de
+   "O Melhor Que Há" comparando chave sem underscore contra constante com
+   underscore — pode nunca bater hoje).
+3. **Dar `id` estável a `pericias.json` e `equipamentos.json`** — pré-requisito
+   estrutural antes de conseguir limpar boa parte do hardcode de
+   Perícias/Equipamento/Ancestralidade (armas naturais, Aparar, Movimentação,
+   Tamanho racial hoje dependem de regex sobre texto livre).
+4. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: Sci-Fi (57),
+   Deadlands (36), Crystal Heart (33), CSV (14), Horror (7).
+5. Só depois, revisar os `[CONFERIR]` (custo/requisito/efeito a bater linha a
+   linha com o livro) — risco menor que os itens acima, mas ainda vale para
+   fechar o ciclo de confiabilidade.
+
+Nenhuma dessas ações foi executada nesta rodada — são só recomendações. Qual
+delas atacar primeiro é decisão sua.
 
 ## Como este documento evolui
 
