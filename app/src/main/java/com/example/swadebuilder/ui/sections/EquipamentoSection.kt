@@ -276,6 +276,7 @@ fun EquipamentoSection(
     tensaoTotal: Int,
     tensaoLimite: Int,
     mechaSlotsTotal: Int,
+    mechaSlotsCapacidade: Int,
     isPersonagemRobotico: Boolean,
     forcaRaw: Int,
     hasMusculoso: Boolean,
@@ -600,11 +601,12 @@ fun EquipamentoSection(
                             color = tensaoColor
                         )
                     }
-                    if (compendioSciFiAtivo && mechaSlotsTotal > 0) {
+                    if (compendioSciFiAtivo && (mechaSlotsTotal > 0 || mechaSlotsCapacidade > 0)) {
+                        val slotsExcedidos = mechaSlotsTotal > mechaSlotsCapacidade
                         Text(
-                            "Slots Mecha/Veículo usados: $mechaSlotsTotal",
+                            "Slots Armadura Energizada: $mechaSlotsTotal/$mechaSlotsCapacidade",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.secondary
+                            color = if (slotsExcedidos) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary
                         )
                     }
                     if (hasSoldado) {

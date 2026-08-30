@@ -78,6 +78,7 @@ import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
 import java.util.UUID
 
 enum class TabStyle { ICONES, TEXTO }
@@ -1612,8 +1613,40 @@ class CriadorState {
         return baseLimit.coerceAtLeast(0) to maxLimit.coerceAtLeast(0)
     }
 
-    fun totalSlotsMecha(): Int =
-        equipamentosComprados.sumOf { (it.mods_slots as? JsonPrimitive)?.content?.toIntOrNull() ?: 0 }
+    // Itens de "base" de Armadura Energizada (Estruturas customizáveis ou Trajes prontos)
+    // trazem armadura/tamanho próprios; Modificadores não têm esses campos. Isso permite
+    // separar "capacidade" (base) de "gasto" (modificadores) dentro da mesma lista plana
+    // de equipamentosComprados, já que o catálogo não guarda a subcategoria por item.
+    private fun equipamentosArmaduraEnergizada(): List<EquipamentoItem> =
+        equipamentosComprados.filter { it.mods_slots != null }
+
+    private fun tamanhoArmaduraEnergizadaBase(): Int =
+        equipamentosArmaduraEnergizada()
+            .filter { it.armadura != null }
+            .sumOf { (it.tamanho as? JsonPrimitive)?.intOrNull ?: 0 }
+
+    private fun EquipamentoItem.slotsResolvidos(tamanhoBase: Int): Int {
+        val prim = mods_slots as? JsonPrimitive ?: return 0
+        prim.intOrNull?.let { return it }
+        val texto = prim.content
+        return when {
+            texto.contains("Metade", ignoreCase = true) -> (tamanhoBase + 1) / 2
+            texto.contains("Tam", ignoreCase = true) -> tamanhoBase
+            else -> 0
+        }
+    }
+
+    fun capacidadeSlotsArmaduraEnergizada(): Int =
+        equipamentosArmaduraEnergizada()
+            .filter { it.armadura != null }
+            .sumOf { (it.mods_slots as? JsonPrimitive)?.intOrNull ?: 0 }
+
+    fun totalSlotsMecha(): Int {
+        val tamanhoBase = tamanhoArmaduraEnergizadaBase()
+        return equipamentosArmaduraEnergizada()
+            .filter { it.armadura == null }
+            .sumOf { it.slotsResolvidos(tamanhoBase) }
+    }
 
     fun isPersonagemRobotico(): Boolean {
         val ancestral = currentAncestryDef

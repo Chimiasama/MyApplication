@@ -1349,6 +1349,7 @@ private fun EquipamentoSection(
         tensaoTotal = state.totalTensaoCibernetica(),
         tensaoLimite = tensaoLimite,
         mechaSlotsTotal = state.totalSlotsMecha(),
+        mechaSlotsCapacidade = state.capacidadeSlotsArmaduraEnergizada(),
         isPersonagemRobotico = isPersonagemRobotico,
         forcaRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4,
         hasMusculoso = hasMusculoso,
