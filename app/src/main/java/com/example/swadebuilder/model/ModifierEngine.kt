@@ -315,20 +315,31 @@ object ModifierEngine {
             if (hasResistencia) {
                 modifiers.add(Modifier("racial_resistencia", SourceType.ANCESTRALIDADE, "Resistência", ModifierTarget.TOUGHNESS_FLAT, 1))
             }
-            if (anc.nome.keyify().contains("TERRACOTA")) {
-                modifiers.add(Modifier("racial_terracota_res", SourceType.ANCESTRALIDADE, "Terracota", ModifierTarget.TOUGHNESS_FLAT, 3))
+            // Antes checava `anc.nome.keyify().contains("TERRACOTA")` — a
+            // habilidade "Metade Construto" do Terracota já tem o id
+            // METADE_CONSTRUTO e é ela quem concede o +3 de Resistência
+            // ("recebem +3 em Resistência"), então o check por id substitui o
+            // nome da raça sem perder nada.
+            val hasMetadeConstruto = anc.habilidades.any { it.id?.keyify() == "METADE_CONSTRUTO" }
+            if (hasMetadeConstruto) {
+                modifiers.add(Modifier("racial_terracota_res", SourceType.ANCESTRALIDADE, "Metade Construto", ModifierTarget.TOUGHNESS_FLAT, 3))
             }
 
             if (hasFerocidade) {
                 modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
             }
 
-            val hasApararBaixo = anc.nome.keyify().contains("DEADERS") || anc.habilidades.any { it.id?.keyify() == "APARAR_BAIXO" } || sources.any { it.keyify() == "APARAR_BAIXO" || it.keyify() == "APARAR BAIXO" }
+            // Antes checava também `anc.nome.keyify().contains("DEADERS")` —
+            // redundante: Deaders (Parasteen) já carrega o id APARAR_BAIXO na
+            // própria habilidade, então o check por id abaixo já cobre a raça
+            // sem precisar saber o nome dela.
+            val hasApararBaixo = anc.habilidades.any { it.id?.keyify() == "APARAR_BAIXO" } || sources.any { it.keyify() == "APARAR_BAIXO" || it.keyify() == "APARAR BAIXO" }
             if (hasApararBaixo) {
                 modifiers.add(Modifier("racial_parry_deaders", SourceType.ANCESTRALIDADE, "Aparar Baixo", ModifierTarget.PARRY, -2))
             }
 
-            val hasMortoVivo = anc.nome.keyify().contains("DEADERS") || anc.habilidades.any { it.id?.keyify() == "MORTO_VIVO" } || sources.any { it.keyify() == "MORTO_VIVO" || it.keyify() == "MORTO VIVO" || it.keyify() == "MORTO-VIVO" }
+            // Mesma redundância: Deaders já carrega o id MORTO_VIVO.
+            val hasMortoVivo = anc.habilidades.any { it.id?.keyify() == "MORTO_VIVO" } || sources.any { it.keyify() == "MORTO_VIVO" || it.keyify() == "MORTO VIVO" || it.keyify() == "MORTO-VIVO" }
             if (hasMortoVivo) {
                 modifiers.add(Modifier("racial_morto_vivo_toughness", SourceType.ANCESTRALIDADE, "Morto-Vivo", ModifierTarget.TOUGHNESS_FLAT, 2))
             }
