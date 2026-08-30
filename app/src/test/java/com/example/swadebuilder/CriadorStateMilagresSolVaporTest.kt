@@ -19,7 +19,8 @@ class CriadorStateMilagresSolVaporTest {
                     nome = "ANTECEDENTE ARCANO (Milagres)",
                     categoria = Categoria.PODER,
                     origem = "SOL_VAPOR",
-                    requisitos = Requisito()
+                    requisitos = Requisito(),
+                    usaPoderesPorEstagio = true
                 )
             )
         }
@@ -38,7 +39,8 @@ class CriadorStateMilagresSolVaporTest {
                     nome = "ANTECEDENTE ARCANO (Milagres)",
                     categoria = Categoria.PODER,
                     origem = "CIDADE_SOL_VAPOR",
-                    requisitos = Requisito()
+                    requisitos = Requisito(),
+                    usaPoderesPorEstagio = true
                 )
             )
         }
@@ -56,7 +58,8 @@ class CriadorStateMilagresSolVaporTest {
                     nome = "ANTECEDENTE ARCANO (Milagres)",
                     categoria = Categoria.PODER,
                     origem = "SOL_VAPOR",
-                    requisitos = Requisito()
+                    requisitos = Requisito(),
+                    usaPoderesPorEstagio = true
                 )
             )
         }

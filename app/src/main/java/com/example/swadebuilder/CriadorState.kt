@@ -3877,38 +3877,34 @@ class CriadorState {
         return listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
     }
 
-    private fun Vantagem.isStageBasedArcanoVariant(key: String): Boolean {
-        val normalizedKey = key.normAAKey()
-        val origin = canonicalOriginKey(origem)
+    /**
+     * "Antecedente Arcano por estágio" (Cidade do Sol a Vapor): a Vantagem
+     * usa ArcaneConfig.getStageBasedPowersByStage em vez do sistema normal
+     * de PP/slots. `usaPoderesPorEstagio` (vantagens.json) já carrega isso
+     * por Vantagem — antes era um `when` fixo enumerando id por chave
+     * (FEITICEIRO -> aa_magia_negra/aa_magia_das_trevas, DEMONIO ->
+     * aa_demonio, MILAGRES -> aa_milagres/antecedente_arcano_milagres).
+     * Só a exceção do Demônio de Cidade do Sol a Vapor continua em código,
+     * porque depende da ancestralidade do PERSONAGEM, não da Vantagem —
+     * não tem como isso ser um campo estático do catálogo.
+     */
+    private fun Vantagem.isStageBasedArcanoVariant(): Boolean {
+        if (!usaPoderesPorEstagio) return false
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
-        return when (normalizedKey) {
-            "FEITICEIRO" -> id == "aa_magia_negra" || id == "aa_magia_das_trevas"
-            "DEMONIO" -> id == "aa_demonio" && !isCidadeSolVaporDemonAncestry
-            "MILAGRES" -> {
-                id == "aa_milagres" ||
-                    (id == "antecedente_arcano_milagres" && origin == "CIDADE_SOL_VAPOR")
-            }
-            else -> false
-        }
+        if (id == "aa_demonio" && isCidadeSolVaporDemonAncestry) return false
+        return true
     }
 
     fun usaPoderesDisponiveisPorEstagio(arcKey: String): Boolean {
         val key = arcKey.normAAKey()
         return vantagensSelecionadas.any { vantagem ->
-            vantagem.toArcanoKey()?.normAAKey() == key && vantagem.isStageBasedArcanoVariant(key)
+            vantagem.toArcanoKey()?.normAAKey() == key && vantagem.isStageBasedArcanoVariant()
         }
     }
 
     fun bloqueiaNovosPoderesPorAntecedente(): Boolean =
-        vantagensSelecionadas.any {
-            when (it.toArcanoKey()?.normAAKey()) {
-                "FEITICEIRO" -> usaPoderesDisponiveisPorEstagio("FEITICEIRO")
-                "DEMONIO" -> usaPoderesDisponiveisPorEstagio("DEMONIO")
-                "MILAGRES" -> usaPoderesDisponiveisPorEstagio("MILAGRES")
-                else -> false
-            }
-        }
+        vantagensSelecionadas.any { it.isStageBasedArcanoVariant() }
 
     fun estagioAtinge(estagioNome: String): Boolean {
         val atualIdx = listaDeEstagios.indexOf(estagioAtual())

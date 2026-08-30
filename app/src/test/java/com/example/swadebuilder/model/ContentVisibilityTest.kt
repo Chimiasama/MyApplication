@@ -176,10 +176,11 @@ class ContentVisibilityTest {
                     origem = "SOL_VAPOR",
                     requisitos = Requisito(),
                     // "Magia Negra" é nome de sabor (Sol & Vapor) pro AA
-                    // Feiticeiro — vantagens.json carrega subtipoArcano
-                    // pronto, este teste replica isso manualmente por não
-                    // passar pelo catálogo real.
-                    subtipoArcano = "FEITICEIRO"
+                    // Feiticeiro — vantagens.json carrega subtipoArcano e
+                    // usaPoderesPorEstagio prontos, este teste replica isso
+                    // manualmente por não passar pelo catálogo real.
+                    subtipoArcano = "FEITICEIRO",
+                    usaPoderesPorEstagio = true
                 )
             )
         }
@@ -205,7 +206,8 @@ class ContentVisibilityTest {
                     nome = "ANTECEDENTE ARCANO (Demônio)",
                     categoria = Categoria.PODER,
                     origem = "SOL_VAPOR",
-                    requisitos = Requisito()
+                    requisitos = Requisito(),
+                    usaPoderesPorEstagio = true
                 )
             )
         }
@@ -231,7 +233,8 @@ class ContentVisibilityTest {
                     nome = "ANTECEDENTE ARCANO (Milagres)",
                     categoria = Categoria.PODER,
                     origem = "SOL_VAPOR",
-                    requisitos = Requisito()
+                    requisitos = Requisito(),
+                    usaPoderesPorEstagio = true
                 )
             )
         }

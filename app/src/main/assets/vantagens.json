@@ -25106,7 +25106,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede acesso a poderes arcanos concedidos por uma entidade divina, seguindo as regras gerais de Antecedente Arcano para esse tipo de origem."
+    "descricaoLite": "Concede acesso a poderes arcanos concedidos por uma entidade divina, seguindo as regras gerais de Antecedente Arcano para esse tipo de origem.",
+    "usaPoderesPorEstagio": true
   },
   {
     "id": "antecedente_arcano_ciencia_estranha",
@@ -27823,7 +27824,8 @@
       "CIDADE_SOL_VAPOR"
     ],
     "descricaoLite": "Concede a perícia Conjurar (Astúcia), os poderes iniciais Disfarce Demoníaco mais outros 3 à escolha, e 10 Pontos de Poder iniciais; demônios têm acesso a poderes exclusivos, indisponíveis para humanos.",
-    "subtipoArcano": "DEMONIO"
+    "subtipoArcano": "DEMONIO",
+    "usaPoderesPorEstagio": true
   },
   {
     "id": "aa_anjo",
@@ -27915,7 +27917,8 @@
       "CIDADE_SOL_VAPOR"
     ],
     "descricaoLite": "Concede a perícia Ocultismo (Astúcia); os poderes exigem um ritual de sacrifício humano (30 minutos mais 5 minutos por vítima), cada sacrifício rendendo 10 Pontos de Poder distribuíveis, com uma rolagem de Ocultismo por poder ativado (falha crítica afeta o próprio feiticeiro). É possível manter até três feitiços prontos sem penalidade; manter mais exige uma rolagem de Ocultismo a cada seis horas com -2 por feitiço extra, sob risco de perdê-los (ou descarregá-los sobre si em Falha Crítica). Benes não restauram PP diretamente, mas podem ser gastos para obter +5 PP de um sacrifício, e o feiticeiro já tem acesso a todos os poderes do seu Estágio.",
-    "subtipoArcano": "FEITICEIRO"
+    "subtipoArcano": "FEITICEIRO",
+    "usaPoderesPorEstagio": true
   },
   {
     "id": "irmao_da_noite",
@@ -27960,7 +27963,8 @@
       "CIDADE_SOL_VAPOR"
     ],
     "descricaoLite": "Vantagem de Antecedente Arcano que usa Fé (Espírito) e dá acesso aos poderes de milagre disponíveis para o Estágio do personagem, mas os Pontos de Poder não se recuperam sozinhos. Para conseguir PP o personagem sofre até três níveis de Fadiga (5 PP cada, curáveis apenas naturalmente), perde os PP não gastos ao descansar e sofre penalidades ou perda de poderes se violar o código religioso.",
-    "subtipoArcano": "MILAGRES"
+    "subtipoArcano": "MILAGRES",
+    "usaPoderesPorEstagio": true
   },
   {
     "id": "guerreiro_do_senhor",
@@ -28215,7 +28219,8 @@
       "CIDADE_SOL_VAPOR"
     ],
     "descricaoLite": "Vantagem de Antecedente Arcano que usa Ocultismo (Astúcia) e dá acesso a qualquer poder de feiticeiro disponível para o Estágio do personagem. Cada feitiço exige um ritual com sacrifício humano (meia hora mais cinco minutos por vítima) que gera 10 Pontos de Poder por sacrifício e uma rolagem de Ocultismo por poder ativado (falha crítica volta o efeito contra o feiticeiro); é possível guardar até três feitiços sem penalidade, exigindo nova rolagem de Ocultismo a cada seis horas (com -2 acumulativo por feitiço extra) para manter os demais.",
-    "subtipoArcano": "FEITICEIRO"
+    "subtipoArcano": "FEITICEIRO",
+    "usaPoderesPorEstagio": true
   },
   {
     "id": "aa_milagres",
@@ -28227,7 +28232,8 @@
       "CIDADE_SOL_VAPOR"
     ],
     "descricaoLite": "Vantagem de Antecedente Arcano que usa Fé (Espírito) e dá acesso aos poderes de milagre disponíveis para o Estágio do personagem, mas os Pontos de Poder não se recuperam sozinhos. Para conseguir PP o personagem sofre até três níveis de Fadiga (5 PP cada, curáveis apenas naturalmente), perde os PP não gastos ao descansar e sofre penalidades ou perda de poderes se violar o código religioso.",
-    "subtipoArcano": "MILAGRES"
+    "subtipoArcano": "MILAGRES",
+    "usaPoderesPorEstagio": true
   },
   {
     "id": "aa_tecnomagia",
