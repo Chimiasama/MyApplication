@@ -116,6 +116,21 @@ class CriadorState {
     private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val validateSelectionUseCase = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase()
     private val resolveAncestryVariantUseCase = ResolveAncestryVariantUseCase()
+    private val resolveAncestryVariantPackageUseCase = com.example.swadebuilder.model.usecase.ResolveAncestryVariantPackageUseCase()
+
+    /**
+     * Mesmo conjunto de ids de ResolveAncestrySpecificAdjustmentsUseCase
+     * (scifiVariantDrivenKeys) — raças cuja Variante Sci-Fi já está no
+     * AncestryVariantRegistry, usado aqui em applyAncestryVariantAdjustments
+     * pra montar as habilidades[] de exibição/ModifierEngine a partir do
+     * mesmo pacote, em vez de duplicar os dados em blocos por raça.
+     */
+    private val scifiVariantDrivenKeys = setOf(
+        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
+        "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
+        "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
+        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS"
+    )
 
     // --- Game Data Properties (Replaces Globals) ---
     var listaAtributos by mutableStateOf<List<String>>(emptyList())
@@ -819,106 +834,47 @@ class CriadorState {
             }
         }
 
-        if (key == "AQUARIANOS" && variant.equals("Semi-aquáticos", ignoreCase = true)) {
-            removeByIdOrName("AQUATICO", "AQUATICO")
-            removeByIdOrName("RESISTENCIA", "RESISTENCIA")
-
-            if (newHabilidades.none { it.id == "SEMIAQUATICO" || it.nome.keyify() == "SEMIAQUATICO" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Semiaquático",
-                        descricao = "Podem respirar na água e no ar. Seus deslocamentos na água usam a Movimentação normal.",
-                        id = "SEMIAQUATICO",
-                        category = "racial_trait_positive"
-                    )
+        // Aquarianos, Elfos, Rakashanos, Avianos, Centaux, Soldados Genéticos,
+        // Mineradores Genéticos e Ferais: as adições/remoções de habilidade
+        // por Variante vinham hardcoded aqui, duplicando (e às vezes
+        // divergindo — ex.: Avianos "Habitante de Gravidade Baixa" aqui vs
+        // "HABITANTE DE GRAVIDADE ZERO/BAIXA" em
+        // ResolveAncestrySpecificAdjustmentsUseCase) os mesmos dados já
+        // cadastrados no AncestryVariantRegistry. Lidas direto do registro
+        // agora — fonte única, sem risco de as duas cópias saírem do
+        // sincronismo de novo.
+        if (key in scifiVariantDrivenKeys) {
+            val opcoes = AncestryVariantRegistry.get(key)?.grupoVariante?.opcoes
+            if (opcoes != null) {
+                val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id
+                    ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
+                val pack = resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = key,
+                    variantOptionId = variantOptionId,
+                    selectionAnswers = emptyList()
                 )
-            }
 
-            if (newHabilidades.none { it.id == "TOQUE_VENENOSO" || it.nome.keyify() == "TOQUE VENENOSO" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Toque Venenoso",
-                        descricao = "Possuem secreções urticantes ou venenosas para contato próximo.",
-                        id = "TOQUE_VENENOSO",
-                        category = "racial_trait_positive"
-                    )
-                )
-            }
+                pack.tracosParaRemoverPorNome.forEach { nome -> removeByIdOrName(nome, nome) }
 
+                fun addIfAbsent(texto: String, category: String) {
+                    val id = texto.uppercase().semAcentos().replace(Regex("[^A-Z0-9]+"), "_").trim('_')
+                    if (newHabilidades.none { it.id == id || it.nome.keyify() == texto.keyify() }) {
+                        val severidade = Regex("""\((Maior|Menor)\)$""").find(texto)?.groupValues?.get(1)
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = texto,
+                                descricao = "",
+                                id = id,
+                                category = category,
+                                severity = if (category == "racial_hindrance") severidade else null
+                            )
+                        )
+                    }
+                }
 
-        }
-
-        if (key == "ELFOS" && variant.equals("Comunitário", ignoreCase = true)) {
-            removeByIdOrName("DESASTRADO", "DESASTRADO")
-
-            if (newHabilidades.none { it.id == "COMUNITARIO" || it.nome.keyify() == "COMUNITARIO" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Comunitário",
-                        descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m).",
-                        id = "COMUNITARIO",
-                        category = "racial_trait_positive"
-                    )
-                )
-            }
-        }
-
-        if (key == "RAKASHANOS" && variant.equals("Brincalhão", ignoreCase = true)) {
-            removeByIdOrName("SANGUINARIO", "SANGUINARIO")
-            if (newHabilidades.none { it.id == "CURIOSO" || it.nome.keyify() == "CURIOSO" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Curioso",
-                        descricao = "Sua natureza exploratória e brincalhona faz com que se metam onde não são chamados.",
-                        id = "CURIOSO",
-                        category = "racial_hindrance",
-                        severity = "Maior"
-                    )
-                )
-            }
-        }
-
-        if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
-            removeByIdOrName("FRAGIL", "FRAGIL")
-            removeByIdOrName("NAO_SABE_NADAR", "NAO SABE NADAR")
-
-            if (newHabilidades.none { it.id == "HABITANTE_DE_GRAVIDADE_BAIXA" || it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Habitante de Gravidade Baixa",
-                        descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado.",
-                        id = "HABITANTE_DE_GRAVIDADE_BAIXA",
-                        category = "racial_trait_negative"
-                    )
-                )
-            }
-
-            if (newHabilidades.none { it.id == "FORMA_ALIENIGENA" || it.nome.keyify() == "FORMA ALIENIGENA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Forma Alienígena",
-                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade.",
-                        id = "FORMA_ALIENIGENA",
-                        category = "racial_trait_negative"
-                    )
-                )
-            }
-        }
-
-        if (key == "CENTAUX" && variant.equals("Gazela", ignoreCase = true)) {
-            removeByIdOrName("GRANDE", "GRANDE")
-            removeByIdOrName("TAMANHO_MAIS_2", "TAMANHO +2")
-            removeByIdOrName("MOVIMENTACAO_2", "MOVIMENTACAO +2")
-
-            if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +4" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "MOVIMENTAÇÃO +4",
-                        descricao = "Gazelas são extremamente rápidas. +4 em Movimentação e d10 no dado de corrida.",
-                        id = "MOVIMENTACAO",
-                        category = "racial_trait_positive"
-                    )
-                )
+                pack.tracosParaAdicionar.forEach { addIfAbsent(it, "racial_trait_positive") }
+                pack.vantagensGratisParaAdicionar.forEach { addIfAbsent(it, "racial_edge") }
+                pack.desvantagensParaAdicionar.forEach { addIfAbsent(it, "racial_hindrance") }
             }
         }
 
@@ -946,22 +902,6 @@ class CriadorState {
                             id = "FORASTEIRO",
                             category = "racial_hindrance",
                             severity = "Maior"
-                        )
-                    )
-                }
-            }
-        }
-
-        if (key.contains("SOLDADOS GENETICOS") || key.contains("SOLDADO GENETICO")) {
-            if (variant.equals("Fuzileiro Zero G", ignoreCase = true)) {
-                removeByIdOrName("NERVOS_DE_ACO", "NERVOS DE AÇO")
-                if (newHabilidades.none { it.id == "adaptacao_gravitacional" || it.nome.keyify() == "ADAPTACAO GRAVITACIONAL" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Adaptação Gravitacional",
-                            descricao = "Ignora a penalidade de -2 para Agilidade e perícias baseadas em Agilidade ao agir em gravidade diferente da sua.",
-                            id = "adaptacao_gravitacional",
-                            category = "racial_edge"
                         )
                     )
                 }
@@ -996,19 +936,6 @@ class CriadorState {
                     )
                 }
             }
-        }
-
-        // Mineradores Genéticos "Zero G": a variante Padrão tem "FORTE" (Força d6)
-        // fixo no JSON; a variante Zero G não deveria ter esse bônus. Remove aqui
-        // em vez de resetar a base em Kotlin por nome de raça.
-        if (key.contains("MINERADOR") && key.contains("GENETICO") && variant.equals("Zero G", ignoreCase = true)) {
-            removeByIdOrName("FORTE", "FORTE")
-        }
-
-        // Ferais (Sci-Fi): "ESPIRITUOSO" (Espírito d6) é fixo no JSON da raça, mas
-        // só vale para a variante Padrão.
-        if (key == "FERAIS" && variant.equals("Menor", ignoreCase = true)) {
-            removeByIdOrName("ESPIRITUOSO", "ESPIRITUOSO")
         }
 
         return base.copy(habilidades = newHabilidades)

@@ -184,7 +184,11 @@ object RacialCaracteristicasResolver {
             .forEach { linhas += "Vantagem racial: ${it.toFancyTitleCase()}" }
 
         desvantagensEfetivas(desvantagens, habilidades).forEach { entrada ->
-            val match = Regex("""^(.*?)\s*\(([^)]+)\)$""").find(entrada)
+            // Só "(Maior)"/"(Menor)" é severidade — outros parênteses no nome
+            // da complicação (ex.: "Sentidos Aguçados (Olhos de Águia)") são
+            // parte do nome, não devem virar "Complicação racial olhos de
+            // águia: ...".
+            val match = Regex("""^(.*?)\s*\((Maior|Menor)\)$""").find(entrada)
             if (match != null) {
                 val (nome, severidade) = match.destructured
                 linhas += "Complicação racial ${severidade.lowercase()}: ${nome.toFancyTitleCase()}"
