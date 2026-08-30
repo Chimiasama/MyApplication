@@ -174,7 +174,12 @@ class ContentVisibilityTest {
                     nome = "ANTECEDENTE ARCANO (Magia Negra)",
                     categoria = Categoria.PODER,
                     origem = "SOL_VAPOR",
-                    requisitos = Requisito()
+                    requisitos = Requisito(),
+                    // "Magia Negra" é nome de sabor (Sol & Vapor) pro AA
+                    // Feiticeiro — vantagens.json carrega subtipoArcano
+                    // pronto, este teste replica isso manualmente por não
+                    // passar pelo catálogo real.
+                    subtipoArcano = "FEITICEIRO"
                 )
             )
         }

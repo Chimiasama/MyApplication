@@ -813,7 +813,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Permite que a personagem conjure seus poderes de forma a afetar grandes unidades de Extras, como tropas ou grupos de inimigos."
+    "descricaoLite": "Permite que a personagem conjure seus poderes de forma a afetar grandes unidades de Extras, como tropas ou grupos de inimigos.",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "mago_de_sangue",
@@ -835,7 +836,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Sempre que a personagem causar diretamente (com poderes, mãos ou armas) um Ferimento não Absorvido em um ser consciente, recupera d6 Pontos de Poder; dano causado indiretamente, por aliados ou lacaios controlados, não conta."
+    "descricaoLite": "Sempre que a personagem causar diretamente (com poderes, mãos ou armas) um Ferimento não Absorvido em um ser consciente, recupera d6 Pontos de Poder; dano causado indiretamente, por aliados ou lacaios controlados, não conta.",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "poder_favorito",
@@ -877,7 +879,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Concede 10 Pontos de Poder dedicados, que recarregam normalmente, e acesso a um conjunto fixo de poderes ligado a uma trilha escolhida (guerreira, ladina, mística etc.), cada uma exigindo um atributo ou perícia mínimo; como ação livre limitada, ativa automaticamente um desses poderes com sucesso, ou com ampliação gastando 2 PP extras. Não dá acesso a vantagens que exigem Antecedente Arcano, e suas habilidades não podem ser combinadas com as de um Antecedente Arcano que a personagem já possua."
+    "descricaoLite": "Concede 10 Pontos de Poder dedicados, que recarregam normalmente, e acesso a um conjunto fixo de poderes ligado a uma trilha escolhida (guerreira, ladina, mística etc.), cada uma exigindo um atributo ou perícia mínimo; como ação livre limitada, ativa automaticamente um desses poderes com sucesso, ou com ampliação gastando 2 PP extras. Não dá acesso a vantagens que exigem Antecedente Arcano, e suas habilidades não podem ser combinadas com as de um Antecedente Arcano que a personagem já possua.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "transferencia",
@@ -1639,7 +1642,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Das 0h à 1h, elimina o risco de Falha Crítica e oferece uma tentativa gratuita de Absorção a cada ferimento sofrido."
+    "descricaoLite": "Das 0h à 1h, elimina o risco de Falha Crítica e oferece uma tentativa gratuita de Absorção a cada ferimento sofrido.",
+    "subtipoArcano": "BRUXA"
   },
   {
     "id": "mau_olhado",
@@ -6199,7 +6203,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Concede acesso a um pacote fixo de poderes, à escolha entre Arauto (adivinhação, aumentar/reduzir característica, cura, vidência) ou Morte (aumentar característica só em si mesmo, deflexão, ferir, proteção só em si mesmo)."
+    "descricaoLite": "Concede acesso a um pacote fixo de poderes, à escolha entre Arauto (adivinhação, aumentar/reduzir característica, cura, vidência) ou Morte (aumentar característica só em si mesmo, deflexão, ferir, proteção só em si mesmo).",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "asas_demonio",
@@ -6219,7 +6224,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Asas retráteis dão ao demônio Movimentação 12 em voo; uma segunda aquisição da vantagem eleva isso para 24, e uma terceira, para 48."
+    "descricaoLite": "Asas retráteis dão ao demônio Movimentação 12 em voo; uma segunda aquisição da vantagem eleva isso para 24, e uma terceira, para 48.",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "couro_blindado",
@@ -6259,7 +6265,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Armas não mágicas causam apenas metade do dano (arredondado para cima) ao ser demoníaco, com exceção das feitas de ferro frio."
+    "descricaoLite": "Armas não mágicas causam apenas metade do dano (arredondado para cima) ao ser demoníaco, com exceção das feitas de ferro frio.",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "fogo_infernal",
@@ -6301,7 +6308,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "O Fogo Infernal do demônio sobe para 2d6 de dano, liberando ainda o uso irrestrito do Modelo de Cone (ou Raio)."
+    "descricaoLite": "O Fogo Infernal do demônio sobe para 2d6 de dano, liberando ainda o uso irrestrito do Modelo de Cone (ou Raio).",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "garras_demonio",
@@ -6321,7 +6329,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Garras retráteis causam For+d4 de dano ao demônio e somam +2 em Atletismo para escalar; adquirida pela segunda vez, o dano das garras sobe para For+d6 com PA 2."
+    "descricaoLite": "Garras retráteis causam For+d4 de dano ao demônio e somam +2 em Atletismo para escalar; adquirida pela segunda vez, o dano das garras sobe para For+d6 com PA 2.",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "sentido_sobrenatural_demonio",
@@ -6403,7 +6412,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Concede presas que causam For+d6 de dano, usáveis contra alvos agarrados; adquirida novamente, ganham PA 2."
+    "descricaoLite": "Concede presas que causam For+d6 de dano, usáveis contra alvos agarrados; adquirida novamente, ganham PA 2.",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "poderes_misticos_demonio",
@@ -6423,7 +6433,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Concede acesso a um pacote fixo de poderes, à escolha entre quatro: Invocador (conjurar aliado, conjurar demônio, proteção, zumbi), Possessor (aumentar/reduzir característica, fantoche, maldição, pesadelos), Sedutor (aumentar/reduzir característica, disfarce, empatia, leitura de mente) ou Trapaceiro (disfarce, deflexão só em si mesmo, horrores ilusórios, medo)."
+    "descricaoLite": "Concede acesso a um pacote fixo de poderes, à escolha entre quatro: Invocador (conjurar aliado, conjurar demônio, proteção, zumbi), Possessor (aumentar/reduzir característica, fantoche, maldição, pesadelos), Sedutor (aumentar/reduzir característica, disfarce, empatia, leitura de mente) ou Trapaceiro (disfarce, deflexão só em si mesmo, horrores ilusórios, medo).",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "invisibilidade_fantasma",
@@ -6465,7 +6476,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Concede acesso a um pacote fixo de poderes espirituais, à escolha entre Aparição (atordoar, cegar, luz/escuridão, morosidade), Poltergeist (devastação, horrores ilusórios, som/silêncio, telecinese) ou Sombra (confusão, fantoche, manipulação elemental, medo)."
+    "descricaoLite": "Concede acesso a um pacote fixo de poderes espirituais, à escolha entre Aparição (atordoar, cegar, luz/escuridão, morosidade), Poltergeist (devastação, horrores ilusórios, som/silêncio, telecinese) ou Sombra (confusão, fantoche, manipulação elemental, medo).",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "rugir_fantasma",
@@ -6878,7 +6890,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Escolhendo entre dois pacotes de poderes místicos ou divinos, a múmia se torna Arquiteto (barreira, detectar/ocultar arcano, telecinese, trancar/destrancar) ou Régio (explosão, rajada, rancor)."
+    "descricaoLite": "Escolhendo entre dois pacotes de poderes místicos ou divinos, a múmia se torna Arquiteto (barreira, detectar/ocultar arcano, telecinese, trancar/destrancar) ou Régio (explosão, rajada, rancor).",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "regeneracao_lenta_mumia",
@@ -7437,7 +7450,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Durante a hora entre meia-noite e uma da manhã, o personagem fica imune a Falhas Críticas (suas falhas contam como normais) e, ao sofrer um Ferimento, pode fazer uma rolagem de Absorção sem custo."
+    "descricaoLite": "Durante a hora entre meia-noite e uma da manhã, o personagem fica imune a Falhas Críticas (suas falhas contam como normais) e, ao sofrer um Ferimento, pode fazer uma rolagem de Absorção sem custo.",
+    "subtipoArcano": "BRUXA"
   },
   {
     "id": "poder_sombrio",
@@ -10206,7 +10220,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "mentalista",
@@ -13309,7 +13324,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "mentalista",
@@ -14675,7 +14691,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Concede um conjunto fixo de poderes conforme o tipo escolhido, com 10 Pontos de Poder que recarregam normalmente e ativação automática por sucesso como ação livre limitada (ou com ampliação gastando mais 2 Pontos de Poder), sem dar acesso a Vantagens que exigem Antecedente Arcano, exceto Pontos de Poder e Drenar Alma. O tipo Guerreiro Estelar (Lutar d8+) usa Aumentar Característica (Lutar, Força ou Vigor), Deflexão, Devastação, Proteção e Telecinese; o tipo Telepata (Astúcia d8+) usa Ajuda, Atordoar, Confusão, Empatia e Leitura Mental."
+    "descricaoLite": "Concede um conjunto fixo de poderes conforme o tipo escolhido, com 10 Pontos de Poder que recarregam normalmente e ativação automática por sucesso como ação livre limitada (ou com ampliação gastando mais 2 Pontos de Poder), sem dar acesso a Vantagens que exigem Antecedente Arcano, exceto Pontos de Poder e Drenar Alma. O tipo Guerreiro Estelar (Lutar d8+) usa Aumentar Característica (Lutar, Força ou Vigor), Deflexão, Devastação, Proteção e Telecinese; o tipo Telepata (Astúcia d8+) usa Ajuda, Atordoar, Confusão, Empatia e Leitura Mental.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "adaptacao_atmosferica",
@@ -24414,7 +24431,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Escolha um tipo de criatura (demônio, oni ou shamni): ganha +2 em Sobrevivência para rastreá-la ou caçá-la, +1 em Jutsu, Atletismo (arremesso) ou Atirar e no dano contra ela, e +1 em Ocultismo para obter informações sobre o tipo. Se já enfrentou um exemplar específico como Carta Selvagem, o bônus também vale para Perceber e para o Aparar contra ele. Pode ser escolhida várias vezes para tipos diferentes."
+    "descricaoLite": "Escolha um tipo de criatura (demônio, oni ou shamni): ganha +2 em Sobrevivência para rastreá-la ou caçá-la, +1 em Jutsu, Atletismo (arremesso) ou Atirar e no dano contra ela, e +1 em Ocultismo para obter informações sobre o tipo. Se já enfrentou um exemplar específico como Carta Selvagem, o bônus também vale para Perceber e para o Aparar contra ele. Pode ser escolhida várias vezes para tipos diferentes.",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "detetive",
@@ -27804,7 +27822,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede a perícia Conjurar (Astúcia), os poderes iniciais Disfarce Demoníaco mais outros 3 à escolha, e 10 Pontos de Poder iniciais; demônios têm acesso a poderes exclusivos, indisponíveis para humanos."
+    "descricaoLite": "Concede a perícia Conjurar (Astúcia), os poderes iniciais Disfarce Demoníaco mais outros 3 à escolha, e 10 Pontos de Poder iniciais; demônios têm acesso a poderes exclusivos, indisponíveis para humanos.",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "aa_anjo",
@@ -27815,7 +27834,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede a habilidade Fé (Espírito), 2 poderes iniciais e 15 Pontos de Poder iniciais; o conjunto de poderes é igual ao dos abençoados, mas anjos podem usar até poderes que normalmente exigiriam as vantagens Guerreiro do Senhor ou Ira do Senhor. Não pode ser escolhida junto com Guerreiro Celestial."
+    "descricaoLite": "Concede a habilidade Fé (Espírito), 2 poderes iniciais e 15 Pontos de Poder iniciais; o conjunto de poderes é igual ao dos abençoados, mas anjos podem usar até poderes que normalmente exigiriam as vantagens Guerreiro do Senhor ou Ira do Senhor. Não pode ser escolhida junto com Guerreiro Celestial.",
+    "subtipoArcano": "ANJO"
   },
   {
     "id": "anjo_cinza",
@@ -27848,7 +27868,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede a perícia Tecnomagia (Astúcia), os poderes iniciais Detectar Arcano e mais 2 à escolha, e Pontos de Poder especiais; permite gastar um Bene para recuperar 5 PP, mas impede o uso dos Modificadores Seletivo e Mortalha (Apressar/Atrasar só valem em poderes com a Limitação Ressonância), com uma lista própria de poderes disponíveis."
+    "descricaoLite": "Concede a perícia Tecnomagia (Astúcia), os poderes iniciais Detectar Arcano e mais 2 à escolha, e Pontos de Poder especiais; permite gastar um Bene para recuperar 5 PP, mas impede o uso dos Modificadores Seletivo e Mortalha (Apressar/Atrasar só valem em poderes com a Limitação Ressonância), com uma lista própria de poderes disponíveis.",
+    "subtipoArcano": "TECNOMAGIA"
   },
   {
     "id": "magomecanico",
@@ -27859,7 +27880,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Permite usar a perícia Tecnomagia no lugar de Consertar (aplicando os modificadores de nível do emissor) para reparar objetos, inclusive os normalmente irreparáveis; processar matéria dessa forma custa 1 PP e 10 minutos."
+    "descricaoLite": "Permite usar a perícia Tecnomagia no lugar de Consertar (aplicando os modificadores de nível do emissor) para reparar objetos, inclusive os normalmente irreparáveis; processar matéria dessa forma custa 1 PP e 10 minutos.",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "molda_carne",
@@ -27892,7 +27914,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede a perícia Ocultismo (Astúcia); os poderes exigem um ritual de sacrifício humano (30 minutos mais 5 minutos por vítima), cada sacrifício rendendo 10 Pontos de Poder distribuíveis, com uma rolagem de Ocultismo por poder ativado (falha crítica afeta o próprio feiticeiro). É possível manter até três feitiços prontos sem penalidade; manter mais exige uma rolagem de Ocultismo a cada seis horas com -2 por feitiço extra, sob risco de perdê-los (ou descarregá-los sobre si em Falha Crítica). Benes não restauram PP diretamente, mas podem ser gastos para obter +5 PP de um sacrifício, e o feiticeiro já tem acesso a todos os poderes do seu Estágio."
+    "descricaoLite": "Concede a perícia Ocultismo (Astúcia); os poderes exigem um ritual de sacrifício humano (30 minutos mais 5 minutos por vítima), cada sacrifício rendendo 10 Pontos de Poder distribuíveis, com uma rolagem de Ocultismo por poder ativado (falha crítica afeta o próprio feiticeiro). É possível manter até três feitiços prontos sem penalidade; manter mais exige uma rolagem de Ocultismo a cada seis horas com -2 por feitiço extra, sob risco de perdê-los (ou descarregá-los sobre si em Falha Crítica). Benes não restauram PP diretamente, mas podem ser gastos para obter +5 PP de um sacrifício, e o feiticeiro já tem acesso a todos os poderes do seu Estágio.",
+    "subtipoArcano": "FEITICEIRO"
   },
   {
     "id": "irmao_da_noite",
@@ -27936,7 +27959,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Vantagem de Antecedente Arcano que usa Fé (Espírito) e dá acesso aos poderes de milagre disponíveis para o Estágio do personagem, mas os Pontos de Poder não se recuperam sozinhos. Para conseguir PP o personagem sofre até três níveis de Fadiga (5 PP cada, curáveis apenas naturalmente), perde os PP não gastos ao descansar e sofre penalidades ou perda de poderes se violar o código religioso."
+    "descricaoLite": "Vantagem de Antecedente Arcano que usa Fé (Espírito) e dá acesso aos poderes de milagre disponíveis para o Estágio do personagem, mas os Pontos de Poder não se recuperam sozinhos. Para conseguir PP o personagem sofre até três níveis de Fadiga (5 PP cada, curáveis apenas naturalmente), perde os PP não gastos ao descansar e sofre penalidades ou perda de poderes se violar o código religioso.",
+    "subtipoArcano": "MILAGRES"
   },
   {
     "id": "guerreiro_do_senhor",
@@ -28101,7 +28125,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "O personagem começa o jogo com quatro vezes o dinheiro inicial e salário anual de cerca de 200 mil sóis, mas recebe a Complicação Fobia (Menor — demônios) sem ganhar pontos de criação por ela; pode substituir a vantagem Rico como pré-requisito para Podre de Rico."
+    "descricaoLite": "O personagem começa o jogo com quatro vezes o dinheiro inicial e salário anual de cerca de 200 mil sóis, mas recebe a Complicação Fobia (Menor — demônios) sem ganhar pontos de criação por ela; pode substituir a vantagem Rico como pré-requisito para Podre de Rico.",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "parrudo",
@@ -28189,7 +28214,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Vantagem de Antecedente Arcano que usa Ocultismo (Astúcia) e dá acesso a qualquer poder de feiticeiro disponível para o Estágio do personagem. Cada feitiço exige um ritual com sacrifício humano (meia hora mais cinco minutos por vítima) que gera 10 Pontos de Poder por sacrifício e uma rolagem de Ocultismo por poder ativado (falha crítica volta o efeito contra o feiticeiro); é possível guardar até três feitiços sem penalidade, exigindo nova rolagem de Ocultismo a cada seis horas (com -2 acumulativo por feitiço extra) para manter os demais."
+    "descricaoLite": "Vantagem de Antecedente Arcano que usa Ocultismo (Astúcia) e dá acesso a qualquer poder de feiticeiro disponível para o Estágio do personagem. Cada feitiço exige um ritual com sacrifício humano (meia hora mais cinco minutos por vítima) que gera 10 Pontos de Poder por sacrifício e uma rolagem de Ocultismo por poder ativado (falha crítica volta o efeito contra o feiticeiro); é possível guardar até três feitiços sem penalidade, exigindo nova rolagem de Ocultismo a cada seis horas (com -2 acumulativo por feitiço extra) para manter os demais.",
+    "subtipoArcano": "FEITICEIRO"
   },
   {
     "id": "aa_milagres",
@@ -28200,7 +28226,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Vantagem de Antecedente Arcano que usa Fé (Espírito) e dá acesso aos poderes de milagre disponíveis para o Estágio do personagem, mas os Pontos de Poder não se recuperam sozinhos. Para conseguir PP o personagem sofre até três níveis de Fadiga (5 PP cada, curáveis apenas naturalmente), perde os PP não gastos ao descansar e sofre penalidades ou perda de poderes se violar o código religioso."
+    "descricaoLite": "Vantagem de Antecedente Arcano que usa Fé (Espírito) e dá acesso aos poderes de milagre disponíveis para o Estágio do personagem, mas os Pontos de Poder não se recuperam sozinhos. Para conseguir PP o personagem sofre até três níveis de Fadiga (5 PP cada, curáveis apenas naturalmente), perde os PP não gastos ao descansar e sofre penalidades ou perda de poderes se violar o código religioso.",
+    "subtipoArcano": "MILAGRES"
   },
   {
     "id": "aa_tecnomagia",
@@ -28211,7 +28238,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede a perícia Tecnomagia (Astúcia), os poderes iniciais Detectar Arcano e mais 2 à escolha, e Pontos de Poder especiais; permite gastar um Bene para recuperar 5 PP, mas impede o uso dos Modificadores Seletivo e Mortalha (Apressar/Atrasar só valem em poderes com a Limitação Ressonância), com uma lista própria de poderes disponíveis."
+    "descricaoLite": "Concede a perícia Tecnomagia (Astúcia), os poderes iniciais Detectar Arcano e mais 2 à escolha, e Pontos de Poder especiais; permite gastar um Bene para recuperar 5 PP, mas impede o uso dos Modificadores Seletivo e Mortalha (Apressar/Atrasar só valem em poderes com a Limitação Ressonância), com uma lista própria de poderes disponíveis.",
+    "subtipoArcano": "TECNOMAGIA"
   },
   {
     "id": "mecanico_cego",
@@ -28299,7 +28327,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede +2 em todas as rolagens de Ocultismo; gastando um Bene e tocando a cabeça de um cadáver, o personagem pode ver a última cena vivida pelo morto ou conversar com seu espírito usando um objeto ligado a ele, com cada pergunta após a primeira exigindo uma rolagem de Persuadir com penalidade cumulativa de -2."
+    "descricaoLite": "Concede +2 em todas as rolagens de Ocultismo; gastando um Bene e tocando a cabeça de um cadáver, o personagem pode ver a última cena vivida pelo morto ou conversar com seu espírito usando um objeto ligado a ele, com cada pergunta após a primeira exigindo uma rolagem de Persuadir com penalidade cumulativa de -2.",
+    "subtipoArcano": "RITUALISTA"
   },
   {
     "id": "taro_confusao",
@@ -28442,7 +28471,8 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Quando atacado, o personagem pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante; vencendo, redireciona o dano do ataque para um personagem aleatório a até cinco quadros de distância."
+    "descricaoLite": "Quando atacado, o personagem pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante; vencendo, redireciona o dano do ataque para um personagem aleatório a até cinco quadros de distância.",
+    "subtipoArcano": "DEMONIO"
   },
   {
     "id": "taro_estrela_morta",
@@ -30346,7 +30376,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "mentalista",
@@ -31493,7 +31524,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Antecedente Arcano cujos praticantes (Abençoados) usam Fé como perícia arcana para realizar milagres."
+    "descricaoLite": "Antecedente Arcano cujos praticantes (Abençoados) usam Fé como perícia arcana para realizar milagres.",
+    "subtipoArcano": "ABENCOADO"
   },
   {
     "id": "antecedente_arcano_mestre_do_chi",
@@ -31516,7 +31548,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Antecedente Arcano cujos praticantes (Mestres do Chi) usam Foco como perícia arcana para canalizar sua força sobrenatural."
+    "descricaoLite": "Antecedente Arcano cujos praticantes (Mestres do Chi) usam Foco como perícia arcana para canalizar sua força sobrenatural.",
+    "subtipoArcano": "MESTRE DO CHI"
   },
   {
     "id": "antecedente_arcano_mascate",
@@ -31533,7 +31566,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Antecedente Arcano cujos praticantes (Mascates) usam Conjurar como perícia arcana para negociar poder com espíritos das trevas."
+    "descricaoLite": "Antecedente Arcano cujos praticantes (Mascates) usam Conjurar como perícia arcana para negociar poder com espíritos das trevas.",
+    "subtipoArcano": "MASCATE"
   },
   {
     "id": "antecedente_arcano_cientista_louco",
@@ -31553,7 +31587,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Antecedente Arcano cujos praticantes (Cientistas Loucos) usam Ciência Estranha como perícia arcana para construir seus inventos."
+    "descricaoLite": "Antecedente Arcano cujos praticantes (Cientistas Loucos) usam Ciência Estranha como perícia arcana para construir seus inventos.",
+    "subtipoArcano": "CIENTISTA LOUCO"
   },
   {
     "id": "antecedente_arcano_xama",
@@ -31572,7 +31607,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Antecedente Arcano cujos praticantes (Xamãs) usam Fé como perícia arcana para barganhar poder com espíritos da natureza."
+    "descricaoLite": "Antecedente Arcano cujos praticantes (Xamãs) usam Fé como perícia arcana para barganhar poder com espíritos da natureza.",
+    "subtipoArcano": "XAMA"
   },
   {
     "id": "humor_acido",
@@ -32378,7 +32414,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Vantagem de inventor que usa dispositivos como um cientista louco, mas também pode Barganhar com o Diabo como um mascate para lançar, por meio de saque de cartas, qualquer poder de cientista louco disponível ao seu Estágio, mesmo os que não possui ou que estão acima dele."
+    "descricaoLite": "Vantagem de inventor que usa dispositivos como um cientista louco, mas também pode Barganhar com o Diabo como um mascate para lançar, por meio de saque de cartas, qualquer poder de cientista louco disponível ao seu Estágio, mesmo os que não possui ou que estão acima dele.",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "antecedente_arcano_vuduismo",
@@ -32397,7 +32434,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Antecedente arcano que usa Fé (ligada a Espírito) como perícia arcana, com 15 Pontos de Poder e 2 poderes iniciais. Uma Falha Crítica em Fé causa Fadiga e encerra os poderes ativos; exige carregar uma bolsa ritual para poder ativá-los, e permite escolher Vantagens de Milagres."
+    "descricaoLite": "Antecedente arcano que usa Fé (ligada a Espírito) como perícia arcana, com 15 Pontos de Poder e 2 poderes iniciais. Uma Falha Crítica em Fé causa Fadiga e encerra os poderes ativos; exige carregar uma bolsa ritual para poder ativá-los, e permite escolher Vantagens de Milagres.",
+    "subtipoArcano": "VODUISTA"
   },
   {
     "id": "esteve_na_encruzilhada",
@@ -32460,7 +32498,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Antecedente arcano que usa Conjurar (Astúcia) como perícia arcana, com 10 Pontos de Poder e 3 poderes iniciais. Falha Crítica causa Fadiga, encerra os poderes e concede 1 ponto de Corrupção; garante rerrolagens em locais com Nível de Medo 4-5 ou em Terra Morta, e permite escolher a Vantagem Sangue dos Whateley."
+    "descricaoLite": "Antecedente arcano que usa Conjurar (Astúcia) como perícia arcana, com 10 Pontos de Poder e 3 poderes iniciais. Falha Crítica causa Fadiga, encerra os poderes e concede 1 ponto de Corrupção; garante rerrolagens em locais com Nível de Medo 4-5 ou em Terra Morta, e permite escolher a Vantagem Sangue dos Whateley.",
+    "subtipoArcano": "BRUXA"
   },
   {
     "id": "bruxa_de_wichita",
@@ -32479,7 +32518,8 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Quando totalmente paramentada com trajes característicos, adiciona +1 em Intimidar e +1 em Persuadir contra quem sinta atração por ela, mas -1 contra autoridades. Também pode carregar seu chicote com energia por 1 Ponto de Poder (ação livre); se acertar o ataque com ampliação, adiciona um dado de bônus ao dano."
+    "descricaoLite": "Quando totalmente paramentada com trajes característicos, adiciona +1 em Intimidar e +1 em Persuadir contra quem sinta atração por ela, mas -1 contra autoridades. Também pode carregar seu chicote com energia por 1 Ponto de Poder (ação livre); se acertar o ataque com ampliação, adiciona um dado de bônus ao dano.",
+    "subtipoArcano": "BRUXA"
   },
   {
     "id": "familiar",
@@ -33138,7 +33178,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) ao conjurar os poderes cura, santuário ou ferir, desde que a personagem já os possua."
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) ao conjurar os poderes cura, santuário ou ferir, desde que a personagem já os possua.",
+    "subtipoArcano": "CLERIGO"
   },
   {
     "id": "maestria_divina_clerigo",
@@ -33155,7 +33196,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes."
+    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes.",
+    "subtipoArcano": "CLERIGO"
   },
   {
     "id": "classe_druida",
@@ -33241,7 +33283,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes enredar, ferir ou proteção, desde que já os possua."
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes enredar, ferir ou proteção, desde que já os possua.",
+    "subtipoArcano": "DRUIDA"
   },
   {
     "id": "maestria_divina_druida",
@@ -33258,7 +33301,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes."
+    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes.",
+    "subtipoArcano": "DRUIDA"
   },
   {
     "id": "classe_feiticeiro",
@@ -33359,7 +33403,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes manipulação elemental, proteção ou raio, desde que já os possua."
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes manipulação elemental, proteção ou raio, desde que já os possua.",
+    "subtipoArcano": "FEITICEIRO"
   },
   {
     "id": "maestria_arcana_feiticeiro",
@@ -33376,7 +33421,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes."
+    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes.",
+    "subtipoArcano": "FEITICEIRO"
   },
   {
     "id": "linhagem_avancada",
@@ -33644,7 +33690,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes proteção arcana, deflexão ou dissipar, desde que já os possua."
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes proteção arcana, deflexão ou dissipar, desde que já os possua.",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "maestria_arcana_mago",
@@ -33661,7 +33708,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes."
+    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes.",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "inspiracao_mistica",
@@ -33719,7 +33767,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite invocar um dos poderes aumentar Característica (apenas Agilidade, Atletismo, Lutar ou Furtividade), deflexão, ferir ou velocidade, todos afetando somente a própria personagem e sem o benefício da Limitação. Usa 10 Pontos de Poder dedicados, que se recarregam normalmente."
+    "descricaoLite": "Como ação livre limitada, permite invocar um dos poderes aumentar Característica (apenas Agilidade, Atletismo, Lutar ou Furtividade), deflexão, ferir ou velocidade, todos afetando somente a própria personagem e sem o benefício da Limitação. Usa 10 Pontos de Poder dedicados, que se recarregam normalmente.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "grande_ki",
@@ -33791,7 +33840,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite invocar um dos milagres ajuda, aumentar Característica (apenas Lutar, Força ou Vigor), curar ou ferir; aumentar Característica e ferir afetam somente a própria personagem, sem o benefício da Limitação. Usa 10 Pontos de Poder dedicados, que se recarregam normalmente."
+    "descricaoLite": "Como ação livre limitada, permite invocar um dos milagres ajuda, aumentar Característica (apenas Lutar, Força ou Vigor), curar ou ferir; aumentar Característica e ferir afetam somente a própria personagem, sem o benefício da Limitação. Usa 10 Pontos de Poder dedicados, que se recarregam normalmente.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "misericordia",
@@ -33884,7 +33934,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite conjurar um dos poderes elo animal, aumentar característica (apenas Atletismo, Lutar ou Atirar), enredar ou dádiva do guerreiro; aumentar característica e dádiva do guerreiro afetam somente a própria personagem, sem o benefício da Limitação. Usa 10 Pontos de Poder dedicados, que se recarregam normalmente."
+    "descricaoLite": "Como ação livre limitada, permite conjurar um dos poderes elo animal, aumentar característica (apenas Atletismo, Lutar ou Atirar), enredar ou dádiva do guerreiro; aumentar característica e dádiva do guerreiro afetam somente a própria personagem, sem o benefício da Limitação. Usa 10 Pontos de Poder dedicados, que se recarregam normalmente.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "mestre_cacador",
@@ -34963,7 +35014,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Ampliações em rolagens de ataque causadoras de dano — via Atletismo (arremessar), Lutar, Atirar ou perícia arcana — devolvem 1 Ponto de Poder ao cavaleiro místico."
+    "descricaoLite": "Ampliações em rolagens de ataque causadoras de dano — via Atletismo (arremessar), Lutar, Atirar ou perícia arcana — devolvem 1 Ponto de Poder ao cavaleiro místico.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "cavaleiro_mistico_2",
@@ -34979,7 +35031,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Após rolar um ataque, 2 Pontos de Poder podem ser gastos para elevar o total em +2."
+    "descricaoLite": "Após rolar um ataque, 2 Pontos de Poder podem ser gastos para elevar o total em +2.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "cavaleiro_mistico_3",
@@ -34995,7 +35048,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Um ataque bem-sucedido pode ter o dano elevado em +2 mediante o gasto de 2 Pontos de Poder."
+    "descricaoLite": "Um ataque bem-sucedido pode ter o dano elevado em +2 mediante o gasto de 2 Pontos de Poder.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "cronista_desbravador",
@@ -35264,7 +35318,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Dois poderes podem ser conjurados juntos, como ação limitada, usando duas perícias arcanas diferentes — um dado é rolado para cada uma, podendo o Dado Selvagem substituir qualquer delas."
+    "descricaoLite": "Dois poderes podem ser conjurados juntos, como ação limitada, usando duas perícias arcanas diferentes — um dado é rolado para cada uma, podendo o Dado Selvagem substituir qualquer delas.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "mistico_teurgo_2",
@@ -35280,7 +35335,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Reduz em 1 Ponto de Poder o custo de cada poder conjurado com a habilidade de conjuração dupla, sem baixar de 1 ponto por poder."
+    "descricaoLite": "Reduz em 1 Ponto de Poder o custo de cada poder conjurado com a habilidade de conjuração dupla, sem baixar de 1 ponto por poder.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "mistico_teurgo_3",
@@ -35296,7 +35352,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Faz com que os benefícios das Vantagens de Classe do personagem passem a valer para os poderes de todas as suas classes, não apenas a de origem."
+    "descricaoLite": "Faz com que os benefícios das Vantagens de Classe do personagem passem a valer para os poderes de todas as suas classes, não apenas a de origem.",
+    "subtipoArcano": "MISTICO"
   },
   {
     "id": "trapaceiro_arcano",
@@ -38018,7 +38075,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "mentalista",
@@ -39523,7 +39581,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Adiciona cegar, visão sombria, disfarce, dissipar, medo, voar, cura, ilusão, iluminar/obscurecer, ajuda, morosidade/velocidade e som/silêncio aos Poderes Disponíveis, ganhando um deles de imediato; exclui Renegado Estelar."
+    "descricaoLite": "Adiciona cegar, visão sombria, disfarce, dissipar, medo, voar, cura, ilusão, iluminar/obscurecer, ajuda, morosidade/velocidade e som/silêncio aos Poderes Disponíveis, ganhando um deles de imediato; exclui Renegado Estelar.",
+    "subtipoArcano": "MAGO"
   },
   {
     "id": "ascensao_estelar",
