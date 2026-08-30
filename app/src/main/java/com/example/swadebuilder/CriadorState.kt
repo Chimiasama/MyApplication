@@ -583,6 +583,14 @@ class CriadorState {
                     }
                 }
                 RacialTraitEffect.Nenhum -> Unit
+                // ResistenciaBonus/PassoBonus/ApararBonus não têm mapa
+                // numérico próprio em RacialModifier (diferente de
+                // atributos/pericias) — o ModifierEngine já lê o traço
+                // removido/presente direto de tracosRemovidosIds/habilidades,
+                // então não há nada a descontar aqui.
+                is RacialTraitEffect.ResistenciaBonus,
+                is RacialTraitEffect.PassoBonus,
+                is RacialTraitEffect.ApararBonus -> Unit
             }
         }
 
