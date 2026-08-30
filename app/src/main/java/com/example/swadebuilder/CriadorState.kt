@@ -119,17 +119,26 @@ class CriadorState {
     private val resolveAncestryVariantPackageUseCase = com.example.swadebuilder.model.usecase.ResolveAncestryVariantPackageUseCase()
 
     /**
-     * Mesmo conjunto de ids de ResolveAncestrySpecificAdjustmentsUseCase
+     * Quase o mesmo conjunto de ids de ResolveAncestrySpecificAdjustmentsUseCase
      * (scifiVariantDrivenKeys) — raças cuja Variante Sci-Fi já está no
      * AncestryVariantRegistry, usado aqui em applyAncestryVariantAdjustments
      * pra montar as habilidades[] de exibição/ModifierEngine a partir do
      * mesmo pacote, em vez de duplicar os dados em blocos por raça.
+     *
+     * "ROBOS" fica de fora aqui (mas está no outro arquivo): a Complicação
+     * base da raça já vem no JSON com nome de sabor ("Circuitos de Asimov",
+     * mecanicamente Pacifista Maior), então adicionar aqui uma segunda
+     * habilidade literalmente chamada "Pacifista (Maior)" duplicaria a
+     * mesma Complicação com dois nomes na lista de Características. Sem
+     * essa raça aqui, exibição de Robôs continua como já era (as 3
+     * habilidades fixas do JSON, sem diferenciar por Variante) — não
+     * piora nada, só não ganha o novo comportamento ainda.
      */
     private val scifiVariantDrivenKeys = setOf(
         "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
         "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
         "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
-        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS"
+        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "SERES SINTETICOS"
     )
 
     // --- Game Data Properties (Replaces Globals) ---
@@ -855,6 +864,11 @@ class CriadorState {
                 )
 
                 pack.tracosParaRemoverPorNome.forEach { nome -> removeByIdOrName(nome, nome) }
+                // Complicações removidas também podem existir como habilidade
+                // embutida (category=racial_hindrance) na raça base — ex.:
+                // Seres Sintéticos "PROGRAMADO" — não só como string solta em
+                // base.desvantagens (que esta função não toca).
+                pack.desvantagensParaRemover.forEach { nome -> removeByIdOrName(nome, nome) }
 
                 fun addIfAbsent(texto: String, category: String) {
                     val id = texto.uppercase().semAcentos().replace(Regex("[^A-Z0-9]+"), "_").trim('_')
@@ -875,36 +889,6 @@ class CriadorState {
                 pack.tracosParaAdicionar.forEach { addIfAbsent(it, "racial_trait_positive") }
                 pack.vantagensGratisParaAdicionar.forEach { addIfAbsent(it, "racial_edge") }
                 pack.desvantagensParaAdicionar.forEach { addIfAbsent(it, "racial_hindrance") }
-            }
-        }
-
-        if (key == "SERES SINTETICOS" || key == "SERES_SINTETICOS") {
-            if (variant.equals("Máquina (Procurado)", ignoreCase = true)) {
-                removeByIdOrName("PROGRAMADO", "PROGRAMADO")
-                if (newHabilidades.none { it.id == "PROCURADO" || it.nome.keyify().contains("PROCURADO") }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Procurado (Maior)",
-                            descricao = "A personagem é procurada pelas autoridades ou por uma facção poderosa.",
-                            id = "PROCURADO",
-                            category = "racial_hindrance",
-                            severity = "Maior"
-                        )
-                    )
-                }
-            } else if (variant.equals("Máquina (Forasteiro)", ignoreCase = true)) {
-                removeByIdOrName("PROGRAMADO", "PROGRAMADO")
-                if (newHabilidades.none { it.id == "FORASTEIRO" || it.nome.keyify().contains("FORASTEIRO") }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Forasteiro (Maior)",
-                            descricao = "A personagem não tem direitos ou é perseguida em quase toda parte.",
-                            id = "FORASTEIRO",
-                            category = "racial_hindrance",
-                            severity = "Maior"
-                        )
-                    )
-                }
             }
         }
 

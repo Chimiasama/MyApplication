@@ -31,14 +31,15 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
     /**
      * Ids de ancestralidade cuja Variante Sci-Fi (Básico/Padrão + 1
      * reconfiguração de cenário) já foi migrada pro AncestryVariantRegistry —
-     * ver comentário no lote 2 do registro. As demais ainda usam o "when"
-     * fixo abaixo, migração pendente.
+     * ver comentário no lote 2 do registro. Cobre todas as raças Sci-Fi com
+     * Variante de verdade; o "when" fixo abaixo cuida só das raças com
+     * grants fixos (sem Variante) e do fallback de raças do livro básico.
      */
     private val scifiVariantDrivenKeys = setOf(
         "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
         "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
         "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
-        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS"
+        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "ROBOS", "SERES SINTETICOS"
     )
 
     /**
@@ -80,7 +81,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             automaticAdvantagesToRemove = resolved.tracosParaRemoverPorNome,
             ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
             racialDisadvantagesToRemove = resolved.desvantagensParaRemover,
-            elementalAction = ElementalAction.NONE
+            elementalAction = ElementalAction.NONE,
+            anotacoesToAdd = resolved.anotacoes
         )
     }
 
@@ -228,73 +230,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                     ensureRacialDisadvantages = emptyList(),
                     elementalAction = ElementalAction.NONE
                 )
-            }
-
-            if (ancKey == "ROBOS" || ancKey == "ROBÔS") {
-                return when (effectiveVariant) {
-                    "Guerreiro" -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("SEM ESCRÚPULOS (Maior)", "PROGRAMADO (Maior)"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                    "Limitado" -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"),
-                        elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = listOf("Robôs Limitado: Combine com o mestre compensação de Perícias Reduzidas.")
-                    )
-                    else -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "SERES SINTETICOS" || ancKey == "SERES SINTÉTICOS") {
-                return when (effectiveVariant) {
-                    "Máquina (Procurado)" -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("PROCURADO (Maior)"),
-                        elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("PROGRAMADO (Maior)")
-                    )
-                    "Máquina (Forasteiro)" -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("FORASTEIRO (Maior)"),
-                        elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("PROGRAMADO (Maior)")
-                    )
-                    else -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("PROGRAMADO"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
             }
 
         }

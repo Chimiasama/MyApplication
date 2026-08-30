@@ -15,13 +15,10 @@ import com.example.swadebuilder.model.VariantOption
  * raças Sci-Fi com Variante de 2 opções (Rakashanos, Sáurios, Aquarianos,
  * Avianos, Elfos, Humanos, Centaux, Drakens, Ferais, Florans, Gelatinoides,
  * Insetoides, Mímicos, Mineradores Genéticos, Oráculos, Possessores,
- * Quadroides, Soldados Genéticos, Yetis).
- *
- * Ficam de fora por ora Robôs e Seres Sintéticos — o "when" original delas
- * não tem um branch `else` claramente equivalente a "Básico"/"Padrão" (cai
- * no mesmo pacote de uma das variantes nomeadas quando `ancestryOptions`
- * vem vazio), então migrar sem essa ambiguidade resolvida arriscaria mudar
- * comportamento; seguem no "when" fixo em ResolveAncestrySpecificAdjustmentsUseCase.
+ * Quadroides, Soldados Genéticos, Yetis). Lote 3: Robôs e Seres Sintéticos —
+ * confirmado contra ancestralidades.json que "Padrão" é uma opção real em
+ * `opcoes` pras duas (não um `else` sem correspondência), então a
+ * ambiguidade que tinha adiado esse par no lote 2 não existe de verdade.
  *
  * Uma raça ausente daqui simplesmente não tem variante nem seleção conhecida
  * pelo motor novo (ex.: Feral — tem traços fixos, não variante nem seleção).
@@ -51,7 +48,9 @@ object AncestryVariantRegistry {
         possessores(),
         quadroides(),
         soldadosGeneticos(),
-        yetis()
+        yetis(),
+        robos(),
+        seresSinteticos()
     ).associateBy { it.ancestralidadeId }
 
     fun get(ancestralidadeId: String): AncestryVariantConfig? = configs[ancestralidadeId]
@@ -450,6 +449,71 @@ object AncestryVariantRegistry {
                     id = "fuzileiro_zero_g",
                     nome = "Fuzileiro Zero G",
                     pacoteFixo = ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"))
+                )
+            )
+        )
+    )
+
+    // Robôs e Seres Sintéticos: confirmado contra ancestralidades.json que
+    // "Padrão" É uma opção real de `opcoes` (não um `else` de segurança sem
+    // texto correspondente) — o que tinha ficado pendente de checar quando
+    // o lote 2 foi migrado. Nota: Robôs Guerreiro troca a Complicação
+    // Pacifista (Maior) por Sem Escrúpulos (Maior) na descrição da raça
+    // ("variantes" no JSON), mas o Result original nunca removia
+    // "PACIFISTA (Maior)" — a habilidade base CIRCUITOS_DE_ASIMOV (que
+    // concede Pacifista Maior) fica, então Guerreiro acumula as duas
+    // Complicações. Preservado como estava (não é uma regressão desta
+    // migração) — sinalizado pro usuário decidir se é bug de conteúdo.
+    private fun robos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "ROBOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"))
+                ),
+                VariantOption(
+                    id = "guerreiro",
+                    nome = "Guerreiro",
+                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("SEM ESCRÚPULOS (Maior)", "PROGRAMADO (Maior)"))
+                ),
+                VariantOption(
+                    id = "limitado",
+                    nome = "Limitado",
+                    pacoteFixo = ResolvedTraitPackage(
+                        desvantagensParaAdicionar = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"),
+                        anotacoes = listOf("Robôs Limitado: Combine com o mestre compensação de Perícias Reduzidas.")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun seresSinteticos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "SERES SINTETICOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("PROGRAMADO"))
+                ),
+                VariantOption(
+                    id = "maquina_procurado",
+                    nome = "Máquina (Procurado)",
+                    pacoteFixo = ResolvedTraitPackage(
+                        desvantagensParaAdicionar = listOf("PROCURADO (Maior)"),
+                        desvantagensParaRemover = listOf("PROGRAMADO (Maior)")
+                    )
+                ),
+                VariantOption(
+                    id = "maquina_forasteiro",
+                    nome = "Máquina (Forasteiro)",
+                    pacoteFixo = ResolvedTraitPackage(
+                        desvantagensParaAdicionar = listOf("FORASTEIRO (Maior)"),
+                        desvantagensParaRemover = listOf("PROGRAMADO (Maior)")
+                    )
                 )
             )
         )
