@@ -79,6 +79,7 @@ class ResolveAncestryVariantPackageUseCase {
         tracosParaRemoverPorNome = packages.flatMap { it.tracosParaRemoverPorNome },
         desvantagensParaRemover = packages.flatMap { it.desvantagensParaRemover },
         naturalArmor = packages.sumOf { it.naturalArmor },
+        armasNaturaisParaAdicionar = packages.flatMap { it.armasNaturaisParaAdicionar },
         anotacoes = packages.flatMap { it.anotacoes }
     )
 }

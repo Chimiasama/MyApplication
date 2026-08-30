@@ -119,27 +119,30 @@ class CriadorState {
     private val resolveAncestryVariantPackageUseCase = com.example.swadebuilder.model.usecase.ResolveAncestryVariantPackageUseCase()
 
     /**
-     * Quase o mesmo conjunto de ids de ResolveAncestrySpecificAdjustmentsUseCase
+     * Mesmo conjunto de ids de ResolveAncestrySpecificAdjustmentsUseCase
      * (scifiVariantDrivenKeys) — raças cuja Variante Sci-Fi já está no
      * AncestryVariantRegistry, usado aqui em applyAncestryVariantAdjustments
      * pra montar as habilidades[] de exibição/ModifierEngine a partir do
      * mesmo pacote, em vez de duplicar os dados em blocos por raça.
-     *
-     * "ROBOS" fica de fora aqui (mas está no outro arquivo): a Complicação
-     * base da raça já vem no JSON com nome de sabor ("Circuitos de Asimov",
-     * mecanicamente Pacifista Maior), então adicionar aqui uma segunda
-     * habilidade literalmente chamada "Pacifista (Maior)" duplicaria a
-     * mesma Complicação com dois nomes na lista de Características. Sem
-     * essa raça aqui, exibição de Robôs continua como já era (as 3
-     * habilidades fixas do JSON, sem diferenciar por Variante) — não
-     * piora nada, só não ganha o novo comportamento ainda.
      */
     private val scifiVariantDrivenKeys = setOf(
         "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
         "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
         "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
-        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "SERES SINTETICOS"
+        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "SERES SINTETICOS", "ROBOS"
     )
+
+    /**
+     * Ids de habilidade que representam a Complicação "Perícias Básicas
+     * Reduzidas" — parcial (só Conhecimento Geral/Persuadir/Furtividade,
+     * ex.: Golens, já cadastrado assim em ancestralidades.json) ou total
+     * (todas as perícias básicas, ex.: Robôs Limitado, injetado via
+     * AncestryVariantRegistry). isPericiaBasicaEfetiva/periciaStartRawInternal
+     * checam a PRESENÇA desses ids na raça em vez de comparar por nome —
+     * antes eram dois `if (ancestralidade == "GOLENS"/"ROBOS")` fixos aqui.
+     */
+    private val periciasBasicasReduzidasParcialId = "PERICIAS_BASICAS_REDUZIDAS"
+    private val periciasBasicasReduzidasTotalId = "PERICIAS_BASICAS_REDUZIDAS_TOTAL"
 
     // --- Game Data Properties (Replaces Globals) ---
     var listaAtributos by mutableStateOf<List<String>>(emptyList())
@@ -1836,17 +1839,33 @@ class CriadorState {
             }
         }
 
-        // Exclusões por Variante (Sáurios Cuspidor troca a Mordida por outra
-        // arma; Insetoides Vespa troca as Garras por Ferrão) — continuam por
-        // nome de raça+variante por enquanto; migrar isso junto de uma
-        // limpeza maior do sistema de Variantes (fora do escopo desta
-        // passada, ver auditoria de hardcode).
-        if (compendioSciFiAtivo) {
-            if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor") {
-                weapons.removeAll { it.nome.equals("Mordida", ignoreCase = true) }
+        // Variant Natural Weapons: armas que só existem numa Variante
+        // específica (ex.: Sáurios "Mordida" só pra Básico, Insetoides
+        // "Ferrão" só pra Vespa) e por isso nunca foram campo fixo da raça
+        // no JSON — lidas do mesmo AncestryVariantRegistry usado em
+        // ResolveAncestrySpecificAdjustmentsUseCase/applyAncestryVariantAdjustments,
+        // com o dano/PA já prontos, em vez de casar por palavra-chave.
+        run {
+            val ancKey = ancestralidade.keyify()
+            // Só entra pra raças Sci-Fi de verdade: Sáurios/Insetoides do
+            // livro básico têm suas próprias armasNaturais fixas no JSON
+            // (já cobertas pelo loop "Race Natural Weapons" acima) e não
+            // têm `opcoes`, então resolveCurrentSciFiVariantSelection()
+            // cairia no Básico do registro Sci-Fi e duplicaria a arma.
+            val opcoes = if (compendioSciFiAtivo) {
+                AncestryVariantRegistry.get(ancKey)?.grupoVariante?.opcoes
+            } else {
+                null
             }
-            if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa") {
-                weapons.removeAll { it.nome.equals("Garras", ignoreCase = true) }
+            if (opcoes != null) {
+                val variantAtual = resolveCurrentSciFiVariantSelection()
+                val variantOptionId = opcoes.firstOrNull { it.nome.equals(variantAtual, ignoreCase = true) }?.id
+                    ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
+                resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = ancKey,
+                    variantOptionId = variantOptionId,
+                    selectionAnswers = emptyList()
+                ).armasNaturaisParaAdicionar.forEach { arma -> adicionarArmaNatural(arma) }
             }
         }
 
@@ -1871,15 +1890,6 @@ class CriadorState {
                 }
             }
             if (alreadyPresent) return@forEach
-
-            // Variant-specific exclusions (Legacy checks + ID checks)
-            // Note: Since we use IDs now, we could check IDs directly, but let's keep robust logic
-            if (compendioSciFiAtivo) {
-                // Sáurios Cuspidor removes MORDIDA (via ID or name)
-                if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor" && keyToken == "MORDIDA") return@forEach
-                // Insetoides Vespa removes GARRAS
-                if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa" && keyToken == "GARRAS") return@forEach
-            }
 
             // Check presence via ID (Strong match) or Name (Legacy/Fallback)
             val hasIdMatch = targetId != null && (
@@ -1955,17 +1965,6 @@ class CriadorState {
                     } else {
                         dmgMatch = "For+d4"
                     }
-                }
-
-                // Insetoides Padrão: For+d4 e PA 2
-                if (key.equals("Garras", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
-                    dmgMatch = "For+d4"
-                    paFinal = maxOf(paFinal, 2)
-                }
-
-                // Insetoides Vespa Variante (Ferrão/Mordida): Tem PA -
-                if (key.equals("Ferrão", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
-                    paFinal = 0
                 }
 
                 if (key.equals("Garras", ignoreCase = true) && hasGarrasVampiro) {
@@ -2751,14 +2750,13 @@ class CriadorState {
 
     fun isPericiaBasicaEfetiva(per: Pericia): Boolean {
         if (!per.basica) return false
-        if (compendioFantasiaAtivo && ancestralidade.keyify() == "GOLENS") {
+        val habilidades = currentAncestryDef?.habilidades ?: return true
+        if (habilidades.any { it.id == periciasBasicasReduzidasTotalId }) return false
+        if (habilidades.any { it.id == periciasBasicasReduzidasParcialId }) {
             val key = per.nome.keyify()
             if (key == "CONHECIMENTO GERAL" || key == "PERSUADIR" || key == "FURTIVIDADE") {
                 return false
             }
-        }
-        if (compendioSciFiAtivo && ancestralidade.keyify() == "ROBOS" && resolveCurrentSciFiVariantSelection() == "Limitado") {
-            return false // Removes d4 from all basic skills
         }
         return true
     }
@@ -2776,11 +2774,15 @@ class CriadorState {
 
         var defaultBase = 0
         if (per.basica) {
-            val isGolemRestricted = compendioFantasiaAtivo && ancKey == "GOLENS" &&
-                    (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")
-            val isRobotLimited = compendioSciFiAtivo && ancKey == "ROBOS" && resolveCurrentSciFiVariantSelection() == "Limitado"
+            val habilidadesDaRaca = (
+                if (ancKey == ancestralidade.keyify()) currentAncestryDef else getAncestralidadeDef(anc)
+            )?.habilidades.orEmpty()
+            val isTotalmenteReduzida = habilidadesDaRaca.any { it.id == periciasBasicasReduzidasTotalId }
+            val isParcialmenteReduzida = !isTotalmenteReduzida &&
+                habilidadesDaRaca.any { it.id == periciasBasicasReduzidasParcialId } &&
+                (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")
 
-            if (!isGolemRestricted && !isRobotLimited) {
+            if (!isTotalmenteReduzida && !isParcialmenteReduzida) {
                 defaultBase = 4
             }
         }

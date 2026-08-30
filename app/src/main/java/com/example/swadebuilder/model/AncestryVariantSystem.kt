@@ -63,6 +63,13 @@ data class ResolvedTraitPackage(
     // Sobrescreve a Armadura Natural da raça quando esta opção muda o valor
     // padrão (ex.: Insetoides Vespa perde a Armadura +2 do Padrão).
     val naturalArmor: Int = 0,
+    // Ataque(s) natural(is) que esta Variante concede — dado estruturado
+    // (dano/PA prontos), mesmo tipo que RacialAbility.armasNaturais usa pra
+    // raça base. Existe porque nem toda arma natural de Variante já está no
+    // JSON da raça (ex.: Sáurios "Mordida" só existe pra Básico, nunca foi
+    // um campo fixo em ancestralidades.json) — sem isso, CriadorState só
+    // conseguia achar essas armas por casamento de palavra-chave em texto.
+    val armasNaturaisParaAdicionar: List<ArmaNatural> = emptyList(),
     val anotacoes: List<String> = emptyList()
 )
 

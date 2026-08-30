@@ -1,6 +1,7 @@
 package com.example.swadebuilder.registry
 
 import com.example.swadebuilder.model.AncestryVariantConfig
+import com.example.swadebuilder.model.ArmaNatural
 import com.example.swadebuilder.model.FixedPackageOption
 import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionDef
@@ -94,6 +95,11 @@ object AncestryVariantRegistry {
                     pacoteFixo = ResolvedTraitPackage(
                         vantagensGratisParaAdicionar = listOf("PRONTIDÃO"),
                         tracosParaAdicionar = listOf("MORDIDA"),
+                        // Sáurios "Mordida" nunca foi um campo fixo no JSON
+                        // da raça (só existe pra Básico) — sem isso aqui,
+                        // extrairArmasNaturais só achava a arma por
+                        // casamento de palavra-chave em texto solto.
+                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Mordida", dano = "For+d4")),
                         naturalArmor = 2
                     )
                 ),
@@ -303,13 +309,18 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "padrao",
                     nome = "Padrão",
-                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("ARMADURA +2", "GARRAS"), naturalArmor = 2)
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("ARMADURA +2", "GARRAS"),
+                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Garras", dano = "For+d4", pa = 2, escalavel = true)),
+                        naturalArmor = 2
+                    )
                 ),
                 VariantOption(
                     id = "vespa",
                     nome = "Vespa",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf("FERRÃO (Mordida For+d4)", "VOO (Movimentação 6)", "TOQUE VENENOSO (Moderado)")
+                        tracosParaAdicionar = listOf("FERRÃO (Mordida For+d4)", "VOO (Movimentação 6)", "TOQUE VENENOSO (Moderado)"),
+                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Ferrão", dano = "For+d4"))
                     )
                 )
             )
@@ -464,25 +475,39 @@ object AncestryVariantRegistry {
     // concede Pacifista Maior) fica, então Guerreiro acumula as duas
     // Complicações. Preservado como estava (não é uma regressão desta
     // migração) — sinalizado pro usuário decidir se é bug de conteúdo.
+    // A habilidade base de Robôs já concede CIRCUITOS DE ASIMOV (nome de
+    // sabor pra Pacifista Maior, ver descrição em ancestralidades.json) e
+    // PROGRAMADO (Maior) incondicionalmente — então Padrão/Limitado não
+    // precisam pedir de novo (o "ensure" antigo pedia "PACIFISTA (Maior)",
+    // um texto que nunca batia com "CIRCUITOS DE ASIMOV (Maior)", e por
+    // isso empilhava as duas Complicações como se fossem diferentes; bug
+    // de conteúdo pré-existente, não introduzido por esta migração).
+    // Guerreiro troca Pacifista por Sem Escrúpulos (Maior) de verdade,
+    // removendo CIRCUITOS DE ASIMOV pelo nome real da habilidade base.
     private fun robos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ROBOS",
         grupoVariante = VariantGroup(
             opcoes = listOf(
-                VariantOption(
-                    id = "padrao",
-                    nome = "Padrão",
-                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"))
-                ),
+                VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
                 VariantOption(
                     id = "guerreiro",
                     nome = "Guerreiro",
-                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("SEM ESCRÚPULOS (Maior)", "PROGRAMADO (Maior)"))
+                    pacoteFixo = ResolvedTraitPackage(
+                        desvantagensParaAdicionar = listOf("SEM ESCRÚPULOS (Maior)"),
+                        desvantagensParaRemover = listOf(
+                            "CIRCUITOS DE ASIMOV (Maior)", "CIRCUITOS DE ASIMOV", "PACIFISTA (Maior)", "PACIFISTA"
+                        )
+                    )
                 ),
                 VariantOption(
                     id = "limitado",
                     nome = "Limitado",
                     pacoteFixo = ResolvedTraitPackage(
-                        desvantagensParaAdicionar = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"),
+                        // Id fixo e previsível (não o slug auto-derivado do
+                        // texto) porque isPericiaBasicaEfetiva/periciaStartRawInternal
+                        // em CriadorState checam esse id diretamente pra saber
+                        // se removem o d4 grátis de todas as perícias básicas.
+                        tracosParaAdicionar = listOf("PERÍCIAS BÁSICAS REDUZIDAS (TOTAL)"),
                         anotacoes = listOf("Robôs Limitado: Combine com o mestre compensação de Perícias Reduzidas.")
                     )
                 )
