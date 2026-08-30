@@ -11,8 +11,17 @@ import com.example.swadebuilder.model.VariantOption
 /**
  * Catálogo central de Variantes/Seleções por ancestralidade, indexado por id
  * estável (mesmo valor de `ancestralidade.keyify()` usado no resto do app).
- * Lote piloto: Terracota, Umvee, Elementais (Sci-Fi), Anões. As outras 21+
- * raças com variante/seleção entram em lotes seguintes, no mesmo padrão.
+ * Lote piloto: Terracota, Umvee, Elementais (Sci-Fi), Anões. Lote 2: as 19
+ * raças Sci-Fi com Variante de 2 opções (Rakashanos, Sáurios, Aquarianos,
+ * Avianos, Elfos, Humanos, Centaux, Drakens, Ferais, Florans, Gelatinoides,
+ * Insetoides, Mímicos, Mineradores Genéticos, Oráculos, Possessores,
+ * Quadroides, Soldados Genéticos, Yetis).
+ *
+ * Ficam de fora por ora Robôs e Seres Sintéticos — o "when" original delas
+ * não tem um branch `else` claramente equivalente a "Básico"/"Padrão" (cai
+ * no mesmo pacote de uma das variantes nomeadas quando `ancestryOptions`
+ * vem vazio), então migrar sem essa ambiguidade resolvida arriscaria mudar
+ * comportamento; seguem no "when" fixo em ResolveAncestrySpecificAdjustmentsUseCase.
  *
  * Uma raça ausente daqui simplesmente não tem variante nem seleção conhecida
  * pelo motor novo (ex.: Feral — tem traços fixos, não variante nem seleção).
@@ -23,10 +32,445 @@ object AncestryVariantRegistry {
         terracota(),
         umvee(),
         elementaisScifi(),
-        anoes()
+        anoes(),
+        rakashanos(),
+        sauriosScifi(),
+        aquarianos(),
+        avianos(),
+        elfos(),
+        humanos(),
+        centaux(),
+        drakens(),
+        ferais(),
+        florans(),
+        gelatinoides(),
+        insetoidesScifi(),
+        mimicos(),
+        mineradoresGeneticos(),
+        oraculos(),
+        possessores(),
+        quadroides(),
+        soldadosGeneticos(),
+        yetis()
     ).associateBy { it.ancestralidadeId }
 
     fun get(ancestralidadeId: String): AncestryVariantConfig? = configs[ancestralidadeId]
+
+    // --- Lote 2: raças Sci-Fi com Variante real de 2 opções (Básico/Padrão +
+    // 1 reconfiguração de cenário), migradas de ResolveAncestrySpecificAdjustmentsUseCase
+    // (bloco `if (isSciFiActive) { if (ancKey == "X") ... }`). Mesmo padrão do
+    // lote piloto: cada opção carrega só as ADIÇÕES/REMOÇÕES de traços — a
+    // Armadura Natural (quando difere de 0, ex.: Sáurios/Insetoides) e o
+    // `forceArmorZero` seguem como exceção pontual na camada de wiring
+    // (ResolveAncestrySpecificAdjustmentsUseCase), igual ao Umvee Pedregoso.
+
+    private fun rakashanos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "RAKASHANOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "basico",
+                    nome = "Básico",
+                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("SANGUINÁRIO (Maior)"))
+                ),
+                VariantOption(
+                    id = "brincalhao",
+                    nome = "Brincalhão",
+                    pacoteFixo = ResolvedTraitPackage(
+                        desvantagensParaAdicionar = listOf("CURIOSO (Maior)"),
+                        desvantagensParaRemover = listOf("SANGUINÁRIO", "SANGUINÁRIO (Maior)")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun sauriosScifi(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "SAURIOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "basico",
+                    nome = "Básico",
+                    pacoteFixo = ResolvedTraitPackage(
+                        vantagensGratisParaAdicionar = listOf("PRONTIDÃO"),
+                        tracosParaAdicionar = listOf("MORDIDA"),
+                        naturalArmor = 2
+                    )
+                ),
+                VariantOption(
+                    id = "cuspidor",
+                    nome = "Cuspidor",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("TOQUE VENENOSO (Cuspidor)"),
+                        naturalArmor = 2
+                    )
+                )
+            )
+        )
+    )
+
+    private fun aquarianos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "AQUARIANOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(id = "basico", nome = "Básico", pacoteFixo = ResolvedTraitPackage()),
+                VariantOption(
+                    id = "semi_aquaticos",
+                    nome = "Semi-aquáticos",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("SEMIAQUÁTICO", "TOQUE VENENOSO"),
+                        tracosParaRemoverPorNome = listOf("AQUÁTICO", "RESISTÊNCIA")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun avianos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "AVIANOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "basico",
+                    nome = "Básico",
+                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("FRÁGIL", "NÃO SABE NADAR"))
+                ),
+                VariantOption(
+                    id = "ave_de_rapina",
+                    nome = "Ave de rapina",
+                    pacoteFixo = ResolvedTraitPackage(
+                        desvantagensParaAdicionar = listOf(
+                            "HABITANTE DE GRAVIDADE ZERO/BAIXA",
+                            "FORMA ALIENÍGENA",
+                            "SENTIDOS AGUÇADOS (Olhos de Águia)"
+                        ),
+                        tracosParaRemoverPorNome = listOf("FRÁGIL", "FRAGIL", "NÃO SABE NADAR", "NAO SABE NADAR"),
+                        desvantagensParaRemover = listOf("NÃO SABE NADAR", "NÃO SABE NADAR (Menor)", "FRÁGIL")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun elfos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "ELFOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "basico",
+                    nome = "Básico",
+                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("DESASTRADO (Menor)"))
+                ),
+                VariantOption(
+                    id = "comunitario",
+                    nome = "Comunitário",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("COMUNITÁRIO"),
+                        tracosParaRemoverPorNome = listOf("DESASTRADO"),
+                        desvantagensParaAdicionar = listOf("TRANSTORNO DE SEPARAÇÃO"),
+                        desvantagensParaRemover = listOf("DESASTRADO", "DESASTRADO (Menor)")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun humanos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "HUMANOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
+                VariantOption(
+                    id = "baixa_gravidade",
+                    nome = "Baixa Gravidade",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaRemoverPorNome = listOf("ADAPTÁVEL", "ADAPTAVEL"),
+                        desvantagensParaAdicionar = listOf("HABITANTE DE GRAVIDADE BAIXA")
+                    )
+                ),
+                VariantOption(
+                    id = "minerador",
+                    nome = "Minerador",
+                    pacoteFixo = ResolvedTraitPackage(desvantagensParaAdicionar = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
+                )
+            )
+        )
+    )
+
+    private fun centaux(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "CENTAUX",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"))
+                ),
+                VariantOption(
+                    id = "gazela",
+                    nome = "Gazela",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("MOVIMENTAÇÃO +4"),
+                        tracosParaRemoverPorNome = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
+                        desvantagensParaRemover = listOf("GRANDE")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun drakens(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "DRAKENS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("FORTE", "RESISTÊNCIA +2"))
+                ),
+                VariantOption(
+                    id = "dragao",
+                    nome = "Dragão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("ARMA DE SOPRO (Fogo)"))
+                )
+            )
+        )
+    )
+
+    private fun ferais(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "FERAIS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("DIMINUTO (Tamanho -3)"))
+                ),
+                VariantOption(
+                    id = "menor",
+                    nome = "Menor",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("DIMINUTO (Tamanho -4)"),
+                        tracosParaRemoverPorNome = listOf("ESPIRITUOSO"),
+                        desvantagensParaAdicionar = listOf("TRANSTORNO DE SEPARAÇÃO"),
+                        desvantagensParaRemover = listOf("ALTA/BAIXA TECNOLOGIA", "ALTA/BAIXA TECNOLOGIA (Maior)")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun florans(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "FLORANS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("ROBUSTO"))
+                ),
+                VariantOption(
+                    id = "defensivo",
+                    nome = "Defensivo",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("TOQUE VENENOSO (Paralisante)"))
+                )
+            )
+        )
+    )
+
+    private fun gelatinoides(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "GELATINOIDES",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("REGENERAÇÃO"))
+                ),
+                VariantOption(
+                    id = "ameba",
+                    nome = "Ameba",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("CAMUFLAGEM"))
+                )
+            )
+        )
+    )
+
+    private fun insetoidesScifi(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "INSETOIDES",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("ARMADURA +2", "GARRAS"), naturalArmor = 2)
+                ),
+                VariantOption(
+                    id = "vespa",
+                    nome = "Vespa",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("FERRÃO (Mordida For+d4)", "VOO (Movimentação 6)", "TOQUE VENENOSO (Moderado)")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun mimicos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "MIMICOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("MUDANÇA DE FORMA"))
+                ),
+                VariantOption(
+                    id = "resistente",
+                    nome = "Resistente",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("RESISTÊNCIA +1", "MUDANÇA DE FORMA (Sem variação de tamanho)")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun mineradoresGeneticos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "MINERADORES GENETICOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"))
+                ),
+                VariantOption(
+                    id = "zero_g",
+                    nome = "Zero G",
+                    pacoteFixo = ResolvedTraitPackage(
+                        vantagensGratisParaAdicionar = listOf("ADAPTAÇÃO GRAVITACIONAL"),
+                        vantagensGratisIds = listOf("adaptacao_gravitacional"),
+                        tracosParaRemoverPorNome = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
+                        desvantagensParaAdicionar = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)"),
+                        desvantagensParaRemover = listOf("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDÊNCIA ATMOSFÉRICA (Maior)")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun oraculos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "ORACULOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(
+                        vantagensGratisParaAdicionar = listOf("NOÇÃO DO PERIGO"),
+                        vantagensGratisIds = listOf("nocao_do_perigo")
+                    )
+                ),
+                VariantOption(
+                    id = "aterrorizado",
+                    nome = "Aterrorizado",
+                    pacoteFixo = ResolvedTraitPackage(
+                        vantagensGratisIds = listOf("poderes_misticos"),
+                        tracosParaAdicionar = listOf("PODERES MÍSTICOS (TELEPATA)"),
+                        tracosParaRemoverPorNome = listOf("NOÇÃO DO PERIGO", "NOCAO_DO_PERIGO")
+                    )
+                )
+            )
+        )
+    )
+
+    private fun possessores(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "POSSESSORES",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(tracosParaRemoverPorNome = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"))
+                ),
+                VariantOption(
+                    id = "energia",
+                    nome = "Energia",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("FORMA DE ENERGIA"),
+                        tracosParaRemoverPorNome = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
+                        desvantagensParaAdicionar = listOf(
+                            "Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    private fun quadroides(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "QUADROIDES",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("AÇÃO ADICIONAL (Física)"),
+                        desvantagensParaAdicionar = listOf("SENSÍVEL (Maior)")
+                    )
+                ),
+                VariantOption(
+                    id = "habilidoso",
+                    nome = "Habilidoso",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)"),
+                        desvantagensParaAdicionar = listOf(
+                            "SENSÍVEL (Maior)",
+                            "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido ao cenário."
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    private fun soldadosGeneticos(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "SOLDADOS GENETICOS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(
+                    id = "padrao",
+                    nome = "Padrão",
+                    pacoteFixo = ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"))
+                ),
+                VariantOption(
+                    id = "fuzileiro_zero_g",
+                    nome = "Fuzileiro Zero G",
+                    pacoteFixo = ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"))
+                )
+            )
+        )
+    )
+
+    private fun yetis(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "YETIS",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
+                VariantOption(
+                    id = "sopro",
+                    nome = "Sopro",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf("ARMA DE SOPRO (Frio)"),
+                        desvantagensParaAdicionar = listOf("DEPENDÊNCIA")
+                    )
+                )
+            )
+        )
+    )
 
     // --- Terracota: Seleção de pacote fixo (Voto OU Obrigação, ambas
     // Complicação Maior "de nascença" — todo Terracota tem uma das duas). ---

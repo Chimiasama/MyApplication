@@ -50,7 +50,19 @@ data class ResolvedTraitPackage(
     val tracosParaAdicionar: List<String> = emptyList(),
     val tracosParaRemoverPorId: List<String> = emptyList(),
     val vantagensGratisParaAdicionar: List<String> = emptyList(),
+    // Ids de Vantagem (vantagens.json) que devem ser garantidas, em vez de
+    // casadas por nome — ex.: "poderes_misticos" (Oráculos Aterrorizado).
+    val vantagensGratisIds: List<String> = emptyList(),
     val desvantagensParaAdicionar: List<String> = emptyList(),
+    // Nomes de traços/vantagens automáticas da raça base que esta opção
+    // substitui/revoga (ex.: Aquarianos Semi-aquáticos remove "Aquático").
+    val tracosParaRemoverPorNome: List<String> = emptyList(),
+    // Complicações raciais da raça base que esta opção substitui/revoga
+    // (ex.: Centaux Gazela remove "Grande").
+    val desvantagensParaRemover: List<String> = emptyList(),
+    // Sobrescreve a Armadura Natural da raça quando esta opção muda o valor
+    // padrão (ex.: Insetoides Vespa perde a Armadura +2 do Padrão).
+    val naturalArmor: Int = 0,
     val anotacoes: List<String> = emptyList()
 )
 
