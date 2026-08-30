@@ -12,7 +12,15 @@ data class RacialAbility(
     val descricaoLite: String? = null,
     val id: String? = null,
     val category: String? = null,
-    val severity: String? = null
+    val severity: String? = null,
+    // Ataque(s) natural(is) concedido(s) por esta habilidade racial, já como
+    // dado estruturado — mesmo campo/tipo que MonstroHabilidade.armasNaturais
+    // usa pro Template de Monstro Heroico (ver MonstroTemplate.kt). Antes
+    // disso, extrairArmasNaturais() extraía dano/PA via regex sobre
+    // `descricao`, casando por palavra-chave no nome; algumas raças (ex.:
+    // Insetoides) precisavam de um valor de PA hardcoded no código porque a
+    // descrição não bastava. Com o dado aqui, o código só lê.
+    val armasNaturais: List<ArmaNatural> = emptyList()
 )
 
 @Serializable

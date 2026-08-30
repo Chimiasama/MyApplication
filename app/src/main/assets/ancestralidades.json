@@ -343,7 +343,21 @@
         "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
         "id": "MORDIDA_GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4."
+        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "armasNaturais": [
+          {
+            "nome": "Garras",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": true
+          },
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Não Sabe Nadar",
@@ -409,7 +423,15 @@
         "descricao": "As presas de personagens são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
         "id": "MORDIDA",
         "category": "racial_trait_positive",
-        "descricaoLite": "As presas atuam como Arma Natural, causando Força+d4 de dano."
+        "descricaoLite": "As presas atuam como Arma Natural, causando Força+d4 de dano.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Sentidos Aguçados",
@@ -741,7 +763,15 @@
         "descricao": "Os cascos de um centauro causam For+d4 de dano, e Vantagens que aumentam o dano de armas naturais, como Artista Marcial, aplicam-se a seus coices, bem como a outros ataques naturais.",
         "id": "CASCOS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Os coices causam Força+d4 de dano e se beneficiam de Vantagens que ampliam o dano de ataques naturais, como Artista Marcial."
+        "descricaoLite": "Os coices causam Força+d4 de dano e se beneficiam de Vantagens que ampliam o dano de ataques naturais, como Artista Marcial.",
+        "armasNaturais": [
+          {
+            "nome": "Cascos",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": true
+          }
+        ]
       },
       {
         "nome": "DEPENDÊNCIA",
@@ -877,7 +907,21 @@
         "descricao": "For+d4, PA 2. Observe que Mordida permite que uma personagem morda uma presa agarrada em vez de apenas a esmagar; e Garras adicionam +2 em Atletismo ao escalar a maioria das superfícies.",
         "id": "MORDIDA_GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Causam Força+d4 com PA 2; a mordida permite atacar um alvo já agarrado em vez de apenas esmagá-lo, e as garras somam +2 em Atletismo para escalar superfícies."
+        "descricaoLite": "Causam Força+d4 com PA 2; a mordida permite atacar um alvo já agarrado em vez de apenas esmagá-lo, e as garras somam +2 em Atletismo para escalar superfícies.",
+        "armasNaturais": [
+          {
+            "nome": "Garras",
+            "dano": "For+d4",
+            "pa": 2,
+            "escalavel": true
+          },
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 2,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "RESISTÊNCIA AMBIENTAL (Calor)",
@@ -1235,7 +1279,15 @@
         "descricao": "Os chifres do infernal causam For+d4 de dano, e causam +4 de dano se a personagem correr pelo menos 5 quadros (10 metros) e acertar com eles.",
         "id": "CHIFRES",
         "category": "racial_trait_positive",
-        "descricaoLite": "Chifres causam For+d4 de dano, com +4 extra caso o ataque venha depois de correr ao menos 5 quadros (10 metros)."
+        "descricaoLite": "Chifres causam For+d4 de dano, com +4 extra caso o ataque venha depois de correr ao menos 5 quadros (10 metros).",
+        "armasNaturais": [
+          {
+            "nome": "Chifres",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "FORASTEIRO",
@@ -1336,7 +1388,15 @@
         "descricao": "As mandíbulas ou pinças do povo inseto causam For+d4 de dano.",
         "id": "MORDIDA_OU_GARRA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Mandíbulas ou pinças causam For+d4 de dano."
+        "descricaoLite": "Mandíbulas ou pinças causam For+d4 de dano.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "GUIADO (Maior)",
@@ -1525,7 +1585,15 @@
         "descricao": "Os chifres do minotauro causam For+d6 de dano, e causam +4 de dano se a personagem correr pelo menos 5 quadros (10 metros) e acertar com eles.",
         "id": "CHIFRES",
         "category": "racial_trait_positive",
-        "descricaoLite": "Chifres causam For+d6 de dano, com +4 extra se acertar depois de correr ao menos 5 quadros (10 metros)."
+        "descricaoLite": "Chifres causam For+d6 de dano, com +4 extra se acertar depois de correr ao menos 5 quadros (10 metros).",
+        "armasNaturais": [
+          {
+            "nome": "Chifres",
+            "dano": "For+d6",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "DESAGRADÁVEL",
@@ -1811,14 +1879,30 @@
         "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (escalar).",
         "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Garras causam For+d4 de dano, com PA 2, além de +2 em Atletismo para escalar."
+        "descricaoLite": "Garras causam For+d4 de dano, com PA 2, além de +2 em Atletismo para escalar.",
+        "armasNaturais": [
+          {
+            "nome": "Garras",
+            "dano": "For+d4",
+            "pa": 2,
+            "escalavel": true
+          }
+        ]
       },
       {
         "nome": "MORDIDA",
         "descricao": "Os dentes do povo ratazana causam For+d4 de dano e podem ser usados contra inimigos agarrados.",
         "id": "MORDIDA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Além de poder atacar oponentes já agarrados, os dentes causam For+d4 de dano."
+        "descricaoLite": "Além de poder atacar oponentes já agarrados, os dentes causam For+d4 de dano.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "RESISTÊNCIA NATURAL",
@@ -1957,14 +2041,30 @@
         "descricao": "O povo serpente possui presas, causando For+d4 de dano.",
         "id": "MORDIDA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Presas causam For+d4 de dano."
+        "descricaoLite": "Presas causam For+d4 de dano.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "MORDIDA VENENOSA",
         "descricao": "Vítimas Abaladas ou Feridas pela Mordida do povo serpente devem fazer uma rolagem de Vigor ou sofrem os efeitos de um veneno Moderado.",
         "id": "MORDIDA_VENENOSA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Quem for Abalado ou Ferido pela mordida precisa testar Vigor, sob pena de sofrer um veneno de intensidade Moderada."
+        "descricaoLite": "Quem for Abalado ou Ferido pela mordida precisa testar Vigor, sob pena de sofrer um veneno de intensidade Moderada.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "MOVIMENTAÇÃO",
@@ -2002,7 +2102,15 @@
         "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (Escalar).",
         "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Garras causam For+d4 de dano, com PA 2, além de +2 em Atletismo para escalar."
+        "descricaoLite": "Garras causam For+d4 de dano, com PA 2, além de +2 em Atletismo para escalar.",
+        "armasNaturais": [
+          {
+            "nome": "Garras",
+            "dano": "For+d4",
+            "pa": 2,
+            "escalavel": true
+          }
+        ]
       },
       {
         "nome": "INIMIGO ANCESTRAL",
@@ -2016,7 +2124,15 @@
         "descricao": "As presas de rakashanos causam For+d4 de dano e podem ser usadas contra inimigos agarrados.",
         "id": "MORDIDA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Mordem com força suficiente para causar For+d4 de dano, inclusive quando o alvo já está agarrado."
+        "descricaoLite": "Mordem com força suficiente para causar For+d4 de dano, inclusive quando o alvo já está agarrado.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "NÃO SABE NADAR",
@@ -2106,7 +2222,15 @@
         "descricao": "Renascidos têm presas que causam For+d4 de dano.",
         "id": "MORDIDA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Suas presas causam dano de For+d4 em combate corpo a corpo."
+        "descricaoLite": "Suas presas causam dano de For+d4 em combate corpo a corpo.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "RESISTÊNCIA AO FRIO",
@@ -2171,7 +2295,15 @@
         "descricao": "As presas dos sáurios causam For+d4 de dano e podem ser usadas contra inimigos agarrados.",
         "id": "MORDIDA",
         "category": "racial_trait_positive",
-        "descricaoLite": "O dano da mordida equivale a For+d4, funcionando também contra oponentes que estejam agarrados a eles."
+        "descricaoLite": "O dano da mordida equivale a For+d4, funcionando também contra oponentes que estejam agarrados a eles.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "SENTIDOS APRIMORADOS",
@@ -2582,7 +2714,21 @@
         "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
         "category": "racial_trait_positive",
         "id": "MORDIDAGARRAS",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4."
+        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "armasNaturais": [
+          {
+            "nome": "Garras",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": true
+          },
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Não Sabe Nadar",
@@ -2653,7 +2799,15 @@
         "descricao": "As presas de personagens são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
         "category": "racial_trait_positive",
         "id": "MORDIDA",
-        "descricaoLite": "As presas atuam como Arma Natural, causando Força+d4 de dano."
+        "descricaoLite": "As presas atuam como Arma Natural, causando Força+d4 de dano.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Sentidos Aguçados",
@@ -2924,7 +3078,21 @@
         "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
         "id": "MORDIDA_GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4."
+        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "armasNaturais": [
+          {
+            "nome": "Garras",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": true
+          },
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Não Sabe Nadar",
@@ -3076,7 +3244,15 @@
         "descricao": "A crista da cabeça desses drakens permite que deem cabeçadas com força extrema. Isso conta como Chifres e causa For+d4 de dano. Veja Armas Naturais em Savage Worlds Edição Aventura.",
         "id": "CABECADA",
         "category": "racial_trait_positive",
-        "descricaoLite": "A crista craniana funciona como arma natural do tipo Chifres, permitindo cabeçadas que causam For+d4 de dano."
+        "descricaoLite": "A crista craniana funciona como arma natural do tipo Chifres, permitindo cabeçadas que causam For+d4 de dano.",
+        "armasNaturais": [
+          {
+            "nome": "Cabeça Dura",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "LENTO",
@@ -4820,7 +4996,15 @@
         "descricao": "Ápice concede garras naturais que causam For+d4 de dano.",
         "category": "racial_trait_positive",
         "id": "GARRAS",
-        "descricaoLite": "Garras naturais causam For+d4 de dano."
+        "descricaoLite": "Garras naturais causam For+d4 de dano.",
+        "armasNaturais": [
+          {
+            "nome": "Garras",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": true
+          }
+        ]
       },
       {
         "nome": "Primitivo",
@@ -5730,7 +5914,21 @@
         "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
         "category": "racial_trait_positive",
         "id": "MORDIDAGARRAS",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4."
+        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "armasNaturais": [
+          {
+            "nome": "Garras",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": true
+          },
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Não Sabe Nadar",
@@ -5801,7 +5999,15 @@
         "descricao": "As presas de personagens são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
         "category": "racial_trait_positive",
         "id": "MORDIDA",
-        "descricaoLite": "As presas atuam como Arma Natural, causando Força+d4 de dano."
+        "descricaoLite": "As presas atuam como Arma Natural, causando Força+d4 de dano.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Sentidos Aguçados",

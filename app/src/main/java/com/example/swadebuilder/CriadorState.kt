@@ -14,6 +14,7 @@ import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.ArcaneConfig
+import com.example.swadebuilder.model.ArmaNatural
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.Complicacao
@@ -1849,40 +1850,90 @@ class CriadorState {
             return dmg
         }
 
-        // Monster Natural Weapons: lido direto do dado estruturado
-        // (MonstroHabilidade.armasNaturais), sem regex sobre o texto de
-        // descrição — o dano/PA de cada arma já vem pronto de
-        // horror_monstros.json.
+        // Vantagens que aprimoram Garras/Mordida específicas (ex.: Garras de
+        // Demônio, Mordida de Vampiro), reaproveitadas tanto pelas armas
+        // naturais de raça quanto de Monstro Heroico — o efeito é da
+        // Vantagem, não de quem concedeu a arma base.
+        val garrasDemonioCount = vantagensSelecionadas.count { it.id == "garras_demonio" }
+        val mordidaDemonioCount = vantagensSelecionadas.count { it.id == "mordida_demonio" }
+        val hasGarrasVampiro = vantagensSelecionadas.any { it.id == "garras_vampiro" }
+        val hasLobisomemAprimorado = vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" }
+
+        fun aplicarUpgradesDeVantagem(arma: ArmaNatural): Pair<String, Int> {
+            var dmg = arma.dano
+            var pa = arma.pa
+
+            if (hasLobisomemAprimorado && (arma.nome.equals("Garras", true) || arma.nome.equals("Mordida", true))) {
+                dmg = "For+d8"
+                pa = maxOf(pa, 4)
+            }
+            if (arma.nome.equals("Garras", true) && garrasDemonioCount > 0) {
+                dmg = if (garrasDemonioCount >= 2) "For+d6" else "For+d4"
+                if (garrasDemonioCount >= 2) pa = maxOf(pa, 2)
+            }
+            if (arma.nome.equals("Garras", true) && hasGarrasVampiro) {
+                dmg = "For+d6"
+                pa = maxOf(pa, 2)
+            }
+            if (arma.nome.equals("Mordida", true) && mordidaDemonioCount > 0) {
+                dmg = "For+d6"
+                if (mordidaDemonioCount >= 2) pa = maxOf(pa, 2)
+            }
+            if (arma.escalavel && (hasMartialArtist || hasBrawler)) {
+                dmg = upgradeDie(dmg)
+            }
+            return dmg to pa
+        }
+
+        fun adicionarArmaNatural(arma: ArmaNatural) {
+            val (dmg, pa) = aplicarUpgradesDeVantagem(arma)
+            weapons.add(
+                EquipamentoItem(
+                    nome = arma.nome,
+                    dano = JsonPrimitive(dmg),
+                    pa = if (pa > 0) JsonPrimitive(pa) else null,
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0)
+                )
+            )
+        }
+
+        // Race Natural Weapons: lido direto do dado estruturado
+        // (RacialAbility.armasNaturais) — não é mais texto pra casar por
+        // palavra-chave, o dano/PA de cada arma já vem pronto de
+        // ancestralidades.json.
+        ancestralidadeObj.habilidades.forEach { hab ->
+            hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
+        }
+
+        // Monster Natural Weapons: mesma leitura estruturada, pro Template de
+        // Monstro Heroico (horror_monstros.json).
         getMonstroSelecionado()?.let { monstro ->
             monstro.habilidades.forEach { hab ->
-                hab.armasNaturais.forEach { arma ->
-                    var dmgMatch = arma.dano
-                    var paValue = arma.pa
-
-                    if (vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" } && (arma.nome.equals("Garras", true) || arma.nome.equals("Mordida", true))) {
-                        dmgMatch = "For+d8"
-                        paValue = maxOf(paValue, 4)
-                    }
-
-                    if (arma.escalavel && (hasMartialArtist || hasBrawler)) {
-                        dmgMatch = upgradeDie(dmgMatch)
-                    }
-
-                    weapons.add(
-                        EquipamentoItem(
-                            nome = arma.nome,
-                            dano = JsonPrimitive(dmgMatch),
-                            pa = if (paValue > 0) JsonPrimitive(paValue) else null,
-                            distancia = JsonPrimitive("Toque"),
-                            peso = JsonPrimitive(0),
-                            custo = JsonPrimitive(0)
-                        )
-                    )
-                }
+                hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
             }
         }
 
-        // Parse logic
+        // Exclusões por Variante (Sáurios Cuspidor troca a Mordida por outra
+        // arma; Insetoides Vespa troca as Garras por Ferrão) — continuam por
+        // nome de raça+variante por enquanto; migrar isso junto de uma
+        // limpeza maior do sistema de Variantes (fora do escopo desta
+        // passada, ver auditoria de hardcode).
+        if (compendioSciFiAtivo) {
+            if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor") {
+                weapons.removeAll { it.nome.equals("Mordida", ignoreCase = true) }
+            }
+            if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa") {
+                weapons.removeAll { it.nome.equals("Garras", ignoreCase = true) }
+            }
+        }
+
+        // Parse logic (permanece pra armas concedidas por Vantagem/Edge — ex.:
+        // Toque Arrepiante, Toque da Morte — e como fallback pra qualquer
+        // combinação raça/vantagem ainda não coberta pelo dado estruturado
+        // acima; o `alreadyPresent` abaixo evita duplicar o que já foi
+        // adicionado pelos blocos de raça/monstro).
         keywords.forEach { key ->
             val keyToken = key.keyify()
             val targetId = keywordToIdMap[key]
@@ -1940,10 +1991,8 @@ class CriadorState {
                 var dmgMatch = dmgRegex.find(desc)?.value?.replace(" ", "") ?: "For+d4"
                 var paFinal = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
 
-                val garrasDemonioCount = vantagensSelecionadas.count { it.id == "garras_demonio" }
-                val mordidaDemonioCount = vantagensSelecionadas.count { it.id == "mordida_demonio" }
-                val hasGarrasVampiro = vantagensSelecionadas.any { it.id == "garras_vampiro" }
-                val hasLobisomemAprimorado = vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" }
+                // garrasDemonioCount/mordidaDemonioCount/hasGarrasVampiro/hasLobisomemAprimorado
+                // já vêm do escopo externo (ver aplicarUpgradesDeVantagem acima).
 
                 if (key.equals("Toque Arrepiante", ignoreCase = true)) {
                     dmgMatch = "For+d4"
