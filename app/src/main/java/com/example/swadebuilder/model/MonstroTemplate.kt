@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.EditionConfig
+import com.example.swadebuilder.util.keyify
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -55,6 +56,50 @@ data class MonstroHabilidade(
 ) {
     fun exibida(): MonstroHabilidade =
         if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this
+}
+
+/**
+ * Mesma lista "Características" que a aba Ancestralidades usa (ver
+ * RacialCaracteristicasResolver), adaptada pro Template de Monstro Heroico —
+ * que não é uma RacialModifier, então precisa converter duas coisas antes de
+ * reaproveitar o resolver:
+ *
+ * - `atributos_bonus` guarda PASSOS (ex.: Anjo Força:2 = 2 passos de dado,
+ *   RacialTraitEffect.AtributoStep(passos=2)), não o delta bruto que
+ *   RacialModifier.atributos usa (onde Elfo Agilidade:2 já É "+2" pronto pra
+ *   somar a 4). Multiplica por 2 pra entrar no mesmo formato. "Fe" (perícia
+ *   Fé, não atributo) sai à parte, convertida pro "tier" que o resolver
+ *   espera pra perícias (passos+1: 1 passo = tier 2 = d6).
+ * - `complicacoes` são frases completas ("Fraqueza (Estaca no Coração):
+ *   Ataque Localizado..."), não o par "Nome (Severidade)" que
+ *   RacialModifier.desvantagens usa — o resolver tentaria ler errado o que
+ *   vem entre parênteses como severidade. Em vez de forçar no mesmo
+ *   parâmetro, cada complicação vira uma linha própria só com o rótulo antes
+ *   dos ":" (mesmo corte que ModifierEngine já faz pra aplicar a mecânica).
+ */
+fun MonstroTemplate.paraCaracteristicas(): List<String> {
+    val atributosConvertidos = atributos_bonus
+        .filterKeys { it.keyify() != "FE" }
+        .mapValues { (_, passos) -> passos * 2 }
+
+    val feEntry = atributos_bonus.entries.firstOrNull { it.key.keyify() == "FE" }
+    val periciasConvertidas = feEntry?.let { mapOf("Fé" to it.value + 1) } ?: emptyMap()
+
+    val habilidadesConvertidas = habilidades.map {
+        RacialAbility(nome = it.nome, descricao = "", id = it.id)
+    }
+
+    val linhas = RacialCaracteristicasResolver.resolver(
+        atributos = atributosConvertidos,
+        pericias = periciasConvertidas,
+        vantagensGratis = vantagensGratis,
+        desvantagens = emptyList(),
+        habilidades = habilidadesConvertidas
+    ).toMutableList()
+
+    complicacoes.forEach { linhas += it.substringBefore(":").trim() }
+
+    return linhas
 }
 
 @Serializable

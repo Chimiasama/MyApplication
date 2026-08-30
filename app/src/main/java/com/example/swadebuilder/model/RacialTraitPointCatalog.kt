@@ -129,6 +129,7 @@ object RacialTraitPointCatalog {
         "FRAGIL" to RacialTraitEffect.ResistenciaBonus(-1),
         "FRAGIL_MAIOR" to RacialTraitEffect.ResistenciaBonus(-2), // sintético: Demônios (Horror), Frágil -2 em vez do -1 padrão
         "LENTO" to RacialTraitEffect.PassoBonus(-1),
+        "MOVIMENTACAO_REDUZIDA" to RacialTraitEffect.PassoBonus(-1),
         "METADE_CONSTRUTO" to RacialTraitEffect.ResistenciaBonus(3),
         "MORTO_VIVO" to RacialTraitEffect.ResistenciaBonus(2),
         "RESISTENCIA" to RacialTraitEffect.ResistenciaBonus(1),
@@ -153,10 +154,35 @@ object RacialTraitPointCatalog {
         "FRAGIL_MAIOR" to "Frágil",
         "LENTO" to "Lento",
         "METADE_CONSTRUTO" to "Metade Construto",
+        "MOVIMENTACAO_REDUZIDA" to "Movimentação Reduzida",
         "MORTO_VIVO" to "Morto-Vivo",
         "RESISTENCIA" to "Resistência",
         "VELOCIDADE_RACIAL" to "Velocidade",
-        "VISAO_NO_ESCURO" to "Visão no Escuro"
+        "VISAO_NO_ESCURO" to "Visão no Escuro",
+
+        // Habilidades puramente narrativas dos 8 Templates de Monstro Heroico
+        // (Horror) — sem efeito numérico modelado, então não aparecem em
+        // EFEITOS, só aqui, pra "Características" não cair no fallback de
+        // nome cru.
+        "EMBELEZAR_ANJO" to "Embelezar",
+        "IMUNE_DOENCAS_VENENOS" to "Imune a Doenças e Venenos",
+        "NAO_ENVELHECE" to "Não Envelhece",
+        "VOO_MOV_12" to "Voo",
+        "ARRUINAR_DEMONIO" to "Arruinar",
+        "NEGOCIADOR_DEMONIO" to "Negociador",
+        "NAO_RESPIRA" to "Não Respira",
+        "RESISTENCIA_AMBIENTAL" to "Resistência Ambiental",
+        "VISAO_TOTAL_ESCURO" to "Visão Total no Escuro",
+        "ETEREO_FANTASMA" to "Etéreo",
+        "INFRAVISAO" to "Infravisão",
+        "MORDIDA_GARRAS_LOBISOMEM" to "Mordida/Garras",
+        "TRANSFORMACAO_LOBISOMEM" to "Transformação",
+        "CIENCIA_RETALHOS" to "Ciência!",
+        "FURIA_RETALHOS" to "Fúria",
+        "PARTES_RECOSTURAR" to "Partes (Recosturar)",
+        "REGENERACAO_LENTA" to "Regeneração (Lenta)",
+        "ROBUSTO_REVIVIDO" to "Robusto",
+        "MORDIDA_VAMPIRO" to "Mordida"
     )
 
     val CUSTOS: Map<String, Int> = mapOf(

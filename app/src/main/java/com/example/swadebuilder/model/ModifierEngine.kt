@@ -210,20 +210,9 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_pace_explicit", SourceType.ANCESTRALIDADE, anc.nome, ModifierTarget.PACE, anc.movimentacao))
             }
 
-            // 3. Keyword Checks (Movimentação Reduzida)
-            val hasMovReduzida = anc.desvantagens.any {
-                val k = it.keyify()
-                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
-            } || anc.habilidades.any {
-                val k = it.nome.keyify()
-                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
-            }
-            if (hasMovReduzida) {
-                modifiers.add(Modifier("racial_pace_reduced", SourceType.ANCESTRALIDADE, "Movimentação Reduzida", ModifierTarget.PACE, -1))
-            }
-
-            // Lento e Velocidade (Template de Monstro Heroico: Lobisomem) agora
-            // saem do loop genérico de RacialTraitPointCatalog logo abaixo —
+            // Movimentação Reduzida (Anões, Avianos, Pequeninos...), Lento e
+            // Velocidade (Template de Monstro Heroico: Lobisomem) agora saem
+            // do loop genérico de RacialTraitPointCatalog logo abaixo —
             // ver bloco "Bônus fixos de Resistência/Passo/Aparar".
 
             // Diminuto (Ancestralidade)
@@ -387,8 +376,11 @@ object ModifierEngine {
                         }
                         val malusMatch = Regex("""MOVIMENTACAO\s*-(\d+)""").find(k)
                         if (malusMatch != null) {
-                            // Do not apply generic minus if "Movimentação Reduzida" was already added by explicit logic to prevent double penalty
-                            val alreadyReduced = modifiers.any { it.id == "racial_pace_reduced" && it.value == -1 }
+                            // Não aplica o desconto genérico se algum traço (Movimentação
+                            // Reduzida, Lento etc., resolvidos pelo loop de
+                            // RacialTraitPointCatalog acima) já penalizou o Passo, pra não
+                            // descontar duas vezes.
+                            val alreadyReduced = modifiers.any { it.target == ModifierTarget.PACE && it.value < 0 }
                             if (!alreadyReduced) {
                                 modifiers.add(Modifier("racial_pace_generic_minus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, -malusMatch.groupValues[1].toInt()))
                             }
