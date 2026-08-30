@@ -2821,24 +2821,18 @@ class CriadorState {
 
         var modifiedBase = base
 
-        // Monster Bonus
+        // Template de Monstro Heroico (Horror): mesma leitura genérica de
+        // atributos_bonus que o atributo usa (ver monstroAtributoTraitIds), só
+        // que aqui o único caso real é "Fe" — a perícia Fé, id "FE" no mesmo
+        // RacialTraitPointCatalog (RacialTraitEffect.PericiaStep). Passos segue
+        // a mesma convenção do resto do app: cada passo é um tipo de dado acima
+        // de d4 (1 passo = d6, 2 passos = d8...).
         getMonstroSelecionado()?.let { monstro ->
-            val monsterKey = per.nome.keyify()
             val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
-                it.key.keyify() == monsterKey
+                it.key.keyify() == perKey
             }
             if (bonusEntry != null) {
-                // Mapping: 1 -> d4 (4), 2 -> d6 (6), 3 -> d8 (8), etc.
-                val steps = bonusEntry.value
-                val bonusRaw = when(steps) {
-                    1 -> 4
-                    2 -> 6
-                    3 -> 8
-                    4 -> 10
-                    5 -> 12
-                    else -> 4
-                }
-                modifiedBase = maxOf(modifiedBase, bonusRaw)
+                modifiedBase = maxOf(modifiedBase, 4 + 2 * bonusEntry.value)
             }
         }
 
@@ -4435,6 +4429,30 @@ class CriadorState {
         }
     }
 
+    /**
+     * Traduz `MonstroTemplate.atributos_bonus` (mapa "atributo -> passos", ex.:
+     * Anjo tem Força:2/Vigor:2) para ids já existentes em
+     * `RacialTraitPointCatalog.EFEITOS` — os mesmos que uma Ancestralidade real
+     * usaria para o mesmo efeito (ex.: Força +2 é "MUITO_FORTE", o id que
+     * qualquer raça com Força +2 também usaria). Isso evita reimplementar o
+     * cálculo de "quantos passos de dado" num segundo lugar: o Monstro apenas
+     * contribui com ids pro mesmo catálogo que a raça já usa.
+     *
+     * A entrada "Fe" (perícia Fé, não atributo) fica de fora — é tratada em
+     * periciaStartRawInternal, que também usa o id "FE" do mesmo catálogo.
+     */
+    private fun monstroAtributoTraitIds(monstro: MonstroTemplate): Set<String> =
+        monstro.atributos_bonus.mapNotNull { (atributo, passos) ->
+            when (atributo.keyify()) {
+                "FORCA" -> if (passos >= 2) "MUITO_FORTE" else "FORTE"
+                "VIGOR" -> if (passos >= 2) "MUITO_RESISTENTE" else "RESISTENTE"
+                "AGILIDADE" -> if (passos >= 2) "MUITO_AGIL" else "AGIL"
+                "ESPIRITO" -> "ESPIRITUAL"
+                "ASTUCIA" -> "ASTUCIA"
+                else -> null
+            }
+        }.toSet()
+
     private fun atributoBaseRacial(a: String): Int {
         // Fix: Use keyified ancestry to match DataLoader map keys
         var base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
@@ -4467,26 +4485,15 @@ class CriadorState {
         // habilidades[] da raça (já com os ajustes de variante aplicados por
         // applyAncestryVariantAdjustments/getAncestralidadeDef) em vez de comparar
         // o nome da raça — assim o bônus segue o traço, não o rótulo da raça.
-        val habilidadeIds = currentAncestryDef?.habilidades
+        //
+        // O Template de Monstro Heroico (Horror) entra no MESMO conjunto de ids —
+        // não é raça nem variante de raça, é uma camada adicional que se soma à
+        // ancestralidade escolhida (ver monstroAtributoTraitIds). Assim o loop
+        // abaixo nem precisa saber que "monstro" existe: só vê ids de traço.
+        val habilidadeIds = (currentAncestryDef?.habilidades
             ?.mapNotNull { it.id?.keyify() }
             ?.toSet()
-            ?: emptySet()
-
-        // Monster Bonus
-        getMonstroSelecionado()?.let { monstro ->
-            val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
-                it.key.keyify() == attrKey
-            }
-            if (bonusEntry != null) {
-                // Steps: 1 -> d6, 2 -> d8. Base is d4 (4).
-                val steps = bonusEntry.value
-                var monsterBase = 4
-                repeat(steps) {
-                    monsterBase = if (monsterBase < 12) monsterBase + 2 else monsterBase + 1
-                }
-                modifiedBase = maxOf(modifiedBase, monsterBase)
-            }
-        }
+            ?: emptySet()) + (getMonstroSelecionado()?.let { monstroAtributoTraitIds(it) } ?: emptySet())
 
         // Traços de alvo fixo (a raça sempre sobe o mesmo atributo quando o traço
         // está presente): o traço só precisa estar na raça, quem diz QUAL

@@ -35,7 +35,12 @@ data class MonstroHabilidade(
     val nome: String,
     val descricao: String,
     // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
-    val descricaoLite: String? = null
+    val descricaoLite: String? = null,
+    // Id estável de traço, no mesmo namespace de RacialTraitPointCatalog quando
+    // a habilidade reaproveita um traço já usado por alguma Ancestralidade
+    // (ex.: "MORTO_VIVO"). Opcional — nem toda habilidade tem efeito mecânico
+    // modelado; várias aqui são só narrativas (ex.: Embelezar, Não Envelhece).
+    val id: String? = null
 ) {
     fun exibida(): MonstroHabilidade =
         if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this

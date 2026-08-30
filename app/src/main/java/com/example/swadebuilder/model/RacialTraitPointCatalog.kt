@@ -87,6 +87,7 @@ object RacialTraitPointCatalog {
         "FORCA_SOBRENATURAL" to RacialTraitEffect.AtributoStep("Força"),
         "FORTE" to RacialTraitEffect.AtributoStep("Força"),
         "INTELIGENCIA" to RacialTraitEffect.AtributoStep("Astúcia"),
+        "MUITO_AGIL" to RacialTraitEffect.AtributoStep("Agilidade", passos = 2), // sintético, usado pelo Template de Monstro Heroico Lobisomem (Horror)
         "MUITO_FORTE" to RacialTraitEffect.AtributoStep("Força", passos = 2),
         "MUITO_RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor", passos = 2),
         "RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor"),

@@ -70,6 +70,22 @@ object ModifierEngine {
         val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
+            // Template de Monstro Heroico (Horror): NÃO é raça nem variante de
+            // raça — é uma camada de traços que se soma à ancestralidade
+            // escolhida (ex.: Elfo + Vampiro). Por isso entra aqui como mais uma
+            // fonte de nomes de traço, junto das da raça, em vez de qualquer
+            // caminho específico por "qual monstro é esse": os checks abaixo
+            // (hasMortoVivo, hasLentoRacial, hasVelocidadeRacial etc.) reagem à
+            // presença do traço, não à identidade do monstro ou da raça.
+            val monstro = state.getMonstroSelecionado()
+            val monstroSources = monstro?.let { m ->
+                m.habilidades.map { it.nome } +
+                    // Complicações do monstro vêm como frase completa
+                    // ("Lento: Movimentação reduzida em 1..."); só o rótulo
+                    // antes dos ":" interessa pros checks por nome/id.
+                    m.complicacoes.map { it.substringBefore(":").trim() }
+            } ?: emptyList()
+
             val rawSources =
                 anc.vantagensGratis +
                     anc.habilidades.map { it.nome } +
@@ -77,7 +93,8 @@ object ModifierEngine {
                     state.vantagensRaciais +
                     state.vantagensAutomaticas +
                     state.desvantagensRaciais +
-                    state.desvantagensAutomaticas
+                    state.desvantagensAutomaticas +
+                    monstroSources
             val sources = rawSources.toMutableList().apply {
                 val ancestryKey = anc.nome.keyify()
                 val allTraitKeys = (
@@ -211,6 +228,14 @@ object ModifierEngine {
             }
             if (hasLentoRacial) {
                 modifiers.add(Modifier("racial_pace_lento", SourceType.ANCESTRALIDADE, "Lento", ModifierTarget.PACE, -1))
+            }
+
+            // Habilidade "Velocidade" (Template de Monstro Heroico: Lobisomem) —
+            // checado por nome de traço, igual aos outros checks desta seção,
+            // não por identidade do monstro.
+            val hasVelocidadeRacial = sources.any { it.keyify() == "VELOCIDADE" }
+            if (hasVelocidadeRacial) {
+                modifiers.add(Modifier("racial_pace_velocidade", SourceType.ANCESTRALIDADE, "Velocidade", ModifierTarget.PACE, 2))
             }
 
             // Diminuto (Ancestralidade)
@@ -451,25 +476,13 @@ object ModifierEngine {
             }
         }
 
-        // 4.5 Monster templates
-        state.getMonstroSelecionado()?.let { monstro ->
-            if (monstro.id == "lobisomem") {
-                modifiers.add(Modifier("monster_lobisomem_pace", SourceType.OUTRO, monstro.nome, ModifierTarget.PACE, 2))
-            }
-            if (monstro.id == "monstro_retalhos") {
-                modifiers.add(Modifier("monster_retalhos_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-            }
-            if (monstro.id == "mumia") {
-                modifiers.add(Modifier("monster_mumia_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-                modifiers.add(Modifier("monster_mumia_pace", SourceType.OUTRO, monstro.nome, ModifierTarget.PACE, -1))
-            }
-            if (monstro.id == "revivido") {
-                modifiers.add(Modifier("monster_revivido_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-            }
-            if (monstro.id == "vampiro") {
-                modifiers.add(Modifier("monster_vampiro_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-            }
-        }
+        // 4.5 Monster templates: Resistência (Morto-Vivo) e Passo (Velocidade,
+        // Lento) do Template de Monstro Heroico agora são resolvidos dentro do
+        // bloco "2. Ancestralidade" acima, pelos mesmos checks por nome/id de
+        // traço que a ancestralidade usa (hasMortoVivo, hasVelocidadeRacial,
+        // hasLentoRacial) — o monstro só entra como mais uma fonte de nomes em
+        // `sources`/`monstroSources`, não como um `if (monstro.id == ...)`
+        // separado por monstro.
 
         // 5. Powers / Other
         if (state.bonusResFromPower != 0) {
