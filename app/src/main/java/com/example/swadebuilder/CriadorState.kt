@@ -53,7 +53,9 @@ import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.dynamicStageCaps
+import com.example.swadebuilder.model.desvantagensEfetivas
 import com.example.swadebuilder.model.getActiveOrigins
+import com.example.swadebuilder.model.vantagensGratisEfetivas
 import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.listaDeEstagios
@@ -4068,28 +4070,15 @@ class CriadorState {
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
-    private fun effectiveVantagensGratis(rm: RacialModifier): List<String> {
-        val fromList = rm.vantagensGratis
-        val fromHabilidades = rm.habilidades
-            .filter { it.category == "racial_edge" }
-            .map { it.id ?: it.nome }
-        return fromList + fromHabilidades
-    }
+    // Delegam pras versões compartilhadas em RacialModifier.kt — mesma lógica
+    // que a lista de Características da aba Ancestralidades usa, pra não ter
+    // dois lugares combinando lista solta + habilidade embutida cada um do
+    // seu jeito.
+    private fun effectiveVantagensGratis(rm: RacialModifier): List<String> =
+        vantagensGratisEfetivas(rm.vantagensGratis, rm.habilidades)
 
-    private fun effectiveDesvantagens(rm: RacialModifier): List<String> {
-        val fromList = rm.desvantagens
-        val fromHabilidades = rm.habilidades
-            .filter { it.category == "racial_hindrance" }
-            .map {
-                val sev = it.severity
-                if (sev != null && !it.nome.contains("($sev)", ignoreCase = true)) {
-                    "${it.nome} ($sev)"
-                } else {
-                    it.nome
-                }
-            }
-        return fromList + fromHabilidades
-    }
+    private fun effectiveDesvantagens(rm: RacialModifier): List<String> =
+        desvantagensEfetivas(rm.desvantagens, rm.habilidades)
 
     val pontosComplicacao: Int
         get() {

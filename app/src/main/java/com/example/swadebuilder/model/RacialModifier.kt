@@ -1,7 +1,9 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toFancyTitleCase
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -106,4 +108,102 @@ fun groupAncestralidadesForDisplay(items: List<RacialModifier>): List<List<Racia
         .groupBy { stripAncestralidadeScenarioSuffix(it.nome).keyify() to it.signature() }
         .values
         .toList()
+}
+
+/**
+ * Uma raça pode registrar uma Vantagem/Complicação grátis de duas formas:
+ * numa lista solta (`vantagensGratis`/`desvantagens`) ou embutida numa
+ * habilidade (`category == "racial_edge"`/`"racial_hindrance"`). As duas
+ * formas coexistem nos dados (histórico de quando cada raça foi cadastrada),
+ * então qualquer código que precise da lista completa — cálculo de pontos em
+ * CriadorState, ou a lista de Características da aba Ancestralidades — usa
+ * estas duas funções em vez de ler só um dos dois lugares.
+ */
+fun vantagensGratisEfetivas(vantagensGratis: List<String>, habilidades: List<RacialAbility>): List<String> =
+    vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { it.id ?: it.nome }
+
+fun desvantagensEfetivas(desvantagens: List<String>, habilidades: List<RacialAbility>): List<String> =
+    desvantagens + habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
+        val sev = hab.severity
+        if (sev != null && !hab.nome.contains("($sev)", ignoreCase = true)) {
+            "${hab.nome} ($sev)"
+        } else {
+            hab.nome
+        }
+    }
+
+/**
+ * Monta a lista "Características" da aba Ancestralidades inteiramente a
+ * partir de dado estruturado — nunca de `RacialAbility.descricao`. A raça não
+ * "diz" o que tem em texto livre; ela só carrega atributos/perícias
+ * (mapas numéricos já existentes), vantagens/complicações grátis (ids/nomes
+ * já existentes) e um id por habilidade solta, e é só esse conjunto que essa
+ * função lê. Rótulos de exibição vêm de `RacialTraitPointCatalog.LABEL` por
+ * id — se um id não tem entrada lá, cai no `nome` cru da habilidade (nunca na
+ * descrição longa), como ponte até o catálogo de rótulos cobrir mais ids.
+ *
+ * Ex. Elfo (Básico): atributos={Agilidade:2}, desvantagens=[Desastrado
+ * (Menor)], habilidades=[Ágil(id=AGIL), Desastrado(id=DESASTRADO,
+ * category=racial_hindrance), Visão no Escuro(id=VISAO_NO_ESCURO)] produz:
+ * ["Atributo aumentado d6: Agilidade", "Complicação racial menor:
+ * Desastrado", "Visão no Escuro"] — Ágil não vira linha própria porque seu id
+ * já resolve pra AtributoStep(Agilidade), a mesma informação da primeira
+ * linha; Desastrado não vira linha própria porque sua categoria já virou a
+ * segunda linha via `desvantagens`.
+ */
+object RacialCaracteristicasResolver {
+
+    fun resolver(
+        atributos: Map<String, Int>,
+        pericias: Map<String, Int>,
+        vantagensGratis: List<String>,
+        desvantagens: List<String>,
+        habilidades: List<RacialAbility>
+    ): List<String> {
+        val linhas = mutableListOf<String>()
+
+        atributos.filterValues { it != 0 }.forEach { (atributo, delta) ->
+            val dado = (4 + delta).toDiceString()
+            val verbo = if (delta > 0) "aumentado" else "reduzido"
+            linhas += "Atributo $verbo $dado: ${atributo.toFancyTitleCase()}"
+        }
+
+        // Mesma convenção de tier usada na exibição atual: 0 = d4-2, N = d4 +
+        // (N-1) passos de dado.
+        pericias.filterValues { it > 0 }.forEach { (pericia, tier) ->
+            val dado = (4 + (tier - 1) * 2).toDiceString()
+            linhas += "Perícia inicial $dado: ${pericia.toFancyTitleCase()}"
+        }
+
+        // vantagensGratisEfetivas/desvantagensEfetivas somam a lista solta com
+        // o que só existe embutido numa habilidade (category=racial_edge/
+        // racial_hindrance) — várias raças (Elfo incluso) só têm a Complicação
+        // registrada assim, com a lista solta vazia.
+        vantagensGratisEfetivas(vantagensGratis, habilidades)
+            .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
+            .forEach { linhas += "Vantagem racial: ${it.toFancyTitleCase()}" }
+
+        desvantagensEfetivas(desvantagens, habilidades).forEach { entrada ->
+            val match = Regex("""^(.*?)\s*\(([^)]+)\)$""").find(entrada)
+            if (match != null) {
+                val (nome, severidade) = match.destructured
+                linhas += "Complicação racial ${severidade.lowercase()}: ${nome.toFancyTitleCase()}"
+            } else {
+                linhas += "Complicação racial: ${entrada.toFancyTitleCase()}"
+            }
+        }
+
+        habilidades.forEach { hab ->
+            // Já virou linha de Vantagem/Complicação acima — não duplica.
+            if (hab.category == "racial_hindrance" || hab.category == "racial_edge") return@forEach
+            val id = hab.id?.keyify()
+            val efeito = RacialTraitPointCatalog.efeitoDe(id)
+            // Já virou a linha de Atributo/Perícia acima — não duplica.
+            if (efeito is RacialTraitEffect.AtributoStep || efeito is RacialTraitEffect.PericiaStep) return@forEach
+            val rotulo = id?.let { RacialTraitPointCatalog.LABEL[it] } ?: hab.nome.toFancyTitleCase()
+            linhas += rotulo
+        }
+
+        return linhas
+    }
 }

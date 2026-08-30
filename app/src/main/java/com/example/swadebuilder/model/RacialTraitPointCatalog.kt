@@ -137,6 +137,28 @@ object RacialTraitPointCatalog {
 
     fun efeitoDe(id: String?): RacialTraitEffect = id?.let { EFEITOS[it.keyify()] } ?: RacialTraitEffect.Nenhum
 
+    /**
+     * Rótulo de exibição por id de traço — a fonte única que tanto o
+     * ModifierEngine (nome da fonte do Modifier) quanto a lista de
+     * "Características" da aba Ancestralidades usam. Cobre ids sem efeito
+     * mecânico numérico (puramente narrativos, ex.: VISAO_NO_ESCURO) além dos
+     * que já estão em EFEITOS — um traço pode ter rótulo sem ter efeito, mas
+     * todo traço com efeito devia ter rótulo aqui.
+     */
+    val LABEL: Map<String, String> = mapOf(
+        "APARAR_BAIXO" to "Aparar Baixo",
+        "ESGUIOS" to "Esguios",
+        "FEROCIDADE_ORC" to "Ferocidade Orc",
+        "FRAGIL" to "Frágil",
+        "FRAGIL_MAIOR" to "Frágil",
+        "LENTO" to "Lento",
+        "METADE_CONSTRUTO" to "Metade Construto",
+        "MORTO_VIVO" to "Morto-Vivo",
+        "RESISTENCIA" to "Resistência",
+        "VELOCIDADE_RACIAL" to "Velocidade",
+        "VISAO_NO_ESCURO" to "Visão no Escuro"
+    )
+
     val CUSTOS: Map<String, Int> = mapOf(
         "ACAO_ADICIONAL" to 5, // oficial: acao_adicional
         "ACOES_ADICIONAIS" to 4, // oficial: acao_adicional_4 (variante condicional, exige ação física/mental)

@@ -303,22 +303,9 @@ object ModifierEngine {
                 return sourceKeys.any { it == id || it == id.replace('_', ' ') || it == id.replace('_', '-') }
             }
 
-            val nomeExibicaoTrait = mapOf(
-                "APARAR_BAIXO" to "Aparar Baixo",
-                "ESGUIOS" to "Esguios",
-                "FEROCIDADE_ORC" to "Ferocidade Orc",
-                "FRAGIL" to "Frágil",
-                "FRAGIL_MAIOR" to "Frágil",
-                "LENTO" to "Lento",
-                "METADE_CONSTRUTO" to "Metade Construto",
-                "MORTO_VIVO" to "Morto-Vivo",
-                "RESISTENCIA" to "Resistência",
-                "VELOCIDADE_RACIAL" to "Velocidade"
-            )
-
             RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
                 if (!traitPresente(id)) return@forEach
-                val nomeExibicao = nomeExibicaoTrait[id] ?: id
+                val nomeExibicao = RacialTraitPointCatalog.LABEL[id] ?: id
                 when (efeito) {
                     is RacialTraitEffect.ResistenciaBonus -> modifiers.add(
                         Modifier("racial_trait_${id}_res", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.TOUGHNESS_FLAT, efeito.valor)
