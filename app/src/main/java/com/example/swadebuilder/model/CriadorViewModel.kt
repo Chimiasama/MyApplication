@@ -477,7 +477,7 @@ class CriadorViewModel(
         state.optVariantesDeRacaAtivo = optVariantesDeRacaAtivo
         state.famaManual = 0
         state.modoMonstroAtivo = modoMonstroAtivo
-        state.tipoMonstroSelecionado = if (modoMonstroAtivo) "anjo" else null
+        state.tipoMonstroSelecionado = if (modoMonstroAtivo) state.listaMonstroTemplates.firstOrNull()?.id else null
         state.grandesResponsabilidades = grandesResponsabilidades
         state.soldadoCargaAtivo = true
         state.regraMultiplosIdiomas = regraMultiplosIdiomas
