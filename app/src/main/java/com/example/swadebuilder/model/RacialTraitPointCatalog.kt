@@ -62,6 +62,17 @@ import com.example.swadebuilder.util.keyify
 sealed class RacialTraitEffect {
     data class AtributoStep(val atributo: String, val passos: Int = 1) : RacialTraitEffect()
     data class PericiaStep(val pericia: String, val passos: Int = 1) : RacialTraitEffect()
+    // Bônus fixo (não "passo de dado") de Resistência/Passo/Aparar — mesma
+    // ideia de AtributoStep/PericiaStep, só que pra alvos que o ModifierEngine
+    // já trata como valor plano (ModifierTarget.TOUGHNESS_FLAT/PACE/PARRY),
+    // não como tipo de dado. Reúne num só lugar o que antes era um
+    // `val hasX = ...; if (hasX) modifiers.add(...)` por traço dentro do
+    // ModifierEngine — o traço só precisa estar presente (por id ou, pra
+    // grants ainda guardados como texto solto em vantagensGratis/desvantagens,
+    // por nome), o catálogo já diz o alvo e o valor.
+    data class ResistenciaBonus(val valor: Int) : RacialTraitEffect()
+    data class PassoBonus(val valor: Int) : RacialTraitEffect()
+    data class ApararBonus(val valor: Int) : RacialTraitEffect()
     data object Nenhum : RacialTraitEffect()
 }
 
@@ -103,7 +114,25 @@ object RacialTraitPointCatalog {
         "SENTIDOS_APRIMORADOS" to RacialTraitEffect.PericiaStep("Perceber"),
         "SENTIDOS_APURADOS" to RacialTraitEffect.PericiaStep("Perceber"),
         "SORRATEIRO" to RacialTraitEffect.PericiaStep("Furtividade"),
-        "TRAPALHOES_TRAVESSOS" to RacialTraitEffect.PericiaStep("Furtividade")
+        "TRAPALHOES_TRAVESSOS" to RacialTraitEffect.PericiaStep("Furtividade"),
+
+        // Resistência/Passo/Aparar de valor fixo. Cada id abaixo tem um valor
+        // único e consistente conferido contra a própria descrição da
+        // habilidade em ancestralidades.json (ex.: Terracota "recebem +3 em
+        // Resistência", Meio-Orc "Recebem Resistência +1") — não são um
+        // "chute" de código. FRAGIL varia por raça (a maioria é -1, Demônios é
+        // -2), então tem dois ids em vez de um só (mesmo padrão de
+        // FORTE/MUITO_FORTE pra AtributoStep).
+        "APARAR_BAIXO" to RacialTraitEffect.ApararBonus(-2),
+        "ESGUIOS" to RacialTraitEffect.ResistenciaBonus(-1),
+        "FEROCIDADE_ORC" to RacialTraitEffect.ResistenciaBonus(1),
+        "FRAGIL" to RacialTraitEffect.ResistenciaBonus(-1),
+        "FRAGIL_MAIOR" to RacialTraitEffect.ResistenciaBonus(-2), // sintético: Demônios (Horror), Frágil -2 em vez do -1 padrão
+        "LENTO" to RacialTraitEffect.PassoBonus(-1),
+        "METADE_CONSTRUTO" to RacialTraitEffect.ResistenciaBonus(3),
+        "MORTO_VIVO" to RacialTraitEffect.ResistenciaBonus(2),
+        "RESISTENCIA" to RacialTraitEffect.ResistenciaBonus(1),
+        "VELOCIDADE_RACIAL" to RacialTraitEffect.PassoBonus(2) // sintético: Template de Monstro Heroico Lobisomem (Horror)
     )
 
     fun efeitoDe(id: String?): RacialTraitEffect = id?.let { EFEITOS[it.keyify()] } ?: RacialTraitEffect.Nenhum

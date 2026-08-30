@@ -5139,7 +5139,7 @@
         "nome": "Frágil",
         "descricao": "-2 na Resistência devido à degeneração física secular.",
         "category": "racial_trait_negative",
-        "id": "FRAGIL",
+        "id": "FRAGIL_MAIOR",
         "descricaoLite": "-2 de Resistência, resultado de um desgaste físico acumulado ao longo de gerações."
       }
     ],

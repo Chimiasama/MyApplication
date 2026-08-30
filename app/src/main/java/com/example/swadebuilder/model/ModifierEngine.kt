@@ -222,21 +222,9 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_pace_reduced", SourceType.ANCESTRALIDADE, "Movimentação Reduzida", ModifierTarget.PACE, -1))
             }
 
-            val hasLentoRacial = sources.any {
-                val key = it.keyify()
-                key == "LENTO" || key.endsWith("LENTO")
-            }
-            if (hasLentoRacial) {
-                modifiers.add(Modifier("racial_pace_lento", SourceType.ANCESTRALIDADE, "Lento", ModifierTarget.PACE, -1))
-            }
-
-            // Habilidade "Velocidade" (Template de Monstro Heroico: Lobisomem) —
-            // checado por nome de traço, igual aos outros checks desta seção,
-            // não por identidade do monstro.
-            val hasVelocidadeRacial = sources.any { it.keyify() == "VELOCIDADE" }
-            if (hasVelocidadeRacial) {
-                modifiers.add(Modifier("racial_pace_velocidade", SourceType.ANCESTRALIDADE, "Velocidade", ModifierTarget.PACE, 2))
-            }
+            // Lento e Velocidade (Template de Monstro Heroico: Lobisomem) agora
+            // saem do loop genérico de RacialTraitPointCatalog logo abaixo —
+            // ver bloco "Bônus fixos de Resistência/Passo/Aparar".
 
             // Diminuto (Ancestralidade)
             // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica penalidade de Tamanho
@@ -278,70 +266,71 @@ object ModifierEngine {
                 addDiminuto(feralSize, "Diminuto (Feral)")
             }
 
-            // Resistência (Auto advantage or racial trait)
-            // Checks for FRAGIL/ESGUIOS (-1)
-            val hasFragil = sources.any { it.keyify() == "FRAGIL" }
-            val fragilPenalty = anc.habilidades.firstOrNull {
-                it.id?.keyify() == "FRAGIL" || it.nome.equals("Frágil", ignoreCase = true)
-            }?.descricao
-                ?.let { descricao ->
-                    Regex("""(?:RESISTENCIA|RESISTÊNCIA)\s*([+-])\s*(\d+)""", RegexOption.IGNORE_CASE).find(descricao)
-                        ?.let { match ->
-                            val sign = match.groupValues[1]
-                            val value = match.groupValues[2].toInt()
-                            if (sign == "-") -value else value
-                        }
-                        ?: Regex("""([+-])\s*(\d+)\s+na\s+Resist[êe]ncia""", RegexOption.IGNORE_CASE).find(descricao)
-                            ?.let { match ->
-                                val sign = match.groupValues[1]
-                                val value = match.groupValues[2].toInt()
-                                if (sign == "-") -value else value
-                            }
-                } ?: -1
-            val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
+            // Bônus fixos de Resistência/Passo/Aparar concedidos por id de
+            // traço: um loop genérico sobre RacialTraitPointCatalog.EFEITOS
+            // substitui o que antes era um `val hasX = ...; if (hasX)
+            // modifiers.add(...)` por traço (Morto-Vivo, Metade Construto,
+            // Frágil, Esguios, Resistência, Ferocidade Orc, Aparar Baixo,
+            // Lento, Velocidade) — o traço só precisa estar presente (por id
+            // na habilidade da raça/monstro, ou por nome solto pros grants
+            // ainda guardados como texto em vantagensGratis/desvantagens), o
+            // catálogo já diz o alvo e o valor. Ver RacialTraitEffect.
+            val sourceKeys = sources.map { it.keyify() }.toSet()
+            // Ids de habilidade da raça, restritos às que ainda têm o nome
+            // presente em `sources` — algumas variantes (Aquarianos Semi-
+            // aquático, Avianos Ave de Rapina) removem uma habilidade da raça
+            // base filtrando o nome dela fora de `sources` (ver bloco de
+            // exclusões por variante logo acima); ler direto de
+            // `anc.habilidades` sem esse filtro reintroduziria o traço
+            // removido por baixo do pano. Habilidades do Monstro Heroico não
+            // passam por essa filtragem de variante de raça, então entram sem
+            // restrição.
+            val traitIds = anc.habilidades
+                .filter { it.nome.keyify() in sourceKeys }
+                .mapNotNull { it.id?.keyify() }
+                .toSet() +
+                (monstro?.habilidades?.mapNotNull { it.id?.keyify() } ?: emptySet())
 
-            if (hasFragil) {
-                modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil", ModifierTarget.TOUGHNESS_FLAT, fragilPenalty))
-            }
-            if (hasEsguios) {
-                modifiers.add(Modifier("racial_esguios", SourceType.ANCESTRALIDADE, "Esguios", ModifierTarget.TOUGHNESS_FLAT, -1))
-            }
+            // FRAGIL/FRAGIL_MAIOR têm o mesmo nome de exibição ("Frágil"),
+            // diferindo só na penalidade (-1 padrão vs -2 dos Demônios) — o
+            // nome sozinho não distingue qual é qual, então esses dois só
+            // contam por id de habilidade, nunca por nome solto em sources.
+            val idsSoPorHabilidade = setOf("FRAGIL", "FRAGIL_MAIOR")
 
-            // Checks for RESISTENCIA/FEROCIDADE (+1)
-            // NOTE: exact token "RESISTENCIA" to avoid matching "RESISTENCIA AMBIENTAL"
-            val hasResistencia = sources.any { it.keyify() == "RESISTENCIA" }
-            val hasFerocidade = anc.habilidades.any { it.nome.contains("Ferocidade", ignoreCase = true) }
-
-            if (hasResistencia) {
-                modifiers.add(Modifier("racial_resistencia", SourceType.ANCESTRALIDADE, "Resistência", ModifierTarget.TOUGHNESS_FLAT, 1))
-            }
-            // Antes checava `anc.nome.keyify().contains("TERRACOTA")` — a
-            // habilidade "Metade Construto" do Terracota já tem o id
-            // METADE_CONSTRUTO e é ela quem concede o +3 de Resistência
-            // ("recebem +3 em Resistência"), então o check por id substitui o
-            // nome da raça sem perder nada.
-            val hasMetadeConstruto = anc.habilidades.any { it.id?.keyify() == "METADE_CONSTRUTO" }
-            if (hasMetadeConstruto) {
-                modifiers.add(Modifier("racial_terracota_res", SourceType.ANCESTRALIDADE, "Metade Construto", ModifierTarget.TOUGHNESS_FLAT, 3))
+            fun traitPresente(id: String): Boolean {
+                if (id in traitIds) return true
+                if (id in idsSoPorHabilidade) return false
+                return sourceKeys.any { it == id || it == id.replace('_', ' ') || it == id.replace('_', '-') }
             }
 
-            if (hasFerocidade) {
-                modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
-            }
+            val nomeExibicaoTrait = mapOf(
+                "APARAR_BAIXO" to "Aparar Baixo",
+                "ESGUIOS" to "Esguios",
+                "FEROCIDADE_ORC" to "Ferocidade Orc",
+                "FRAGIL" to "Frágil",
+                "FRAGIL_MAIOR" to "Frágil",
+                "LENTO" to "Lento",
+                "METADE_CONSTRUTO" to "Metade Construto",
+                "MORTO_VIVO" to "Morto-Vivo",
+                "RESISTENCIA" to "Resistência",
+                "VELOCIDADE_RACIAL" to "Velocidade"
+            )
 
-            // Antes checava também `anc.nome.keyify().contains("DEADERS")` —
-            // redundante: Deaders (Parasteen) já carrega o id APARAR_BAIXO na
-            // própria habilidade, então o check por id abaixo já cobre a raça
-            // sem precisar saber o nome dela.
-            val hasApararBaixo = anc.habilidades.any { it.id?.keyify() == "APARAR_BAIXO" } || sources.any { it.keyify() == "APARAR_BAIXO" || it.keyify() == "APARAR BAIXO" }
-            if (hasApararBaixo) {
-                modifiers.add(Modifier("racial_parry_deaders", SourceType.ANCESTRALIDADE, "Aparar Baixo", ModifierTarget.PARRY, -2))
-            }
-
-            // Mesma redundância: Deaders já carrega o id MORTO_VIVO.
-            val hasMortoVivo = anc.habilidades.any { it.id?.keyify() == "MORTO_VIVO" } || sources.any { it.keyify() == "MORTO_VIVO" || it.keyify() == "MORTO VIVO" || it.keyify() == "MORTO-VIVO" }
-            if (hasMortoVivo) {
-                modifiers.add(Modifier("racial_morto_vivo_toughness", SourceType.ANCESTRALIDADE, "Morto-Vivo", ModifierTarget.TOUGHNESS_FLAT, 2))
+            RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
+                if (!traitPresente(id)) return@forEach
+                val nomeExibicao = nomeExibicaoTrait[id] ?: id
+                when (efeito) {
+                    is RacialTraitEffect.ResistenciaBonus -> modifiers.add(
+                        Modifier("racial_trait_${id}_res", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.TOUGHNESS_FLAT, efeito.valor)
+                    )
+                    is RacialTraitEffect.PassoBonus -> modifiers.add(
+                        Modifier("racial_trait_${id}_pace", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PACE, efeito.valor)
+                    )
+                    is RacialTraitEffect.ApararBonus -> modifiers.add(
+                        Modifier("racial_trait_${id}_parry", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PARRY, efeito.valor)
+                    )
+                    else -> Unit
+                }
             }
 
             if (state.compendioSciFiAtivo && anc.nome.keyify() == "MIMICOS") {
@@ -376,15 +365,16 @@ object ModifierEngine {
                         val value = match.groupValues[2].toInt()
                         val finalValue = if (sign == "-") -value else value
 
-                        // Avoid duplicates if caught by hardcoded check above (e.g. Frágil might say "Resistência -1")
-                        // But Fragil logic above relies on name "FRAGIL". This regex handles explicit "+1" or "-1".
-                        // Aquarianos: "Resistência +1".
-                        // Duplicate check: Don't add if already added by explicit logic (like "racial_resistencia")
+                        // Evita duplicar quando o loop genérico de traços (bloco
+                        // "Bônus fixos de Resistência/Passo/Aparar" acima) já
+                        // cobriu o mesmo valor pra essa raça — ids atualizados
+                        // pra bater com "racial_trait_${id}_res" (ver EFEITOS).
                         val alreadyAdded = modifiers.any {
-                            (it.id == "racial_resistencia" && finalValue == 1) ||
-                            (it.id == "racial_fragil" && finalValue == fragilPenalty) ||
-                            (it.id == "racial_esguios" && finalValue == -1) ||
-                            (it.id == "racial_ferocidade" && finalValue == 1)
+                            (it.id == "racial_trait_RESISTENCIA_res" && finalValue == 1) ||
+                            (it.id == "racial_trait_FRAGIL_res" && finalValue == -1) ||
+                            (it.id == "racial_trait_FRAGIL_MAIOR_res" && finalValue == -2) ||
+                            (it.id == "racial_trait_ESGUIOS_res" && finalValue == -1) ||
+                            (it.id == "racial_trait_FEROCIDADE_ORC_res" && finalValue == 1)
                         }
 
                         if (!alreadyAdded) {

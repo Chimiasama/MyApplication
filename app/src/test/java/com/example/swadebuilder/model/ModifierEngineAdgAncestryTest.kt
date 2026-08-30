@@ -118,9 +118,9 @@ class ModifierEngineAdgAncestryTest {
                 desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility(
-                        nome = "Nascidos de Argila",
-                        descricao = "Terracotas são um equilíbrio entre carne e pedra.",
-                        id = "NASCIDOS_DE_ARGILA",
+                        nome = "Metade Construto",
+                        descricao = "Terracotas são um equilíbrio entre carne e pedra, recebem +3 em Resistência.",
+                        id = "METADE_CONSTRUTO",
                         category = "racial_trait_positive"
                     )
                 )
@@ -131,7 +131,7 @@ class ModifierEngineAdgAncestryTest {
 
         assertTrue(
             modifiers.any {
-                it.id == "racial_terracota_res" &&
+                it.id == "racial_trait_METADE_CONSTRUTO_res" &&
                     it.target == ModifierTarget.TOUGHNESS_FLAT &&
                     it.value == 3
             }
