@@ -70,6 +70,22 @@ object ModifierEngine {
         val ancestral = state.getAncestralidadeDef(ancestralName)
 
         ancestral?.let { anc ->
+            // Template de Monstro Heroico (Horror): NÃO é raça nem variante de
+            // raça — é uma camada de traços que se soma à ancestralidade
+            // escolhida (ex.: Elfo + Vampiro). Por isso entra aqui como mais uma
+            // fonte de nomes de traço, junto das da raça, em vez de qualquer
+            // caminho específico por "qual monstro é esse": os checks abaixo
+            // (hasMortoVivo, hasLentoRacial, hasVelocidadeRacial etc.) reagem à
+            // presença do traço, não à identidade do monstro ou da raça.
+            val monstro = state.getMonstroSelecionado()
+            val monstroSources = monstro?.let { m ->
+                m.habilidades.map { it.nome } +
+                    // Complicações do monstro vêm como frase completa
+                    // ("Lento: Movimentação reduzida em 1..."); só o rótulo
+                    // antes dos ":" interessa pros checks por nome/id.
+                    m.complicacoes.map { it.substringBefore(":").trim() }
+            } ?: emptyList()
+
             val rawSources =
                 anc.vantagensGratis +
                     anc.habilidades.map { it.nome } +
@@ -77,7 +93,8 @@ object ModifierEngine {
                     state.vantagensRaciais +
                     state.vantagensAutomaticas +
                     state.desvantagensRaciais +
-                    state.desvantagensAutomaticas
+                    state.desvantagensAutomaticas +
+                    monstroSources
             val sources = rawSources.toMutableList().apply {
                 val ancestryKey = anc.nome.keyify()
                 val allTraitKeys = (
@@ -193,25 +210,10 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_pace_explicit", SourceType.ANCESTRALIDADE, anc.nome, ModifierTarget.PACE, anc.movimentacao))
             }
 
-            // 3. Keyword Checks (Movimentação Reduzida)
-            val hasMovReduzida = anc.desvantagens.any {
-                val k = it.keyify()
-                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
-            } || anc.habilidades.any {
-                val k = it.nome.keyify()
-                k.contains("MOVIMENTACAO") && k.contains("REDUZIDA")
-            }
-            if (hasMovReduzida) {
-                modifiers.add(Modifier("racial_pace_reduced", SourceType.ANCESTRALIDADE, "Movimentação Reduzida", ModifierTarget.PACE, -1))
-            }
-
-            val hasLentoRacial = sources.any {
-                val key = it.keyify()
-                key == "LENTO" || key.endsWith("LENTO")
-            }
-            if (hasLentoRacial) {
-                modifiers.add(Modifier("racial_pace_lento", SourceType.ANCESTRALIDADE, "Lento", ModifierTarget.PACE, -1))
-            }
+            // Movimentação Reduzida (Anões, Avianos, Pequeninos...), Lento e
+            // Velocidade (Template de Monstro Heroico: Lobisomem) agora saem
+            // do loop genérico de RacialTraitPointCatalog logo abaixo —
+            // ver bloco "Bônus fixos de Resistência/Passo/Aparar".
 
             // Diminuto (Ancestralidade)
             // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica penalidade de Tamanho
@@ -253,59 +255,58 @@ object ModifierEngine {
                 addDiminuto(feralSize, "Diminuto (Feral)")
             }
 
-            // Resistência (Auto advantage or racial trait)
-            // Checks for FRAGIL/ESGUIOS (-1)
-            val hasFragil = sources.any { it.keyify() == "FRAGIL" }
-            val fragilPenalty = anc.habilidades.firstOrNull {
-                it.id?.keyify() == "FRAGIL" || it.nome.equals("Frágil", ignoreCase = true)
-            }?.descricao
-                ?.let { descricao ->
-                    Regex("""(?:RESISTENCIA|RESISTÊNCIA)\s*([+-])\s*(\d+)""", RegexOption.IGNORE_CASE).find(descricao)
-                        ?.let { match ->
-                            val sign = match.groupValues[1]
-                            val value = match.groupValues[2].toInt()
-                            if (sign == "-") -value else value
-                        }
-                        ?: Regex("""([+-])\s*(\d+)\s+na\s+Resist[êe]ncia""", RegexOption.IGNORE_CASE).find(descricao)
-                            ?.let { match ->
-                                val sign = match.groupValues[1]
-                                val value = match.groupValues[2].toInt()
-                                if (sign == "-") -value else value
-                            }
-                } ?: -1
-            val hasEsguios = anc.habilidades.any { it.nome.contains("Esguios", ignoreCase = true) }
+            // Bônus fixos de Resistência/Passo/Aparar concedidos por id de
+            // traço: um loop genérico sobre RacialTraitPointCatalog.EFEITOS
+            // substitui o que antes era um `val hasX = ...; if (hasX)
+            // modifiers.add(...)` por traço (Morto-Vivo, Metade Construto,
+            // Frágil, Esguios, Resistência, Ferocidade Orc, Aparar Baixo,
+            // Lento, Velocidade) — o traço só precisa estar presente (por id
+            // na habilidade da raça/monstro, ou por nome solto pros grants
+            // ainda guardados como texto em vantagensGratis/desvantagens), o
+            // catálogo já diz o alvo e o valor. Ver RacialTraitEffect.
+            val sourceKeys = sources.map { it.keyify() }.toSet()
+            // Ids de habilidade da raça, restritos às que ainda têm o nome
+            // presente em `sources` — algumas variantes (Aquarianos Semi-
+            // aquático, Avianos Ave de Rapina) removem uma habilidade da raça
+            // base filtrando o nome dela fora de `sources` (ver bloco de
+            // exclusões por variante logo acima); ler direto de
+            // `anc.habilidades` sem esse filtro reintroduziria o traço
+            // removido por baixo do pano. Habilidades do Monstro Heroico não
+            // passam por essa filtragem de variante de raça, então entram sem
+            // restrição.
+            val traitIds = anc.habilidades
+                .filter { it.nome.keyify() in sourceKeys }
+                .mapNotNull { it.id?.keyify() }
+                .toSet() +
+                (monstro?.habilidades?.mapNotNull { it.id?.keyify() } ?: emptySet())
 
-            if (hasFragil) {
-                modifiers.add(Modifier("racial_fragil", SourceType.ANCESTRALIDADE, "Frágil", ModifierTarget.TOUGHNESS_FLAT, fragilPenalty))
-            }
-            if (hasEsguios) {
-                modifiers.add(Modifier("racial_esguios", SourceType.ANCESTRALIDADE, "Esguios", ModifierTarget.TOUGHNESS_FLAT, -1))
-            }
+            // FRAGIL/FRAGIL_MAIOR têm o mesmo nome de exibição ("Frágil"),
+            // diferindo só na penalidade (-1 padrão vs -2 dos Demônios) — o
+            // nome sozinho não distingue qual é qual, então esses dois só
+            // contam por id de habilidade, nunca por nome solto em sources.
+            val idsSoPorHabilidade = setOf("FRAGIL", "FRAGIL_MAIOR")
 
-            // Checks for RESISTENCIA/FEROCIDADE (+1)
-            // NOTE: exact token "RESISTENCIA" to avoid matching "RESISTENCIA AMBIENTAL"
-            val hasResistencia = sources.any { it.keyify() == "RESISTENCIA" }
-            val hasFerocidade = anc.habilidades.any { it.nome.contains("Ferocidade", ignoreCase = true) }
-
-            if (hasResistencia) {
-                modifiers.add(Modifier("racial_resistencia", SourceType.ANCESTRALIDADE, "Resistência", ModifierTarget.TOUGHNESS_FLAT, 1))
-            }
-            if (anc.nome.keyify().contains("TERRACOTA")) {
-                modifiers.add(Modifier("racial_terracota_res", SourceType.ANCESTRALIDADE, "Terracota", ModifierTarget.TOUGHNESS_FLAT, 3))
+            fun traitPresente(id: String): Boolean {
+                if (id in traitIds) return true
+                if (id in idsSoPorHabilidade) return false
+                return sourceKeys.any { it == id || it == id.replace('_', ' ') || it == id.replace('_', '-') }
             }
 
-            if (hasFerocidade) {
-                modifiers.add(Modifier("racial_ferocidade", SourceType.ANCESTRALIDADE, "Ferocidade Orc", ModifierTarget.TOUGHNESS_FLAT, 1))
-            }
-
-            val hasApararBaixo = anc.nome.keyify().contains("DEADERS") || anc.habilidades.any { it.id?.keyify() == "APARAR_BAIXO" } || sources.any { it.keyify() == "APARAR_BAIXO" || it.keyify() == "APARAR BAIXO" }
-            if (hasApararBaixo) {
-                modifiers.add(Modifier("racial_parry_deaders", SourceType.ANCESTRALIDADE, "Aparar Baixo", ModifierTarget.PARRY, -2))
-            }
-
-            val hasMortoVivo = anc.nome.keyify().contains("DEADERS") || anc.habilidades.any { it.id?.keyify() == "MORTO_VIVO" } || sources.any { it.keyify() == "MORTO_VIVO" || it.keyify() == "MORTO VIVO" || it.keyify() == "MORTO-VIVO" }
-            if (hasMortoVivo) {
-                modifiers.add(Modifier("racial_morto_vivo_toughness", SourceType.ANCESTRALIDADE, "Morto-Vivo", ModifierTarget.TOUGHNESS_FLAT, 2))
+            RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
+                if (!traitPresente(id)) return@forEach
+                val nomeExibicao = RacialTraitPointCatalog.LABEL[id] ?: id
+                when (efeito) {
+                    is RacialTraitEffect.ResistenciaBonus -> modifiers.add(
+                        Modifier("racial_trait_${id}_res", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.TOUGHNESS_FLAT, efeito.valor)
+                    )
+                    is RacialTraitEffect.PassoBonus -> modifiers.add(
+                        Modifier("racial_trait_${id}_pace", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PACE, efeito.valor)
+                    )
+                    is RacialTraitEffect.ApararBonus -> modifiers.add(
+                        Modifier("racial_trait_${id}_parry", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PARRY, efeito.valor)
+                    )
+                    else -> Unit
+                }
             }
 
             if (state.compendioSciFiAtivo && anc.nome.keyify() == "MIMICOS") {
@@ -340,15 +341,16 @@ object ModifierEngine {
                         val value = match.groupValues[2].toInt()
                         val finalValue = if (sign == "-") -value else value
 
-                        // Avoid duplicates if caught by hardcoded check above (e.g. Frágil might say "Resistência -1")
-                        // But Fragil logic above relies on name "FRAGIL". This regex handles explicit "+1" or "-1".
-                        // Aquarianos: "Resistência +1".
-                        // Duplicate check: Don't add if already added by explicit logic (like "racial_resistencia")
+                        // Evita duplicar quando o loop genérico de traços (bloco
+                        // "Bônus fixos de Resistência/Passo/Aparar" acima) já
+                        // cobriu o mesmo valor pra essa raça — ids atualizados
+                        // pra bater com "racial_trait_${id}_res" (ver EFEITOS).
                         val alreadyAdded = modifiers.any {
-                            (it.id == "racial_resistencia" && finalValue == 1) ||
-                            (it.id == "racial_fragil" && finalValue == fragilPenalty) ||
-                            (it.id == "racial_esguios" && finalValue == -1) ||
-                            (it.id == "racial_ferocidade" && finalValue == 1)
+                            (it.id == "racial_trait_RESISTENCIA_res" && finalValue == 1) ||
+                            (it.id == "racial_trait_FRAGIL_res" && finalValue == -1) ||
+                            (it.id == "racial_trait_FRAGIL_MAIOR_res" && finalValue == -2) ||
+                            (it.id == "racial_trait_ESGUIOS_res" && finalValue == -1) ||
+                            (it.id == "racial_trait_FEROCIDADE_ORC_res" && finalValue == 1)
                         }
 
                         if (!alreadyAdded) {
@@ -374,8 +376,11 @@ object ModifierEngine {
                         }
                         val malusMatch = Regex("""MOVIMENTACAO\s*-(\d+)""").find(k)
                         if (malusMatch != null) {
-                            // Do not apply generic minus if "Movimentação Reduzida" was already added by explicit logic to prevent double penalty
-                            val alreadyReduced = modifiers.any { it.id == "racial_pace_reduced" && it.value == -1 }
+                            // Não aplica o desconto genérico se algum traço (Movimentação
+                            // Reduzida, Lento etc., resolvidos pelo loop de
+                            // RacialTraitPointCatalog acima) já penalizou o Passo, pra não
+                            // descontar duas vezes.
+                            val alreadyReduced = modifiers.any { it.target == ModifierTarget.PACE && it.value < 0 }
                             if (!alreadyReduced) {
                                 modifiers.add(Modifier("racial_pace_generic_minus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, -malusMatch.groupValues[1].toInt()))
                             }
@@ -451,25 +456,13 @@ object ModifierEngine {
             }
         }
 
-        // 4.5 Monster templates
-        state.getMonstroSelecionado()?.let { monstro ->
-            if (monstro.id == "lobisomem") {
-                modifiers.add(Modifier("monster_lobisomem_pace", SourceType.OUTRO, monstro.nome, ModifierTarget.PACE, 2))
-            }
-            if (monstro.id == "monstro_retalhos") {
-                modifiers.add(Modifier("monster_retalhos_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-            }
-            if (monstro.id == "mumia") {
-                modifiers.add(Modifier("monster_mumia_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-                modifiers.add(Modifier("monster_mumia_pace", SourceType.OUTRO, monstro.nome, ModifierTarget.PACE, -1))
-            }
-            if (monstro.id == "revivido") {
-                modifiers.add(Modifier("monster_revivido_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-            }
-            if (monstro.id == "vampiro") {
-                modifiers.add(Modifier("monster_vampiro_tough", SourceType.OUTRO, monstro.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
-            }
-        }
+        // 4.5 Monster templates: Resistência (Morto-Vivo) e Passo (Velocidade,
+        // Lento) do Template de Monstro Heroico agora são resolvidos dentro do
+        // bloco "2. Ancestralidade" acima, pelos mesmos checks por nome/id de
+        // traço que a ancestralidade usa (hasMortoVivo, hasVelocidadeRacial,
+        // hasLentoRacial) — o monstro só entra como mais uma fonte de nomes em
+        // `sources`/`monstroSources`, não como um `if (monstro.id == ...)`
+        // separado por monstro.
 
         // 5. Powers / Other
         if (state.bonusResFromPower != 0) {

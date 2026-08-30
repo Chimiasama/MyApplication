@@ -2,6 +2,7 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
+import com.example.swadebuilder.model.AncestryVariantConfig
 import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionAnswer
 import com.example.swadebuilder.model.SelectionDef
@@ -25,6 +26,64 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
     private fun fixedPackageAnswerFrom(def: SelectionDef, displayValue: String?): SelectionAnswer {
         val matchId = def.pacotesFixos?.firstOrNull { it.nome.equals(displayValue, ignoreCase = true) }?.id
         return SelectionAnswer(selectionId = def.id, fixedPackageChoiceId = matchId)
+    }
+
+    /**
+     * Ids de ancestralidade cuja Variante Sci-Fi (Básico/Padrão + 1
+     * reconfiguração de cenário) já foi migrada pro AncestryVariantRegistry —
+     * ver comentário no lote 2 do registro. Cobre todas as raças Sci-Fi com
+     * Variante de verdade; o "when" fixo abaixo cuida só das raças com
+     * grants fixos (sem Variante) e do fallback de raças do livro básico.
+     */
+    private val scifiVariantDrivenKeys = setOf(
+        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
+        "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
+        "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
+        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "ROBOS", "SERES SINTETICOS"
+    )
+
+    /**
+     * Casa a Variante efetiva (texto já normalizado por
+     * ResolveAncestryVariantUseCase) com o id estável da VariantOption
+     * correspondente no registro. Sem opção correspondente (ex.:
+     * `effectiveVariant` nulo por falta de `ancestryOptions`), cai na opção
+     * "Básico"/"Padrão" cadastrada — mesmo comportamento de fallback que o
+     * "when" fixo tinha via `else`.
+     */
+    private fun variantOptionIdFrom(config: AncestryVariantConfig, effectiveVariant: String?): String? {
+        val opcoes = config.grupoVariante?.opcoes ?: return null
+        return opcoes.firstOrNull { it.nome.equals(effectiveVariant, ignoreCase = true) }?.id
+            ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
+    }
+
+    /**
+     * Constrói o Result a partir do pacote resolvido no registro — só
+     * traduz os campos genéricos (traços/vantagens/desvantagens a
+     * adicionar/remover). Armadura Natural quando a Variante muda o valor
+     * (ex.: Insetoides) já vem embutida em `naturalArmor`; `forceArmorZero`
+     * é sempre true nesse grupo de raças (nenhuma delas mantém Armadura sem
+     * forçar o reset primeiro), igual ao "when" fixo que este substitui.
+     */
+    private fun buildResultFromVariantRegistry(ancestralidadeId: String, effectiveVariant: String?): Result? {
+        val config = AncestryVariantRegistry.get(ancestralidadeId) ?: return null
+        val variantOptionId = variantOptionIdFrom(config, effectiveVariant) ?: return null
+        val resolved = resolveAncestryVariantPackageUseCase.resolve(
+            ancestralidadeId = ancestralidadeId,
+            variantOptionId = variantOptionId,
+            selectionAnswers = emptyList()
+        )
+        return Result(
+            naturalArmorFromRace = resolved.naturalArmor,
+            forceArmorZero = true,
+            ensureAdvantageNames = resolved.vantagensGratisParaAdicionar,
+            ensureAdvantageIds = resolved.vantagensGratisIds,
+            ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
+            automaticAdvantagesToRemove = resolved.tracosParaRemoverPorNome,
+            ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
+            racialDisadvantagesToRemove = resolved.desvantagensParaRemover,
+            elementalAction = ElementalAction.NONE,
+            anotacoesToAdd = resolved.anotacoes
+        )
     }
 
     enum class ElementalAction {
@@ -142,228 +201,8 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 }
             }
 
-            if (ancKey == "RAKASHANOS") {
-                return if (effectiveVariant == "Brincalhão") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("CURIOSO (Maior)"),
-                        elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("SANGUINÁRIO", "SANGUINÁRIO (Maior)")
-                    )
-                } else {
-                    // Básico
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("SANGUINÁRIO (Maior)"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "SAURIOS") {
-                return if (effectiveVariant == "Cuspidor") {
-                    Result(
-                        naturalArmorFromRace = 2, // Keeps Armor
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("TOQUE VENENOSO (Cuspidor)"), // Text only trait
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Básico
-                    Result(
-                        naturalArmorFromRace = 2, // Keeps Armor
-                        forceArmorZero = true,
-                        ensureAdvantageNames = listOf("PRONTIDÃO"),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("MORDIDA"), // Natural Weapon
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "AQUARIANOS") {
-                return if (effectiveVariant == "Semi-aquáticos") {
-                    Result(
-                        naturalArmorFromRace = 0, // Assume no Natural Armor change unless stated
-                        forceArmorZero = true, // To avoid stacking issues if any
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("SEMIAQUÁTICO", "TOQUE VENENOSO"),
-                        automaticAdvantagesToRemove = listOf("AQUÁTICO", "RESISTÊNCIA"),
-                        ensureRacialDisadvantages = emptyList(), // Dependency is in JSON
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Básico
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "AVIANOS") {
-                return if (effectiveVariant.equals("Ave de rapina", ignoreCase = true)) {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        automaticAdvantagesToRemove = listOf("FRÁGIL", "FRAGIL", "NÃO SABE NADAR", "NAO SABE NADAR"),
-                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
-                        elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("NÃO SABE NADAR", "NÃO SABE NADAR (Menor)", "FRÁGIL")
-                    )
-                } else {
-                    // Básico
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("FRÁGIL", "NÃO SABE NADAR"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "ELFOS") {
-                return if (effectiveVariant == "Comunitário") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("COMUNITÁRIO"),
-                        automaticAdvantagesToRemove = listOf("DESASTRADO"),
-                        ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
-                        elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("DESASTRADO", "DESASTRADO (Menor)")
-                    )
-                } else {
-                    // Básico
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("DESASTRADO (Menor)"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey.contains("HUMANO")) {
-                // Check if it's the specific SciFi Human entry or generic.
-                // Assuming "HUMANOS" key.
-                if (ancKey == "HUMANOS") {
-                    return when (effectiveVariant) {
-                        "Baixa Gravidade" -> Result(
-                            naturalArmorFromRace = 0,
-                            forceArmorZero = true,
-                            ensureAdvantageNames = emptyList(),
-                            ensureAdvantageIds = emptyList(),
-                            ensureAutomaticAdvantages = emptyList(), // Agility d6 handled in Attribute Logic
-                            automaticAdvantagesToRemove = listOf("ADAPTÁVEL", "ADAPTAVEL"),
-                            ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE BAIXA"),
-                            elementalAction = ElementalAction.NONE
-                        )
-                        "Minerador" -> {
-                            Result(
-                                naturalArmorFromRace = 0,
-                                forceArmorZero = true,
-                                ensureAdvantageNames = emptyList(),
-                                ensureAdvantageIds = emptyList(),
-                                ensureAutomaticAdvantages = emptyList(), // Attribute handled logic
-                                ensureRacialDisadvantages = listOf("DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
-                                elementalAction = ElementalAction.NONE
-                            )
-                        }
-                        else -> { // Padrão
-                            Result(
-                                naturalArmorFromRace = 0,
-                                forceArmorZero = true,
-                                ensureAdvantageNames = emptyList(),
-                                ensureAdvantageIds = emptyList(),
-                                ensureAutomaticAdvantages = emptyList(),
-                                ensureRacialDisadvantages = emptyList(),
-                                elementalAction = ElementalAction.NONE
-                            )
-                        }
-                    }
-                }
-            }
-
-            if (ancKey == "CENTAUX") {
-                return if (effectiveVariant == "Gazela") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("MOVIMENTAÇÃO +4"),
-                        automaticAdvantagesToRemove = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
-                        ensureRacialDisadvantages = emptyList(),
-                        racialDisadvantagesToRemove = listOf("GRANDE"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "DRAKENS") {
-                return if (effectiveVariant == "Dragão") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("ARMA DE SOPRO (Fogo)"), // Text trait
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FORTE", "RESISTÊNCIA +2"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
+            if (ancKey in scifiVariantDrivenKeys) {
+                buildResultFromVariantRegistry(ancKey, effectiveVariant)?.let { return it }
             }
 
             if (ancKey == "ELEMENTAIS") {
@@ -393,362 +232,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 )
             }
 
-            if (ancKey == "FERAIS") {
-                return if (effectiveVariant == "Menor") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -4)"),
-                        ensureRacialDisadvantages = listOf("TRANSTORNO DE SEPARAÇÃO"),
-                        elementalAction = ElementalAction.NONE,
-                        automaticAdvantagesToRemove = listOf("ESPIRITUOSO"),
-                        racialDisadvantagesToRemove = listOf("ALTA/BAIXA TECNOLOGIA", "ALTA/BAIXA TECNOLOGIA (Maior)")
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("DIMINUTO (Tamanho -3)"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "FLORANS") {
-                return if (effectiveVariant == "Defensivo") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("TOQUE VENENOSO (Paralisante)"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("ROBUSTO"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "GELATINOIDES") {
-                return if (effectiveVariant == "Ameba") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("CAMUFLAGEM"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("REGENERAÇÃO"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "INSETOIDES") {
-                return if (effectiveVariant == "Vespa") {
-                    Result(
-                        naturalArmorFromRace = 0, // No Armor +2
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FERRÃO (Mordida For+d4)", "VOO (Movimentação 6)", "TOQUE VENENOSO (Moderado)"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 2,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("ARMADURA +2", "GARRAS"), // For+d4 will be handled in extrairArmasNaturais logic update or default if needed
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "MIMICOS" || ancKey == "MÍMICOS") {
-                return if (effectiveVariant == "Resistente") {
-                    Result(
-                        naturalArmorFromRace = 0, // No specific Armor trait mentioned, but Resistance +1. Usually handled via TOUGHNESS modifier or manually.
-                        // "aumentando sua Resistência em +1". If not via Armor, maybe via Toughness bonus logic in State or just a trait "RESISTENTE".
-                        // Assuming "RESISTÊNCIA +1" trait string handles it via ModifierEngine if mapped, or just textual.
-                        // Standard Mimics have nothing special? They have "Mudança de Forma".
-                        // Variant text: "MUDANÇA DE FORMA: ... sem variação de Tamanho."
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("RESISTÊNCIA +1", "MUDANÇA DE FORMA (Sem variação de tamanho)"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("MUDANÇA DE FORMA"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "MINERADORES GENETICOS" || ancKey == "MINERADORES GENÉTICOS") {
-                return if (effectiveVariant == "Zero G") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL"),
-                        ensureAdvantageIds = listOf("adaptacao_gravitacional"),
-                        ensureAutomaticAdvantages = listOf("ADAPTAÇÃO GRAVITACIONAL"),
-                        automaticAdvantagesToRemove = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
-                        ensureRacialDisadvantages = listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)"),
-                        racialDisadvantagesToRemove = listOf("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
-                        ensureRacialDisadvantages = emptyList(), // Removed from complications
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "ORACULOS" || ancKey == "ORÁCULOS") {
-                return if (effectiveVariant == "Aterrorizado") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = listOf("poderes_misticos"), // Handled in CriadorState to set choice to Telepata
-                        ensureAutomaticAdvantages = listOf("PODERES MÍSTICOS (TELEPATA)"),
-                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO_DO_PERIGO"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = listOf("NOÇÃO DO PERIGO"),
-                        ensureAdvantageIds = listOf("nocao_do_perigo"),
-                        ensureAutomaticAdvantages = listOf("NOÇÃO DO PERIGO"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "POSSESSORES") {
-                return if (effectiveVariant == "Energia") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("FORMA DE ENERGIA"),
-                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
-                        ensureRacialDisadvantages = listOf("Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        automaticAdvantagesToRemove = listOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "QUADROIDES") {
-                return if (effectiveVariant == "Habilidoso") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)"),
-                        ensureRacialDisadvantages = listOf(
-                            "SENSÍVEL (Maior)",
-                            "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido ao cenário."
-                        ),
-                        elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = emptyList()
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("AÇÃO ADICIONAL (Física)"),
-                        ensureRacialDisadvantages = listOf("SENSÍVEL (Maior)"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "ROBOS" || ancKey == "ROBÔS") {
-                return when (effectiveVariant) {
-                    "Guerreiro" -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("SEM ESCRÚPULOS (Maior)", "PROGRAMADO (Maior)"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                    "Limitado" -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"),
-                        elementalAction = ElementalAction.NONE,
-                        anotacoesToAdd = listOf("Robôs Limitado: Combine com o mestre compensação de Perícias Reduzidas.")
-                    )
-                    else -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("PACIFISTA (Maior)", "PROGRAMADO (Maior)"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "SERES SINTETICOS" || ancKey == "SERES SINTÉTICOS") {
-                return when (effectiveVariant) {
-                    "Máquina (Procurado)" -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("PROCURADO (Maior)"),
-                        elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("PROGRAMADO (Maior)")
-                    )
-                    "Máquina (Forasteiro)" -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("FORASTEIRO (Maior)"),
-                        elementalAction = ElementalAction.NONE,
-                        racialDisadvantagesToRemove = listOf("PROGRAMADO (Maior)")
-                    )
-                    else -> Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = listOf("PROGRAMADO"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "SOLDADOS GENETICOS" || ancKey == "SOLDADOS GENÉTICOS") {
-                return if (effectiveVariant == "Fuzileiro Zero G") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("ADAPTAÇÃO GRAVITACIONAL", "REFLEXOS DE COMBATE"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("NERVOS DE AÇO", "REFLEXOS DE COMBATE"),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
-
-            if (ancKey == "YETIS") {
-                return if (effectiveVariant == "Sopro") {
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = listOf("ARMA DE SOPRO (Frio)"),
-                        ensureRacialDisadvantages = listOf("DEPENDÊNCIA"),
-                        elementalAction = ElementalAction.NONE
-                    )
-                } else {
-                    // Padrão
-                    Result(
-                        naturalArmorFromRace = 0,
-                        forceArmorZero = true,
-                        ensureAdvantageNames = emptyList(),
-                        ensureAdvantageIds = emptyList(),
-                        ensureAutomaticAdvantages = emptyList(),
-                        ensureRacialDisadvantages = emptyList(),
-                        elementalAction = ElementalAction.NONE
-                    )
-                }
-            }
         }
 
         if (canonicalOriginKey(ancestryOrigin) == "ARTE_DA_GUERRA" && ancKey.contains("UMVEE")) {

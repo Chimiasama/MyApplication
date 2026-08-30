@@ -63,9 +63,20 @@ class RacialTraitPointCatalogTest {
 
     @Test
     fun `efeitoDe retorna Nenhum pra tracos sem gancho mecanico numerico ou id desconhecido`() {
-        assertEquals(RacialTraitEffect.Nenhum, RacialTraitPointCatalog.efeitoDe("FRAGIL"))
+        // FORASTEIRO é só Complicação (sem alvo numérico modelado) — continua Nenhum.
+        assertEquals(RacialTraitEffect.Nenhum, RacialTraitPointCatalog.efeitoDe("FORASTEIRO"))
         assertEquals(RacialTraitEffect.Nenhum, RacialTraitPointCatalog.efeitoDe(null))
         assertEquals(RacialTraitEffect.Nenhum, RacialTraitPointCatalog.efeitoDe("ID_QUE_NAO_EXISTE"))
+    }
+
+    @Test
+    fun `efeitoDe retorna bonus fixo de Resistencia Passo e Aparar`() {
+        assertEquals(RacialTraitEffect.ResistenciaBonus(-1), RacialTraitPointCatalog.efeitoDe("FRAGIL"))
+        assertEquals(RacialTraitEffect.ResistenciaBonus(-2), RacialTraitPointCatalog.efeitoDe("FRAGIL_MAIOR"))
+        assertEquals(RacialTraitEffect.ResistenciaBonus(2), RacialTraitPointCatalog.efeitoDe("MORTO_VIVO"))
+        assertEquals(RacialTraitEffect.ResistenciaBonus(3), RacialTraitPointCatalog.efeitoDe("METADE_CONSTRUTO"))
+        assertEquals(RacialTraitEffect.PassoBonus(-1), RacialTraitPointCatalog.efeitoDe("LENTO"))
+        assertEquals(RacialTraitEffect.ApararBonus(-2), RacialTraitPointCatalog.efeitoDe("APARAR_BAIXO"))
     }
 
     @Test

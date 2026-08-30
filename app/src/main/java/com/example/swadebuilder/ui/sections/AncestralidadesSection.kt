@@ -52,6 +52,8 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.Constants
+import com.example.swadebuilder.model.RacialAbility
+import com.example.swadebuilder.model.RacialCaracteristicasResolver
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.getActiveOrigins
@@ -70,7 +72,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RacialAbilityLite(
     val nome: String,
-    val descricao: String
+    val descricao: String,
+    val id: String? = null,
+    val category: String? = null,
+    val severity: String? = null
 )
 
 @Serializable
@@ -222,7 +227,7 @@ fun AncestralidadesSection(
                     .toSet()
 
                 val habilidadesLite = representative.habilidades.map {
-                    RacialAbilityLite(it.nome.toFancyTitleCase(), it.descricao)
+                    RacialAbilityLite(it.nome.toFancyTitleCase(), it.descricao, it.id, it.category, it.severity)
                 }
 
                 RacialModifierLite(
@@ -972,7 +977,7 @@ fun AncestralidadesSection(
                                         val vantagensGratisEfetivas = ancestryDefAtivo?.vantagensGratis ?: item.vantagensGratis
                                         val desvantagensEfetivas = ancestryDefAtivo?.desvantagens ?: item.desvantagens
                                         val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
-                                            RacialAbilityLite(nome = it.nome, descricao = it.descricao)
+                                            RacialAbilityLite(nome = it.nome, descricao = it.descricao, id = it.id, category = it.category, severity = it.severity)
                                         } ?: item.habilidades
 
                                         // Description
@@ -985,65 +990,11 @@ fun AncestralidadesSection(
                                             Spacer(Modifier.height(8.dp))
                                         }
 
-                                        // Attributes. Um valor 0 é d4 (o padrão de qualquer personagem) —
-                                        // omite da lista pra só mostrar o que a raça/variante realmente
-                                        // altera (ex.: depois de remover Resistente de uma Variante,
-                                        // Vigor volta a 0/d4 e simplesmente some daqui).
-                                        val atributosParaExibir = atributosEfetivos.filterValues { it != 0 }
-                                        if (atributosParaExibir.isNotEmpty()) {
-                                            val attrsText = atributosParaExibir.entries.joinToString(", ") { (k, v) ->
-                                                val dieVal = 4 + v
-                                                "${k.toFancyTitleCase()} ${dieVal.toDiceString()}"
-                                            }
-                                            Text(
-                                                text = "Atributos: $attrsText",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurface
-                                            )
-                                            Spacer(Modifier.height(4.dp))
-                                        }
-
-                                        // Skills
-                                        if (periciasEfetivas.isNotEmpty()) {
-                                            val skillsText = periciasEfetivas.entries.joinToString(", ") { (k, v) ->
-                                                val die = if (v == 0) "d4-2" else (4 + (v - 1) * 2).toDiceString()
-                                                "${k.toFancyTitleCase()} $die"
-                                            }
-                                            Text(
-                                                text = "Perícias: $skillsText",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurface
-                                            )
-                                            Spacer(Modifier.height(4.dp))
-                                        }
-
-                                        // Free Advantages
-                                        val vantagensGratisVisiveis = vantagensGratisEfetivas.filterNot {
-                                            it.keyify() == Constants.ID_AA_AGENT_SYN.keyify()
-                                        }
-                                        if (vantagensGratisVisiveis.isNotEmpty()) {
-                                            val advsText = vantagensGratisVisiveis.joinToString(", ") { it.toFancyTitleCase() }
-                                            Text(
-                                                text = "Vantagens: $advsText",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurface
-                                            )
-                                            Spacer(Modifier.height(4.dp))
-                                        }
-
-                                        // Hindrances
-                                        if (desvantagensEfetivas.isNotEmpty()) {
-                                            val hindsText = desvantagensEfetivas.joinToString(", ") { it.toFancyTitleCase() }
-                                            Text(
-                                                text = "Complicações: $hindsText",
-                                                style = MaterialTheme.typography.bodySmall,
-                                                color = MaterialTheme.colorScheme.onSurface
-                                            )
-                                            Spacer(Modifier.height(4.dp))
-                                        }
-
-                                        // Abilities
-                                        val habilidadesExibidas = buildList {
+                                        // Características: uma lista só, montada inteiramente a partir de
+                                        // dado estruturado (atributos/perícias numéricos, vantagens/
+                                        // complicações grátis, id por habilidade) — nunca da descrição
+                                        // longa de uma habilidade. Ver RacialCaracteristicasResolver.
+                                        val habilidadesParaCaracteristicas = buildList {
                                             addAll(habilidadesEfetivas)
                                             if (
                                                 isSelected &&
@@ -1052,32 +1003,35 @@ fun AncestralidadesSection(
                                                 state.resolveSciFiVariantSelectionFor(item.nome, item.opcoes).equals("Ave de rapina", ignoreCase = true)
                                             ) {
                                                 if (none { it.nome.keyify() == "FORMA ALIENIGENA" }) {
-                                                    add(
-                                                        RacialAbilityLite(
-                                                            nome = "Forma Alienígena",
-                                                            descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade."
-                                                        )
-                                                    )
+                                                    add(RacialAbilityLite(nome = "Forma Alienígena", descricao = ""))
                                                 }
                                             }
                                         }
-                                        if (habilidadesExibidas.isNotEmpty()) {
-                                            Spacer(Modifier.height(4.dp))
-                                            habilidadesExibidas.forEach { ability ->
-                                                Column(modifier = Modifier.padding(bottom = 4.dp)) {
-                                                    val abilityDisplayName =
-                                                        if (ability.nome.keyify() == "FORTUNA DA") "Sorte" else ability.nome
-                                                    Text(
-                                                        text = abilityDisplayName,
-                                                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                                        color = MaterialTheme.colorScheme.primary
-                                                    )
-                                                    Text(
-                                                        text = ability.descricao,
-                                                        style = MaterialTheme.typography.bodySmall,
-                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                    )
-                                                }
+
+                                        val caracteristicas = RacialCaracteristicasResolver.resolver(
+                                            atributos = atributosEfetivos,
+                                            pericias = periciasEfetivas,
+                                            vantagensGratis = vantagensGratisEfetivas,
+                                            desvantagens = desvantagensEfetivas,
+                                            habilidades = habilidadesParaCaracteristicas.map {
+                                                RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
+                                            }
+                                        )
+
+                                        if (caracteristicas.isNotEmpty()) {
+                                            Text(
+                                                text = "Características:",
+                                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                                color = MaterialTheme.colorScheme.onSurface
+                                            )
+                                            Spacer(Modifier.height(2.dp))
+                                            caracteristicas.forEach { linha ->
+                                                Text(
+                                                    text = "• $linha",
+                                                    style = MaterialTheme.typography.bodySmall,
+                                                    color = MaterialTheme.colorScheme.onSurface,
+                                                    modifier = Modifier.padding(start = 4.dp, bottom = 2.dp)
+                                                )
                                             }
                                         }
                                     }

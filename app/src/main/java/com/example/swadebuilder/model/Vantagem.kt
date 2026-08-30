@@ -40,6 +40,14 @@ data class Vantagem(
     @SerialName("subtipoArcano")
     val subtipoArcano: String? = null,     // ex.: "DOM", "MAGIA", "MILAGRES", "PSIÔNICOS", "CIÊNCIA ESTRANHA"
 
+    // Antecedentes Arcanos "por estágio" (Cidade do Sol a Vapor): quando
+    // true, esta Vantagem-de-AA usa o sistema de poderes por estágio de
+    // ArcaneConfig (ArcaneConfig.getStageBasedPowersByStage) em vez do
+    // sistema normal de Pontos de Poder/slots — ver
+    // CriadorState.isStageBasedArcanoVariant().
+    @SerialName("usaPoderesPorEstagio")
+    val usaPoderesPorEstagio: Boolean = false,
+
     @SerialName("isGrupoSelector")
 
     val isGrupoSelector: Boolean = false,  // true apenas para a entrada-base "antecedente_arcano" (com choiceOptions)

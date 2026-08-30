@@ -26,7 +26,8 @@ class CriadorStateDemonioArcanoTest {
                     nome = "ANTECEDENTE ARCANO (Demônio)",
                     categoria = Categoria.PODER,
                     origem = "SOL_VAPOR",
-                    requisitos = Requisito()
+                    requisitos = Requisito(),
+                    usaPoderesPorEstagio = true
                 )
             )
         }
@@ -43,7 +44,8 @@ class CriadorStateDemonioArcanoTest {
             nome = "ANTECEDENTE ARCANO (Demônio)",
             categoria = Categoria.PODER,
             origem = "SOL_VAPOR",
-            requisitos = Requisito()
+            requisitos = Requisito(),
+            usaPoderesPorEstagio = true
         )
 
         val state = CriadorState().apply {
@@ -67,7 +69,8 @@ class CriadorStateDemonioArcanoTest {
             nome = "ANTECEDENTE ARCANO (Demônio)",
             categoria = Categoria.PODER,
             origem = "SOL_VAPOR",
-            requisitos = Requisito()
+            requisitos = Requisito(),
+            usaPoderesPorEstagio = true
         )
         val novosPoderes = Vantagem(
             id = "novos_poderes",

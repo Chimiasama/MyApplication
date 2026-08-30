@@ -12,22 +12,26 @@
       {
         "nome": "Embelezar",
         "descricao": "Anjos podem criar um embelezamento menor como ação livre limitada (limpar roupa, eliminar pequenos cortes, fazer flores crescerem, etc).",
-        "descricaoLite": "Como ação livre limitada, pode causar um pequeno embelezamento — limpar uma roupa, fechar um pequeno corte, fazer flores desabrocharem, entre outros efeitos discretos."
+        "descricaoLite": "Como ação livre limitada, pode causar um pequeno embelezamento — limpar uma roupa, fechar um pequeno corte, fazer flores desabrocharem, entre outros efeitos discretos.",
+        "id": "EMBELEZAR_ANJO"
       },
       {
         "nome": "Imune a Doenças e Venenos",
         "descricao": "Anjos ignoram males mortais.",
-        "descricaoLite": "Não é afetado por doenças ou venenos mundanos."
+        "descricaoLite": "Não é afetado por doenças ou venenos mundanos.",
+        "id": "IMUNE_DOENCAS_VENENOS"
       },
       {
         "nome": "Não Envelhece",
         "descricao": "Anjos não envelhecem como os mortais.",
-        "descricaoLite": "Não sofre os efeitos da idade como um mortal comum."
+        "descricaoLite": "Não sofre os efeitos da idade como um mortal comum.",
+        "id": "NAO_ENVELHECE"
       },
       {
         "nome": "Voo",
         "descricao": "Podem materializar ou fazer crescer grandes asas emplumadas como ação limitada. Movimentação 12. Retrair as asas também é uma ação limitada.",
-        "descricaoLite": "Como ação limitada, pode manifestar grandes asas emplumadas e voar com Movimentação 12; recolhê-las de volta também exige uma ação limitada."
+        "descricaoLite": "Como ação limitada, pode manifestar grandes asas emplumadas e voar com Movimentação 12; recolhê-las de volta também exige uma ação limitada.",
+        "id": "VOO_MOV_12"
       }
     ],
     "complicacoes": [
@@ -50,37 +54,44 @@
       {
         "nome": "Arruinar",
         "descricao": "Podem causar pequenos efeitos malignos por onde passam (flores murcham, leite estraga, iluminação pisca). O efeito é limitado a alguns alvos e raramente tem efeito mecânico.",
-        "descricaoLite": "Sua presença provoca pequenos efeitos malignos ao redor — flores murcham, leite azeda, luzes tremulam —, limitados a poucos alvos e quase sempre sem efeito mecânico relevante."
+        "descricaoLite": "Sua presença provoca pequenos efeitos malignos ao redor — flores murcham, leite azeda, luzes tremulam —, limitados a poucos alvos e quase sempre sem efeito mecânico relevante.",
+        "id": "ARRUINAR_DEMONIO"
       },
       {
         "nome": "Imune a Doenças e Venenos",
         "descricao": "Demônios ignoram males mortais.",
-        "descricaoLite": "Não é afetado por doenças ou venenos mundanos."
+        "descricaoLite": "Não é afetado por doenças ou venenos mundanos.",
+        "id": "IMUNE_DOENCAS_VENENOS"
       },
       {
         "nome": "Negociador",
         "descricao": "Pode fazer um único 'Pacto' com uma alma mortal (Menor ou Maior) em troca de favores ou travessuras.",
-        "descricaoLite": "Pode firmar um único 'pacto' com uma alma mortal (Menor ou Maior) em troca de favores ou artimanhas."
+        "descricaoLite": "Pode firmar um único 'pacto' com uma alma mortal (Menor ou Maior) em troca de favores ou artimanhas.",
+        "id": "NEGOCIADOR_DEMONIO"
       },
       {
         "nome": "Não Envelhece",
         "descricao": "Demônios não envelhecem.",
-        "descricaoLite": "Não sofre os efeitos da idade."
+        "descricaoLite": "Não sofre os efeitos da idade.",
+        "id": "NAO_ENVELHECE"
       },
       {
         "nome": "Não Respira",
         "descricao": "Demônios não precisam de oxigênio.",
-        "descricaoLite": "Não precisa respirar."
+        "descricaoLite": "Não precisa respirar.",
+        "id": "NAO_RESPIRA"
       },
       {
         "nome": "Resistência Ambiental",
         "descricao": "Recebem +4 para resistir a efeitos baseados em frio, eletricidade e calor, e reduzem o dano dessas fontes em 4.",
-        "descricaoLite": "Recebe +4 para resistir a efeitos baseados em frio, eletricidade ou calor, e o dano vindo dessas fontes é reduzido em 4."
+        "descricaoLite": "Recebe +4 para resistir a efeitos baseados em frio, eletricidade ou calor, e o dano vindo dessas fontes é reduzido em 4.",
+        "id": "RESISTENCIA_AMBIENTAL"
       },
       {
         "nome": "Visão Total no Escuro",
         "descricao": "Ignoram penalidades por Iluminação e até 2 pontos de penalidades por invisibilidade ou poderes similares a até 10 quadros.",
-        "descricaoLite": "Ignora penalidades por Iluminação e até 2 pontos de penalidade por invisibilidade ou poderes similares, dentro de um alcance de 10 quadros."
+        "descricaoLite": "Ignora penalidades por Iluminação e até 2 pontos de penalidade por invisibilidade ou poderes similares, dentro de um alcance de 10 quadros.",
+        "id": "VISAO_TOTAL_ESCURO"
       }
     ],
     "complicacoes": [
@@ -102,32 +113,38 @@
       {
         "nome": "Etéreo",
         "descricao": "Mudar de estado é uma ação livre limitada. Enquanto intangível, pode atravessar objetos sólidos e não é afetado por ataques normais, mas recebe dano de armas mágicas, poderes e habilidades.",
-        "descricaoLite": "Pode alternar entre os estados tangível e intangível como ação livre limitada; enquanto intangível, atravessa objetos sólidos e não sofre dano de ataques comuns, mas continua vulnerável a armas mágicas, poderes e habilidades especiais."
+        "descricaoLite": "Pode alternar entre os estados tangível e intangível como ação livre limitada; enquanto intangível, atravessa objetos sólidos e não sofre dano de ataques comuns, mas continua vulnerável a armas mágicas, poderes e habilidades especiais.",
+        "id": "ETEREO_FANTASMA"
       },
       {
         "nome": "Imune a Doenças e Venenos",
         "descricao": "Fantasmas não podem ficar doentes ou serem envenenados.",
-        "descricaoLite": "Não pode adoecer nem ser envenenado."
+        "descricaoLite": "Não pode adoecer nem ser envenenado.",
+        "id": "IMUNE_DOENCAS_VENENOS"
       },
       {
         "nome": "Não Envelhece",
         "descricao": "As mazelas do tempo não afetam fantasmas.",
-        "descricaoLite": "A passagem do tempo não o afeta."
+        "descricaoLite": "A passagem do tempo não o afeta.",
+        "id": "NAO_ENVELHECE"
       },
       {
         "nome": "Não Respira",
         "descricao": "Fantasmas não precisam de oxigênio.",
-        "descricaoLite": "Não precisa respirar."
+        "descricaoLite": "Não precisa respirar.",
+        "id": "NAO_RESPIRA"
       },
       {
         "nome": "Visão Total no Escuro",
         "descricao": "Ignoram todas as penalidades por Iluminação e até 2 pontos de penalidades por invisibilidade ou poderes similares a até 10 quadros.",
-        "descricaoLite": "Ignora todas as penalidades por Iluminação e até 2 pontos de penalidade por invisibilidade ou poderes similares, dentro de um alcance de 10 quadros."
+        "descricaoLite": "Ignora todas as penalidades por Iluminação e até 2 pontos de penalidade por invisibilidade ou poderes similares, dentro de um alcance de 10 quadros.",
+        "id": "VISAO_TOTAL_ESCURO"
       },
       {
         "nome": "Voo",
         "descricao": "Fantasmas podem voar com Movimentação 12.",
-        "descricaoLite": "Pode voar com Movimentação 12."
+        "descricaoLite": "Pode voar com Movimentação 12.",
+        "id": "VOO_MOV_12"
       }
     ],
     "complicacoes": [
@@ -151,27 +168,46 @@
       {
         "nome": "Infravisão",
         "descricao": "Podem ver assinaturas de calor e reduzem penalidades por Iluminação à metade quando atacam alvos vivos.",
-        "descricaoLite": "Enxerga assinaturas de calor, tendo as penalidades por Iluminação reduzidas à metade ao atacar alvos vivos."
+        "descricaoLite": "Enxerga assinaturas de calor, tendo as penalidades por Iluminação reduzidas à metade ao atacar alvos vivos.",
+        "id": "INFRAVISAO"
       },
       {
         "nome": "Mordida/Garras",
         "descricao": "Causam For+d6, PA 2.",
-        "descricaoLite": "Seus ataques naturais causam For+d6, PA 2."
+        "descricaoLite": "Seus ataques naturais causam For+d6, PA 2.",
+        "id": "MORDIDA_GARRAS_LOBISOMEM",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d6",
+            "pa": 2,
+            "escalavel": false
+          },
+          {
+            "nome": "Garras",
+            "dano": "For+d6",
+            "pa": 2,
+            "escalavel": true
+          }
+        ]
       },
       {
         "nome": "Regeneração (Lenta)",
         "descricao": "Podem tentar uma rolagem de cura natural a cada dia.",
-        "descricaoLite": "Pode tentar uma rolagem de cura natural uma vez por dia."
+        "descricaoLite": "Pode tentar uma rolagem de cura natural uma vez por dia.",
+        "id": "REGENERACAO_LENTA"
       },
       {
         "nome": "Transformação",
         "descricao": "Ação livre limitada. Obrigatória na lua cheia (do anoitecer ao nascer do sol). Habilidades só funcionam transformado. Retorna a humano se Incapacitado.",
-        "descricaoLite": "Mudar de forma é uma ação livre limitada, obrigatória durante a lua cheia (do anoitecer ao nascer do sol). Suas habilidades especiais só funcionam enquanto transformado, e ele volta à forma humana caso seja Incapacitado."
+        "descricaoLite": "Mudar de forma é uma ação livre limitada, obrigatória durante a lua cheia (do anoitecer ao nascer do sol). Suas habilidades especiais só funcionam enquanto transformado, e ele volta à forma humana caso seja Incapacitado.",
+        "id": "TRANSFORMACAO_LOBISOMEM"
       },
       {
         "nome": "Velocidade",
         "descricao": "Movimentação +2 e o dado de corrida aumenta em um tipo.",
-        "descricaoLite": "Ganha +2 de Movimentação, e seu dado de corrida sobe um tipo de dado."
+        "descricaoLite": "Ganha +2 de Movimentação, e seu dado de corrida sobe um tipo de dado.",
+        "id": "VELOCIDADE_RACIAL"
       }
     ],
     "complicacoes": [
@@ -192,31 +228,40 @@
       "Forca": 2,
       "Vigor": 2
     },
+    "vantagensGratis": [
+      "resistencia_arcana",
+      "furioso"
+    ],
     "habilidades": [
       {
         "nome": "Ciência!",
         "descricao": "Criados por cientistas loucos, possuem a Vantagem Resistência Arcana.",
-        "descricaoLite": "Fruto da obra de um cientista insano, possui a Vantagem Resistência Arcana."
+        "descricaoLite": "Fruto da obra de um cientista insano, possui a Vantagem Resistência Arcana.",
+        "id": "CIENCIA_RETALHOS"
       },
       {
         "nome": "Fúria",
         "descricao": "Todos os monstros de retalhos possuem a Vantagem Furioso.",
-        "descricaoLite": "Possui a Vantagem Furioso."
+        "descricaoLite": "Possui a Vantagem Furioso.",
+        "id": "FURIA_RETALHOS"
       },
       {
         "nome": "Morto-Vivo",
         "descricao": "Resistência +2; +2 para recuperar Abalado; Ataques Localizados não causam dano extra; ignora 1 ponto de penalidade por Ferimentos; não respira; imune a doenças e venenos.",
-        "descricaoLite": "Recebe +2 de Resistência; +2 para se recuperar de Abalado; Ataques Localizados não causam dano extra contra ele; ignora 1 ponto de penalidade por Ferimentos; não precisa respirar; é imune a doenças e venenos."
+        "descricaoLite": "Recebe +2 de Resistência; +2 para se recuperar de Abalado; Ataques Localizados não causam dano extra contra ele; ignora 1 ponto de penalidade por Ferimentos; não precisa respirar; é imune a doenças e venenos.",
+        "id": "MORTO_VIVO"
       },
       {
         "nome": "Não Envelhece",
         "descricao": "Monstros de retalhos não envelhecem.",
-        "descricaoLite": "Não sofre os efeitos da idade."
+        "descricaoLite": "Não sofre os efeitos da idade.",
+        "id": "NAO_ENVELHECE"
       },
       {
         "nome": "Partes (Recosturar)",
         "descricao": "Partes perdidas podem ser recosturadas com linha e agulha, 10 minutos e rolagem de Curar -4 (ou Ciência Estranha).",
-        "descricaoLite": "Partes do corpo perdidas podem ser recosturadas com agulha e linha, em 10 minutos, mediante um teste de Curar -4 (ou Ciência Estranha)."
+        "descricaoLite": "Partes do corpo perdidas podem ser recosturadas com agulha e linha, em 10 minutos, mediante um teste de Curar -4 (ou Ciência Estranha).",
+        "id": "PARTES_RECOSTURAR"
       }
     ],
     "complicacoes": [
@@ -243,12 +288,14 @@
       {
         "nome": "Morto-Vivo",
         "descricao": "Resistência +2; +2 para recuperar Abalado; Ataques Localizados não causam dano extra; ignora 1 ponto de penalidade por Ferimentos; não respira; imune a doenças e venenos.",
-        "descricaoLite": "Recebe +2 de Resistência; +2 para se recuperar de Abalado; Ataques Localizados não causam dano extra contra ele; ignora 1 ponto de penalidade por Ferimentos; não precisa respirar; é imune a doenças e venenos."
+        "descricaoLite": "Recebe +2 de Resistência; +2 para se recuperar de Abalado; Ataques Localizados não causam dano extra contra ele; ignora 1 ponto de penalidade por Ferimentos; não precisa respirar; é imune a doenças e venenos.",
+        "id": "MORTO_VIVO"
       },
       {
         "nome": "Não Envelhece",
         "descricao": "Múmias não envelhecem. A maioria tem várias centenas de anos.",
-        "descricaoLite": "Não sofre os efeitos da idade; a maioria já acumula várias centenas de anos de existência."
+        "descricaoLite": "Não sofre os efeitos da idade; a maioria já acumula várias centenas de anos de existência.",
+        "id": "NAO_ENVELHECE"
       }
     ],
     "complicacoes": [
@@ -273,22 +320,26 @@
       {
         "nome": "Morto-Vivo",
         "descricao": "Resistência +2; +2 para recuperar Abalado; Ataques Localizados não causam dano extra; ignora 1 ponto de penalidade por Ferimentos; não respira; imune a doenças e venenos.",
-        "descricaoLite": "Recebe +2 de Resistência; +2 para se recuperar de Abalado; Ataques Localizados não causam dano extra contra ele; ignora 1 ponto de penalidade por Ferimentos; não precisa respirar; é imune a doenças e venenos."
+        "descricaoLite": "Recebe +2 de Resistência; +2 para se recuperar de Abalado; Ataques Localizados não causam dano extra contra ele; ignora 1 ponto de penalidade por Ferimentos; não precisa respirar; é imune a doenças e venenos.",
+        "id": "MORTO_VIVO"
       },
       {
         "nome": "Não Envelhece",
         "descricao": "Revividos não envelhecem.",
-        "descricaoLite": "Não sofre os efeitos da idade."
+        "descricaoLite": "Não sofre os efeitos da idade.",
+        "id": "NAO_ENVELHECE"
       },
       {
         "nome": "Regeneração (Lenta)",
         "descricao": "Podem tentar uma rolagem de cura natural a cada dia, desde que absorvam meio quilo de carne crua.",
-        "descricaoLite": "Pode tentar uma rolagem de cura natural por dia, desde que consuma meio quilo de carne crua."
+        "descricaoLite": "Pode tentar uma rolagem de cura natural por dia, desde que consuma meio quilo de carne crua.",
+        "id": "REGENERACAO_LENTA"
       },
       {
         "nome": "Robusto",
         "descricao": "Revividos não recebem Ferimentos por serem Abalados duas vezes.",
-        "descricaoLite": "Não sofre Ferimento por ser Abalado duas vezes."
+        "descricaoLite": "Não sofre Ferimento por ser Abalado duas vezes.",
+        "id": "ROBUSTO_REVIVIDO"
       }
     ],
     "complicacoes": [
@@ -311,27 +362,40 @@
       {
         "nome": "Mordida",
         "descricao": "Presas retráteis que causam For+d4 de dano.",
-        "descricaoLite": "Possui presas retráteis que causam For+d4 de dano."
+        "descricaoLite": "Possui presas retráteis que causam For+d4 de dano.",
+        "id": "MORDIDA_VAMPIRO",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Morto-Vivo",
         "descricao": "Resistência +2; +2 para recuperar Abalado; Ataques Localizados não causam dano extra; ignora 1 ponto de penalidade por Ferimentos; não respira; imune a doenças e venenos.",
-        "descricaoLite": "Recebe +2 de Resistência; +2 para se recuperar de Abalado; Ataques Localizados não causam dano extra contra ele; ignora 1 ponto de penalidade por Ferimentos; não precisa respirar; é imune a doenças e venenos."
+        "descricaoLite": "Recebe +2 de Resistência; +2 para se recuperar de Abalado; Ataques Localizados não causam dano extra contra ele; ignora 1 ponto de penalidade por Ferimentos; não precisa respirar; é imune a doenças e venenos.",
+        "id": "MORTO_VIVO"
       },
       {
         "nome": "Não Envelhece",
         "descricao": "Vampiros não envelhecem.",
-        "descricaoLite": "Não sofre os efeitos da idade."
+        "descricaoLite": "Não sofre os efeitos da idade.",
+        "id": "NAO_ENVELHECE"
       },
       {
         "nome": "Regeneração (Lenta)",
         "descricao": "Enquanto alimentados, podem tentar uma rolagem de cura natural por dia.",
-        "descricaoLite": "Enquanto estiver alimentado, pode tentar uma rolagem de cura natural por dia."
+        "descricaoLite": "Enquanto estiver alimentado, pode tentar uma rolagem de cura natural por dia.",
+        "id": "REGENERACAO_LENTA"
       },
       {
         "nome": "Visão Total no Escuro",
         "descricao": "Ignora penalidades por Iluminação e até 2 penalidades por invisibilidade ou poderes similares a até 10 quadros.",
-        "descricaoLite": "Ignora penalidades por Iluminação e até 2 pontos de penalidade por invisibilidade ou poderes similares, dentro de um alcance de 10 quadros."
+        "descricaoLite": "Ignora penalidades por Iluminação e até 2 pontos de penalidade por invisibilidade ou poderes similares, dentro de um alcance de 10 quadros.",
+        "id": "VISAO_TOTAL_ESCURO"
       }
     ],
     "complicacoes": [

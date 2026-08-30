@@ -62,6 +62,17 @@ import com.example.swadebuilder.util.keyify
 sealed class RacialTraitEffect {
     data class AtributoStep(val atributo: String, val passos: Int = 1) : RacialTraitEffect()
     data class PericiaStep(val pericia: String, val passos: Int = 1) : RacialTraitEffect()
+    // Bônus fixo (não "passo de dado") de Resistência/Passo/Aparar — mesma
+    // ideia de AtributoStep/PericiaStep, só que pra alvos que o ModifierEngine
+    // já trata como valor plano (ModifierTarget.TOUGHNESS_FLAT/PACE/PARRY),
+    // não como tipo de dado. Reúne num só lugar o que antes era um
+    // `val hasX = ...; if (hasX) modifiers.add(...)` por traço dentro do
+    // ModifierEngine — o traço só precisa estar presente (por id ou, pra
+    // grants ainda guardados como texto solto em vantagensGratis/desvantagens,
+    // por nome), o catálogo já diz o alvo e o valor.
+    data class ResistenciaBonus(val valor: Int) : RacialTraitEffect()
+    data class PassoBonus(val valor: Int) : RacialTraitEffect()
+    data class ApararBonus(val valor: Int) : RacialTraitEffect()
     data object Nenhum : RacialTraitEffect()
 }
 
@@ -87,6 +98,7 @@ object RacialTraitPointCatalog {
         "FORCA_SOBRENATURAL" to RacialTraitEffect.AtributoStep("Força"),
         "FORTE" to RacialTraitEffect.AtributoStep("Força"),
         "INTELIGENCIA" to RacialTraitEffect.AtributoStep("Astúcia"),
+        "MUITO_AGIL" to RacialTraitEffect.AtributoStep("Agilidade", passos = 2), // sintético, usado pelo Template de Monstro Heroico Lobisomem (Horror)
         "MUITO_FORTE" to RacialTraitEffect.AtributoStep("Força", passos = 2),
         "MUITO_RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor", passos = 2),
         "RESISTENTE" to RacialTraitEffect.AtributoStep("Vigor"),
@@ -102,10 +114,76 @@ object RacialTraitPointCatalog {
         "SENTIDOS_APRIMORADOS" to RacialTraitEffect.PericiaStep("Perceber"),
         "SENTIDOS_APURADOS" to RacialTraitEffect.PericiaStep("Perceber"),
         "SORRATEIRO" to RacialTraitEffect.PericiaStep("Furtividade"),
-        "TRAPALHOES_TRAVESSOS" to RacialTraitEffect.PericiaStep("Furtividade")
+        "TRAPALHOES_TRAVESSOS" to RacialTraitEffect.PericiaStep("Furtividade"),
+
+        // Resistência/Passo/Aparar de valor fixo. Cada id abaixo tem um valor
+        // único e consistente conferido contra a própria descrição da
+        // habilidade em ancestralidades.json (ex.: Terracota "recebem +3 em
+        // Resistência", Meio-Orc "Recebem Resistência +1") — não são um
+        // "chute" de código. FRAGIL varia por raça (a maioria é -1, Demônios é
+        // -2), então tem dois ids em vez de um só (mesmo padrão de
+        // FORTE/MUITO_FORTE pra AtributoStep).
+        "APARAR_BAIXO" to RacialTraitEffect.ApararBonus(-2),
+        "ESGUIOS" to RacialTraitEffect.ResistenciaBonus(-1),
+        "FEROCIDADE_ORC" to RacialTraitEffect.ResistenciaBonus(1),
+        "FRAGIL" to RacialTraitEffect.ResistenciaBonus(-1),
+        "FRAGIL_MAIOR" to RacialTraitEffect.ResistenciaBonus(-2), // sintético: Demônios (Horror), Frágil -2 em vez do -1 padrão
+        "LENTO" to RacialTraitEffect.PassoBonus(-1),
+        "MOVIMENTACAO_REDUZIDA" to RacialTraitEffect.PassoBonus(-1),
+        "METADE_CONSTRUTO" to RacialTraitEffect.ResistenciaBonus(3),
+        "MORTO_VIVO" to RacialTraitEffect.ResistenciaBonus(2),
+        "RESISTENCIA" to RacialTraitEffect.ResistenciaBonus(1),
+        "VELOCIDADE_RACIAL" to RacialTraitEffect.PassoBonus(2) // sintético: Template de Monstro Heroico Lobisomem (Horror)
     )
 
     fun efeitoDe(id: String?): RacialTraitEffect = id?.let { EFEITOS[it.keyify()] } ?: RacialTraitEffect.Nenhum
+
+    /**
+     * Rótulo de exibição por id de traço — a fonte única que tanto o
+     * ModifierEngine (nome da fonte do Modifier) quanto a lista de
+     * "Características" da aba Ancestralidades usam. Cobre ids sem efeito
+     * mecânico numérico (puramente narrativos, ex.: VISAO_NO_ESCURO) além dos
+     * que já estão em EFEITOS — um traço pode ter rótulo sem ter efeito, mas
+     * todo traço com efeito devia ter rótulo aqui.
+     */
+    val LABEL: Map<String, String> = mapOf(
+        "APARAR_BAIXO" to "Aparar Baixo",
+        "ESGUIOS" to "Esguios",
+        "FEROCIDADE_ORC" to "Ferocidade Orc",
+        "FRAGIL" to "Frágil",
+        "FRAGIL_MAIOR" to "Frágil",
+        "LENTO" to "Lento",
+        "METADE_CONSTRUTO" to "Metade Construto",
+        "MOVIMENTACAO_REDUZIDA" to "Movimentação Reduzida",
+        "MORTO_VIVO" to "Morto-Vivo",
+        "RESISTENCIA" to "Resistência",
+        "VELOCIDADE_RACIAL" to "Velocidade",
+        "VISAO_NO_ESCURO" to "Visão no Escuro",
+
+        // Habilidades puramente narrativas dos 8 Templates de Monstro Heroico
+        // (Horror) — sem efeito numérico modelado, então não aparecem em
+        // EFEITOS, só aqui, pra "Características" não cair no fallback de
+        // nome cru.
+        "EMBELEZAR_ANJO" to "Embelezar",
+        "IMUNE_DOENCAS_VENENOS" to "Imune a Doenças e Venenos",
+        "NAO_ENVELHECE" to "Não Envelhece",
+        "VOO_MOV_12" to "Voo",
+        "ARRUINAR_DEMONIO" to "Arruinar",
+        "NEGOCIADOR_DEMONIO" to "Negociador",
+        "NAO_RESPIRA" to "Não Respira",
+        "RESISTENCIA_AMBIENTAL" to "Resistência Ambiental",
+        "VISAO_TOTAL_ESCURO" to "Visão Total no Escuro",
+        "ETEREO_FANTASMA" to "Etéreo",
+        "INFRAVISAO" to "Infravisão",
+        "MORDIDA_GARRAS_LOBISOMEM" to "Mordida/Garras",
+        "TRANSFORMACAO_LOBISOMEM" to "Transformação",
+        "CIENCIA_RETALHOS" to "Ciência!",
+        "FURIA_RETALHOS" to "Fúria",
+        "PARTES_RECOSTURAR" to "Partes (Recosturar)",
+        "REGENERACAO_LENTA" to "Regeneração (Lenta)",
+        "ROBUSTO_REVIVIDO" to "Robusto",
+        "MORDIDA_VAMPIRO" to "Mordida"
+    )
 
     val CUSTOS: Map<String, Int> = mapOf(
         "ACAO_ADICIONAL" to 5, // oficial: acao_adicional

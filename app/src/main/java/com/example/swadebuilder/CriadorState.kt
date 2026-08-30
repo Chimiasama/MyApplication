@@ -14,6 +14,7 @@ import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.ArcaneConfig
+import com.example.swadebuilder.model.ArmaNatural
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.Complicacao
@@ -52,7 +53,9 @@ import com.example.swadebuilder.model.VantFilter
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.model.dynamicStageCaps
+import com.example.swadebuilder.model.desvantagensEfetivas
 import com.example.swadebuilder.model.getActiveOrigins
+import com.example.swadebuilder.model.vantagensGratisEfetivas
 import com.example.swadebuilder.model.ids.ModuleIds
 import com.example.swadebuilder.model.ids.PathfinderCurrencyIds
 import com.example.swadebuilder.model.listaDeEstagios
@@ -78,6 +81,7 @@ import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
 import java.util.UUID
 
 enum class TabStyle { ICONES, TEXTO }
@@ -112,6 +116,33 @@ class CriadorState {
     private val rebuildSkillStacksUseCase = RebuildSkillStacksUseCase()
     private val validateSelectionUseCase = com.example.swadebuilder.model.usecase.ValidateSelectionUseCase()
     private val resolveAncestryVariantUseCase = ResolveAncestryVariantUseCase()
+    private val resolveAncestryVariantPackageUseCase = com.example.swadebuilder.model.usecase.ResolveAncestryVariantPackageUseCase()
+
+    /**
+     * Mesmo conjunto de ids de ResolveAncestrySpecificAdjustmentsUseCase
+     * (scifiVariantDrivenKeys) — raças cuja Variante Sci-Fi já está no
+     * AncestryVariantRegistry, usado aqui em applyAncestryVariantAdjustments
+     * pra montar as habilidades[] de exibição/ModifierEngine a partir do
+     * mesmo pacote, em vez de duplicar os dados em blocos por raça.
+     */
+    private val scifiVariantDrivenKeys = setOf(
+        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
+        "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
+        "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
+        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "SERES SINTETICOS", "ROBOS"
+    )
+
+    /**
+     * Ids de habilidade que representam a Complicação "Perícias Básicas
+     * Reduzidas" — parcial (só Conhecimento Geral/Persuadir/Furtividade,
+     * ex.: Golens, já cadastrado assim em ancestralidades.json) ou total
+     * (todas as perícias básicas, ex.: Robôs Limitado, injetado via
+     * AncestryVariantRegistry). isPericiaBasicaEfetiva/periciaStartRawInternal
+     * checam a PRESENÇA desses ids na raça em vez de comparar por nome —
+     * antes eram dois `if (ancestralidade == "GOLENS"/"ROBOS")` fixos aqui.
+     */
+    private val periciasBasicasReduzidasParcialId = "PERICIAS_BASICAS_REDUZIDAS"
+    private val periciasBasicasReduzidasTotalId = "PERICIAS_BASICAS_REDUZIDAS_TOTAL"
 
     // --- Game Data Properties (Replaces Globals) ---
     var listaAtributos by mutableStateOf<List<String>>(emptyList())
@@ -373,9 +404,26 @@ class CriadorState {
     fun aplicarTipoMonstro(novoId: String?): List<String> {
         val feedback = mutableListOf<String>()
 
+        val monstroAnterior = getMonstroSelecionado()
         tipoMonstroSelecionado = novoId
+        val monstroNovo = getMonstroSelecionado()
 
         if (modoMonstroAtivo) {
+            // Vantagens grátis do Template de Monstro Heroico (ex.: Monstro de
+            // Retalhos possui Furioso e Resistência Arcana de graça — não é
+            // escolha do jogador, é o template quem concede). Usa o mesmo
+            // mecanismo (vantagensRaciais) que uma Ancestralidade usa pros
+            // próprios grants automáticos, só que a fonte aqui é o monstro.
+            val novasKeys = monstroNovo?.vantagensGratis?.map { it.keyify() }.orEmpty()
+            monstroAnterior?.vantagensGratis
+                ?.filterNot { it.keyify() in novasKeys }
+                ?.forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
+            monstroNovo?.vantagensGratis?.forEach { grant ->
+                if (vantagensRaciais.none { it.keyify() == grant.keyify() }) {
+                    vantagensRaciais.add(grant)
+                }
+            }
+
             val selectedTemplateKey = novoId?.keyify()
             val toRemove = vantagensSelecionadas
                 .filter { it.categoria == Categoria.MONSTRUOSAS }
@@ -562,6 +610,14 @@ class CriadorState {
                     }
                 }
                 RacialTraitEffect.Nenhum -> Unit
+                // ResistenciaBonus/PassoBonus/ApararBonus não têm mapa
+                // numérico próprio em RacialModifier (diferente de
+                // atributos/pericias) — o ModifierEngine já lê o traço
+                // removido/presente direto de tracosRemovidosIds/habilidades,
+                // então não há nada a descontar aqui.
+                is RacialTraitEffect.ResistenciaBonus,
+                is RacialTraitEffect.PassoBonus,
+                is RacialTraitEffect.ApararBonus -> Unit
             }
         }
 
@@ -790,152 +846,52 @@ class CriadorState {
             }
         }
 
-        if (key == "AQUARIANOS" && variant.equals("Semi-aquáticos", ignoreCase = true)) {
-            removeByIdOrName("AQUATICO", "AQUATICO")
-            removeByIdOrName("RESISTENCIA", "RESISTENCIA")
-
-            if (newHabilidades.none { it.id == "SEMIAQUATICO" || it.nome.keyify() == "SEMIAQUATICO" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Semiaquático",
-                        descricao = "Podem respirar na água e no ar. Seus deslocamentos na água usam a Movimentação normal.",
-                        id = "SEMIAQUATICO",
-                        category = "racial_trait_positive"
-                    )
+        // Aquarianos, Elfos, Rakashanos, Avianos, Centaux, Soldados Genéticos,
+        // Mineradores Genéticos e Ferais: as adições/remoções de habilidade
+        // por Variante vinham hardcoded aqui, duplicando (e às vezes
+        // divergindo — ex.: Avianos "Habitante de Gravidade Baixa" aqui vs
+        // "HABITANTE DE GRAVIDADE ZERO/BAIXA" em
+        // ResolveAncestrySpecificAdjustmentsUseCase) os mesmos dados já
+        // cadastrados no AncestryVariantRegistry. Lidas direto do registro
+        // agora — fonte única, sem risco de as duas cópias saírem do
+        // sincronismo de novo.
+        if (key in scifiVariantDrivenKeys) {
+            val opcoes = AncestryVariantRegistry.get(key)?.grupoVariante?.opcoes
+            if (opcoes != null) {
+                val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id
+                    ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
+                val pack = resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = key,
+                    variantOptionId = variantOptionId,
+                    selectionAnswers = emptyList()
                 )
-            }
 
-            if (newHabilidades.none { it.id == "TOQUE_VENENOSO" || it.nome.keyify() == "TOQUE VENENOSO" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Toque Venenoso",
-                        descricao = "Possuem secreções urticantes ou venenosas para contato próximo.",
-                        id = "TOQUE_VENENOSO",
-                        category = "racial_trait_positive"
-                    )
-                )
-            }
+                pack.tracosParaRemoverPorNome.forEach { nome -> removeByIdOrName(nome, nome) }
+                // Complicações removidas também podem existir como habilidade
+                // embutida (category=racial_hindrance) na raça base — ex.:
+                // Seres Sintéticos "PROGRAMADO" — não só como string solta em
+                // base.desvantagens (que esta função não toca).
+                pack.desvantagensParaRemover.forEach { nome -> removeByIdOrName(nome, nome) }
 
-
-        }
-
-        if (key == "ELFOS" && variant.equals("Comunitário", ignoreCase = true)) {
-            removeByIdOrName("DESASTRADO", "DESASTRADO")
-
-            if (newHabilidades.none { it.id == "COMUNITARIO" || it.nome.keyify() == "COMUNITARIO" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Comunitário",
-                        descricao = "Elfos comunitários recebem +2 em rolagens de Espírito quando outro elfo estiver a até 12 quadros (24m).",
-                        id = "COMUNITARIO",
-                        category = "racial_trait_positive"
-                    )
-                )
-            }
-        }
-
-        if (key == "RAKASHANOS" && variant.equals("Brincalhão", ignoreCase = true)) {
-            removeByIdOrName("SANGUINARIO", "SANGUINARIO")
-            if (newHabilidades.none { it.id == "CURIOSO" || it.nome.keyify() == "CURIOSO" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Curioso",
-                        descricao = "Sua natureza exploratória e brincalhona faz com que se metam onde não são chamados.",
-                        id = "CURIOSO",
-                        category = "racial_hindrance",
-                        severity = "Maior"
-                    )
-                )
-            }
-        }
-
-        if (key == "AVIANOS" && variant.equals("Ave de rapina", ignoreCase = true)) {
-            removeByIdOrName("FRAGIL", "FRAGIL")
-            removeByIdOrName("NAO_SABE_NADAR", "NAO SABE NADAR")
-
-            if (newHabilidades.none { it.id == "HABITANTE_DE_GRAVIDADE_BAIXA" || it.nome.keyify() == "HABITANTE DE GRAVIDADE BAIXA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Habitante de Gravidade Baixa",
-                        descricao = "Corpos adaptados à baixa gravidade sofrem em gravidade padrão ou alta. Subtraia 1 das rolagens de Característica em ambientes de gravidade padrão ou maior sem equipamento apropriado.",
-                        id = "HABITANTE_DE_GRAVIDADE_BAIXA",
-                        category = "racial_trait_negative"
-                    )
-                )
-            }
-
-            if (newHabilidades.none { it.id == "FORMA_ALIENIGENA" || it.nome.keyify() == "FORMA ALIENIGENA" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "Forma Alienígena",
-                        descricao = "O tamanho e a forma destes seres são incompatíveis com a maioria dos equipamentos e veículos usados no cenário. Só podem usar armaduras personalizadas e subtraem 1 das rolagens de Característica ao usar equipamentos e veículos não personalizados. Os itens podem ser personalizados para funcionar para a personagem por 100% do custo base (a critério do Mestre). Se a criatura também for Grande (veja Savage Worlds Edição Aventura), use apenas essa habilidade.",
-                        id = "FORMA_ALIENIGENA",
-                        category = "racial_trait_negative"
-                    )
-                )
-            }
-        }
-
-        if (key == "CENTAUX" && variant.equals("Gazela", ignoreCase = true)) {
-            removeByIdOrName("GRANDE", "GRANDE")
-            removeByIdOrName("TAMANHO_MAIS_2", "TAMANHO +2")
-            removeByIdOrName("MOVIMENTACAO_2", "MOVIMENTACAO +2")
-
-            if (newHabilidades.none { it.nome.keyify() == "MOVIMENTACAO +4" }) {
-                newHabilidades.add(
-                    com.example.swadebuilder.model.RacialAbility(
-                        nome = "MOVIMENTAÇÃO +4",
-                        descricao = "Gazelas são extremamente rápidas. +4 em Movimentação e d10 no dado de corrida.",
-                        id = "MOVIMENTACAO",
-                        category = "racial_trait_positive"
-                    )
-                )
-            }
-        }
-
-        if (key == "SERES SINTETICOS" || key == "SERES_SINTETICOS") {
-            if (variant.equals("Máquina (Procurado)", ignoreCase = true)) {
-                removeByIdOrName("PROGRAMADO", "PROGRAMADO")
-                if (newHabilidades.none { it.id == "PROCURADO" || it.nome.keyify().contains("PROCURADO") }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Procurado (Maior)",
-                            descricao = "A personagem é procurada pelas autoridades ou por uma facção poderosa.",
-                            id = "PROCURADO",
-                            category = "racial_hindrance",
-                            severity = "Maior"
+                fun addIfAbsent(texto: String, category: String) {
+                    val id = texto.uppercase().semAcentos().replace(Regex("[^A-Z0-9]+"), "_").trim('_')
+                    if (newHabilidades.none { it.id == id || it.nome.keyify() == texto.keyify() }) {
+                        val severidade = Regex("""\((Maior|Menor)\)$""").find(texto)?.groupValues?.get(1)
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = texto,
+                                descricao = "",
+                                id = id,
+                                category = category,
+                                severity = if (category == "racial_hindrance") severidade else null
+                            )
                         )
-                    )
+                    }
                 }
-            } else if (variant.equals("Máquina (Forasteiro)", ignoreCase = true)) {
-                removeByIdOrName("PROGRAMADO", "PROGRAMADO")
-                if (newHabilidades.none { it.id == "FORASTEIRO" || it.nome.keyify().contains("FORASTEIRO") }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Forasteiro (Maior)",
-                            descricao = "A personagem não tem direitos ou é perseguida em quase toda parte.",
-                            id = "FORASTEIRO",
-                            category = "racial_hindrance",
-                            severity = "Maior"
-                        )
-                    )
-                }
-            }
-        }
 
-        if (key.contains("SOLDADOS GENETICOS") || key.contains("SOLDADO GENETICO")) {
-            if (variant.equals("Fuzileiro Zero G", ignoreCase = true)) {
-                removeByIdOrName("NERVOS_DE_ACO", "NERVOS DE AÇO")
-                if (newHabilidades.none { it.id == "adaptacao_gravitacional" || it.nome.keyify() == "ADAPTACAO GRAVITACIONAL" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Adaptação Gravitacional",
-                            descricao = "Ignora a penalidade de -2 para Agilidade e perícias baseadas em Agilidade ao agir em gravidade diferente da sua.",
-                            id = "adaptacao_gravitacional",
-                            category = "racial_edge"
-                        )
-                    )
-                }
+                pack.tracosParaAdicionar.forEach { addIfAbsent(it, "racial_trait_positive") }
+                pack.vantagensGratisParaAdicionar.forEach { addIfAbsent(it, "racial_edge") }
+                pack.desvantagensParaAdicionar.forEach { addIfAbsent(it, "racial_hindrance") }
             }
         }
 
@@ -967,19 +923,6 @@ class CriadorState {
                     )
                 }
             }
-        }
-
-        // Mineradores Genéticos "Zero G": a variante Padrão tem "FORTE" (Força d6)
-        // fixo no JSON; a variante Zero G não deveria ter esse bônus. Remove aqui
-        // em vez de resetar a base em Kotlin por nome de raça.
-        if (key.contains("MINERADOR") && key.contains("GENETICO") && variant.equals("Zero G", ignoreCase = true)) {
-            removeByIdOrName("FORTE", "FORTE")
-        }
-
-        // Ferais (Sci-Fi): "ESPIRITUOSO" (Espírito d6) é fixo no JSON da raça, mas
-        // só vale para a variante Padrão.
-        if (key == "FERAIS" && variant.equals("Menor", ignoreCase = true)) {
-            removeByIdOrName("ESPIRITUOSO", "ESPIRITUOSO")
         }
 
         return base.copy(habilidades = newHabilidades)
@@ -1612,8 +1555,40 @@ class CriadorState {
         return baseLimit.coerceAtLeast(0) to maxLimit.coerceAtLeast(0)
     }
 
-    fun totalSlotsMecha(): Int =
-        equipamentosComprados.sumOf { (it.mods_slots as? JsonPrimitive)?.content?.toIntOrNull() ?: 0 }
+    // Itens de "base" de Armadura Energizada (Estruturas customizáveis ou Trajes prontos)
+    // trazem armadura/tamanho próprios; Modificadores não têm esses campos. Isso permite
+    // separar "capacidade" (base) de "gasto" (modificadores) dentro da mesma lista plana
+    // de equipamentosComprados, já que o catálogo não guarda a subcategoria por item.
+    private fun equipamentosArmaduraEnergizada(): List<EquipamentoItem> =
+        equipamentosComprados.filter { it.mods_slots != null }
+
+    private fun tamanhoArmaduraEnergizadaBase(): Int =
+        equipamentosArmaduraEnergizada()
+            .filter { it.armadura != null }
+            .sumOf { (it.tamanho as? JsonPrimitive)?.intOrNull ?: 0 }
+
+    private fun EquipamentoItem.slotsResolvidos(tamanhoBase: Int): Int {
+        val prim = mods_slots as? JsonPrimitive ?: return 0
+        prim.intOrNull?.let { return it }
+        val texto = prim.content
+        return when {
+            texto.contains("Metade", ignoreCase = true) -> (tamanhoBase + 1) / 2
+            texto.contains("Tam", ignoreCase = true) -> tamanhoBase
+            else -> 0
+        }
+    }
+
+    fun capacidadeSlotsArmaduraEnergizada(): Int =
+        equipamentosArmaduraEnergizada()
+            .filter { it.armadura != null }
+            .sumOf { (it.mods_slots as? JsonPrimitive)?.intOrNull ?: 0 }
+
+    fun totalSlotsMecha(): Int {
+        val tamanhoBase = tamanhoArmaduraEnergizadaBase()
+        return equipamentosArmaduraEnergizada()
+            .filter { it.armadura == null }
+            .sumOf { it.slotsResolvidos(tamanhoBase) }
+    }
 
     fun isPersonagemRobotico(): Boolean {
         val ancestral = currentAncestryDef
@@ -1799,59 +1774,106 @@ class CriadorState {
             return dmg
         }
 
-        // Monster Natural Weapons
+        // Vantagens que aprimoram Garras/Mordida específicas (ex.: Garras de
+        // Demônio, Mordida de Vampiro), reaproveitadas tanto pelas armas
+        // naturais de raça quanto de Monstro Heroico — o efeito é da
+        // Vantagem, não de quem concedeu a arma base.
+        val garrasDemonioCount = vantagensSelecionadas.count { it.id == "garras_demonio" }
+        val mordidaDemonioCount = vantagensSelecionadas.count { it.id == "mordida_demonio" }
+        val hasGarrasVampiro = vantagensSelecionadas.any { it.id == "garras_vampiro" }
+        val hasLobisomemAprimorado = vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" }
+
+        fun aplicarUpgradesDeVantagem(arma: ArmaNatural): Pair<String, Int> {
+            var dmg = arma.dano
+            var pa = arma.pa
+
+            if (hasLobisomemAprimorado && (arma.nome.equals("Garras", true) || arma.nome.equals("Mordida", true))) {
+                dmg = "For+d8"
+                pa = maxOf(pa, 4)
+            }
+            if (arma.nome.equals("Garras", true) && garrasDemonioCount > 0) {
+                dmg = if (garrasDemonioCount >= 2) "For+d6" else "For+d4"
+                if (garrasDemonioCount >= 2) pa = maxOf(pa, 2)
+            }
+            if (arma.nome.equals("Garras", true) && hasGarrasVampiro) {
+                dmg = "For+d6"
+                pa = maxOf(pa, 2)
+            }
+            if (arma.nome.equals("Mordida", true) && mordidaDemonioCount > 0) {
+                dmg = "For+d6"
+                if (mordidaDemonioCount >= 2) pa = maxOf(pa, 2)
+            }
+            if (arma.escalavel && (hasMartialArtist || hasBrawler)) {
+                dmg = upgradeDie(dmg)
+            }
+            return dmg to pa
+        }
+
+        fun adicionarArmaNatural(arma: ArmaNatural) {
+            val (dmg, pa) = aplicarUpgradesDeVantagem(arma)
+            weapons.add(
+                EquipamentoItem(
+                    nome = arma.nome,
+                    dano = JsonPrimitive(dmg),
+                    pa = if (pa > 0) JsonPrimitive(pa) else null,
+                    distancia = JsonPrimitive("Toque"),
+                    peso = JsonPrimitive(0),
+                    custo = JsonPrimitive(0)
+                )
+            )
+        }
+
+        // Race Natural Weapons: lido direto do dado estruturado
+        // (RacialAbility.armasNaturais) — não é mais texto pra casar por
+        // palavra-chave, o dano/PA de cada arma já vem pronto de
+        // ancestralidades.json.
+        ancestralidadeObj.habilidades.forEach { hab ->
+            hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
+        }
+
+        // Monster Natural Weapons: mesma leitura estruturada, pro Template de
+        // Monstro Heroico (horror_monstros.json).
         getMonstroSelecionado()?.let { monstro ->
             monstro.habilidades.forEach { hab ->
-                val nomeKey = hab.nome.keyify()
-                val hasNaturalAttack = nomeKey.contains("GARRA") || nomeKey.contains("MORDIDA") || nomeKey.contains("CHIFRE") || nomeKey.contains("CASCO")
-                if (!hasNaturalAttack) return@forEach
-
-                val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
-                val paRegex = Regex("""PA\s*\d+""", RegexOption.IGNORE_CASE)
-                val baseDamage = dmgRegex.find(hab.descricao)?.value?.replace(" ", "") ?: "For+d4"
-                val basePa = paRegex.find(hab.descricao)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
-
-                fun addNaturalWeapon(name: String, canScaleClaws: Boolean) {
-                    var dmgMatch = baseDamage
-                    var paValue = basePa
-
-                    if (vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" } && (name.equals("Garras", true) || name.equals("Mordida", true))) {
-                        dmgMatch = "For+d8"
-                        paValue = maxOf(paValue, 4)
-                    }
-
-                    if (canScaleClaws && (hasMartialArtist || hasBrawler)) {
-                        dmgMatch = upgradeDie(dmgMatch)
-                    }
-
-                    weapons.add(
-                        EquipamentoItem(
-                            nome = name,
-                            dano = JsonPrimitive(dmgMatch),
-                            pa = if (paValue > 0) JsonPrimitive(paValue) else null,
-                            distancia = JsonPrimitive("Toque"),
-                            peso = JsonPrimitive(0),
-                            custo = JsonPrimitive(0)
-                        )
-                    )
-                }
-
-                if (nomeKey.contains("MORDIDA") && nomeKey.contains("GARRA")) {
-                    addNaturalWeapon("Mordida", canScaleClaws = false)
-                    addNaturalWeapon("Garras", canScaleClaws = true)
-                } else if (nomeKey.contains("GARRA")) {
-                    addNaturalWeapon("Garras", canScaleClaws = true)
-                } else if (nomeKey.contains("MORDIDA")) {
-                    addNaturalWeapon("Mordida", canScaleClaws = false)
-                } else if (nomeKey.contains("CHIFRE")) {
-                    addNaturalWeapon("Chifres", canScaleClaws = false)
-                } else if (nomeKey.contains("CASCO")) {
-                    addNaturalWeapon("Cascos", canScaleClaws = false)
-                }
+                hab.armasNaturais.forEach { arma -> adicionarArmaNatural(arma) }
             }
         }
 
-        // Parse logic
+        // Variant Natural Weapons: armas que só existem numa Variante
+        // específica (ex.: Sáurios "Mordida" só pra Básico, Insetoides
+        // "Ferrão" só pra Vespa) e por isso nunca foram campo fixo da raça
+        // no JSON — lidas do mesmo AncestryVariantRegistry usado em
+        // ResolveAncestrySpecificAdjustmentsUseCase/applyAncestryVariantAdjustments,
+        // com o dano/PA já prontos, em vez de casar por palavra-chave.
+        run {
+            val ancKey = ancestralidade.keyify()
+            // Só entra pra raças Sci-Fi de verdade: Sáurios/Insetoides do
+            // livro básico têm suas próprias armasNaturais fixas no JSON
+            // (já cobertas pelo loop "Race Natural Weapons" acima) e não
+            // têm `opcoes`, então resolveCurrentSciFiVariantSelection()
+            // cairia no Básico do registro Sci-Fi e duplicaria a arma.
+            val opcoes = if (compendioSciFiAtivo) {
+                AncestryVariantRegistry.get(ancKey)?.grupoVariante?.opcoes
+            } else {
+                null
+            }
+            if (opcoes != null) {
+                val variantAtual = resolveCurrentSciFiVariantSelection()
+                val variantOptionId = opcoes.firstOrNull { it.nome.equals(variantAtual, ignoreCase = true) }?.id
+                    ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
+                resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = ancKey,
+                    variantOptionId = variantOptionId,
+                    selectionAnswers = emptyList()
+                ).armasNaturaisParaAdicionar.forEach { arma -> adicionarArmaNatural(arma) }
+            }
+        }
+
+        // Parse logic (permanece pra armas concedidas por Vantagem/Edge — ex.:
+        // Toque Arrepiante, Toque da Morte — e como fallback pra qualquer
+        // combinação raça/vantagem ainda não coberta pelo dado estruturado
+        // acima; o `alreadyPresent` abaixo evita duplicar o que já foi
+        // adicionado pelos blocos de raça/monstro).
         keywords.forEach { key ->
             val keyToken = key.keyify()
             val targetId = keywordToIdMap[key]
@@ -1868,15 +1890,6 @@ class CriadorState {
                 }
             }
             if (alreadyPresent) return@forEach
-
-            // Variant-specific exclusions (Legacy checks + ID checks)
-            // Note: Since we use IDs now, we could check IDs directly, but let's keep robust logic
-            if (compendioSciFiAtivo) {
-                // Sáurios Cuspidor removes MORDIDA (via ID or name)
-                if (ancestralidade.keyify() == "SAURIOS" && resolveCurrentSciFiVariantSelection() == "Cuspidor" && keyToken == "MORDIDA") return@forEach
-                // Insetoides Vespa removes GARRAS
-                if (ancestralidade.keyify() == "INSETOIDES" && resolveCurrentSciFiVariantSelection() == "Vespa" && keyToken == "GARRAS") return@forEach
-            }
 
             // Check presence via ID (Strong match) or Name (Legacy/Fallback)
             val hasIdMatch = targetId != null && (
@@ -1909,10 +1922,8 @@ class CriadorState {
                 var dmgMatch = dmgRegex.find(desc)?.value?.replace(" ", "") ?: "For+d4"
                 var paFinal = paRegex.find(desc)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
 
-                val garrasDemonioCount = vantagensSelecionadas.count { it.id == "garras_demonio" }
-                val mordidaDemonioCount = vantagensSelecionadas.count { it.id == "mordida_demonio" }
-                val hasGarrasVampiro = vantagensSelecionadas.any { it.id == "garras_vampiro" }
-                val hasLobisomemAprimorado = vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" }
+                // garrasDemonioCount/mordidaDemonioCount/hasGarrasVampiro/hasLobisomemAprimorado
+                // já vêm do escopo externo (ver aplicarUpgradesDeVantagem acima).
 
                 if (key.equals("Toque Arrepiante", ignoreCase = true)) {
                     dmgMatch = "For+d4"
@@ -1954,17 +1965,6 @@ class CriadorState {
                     } else {
                         dmgMatch = "For+d4"
                     }
-                }
-
-                // Insetoides Padrão: For+d4 e PA 2
-                if (key.equals("Garras", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
-                    dmgMatch = "For+d4"
-                    paFinal = maxOf(paFinal, 2)
-                }
-
-                // Insetoides Vespa Variante (Ferrão/Mordida): Tem PA -
-                if (key.equals("Ferrão", ignoreCase = true) && ancestralidade.keyify() == "INSETOIDES") {
-                    paFinal = 0
                 }
 
                 if (key.equals("Garras", ignoreCase = true) && hasGarrasVampiro) {
@@ -2750,14 +2750,13 @@ class CriadorState {
 
     fun isPericiaBasicaEfetiva(per: Pericia): Boolean {
         if (!per.basica) return false
-        if (compendioFantasiaAtivo && ancestralidade.keyify() == "GOLENS") {
+        val habilidades = currentAncestryDef?.habilidades ?: return true
+        if (habilidades.any { it.id == periciasBasicasReduzidasTotalId }) return false
+        if (habilidades.any { it.id == periciasBasicasReduzidasParcialId }) {
             val key = per.nome.keyify()
             if (key == "CONHECIMENTO GERAL" || key == "PERSUADIR" || key == "FURTIVIDADE") {
                 return false
             }
-        }
-        if (compendioSciFiAtivo && ancestralidade.keyify() == "ROBOS" && resolveCurrentSciFiVariantSelection() == "Limitado") {
-            return false // Removes d4 from all basic skills
         }
         return true
     }
@@ -2775,11 +2774,15 @@ class CriadorState {
 
         var defaultBase = 0
         if (per.basica) {
-            val isGolemRestricted = compendioFantasiaAtivo && ancKey == "GOLENS" &&
-                    (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")
-            val isRobotLimited = compendioSciFiAtivo && ancKey == "ROBOS" && resolveCurrentSciFiVariantSelection() == "Limitado"
+            val habilidadesDaRaca = (
+                if (ancKey == ancestralidade.keyify()) currentAncestryDef else getAncestralidadeDef(anc)
+            )?.habilidades.orEmpty()
+            val isTotalmenteReduzida = habilidadesDaRaca.any { it.id == periciasBasicasReduzidasTotalId }
+            val isParcialmenteReduzida = !isTotalmenteReduzida &&
+                habilidadesDaRaca.any { it.id == periciasBasicasReduzidasParcialId } &&
+                (perKey == "CONHECIMENTO GERAL" || perKey == "PERSUADIR" || perKey == "FURTIVIDADE")
 
-            if (!isGolemRestricted && !isRobotLimited) {
+            if (!isTotalmenteReduzida && !isParcialmenteReduzida) {
                 defaultBase = 4
             }
         }
@@ -2788,24 +2791,18 @@ class CriadorState {
 
         var modifiedBase = base
 
-        // Monster Bonus
+        // Template de Monstro Heroico (Horror): mesma leitura genérica de
+        // atributos_bonus que o atributo usa (ver monstroAtributoTraitIds), só
+        // que aqui o único caso real é "Fe" — a perícia Fé, id "FE" no mesmo
+        // RacialTraitPointCatalog (RacialTraitEffect.PericiaStep). Passos segue
+        // a mesma convenção do resto do app: cada passo é um tipo de dado acima
+        // de d4 (1 passo = d6, 2 passos = d8...).
         getMonstroSelecionado()?.let { monstro ->
-            val monsterKey = per.nome.keyify()
             val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
-                it.key.keyify() == monsterKey
+                it.key.keyify() == perKey
             }
             if (bonusEntry != null) {
-                // Mapping: 1 -> d4 (4), 2 -> d6 (6), 3 -> d8 (8), etc.
-                val steps = bonusEntry.value
-                val bonusRaw = when(steps) {
-                    1 -> 4
-                    2 -> 6
-                    3 -> 8
-                    4 -> 10
-                    5 -> 12
-                    else -> 4
-                }
-                modifiedBase = maxOf(modifiedBase, bonusRaw)
+                modifiedBase = maxOf(modifiedBase, 4 + 2 * bonusEntry.value)
             }
         }
 
@@ -3880,38 +3877,34 @@ class CriadorState {
         return listaDeEstagios.first { progresso in it.minProgress .. it.maxProgress }
     }
 
-    private fun Vantagem.isStageBasedArcanoVariant(key: String): Boolean {
-        val normalizedKey = key.normAAKey()
-        val origin = canonicalOriginKey(origem)
+    /**
+     * "Antecedente Arcano por estágio" (Cidade do Sol a Vapor): a Vantagem
+     * usa ArcaneConfig.getStageBasedPowersByStage em vez do sistema normal
+     * de PP/slots. `usaPoderesPorEstagio` (vantagens.json) já carrega isso
+     * por Vantagem — antes era um `when` fixo enumerando id por chave
+     * (FEITICEIRO -> aa_magia_negra/aa_magia_das_trevas, DEMONIO ->
+     * aa_demonio, MILAGRES -> aa_milagres/antecedente_arcano_milagres).
+     * Só a exceção do Demônio de Cidade do Sol a Vapor continua em código,
+     * porque depende da ancestralidade do PERSONAGEM, não da Vantagem —
+     * não tem como isso ser um campo estático do catálogo.
+     */
+    private fun Vantagem.isStageBasedArcanoVariant(): Boolean {
+        if (!usaPoderesPorEstagio) return false
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
-        return when (normalizedKey) {
-            "FEITICEIRO" -> id == "aa_magia_negra" || id == "aa_magia_das_trevas"
-            "DEMONIO" -> id == "aa_demonio" && !isCidadeSolVaporDemonAncestry
-            "MILAGRES" -> {
-                id == "aa_milagres" ||
-                    (id == "antecedente_arcano_milagres" && origin == "CIDADE_SOL_VAPOR")
-            }
-            else -> false
-        }
+        if (id == "aa_demonio" && isCidadeSolVaporDemonAncestry) return false
+        return true
     }
 
     fun usaPoderesDisponiveisPorEstagio(arcKey: String): Boolean {
         val key = arcKey.normAAKey()
         return vantagensSelecionadas.any { vantagem ->
-            vantagem.toArcanoKey()?.normAAKey() == key && vantagem.isStageBasedArcanoVariant(key)
+            vantagem.toArcanoKey()?.normAAKey() == key && vantagem.isStageBasedArcanoVariant()
         }
     }
 
     fun bloqueiaNovosPoderesPorAntecedente(): Boolean =
-        vantagensSelecionadas.any {
-            when (it.toArcanoKey()?.normAAKey()) {
-                "FEITICEIRO" -> usaPoderesDisponiveisPorEstagio("FEITICEIRO")
-                "DEMONIO" -> usaPoderesDisponiveisPorEstagio("DEMONIO")
-                "MILAGRES" -> usaPoderesDisponiveisPorEstagio("MILAGRES")
-                else -> false
-            }
-        }
+        vantagensSelecionadas.any { it.isStageBasedArcanoVariant() }
 
     fun estagioAtinge(estagioNome: String): Boolean {
         val atualIdx = listaDeEstagios.indexOf(estagioAtual())
@@ -3994,28 +3987,15 @@ class CriadorState {
     val complicacoesSelecionadas: SnapshotStateMap<Complicacao, String?> = mutableStateMapOf()
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
-    private fun effectiveVantagensGratis(rm: RacialModifier): List<String> {
-        val fromList = rm.vantagensGratis
-        val fromHabilidades = rm.habilidades
-            .filter { it.category == "racial_edge" }
-            .map { it.id ?: it.nome }
-        return fromList + fromHabilidades
-    }
+    // Delegam pras versões compartilhadas em RacialModifier.kt — mesma lógica
+    // que a lista de Características da aba Ancestralidades usa, pra não ter
+    // dois lugares combinando lista solta + habilidade embutida cada um do
+    // seu jeito.
+    private fun effectiveVantagensGratis(rm: RacialModifier): List<String> =
+        vantagensGratisEfetivas(rm.vantagensGratis, rm.habilidades)
 
-    private fun effectiveDesvantagens(rm: RacialModifier): List<String> {
-        val fromList = rm.desvantagens
-        val fromHabilidades = rm.habilidades
-            .filter { it.category == "racial_hindrance" }
-            .map {
-                val sev = it.severity
-                if (sev != null && !it.nome.contains("($sev)", ignoreCase = true)) {
-                    "${it.nome} ($sev)"
-                } else {
-                    it.nome
-                }
-            }
-        return fromList + fromHabilidades
-    }
+    private fun effectiveDesvantagens(rm: RacialModifier): List<String> =
+        desvantagensEfetivas(rm.desvantagens, rm.habilidades)
 
     val pontosComplicacao: Int
         get() {
@@ -4402,6 +4382,30 @@ class CriadorState {
         }
     }
 
+    /**
+     * Traduz `MonstroTemplate.atributos_bonus` (mapa "atributo -> passos", ex.:
+     * Anjo tem Força:2/Vigor:2) para ids já existentes em
+     * `RacialTraitPointCatalog.EFEITOS` — os mesmos que uma Ancestralidade real
+     * usaria para o mesmo efeito (ex.: Força +2 é "MUITO_FORTE", o id que
+     * qualquer raça com Força +2 também usaria). Isso evita reimplementar o
+     * cálculo de "quantos passos de dado" num segundo lugar: o Monstro apenas
+     * contribui com ids pro mesmo catálogo que a raça já usa.
+     *
+     * A entrada "Fe" (perícia Fé, não atributo) fica de fora — é tratada em
+     * periciaStartRawInternal, que também usa o id "FE" do mesmo catálogo.
+     */
+    private fun monstroAtributoTraitIds(monstro: MonstroTemplate): Set<String> =
+        monstro.atributos_bonus.mapNotNull { (atributo, passos) ->
+            when (atributo.keyify()) {
+                "FORCA" -> if (passos >= 2) "MUITO_FORTE" else "FORTE"
+                "VIGOR" -> if (passos >= 2) "MUITO_RESISTENTE" else "RESISTENTE"
+                "AGILIDADE" -> if (passos >= 2) "MUITO_AGIL" else "AGIL"
+                "ESPIRITO" -> "ESPIRITUAL"
+                "ASTUCIA" -> "ASTUCIA"
+                else -> null
+            }
+        }.toSet()
+
     private fun atributoBaseRacial(a: String): Int {
         // Fix: Use keyified ancestry to match DataLoader map keys
         var base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
@@ -4434,26 +4438,15 @@ class CriadorState {
         // habilidades[] da raça (já com os ajustes de variante aplicados por
         // applyAncestryVariantAdjustments/getAncestralidadeDef) em vez de comparar
         // o nome da raça — assim o bônus segue o traço, não o rótulo da raça.
-        val habilidadeIds = currentAncestryDef?.habilidades
+        //
+        // O Template de Monstro Heroico (Horror) entra no MESMO conjunto de ids —
+        // não é raça nem variante de raça, é uma camada adicional que se soma à
+        // ancestralidade escolhida (ver monstroAtributoTraitIds). Assim o loop
+        // abaixo nem precisa saber que "monstro" existe: só vê ids de traço.
+        val habilidadeIds = (currentAncestryDef?.habilidades
             ?.mapNotNull { it.id?.keyify() }
             ?.toSet()
-            ?: emptySet()
-
-        // Monster Bonus
-        getMonstroSelecionado()?.let { monstro ->
-            val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
-                it.key.keyify() == attrKey
-            }
-            if (bonusEntry != null) {
-                // Steps: 1 -> d6, 2 -> d8. Base is d4 (4).
-                val steps = bonusEntry.value
-                var monsterBase = 4
-                repeat(steps) {
-                    monsterBase = if (monsterBase < 12) monsterBase + 2 else monsterBase + 1
-                }
-                modifiedBase = maxOf(modifiedBase, monsterBase)
-            }
-        }
+            ?: emptySet()) + (getMonstroSelecionado()?.let { monstroAtributoTraitIds(it) } ?: emptySet())
 
         // Traços de alvo fixo (a raça sempre sobe o mesmo atributo quando o traço
         // está presente): o traço só precisa estar na raça, quem diz QUAL
