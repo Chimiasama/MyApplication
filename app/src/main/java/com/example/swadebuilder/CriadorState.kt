@@ -374,9 +374,26 @@ class CriadorState {
     fun aplicarTipoMonstro(novoId: String?): List<String> {
         val feedback = mutableListOf<String>()
 
+        val monstroAnterior = getMonstroSelecionado()
         tipoMonstroSelecionado = novoId
+        val monstroNovo = getMonstroSelecionado()
 
         if (modoMonstroAtivo) {
+            // Vantagens grátis do Template de Monstro Heroico (ex.: Monstro de
+            // Retalhos possui Furioso e Resistência Arcana de graça — não é
+            // escolha do jogador, é o template quem concede). Usa o mesmo
+            // mecanismo (vantagensRaciais) que uma Ancestralidade usa pros
+            // próprios grants automáticos, só que a fonte aqui é o monstro.
+            val novasKeys = monstroNovo?.vantagensGratis?.map { it.keyify() }.orEmpty()
+            monstroAnterior?.vantagensGratis
+                ?.filterNot { it.keyify() in novasKeys }
+                ?.forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
+            monstroNovo?.vantagensGratis?.forEach { grant ->
+                if (vantagensRaciais.none { it.keyify() == grant.keyify() }) {
+                    vantagensRaciais.add(grant)
+                }
+            }
+
             val selectedTemplateKey = novoId?.keyify()
             val toRemove = vantagensSelecionadas
                 .filter { it.categoria == Categoria.MONSTRUOSAS }
@@ -1832,34 +1849,28 @@ class CriadorState {
             return dmg
         }
 
-        // Monster Natural Weapons
+        // Monster Natural Weapons: lido direto do dado estruturado
+        // (MonstroHabilidade.armasNaturais), sem regex sobre o texto de
+        // descrição — o dano/PA de cada arma já vem pronto de
+        // horror_monstros.json.
         getMonstroSelecionado()?.let { monstro ->
             monstro.habilidades.forEach { hab ->
-                val nomeKey = hab.nome.keyify()
-                val hasNaturalAttack = nomeKey.contains("GARRA") || nomeKey.contains("MORDIDA") || nomeKey.contains("CHIFRE") || nomeKey.contains("CASCO")
-                if (!hasNaturalAttack) return@forEach
+                hab.armasNaturais.forEach { arma ->
+                    var dmgMatch = arma.dano
+                    var paValue = arma.pa
 
-                val dmgRegex = Regex("""(For|Str|Força|Strength)(\s*\+\s*)?d\d+""", RegexOption.IGNORE_CASE)
-                val paRegex = Regex("""PA\s*\d+""", RegexOption.IGNORE_CASE)
-                val baseDamage = dmgRegex.find(hab.descricao)?.value?.replace(" ", "") ?: "For+d4"
-                val basePa = paRegex.find(hab.descricao)?.value?.replace("PA", "", ignoreCase = true)?.trim()?.toIntOrNull() ?: 0
-
-                fun addNaturalWeapon(name: String, canScaleClaws: Boolean) {
-                    var dmgMatch = baseDamage
-                    var paValue = basePa
-
-                    if (vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" } && (name.equals("Garras", true) || name.equals("Mordida", true))) {
+                    if (vantagensSelecionadas.any { it.id == "mordida_garras_aprimorada" } && (arma.nome.equals("Garras", true) || arma.nome.equals("Mordida", true))) {
                         dmgMatch = "For+d8"
                         paValue = maxOf(paValue, 4)
                     }
 
-                    if (canScaleClaws && (hasMartialArtist || hasBrawler)) {
+                    if (arma.escalavel && (hasMartialArtist || hasBrawler)) {
                         dmgMatch = upgradeDie(dmgMatch)
                     }
 
                     weapons.add(
                         EquipamentoItem(
-                            nome = name,
+                            nome = arma.nome,
                             dano = JsonPrimitive(dmgMatch),
                             pa = if (paValue > 0) JsonPrimitive(paValue) else null,
                             distancia = JsonPrimitive("Toque"),
@@ -1867,19 +1878,6 @@ class CriadorState {
                             custo = JsonPrimitive(0)
                         )
                     )
-                }
-
-                if (nomeKey.contains("MORDIDA") && nomeKey.contains("GARRA")) {
-                    addNaturalWeapon("Mordida", canScaleClaws = false)
-                    addNaturalWeapon("Garras", canScaleClaws = true)
-                } else if (nomeKey.contains("GARRA")) {
-                    addNaturalWeapon("Garras", canScaleClaws = true)
-                } else if (nomeKey.contains("MORDIDA")) {
-                    addNaturalWeapon("Mordida", canScaleClaws = false)
-                } else if (nomeKey.contains("CHIFRE")) {
-                    addNaturalWeapon("Chifres", canScaleClaws = false)
-                } else if (nomeKey.contains("CASCO")) {
-                    addNaturalWeapon("Cascos", canScaleClaws = false)
                 }
             }
         }

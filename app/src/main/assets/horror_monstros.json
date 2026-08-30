@@ -175,7 +175,21 @@
         "nome": "Mordida/Garras",
         "descricao": "Causam For+d6, PA 2.",
         "descricaoLite": "Seus ataques naturais causam For+d6, PA 2.",
-        "id": "MORDIDA_GARRAS_LOBISOMEM"
+        "id": "MORDIDA_GARRAS_LOBISOMEM",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d6",
+            "pa": 2,
+            "escalavel": false
+          },
+          {
+            "nome": "Garras",
+            "dano": "For+d6",
+            "pa": 2,
+            "escalavel": true
+          }
+        ]
       },
       {
         "nome": "Regeneração (Lenta)",
@@ -214,6 +228,10 @@
       "Forca": 2,
       "Vigor": 2
     },
+    "vantagensGratis": [
+      "resistencia_arcana",
+      "furioso"
+    ],
     "habilidades": [
       {
         "nome": "Ciência!",
@@ -345,7 +363,15 @@
         "nome": "Mordida",
         "descricao": "Presas retráteis que causam For+d4 de dano.",
         "descricaoLite": "Possui presas retráteis que causam For+d4 de dano.",
-        "id": "MORDIDA_VAMPIRO"
+        "id": "MORDIDA_VAMPIRO",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": false
+          }
+        ]
       },
       {
         "nome": "Morto-Vivo",
