@@ -135,18 +135,38 @@ fun groupAncestralidadesForDisplay(items: List<RacialModifier>): List<List<Racia
  * CriadorState, ou a lista de Características da aba Ancestralidades — usa
  * estas duas funções em vez de ler só um dos dois lugares.
  */
+private val racialGrantSeveritySuffixRegex = Regex("""\s*\((MAIOR|MENOR)\)\s*$""")
+
+// Chave de dedup tolerante a diferenças de formatação puramente cosméticas entre a
+// mesma vantagem/desvantagem grátis representada de duas formas — id vs nome (ex.:
+// "ANTECEDENTE_ARCANO_MILAGRES" vs "Antecedente Arcano (Milagres)") ou nome cru vs
+// nome com sufixo de gravidade re-anexado (ex.: "Desastrado" vs "Desastrado (Menor)").
+// Reduz a string a só letras/números maiúsculos sem acento — duas grafias que só
+// diferem em espaço/underscore/parênteses/pontuação caem na mesma chave.
+fun String.racialGrantDedupeKey(): String =
+    keyify().replace(racialGrantSeveritySuffixRegex, "").filter { it.isLetterOrDigit() }
+
+// distinctBy(racialGrantDedupeKey) porque algumas raças do catálogo (6 de 121, ex.:
+// Halfling do Pathfinder com "Sorte") têm a mesma vantagem/desvantagem registrada nas
+// DUAS formas ao mesmo tempo — solta em vantagensGratis/desvantagens E de novo dentro
+// de habilidades[] com category=racial_edge/racial_hindrance — em vez de só uma
+// delas, que é o que o resto deste arquivo assume. Sem isso a Vantagem/Complicação
+// aparecia duplicada em qualquer lugar que lesse essa lista (ex.: "Características" da
+// aba Ancestralidades), mesmo a concessão mecânica de verdade só acontecendo uma vez
+// (ResolveGrantedAncestryAdvantagesUseCase já tinha seu próprio distinctBy(id)).
 fun vantagensGratisEfetivas(vantagensGratis: List<String>, habilidades: List<RacialAbility>): List<String> =
-    vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { it.id ?: it.nome }
+    (vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { it.id ?: it.nome })
+        .distinctBy { it.racialGrantDedupeKey() }
 
 fun desvantagensEfetivas(desvantagens: List<String>, habilidades: List<RacialAbility>): List<String> =
-    desvantagens + habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
+    (desvantagens + habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
         val sev = hab.severity
         if (sev != null && !hab.nome.contains("($sev)", ignoreCase = true)) {
             "${hab.nome} ($sev)"
         } else {
             hab.nome
         }
-    }
+    }).distinctBy { it.racialGrantDedupeKey() }
 
 /**
  * Monta a lista "Características" da aba Ancestralidades inteiramente a
