@@ -114,7 +114,7 @@ existe mas precisa validação linha a linha):
 | `BASICO` | [`book_index/basico.md`](reports/book_index/basico.md) | 319 | 1 | 4 |
 | `FANTASIA` | [`book_index/fantasia.md`](reports/book_index/fantasia.md) | 158 | 1 | 7 |
 | `SCIFI` | [`book_index/scifi.md`](reports/book_index/scifi.md) | 169 | 0 | 9 |
-| `HORROR` | [`book_index/horror.md`](reports/book_index/horror.md) | 179 | 7 | 3 |
+| `HORROR` | [`book_index/horror.md`](reports/book_index/horror.md) | 179 | 0 | 10 |
 | `SUPERPODERES` | [`book_index/superpoderes.md`](reports/book_index/superpoderes.md) | 125 | 3 | 3 |
 | `PATHFINDER_BASICO` / `PATHFINDER_COMPENDIO` | [`book_index/pathfinder.md`](reports/book_index/pathfinder.md) | 67 | 1 | 2 |
 | `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | 126 | 0 | 4 |
@@ -122,14 +122,13 @@ existe mas precisa validação linha a linha):
 | `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 116 | 0 | 8 |
 | `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 76 | 0 | 6 |
 | `WISEGUYS` | [`book_index/wiseguys.md`](reports/book_index/wiseguys.md) | 99 | 1 | 0 |
-| **Total** | | **1605** | **15** | **46** |
+| **Total** | | **1605** | **8** | **53** |
 
-**Leitura rápida:** o Livro Básico, Fantasia, Arte da Guerra, Wiseguys, Deadlands,
-Sci-Fi, Crystal Heart e agora **CSV** estão praticamente 100% cobertos (0-1
-`[FALTA]`, os módulos mais antigos/maduros do app + os resolvidos em 2026-08-31
-— ver abaixo). A maior lacuna de conteúdo real que resta é **Horror (7
-faltando)** — ver o motivo resumido em cada arquivo de índice antes de decidir
-prioridade.
+**Leitura rápida:** todos os 11 livros mapeados estão praticamente fechados —
+0-1 `[FALTA]` cada, exceto Superpoderes (3), que já eram considerados baixa
+prioridade desde a varredura original. Não sobra nenhuma lacuna de conteúdo
+volumosa; o que resta é revisar os 53 `[CONFERIR]` espalhados pelos índices
+(item 6 da lista de prioridades, abaixo).
 
 **Sci-Fi resolvido (2026-08-31, item 5 da lista de prioridades):** dos 56 itens
 `[FALTA]` reais do relatório, 9 foram marcados `[FORA DE ESCOPO]` (7 "Robôs
@@ -145,6 +144,21 @@ constava na varredura original). Conteúdo transcrito por agente a partir do
 texto de `docs/swade_scifi` e conferido manualmente (spot-check linha a linha
 contra o livro) antes de mesclar — ver `docs/reports/book_index/scifi.md` pra
 cada id e localização.
+
+**Horror resolvido (2026-08-31, item 5 da lista de prioridades):** os 7
+`[FALTA]` do Compêndio de Horror eram todos regras de resolução em jogo, não
+opções compráveis na criação — categoricamente diferentes dos itens
+resolvidos nos outros livros (Vantagens/Equipamento/Poderes/Ancestralidade).
+Marcados `[FORA DE ESCOPO]`: a regra "Criando Itens Alquímicos" (sistema de
+crafting, mesma categoria já excluída em toda a sessão — os itens resultantes
+já estavam cadastrados) e o Sistema de Medo e Trauma completo (Tabela Efeitos
+de Medo D20, Tabela Psicoses Aleatórias D12, regra de Colapso/Surto Psicótico,
+regras de tratamento de Psicoses, e o recurso RAIVA do Monstro Heroico, que
+depende desse mesmo sistema) — todos são sorteios/rastreamento conduzidos
+pelo Mestre durante a campanha, não dados de ficha na criação; as
+Complicações que a tabela de Psicoses pode gerar já existem todas
+individualmente em `complicacoes.json`. Nenhuma mudança de código ou catálogo
+neste item — só documentação. Ver `docs/reports/book_index/horror.md`.
 
 **CSV resolvido (2026-08-31, item 5 da lista de prioridades):** os 14 `[FALTA]`
 do cenário Cidade do Sol a Vapor eram um mix de dados de catálogo e de código.
@@ -349,9 +363,9 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
    é o próximo passo natural (as fórmulas de Aparar/Movimentação/Tamanho
    racial, armas naturais etc. continuam comparando por nome/regex até
    alguém fazer essa migração, agora que o id existe pra elas usarem).
-5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: ✅ ~~Sci-Fi (57)~~,
-   ✅ ~~Deadlands (36)~~, ✅ ~~Crystal Heart (33)~~ e ✅ ~~CSV (14)~~ — feitos
-   (ver acima e abaixo). Resta: Horror (7).
+5. ✅ **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: ~~Sci-Fi (57)~~,
+   ~~Deadlands (36)~~, ~~Crystal Heart (33)~~, ~~CSV (14)~~ e ~~Horror (7)~~ —
+   todos feitos (ver acima e abaixo).
 
 **Deadlands resolvido (2026-08-31):** os 36 `[FALTA]` eram todas Vantagens de
 árvores de arquétipo (Abençoado, Agente, Atormentado ×2 seções, Cientista

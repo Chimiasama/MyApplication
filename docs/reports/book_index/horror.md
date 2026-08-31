@@ -124,7 +124,7 @@ texto do livro; nenhuma habilidade ou Vantagem exclusiva ficou de fora.
 
 ### Sistemas do Monstro Heroico (p.14–15)
 
-- **RAIVA** — id sugerido: `sistema_raiva_monstro_heroico` — [FALTA] — 1x/sessão gasta um Bene como Convicção para entrar em fúria; ao terminar, Espírito -2 ou ganha Psicose Maior; a 4ª Psicose (de Raiva ou Medo) vira Surto Psicótico. Não há rastreamento desse recurso em nenhum catálogo/estado do app (`horror_monstros.json` só traz atributos/habilidades/complicações fixas do template). — linhas ~822–855
+- **RAIVA** — [FORA DE ESCOPO, resolvido em 2026-08-31] — 1x/sessão gasta um Bene como Convicção para entrar em fúria; ao terminar, Espírito -2 ou ganha Psicose Maior; a 4ª Psicose (de Raiva ou Medo) vira Surto Psicótico. É um recurso de resolução em jogo (ativado em cena, com consequência sorteada no sistema de Medo/Psicoses acima), não uma opção comprável na criação — mesma natureza dos demais itens de regra de resolução já fora de escopo neste levantamento; `horror_monstros.json` continua trazendo corretamente os atributos/habilidades/complicações fixas de criação de cada template. — linhas ~822–855
 - **PODERES MÍSTICOS** (regra genérica de referência) — [OK, via referência] — Base mecânica citada pelas 4 Vantagens "Poderes Místicos (X)" já catalogadas (Anjo/Demônio/Fantasma/Múmia); não é uma entrada compra própria, por isso sem id — apenas o texto de regra (10 PP dedicados, ativação automática por ação livre limitada). — linha ~856
 
 ## Novos Poderes (Capítulo Quatro, p.86–99)
@@ -286,21 +286,24 @@ exatamente com a tabela do livro.
 - **Fósforos** — [OK] — linha ~7498
 - **Pedra Explosiva** — [OK] — linha ~7501
 
-- **Regra "Criando Itens Alquímicos"** — id sugerido: `regra_criacao_itens_alquimicos` — [FALTA] — procedimento de crafting (laboratório + metade do custo em componentes + tempo = custo em minutos + rolagem de Alquimia) tanto para os Itens Arcanos alquímicos (p.116) quanto para os consumíveis acima (p.117); os *resultados* (os itens) já estão cadastrados, mas a *regra de fabricação* em si não tem representação em nenhum catálogo/mecânica do app. Baixa prioridade — é regra de mesa aplicável manualmente. — linhas ~7379 e ~7471
+- **Regra "Criando Itens Alquímicos"** — id sugerido: `regra_criacao_itens_alquimicos` — [FORA DE ESCOPO, resolvido em 2026-08-31] — procedimento de crafting (laboratório + metade do custo em componentes + tempo = custo em minutos + rolagem de Alquimia) tanto para os Itens Arcanos alquímicos (p.116) quanto para os consumíveis acima (p.117); mesma categoria de "criação de item" explicitamente fora do escopo deste mapeamento (igual crafting de magomecânico/invenções do CSV e criação de item mágico em geral) — os *resultados* (os itens) já estão cadastrados, só o sistema de fabricação em si fica de fora. — linhas ~7379 e ~7471
 
-## Sistema de Medo e Trauma (Capítulo Três, p.50–52)
+## Sistema de Medo e Trauma (Capítulo Três, p.50–52) [FORA DE ESCOPO, resolvido em 2026-08-31]
 
-Afeta diretamente a ficha do personagem (fobias/manias de longo prazo geradas
-por falha em teste de Medo) — não há representação disso em nenhum
-catálogo/estado do app hoje (busca por "Psicose"/"Efeitos de Medo" nos JSONs
-não retorna nada; `complicacoes.json` só tem as Complicações fixas de criação,
-não o gerador aleatório de Psicoses).
+Sistema de resolução de mesa conduzido pelo Mestre a cada falha em teste de
+Medo (sorteio em tabela + rastreamento de estado ao longo da campanha,
+paralelo ao de Ferimentos/Fadiga), não um catálogo de opções que o jogador
+compra na criação — mesma natureza dos outros itens de "regra de resolução"
+já marcados fora de escopo neste levantamento (Proteções e Aprisionamentos,
+Sinais e Presságios etc.). Os *resultados* que a tabela pode gerar (as
+Complicações) já existem todas individualmente em `complicacoes.json`; só o
+sorteio/rastreamento em si fica de fora.
 
 - **Testes de Medo e regra de Sanidade "in-line"** — [OK, conceitual] — Regra central: falha em teste de Medo (Espírito) manda para a tabela de Efeitos de Medo em vez de um contador de Sanidade numérico. — linhas ~2878–2893
-- **Tabela Efeitos de Medo (D20)** — id sugerido: `tabela_efeitos_de_medo` — [FALTA] — 8 faixas de resultado (Surto de Adrenalina → Ataque Cardíaco/Surto Psicótico em 22+); referenciada por várias Vantagens já cadastradas (ex. Aura de Coragem, Rainha/Rei do Grito) mas a tabela em si não existe como dado. — linha ~2927
-- **Tabela Psicoses Aleatórias (D12 Menor/Maior)** — id sugerido: `tabela_psicoses_aleatorias` — [FALTA] — gera uma Complicação Menor ou Maior temporária (todas já existem em `complicacoes.json` individualmente: Cauteloso, Delirante, Pessimista, Hábito, Hesitante, Fobia, Peculiaridade, Histérico, Teimoso, Supersticioso, Desconfiado, Sensível / Sanguinário, Amaldiçoado, Delirante, Condenado, Hábito, Mudo, Terrores Noturnos, Fobia, Sem Escrúpulos, Histérico, Desconfiado, Covarde) — falta só a tabela de sorteio e o rastreamento de "até 3 Psicoses" (regra Colapso). — linha ~2915
-- **Colapso / Surto Psicótico** — id sugerido: `regra_colapso_surto_psicotico` — [FALTA] — limite de 3 Psicoses por personagem; a 4ª vira Surto Psicótico (personagem sob controle do Mestre). — linha ~2987
-- **Tratando Efeitos de Medo (Descanso/Terapia, Triunfando sobre o Mal)** — id sugerido: `regra_tratamento_psicoses` — [FALTA] — formas de remover Psicoses geradas por Medo (via downtime "Pausa" ou derrotando um grande mal); Complicações escolhidas na criação continuam só removíveis por Progresso. — linha ~2995
+- **Tabela Efeitos de Medo (D20)** — [FORA DE ESCOPO] — 8 faixas de resultado (Surto de Adrenalina → Ataque Cardíaco/Surto Psicótico em 22+); referenciada por várias Vantagens já cadastradas (ex. Aura de Coragem, Rainha/Rei do Grito), mas é uma tabela de sorteio resolvida pelo Mestre em jogo, não uma opção de criação de personagem. — linha ~2927
+- **Tabela Psicoses Aleatórias (D12 Menor/Maior)** — [FORA DE ESCOPO] — gera uma Complicação Menor ou Maior temporária (todas já existem em `complicacoes.json` individualmente: Cauteloso, Delirante, Pessimista, Hábito, Hesitante, Fobia, Peculiaridade, Histérico, Teimoso, Supersticioso, Desconfiado, Sensível / Sanguinário, Amaldiçoado, Delirante, Condenado, Hábito, Mudo, Terrores Noturnos, Fobia, Sem Escrúpulos, Histérico, Desconfiado, Covarde) — a tabela de sorteio e o rastreamento de "até 3 Psicoses" (regra Colapso) são mecânica de mesa em andamento na campanha, não criação de personagem. — linha ~2915
+- **Colapso / Surto Psicótico** — [FORA DE ESCOPO] — limite de 3 Psicoses por personagem; a 4ª vira Surto Psicótico (personagem sob controle do Mestre) — regra de mesa. — linha ~2987
+- **Tratando Efeitos de Medo (Descanso/Terapia, Triunfando sobre o Mal)** — [FORA DE ESCOPO] — formas de remover Psicoses geradas por Medo (via downtime "Pausa" ou derrotando um grande mal); Complicações escolhidas na criação continuam só removíveis por Progresso — regra de mesa. — linha ~2995
 
 ## Fora de escopo
 
