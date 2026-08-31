@@ -162,16 +162,37 @@ deveria passar a ler `id`.
 
 Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
 
-1. **Terminar migrações "meio feitas"** (mais barato, menor risco): em
-   `ModifierEngine.kt` já existem 4 vantagens comparadas por `id` no mesmo
-   bloco onde 6 outras (Musculoso, Brutamontes, Brigão, Ligeiro, Bloquear,
-   Bloquear Aprimorado) ainda comparam por nome — e o mesmo padrão se repete
-   em `DerivedAttributesCalculator.kt`/`CriadorState.kt` para
-   Profissional/Especialista. Trocar essas linhas não muda nenhum
-   comportamento visível, só remove o risco de quebra silenciosa.
-2. **Investigar o possível bug em `RequirementValidator.kt:28`** (regra de
-   "O Melhor Que Há" comparando chave sem underscore contra constante com
-   underscore — pode nunca bater hoje).
+1. ✅ **Terminar migrações "meio feitas"** — feito (commit `9293f4e`). 14
+   novas `Constants.ID_*` (conferidas contra `vantagens.json`/
+   `complicacoes.json`) e toda comparação por nome restante trocada por `id`
+   para Bloquear, Bloquear Aprimorado, Ligeiro, Musculoso, Brutamontes,
+   Brigão (+ alias Pugilista), Soldado, Profissional, Especialista, Idoso,
+   Lento, Obeso, Pequeno — em `ModifierEngine.kt`, `DerivedAttributesCalculator.kt`,
+   `RequirementValidator.kt`, `CriadorState.kt`, `PericiaRules.kt`,
+   `ResumoSection.kt`, `UnifiedScreen.kt`, e o `calcAparar` duplicado de
+   `SummaryUtils.kt`/`ResumoPdfReferenciador.kt` (achados que a auditoria
+   original não tinha coberto, pois esses arquivos não estavam na lista dos
+   agentes de auditoria). Build não pôde ser verificado neste sandbox (AGP
+   inacessível pela rede) — revisão só manual, recomendo rodar
+   `./gradlew build`/testes antes de dar como fechado.
+2. ✅ **Bug de "O Melhor Que Há"** — feito (commit `4423102`). Achado real,
+   não só estilo: a regra comparava `v.nome.keyify()` (`"O MELHOR QUE HA"`)
+   contra a constante em formato de id (`"o_melhor_que_ha"`) — nunca batia,
+   então a vantagem podia ser comprada sem nenhum investimento em Superpoder
+   e durante progressão, ao contrário de toda outra checagem da mesma
+   vantagem no resto do código. Corrigido nos **dois** lugares onde o mesmo
+   bug existia: `RequirementValidator.canSelect` (usado no diálogo de
+   progressão) e `ValidateSpecialRulesUseCase.execute` (usado por
+   `ValidateSelectionUseCase`, o validador real da seleção de vantagens
+   durante a criação de personagem).
+   - **Achado novo durante a investigação:** existe uma segunda camada de
+     validação inteira em `app/src/main/java/.../model/usecase/`
+     (~37 arquivos `Validate*UseCase`/`Resolve*UseCase`) que nenhuma das
+     duas auditorias de hardcode cobriu, porque essa pasta não estava na
+     lista de arquivos passada aos agentes. `ValidateSpecialRulesUseCase`
+     era quase uma cópia de `RequirementValidator.canSelect` com o mesmo
+     bug. Essa pasta provavelmente merece sua própria passada de auditoria
+     de hardcode/duplicação — ainda não fiz isso.
 3. **Dar `id` estável a `pericias.json` e `equipamentos.json`** — pré-requisito
    estrutural antes de conseguir limpar boa parte do hardcode de
    Perícias/Equipamento/Ancestralidade (armas naturais, Aparar, Movimentação,
@@ -181,6 +202,9 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
 5. Só depois, revisar os `[CONFERIR]` (custo/requisito/efeito a bater linha a
    linha com o livro) — risco menor que os itens acima, mas ainda vale para
    fechar o ciclo de confiabilidade.
+6. **Novo item, ainda não priorizado:** auditoria dedicada da pasta
+   `model/usecase/` (duplicação com `RequirementValidator`/`ModifierEngine`/
+   `CriadorState`, e os mesmos padrões de hardcode por nome).
 
 Nenhuma dessas ações foi executada nesta rodada — são só recomendações. Qual
 delas atacar primeiro é decisão sua.
