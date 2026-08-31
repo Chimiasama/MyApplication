@@ -233,10 +233,34 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
      Isso já resolve **(c)** também (a entrada morta `"TARO ENGENHEIRO"`
      virou o id real `taro_engenheiro`). Testes novos em
      `IncompatibilityRulesTest.kt` cobrindo as duas direções de cada par.
-   - **(b) e (d) ainda não feitos**: unificar `ProgressosDialog` num único
-     validador com a criação de personagem (elimina os achados 1a/Samurai
-     do relatório) e consolidar `scifiVariantDrivenKeys` duplicada em
-     `ResolveAncestrySpecificAdjustmentsUseCase.kt`/`CriadorState.kt`.
+   - **(d) feito** (commit `d592185`): `scifiVariantDrivenKeys` (21 ids)
+     virou `AncestryVariantRegistry.scifiVariantDrivenKeys` (público), em
+     vez de cópias idênticas em `CriadorState.kt` e
+     `ResolveAncestrySpecificAdjustmentsUseCase.kt`.
+   - **(b) parcialmente feito** (commit `d592185`): investiguei unificar
+     `ProgressosDialog` com o validador de criação e decidi não fazer a
+     fusão completa às cegas. `RequirementValidator` também é chamado por
+     `strictRequirementsOk(v, estIndex)`, que faz uma checagem própria de
+     "essa vantagem ficaria disponível no Estágio X que estou só
+     pré-visualizando" comparando `estIndex` direto — diferente do jeito
+     que `RequirementValidator`/`podeSelecionar` checam estágio (só sabem o
+     Estágio atual real do personagem, ou o override específico de compra
+     via XP). Trocar `RequirementValidator` por `state.podeSelecionar()`
+     puro faria essa checagem de estágio passar a usar sempre o Estágio
+     atual — não dá pra confirmar se isso quebra a pré-visualização de
+     Estágios futuros sem rodar o app de verdade, o que não é possível
+     neste sandbox. Em vez disso, portei as 2 regras que estavam faltando e
+     são seguras de adicionar (não mexem em lógica de estágio): Cavaleiro
+     exige Obrigação (Maior), e Tiro Duplo Aprimorado exige Tiro Duplo com
+     perícia escolhida em d10+. Ficou de fora, documentado como risco a
+     investigar com o app rodando antes de mexer: a exceção de Estágio de
+     Liderança do Samurai (mexe direto na lógica de estágio que estou
+     evitando tocar às cegas), e todo o conteúdo de
+     `ValidateScenarioRulesUseCase` (bloqueios específicos de Crystal
+     Heart/Fantasia/Pathfinder) que `RequirementValidator` nunca teve —
+     nenhum dos dois afeta a seleção de verdade hoje (o gate real já usa
+     `state.podeSelecionar()` em paralelo), só a precisão da
+     pré-visualização nas abas de Estágio.
 4. **Dar `id` estável a `pericias.json` e `equipamentos.json`** — pré-requisito
    estrutural antes de conseguir limpar boa parte do hardcode de
    Perícias/Equipamento/Ancestralidade (armas naturais, Aparar, Movimentação,
