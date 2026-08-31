@@ -13973,6 +13973,69 @@
         "dev": 2,
         "observacoes": "Estes pesados sinalizadores autoalimentados são colocados nas profundezas do espaço como faróis para outros viajantes, particularmente aqueles que tentam viajar para lá em velocidade superlumínica. Eles transmitem coordenadas tridimensionais e qualquer outra informação que o engenheiro queira deixar, incluindo dados planetários ou até mesmo mensagens audiovisuais — ou avisos!",
         "descricaoLite": "Sinalizador pesado e autoalimentado instalado no espaço profundo para orientar viajantes, especialmente em velocidade superluminal, transmitindo coordenadas e outras informações definidas pelo operador."
+      },
+      {
+        "id": "acesso_remoto_ciberdeck",
+        "nome": "Programa de Ciberdeck (Acesso Remoto)",
+        "custo": 100,
+        "mods_slots": 1,
+        "observacoes": "Permite que até quatro aliados conectados ao ciberdeck tentem rolagens de Suporte. Ocupa 1 dos 4 espaços de programa do ciberdeck. Alguns programas se autoexcluem após o uso e precisam ser recomprados.",
+        "descricaoLite": "Permite que até quatro aliados conectados ao ciberdeck tentem rolagens de Suporte.",
+        "origem": "SCI_FI"
+      },
+      {
+        "id": "guardiao_ciberdeck",
+        "nome": "Programa de Ciberdeck (Guardião)",
+        "custo": 100,
+        "mods_slots": 2,
+        "observacoes": "O sistema bloqueia até 4 pontos de dano que o usuário recebe das contramedidas de Sobrecarga do sistema. Ocupa 2 dos 4 espaços de programa do ciberdeck. Alguns programas se autoexcluem após o uso e precisam ser recomprados.",
+        "descricaoLite": "O sistema bloqueia até 4 pontos de dano que o usuário recebe das contramedidas de Sobrecarga do sistema.",
+        "origem": "SCI_FI"
+      },
+      {
+        "id": "assistente_ciberdeck",
+        "nome": "Programa de Ciberdeck (Assistente)",
+        "custo": 100,
+        "mods_slots": 2,
+        "observacoes": "O deck tem uma IA dedicada que ajuda a codificar rapidamente, adicionando +2 à rolagem de Hackear do usuário. Ocupa 2 dos 4 espaços de programa do ciberdeck. Alguns programas se autoexcluem após o uso e precisam ser recomprados.",
+        "descricaoLite": "O deck tem uma IA dedicada que ajuda a codificar rapidamente, adicionando +2 à rolagem de Hackear do usuário.",
+        "origem": "SCI_FI"
+      },
+      {
+        "id": "redirecionar_ciberdeck",
+        "nome": "Programa de Ciberdeck (Redirecionar)",
+        "custo": 100,
+        "mods_slots": 1,
+        "observacoes": "O usuário pode rerrolar uma rolagem de Hackear que tenha falhado (incluindo uma Falha Crítica). Se essa rolagem falhar, o programa não funciona mais nessa netrun. Ocupa 1 dos 4 espaços de programa do ciberdeck. Alguns programas se autoexcluem após o uso e precisam ser recomprados.",
+        "descricaoLite": "O usuário pode rerrolar uma rolagem de Hackear que tenha falhado (incluindo uma Falha Crítica). Se essa rolagem falhar, o programa não funciona mais nessa netrun.",
+        "origem": "SCI_FI"
+      },
+      {
+        "id": "embaralhador_ciberdeck",
+        "nome": "Programa de Ciberdeck (Embaralhador)",
+        "custo": 100,
+        "mods_slots": 1,
+        "observacoes": "Falsifica a contramedida do Rastreador com uma localização falsa (óbvia) e depois se apaga para evitar mais rastreamentos. Ocupa 1 dos 4 espaços de programa do ciberdeck. Alguns programas se autoexcluem após o uso e precisam ser recomprados.",
+        "descricaoLite": "Falsifica a contramedida do Rastreador com uma localização falsa (óbvia) e depois se apaga para evitar mais rastreamentos.",
+        "origem": "SCI_FI"
+      },
+      {
+        "id": "spammer_ciberdeck",
+        "nome": "Programa de Ciberdeck (Spammer)",
+        "custo": 100,
+        "mods_slots": 2,
+        "observacoes": "Sobrecarrega a rede alvo com sinais aleatórios. Quando \"disparado\" (excluído), a contramedida para essa Carta de Ação falha automaticamente, ganhando ou não um Marcador de Tarefa naquele turno. Ocupa 2 dos 4 espaços de programa do ciberdeck. Alguns programas se autoexcluem após o uso e precisam ser recomprados.",
+        "descricaoLite": "Sobrecarrega a rede alvo com sinais aleatórios. Quando \"disparado\" (excluído), a contramedida para essa Carta de Ação falha automaticamente, ganhando ou não um Marcador de Tarefa naquele turno.",
+        "origem": "SCI_FI"
+      },
+      {
+        "id": "virus_ciberdeck",
+        "nome": "Programa de Ciberdeck (Vírus)",
+        "custo": 100,
+        "mods_slots": 1,
+        "observacoes": "O hacker pode excluir este programa para estender a Tarefa Dramática por mais uma rodada. Ocupa 1 dos 4 espaços de programa do ciberdeck. Alguns programas se autoexcluem após o uso e precisam ser recomprados.",
+        "descricaoLite": "O hacker pode excluir este programa para estender a Tarefa Dramática por mais uma rodada.",
+        "origem": "SCI_FI"
       }
     ]
   },

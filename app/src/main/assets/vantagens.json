@@ -14522,7 +14522,8 @@
   },
   {
     "id": "gravidade_zero",
-    "nome": "ADAPTADO À GRAVIDADE ZERO",
+    "nome": "ADAPTAÇÃO GRAVITACIONAL",
+    "originalName": "ADAPTADO À GRAVIDADE ZERO",
     "categoria": "ANTECEDENTE",
     "requisitos": {
       "estagio": "Novato",
@@ -14530,11 +14531,11 @@
         "Agilidade": 6
       }
     },
-    "descricao": "Não sofre enjoo espacial. Move-se com sua Movimentação normal em gravidade zero (voando/pulando).",
+    "descricao": "Personagens em uma gravidade diferente daquela a que estão acostumados sofrem uma penalidade de -2 em Agilidade e em rolagens de perícias baseadas em Agilidade, até se adaptarem. Quem tem esta Vantagem sempre ignora essa penalidade.",
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "O enjoo espacial nunca afeta o personagem, que também mantém sua Movimentação normal ao voar ou saltar em gravidade zero."
+    "descricaoLite": "Ignora a penalidade de -2 em Agilidade e perícias baseadas em Agilidade causada pela desorientação de estar em uma gravidade diferente da habitual."
   },
   {
     "id": "capitao",

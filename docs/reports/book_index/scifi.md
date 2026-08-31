@@ -76,16 +76,14 @@ Todas as 26 vantagens do "Sumário de Vantagens" do capítulo (l.1874-2011) est�
 - **MILAGREIRO** — id: `milagreiro` — [OK] — Lendária — l.~1810
 - **SALVADOR DO UNIVERSO** — id: `salvador_universo` — [OK] — Lendária — l.~1825
 
-### [CONFERIR] Vantagens sem correspondência encontrada neste texto
+### Vantagens sem correspondência encontrada neste texto [revisado em 2026-08-31]
 
 Estas 3 vantagens estão em `vantagens.json` com `livros: ["SCI_FI"]`, mas uma busca
-por seus nomes completos em `docs/swade_scifi` **não retornou nenhuma ocorrência** —
-vale confirmar contra o livro físico/PDF se pertencem mesmo a este Compêndio (podem
-ser de outra edição/suplemento e estar mistagueadas):
+por seus nomes completos em `docs/swade_scifi` não retornou nenhuma ocorrência:
 
-- **JOCKEY DE MECHA** — id: `jockey_mecha` — [CONFERIR] — usa Agilidade pessoal em vez da do Mecha nas manobras
-- **ENGENHEIRO ESPACIAL** — id: `engenheiro_espacial` — [CONFERIR] — +2 Consertar naves estelares
-- **ADAPTADO À GRAVIDADE ZERO** — id: `gravidade_zero` — [CONFERIR] — sem enjoo espacial, Movimentação normal em zero-G
+- **JOCKEY DE MECHA** — id: `jockey_mecha` — [CONFERIR, mantido] — usa Agilidade pessoal em vez da do Mecha nas manobras. Busca ampla no texto (nome completo, "Jockey", "Jóquei", "piloto/controlador/operador de mecha") não encontrou nenhuma ocorrência. Sem evidência de que pertence a este livro nem de que não pertence — mantido como está, vale confirmar contra o PDF/edição física.
+- **ENGENHEIRO ESPACIAL** — id: `engenheiro_espacial` — [CONFERIR, mantido] — +2 Consertar naves estelares. Mesma situação: busca ampla (nome completo, "Engenheiro" isolado, "Engenheiro de Naves/Naval") só encontrou a vantagem Milagreiro (que menciona "engenheiro" na descrição, não é uma vantagem própria) — sem correspondência real encontrada, mantido como está.
+- **ADAPTAÇÃO GRAVITACIONAL** — id: `gravidade_zero` — [OK, corrigido] — encontrada no texto sob um nome diferente do catalogado. A regra de Gravidade (l.~5050-5069) cita explicitamente "a Vantagem Adaptação Gravitacional (p. 30)" como a que "sempre ignora" a penalidade de -2 em Agilidade/perícias de Agilidade por desorientação gravitacional; o nome também aparece em 8 outras referências e listas de Vantagens de templates ao longo do livro (l.~925, 1075, 5062, 8619, 9193, 15968, 20068, 20625+). O bloco de definição formal da Vantagem (cabeçalho + "REQUISITOS:") não foi capturado na extração de texto do PDF (mesmo padrão de perda já visto em outros livros desta sessão), mas o efeito citado deixa a mecânica clara. Corrigidos `nome` (era "ADAPTADO À GRAVIDADE ZERO") e `descricao`/`descricaoLite` em `vantagens.json` para bater com o efeito confirmado no texto (ignora a penalidade de -2 em Agilidade por gravidade diferente da habitual, não mais "enjoo espacial"/"Movimentação normal"); nome antigo preservado em `originalName` para rastreabilidade.
 
 ## Antecedentes Arcanos de Ficção Científica (Capítulo 11, l.~13029-14113)
 
@@ -122,13 +120,19 @@ o livro restringe a "velocidade (mas não morosidade)" e o dado usa o poder comb
 - **TRANSMORFO** — id: `antecedente_arcano_transmorfo` — [OK] — Foco (Espírito), 15 PP, Foco Interno (poderes só Pessoal), Regeneração Lenta, Dotado; 12 poderes conferem 1:1 em quantidade — l.~14038
   - Vantagens: **GELATINOSO** `gelatinoso` [OK] l.~14080 · **TRANSFORMAR** `transformar` [OK] l.~14096
 
-### [CONFERIR] Nuance do Transmorfo
+### Nuance do Transmorfo [OK, limitação estrutural documentada, revisado em 2026-08-31]
 
-O livro diz que o Transmorfo só pode manifestar "velocidade (mas não morosidade)"
-(l.14058-14059) dentro do poder combinado morosidade/velocidade — o dado
-`poderes_permitidos` do antecedente lista `morosidade_velocidade` sem indicar essa
-restrição de sentido único; hoje isso provavelmente só é reforçado na descrição em
-texto, não na estrutura de dados.
+Confirmado contra o texto (l.14053-14061, "PODERES DISPONÍVEIS: [...] velocidade (mas
+não morosidade) [...]"): o Transmorfo só pode manifestar o Aspecto "velocidade" do
+poder combinado, nunca "morosidade" — mas o dado `poderes_permitidos` do antecedente
+lista `morosidade_velocidade` como um id só, sem forma de restringir só um Aspecto.
+Esta é a mesma limitação estrutural já documentada para Antecedente Arcano (Milagres)
+no CSV (`docs/reports/book_index/csv.md`, "Morosidade"/"Reduzir Característica" presas
+a Guerreiro do Senhor sem afetar o Aspecto livre "Velocidade"/"Aumentar Característica"
+por compartilharem o mesmo id): o modelo de dados tem um único id por poder, não um id
+por Aspecto, então não há como aplicar o gate nesse nível de detalhe sem desdobrar o
+poder em dois ids separados (mudança maior, fora do escopo deste levantamento). Fica
+documentado como limitação estrutural conhecida, sem alteração de código.
 
 ## Complicações Novas (Capítulo 1, l.~1237-1485, + Cibernéticos l.~7963-7980)
 
@@ -177,7 +181,7 @@ incluindo 1 extra "Traje de Exploração de Águas Profundas").
 - **Armas Corpo a Corpo** (Correntes, PEM, Energia, Moleculares, Psíquicas, Repulsoras, Atordoantes, Vibro) — [OK] — `Armas Corpo a Corpo/Geral` (22 itens) — l.~3411-3427
 - **Armas de Longa Distância** (Blasters, Desintegradores, Estilhaço, Lança-Chamas, Flechetes, Granadas, Girofoguetes, Lasers, Lança-Mísseis, Plasma, Psíquicas, Pulso, Lança-Foguetes, Lança-Projéteis, Atordoantes) — [OK] — `Armas de Longa Distância/*` (14 subgrupos, ~58 itens) — l.~3443-1978(rel.)
 - **Armas Veiculares/Montadas** (Canhões Automáticos, Bombas, Canhões, Canhões Gravitacionais, Lança-Granadas, Canhões de Íon, Condutores de Massa, Minas, Mísseis, Feixe/Canhões de Partículas, Torpedos, Raio Trator) — [OK] — `Armas Veiculares/Geral` (58 itens) — l.~3739(rel. dentro de 2077+)-2071(rel.)
-- **Ciberdeck — Programas** (Acesso Remoto, Guardião, Assistente, Redirecionar, Embaralhador, Spammer, Vírus, Capítulo 3 l.~5544-5583) — id sugerido: `programa_ciberdeck_*` — [CONFERIR] — o item "Ciberdeck" existe em `Eletrônicos/Computadores e Vigilância`, mas não há confirmação de que os 7 programas-upgrade estejam modelados como sub-itens/mods compráveis separados
+- **Ciberdeck — Programas** (Acesso Remoto, Guardião, Assistente, Redirecionar, Embaralhador, Spammer, Vírus, Capítulo 3 l.~5544-5583) — [OK, resolvido em 2026-08-31] — confirmado que os 7 programas-upgrade (custo $100 cada, 1-2 dos 4 espaços do ciberdeck) não existiam em nenhum lugar do catálogo; adicionados como itens novos na mesma categoria `Eletrônicos/Computadores e Vigilância` (`livros: ["SCI_FI"]`) que já tinha o item "Ciberdeck" base — ids `acesso_remoto_ciberdeck`, `guardiao_ciberdeck`, `assistente_ciberdeck`, `redirecionar_ciberdeck`, `embaralhador_ciberdeck`, `spammer_ciberdeck`, `virus_ciberdeck`, com o número de espaços ocupados no campo `mods_slots`.
 
 ## Cibernéticos (Capítulo 4, l.~7879-8308)
 
@@ -274,19 +278,24 @@ mecânicas dos poderes novos/atualizados em si, em `poderes.json`.
 - **13 poderes inéditos deste livro** (sem marcador "F" de atualização): Aperto Telecinético, Buraco Negro, Contra-Ataque Mental, Controlar Máquina, Criar Item, Curto-Circuito, Fantasma na Máquina, Gravidade, Leitura de Objeto, Localizar, Parar o Tempo, Previsão, Trancar/Destrancar — [OK] existem em `poderes.json`, mas ver ressalva de tag abaixo — l.~14133-14744
 - **5 poderes "F" (atualização de poder pré-existente do SWADE básico)**: Conjurar Aliado, Mudança de Forma, Telecinese, Teleporte, Vidência — [OK] existem, mesma ressalva de tag — l.~14020-14839
 
-### [CONFERIR] Tag de livro dos poderes reaproveitados entre compêndios
+### Tag de livro dos poderes reaproveitados entre compêndios [resolvido em 2026-08-31]
 
 `aperto_telecinetico`, `buraco_negro`, `contra_ataque_mental`, `controlar_maquina`,
 `criar_item`, `curto_circuito`, `fantasma_na_maquina`, `gravidade` e `previsao` estão
-corretamente com `livros: ["SCI_FI"]`. Mas **`conjurar_aliado`, `mudanca_de_forma`,
-`telecinese` e `teleporte` estão tagueados só `["PATHFINDER"]`**, e **`leitura_de_objeto`,
-`localizar`, `parar_o_tempo`, `trancar_destrancar` só `["FANTASIA"]`** — mesmo sendo
-poderes deste Compêndio (a maioria marcada "F" no livro, ou seja, reaproveitados
-entre vários Compêndios com o mesmo texto). Isso não quebra os Antecedentes Arcanos
-(cujas listas `poderes_permitidos` apontam para o id certo independente da tag), mas
-qualquer filtro de "poderes disponíveis no livro Sci-Fi" que dependa só do campo
-`livros` do poder (em vez de `poderes_permitidos` do Antecedente) vai esconder esses
-9 poderes.
+corretamente com `livros: ["SCI_FI"]`. Reconferido item a item contra `poderes.json`
+(não contra a nota original, que estava desatualizada): **`conjurar_aliado`,
+`mudanca_de_forma`, `telecinese`, `teleporte` e `leitura_de_objeto` JÁ tinham** uma
+cópia própria com `livros: ["SCI_FI"]` (o catálogo replica a mesma entrada uma vez
+por livro em que o poder é reimpresso, mesmo padrão de `vantagens.json`/
+`equipamentos.json`) — a observação anterior de que estariam só em `["PATHFINDER"]`/
+`["FANTASIA"]` estava incorreta. Só **`localizar`, `parar_o_tempo` e
+`trancar_destrancar` realmente não tinham** cópia com `livros: ["SCI_FI"]` (só
+`["FANTASIA"]`) — adicionada uma cópia de cada com a tag corrigida, mesmo texto da
+versão Fantasia (poder idêntico reaproveitado, sem marcador "F" no livro, mas ainda
+assim usado pela lista `poderes_permitidos` de Antecedentes deste Compêndio). Isso
+não afetava os Antecedentes Arcanos em si (cujas listas `poderes_permitidos` apontam
+para o id certo independente da tag), só um eventual filtro de "poderes disponíveis
+no livro Sci-Fi" que dependesse do campo `livros` do poder.
 
 ## Artefatos / Relíquias (Capítulo 12, l.~14839-15750)
 

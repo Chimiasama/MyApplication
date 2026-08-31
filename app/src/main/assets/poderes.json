@@ -16321,5 +16321,44 @@
       "DEADLANDS"
     ],
     "descricaoLite": "Abre uma fenda entre o mundo físico e os Campos de Caça (ou entre regiões dos Campos de Caça), permitindo viagem por 1 minuto de duração; disponível para todo Antecedente Arcano de Deadlands exceto Mestre do Chi."
+  },
+  {
+    "id": "localizar",
+    "nome": "Localizar",
+    "estagio": "Novato",
+    "duracao": "10 minutos",
+    "descricao": "Manifestações: Um cristal flutuante sobre um mapa, uma mensagem nas nuvens, um raio de luz.\n\nÀs vezes, é literalmente impossível encontrar algo por meios mundanos. Localizar permite a quem conjura encontrar essas coisas escondidas.\nAo usar este poder, escolhe-se um objeto, criatura ou local. Se o conjurador nunca viu o alvo, a rolagem é feita com -2. Um sucesso dá uma noção da direção geral e da distância do alvo. Uma ampliação também dá uma impressão do alvo (por exemplo, a criatura está dormindo, o objeto está em um cofre, a porta secreta está atrás de uma estante).\nÁgua Corrente: Água corrente bloqueia localizar se está no caminho entre quem conjura e o alvo.\n\nMODIFICADORES\n- ENCONTRAR O CAMINHO (+1): Além da direção e distância até um alvo, a conjuradora também tem um senso sobrenatural do caminho mais seguro ou mais rápido para navegar até sua área geral.",
+    "pontosDePoder": "3",
+    "distancia": "Pessoal",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Indica a direção geral e a distância de um objeto, criatura ou local escolhido, com -2 na rolagem se quem conjura nunca tiver visto o alvo; uma ampliação também revela uma impressão do seu estado atual. Água corrente entre conjurador e alvo bloqueia o efeito. Pagando pontos extras, o conjurador também sente o caminho mais rápido ou seguro até a região do alvo."
+  },
+  {
+    "id": "parar_o_tempo",
+    "nome": "Parar o Tempo",
+    "estagio": "Heroico",
+    "duracao": "Instantânea",
+    "descricao": "Manifestações: Uma ampulheta brilhante, partículas de gelo flutuantes, borrão.\n\nTempo é constante para a maioria, mas não para este conjurador. Parar o tempo diminui o tempo para tudo, exceto para quem o conjura, garantindo 1d4+1 turnos imediatamente após terminar este. Durante esses turnos, o conjurador pode agir normalmente em sua Carta de Ação. Com uma ampliação, pode escolher sacar uma nova Carta de Ação a cada turno. Parar o tempo termina se alguma das ações do conjurador afetar outra personagem ou criatura.",
+    "pontosDePoder": "10",
+    "distancia": "Pessoal",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Concede a quem conjura 1d4+1 turnos extras logo após a conjuração, durante os quais apenas ele age normalmente em sua Carta de Ação — com ampliação, pode comprar uma nova Carta de Ação a cada um desses turnos. O efeito termina assim que alguma ação do conjurador afetar outra criatura ou personagem."
+  },
+  {
+    "id": "trancar_destrancar",
+    "nome": "Trancar/Destrancar",
+    "estagio": "Novato",
+    "duracao": "Permanente (trancar); Instantânea (destrancar)",
+    "descricao": "Manifestações: Uma chave mestra, fingir abrir ou trancar uma fechadura.\n\nTrancar sela magicamente uma porta, janela, recipiente, envelope, gaveta, caixa ou outro item que possa ser fechado. Qualquer tentativa de abrir um recipiente, porta ou passagem trancado magicamente sofre uma penalidade de -4. Quaisquer outras tentativas de uma personagem falharão automaticamente até que aumente sua perícia, momento em que poderá tentar novamente. Uma ampliação ao trancar magicamente o alvo significa que só pode ser desbloqueado por meio da versão destrancar deste poder (com a penalidade de -4 listada acima) ou dissipação da tranca mágica e arrombamento da fechadura.\nÉ possível definir uma senha quando a tranca é criada; o portal se abre para quem falar a frase e permanece aberto até que a frase seja repetida.\nDestrancar pode ser usado no lugar de Consertar ou Ladinagem (mas não de Força) ao tentar destrancar um recipiente, porta ou passagem. Ignora até 4 pontos de penalidade na tarefa e, com uma ampliação, também desarma quaisquer armadilhas ou alarmes na passagem.\nNenhum dos feitiços tem qualquer efeito sobre barreiras, barricadas ou bloqueios — apenas objetos distintos que podem ser abertos ou fechados.\n\nMODIFICADORES\n- ALERTA (+1): Trancar apenas. Se o objeto trancado magicamente for aberto, quem conjurou saberá instantaneamente que isso aconteceu (e qual objeto foi destrancado se múltiplas instâncias deste poder estiverem em vigor). Um ser que falar a senha (determinada no momento da conjuração) não dispara o alerta. Este aviso dura 1 dia.",
+    "pontosDePoder": "1",
+    "distancia": "Astúcia",
+    "livros": [
+      "SCI_FI"
+    ],
+    "descricaoLite": "Na versão que tranca, sela magicamente uma porta, recipiente ou objeto similar, impondo -4 a qualquer tentativa de abri-lo (falhas automáticas até a perícia do tentante melhorar) e permitindo definir uma senha que abre e mantém a passagem aberta; com ampliação, só é possível destrancar pelo próprio poder ou dissipando o efeito e arrombando fisicamente. Na versão que destranca, substitui Consertar ou Ladinagem (não Força) numa tentativa de abertura, ignorando até 4 pontos de penalidade e, com ampliação, também desarmando armadilhas ou alarmes. Nenhuma das versões afeta barreiras ou bloqueios, só objetos que abrem e fecham. Pagando pontos extras, quem trancou é avisado instantaneamente se o objeto for aberto (exceto por quem souber a senha), por até um dia."
   }
 ]
