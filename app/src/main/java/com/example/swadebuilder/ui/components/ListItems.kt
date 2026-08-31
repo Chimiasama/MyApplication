@@ -22,9 +22,6 @@ import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.sections.toResumo
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
 import com.example.swadebuilder.util.toFancyTitleCase
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.contentOrNull
-import kotlinx.serialization.json.jsonPrimitive
 
 @Composable
 fun StandardEquipamentoItem(
@@ -133,8 +130,3 @@ fun StandardEquipamentoItem(
         }
     }
 }
-
-private fun JsonElement?.contentString(): String? = this
-    ?.jsonPrimitive
-    ?.contentOrNull
-    ?.takeIf { it.isNotBlank() }

@@ -642,12 +642,6 @@ private fun rememberSummarySections(state: CriadorState, viewModel: CriadorViewM
     return remember(lines) { lines.toSummarySections(summaryHeaders) }
 }
 
-private fun SummarySection.isEmptyPlaceholder(): Boolean =
-    items.all { item ->
-        val trimmed = item.trim()
-        trimmed == "– Nenhuma" || trimmed == "– Nenhum"
-    }
-
 private fun List<String>.toSummarySections(headers: Set<String>): List<SummarySection> {
     val sections = mutableListOf<SummarySection>()
     var currentTitle: String? = null

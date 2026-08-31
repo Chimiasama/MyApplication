@@ -951,27 +951,6 @@ class CriadorState {
         )
     }
 
-    private fun withBaselineCounterpartMechanics(
-        selected: RacialModifier,
-        ancestryKey: String
-    ): RacialModifier {
-        val selectedOrigin = canonicalOriginKey(selected.origem)
-        val shouldNormalize = selectedOrigin in setOf("FANTASIA", "HORROR", "SCIFI", "SCI_FI", "FC", "SUPER")
-        if (!shouldNormalize) return selected
-
-        val baseline = listaAncestralidadesJson.firstOrNull {
-            canonicalOriginKey(it.origem) == "BASICO" && it.nome.keyify() == ancestryKey
-        } ?: return selected
-
-        return selected.copy(
-            atributos = baseline.atributos,
-            pericias = baseline.pericias,
-            vantagensGratis = baseline.vantagensGratis,
-            desvantagens = baseline.desvantagens,
-            habilidades = baseline.habilidades
-        )
-    }
-
     fun isAttributeRankLimitReached(): Boolean {
         val stageIndex = currentProgressStageIndex()
         val lendarioIndex = listaDeEstagios.indexOfFirst { it.nome.equals("Lendário", ignoreCase = true) }
