@@ -191,20 +191,43 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
      duas auditorias de hardcode cobriu, porque essa pasta não estava na
      lista de arquivos passada aos agentes. `ValidateSpecialRulesUseCase`
      era quase uma cópia de `RequirementValidator.canSelect` com o mesmo
-     bug. Essa pasta provavelmente merece sua própria passada de auditoria
-     de hardcode/duplicação — ainda não fiz isso.
-3. **Dar `id` estável a `pericias.json` e `equipamentos.json`** — pré-requisito
+     bug.
+3. ✅ **Auditoria da pasta `model/usecase/`** — feita
+   ([`reports/hardcode_audit_usecase_layer.md`](reports/hardcode_audit_usecase_layer.md)).
+   27 achados Tipo A (hardcode por nome, mesmo padrão de sempre) + **6
+   achados Tipo B (duplicação/divergência com `model/`)**. O mais grave: o
+   mapa de incompatibilidades entre Vantagens/Complicações existe em
+   **3 cópias** (`ValidateConflictsUseCase.kt` com 20 entradas,
+   `RequirementValidator.kt` com só 7, `CriadorState.kt` com 20 iguais às do
+   UseCase mas usada só pra mensagem de erro) — e as duas cópias que
+   **decidem** algo (não só exibem mensagem) **já divergem hoje**: dá pra
+   pegar Antecedente Arcano (Milagres) tendo Alma Penhorada/Vendida durante
+   a progressão de nível (`ProgressosDialog`), embora isso seja bloqueado
+   na criação do personagem. Mesmo padrão achado na regra de
+   Cavaleiro/Obrigação Maior e na exceção de Estágio de Liderança do
+   Samurai (Arte da Guerra) — ambas existem só no validador de criação, não
+   no de progressão. Causa raiz: **criação de personagem e progressão de
+   nível usam dois validadores diferentes e vivos**
+   (`ValidateSelectionUseCase` vs. `RequirementValidator.canSelect`), que
+   precisam ser sincronizados manualmente a cada mudança de regra — foi
+   exatamente essa duplicação que já causou o bug do "O Melhor Que Há"
+   (item 2 acima). Recomendação do relatório, em ordem: (a) unificar o mapa
+   de incompatibilidades numa fonte única por id; (b) fazer
+   `ProgressosDialog` usar `ValidateSelectionUseCase` em vez de
+   `RequirementValidator` (ou o inverso, virando um wrapper fino do outro);
+   (c) remover a entrada morta `"TARO ENGENHEIRO"` do mapa (não corresponde
+   a nenhum id real); (d) consolidar a lista `scifiVariantDrivenKeys`
+   duplicada entre `ResolveAncestrySpecificAdjustmentsUseCase.kt` e
+   `CriadorState.kt`. Nada disso foi implementado ainda.
+4. **Dar `id` estável a `pericias.json` e `equipamentos.json`** — pré-requisito
    estrutural antes de conseguir limpar boa parte do hardcode de
    Perícias/Equipamento/Ancestralidade (armas naturais, Aparar, Movimentação,
    Tamanho racial hoje dependem de regex sobre texto livre).
-4. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: Sci-Fi (57),
+5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: Sci-Fi (57),
    Deadlands (36), Crystal Heart (33), CSV (14), Horror (7).
-5. Só depois, revisar os `[CONFERIR]` (custo/requisito/efeito a bater linha a
+6. Só depois, revisar os `[CONFERIR]` (custo/requisito/efeito a bater linha a
    linha com o livro) — risco menor que os itens acima, mas ainda vale para
    fechar o ciclo de confiabilidade.
-6. **Novo item, ainda não priorizado:** auditoria dedicada da pasta
-   `model/usecase/` (duplicação com `RequirementValidator`/`ModifierEngine`/
-   `CriadorState`, e os mesmos padrões de hardcode por nome).
 
 Nenhuma dessas ações foi executada nesta rodada — são só recomendações. Qual
 delas atacar primeiro é decisão sua.
