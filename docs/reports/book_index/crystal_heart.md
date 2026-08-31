@@ -59,7 +59,7 @@ Todos os 38 registros do JSON (1 placeholder `heart_starter` + 37 Cristais reais
 - **Domínio** — id: `heart_dominio` — [OK] — Controle/autoridade sobre outros — linha ~532 de swade_crystal_heart_muitos_coracoes
 - **Elegância** — id: `heart_elegancia` — [OK] — Graça/duelo — linha ~592 de swade_crystal_heart_muitos_coracoes
 
-**[CONFERIR]** `heart_bolha`: o JSON marca `estagio: "Experiente"`, mas no texto Bolha é o **último Cristal da lista de Novatos** (linha 5532), antes do cabeçalho "Cristais Experientes" (linha 5575) que introduz Veloz/Fogo/Sombra/Translucido/Infusão. Vale confirmar se o app pretendia isso de propósito (ex.: rebalanceamento) ou se é erro de captura do estágio.
+**[OK, corrigido em 2026-08-31]** `heart_bolha`: confirmado contra o texto (linhas 5532-5575) que Bolha é o último Cristal impresso antes do rodapé "Cristais Experientes" — mesmo padrão de rodapé-anuncia-o-que-vem-a-seguir já usado com segurança para classificar os 33 Cristais do Apêndice A. Corrigido `estagio` de "Experiente" para "Novato" em `crystal_coracoes.json`.
 
 ### Cristais adicionais do Apêndice A "Mais Cristais" [OK — 33/33, resolvido em 2026-08-31]
 
@@ -105,10 +105,12 @@ O livro principal tem um apêndice inteiro de Cristais extras (linhas 16641–18
 
 **[CONFERIR — mecânica não localizada no texto-fonte]** `crystal_tropos.json` tem 4 registros (`treino_schultz`, `treino_mira`, `treino_yara`, `treino_leighmya`), cada um dando +1 em um atributo e duas perícias/edges "ganhas ao comprar" (ex.: `treino_schultz` → Vigor+1, Consertar, Brutamontes). O livro **não** usa a palavra "Tropo" em nenhum lugar (única ocorrência textual é o falso cognato "claustropos", um monstro). O mais próximo que existe é a lista de dez Supervisores/Mentores do Apêndice B (linha 18288 de swade_crystal_heart), da qual **Schultz, Trabalhador Incansável** (linha ~18455) e **Mira, a Sutil** (linha ~18443) realmente aparecem — mas o texto não lhes atribui bônus de atributo nem perícias fixas; isso é coberto mecanicamente pela Vantagem **Mentor** (veja Vantagens abaixo), que dá +1 perícia à escolha e +2 Requisição, não um pacote fixo por mentor. Os nomes **Yara** e **Leighmya** não aparecem em nenhum dos dois arquivos-fonte (nem entre os 10 mentores do Apêndice B, nem entre os "Doze Agentes Heroicos", que terminam em Yurhant). Recomenda-se checar se `crystal_tropos.json` foi extraído de uma fonte adicional (ex.: "Vivendo com a Syn", citado na introdução do livro como suplemento não incluído nestes dois arquivos) antes de tratar como conteúdo homebrew do app.
 
-- **Discípulo de Schultz (O Trabalhador)** — id: `treino_schultz` — [CONFERIR] — Vigor+1, Consertar, Brutamontes; mentor "Schultz" existe (Apêndice B) mas sem esse pacote no texto — linha ~18455 de swade_crystal_heart
-- **Discípulo de Mira (A Sutil)** — id: `treino_mira` — [CONFERIR] — Espírito+1, Carismático, Ladrão; mentora "Mira, a Sutil" existe (Apêndice B) mas sem esse pacote no texto — linha ~18443 de swade_crystal_heart
-- **Discípulo de Yara (A Caçadora)** — id: `treino_yara` — [CONFERIR] — Agilidade+1, Mateiro, Atento; nome "Yara" não encontrado em nenhum dos dois arquivos-fonte — sem linha correspondente
-- **Discípulo de Leighmya (A Analista)** — id: `treino_leighmya` — [CONFERIR] — Astúcia+1, Erudito, Investigador; nome "Leighmya" não encontrado em nenhum dos dois arquivos-fonte — sem linha correspondente
+- **Discípulo de Schultz (O Trabalhador)** — id: `treino_schultz` — [CONFERIR, investigado em 2026-08-31] — Vigor+1, Consertar, Brutamontes; mentor "Schultz" existe (Apêndice B) mas sem esse pacote no texto
+- **Discípulo de Mira (A Sutil)** — id: `treino_mira` — [CONFERIR, investigado em 2026-08-31] — Espírito+1, Carismático, Ladrão; mentora "Mira, a Sutil" existe (Apêndice B) mas sem esse pacote no texto
+- **Discípulo de Yara (A Caçadora)** — id: `treino_yara` — [CONFERIR, investigado em 2026-08-31] — Agilidade+1, Mateiro, Atento; nome "Yara" não encontrado em nenhum dos dois arquivos-fonte
+- **Discípulo de Leighmya (A Analista)** — id: `treino_leighmya` — [CONFERIR, investigado em 2026-08-31] — Astúcia+1, Erudito, Investigador; nome "Leighmya" não encontrado em nenhum dos dois arquivos-fonte
+
+**Conclusão da investigação (2026-08-31):** confirmado (via listagem de `docs/`) que não existe nenhum terceiro arquivo-fonte de Crystal Heart no repositório além dos dois já usados — não há como confirmar o "Vivendo com a Syn" citado na introdução do livro como possível origem. Combinado com 2 dos 4 nomes sendo inventados (Yara, Leighmya não aparecem em lugar nenhum, nem entre os 10 mentores do Apêndice B nem entre os 12 Agentes Heroicos), a conclusão mais provável é que `crystal_tropos.json` é conteúdo adicionado pelo app (inspirado nos 2 mentores reais do Apêndice B, com 2 nomes extras inventados), não uma transcrição de material oficial. Mantido como está — são 4 registros já em uso pelo sistema de criação, e removê-los sem certeza absoluta seria mais arriscado que preservá-los documentados como "de origem não confirmada no livro-fonte".
 
 ## Ancestralidades / Terra Natal
 
@@ -149,7 +151,7 @@ Todas as 19 Vantagens novas ("Novas Vantagens", linha 1012) e as 4 Vantagens com
 - **Comando (uso alterado)** — id: `comando_ch` — [OK] — Vantagens de Liderança para Extras também valem para PPs — linha ~995 de swade_crystal_heart
 - **Conexões (uso alterado)** — id: `conexoes_ch` — [OK] — Não vale para membros da Syn (usa Requisição/Mentor) — linha ~1001 de swade_crystal_heart
 
-**[CONFERIR]** Cinco Vantagens em `vantagens.json` com tag `CRYSTAL_HEART` não têm correspondência textual em nenhum dos dois arquivos-fonte: `sintonizacao_cristal` (SINTONIZAÇÃO COM CRISTAL), `troca_rapida` (TROCA RÁPIDA (Coração)), `resiliencia_cristalina` (RESILIÊNCIA CRISTALINA), `sobrecarga_segura` (SOBRECARGA SEGURA) e `arma_predileta_aprimorada` (ARMA PREDILETA APRIMORADA). Parecem extensões homebrew do app para o sistema de Coração — vale confirmar a origem antes de apresentá-las como conteúdo oficial do livro.
+**[CONFERIR, investigado em 2026-08-31]** Cinco Vantagens em `vantagens.json` com tag `CRYSTAL_HEART` não têm correspondência textual em nenhum dos dois arquivos-fonte: `sintonizacao_cristal` (SINTONIZAÇÃO COM CRISTAL), `troca_rapida` (TROCA RÁPIDA (Coração)), `resiliencia_cristalina` (RESILIÊNCIA CRISTALINA), `sobrecarga_segura` (SOBRECARGA SEGURA) e `arma_predileta_aprimorada` (ARMA PREDILETA APRIMORADA). Busca ampla (nome completo e variações) confirma zero ocorrências nos dois arquivos-fonte disponíveis — mesma conclusão dos Tropos acima: parecem extensões do app para o sistema de Coração, não conteúdo oficial do livro (nos textos-fonte disponíveis). Mantidas como estão.
 
 ## Complicações novas ou modificadas (linha 856)
 
@@ -163,7 +165,7 @@ Todas as 19 Vantagens novas ("Novas Vantagens", linha 1012) e as 4 Vantagens com
 - **Dessintonia (Maior)** — id: `dessintonia` — [OK] — Precisa re-rolar Canalizar Cristal a cada 10min para manter poder — linha ~938 de swade_crystal_heart
 - **Disposição Persistente (Menor)** — id: `disposicao_persistente` — [OK] — Mantém uma Complicação Menor do Cristal anterior ao trocar — linha ~949 de swade_crystal_heart
 
-**[CONFERIR]** Três Complicações em `complicacoes.json` com tag `CRYSTAL_HEART` não foram localizadas em nenhum dos dois textos-fonte: `comp_dessorna` ("Dessorna (Doença do Cristal)"), `comp_sensibilidade_obsidiana` ("Sensibilidade à Obsidiana") e `comp_inimigo_syn` ("Inimigo da Syn"). Parecem adições do app (a última é redundante com `inimigo_ch` acima).
+**[CONFERIR, investigado em 2026-08-31]** Três Complicações em `complicacoes.json` com tag `CRYSTAL_HEART` não foram localizadas em nenhum dos dois textos-fonte: `comp_dessorna` ("Dessorna (Doença do Cristal)"), `comp_sensibilidade_obsidiana` ("Sensibilidade à Obsidiana") e `comp_inimigo_syn` ("Inimigo da Syn"). Busca ampla confirma zero ocorrências — mesma conclusão das Vantagens/Tropos acima: parecem adições do app, não conteúdo do livro-fonte disponível (a última é redundante com `inimigo_ch`, que é a versão confirmada no texto). Mantidas como estão.
 
 ## Perícias específicas (Passo 2, linha 610)
 
@@ -174,7 +176,9 @@ Lista fechada de 23 perícias (as demais "não existem em Crystal Heart", linha 
 
 ## Antecedente Arcano / sistema de poder próprio
 
-Já detalhado em "Sistema de Coração" acima — o Antecedente Arcano do cenário é único (**Canalizar Cristal**, id `aa_agente_syn`) e não usa Pontos de Poder; os "poderes" ficam embutidos em cada registro de Coração (campo `poderes: List<String>` em `crystal_coracoes.json`), não num catálogo genérico separado. Isso explica por que `poderes.json` (usado por outros livros do app) não tem nenhuma entrada com tag `CRYSTAL_HEART` — **[CONFERIR]**: confirme que essa é uma decisão de design intencional (poderes como texto associado ao Coração) e não uma lacuna de modelagem.
+Já detalhado em "Sistema de Coração" acima — o Antecedente Arcano do cenário é único (**Canalizar Cristal**, id `aa_agente_syn`) e não usa Pontos de Poder; os "poderes" ficam embutidos em cada registro de Coração (campo `poderes: List<String>` em `crystal_coracoes.json`), não num catálogo genérico separado. Isso explica por que `poderes.json` (usado por outros livros do app) não tem nenhuma entrada com tag `CRYSTAL_HEART`.
+
+**[OK, confirmado em 2026-08-31]** É decisão de design intencional, não lacuna de modelagem: os poderes de cada Cristal têm nomes, custos em PP e Modificadores permitidos completamente diferentes uns dos outros dentro do próprio texto do Cristal (ex.: "Bolha (proteção, -2)" é mecanicamente uma versão customizada de "proteção" com regras próprias, não o poder genérico de `poderes.json`), então cada Coração precisa mesmo carregar seu próprio texto de poder — um catálogo genérico compartilhado não representaria essas variações.
 
 ## Equipamento temático (capítulo Equipamentos, linha 2758)
 

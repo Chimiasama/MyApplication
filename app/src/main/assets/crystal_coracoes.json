@@ -479,7 +479,7 @@
   {
     "id": "heart_bolha",
     "nome": "Bolha",
-    "estagio": "Experiente",
+    "estagio": "Novato",
     "habilidade_passiva": "Cria bolhas duras (Dureza 5). +2 Atletismo para arremessar (Dano Força).",
     "poderes": [
       "Bolha (proteção, -2). Prende alvo em bolha. Proteção ambiental básica, risco de sufocamento."
