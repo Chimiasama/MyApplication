@@ -82,6 +82,18 @@ fun String.keyify(): String {
 }
 
 /**
+ * Normaliza texto pra uso como sufixo de id estável: sem acentos, minúsculo, com espaços e
+ * qualquer outra pontuação virando "_" (ex.: "Fôgo do Inferno!" -> "fogo_do_inferno"). Usado
+ * pra gerar ids de conteúdo customizado (ver SettingsDialog.kt) de forma consistente com
+ * keyify() (mesma normalização de acentos), evitando colisões silenciosas por causa de acento
+ * ou espaçamento diferentes entre dois nomes que na prática são o mesmo texto.
+ */
+fun String.toIdSlug(): String {
+    if (this.isBlank()) return ""
+    return trim().semAcentos().lowercase().replace(Regex("[^a-z0-9]+"), "_").trim('_')
+}
+
+/**
  * Transforma texto para Title Case simples: cada palavra começa com maiúscula.
  */
 fun String.titleCase(): String {

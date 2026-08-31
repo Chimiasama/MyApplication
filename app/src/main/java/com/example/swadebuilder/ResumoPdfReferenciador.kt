@@ -142,6 +142,8 @@ suspend fun produzirEExibirFichaPdf(
     listaComplicacoes: List<Complicacao>,
     listaVantagens: List<Vantagem>,
     listaPoderes: List<Poder>,
+    // Ver gerarFichaEmPdf.
+    especieId: String? = null,
     onShowMessage: (String) -> Unit
 ) {
     withContext(Dispatchers.IO) {
@@ -173,7 +175,8 @@ suspend fun produzirEExibirFichaPdf(
                 mapaAtributosDisplay,
                 listaComplicacoes,
                 listaVantagens,
-                listaPoderes
+                listaPoderes,
+                especieId
             )
 
             val uri: Uri = FileProvider.getUriForFile(
@@ -535,7 +538,12 @@ fun gerarFichaEmPdf(
     mapaAtributosDisplay: Map<String, String>,
     listaComplicacoes: List<Complicacao>,
     listaVantagens: List<Vantagem>,
-    listaPoderes: List<Poder>
+    listaPoderes: List<Poder>,
+    // Id estável da espécie da ancestralidade atual (RacialModifier.especieId,
+    // ex.: state.currentAncestryDef?.especieId), resolvido pelo chamador —
+    // ver drawHeader/calcAparar. Null pra raça customizada (nunca aciona
+    // regra oficial por engano) ou quando o chamador não o resolveu.
+    especieId: String? = null
 ) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
@@ -736,10 +744,10 @@ fun gerarFichaEmPdf(
             val headerH = 140f
             val derivedH = 60f
             val headerRect = RectF(margin, margin, w - margin, margin + headerH)
-            drawHeader(canvas, headerRect, personagem, theme, portrait)
+            drawHeader(canvas, headerRect, personagem, theme, portrait, especieId)
 
             val derivedRect = RectF(margin, headerRect.bottom + 10f, w - margin, headerRect.bottom + 10f + derivedH)
-            drawDerivedStats(canvas, derivedRect, personagem, theme)
+            drawDerivedStats(canvas, derivedRect, personagem, theme, especieId)
 
             contentTop = derivedRect.bottom + 20f
         } else {
@@ -919,7 +927,7 @@ fun getPdfTheme(themeName: String): PdfTheme {
 }
 
 // Helpers reused from previous implementation
-fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, portrait: Bitmap?) {
+fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, portrait: Bitmap?, especieId: String? = null) {
     // ... (Same logic as before)
     val paint = Paint().apply {
         color = theme.headerBackground
@@ -987,7 +995,7 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     }
 
     canvas.drawText(displayedName, rect.left + 10f, rect.top + 30f, titlePaint)
-    val ancestralidadeTitulo = buildAncestralidadeDisplay(p)
+    val ancestralidadeTitulo = buildAncestralidadeDisplay(p, especieId = especieId)
     canvas.drawText("$ancestralidadeTitulo - Novato", rect.left + 10f, rect.top + 50f, subtitlePaint)
 
     if (p.coracaoCrystalSelecionado != null) {
@@ -1016,8 +1024,8 @@ fun drawTrack(canvas: Canvas, x: Float, y: Float, label: String, boxes: Int, cur
     }
 }
 
-fun drawDerivedStats(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme) {
-    val aparar = calcAparar(p)
+fun drawDerivedStats(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, especieId: String? = null) {
+    val aparar = calcAparar(p, especieId)
     val resistencia = calcResistencia(p)
     val mov = p.movimentacao
     val boxWidth = rect.width() / 3
@@ -1058,18 +1066,22 @@ fun drawAttributeShape(canvas: Canvas, cx: Float, cy: Float, text: String, theme
 }
 
 // Calculation Helpers
-fun calcAparar(personagem: MeuPersonagem): Int {
+fun calcAparar(personagem: MeuPersonagem, especieId: String? = null): Int {
     val lutar = personagem.pericias["Lutar"] ?: 0
     val jutsu = personagem.pericias["Jutsu"] ?: 0
     val base = 2 + (max(lutar, jutsu) / 2)
     val bloq = if (personagem.vantagens.contains(Constants.ID_BLOQUEAR)) 1 else 0
     val bloqImp = if (personagem.vantagens.contains(Constants.ID_BLOQUEAR_APRIMORADO)) 1 else 0
 
-    val isDeaders = personagem.ancestralidade.keyify().contains("DEADERS")
+    // especieId (RacialModifier.especieId) resolvido pelo chamador — ver
+    // gerarFichaEmPdf. Fica null pra raça customizada, então nunca casa com
+    // "deaders"/"serranos"/"humano" por acidente; se ausente (chamador
+    // antigo que não resolveu), cai no heurístico por nome de antes.
+    val isDeaders = if (especieId != null) especieId == "deaders" else personagem.ancestralidade.keyify().contains("DEADERS")
     val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
     val apararBaixoMod = if (hasApararBaixo) -2 else 0
 
-    val isSerranos = personagem.ancestralidade.keyify().contains("SERRANOS")
+    val isSerranos = if (especieId != null) especieId == "serranos" else personagem.ancestralidade.keyify().contains("SERRANOS")
     val serranosApararMod = if (isSerranos) 2 else 0
 
     val racialParryBonus = (personagem.vantagensRaciais + personagem.desvantagensRaciais)
@@ -1084,10 +1096,11 @@ fun calcAparar(personagem: MeuPersonagem): Int {
                 ?: 0
         }
 
+    val isHumano = if (especieId != null) especieId == "humano" else personagem.ancestralidade.keyify().contains("HUMANO")
     val garcaParryBonus =
         if (
             personagem.compendioArteDaGuerraAtivo &&
-            personagem.ancestralidade.keyify().contains("HUMANO") &&
+            isHumano &&
             personagem.signoAdgSelecionado.equals("Garça", ignoreCase = true)
         ) 1 else 0
 

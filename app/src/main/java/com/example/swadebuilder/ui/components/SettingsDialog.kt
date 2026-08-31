@@ -57,6 +57,7 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CustomContentType
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.toIdSlug
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.getActiveOrigins
@@ -81,6 +82,81 @@ private fun primeiroCustoSuperPoder(custoBase: String?): Int =
         ?.replace('–', '-')
         ?.toIntOrNull()
         ?: 1
+
+// Junta o conteúdo customizado de TODOS os livros de armazenamento (Geral incluso) num
+// único BookCustomContent — mesma normalização de identidade usada pela lista "Gerenciar
+// Conteúdo Customizado" (activeBookCustomData, mais abaixo neste arquivo): um mesmo
+// id/nome salvo sob mais de uma tag de livro vira uma cópia representativa só. Usado pro
+// backup de ficha (ver "Backup e Transferência (JSON)"), pra nunca deixar a ficha
+// referenciar conteúdo custom que não existe em outro aparelho/instalação.
+private fun aggregateAllCustomContent(
+    context: android.content.Context,
+    manager: com.example.swadebuilder.util.CustomStorageManager
+): com.example.swadebuilder.util.BookCustomContent {
+    val livros = com.example.swadebuilder.util.TODOS_OS_LIVROS + com.example.swadebuilder.util.TAG_GERAL
+    val all = livros.map { manager.loadCustomContent(context, it) }
+    return com.example.swadebuilder.util.BookCustomContent(
+        bookKey = "TODOS",
+        vantagens = all.flatMap { it.vantagens }.distinctBy { it.id },
+        complicacoes = all.flatMap { it.complicacoes }.distinctBy { it.id },
+        equipamentos = all.flatMap { it.equipamentos }.distinctBy { it.nome.lowercase() },
+        poderes = all.flatMap { it.poderes }.distinctBy { it.id },
+        superPoderes = all.flatMap { it.superPoderes }.distinctBy { it.nome.lowercase() },
+        racas = all.flatMap { it.racas }.distinctBy { it.nome.lowercase() },
+        habilidadesRaciais = all.flatMap { it.habilidadesRaciais }.distinctBy { it.nome.lowercase() },
+        variantesRaciais = all.flatMap { it.variantesRaciais }.distinctBy { it.id }
+    )
+}
+
+// Contrapartida de aggregateAllCustomContent() na importação: grava cada item no disco
+// (CustomStorageManager, sob o livro do próprio item.origem — GERAL quando o tipo não tem
+// origem, como Super Poder/Traço Racial) e sincroniza em memória (state.lista*) usando os
+// mesmos helpers "pula se já existir" do fluxo normal de criação (ver TextButton "Salvar
+// Item" acima), pra que os ids/nomes que a ficha restaurada referencia já resolvam
+// imediatamente, sem esperar um reload completo dos dados do jogo.
+private fun mergeImportedCustomContent(
+    context: android.content.Context,
+    state: CriadorState,
+    manager: com.example.swadebuilder.util.CustomStorageManager,
+    bundle: com.example.swadebuilder.util.BookCustomContent
+) {
+    val geral = com.example.swadebuilder.util.TAG_GERAL
+    bundle.vantagens.forEach { item ->
+        manager.addVantagem(context, item.origem.ifBlank { geral }, item)
+        state.addCustomVantagem(item)
+    }
+    bundle.complicacoes.forEach { item ->
+        manager.addComplicacao(context, item.origem.ifBlank { geral }, item)
+        state.addCustomComplicacao(item)
+    }
+    bundle.equipamentos.forEach { item ->
+        manager.addEquipamento(context, item.origem?.ifBlank { geral } ?: geral, item)
+        state.addCustomEquipamento(item)
+    }
+    bundle.poderes.forEach { item ->
+        manager.addPoder(context, item.origem.ifBlank { geral }, item)
+        state.addCustomPoder(item)
+    }
+    bundle.superPoderes.forEach { item ->
+        manager.addSuperPoder(context, geral, item)
+        state.addCustomSuperPoder(item)
+    }
+    bundle.racas.forEach { item ->
+        manager.addRaca(context, item.origem.ifBlank { geral }, item)
+        if (state.listaAncestralidadesJson.none { it.nome.equals(item.nome, ignoreCase = true) }) {
+            state.listaAncestralidadesJson = state.listaAncestralidadesJson + item
+        }
+    }
+    bundle.habilidadesRaciais.forEach { item ->
+        manager.addHabilidadeRacial(context, geral, item)
+    }
+    bundle.variantesRaciais.forEach { item ->
+        manager.addVarianteRacial(context, geral, item)
+        if (state.listaVariantesRaciaisCustom.none { it.id == item.id }) {
+            state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom + item
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1158,22 +1234,44 @@ fun SettingsDialog(
                                                         // sido salvo sob várias tags (ver selectedBookTags na criação), e
                                                         // cada chamada de delete é um no-op inofensivo nos livros onde o
                                                         // item não existe.
+                                                        // Sincroniza também state.lista* (não só o disco): sem isso, o item
+                                                        // apagado continuava selecionável nas telas de ficha até o app
+                                                        // recarregar os dados do zero, e um novo item criado com o mesmo
+                                                        // nome logo em seguida seria barrado por falso positivo de colisão.
                                                         when (type) {
                                                             "Vantagem" -> {
                                                                 val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
-                                                                item?.let { i -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVantagem(context, it, i.id) } }
+                                                                item?.let { i ->
+                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVantagem(context, it, i.id) }
+                                                                    state.listaVantagens = state.listaVantagens.filterNot { it.id == i.id }
+                                                                }
                                                             }
                                                             "Complicação" -> {
                                                                 val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
-                                                                item?.let { i -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteComplicacao(context, it, i.id) } }
+                                                                item?.let { i ->
+                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteComplicacao(context, it, i.id) }
+                                                                    state.listaComplicacoes = state.listaComplicacoes.filterNot { it.id == i.id }
+                                                                }
                                                             }
-                                                            "Equipamento" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteEquipamento(context, it, name) }
+                                                            "Equipamento" -> {
+                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteEquipamento(context, it, name) }
+                                                                state.listaEquipamentos = state.listaEquipamentos.filterNot { it.nome.equals(name, ignoreCase = true) }
+                                                            }
                                                             "Poder" -> {
                                                                 val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
-                                                                item?.let { i -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePoder(context, it, i.id) } }
+                                                                item?.let { i ->
+                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePoder(context, it, i.id) }
+                                                                    state.listaPoderes = state.listaPoderes.filterNot { it.id == i.id }
+                                                                }
                                                             }
-                                                            "Super Poder" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteSuperPoder(context, it, name) }
-                                                            "Raça" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteRaca(context, it, name) }
+                                                            "Super Poder" -> {
+                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteSuperPoder(context, it, name) }
+                                                                state.listaSuperPoderes = state.listaSuperPoderes.filterNot { it.nome.equals(name, ignoreCase = true) }
+                                                            }
+                                                            "Raça" -> {
+                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteRaca(context, it, name) }
+                                                                state.listaAncestralidadesJson = state.listaAncestralidadesJson.filterNot { it.nome.equals(name, ignoreCase = true) }
+                                                            }
                                                             "Traço Racial" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteHabilidadeRacial(context, it, name) }
                                                             "Variante de Raça" -> {
                                                                 val item = activeBookCustomData.variantesRaciais.firstOrNull { it.nome == name }
@@ -1216,7 +1314,11 @@ fun SettingsDialog(
                                     TextButton(onClick = {
                                                 val safeDesc = customItemDesc.ifBlank { "-" }
                                                 if (customItemName.isNotBlank()) {
-                                            val id = "custom:${customItemName.lowercase().replace(" ", "_")}"
+                                            // toIdSlug() normaliza acento/espaço/pontuação (ver StringExtensions.kt) — evita
+                                            // que "Fogo" e "Fôgo" gerem ids diferentes, ou que "Fogo do Inferno" e
+                                            // "fogo   do inferno" colidam sem o app perceber.
+                                            val id = "custom:${customItemName.toIdSlug()}"
+                                            val normalizedName = customItemName.keyify()
                                             // Livro(s) escolhidos no Seletor de Livros; se nada foi marcado, cai no
                                             // livro atualmente ativo pra não perder a criação.
                                             val tags = selectedBookTags.ifEmpty {
@@ -1225,6 +1327,35 @@ fun SettingsDialog(
                                             val tagsLabel = tags.joinToString(", ") {
                                                 if (it == com.example.swadebuilder.util.TAG_GERAL) "Geral" else it.toEditionDisplayName()
                                             }
+                                            // Bloqueia colisão de nome/id antes de salvar: CustomStorageManager.addXxx()
+                                            // sobrescreve silenciosamente por id/nome no disco, enquanto
+                                            // CriadorState.addCustomXxx() ignora silenciosamente a nova entrada se o
+                                            // id/nome já existir em memória — os dois lados divergiam sem esse guard.
+                                            // Compara contra o catálogo oficial + custom ativo (state.lista*) e contra
+                                            // TODO o conteúdo customizado já salvo em qualquer livro (activeBookCustomData),
+                                            // pra nunca deixar dois itens com o mesmo nome/id coexistirem.
+                                            val colisao: String? = when (selectedCategory) {
+                                                "Vantagem", "Antecedente Arcano" ->
+                                                    if (state.listaVantagens.any { it.id == id } || activeBookCustomData.vantagens.any { it.id == id }) "Vantagem" else null
+                                                "Complicação" ->
+                                                    if (state.listaComplicacoes.any { it.id == id } || activeBookCustomData.complicacoes.any { it.id == id }) "Complicação" else null
+                                                "Equipamento" ->
+                                                    if (state.listaEquipamentos.any { it.nome.keyify() == normalizedName } || activeBookCustomData.equipamentos.any { it.nome.keyify() == normalizedName }) "Equipamento" else null
+                                                "Poder" ->
+                                                    if (state.listaPoderes.any { it.id == id } || activeBookCustomData.poderes.any { it.id == id }) "Poder" else null
+                                                "Super Poder" ->
+                                                    if (state.listaSuperPoderes.any { it.nome.keyify() == normalizedName } || activeBookCustomData.superPoderes.any { it.nome.keyify() == normalizedName }) "Super Poder" else null
+                                                "Raça" ->
+                                                    if (state.listaAncestralidadesJson.any { it.nome.keyify() == normalizedName } || activeBookCustomData.racas.any { it.nome.keyify() == normalizedName }) "Raça" else null
+                                                "Traço Racial" ->
+                                                    if (baseRacialCatalog.any { it.nome.keyify() == normalizedName } || activeBookCustomData.habilidadesRaciais.any { it.nome.keyify() == normalizedName }) "Traço Racial" else null
+                                                "Variante de Raça" ->
+                                                    if (state.listaVariantesRaciaisCustom.any { it.id == id } || activeBookCustomData.variantesRaciais.any { it.id == id }) "Variante de Raça" else null
+                                                else -> null
+                                            }
+                                            if (colisao != null) {
+                                                statusMessage = "Erro: já existe um(a) $colisao chamado(a) '$customItemName'. Escolha outro nome."
+                                            } else {
                                             when (selectedCategory) {
                                                 "Vantagem" -> {
                                                     val combinedPrevEdges = customPrereqEdges + customPrereqComps
@@ -1267,7 +1398,8 @@ fun SettingsDialog(
                                                         dano = if (customDamage.isNotBlank()) kotlinx.serialization.json.JsonPrimitive(customDamage) else null,
                                                                 observacoes = kotlinx.serialization.json.JsonPrimitive(safeDesc),
                                                                 origem = tags.first(),
-                                                                subtipo = customEquipSubtype
+                                                                subtipo = customEquipSubtype,
+                                                                id = id
                                                     )
                                                             tags.forEach { tag -> customStorageManager.addEquipamento(context, tag, newEquip.copy(origem = tag)) }
                                                     state.addCustomEquipamento(newEquip)
@@ -1297,7 +1429,8 @@ fun SettingsDialog(
                                                         nome = customItemName,
                                                         custoBase = customSuperPoderCustoBase.ifBlank { "2" },
                                                         descricao = safeDesc,
-                                                        modificadores = modificadoresList.ifEmpty { null }
+                                                        modificadores = modificadoresList.ifEmpty { null },
+                                                        id = id
                                                     )
                                                     tags.forEach { tag -> customStorageManager.addSuperPoder(context, tag, newSuperPoder) }
                                                     state.addCustomSuperPoder(newSuperPoder)
@@ -1331,7 +1464,7 @@ fun SettingsDialog(
                                                             com.example.swadebuilder.model.RacialAbility(
                                                                 nome = trait.nome,
                                                                 descricao = trait.descricao,
-                                                                id = trait.nome.lowercase().replace(" ", "_"),
+                                                                id = trait.nome.toIdSlug(),
                                                                 category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative"
                                                             )
                                                         }
@@ -1346,6 +1479,7 @@ fun SettingsDialog(
                                                         )
                                                     }
                                                     val newRace = com.example.swadebuilder.model.RacialModifier(
+                                                        id = id,
                                                         nome = customItemName,
                                                         descricao = safeDesc,
                                                         atributos = emptyMap(),
@@ -1362,7 +1496,8 @@ fun SettingsDialog(
                                                     val newTrait = com.example.swadebuilder.model.HabilidadeCriacao(
                                                         nome = customItemName,
                                                         custo = costInt,
-                                                        descricao = safeDesc
+                                                        descricao = safeDesc,
+                                                        id = id
                                                     )
                                                     tags.forEach { tag -> customStorageManager.addHabilidadeRacial(context, tag, newTrait) }
                                                     statusMessage = "Traço racial '$customItemName' salvo em: $tagsLabel"
@@ -1446,6 +1581,7 @@ fun SettingsDialog(
                                             customPrereqComps = emptyList()
                                             customDamage = ""
                                             customRacialTrait = ""
+                                            }
                                         } else if (customPackageJson.isNotBlank()) {
                                             val importRes = manager.importPackageFromJson(customPackageJson)
                                             if (importRes.isSuccess) {
@@ -2031,6 +2167,8 @@ fun SettingsDialog(
                     var showImportDialog by remember { mutableStateOf(false) }
                     var backupJsonText by remember { mutableStateOf("") }
                     var importErrorText by remember { mutableStateOf<String?>(null) }
+                    val backupContext = androidx.compose.ui.platform.LocalContext.current
+                    val backupStorageManager = remember { com.example.swadebuilder.util.CustomStorageManager() }
 
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -2052,7 +2190,9 @@ fun SettingsDialog(
                         ) {
                             OutlinedButton(
                                 onClick = {
-                                    backupJsonText = com.example.swadebuilder.util.CharacterBackupManager.exportBackupJson(state.toSnapshot())
+                                    val bundle = aggregateAllCustomContent(backupContext, backupStorageManager)
+                                    val snapshot = state.toSnapshot().copy(customContent = bundle)
+                                    backupJsonText = com.example.swadebuilder.util.CharacterBackupManager.exportBackupJson(snapshot)
                                     showExportDialog = true
                                 },
                                 modifier = Modifier.weight(1f)
@@ -2119,6 +2259,15 @@ fun SettingsDialog(
                                     onClick = {
                                         when (val result = com.example.swadebuilder.util.CharacterBackupManager.importBackupJson(backupJsonText)) {
                                             is com.example.swadebuilder.util.CharacterBackupManager.ImportResult.Success -> {
+                                                // Mescla o conteúdo customizado embutido no backup ANTES de restaurar a
+                                                // ficha, pra que vantagens/raça/poderes/etc. custom que ela referencia já
+                                                // existam em state.lista* no momento em que restoreFromSnapshot resolve
+                                                // cada seleção — sem isso a ficha restaurada mostraria seleções "vazias"
+                                                // até um reload completo dos dados do jogo.
+                                                result.snapshot.customContent?.let { bundle ->
+                                                    mergeImportedCustomContent(backupContext, state, backupStorageManager, bundle)
+                                                    onCustomContentChanged()
+                                                }
                                                 state.restoreFromSnapshot(result.snapshot, mutableListOf())
                                                 showImportDialog = false
                                             }

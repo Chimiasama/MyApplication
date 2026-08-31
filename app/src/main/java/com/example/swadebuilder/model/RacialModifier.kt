@@ -40,7 +40,19 @@ data class RacialModifier(
     val origem: String = "BASICO",
     val movimentacao: Int = 0,
     val tags: List<String> = emptyList(),
-    val opcoes: List<String> = emptyList()
+    val opcoes: List<String> = emptyList(),
+    // Identificador estável do "conceito de espécie" por trás desta entrada,
+    // compartilhado entre as várias cópias por livro da mesma raça (mesmo
+    // padrão de vantagens.json: um id, reimpresso por livro). Existe
+    // separado de `id` porque `id` já tem uma convenção divergente e mais
+    // antiga (algumas raças usam sufixo de livro, ex. `anc_humano_csv`,
+    // outras não têm id nenhum) — mexer nisso quebraria referências já
+    // existentes. `especieId` é só para o código de regra (SummaryUtils.kt
+    // etc.) checar "esta ficha é da espécie X" sem comparar texto de nome,
+    // e fica `null` em raças customizadas pelo jogador (nunca preenchido na
+    // criação customizada), o que já barra por construção uma raça custom
+    // com nome parecido de acionar uma regra pensada para a raça oficial.
+    val especieId: String? = null
 )
 
 @Serializable
@@ -49,7 +61,11 @@ data class HabilidadeCriacao(
     val custo: Int,
     val descricao: String,
     // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
-    val descricaoLite: String? = null
+    val descricaoLite: String? = null,
+    // Id estável pra Traços Raciais customizados (ver SettingsDialog.kt) — o catálogo oficial
+    // (basico_habilidades_raciais.json) continua identificado por `nome` em todo o app, então
+    // esse campo é aditivo e não muda a regra de identidade.
+    val id: String? = null
 ) {
     fun exibida(): HabilidadeCriacao =
         if (!com.example.swadebuilder.EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this

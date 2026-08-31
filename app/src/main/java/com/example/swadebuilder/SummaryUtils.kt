@@ -24,14 +24,25 @@ private fun formatRacialAnnotationDisplay(raw: String): String {
     return if (hasNarrativePunctuation) trimmed else trimmed.toFancyTitleCase()
 }
 
-fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase: String? = null): String {
+fun buildAncestralidadeDisplay(
+    personagem: MeuPersonagem,
+    ancestralidadeNomeBase: String? = null,
+    // Id estável da espécie (RacialModifier.especieId) já resolvido pelo
+    // chamador, quando disponível — ver `especieIdAtual` em
+    // buildSummaryLines(). Fica null pra qualquer raça customizada, então
+    // uma raça custom com nome parecido de "Humano"/"Descendente Elemental"
+    // nunca aciona esse sufixo por engano. Opcional (default null) só para
+    // não quebrar chamador que ainda não tenha o id resolvido à mão — nesse
+    // caso cai no heurístico por nome de exibição de antes.
+    especieId: String? = null
+): String {
     val baseRaw = (ancestralidadeNomeBase ?: personagem.ancestralidade)
     val baseOriginal = if (!EditionConfig.isFullEdition) {
         baseRaw.toEditionDisplayName().let { GenericNameMapper.map(it) }.toFancyTitleCase()
     } else {
         baseRaw.toFancyTitleCase()
     }
-    val isHuman = baseOriginal.keyify().contains("HUMANO")
+    val isHuman = if (especieId != null) especieId == "humano" else baseOriginal.keyify().contains("HUMANO")
 
     if (personagem.compendioArteDaGuerraAtivo && isHuman) {
         val sign = personagem.signoAdgSelecionado
@@ -43,12 +54,14 @@ fun buildAncestralidadeDisplay(personagem: MeuPersonagem, ancestralidadeNomeBase
         return "Humano $signLabel"
     }
 
+    val isDescendenteElemental = if (especieId != null) especieId == "descendente_elemental" else baseOriginal.keyify().contains("DESCENDENTE ELEMENTAL")
+
     val sufixo = when {
         isHuman && !personagem.pacoteCulturalFantasiaSelecionado.isNullOrBlank() -> {
             val pack = personagem.pacoteCulturalFantasiaSelecionado
             if (pack.equals("Humano padrão", ignoreCase = true)) null else pack
         }
-        baseOriginal.keyify().contains("DESCENDENTE ELEMENTAL") && !personagem.descendenteElementalSelecionado.isNullOrBlank() -> {
+        isDescendenteElemental && !personagem.descendenteElementalSelecionado.isNullOrBlank() -> {
             personagem.descendenteElementalSelecionado
         }
         else -> null
@@ -103,6 +116,22 @@ fun buildSummaryLines(
         }
         .maxByOrNull { CriadorState.getOriginPriority(it.origem) }
         ?: listaAncestralidades.firstOrNull { it.nome.keyify() == personagem.ancestralidade }
+
+    // Identificador estável da "espécie" da ancestralidade resolvida (ver
+    // RacialModifier.especieId) — usado por toda regra abaixo que precisa
+    // saber "esta ficha é da raça oficial X" sem comparar nome de exibição.
+    // Fica null para qualquer raça customizada pelo jogador (nunca
+    // preenchido na criação customizada), então uma raça custom com nome
+    // parecido de uma oficial nunca aciona essas regras por engano.
+    val especieIdAtual = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.especieId
+        // Fallback defensivo: a resolução acima (ancestralidadeNomeObj) exige
+        // `personagem.ancestralidade` já perfeitamente normalizado (mesmo
+        // keyify do nome do catálogo), e pode falhar silenciosamente se não
+        // estiver (ex.: acento remanescente por alguma inconsistência a
+        // montante). Refaz a busca normalizando os dois lados, só para achar
+        // o especieId — não substitui ancestralidadeNomeObj em si, que
+        // continua controlando nome/habilidades exibidos como sempre.
+        ?: listaAncestralidades.firstOrNull { it.nome.keyify() == personagem.ancestralidade.keyify() }?.especieId
 
     val rawAncestralidadeNome = if (showOfficialNames && ancestralidadeNomeObj?.originalName != null) {
         ancestralidadeNomeObj.originalName
@@ -217,11 +246,11 @@ fun buildSummaryLines(
         val bloquearAprimoradoBonus =
             if (personagem.vantagens.contains(Constants.ID_BLOQUEAR_APRIMORADO)) 1 else 0
 
-        val isDeaders = personagem.ancestralidade.keyify().contains("DEADERS")
+        val isDeaders = especieIdAtual == "deaders"
         val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
         val apararBaixoMod = if (hasApararBaixo) -2 else 0
 
-        val isSerranos = personagem.ancestralidade.keyify().contains("SERRANOS")
+        val isSerranos = especieIdAtual == "serranos"
         val serranosApararMod = if (isSerranos) 2 else 0
 
         val racialParryBonus = (personagem.vantagensRaciais + personagem.desvantagensRaciais)
@@ -239,7 +268,7 @@ fun buildSummaryLines(
         val garcaParryBonus =
             if (
                 personagem.compendioArteDaGuerraAtivo &&
-                personagem.ancestralidade.keyify().contains("HUMANO") &&
+                especieIdAtual == "humano" &&
                 personagem.signoAdgSelecionado.equals("Garça", ignoreCase = true)
             ) 1 else 0
 
@@ -253,7 +282,7 @@ fun buildSummaryLines(
         personagem.reservaChi?.let { return it }
 
         val espRaw = personagem.atributos["ESPIRITO"] ?: 0
-        val racialPenalty = if (personagem.ancestralidade.keyify() == "TERRACOTA") 1 else 0
+        val racialPenalty = if (especieIdAtual == "terracota") 1 else 0
         val chiBonus = allAdvantages
             .filter { it.id in personagem.vantagens }
             .count { it.categoria == Categoria.CHI }
@@ -273,7 +302,7 @@ fun buildSummaryLines(
 
     lines += "Identidade"
     lines += "Nome: ${personagem.nome.ifBlank { "(sem nome)" }}"
-    val ancestralidadeDisplay = buildAncestralidadeDisplay(personagem, ancestralidadeNome)
+    val ancestralidadeDisplay = buildAncestralidadeDisplay(personagem, ancestralidadeNome, especieIdAtual)
     lines += "$ancestralidadeDisplay$monstroNome"
     if (personagem.coracaoCrystalSelecionado != null) {
         val heartName = if (!EditionConfig.isFullEdition) GenericNameMapper.map(personagem.coracaoCrystalSelecionado.nome) else personagem.coracaoCrystalSelecionado.nome
@@ -510,23 +539,23 @@ fun buildSummaryLines(
     }
     val habilidadesRaciaisBaseRaw = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades?.filter { it.category != "racial_hindrance" }?.map { it.nome } ?: emptyList()
     val isAvianosAveRapina = personagem.compendioSciFiAtivo &&
-        personagem.ancestralidade.keyify() == "AVIANOS" &&
+        especieIdAtual == "avianos" &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify() == "FORMA ALIENIGENA" } &&
         personagem.desvantagensRaciais.any { it.substringBefore("(").trim().keyify().startsWith("HABITANTE DE GRAVIDADE") }
 
     val isAquarianosSemiaquaticos = personagem.compendioSciFiAtivo &&
-        personagem.ancestralidade.keyify() == "AQUARIANOS" &&
+        especieIdAtual == "aquarianos" &&
         personagem.vantagensRaciais.any {
             val key = it.substringBefore("(").trim().keyify()
             key.contains("SEMI") && key.contains("AQUATIC")
         }
 
     val isElfosComunitario = personagem.compendioSciFiAtivo &&
-        personagem.ancestralidade.keyify() == "ELFOS" &&
+        especieIdAtual == "elfos" &&
         personagem.vantagensRaciais.any { it.substringBefore("(").trim().keyify() == "COMUNITARIO" }
 
     val isCentauxGazela = personagem.compendioSciFiAtivo &&
-        personagem.ancestralidade.keyify() == "CENTAUX" &&
+        especieIdAtual == "centaux" &&
         personagem.vantagensRaciais.any {
             it.substringBefore("(").trim().keyify() == "MOVIMENTACAO +4"
         }
@@ -537,17 +566,17 @@ fun buildSummaryLines(
         val racialTraitKeys = personagem.vantagensRaciais
             .map { it.substringBefore("(").trim().keyify() }
             .toSet()
-        if (personagem.ancestralidade.keyify() == "AQUARIANOS" &&
+        if (especieIdAtual == "aquarianos" &&
             racialTraitKeys.any { it.contains("SEMI") && it.contains("AQUATIC") }
         ) {
             removeAll { it.keyify() == "AQUATICO" || it.keyify() == "RESISTENCIA" }
         }
 
-        if (personagem.ancestralidade.keyify() == "ELFOS" && racialTraitKeys.contains("COMUNITARIO")) {
+        if (especieIdAtual == "elfos" && racialTraitKeys.contains("COMUNITARIO")) {
             removeAll { it.keyify() == "DESASTRADO" }
         }
 
-        if (personagem.ancestralidade.keyify().contains("HUMANO")) {
+        if (especieIdAtual == "humano") {
             val pack = personagem.pacoteCulturalFantasiaSelecionado
             if (!pack.isNullOrBlank() && !pack.equals("Humano padrão", ignoreCase = true)) {
                 removeAll { it.keyify() == "ADAPTAVEL" }
@@ -577,11 +606,11 @@ fun buildSummaryLines(
             removeAll { it.keyify() == "MOVIMENTACAO +2" || it.keyify() == "TAMANHO +2" }
         }
 
-        if (personagem.ancestralidade.keyify() == "DRACONIANOS") {
+        if (especieIdAtual == "draconianos") {
             removeAll { it.keyify() == "ARROGANTE" }
         }
 
-        if (personagem.ancestralidade.keyify() == "MINERADORES GENETICOS" || personagem.ancestralidade.keyify() == "MINERADORES GENÉTICOS") {
+        if (especieIdAtual == "mineradores_geneticos") {
             if (personagem.vantagensRaciais.any { it.keyify() == "ADAPTACAO GRAVITACIONAL" || it.keyify() == "ADAPTAÇÃO GRAVITACIONAL" } ||
                 personagem.vantagens.any { it.keyify() == "ADAPTACAO_GRAVITACIONAL" }
             ) {
@@ -589,7 +618,7 @@ fun buildSummaryLines(
             }
         }
 
-        if (personagem.ancestralidade.keyify() == "ORACULOS" || personagem.ancestralidade.keyify() == "ORÁCULOS") {
+        if (especieIdAtual == "oraculos") {
             if (personagem.vantagensRaciais.any { it.keyify().contains("PODERES MISTICOS (TELEPATA)") || it.keyify().contains("PODERES MÍSTICOS (TELEPATA)") } ||
                 personagem.vantagens.any { it.keyify() == "PODERES_MISTICOS" }
             ) {
@@ -597,7 +626,7 @@ fun buildSummaryLines(
             }
         }
 
-        if (personagem.ancestralidade.keyify() == "SERES SINTETICOS" || personagem.ancestralidade.keyify() == "SERES_SINTETICOS") {
+        if (especieIdAtual == "seres_sinteticos") {
             val hasVariantComplication = personagem.desvantagensRaciais.any {
                 val key = it.keyify()
                 key.contains("PROCURADO") || key.contains("FORASTEIRO")
@@ -607,7 +636,7 @@ fun buildSummaryLines(
             }
         }
 
-        if (personagem.ancestralidade.keyify().contains("SOLDADOS GENETICOS") || personagem.ancestralidade.keyify().contains("SOLDADO GENETICO")) {
+        if (especieIdAtual == "soldados_geneticos") {
             val hasZeroG = personagem.vantagensRaciais.any { it.keyify().contains("ADAPTACAO GRAVITACIONAL") }
             if (hasZeroG) {
                 removeAll { it.keyify() == "NERVOS DE ACO" }
@@ -615,7 +644,7 @@ fun buildSummaryLines(
         }
     }
 
-    val habilidadesRaciais = if (personagem.ancestralidade.keyify().contains("DESCENDENTE ELEMENTAL")) {
+    val habilidadesRaciais = if (especieIdAtual == "descendente_elemental") {
         val elem = personagem.descendenteElementalSelecionado?.keyify()
         habilidadesRaciaisBase
             .map { it.substringBefore("(").trim() }
@@ -664,7 +693,7 @@ fun buildSummaryLines(
     // Fix: Normalize IDs to Names using Ancestry Definition to prevent duplicates (e.g. "Armadura +2" vs "Armadura 2") and fix formatting (e.g. "Mordida/Garras")
     val racialAbilityMap = (ancestralidadeAtual ?: ancestralidadeNomeObj)?.habilidades?.associateBy { it.id?.keyify() ?: it.nome.keyify() } ?: emptyMap()
 
-    val isAdgHuman = personagem.compendioArteDaGuerraAtivo && personagem.ancestralidade.keyify().contains("HUMANO")
+    val isAdgHuman = personagem.compendioArteDaGuerraAtivo && especieIdAtual == "humano"
     val adgHumanSignTrait = if (isAdgHuman) {
         val sign = personagem.signoAdgSelecionado
         if (sign.isNullOrBlank() || sign.equals("Nenhum", ignoreCase = true)) {
@@ -679,9 +708,9 @@ fun buildSummaryLines(
     val allRacialTraits = if (isAdgHuman) {
         adgHumanSignTrait
     } else {
-        val isTanukimimiWithPositiveThoughts = personagem.ancestralidade.keyify().contains("TANUKIMIMI") &&
+        val isTanukimimiWithPositiveThoughts = especieIdAtual == "tanukimimi" &&
             habilidadesRaciais.any { it.keyify() == "PENSAMENTOS POSITIVOS" }
-        val isFeralWithInsanidade = personagem.ancestralidade.keyify() == "FERAL" &&
+        val isFeralWithInsanidade = especieIdAtual == "feral" &&
             habilidadesRaciais.any { it.keyify() == "INSANIDADE" }
         (habilidadesRaciais + personagem.vantagensRaciais)
             .filterNot { trait ->
@@ -697,12 +726,12 @@ fun buildSummaryLines(
                 isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
             }
             .filterNot { trait ->
-                personagem.ancestralidade.keyify() == "SERRANOS" && trait.keyify() == "NOCAO DE PERIGO"
+                especieIdAtual == "serranos" && trait.keyify() == "NOCAO DE PERIGO"
             }
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
             .map { trait ->
                 val key = trait.keyify()
-                if (personagem.ancestralidade.keyify() == "SAURIOS" && key == "PRONTIDAO") {
+                if (especieIdAtual == "saurios" && key == "PRONTIDAO") {
                     "Sentidos Aguçados"
                 } else {
                     // 1. Check Advantages (Grantable Edges)
@@ -717,7 +746,7 @@ fun buildSummaryLines(
                             // while keeping behavior textual (not a free Edge).
                             if (ability.id?.keyify() == "FORTUNA_DA" || ability.nome.keyify() == "FORTUNA DA") {
                                 "Sorte"
-                            } else if (personagem.ancestralidade.keyify() == "POVO RATO" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
+                            } else if (especieIdAtual == "povo_rato" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
                                 "Fobia - Gatos (Menor)"
                             } else {
                                 // Use the display name from JSON (preserves symbols like '/')
@@ -792,7 +821,7 @@ fun buildSummaryLines(
     lines += ""
 
     val isPathfinderGnome = personagem.compendioPathfinderAtivo &&
-            personagem.ancestralidade.uppercase().contains("GNOMO")
+            especieIdAtual == "gnomo"
 
     if (personagem.poderes.isNotEmpty() || isPathfinderGnome) {
         val filteredPowers = personagem.poderes.filterKeys { key ->

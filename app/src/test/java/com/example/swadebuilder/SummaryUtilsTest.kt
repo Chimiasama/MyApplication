@@ -80,7 +80,8 @@ class SummaryUtilsTest {
                     com.example.swadebuilder.model.RacialAbility("Sentidos Aguçados", ""),
                     com.example.swadebuilder.model.RacialAbility("Voo", "")
                 ),
-                origem = "FC"
+                origem = "FC",
+                especieId = "avianos"
             )
         )
         val listaMonstros = emptyList<com.example.swadebuilder.model.MonstroTemplate>()
@@ -214,7 +215,8 @@ class SummaryUtilsTest {
                         com.example.swadebuilder.model.RacialAbility("Ágil", ""),
                         com.example.swadebuilder.model.RacialAbility("Desastrado", ""),
                         com.example.swadebuilder.model.RacialAbility("Visão no Escuro", "")
-                    )
+                    ),
+                    especieId = "elfos"
                 )
             ),
             listaMonstros = emptyList(),
@@ -372,7 +374,8 @@ class SummaryUtilsTest {
                         com.example.swadebuilder.model.RacialAbility("Tamanho +2", ""),
                         com.example.swadebuilder.model.RacialAbility("Grande", ""),
                         com.example.swadebuilder.model.RacialAbility("Óbvio", "")
-                    )
+                    ),
+                    especieId = "centaux"
                 )
             ),
             listaMonstros = emptyList(),
@@ -468,7 +471,15 @@ class SummaryUtilsTest {
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = emptyList(),
-            listaAncestralidades = emptyList(),
+            listaAncestralidades = listOf(
+                com.example.swadebuilder.model.RacialModifier(
+                    nome = "HUMANOS",
+                    origem = "ARTE_DA_GUERRA",
+                    atributos = emptyMap(),
+                    pericias = emptyMap(),
+                    especieId = "humano"
+                )
+            ),
             listaMonstros = emptyList(),
             listaComplicacoes = emptyList(),
             listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
@@ -550,7 +561,8 @@ class SummaryUtilsTest {
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Pensamentos Positivos", ""),
                         com.example.swadebuilder.model.RacialAbility("Lentos para Agir", "")
-                    )
+                    ),
+                    especieId = "tanukimimi"
                 )
             ),
             listaMonstros = emptyList(),
@@ -649,7 +661,8 @@ class SummaryUtilsTest {
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Insanidade", ""),
                         com.example.swadebuilder.model.RacialAbility("Primitivo", "")
-                    )
+                    ),
+                    especieId = "feral"
                 )
             ),
             listaMonstros = emptyList(),
@@ -745,7 +758,8 @@ class SummaryUtilsTest {
                         com.example.swadebuilder.model.RacialAbility("Pontos de Perícia", ""),
                         com.example.swadebuilder.model.RacialAbility("Adaptável ou Signo", ""),
                         com.example.swadebuilder.model.RacialAbility("Signos de Nascença", "")
-                    )
+                    ),
+                    especieId = "humano"
                 )
             ),
             listaMonstros = emptyList(),

@@ -187,7 +187,7 @@ fun SummaryContent(
 
     val hasMusculoso = state.vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
     val hasSoldado = state.vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
-    val hasDwarfLoadBonus = state.compendioPathfinderAtivo && state.ancestralidade.keyify() == "ANAO"
+    val hasDwarfLoadBonus = state.compendioPathfinderAtivo && state.currentAncestryDef?.especieId == "anao"
     val weightLimit = state.valorCargaMaxima()
     val totalWeight = state.equipamentosComprados
         .mapNotNull { item ->
@@ -246,7 +246,7 @@ fun SummaryContent(
 
     val nome = state.nomePersonagem
 
-    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem())
+    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem(), especieId = state.currentAncestryDef?.especieId)
 
     val heartValue = state.coracaoCrystalSelecionado?.nome
 
@@ -611,7 +611,7 @@ fun BasicCharacterInfo(
     val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
 
     val nome = state.nomePersonagem
-    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem())
+    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem(), especieId = state.currentAncestryDef?.especieId)
 
     val heartValue = state.coracaoCrystalSelecionado?.nome
 

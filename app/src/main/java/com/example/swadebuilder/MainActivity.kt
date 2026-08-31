@@ -852,7 +852,8 @@ class MainActivity : ComponentActivity() {
                                                         mapAttrDisplay,
                                                         complications,
                                                         advantages,
-                                                        powers
+                                                        powers,
+                                                        state.currentAncestryDef?.especieId
                                                     ) { msg ->
                                                         scope.launch {
                                                             snackHost.showSnackbar(msg)
