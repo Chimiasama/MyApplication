@@ -52,6 +52,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -864,11 +865,11 @@ class MainActivity : ComponentActivity() {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                             }
 
-                                            IconButton(onClick = {
+                                            FilledTonalIconButton(onClick = {
                                                 triggerFeedback()
                                                 showSettingsDialog = true
                                             }) {
-                                                Icon(Icons.Default.Settings, contentDescription = "Change Theme")
+                                                Icon(Icons.Default.Settings, contentDescription = "Configurações")
                                             }
                                         }
                                     )

@@ -157,6 +157,28 @@ private fun mergeImportedCustomContent(
     }
 }
 
+/**
+ * Rótulo + grupo de FilterChips do formulário de Conteúdo Customizado — era repetido em cada
+ * categoria com pequenas inconsistências (algumas usavam Row sem quebra de linha, que cortava
+ * os chips em telas estreitas quando havia várias opções).
+ */
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun LabeledChipGroup(
+    label: String,
+    modifier: Modifier = Modifier,
+    content: @Composable androidx.compose.foundation.layout.FlowRowScope.() -> Unit
+) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        androidx.compose.foundation.layout.FlowRow(
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+            content = content
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
@@ -335,6 +357,12 @@ fun SettingsDialog(
                             },
                             modifier = Modifier.fillMaxWidth()
                         ) {
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(Modifier.width(8.dp))
                             Text("Gerenciar Conteúdo Customizado")
                         }
                     }
@@ -679,86 +707,63 @@ fun SettingsDialog(
                                                         customAdvCategory = availableAdvCategories.firstOrNull() ?: Categoria.PROFISSIONAL
                                                     }
 
-                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                        Text("Categoria da Vantagem:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                                                        @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
-                                                        androidx.compose.foundation.layout.FlowRow(
-                                                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                                                        ) {
-                                                            availableAdvCategories.forEach { catEnum ->
-                                                                androidx.compose.material3.FilterChip(
-                                                                    selected = customAdvCategory == catEnum,
-                                                                    onClick = { customAdvCategory = catEnum },
-                                                                    label = { Text(catEnum.getDisplayName(), style = MaterialTheme.typography.labelSmall) }
-                                                                )
-                                                            }
+                                                    LabeledChipGroup("Categoria da Vantagem:") {
+                                                        availableAdvCategories.forEach { catEnum ->
+                                                            androidx.compose.material3.FilterChip(
+                                                                selected = customAdvCategory == catEnum,
+                                                                onClick = { customAdvCategory = catEnum },
+                                                                label = { Text(catEnum.getDisplayName(), style = MaterialTheme.typography.labelSmall) }
+                                                            )
                                                         }
                                                     }
-                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                        Text("Estágio Mínimo:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                                                        @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
-                                                        androidx.compose.foundation.layout.FlowRow(
-                                                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                                                        ) {
-                                                            listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário").forEach { stage ->
-                                                                androidx.compose.material3.FilterChip(
-                                                                    selected = customStage == stage,
-                                                                    onClick = { customStage = stage },
-                                                                    label = { Text(stage, style = MaterialTheme.typography.labelSmall) }
-                                                                )
-                                                            }
+                                                    LabeledChipGroup("Estágio Mínimo:") {
+                                                        listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário").forEach { stage ->
+                                                            androidx.compose.material3.FilterChip(
+                                                                selected = customStage == stage,
+                                                                onClick = { customStage = stage },
+                                                                label = { Text(stage, style = MaterialTheme.typography.labelSmall) }
+                                                            )
                                                         }
                                                     }
                                                 }
                                                 "Complicação" -> {
-                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                        Text("Severidade Permitida:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                                                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                                            listOf("Maior", "Menor", "Maior ou Menor").forEach { sev ->
-                                                                androidx.compose.material3.FilterChip(
-                                                                    selected = customSeverity == sev,
-                                                                    onClick = { customSeverity = sev },
-                                                                    label = { Text(sev, style = MaterialTheme.typography.labelSmall) }
-                                                                )
-                                                            }
+                                                    LabeledChipGroup("Severidade Permitida:") {
+                                                        listOf("Maior", "Menor", "Maior ou Menor").forEach { sev ->
+                                                            androidx.compose.material3.FilterChip(
+                                                                selected = customSeverity == sev,
+                                                                onClick = { customSeverity = sev },
+                                                                label = { Text(sev, style = MaterialTheme.typography.labelSmall) }
+                                                            )
                                                         }
                                                     }
                                                 }
                                                 "Equipamento" -> {
-                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                        Text("Tipo de Equipamento:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                                                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                                            listOf("Arma", "Armadura", "Escudo", "Geral", "Veículo").forEach { st ->
-                                                                androidx.compose.material3.FilterChip(
-                                                                    selected = customEquipSuperType == st,
-                                                                    onClick = {
-                                                                        customEquipSuperType = st
-                                                                        customEquipSubtype = when (st) {
-                                                                            "Arma" -> "Corpo a Corpo"
-                                                                            "Armadura" -> "Armadura Corporal"
-                                                                            "Escudo" -> "Escudo"
-                                                                            "Veículo" -> "Veículo"
-                                                                            else -> "Equipamento Geral"
-                                                                        }
-                                                                    },
-                                                                    label = { Text(st, style = MaterialTheme.typography.labelSmall) }
-                                                                )
-                                                            }
+                                                    LabeledChipGroup("Tipo de Equipamento:") {
+                                                        listOf("Arma", "Armadura", "Escudo", "Geral", "Veículo").forEach { st ->
+                                                            androidx.compose.material3.FilterChip(
+                                                                selected = customEquipSuperType == st,
+                                                                onClick = {
+                                                                    customEquipSuperType = st
+                                                                    customEquipSubtype = when (st) {
+                                                                        "Arma" -> "Corpo a Corpo"
+                                                                        "Armadura" -> "Armadura Corporal"
+                                                                        "Escudo" -> "Escudo"
+                                                                        "Veículo" -> "Veículo"
+                                                                        else -> "Equipamento Geral"
+                                                                    }
+                                                                },
+                                                                label = { Text(st, style = MaterialTheme.typography.labelSmall) }
+                                                            )
                                                         }
                                                     }
                                                     if (customEquipSuperType == "Arma") {
-                                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                            Text("Subtipo de Arma:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                                                            Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                                                                listOf("Corpo a Corpo", "Ataque a Distância", "Futurista").forEach { sub ->
-                                                                    androidx.compose.material3.FilterChip(
-                                                                        selected = customEquipSubtype == sub,
-                                                                        onClick = { customEquipSubtype = sub },
-                                                                        label = { Text(sub, style = MaterialTheme.typography.labelSmall) }
-                                                                    )
-                                                                }
+                                                        LabeledChipGroup("Subtipo de Arma:") {
+                                                            listOf("Corpo a Corpo", "Ataque a Distância", "Futurista").forEach { sub ->
+                                                                androidx.compose.material3.FilterChip(
+                                                                    selected = customEquipSubtype == sub,
+                                                                    onClick = { customEquipSubtype = sub },
+                                                                    label = { Text(sub, style = MaterialTheme.typography.labelSmall) }
+                                                                )
                                                             }
                                                         }
                                                     }
@@ -1030,14 +1035,11 @@ fun SettingsDialog(
                                                                     fontWeight = FontWeight.SemiBold,
                                                                     color = saldoColor
                                                                 )
-                                                                Row(
-                                                                    modifier = Modifier.fillMaxWidth(),
-                                                                    verticalAlignment = Alignment.CenterVertically
-                                                                ) {
-                                                                    Checkbox(checked = varianteSemLimite, onCheckedChange = { varianteSemLimite = it })
-                                                                    Spacer(Modifier.width(4.dp))
-                                                                    Text("Sem limite de pontos (raças mais fortes)", style = MaterialTheme.typography.labelSmall)
-                                                                }
+                                                                CheckboxRow(
+                                                                    label = "Sem limite de pontos (raças mais fortes)",
+                                                                    checked = varianteSemLimite,
+                                                                    onCheckedChange = { varianteSemLimite = it }
+                                                                )
 
                                                                 HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
                                                                 Text("Remover da raça base:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
