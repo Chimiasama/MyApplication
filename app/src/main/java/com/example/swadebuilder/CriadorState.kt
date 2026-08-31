@@ -19,6 +19,7 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.CustomAncestryVariant
 import com.example.swadebuilder.model.EquipFilter
@@ -2072,14 +2073,11 @@ class CriadorState {
     // PROMPT 2: Brawny (Brutamontes) Carga calculation
     fun valorCargaMaxima(): Float {
         val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
-        val hasSoldado = vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
-        val hasMusculoso = vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
+        val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
+        val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
         val hasDwarfLoadBonus = compendioPathfinderAtivo && ancestralidade.keyify() == "ANAO"
         // PROMPT 2: "Brawny treats Strength as one die type higher"
-        val hasBrutamontes = vantagensSelecionadas.any {
-            val nk = it.nome.keyify()
-            nk == "BRUTAMONTES" || nk == "BRAWNY"
-        }
+        val hasBrutamontes = vantagensSelecionadas.any { it.id == Constants.ID_BRUTAMONTES }
 
         var effectiveStrength = strengthRaw
 
@@ -2316,11 +2314,7 @@ class CriadorState {
         compendioPathfinderAtivo && pathfinderFreeSlotId == null
     }
 
-    private fun Vantagem.isBrutamontes(): Boolean {
-        val idKey = id.keyify()
-        val nameKey = nome.keyify()
-        return idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nameKey == "BRUTAMONTES" || nameKey == "BRAWNY"
-    }
+    private fun Vantagem.isBrutamontes(): Boolean = id == Constants.ID_BRUTAMONTES
 
     private fun rawValuesBeforeArcaneSkillGrant(v: Vantagem): Map<String, Int>? {
         if (modoProgressaoAtivo) return null
@@ -4606,10 +4600,10 @@ class CriadorState {
 
         val chave = a.keyify()
         val profCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "PROFISSIONAL" && it.choice?.keyify() == chave
+            it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == chave
         }
         val espCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
+            it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
 
         var finalCap = baseCap + (profCount + espCount) * 2
@@ -4647,10 +4641,10 @@ class CriadorState {
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "PROFISSIONAL" && it.choice?.keyify() == chave
+            it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == chave
         }
         val espCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
+            it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
 
         return baseCap + (profCount + espCount) * 2

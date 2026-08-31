@@ -68,20 +68,20 @@ object RequirementValidator {
         }
 
         // 4) PROFISSIONAL / ESPECIALISTA
-        if (key == Constants.EDGE_PROFESSIONAL.keyify() || key == Constants.EDGE_EXPERT.keyify()) {
+        if (v.id == Constants.ID_PROFISSIONAL || v.id == Constants.ID_ESPECIALISTA) {
             val choiceSeguro = v.choice
 
             if (v.requiresChoice && choiceSeguro != null) {
                 val already = state.vantagensSelecionadas.any {
-                    it.nome.keyify() == key &&
+                    it.id == v.id &&
                             it.choice?.keyify() == choiceSeguro.keyify()
                 }
                 if (already) return false
             }
 
-            if (key == Constants.EDGE_EXPERT.keyify() && choiceSeguro != null) {
+            if (v.id == Constants.ID_ESPECIALISTA && choiceSeguro != null) {
                 val profExist = state.vantagensSelecionadas.any {
-                    it.id == "profissional" && it.choice?.keyify() == choiceSeguro.keyify()
+                    it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == choiceSeguro.keyify()
                 }
                 if (!profExist) return false
             }

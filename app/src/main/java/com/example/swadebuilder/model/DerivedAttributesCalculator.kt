@@ -30,9 +30,9 @@ object DerivedAttributesCalculator {
         val base = 2 + (maxFightingRaw / 2)
 
         val bloquearBonus =
-            if (state.vantagensSelecionadas.any { it.nome.keyify() == Constants.EDGE_BLOCK.keyify() }) 1 else 0
+            if (state.vantagensSelecionadas.any { it.id == Constants.ID_BLOQUEAR }) 1 else 0
         val bloquearAprimoradoBonus =
-            if (state.vantagensSelecionadas.any { it.nome.keyify() == Constants.EDGE_IMPROVED_BLOCK.keyify() }) 1 else 0
+            if (state.vantagensSelecionadas.any { it.id == Constants.ID_BLOQUEAR_APRIMORADO }) 1 else 0
 
         return base + bloquearBonus + bloquearAprimoradoBonus + state.bonusApararFromPower
     }
@@ -55,7 +55,7 @@ object DerivedAttributesCalculator {
 
         val idosoPenalty =
             state.complicacoesSelecionadas
-                .filterKeys { it.name.keyify() == Constants.EDGE_ELDERLY.keyify() || it.id.keyify().endsWith(Constants.EDGE_ELDERLY.keyify()) }
+                .filterKeys { it.id == Constants.ID_IDOSO }
                 .isNotEmpty()
                 .takeIf { it }
                 ?.let { 1 }
@@ -64,7 +64,7 @@ object DerivedAttributesCalculator {
         val lentoPenalty = state.complicacoesSelecionadas
             .entries
             .firstOrNull {
-                it.key.name.keyify() == Constants.EDGE_SLOW.keyify() || it.key.id.keyify().endsWith(Constants.EDGE_SLOW.keyify())
+                it.key.id == Constants.ID_LENTO
             }
             ?.let { (_, grau) ->
                 when (grau) {
@@ -77,14 +77,14 @@ object DerivedAttributesCalculator {
 
         val obesoPenalty =
             state.complicacoesSelecionadas
-                .filterKeys { it.name.keyify() == Constants.EDGE_OBESE.keyify() || it.id.keyify().endsWith(Constants.EDGE_OBESE.keyify()) }
+                .filterKeys { it.id == Constants.ID_OBESO }
                 .isNotEmpty()
                 .takeIf { it }
                 ?.let { 1 }
                 ?: 0
 
         val ligeiroBonus =
-            if (state.vantagensSelecionadas.any { it.nome.keyify() == Constants.EDGE_FLEET_FOOTED.keyify() })
+            if (state.vantagensSelecionadas.any { it.id == Constants.ID_LIGEIRO })
                 2
             else
                 0

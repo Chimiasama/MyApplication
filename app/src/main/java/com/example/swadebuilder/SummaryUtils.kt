@@ -167,9 +167,6 @@ fun buildSummaryLines(
     }
 
 
-    val vantagensNomeKey: List<String> = allAdvantages
-        .filter { it.id in personagem.vantagens }
-        .map { it.nome.keyify() }
     val complicacoesNomeadas: List<String> = complicationDisplayNames(personagem.complicacoes, showOfficialNames)
     val transtornosNomeados: List<String> = complicationDisplayNames(personagem.transtornos, showOfficialNames)
     val complicacoesNomeKeyset = listaComplicacoes
@@ -216,9 +213,9 @@ fun buildSummaryLines(
         val base = 2 + (max(lutarComSupers, jutsuComSupers) / 2)
 
         val bloquearBonus =
-            if (vantagensNomeKey.any { it == "BLOQUEAR" }) 1 else 0
+            if (personagem.vantagens.contains(Constants.ID_BLOQUEAR)) 1 else 0
         val bloquearAprimoradoBonus =
-            if (vantagensNomeKey.any { it == "BLOQUEAR APRIMORADO" }) 1 else 0
+            if (personagem.vantagens.contains(Constants.ID_BLOQUEAR_APRIMORADO)) 1 else 0
 
         val isDeaders = personagem.ancestralidade.keyify().contains("DEADERS")
         val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }

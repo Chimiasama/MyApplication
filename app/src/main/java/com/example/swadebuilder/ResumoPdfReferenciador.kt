@@ -20,6 +20,7 @@ import androidx.core.content.FileProvider
 import androidx.core.graphics.withClip
 import androidx.core.graphics.withTranslation
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
@@ -1061,8 +1062,8 @@ fun calcAparar(personagem: MeuPersonagem): Int {
     val lutar = personagem.pericias["Lutar"] ?: 0
     val jutsu = personagem.pericias["Jutsu"] ?: 0
     val base = 2 + (max(lutar, jutsu) / 2)
-    val bloq = if (personagem.vantagens.any { it.keyify() == "BLOQUEAR" }) 1 else 0
-    val bloqImp = if (personagem.vantagens.any { it.keyify() == "BLOQUEAR APRIMORADO" }) 1 else 0
+    val bloq = if (personagem.vantagens.contains(Constants.ID_BLOQUEAR)) 1 else 0
+    val bloqImp = if (personagem.vantagens.contains(Constants.ID_BLOQUEAR_APRIMORADO)) 1 else 0
 
     val isDeaders = personagem.ancestralidade.keyify().contains("DEADERS")
     val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }

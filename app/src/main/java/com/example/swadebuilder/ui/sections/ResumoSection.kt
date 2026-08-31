@@ -76,6 +76,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.buildSummaryLines
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.toDiceString
@@ -184,8 +185,8 @@ fun SummaryContent(
     val attributesSection = sections.firstOrNull { it.title == "Atributos" }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
 
-    val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
-    val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
+    val hasMusculoso = state.vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
+    val hasSoldado = state.vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
     val hasDwarfLoadBonus = state.compendioPathfinderAtivo && state.ancestralidade.keyify() == "ANAO"
     val weightLimit = state.valorCargaMaxima()
     val totalWeight = state.equipamentosComprados
