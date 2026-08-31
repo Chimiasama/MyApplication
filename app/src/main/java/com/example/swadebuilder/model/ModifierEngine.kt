@@ -187,8 +187,21 @@ object ModifierEngine {
             // (ver CriadorState.addIfAbsent), não como RacialAbility com id —
             // autoTraitId() deriva desse texto o MESMO id que addIfAbsent já
             // atribuiria, então o traço é reconhecido pelo id real dele, não
-            // por regex sobre o texto.
-            val autoIdKeys = sources.map { it.autoTraitId() }.toSet()
+            // por regex sobre o texto. Só entra nesse fallback quem NÃO já
+            // tem uma habilidade própria (com id de verdade) pro mesmo nome —
+            // sem isso, uma raça cujo texto de habilidade já usada por
+            // traitIds (ex.: Povo Rato/Fadas "DIMINUTO (Tamanho -4)", id
+            // "DIMINUTO") também bateria com o auto-slug de outra raça que
+            // injeta o mesmo texto solto por Variante (Ferais "Menor", id
+            // sintético "DIMINUTO_TAMANHO_4") e contaria o efeito em dobro.
+            val habilidadeNomeKeys = (
+                anc.habilidades.map { it.nome.keyify() } +
+                    (monstro?.habilidades?.map { it.nome.keyify() } ?: emptyList())
+                ).toSet()
+            val autoIdKeys = sources
+                .filterNot { it.keyify() in habilidadeNomeKeys }
+                .map { it.autoTraitId() }
+                .toSet()
 
             // FRAGIL/FRAGIL_MAIOR têm o mesmo nome de exibição ("Frágil"),
             // diferindo só na penalidade (-1 padrão vs -2 dos Demônios) — o
