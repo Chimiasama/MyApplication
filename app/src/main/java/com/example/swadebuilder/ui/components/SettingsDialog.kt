@@ -54,7 +54,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.model.Categoria
-import com.example.swadebuilder.model.CustomContentType
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toIdSlug
@@ -311,7 +310,6 @@ fun SettingsDialog(
                     var showCustomContentDialog by remember { mutableStateOf(false) }
                     var customItemName by remember { mutableStateOf("") }
                     var customItemDesc by remember { mutableStateOf("") }
-                    var customPackageJson by remember { mutableStateOf("") }
                     var statusMessage by remember { mutableStateOf<String?>(null) }
 
                     Column(
@@ -332,7 +330,6 @@ fun SettingsDialog(
                             onClick = {
                                 customItemName = ""
                                 customItemDesc = ""
-                                customPackageJson = ""
                                 statusMessage = null
                                 showCustomContentDialog = true
                             },
@@ -345,7 +342,6 @@ fun SettingsDialog(
                     if (showCustomContentDialog) {
                         val context = androidx.compose.ui.platform.LocalContext.current
                         val customStorageManager = remember { com.example.swadebuilder.util.CustomStorageManager() }
-                        val manager = remember { com.example.swadebuilder.util.CustomContentManager() }
                         // Livro(s) a que o item sendo criado vai ficar vinculado — o jogador
                         // escolhe isso na hora de salvar (ver "Seletor de Livros" abaixo), não
                         // fica mais preso ao livro que estava ativo quando abriu essa tela.
@@ -386,7 +382,6 @@ fun SettingsDialog(
                         var customRange by remember { mutableStateOf("Toque") }
                         var customDuration by remember { mutableStateOf("3 turnos") }
                         var customRacialTrait by remember { mutableStateOf("") }
-                        var showJsonImportSection by remember { mutableStateOf(false) }
                         var refreshTrigger by remember { mutableStateOf(0) }
 
                         var customTraitCost by remember { mutableStateOf("1") }
@@ -1174,20 +1169,6 @@ fun SettingsDialog(
                                         }
                                     }
 
-                                    // Collapsible Advanced JSON Import section
-                                    TextButton(onClick = { showJsonImportSection = !showJsonImportSection }) {
-                                        Text(if (showJsonImportSection) "▼ Ocultar Importação JSON" else "▶ Avançado: Importar Pacote JSON")
-                                    }
-
-                                    if (showJsonImportSection) {
-                                        androidx.compose.material3.OutlinedTextField(
-                                            value = customPackageJson,
-                                            onValueChange = { customPackageJson = it },
-                                            label = { Text("Cole o JSON do pacote") },
-                                            modifier = Modifier.fillMaxWidth().height(90.dp)
-                                        )
-                                    }
-
                                     // Custom Content Items Manager List (todos os livros)
                                     HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
                                     Text(
@@ -1581,15 +1562,6 @@ fun SettingsDialog(
                                             customPrereqComps = emptyList()
                                             customDamage = ""
                                             customRacialTrait = ""
-                                            }
-                                        } else if (customPackageJson.isNotBlank()) {
-                                            val importRes = manager.importPackageFromJson(customPackageJson)
-                                            if (importRes.isSuccess) {
-                                                statusMessage = "Pacote '${importRes.getOrNull()?.packageName}' importado com sucesso!"
-                                                customPackageJson = ""
-                                                onCustomContentChanged()
-                                            } else {
-                                                statusMessage = "Erro ao importar: ${importRes.exceptionOrNull()?.message}"
                                             }
                                         } else {
                                                     statusMessage = "Preencha o Nome do item."
