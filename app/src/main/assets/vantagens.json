@@ -27837,7 +27837,8 @@
       "CIDADE_SOL_VAPOR"
     ],
     "descricaoLite": "Concede a habilidade Fé (Espírito), 2 poderes iniciais e 15 Pontos de Poder iniciais; o conjunto de poderes é igual ao dos abençoados, mas anjos podem usar até poderes que normalmente exigiriam as vantagens Guerreiro do Senhor ou Ira do Senhor. Não pode ser escolhida junto com Guerreiro Celestial.",
-    "subtipoArcano": "ANJO"
+    "subtipoArcano": "ANJO",
+    "usaPoderesPorEstagio": true
   },
   {
     "id": "anjo_cinza",
@@ -27871,7 +27872,8 @@
       "CIDADE_SOL_VAPOR"
     ],
     "descricaoLite": "Concede a perícia Tecnomagia (Astúcia), os poderes iniciais Detectar Arcano e mais 2 à escolha, e Pontos de Poder especiais; permite gastar um Bene para recuperar 5 PP, mas impede o uso dos Modificadores Seletivo e Mortalha (Apressar/Atrasar só valem em poderes com a Limitação Ressonância), com uma lista própria de poderes disponíveis.",
-    "subtipoArcano": "TECNOMAGIA"
+    "subtipoArcano": "TECNOMAGIA",
+    "usaPoderesPorEstagio": true
   },
   {
     "id": "magomecanico",
@@ -28155,6 +28157,94 @@
     "descricaoLite": "Concede +2 em Lutar, Atirar e no dano, mas apenas em combate direto contra um único oponente."
   },
   {
+    "id": "irmandade_das_seis_chaves",
+    "nome": "IRMANDADE DAS SEIS CHAVES",
+    "categoria": "ANTECEDENTE",
+    "requisitos": "Veterano, Vantagem Magomecânico ou Consertar d10+ e Ciência d10+",
+    "descricao": "Seu personagem se destacou como um inventor proeminente e recebeu um convite para a Irmandade das Seis Chaves, onde se encontram os cientistas, inventores e magomecânicos que mais se destacam na Teia. Como sinal de reconhecimento, você pode escolher um dos animais de estimação magomecânicos especiais (estatísticas prontas, abaixo). Se necessário, um animal de estimação pode ser substituído por outro, mas o novo animal será entregue em d6 dias. Se um animal for destruído ou perdido de alguma forma, ele só será substituído na próxima aventura. Em acordo com o Mestre, um animal de estimação personalizado também pode ser criado, ao invés de escolher um dos listados. Todos os animais têm a habilidade Autômato (Construto: +2 para sair do Estado Abalado, não respira, imune a venenos/doenças/poderes que afetam a mente, ignora um Ferimento, Ferimentos não curam com o tempo nem com Curar; Destemido: imune a Medo/Intimidar; Bloco de comando de voz; Receptor tecnomágico: aceita poderes com as Limitações Ressonância e Óculos).\n\nModelo EB-18.28.Q \"Anansi\", assistente universal — aranha com membros manipuladores adicionais. Agilidade d8, Astúcia d8, Espírito d6, Força d8, Vigor d6; Atletismo d6, Curar d8, Consertar d10, Ladinagem d8, Perceber d8; Movimentação 4, Aparar 2, Resistência 7(2); Armadura +2; Ferramentas embutidas (ferramentas e gazuas nos membros); Combustível: bateria de 20 PP, dura 4 horas.\n\nModelo CM-18.99.B \"Hanuman\", guarda-costas — autômato de combate em forma de primata, equipado com duas lâminas de aço vermelho. Agilidade d6, Astúcia d6, Espírito d8, Força d10, Vigor d10; Atletismo d8, Intimidar d8, Lutar d10, Perceber d8; Vantagens: Ambidestro, Varredura; Movimentação 8, Aparar 7, Resistência 12(4); Armadura +4; Lâminas de aço vermelho (For+d6+2, PA 2); Tamanho 1 (meia tonelada); Resiliente (sofre um Ferimento antes da Incapacitação); Reconhecimento amigo-inimigo (via faróis tecnomágicos); Combustível: bateria de 5 PP/dia + briquete de enxofre (~100g) por 4h de operação.\n\nModelo EE-19.31.S \"Hugin\", pássaro espião — pequeno pássaro mecânico (corvo, coruja ou sob encomenda) com câmera de filme (30 min sem som). Agilidade d10, Astúcia d8, Espírito d6, Força d4-2, Vigor d8; Atletismo d8, Furtividade d8, Lutar d6, Perceber d10; Movimentação 3, Aparar 5, Resistência 5(2); Voar (Movimentação 36, impossível fora da cidade pelos ventos do Limbo); Armadura +2; Garras (For+d4); Visão no Escuro (ignora Penumbra/Escuridão, não Escuridão como Breu); Rede de Navegação pelos faróis da Irmandade; Rastreamento de alvos com rastreador plantado; Tamanho -3 (~50cm); Bateria tecnomágica média de 10 PP, dura 4h, retorna à base com bateria fraca.\n\nModelo HD-19.03.M \"Sleipnir\", cavalo mecânico — transporte para as ruas da cidade. Agilidade d6, Astúcia d4, Espírito d6, Força d12, Vigor d10; Atletismo d8, Lutar d6, Perceber d6; Vantagens: Ligeiro; Movimentação 10, Aparar 5, Resistência 14(4); Armadura +4; Coice (For+d4+2, dianteiras e traseiras); Tamanho 3 (~1 tonelada); Transporte Elegante (concede Conexões [Alta Sociedade] enquanto disponível; dobra os usos por sessão se já tiver essa Vantagem); Combustível: briquete de enxofre (~100g) por 1h de operação.\n\nCriação de um magomecânico: mecanismo extremamente complexo — só o criador o entende plenamente; outro personagem com Magomecânico pode consertá-lo em mau funcionamento com sucesso em Tecnomagia a -4 e 1d8 horas.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "Concede um animal de estimação magomecânico fixo com estatísticas prontas (Anansi, assistente; Hanuman, guarda-costas; Hugin, espião voador; ou Sleipnir, montaria), todos com a habilidade Autômato; substituível se perdido/destruído."
+  },
+  {
+    "id": "clapper_branco",
+    "nome": "CLAPPER BRANCO",
+    "categoria": "ANTECEDENTE",
+    "requisitos": "Novato",
+    "descricao": "Seu personagem pertence aos novos Clappers e luta ativamente pelos direitos dos trabalhadores por meios políticos. Isso concede respeito nos distritos da classe trabalhadora, recebendo +2 em rolagens de Persuadir em qualquer interação com trabalhadores de fábrica.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "+2 em Persuadir com trabalhadores de fábrica, por lutar pelos direitos dos trabalhadores através de meios políticos."
+  },
+  {
+    "id": "clapper_do_carvao",
+    "nome": "CLAPPER DO CARVÃO",
+    "categoria": "ANTECEDENTE",
+    "requisitos": "Novato",
+    "descricao": "Seu personagem espera o retorno do Mestre Clapp e luta contra o uso de máquinas de enxofre usando métodos impactantes. Durante a luta, ele se torna mestre em sabotagem. Após passar cinco minutos e obter sucesso em uma rolagem de Consertar, ele pode garantir que na próxima vez que um mecanismo for usado ocorrerá um Mau Funcionamento. Com uma Ampliação, também pode escolher um efeito de mau funcionamento específico, exceto os efeitos correspondentes aos Curingas. Se seu personagem usar mecanismos de enxofre e outros clappers do carvão descobrirem, a reação deles em relação ao personagem diminui em três passos.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "Após 5 minutos e sucesso em Consertar, garante que o próximo uso de um mecanismo sabotado sofra Mau Funcionamento (com Ampliação, escolhe o efeito, exceto os de Curinga); usar mecanismos de enxofre e ser descoberto por outros clappers do carvão piora a reação deles em três passos."
+  },
+  {
+    "id": "culto_do_eclipse",
+    "nome": "CULTO DO ECLIPSE",
+    "categoria": "ANTECEDENTE",
+    "requisitos": "Novato",
+    "descricao": "Seu personagem faz parte de uma das células do Culto do Eclipse, uma comunidade destrutiva que acredita que o Eclipse foi o maior evento da história. Uma vez por sessão, se fizer uma rolagem de Persuadir e tiver sucesso, três combatentes do Culto virão ajudá-lo (estatísticas de aliado no livro, não modeladas neste catálogo). Com uma Ampliação, um deles será um especialista escolhido pelo jogador. O Culto é proibido; se a Guarda descobrir que o personagem faz parte dele, isso pode acarretar sérios problemas.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "1x/sessão, com sucesso em Persuadir, convoca 3 combatentes do Culto do Eclipse para ajudar (um deles um especialista à escolha, com Ampliação), mas ser descoberto na Guarda como membro do Culto proibido traz sérias consequências."
+  },
+  {
+    "id": "sociedade_do_noroeste",
+    "nome": "SOCIEDADE DO NOROESTE",
+    "categoria": "ANTECEDENTE",
+    "requisitos": "Novato, Perceber d8+",
+    "descricao": "Seu personagem é membro do clube social Sociedade do Noroeste, cujos membros procuram por lugares na cidade que sofreram mudanças inexplicadas. Devido às buscas regulares, ele recebe +2 em todas as rolagens de Perceber nas ruas. Conhece a cidade perfeitamente bem e não é capaz de se perder na Teia ou entrar num beco sem saída ao tentar fugir de perseguidores. Se estiver em uma sala desconhecida (por exemplo, se foi sequestrado), pode fazer uma rolagem de Perceber; o sucesso permite determinar sua localização atual dentro dos blocos mais próximos.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "+2 em Perceber nas ruas, nunca se perde na Teia nem entra em becos sem saída ao fugir, e pode usar Perceber para descobrir sua localização mesmo em um lugar desconhecido."
+  },
+  {
+    "id": "pena_do_albatroz",
+    "nome": "A PENA DO ALBATROZ",
+    "categoria": "ANTECEDENTE",
+    "requisitos": "Novato",
+    "descricao": "Seu personagem fez um favor significativo para a Ordem do Albatroz e pode contar com ajuda em uma situação difícil. Possui um amuleto de prata com uma pena gravada. Uma vez por sessão, pode apresentá-lo a qualquer membro da Força Expedicionária e pedir ajuda. Se precisar de proteção, é provável que a receba imediatamente; em outras ocasiões, encontrará um representante da Ordem que auxiliará a resolver o problema. Se o pedido envolver violação da lei ou for contrário aos interesses da Ordem, o personagem não receberá ajuda, ou se for ajudado, perderá o medalhão posteriormente — e junto o direito de recorrer à Ordem novamente.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "1x/sessão, apresenta um amuleto da Ordem do Albatroz a um membro da Força Expedicionária para pedir ajuda (quase garantida em caso de perigo); um pedido ilegal ou contrário aos interesses da Ordem é recusado, ou custa o medalhão e o direito de recorrer de novo."
+  },
+  {
+    "id": "adepto_ordem_do_albatroz",
+    "nome": "ADEPTO DA ORDEM DO ALBATROZ",
+    "categoria": "ANTECEDENTE",
+    "requisitos": "Novato, Conhecimento Acadêmico d6+",
+    "descricao": "Seu personagem é um membro da Ordem do Albatroz, organização dedicada à busca dos conhecimentos antigos escondidos no Limbo. Possui um anel sinete indicando seu nível de iniciação e conhece o aperto de mão secreto que confirma a filiação à Ordem. Uma vez por sessão, pode pedir ajuda à Ordem como se tivesse a Vantagem Conexões. Além disso, uma vez por sessão, pode gastar 2d6 minutos para lembrar se ouviu algo de outros membros da Ordem sobre um lugar específico no Limbo, uma criatura que vive nos desertos ou qualquer outra informação relacionada ao Limbo e sua história — quanto mais informações coletadas sobre algo, mais dados pode lembrar; se for o primeiro entre os companheiros a lidar com aquilo, não obtém nenhuma informação.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "1x/sessão, pede ajuda à Ordem do Albatroz como se tivesse Conexões; 1x/sessão, gastando 2d6 minutos, pode tentar lembrar informações que outros membros já compartilharam sobre um lugar/criatura/fenômeno do Limbo (nada a lembrar se for o primeiro a encontrá-lo)."
+  },
+  {
+    "id": "cavaleiro_de_sao_germain",
+    "nome": "CAVALEIRO DE SÃO GERMAIN",
+    "categoria": "ANTECEDENTE",
+    "requisitos": "Novato, Código de Honra (Ordem de São Germain)",
+    "descricao": "Seu personagem odeia demônios com todo o coração e acredita que negociar com eles levará a Teia à ruína. A combinação desse ódio com o treinamento na Ordem de São Germain permite atuar de forma eficaz em combate contra demônios: recebe +2 de Resistência contra ataques mágicos feitos por demônios e um bônus de +2 de dano contra demônios. Ao se juntar à Ordem, o personagem recebe a Complicação Código de Honra (Ordem de São Germain), se ainda não a possuir, sem pontos de complicação adicionais por isso; violar esse código resulta em expulsão da Ordem.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "+2 de Resistência contra magia demoníaca e +2 de dano contra demônios; exige a Complicação Código de Honra (Ordem de São Germain), que se perdida pela violação do código expulsa o personagem da Ordem."
+  },
+  {
     "id": "atirador_perceptivo",
     "nome": "ATIRADOR PERCEPTIVO",
     "categoria": "COMBATE",
@@ -28221,31 +28311,6 @@
     "descricaoLite": "Vantagem de Antecedente Arcano que usa Ocultismo (Astúcia) e dá acesso a qualquer poder de feiticeiro disponível para o Estágio do personagem. Cada feitiço exige um ritual com sacrifício humano (meia hora mais cinco minutos por vítima) que gera 10 Pontos de Poder por sacrifício e uma rolagem de Ocultismo por poder ativado (falha crítica volta o efeito contra o feiticeiro); é possível guardar até três feitiços sem penalidade, exigindo nova rolagem de Ocultismo a cada seis horas (com -2 acumulativo por feitiço extra) para manter os demais.",
     "subtipoArcano": "FEITICEIRO",
     "usaPoderesPorEstagio": true
-  },
-  {
-    "id": "aa_milagres",
-    "nome": "ANTECEDENTE ARCANO (Milagres)",
-    "categoria": "PODER",
-    "requisitos": "Novato, Humano, Fé d6+",
-    "descricao": "Perícia: Fé (Espírito)\nPoderes iniciais: Especial\nPontos de poder: Especial\n\nÀs vezes, entre os convictos religiosos, existem aqueles que são capazes de realizar milagres. Infelizmente, essa habilidade não vem da graça; os milagres consomem a força vital de um crente, às vezes até o ponto da fatalidade.\n\nPoderes disponíveis: Personagens com essa Vantagem podem usar qualquer poder dos abençoados que esteja disponível para o seu Estágio.\nCódigo: Os abençoados acreditam fielmente que o poder é concedido por algum deus. Para estar em harmonia consigo mesmos e realizar milagres, eles precisam ter absoluta certeza de que estão no caminho certo. Para violações menores dos códigos estabelecidas por sua religião, os personagens recebem uma penalidade de -2 em suas rolagens de Fé até completarem um ritual de perdão dos pecados de acordo com os ensinamentos de sua religião. Para violações médias, eles perdem seus poderes até receberem perdão por seus pecados. Nos casos mais graves, um personagem pode perder seus poderes permanentemente, ou até que ocorra um evento que possa ser interpretado como um perdão divino.\nO preço do milagre: Para obter poder, os abençoados consomem sua própria energia vital. Os PP dos abençoados não são restaurados automaticamente. A qualquer momento, eles podem adquirir até três níveis de Fadiga para receber 5 PP para cada nível, semelhante ao efeito da Vantagem Drena a Alma. Esses níveis de Fadiga só podem ser restaurados naturalmente, o uso do poder Ajuda ou qualquer outro meio e engenhoca estimulantes não ajudará nesse caso. Quando descansando, todos os PP não gastos são perdidos.\nDeterminação Religiosa: Se a próxima ação após receber PP for a realização de um milagre, não são aplicadas penalidades por níveis de Fadiga recém-adquiridos. Se o abençoado perder a consciência devido à Fadiga, isso acontecerá apenas após o uso do poder.\nUsando Benes: Os abençoados não podem restaurar PP usando Benes, mas ao receber PP pelos níveis de Fadiga, eles podem gastar um Bene para obter 5 PP adicionais.\nVantagens Indisponíveis: Os abençoados não podem adquirir a Vantagem Novos Poderes, pois todos os poderes correspondentes ao seu estágio estão disponíveis para eles.\n\nRestrições nos Modificadores de Poder:\nAbençoados podem usar o modificador de Fadiga com essa Vantagem apenas se tiverem a Vantagem Guerreiro do Senhor, e usar os modificadores de Arma Pesada e Dano Persistente requer ter a Vantagem Ira do Senhor.\n\nLista de Poderes:\nAbaixo está uma lista de poderes com exemplos de Manifestações disponíveis para abençoados. Para alguns poderes, as particularidades de seu uso ou novas regras que diferem do que é descrito em Savage Worlds são indicadas. Se uma Vantagem for indicada entre parênteses após o nome do poder, então é necessário ter essa Vantagem para o uso do poder. Se um Aspecto exigir essa Vantagem e o outro não, então os Aspectos serão listados como poderes separados. Se “Aspecto” for indicado entre parênteses, então o poder sempre terá essa Limitação, e apenas um Aspecto estará listado (por exemplo, “Iluminar” mas não “Iluminar/Obscurecer”).\nNovato\nAjuda: Imposição das mãos.\nAumentar Característica: Uma breve oração.\nCura: Imposição das mãos e uma breve oração.\nParticularidades: Um abençoado pode curar a doença Sopro do Limbo (veja Ermos do Limbo no Livro dos Anjos (p. XXX)) com esse poder se o Modificador de Cura Maior for aplicado.\nDeflexão: Sem manifestações visíveis, apenas alguns obstáculos ocasionais perturbam os atacantes.\nDetectar Arcano (Aspecto): Uma breve oração com o pedido para mostrar o caminho.\nEnredar: O alvo é envolvido por espinhos.\nParticularidades: Cada tentativa falha de se soltar causa 2d4 de dano ao alvo.\nIluminar (Aspecto): Uma bola de luz.\nProteção Ambiental: Uma breve oração, não tem manifestações externas.\nParticularidades: Este poder também fornece proteção completa contra o efeito dos ventos do Limbo (veja Ermos do Limbo no Livro dos Anjos, p. 187).\nProteção Arcana: Uma bolha brilhante rodeando o alvo.\nProteção: Armadura de luz.\nSom/Silêncio: Os sons devem estar associados aos rituais da fé do abençoado (sino tocando, sons de oração, mantras, etc.).\nVisão Sombria: Sem manifestações visíveis.\nExperiente\nAtordoar (Guerreiro do Senhor): A vítima tem uma sensação avassaladora de culpa.\nParticularidades: O alvo faz uma rolagem de Espírito ao invés de Vigor.\nCampo de Dano (Guerreiro do Senhor): Uma aura brilhante em torno do alvo.\nCegar (Guerreiro do Senhor): Para o alvo parece que tudo está inundado de luz brilhante.\nConfusão (Guerreiro do Senhor): Sem sinais visíveis.\nDevastação (Guerreiro do Senhor): Um redemoinho, girando e jogando os oponentes para longe.\nDissipar: Uma oração; a luz irrompe da mão abençoada.\nParticularidades: Este poder não afeta as características naturais das criaturas do Limbo e objetos mágicos, a menos que a descrição do objeto diga o contrário.\nInvisibilidade: O alvo simplesmente deixa de ser percebido.\nMorosidade (Guerreiro do Senhor): As pernas do alvo começam a crescer e se prender como raízes no chão.\nRaio (Guerreiro do Senhor): Um raio fino de luz brilhante irrompe da mão abençoada.\nReduzir Característica (Guerreiro do Senhor): Uma breve oração.\nSono: Os alvos têm sonhos serenos (penalidade de -2 em rolagem de Espírito ao acordar por um som alto).\nVelocidade: Um leve brilho ao redor das pernas do alvo.\nVeterano\nDádiva do Guerreiro (Ira do Senhor): O alvo é envolvido por um brilho.\nExplosão (Ira do Senhor): Uma bola de luz branca brilhante.\nModificadores:\nLuz cegante (+2): Além do dano, o poder causa um efeito cegante (similar ao poder cegar).\nFerir (Ira do Senhor): Uma oração que faz projéteis ou armas brilharem com uma luz branca tênue.\nMedo (Ira do Senhor): Sem manifestações visíveis.\nRajada (Ira do Senhor): Um jato de chama branca irrompe das mãos do abençoado.\nHeroico\nAdivinhação: Uma longa prece pedindo orientação.\nRessurreição: Uma longa prece (cerca de meia hora).\nParticularidades: A ressurreição é o maior milagre, mas, infelizmente, na maioria das vezes, reviver uma pessoa só é possível ao custo de outra. A recuperação frequentemente leva à morte do abençoado. Se um personagem morreu não mais do que meia hora atrás, o abençoado pode tentar revivê-lo. Se o poder for usado com sucesso, o alvo volta à vida e todos os seus Ferimentos desaparecem.",
-    "livros": [
-      "CIDADE_SOL_VAPOR"
-    ],
-    "descricaoLite": "Vantagem de Antecedente Arcano que usa Fé (Espírito) e dá acesso aos poderes de milagre disponíveis para o Estágio do personagem, mas os Pontos de Poder não se recuperam sozinhos. Para conseguir PP o personagem sofre até três níveis de Fadiga (5 PP cada, curáveis apenas naturalmente), perde os PP não gastos ao descansar e sofre penalidades ou perda de poderes se violar o código religioso.",
-    "subtipoArcano": "MILAGRES",
-    "usaPoderesPorEstagio": true
-  },
-  {
-    "id": "aa_tecnomagia",
-    "nome": "ANTECEDENTE ARCANO (Tecnomagia)",
-    "categoria": "PODER",
-    "requisitos": "Novato, Humano, Tecnomagia d6+",
-    "descricao": "Perícia: Tecnomagia (Astúcia)\nPoderes Iniciais: Detectar Arcano e 2 poderes de sua escolha\nPontos de Poder: Especial\n\nA era da tecnomagia começou em 1882, após as descobertas revolucionárias do Professor Charles Strangelove. Ao contrário dos magos tradicionais, os tecnomagos não realizam suas magias usando seu próprio poder inerente, muito menos através de rituais arcanos. Ao invés disso, o tecnomago depende de equipamentos especialmente projetados.. Uma pessoa inexperiente pode pensar que se deseja praticar tecnomagia basta ter uma carteira cheia, mas isso não é verdade. Para usar seus poderes, um tecnomago precisa inserir um conjunto definido de valores na unidade de programação de seu kit. A base para cada conjunto é uma assinatura do poder selecionado. A maioria das assinaturas é comumente acessível entre a comunidade tecnomágica, portanto podem ser pesquisadas e adquiridas com relativa facilidade. (Para poderes que exigem o Estágio Veterano e acima, o Mestre do Jogo pode decidir que a busca por uma assinatura será uma missão separada). No entanto, para que um poder funcione, é necessário ajustar a assinatura, considerando o grande número de fatores (parâmetros individuais de um tecnomago, horário do dia, etc.). A capacidade de sentir esses parâmetros em um nível intuitivo é um fator que separa as pessoas que são capazes de se tornar tecnomagos das que não são.\n\nUsando Benes: Tecnomagos podem restaurar 5 PP gastando um Bene, conforme explicado em Savage Worlds Edição Aventura.\n\nModificadores de Poder Indisponíveis\nTecnomagos não podem usar os Modificadores Seletivo e Mortalha. Os Modificadores Apressar/ Atrasar só podem ser usado em poderes com a Limitação de Ressonância.\n\nLista de poderes\nA seguir está uma lista de poderes com exemplos de Manifestações que estão disponíveis para tecnomagos.\nSe uma Limitação é indicada entre parênteses, é obrigatória para aprender o poder. Se esta Limitação é um Aspecto, então apenas uma variante do poder é listada (por exemplo, “Iluminar”, mas não “Iluminar/Obscurecer”). Além disso, se diferentes versões do poder são itens independentes na lista, então eles são estudados separadamente.\nAlém disso, para alguns poderes, são indicadas particularidades de seu uso ou novas regras que diferem de Savage Worlds.\nNovato\nAjuda: Sons calmantes.\nAndar nas Paredes (Ressonância): O circuito nas luvas começa a brilhar levemente laranja.\nAtordoar: Ultrassom.\nAumentar/Diminuir Característica (Ressonância): Circuito de ressonância começa a brilhar levemente laranja.\nCegar: Um flash de luz.\nConfusão: O som de uma frequência específica, causando confusão no inimigo.\nDeflexão (Ressonância): Circuito de ressonância começa a gerar um campo magnético repelente.\nDevastação: Fluxo de poderosos ventos divergentes a partir do ponto-alvo.\nDetectar Arcano (Óculos, Aspecto): Sem Manifestações visíveis.\nParticularidades: A critério do Mestre, pode ser necessário uma rolagem de Ocultismo adicional para entender a essência do rastro mágico, se tiver uma origem não tecnomágica.\nEnredar: Envolve o alvo em gelo.\nExplosão: Explosão de fogo, trovão ou ventos congelantes.\nIluminar (Aspecto): O tecnomago preenche o objeto com energia, então ele começa a brilhar.\nParticularidades: Precisa ser um objeto pequeno, que será a fonte de luz. Pode ser qualquer sucata, mas não pode ser parte de algo maior (por exemplo, não pode usar uma área de solo como fonte de luz, mas pode usar uma poção de terra que você pegar).\nMedo: O som de uma frequência especialmente selecionada causa medo.\nOcultar o Arcano (Aspecto): Sem Manifestações visíveis.\nParticularidades: Aplicar este feitiço leva 15 minutos. A critério do Mestre, se for necessário ocultar energias arcanas em uma área grande, ou de um artefato especialmente poderoso, o tempo pode ser aumentado. Em caso de Falha Crítica, ele funciona como o poder Dissipar.\nProteção (Ressonância): O circuito começa a brilhar levemente azul.\nProteção Arcana (Ressonância): Circuito de ressonância pulsa com luz vermelha.\nRaio: Raio de trovão, fogo ou gelo.\nSom\\Silêncio: Ondas sonoras emanando do ponto-alvo.\nVisão Sombria (Óculos): O vidro dos óculos brilha fracamente com luz vermelha (este efeito pode ser percebido com um sucesso em uma rolagem de Perceber com uma penalidade de -6).\nExperiente\nCampo de Dano (Ressonância): Descargas elétricas no circuito de ressonância que são inofensivas para o usuário.\nDissipar: Explosão de energia, direcionada ao local afetado pela magia.\nParticularidades: Este poder não afeta as características naturais de criaturas do Limbo e objetos mágicos, a menos que a descrição do objeto diga o contrário. Para escolher o efeito de neutralização adequado, um tecnomago precisa determinar a natureza do rastro mágico primeiro com a ajuda do poder detectar arcano, caso contrário receberá uma penalidade de -4 para rolagens de Tecnomagia ao lançar este poder.\nExplosão: Bola de relâmpago, fogo ou gelo.\nFerir: Preenche projéteis ou armas com energia.\nInvisibilidade (Ressonância): Causa um efeito de camuflagem semelhante a de um camaleão.\nMorosidade/Velocidade (Ressonância): O circuito começa a brilhar com uma luz azul brilhante para velocidade, ou luz verde pálido para morosidade.\nSono: Som que causa sonolência.\nVisão Distante (Óculos): Sem manifestações visíveis.\nVeterano\nLimpeza mental: Ondas sonoras hipnotizantes.\nParticularidades: A modificação Editar não está disponível. Tecnomagos podem apagar até uma hora das memórias mais recentes, ou 24 horas com uma Ampliação.\nSobrecarga: Fluxo de energia dirigido ao mecanismo.\nPP: 4\nDistância: Astúcia x2.\nDuração: Instantânea\nAtingindo pontos sensíveis, o tecnomago sobrecarrega um mecanismo até quebrá-lo. Role os dados apropriados, dependendo do tamanho do mecanismo (d4 para mecanismos pequenos, como pistolas ou brinquedos mecânicos, d6 para médios, como armaduras mecanizadas ou autômatos, d8 para grandes, como veículos ou autômatos enormes). Se o resultado for menor que o PMF do mecanismo, ocorre um mau funcionamento imediatamente. Se este poder for aplicado novamente ao mesmo mecanismo, seus PMF aumentarão em 2 até o final do próximo turno.\nModificadores:\nFalha Catastrófica (+5): Se houver um mau funcionamento, o mecanismo explode. Mecanismos pequenos causam 2d4 de dano em um Modelo Pequeno de Explosão, 2d6 em um Modelo Médio de Explosão para mecanismos médios, e 2d8 em um Modelo Grande de Explosão para mecanismos grandes.",
-    "livros": [
-      "CIDADE_SOL_VAPOR"
-    ],
-    "descricaoLite": "Concede a perícia Tecnomagia (Astúcia), os poderes iniciais Detectar Arcano e mais 2 à escolha, e Pontos de Poder especiais; permite gastar um Bene para recuperar 5 PP, mas impede o uso dos Modificadores Seletivo e Mortalha (Apressar/Atrasar só valem em poderes com a Limitação Ressonância), com uma lista própria de poderes disponíveis.",
-    "subtipoArcano": "TECNOMAGIA"
   },
   {
     "id": "mecanico_cego",

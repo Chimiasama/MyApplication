@@ -120,16 +120,16 @@ existe mas precisa validação linha a linha):
 | `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | 126 | 0 | 4 |
 | `ADG_BASICO` / `ADG_DIARIO_KUI` | [`book_index/adg.md`](reports/book_index/adg.md) | 171 | 1 | 0 |
 | `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 116 | 0 | 8 |
-| `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 62 | 14 | 6 |
+| `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 76 | 0 | 6 |
 | `WISEGUYS` | [`book_index/wiseguys.md`](reports/book_index/wiseguys.md) | 99 | 1 | 0 |
-| **Total** | | **1591** | **29** | **46** |
+| **Total** | | **1605** | **15** | **46** |
 
 **Leitura rápida:** o Livro Básico, Fantasia, Arte da Guerra, Wiseguys, Deadlands,
-**Sci-Fi** e agora **Crystal Heart** estão praticamente 100% cobertos (0-1
+Sci-Fi, Crystal Heart e agora **CSV** estão praticamente 100% cobertos (0-1
 `[FALTA]`, os módulos mais antigos/maduros do app + os resolvidos em 2026-08-31
-— ver abaixo). A maior lacuna de conteúdo real que resta é **Cidade do Sol a
-Vapor / CSV (14 faltando)** — ver o motivo resumido em cada arquivo de índice
-antes de decidir prioridade.
+— ver abaixo). A maior lacuna de conteúdo real que resta é **Horror (7
+faltando)** — ver o motivo resumido em cada arquivo de índice antes de decidir
+prioridade.
 
 **Sci-Fi resolvido (2026-08-31, item 5 da lista de prioridades):** dos 56 itens
 `[FALTA]` reais do relatório, 9 foram marcados `[FORA DE ESCOPO]` (7 "Robôs
@@ -145,6 +145,40 @@ constava na varredura original). Conteúdo transcrito por agente a partir do
 texto de `docs/swade_scifi` e conferido manualmente (spot-check linha a linha
 contra o livro) antes de mesclar — ver `docs/reports/book_index/scifi.md` pra
 cada id e localização.
+
+**CSV resolvido (2026-08-31, item 5 da lista de prioridades):** os 14 `[FALTA]`
+do cenário Cidade do Sol a Vapor eram um mix de dados de catálogo e de código.
+Dados: a ancestralidade **Anjo** (`anc_anjo_csv`, com os traços raciais "Asas
+de Anjo" e "Recluso"), que já era pré-requisito de 3 Vantagens cadastradas mas
+inexistente como ancestralidade selecionável; **8 Vantagens** de organizações/
+sociedades secretas da Teia (Irmandade das Seis Chaves, Clapper Branco,
+Clapper do Carvão, Culto do Eclipse, Sociedade do Noroeste, A Pena do
+Albatroz, Adepto da Ordem do Albatroz, Cavaleiro de São Germain); e **4 itens
+de equipamento** do suplemento Movimento Vermelho (Rebitadora, Rebites,
+Broca Compacta, Tabaco "Hora Extra"). Código: os Antecedentes Arcanos
+(Tecnomagia) e (Anjo) tinham listas de poderes por Estágio documentadas no
+livro mas não implementadas — `ArcaneConfig.kt` só reconhecia `MILAGRES`,
+`FEITICEIRO` e `DEMONIO`. Adicionado `SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE`
+(27 poderes em 3 Estágios) e um novo caso `"ANJO" -> SOL_VAPOR_MILAGRES_POWERS_BY_STAGE`
+(Anjo reaproveita a lista dos Abençoados, mas sem exigir Guerreiro do
+Senhor/Ira do Senhor — resolvido de graça, já que `getStageBasedPowerRequirement`
+nunca teve entrada pra `"ANJO"`), com `usaPoderesPorEstagio: true` marcado nas
+duas Vantagens em `vantagens.json`. Achado incidental corrigido: `aa_tecnomagia`
+e `aa_milagres` tinham uma cópia duplicada byte a byte em `vantagens.json`
+(mesmo id, mesmo livro, mesmo texto — diferente do padrão normal de repetir o
+mesmo id uma vez por livro); removida a duplicata de cada uma. Cobertura de
+teste nova em `ArcaneConfigStageBasedTest.kt`. Ver
+`docs/reports/book_index/csv.md` pra cada id, localização e a ressalva sobre
+"Explosão" aparecer duas vezes na lista de poderes de Tecnomagia no livro.
+
+**Achado incidental não corrigido (fora do escopo de CSV):** durante a
+limpeza de duplicatas acima, uma varredura geral encontrou que a Vantagem
+`aristocrata` tem 2 cópias com `livros: ["ARTE_DA_GUERRA"]` e texto
+**diferente** entre si (521 vs. 319 caracteres) — provável divergência de
+conteúdo, não simples duplicata. Não investigado nem corrigido por ser do
+livro Arte da Guerra, não Cidade do Sol a Vapor; registrado aqui como
+candidato a follow-up se o time quiser uma auditoria geral de duplicatas do
+catálogo.
 
 **Crystal Heart resolvido (2026-08-31, item 5 da lista de prioridades):** os
 33 Cristais faltantes do "Apêndice A: Mais Cristais" (`docs/swade_crystal_heart`,
@@ -316,8 +350,8 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
    racial, armas naturais etc. continuam comparando por nome/regex até
    alguém fazer essa migração, agora que o id existe pra elas usarem).
 5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: ✅ ~~Sci-Fi (57)~~,
-   ✅ ~~Deadlands (36)~~ e ✅ ~~Crystal Heart (33)~~ — feitos (ver acima e
-   abaixo). Restam: CSV (14), Horror (7).
+   ✅ ~~Deadlands (36)~~, ✅ ~~Crystal Heart (33)~~ e ✅ ~~CSV (14)~~ — feitos
+   (ver acima e abaixo). Resta: Horror (7).
 
 **Deadlands resolvido (2026-08-31):** os 36 `[FALTA]` eram todas Vantagens de
 árvores de arquétipo (Abençoado, Agente, Atormentado ×2 seções, Cientista

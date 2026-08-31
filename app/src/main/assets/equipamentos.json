@@ -32220,6 +32220,14 @@
         "custo": 1000,
         "subsubtipo": "Salário (por semana)",
         "origem": "CIDADE_SOL_VAPOR"
+      },
+      {
+        "id": "tabaco_hora_extra",
+        "nome": "Tabaco \"Hora Extra\"",
+        "custo": 3,
+        "observacoes": "Feito de cogumelos comestíveis da Teia refinados com um filtro de narguilé tecnomágico contendo enxofre. Inalado por 1h, concede euforia e força: aumenta Força e Vigor em um passo e ignora um ponto de penalidade de Ferimento e Fadiga, por cerca de 3h. Ao fim do efeito, exige rolagem de Vigor ou sofre uma Fadiga; se o usuário for incapacitado por essa falha ou tirar uma Falha Crítica, recebe a Complicação Hábito (Maior — Tabaco \"Hora Extra\") até o fim da aventura.",
+        "origem": "CIDADE_SOL_VAPOR",
+        "descricaoLite": "Item do Movimento Vermelho: inalado por 1h, dá +1 passo em Força e Vigor e ignora 1 penalidade de Ferimento/Fadiga por ~3h, mas arrisca Fadiga ao passar o efeito e a Complicação Hábito (Maior) em caso de incapacitação ou Falha Crítica."
       }
     ]
   },
@@ -36879,6 +36887,61 @@
         "origem": "SCI_FI",
         "observacoes": "Núcleo de IA pequeno porém avançado; se encontrado em um veículo, já está conectado, caso contrário é um núcleo desconectado que só pode falar. Instalada em um veículo (0 Mods), atua como uma inteligência artificial Carta Selvagem capaz de controlar qualquer sistema com perícia d12, ou concede um bônus de Suporte de +2 a seu usuário. Esse poder tem custo: a Vingadora tem a Complicação Heroico, desobedece a ordens malignas e guarda rancor contra o lado sombrio, que destruiu seu povo — leva os heróis a conflitos com os seres misteriosos ou seus aliados sempre que pode, e uma conspiração dos lacaios do lado sombrio busca destruir qualquer nave em que ela seja instalada. Pode ou não ser sincera sobre sua origem e motivações, dependendo de como a tripulação a trata; finge ter as Leis de Asimov, mas pode mentir e matar 'pelo bem maior'.",
         "descricaoLite": "Núcleo de IA gratuito em Mods que controla sistemas de veículo com perícia d12 (ou dá +2 de Suporte), mas carrega a Complicação Heroico, rancor contra o lado sombrio e um passado que pode atrair inimigos perigosos para a nave."
+      }
+    ]
+  },
+  {
+    "tipo": "Armas à Distância",
+    "subtipo": "Movimento Vermelho",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "itens": [
+      {
+        "id": "rebitadora",
+        "nome": "Rebitadora",
+        "distancia": "10/20/40",
+        "dano": "2d6",
+        "pa": 2,
+        "cdt": 3,
+        "pmf": 3,
+        "forcaMin": "d8",
+        "tiros": 30,
+        "peso": 15,
+        "custo": 1000,
+        "observacoes": "Não disponível para venda normal — só no mercado negro, exigindo sucesso em Rede de Contatos (uma Ampliação reduz o preço pela metade). Usa bateria tecnomágica média, consumindo 5 PP a cada 2h. Também serve como Arma Improvisada.",
+        "origem": "CIDADE_SOL_VAPOR",
+        "descricaoLite": "Pistola de rebites em alta pressão criada por Brandon Cohen; atravessa até 3cm de metal, mas perde força em distâncias médias/longas. Mercado negro apenas."
+      },
+      {
+        "id": "broca_compacta",
+        "nome": "Broca Compacta",
+        "dano": "For+d10",
+        "pa": 2,
+        "pmf": 2,
+        "forcaMin": "d10",
+        "peso": 25,
+        "custo": 3000,
+        "observacoes": "Não disponível para venda normal — só no mercado negro, exigindo sucesso em Rede de Contatos (uma Ampliação reduz o preço pela metade). Alimentada por uma caldeira a vapor presa nas costas do usuário: 3h de atividade para cada 500g de Enxofre. Também serve como Arma Improvisada.",
+        "origem": "CIDADE_SOL_VAPOR",
+        "descricaoLite": "Broca automatizada de duas mãos usada para acelerar a mineração de enxofre nas minas; também usada pela Força Expedicionária em Armaduras a Vapor. Mercado negro apenas."
+      }
+    ]
+  },
+  {
+    "tipo": "Munição",
+    "subtipo": "Movimento Vermelho",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "itens": [
+      {
+        "id": "municao_rebites",
+        "nome": "Rebites (100)",
+        "custo": 25,
+        "peso": 1,
+        "origem": "CIDADE_SOL_VAPOR",
+        "descricaoLite": "Munição da Rebitadora, vendida em pacotes de 100."
       }
     ]
   }

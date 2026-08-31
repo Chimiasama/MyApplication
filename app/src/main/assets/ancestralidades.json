@@ -5174,6 +5174,32 @@
     ]
   },
   {
+    "id": "anc_anjo_csv",
+    "nome": "Anjo",
+    "categoria": "ANCESTRALIDADE",
+    "atributos": {},
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Asas de Anjo",
+        "descricao": "Podem voar com uma Movimentação de 12, usando Atletismo para manobrar. Um anjo pode se livrar das asas a qualquer momento ou fazê-las crescerem novamente, o que leva 5 rodadas (30 segundos fora de combate). Com as asas, um anjo não pode nadar e recebe -1 em movimentação devido ao seu tamanho. Os ares do Limbo dificultam o voo dos anjos como a todos os outros: no centro da cidade um anjo não pode voar a mais de 500 metros acima do chão, na periferia mais do que 50 metros, e nos ermos menos do que 10 metros.",
+        "category": "racial_trait_positive",
+        "id": "ASAS_DE_ANJO",
+        "descricaoLite": "Voa com Movimentação 12 (Atletismo para manobrar; 5 rodadas para recolher/recriar as asas), mas não pode nadar com elas, sofre -1 de movimentação pelo próprio tamanho e tem tetos de altitude reduzidos nos ares do Limbo."
+      },
+      {
+        "nome": "Recluso",
+        "descricao": "Anjos têm pouco interesse no que está acontecendo fora do Céu, especialmente nos últimos séculos, então recebem -2 em todas as rolagens de Conhecimento Geral.",
+        "category": "racial_trait_negative",
+        "id": "RECLUSO",
+        "descricaoLite": "-2 em todas as rolagens de Conhecimento Geral, por pouco interesse no que acontece fora do Céu."
+      }
+    ],
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ]
+  },
+  {
     "id": "anc_humano_deadlands",
     "nome": "Humano",
     "categoria": "ANCESTRALIDADE",

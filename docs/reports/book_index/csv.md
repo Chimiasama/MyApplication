@@ -18,7 +18,7 @@ alguma divergência/nuance que vale checar).
 - **Humano** — id: `anc_humano_csv` — [OK] — Origem padrão de personagens, ganha uma Vantagem de Novato extra grátis (Adaptável) — linha ~2252 (Antecedente Arcano exige "Humano") de docs/swade_csv_livro_dos_mortais
 - **Demônios** — id: `anc_demonio_csv` — [OK] — Habitantes do Abismo, -2 em Resistência (Frágil), começam com Antecedente Arcano (Demônio) — linha ~2000-2034 de docs/swade_csv_livro_do_criador
 - **Meio-Demônio** — id: `anc_meio_demonio_csv` — [OK] — Herança mista, Vantagem Novato extra e opção de comprar AA (Demônio) com Disfarce Demoníaco atrasado para o Estágio Experiente (custo 2 PP) — linha ~2169-2204 de docs/swade_csv_livro_do_criador
-- **Anjo** — id sugerido: `anc_anjo_csv` — [FALTA] — Habitantes alados do Céu; racial "Asas de Anjo" (voo 12, usa Atletismo, não pode nadar, -1 em movimentação com asas) e "Recluso" (-2 em Conhecimento Geral); é pré-requisito de três Vantagens já cadastradas (`aa_anjo`, `anjo_cinza`, `guerreiro_celestial`) que hoje não podem ser satisfeitas no app porque não existe ancestralidade Anjo selecionável — linha ~2205-2236 de docs/swade_csv_livro_do_criador
+- **Anjo** — id: `anc_anjo_csv` — [OK, resolvido em 2026-08-31] — Habitantes alados do Céu; racial "Asas de Anjo" (voo 12, usa Atletismo, não pode nadar, -1 em movimentação com asas, teto de altitude reduzido no Limbo) e "Recluso" (-2 em Conhecimento Geral); agora satisfaz o requisito das três Vantagens já cadastradas (`aa_anjo`, `anjo_cinza`, `guerreiro_celestial`) — linha ~2205-2236 de docs/swade_csv_livro_do_criador
 
 ## Vantagens
 
@@ -52,8 +52,8 @@ alguma divergência/nuance que vale checar).
 - **Guerreiro do Senhor** — id: `guerreiro_do_senhor` — [OK] — Experiente, AA (Milagres); libera poderes de combate dos abençoados — linha ~7490 de docs/swade_csv_livro_dos_mortais
 - **Ira do Senhor** — id: `ira_do_senhor` — [OK] — Veterano, Guerreiro do Senhor; libera poderes de combate mais fortes — linha ~7501 de docs/swade_csv_livro_dos_mortais
 - **Poder do Espírito** — id: `poder_do_espirito` — [OK] — Experiente, AA (Milagres), Espírito d8+, Fé d8+; +10 PP por Fadiga da Determinação Religiosa — linha ~7509 de docs/swade_csv_livro_dos_mortais
-- **Anjo Cinza** — id: `anjo_cinza` — [OK, requer ancestralidade Anjo — ver FALTA acima] — Novato, Anjo; imune a ares do Limbo, calor, frio, doenças e venenos — linha ~2256 de docs/swade_csv_livro_do_criador
-- **Guerreiro Celestial** — id: `guerreiro_celestial` — [OK, requer ancestralidade Anjo — ver FALTA acima] — Experiente, Anjo; lança em si mesmo proteção/aumentar característica/velocidade/dádiva do guerreiro usando o Atributo — linha ~2263 de docs/swade_csv_livro_do_criador
+- **Anjo Cinza** — id: `anjo_cinza` — [OK, ancestralidade Anjo agora existe] — Novato, Anjo; imune a ares do Limbo, calor, frio, doenças e venenos — linha ~2256 de docs/swade_csv_livro_do_criador
+- **Guerreiro Celestial** — id: `guerreiro_celestial` — [OK, ancestralidade Anjo agora existe] — Experiente, Anjo; lança em si mesmo proteção/aumentar característica/velocidade/dádiva do guerreiro usando o Atributo — linha ~2263 de docs/swade_csv_livro_do_criador
 
 ### Profissionais
 
@@ -70,16 +70,16 @@ alguma divergência/nuance que vale checar).
 - **Seguidor de Nietzsche** — id: `seguidor_de_nietzsche` — [OK] — Ganha Convicção em Falha Crítica — linha ~2345 de docs/swade_csv_livro_dos_mortais
 - **Tarô da Nova Era** (22 cartas, uma escolha única) — ids: `taro_peregrino`, `taro_charlatao`, `taro_espiritualista`, `taro_confusao`, `taro_sentinela`, `taro_engenheiro`, `taro_portao`, `taro_voo`, `taro_pacto`, `taro_expedicao`, `taro_fortuna`, `taro_mecanismo`, `taro_sem_alma`, `taro_morte`, `taro_conhecimento`, `taro_demonio`, `taro_estrela_morta`, `taro_eter`, `taro_vazio`, `taro_luz`, `taro_galvanismo`, `taro_cidade` — [OK] — todas as 22 cartas do Arcano Maior conferidas 1:1 — linhas ~2385-2726 de docs/swade_csv_livro_dos_mortais
 
-### De Organizações / Sociedades Secretas (cidadania na Teia)
+### De Organizações / Sociedades Secretas (cidadania na Teia) [OK — 8/8, resolvido em 2026-08-31]
 
-- **Irmandade das Seis Chaves** — id sugerido: `irmandade_das_seis_chaves` — [FALTA] — Veterano, Magomecânico ou Consertar/Ciência d10+; concede um "animal de estimação" magomecânico fixo (Anansi, Hanuman, Hugin ou Sleipnir, estatísticas prontas no livro, não é sistema de criação) — linha ~8648 de docs/swade_csv_livro_dos_mortais
-- **Clapper Branco** — id sugerido: `clapper_branco` — [FALTA] — Novato; +2 em Persuadir com trabalhadores de fábrica — linha ~8925 de docs/swade_csv_livro_dos_mortais
-- **Clapper do Carvão** — id sugerido: `clapper_do_carvao` — [FALTA] — Novato; sabota mecanismos, causando Mau Funcionamento programado — linha ~8934 de docs/swade_csv_livro_dos_mortais
-- **Culto do Eclipse** — id sugerido: `culto_do_eclipse` — [FALTA] — Novato; 1x/sessão convoca 3 combatentes do Culto para ajudar — linha ~8991 de docs/swade_csv_livro_dos_mortais
-- **Sociedade do Noroeste** — id sugerido: `sociedade_do_noroeste` — [FALTA] — Novato, Perceber d8+; +2 em Perceber nas ruas, nunca se perde na Teia — linha ~9222 de docs/swade_csv_livro_dos_mortais
-- **A Pena do Albatroz** — id sugerido: `pena_do_albatroz` — [FALTA] — Novato; 1x/sessão pede ajuda a um membro da Força Expedicionária — linha ~9280 de docs/swade_csv_livro_dos_mortais
-- **Adepto da Ordem do Albatroz** — id sugerido: `adepto_ordem_do_albatroz` — [FALTA] — Novato, Conhecimento Acadêmico d6+; Conexões com a Ordem + recall de informação sobre o Limbo — linha ~9301 de docs/swade_csv_livro_dos_mortais
-- **Cavaleiro de São Germain** — id sugerido: `cavaleiro_de_sao_germain` — [FALTA] — Novato, Complicação Código de Honra (Ordem de São Germain); +2 Resistência contra magia demoníaca e +2 de dano contra demônios — linha ~9490 de docs/swade_csv_livro_dos_mortais
+- **Irmandade das Seis Chaves** — id: `irmandade_das_seis_chaves` — [OK] — Veterano, Magomecânico ou Consertar/Ciência d10+; concede um "animal de estimação" magomecânico fixo (Anansi, Hanuman, Hugin ou Sleipnir — estatísticas prontas transcritas na descrição da Vantagem, não é sistema de criação) — linha ~8648 de docs/swade_csv_livro_dos_mortais
+- **Clapper Branco** — id: `clapper_branco` — [OK] — Novato; +2 em Persuadir com trabalhadores de fábrica — linha ~8925 de docs/swade_csv_livro_dos_mortais
+- **Clapper do Carvão** — id: `clapper_do_carvao` — [OK] — Novato; sabota mecanismos, causando Mau Funcionamento programado — linha ~8934 de docs/swade_csv_livro_dos_mortais
+- **Culto do Eclipse** — id: `culto_do_eclipse` — [OK] — Novato; 1x/sessão convoca 3 combatentes do Culto para ajudar (statblocks dos combatentes ficam fora do escopo, mesma categoria de bestiário) — linha ~8991 de docs/swade_csv_livro_dos_mortais
+- **Sociedade do Noroeste** — id: `sociedade_do_noroeste` — [OK] — Novato, Perceber d8+; +2 em Perceber nas ruas, nunca se perde na Teia — linha ~9222 de docs/swade_csv_livro_dos_mortais
+- **A Pena do Albatroz** — id: `pena_do_albatroz` — [OK] — Novato; 1x/sessão pede ajuda a um membro da Força Expedicionária — linha ~9280 de docs/swade_csv_livro_dos_mortais
+- **Adepto da Ordem do Albatroz** — id: `adepto_ordem_do_albatroz` — [OK] — Novato, Conhecimento Acadêmico d6+; Conexões com a Ordem + recall de informação sobre o Limbo — linha ~9301 de docs/swade_csv_livro_dos_mortais
+- **Cavaleiro de São Germain** — id: `cavaleiro_de_sao_germain` — [OK] — Novato, Complicação Código de Honra (Ordem de São Germain); +2 Resistência contra magia demoníaca e +2 de dano contra demônios — linha ~9490 de docs/swade_csv_livro_dos_mortais
 
 ### Movimento Vermelho (suplemento)
 
@@ -189,7 +189,7 @@ Supervisor/Mercador = Experiente; Ceifador/Guerreiro = Veterano; Mago/Conselheir
 = Lendário) — é lore de status social do demônio, não um dado usado pelo `ArcaneConfig` (que já
 tem estágio Lendário sem poderes associados) — incluída aqui só como contexto, não requer ação.
 
-### Antecedente Arcano (Tecnomagia) — id `aa_tecnomagia` — **[FALTA no sistema por estágio]**
+### Antecedente Arcano (Tecnomagia) — id `aa_tecnomagia` — **[OK, resolvido em 2026-08-31]**
 
 O livro apresenta uma lista de poderes por Estágio para tecnomagos tão detalhada quanto a dos
 Feiticeiros/Abençoados (Novato, Experiente, Veterano — não há lista de Heroico) — linha ~7104 de
@@ -198,26 +198,39 @@ docs/swade_csv_livro_dos_mortais:
 | Estágio | Poderes (livro) |
 |---|---|
 | Novato | Ajuda, Andar nas Paredes (Ressonância), Atordoar, Aumentar/Diminuir Característica (Ressonância), Cegar, Confusão, Deflexão (Ressonância), Devastação, Detectar Arcano (Óculos, Aspecto), Enredar, Explosão, Iluminar (Aspecto), Medo, Ocultar o Arcano (Aspecto), Proteção (Ressonância), Proteção Arcana (Ressonância), Raio, Som/Silêncio, Visão Sombria (Óculos) |
-| Experiente | Campo de Dano (Ressonância), Dissipar, Explosão, Ferir, Invisibilidade (Ressonância), Morosidade/Velocidade (Ressonância), Sono, Visão Distante (Óculos) |
+| Experiente | Campo de Dano (Ressonância), Dissipar, Ferir, Invisibilidade (Ressonância), Morosidade/Velocidade (Ressonância), Sono, Visão Distante (Óculos) |
 | Veterano | Limpeza Mental, Sobrecarga |
 
-Porém `Vantagem aa_tecnomagia` **não** tem `usaPoderesPorEstagio: true` em `vantagens.json`, e
-`ArcaneConfig.getStageBasedPowersByStage()` só reconhece as chaves `"MILAGRES"`, `"FEITICEIRO"` e
-`"DEMONIO"` — não existe caso `"TECNOMAGIA"`. Isso significa que, hoje, o app não restringe os
-poderes de tecnomago por Estágio como o livro exige — é a divergência mais relevante encontrada
-neste levantamento. id sugerido para o mapa novo: `SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE`.
+**Nota:** "Explosão" aparece listada tanto em Novato (linha ~7148) quanto em Experiente (linha
+~7201) no texto do livro, sem explicação para a repetição — mantida como Novato (a ocorrência mais
+cedo/permissiva) no novo `SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE` (`ArcaneConfig.kt`), já que um
+`linkedMapOf` só pode ter um valor por chave. Vale conferir contra o PDF original se possível.
 
-### Antecedente Arcano (Anjo) — id `aa_anjo` — **[FALTA no sistema por estágio]**
+Adicionado `SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE` em `ArcaneConfig.kt`, um novo caso
+`"TECNOMAGIA" -> SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE` em `getStageBasedPowersByStage()`, e
+`"usaPoderesPorEstagio": true` na Vantagem `aa_tecnomagia` (`vantagens.json`) — o app agora
+restringe os poderes de tecnomago por Estágio como o livro exige.
+
+**Achado incidental corrigido:** `aa_tecnomagia` e `aa_milagres` tinham uma entrada **duplicada
+byte a byte** em `vantagens.json` (mesmo id, mesmo `livros`, mesma descrição — diferente do padrão
+normal do catálogo, em que o mesmo id se repete uma vez por livro onde a Vantagem é reimpressa).
+Removida a cópia extra de cada uma.
+
+### Antecedente Arcano (Anjo) — id `aa_anjo` — **[OK, resolvido em 2026-08-31]**
 
 O livro afirma que Anjos usam exatamente a mesma lista de poderes (por Estágio) dos Abençoados
 (Milagres), com a diferença de que **não precisam** das Vantagens Guerreiro do Senhor/Ira do Senhor
 para acessar os poderes de combate marcados com essas exigências — linha ~2238 de
 docs/swade_csv_livro_do_criador ("o conjunto de poderes disponíveis para os anjos e seus efeitos
 são os mesmos que o dos abençoados [...] e anjos sem vantagens adicionais podem usar poderes que
-abençoados só podem usar com as Vantagens Guerreiro do Senhor ou Ira do Senhor"). Porém
-`aa_anjo` não tem `usaPoderesPorEstagio: true`, e não há nenhuma referência a `"ANJO"` em
-`ArcaneConfig.kt`, `CriadorState.kt` ou `PoderesSection.kt`. Combinado com a ausência da
-ancestralidade Anjo (ver seção de Ancestralidades), Antecedente Arcano (Anjo) hoje não tem
+abençoados só podem usar com as Vantagens Guerreiro do Senhor ou Ira do Senhor").
+
+Adicionado um novo caso `"ANJO" -> SOL_VAPOR_MILAGRES_POWERS_BY_STAGE` em
+`getStageBasedPowersByStage()` (reaproveitando a lista dos Abençoados, sem duplicar dados) e
+`"usaPoderesPorEstagio": true` na Vantagem `aa_anjo`. Como `getStageBasedPowerRequirement()` só tem
+entradas pra chave `"MILAGRES"` (nunca `"ANJO"`), o comportamento padrão (sem exigência) já
+reproduz corretamente a regra do livro — não precisou de código extra além do case acima. Combinado
+com a nova ancestralidade Anjo (ver seção de Ancestralidades), Antecedente Arcano (Anjo) agora tem
 sustentação mecânica completa no app.
 
 ## Equipamento
@@ -234,12 +247,12 @@ Expedicionária), armas brancas exclusivas (Faca/Espada/Sabre/Espada-bengala, no
 vermelho), baterias tecnomágicas (Pequena a Estacionária) e itens do dia a dia da Teia (transporte,
 comida, aluguel, salários). Todos [OK].
 
-Itens do suplemento **Movimento Vermelho** ainda não cadastrados:
+Itens do suplemento **Movimento Vermelho** [OK — 4/4, resolvido em 2026-08-31]:
 
-- **Rebitadora** — id sugerido: `rebitadora` — [FALTA] — arma de pressão (10/20/40, 2d6, PA2, PMF3, Força Mín. d8, 30 tiros), usa bateria tecnomágica média — linha ~338 de docs/swade_csv_movimento_vermelho
-- **Rebites (100)** — id sugerido: `municao_rebites` — [FALTA] — munição da Rebitadora, custo 25, peso 1 — linha ~359 de docs/swade_csv_movimento_vermelho
-- **Broca Compacta** — id sugerido: `broca_compacta` — [FALTA] — ferramenta/arma improvisada (For+d10, PA2, PMF3, mercado negro), alimentada por caldeira a vapor nas costas — linha ~314 de docs/swade_csv_movimento_vermelho
-- **Tabaco "Hora Extra"** — id sugerido: `tabaco_hora_extra` — [FALTA] — item consumível (3 sóis); +1 passo em Força/Vigor por 3h, ignora 1 ponto de penalidade de Ferimento/Fadiga, risco de Complicação Hábito — linha ~289 de docs/swade_csv_movimento_vermelho
+- **Rebitadora** — id: `rebitadora` — [OK] — arma de pressão (10/20/40, 2d6, PA2, CdT3, PMF3, Força Mín. d8, 30 tiros), usa bateria tecnomágica média, só no mercado negro — linha ~338 de docs/swade_csv_movimento_vermelho
+- **Rebites (100)** — id: `municao_rebites` — [OK] — munição da Rebitadora, custo 25, peso 1 — linha ~359 de docs/swade_csv_movimento_vermelho
+- **Broca Compacta** — id: `broca_compacta` — [OK] — ferramenta/arma improvisada (For+d10, PA2, PMF2, Força Mín. d10, mercado negro), alimentada por caldeira a vapor nas costas — linha ~314 de docs/swade_csv_movimento_vermelho
+- **Tabaco "Hora Extra"** — id: `tabaco_hora_extra` — [OK] — item consumível (3 sóis); +1 passo em Força/Vigor por 3h, ignora 1 ponto de penalidade de Ferimento/Fadiga, risco de Complicação Hábito (Maior) — adicionado à categoria já existente "Itens Diários (Livro dos Homens)" — linha ~289 de docs/swade_csv_movimento_vermelho
 
 ## Poderes
 
