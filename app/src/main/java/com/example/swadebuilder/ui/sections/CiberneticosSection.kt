@@ -314,11 +314,8 @@ fun CiberneticosSection(
 
         if (state.ciberneticosInstalados.isEmpty()) {
             item {
-                Text(
-                    text = "Nenhum implante cibernético instalado.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(8.dp)
+                com.example.swadebuilder.ui.components.EmptyState(
+                    message = "Nenhum implante cibernético instalado."
                 )
             }
         } else {

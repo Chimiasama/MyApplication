@@ -203,11 +203,8 @@ fun MechasSection(
 
         if (state.mechasSelecionados.isEmpty()) {
             item {
-                Text(
-                    text = "Nenhum Mecha selecionado. Escolha um modelo acima ou crie um do zero.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(8.dp)
+                com.example.swadebuilder.ui.components.EmptyState(
+                    message = "Nenhum Mecha selecionado. Escolha um modelo acima ou crie um do zero."
                 )
             }
         } else {
