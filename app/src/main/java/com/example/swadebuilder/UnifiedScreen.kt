@@ -98,25 +98,6 @@ import java.io.File
 import java.security.MessageDigest
 
 
-// @Preview(showBackground = true) // Commented out to avoid build errors with ViewModel
-@Composable
-fun PreviewApp() {
-    val state = remember { CriadorState() }
-    val vm = remember { CriadorViewModel() }
-
-    UnifiedScreen(
-        state = state,
-        viewModel = vm,
-        equipamentoCategorias = emptyList(),
-        superequipCategorias = emptyList(),
-        listaSuperPoderes = emptyList(),
-        onShowMessage = {},
-        onUserFeedback = {},
-        onRequestProgression = {}
-    )
-}
-
-
 @Composable
 fun UnifiedScreen(
     state: CriadorState,

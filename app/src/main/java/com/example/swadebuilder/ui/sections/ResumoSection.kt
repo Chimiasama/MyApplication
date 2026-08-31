@@ -602,83 +602,6 @@ private fun SkillNotesSummaryCard(
     }
 }
 
-@Composable
-fun BasicCharacterInfo(
-    state: CriadorState,
-    showDerivedStats: Boolean = false
-) {
-    val sections = rememberSummarySections(state, viewModel())
-    val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
-
-    val nome = state.nomePersonagem
-    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem(), especieId = state.currentAncestryDef?.especieId)
-
-    val heartValue = state.coracaoCrystalSelecionado?.nome
-
-    val monstroInfo = if (state.modoMonstroAtivo) {
-        val tipoNome = state.listaMonstroTemplates
-            .find { it.id == state.tipoMonstroSelecionado }
-            ?.nome
-            ?: "Desconhecido"
-        "\nTipo de Monstro: $tipoNome"
-    } else {
-        ""
-    }
-
-    val ancestralidadeDisplay = buildString {
-        append("$ancestralidadeValue$monstroInfo")
-        if (heartValue != null) {
-            append("\nCoração: $heartValue")
-        }
-    }
-
-    Column(Modifier.fillMaxWidth()) {
-        IdentityCard(
-            nome = nome,
-            onNomeChange = { state.nomePersonagem = it },
-            ancestralidade = ancestralidadeDisplay,
-        activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
-        )
-
-        if (showDerivedStats) {
-            Spacer(Modifier.height(12.dp))
-            derivedSection?.let {
-                DerivedStatsRow(stats = it.toStats())
-            }
-        }
-    }
-}
-
-@Composable
-fun SummaryCompact(state: CriadorState, viewModel: CriadorViewModel = viewModel()) {
-    val sections = rememberSummarySections(state, viewModel)
-    val traitsSection = sections.firstOrNull { it.title == "Atributos" }
-    val skillsSection = sections.firstOrNull { it.title == "Perícias" }
-    val gearSection = sections.firstOrNull { it.title == "Recursos & Equipamentos" }
-    val inventorySections = sections.filter { it.title in inventoryTitles }
-        .filterNot { it.isEmptyPlaceholder() }
-
-    val cards = listOfNotNull(
-        traitsSection?.let { "Traits" to listOf(it) },
-        skillsSection?.let { "Skills" to listOf(it) },
-        gearSection?.let { "Gear" to listOf(it) },
-        inventorySections.takeIf { it.isNotEmpty() }?.let { "Inventory" to it }
-    )
-
-    Column(Modifier.fillMaxWidth()) {
-        cards.forEachIndexed { idx, (title, cardSections) ->
-            SummaryCompactCard(
-                title = title,
-                sections = cardSections,
-                textStyle = MaterialTheme.typography.bodySmall
-            )
-            if (idx != cards.lastIndex) {
-                Spacer(Modifier.height(12.dp))
-            }
-        }
-    }
-}
-
 private data class SummarySection(
     val title: String,
     val items: List<String>
@@ -690,13 +613,6 @@ private val summaryHeaders = setOf(
     "Atributos",
     "Perícias",
     "Recursos & Equipamentos",
-    "Vantagens",
-    "Complicações",
-    "Poderes arcanos",
-    "Superpoderes"
-)
-
-private val inventoryTitles = setOf(
     "Vantagens",
     "Complicações",
     "Poderes arcanos",
@@ -1059,45 +975,6 @@ private fun SummarySectionCard(
             )
             Spacer(Modifier.height(8.dp))
             SummarySectionItems(items = section.items, textStyle = textStyle)
-        }
-    }
-}
-
-@Composable
-private fun SummaryCompactCard(
-    title: String,
-    sections: List<SummarySection>,
-    textStyle: TextStyle
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(Modifier.padding(12.dp)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(Modifier.height(8.dp))
-            sections.forEachIndexed { idx, section ->
-                if (sections.size > 1) {
-                    Text(
-                        text = section.title,
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(Modifier.height(6.dp))
-                }
-                SummarySectionItems(items = section.items, textStyle = textStyle)
-                if (idx != sections.lastIndex) {
-                    Spacer(Modifier.height(10.dp))
-                }
-            }
         }
     }
 }

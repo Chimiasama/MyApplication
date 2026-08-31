@@ -1044,25 +1044,3 @@ fun AncestralidadesSection(
         }
     }
 }
-
-
-@Composable
-fun TransparentOutlinedReadOnlyField(
-    text: String,
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    trailingIcon: (@Composable (() -> Unit))? = null
-) {
-    androidx.compose.material3.OutlinedTextField(
-        value = text,
-        onValueChange = {},
-        readOnly = true,
-        enabled = enabled,
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(enabled) { onClick() },
-        trailingIcon = trailingIcon,
-        singleLine = true
-    )
-}

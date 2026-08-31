@@ -23,9 +23,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.AlertDialog
@@ -34,7 +32,6 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -830,52 +827,4 @@ private fun ComplicacaoItem(
             }
         }
     }
-}
-
-@Composable
-fun TransparentOutlinedReadOnlyField(
-    text: String,
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val colors = MaterialTheme.colorScheme
-
-    BasicTextField(
-        value         = text,
-        onValueChange = {},
-        enabled       = enabled,
-        readOnly      = true,
-        textStyle     = LocalTextStyle.current.copy(color = colors.onSurface),
-        singleLine    = true,
-        modifier      = modifier,
-        decorationBox = { inner ->
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .background(Color.Transparent, shape = MaterialTheme.shapes.small)
-                    .border(
-                        width = 1.dp,
-                        color = if (enabled)
-                            colors.outline.copy(alpha = 0.8f)
-                        else
-                            colors.outline.copy(alpha = 0.5f),
-                        shape = MaterialTheme.shapes.small
-                    )
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-                    .clickable(enabled = enabled, onClick = onClick)
-            ) {
-                inner()
-                Spacer(Modifier.weight(1f))
-                Icon(
-                    imageVector        = Icons.Default.ArrowDropDown,
-                    contentDescription = "",
-                    tint = if (enabled)
-                        colors.onSurface
-                    else
-                        colors.onSurface.copy(alpha = 0.5f)
-                )
-            }
-        }
-    )
 }

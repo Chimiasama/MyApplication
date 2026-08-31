@@ -94,15 +94,6 @@ fun String.toIdSlug(): String {
 }
 
 /**
- * Transforma texto para Title Case simples: cada palavra começa com maiúscula.
- */
-fun String.titleCase(): String {
-    return this.lowercase().split(" ").joinToString(" ") { word ->
-        word.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-    }
-}
-
-/**
  * Transforma texto para "Sentence case": primeira letra maiúscula, restante minúsculo.
  * Substitui underscores por espaços.
  * Ex: "UM BRAÇO SÓ" -> "Um braço só".
