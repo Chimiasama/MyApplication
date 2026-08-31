@@ -147,6 +147,8 @@ data class SnapshotSelecoes(
     val expandirRetrato: Boolean = false,
     val portraitScaleType: String = "CROP",
     val portraitAlignment: String = "CENTER",
+    val portraitOffsetY: Float = 0.5f,
+    val portraitZoom: Float = 1f,
     val signoAdgSelecionado: String? = null,
     val pacoteCulturalFantasiaSelecionado: String? = null,
     val povoDoMarOpcao: String? = null,

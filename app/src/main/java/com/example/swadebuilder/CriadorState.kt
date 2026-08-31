@@ -1310,7 +1310,11 @@ class CriadorState {
     // expandirRetrato: Se true, ocupa 50% da largura no Resumo. Se false, ocupa menos espaço (default).
     var expandirRetrato by mutableStateOf(false)
     var portraitScaleType by mutableStateOf("CROP") // CROP, FIT
-    var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM
+    var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM — legado, mantido só pra compatibilidade de saves antigos
+    // Posição/zoom contínuos usados de fato pro recorte (substituem portraitAlignment na exibição).
+    // portraitOffsetY: 0f = topo do enquadramento, 0.5f = centro, 1f = base.
+    var portraitOffsetY by mutableStateOf(0.5f)
+    var portraitZoom by mutableStateOf(1f) // 1f..2.5f
 
     var coracaoCrystalSelecionado by mutableStateOf<CrystalHeart?>(null)
 
@@ -6310,6 +6314,8 @@ class CriadorState {
                 expandirRetrato = expandirRetrato,
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
+                portraitOffsetY = portraitOffsetY,
+                portraitZoom = portraitZoom,
                 signoAdgSelecionado = signoAdgSelecionado,
                 pacoteCulturalFantasiaSelecionado = pacoteCulturalFantasiaSelecionado,
                 povoDoMarOpcao = povoDoMarOpcao,
@@ -6437,6 +6443,8 @@ class CriadorState {
         expandirRetrato = snapshot.selecoes.expandirRetrato
         portraitScaleType = snapshot.selecoes.portraitScaleType
         portraitAlignment = snapshot.selecoes.portraitAlignment
+        portraitOffsetY = snapshot.selecoes.portraitOffsetY
+        portraitZoom = snapshot.selecoes.portraitZoom
 
         // Flags adicionais
         nasceUmHeroi = flags.nasceUmHeroi

@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +18,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
@@ -44,6 +48,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -55,8 +60,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.graphicsLayer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -349,18 +356,11 @@ fun SummaryContent(
                         val imageBitmap = imageBitmapState.value
                         val isPortraitLoading = state.portraitFileName != null && imageBitmap == null
                         if (imageBitmap != null) {
-                            val scale = if (state.portraitScaleType == "FIT") ContentScale.Fit else ContentScale.Crop
-                            val align = when (state.portraitAlignment) {
-                                "TOP" -> Alignment.TopCenter
-                                "BOTTOM" -> Alignment.BottomCenter
-                                else -> Alignment.Center
-                            }
-
-                            Image(
-                                bitmap = imageBitmap,
-                                contentDescription = "Retrato",
-                                contentScale = scale,
-                                alignment = align,
+                            PortraitImage(
+                                imageBitmap = imageBitmap,
+                                scaleType = state.portraitScaleType,
+                                offsetY = state.portraitOffsetY,
+                                zoom = state.portraitZoom,
                                 modifier = Modifier.fillMaxSize()
                             )
                         } else if (isPortraitLoading) {
@@ -411,6 +411,7 @@ fun SummaryContent(
                 if (showImageSettings) {
                     ImageSettingsDialog(
                         state = state,
+                        imageBitmap = imageBitmapState.value,
                         onDismiss = { showImageSettings = false }
                     )
                 }
@@ -1230,16 +1231,73 @@ private fun SkillChip(text: String) {
     }
 }
 
+/**
+ * Renderização compartilhada do retrato — usada tanto no card do Resumo quanto na
+ * pré-visualização do ImageSettingsDialog, pra garantir que os dois fiquem sempre idênticos.
+ */
+@Composable
+private fun PortraitImage(
+    imageBitmap: ImageBitmap,
+    scaleType: String,
+    offsetY: Float,
+    zoom: Float,
+    modifier: Modifier = Modifier
+) {
+    val contentScale = if (scaleType == "FIT") ContentScale.Fit else ContentScale.Crop
+    val alignment: Alignment = if (scaleType == "CROP") {
+        BiasAlignment(horizontalBias = 0f, verticalBias = (offsetY * 2f - 1f).coerceIn(-1f, 1f))
+    } else {
+        Alignment.Center
+    }
+    val appliedZoom = if (scaleType == "CROP") zoom.coerceIn(1f, 2.5f) else 1f
+
+    Image(
+        bitmap = imageBitmap,
+        contentDescription = "Retrato",
+        contentScale = contentScale,
+        alignment = alignment,
+        modifier = modifier.graphicsLayer(scaleX = appliedZoom, scaleY = appliedZoom)
+    )
+}
+
 @Composable
 private fun ImageSettingsDialog(
     state: CriadorState,
+    imageBitmap: ImageBitmap?,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Ajustes da Foto") },
         text = {
-            Column {
+            Column(
+                modifier = Modifier
+                    .heightIn(max = 420.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                if (imageBitmap != null && state.portraitScaleType == "CROP") {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .width(140.dp)
+                                .aspectRatio(0.8f),
+                            border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
+                        ) {
+                            PortraitImage(
+                                imageBitmap = imageBitmap,
+                                scaleType = state.portraitScaleType,
+                                offsetY = state.portraitOffsetY,
+                                zoom = state.portraitZoom,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(16.dp))
+                }
+
                 Text("Modo de Exibição", style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(8.dp))
                 ChoiceButtonRow("Preencher (Corte)", state.portraitScaleType == "CROP") {
@@ -1258,17 +1316,22 @@ private fun ImageSettingsDialog(
                     onCheckedChange = { state.expandirRetrato = it }
                 )
 
-                if (state.portraitScaleType == "CROP") {
+                if (state.portraitScaleType == "CROP" && imageBitmap != null) {
                     Spacer(Modifier.height(16.dp))
-                    Text("Alinhamento", style = MaterialTheme.typography.labelLarge)
+                    Text("Posição (rosto ↔ corpo)", style = MaterialTheme.typography.labelLarge)
+                    Slider(
+                        value = state.portraitOffsetY,
+                        onValueChange = { state.portraitOffsetY = it },
+                        valueRange = 0f..1f
+                    )
+
                     Spacer(Modifier.height(8.dp))
-                    Column {
-                        listOf("TOP" to "Topo", "CENTER" to "Centro", "BOTTOM" to "Baixo").forEach { (key, label) ->
-                            ChoiceButtonRow(label, state.portraitAlignment == key) {
-                                state.portraitAlignment = key
-                            }
-                        }
-                    }
+                    Text("Zoom", style = MaterialTheme.typography.labelLarge)
+                    Slider(
+                        value = state.portraitZoom,
+                        onValueChange = { state.portraitZoom = it },
+                        valueRange = 1f..2.5f
+                    )
                 }
             }
         },
