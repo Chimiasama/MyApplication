@@ -120,19 +120,6 @@ class CriadorState {
     private val resolveAncestryVariantUseCase = ResolveAncestryVariantUseCase()
     private val resolveAncestryVariantPackageUseCase = com.example.swadebuilder.model.usecase.ResolveAncestryVariantPackageUseCase()
 
-    /**
-     * Mesmo conjunto de ids de ResolveAncestrySpecificAdjustmentsUseCase
-     * (scifiVariantDrivenKeys) — raças cuja Variante Sci-Fi já está no
-     * AncestryVariantRegistry, usado aqui em applyAncestryVariantAdjustments
-     * pra montar as habilidades[] de exibição/ModifierEngine a partir do
-     * mesmo pacote, em vez de duplicar os dados em blocos por raça.
-     */
-    private val scifiVariantDrivenKeys = setOf(
-        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
-        "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
-        "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
-        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "SERES SINTETICOS", "ROBOS"
-    )
 
     /**
      * Ids de habilidade que representam a Complicação "Perícias Básicas
@@ -857,7 +844,7 @@ class CriadorState {
         // cadastrados no AncestryVariantRegistry. Lidas direto do registro
         // agora — fonte única, sem risco de as duas cópias saírem do
         // sincronismo de novo.
-        if (key in scifiVariantDrivenKeys) {
+        if (key in AncestryVariantRegistry.scifiVariantDrivenKeys) {
             val opcoes = AncestryVariantRegistry.get(key)?.grupoVariante?.opcoes
             if (opcoes != null) {
                 val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id

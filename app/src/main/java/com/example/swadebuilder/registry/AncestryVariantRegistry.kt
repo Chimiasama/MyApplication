@@ -56,6 +56,26 @@ object AncestryVariantRegistry {
 
     fun get(ancestralidadeId: String): AncestryVariantConfig? = configs[ancestralidadeId]
 
+    /**
+     * Ids de ancestralidade cujo lote de Variante Sci-Fi (2 e 3, ver
+     * comentário da classe) já foi migrado pra este registro — usado por
+     * `ResolveAncestrySpecificAdjustmentsUseCase` e `CriadorState` pra
+     * decidir se a raça resolve traços/habilidades por aqui em vez de pelos
+     * blocos hardcoded antigos. Antes desta constante existiam duas cópias
+     * manuais idênticas desta lista, uma em cada arquivo (ver
+     * docs/reports/hardcode_audit_usecase_layer.md, achado Tipo B).
+     *
+     * Deliberadamente NÃO inclui o lote piloto (Terracota, Umvee, Elementais,
+     * Anões): essas quatro raças também estão em `configs`, mas resolvem
+     * traços/habilidades por um caminho diferente, anterior a este lote.
+     */
+    val scifiVariantDrivenKeys: Set<String> = setOf(
+        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
+        "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
+        "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
+        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "ROBOS", "SERES SINTETICOS"
+    )
+
     // --- Lote 2: raças Sci-Fi com Variante real de 2 opções (Básico/Padrão +
     // 1 reconfiguração de cenário), migradas de ResolveAncestrySpecificAdjustmentsUseCase
     // (bloco `if (isSciFiActive) { if (ancKey == "X") ... }`). Mesmo padrão do

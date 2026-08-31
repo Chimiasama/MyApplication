@@ -30,6 +30,14 @@ object RequirementValidator {
             if (state.superInvestments.isEmpty()) return false
         }
 
+        // 1a) Regra especial: CAVALEIRO (Fantasia) — exige Obrigação (Maior)
+        if (v.id == "cavaleiro") {
+            val hasObligation = state.complicacoesSelecionadas.entries.any { (comp, grau) ->
+                comp.id == "obrigacao" && grau == "Maior"
+            }
+            if (!hasObligation) return false
+        }
+
         // 2) Pontos de Poder por estágio
         if (v.nome.contains(Constants.EDGE_POWER_POINTS, ignoreCase = true)) {
             val totalFeitas = state.comprasPpPorEstagio.values.sum()
@@ -230,6 +238,16 @@ object RequirementValidator {
 
         // 13) Exige Carta Selvagem?
         if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
+
+        // 13b) Tiro Duplo Aprimorado — exige Tiro Duplo com a perícia associada em d10+
+        if (v.id == "tiro_duplo_aprimorado") {
+            val base = state.vantagensSelecionadas.firstOrNull { it.id == "tiro_duplo" }
+            if (base == null) return false
+            val choice = base.choice
+            if (choice.isNullOrBlank()) return false
+            val skill = state.getBestPericia(choice) ?: return false
+            if (state.rawTotal(skill) < 10) return false
+        }
 
         // 14) Conflitos com complicações
         val compsConfl = IncompatibilityRules.complicacoesIncompativeisCom(v.id)
