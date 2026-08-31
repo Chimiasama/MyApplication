@@ -51,7 +51,6 @@ import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
-import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialCaracteristicasResolver
 import com.example.swadebuilder.model.RacialModifier
@@ -60,7 +59,6 @@ import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
 import com.example.swadebuilder.model.stripAncestralidadeScenarioSuffix
 import com.example.swadebuilder.registry.AncestryVariantRegistry
-import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.theme.emphasis

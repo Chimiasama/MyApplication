@@ -52,7 +52,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.util.loadJsonAsset
 import com.example.swadebuilder.util.keyify
