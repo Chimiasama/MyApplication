@@ -4,8 +4,7 @@ package com.example.swadebuilder.model
  * Única fonte de verdade para conflitos Vantagem x Complicação (não pode ter as duas ao mesmo
  * tempo). Antes desta classe existiam 3 cópias manuais do mesmo mapa (ValidateConflictsUseCase,
  * RequirementValidator, CriadorState.mensagemConflitoPara*), chaveadas por nome/texto em vez de
- * id — o que já tinha causado divergência real entre o validador de criação e o de progressão
- * (ver docs/reports/hardcode_audit_usecase_layer.md).
+ * id — o que já tinha causado divergência real entre o validador de criação e o de progressão.
  *
  * Todas as entradas abaixo foram conferidas contra vantagens.json/complicacoes.json (ids reais)
  * e, para os casos de Antecedente Arcano, contra o texto de Cidade do Sol a Vapor (Livro dos

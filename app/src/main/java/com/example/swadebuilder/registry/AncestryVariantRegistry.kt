@@ -62,8 +62,7 @@ object AncestryVariantRegistry {
      * `ResolveAncestrySpecificAdjustmentsUseCase` e `CriadorState` pra
      * decidir se a raça resolve traços/habilidades por aqui em vez de pelos
      * blocos hardcoded antigos. Antes desta constante existiam duas cópias
-     * manuais idênticas desta lista, uma em cada arquivo (ver
-     * docs/reports/hardcode_audit_usecase_layer.md, achado Tipo B).
+     * manuais idênticas desta lista, uma em cada arquivo.
      *
      * Deliberadamente NÃO inclui o lote piloto (Terracota, Umvee, Elementais,
      * Anões): essas quatro raças também estão em `configs`, mas resolvem
