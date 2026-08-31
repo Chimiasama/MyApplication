@@ -157,7 +157,9 @@ fun MechasSection(
                                 onClick = {
                                     highlightedMechaId = mecha.id
                                     state.mechasSelecionados.add(
-                                        mecha.copy(id = "${mecha.id}_${System.currentTimeMillis()}")
+                                        // UUID em vez de currentTimeMillis(): dois cliques rápidos no mesmo
+                                        // mecha podiam cair no mesmo milissegundo e gerar ids duplicados.
+                                        mecha.copy(id = "${mecha.id}_${java.util.UUID.randomUUID()}")
                                     )
                                     onUserFeedback()
                                 },
@@ -265,7 +267,7 @@ private fun CreateCustomMechaDialog(
             FilledTonalButton(
                 onClick = {
                     val customMecha = MechaItem(
-                        id = "custom_mech_${System.currentTimeMillis()}",
+                        id = "custom_mech_${java.util.UUID.randomUUID()}",
                         nome = nomeText.ifBlank { "Mecha Customizado" },
                         categoria_chassi = categoriaChassiText,
                         tamanho = tamanhoText.toIntOrNull() ?: 7,
