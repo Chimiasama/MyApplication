@@ -135,9 +135,11 @@ fun PoderesSection(
         }
     }
 
-    val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
+    val powerCacheState by androidx.compose.runtime.produceState<Map<String, List<Poder>>?>(initialValue = null) {
         value = com.example.swadebuilder.model.poderesPorOrigem(context)
     }
+    val powerCache: Map<String, List<Poder>> = powerCacheState ?: emptyMap()
+    val isPowersLoading = powerCacheState == null
 
     val dominiosCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
         val list = runCatching { context.loadJsonAssetAsync<List<DominioJson>>("fantasia_dominios.json") }.getOrElse { emptyList() }
@@ -623,7 +625,13 @@ fun PoderesSection(
                 }
 
                 // POWERS LIST
-                if (poderesParaEsteArcano.isEmpty()) {
+                if (isPowersLoading) {
+                    item {
+                        com.example.swadebuilder.ui.components.LoadingState(
+                            message = "Carregando poderes..."
+                        )
+                    }
+                } else if (poderesParaEsteArcano.isEmpty()) {
                     item {
                         com.example.swadebuilder.ui.components.EmptyState(
                             message = "Nenhum poder disponível para os filtros selecionados."

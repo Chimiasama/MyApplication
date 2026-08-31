@@ -347,6 +347,7 @@ fun SummaryContent(
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         val imageBitmap = imageBitmapState.value
+                        val isPortraitLoading = state.portraitFileName != null && imageBitmap == null
                         if (imageBitmap != null) {
                             val scale = if (state.portraitScaleType == "FIT") ContentScale.Fit else ContentScale.Crop
                             val align = when (state.portraitAlignment) {
@@ -362,6 +363,13 @@ fun SummaryContent(
                                 alignment = align,
                                 modifier = Modifier.fillMaxSize()
                             )
+                        } else if (isPortraitLoading) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                com.example.swadebuilder.ui.components.LoadingState(modifier = Modifier.fillMaxWidth())
+                            }
                         } else {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
