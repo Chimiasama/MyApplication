@@ -155,13 +155,14 @@ Também há uma tabela genérica de "Novas Habilidades de Ancestralidade" (custo
 - **Necromante** — id: `antecedente_arcano_necromante` — [OK] — linha ~7401 — vantagens: Familiar Morto-Vivo (`familiar_morto_vivo`, l.7442), Recipiente da Alma (`recipiente_da_alma`, l.7454)
 - **Xamã** — id: `antecedente_arcano_xama` — [OK] — linha ~7476 — vantagens: Fetiche Sagrado (`fetiche_sagrado`, l.7536), Magia Primordial (`magia_primordial`, l.7551)
 
-### Subsistemas de regra do capítulo Arcano (não são "itens" de catálogo — lógica de app, não entrada JSON)
-- **Múltiplos Antecedentes Arcanos** — [CONFERIR] — regra de multiclasse arcana (reserva de PP compartilhada) — linha ~6139
-- **Truques** — [CONFERIR] — magias menores/cantrips sem custo de PP baseadas em poder já conhecido — linha ~7893
-- **Dispositivos Arcanos** — [CONFERIR] — itens mágicos temporários feitos com a vantagem Artífice — linha ~7965
-- **Magia de Batalha** — [CONFERIR] — regra para conjurar contra/com tropas em massa (liga-se à vantagem Mago de Batalha) — linha ~8049
-- **Poderes Preparados** — [CONFERIR] — feitiços pré-preparados com aprimoramentos próprios — linha ~8106
-- **Magia Ritualística** — [CONFERIR] — conjuração ritual longa com aprimoramentos próprios — linha ~8183
+### Subsistemas de regra do capítulo Arcano (não são "itens" de catálogo — lógica de app, não entrada JSON) [FORA DE ESCOPO, resolvido em 2026-08-31]
+Todos os 6 revisados contra o texto-fonte: são regras de resolução em jogo (cálculo, procedimento ou downtime), não opções compráveis na criação de personagem — mesma natureza dos itens já marcados fora de escopo no Compêndio de Horror.
+- **Múltiplos Antecedentes Arcanos** — [FORA DE ESCOPO] — regra de cálculo (reserva de PP compartilhada ao ter mais de um Antecedente Arcano/Poderes Místicos) — linha ~6139
+- **Truques** — [FORA DE ESCOPO] — forma alternativa de usar um poder já conhecido sem custo de PP, resolvida por rolagem em cena — linha ~7893
+- **Dispositivos Arcanos** — [FORA DE ESCOPO] — sistema de criação de item mágico temporário via Vantagem Artífice (mesma categoria de "criação de item mágico" já excluída em toda a sessão) — linha ~7965
+- **Magia de Batalha** — [FORA DE ESCOPO] — regra de combate em massa ligada à Vantagem Mago de Batalha (já cadastrada) — linha ~8049
+- **Poderes Preparados** — [FORA DE ESCOPO] — procedimento de downtime (componentes + tempo de preparo) para conjurar sem custo de PP depois — linha ~8106
+- **Magia Ritualística** — [FORA DE ESCOPO] — mesmo procedimento de Poderes Preparados, com aprimoramentos e acesso a poderes fora do Antecedente do conjurador — linha ~8183
 
 ### Domínios (divindades/portfólios para Clérigos e afins) — `fantasia_dominios.json`
 11 domínios, todos presentes:
