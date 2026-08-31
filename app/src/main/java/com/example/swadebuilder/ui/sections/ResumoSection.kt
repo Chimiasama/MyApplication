@@ -1244,20 +1244,11 @@ private fun ImageSettingsDialog(
                 Spacer(Modifier.height(16.dp))
                 Text("Tamanho", style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(4.dp))
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    androidx.compose.material3.Checkbox(
-                        checked = state.expandirRetrato,
-                        onCheckedChange = { state.expandirRetrato = it }
-                    )
-                    Text(
-                        "Expandir (Ocupar 50% da largura)",
-                        modifier = Modifier.clickable { state.expandirRetrato = !state.expandirRetrato },
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+                com.example.swadebuilder.ui.components.CheckboxRow(
+                    label = "Expandir (Ocupar 50% da largura)",
+                    checked = state.expandirRetrato,
+                    onCheckedChange = { state.expandirRetrato = it }
+                )
 
                 if (state.portraitScaleType == "CROP") {
                     Spacer(Modifier.height(16.dp))
