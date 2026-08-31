@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.swadebuilder.ui.theme.Spacing
 
 @Composable
 fun SectionCard(
@@ -34,7 +35,7 @@ fun SectionCard(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 12.dp, horizontal = 4.dp),
+                    .padding(vertical = Spacing.md, horizontal = Spacing.xs),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
@@ -42,7 +43,7 @@ fun SectionCard(
                     contentDescription = null,
                     modifier = Modifier
                         .size(32.dp)
-                        .padding(end = 12.dp),
+                        .padding(end = Spacing.md),
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
@@ -59,7 +60,7 @@ fun SectionCard(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 4.dp, vertical = 0.dp),
+                .padding(horizontal = Spacing.xs, vertical = 0.dp),
             shape = MaterialTheme.shapes.medium,
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -67,7 +68,7 @@ fun SectionCard(
                 containerColor = cardColor
             )
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(Spacing.lg)) {
                 content()
             }
         }

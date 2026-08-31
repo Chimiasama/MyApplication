@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.ui.theme.Spacing
 
 @Composable
 fun ExpandableSearchFilter(
@@ -112,7 +113,7 @@ fun ChoiceButtonRow(
         title = label,
         selected = selected,
         onClick = onSelect,
-        modifier = Modifier.padding(vertical = 4.dp),
+        modifier = Modifier.padding(vertical = Spacing.xs),
         subtitle = subtitle,
         mode = SelectionMode.UNICA,
         enabled = enabled
@@ -142,7 +143,7 @@ fun CheckboxRow(
         title = label,
         selected = checked,
         onClick = { onCheckedChange(!checked) },
-        modifier = Modifier.padding(vertical = 4.dp),
+        modifier = Modifier.padding(vertical = Spacing.xs),
         mode = SelectionMode.MULTIPLA
     )
 }

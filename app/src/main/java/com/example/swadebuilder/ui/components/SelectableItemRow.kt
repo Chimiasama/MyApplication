@@ -31,6 +31,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.ui.theme.Spacing
 import com.example.swadebuilder.ui.theme.emphasis
 
 /**
@@ -86,9 +87,9 @@ fun SelectableItemRow(
                 role = a11yRole
                 this.selected = selected
             }
-            .padding(horizontal = 14.dp, vertical = 12.dp),
+            .padding(horizontal = Spacing.lg, vertical = Spacing.md),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+        horizontalArrangement = Arrangement.spacedBy(Spacing.md)
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -172,7 +173,7 @@ fun ItemTag(
         modifier = modifier
             .clip(RoundedCornerShape(999.dp))
             .background(if (emphasized) scheme.secondaryContainer else scheme.surfaceVariant)
-            .padding(horizontal = 10.dp, vertical = 4.dp)
+            .padding(horizontal = Spacing.sm, vertical = Spacing.xs)
     ) {
         Text(
             text = text,
