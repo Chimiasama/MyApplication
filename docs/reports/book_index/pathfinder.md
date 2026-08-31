@@ -194,7 +194,7 @@ Vantagens de Prestígio do Compêndio.
   ~7765 de docs/swade_pathfinder_basico ("MOEDA" / "MOEDAS E VALOR DE TROCA": 1 pl = 10 po = 100 pp = 1.000 pc; o
   padrão de custos da tabela de equipamentos é em po). O livro também lista nomes regionais de moedas por
   divindade/nação (linha ~594) — puramente narrativo/lore, sem efeito mecânico, portanto fora de escopo mecânico.
-- **Materiais especiais** — [CONFERIR] — o livro descreve 6 materiais na seção "MATERIAIS ESPECIAIS" (linhas
+- **Materiais especiais** — [OK, resolvido em 2026-08-31] — o livro descreve 6 materiais na seção "MATERIAIS ESPECIAIS" (linhas
   ~7690–7810 de docs/swade_pathfinder_basico): **Adamante** (PA +1 em armas, ignora 2 PA em armaduras, +3.000 po),
   **Madeira Negra** (metade do peso, Dureza +2), **Couro de Dragão** (conta como obra-prima, +4 de armadura contra
   o elemento do dragão), **Ferro Frio** (Dureza +2, dobro do custo, eficaz contra fadas/demônios), **Mithral**
@@ -205,8 +205,10 @@ Vantagens de Prestígio do Compêndio.
   `nome`). A categoria "Materiais Especiais / Metais e Madeiras" que É tagueada `PATHFINDER` contém apenas 1 item
   (Adamante, 3.000 po) — duplicata parcial da entrada `FANTASIA` "Adamantina". Ou seja, o conteúdo mecânico já
   existe e bate com o livro, mas 5 dos 6 materiais (Madeira Negra, Couro de Dragão, Ferro Frio, Mithral, Prata
-  Alquímica) não estão marcados como válidos para o livro PATHFINDER — vale adicionar a tag `PATHFINDER` a essas
-  entradas (ou replicá-las na categoria já tagueada) se a intenção é que apareçam ao usar esse livro.
+  Alquímica) não estavam marcados como válidos para o livro PATHFINDER. Adicionada uma cópia de cada um dos 5 na
+  categoria "Materiais Especiais / Metais e Madeiras" já tagueada `PATHFINDER` (mesma onde já estava `adamante`),
+  com `origem: "PATHFINDER"` — mesmo padrão de "uma entrada por livro em que o conteúdo é reimpresso" do resto do
+  catálogo.
 
 **`PathfinderCurrencyIds` no código** (`app/src/main/java/com/example/swadebuilder/model/ids/DomainIds.kt`, linha
 48): `PL`, `PO`, `PP`, `PC` — **bate exatamente** com as 4 moedas do livro (Platina, Ouro, Prata, Cobre) e com a
@@ -270,8 +272,11 @@ Planar, Vidência, Visão Distante, Visão Sombria, Voar, Zumbi).
 - **[FALTA]**: nenhuma entrada de ancestralidade, vantagem, complicação, perícia, domínio ou poder ficou sem
   correspondência em JSON — a base de dados já está com cobertura completa para os dois livros dentro do escopo de
   criação de personagem.
-- **[CONFERIR]**: 2 itens — (1) tabela "Divindades e Domínios" (20 divindades de Golarion) sem estrutura de dados
-  própria no app (não é estritamente necessária para a ficha, mas ajudaria a UX de escolha de domínio); (2) 5 dos 6
-  materiais especiais de armas/armaduras do livro (Madeira Negra, Couro de Dragão, Ferro Frio, Mithral, Prata
-  Alquímica) existem em `equipamentos.json` mas só com a tag `FANTASIA`, não `PATHFINDER` — só o Adamante está
-  tagueado corretamente para este livro.
+- **[FORA DE ESCOPO, resolvido em 2026-08-31]**: tabela "Divindades e Domínios" (linha ~3661-3705 de
+  docs/swade_pathfinder_basico) — 20 divindades de Golarion, cada uma com Tendência/Áreas de Interesse/lista de
+  Domínios sugeridos. É uma tabela de referência narrativa (que divindade combina com qual tema) para orientar a
+  escolha de domínio, não uma entrada mecânica nova por si — os Domínios em si (Terra, Nobreza, Proteção etc.) já
+  são cobertos como Vantagens do Antecedente Arcano Clérigo. Mesma categoria de tabela-de-lore já deixada de fora
+  em outros livros desta sessão (ex.: Casta → Estágio do Demônio no CSV).
+- **[OK, resolvido em 2026-08-31]**: os 5 materiais especiais sem tag `PATHFINDER` — ver detalhe na seção
+  "Materiais especiais" acima.

@@ -19877,6 +19877,51 @@
         "originalName": "Adamantina",
         "origem": "PATHFINDER",
         "descricaoLite": "Adiciona PA +1 a armas. Armaduras ignoram 2 pontos de PA. Aumenta a dureza."
+      },
+      {
+        "id": "couro_de_dragao",
+        "nome": "Couro de Dragão",
+        "custo": "+2500",
+        "peso": "—",
+        "observacoes": "Conta como Obra-prima. +4 Armadura contra elemento do dragão.",
+        "descricaoLite": "Conta como Obra-prima. +4 Armadura contra elemento do dragão.",
+        "origem": "PATHFINDER"
+      },
+      {
+        "id": "ferro_frio",
+        "nome": "Ferro Frio",
+        "custo": "x2",
+        "peso": "—",
+        "observacoes": "Eficaz contra fadas/demônios. Quebra na Falha Crítica.",
+        "descricaoLite": "Eficaz contra fadas/demônios. Quebra na Falha Crítica.",
+        "origem": "PATHFINDER"
+      },
+      {
+        "id": "madeira_negra",
+        "nome": "Madeira Negra",
+        "custo": "+10/kg",
+        "peso": "Metade",
+        "observacoes": "Dureza +2.",
+        "descricaoLite": "Dureza +2.",
+        "origem": "PATHFINDER"
+      },
+      {
+        "id": "mithral",
+        "nome": "Mithral",
+        "custo": "x100 (arma) / x10 (armadura)",
+        "peso": "Metade",
+        "observacoes": "Reduz Força Mínima em um dado. Conta como prata.",
+        "descricaoLite": "Reduz Força Mínima em um dado. Conta como prata.",
+        "origem": "PATHFINDER"
+      },
+      {
+        "id": "prata_alquimica",
+        "nome": "Prata Alquímica",
+        "custo": "x10",
+        "peso": "—",
+        "observacoes": "Afeta licantropos.",
+        "descricaoLite": "Afeta licantropos.",
+        "origem": "PATHFINDER"
       }
     ]
   },
