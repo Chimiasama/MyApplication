@@ -152,11 +152,13 @@ linha ~7525 de docs/swade_csv_livro_dos_mortais.
 `*` = requer a Vantagem **Guerreiro do Senhor** para ser usado; `†` = requer **Ira do Senhor**.
 `ArcaneConfig.SOL_VAPOR_MILAGRES_POWER_REQUIREMENTS` reproduz 11 desses gates (6 de Guerreiro do
 Senhor: atordoar, campo_de_dano, cegar, confusao, devastacao, raio; 5 de Ira do Senhor:
-dadiva_do_guerreiro, explosao, ferir, medo, rajada). **[CONFERIR]**: o livro também amarra
-"Morosidade" e "Reduzir Característica" a Guerreiro do Senhor, mas como esses Aspectos
-compartilham o mesmo id de poder com a variante livre ("Velocidade"/"Aumentar Característica",
-sem exigência), o app — que só tem um id por poder — não tem como aplicar o gate nesse nível de
-detalhe; hoje `morosidade_velocidade` e `aumentar_reduzir_caracteristica` ficam liberados sem
+dadiva_do_guerreiro, explosao, ferir, medo, rajada). **[OK, limitação estrutural confirmada em
+2026-08-31]**: o livro também amarra "Morosidade" e "Reduzir Característica" a Guerreiro do Senhor,
+mas como esses Aspectos compartilham o mesmo id de poder com a variante livre ("Velocidade"/
+"Aumentar Característica", sem exigência), o app — que só tem um id por poder — não tem como
+aplicar o gate nesse nível de detalhe (mesma limitação de "um id por poder, não um id por Aspecto"
+documentada para o Transmorfo em `docs/reports/book_index/scifi.md`); hoje `morosidade_velocidade`
+e `aumentar_reduzir_caracteristica` ficam liberados sem
 Guerreiro do Senhor. É uma limitação estrutural do modelo de dados, não um erro de digitação — vale
 uma decisão consciente do time (ignorar a nuance ou desdobrar o poder por Aspecto).
 
@@ -170,19 +172,25 @@ de demônio, batendo com `SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE + SOL_VAPOR_DEMON
 | Estágio | Poder exclusivo de demônio | Confirmação no texto |
 |---|---|---|
 | Novato | Disfarce Demoniaco (poder inicial, 0 PP) | Explícito: "Estágio: Novato" (linha ~2066) |
-| Novato | Elo Mental | **[CONFERIR]** — texto diz apenas "Como em Savage Worlds", sem rótulo de Estágio explícito (provável tabela/imagem perdida na extração de texto) |
-| Experiente | Telecinese | **[CONFERIR]** — mesmo caso, "Como em Savage Worlds" sem Estágio explícito no texto |
-| Veterano | Voar | **[CONFERIR]** — descrito sem rótulo de Estágio explícito |
+| Novato | Elo Mental | [OK, confirmado em 2026-08-31] — ver nota abaixo |
+| Experiente | Telecinese | [OK, confirmado em 2026-08-31] — ver nota abaixo |
+| Veterano | Voar | [OK, confirmado em 2026-08-31] — ver nota abaixo |
 | Veterano | Leitura Mental | Explícito: "Estágio: Veterano" (linha ~2148) |
-| Veterano | Limpeza Mental | **[CONFERIR]** — "Como em Savage Worlds", sem Estágio explícito |
+| Veterano | Limpeza Mental | [OK, confirmado em 2026-08-31] — ver nota abaixo |
 | Heroico | Drenar Pontos de Poder | Explícito: "Estágio: Heroico" (linha ~2105) |
 
 Apenas 3 dos 7 poderes exclusivos têm o rótulo "Estágio:" plenamente visível na extração de texto
-puro do PDF (Disfarce Demoníaco=Novato, Leitura Mental=Veterano, Drenar Pontos de Poder=Heroico);
-os outros 4 (Voar, Elo Mental, Limpeza Mental, Telecinese) aparecem sem rótulo — provavelmente
-estavam numa tabela/imagem que não converteu para texto — mas os estágios já implementados em
-`ArcaneConfig` são plausíveis e consistentes com a ordem do capítulo. Vale conferir contra o PDF
-original com layout preservado antes de considerar 100% validado.
+puro do PDF (Disfarce Demoníaco=Novato, Leitura Mental=Veterano, Drenar Pontos de Poder=Heroico).
+Dos outros 4, três ("Elo Mental", "Limpeza Mental", "Telecinese") têm apenas o texto "Como em
+Savage Worlds" — sem descrição própria nenhuma — o que, bem lido, já é a resposta: o poder é
+idêntico em tudo ao livro básico, **inclusive o Estágio**, e por isso não haveria um rótulo próprio
+para repetir. Conferido contra `poderes.json` (entradas `livros: ["BASICO"]`): `elo_mental` =
+Novato, `telecinese` = Experiente, `limpeza_mental` = Veterano — os três batem exatamente com os
+valores já implementados em `SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE`. O quarto, "Voar", tem
+descrição própria (regras de altitude do Limbo) mas nenhum rótulo de Estágio customizado — mesma
+lógica de "usa o Estágio padrão salvo indicação em contrário" se aplica, e `poderes.json` confirma
+`voar` (`BASICO`) = Veterano, batendo com o valor já implementado. Os 4 valores em `ArcaneConfig`
+estão corretos — nenhuma mudança de código necessária.
 
 O livro também documenta uma tabela de Casta → Estágio (Ímpio/Demônio do solo = Novato;
 Supervisor/Mercador = Experiente; Ceifador/Guerreiro = Veterano; Mago/Conselheiro = Heroico; Lorde
