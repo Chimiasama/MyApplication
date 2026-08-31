@@ -7055,6 +7055,11 @@
         "nome": "Forte",
         "custo": "+1",
         "descricao": "Ocultar apenas. Rolagens de detecção para ver através do ocultamento são feitas com -2."
+      },
+      {
+        "nome": "Visão Espiritual",
+        "custo": "+5",
+        "descricao": "Quem conjura deve ser de Estágio Heroico para usar esta opção. Permite \"mudar\" a visão para enxergar a versão dos Campos de Caça da localização atual, revelando o Nível de Medo da área e a chance de perceber seres espirituais à espreita. Também é possível se concentrar em um objeto ou na essência de um ser, como uma ação (no máximo uma vez por rodada), revelando sua natureza geral, Complicações Maiores e um sentido geral de habilidades sobrenaturais; uma ampliação revela mais informações (Complicações Menores, poderes ou fraquezas específicas etc.)."
       }
     ],
     "tags": [
@@ -16292,5 +16297,29 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Anula, dentro de um Modelo Médio de Explosão centrado no conjurador, as penalidades por obstrução visual e o bônus de Agrupamento que inimigos teriam contra ele."
+  },
+  {
+    "id": "abrir_portal",
+    "nome": "ABRIR PORTAL",
+    "estagio": "Heroico",
+    "pontosDePoder": 20,
+    "distancia": "Espírito",
+    "duracao": "1 minuto",
+    "manifestacoes": [
+      "Fenda luminosa no ar",
+      "rasgo entre os planos",
+      "ritual do Antecedente Arcano específico"
+    ],
+    "descricao": "Abrir Portal cria uma fenda entre os planos, permitindo que personagens no mundo físico viajem para os Campos de Caça ou vice-versa. Está disponível para todos os Antecedentes Arcanos de Deadlands, exceto mestres do chi.\nDentro dos Campos de Caça, um portal também pode ser aberto para outra parte dos Campos de Caça (exceto o Céu ou o Inferno) — um grupo poderia viajar, por exemplo, da versão espiritual de Deadwood para a versão espiritual de Paris. Outra conjuração naquele reino de bolso permitiria que o grupo deixasse o reino espiritual e caminhasse pelas ruas reais de Paris.\nAbrir Portal não permite viajar entre \"mundos\" (como do Inferno para a Terra, ou até a Colônia Perdida); isso requer uma viagem árdua pelos Campos de Caça e é sempre uma aventura por si só.",
+    "modificadores": [],
+    "tags": [
+      "stage:heroico",
+      "tipo:viagem",
+      "campos_de_caca"
+    ],
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Abre uma fenda entre o mundo físico e os Campos de Caça (ou entre regiões dos Campos de Caça), permitindo viagem por 1 minuto de duração; disponível para todo Antecedente Arcano de Deadlands exceto Mestre do Chi."
   }
 ]

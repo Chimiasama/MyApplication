@@ -80,31 +80,35 @@ Todas as 10 Complicações novas do Capítulo "Criando Heróis e Heroínas" já 
 - **Rápido como um Raio** — id: `rapido_como_um_raio` — [OK] — linha ~1763
 
 ### De Abençoado
-- **Fé Verdadeira** — id sugerido: `fe_verdadeira_abencoado` — [FALTA] — Veterano, Espírito d10+, AA (Abençoado), Fé d6+; rerrolagem grátis em Fé — linha ~3736 de docs/swade_deadlands
-- **Rebanho** — id sugerido: `rebanho` — [FALTA] — Veterano, Persuadir d8+; concede 5 seguidores (estatísticas de Cidadão) — linha ~3742
+**[OK — resolvido em 2026-08-31]**
+- **Fé Verdadeira** — id: `fe_verdadeira_abencoado` — [OK] — corrigido contra o livro: Novato (não Veterano), Espírito d10+, AA (Abençoado), Fé d6+; rerrolagem grátis em Fé — linha ~3736 de docs/swade_deadlands
+- **Rebanho** — id: `rebanho` — [OK] — Veterano, Persuadir d8+; concede 5 seguidores (estatísticas de Cidadão); repetível a partir do Estágio Lendário — linha ~3742
 
 ### De Agente
-- **Pessoa de Mil Faces** — id sugerido: `pessoa_de_mil_faces` — [FALTA] — Heroico, AA Agente, Persuadir d8+; disfarce/infiltração aprimorados — linha ~3988
+**[OK — resolvido em 2026-08-31]**
+- **Pessoa de Mil Faces** — id: `pessoa_de_mil_faces` — [OK] — corrigido contra o livro: Experiente (não Heroico), Performance d8+; disfarce/infiltração aprimorados — linha ~3988
 
 ### De Atormentado (livro básico — habilidades "de tronco")
-- **Assustar** — id sugerido: `assustar_atormentado` — [FALTA] — força teste de Medo –2 num alvo — linha ~4332
-- **Atributo Sobrenatural** — id sugerido: `atributo_sobrenatural` — [FALTA] — melhora um atributo em 2 tipos de dado, repetível por atributo — linha ~4350
-- **Devorador de Almas** — id sugerido: `devorador_de_almas` — [FALTA] — cura Ferimento/Fadiga ao ferir com as mãos nuas — linha ~4361
-- **Fantasma** — id sugerido: `fantasma_atormentado` — [FALTA] — forma incorpórea à vontade — linha ~4378
-- **Fogo do Inferno** — id sugerido: `fogo_do_inferno` — [FALTA] — ataque de fogo em Modelo de Cone, 3d6 — linha ~4394
-- **Frio da Sepultura** — id sugerido: `frio_da_sepultura` — [FALTA] — Modelo Grande de Explosão deixa alvos Vulneráveis — linha ~4404
-- **Garras** — id sugerido: `garras_atormentado` — [FALTA] — For+d6 em combate — linha ~4413
-- **Garras Aprimoradas** — id sugerido: `garras_aprimoradas_atormentado` — [FALTA] — For+d8, PA 2 — linha ~4419
-- **Implacável (Atormentado)** — id sugerido: `implacavel_atormentado` — [FALTA] — nome colide com `implacavel` já cadastrado para o livro HORROR (mecânica diferente: Ferimento extra antes de Incapacitar); precisa de id próprio — linha ~4424
-- **Infestar** — id sugerido: `infestar` — [FALTA] — controla um Bando de insetos — linha ~4437
-- **Murchar** — id sugerido: `murchar` — [FALTA] — reduz Força (e Vigor com ampliação) da vítima por toque — linha ~4464
-- **Olhos de Gato** — id sugerido: `olhos_de_gato` — [FALTA] — nega penalidades de penumbra/escuridão — linha ~4479
-- **Olhos de Gato Aprimorados** — id sugerido: `olhos_de_gato_aprimorados` — [FALTA] — visão perfeita no escuro — linha ~4485
-- **Remendar** — id sugerido: `remendar` — [FALTA] — cura natural diária consumindo carne — linha ~4491
-- **Remendar Aprimorado** — id sugerido: `remendar_aprimorado` — [FALTA] — cura natural a cada hora — linha ~4498
+**[OK — resolvido em 2026-08-31]**
+- **Assustar** — id: `assustar_atormentado` — [OK] — força teste de Medo –2 num alvo — linha ~4332
+- **Atributo Sobrenatural** — id: `atributo_sobrenatural` — [OK] — melhora um atributo em 2 tipos de dado, repetível por atributo (até 5x) — linha ~4350
+- **Devorador de Almas** — id: `devorador_de_almas` — [OK] — cura Ferimento/Fadiga ao ferir com as mãos nuas — linha ~4361
+- **Fantasma** — id: `fantasma_atormentado` — [OK] — forma incorpórea à vontade — linha ~4378
+- **Fogo do Inferno** — id: `fogo_do_inferno` — [OK] — ataque de fogo em Modelo de Cone, 3d6 — linha ~4394
+- **Frio da Sepultura** — id: `frio_da_sepultura` — [OK] — Modelo Grande de Explosão deixa alvos Vulneráveis — linha ~4404
+- **Garras** — id: `garras_atormentado` — [OK] — For+d6 em combate — linha ~4413
+- **Garras Aprimoradas** — id: `garras_aprimoradas_atormentado` — [OK] — For+d8, PA 2 — linha ~4419
+- **Implacável (Atormentado)** — id: `implacavel_atormentado` — [OK] — id próprio confirmado, mecânica realmente diferente do `implacavel` do livro HORROR (Ferimento extra antes de Incapacitar, cumulativo com Duro na Queda) — linha ~4424
+- **Infestar** — id: `infestar` — [OK] — controla um Bando de insetos — linha ~4437
+- **Murchar** — id: `murchar` — [OK] — reduz Força (e Vigor com ampliação) da vítima por toque — linha ~4464
+- **Olhos de Gato** — id: `olhos_de_gato` — [OK] — nega penalidades de penumbra/escuridão — linha ~4479
+- **Olhos de Gato Aprimorados** — id: `olhos_de_gato_aprimorados` — [OK] — visão perfeita no escuro — linha ~4485
+- **Remendar** — id: `remendar` — [OK] — cura natural diária consumindo carne — linha ~4491
+- **Remendar Aprimorado** — id: `remendar_aprimorado` — [OK] — cura natural a cada hora; nota: o livro grafa o pré-requisito adicional como "Costurado", inconsistência de tradução — tratado como pré-requisito de `remendar` — linha ~4498
 
 ### De Atormentado (compêndio — habilidades adicionais)
-- **Aranha** — id sugerido: `aranha_atormentado` — [FALTA] — anda em superfícies verticais/invertidas — linha ~274 de docs/swade_deadlands_compendio
+**[OK — resolvido em 2026-08-31]**
+- **Aranha** — id: `aranha_atormentado` — [OK] — anda em superfícies verticais/invertidas — linha ~274 de docs/swade_deadlands_compendio
 - **Arame Espiritual** — id: `arame_espiritual` — [OK] — linha ~298
 - **Cavar** — id: `cavar` — [OK] (nota: mesmo id existe também como poder em `poderes.json`; conferir se não há conflito de namespace) — linha ~313
 - **Chamado dos Mortos** — id: `chamado_dos_mortos` — [OK] — linha ~336
@@ -128,29 +132,39 @@ Todas as 10 Complicações novas do Capítulo "Criando Heróis e Heroínas" já 
 - **Visão Espiritual** — id: `visao_espiritual` — [OK] — linha ~740
 
 ### De Cientista Louco
-- **Alquimia** — id sugerido: `alquimia` — [FALTA] — cria até 3 poções/elixires investindo Pontos de Poder — linha ~4626 de docs/swade_deadlands
-- **Devorador de Minério** — id sugerido: `devorador_de_minerio` — [FALTA] — +5 Pontos de Poder por comer rocha fantasma; risco de Febre da Rocha Fantasma — linha ~4662
-- **Gênio Verdadeiro** — id sugerido: `genio_verdadeiro` — [FALTA] — gasta Bene para forçar nova rolagem nas tabelas de Mau Funcionamento/Loucura — linha ~4685
-- **Ligação com o Ferro** — id sugerido: `ligacao_com_o_ferro` — [FALTA] — começa com até $2.000 em dispositivos infernais, desconto de 25% — linha ~4703
+**[OK — resolvido em 2026-08-31]**
+- **Alquimia** — id: `alquimia` — [OK] — cria até 3 poções/elixires investindo Pontos de Poder — linha ~4626 de docs/swade_deadlands
+- **Devorador de Minério** — id: `devorador_de_minerio` — [OK] — +5 Pontos de Poder por comer rocha fantasma; risco de Febre da Rocha Fantasma — linha ~4662
+- **Gênio Verdadeiro** — id: `genio_verdadeiro` — [OK] — gasta Bene para forçar nova rolagem nas tabelas de Mau Funcionamento/Loucura — linha ~4685
+- **Ligação com o Ferro** — id: `ligacao_com_o_ferro` — [OK] — começa com até $2.000 em dispositivos infernais, desconto de 25% — linha ~4703
 
 ### De Mascate
-- **Bruxeiro** — id sugerido: `bruxeiro` — [FALTA] — ganha o poder enfeitiçar munição e pode gravar armas com runas — linha ~5010
-- **Conhecedor** — id sugerido: `conhecedor` — [FALTA] — pode descartar até 3 cartas ao Barganhar com o Diabo — linha ~5048
-- **Grande Apostador** — id sugerido: `grande_apostador` — [FALTA] — carta extra ao Barganhar com o Diabo — linha ~5056
-- **Grande Apostador Aprimorado** — id sugerido: `grande_apostador_aprimorado` — [FALTA] — duas cartas extras — linha ~5062
-- **Sangue dos Whateley** — id sugerido: `sangue_dos_whateley` — [FALTA] — sofre Fadiga/Ferimento para ganhar Pontos de Poder; –1 em Persuadir — linha ~5066
+**[OK — resolvido em 2026-08-31]**
+- **Bruxeiro** — id: `bruxeiro` — [OK] — ganha o poder enfeitiçar munição e pode gravar armas com runas — linha ~5010
+- **Conhecedor** — id: `conhecedor` — [OK] — pode descartar até 3 cartas ao Barganhar com o Diabo — linha ~5048
+- **Grande Apostador** — id: `grande_apostador` — [OK] — carta extra ao Barganhar com o Diabo — linha ~5056
+- **Grande Apostador Aprimorado** — id: `grande_apostador_aprimorado` — [OK] — duas cartas extras — linha ~5062
+- **Sangue dos Whateley** — id: `sangue_dos_whateley` — [OK] — sofre Fadiga/Ferimento para ganhar Pontos de Poder; –1 em Persuadir — linha ~5066
 
 ### De Mestre do Chi
-- **Kung Fu Superior** — id sugerido: `kung_fu_superior` — [FALTA] — escolhe um estilo entre 6 (Bêbado, Garra de Águia, Louva-a-Deus, Macaco, Shuai Jiao, Tantui, Wing Chun); repetível — linha ~5211
-- **Kung Fu Celestial** — id sugerido: `kung_fu_celestial` — [FALTA] — permite manter dois estilos simultâneos — linha ~5296
+**[OK — resolvido em 2026-08-31]**
+- **Kung Fu Superior** — id: `kung_fu_superior` — [OK] — escolhe um estilo entre 6 (Bêbado, Garra de Águia, Louva-a-Deus, Macaco, Shuai Jiao, Tantui, Wing Chun); repetível para novos estilos — linha ~5211
+- **Kung Fu Celestial** — id: `kung_fu_celestial` — [OK] — permite manter dois estilos simultâneos — linha ~5296
 
 ### De Patrulheiro Territorial
-- **Como um Carvalho** — id sugerido: `como_um_carvalho` — [FALTA] — aliados próximos negam 2 pontos de penalidade de Medo — linha ~5498
-- **Promoção de Patrulheiro** — id sugerido: `promocao_de_patrulheiro` — [FALTA] — repetível até 3x (Sargento/Tenente/Capitão), concede o Capítulo 13 — linha ~5512
+**[OK — resolvido em 2026-08-31]**
+- **Como um Carvalho** — id: `como_um_carvalho` — [OK] — aliados próximos negam 2 pontos de penalidade de Medo — linha ~5498
+- **Promoção de Patrulheiro** — id: `promocao_de_patrulheiro` — [OK] — repetível até 3x (Sargento/Tenente/Capitão, este último exige Heroico), concede o Capítulo 13 na 2ª compra — linha ~5512
 
 ### De Xamã
-- **Favor do Espírito** — id sugerido: `favor_do_espirito` — [FALTA] — lança um poder escolhido sem penalidade de Ação Múltipla — linha ~5680
-- **Fetiche** — id sugerido: `fetiche` — [FALTA] — rerrolagem grátis em Fé enquanto portar o fetiche — linha ~5697
+**[OK — resolvido em 2026-08-31]**
+- **Favor do Espírito** — id: `favor_do_espirito` — [OK] — lança um poder escolhido sem penalidade de Ação Múltipla; repetível para poderes adicionais — linha ~5680
+- **Fetiche** — id: `fetiche` — [OK] — rerrolagem grátis em Fé enquanto portar o fetiche — linha ~5697
+
+### Poderes novos e modificador (docs/swade_deadlands_compendio, l.~5057-5105)
+**[OK — resolvido em 2026-08-31]**
+- **Abrir Portal** (poder novo) — id: `abrir_portal` — [OK] — Heroico, 20 PP, abre fenda entre o mundo físico e os Campos de Caça (ou entre regiões deles); disponível para todo Antecedente Arcano de Deadlands exceto Mestre do Chi — linha ~5084
+- **Visão Espiritual (+5)** — [OK] — nova opção de modificador para o poder `detectar_ocultar_arcano` (cópia tagueada DEADLANDS), só Estágio Heroico; adicionado ao array `modificadores` desse poder — linha ~5057
 
 ### De Delegado Federal / Mago do Metal
 - Nenhuma Vantagem adicional própria além da Vantagem "base" já listada acima (Delegado Federal, Mago do Metal) — [OK]
@@ -184,8 +198,8 @@ Todas as 10 Complicações novas do Capítulo "Criando Heróis e Heroínas" já 
 - **Iludir** (Bruxa) — id: `iludir` — [OK] — linha ~1797
 - **Pavor** (Bruxa) — id: `pavor` — [OK] — linha ~1834
 - **Transformar** (Bruxa) — id: `transformar` — [OK] — linha ~1853
-- **Abrir Portal** — id sugerido: `abrir_portal` — [FALTA] — Heroico, 20 PP, disponível para todos os Antecedentes Arcanos menos Mestre do Chi; abre uma fenda entre o mundo físico e os Campos de Caça — linha ~5080
-- **Detectar/Ocultar Arcano — opção "Visão Espiritual" (+5)** — [FALTA] — nova opção de poder do compêndio (só Estágio Heroico) que não aparece nos modificadores de `detectar_ocultar_arcano` tagueados DEADLANDS — linha ~5057
+- **Abrir Portal** — id: `abrir_portal` — [OK] — resolvido em 2026-08-31, ver seção "Poderes novos e modificador" acima — linha ~5084
+- **Detectar/Ocultar Arcano — opção "Visão Espiritual" (+5)** — [OK] — resolvido em 2026-08-31, ver seção "Poderes novos e modificador" acima — linha ~5057
 
 ## Manias / Corrupção (magia negra ligada à ficha)
 

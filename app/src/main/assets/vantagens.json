@@ -40474,5 +40474,807 @@
       "SCI_FI"
     ],
     "descricaoLite": "Como ação limitada, manifesta uma entre cinco habilidades genéticas (dura até ficar Incapacitado ou trocar por outra): Camuflagem (+2 Furtividade, +4 se imóvel), Garras (Força+d4 de dano), Ligeiro (Movimentação +2 e corrida maior), Robusto (segundo Abalado não gera Ferimento) ou Alcance 1 (braços que se esticam)."
+  },
+  {
+    "id": "fe_verdadeira_abencoado",
+    "nome": "FÉ VERDADEIRA",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 10
+      },
+      "pericias": {
+        "Fé": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_abencoado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Este agente sagrado parece atrair a atenção especial da sua divindade. Ele recebe uma rerrolagem gratuita sempre que faz uma rolagem de Fé.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Concede uma rerrolagem gratuita em qualquer rolagem de Fé."
+  },
+  {
+    "id": "rebanho",
+    "nome": "REBANHO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {
+        "Persuadir": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_abencoado"
+      ],
+      "observacoes": "Não pode ser comprada uma segunda vez até que o Abençoado alcance o Estágio Lendário; a partir daí pode ser escolhida quantas vezes desejar."
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Os maiores profetas e pregadores atraem seguidores fiéis. Rebanho concede ao padre cinco seguidores que servem ao seu lado na capacidade que o jogador escolher. Eles usam as estatísticas de Cidadão e, como qualquer outro Aliado, podem receber Progressões. Chegam apenas com as roupas do corpo e alguns dólares, mas podem ser armados e equipados se o Abençoado achar apropriado.\nMembros do Rebanho que morrem são lentamente substituídos ao longo do tempo (geralmente representando um \"renascimento\"). A Vantagem não pode ser escolhida novamente até que o Abençoado seja Lendário; a partir de então, pode ser comprada quantas vezes o jogador desejar (assim como a Vantagem Seguidores, se assim preferir).",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Concede cinco seguidores (estatísticas de Cidadão) que servem ao Abençoado; a Vantagem só pode ser comprada de novo ao alcançar o Estágio Lendário, quando passa a ser ilimitada."
+  },
+  {
+    "id": "pessoa_de_mil_faces",
+    "nome": "PESSOA DE MIL FACES",
+    "categoria": "PROFISSIONAL",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Performance": 8
+      },
+      "vantagens_previas": [
+        "agente"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Esta Vantagem ajuda Agentes a se infiltrarem entre seus inimigos, dando-lhes recursos e a capacidade de estudar o alvo. O Agente adiciona +2 às suas rolagens de Performance quando tenta se passar por um \"tipo\" comum de pessoa, de compleição aproximadamente semelhante à sua.\nHá uma penalidade de -2 para se passar por alguém de quem o alvo só ouviu falar, -4 para alguém que o alvo já viu antes, ou -6 para se passar por um indivíduo específico ou alguém com quem o alvo já tenha convivido. Usar esta Vantagem exige roupas apropriadas ao papel; um kit de disfarce remove 2 pontos de penalidade.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Dá +2 em Performance para se passar por um tipo comum de pessoa; penalidades de -2 a -6 se aplicam ao personificar alguém de quem o alvo já ouviu falar, viu ou conhece pessoalmente (um kit de disfarce remove 2 pontos de penalidade)."
+  },
+  {
+    "id": "assustar_atormentado",
+    "nome": "ASSUSTAR",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "De vez em quando, uma alma infeliz vislumbra a coisa que vive dentro de um Atormentado. Alguns correm para as colinas, outros apenas choram, mas todos são afetados, até a alma mais forte.\nComo uma ação, o Atormentado pode forçar um único alvo a fazer um teste de Medo com -2. A vítima deve estar razoavelmente perto ou capaz de ver o desmorto (critério do Mestre), e o poder não pode ser usado no mesmo alvo mais de uma vez durante o mesmo encontro. O Atormentado pode optar por receber um nível de Fadiga para, em vez disso, afetar todos os alvos dentro de um raio de 12 quadros.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Uma ação força um alvo próximo a um teste de Medo com -2 (uma vez por encontro por alvo); gastando um nível de Fadiga, afeta todos os alvos num raio de 12 quadros."
+  },
+  {
+    "id": "atributo_sobrenatural",
+    "nome": "ATRIBUTO SOBRENATURAL",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": "Pode ser escolhida até cinco vezes, uma para cada atributo.",
+      "choiceOptions": [
+        "Agilidade",
+        "Astúcia",
+        "Espírito",
+        "Força",
+        "Vigor"
+      ]
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Atributo Sobrenatural melhora imediatamente um atributo em dois tipos de dado (por exemplo, um d12 se torna d12+2). Esta Vantagem pode ser escolhida até cinco vezes, uma para cada atributo. Isso também aumenta o limite máximo dessa característica (e quaisquer perícias associadas a ela) na mesma quantidade.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Melhora um atributo escolhido em dois tipos de dado (ex.: d12 vira d12+2) e eleva seu limite máximo na mesma quantidade; repetível uma vez por atributo, até cinco vezes."
+  },
+  {
+    "id": "devorador_de_almas",
+    "nome": "DEVORADOR DE ALMAS",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Nada a respeito dos Atormentados é agradável: quando não estão devorando a carne de algo, de preferência crua e se contorcendo, o demônio interior costuma estar atrás da própria energia vital de suas vítimas.\nSe o Atormentado causar um ou mais Ferimentos com um ataque bem-sucedido de Lutar desarmado (incluindo garras, se as tiver), pode então fazer uma rolagem de Espírito com -2 como uma ação livre. Com sucesso, cura um nível de seus próprios Ferimentos (ou um nível de Fadiga, à sua escolha). Causar múltiplos Ferimentos no mesmo ataque não tem efeito adicional.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Após causar Ferimento em ataque desarmado bem-sucedido, uma rolagem de Espírito -2 (ação livre) permite curar um nível de Ferimento ou Fadiga próprio."
+  },
+  {
+    "id": "fantasma_atormentado",
+    "nome": "FANTASMA",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O Atormentado pode se tornar incorpóreo à vontade. Na forma fantasmagórica é intangível, mas continua visível, e ataques mágicos o afetam normalmente.\nO desmorto decide se está corpóreo ou incorpóreo no início do seu turno, como uma ação livre, mas deve permanecer nesse estado até seu próximo turno. Ele fica Distraído enquanto permanece na forma de fantasma, mas pode permanecer nela pelo tempo que quiser. Se for Abalado, Atordoado ou Ferido enquanto incorpóreo, deve fazer uma rolagem de Espírito ou torna-se corpóreo imediatamente.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Como ação livre no início do turno, torna-se incorpóreo (intangível, mas visível e Distraído) até o turno seguinte; ficar Abalado, Atordoado ou Ferido nesse estado exige rolagem de Espírito para não voltar a ser corpóreo."
+  },
+  {
+    "id": "fogo_do_inferno",
+    "nome": "FOGO DO INFERNO",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Puro fogo ardente sopra diretamente das profundezas do Inferno pelas pontas dos dedos do Atormentado. Isso consome uma ação e só pode ser usado uma vez por turno. O ataque usa a perícia Atletismo, afeta um Modelo de Cone e causa 3d6 de dano em quem for pego pelo modelo. Fogo do Inferno pode ser evadido.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Uma ação por turno: ataque de Atletismo em Modelo de Cone que causa 3d6 de dano (pode ser evadido)."
+  },
+  {
+    "id": "frio_da_sepultura",
+    "nome": "FRIO DA SEPULTURA",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O Atormentado irradia o frio gelado da morte em um Modelo Grande de Explosão centrado em si mesmo. Isso custa um Bene e leva uma ação. Seres vivos dentro do modelo que não estejam protegidos por equipamento contra frio ou similar ficam automaticamente Vulneráveis.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Por um Bene e uma ação, irradia frio mortal num Modelo Grande de Explosão centrado em si, deixando Vulneráveis os seres vivos desprotegidos atingidos."
+  },
+  {
+    "id": "garras_atormentado",
+    "nome": "GARRAS",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O herói ou heroína ganha garras afiadas que causam For+d6 de dano em combate corpo a corpo. Atormentados podem estender ou retrair as garras como uma ação livre.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Garras afiadas que causam For+d6 de dano; podem ser estendidas ou retraídas como ação livre."
+  },
+  {
+    "id": "garras_aprimoradas_atormentado",
+    "nome": "GARRAS APRIMORADAS",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado",
+        "garras_atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "As garras do Atormentado agora infligem For+d8 de dano e possuem PA 2.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Melhora as Garras para For+d8 de dano com PA 2."
+  },
+  {
+    "id": "implacavel_atormentado",
+    "nome": "IMPLACÁVEL",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": "Mecânica distinta da Vantagem \"Implacável\" do livro Horror (id implacavel), que trata do Estado Abalado; esta versão de Atormentado concede um Ferimento adicional antes de Incapacitar."
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Desmortos são uma raça dura e desagradável, alimentada pelo poder infernal de demônios. Eventualmente, alguns deles conseguem aguentar uma pancada que derrubaria qualquer hombre normal.\nUm desmorto com esta Vantagem pode sofrer um Ferimento adicional antes de ficar Incapacitado. Isso se acumula com as Vantagens Duro na Queda e Muito Duro na Queda, e seu máximo de penalidades por Ferimentos continua limitado a -3.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "O desmorto suporta um Ferimento adicional antes de ficar Incapacitado (acumula com Duro na Queda/Muito Duro na Queda; penalidade máxima de Ferimentos continua -3)."
+  },
+  {
+    "id": "infestar",
+    "nome": "INFESTAR",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Como muitos aspectos da natureza, os insetos têm homólogos espirituais nos Campos de Caça. Os manitus levam jeito para controlar rastejantes assustadores, e alguns passam isso a seus hospedeiros.\nInfestar não permite criar insetos nem invocá-los de grandes distâncias — eles já devem estar presentes nas imediações (a critério do Xerife), mas o bando não precisa ser de uma única espécie. Para invocar o bando, o Atormentado usa uma ação e gasta um Bene para reunir uma massa de aranhas, baratas e lacraias em uma horda que se contorce e morde.\nO Atormentado controla o bando até que ele se dissipe — quando destruído ou após cerca de cinco minutos. Use as regras de Bando de Savage Worlds para as estatísticas das criaturas e suas Habilidades Especiais.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Por uma ação e um Bene, convoca um bando de insetos presentes nas imediações e o controla por cerca de cinco minutos (ou até ser destruído)."
+  },
+  {
+    "id": "murchar",
+    "nome": "MURCHAR",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Esta Vantagem aterrorizante permite que o desmorto envelheça anormalmente sua vítima. Como uma ação, o Atormentado toca o alvo e faz uma rolagem resistida de Espírito. Se o morto-vivo vencer, a carne e os ossos da vítima murcham e se deterioram, reduzindo a Força em um tipo de dado (até o mínimo de d4) por uma hora. Com uma ampliação, Força e Vigor são reduzidos em um tipo de dado. Usos múltiplos de Murchar no mesmo alvo não se acumulam, mas o Atormentado pode fazer tentativas subsequentes para obter o efeito ampliado.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Toque + rolagem resistida de Espírito: sucesso reduz a Força do alvo em um dado por uma hora (mínimo d4); com ampliação, também reduz o Vigor."
+  },
+  {
+    "id": "olhos_de_gato",
+    "nome": "OLHOS DE GATO",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Os olhos do desmorto brilham ligeiramente no escuro, aumentando a luz disponível e negando todas as penalidades por Penumbra e Escuridão.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Nega todas as penalidades por Penumbra e Escuridão."
+  },
+  {
+    "id": "olhos_de_gato_aprimorados",
+    "nome": "OLHOS DE GATO APRIMORADOS",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado",
+        "olhos_de_gato"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Permite ver perfeitamente no escuro, ignorando todas as penalidades de iluminação.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Visão perfeita no escuro: ignora todas as penalidades de iluminação."
+  },
+  {
+    "id": "remendar",
+    "nome": "REMENDAR",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Um morto com Remendar se regenera muito mais rápido do que o normal — ele pode fazer uma rolagem de cura natural todos os dias, desde que consuma meio quilo de carne para cada tentativa.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Permite uma rolagem de cura natural por dia, desde que consuma meio quilo de carne a cada tentativa."
+  },
+  {
+    "id": "remendar_aprimorado",
+    "nome": "REMENDAR APRIMORADO",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado",
+        "remendar"
+      ],
+      "observacoes": "No texto original o pré-requisito adicional aparece grafado como \"Costurado\", mas trata-se da mesma Vantagem Remendar (inconsistência de tradução do livro) — o pré-requisito correto é Remendar."
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Funciona como Remendar, mas o desmorto faz a rolagem de cura natural a cada hora, em vez de uma vez por dia (ainda consumindo meio quilo de carne por tentativa).",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Como Remendar, mas a rolagem de cura natural pode ser feita a cada hora."
+  },
+  {
+    "id": "aranha_atormentado",
+    "nome": "ARANHA",
+    "categoria": "ATORMENTADO",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "atormentado"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Em um mundo cheio de terrores e abominações, há poucas coisas mais assustadoras do que ver um Atormentado correr por uma parede.\nÉ exatamente isso que esta Vantagem faz: concede ao herói ou heroína a capacidade de andar em superfícies verticais com sua Movimentação regular. Ele ou ela pode até se agarrar a superfícies invertidas com metade da Movimentação (mas não pode correr nelas).",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Permite andar em superfícies verticais com a Movimentação normal e em superfícies invertidas com metade da Movimentação (sem poder correr nelas)."
+  },
+  {
+    "id": "alquimia",
+    "nome": "ALQUIMIA",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Ciência Estranha": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_cientista_louco"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Cientistas estranhos já podem fazer poções, elixires, tinturas e afins, dependendo da Manifestação dos seus poderes; podem usá-las em outros, mas não \"dá-las\" a menos que criem o item com a Vantagem Artífice.\nAlquimia é uma pequena trapaça que permite ao personagem criar até três poções ou elixires, investindo um único Ponto de Poder em cada uma. Criar as poções leva 30 minutos e $5 de reagentes cada, sempre incluindo ao menos uma pitada de rocha fantasma. Nenhuma rolagem de Ciência Estranha é feita: a criação é automaticamente bem-sucedida e produz qualquer mistura das poções abaixo. Elas podem ser dadas livremente e duram 24 horas; o cientista não recupera os Pontos de Poder investidos até que sejam usadas, descartadas ou expirem. Beber uma poção é uma ação.\nElixir de Foco: adiciona +1 a qualquer rolagem de Característica (escolhida ao criar) por três rodadas.\nPeptônico: o receptor faz uma rolagem de Vigor; sucesso elimina um nível de Fadiga, ampliação elimina dois.\nÓleo de Cobra: o receptor faz uma rolagem de cura natural; sucesso cura um Ferimento, ampliação cura dois.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Permite criar até três poções (1 Ponto de Poder cada, $5 e 30 minutos) escolhidas entre Elixir de Foco, Peptônico e Óleo de Cobra, que duram 24h e podem ser dadas a outros."
+  },
+  {
+    "id": "devorador_de_minerio",
+    "nome": "DEVORADOR DE MINÉRIO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Ciência Estranha": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_cientista_louco"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Embora o cientista louco provavelmente não queira que ninguém saiba, ele desenvolveu um gosto pela rocha fantasma. Comer a rocha crua não é possível, mas é fácil pulverizá-la ou esmagá-la e polvilhá-la no uísque favorito ou espalhá-la como sal sobre a comida.\nÉ uma prática obviamente perigosa, mas fortalece muito a ligação do Cientista Estranho com os Campos de Caça: ele ganha 5 Pontos de Poder quando esta Vantagem é escolhida (além de qualquer ganho pela Vantagem Pontos de Poder). A desvantagem é que, sempre que precisar rolar na Tabela de Mau Funcionamento e tirar 13, ele recebe a febre da rocha fantasma em vez do resultado de Gremlin. Só pode contrair a febre uma vez, e deve viver ou morrer pelas regras da Febre da Rocha Fantasma.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Ganha 5 Pontos de Poder extras ao comprar, mas um 13 na Tabela de Mau Funcionamento causa a febre da rocha fantasma em vez de Gremlin."
+  },
+  {
+    "id": "genio_verdadeiro",
+    "nome": "GÊNIO VERDADEIRO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Astúcia": 8
+      },
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_cientista_louco"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Alguns dizem que a Nova Ciência é inspirada por entidades sobrenaturais; a maioria dos inventores chama isso de superstição, mas um verdadeiro gênio não só aceita como abraça a ideia — afinal, não importa de onde vem a inspiração, e sim o que se faz com a tecnologia.\nSempre que precisar usar a Tabela de Loucura ou a Tabela de Mau Funcionamento de dispositivos infernais, o personagem pode gastar um Bene para forçar o Xerife a rolar de novo e então escolher o resultado que preferir. É possível gastar quantos Benes quiser até se safar ou ficar satisfeito com o resultado.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Gastando Benes, força o Xerife a rerrolar a Tabela de Loucura ou de Mau Funcionamento e escolher o resultado, quantas vezes desejar."
+  },
+  {
+    "id": "ligacao_com_o_ferro",
+    "nome": "LIGAÇÃO COM O FERRO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_cientista_louco"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Todos têm de aprender seu ofício em algum lugar. O cientista louco foi aprendiz de um mestre artesão, trabalhou em uma fábrica da Hellstromme Industries, na oficina da Smith & Robards, ou mesmo em alguma instalação secreta do governo. Estudantes dessas difíceis e inovadoras provações na Nova Ciência são ditos ter uma \"Ligação com o Ferro\".\nO herói ou heroína conseguiu deixar seu antigo emprego com parte do equipamento com que trabalhou e ainda tem amigos que podem lhe conseguir um acordo especial quando está em apuros. O cientista louco começa com até $2.000 em dispositivos infernais ou veículos, e reduz em 25% o preço listado de quaisquer dispositivos comprados futuramente através dessa fonte. Pode conseguir descontos por outros meios, recitando suas credenciais e compartilhando experiências com outros inventores (a critério do Xerife).",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Começa com até $2.000 em dispositivos infernais ou veículos e ganha 25% de desconto em compras futuras de dispositivos através dessa fonte."
+  },
+  {
+    "id": "bruxeiro",
+    "nome": "BRUXEIRO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Atirar": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_mascate"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "John Henry \"Doc\" Holliday era um mascate que aprendeu os segredos da \"magia rúnica\", um processo que antigos vikings usavam para encantar suas armas. Ele gravou runas em seu revólver favorito e a \"arte do bruxeiro\" nasceu, mais tarde divulgada em uma série de romances baratos.\nBruxeiros que aprendem os segredos de Holliday ganham o poder enfeitiçar munição e podem criar suas próprias \"armas enfeitiçadas\" gravadas com runas. Isso leva quatro horas por arma (a maior parte gravando o cano com runas); pode ser qualquer arma de fogo, de uma derringer a uma Gatling.\nUma vez concluída, o bruxeiro pode usar essa arma para lançar qualquer um dos seguintes poderes que possua, sobre ou com a arma enfeitiçada, sem incorrer em penalidade de Ação Múltipla: aumentar Atirar, deflexão, enfeitiçar munição e proteção. Essas magias têm Distância Pessoal mesmo lançadas dessa forma e não podem usar o modificador Receptores Adicionais. A ativação faz as runas da arma brilharem sutilmente, lançarem faíscas ou efeito semelhante.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Concede o poder enfeitiçar munição e permite gravar runas em uma arma de fogo (4 horas) para lançar sobre/com ela, sem penalidade de Ação Múltipla, os poderes aumentar Atirar, deflexão, enfeitiçar munição e proteção."
+  },
+  {
+    "id": "conhecedor",
+    "nome": "CONHECEDOR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Heroico",
+      "atributos": {},
+      "pericias": {
+        "Conjurar": 10
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_mascate"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Com o conhecimento vem o poder, e este mascate sabe bem disso. Depois de formar uma mão de pôquer de cinco cartas ao Barganhar com o Diabo, o mascate pode descartar até três cartas e sacar novamente.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Ao Barganhar com o Diabo, permite descartar até três cartas da mão formada e sacar novamente."
+  },
+  {
+    "id": "grande_apostador",
+    "nome": "GRANDE APOSTADOR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Conjurar": 6
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_mascate"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Aposte alto ou vá pra casa. O herói saca uma carta extra sempre que Barganha com o Diabo.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Saca uma carta extra ao Barganhar com o Diabo."
+  },
+  {
+    "id": "grande_apostador_aprimorado",
+    "nome": "GRANDE APOSTADOR APRIMORADO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "grande_apostador"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O jogador inveterado saca duas cartas extras (no total) ao Barganhar com o Diabo.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Saca duas cartas extras (total) ao Barganhar com o Diabo, substituindo o bônus de Grande Apostador."
+  },
+  {
+    "id": "sangue_dos_whateley",
+    "nome": "SANGUE DOS WHATELEY",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "antecedente_arcano_mascate"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Em algum ramo torto da árvore genealógica do mascate há os Whateley, uma família distorcida de bruxas e feiticeiros consanguíneos, poderosa e extremamente louca. Mascates com o espírito dos Whateley correndo nas veias aprenderam a \"magia do sangue\".\nMuitos Whateley são deformados, embora o herói ou heroína não precise ser (pegue a Complicação apropriada se for o caso); todos têm uma marca reveladora — pele pálida, cabelo preto, unhas compridas, aparência doentia, e todos têm olhos verdes. Algo no sangue contaminado afasta as pessoas, reduzindo as rolagens de Persuadir do mascate em 1 (embora Vantagens como Atraente ou Carismático possam compensar isso).\nUm mascate com Sangue dos Whateley pode sofrer voluntariamente um nível de Fadiga para ganhar 5 Pontos de Poder, ou um Ferimento para ganhar 10. Isso é feito se cortando, se entalhando ou se mutilando de outra forma, como uma ação livre. Se isso for Incapacitar a pessoa, ela completa seu turno antes de desmaiar.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Reduz Persuadir em 1, mas permite sofrer voluntariamente 1 nível de Fadiga por 5 Pontos de Poder, ou 1 Ferimento por 10 Pontos de Poder, como ação livre."
+  },
+  {
+    "id": "kung_fu_superior",
+    "nome": "KUNG FU SUPERIOR",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {
+        "Espírito": 6
+      },
+      "pericias": {
+        "Lutar": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_mestre_do_chi"
+      ],
+      "observacoes": "Escolha um estilo por compra; pode ser comprada novamente para aprender outros estilos (até os 6 listados).",
+      "choiceOptions": [
+        "Estilo Bêbado",
+        "Garra de Águia",
+        "Louva-a-Deus",
+        "Macaco",
+        "Shuai Jiao",
+        "Tantui",
+        "Wing Chun"
+      ]
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Através de anos de estudo concentrado sob a tutela de um sábio professor, o herói ou heroína dominou vários estilos ou posições de sua prática particular de kung fu.\nEscolha uma das opções abaixo na primeira vez que esta Vantagem for comprada; ela pode ser comprada outras vezes para adicionar novas opções. Como uma ação livre no início do turno, o personagem pode assumir qualquer um dos estilos que já tenha escolhido; os benefícios do estilo permanecem até que ele mude para outro.\nEstilo Bêbado: adversários subtraem 2 das rolagens de ataque para atingir o lutador, mas sua Movimentação é reduzida em 2 (ainda pode correr).\nGarra de Águia: os ataques desarmados de Lutar ganham PA 4 e são considerados Arma Pesada.\nLouva-a-Deus: uma vez por rodada, quem falhar um ataque de Lutar contra o artista marcial fica Distraído ou Vulnerável, à escolha do artista marcial.\nMacaco: +2 de Aparar; também pode fazer um Desafio de Atletismo contra todos os inimigos adjacentes como uma única ação, cada um resistindo separadamente.\nShuai Jiao: uma vez por rodada, quando um inimigo falha um ataque de Lutar contra o artista marcial, ele pode realizar uma tentativa de Agarrar como ação livre.\nTantui: o dano de combate desarmado de um ataque de Lutar por rodada aumenta em um tipo de dado; se o ataque deixar o inimigo Abalado ou Ferido, ele também é empurrado 1d4 quadros (1d4+2 com ampliação). Uma rolagem de Atletismo bem-sucedida permite levantar-se do chão sem gastar os 2 quadros de movimento habituais.\nWing Chun: +1 de Aparar e -2 no dano corpo a corpo recebido enquanto usa este estilo.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Escolhe um estilo de kung fu com um benefício próprio (Bêbado, Garra de Águia, Louva-a-Deus, Macaco, Shuai Jiao, Tantui ou Wing Chun); pode ser comprada de novo para aprender outros estilos."
+  },
+  {
+    "id": "kung_fu_celestial",
+    "nome": "KUNG FU CELESTIAL",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {
+        "Espírito": 8
+      },
+      "pericias": {
+        "Lutar": 10
+      },
+      "vantagens_previas": [
+        "kung_fu_superior"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Mais opções se tornam disponíveis ao artista marcial à medida que ele domina os aspectos místicos e físicos de sua arte.\nQuem possui esta Vantagem ganha um estilo adicional de Kung Fu Superior e pode assumir dois estilos ao mesmo tempo, usando qualquer uma ou ambas as opções como achar melhor. É possível trocar um ou ambos os estilos como ação livre no início do turno.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Ganha mais um estilo de Kung Fu Superior e passa a poder manter dois estilos ativos ao mesmo tempo, trocando-os como ação livre."
+  },
+  {
+    "id": "como_um_carvalho",
+    "nome": "COMO UM CARVALHO",
+    "categoria": "PROFISSIONAL",
+    "requisitos": {
+      "estagio": "Veterano",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "coragem",
+        "patrulheiro_territorial"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Poucas coisas acalmam os nervos de um grupo como ver um Patrulheiro de pé, frente a frente, com uma abominação horrenda.\nTodos os aliados dentro de 12 quadros do Patrulheiro negam 2 pontos de penalidades de Medo ao fazerem um teste de Medo. Se o Patrulheiro falhar em seu próprio teste de Medo, ou ficar Abalado ou Atordoado, os aliados não recebem o benefício. Se um grupo faz o teste ao mesmo tempo, o Patrulheiro rola primeiro.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Aliados a até 12 quadros negam 2 pontos de penalidade em testes de Medo, desde que o Patrulheiro não tenha falhado seu próprio teste nem esteja Abalado/Atordoado."
+  },
+  {
+    "id": "promocao_de_patrulheiro",
+    "nome": "PROMOÇÃO DE PATRULHEIRO",
+    "categoria": "PROFISSIONAL",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {},
+      "vantagens_previas": [
+        "patrulheiro_territorial"
+      ],
+      "observacoes": "Pode ser comprada até três vezes: 1ª vez (Experiente) promove a Sargento; 2ª vez promove a Tenente; 3ª vez, exigindo Estágio Heroico, promove a Capitão/Capitã."
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O Patrulheiro ou Patrulheira é promovido a Sargento. Recebe um ligeiro aumento de salário, uma espingarda ou rifle Gatling e, se desejar, pode pedir Favores maiores.\nEsta Vantagem pode ser escolhida uma segunda vez para uma promoção a Tenente, concedendo acesso ao Capítulo 13 de Fugitivos da Justiça, um pouco de dinheiro extra e a capacidade de pedir grandes Favores.\nNo Estágio Heroico, pode ser escolhida uma última vez para a promoção a Capitão ou Capitã, concedendo acesso a Favores de 4 pontos.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Repetível até 3 vezes: promove a Sargento (salário maior, espingarda/Gatling, Favores maiores), depois a Tenente (Capítulo 13 de Fugitivos da Justiça, Favores grandes) e, no Estágio Heroico, a Capitão/Capitã (Favores de 4 pontos)."
+  },
+  {
+    "id": "favor_do_espirito",
+    "nome": "FAVOR DO ESPÍRITO",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "atributos": {},
+      "pericias": {
+        "Fé": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_xama"
+      ],
+      "observacoes": "Escolha um poder do xamã diferente a cada compra desta Vantagem; o benefício de ignorar a penalidade de Ação Múltipla só pode ser usado uma vez por turno, mesmo com múltiplas compras."
+    },
+    "limite_compra": "infinito",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "O xamã ganhou o favor de um espírito em particular e o poder singular que ele lhe concede.\nEscolha um dos poderes do xamã cada vez que esta Vantagem for comprada. O xamã pode lançar esse poder como uma ação sem incorrer em penalidade de Ação Múltipla, podendo, por exemplo, invocar proteção e em seguida fazer um ataque, orar por outra bênção ou realizar outra ação.\nO xamã só pode reclamar este benefício uma vez por turno, mesmo que tenha escolhido Favor do Espírito mais de uma vez (para poderes diferentes).",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Escolhe um poder do xamã que pode ser lançado sem penalidade de Ação Múltipla (uma vez por turno); repetível para cobrir poderes adicionais."
+  },
+  {
+    "id": "fetiche",
+    "nome": "FETICHE",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Novato",
+      "atributos": {},
+      "pericias": {
+        "Fé": 8
+      },
+      "vantagens_previas": [
+        "antecedente_arcano_xama"
+      ],
+      "observacoes": ""
+    },
+    "limite_compra": "uma_vez",
+    "vinculado_pericia": false,
+    "ganha_ao_comprar": [],
+    "descricao": "Fetiches são dispositivos que ajudam um xamã a se concentrar quando precisa contactar o mundo espiritual: pode ser uma figura de graveto representando um animal predileto, um ícone da natureza ou um chocalho que ajuda a chamar a atenção dos espíritos da natureza distantes.\nUm xamã com um fetiche recebe uma rerrolagem gratuita quando faz uma rolagem de Fé. Se o fetiche for perdido ou destruído, o xamã pode criar um substituto com um ritual de uma hora.",
+    "livros": [
+      "DEADLANDS"
+    ],
+    "descricaoLite": "Concede uma rerrolagem gratuita em rolagens de Fé; se o fetiche for perdido ou destruído, um ritual de uma hora cria um substituto."
   }
 ]

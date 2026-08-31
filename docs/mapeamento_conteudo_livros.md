@@ -117,12 +117,12 @@ existe mas precisa validação linha a linha):
 | `HORROR` | [`book_index/horror.md`](reports/book_index/horror.md) | 179 | 7 | 3 |
 | `SUPERPODERES` | [`book_index/superpoderes.md`](reports/book_index/superpoderes.md) | 125 | 3 | 3 |
 | `PATHFINDER_BASICO` / `PATHFINDER_COMPENDIO` | [`book_index/pathfinder.md`](reports/book_index/pathfinder.md) | 67 | 1 | 2 |
-| `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | 88 | **36** | 4 |
+| `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | 126 | 0 | 4 |
 | `ADG_BASICO` / `ADG_DIARIO_KUI` | [`book_index/adg.md`](reports/book_index/adg.md) | 171 | 1 | 0 |
 | `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 83 | **33** | 8 |
 | `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 62 | 14 | 6 |
 | `WISEGUYS` | [`book_index/wiseguys.md`](reports/book_index/wiseguys.md) | 99 | 1 | 0 |
-| **Total** | | **1520** | **98** | **46** |
+| **Total** | | **1558** | **62** | **46** |
 
 **Leitura rápida:** o Livro Básico, Fantasia, Arte da Guerra, Wiseguys e agora
 **Sci-Fi** estão praticamente 100% cobertos (0-1 `[FALTA]`, os módulos mais
@@ -296,9 +296,25 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
    é o próximo passo natural (as fórmulas de Aparar/Movimentação/Tamanho
    racial, armas naturais etc. continuam comparando por nome/regex até
    alguém fazer essa migração, agora que o id existe pra elas usarem).
-5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: ✅ ~~Sci-Fi (57)~~ —
-   feito (ver acima). Restam: Deadlands (36), Crystal Heart (33), CSV (14),
-   Horror (7).
+5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: ✅ ~~Sci-Fi (57)~~ e
+   ✅ ~~Deadlands (36)~~ — feitos (ver acima e abaixo). Restam: Crystal Heart
+   (33), CSV (14), Horror (7).
+
+**Deadlands resolvido (2026-08-31):** os 36 `[FALTA]` eram todas Vantagens de
+árvores de arquétipo (Abençoado, Agente, Atormentado ×2 seções, Cientista
+Louco, Mascate, Mestre do Chi, Patrulheiro Territorial, Xamã) + 1 poder novo +
+1 modificador de poder — sem ambiguidade de escopo (tudo build de personagem,
+nada de bestiário/crafting). Adicionadas 34 Vantagens a `vantagens.json`, o
+poder `abrir_portal` a `poderes.json`, e o modificador "Visão Espiritual (+5)"
+ao array `modificadores` do poder `detectar_ocultar_arcano` (cópia tagueada
+DEADLANDS). Ao ler o livro, o agente corrigiu vários dados que a varredura
+original tinha errado (ex.: Fé Verdadeira é Novato, não Veterano; Pessoa de
+Mil Faces é Experiente, não Heroico; Rebanho e Favor do Espírito são
+repetíveis) e confirmou que `implacavel_atormentado` tem mecânica realmente
+diferente de `implacavel` (HORROR), então o id próprio estava certo. Conferi
+manualmente (Fé Verdadeira, Abrir Portal e Visão Espiritual) contra o texto
+antes de mesclar — bateu tudo. Ver `docs/reports/book_index/deadlands.md` pra
+cada id e localização.
 6. Só depois, revisar os `[CONFERIR]` (custo/requisito/efeito a bater linha a
    linha com o livro) — risco menor que os itens acima, mas ainda vale para
    fechar o ciclo de confiabilidade.
