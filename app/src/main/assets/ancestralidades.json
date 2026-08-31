@@ -132,7 +132,10 @@
       "BASICO"
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
-    "especieId": "avianos"
+    "especieId": "avianos",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "AQUARIANOS",
@@ -516,7 +519,10 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial."
+    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial.",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "GUARDIÕES",
@@ -2507,7 +2513,10 @@
       "HORROR"
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
-    "especieId": "avianos"
+    "especieId": "avianos",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "AQUARIANOS",
@@ -5234,6 +5243,9 @@
     ],
     "livros": [
       "CIDADE_SOL_VAPOR"
+    ],
+    "tags": [
+      "asas"
     ]
   },
   {
@@ -5760,7 +5772,10 @@
       "SUPER"
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
-    "especieId": "avianos"
+    "especieId": "avianos",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "AQUARIANOS",
@@ -6158,7 +6173,10 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial."
+    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial.",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "GUARDIÕES",

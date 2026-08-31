@@ -451,6 +451,23 @@ fun SettingsDialog(
                             mutableStateOf<((com.example.swadebuilder.model.HabilidadeCriacao) -> Unit)?>(null)
                         }
 
+                        // "Bônus/Penalidade de Perícia (±1/±2)": traços genéricos do catálogo
+                        // oficial (basico_habilidades_raciais.json) que dizem "uma Perícia
+                        // específica"/"uma perícia escolhida" — sem picker, o Mestre selecionava
+                        // o traço genérico e não havia registro de qual perícia era. O app não
+                        // aplica esse bônus em teste nenhum (perícia aqui é só custo de criação
+                        // de raça, o teste em si é decidido à mesa), mas o traço final precisa
+                        // deixar claro qual perícia foi escolhida — mesmo padrão de
+                        // superPoderRacialPickerTarget, embutindo a escolha no nome
+                        // ("Bônus de Perícia (+1): Intimidar") sem tocar no id
+                        // (bonus_pericia_1/2, penalidade_pericia_1/2 continuam os mesmos).
+                        val periciaChoiceTraitIds = remember {
+                            setOf("bonus_pericia_1", "bonus_pericia_2", "penalidade_pericia_1", "penalidade_pericia_2")
+                        }
+                        var periciaTraitPickerTarget by remember {
+                            mutableStateOf<Pair<com.example.swadebuilder.model.HabilidadeCriacao, (com.example.swadebuilder.model.HabilidadeCriacao) -> Unit>?>(null)
+                        }
+
                         // Todas as categorias sempre disponíveis, em qualquer tela — a engrenagem
                         // já é global (tela inicial, criação, fase de XP), então não há mais
                         // motivo pra esconder categorias por causa de "isHomeScreen".
@@ -1800,8 +1817,11 @@ fun SettingsDialog(
                                         )
                                         allTraitsCatalog.filter { it.nome.contains(filterTraitText, ignoreCase = true) }.forEach { trait ->
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
                                             val isSel = if (isSuperPoderesRow) {
                                                 selectedRacialTraits.any { it.nome.startsWith("Super Poderes (") }
+                                            } else if (isPericiaChoiceRow) {
+                                                selectedRacialTraits.any { it.id == trait.id }
                                             } else {
                                                 selectedRacialTraits.any { it.nome.equals(trait.nome, ignoreCase = true) }
                                             }
@@ -1813,6 +1833,14 @@ fun SettingsDialog(
                                                         }
                                                     } else {
                                                         selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isPericiaChoiceRow) {
+                                                    if (checked) {
+                                                        periciaTraitPickerTarget = trait to { escolhido ->
+                                                            selectedRacialTraits = selectedRacialTraits + escolhido
+                                                        }
+                                                    } else {
+                                                        selectedRacialTraits = selectedRacialTraits.filterNot { it.id == trait.id }
                                                     }
                                                 } else {
                                                     selectedRacialTraits = if (checked) selectedRacialTraits + trait else selectedRacialTraits.filterNot { it.nome.equals(trait.nome, ignoreCase = true) }
@@ -1888,8 +1916,11 @@ fun SettingsDialog(
                                         )
                                         allVarianteTraitsCatalog.filter { it.nome.contains(filterVarianteTraitText, ignoreCase = true) }.forEach { trait ->
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
+                                            val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
                                             val isSel = if (isSuperPoderesRow) {
                                                 varianteTracosAdicionados.any { it.nome.startsWith("Super Poderes (") }
+                                            } else if (isPericiaChoiceRow) {
+                                                varianteTracosAdicionados.any { it.id == trait.id }
                                             } else {
                                                 varianteTracosAdicionados.any { it.nome.equals(trait.nome, ignoreCase = true) }
                                             }
@@ -1901,6 +1932,14 @@ fun SettingsDialog(
                                                         }
                                                     } else {
                                                         varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isPericiaChoiceRow) {
+                                                    if (checked) {
+                                                        periciaTraitPickerTarget = trait to { escolhido ->
+                                                            varianteTracosAdicionados = varianteTracosAdicionados + escolhido
+                                                        }
+                                                    } else {
+                                                        varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.id == trait.id }
                                                     }
                                                 } else {
                                                     varianteTracosAdicionados = if (checked) varianteTracosAdicionados + trait else varianteTracosAdicionados.filterNot { it.nome.equals(trait.nome, ignoreCase = true) }
@@ -1975,6 +2014,54 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { superPoderRacialPickerTarget = null }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        periciaTraitPickerTarget?.let { (trait, onEscolhido) ->
+                            var filterPericiaTraitText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { periciaTraitPickerTarget = null },
+                                title = { Text("Escolher Perícia") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        Text(
+                                            "${trait.nome} — a que se aplica ao teste da perícia é decidida à mesa; aqui só registramos qual perícia foi escolhida pra este traço.",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterPericiaTraitText,
+                                            onValueChange = { filterPericiaTraitText = it },
+                                            label = { Text("Filtrar Perícia") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        state.listaPericias
+                                            .distinctBy { it.nome }
+                                            .sortedBy { it.nome }
+                                            .filter { it.nome.contains(filterPericiaTraitText, ignoreCase = true) }
+                                            .forEach { pericia ->
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth().clickable {
+                                                        onEscolhido(
+                                                            com.example.swadebuilder.model.HabilidadeCriacao(
+                                                                nome = "${trait.nome}: ${pericia.nome}",
+                                                                custo = trait.custo,
+                                                                descricao = "${trait.descricao} Perícia escolhida: ${pericia.nome}.",
+                                                                descricaoLite = trait.descricaoLite,
+                                                                id = trait.id
+                                                            )
+                                                        )
+                                                        periciaTraitPickerTarget = null
+                                                    }.padding(vertical = 6.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Text(pericia.nome, style = MaterialTheme.typography.bodyMedium)
+                                                }
+                                            }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { periciaTraitPickerTarget = null }) { Text("Cancelar") } }
                             )
                         }
 

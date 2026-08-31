@@ -20,23 +20,41 @@ e o que ainda precisa de decisão antes de mexer.
   usa `RacialTraitPointCatalog.LABEL`/`EFEITOS` primeiro, com fallback pro
   nome cru só quando não há id reconhecido.
 - **RECLUSO** (Anjo, CSV) sem entrada nenhuma em CUSTOS/LABEL — cadastrado
-  (-2, tier de `penalidade_pericia_2`), mas ver nota abaixo — continua sem
-  efeito mecânico aplicado de verdade, só ficou consistente no catálogo de
-  custo/rótulo.
-
-## Decisão de escopo confirmada (não é bug, é limite do app)
-
-**Bônus/penalidade fixo de perícia não é calculado em lugar nenhum do app.**
-O catálogo oficial de criação de raça tem `bonus_pericia_1/2` e
-`penalidade_pericia_1/2` (usados hoje só pra precificar pontos de traço
-customizado), mas o `ModifierEngine` não tem alvo de "perícia" — só
-Resistência/Aparar/Passo/Armadura/Tamanho. Afeta pelo menos: Recluso (Anjo,
--2 Conhecimento Geral), Sem Noção (Meio-Gigantes, -1 Conhecimento
-Geral/Perceber), Aptidão com Pedras (Anão Pathfinder, +2 Perceber
-situacional), Natureza Diabólica (+1 Intimidar), Obvio (-1 Furtividade),
-Brutal/Rude (-1/-2 Persuadir), entre outros. Construir esse mecanismo é
-feature nova (novo `ModifierTarget`, exibição na tela de Perícias), não um
-ajuste de id — fica pra você decidir se vale a pena antes de eu mexer.
+  (-2, tier de `penalidade_pericia_2`). Confirmado com o dono do projeto:
+  perícia é teste de jogo, não dado de construção — não precisa de
+  modificador calculado, só precisa que o custo/rótulo do traço fique
+  registrado certinho (feito).
+- **Escolha de perícia nos traços genéricos do catálogo oficial**:
+  `bonus_pericia_1/2`/`penalidade_pericia_1/2` (basico_habilidades_raciais.
+  json) não tinham nenhum jeito de registrar QUAL perícia foi escolhida ao
+  montar uma raça/Variante customizada — o traço entrava com o nome genérico
+  igual pra qualquer perícia. Adicionado um picker em `SettingsDialog.kt`
+  (mesmo padrão já usado pro Super Poder racial): ao marcar um desses 4
+  traços, abre "Escolher Perícia" e o traço final entra como, por exemplo,
+  "Bônus de Perícia (+1): Intimidar" — id continua o mesmo
+  (`bonus_pericia_1`), só o nome/descrição da instância ficam
+  autoexplicativos. Não calcula o +1/-1 em teste nenhum, por decisão
+  confirmada — só deixa registrado o que é.
+- **Mordida/Garra/Chifre/Casco/Ferrão — já estava certo, conferido**: as 21
+  entradas de arma natural em `ancestralidades.json` já têm
+  `armasNaturais` estruturado (`dano`, `pa`, `escalavel`) e
+  `CriadorState.kt:1764-1770` já lê direto desse campo — o bloco de regex/
+  palavra-chave antigo (achado de auditoria anterior) já tinha sido
+  substituído antes desta sessão. Nenhuma ação necessária.
+- **Tag de "asas físicas"**: já existe um mecanismo funcionando —
+  `requisitos.tags` de Vantagem (ex.: `golpe_de_asa`, Fantasia) é validado
+  contra `RacialModifier.tags` da raça (`CriadorState.kt:4873-4875`,
+  `ValidateRequirementsUseCase.kt:83-85`), e separadamente
+  `requisitos.templatesRequired` (ex.: `asas_demonio`, `ataque_alado (Anjo)`,
+  Horror) é validado contra o Monstro Heroico selecionado
+  (`CriadorState.kt:4879-4881`) — os dois já funcionam certos hoje. O que
+  achei de errado: Avianos (Básico/Horror/Super) e Celestiais
+  (Básico/Super) tinham a mesma habilidade de Voo que suas cópias de
+  Fantasia/Sci-Fi, mas SEM o `tags: ["asas"]` que essas cópias têm —
+  corrigido (+ Anjo do Cidade do Sol a Vapor, que não tinha tag nenhuma).
+  O Anjo/Demônio do Horror (Monstro Heroico) não precisam dessa tag: já são
+  travados por `templatesRequired`, que é mais preciso (trava no monstro
+  exato, não em "qualquer um com asas").
 
 ## Pendente — precisa de decisão antes de corrigir
 
