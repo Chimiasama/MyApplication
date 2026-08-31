@@ -211,14 +211,32 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
    (`ValidateSelectionUseCase` vs. `RequirementValidator.canSelect`), que
    precisam ser sincronizados manualmente a cada mudança de regra — foi
    exatamente essa duplicação que já causou o bug do "O Melhor Que Há"
-   (item 2 acima). Recomendação do relatório, em ordem: (a) unificar o mapa
-   de incompatibilidades numa fonte única por id; (b) fazer
-   `ProgressosDialog` usar `ValidateSelectionUseCase` em vez de
-   `RequirementValidator` (ou o inverso, virando um wrapper fino do outro);
-   (c) remover a entrada morta `"TARO ENGENHEIRO"` do mapa (não corresponde
-   a nenhum id real); (d) consolidar a lista `scifiVariantDrivenKeys`
-   duplicada entre `ResolveAncestrySpecificAdjustmentsUseCase.kt` e
-   `CriadorState.kt`. Nada disso foi implementado ainda.
+   (item 2 acima).
+   - **(a) feito** (commit `ccea1dc`): as 3 cópias viraram uma fonte única,
+     `model/IncompatibilityRules.kt`, usada por `ValidateConflictsUseCase`,
+     `RequirementValidator` e `CriadorState.mensagemConflitoPara*`. Ao
+     conferir cada entrada linha a linha contra o catálogo e contra o texto
+     real de Cidade do Sol a Vapor (`docs/swade_csv_livro_dos_mortais`),
+     descobri que o problema era maior do que o relatório apontou: **5 das
+     10 duplas de conflito nunca funcionaram em NENHUMA das 3 cópias**
+     (Alma Penhorada/Vendida × Antecedente Arcano Milagres, Maldição do
+     Gremlin × Antecedente Arcano Tecnomagia, Tecnofobia × Tarô
+     Engenheiro/Mestre das Caldeiras/Mecânico Cego) — as chaves usavam
+     prefixo `"COMP "` e texto `"ANTECEDENTE ARCANO X"` com espaço, que
+     nunca batem contra os ids reais (`comp_alma_penhorada`,
+     `antecedente_arcano_milagres`, snake_case) nem contra os nomes reais
+     (que têm parênteses, e `keyify()` não remove parênteses). Ou seja, não
+     era só risco de divergência futura — metade das regras do livro já
+     estavam silenciosamente sem efeito em todo o app, não só na
+     progressão. A correção também incluiu as duas variantes de Crystal
+     Heart (`lento_ch`, `inimigo_ch`) que nenhuma das 3 cópias cobria.
+     Isso já resolve **(c)** também (a entrada morta `"TARO ENGENHEIRO"`
+     virou o id real `taro_engenheiro`). Testes novos em
+     `IncompatibilityRulesTest.kt` cobrindo as duas direções de cada par.
+   - **(b) e (d) ainda não feitos**: unificar `ProgressosDialog` num único
+     validador com a criação de personagem (elimina os achados 1a/Samurai
+     do relatório) e consolidar `scifiVariantDrivenKeys` duplicada em
+     `ResolveAncestrySpecificAdjustmentsUseCase.kt`/`CriadorState.kt`.
 4. **Dar `id` estável a `pericias.json` e `equipamentos.json`** — pré-requisito
    estrutural antes de conseguir limpar boa parte do hardcode de
    Perícias/Equipamento/Ancestralidade (armas naturais, Aparar, Movimentação,
