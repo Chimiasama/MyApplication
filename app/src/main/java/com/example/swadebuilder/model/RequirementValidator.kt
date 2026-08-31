@@ -232,30 +232,8 @@ object RequirementValidator {
         if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
 
         // 14) Conflitos com complicações
-        // Incompatibilities are private in CriadorState, need to reproduce logic or move map to Constants/Global.
-        // Replicating map here since it's small and static constants.
-        val incompatibilidades: Map<String, Set<String>> = mapOf(
-            Constants.EDGE_SLOW   to setOf(Constants.EDGE_FLEET_FOOTED),
-            Constants.EDGE_FLEET_FOOTED to setOf(Constants.EDGE_SLOW),
-            Constants.EDGE_OBESE      to setOf(Constants.EDGE_MUSCULAR),
-            Constants.EDGE_MUSCULAR  to setOf(Constants.EDGE_OBESE),
-            Constants.EDGE_POVERTY        to setOf(Constants.EDGE_RICH, Constants.EDGE_FILTHY_RICH),
-            Constants.EDGE_RICH           to setOf(Constants.EDGE_POVERTY),
-            Constants.EDGE_FILTHY_RICH  to setOf(Constants.EDGE_POVERTY)
-        )
-
-        val compsConfl = incompatibilidades[key] ?: emptySet()
-        val vantKey = v.nome.trim().uppercase()
-        if (vantKey == Constants.EDGE_RICH || vantKey == Constants.EDGE_FILTHY_RICH) {
-            val tenhoPobreza = state.complicacoesSelecionadas.keys.any {
-                it.id.trim().uppercase() == Constants.EDGE_POVERTY
-            }
-            if (tenhoPobreza) return false
-        }
-        if (state.complicacoesSelecionadas.keys
-                .map { it.id.keyify() }
-                .any { it in compsConfl }
-        ) return false
+        val compsConfl = IncompatibilityRules.complicacoesIncompativeisCom(v.id)
+        if (state.complicacoesSelecionadas.keys.any { it.id in compsConfl }) return false
 
         return true
     }

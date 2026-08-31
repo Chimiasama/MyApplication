@@ -28,6 +28,7 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.GameDataSnapshot
+import com.example.swadebuilder.model.IncompatibilityRules
 import com.example.swadebuilder.model.MechaItem
 import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
@@ -3552,45 +3553,17 @@ class CriadorState {
             }
     }
 
-    private val incompatibilidades: Map<String, Set<String>> = mapOf(
-        "LENTO"   to setOf("LIGEIRO"),
-        "LIGEIRO" to setOf("LENTO"),
-        "OBESO"      to setOf("MUSCULOSO"),
-        "MUSCULOSO"  to setOf("OBESO"),
-        "COMP ALMA PENHORADA" to setOf("ANTECEDENTE ARCANO MILAGRES", "AA MILAGRES"),
-        "COMP ALMA VENDIDA" to setOf("ANTECEDENTE ARCANO MILAGRES", "AA MILAGRES"),
-        "ANTECEDENTE ARCANO MILAGRES" to setOf("COMP ALMA PENHORADA", "COMP ALMA VENDIDA"),
-        "AA MILAGRES" to setOf("COMP ALMA PENHORADA", "COMP ALMA VENDIDA"),
-        "COMP MALDICAO GREMLIN" to setOf("ANTECEDENTE ARCANO TECNOMAGIA", "AA TECNOMAGIA"),
-        "ANTECEDENTE ARCANO TECNOMAGIA" to setOf("COMP MALDICAO GREMLIN"),
-        "AA TECNOMAGIA" to setOf("COMP MALDICAO GREMLIN"),
-        "COMP TECNOFOBIA" to setOf("TARO ENGENHEIRO", "MESTRE DAS CALDEIRAS", "MECANICO CEGO"),
-        "TARO ENGENHEIRO" to setOf("COMP TECNOFOBIA"),
-        "MESTRE DAS CALDEIRAS" to setOf("COMP TECNOFOBIA"),
-        "MECANICO CEGO" to setOf("COMP TECNOFOBIA"),
-        "POBREZA"        to setOf("RICO", "PODRE DE RICO"),
-        "RICO"           to setOf("POBREZA"),
-        "PODRE DE RICO"  to setOf("POBREZA"),
-        "ESCOLHIDO"      to setOf("INIMIGO"),
-        "INIMIGO"        to setOf("ESCOLHIDO")
-    )
-
     fun mensagemConflitoParaVantagem(vantagem: Vantagem): String? {
-        val keys = setOf(vantagem.nome.keyify(), vantagem.id.keyify())
-        val compsConfl = keys.flatMap { incompatibilidades[it].orEmpty() }.toSet()
+        val compsConfl = IncompatibilityRules.complicacoesIncompativeisCom(vantagem.id)
         if (compsConfl.isEmpty()) return null
-        val conflito = complicacoesSelecionadas.keys.firstOrNull { comp ->
-            comp.id.keyify() in compsConfl
-        }
+        val conflito = complicacoesSelecionadas.keys.firstOrNull { comp -> comp.id in compsConfl }
         return conflito?.let { "Remova ${it.name} para pegar ${vantagem.nome}." }
     }
 
     fun mensagemConflitoParaComplicacao(complicacao: Complicacao): String? {
-        val key = complicacao.id.keyify()
-        val vantConfl = incompatibilidades[key] ?: return null
-        val conflito = vantagensSelecionadas.firstOrNull { vant ->
-            vant.nome.keyify() in vantConfl || vant.id.keyify() in vantConfl
-        }
+        val vantConfl = IncompatibilityRules.vantagensIncompativeisCom(complicacao.id)
+        if (vantConfl.isEmpty()) return null
+        val conflito = vantagensSelecionadas.firstOrNull { vant -> vant.id in vantConfl }
         return conflito?.let { "Remova ${it.nome} para pegar ${complicacao.name}." }
     }
 
