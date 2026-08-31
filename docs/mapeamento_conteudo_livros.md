@@ -119,16 +119,16 @@ existe mas precisa validação linha a linha):
 | `PATHFINDER_BASICO` / `PATHFINDER_COMPENDIO` | [`book_index/pathfinder.md`](reports/book_index/pathfinder.md) | 67 | 1 | 2 |
 | `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | 126 | 0 | 4 |
 | `ADG_BASICO` / `ADG_DIARIO_KUI` | [`book_index/adg.md`](reports/book_index/adg.md) | 171 | 1 | 0 |
-| `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 83 | **33** | 8 |
+| `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 116 | 0 | 8 |
 | `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 62 | 14 | 6 |
 | `WISEGUYS` | [`book_index/wiseguys.md`](reports/book_index/wiseguys.md) | 99 | 1 | 0 |
-| **Total** | | **1558** | **62** | **46** |
+| **Total** | | **1591** | **29** | **46** |
 
-**Leitura rápida:** o Livro Básico, Fantasia, Arte da Guerra, Wiseguys e agora
-**Sci-Fi** estão praticamente 100% cobertos (0-1 `[FALTA]`, os módulos mais
-antigos/maduros do app + Sci-Fi resolvido em 2026-08-31 — ver abaixo). As maiores
-lacunas de conteúdo real agora estão em **Deadlands (36 faltando)** e
-**Crystal Heart (33 faltando)** — ver o motivo resumido em cada arquivo de índice
+**Leitura rápida:** o Livro Básico, Fantasia, Arte da Guerra, Wiseguys, Deadlands,
+**Sci-Fi** e agora **Crystal Heart** estão praticamente 100% cobertos (0-1
+`[FALTA]`, os módulos mais antigos/maduros do app + os resolvidos em 2026-08-31
+— ver abaixo). A maior lacuna de conteúdo real que resta é **Cidade do Sol a
+Vapor / CSV (14 faltando)** — ver o motivo resumido em cada arquivo de índice
 antes de decidir prioridade.
 
 **Sci-Fi resolvido (2026-08-31, item 5 da lista de prioridades):** dos 56 itens
@@ -145,6 +145,25 @@ constava na varredura original). Conteúdo transcrito por agente a partir do
 texto de `docs/swade_scifi` e conferido manualmente (spot-check linha a linha
 contra o livro) antes de mesclar — ver `docs/reports/book_index/scifi.md` pra
 cada id e localização.
+
+**Crystal Heart resolvido (2026-08-31, item 5 da lista de prioridades):** os
+33 Cristais faltantes do "Apêndice A: Mais Cristais" (`docs/swade_crystal_heart`,
+linhas 16641–18287) foram transcritos e mesclados em
+`app/src/main/assets/crystal_coracoes.json` (38 → 71 registros). A determinação
+do Estágio (Novato/Experiente/Veterano/Heroico) de cada Cristal por posição no
+texto (entre os rodapés de seção do apêndice) foi cruzada com o capítulo de
+Agentes-exemplo do livro (linhas 3400–3900), que cita o Estágio de vários
+Cristais nomeados em prosa direta. Isso revelou que a seção do apêndice tem um
+artefato real de extração em duas colunas (já visível no texto de Distorção/
+Nada, cujos poderes foram impressos intercalados) e que 4 Cristais
+(`heart_ausencia`, `heart_fera`, `heart_reverte`, `heart_aurora`) tinham Estágio
+diferente do que a posição no texto sugeria — corrigidos para bater com a
+citação direta ("Jordan carrega Ausência (Veterano)", "Marc carrega Besta [=
+Fera] (Veterano)", "Reverte (Heroico) permite a Ivan...", "Aurora (Heroico), o
+Cristal que Yurhant usa..."). Distribuição final: 3 Novato, 11 Experiente, 13
+Veterano, 6 Heroico. Ver `docs/reports/book_index/crystal_heart.md` para cada
+id, localização e a justificativa completa de cada correção de Estágio
+(campo `_duvida_estagio` no JSON).
 
 ## Auditoria de hardcode (nome-texto em vez de ID)
 
@@ -296,9 +315,9 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
    é o próximo passo natural (as fórmulas de Aparar/Movimentação/Tamanho
    racial, armas naturais etc. continuam comparando por nome/regex até
    alguém fazer essa migração, agora que o id existe pra elas usarem).
-5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: ✅ ~~Sci-Fi (57)~~ e
-   ✅ ~~Deadlands (36)~~ — feitos (ver acima e abaixo). Restam: Crystal Heart
-   (33), CSV (14), Horror (7).
+5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: ✅ ~~Sci-Fi (57)~~,
+   ✅ ~~Deadlands (36)~~ e ✅ ~~Crystal Heart (33)~~ — feitos (ver acima e
+   abaixo). Restam: CSV (14), Horror (7).
 
 **Deadlands resolvido (2026-08-31):** os 36 `[FALTA]` eram todas Vantagens de
 árvores de arquétipo (Abençoado, Agente, Atormentado ×2 seções, Cientista

@@ -791,5 +791,728 @@
       "Bando (conjurar aliado, -3). Invoca um bando de aves de cores prismáticas para lutar ao lado do personagem.",
       "Abra as Asas (voar, -2). Faz surgir asas sólidas capazes de sustentar voo, mas deixa o personagem Distraído, com -2 em Astúcia."
     ]
+  },
+  {
+    "id": "heart_tranquilo",
+    "nome": "Tranquilo",
+    "estagio": "Novato",
+    "habilidade_passiva": "Quando tudo é direto, não há nada que faça você hesitar ou reconsiderar. Você é Rápido.",
+    "poderes": [
+      "Ingenuidade (dádiva do guerreiro, Contínuo, -2). Apenas em você. Você aumenta sua concentração ao máximo, de modo que quase nada pode distraí-lo. Você ganha Corajoso e Reflexos de Combate. Com uma ampliação, você adquire a capacidade de gastar um Bene para ter sucesso automático em uma rolagem baseada em Astúcia ou Espírito feita contra você, em vez de rolar os dados. Enquanto estiver ativo, você aceita tudo ao pé da letra e é ainda menos sofisticado do que o normal; reduza seu dado de Astúcia em um passo adicional, além da penalidade da disposição (para 1d4-2 se já estiver abaixo do mínimo). Com uma ampliação, você rola todas as habilidades de Astúcia e Espírito com -1.",
+      "Despreocupação (voar, -2). Você toca alguém e os liberta de suas preocupações, fazendo com que eles literalmente comecem a flutuar. A pessoa flutuante não tem controle sobre seu movimento; eles não voam de verdade, apenas ficam sem peso (uma brisa pode empurrá-los). Isso os deixa Distraídos. Um alvo não disposto pode resistir ao efeito com rolagem de Astúcia, com +2 se considerarem você hostil (é mais difícil afrouxá-los). Se falharem, podem rolar novamente no início de cada turno. Um alvo disposto não precisa rolar para resistir e até pode gastar uma ação para clarear a mente, dando a você +2 na rolagem de Canalizar Cristal para afetá-lo."
+    ],
+    "complicacao_inerente": "A Astúcia está relacionada a fazer conexões, mas este Cristal impede isso. Seu dado de Astúcia é reduzido em um passo (1d4-1 se já estiver no mínimo). Você não é 'burro', apenas tem dificuldade em diferenciar nuances de significado ou conectar diferentes conceitos.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Uma coluna torcida de fumaça. Tema: Pensamentos e ações simples e descomplicados — ver o que está bem na sua frente sem duvidar de si mesmo, adormecer rapidamente sem preocupações no mundo.",
+    "descricaoLite": "Uma coluna torcida de fumaça associada a pensamentos e ações simples, diretos e sem hesitação.",
+    "habilidadePassivaLite": "Concede a Vantagem Rápido: você nunca hesita diante do óbvio.",
+    "complicacaoInerenteLite": "Reduz o dado de Astúcia em um passo: dificuldade em captar nuances e conectar ideias, mesmo sem ser propriamente 'burro'.",
+    "poderesLite": [
+      "Ingenuidade (dádiva do guerreiro, Contínuo, -2). Você fica quase imune a distrações, ganhando Corajoso e Reflexos de Combate (com ampliação, sucesso automático contra rolagens de Astúcia/Espírito feitas contra você), mas enquanto ativo fica ainda mais literal e perde mais um passo de Astúcia.",
+      "Despreocupação (voar, -2). Toca um alvo e o deixa flutuando sem peso e sem controle sobre o próprio movimento, tornando-o Distraído; um alvo hostil pode resistir com Astúcia."
+    ]
+  },
+  {
+    "id": "heart_linguarudo",
+    "nome": "Linguarudo",
+    "estagio": "Novato",
+    "habilidade_passiva": "É difícil esconder qualquer coisa de você; você ganha a Vantagem Investigador, que também se aplica às tentativas de interrogatório.",
+    "poderes": [
+      "Constrangimento (aumentar característica [Provocar], Contínuo, -1). Apenas em você. Você extrai pequenos segredos embaraçosos das mentes daqueles ao seu redor, zombando deles para os desestabilizar. Você ganha a Vantagem do Agitador. Enquanto estiver ativo, você continua revelando todos os segredos que detecta (incluindo os de seus aliados!) - você não consegue evitar.",
+      "Revelar Segredos (leitura mental, -1). Seu Cristal tenta extrair um segredo da mente do alvo. Se você não fizer uma pergunta específica, você obtém uma informação aleatória que o alvo mantém em segredo."
+    ],
+    "complicacao_inerente": "Você tem uma vontade incontrolável de contar seus próprios segredos. Você tem Boca Grande.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Afiado, preto e roxo, parece estar nas sombras. Tema: Revelando verdades ocultas, segredos mantidos enterrados — encontrando a chave no fundo da gaveta, notando lugares suspeitos em um mapa.",
+    "descricaoLite": "Um cristal afiado, preto e roxo, que parece emergir das sombras e revela verdades e segredos ocultos.",
+    "habilidadePassivaLite": "Concede Investigador, inclusive em interrogatórios: nada fica escondido de você por muito tempo.",
+    "complicacaoInerenteLite": "Boca Grande: você não consegue guardar nem os próprios segredos.",
+    "poderesLite": [
+      "Constrangimento (aumentar característica [Provocar], Contínuo, -1). Extrai segredos embaraçosos das mentes ao redor para desestabilizar oponentes (ganha Agitador), mas enquanto ativo você revela todo segredo que detecta, até de aliados.",
+      "Revelar Segredos (leitura mental, -1). Extrai um segredo da mente do alvo — específico se você perguntar, ou algo aleatório se não perguntar."
+    ]
+  },
+  {
+    "id": "heart_alizarina",
+    "nome": "Alizarina",
+    "estagio": "Novato",
+    "habilidade_passiva": "Sempre que alguém te machuca, você fica Vulnerável apenas para você até o final do seu próximo turno. Isso inclui abuso verbal, mas o dano deve ser genuíno — eles devem te deixar pelo menos Abalado.",
+    "poderes": [
+      "Venha até Mim (campo de dano e proteção, Contínuo, -3). Somente em você. Você ergue uma barreira translúcida vermelho escuro ao seu redor para se proteger contra ataques físicos (como golpes de espada e balas). Este campo é imune a PA não baseada em Cristais. Quando você é atingido por um ataque, mesmo que não supere sua Resistência, um brilho vermelho aparece no ponto de contato. Seu próximo ataque recebe um bônus de dano de +1. Vários acertos resultam em um bônus acumulativo, mas tudo é perdido se não for usado até o final do seu próximo turno. Enquanto estiver ativo, a Complicação Vingativo da disposição é Maior em vez de Menor, e você está constantemente com raiva. Modificadores permitidos: Dano (campo de dano), Mais Armadura (proteção).",
+      "Descarga (explosão, -2). Só pode ser usado enquanto o poder anterior estiver ativo; ativar a Descarga automaticamente desativa o outro poder (após a realização da rolagem de Canalizar Cristal). Você libera seu campo protetor em um cone de energia acumulada. Se você tiver um bônus de dano proveniente desse poder, aplique-o a todos os alvos da explosão."
+    ],
+    "complicacao_inerente": "Sensível (Menor) e Vingativo (Menor). É fácil te atingir e você leva isso a sério.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Vermelho escuro, formato bulboso. Tema: Absorvendo tudo e depois liberando com fúria — socar uma parede para machucar o punho, criando uma onda de raiva que arremessa uma porta próxima.",
+    "descricaoLite": "Um cristal vermelho escuro e bulboso que absorve impactos e sofrimento para depois liberá-los com fúria.",
+    "habilidadePassivaLite": "Sempre que alguém realmente te machuca (inclusive verbalmente, deixando-o ao menos Abalado), você fica Vulnerável só para si até o fim do seu próximo turno.",
+    "complicacaoInerenteLite": "Sensível e Vingativo (ambos Menor): você se machuca fácil e não esquece quem fez isso.",
+    "poderesLite": [
+      "Venha até Mim (campo de dano e proteção, Contínuo, -3). Ergue uma barreira que protege contra ataques físicos e acumula um bônus de dano de +1 por acerto sofrido (perdido se não usado até o fim do turno seguinte); enquanto ativo, seu Vingativo vira Maior.",
+      "Descarga (explosão, -2). Usável só com o poder anterior ativo (que se desativa ao usá-lo); libera o campo protetor como um cone de energia, aplicando o bônus de dano acumulado a todos os alvos."
+    ],
+    "_duvida_estagio": "Posicionado no texto entre o primeiro rodapé 'Cristais Novatos' (l.16720) e o primeiro rodapé 'Cristais Experientes' (l.16765). Um teste de contagem de poderes em outros limites de bloco (ex.: Fera com 3 poderes antes do rodapé 'Cristais Veteranos' l.17329 vs. Rugido com 4 poderes logo depois) confirma que cada rodapé anuncia o bloco de conteúdo que vem A SEGUIR dele, o que classificaria Alizarina como Novato (mesmo bloco de Tranquilo/Linguarudo). Porém a Disposição (duas Complicações Menores, e Vingativo vira Maior quando um poder está ativo) e os custos dos poderes (-3 e -2, mais altos que os -1/-2 de Tranquilo/Linguarudo) lembram mais um Cristal Experiente. Mantido como Novato pela evidência posicional/textual, mas registrado aqui por transparência."
+  },
+  {
+    "id": "heart_bam_bam",
+    "nome": "Bam-Bam",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Você está muito energético, ganhando as Vantagens Frenesi e Reflexos de Combate.",
+    "poderes": [
+      "Evocar Servo Explosivo (conjurar aliado, especial). Você energiza um objeto para lutar por você. O objeto é capaz de se mover, mas ainda está limitado em sua forma e tamanho. O aliado será sempre um Guarda-Costas, mas seu Tamanho pode variar; o Tamanho máximo do objeto que você pode animar é limitado pelo seu Estágio: Novato 0, Experiente 2, Veterano 4, Heroico 6, Lendário 8. O aliado ataca seus inimigos, mas se não houver nenhum, ele atacará seus amigos; ele realmente quer atacar algo. Quando a duração terminar ou o aliado for destruído, ele explode em um Modelo Pequeno de Explosão causando 2d6 de dano (3d6 para Tamanho 4 ou superior).",
+      "Explodir a Terra (devastação, -1). Apenas Cone. Você toca a terra e libera uma onda de energia ondulante à sua frente, fazendo o chão tremer e rachar. Modificador permitido: Forte.",
+      "Explosão Infusa (ferir, -1). O objeto que você toca irradia energia amarelo-alaranjada; ele está pronto para explodir ao entrar em contato. O poder dura até ser liberado ou por três rodadas; em ambos os casos, o objeto libera a energia causando 1d6 de dano (2d6 com uma ampliação) em um Modelo Pequeno de Explosão (podendo causar danos ao próprio objeto). Modificador permitido: Recipientes adicionais — você pode tocar até quatro itens em uma ação."
+    ],
+    "complicacao_inerente": "Você está excessivamente animado e agitado; não consegue ficar parado e continua falando e se movendo. Você tem as Complicações Boca Grande e é Guiado (Menor; o que está atrás daquela próxima colina?).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Amarelo alaranjado e pontiagudo, parece tremer de empolgação. Tema: Energiza matéria inorgânica com energia cinética por contato direto — faz um pequeno fogo explodir, faz uma janela tremer.",
+    "descricaoLite": "Um cristal amarelo-alaranjado e pontiagudo que treme de empolgação e energiza objetos inanimados por contato direto.",
+    "habilidadePassivaLite": "Concede Frenesi e Reflexos de Combate — pura energia contida.",
+    "complicacaoInerenteLite": "Boca Grande e Guiado (Menor): agitação constante, incapaz de ficar quieto ou calado, sempre curioso pelo que vem a seguir.",
+    "poderesLite": [
+      "Evocar Servo Explosivo (conjurar aliado, especial). Anima um objeto (Guarda-Costas, Tamanho até 2 no Estágio Experiente) que ataca seus inimigos e explode causando 2d6 de dano quando destruído ou ao terminar a duração.",
+      "Explodir a Terra (devastação, -1). Libera uma onda de energia em Cone à sua frente, fazendo o chão tremer e rachar.",
+      "Explosão Infusa (ferir, -1). Faz um objeto tocado irradiar energia que explode em até três rodadas, causando 1d6 (2d6 com ampliação) de dano em área."
+    ]
+  },
+  {
+    "id": "heart_imortal",
+    "nome": "Imortal",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Ao aprofundar sua própria alma você é capaz de ignorar um nível de penalidades de Ferimentos e Fadiga.",
+    "poderes": [
+      "Chocalho (medo, -2). Sempre ativa com o Modificador Área de Efeito (Modelo Médio de Explosão), que é centrado em você (você é imune). Seu Cristal pressiona brutalmente as almas de todos, que podem ser vistas saindo ligeiramente de seus corpos. Isso é uma experiência que faz as pessoas estremecerem. Modificador permitido: Área de Efeito (Modelo Grande de Explosão).",
+      "Ataque de Alma (ferir, Contínuo, -1). Deve ser usado em uma arma corpo a corpo que você esteja segurando. Quando você ataca, seu Cristal pressiona a força vital do alvo, forçando uma parte de sua alma a sair do corpo — apenas o suficiente para que você possa atacar a própria alma. O ataque é realizado normalmente, mas o dano ignora toda a armadura e é rolado contra Espírito/2 + 2 ('Resistência Espiritual') em vez da Resistência regular. Vantagens como Obstinado e semelhantes podem fornecer um bônus a esse Número Alvo. Se o alvo morrer por esse ataque, você recupera um Ferimento. Enquanto esse poder estiver ativo, seus olhos ficam cinza nebuloso, suas palavras parecem ecoar e você continua formulando suas frases de maneira ameaçadora."
+    ],
+    "complicacao_inerente": "Desagradável (Menor) e Hábito (Menor; sussurra muito). Você se torna distante e pessimista. Sua primeira pergunta ao conhecer uma nova pessoa pode ser um sussurro sombrio do tipo 'Houve alguma morte por aqui ultimamente?'",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Preto com textura de quartzo. Tema: As almas geralmente estão dentro do corpo, mas você pode tocá-las diretamente, empurrando-as e puxando-as antes que voltem rapidamente; não tem efeito sobre objetos inanimados. Ignore pequenos desconfortos, como fazer um arrepio percorrer a espinha de alguém sacudindo sua alma.",
+    "descricaoLite": "Um cristal preto com textura de quartzo que permite tocar almas diretamente, embora não afete objetos inanimados.",
+    "habilidadePassivaLite": "Ignora um nível de penalidade de Ferimentos e de Fadiga, aprofundando a própria alma.",
+    "complicacaoInerenteLite": "Desagradável e Hábito de sussurrar (ambos Menor): torna-se distante, pessimista e mórbido com estranhos.",
+    "poderesLite": [
+      "Chocalho (medo, -2). Pressiona brutalmente as almas de todos ao redor (você é imune), causando medo e visivelmente puxando as almas para fora dos corpos.",
+      "Ataque de Alma (ferir, Contínuo, -1). Numa arma corpo a corpo, faz o dano ignorar armadura e ser resistido pela Resistência Espiritual (Espírito/2+2); matar o alvo assim recupera um Ferimento seu."
+    ]
+  },
+  {
+    "id": "heart_cacador",
+    "nome": "Caçador",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Você é Ligeiro e tem Prontidão.",
+    "poderes": [
+      "Destacar (empatia, -1). Se você vencer a rolagem resistida, você forma um vínculo metafísico com o alvo, que agora é sua presa. Você recebe +1 (+2 com uma ampliação) em rolagens de Lutar, Intimidar ou Atirar contra ele. Você é incapaz de ler seus pensamentos superficiais, mas pode avaliar sua direção, independentemente da distância. Você pode manter esse poder indefinidamente, mas a presa pode fazer uma nova rolagem de Espírito a cada manhã (resistida pela sua Canalizar Cristal) para tentar dissipá-lo.",
+      "Perseguição Implacável (dádiva do guerreiro, Contínuo, -2). Você deve ter uma presa, obtida pelo poder Destacar. Você ganha Reflexos de Combate, Corredor, Impiedoso e Segundo Fôlego, mas apenas enquanto estiver perseguindo sua presa."
+    ],
+    "complicacao_inerente": "Você é Guiado (Maior) para perseguir e caçar. Se você atualmente possui uma presa (veja o poder Destacar), você sente um desejo constante de caçá-la. Se você não tem uma presa, você sente um desejo constante de perseguir algo.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Rosa e bulboso com veias amarelas. Tema: Perseguir um alvo com propósito determinado — perseguir e capturar um gato, vencer numa partida de esconde-esconde.",
+    "descricaoLite": "Um cristal rosa e bulboso, marcado por veias amarelas, voltado à perseguição determinada de um alvo.",
+    "habilidadePassivaLite": "Concede Ligeiro e Prontidão.",
+    "complicacaoInerenteLite": "Guiado (Maior) para caçar: sempre precisa estar perseguindo algo, tenha ou não uma presa definida no momento.",
+    "poderesLite": [
+      "Destacar (empatia, -1). Vencendo uma rolagem resistida, forma um vínculo com o alvo (sua 'presa'): +1/+2 em Lutar, Intimidar ou Atirar contra ele e sempre sabe sua direção; a presa pode tentar se livrar do vínculo a cada manhã.",
+      "Perseguição Implacável (dádiva do guerreiro, Contínuo, -2). Exige ter uma presa marcada; concede Reflexos de Combate, Corredor, Impiedoso e Segundo Fôlego enquanto a persegue."
+    ]
+  },
+  {
+    "id": "heart_lembranca",
+    "nome": "Lembrança",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Ganhe +2 em rolagens de Conhecimento Geral. Você pode fazer uma rolagem de Astúcia para lembrar de qualquer detalhe que já tenha visto ou ouvido.",
+    "poderes": [
+      "Ler Memórias (leitura mental, -1). Você deve olhar nos olhos do alvo por pelo menos um minuto. Você é capaz de vasculhar suas experiências passadas, mas apenas aquelas que eles se lembram claramente. Eles sabem exatamente quais memórias você está vivenciando.",
+      "Lembrança Perfeita (adivinhação, -1). Você examina as memórias coletadas pelo Cristal. O Mestre rola um dado em segredo: em 1-3, a resposta que você procura pode ser obtida dessa forma, mas subtraia o número do resultado da rolagem de ativação; em 4-6, nenhuma memória relevante existe no Cristal."
+    ],
+    "complicacao_inerente": "Delirante (Maior) desencadeado por memórias que pertenceram a outra pessoa que usou este Cristal, há muito tempo. Os detalhes da ilusão podem contradizer completamente coisas que você já sabe, mas as memórias permanecem as mesmas e nenhuma nova revelação ou fato pode mudá-las.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Azul claro, translúcido, espesso mas leve. Tema: Lembrar de tudo — recordar o nome de algo ou alguém, reconhecer um rosto.",
+    "descricaoLite": "Um cristal azul claro, translúcido, espesso porém leve, dedicado a nunca esquecer nada.",
+    "habilidadePassivaLite": "+2 em Conhecimento Geral e a capacidade de rolar Astúcia para recordar qualquer detalhe já visto ou ouvido.",
+    "complicacaoInerenteLite": "Delirante (Maior): memórias de um dono anterior do Cristal se intrometem e não podem ser corrigidas por fatos novos.",
+    "poderesLite": [
+      "Ler Memórias (leitura mental, -1). Olhando nos olhos do alvo por um minuto, vasculha suas memórias claras (e o alvo sabe quais foram acessadas).",
+      "Lembrança Perfeita (adivinhação, -1). Consulta as memórias já armazenadas no Cristal; o Mestre rola em segredo se a resposta buscada está disponível."
+    ]
+  },
+  {
+    "id": "heart_demonio_da_corda",
+    "nome": "Demônio da Corda",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Você pode criar uma corda se estendendo do seu suporte, atravessando sua roupa, que emite um brilho suave de luz laranja. Você pode fazê-la tão longa quanto quiser, mas só pode criar cerca de 2 metros por ação (sem necessidade de rolagem). Você pode cancelar a corda com uma ação livre, em qualquer tamanho, e ela pode ser cortada (Dureza 6); qualquer parte não conectada ao Cristal se dissipa imediatamente. Ao dispensar a corda, um oponente em espera tem a chance de agarrá-la e puxá-la como Ação de Interrupção antes que ela desapareça. Se alguém puxar a corda e você obtiver uma Falha Crítica na rolagem de Atributo para resistir (geralmente Força), a tampa do seu suporte se dobra: sempre que você usar um Cristal, há 1 chance em 6 de ele cair, até uma jogada bem-sucedida de Engenharia consertar. Normalmente você segura a corda com as duas mãos (para evitar puxões), mas ela concede +2 a qualquer rolagem de Atributo que você fizer com ela, com alcance de Força x2. Você pode chicotear alguém com Lutar (d4+Força de dano), usá-la como laço para derrubar um oponente (agarrar à distância), ou dar um tapa na arma da mão de um inimigo (ataque localizado na mão para desarmar).",
+    "poderes": [
+      "Festa das Tentáculos Loucos (devastação, -2). Apenas em Cone, sempre ativa com o Modificador Forte. Você libera não uma, não duas, mas uma dúzia de cordas de seu suporte, chicoteando por todos os lugares e em tudo que estiver à sua frente. A confusão de cordas batendo some um momento depois. Para usar esse poder, você não pode ter uma corda já manifestada.",
+      "Domínio de Cordas (telecinese, -3). Concentrando-se na corda, você pode fazê-la se mover como se fosse um de seus membros. Ela possui uma Força igual à sua Canalizar Cristal."
+    ],
+    "complicacao_inerente": "Pacifista (Menor): seu instinto se torna restringir em vez de destruir. Você tem muito orgulho de sua habilidade com a corda e é Invejoso (Menor) de qualquer um que pareça rivalizar com sua agilidade.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Laranja escuro, forma de bobina. Tema: O conceito de comprimento unidimensional — uma corda infinita. Faz a ponta da corda bater em uma mesa; mantém-na suspensa no ar.",
+    "descricaoLite": "Um cristal laranja escuro em forma de bobina que manifesta uma corda infinita e unidimensional.",
+    "habilidadePassivaLite": "Cria uma corda quase infinita a partir do suporte (2 metros por ação, Dureza 6, cortável), útil para chicotear, laçar ou desarmar (+2 e alcance de Força x2), mas arriscada: uma Falha Crítica ao ser puxado pode entortar o suporte.",
+    "complicacaoInerenteLite": "Pacifista e Invejoso (ambos Menor): prefere restringir a ferir, e não tolera quem rivaliza com sua destreza na corda.",
+    "poderesLite": [
+      "Festa das Tentáculos Loucos (devastação, -2). Libera uma dúzia de cordas chicoteando tudo à frente em Cone (com Forte); exige não ter uma corda já manifestada.",
+      "Domínio de Cordas (telecinese, -3). Controla a corda como se fosse um membro seu, com Força igual à sua Canalizar Cristal."
+    ]
+  },
+  {
+    "id": "heart_escrutinador",
+    "nome": "Escrutinador",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Você ganha a Vantagem Investigador. Sempre que passar vários minutos estudando um objeto, artificial ou natural, seu Cristal forma um esquema ou diagrama dele, que você pode trazer à mente com o mesmo nível de detalhe da investigação inicial (atualizado automaticamente se obtiver mais informações, como ao desmontá-lo ou dissecá-lo). Um entendimento básico concede +1 em rolagens relevantes (normalmente Engenharia, Curar ou Ladinagem) relacionadas ao item ou criatura, enquanto uma análise mais minuciosa confere +2. Você conhece as áreas vitais do objeto e pode ignorar 1 ponto de penalidade em Ataques Localizados contra ele. Você só lembra dos diagramas de objetos que você mesmo analisou; para lembrar dos diagramas de usuários anteriores, precisa primeiro ter acesso a eles (veja o poder Dedução).",
+    "poderes": [
+      "Análise de Comportamento (empatia, -1). Você estuda uma pessoa por alguns momentos, obtendo um entendimento de seu estado emocional e prováveis pensamentos superficiais. Sua análise permite que você escolha as palavras certas para influenciá-las.",
+      "Dedução (leitura de objeto, -1). Você estuda um objeto ou animal por pelo menos 10 minutos para obter uma compreensão melhor de sua estrutura e padrões comportamentais. Você não vê literalmente o que aconteceu ao seu redor, mas pode entender onde ele esteve, o que aconteceu com ele, etc. Este poder tem um efeito adicional: se um usuário anterior deste Cristal já estudou um objeto do mesmo tipo, você ganha acesso imediato aos seus diagramas assim que ativar este poder."
+    ],
+    "complicacao_inerente": "Você não consegue deixar de notar as falhas em tudo e em todos e você faz notarem isso — aponta rachaduras na parede, critica inconsistências no enredo e escolhas irracionais, o que faz de você uma pessoa Desagradável. Sua habilidade analítica também tende a apontar para o caminho mais fácil, indo contra seus princípios morais e tornando-o Sem Escrúpulos (Menor).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Meia esfera translúcida. Tema: Compreensão por meio de análise minuciosa, formando e retendo esquemas de tudo o que é analisado — compreender o funcionamento de uma armadilha, desenhar plantas de um prédio.",
+    "descricaoLite": "Uma meia esfera translúcida que forma esquemas mentais detalhados de tudo o que é minuciosamente analisado.",
+    "habilidadePassivaLite": "Investigador; forma diagramas mentais detalhados de qualquer objeto estudado por minutos, dando +1 (ou +2 com análise minuciosa) em rolagens relacionadas a ele e ignorando 1 de penalidade em Ataques Localizados contra ele.",
+    "complicacaoInerenteLite": "Desagradável (aponta toda falha alheia em voz alta) e Sem Escrúpulos, Menor (a análise sempre acha o caminho mais fácil, mesmo que antiético).",
+    "poderesLite": [
+      "Análise de Comportamento (empatia, -1). Estuda o estado emocional e pensamentos superficiais de alguém por alguns instantes, ganhando as palavras certas para influenciá-la.",
+      "Dedução (leitura de objeto, -1). Estudando um objeto ou animal por 10 minutos, revela sua história recente e dá acesso a diagramas já registrados por usuários anteriores do Cristal sobre itens semelhantes."
+    ]
+  },
+  {
+    "id": "heart_escorregadio",
+    "nome": "Escorregadio",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Vantagens Esquiva e Retirada. É difícil mirar em você.",
+    "poderes": [
+      "Modo Deslizando (velocidade, Contínuo, -1). Somente em você. Quem precisa de patins quando seus próprios pés podem deslizar em qualquer coisa? O problema é parar. Se você obtiver uma Falha Crítica em uma rolagem de Atletismo, escorregará e cairá Prostrado, movendo-se 1d6 quadros em uma direção aleatória e sofrendo 2d4 de dano se colidir com algo. Se você receber um Paus para iniciativa ou obter o resultado mais alto em seu dado de corrida, deverá fazer uma rolagem de Agilidade ou cair da mesma maneira.",
+      "Modo Escorregadio (deflexão e dádiva do guerreiro, Contínuo, -4). Somente em você. Você desvia de qualquer ataque que venha em sua direção. Enquanto estiver ativo, você também recebe as versões Aprimoradas de Esquiva e Retirada. No entanto, você mal consegue segurar qualquer coisa em suas mãos escorregadias: seus próprios ataques têm a mesma penalidade que os ataques feitos contra você."
+    ],
+    "complicacao_inerente": "Você se torna evasivo, evitando tópicos que são desconfortáveis para você, e até mesmo se torna Covarde.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Cinza, liso e brilhante, como uma pedra de rio. Tema: O mundo é como água, e você é como óleo — nada gruda enquanto você desliza. Deslize por uma rampa inclinada; deixe suas roupas escorregarem.",
+    "descricaoLite": "Um cristal cinza, liso e brilhante como pedra de rio, pelo qual nada gruda em você.",
+    "habilidadePassivaLite": "Concede Esquiva e Retirada — quase impossível de acertar.",
+    "complicacaoInerenteLite": "Covarde: evita qualquer coisa desconfortável, literal ou figurativamente.",
+    "poderesLite": [
+      "Modo Deslizando (velocidade, Contínuo, -1). Desliza livremente pelo chão, mas arrisca cair Prostrado e tomar dano em uma Falha Crítica de Atletismo ou em certos resultados de iniciativa.",
+      "Modo Escorregadio (deflexão e dádiva do guerreiro, Contínuo, -4). Concede deflexão total dos ataques e as versões Aprimoradas de Esquiva/Retirada, mas seus próprios ataques sofrem a mesma penalidade imposta aos que tentam acertá-lo."
+    ]
+  },
+  {
+    "id": "heart_viajante",
+    "nome": "Viajante",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Você está bem equipado para uma jornada. Seu dado de Sobrevivência aumenta em um passo, e você recebe +2 em qualquer rolagem feita durante uma Tarefa Dramática ou Encontro Rápido envolvendo viagens.",
+    "poderes": [
+      "Companheiro de Estrada (conjurar aliado, Contínuo, -1). Ao redor do mundo, existem pessoas que estão vagando sem um destino em mente. Por que não caminhar juntos? Este poder convoca ao seu lado alguém que está atualmente em uma jornada sem rumo. Eles são amigáveis com você e se juntarão em seu caminho, desde que você mantenha este poder ativo. Você só pode ter um companheiro desse tipo por vez.",
+      "Nenhum Lugar como o Lar (teleporte, -1). Toda jornada começa com um único passo e também pode terminar com um. Você dá um passo e se encontra de volta ao lugar que considera 'lar'. Outros podem se juntar a você, se estiverem seguindo exatamente os seus passos. Modificador permitido: Receptores Adicionais.",
+      "Velha Canção (sono, -1). Você canta aquela velha melodia, aquela que aquece o coração quando está frio e ajuda você a lembrar para onde voltará quando tudo acabar. Modificador permitido: Área de Efeito."
+    ],
+    "complicacao_inerente": "Permanecer em um só lugar é difícil quando se ouve a canção da estrada tão claramente. Você é Guiado (Maior) a partir em busca de novas paisagens e terras distantes.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Verde e marrom, como uma bota velha. Tema: Peregrinação, alcançando longe, mas sempre retornando ao lar — seguir uma trilha, identificar excelentes bastões de caminhada, criar uma refeição básica a partir de muito pouco.",
+    "descricaoLite": "Um cristal verde e marrom, como uma velha bota de caminhada, feito para a peregrinação e o retorno ao lar.",
+    "habilidadePassivaLite": "+1 passo em Sobrevivência e +2 em rolagens de Tarefas Dramáticas/Encontros Rápidos de viagem.",
+    "complicacaoInerenteLite": "Guiado (Maior): sempre precisa partir em busca de novas paisagens e terras distantes.",
+    "poderesLite": [
+      "Companheiro de Estrada (conjurar aliado, Contínuo, -1). Convoca um viajante sem rumo para acompanhá-lo enquanto o poder estiver ativo (só um por vez).",
+      "Nenhum Lugar como o Lar (teleporte, -1). Teleporta-se de volta ao lugar que considera 'lar'; outros podem acompanhá-lo se estiverem seguindo seus passos.",
+      "Velha Canção (sono, -1). Canta uma melodia que induz sono, podendo afetar uma área."
+    ]
+  },
+  {
+    "id": "heart_vaso",
+    "nome": "Vaso",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Você pode tocar em um objeto inanimado (incluindo plantas) para colocar parte de sua consciência nele. Você adquire uma sensação embaçada da visão, do tato e do paladar desse objeto, o que lhe permite fazer rolagens de Perceber como se estivesse no local do objeto, com penalidades de distância duplicadas. Uma vez ativado, não há limite de distância entre você e o objeto. Se o objeto for maior que o seu punho, você deve fazer uma rolagem de Canalizar Cristal com uma penalidade igual ao tamanho do objeto, mínimo de -1 (como com o poder Amigo das Feras). A conexão termina quando você perde a consciência, ou você pode encerrá-la como uma ação gratuita. Nada impede que você se coloque em vários objetos, mas cada um é considerado uma ativação diferente, incorrendo na penalidade regular de -1 para manter poderes.",
+    "poderes": [
+      "Construir um Vaso (conjurar aliado, Contínuo, especial). Sempre ativado com o Modificador Passageiro da Mente. Você monta um construto humanoide a partir de elementos em seu ambiente e lhe concede uma parte significativa de sua psique. O tipo do aliado é limitado pelo seu Estágio, e você não pode convocar um Reflexo Pessoal. Enquanto estiver ativo, seu corpo e o aliado tendem a se mover e agir de maneiras semelhantes; às vezes, você não tem certeza de qual deles é você. Modificador Permitido: Mordida/Garra.",
+      "Mover o Objeto (telecinese, Contínuo, -3). Você só pode mover um objeto que já está controlando. Enquanto estiver ativo, você tem uma penalidade de -1 (por item controlado) em todas as rolagens de Astúcia e Espírito e perícias relacionadas, pois uma parte de sua mente está ocupada controlando o objeto."
+    ],
+    "complicacao_inerente": "Sem Noção (Maior). Você se distrai facilmente, pois tende a colocar pequenos pedaços de si em coisas pequenas ao seu redor.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Semelhante a um cubo, com superfície áspera, mistura de tons de marrom. Tema: Sua consciência é como água, e o mundo ao seu redor está cheio de recipientes — você pode infundir um pouco de si nas coisas ao seu redor, como colocar um pouco de si num copo para saborear a água.",
+    "descricaoLite": "Um cristal cúbico, áspero e marrom, cuja consciência flui como água para dentro dos objetos ao redor.",
+    "habilidadePassivaLite": "Toca um objeto inanimado para infundir parte de sua consciência nele, permitindo rolagens de Perceber a partir dele (com penalidade de distância dobrada) sem limite de distância uma vez ativado.",
+    "complicacaoInerenteLite": "Sem Noção (Maior): distrai-se constantemente espalhando pedaços de si em objetos ao redor.",
+    "poderesLite": [
+      "Construir um Vaso (conjurar aliado, Contínuo, especial). Monta um construto humanoide a partir do ambiente e infunde nele parte de sua psique (Passageiro da Mente), limitado pelo Estágio; corpo e construto agem de forma semelhante enquanto ativo.",
+      "Mover o Objeto (telecinese, Contínuo, -3). Move um objeto já sob sua consciência, com penalidade de -1 em Astúcia/Espírito por item controlado."
+    ]
+  },
+  {
+    "id": "heart_distorcao",
+    "nome": "Distorção",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Ganhe a Vantagem Acrobata enquanto você desloca levemente o espaço ao seu redor ao se mover. Você também tem Alcance +1 com todas as armas corpo a corpo.",
+    "poderes": [
+      "Travessia de Distância (teleporte, Contínuo, -1). Você assume o controle total das distorções de deslocamento do Cristal, superando sua natureza. Você não é mais Lento, mas o efeito de teleporte é muito desorientador, deixando você Vulnerável e Distraído. Uma rolagem de Astúcia permite que você ignore um estado, ou ambos com uma ampliação. Modificadores Permitidos: Todos.",
+      "Esticar (crescimento/encolhimento, Contínuo, -1 por ponto de Tamanho alterado). Somente em você. Tecnicamente, você permanece no mesmo Tamanho — é o espaço que você ocupa que está distorcido. Enquanto ativo, objetos distantes parecem muito estranhos do seu ponto de vista, causando um redutor de -2 em rolagens de Perceber e ataques à distância."
+    ],
+    "complicacao_inerente": "Lento (Maior). O espaço ao seu redor se distorce e estica de maneiras imprevisíveis. Caminhar longas distâncias por mais de quatro horas requer um sucesso em uma rolagem de Vigor para evitar sentir-se enjoado e adquirir um nível de Fadiga.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Dodecaedro prateado opalescente, que pode causar enjoos se olhado por muito tempo. Tema: Distâncias e espaços, distorcidos — você dá um passo, mas atravessa o dobro da distância.",
+    "descricaoLite": "Um dodecaedro prateado opalescente que distorce distâncias e o espaço ao redor de quem o carrega.",
+    "habilidadePassivaLite": "Acrobata e Alcance +1 em corpo a corpo, por deslocar levemente o espaço ao seu redor.",
+    "complicacaoInerenteLite": "Lento (Maior): o espaço se distorce de forma imprevisível; jornadas de mais de quatro horas exigem Vigor contra enjoo e Fadiga.",
+    "poderesLite": [
+      "Travessia de Distância (teleporte, Contínuo, -1). Assume controle total da distorção espacial: deixa de ser Lento, mas o teleporte constante o deixa Vulnerável e Distraído (mitigável com Astúcia).",
+      "Esticar (crescimento/encolhimento, Contínuo, -1 por ponto de Tamanho). Distorce o espaço ocupado sem mudar de Tamanho real, mas causa -2 em Perceber e ataques à distância enquanto ativo."
+    ],
+    "_duvida_estagio": "No livro, os poderes deste Cristal e do seguinte (Nada) aparecem impressos como um único bloco de cinco entradas sem repetir os cabeçalhos (artefato de layout em duas colunas). Reconstruí a divisão pelo conteúdo temático de cada poder: os dois aqui listados citam explicitamente 'distorções do Cristal' e removem a Complicação Lento própria de Distorção; os outros três (atribuídos a Nada) citam 'sensação de falta de valor', tema de Nada. A divisão parece segura, mas fica registrada por transparência."
+  },
+  {
+    "id": "heart_nada",
+    "nome": "Nada",
+    "estagio": "Experiente",
+    "habilidade_passiva": "Você carrega o peso de se sentir sem valor — mas esse fardo é artificial, e você sabe disso. Leva algum esforço, mas várias vezes por dia você pode suprimir esse sentimento e obter a Vantagem Pau pra Toda Obra, alimentado por uma injeção de autoconfiança.",
+    "poderes": [
+      "Não se Incomode (morosidade, -1). Você espalha a sensação de falta de valor em uma área, fazendo com que todos que estão nela fiquem desejando não ter saído da cama nesse dia. Modificadores permitidos: Todos.",
+      "Apenas Me Enterre (cavar, Contínuo, -1). Somente em você. Você afunda no chão melancolicamente. Enquanto estiver ativo, você fica distraído por pensamentos auto depreciativos.",
+      "Carregue o Fardo (reduzir característica, -1). Você transfere a sensação de falta de valor para outra pessoa, fazendo-a acreditar subitamente que é menos eficiente e útil do que pensava. Modificadores permitidos: Todos."
+    ],
+    "complicacao_inerente": "Você possui as Complicações Almofadinha e Pequeno. Você não se torna realmente menor; apenas se comporta de forma mais compacta, parecendo submisso e pequeno.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Uma pequena pedra cinza. Tema: Fraqueza, ser menos capaz, não ter habilidade — indicando a incapacidade de alguém em lidar com algo, sentir-se mal consigo mesmo.",
+    "descricaoLite": "Uma pequena pedra cinza associada à fraqueza e à sensação de não ter valor.",
+    "habilidadePassivaLite": "Várias vezes por dia, suprime a sensação artificial de inutilidade e ganha a Vantagem Pau pra Toda Obra.",
+    "complicacaoInerenteLite": "Almofadinha e Pequeno: comporta-se de forma submissa e compacta, sem realmente encolher.",
+    "poderesLite": [
+      "Não se Incomode (morosidade, -1). Espalha a sensação de falta de valor numa área, deixando todos ali desanimados e lentos.",
+      "Apenas Me Enterre (cavar, Contínuo, -1). Afunda-se melancolicamente no chão, distraído por pensamentos autodepreciativos enquanto ativo.",
+      "Carregue o Fardo (reduzir característica, -1). Transfere a sensação de inutilidade para outra pessoa, reduzindo a confiança dela em suas próprias capacidades."
+    ],
+    "_duvida_estagio": "No livro, os poderes deste Cristal e do anterior (Distorção) aparecem impressos como um único bloco de cinco entradas sem repetir os cabeçalhos (artefato de layout em duas colunas). Reconstruí a divisão pelo conteúdo temático: os três aqui listados citam a 'sensação de falta de valor', tema de Nada; os outros dois (atribuídos a Distorção) citam 'distorções do Cristal'. A divisão parece segura, mas fica registrada por transparência."
+  },
+  {
+    "id": "heart_ausencia",
+    "nome": "Ausência",
+    "estagio": "Veterano",
+    "habilidade_passiva": "A habilidade de fazer as coisas diminuírem ajuda você a perceber o quão real você é, e você ganha Vontade de Ferro. Quando você recebe uma carta de Copas como iniciativa, os inimigos esquecem da sua presença e não percebem você durante essa rodada; eles precisam fazer uma rolagem de Astúcia para mirar em você.",
+    "poderes": [
+      "Desvanecer (intangibilidade, -3). Você torna algo... menos. Menos real, menos perceptível, menos memorável. Subtraia o Tamanho do alvo do rolamento. Se ativado em uma criatura, o alvo também sofre uma penalidade de -2 em todos os rolamentos de Atributos e sua Movimentação é reduzida em 2. O alvo é visível, mas desbotado, e qualquer som que ele faça parece originar-se de longe.",
+      "Desaparecer (banir, -2). Funciona apenas em alvos afetados pela intangibilidade. A coisa banida deixa de existir e até desvanece da memória — qualquer pessoa que tente se lembrar dela deve primeiro fazer uma rolagem de Astúcia. Esse estado depende dos poderes do Cristal: caso a Ausência se torne selvagem, a coisa desaparecida pode reaparecer no local de onde foi banida."
+    ],
+    "complicacao_inerente": "Você sente uma conexão profunda com espaços amplos e vazios. Você é atraído por cavernas amplas, vales escondidos, ilhas desabitadas e lugares semelhantes na natureza. Você é Guiado (Maior) a explorar esses lugares e até mesmo possui uma Fobia (Menor) de espaços apertados.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Uma esfera perfeita, semitransparente, com o interior aparentemente preenchido por uma névoa cinza congelada. Tema: Ausência, espaços negativos, vazios — esvazie sua mente de todos os pensamentos, torne uma maçã esquecível.",
+    "descricaoLite": "Uma esfera semitransparente com névoa cinza congelada em seu interior, ligada à ausência e ao vazio.",
+    "habilidadePassivaLite": "Vontade de Ferro; ao sacar Copas na iniciativa, inimigos esquecem sua presença naquela rodada, exigindo Astúcia para mirar em você.",
+    "complicacaoInerenteLite": "Guiado (Maior) a explorar espaços amplos e vazios, e Fobia (Menor) de espaços apertados.",
+    "poderesLite": [
+      "Desvanecer (intangibilidade, -3). Torna o alvo menos real e perceptível (penalidade pelo Tamanho dele na rolagem); em criaturas, ainda causa -2 em Atributos e -2 de Movimentação.",
+      "Desaparecer (banir, -2). Usável só em alvos já 'desvanecidos': faz o alvo deixar de existir e sumir até da memória alheia (que exige Astúcia para ser recuperada)."
+    ],
+    "_duvida_estagio": "Por posição no texto (página 203, entre o rodapé 'Cristais Experientes' l.16765 e o rodapé 'Cristais Veteranos' l.17329, sem outro marcador de seção entre eles), este Cristal seria Experiente. Porém o capítulo de Agentes-exemplo do livro (l.3593) afirma explicitamente 'Jordan carrega Ausência (Veterano)'. Mantido como Veterano por essa citação direta e inequívoca, que prevalece sobre a inferência posicional (a mesma seção do apêndice já teve um artefato de extração comprovado — a divisão de colunas entre Distorção e Nada)."
+  },
+  {
+    "id": "heart_fera",
+    "nome": "Fera",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Reflexos de Combate, Rápido. Quando você recebe uma carta de Copas como iniciativa, seus ataques desarmados causam dano de For+d6 e sua Movimentação é aumentada em 2 durante esta rodada.",
+    "poderes": [
+      "Amigo das Feras (amigo das feras, especial). Você pode falar e controlar qualquer mamífero, seja ele natural ou corrompido por Cristal. Modificador permitido: Passageiro da Mente.",
+      "Rugido (explosão e devastação, -2). Apenas Modelo de Cone. Você solta um rugido com uma força que rasga todos à sua frente, causando dano (explosão) e os lançando para trás (devastação). Modificadores permitidos: Dano (explosão), Forte (devastação).",
+      "Besta Interior (dádiva do guerreiro, Contínuo, -2). Somente em você. Você canaliza sua besta interior e ganha as Vantagens Brigão e Frenesi. Com uma ampliação, você obtém Pugilista e Frenesi Aprimorado. Enquanto ativo, você se comunica principalmente através de rosnados irritados. Este poder permanece ativo por 2 rodadas após ser desativado por qualquer motivo."
+    ],
+    "complicacao_inerente": "Quem precisa de ferramentas? Você é Desastrado. Além disso, quem precisa de prisioneiros? Você é Sanguinário.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Vermelho brilhante com estrias de marrom, como um pedaço de carne. Tema: Força a manifestação da sua besta primal — seus olhos brilham amarelos, seus dedos parecem garras, você pode farejar como um lobo.",
+    "descricaoLite": "Um cristal vermelho brilhante com estrias marrons, como carne crua, que manifesta a besta primal do portador.",
+    "habilidadePassivaLite": "Reflexos de Combate e Rápido; ao sacar Copas na iniciativa, ataques desarmados causam For+d6 e Movimentação +2 na rodada.",
+    "complicacaoInerenteLite": "Desastrado e Sanguinário: instintos animais que rejeitam ferramentas e misericórdia.",
+    "poderesLite": [
+      "Amigo das Feras (amigo das feras, especial). Fala e controla qualquer mamífero, natural ou corrompido por Cristal.",
+      "Rugido (explosão e devastação, -2). Em Cone, causa dano e arremessa para trás tudo à sua frente.",
+      "Besta Interior (dádiva do guerreiro, Contínuo, -2). Concede Brigão e Frenesi (Pugilista e Frenesi Aprimorado com ampliação); enquanto ativo você só rosna, e o efeito persiste 2 rodadas após desativado."
+    ],
+    "_duvida_estagio": "Por posição no texto (página 203, imediatamente antes do rodapé 'Cristais Veteranos' l.17329, sem outro marcador de seção antes dele), este Cristal seria Experiente. Porém o capítulo de Agentes-exemplo do livro (l.3654) afirma explicitamente 'Marc carrega Besta (Veterano)' — 'Besta' corresponde a este Cristal (sua terceira habilidade se chama 'Besta Interior', l.17320). Mantido como Veterano por essa citação direta, que prevalece sobre a inferência posicional (a mesma seção do apêndice já teve um artefato de extração comprovado — a divisão de colunas entre Distorção e Nada)."
+  },
+  {
+    "id": "heart_rugido",
+    "nome": "Rugido",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Quando você age, dá o seu melhor; você tem Impulso. Além disso, quando você fala, fala para uma multidão; você tem Agitador. Por fim, você reduz em 2 todo dano de ataques baseados em voz ou som.",
+    "poderes": [
+      "Agora Escuta Aqui! (aumentar característica [Intimidar e Provocar], Contínuo, -1). Somente em você. Você se torna mais intenso, gritando e comandando. Você também recebe a Vantagem Provocador. Enquanto estiver ativo, você não consegue falar em um tom mais baixo do que um grito.",
+      "Grito (explosão, -1). Sua voz é como um martelo. Modificador permitido: Dano.",
+      "Silêncio (silêncio, -1). Você inverte o poder de seu Cristal, silenciando todos os sons em um Modelo Médio de Explosão centrada em você.",
+      "Trovoada (atordoar, -1). Ao encarar alguém (pode ser mais de um alvo) e gritar uma palavra poderosa (geralmente 'KABRUMMM!!'), você faz com que eles recebam toda a força do seu grito, atordoando-os. Modificador permitido: Área de Efeito."
+    ],
+    "complicacao_inerente": "Ser silencioso e tímido é para outras pessoas. Você tem -2 em rolagens de Furtividade e sempre busca estar no centro da ação (provavelmente gritando mais alto). Isso faz com que você seja Impulsivo.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Uma tigela grande e funda. Tema: Sendo muito alto — sendo facilmente ouvido em qualquer lugar, tornando um som baixo mais alto.",
+    "descricaoLite": "Uma tigela grande e funda dedicada a amplificar sons até o extremo.",
+    "habilidadePassivaLite": "Impulso e Agitador, além de reduzir em 2 o dano de qualquer ataque baseado em voz ou som.",
+    "complicacaoInerenteLite": "Impulsivo, com -2 em Furtividade: incapaz de ser discreto ou ficar fora do centro das atenções.",
+    "poderesLite": [
+      "Agora Escuta Aqui! (aumentar característica [Intimidar e Provocar], Contínuo, -1). Fica mais intenso e comandante (ganha Provocador), mas só consegue falar aos gritos enquanto ativo.",
+      "Grito (explosão, -1). Um brado que golpeia como um martelo.",
+      "Silêncio (silêncio, -1). Inverte o Cristal para silenciar uma área ao seu redor.",
+      "Trovoada (atordoar, -1). Grita uma palavra de poder para atordoar um ou mais alvos encarados."
+    ]
+  },
+  {
+    "id": "heart_garra",
+    "nome": "Garra",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Quando você causa dano, sempre machuca (Impiedoso e Golpe Poderoso). Como uma ação, você pode transformar seus dedos em garras grossas e negras, que causam d4 de dano. Elas são Armas Naturais.",
+    "poderes": [
+      "Gancho (enredar, -2). Faz com que garras grossas, negras e curvas irrompam através de todas as superfícies ao redor do alvo, possivelmente até mesmo de seus próprios equipamentos. Se o alvo estiver Enredado, ele também sofre 1d4 de dano. Se estiver Preso, sofre 1d6. Modificador Permitido: Área de Efeito.",
+      "Perfurar o Coração (ferir, -1). Somente em você. Seus dedos devem estar transformados em garras. Você impõe suas garras com uma nitidez tão feroz que elas rasgam qualquer coisa para alcançar o coração. Se acertar com uma ampliação, você adiciona +1d8 de dano em vez de +1d6. Observe que este poder não é contínuo; tem a duração normal de 5 rodadas.",
+      "Desprender (voar, -2). Somente em você. Você solta, desenrola, recolhe sua forte aderência ao mundo. Você pode voar com uma Movimentação de 3, ou o dobro disso com uma ampliação. Desprender-se não é natural (é possível, mas parece errado), então tentar se desprender mais de uma vez por hora requer uma rolagem de Vigor para evitar sofrer um nível de Fadiga. Observe que este poder não é contínuo."
+    ],
+    "complicacao_inerente": "Uma vez que você retalha algo, simplesmente não consegue parar. Você só quer enfiar sua garra mais fundo. Você continua procurando por um ponto fraco, pressionando o máximo que pode. Não é que você queira ferir os sentimentos de alguém, é simplesmente que você precisa deixar sua garra neles, para que eles sempre pensem em você. Isso é uma combinação de Hábito (Menor) e Desagradável, com uma particularidade bastante perturbadora.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Cinza escuro e com forma de garra. Tema: Dor aguda, profunda e penetrante, avançando para torná-la ainda mais dolorosa — toque alguém e faça-o sentir dor, rasgue uma carta com a ponta do dedo.",
+    "descricaoLite": "Um cristal cinza escuro em forma de garra, feito para infligir dor aguda e penetrante.",
+    "habilidadePassivaLite": "Impiedoso e Golpe Poderoso sempre que causa dano; pode transformar os dedos em garras (Arma Natural, d4 de dano).",
+    "complicacaoInerenteLite": "Hábito (Menor) e Desagradável: incapaz de parar de pressionar um ponto fraco encontrado, seja físico ou emocional.",
+    "poderesLite": [
+      "Gancho (enredar, -2). Faz garras irromperem das superfícies ao redor do alvo, enredando-o e causando 1d4 (ou 1d6 se Preso) de dano; pode afetar uma área.",
+      "Perfurar o Coração (ferir, -1). Com os dedos transformados em garras, adiciona +1d6 de dano extra (+1d8 com ampliação) por 5 rodadas.",
+      "Desprender (voar, -2). Voa com Movimentação 3 (6 com ampliação); usar mais de uma vez por hora arrisca Fadiga."
+    ]
+  },
+  {
+    "id": "heart_lingua_seca",
+    "nome": "Língua Seca",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Vantagem Impiedoso, à medida que sua salinidade penetra no sangue, agravando as feridas. Também a Vantagem Humilhar, já que você realmente sabe como deixar as pessoas irritadas.",
+    "poderes": [
+      "Cegar (cegar, -2). Apenas usado no modelo Cone. Você joga sal nos olhos dos alvos. Modificador Permitido: Forte.",
+      "Soco de Sal (raio, -1). Um pedaço de sal do tamanho de um punho. Modificador Permitido: Dano.",
+      "Barreira de Sal (barreira, -1). Uma parede de cristais de sal surge de uma superfície. Quando a duração termina, ela se desintegra em várias pequenas pilhas de sal. Modificadores Permitidos: Fortificada, Tamanho.",
+      "Sangue Salgado (atordoar, -1). Um aumento repentino de sal na corrente sanguínea da vítima a desidrata. Modificador Permitido: Área de Efeito."
+    ],
+    "complicacao_inerente": "Você está Anêmico, pois todo esse sal está afetando seu corpo; Delirante (Menor), achando que tudo fica melhor com sal; e com uma Fobia (Menor) de corpos d'água grandes.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Parece exatamente como um grande cristal de sal. Tema: Você lembra um grande cristal de sal e torna as coisas secas e salgadas — coloque o dedo em um copo para tornar a água salgada.",
+    "descricaoLite": "Um grande cristal de sal que torna secas e salgadas as coisas ao seu redor.",
+    "habilidadePassivaLite": "Impiedoso (a salinidade agrava feridas) e Humilhar.",
+    "complicacaoInerenteLite": "Anêmico, Delirante (Menor; tudo fica melhor com sal) e Fobia (Menor) de grandes corpos d'água.",
+    "poderesLite": [
+      "Cegar (cegar, -2). Joga sal nos olhos de alvos em Cone.",
+      "Soco de Sal (raio, -1). Lança um projétil de sal do tamanho de um punho.",
+      "Barreira de Sal (barreira, -1). Ergue uma parede de sal que se desfaz em pilhas ao terminar.",
+      "Sangue Salgado (atordoar, -1). Desidrata a vítima com um aumento repentino de sal no sangue."
+    ]
+  },
+  {
+    "id": "heart_consistente",
+    "nome": "Consistente",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Ao usar Ações Múltiplas, se a sua segunda ação for exatamente a mesma que a primeira, você não sofre a penalidade. Você também possui a vantagem Ligeiro, já que se mover para frente é fácil como uma brisa.",
+    "poderes": [
+      "Movimento Perpétuo (poder único, Contínuo, -1). Enquanto você continuar realizando a mesma tarefa, pode continuar por longos períodos sem descanso ou dormir. Faça uma rolagem de Canalizar Cristal no final de cada período determinado para continuar por outro período. Decida com o Mestre o comprimento apropriado para um período, dependendo da tarefa. Alguns exemplos: Nadar — a cada duas horas; Correr — a cada quatro horas; Cavar um buraco — a cada oito horas; Cantarolar — a cada doze horas. Após a primeira rolagem, você recebe uma penalidade cumulativa de -1 na rolagem.",
+      "Movimento Repetido (telecinese, Contínuo, -3). Você realiza um movimento específico com um objeto, solta-o, e o objeto continua executando exatamente o mesmo movimento. Enquanto ativo, você ocasionalmente repete seus próprios movimentos; se mantiver mais de uma instância deste poder, torna-se Desajeitado.",
+      "Ssss-BANG (poder único, -2). Este poder permite que você avance diretamente na direção em que está virado (que inclui para cima ou para baixo). Este poder só pode ser ativado após você já ter começado a se mover na direção desejada (pular conta). Quando ativado, você se move imediatamente com o que resta de sua Movimentação, independentemente da elevação. Você está envolvido por uma rajada de força imparável que o protege de danos iminentes. Tudo em seu caminho sofre 2d6 de dano (3d6 com uma ampliação) e é Empurrado; você usa o resultado de sua Canalizar Cristal em vez de Força e adiciona +2 para correr. A maioria dos tipos de terra racha e se quebra em um buraco com cerca de meia Movimentação de profundidade. Modificador: por -1 você causa 3d6 de dano (4d6 com uma ampliação)."
+    ],
+    "complicacao_inerente": "A melhor maneira de avançar é parar de discutir e agir imediatamente: você é Impulsivo. Você também acaba preso em um ciclo e tende a se repetir, dizendo a mesma coisa, reiterando o ponto, o que se torna um Hábito (Menor; irritante).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Fluido e azul brilhante, em forma de estrela-do-mar enrolada. Tema: Sempre adiante, movimento perpétuo — caminhando com propósito, apenas continue nadando.",
+    "descricaoLite": "Um cristal azul brilhante e fluido, em forma de estrela-do-mar enrolada, dedicado ao movimento perpétuo.",
+    "habilidadePassivaLite": "Repetir a mesma ação em Ações Múltiplas não sofre penalidade, e concede Ligeiro.",
+    "complicacaoInerenteLite": "Impulsivo e Hábito (Menor) de se repetir, dizendo e reiterando as mesmas coisas.",
+    "poderesLite": [
+      "Movimento Perpétuo (poder único, Contínuo, -1). Permite continuar a mesma tarefa por longos períodos sem descanso, exigindo uma nova rolagem de Canalizar Cristal (com penalidade cumulativa) a cada período determinado.",
+      "Movimento Repetido (telecinese, Contínuo, -3). Faz um objeto repetir indefinidamente um movimento específico; manter várias instâncias torna você Desajeitado.",
+      "Ssss-BANG (poder único, -2). Avança em disparada na direção em que já estava se movendo, causando 2d6 (3d6 com ampliação) de dano e empurrando tudo no caminho, protegido de dano iminente."
+    ]
+  },
+  {
+    "id": "heart_ego",
+    "nome": "Ego",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Mover-me? Eu? Nunca. Você é Carismático, Focado e Obstinado.",
+    "poderes": [
+      "Eu em Você (fantoche, -2). Você insere seus padrões de pensamento na mente de outra pessoa. Isso deve ser um pensamento específico ou plano de ação. A vítima do ataque terá exatamente a mesma ideia, mas pensará que é sua própria. Você só pode afetar pensamentos sobre o presente; com uma ampliação, você pode inserir pensamentos sobre o futuro. Você deve ser capaz de ver ou tocar o alvo. Modificador Permitido: Recipientes Adicionais.",
+      "Mais eu (conjurar aliado, -3). Sempre ativado com o Modificador Passageiro da Mente. Você cria uma pequena cópia sua (com doze centímetros de altura) ao seu lado, tocando sua pele. A cópia não é um aliado; na verdade, é você mesmo! Agora você tem dois corpos. Você pode criar mais cópias com ativações adicionais, mas cada uma é um poder mantido separadamente. Você não pode dividir sua atenção entre os corpos, o que significa que você ainda tem a quantidade normal de turnos e ações. Quando você não está dirigindo suas cópias, elas tendem a segui-lo de acordo com suas intenções, apoiando-o automaticamente com suas próprias habilidades (rolando apenas uma vez para todas elas, como uma rolagem em grupo). Todas as cópias são Reflexo Pessoal com Tamanho -3."
+    ],
+    "complicacao_inerente": "Você também tem, é claro, Excesso de Confiança e é muito Teimoso.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Branco, bulboso e brilhante. Os Agentes afirmam que 'tem vontade própria', já que é notoriamente difícil de controlar. Tema: Aumentando seu ego a níveis ridículos, expandindo-o tanto que você pode ter mais de você mesmo — e também colocar um pouco de si em outras pessoas. Exale uma aura de confiança mesmo coberto de lama e usando apenas meias; sentindo-se orgulhoso de si mesmo sem motivo algum.",
+    "descricaoLite": "Um cristal branco, bulboso e brilhante, notoriamente difícil de controlar, que expande o ego do portador a níveis absurdos.",
+    "habilidadePassivaLite": "Concede Carismático, Focado e Obstinado.",
+    "complicacaoInerenteLite": "Excesso de Confiança e Teimoso.",
+    "poderesLite": [
+      "Eu em Você (fantoche, -2). Insere um pensamento ou plano específico na mente de um alvo visto ou tocado, que o assume como próprio (com ampliação, pode ser sobre o futuro).",
+      "Mais eu (conjurar aliado, -3). Cria uma cópia miniatura de si mesmo (Reflexo Pessoal, Tamanho -3) que age de acordo com suas intenções quando não dirigida diretamente; mais cópias exigem novas ativações."
+    ]
+  },
+  {
+    "id": "heart_alma",
+    "nome": "Alma",
+    "estagio": "Veterano",
+    "habilidade_passiva": "É difícil afetar o próprio coração (bem, metaforicamente) e suas emoções são suas. Você possui as Vantagens Resistência Arcana e Obstinado.",
+    "poderes": [
+      "Limpar Memória (limpeza mental, -2). Você precisa tocar o peito do alvo para ativar esse poder. Modificador permitido: Conjuração Rápida.",
+      "Conjurar Memórias (leitura de objeto, -1). Você toca um coração e força as memórias internas a tomarem forma como aparições etéreas. Apenas você pode vê-las, mas pode torná-las visíveis a todos com um Modificador de -1. Modificador permitido: Forte.",
+      "Detectar Corações (detectar arcano, Contínuo, -1). Você pode detectar corações, estejam eles dentro de uma pessoa viva ou em qualquer outro lugar. O mesmo vale para os Cristais. Enquanto estiver ativo, tanto seu Pacifista quanto sua Fobia se tornam Maiores.",
+      "Ler Memórias (leitura mental, -1). Você precisa tocar o peito do alvo para ativar esse poder.",
+      "Enxurrada de Memórias (confusão, -1). Você força o coração de uma pessoa a evocar uma corrente avassaladora de memórias aleatórias em sua mente. Modificador permitido: Área de Efeito."
+    ],
+    "complicacao_inerente": "Você tem uma Fobia (Menor) de cemitérios, campos de batalha e qualquer outro lugar onde muitas pessoas tenham morrido. Sua conexão profunda com os corações de todos também o torna avesso a causar danos a outras pessoas, tornando-o um Pacifista (Menor).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Pequeno e pálido, verde semitranslúcido. Tema: Acessando e interagindo com as memórias deixadas nos corações — ajude um amigo a lembrar algum detalhe ao tocar o peito dele.",
+    "descricaoLite": "Um pequeno cristal verde-pálido semitranslúcido, capaz de acessar as memórias guardadas nos corações.",
+    "habilidadePassivaLite": "Resistência Arcana e Obstinado — seu próprio coração e emoções são difíceis de afetar.",
+    "complicacaoInerenteLite": "Fobia (Menor) de locais com muitas mortes e Pacifista (Menor), fruto da conexão profunda com o coração de todos.",
+    "poderesLite": [
+      "Limpar Memória (limpeza mental, -2). Apaga memórias tocando o peito do alvo.",
+      "Conjurar Memórias (leitura de objeto, -1). Toca um coração e faz suas memórias tomarem forma de aparições etéreas visíveis (a princípio só para você).",
+      "Detectar Corações (detectar arcano, Contínuo, -1). Detecta corações e Cristais em qualquer lugar; enquanto ativo, seu Pacifista e sua Fobia viram Maiores.",
+      "Ler Memórias (leitura mental, -1). Lê a mente do alvo tocando seu peito.",
+      "Enxurrada de Memórias (confusão, -1). Força o coração de alguém a liberar uma torrente de memórias aleatórias, podendo afetar uma área."
+    ]
+  },
+  {
+    "id": "heart_jato",
+    "nome": "Jato",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Você pode se impulsionar para fora do perigo com uma rápida explosão nas suas mãos ou pés. Contanto que você possa mover livremente pelo menos um membro, você possui Esquiva e Retirada. Você também aumenta o dado de Pilotar em um nível (ou o adquire em d6 se não o possuir). Ao usar a Regra Treinamento Syn, você é capaz de obter um uso de qualquer Vantagem que se encaixe no tema do Cristal sem gastar um Bene ao se impulsionar: faça uma rolagem de Vigor ou sofra um nível de Fadiga.",
+    "poderes": [
+      "Jato (voar, Contínuo, -2). Você libera jatos logo abaixo de seus pés (não se preocupe, seus sapatos ficam bem) e voa, usando jatos semelhantes em suas mãos para equilíbrio. Para realizar acrobacias ou ao escolher uma perícia de manobra para uma Perseguição, use Pilotar, não Atletismo: o truque é controlar jatos multidirecionais de diferentes intensidades. Se ambas as suas mãos estiverem ocupadas, role com -2. Você deve manter a propulsão de forma contínua para permanecer no ar. Isso requer parte da sua atenção e causa um redutor de -1 em rolagens de Astúcia e perícias relacionadas.",
+      "Propulsor (rajada e devastação, -2). Você estende a mão em direção a um inimigo e libera um intenso jato de energia. Causa 2d6 de dano (3d6 com uma ampliação) a todos em um Modelo de Cone enquanto move o braço em um movimento amplo. Você também pode direcionar a energia em uma linha de 8 quadros de comprimento, causando dano (3d8 com uma ampliação) a todos em seu caminho. Em ambos os casos, a devastação entra em efeito após a rajada ser resolvida. Você deve fazer uma rolagem de Força para evitar perder o controle da rajada e ser arremessado para trás 1d4 quadros e cair prostrado. Você recebe um bônus de +2 na rolagem se usar a outra mão para segurar seu braço firmemente. Modificadores Disponíveis: Dano (rajada), Forte (devastação)."
+    ],
+    "complicacao_inerente": "Liberar explosões tão intensas de energia tem um impacto no seu corpo, tornando-o um canhão de vidro: capaz de um grande poder de fogo, mas facilmente quebrável. Seu dado de Vigor é reduzido em um nível (para d4-1 se já estiver no mínimo) e sua estabilidade espiritual não é das melhores, tornando-o Covarde.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Um cone alongado, de cor azul brilhante e branca. Tema: Explosões poderosas de energia altamente pressurizada — crie um jato de alguns centímetros na ponta do seu dedo, libere pequenos jatos dos seus pés para pular um pouco mais alto.",
+    "descricaoLite": "Um cone alongado azul e branco que libera explosões de energia altamente pressurizada.",
+    "habilidadePassivaLite": "Esquiva e Retirada (com um membro livre para o jato), +1 passo em Pilotar (ou d6 se não tiver) e um uso extra de Vantagens temáticas via Treinamento Syn, ao custo de possível Fadiga.",
+    "complicacaoInerenteLite": "Vigor reduzido em um passo e Covarde: um canhão de vidro, poderoso mas frágil.",
+    "poderesLite": [
+      "Jato (voar, Contínuo, -2). Voa com jatos nos pés e mãos, usando Pilotar em vez de Atletismo para acrobacias; manter o voo custa -1 em Astúcia e perícias relacionadas.",
+      "Propulsor (rajada e devastação, -2). Libera um jato intenso em Cone ou em linha, causando dano e depois empurrando os alvos; você mesmo arrisca ser arremessado se falhar em Força."
+    ]
+  },
+  {
+    "id": "heart_intenso",
+    "nome": "Intenso",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Você é Furioso, Brutamontes e ainda Impiedoso, uma força a ser temida.",
+    "poderes": [
+      "Erupção (crescimento, Contínuo; especial). Você não cresce tanto quanto se expande, aumentando sua massa muscular. Você pode crescer até o Tamanho 3 no máximo, e pode receber um Ferimento adicional para cada ponto de Tamanho. Seu máximo de penalidade por Ferimentos ainda é -3. Caso você cancele este poder enquanto tiver mais de três Ferimentos, você deve imediatamente fazer uma rolagem de Vigor como se estivesse Incapacitado. Enquanto estiver ativo, você é Lento (Menor).",
+      "Físico Aprimorado (aumentar característica [Atletismo, Força e Vigor], Contínuo, -2). Somente em você. Você pode fazer qualquer coisa — desde que ignore os gritos de dor vindos dos seus músculos. Enquanto estiver ativo, a cada dez minutos de atividade ou quando você tirar uma carta de Copas em combate, você deve fazer uma rolagem de Espírito ou sofrer um nível de Fadiga."
+    ],
+    "complicacao_inerente": "Seus músculos tremem e suas veias se destacam; é perturbador. Você é Feio (Menor). Com seus hormônios enfurecidos, você também é Sem Escrúpulos (Maior).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Um tijolo grande e vermelho. Tema: Ser mais forte que o forte, ao custo de tudo mais — parecer maior do que você é, permanecer imóvel em ventos fortes, ignorar a fome.",
+    "descricaoLite": "Um grande tijolo vermelho que torna o portador extremamente forte, ao custo de tudo mais.",
+    "habilidadePassivaLite": "Furioso, Brutamontes e Impiedoso.",
+    "complicacaoInerenteLite": "Feio (Menor) e Sem Escrúpulos (Maior), fruto de músculos tremendo e hormônios enfurecidos.",
+    "poderesLite": [
+      "Erupção (crescimento, Contínuo, especial). Aumenta a massa muscular até Tamanho 3, ganhando um Ferimento adicional por ponto, mas fica Lento (Menor) enquanto ativo; cancelar com mais de 3 Ferimentos exige rolagem de Vigor.",
+      "Físico Aprimorado (aumentar característica [Atletismo, Força e Vigor], Contínuo, -2). Eleva Atletismo, Força e Vigor, mas exige rolagem de Espírito a cada 10 minutos ou ao sacar Copas, sob pena de Fadiga."
+    ]
+  },
+  {
+    "id": "heart_boca",
+    "nome": "Boca",
+    "estagio": "Veterano",
+    "habilidade_passiva": "O tema do Cristal se manifesta como um portal giratório de cor roxa escura, com cerca de 30 centímetros de diâmetro, centrado no suporte e atravessando sua armadura. O portal aparece enquanto você se concentrar nele (mas a sensação de fome está sempre presente). Você pode estender a mão para dentro do portal, com muito cuidado, para retirar algo que foi previamente considerado consumido. Trate isso como a Vantagem Sucateiro. Você pode usar a Boca em combate corpo a corpo ao tentar engolir uma criatura de até Tamanho -1. Para isso, você precisa ter sucesso em uma rolagem de agarrar; observe que suas mãos não precisam estar livres! Se a criatura estiver Enredada, ela está quase dentro; se estiver Presa, ela é empurrada completamente para dentro do portal e sofre uma penalidade de -2 ao tentar escapar. O alvo sofre dano de 2d6 por rodada da energia corrosiva da boca. A armadura não oferece proteção.",
+    "poderes": [
+      "Aura de Destruição (rajada, -3). Ao inverter o poder do portal, você cria um MME centrado em você: um campo de fome corrosiva que desintegra tudo o que passa por ele. Criaturas dentro do campo (exceto você) devem fazer uma rolagem de Vigor (com -2 com uma ampliação) ou sofrer 2d6 de dano, com o Modificador Dano. Você pode manter este poder, forçando as criaturas na área no início de seu turno a fazerem outra rolagem de Vigor, mas então você também começa a sofrer dano. A área é preenchida por uma névoa roxa e embaçada. Se houver uma criatura Enredada ou Presa dentro do portal, ela é liberada. Modificadores Permitidos: Efeito de Área e Dano.",
+      "Disrupção (dissipar, -1). Você libera uma onda de energia disruptiva do portal, tentando dissipar todos os efeitos dos Cristais em um MME centrado em você. Modificador Permitido: Poder, que permite que você perturbe as manifestações dos Cristais e até mesmo as habilidades especiais de criaturas corrompidas."
+    ],
+    "complicacao_inerente": "O Cristal parece se alimentar do portador. Você possui a Complicação Anêmico e reduz seu dado de Vigor em um passo. Se já estiver em d4, fica d4-1.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Roxo escuro, quase preto, com uma depressão redonda que, observada de perto, parece cheia de milhares de presas. Tema: Aniquilar e consumir sem nenhum benefício ou razão — limpar os restos de um prato com a boca voraz.",
+    "descricaoLite": "Um cristal roxo escuro com uma depressão cheia de presas minúsculas, dedicado a aniquilar e consumir.",
+    "habilidadePassivaLite": "Manifesta um portal de 30cm no peito que funciona como a Vantagem Sucateiro para recuperar algo consumido, e pode engolir criaturas de até Tamanho -1 via agarrão, causando 2d6 de dano corrosivo por rodada (ignora armadura).",
+    "complicacaoInerenteLite": "Anêmico e Vigor reduzido em um passo: o próprio Cristal se alimenta de você.",
+    "poderesLite": [
+      "Aura de Destruição (rajada, -3). Cria um campo de fome corrosiva ao seu redor (MME) que causa 2d6 de dano a quem não passar em Vigor; mantê-lo ativo também começa a feri-lo.",
+      "Disrupção (dissipar, -1). Libera uma onda que tenta dissipar efeitos de Cristais (e com o Modificador Poder, habilidades de criaturas corrompidas) numa área ao redor."
+    ]
+  },
+  {
+    "id": "heart_pedra",
+    "nome": "Pedra",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Aumente seu dado de Vigor em um passo. Você ganha as Vantagens Musculoso e Queixo de Ferro; você não cresce fisicamente de Tamanho, mas de alguma forma dá a impressão de ser maior.",
+    "poderes": [
+      "Escavação (cavar, -2). Somente em você, sempre ativa com o Modificador de Poder. Você e seus pertences se tornam cinzentos e se fundem com o chão.",
+      "Pele de Pedra (proteção, Contínuo, -2). Somente em você, sempre ativa com o Modificador de Resistência. Você endurece sua pele para se tornar semelhante a uma rocha. Modificador permitido: Mais Armadura. Enquanto estiver ativo, sua Velocidade é reduzida em 2.",
+      "Muro de Pedra (barreira, -1). Você ergue uma parede de terra ou pedra do chão. Modificadores permitidos: Endurecido, Modelado, Tamanho."
+    ],
+    "complicacao_inerente": "Língua Presa, e você tem uma penalidade de -2 em rolagens de Agilidade. Seus pensamentos podem ser profundos, mas suas respostas são lentas.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Roxo e em formato de bloco. De alguma forma, parece pesado. Tema: Pedra torna você como uma rocha — sua pele fica cinza, faz um pequeno monte de terra subir, resiste a uma corrente elétrica.",
+    "descricaoLite": "Um cristal roxo em formato de bloco, pesado ao toque, que torna o portador semelhante a uma rocha.",
+    "habilidadePassivaLite": "Vigor +1 passo, Musculoso e Queixo de Ferro; parece maior sem realmente crescer.",
+    "complicacaoInerenteLite": "Língua Presa e -2 em Agilidade: pensamento profundo, mas reação lenta.",
+    "poderesLite": [
+      "Escavação (cavar, -2). Funde-se com o chão junto de seus pertences (sempre com o Modificador de Poder).",
+      "Pele de Pedra (proteção, Contínuo, -2). Endurece a própria pele como rocha (sempre com Resistência), reduzindo a Velocidade em 2 enquanto ativo.",
+      "Muro de Pedra (barreira, -1). Ergue uma parede de terra ou pedra do chão."
+    ]
+  },
+  {
+    "id": "heart_espectro",
+    "nome": "Espectro",
+    "estagio": "Veterano",
+    "habilidade_passiva": "Você pode estar em vários lugares ao mesmo tempo, mas ainda há apenas um de você. Isso significa que quando você se divide, apenas algumas partes de você podem estar em cada uma de suas localizações; qual parte depende de você. Você pode dividir uma ou mais de suas perícias em partes distintas, mas ainda assim só pode realizar até três ações por turno — se você se separar em mais de três partes, algumas ficam inativas a cada turno. Quando você se separa, sua forma permanece como está; você cria uma presença vagamente humanoide, em sua maioria invisível (Dificuldade -4 para ver), com Aparar 2 e sua Resistência (sem Armadura). Se ela sofrer um Ferimento, desaparece; se ficar Abalada, você não pode usá-la até que se recupere, mas o resto de você não fica Abalado. Cada presença conta como um poder mantido (-1 em Canalizar Cristal para ativar poderes), mas não requer ativação em si. Você pode mover uma presença à sua Movimentação, mas apenas dentro de um alcance igual à sua Astúcia multiplicada por 2 a partir do seu corpo. Você só pode 'estar' em uma de suas presenças (ou em seu corpo) de cada vez, mas pode se mover entre elas com um pensamento e não fica desorientado; está ciente da localização de cada presença. As perícias que você separa do seu corpo não estão mais disponíveis para você, nem podem ser usadas por qualquer presença que não as possua — se você enviar seu Lutar com uma presença segurando sua espada, seu corpo ficará inexperiente em Lutar. Todas as suas presenças podem ver e ouvir, mas não muito bem; cada presença é considerada inexperiente em todas as habilidades que não possui, com algumas exceções: todas as presenças têm Atletismo em um tipo de dado inferior ao seu normal (uma delas pode ter seu dado completo, mas então seu corpo terá um dado inferior); Perceber pode ser separada em cada sentido diferente; todas as presenças usam seus atributos, se necessário. Você pode enviar várias perícias juntas na mesma presença, mas uma vez que uma presença exista, ela não pode 'trocar' de perícias — é preciso descartá-la (ação livre) e criar uma nova.",
+    "poderes": [
+      "Salto (teleporte, -1). Ei, uma parte de você já está lá — é melhor estar completamente lá. Você move seu corpo para uma de suas presenças, que então se dissipa.",
+      "Moldar Presença (crescimento/encolhimento, especial). Você não pode mudar seu próprio Tamanho, mas pode tornar uma presença maior ou menor. Apenas essa presença terá seus Atributos alterados.",
+      "Compartilhar a Perícia (aumentar característica, Contínuo, -1). Somente em você. Você se concentra e compartilha uma perícia entre duas ou mais de suas presenças e/ou seu corpo. Em caso de sucesso, ambas as partes obtêm a perícia no nível normal; em caso de ampliação, você pode adicionar outra perícia para compartilhar. Em outras palavras, você não pode aumentar uma perícia além do seu nível normal — apenas a compartilha de forma mais equilibrada. Enquanto estiver ativo, o alcance máximo de suas presenças é igual a Astúcia x4, mas seu corpo fica Vulnerável. Modificador permitido: Recipientes adicionais (suas outras partes)."
+    ],
+    "complicacao_inerente": "Você está em todos os lugares. Isso faz de você Sem Noção.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Gema laranja oval, brilhante e radiante. Tema: Sua presença pode ser dividida entre vários lugares ou de várias maneiras — preparando uma refeição enquanto conversa com amigos e também caçando o jantar.",
+    "descricaoLite": "Uma gema laranja oval e radiante que permite dividir a própria presença entre vários lugares.",
+    "habilidadePassivaLite": "Divide perícias específicas entre presenças vagamente humanoides quase invisíveis (Aparar 2, sua Resistência sem armadura, um Ferimento as dissipa), mantendo até 3 ações por turno no total entre corpo e presenças; cada presença consome -1 em Canalizar Cristal como poder mantido.",
+    "complicacaoInerenteLite": "Sem Noção: estar em todo lugar tira o foco de qualquer lugar específico.",
+    "poderesLite": [
+      "Salto (teleporte, -1). Move seu corpo instantaneamente até uma de suas presenças, que se dissipa.",
+      "Moldar Presença (crescimento/encolhimento, especial). Altera o Tamanho (e os Atributos) de uma presença específica, sem afetar seu próprio corpo.",
+      "Compartilhar a Perícia (aumentar característica, Contínuo, -1). Compartilha uma perícia entre corpo e presenças (mais uma com ampliação), aumentando o alcance delas para Astúcia x4 mas deixando o corpo Vulnerável."
+    ]
+  },
+  {
+    "id": "heart_reverte",
+    "nome": "Reverte",
+    "estagio": "Heroico",
+    "habilidade_passiva": "Você possui a Vantagem Mateiro. Qualquer ataque realizado contra você com uma arma fabricada causa -2 de dano. O atacante então deve fazer uma rolagem de Agilidade para evitar que a arma se quebre. Além disso, você é imune a venenos sintéticos.",
+    "poderes": [
+      "Desmontar (enredar, -2). As roupas do alvo ou os itens que ele está segurando se desfazem e se reformam em torno de seus membros em suas formas brutas — lã grossa, plástico pegajoso, metal duro, etc. Armas são destruídas, mas a armadura ainda pode ter alguma eficácia. Se o material for muito denso para uma pessoa se libertar (a maioria dos metais, por exemplo), pode ser necessário usar um maçarico para libertar a vítima. Tudo permanece desmontado enquanto você mantiver esse poder. Como uma ação livre, você pode reverter qualquer item desmontado de volta para suas formas originais. Modificador Permitido: Área de Efeito.",
+      "Destruir Tudo (explosão, -2). Paredes se quebram e pisos pavimentados se abrem. Qualquer pessoa que tentar Evadir rola com -2 e, em caso de falha, cai prostrado. Esse poder não afeta criaturas que estão em terreno natural, a menos que haja um porão abaixo delas. Tudo permanece desmontado enquanto você mantiver esse poder, e você pode reverter toda a paisagem desmontada de volta para sua forma original como uma ação livre. Isso age como um enredar dentro do mesmo Modelo de Cone, conforme o chão se reforma em torno das pernas dos alvos. Modificador Permitido: Dano."
+    ],
+    "complicacao_inerente": "Itens fabricados parecem um pouco estranhos para você. Você tem a Complicação Desastrado, o Hábito (Maior, precisa ficar 'livre de artefatos humanos' por algumas horas por dia) e a Peculiaridade (evita confortos modernos). Disposição Persistente: quando um Agente retira Reverte, mantém a Complicação Desastrado. A cada semana, eles fazem uma rolagem de Espírito para superar essa Complicação.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Marrom escuro, com textura semelhante à casca. Conhecido pela história de como foi obtido em uma batalha perigosa e fantástica. Tema: Reverte qualquer coisa feita pelo homem, transformando o artificial de volta ao estado natural e bruto — a intenção da construção original permanece dentro de suas partes para que possa mais tarde reverter (ou re-reverter) para sua forma original. Desfaça uma porta para que ela se desintegre, e então a refaça após passar por ela.",
+    "descricaoLite": "Um cristal marrom escuro com textura de casca, obtido numa batalha lendária, que reverte objetos artificiais ao seu estado natural.",
+    "habilidadePassivaLite": "Mateiro; armas fabricadas causam -2 de dano contra você e arriscam quebrar; imune a venenos sintéticos.",
+    "complicacaoInerenteLite": "Desastrado, Hábito (Maior; precisa ficar sem artefatos humanos algumas horas por dia) e Peculiaridade de evitar confortos modernos — a dificuldade de adaptação persiste (rolagem semanal de Espírito) mesmo após remover o Cristal.",
+    "poderesLite": [
+      "Desmontar (enredar, -2). Desfaz roupas e itens do alvo em suas formas brutas (armas são destruídas), podendo reverter tudo de volta como ação livre.",
+      "Destruir Tudo (explosão, -2). Quebra paredes e pisos pavimentados de área artificial, forçando quem tenta escapar a Evadir com -2; pode reverter a paisagem de volta como ação livre."
+    ],
+    "_duvida_estagio": "A Disposição deste Cristal foi impressa dividida em duas partes por uma quebra de página/coluna: começa antes do cabeçalho 'Aurora' (l.17917) e retoma logo após o rodapé 'Cristais Heroicos' (l.17988-17998), com o Cristal Aurora completo impresso entre as duas metades. Reconstruí o texto unindo os dois trechos (confirmado pela continuidade gramatical: '...itens fabricados parecem um [quebra] ...pouco estranhos para você'). Por posição (cabeçalho e maior parte do conteúdo antes do primeiro rodapé 'Cristais Heroicos'), pareceria Veterano; porém o capítulo de Agentes-exemplo do livro (l.3551) afirma explicitamente 'Reverte (Heroico) permite a Ivan desfazer qualquer coisa'. Corrigido para Heroico por essa citação direta, que prevalece sobre a inferência posicional (a mesma seção do apêndice já teve um artefato de extração comprovado — a divisão de colunas/páginas entre Reverte e Aurora, descrita acima)."
+  },
+  {
+    "id": "heart_aurora",
+    "nome": "Aurora",
+    "estagio": "Heroico",
+    "habilidade_passiva": "Você possui a Vantagem Mateiro e seu dado de Vigor é aumentado em um passo. Animais nunca te atacam a menos que estejam desesperados ou provocados por você, e você é imune à fauna venenosa de Fjordstad.",
+    "poderes": [
+      "Rajada Vento Norte (rajada, -2). Você libera os ventos congelantes em seus inimigos. Qualquer pessoa que ficar Abalada ou Ferida por esse poder também será empurrada para longe de você em 1d6 quadros. Modificador Permitido: Dano.",
+      "Comunhão (adivinhação, -3). Você estende sua consciência por todo o mundo, em um alcance de sua Espírito em quilômetros. Você pode fazer qualquer pergunta sobre o que está acontecendo dentro dessa esfera, mas sua consciência não penetra em objetos feitos pelo homem.",
+      "Enredar (enredar, -1). Gelo se forma ao redor das pernas do alvo, ou talvez videiras e galhos o segurem. Modificadores Permitidos: Todos.",
+      "Investir na Natureza (aumentar característica [Espírito ou Vigor], -1). Você concede a alguém um vislumbre da verdadeira majestade da natureza. Modificador Permitido: Recipientes Adicionais.",
+      "Natureza (manipulação elemental, -1). Você pode mudar a neve e rachar o gelo.",
+      "Unido à Natureza (aumentar característica [Perceber e Sobrevivência], Contínuo, -2). Somente em você. Você aumenta sua conexão com a natureza selvagem. Enquanto estiver ativo, você fala apenas em enigmas sábios e (como a natureza) nunca tem pressa, tornando-se Lento (Menor).",
+      "Feral (amigo das feras, especial). Funciona em todos os animais de Fjordstad. Modificador Permitido: Passageiro da Mente.",
+      "Viagem (teleporte, -1). Conhece os caminhos secretos pela natureza. Dá um passo para trás e desaparece na vegetação ou até mesmo em uma sombra — apenas para reaparecer a uma curta distância."
+    ],
+    "complicacao_inerente": "Você é estoico, às vezes tão frio quanto um bloco de gelo. Às vezes, você fica à margem, sem intervir ou mesmo responder, simplesmente observando os eventos se desenrolarem — assim como a natureza faz. Isso pode ser considerado uma forma Maior de Cauteloso ou Guiado (Maior; observar com sabedoria). Você também não possui compreensão de máquinas (Desastrado) e tem dificuldade em se adaptar a climas estrangeiros (Anêmico quando não está em Fjordstad). Disposição Persistente: quando um Agente remove Aurora de seu suporte, ainda enfrenta dificuldades para se adaptar a padrões climáticos estrangeiros; em um novo clima, deve fazer uma rolagem de Vigor a cada semana para superar essa Complicação.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Cores parecidas com as luzes do norte, em uma forma que lembra vagamente um floco de neve. Tema: Conectando-se e tornando-se parte da natureza (possivelmente apenas do ambiente frio de Fjordstad; não está claro) — conheça o clima, sinta o que está em seu ambiente, saiba instintivamente as qualidades das plantas e animais.",
+    "descricaoLite": "Um cristal com cores de aurora boreal, em forma de floco de neve, que conecta o portador à natureza (talvez só ao ambiente frio de Fjordstad).",
+    "habilidadePassivaLite": "Mateiro, Vigor +1 passo, animais não o atacam sem provocação, e é imune à fauna venenosa de Fjordstad.",
+    "complicacaoInerenteLite": "Cauteloso (Maior) ou Guiado (Maior; observar antes de agir), Desastrado com máquinas e Anêmico fora de Fjordstad; a dificuldade de adaptação ao clima persiste por um tempo mesmo após remover o Cristal.",
+    "poderesLite": [
+      "Rajada Vento Norte (rajada, -2). Libera ventos congelantes que empurram para longe quem ficar Abalado ou Ferido.",
+      "Comunhão (adivinhação, -3). Estende a consciência por quilômetros (raio = Espírito) para responder perguntas sobre a natureza, mas não sobre objetos feitos pelo homem.",
+      "Enredar (enredar, -1). Prende as pernas do alvo com gelo, videiras ou galhos.",
+      "Investir na Natureza (aumentar característica [Espírito ou Vigor], -1). Concede a um alvo um vislumbre da majestade da natureza, elevando o atributo escolhido.",
+      "Natureza (manipulação elemental, -1). Manipula neve e gelo ao redor.",
+      "Unido à Natureza (aumentar característica [Perceber e Sobrevivência], Contínuo, -2). Eleva Perceber e Sobrevivência, mas torna Lento (Menor) e falante em enigmas enquanto ativo.",
+      "Feral (amigo das feras, especial). Fala e controla qualquer animal de Fjordstad.",
+      "Viagem (teleporte, -1). Desaparece na vegetação ou em uma sombra para reaparecer a curta distância."
+    ],
+    "_duvida_estagio": "Aurora é o último Cristal antes do primeiro rodapé 'Cristais Heroicos' (l.~17988) e tem 8 poderes nomeados — bem acima da referência do livro para Veterano (até 4 poderes, ~8 PP; l.5941-5947), o que já sugeria Heroico. Confirmado: o capítulo de Agentes-exemplo do livro (l.3891) afirma explicitamente 'Aurora (Heroico), o Cristal que Yurhant usa'. Corrigido para Heroico por essa citação direta, que também resolve a contagem atípica de poderes."
+  },
+  {
+    "id": "heart_escudo",
+    "nome": "Escudo",
+    "estagio": "Heroico",
+    "habilidade_passiva": "Você é Corajoso e aumenta seus dados de Força e Vigor em um passo.",
+    "poderes": [
+      "Arma Melhorada (ferir, Contínuo, -1). Você envolve um objeto com um campo de força amarelado e cintilante, que então é esticado ao redor do objeto, transformando-o em uma arma eficaz. Use as categorias de Arma Improvisada, mas a pessoa que o segura é considerada armada com uma arma real. Além disso, o dano da arma é aumentado de acordo com o resultado do lançamento, seu alcance de arremesso é dobrado e sua Força Mínima é reduzida em dois níveis. Se o objeto for suficientemente semelhante em forma a uma arma específica, você pode fazê-lo se comportar exatamente como aquela arma (e obter o bônus de dano do poder). Você também pode criar escudos pequenos, médios ou grandes sem requisitos de Força Mínima. Enquanto estiver ativo, o campo de força cintilante emite luzes em constante mudança, tornando qualquer rolagem de Furtividade impossível. Modificador permitido: Recipiente Adicional.",
+      "Lançar Arma (raio, -1). Você lança a Arma Melhorada que está segurando, a qual retorna à sua mão no final do seu turno. Modificador permitido: Dano.",
+      "Escudo (proteção, Contínuo, -1). Somente em você. Você se cobre com o campo de força. Enquanto estiver ativo, você não apenas é Leal, mas completamente Heroico. Modificador permitido: Mais Armadura.",
+      "Escudo para Longe! (voar, Contínuo, -2). Somente em você, Escudo deve estar ativo. Você levanta o campo de força no ar. Manter este poder impõe uma penalidade de -2 em rolagens de Canalizar Cristal, em vez de -1.",
+      "Escudo Ativo! (crescimento, Contínuo, -1 por ponto de mudança de Tamanho). Somente em você, Escudo deve estar ativo. Você aumenta o tamanho do campo de força que o cerca, tornando-se uma pessoa pequena em uma 'armadura' grande. O campo de força é robusto, mas quase não possui articulações, então você tem -2 em qualquer ação que exija precisão."
+    ],
+    "complicacao_inerente": "Você é protetor dos seus amigos (Leal) e da sua palavra (Código de Honra).",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Esfera amarela clara, aparentemente oca. Tema: Cubra coisas inanimadas com campo de força de cor amarela que pode ser esticado — cubra algo pequeno com um campo amarelo cintilante, tão fino e fraco como papel.",
+    "descricaoLite": "Uma esfera amarelo-clara, aparentemente oca, que envolve objetos inanimados em campos de força amarelos e esticáveis.",
+    "habilidadePassivaLite": "Corajoso e +1 passo em Força e Vigor.",
+    "complicacaoInerenteLite": "Leal e Código de Honra: protetor dos amigos e da própria palavra.",
+    "poderesLite": [
+      "Arma Melhorada (ferir, Contínuo, -1). Transforma um objeto em arma improvisada eficaz (dano extra, alcance dobrado, Força Mínima reduzida) ou em escudo, mas ilumina o portador e impede Furtividade.",
+      "Lançar Arma (raio, -1). Arremessa a Arma Melhorada, que retorna à mão no fim do turno.",
+      "Escudo (proteção, Contínuo, -1). Cobre-se com o campo de força, ganhando proteção e tornando-se 'completamente Heroico' enquanto ativo.",
+      "Escudo para Longe! (voar, Contínuo, -2). Levanta o campo de força no ar para voar, com penalidade maior de manutenção (-2).",
+      "Escudo Ativo! (crescimento, Contínuo, -1 por ponto de Tamanho). Amplia o campo de força ao redor do corpo como uma armadura grande, com -2 em ações que exigem precisão."
+    ]
+  },
+  {
+    "id": "heart_esboco",
+    "nome": "Esboço",
+    "estagio": "Heroico",
+    "habilidade_passiva": "Você pode desenhar no ar com o dedo, criando um objeto físico que permanece em existência enquanto você se concentrar nele (isso é considerado um poder que você está mantendo). A qualidade do seu desenho afeta a utilidade do item — o Mestre pode pedir que você faça uma rolagem de Ladinagem ou Engenharia se estiver tentando criar algo especialmente delicado, preciso ou complicado. Tudo o que você cria é feito de um material cinza fosco, um pouco elástico e bastante leve. Desenhar algo simples, como uma faca afiada, é uma ação livre; qualquer coisa mais complicada leva pelo menos uma Ação, e possivelmente vários minutos ou mais.",
+    "poderes": [
+      "Desvanecer (intangibilidade, Contínuo, -3). Somente em você. Você reverte os efeitos do Cristal, tornando-se ligeiramente imaginário. Enquanto estiver ativo, seu eu físico é suscetível a opiniões, suas e de outras pessoas. Você tem -2 ao resistir a testes baseados em Astúcia e Espírito. Se falhar e ficar Abalado, você fica Atordoado em vez disso.",
+      "Replicar (ilusão, Contínuo, -2). Ao se concentrar em um item específico que você se lembra de ter visto no passado, você é capaz de criar uma réplica dele que se parece e até cheira como o original. Enquanto este poder estiver ativo, você não consegue parar de pensar neste item e em cada um de seus detalhes. Modificador Permitido: Forte.",
+      "Barreira Rastro (barreira, Contínuo, -1). Você estende a habilidade de manifestar desenhos para todo o seu corpo: ao caminhar ou correr, você cria uma barreira sólida atrás de você. Ela tem o comprimento da distância percorrida neste turno, e é tão alta e larga quanto você. Enquanto estiver ativo, você não pode desenhar nada menor e só pode ativá-lo novamente para 'desenhar' mais paredes. Modificadores Permitidos: Reforçada, Moldada, Tamanho."
+    ],
+    "complicacao_inerente": "Não importa o que você desenhe, nunca é tão perfeito como era quando você o imaginou. Você é Guiado (Maior) para garantir que todos os detalhes estejam corretos, então usar esse poder para criar algo 'na hora' ou 'apenas por um momento' deixa você desconfortável. Você também é Invejoso (Menor) em relação às criações artísticas de outras pessoas.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Um cilindro quase perfeito, cinza fosco, como grafite. Tema: Manifestar coisas imaginadas como construtos no mundo real — desenhe uma forma muito simples que exista por vários segundos.",
+    "descricaoLite": "Um cilindro cinza-fosco quase perfeito, parecido com grafite, que manifesta desenhos como construtos reais.",
+    "habilidadePassivaLite": "Desenha no ar objetos físicos reais e leves (feitos de um material cinza elástico) que existem enquanto você se concentrar; itens simples são de graça, complexos exigem Ação e talvez rolagens de Ladinagem/Engenharia.",
+    "complicacaoInerenteLite": "Guiado (Maior) para acertar cada detalhe de suas criações e Invejoso (Menor) das criações artísticas alheias.",
+    "poderesLite": [
+      "Desvanecer (intangibilidade, Contínuo, -3). Torna-se ligeiramente imaginário, com -2 para resistir a testes de Astúcia/Espírito (falhas que dariam Abalado o deixam Atordoado).",
+      "Replicar (ilusão, Contínuo, -2). Cria uma réplica sensorialmente convincente de um item lembrado, exigindo concentração constante nele enquanto ativo.",
+      "Barreira Rastro (barreira, Contínuo, -1). Deixa uma parede sólida atrás de si ao se mover, do tamanho da distância percorrida; enquanto ativa, só pode 'desenhar' mais paredes."
+    ]
+  },
+  {
+    "id": "heart_empatia",
+    "nome": "Empatia",
+    "estagio": "Heroico",
+    "habilidade_passiva": "Você pode ver as emoções das pessoas como auras coloridas irradiando ao redor delas. Essas auras são percebidas através do seu Cristal, então você pode senti-las mesmo através de paredes ou na escuridão, em um alcance igual a Astúcia x2. Suas formas são vagas demais para dar uma indicação clara das ações da pessoa, mas através de suas cores você pode identificar exatamente o estado emocional da pessoa. Isso lhe concede uma nova rolagem gratuita em todas as interações sociais. Quando você ataca usando Lutar, você pode atacar a aura da pessoa, que é física para você. O dano é causado contra a 'Resistência Espiritual' do alvo (metade do Espírito + 2), ignorando a armadura, mas possivelmente afetado por Vantagens como Obstinado.",
+    "poderes": [
+      "Atração Emocional (raio, -1). Você estende a mão e puxa a aura de uma pessoa à distância. Esse ataque não é afetado por Cobertura, e o dano é resistido usando a Resistência Espiritual. Modificador permitido: Dano.",
+      "Tempestade Emocional (atordoar, -1). Você empurra as emoções do alvo, fazendo com que elas se transformem em um emaranhado de sentimentos não resolvidos. Modificador permitido: Área de Efeito.",
+      "Evocar Medo (medo, -1). Você puxa uma das emoções mais fáceis de manipular no alvo: o medo. Modificador permitido: Área de Efeito.",
+      "Fortificar Emoção (proteção arcana e aumentar característica [Espírito], -2). Somente em você. Ao fortalecer sua aura e empurrá-la para dentro do seu corpo, você se protege de todos os efeitos que influenciam seus sentimentos e pensamentos. Enquanto ativo, você ganha a qualidade Obstinado, mas fica emocionalmente limitado, perdendo seu rerrolar grátis em interações sociais. Deve manter pelo menos um braço estendido por pelo menos uma ação por turno. Modificador permitido: Recipientes Adicionais (que devem ficar adjacentes a você para obter o benefício)."
+    ],
+    "complicacao_inerente": "Suas próprias emoções tendem a se materializar e escapar de você, deixando-o vazio sem que você perceba. Se você perceber, poderá desenvolver a emoção naturalmente novamente ou voltar correndo e tentar encontrá-la (ela está em algum lugar no chão, evaporando-se após vários minutos). No início de cada cena, role 1d4: 1 — mantém sua disciplina, tudo está ok; 2 — perde a coragem e fica Covarde; 3 — perde a confiança e fica Hesitante e Cauteloso; 4 — perde a paciência e fica com Excesso de Confiança. Enquanto você permanecer inconsciente dessa fuga emocional, as pessoas têm a sensação de que você está 'fingindo': sentem que você está apenas dizendo coisas para agradá-las, sem emoção honesta e genuína por trás de suas palavras. Você tem -1 em todas as interações sociais.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Multicolorido, multifacetado. Tema: As emoções são coisas físicas; elas podem ser vistas, tocadas e manipuladas — percebendo o estado emocional de alguém ao olhar para ele, influenciando o próprio estado emocional ao empurrar ou puxar a própria aura.",
+    "descricaoLite": "Um cristal multicolorido e multifacetado que torna as emoções visíveis, tangíveis e manipuláveis.",
+    "habilidadePassivaLite": "Vê e sente auras emocionais através de paredes/escuridão (alcance Astúcia x2), identificando o estado emocional exato e ganhando uma rolagem social grátis; pode atacar essa aura em Lutar, ignorando armadura (dano contra Resistência Espiritual).",
+    "complicacaoInerenteLite": "No início de cada cena, rola 1d4 para ver qual emoção escapa de você (Covarde, Hesitante e Cauteloso, ou Excesso de Confiança, em 3 dos 4 resultados); enquanto não perceber a fuga, sofre -1 em interações sociais por parecer falso.",
+    "poderesLite": [
+      "Atração Emocional (raio, -1). Puxa a aura de um alvo à distância, ignorando Cobertura, com dano resistido por Resistência Espiritual.",
+      "Tempestade Emocional (atordoar, -1). Transforma as emoções do alvo num emaranhado de sentimentos não resolvidos, podendo afetar uma área.",
+      "Evocar Medo (medo, -1). Puxa o medo do alvo, podendo afetar uma área.",
+      "Fortificar Emoção (proteção arcana e aumentar característica [Espírito], -2). Blinda suas próprias emoções e pensamentos (Obstinado), mas perde o rerrolar social grátis e precisa manter um braço estendido."
+    ]
+  },
+  {
+    "id": "heart_mares",
+    "nome": "Marés",
+    "estagio": "Heroico",
+    "habilidade_passiva": "As marés são imensas. Não se pode movê-las — é movido por elas. Você tem Mãos Firmes e Obstinado. Se você não se mover durante seu turno, nada pode movê-lo até o início do seu próximo turno. Se você usar Defender, também ganha +4 na sua Resistência.",
+    "poderes": [
+      "Onda (enredar e devastação, -2). Você levanta os braços e uma onda irrompe de você através do solo em um Modelo de Cone (devastação). Este poder funciona através de qualquer meio; criaturas voadoras ou nadadoras fazem sua rolagem de Força com -2. Se estiverem em solo, os alvos também ficam sujeitos a serem enredados, pois seus pés são engolidos pelo chão em movimento. Modificador Disponível: Área de Efeito (Modelo Grande de Explosão) para ambos os efeitos com -2.",
+      "Siga o Fluxo (cavar, proteção ambiental e voar, Contínuo, -4). Você se abraça com os braços e se desloca pelo mundo. Terra e água se moldam para permitir que você se mova por elas, navegando em correntes magnéticas invisíveis. Enquanto estiver ativo, você só pode fazer uma única ação física a cada rodada. Modificador Disponível: Recipientes Adicionais (-2 cada) que podem fazer uma única ação física por turno.",
+      "Maré Alta (manipulação ambiental, -2). Você se concentra, levantando os braços, e o mundo se move. Os líquidos se deslocam facilmente, mas para mover gases você rola com -1, e para sólidos com -2. É mais fácil mover algumas matérias; mover objetos grandes como prédios ou objetos compostos como máquinas incorre em penalidades adicionais. Você não pode mirar em criaturas específicas, apenas em parte do ambiente de até 3 metros cúbicos (30 com ampliação). Este poder age lentamente, ao longo de um minuto ou mais, mas com Força de d12+10 ou d12+15 com uma ampliação."
+    ],
+    "complicacao_inerente": "As marés mudam lentamente. Você é Lento (Menor) e até mesmo seus pensamentos demoram para acompanhar, então você é Sem Noção. Por fim, você tem uma Peculiaridade: você fala de coisas grandiosas e imponentes, usando palavras como 'liberar' e 'monumental'.",
+    "origem": "CRYSTAL_HEART",
+    "descricao": "Forma semelhante a uma concha, de cor púrpura profundo que se transforma em verde profundo duas vezes por dia. Tema: Assim como as coisas sobem, também devem cair. Você está no centro das marés, seja líquida, gasosa ou até mesmo sólida — aumente a pressão do ar na sala para fazer as janelas de vidro explodirem, eleve-se lentamente vários centímetros em um colchão de alta pressão.",
+    "descricaoLite": "Um cristal em forma de concha, púrpura que vira verde-profundo duas vezes ao dia, ligado aos ciclos de subida e queda das marés.",
+    "habilidadePassivaLite": "Mãos Firmes e Obstinado; se não se mover no turno, nada pode movê-lo até o próximo, e Defender concede +4 de Resistência.",
+    "complicacaoInerenteLite": "Lento (Menor), Sem Noção e a Peculiaridade de falar de forma grandiosa e imponente.",
+    "poderesLite": [
+      "Onda (enredar e devastação, -2). Libera uma onda pelo solo em Cone que arremessa e pode enredar os alvos, funcionando mesmo contra voadores/nadadores (com -2 na resistência deles); pode afetar área maior.",
+      "Siga o Fluxo (cavar, proteção ambiental e voar, Contínuo, -4). Move-se através de terra e água como correntes invisíveis, limitado a uma ação física por rodada enquanto ativo.",
+      "Maré Alta (manipulação ambiental, -2). Move líquidos, gases ou sólidos do ambiente (até 3 m³, 30 com ampliação) lentamente mas com Força d12+10 (d12+15 com ampliação)."
+    ]
   }
 ]

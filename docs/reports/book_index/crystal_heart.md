@@ -61,43 +61,45 @@ Todos os 38 registros do JSON (1 placeholder `heart_starter` + 37 Cristais reais
 
 **[CONFERIR]** `heart_bolha`: o JSON marca `estagio: "Experiente"`, mas no texto Bolha é o **último Cristal da lista de Novatos** (linha 5532), antes do cabeçalho "Cristais Experientes" (linha 5575) que introduz Veloz/Fogo/Sombra/Translucido/Infusão. Vale confirmar se o app pretendia isso de propósito (ex.: rebalanceamento) ou se é erro de captura do estágio.
 
-### Cristais adicionais não catalogados — Apêndice A "Mais Cristais" [FALTA — 33 Cristais]
+### Cristais adicionais do Apêndice A "Mais Cristais" [OK — 33/33, resolvido em 2026-08-31]
 
-O livro principal tem um apêndice inteiro de Cristais extras (linhas 16641–18287) no mesmo formato dos já catalogados (Descrição/Tema/Benefício/Disposição/Poderes), pensado para o Cristal evoluir/ser trocado ao longo da campanha. Nenhum desses 33 está em `crystal_coracoes.json`:
+O livro principal tem um apêndice inteiro de Cristais extras (linhas 16641–18287) no mesmo formato dos já catalogados (Descrição/Tema/Benefício/Disposição/Poderes), pensado para o Cristal evoluir/ser trocado ao longo da campanha. Os 33 foram transcritos e mesclados em `crystal_coracoes.json` (agora com 71 registros: 38 do catálogo-base + 33 do Apêndice A):
 
-- **Tranquilo** — id sugerido: `heart_tranquilo` — [FALTA] — Rápido, mas Astúcia reduzida; pensamento simples — linha ~16643 de swade_crystal_heart
-- **Linguarudo** — id sugerido: `heart_linguarudo` — [FALTA] — Revela verdades/segredos ocultos — linha ~16690 de swade_crystal_heart
-- **Alizarina** — id sugerido: `heart_alizarina` — [FALTA] — Absorve impacto e libera com fúria — linha ~16723 de swade_crystal_heart
-- **Bam-Bam** — id sugerido: `heart_bam_bam` — [FALTA] — Energiza matéria inorgânica por contato — linha ~16766 de swade_crystal_heart
-- **Imortal** — id sugerido: `heart_imortal` — [FALTA] — Toca almas diretamente — linha ~16816 de swade_crystal_heart
-- **Caçador** — id sugerido: `heart_cacador` — [FALTA] — Perseguição e captura de alvos — linha ~16864 de swade_crystal_heart
-- **Lembrança** — id sugerido: `heart_lembranca` — [FALTA] — Memória perfeita — linha ~16897 de swade_crystal_heart
-- **Demônio da Corda** — id sugerido: `heart_demonio_da_corda` — [FALTA] — Corda infinita/unidimensional — linha ~16928 de swade_crystal_heart
-- **Escrutinador** — id sugerido: `heart_escrutinador` — [FALTA] — Análise minuciosa, esquemas — linha ~16990 de swade_crystal_heart
-- **Escorregadio** — id sugerido: `heart_escorregadio` — [FALTA] — Nada gruda; deslizar — linha ~17047 de swade_crystal_heart
-- **Viajante** — id sugerido: `heart_viajante` — [FALTA] — Peregrinação, sempre retorna ao lar — linha ~17085 de swade_crystal_heart
-- **Vaso** — id sugerido: `heart_vaso` — [FALTA] — Consciência como água em recipientes — linha ~17127 de swade_crystal_heart
-- **Distorção** — id sugerido: `heart_distorcao` — [FALTA] — Distorce distância/espaço — linha ~17182 de swade_crystal_heart
-- **Nada** — id sugerido: `heart_nada` — [FALTA] — Fraqueza/incapacidade — linha ~17198 de swade_crystal_heart
-- **Ausência** — id sugerido: `heart_ausencia` — [FALTA] — Espaços negativos/vazio — linha ~17253 de swade_crystal_heart
-- **Fera** — id sugerido: `heart_fera` — [FALTA] — Manifestação de besta primal — linha ~17295 de swade_crystal_heart
-- **Rugido** — id sugerido: `heart_rugido` — [FALTA] — Som extremamente alto — linha ~17332 de swade_crystal_heart
-- **Garra** — id sugerido: `heart_garra` — [FALTA] — Dor aguda e penetrante — linha ~17368 de swade_crystal_heart
-- **Língua Seca** — id sugerido: `heart_lingua_seca` — [FALTA] — Torna coisas secas/salgadas — linha ~17422 de swade_crystal_heart
-- **Consistente** — id sugerido: `heart_consistente` — [FALTA] — Movimento perpétuo — linha ~17454 de swade_crystal_heart
-- **Ego** — id sugerido: `heart_ego` — [FALTA] — Multiplicação do próprio ego/self — linha ~17517 de swade_crystal_heart
-- **Alma** — id sugerido: `heart_alma` — [FALTA] — Acessa memórias nos corações alheios — linha ~17563 de swade_crystal_heart
-- **Jato** — id sugerido: `heart_jato` — [FALTA] — Explosões de energia pressurizada — linha ~17610 de swade_crystal_heart
-- **Intenso** — id sugerido: `heart_intenso` — [FALTA] — Força ao custo de tudo mais — linha ~17671 de swade_crystal_heart
-- **Boca** — id sugerido: `heart_boca` — [FALTA] — Aniquilar e consumir — linha ~17707 de swade_crystal_heart
-- **Pedra** — id sugerido: `heart_pedra` — [FALTA] — Corpo vira rocha — linha ~17766 de swade_crystal_heart
-- **Espectro** — id sugerido: `heart_espectro` — [FALTA] — Presença dividida em vários lugares — linha ~17799 de swade_crystal_heart
-- **Reverte** — id sugerido: `heart_reverte` — [FALTA] — Reverte objetos feitos pelo homem ao natural — linha ~17896 de swade_crystal_heart
-- **Aurora** — id sugerido: `heart_aurora` — [FALTA] — Conexão com a natureza/frio — linha ~17918 de swade_crystal_heart
-- **Escudo** — id sugerido: `heart_escudo` — [FALTA] — Proteção (Heroico) — linha ~17988 de swade_crystal_heart
-- **Esboço** — id sugerido: `heart_esboco` — [FALTA] — Manifesta desenhos como construtos reais — linha ~18090 de swade_crystal_heart
-- **Empatia** — id sugerido: `heart_empatia` — [FALTA] — Emoções como objetos físicos — linha ~18151 de swade_crystal_heart
-- **Marés** — id sugerido: `heart_mares` — [FALTA] — Ciclos de subida/queda — linha ~18227 de swade_crystal_heart
+- **Tranquilo** — id: `heart_tranquilo` — [OK] — Novato — Rápido, mas Astúcia reduzida; pensamento simples — linha ~16643 de swade_crystal_heart
+- **Linguarudo** — id: `heart_linguarudo` — [OK] — Novato — Revela verdades/segredos ocultos — linha ~16690 de swade_crystal_heart
+- **Alizarina** — id: `heart_alizarina` — [OK] — Novato — Absorve impacto e libera com fúria — linha ~16723 de swade_crystal_heart
+- **Bam-Bam** — id: `heart_bam_bam` — [OK] — Experiente — Energiza matéria inorgânica por contato — linha ~16766 de swade_crystal_heart
+- **Imortal** — id: `heart_imortal` — [OK] — Experiente — Toca almas diretamente — linha ~16816 de swade_crystal_heart
+- **Caçador** — id: `heart_cacador` — [OK] — Experiente — Perseguição e captura de alvos — linha ~16864 de swade_crystal_heart
+- **Lembrança** — id: `heart_lembranca` — [OK] — Experiente — Memória perfeita — linha ~16897 de swade_crystal_heart
+- **Demônio da Corda** — id: `heart_demonio_da_corda` — [OK] — Experiente — Corda infinita/unidimensional — linha ~16928 de swade_crystal_heart
+- **Escrutinador** — id: `heart_escrutinador` — [OK] — Experiente — Análise minuciosa, esquemas — linha ~16990 de swade_crystal_heart
+- **Escorregadio** — id: `heart_escorregadio` — [OK] — Experiente — Nada gruda; deslizar — linha ~17047 de swade_crystal_heart
+- **Viajante** — id: `heart_viajante` — [OK] — Experiente — Peregrinação, sempre retorna ao lar — linha ~17085 de swade_crystal_heart
+- **Vaso** — id: `heart_vaso` — [OK] — Experiente — Consciência como água em recipientes — linha ~17127 de swade_crystal_heart
+- **Distorção** — id: `heart_distorcao` — [OK] — Experiente — Distorce distância/espaço — linha ~17182 de swade_crystal_heart
+- **Nada** — id: `heart_nada` — [OK] — Experiente — Fraqueza/incapacidade — linha ~17198 de swade_crystal_heart
+- **Ausência** — id: `heart_ausencia` — [OK] — Veterano — Espaços negativos/vazio — linha ~17253 de swade_crystal_heart
+- **Fera** — id: `heart_fera` — [OK] — Veterano — Manifestação de besta primal — linha ~17295 de swade_crystal_heart
+- **Rugido** — id: `heart_rugido` — [OK] — Veterano — Som extremamente alto — linha ~17332 de swade_crystal_heart
+- **Garra** — id: `heart_garra` — [OK] — Veterano — Dor aguda e penetrante — linha ~17368 de swade_crystal_heart
+- **Língua Seca** — id: `heart_lingua_seca` — [OK] — Veterano — Torna coisas secas/salgadas — linha ~17422 de swade_crystal_heart
+- **Consistente** — id: `heart_consistente` — [OK] — Veterano — Movimento perpétuo — linha ~17454 de swade_crystal_heart
+- **Ego** — id: `heart_ego` — [OK] — Veterano — Multiplicação do próprio ego/self — linha ~17517 de swade_crystal_heart
+- **Alma** — id: `heart_alma` — [OK] — Veterano — Acessa memórias nos corações alheios — linha ~17563 de swade_crystal_heart
+- **Jato** — id: `heart_jato` — [OK] — Veterano — Explosões de energia pressurizada — linha ~17610 de swade_crystal_heart
+- **Intenso** — id: `heart_intenso` — [OK] — Veterano — Força ao custo de tudo mais — linha ~17671 de swade_crystal_heart
+- **Boca** — id: `heart_boca` — [OK] — Veterano — Aniquilar e consumir — linha ~17707 de swade_crystal_heart
+- **Pedra** — id: `heart_pedra` — [OK] — Veterano — Corpo vira rocha — linha ~17766 de swade_crystal_heart
+- **Espectro** — id: `heart_espectro` — [OK] — Veterano — Presença dividida em vários lugares — linha ~17799 de swade_crystal_heart
+- **Reverte** — id: `heart_reverte` — [OK] — Heroico — Reverte objetos feitos pelo homem ao natural — linha ~17896 de swade_crystal_heart
+- **Aurora** — id: `heart_aurora` — [OK] — Heroico — Conexão com a natureza/frio — linha ~17918 de swade_crystal_heart
+- **Escudo** — id: `heart_escudo` — [OK] — Heroico — Proteção — linha ~17988 de swade_crystal_heart
+- **Esboço** — id: `heart_esboco` — [OK] — Heroico — Manifesta desenhos como construtos reais — linha ~18090 de swade_crystal_heart
+- **Empatia** — id: `heart_empatia` — [OK] — Heroico — Emoções como objetos físicos — linha ~18151 de swade_crystal_heart
+- **Marés** — id: `heart_mares` — [OK] — Heroico — Ciclos de subida/queda — linha ~18227 de swade_crystal_heart
+
+**Nota sobre Estágios corrigidos por citação cruzada:** a determinação do Estágio de cada Cristal por posição no texto (entre os rodapés "Cristais Novatos/Experientes/Veteranos/Heroicos", linhas 16720/16765/17329/17988) é a fonte primária, mas essa seção do apêndice tem um artefato comprovado de extração em duas colunas (o texto de Distorção e Nada foi impresso intercalado, exigindo reconstrução por conteúdo temático — ambos confirmados como Experiente, sem mudança de estágio). Para 4 Cristais (`heart_ausencia`, `heart_fera`, `heart_reverte`, `heart_aurora`) a posição no texto conflitava com citações diretas e inequívocas do capítulo de Agentes-exemplo (linhas 3400–3900: "Jordan carrega Ausência (Veterano)", "Marc carrega Besta [= Fera, ver poder 'Besta Interior'] (Veterano)", "Reverte (Heroico) permite a Ivan...", "Aurora (Heroico), o Cristal que Yurhant usa..."). Nesses 4 casos a citação direta prevaleceu sobre a inferência posicional; o JSON registra a justificativa completa no campo `_duvida_estagio` de cada entrada, para conferência futura contra o livro físico/PDF se necessário.
 
 ## Tropos
 
