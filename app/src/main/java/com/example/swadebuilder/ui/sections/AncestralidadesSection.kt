@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -63,6 +64,7 @@ import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.ui.theme.emphasis
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
@@ -350,6 +352,13 @@ fun AncestralidadesSection(
                                 selectedKey.value = itemKey
                                 onSelectAncestralidade(item.nome)
                             },
+                        // Mesma linguagem de SelectableItemRow (ver ui/components): borda
+                        // acompanha o preenchimento quando selecionado, em vez de só a cor
+                        // mudar sozinha. O conteúdo aninhado aqui (signo, variante, traços
+                        // de Anão Ciber etc.) é complexo demais pra trocar por
+                        // SelectableItemRow sem QA visual num aparelho de verdade — fica só
+                        // esse acompanhamento de borda por enquanto.
+                        border = if (isSelected) BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
                         colors = CardDefaults.cardColors(
                             containerColor = if (isSelected) {
                                 MaterialTheme.colorScheme.primaryContainer
@@ -371,8 +380,8 @@ fun AncestralidadesSection(
 
                                     Text(
                                         text = displayName,
-                                        style = MaterialTheme.typography.bodyMedium, // Smaller font
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        style = if (isSelected) MaterialTheme.typography.emphasis else MaterialTheme.typography.bodyMedium,
+                                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
                                     )
                                 }
 
