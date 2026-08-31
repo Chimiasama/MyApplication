@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -556,36 +555,33 @@ fun AncestralidadesSection(
                                                 val marcado = selecaoAtual != null
                                                 val custoAbs = -trait.custo
                                                 val cabeNoOrcamento = pontosUsados + custoAbs <= AnaoCiberTraitCatalog.MAX_PONTOS
-                                                Row(
-                                                    verticalAlignment = Alignment.CenterVertically,
-                                                    modifier = Modifier.alpha(if (marcado || cabeNoOrcamento) 1f else 0.4f)
-                                                ) {
-                                                    Checkbox(
-                                                        checked = marcado,
-                                                        enabled = marcado || cabeNoOrcamento,
-                                                        onCheckedChange = { checked ->
-                                                            val atualizados = if (checked) {
-                                                                // Traços paramétricos já entram com um alvo padrão
-                                                                // (o primeiro disponível), senão a desvantagem fica
-                                                                // "muda" na ficha até o jogador abrir o dropdown.
-                                                                val novaSelecao = AnaoCiberTraitSelection(
-                                                                    traitId = trait.id,
-                                                                    escolhaAtributo = if (trait.exigeEscolhaAtributo) {
-                                                                        state.listaAtributos.firstOrNull()
-                                                                    } else null,
-                                                                    escolhaPericia = if (trait.exigeEscolhaPericia) {
-                                                                        state.periciasFiltradasPorCompendio.minByOrNull { it.nome }?.nome
-                                                                    } else null
-                                                                )
-                                                                state.anaoCiberTracosSelecionados + novaSelecao
-                                                            } else {
-                                                                state.anaoCiberTracosSelecionados.filterNot { it.traitId == trait.id }
-                                                            }
-                                                            state.selecionarAnaoCiberTracos(atualizados)
+                                                com.example.swadebuilder.ui.components.SelectableItemRow(
+                                                    title = "${trait.nome} (${trait.custo})",
+                                                    selected = marcado,
+                                                    onClick = {
+                                                        val atualizados = if (!marcado) {
+                                                            // Traços paramétricos já entram com um alvo padrão
+                                                            // (o primeiro disponível), senão a desvantagem fica
+                                                            // "muda" na ficha até o jogador abrir o dropdown.
+                                                            val novaSelecao = AnaoCiberTraitSelection(
+                                                                traitId = trait.id,
+                                                                escolhaAtributo = if (trait.exigeEscolhaAtributo) {
+                                                                    state.listaAtributos.firstOrNull()
+                                                                } else null,
+                                                                escolhaPericia = if (trait.exigeEscolhaPericia) {
+                                                                    state.periciasFiltradasPorCompendio.minByOrNull { it.nome }?.nome
+                                                                } else null
+                                                            )
+                                                            state.anaoCiberTracosSelecionados + novaSelecao
+                                                        } else {
+                                                            state.anaoCiberTracosSelecionados.filterNot { it.traitId == trait.id }
                                                         }
-                                                    )
-                                                    Text("${trait.nome} (${trait.custo})", style = MaterialTheme.typography.bodyMedium)
-                                                }
+                                                        state.selecionarAnaoCiberTracos(atualizados)
+                                                    },
+                                                    modifier = Modifier.padding(vertical = 2.dp),
+                                                    mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
+                                                    enabled = marcado || cabeNoOrcamento
+                                                )
 
                                                 if (marcado && trait.exigeEscolhaAtributo) {
                                                     var atributoExpanded by remember { mutableStateOf(false) }
