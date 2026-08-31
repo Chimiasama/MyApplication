@@ -30,6 +30,14 @@ val MatrixFamily = FontFamily(
 
 val StencilFamily = FontFamily.Monospace
 
+// Token único de "ênfase" (rótulo em negrito dentro de um item — custo, estágio, nome
+// selecionado etc.). Antes disso cada tela recriava a mesma coisa na mão, quase sempre como
+// `MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)` — encontrado ~91
+// vezes no app, cada recriação livre pra divergir em tamanho/peso. Usar
+// `MaterialTheme.typography.emphasis` em vez disso.
+val Typography.emphasis: TextStyle
+    get() = titleMedium.copy(fontWeight = FontWeight.SemiBold)
+
 // Helper to create Typography
 // SEPARAÇÃO HIERÁRQUICA: headingFontFamily para Títulos, bodyFontFamily para Leitura.
 private fun createTypography(

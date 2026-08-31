@@ -16,11 +16,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.ui.sections.toResumo
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
+import com.example.swadebuilder.ui.theme.emphasis
 import com.example.swadebuilder.util.toFancyTitleCase
 
 @Composable
@@ -58,8 +58,7 @@ fun StandardEquipamentoItem(
                         } else {
                             equipamento.nomeExibicao.toFancyTitleCase()
                         },
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        style = MaterialTheme.typography.emphasis
                     )
                 }
 
