@@ -55,7 +55,7 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.getActiveOrigins
-import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.util.loadJsonAssetAsync
 import com.example.swadebuilder.model.powerAssetOriginKey
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
@@ -140,12 +140,12 @@ fun PoderesSection(
     }
 
     val dominiosCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
-        val list = runCatching { context.loadJsonAsset<List<DominioJson>>("fantasia_dominios.json") }.getOrElse { emptyList() }
+        val list = runCatching { context.loadJsonAssetAsync<List<DominioJson>>("fantasia_dominios.json") }.getOrElse { emptyList() }
         value = list
     }
 
     val dominiosPathfinderCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
-        val list = runCatching { context.loadJsonAsset<List<DominioJson>>("pathfinder_dominios.json") }.getOrElse { emptyList() }
+        val list = runCatching { context.loadJsonAssetAsync<List<DominioJson>>("pathfinder_dominios.json") }.getOrElse { emptyList() }
         value = list
     }
 
