@@ -25,7 +25,7 @@ object RequirementValidator {
         val key = v.nome.keyify()
 
         // 1) Regra especial: O MELHOR QUE HÁ
-        if (key == Constants.ID_THE_BEST_THERE_IS) {
+        if (v.id == Constants.ID_THE_BEST_THERE_IS) {
             if (state.emProgresso) return false
             if (state.superInvestments.isEmpty()) return false
         }

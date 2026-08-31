@@ -44,7 +44,7 @@ class ValidateSpecialRulesUseCase {
         val key = v.nome.keyify()
 
         // 1) Regra especial: O MELHOR QUE HÁ
-        if (key == "o_melhor_que_ha") {
+        if (v.id == "o_melhor_que_ha") {
             if (input.emProgresso) return false
             if (input.superInvestments.isEmpty()) return false
         }
