@@ -111,24 +111,25 @@ existe mas precisa validação linha a linha):
 
 | BookId | Índice | OK | FALTA | CONFERIR |
 |---|---|--:|--:|--:|
-| `BASICO` | [`book_index/basico.md`](reports/book_index/basico.md) | 319 | 1 | 4 |
-| `FANTASIA` | [`book_index/fantasia.md`](reports/book_index/fantasia.md) | 158 | 1 | 7 |
-| `SCIFI` | [`book_index/scifi.md`](reports/book_index/scifi.md) | 169 | 0 | 9 |
-| `HORROR` | [`book_index/horror.md`](reports/book_index/horror.md) | 179 | 0 | 10 |
-| `SUPERPODERES` | [`book_index/superpoderes.md`](reports/book_index/superpoderes.md) | 125 | 3 | 3 |
-| `PATHFINDER_BASICO` / `PATHFINDER_COMPENDIO` | [`book_index/pathfinder.md`](reports/book_index/pathfinder.md) | 67 | 1 | 2 |
-| `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | 126 | 0 | 4 |
+| `BASICO` | [`book_index/basico.md`](reports/book_index/basico.md) | 323 | 1 | 0 |
+| `FANTASIA` | [`book_index/fantasia.md`](reports/book_index/fantasia.md) | 165 | 1 | 0 |
+| `SCIFI` | [`book_index/scifi.md`](reports/book_index/scifi.md) | 176 | 0 | 2 |
+| `HORROR` | [`book_index/horror.md`](reports/book_index/horror.md) | 189 | 0 | 0 |
+| `SUPERPODERES` | [`book_index/superpoderes.md`](reports/book_index/superpoderes.md) | 128 | 3 | 0 |
+| `PATHFINDER_BASICO` / `PATHFINDER_COMPENDIO` | [`book_index/pathfinder.md`](reports/book_index/pathfinder.md) | 69 | 1 | 0 |
+| `DEADLANDS_BASICO` / `DEADLANDS_COMPENDIO` | [`book_index/deadlands.md`](reports/book_index/deadlands.md) | 130 | 0 | 0 |
 | `ADG_BASICO` / `ADG_DIARIO_KUI` | [`book_index/adg.md`](reports/book_index/adg.md) | 171 | 1 | 0 |
-| `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 116 | 0 | 8 |
-| `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 76 | 0 | 6 |
+| `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 124 | 0 | 0 |
+| `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 82 | 0 | 0 |
 | `WISEGUYS` | [`book_index/wiseguys.md`](reports/book_index/wiseguys.md) | 99 | 1 | 0 |
-| **Total** | | **1605** | **8** | **53** |
+| **Total** | | **1656** | **8** | **2** |
 
-**Leitura rápida:** todos os 11 livros mapeados estão praticamente fechados —
-0-1 `[FALTA]` cada, exceto Superpoderes (3), que já eram considerados baixa
-prioridade desde a varredura original. Não sobra nenhuma lacuna de conteúdo
-volumosa; o que resta é revisar os 53 `[CONFERIR]` espalhados pelos índices
-(item 6 da lista de prioridades, abaixo).
+**Leitura rápida:** os 11 livros mapeados estão praticamente fechados — 0-1
+`[FALTA]` cada, exceto Superpoderes (3), que já eram considerados baixa
+prioridade desde a varredura original. Todos os 51 `[CONFERIR]` resolvidos
+nesta rodada (item 6 da lista de prioridades, ver abaixo) — só restam 2, em
+Sci-Fi (`jockey_mecha`/`engenheiro_espacial`, vantagens sem correspondência
+encontrada em nenhum texto-fonte disponível, mesmo após busca ampla).
 
 **Sci-Fi resolvido (2026-08-31, item 5 da lista de prioridades):** dos 56 itens
 `[FALTA]` reais do relatório, 9 foram marcados `[FORA DE ESCOPO]` (7 "Robôs
@@ -212,6 +213,60 @@ Cristal que Yurhant usa..."). Distribuição final: 3 Novato, 11 Experiente, 13
 Veterano, 6 Heroico. Ver `docs/reports/book_index/crystal_heart.md` para cada
 id, localização e a justificativa completa de cada correção de Estágio
 (campo `_duvida_estagio` no JSON).
+
+**Revisão de `[CONFERIR]` resolvida (2026-08-31, item 6 da lista de
+prioridades):** os 53 `[CONFERIR]` espalhados pelos 9 índices que tinham
+algum (Sci-Fi, Crystal Heart, Fantasia, CSV, Deadlands, Básico, Superpoderes,
+Horror, Pathfinder) foram revisados um a um contra o texto-fonte. Achados
+reais corrigidos:
+
+- **`gravidade_zero` (Sci-Fi)** — a vantagem existia sob um nome diferente
+  do livro ("Adaptado à Gravidade Zero" no catálogo vs. "Adaptação
+  Gravitacional", citada 9x no texto). Nome e descrição corrigidos para
+  bater com o efeito confirmado (ignora -2 em Agilidade por gravidade
+  diferente da habitual); nome antigo preservado em `originalName`.
+- **Programas de Ciberdeck (Sci-Fi)** — 7 itens de equipamento (Acesso
+  Remoto, Guardião, Assistente, Redirecionar, Embaralhador, Spammer, Vírus)
+  citados no livro nunca tinham sido cadastrados; adicionados.
+- **Tags de poder (Sci-Fi)** — `localizar`, `parar_o_tempo` e
+  `trancar_destrancar` não tinham cópia tagueada `SCI_FI` (só `FANTASIA`);
+  adicionada.
+- **`banir` (Deadlands)** — faltava a nota específica do cenário (o manitu
+  de um Atormentado nunca é banido permanentemente, só fica "inerte" por uma
+  hora); adicionada à descrição.
+- **4 Estágios de poder de Demônio (CSV)** — Elo Mental/Telecinese/Voar/
+  Limpeza Mental não tinham rótulo de Estágio visível na extração de texto;
+  confirmados batendo com o Estágio padrão do poder equivalente no SWADE
+  básico (o texto "Como em Savage Worlds" já era a resposta).
+- **`heart_bolha` (Crystal Heart)** — Estágio corrigido de Experiente para
+  Novato, confirmado por posição no texto (mesmo critério já validado para
+  os 33 Cristais do Apêndice A).
+- **5 materiais especiais (Pathfinder)** — Madeira Negra, Couro de Dragão,
+  Ferro Frio, Mithral e Prata Alquímica existiam só tagueados `FANTASIA`;
+  adicionada cópia tagueada `PATHFINDER`.
+- **2 Complicações (Superpoderes)** — `dependencia` e `dependente` existiam
+  só tagueadas `HORROR`/`SCI_FI`; adicionada cópia tagueada `SUPER` (esta
+  última com texto próprio, mais fiel ao livro que o da versão Sci-Fi).
+
+Outros achados foram investigados e confirmados como corretos/intencionais
+sem necessidade de mudança (taxonomia de categoria no Básico, limitação
+estrutural de "um id por poder, não por Aspecto" repetida em Sci-Fi/CSV,
+decisão de design de poderes embutidos por Coração no Crystal Heart, tabelas
+de lore/referência sem efeito mecânico em CSV/Pathfinder), ou marcados
+`[FORA DE ESCOPO]` por serem regras de resolução em jogo/sorteio conduzidas
+pelo Mestre, não opções compráveis na criação (subsistemas arcanos inteiros
+do Fantasia, tabelas de loucura/corrupção do Deadlands). Um pequeno número
+de itens (4 Tropos e 5 Vantagens/3 Complicações do Crystal Heart, 2 Itens
+Arcanos do Horror) não têm correspondência em nenhum texto-fonte disponível
+mesmo após busca ampla — mantidos como estão, documentados como prováveis
+adições do app. Dois achados incidentais de qualidade de dado também foram
+corrigidos ao longo da revisão: duplicatas byte-a-byte de `fobia`
+(Superpoderes/Horror) — mesmo padrão já corrigido para `aa_tecnomagia`/
+`aa_milagres` no CSV. Restam só **2 `[CONFERIR]` genuinamente sem resolução**
+(`jockey_mecha` e `engenheiro_espacial`, Sci-Fi) — vantagens sem nenhuma
+ocorrência encontrada em `docs/swade_scifi` mesmo com busca ampla, sem uma
+segunda fonte disponível para confirmar ou negar que pertencem ao livro. Ver
+cada `book_index/*.md` para o detalhe completo por item.
 
 ## Auditoria de hardcode (nome-texto em vez de ID)
 
@@ -382,12 +437,19 @@ diferente de `implacavel` (HORROR), então o id próprio estava certo. Conferi
 manualmente (Fé Verdadeira, Abrir Portal e Visão Espiritual) contra o texto
 antes de mesclar — bateu tudo. Ver `docs/reports/book_index/deadlands.md` pra
 cada id e localização.
-6. Só depois, revisar os `[CONFERIR]` (custo/requisito/efeito a bater linha a
-   linha com o livro) — risco menor que os itens acima, mas ainda vale para
-   fechar o ciclo de confiabilidade.
+6. ✅ **Revisar os `[CONFERIR]`** (custo/requisito/efeito a bater linha a
+   linha com o livro) — feito, ver "Revisão de `[CONFERIR]` resolvida"
+   abaixo. Dos 53 originais, 51 fechados (a maioria confirmada como correta,
+   com alguns achados reais corrigidos); restam só 2, genuinamente sem fonte
+   disponível para confirmar ou negar.
 
-Nenhuma dessas ações foi executada nesta rodada — são só recomendações. Qual
-delas atacar primeiro é decisão sua.
+Com os itens 1-6 completos, o ciclo original deste levantamento (mapear
+conteúdo faltante + auditar hardcode + fechar as lacunas encontradas) está
+fechado. O que resta como trabalho futuro, não feito nesta rodada: migrar
+o código consumidor de `pericias.json`/`equipamentos.json` para usar `.id`
+em vez de `.nome` agora que o campo existe (mencionado no item 4), e a
+auditoria geral de duplicatas do catálogo sugerida na nota sobre
+`aristocrata` acima.
 
 ## Como este documento evolui
 
