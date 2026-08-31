@@ -24,7 +24,7 @@ Criação: 12 pontos; 5 perícias básicas (Atletismo, Conhecimento Geral, Furti
 - **Ciência** (Astúcia) — [OK] — biologia, química, geologia etc. — linha ~2124
 - **Ciência Estranha** (Astúcia) — [OK] — perícia arcana do Antecedente Arcano (Ciência Estranha) — linha ~2132
 - **Conhecimento Acadêmico** (Astúcia) — [OK] — artes, história, literatura — linha ~2143
-- **Conhecimento Batalha** (Astúcia) — [CONFERIR] — asset usa "Conhecimento de Batalha" (com "de"); nome do livro é "Conhecimento Batalha" — linha ~2151
+- **Conhecimento Batalha** (Astúcia) — [OK, investigado em 2026-08-31] — confirmado: o livro (linha 2151, "CONHECIMENTO BATALHA (ASTÚCIA)") usa "Conhecimento Batalha" sem "de", e a entrada tagueada `BASICO` no catálogo (id `conhecimento_de_batalha`) exibe "Conhecimento de Batalha" com "de" — divergência real, mas de baixo risco/baixo impacto (é só o texto de exibição, o id já é estável). Existe também uma segunda entrada `conhecimento_batalha` (sem "de") só com tag `CRYSTAL_HEART`. Não corrigido: `conhecimento_de_batalha` é compartilhado por 10 livros (`ARTE_DA_GUERRA`, `BASICO`, `CIDADE_SOL_VAPOR`, `DEADLANDS`, `FANTASIA`, `HORROR`, `PATHFINDER`, `SCI_FI`, `SUPER`, `WISEGUYS`), e mudar o nome de exibição afetaria todos de uma vez sem eu ter conferido se "de Batalha" é de fato a forma usada nos outros 9 — mudança maior do que o escopo desta revisão pontual justifica.
 - **Conhecimento Geral** (Astúcia, básica) — [OK] — linha ~2157
 - **Conjurar** (Astúcia) — [OK] — perícia arcana do Antecedente Arcano (Magia) — linha ~2071
 - **Consertar** (Astúcia) — [OK] — reparo mecânico/eletrônico — linha ~2076
@@ -53,7 +53,7 @@ Criação: 12 pontos; 5 perícias básicas (Atletismo, Conhecimento Geral, Furti
 
 ## Vantagens
 
-139 vantagens do livro básico mapeadas (133 "normais" + Antecedente Arcano genérico + 5 subtipos), todas presentes em `vantagens.json` com `categoria`, `requisitos` e descrição. Nota de categorização: o JSON agrupa como `COMBATE` várias vantagens que o livro lista sob "Vantagens Estranhas" (Mãos Firmes, Nervos de Aço, Queixo de Ferro, Retirada, Rock and Roll!, Tiro Mortal, Varredura etc.) — não é um erro de dado, só uma taxonomia diferente da seção do livro; marcado [CONFERIR] apenas nesses casos.
+139 vantagens do livro básico mapeadas (133 "normais" + Antecedente Arcano genérico + 5 subtipos), todas presentes em `vantagens.json` com `categoria`, `requisitos` e descrição. Nota de categorização [OK, confirmado em 2026-08-31]: o JSON agrupa como `COMBATE` várias vantagens que o livro lista sob "Vantagens Estranhas" (Mãos Firmes, Nervos de Aço, Queixo de Ferro, Retirada, Rock and Roll!, Tiro Mortal, Varredura etc.) — confirmado que é taxonomia intencional do app (agrupar por função mecânica em vez de replicar a seção do livro), não um erro de dado; mantido como está, já que mudar a `categoria` de várias vantagens só por rótulo tem risco de efeito colateral em código que filtra por categoria, sem nenhum ganho real de correção.
 
 ### De Antecedente (24 + Antecedente Arcano)
 - **Ambidestro** — `ambidestro` — [OK] — ignora -2 na mão inábil (N, Agi d8) — linha ~4833
@@ -326,7 +326,7 @@ Catálogo comprável do Cap. 2 mapeado em `equipamentos.json`: 32 grupos (`tipo`
 | Rifles (ação-alavanca, ferrolho, assalto) (~5993–6019) | Armas de Fogo / Rifles | 9 | [OK] |
 | Escopetas (~6030) | Armas de Fogo / Escopetas | 4 | [OK] |
 | Metralhadoras (~6057) | Armas de Fogo / Metralhadoras | 7 | [OK] |
-| Armas de Energia (Sci-Fi, sem seção própria no básico — futuristas) | Armas de Energia / Lasers (Sci-Fi) | 4 | [CONFERIR] |
+| Armas de Energia — "Lasers (Futuristas)" (~6058-6071) | Armas de Energia / Lasers (Sci-Fi) | 4 | [OK] |
 | Canhões e Catapultas (~6109–6120) | Armas Especiais / Canhões e Catapultas | 3 | [OK] |
 | Lança-Chamas, Minas, Granadas (~6132–6198) | Armas Especiais / Explosivos e Lança-Chamas | 10 | [OK] |
 | Lança-Foguetes, Mísseis (~6215–6242) | Armas Pesadas / Lança-Foguetes e Mísseis | 9 | [OK] |
@@ -337,7 +337,7 @@ Catálogo comprável do Cap. 2 mapeado em `equipamentos.json`: 32 grupos (`tipo`
 | Aeronaves (~6580–6609) | Veículos / Aeronaves | 15 | [OK] |
 | Embarcações (~6633) | Veículos / Embarcações | 8 | [OK] |
 
-[CONFERIR] em "Armas de Energia / Lasers" apenas porque o livro básico não tem uma seção dedicada a laser com esse nome exato — vale conferir se esses 4 itens vieram de um adendo futurista do próprio básico (armas modernas/futuristas aparecem espalhadas nas tabelas de rifles/pistolas com a tag "futuristas") ou se foram herdados de outro sourcebook e só rotulados como BASICO por engano.
+[OK, confirmado em 2026-08-31] "Armas de Energia / Lasers" tem sim seção própria no livro básico: cabeçalho "LASERS (FUTURISTAS)" (linha ~6072), precedido por uma tabela com exatamente 4 armas (Pistola, Rifle, Submetralhadora, Gatling Laser — linhas ~6067-6071) e as regras próprias de Cauterização/Sobrecarregar/Sem Recuo. Bate 4=4 com o JSON — não é mistag de outro sourcebook, é conteúdo genuíno do capítulo de equipamento do livro básico (que cobre múltiplas eras tecnológicas para o Mestre escolher o nível da campanha).
 
 ## Poderes
 
