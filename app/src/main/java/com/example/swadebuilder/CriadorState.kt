@@ -19,6 +19,7 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.CrystalHeart
 import com.example.swadebuilder.model.CustomAncestryVariant
 import com.example.swadebuilder.model.EquipFilter
@@ -27,6 +28,7 @@ import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.GameDataSnapshot
+import com.example.swadebuilder.model.IncompatibilityRules
 import com.example.swadebuilder.model.MechaItem
 import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
@@ -118,19 +120,6 @@ class CriadorState {
     private val resolveAncestryVariantUseCase = ResolveAncestryVariantUseCase()
     private val resolveAncestryVariantPackageUseCase = com.example.swadebuilder.model.usecase.ResolveAncestryVariantPackageUseCase()
 
-    /**
-     * Mesmo conjunto de ids de ResolveAncestrySpecificAdjustmentsUseCase
-     * (scifiVariantDrivenKeys) — raças cuja Variante Sci-Fi já está no
-     * AncestryVariantRegistry, usado aqui em applyAncestryVariantAdjustments
-     * pra montar as habilidades[] de exibição/ModifierEngine a partir do
-     * mesmo pacote, em vez de duplicar os dados em blocos por raça.
-     */
-    private val scifiVariantDrivenKeys = setOf(
-        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
-        "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
-        "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
-        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "SERES SINTETICOS", "ROBOS"
-    )
 
     /**
      * Ids de habilidade que representam a Complicação "Perícias Básicas
@@ -855,7 +844,7 @@ class CriadorState {
         // cadastrados no AncestryVariantRegistry. Lidas direto do registro
         // agora — fonte única, sem risco de as duas cópias saírem do
         // sincronismo de novo.
-        if (key in scifiVariantDrivenKeys) {
+        if (key in AncestryVariantRegistry.scifiVariantDrivenKeys) {
             val opcoes = AncestryVariantRegistry.get(key)?.grupoVariante?.opcoes
             if (opcoes != null) {
                 val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id
@@ -959,27 +948,6 @@ class CriadorState {
         return resolveSciFiVariantSelectionFor(
             ancestryName = ancestryName,
             availableOptions = ancDef.opcoes
-        )
-    }
-
-    private fun withBaselineCounterpartMechanics(
-        selected: RacialModifier,
-        ancestryKey: String
-    ): RacialModifier {
-        val selectedOrigin = canonicalOriginKey(selected.origem)
-        val shouldNormalize = selectedOrigin in setOf("FANTASIA", "HORROR", "SCIFI", "SCI_FI", "FC", "SUPER")
-        if (!shouldNormalize) return selected
-
-        val baseline = listaAncestralidadesJson.firstOrNull {
-            canonicalOriginKey(it.origem) == "BASICO" && it.nome.keyify() == ancestryKey
-        } ?: return selected
-
-        return selected.copy(
-            atributos = baseline.atributos,
-            pericias = baseline.pericias,
-            vantagensGratis = baseline.vantagensGratis,
-            desvantagens = baseline.desvantagens,
-            habilidades = baseline.habilidades
         )
     }
 
@@ -1342,7 +1310,11 @@ class CriadorState {
     // expandirRetrato: Se true, ocupa 50% da largura no Resumo. Se false, ocupa menos espaço (default).
     var expandirRetrato by mutableStateOf(false)
     var portraitScaleType by mutableStateOf("CROP") // CROP, FIT
-    var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM
+    var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM — legado, mantido só pra compatibilidade de saves antigos
+    // Posição/zoom contínuos usados de fato pro recorte (substituem portraitAlignment na exibição).
+    // portraitOffsetY: 0f = topo do enquadramento, 0.5f = centro, 1f = base.
+    var portraitOffsetY by mutableStateOf(0.5f)
+    var portraitZoom by mutableStateOf(1f) // 1f..2.5f
 
     var coracaoCrystalSelecionado by mutableStateOf<CrystalHeart?>(null)
 
@@ -1517,8 +1489,6 @@ class CriadorState {
     fun totalTensaoCibernetica(): Int =
         ciberneticosInstalados.sumOf { it.strain_custo } + equipamentosComprados.sumOf { it.tensao ?: 0 }
 
-    fun totalTensaoAtual(): Int = totalTensaoCibernetica()
-
     fun valorLimiteTensao(): Pair<Int, Int> {
         val espirito = valoresAtributos["ESPIRITO"]?.intValue ?: 4
         val vigor = valoresAtributos["VIGOR"]?.intValue ?: 4
@@ -1615,41 +1585,9 @@ class CriadorState {
         return (baseSlots + bonusSlots).coerceAtLeast(0)
     }
 
-    fun valorAparar(): Int {
-        val perLutar = mapaPericias["LUTAR"]
-        val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
-        // "Jutsu" não existe como perícia própria no catálogo (mapaPericias["JUTSU"] nunca
-        // resolvia nada) — as categorias extras vivem em jutsuExtras, uma por especialização
-        // de arma além do slot base (que é a própria perícia Lutar).
-        val jutsuRaw = if (compendioArteDaGuerraAtivo) {
-            jutsuExtras.maxOfOrNull { rawTotalComSupers(it) } ?: 0
-        } else 0
-        val melhorLuta = maxOf(lutarRaw, jutsuRaw)
-        val base     = 2 + (melhorLuta / 2)
-
-        val mods = ModifierEngine.sum(this, ModifierTarget.PARRY)
-
-        val finalValue = base + mods
-        return finalValue.coerceAtLeast(0)
-    }
-
     // Engine Delegation
     fun tamanhoExibido(): Int = ModifierEngine.sizeDisplay(this)
-    fun tamanhoParaResistencia(): Int = ModifierEngine.sizeForToughness(this)
     fun resistenciaBase(): Int = ModifierEngine.toughnessBase(this)
-
-    fun valorResistenciaBase(): Int {
-        // Agora delega para o engine
-        // O engine já inclui bônus de poder, mas se quisermos manter "Base" vs "Final"
-        // para outras lógicas, teríamos que ter cuidado.
-        // O prompt pede para usar engine.
-        return resistenciaBase()
-    }
-
-    fun valorResistenciaFinal(): Int {
-        // resistenciaBase() do engine j inclui bonusResFromPower (via TOUGHNESS_FLAT)
-        return resistenciaBase()
-    }
 
     fun calculaAtaqueDesarmado(): Pair<String, String> {
         val modifiers = mutableListOf<String>()
@@ -2039,26 +1977,10 @@ class CriadorState {
         return weapons
     }
 
-    fun valorChi(): Int {
-        return reservaChi
-    }
-
     fun valorDominio(): Int {
         val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
         // Domínio inicial para ressuscitados é geralmente o dado de Espírito
         return espiritoRaw
-    }
-
-    fun valorArmaduraEfetiva(): Int {
-        // Soma armadura de equipamentos (via Engine, já filtrando Mechas) com a
-        // variável 'armadura' de estado (override manual/legado usado por raças
-        // como Sáurios), usa o maior entre isso e a armadura de Poderes, e soma
-        // a armadura natural da raça.
-        val armorFromEquipment = ModifierEngine.sum(this, ModifierTarget.ARMOR)
-        val totalEquipmentArmor = armorFromEquipment + armadura
-
-        val bestArmor = kotlin.math.max(armorFromPower, totalEquipmentArmor)
-        return (bestArmor + naturalArmorFromRace).coerceAtLeast(0)
     }
 
     fun valorTamanho(): Int = tamanhoExibido()
@@ -2072,14 +1994,11 @@ class CriadorState {
     // PROMPT 2: Brawny (Brutamontes) Carga calculation
     fun valorCargaMaxima(): Float {
         val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
-        val hasSoldado = vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
-        val hasMusculoso = vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
+        val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
+        val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
         val hasDwarfLoadBonus = compendioPathfinderAtivo && ancestralidade.keyify() == "ANAO"
         // PROMPT 2: "Brawny treats Strength as one die type higher"
-        val hasBrutamontes = vantagensSelecionadas.any {
-            val nk = it.nome.keyify()
-            nk == "BRUTAMONTES" || nk == "BRAWNY"
-        }
+        val hasBrutamontes = vantagensSelecionadas.any { it.id == Constants.ID_BRUTAMONTES }
 
         var effectiveStrength = strengthRaw
 
@@ -2316,11 +2235,7 @@ class CriadorState {
         compendioPathfinderAtivo && pathfinderFreeSlotId == null
     }
 
-    private fun Vantagem.isBrutamontes(): Boolean {
-        val idKey = id.keyify()
-        val nameKey = nome.keyify()
-        return idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nameKey == "BRUTAMONTES" || nameKey == "BRAWNY"
-    }
+    private fun Vantagem.isBrutamontes(): Boolean = id == Constants.ID_BRUTAMONTES
 
     private fun rawValuesBeforeArcaneSkillGrant(v: Vantagem): Map<String, Int>? {
         if (modoProgressaoAtivo) return null
@@ -3558,78 +3473,23 @@ class CriadorState {
             }
     }
 
-    private val incompatibilidades: Map<String, Set<String>> = mapOf(
-        "LENTO"   to setOf("LIGEIRO"),
-        "LIGEIRO" to setOf("LENTO"),
-        "OBESO"      to setOf("MUSCULOSO"),
-        "MUSCULOSO"  to setOf("OBESO"),
-        "COMP ALMA PENHORADA" to setOf("ANTECEDENTE ARCANO MILAGRES", "AA MILAGRES"),
-        "COMP ALMA VENDIDA" to setOf("ANTECEDENTE ARCANO MILAGRES", "AA MILAGRES"),
-        "ANTECEDENTE ARCANO MILAGRES" to setOf("COMP ALMA PENHORADA", "COMP ALMA VENDIDA"),
-        "AA MILAGRES" to setOf("COMP ALMA PENHORADA", "COMP ALMA VENDIDA"),
-        "COMP MALDICAO GREMLIN" to setOf("ANTECEDENTE ARCANO TECNOMAGIA", "AA TECNOMAGIA"),
-        "ANTECEDENTE ARCANO TECNOMAGIA" to setOf("COMP MALDICAO GREMLIN"),
-        "AA TECNOMAGIA" to setOf("COMP MALDICAO GREMLIN"),
-        "COMP TECNOFOBIA" to setOf("TARO ENGENHEIRO", "MESTRE DAS CALDEIRAS", "MECANICO CEGO"),
-        "TARO ENGENHEIRO" to setOf("COMP TECNOFOBIA"),
-        "MESTRE DAS CALDEIRAS" to setOf("COMP TECNOFOBIA"),
-        "MECANICO CEGO" to setOf("COMP TECNOFOBIA"),
-        "POBREZA"        to setOf("RICO", "PODRE DE RICO"),
-        "RICO"           to setOf("POBREZA"),
-        "PODRE DE RICO"  to setOf("POBREZA"),
-        "ESCOLHIDO"      to setOf("INIMIGO"),
-        "INIMIGO"        to setOf("ESCOLHIDO")
-    )
-
     fun mensagemConflitoParaVantagem(vantagem: Vantagem): String? {
-        val keys = setOf(vantagem.nome.keyify(), vantagem.id.keyify())
-        val compsConfl = keys.flatMap { incompatibilidades[it].orEmpty() }.toSet()
+        val compsConfl = IncompatibilityRules.complicacoesIncompativeisCom(vantagem.id)
         if (compsConfl.isEmpty()) return null
-        val conflito = complicacoesSelecionadas.keys.firstOrNull { comp ->
-            comp.id.keyify() in compsConfl
-        }
+        val conflito = complicacoesSelecionadas.keys.firstOrNull { comp -> comp.id in compsConfl }
         return conflito?.let { "Remova ${it.name} para pegar ${vantagem.nome}." }
     }
 
     fun mensagemConflitoParaComplicacao(complicacao: Complicacao): String? {
-        val key = complicacao.id.keyify()
-        val vantConfl = incompatibilidades[key] ?: return null
-        val conflito = vantagensSelecionadas.firstOrNull { vant ->
-            vant.nome.keyify() in vantConfl || vant.id.keyify() in vantConfl
-        }
+        val vantConfl = IncompatibilityRules.vantagensIncompativeisCom(complicacao.id)
+        if (vantConfl.isEmpty()) return null
+        val conflito = vantagensSelecionadas.firstOrNull { vant -> vant.id in vantConfl }
         return conflito?.let { "Remova ${it.nome} para pegar ${complicacao.name}." }
     }
 
     val poderSlotsPorArcano = mutableStateMapOf<String, SnapshotStateList<String?>>()
 
     val novosPoderesStacksPorArcano = mutableStateMapOf<String, MutableList<List<String>>>()
-
-    fun registrarNovosPoderes(versionKey: String, escolhas: List<String>) {
-        val pilha = novosPoderesStacksPorArcano.getOrPut(versionKey) { mutableListOf() }
-        pilha.add(escolhas)
-    }
-
-    fun desfazerUltimosNovosPoderes(versionKey: String, initialSlots: Int) {
-        val pilha = novosPoderesStacksPorArcano[versionKey] ?: return
-        if (pilha.isEmpty()) return
-
-        val ultima = pilha.removeAt(pilha.lastIndex)
-        val slots = poderSlotsPorArcano[versionKey] ?: return
-
-        ultima.forEach { poderId ->
-            val idx = slots.indexOfLast { it == poderId }
-            if (idx >= 0) slots[idx] = null
-        }
-
-        val extrasAinda = pilha.sumOf { it.size }
-        val tamanhoMinimo = (initialSlots + extrasAinda).coerceAtLeast(initialSlots)
-
-        while (slots.size > tamanhoMinimo && slots.lastOrNull() == null) {
-            slots.removeAt(slots.lastIndex)
-        }
-
-        syncPoderesSelecionadosFromSlots()
-    }
 
     fun syncPoderesSelecionadosFromSlots() {
         ensureTransmorfoFixedDisguisePower()
@@ -4103,11 +3963,6 @@ class CriadorState {
             this[MainSection.RESUMO] = true
         }
 
-    fun toggleSection(section: MainSection) {
-        val current = sectionsExpanded[section] ?: false
-        sectionsExpanded[section] = !current
-    }
-
     // guarda o nome da vantagem que está em foco (usada ao voltar da tela de detalhes)
     var vantagemEmFoco by mutableStateOf<String?>(null)
 
@@ -4313,46 +4168,6 @@ class CriadorState {
     }
     val spCostStackPorPericia = mutableStateMapOf<Pericia, SnapshotStateList<Int>>().also { m ->
         listaPericias.forEach { m[it] = mutableStateListOf() }
-    }
-
-    fun rebuildPericias(desiredRaw: Map<Pericia, Int>) {
-        syncLinguistaIdiomas()
-        val poolSize = totalSpPool // Updated getter usage
-        var cumulativeCost = 0
-
-        periciasComIdiomas().forEach { per ->
-
-            val cap = periciaCapRaw(per)
-            val target = (desiredRaw[per] ?: rawTotal(per)).coerceAtMost(cap)
-
-            val stack = spCostStackPorPericia.getValue(per)
-            stack.clear()
-            baseIncsPorPericia[per] = 0
-
-            var curr = periciaStartRaw(ancestralidade, per)
-            var freeSteps = compIncsPorPericia.getValue(per)
-
-            while (curr < target && cumulativeCost < poolSize) {
-                val next = when {
-                    curr == 0 -> 4
-                    curr < 12 -> curr + 2
-                    else      -> curr + 1
-                }
-
-                val attrKey = atributoBaseParaPericia(per)
-                val cost    = if (next <= valoresAtributos[attrKey]!!.intValue) 1 else 2
-                if (cumulativeCost + cost > poolSize) break
-
-                if (freeSteps > 0) {
-                    freeSteps -= 1
-                } else {
-                    stack.add(cost)
-                    baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
-                    cumulativeCost += cost
-                }
-                curr = next
-            }
-        }
     }
 
     fun decreasePericia(per: Pericia) {
@@ -4606,10 +4421,10 @@ class CriadorState {
 
         val chave = a.keyify()
         val profCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "PROFISSIONAL" && it.choice?.keyify() == chave
+            it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == chave
         }
         val espCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
+            it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
 
         var finalCap = baseCap + (profCount + espCount) * 2
@@ -4647,10 +4462,10 @@ class CriadorState {
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "PROFISSIONAL" && it.choice?.keyify() == chave
+            it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == chave
         }
         val espCount = vantagensSelecionadas.count {
-            it.nome.keyify() == "ESPECIALISTA" && it.choice?.keyify() == chave
+            it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
 
         return baseCap + (profCount + espCount) * 2
@@ -5086,23 +4901,6 @@ class CriadorState {
         recomputeAvailableProgress()
     }
 
-    fun refundProgressAcrossStages(n: Int) {
-        var remaining = n
-        reachedStages()
-            .mapIndexed { idx, est -> idx to est }
-            .asReversed()
-            .forEach { (_, est) ->
-                if (remaining == 0) return@forEach
-                val spent = stageXpSpent.getValue(est.nome)
-                if (spent > 0) {
-                    val refund = spent.coerceAtMost(remaining)
-                    stageXpSpent[est.nome] = spent - refund
-                    remaining -= refund
-                }
-            }
-        recomputeAvailableProgress()
-    }
-
     fun refundProgressAtStage(stageName: String, n: Int) {
         val current = stageXpSpent.getValue(stageName)
         stageXpSpent[stageName] = (current - n).coerceAtLeast(0)
@@ -5299,22 +5097,6 @@ class CriadorState {
 
         recalcularPontosAtributo()
         rebuildAllPericiaStacks()
-    }
-
-    fun selecionarAnoesScifi(opcao: String?) {
-        val ancDef = getAncestralidadeDef("ANÕES")
-        val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
-            ancestryName = "ANÕES",
-            availableOptions = ancDef?.opcoes ?: emptyList(),
-            overrideSelection = opcao
-        )
-        if (anoesScifiSelecionado == normalized && scifiVariant == normalized) return
-        anoesScifiSelecionado = normalized
-        if (scifiVariant != normalized) scifiVariant = normalized
-        if (ancestralidade.keyify().contains("ANOES")) {
-            val msgs = mutableListOf<String>()
-            aplicarAncestralidade(ancestralidade, msgs)
-        }
     }
 
     fun selecionarScifiVariant(opcao: String?) {
@@ -6242,21 +6024,6 @@ class CriadorState {
             pontosVantagem == 0 &&
             (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
 
-    fun checkIdosoConstraint(pericia: Pericia): Boolean {
-        // Only active if Idoso complication is present
-        val idosoKey = "IDOSO"
-        val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == idosoKey }
-        if (!hasIdoso) return true
-
-        // If trying to reduce a Smarts-based skill
-        if (pericia.atributo == "ASTUCIA") {
-            // Check if removing this point would violate the 5-point minimum IF we have spent points on non-Smarts skills?
-            // Actually, simply returning true allows reduction. The constraint is checked at completion.
-            return true
-        }
-        return true
-    }
-
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
         // Em campanha supers, também exige ter zerado os Pontos de Super.
@@ -6547,6 +6314,8 @@ class CriadorState {
                 expandirRetrato = expandirRetrato,
                 portraitScaleType = portraitScaleType,
                 portraitAlignment = portraitAlignment,
+                portraitOffsetY = portraitOffsetY,
+                portraitZoom = portraitZoom,
                 signoAdgSelecionado = signoAdgSelecionado,
                 pacoteCulturalFantasiaSelecionado = pacoteCulturalFantasiaSelecionado,
                 povoDoMarOpcao = povoDoMarOpcao,
@@ -6674,6 +6443,8 @@ class CriadorState {
         expandirRetrato = snapshot.selecoes.expandirRetrato
         portraitScaleType = snapshot.selecoes.portraitScaleType
         portraitAlignment = snapshot.selecoes.portraitAlignment
+        portraitOffsetY = snapshot.selecoes.portraitOffsetY
+        portraitZoom = snapshot.selecoes.portraitZoom
 
         // Flags adicionais
         nasceUmHeroi = flags.nasceUmHeroi

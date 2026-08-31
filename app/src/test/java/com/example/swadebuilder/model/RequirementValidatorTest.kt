@@ -101,6 +101,46 @@ class RequirementValidatorTest {
     }
 
     @Test
+    fun `cavaleiro exige Obrigacao Maior`() {
+        val cavaleiro = Vantagem(
+            id = "cavaleiro",
+            nome = "CAVALEIRO",
+            categoria = Categoria.SOCIAIS,
+            requisitos = Requisito(estagio = "Novato")
+        )
+
+        val state = CriadorState()
+        assertFalse(RequirementValidator.canSelect(cavaleiro, state))
+
+        state.complicacoesSelecionadas[complicacao("obrigacao")] = "Menor"
+        assertFalse(RequirementValidator.canSelect(cavaleiro, state))
+
+        state.complicacoesSelecionadas[complicacao("obrigacao")] = "Maior"
+        assertTrue(RequirementValidator.canSelect(cavaleiro, state))
+    }
+
+    @Test
+    fun `tiro duplo aprimorado exige tiro duplo com escolha de pericia`() {
+        val tiroDuploAprimorado = Vantagem(
+            id = "tiro_duplo_aprimorado",
+            nome = "TIRO DUPLO APRIMORADO",
+            categoria = Categoria.COMBATE,
+            requisitos = Requisito(estagio = "Novato")
+        )
+
+        val state = CriadorState()
+        assertFalse(RequirementValidator.canSelect(tiroDuploAprimorado, state))
+
+        state.vantagensSelecionadas += Vantagem(
+            id = "tiro_duplo",
+            nome = "TIRO DUPLO",
+            categoria = Categoria.COMBATE,
+            requisitos = Requisito(estagio = "Novato")
+        )
+        assertFalse(RequirementValidator.canSelect(tiroDuploAprimorado, state))
+    }
+
+    @Test
     fun `vantagens normais continuam exigindo todos prerequisitos`() {
         val vantagemComum = Vantagem(
             id = "teste_and",

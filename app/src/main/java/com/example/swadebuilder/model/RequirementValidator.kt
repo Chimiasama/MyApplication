@@ -25,9 +25,17 @@ object RequirementValidator {
         val key = v.nome.keyify()
 
         // 1) Regra especial: O MELHOR QUE HÁ
-        if (key == Constants.ID_THE_BEST_THERE_IS) {
+        if (v.id == Constants.ID_THE_BEST_THERE_IS) {
             if (state.emProgresso) return false
             if (state.superInvestments.isEmpty()) return false
+        }
+
+        // 1a) Regra especial: CAVALEIRO (Fantasia) — exige Obrigação (Maior)
+        if (v.id == "cavaleiro") {
+            val hasObligation = state.complicacoesSelecionadas.entries.any { (comp, grau) ->
+                comp.id == "obrigacao" && grau == "Maior"
+            }
+            if (!hasObligation) return false
         }
 
         // 2) Pontos de Poder por estágio
@@ -68,20 +76,20 @@ object RequirementValidator {
         }
 
         // 4) PROFISSIONAL / ESPECIALISTA
-        if (key == Constants.EDGE_PROFESSIONAL.keyify() || key == Constants.EDGE_EXPERT.keyify()) {
+        if (v.id == Constants.ID_PROFISSIONAL || v.id == Constants.ID_ESPECIALISTA) {
             val choiceSeguro = v.choice
 
             if (v.requiresChoice && choiceSeguro != null) {
                 val already = state.vantagensSelecionadas.any {
-                    it.nome.keyify() == key &&
+                    it.id == v.id &&
                             it.choice?.keyify() == choiceSeguro.keyify()
                 }
                 if (already) return false
             }
 
-            if (key == Constants.EDGE_EXPERT.keyify() && choiceSeguro != null) {
+            if (v.id == Constants.ID_ESPECIALISTA && choiceSeguro != null) {
                 val profExist = state.vantagensSelecionadas.any {
-                    it.id == "profissional" && it.choice?.keyify() == choiceSeguro.keyify()
+                    it.id == Constants.ID_PROFISSIONAL && it.choice?.keyify() == choiceSeguro.keyify()
                 }
                 if (!profExist) return false
             }
@@ -231,31 +239,19 @@ object RequirementValidator {
         // 13) Exige Carta Selvagem?
         if (v.requisitos.exigeCS && !state.cartaSelvagem) return false
 
-        // 14) Conflitos com complicações
-        // Incompatibilities are private in CriadorState, need to reproduce logic or move map to Constants/Global.
-        // Replicating map here since it's small and static constants.
-        val incompatibilidades: Map<String, Set<String>> = mapOf(
-            Constants.EDGE_SLOW   to setOf(Constants.EDGE_FLEET_FOOTED),
-            Constants.EDGE_FLEET_FOOTED to setOf(Constants.EDGE_SLOW),
-            Constants.EDGE_OBESE      to setOf(Constants.EDGE_MUSCULAR),
-            Constants.EDGE_MUSCULAR  to setOf(Constants.EDGE_OBESE),
-            Constants.EDGE_POVERTY        to setOf(Constants.EDGE_RICH, Constants.EDGE_FILTHY_RICH),
-            Constants.EDGE_RICH           to setOf(Constants.EDGE_POVERTY),
-            Constants.EDGE_FILTHY_RICH  to setOf(Constants.EDGE_POVERTY)
-        )
-
-        val compsConfl = incompatibilidades[key] ?: emptySet()
-        val vantKey = v.nome.trim().uppercase()
-        if (vantKey == Constants.EDGE_RICH || vantKey == Constants.EDGE_FILTHY_RICH) {
-            val tenhoPobreza = state.complicacoesSelecionadas.keys.any {
-                it.id.trim().uppercase() == Constants.EDGE_POVERTY
-            }
-            if (tenhoPobreza) return false
+        // 13b) Tiro Duplo Aprimorado — exige Tiro Duplo com a perícia associada em d10+
+        if (v.id == "tiro_duplo_aprimorado") {
+            val base = state.vantagensSelecionadas.firstOrNull { it.id == "tiro_duplo" }
+            if (base == null) return false
+            val choice = base.choice
+            if (choice.isNullOrBlank()) return false
+            val skill = state.getBestPericia(choice) ?: return false
+            if (state.rawTotal(skill) < 10) return false
         }
-        if (state.complicacoesSelecionadas.keys
-                .map { it.id.keyify() }
-                .any { it in compsConfl }
-        ) return false
+
+        // 14) Conflitos com complicações
+        val compsConfl = IncompatibilityRules.complicacoesIncompativeisCom(v.id)
+        if (state.complicacoesSelecionadas.keys.any { it.id in compsConfl }) return false
 
         return true
     }

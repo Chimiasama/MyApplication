@@ -1,5 +1,6 @@
 package com.example.swadebuilder
 
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.RuleConstants
 import com.example.swadebuilder.util.keyify
@@ -102,11 +103,7 @@ fun CriadorState.calcularPericiaRules(
 
 fun CriadorState.atributoBaseParaPericia(per: Pericia): String {
     val isAtletismo = per.nome.keyify() == "ATLETISMO"
-    val hasBrutamontes = vantagensSelecionadas.any { vant ->
-        val idKey = vant.id.keyify()
-        val nomeKey = vant.nome.keyify()
-        idKey == "BRUTAMONTES" || idKey == "BRAWNY" || nomeKey == "BRUTAMONTES" || nomeKey == "BRAWNY"
-    }
+    val hasBrutamontes = vantagensSelecionadas.any { it.id == Constants.ID_BRUTAMONTES }
 
     return if (isAtletismo && hasBrutamontes) {
         "FORCA"

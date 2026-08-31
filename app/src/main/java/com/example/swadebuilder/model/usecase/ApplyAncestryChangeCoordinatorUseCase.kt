@@ -4,6 +4,7 @@ import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.racialGrantDedupeKey
 import com.example.swadebuilder.util.keyify
 
 class ApplyAncestryChangeCoordinatorUseCase(
@@ -114,15 +115,25 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 allAdvantages = params.allAdvantages,
                 selectedAdvantages = filteredAdvantages,
                 previousFreeAdvantageKeys = transitionBootstrap.ancestryTransitionContext.previousFreeAdvantageKeys,
-                ancestryGrantedAdvantages = (params.targetAncestryDef?.vantagensGratis ?: emptyList()) +
+                // distinctBy(racialGrantDedupeKey): mesmo motivo do RacialModifier.kt
+                // vantagensGratisEfetivas/desvantagensEfetivas (6 de 121 raças do catálogo
+                // registram a mesma vantagem/desvantagem solta E embutida numa habilidade ao
+                // mesmo tempo) — essa lista aqui é o que popula vantagensRaciais/
+                // vantagensAutomaticas em ResolveAncestryRacialPackageUseCase, então sem o
+                // dedup aqui a duplicata sobrevivia mesmo já corrigida na exibição da aba
+                // Ancestralidades. Reimplementa (não chama) vantagensGratisEfetivas porque
+                // esse filtro tem uma condição extra (Antecedente Arcano por id/nome) que a
+                // versão compartilhada não tem.
+                ancestryGrantedAdvantages = ((params.targetAncestryDef?.vantagensGratis ?: emptyList()) +
                         (params.targetAncestryDef?.habilidades
                             ?.filter {
                                 it.category == "racial_edge" ||
                                     it.id?.contains("ANTECEDENTE_ARCANO", ignoreCase = true) == true ||
                                     it.nome.contains("Antecedente Arcano", ignoreCase = true)
                             }
-                            ?.map { it.id ?: it.nome } ?: emptyList()),
-                ancestryAutomaticDisadvantages = (params.targetAncestryDef?.desvantagens ?: emptyList()) +
+                            ?.map { it.id ?: it.nome } ?: emptyList()))
+                    .distinctBy { it.racialGrantDedupeKey() },
+                ancestryAutomaticDisadvantages = ((params.targetAncestryDef?.desvantagens ?: emptyList()) +
                         (params.targetAncestryDef?.habilidades
                             ?.filter { it.category == "racial_hindrance" }
                             ?.map {
@@ -131,7 +142,8 @@ class ApplyAncestryChangeCoordinatorUseCase(
                                 } else {
                                     it.nome
                                 }
-                            } ?: emptyList()),
+                            } ?: emptyList()))
+                    .distinctBy { it.racialGrantDedupeKey() },
                 ancestryOrigin = params.targetAncestryDef?.origem ?: "BASICO"
             )
         )

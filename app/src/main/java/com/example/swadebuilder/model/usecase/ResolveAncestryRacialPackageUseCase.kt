@@ -2,6 +2,7 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.model.racialGrantDedupeKey
 import com.example.swadebuilder.util.keyify
 
 class ResolveAncestryRacialPackageUseCase(
@@ -48,9 +49,15 @@ class ResolveAncestryRacialPackageUseCase(
             }
             .toMutableList()
 
-        val vantagensAutomaticas = params.ancestryGrantedAdvantages.toMutableList()
-        val vantagensRaciais = params.ancestryGrantedAdvantages.toMutableList()
-        val desvantagensRaciais = params.ancestryAutomaticDisadvantages.toMutableList()
+        // distinctBy(racialGrantDedupeKey): defesa extra pro caso de algum chamador futuro
+        // passar uma lista não deduplicada aqui — ver RacialModifier.kt
+        // vantagensGratisEfetivas/desvantagensEfetivas pro motivo (raças do catálogo que
+        // registram a mesma vantagem/desvantagem solta e embutida numa habilidade ao mesmo
+        // tempo). O chamador atual (ApplyAncestryChangeCoordinatorUseCase) já dedupliaca
+        // antes de passar pra cá, então isso é redundante hoje — de propósito.
+        val vantagensAutomaticas = params.ancestryGrantedAdvantages.distinctBy { it.racialGrantDedupeKey() }.toMutableList()
+        val vantagensRaciais = params.ancestryGrantedAdvantages.distinctBy { it.racialGrantDedupeKey() }.toMutableList()
+        val desvantagensRaciais = params.ancestryAutomaticDisadvantages.distinctBy { it.racialGrantDedupeKey() }.toMutableList()
 
         val grantedAdvantagesResult = resolveGrantedAncestryAdvantagesUseCase.execute(
             ResolveGrantedAncestryAdvantagesUseCase.Params(

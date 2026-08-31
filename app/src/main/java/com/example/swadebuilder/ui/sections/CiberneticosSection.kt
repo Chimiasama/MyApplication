@@ -196,7 +196,9 @@ fun CiberneticosSection(
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .clickable {
-                                        state.ciberneticosInstalados.add(item.copy(id = "${item.id}_${System.currentTimeMillis()}"))
+                                        // UUID em vez de currentTimeMillis(): dois cliques rápidos no mesmo
+                                        // item podiam cair no mesmo milissegundo e gerar ids duplicados.
+                                        state.ciberneticosInstalados.add(item.copy(id = "${item.id}_${java.util.UUID.randomUUID()}"))
                                         onUserFeedback()
                                     }
                                     .padding(horizontal = 10.dp, vertical = 2.dp),
@@ -283,7 +285,7 @@ fun CiberneticosSection(
                             if (customName.isNotBlank()) {
                                 val strainVal = customStrainText.toIntOrNull() ?: 1
                                 val customItem = CiberneticoItem(
-                                    id = "custom_${System.currentTimeMillis()}",
+                                    id = "custom_${java.util.UUID.randomUUID()}",
                                     nome = customName.trim(),
                                     strain_custo = strainVal,
                                     efeito = customEffect.trim()
@@ -312,11 +314,8 @@ fun CiberneticosSection(
 
         if (state.ciberneticosInstalados.isEmpty()) {
             item {
-                Text(
-                    text = "Nenhum implante cibernético instalado.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(8.dp)
+                com.example.swadebuilder.ui.components.EmptyState(
+                    message = "Nenhum implante cibernético instalado."
                 )
             }
         } else {

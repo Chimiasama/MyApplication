@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,8 +18,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
@@ -44,6 +48,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -55,11 +60,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -76,13 +83,13 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.buildSummaryLines
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.util.CharacterPortraitStorage
-import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.toFancyTitleCase
 
 @Composable
@@ -184,9 +191,9 @@ fun SummaryContent(
     val attributesSection = sections.firstOrNull { it.title == "Atributos" }
     val skillsSection = sections.firstOrNull { it.title == "Perícias" }
 
-    val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
-    val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
-    val hasDwarfLoadBonus = state.compendioPathfinderAtivo && state.ancestralidade.keyify() == "ANAO"
+    val hasMusculoso = state.vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
+    val hasSoldado = state.vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
+    val hasDwarfLoadBonus = state.compendioPathfinderAtivo && state.currentAncestryDef?.especieId == "anao"
     val weightLimit = state.valorCargaMaxima()
     val totalWeight = state.equipamentosComprados
         .mapNotNull { item ->
@@ -245,7 +252,7 @@ fun SummaryContent(
 
     val nome = state.nomePersonagem
 
-    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem())
+    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem(), especieId = state.currentAncestryDef?.especieId)
 
     val heartValue = state.coracaoCrystalSelecionado?.nome
 
@@ -346,21 +353,22 @@ fun SummaryContent(
                 ) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         val imageBitmap = imageBitmapState.value
+                        val isPortraitLoading = state.portraitFileName != null && imageBitmap == null
                         if (imageBitmap != null) {
-                            val scale = if (state.portraitScaleType == "FIT") ContentScale.Fit else ContentScale.Crop
-                            val align = when (state.portraitAlignment) {
-                                "TOP" -> Alignment.TopCenter
-                                "BOTTOM" -> Alignment.BottomCenter
-                                else -> Alignment.Center
-                            }
-
-                            Image(
-                                bitmap = imageBitmap,
-                                contentDescription = "Retrato",
-                                contentScale = scale,
-                                alignment = align,
+                            PortraitImage(
+                                imageBitmap = imageBitmap,
+                                scaleType = state.portraitScaleType,
+                                offsetY = state.portraitOffsetY,
+                                zoom = state.portraitZoom,
                                 modifier = Modifier.fillMaxSize()
                             )
+                        } else if (isPortraitLoading) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                com.example.swadebuilder.ui.components.LoadingState(modifier = Modifier.fillMaxWidth())
+                            }
                         } else {
                             Box(
                                 modifier = Modifier.fillMaxSize(),
@@ -402,6 +410,7 @@ fun SummaryContent(
                 if (showImageSettings) {
                     ImageSettingsDialog(
                         state = state,
+                        imageBitmap = imageBitmapState.value,
                         onDismiss = { showImageSettings = false }
                     )
                 }
@@ -601,83 +610,6 @@ private fun SkillNotesSummaryCard(
     }
 }
 
-@Composable
-fun BasicCharacterInfo(
-    state: CriadorState,
-    showDerivedStats: Boolean = false
-) {
-    val sections = rememberSummarySections(state, viewModel())
-    val derivedSection = sections.firstOrNull { it.title == "Atributos derivados" }
-
-    val nome = state.nomePersonagem
-    val ancestralidadeValue = buildAncestralidadeDisplay(state.toMeuPersonagem())
-
-    val heartValue = state.coracaoCrystalSelecionado?.nome
-
-    val monstroInfo = if (state.modoMonstroAtivo) {
-        val tipoNome = state.listaMonstroTemplates
-            .find { it.id == state.tipoMonstroSelecionado }
-            ?.nome
-            ?: "Desconhecido"
-        "\nTipo de Monstro: $tipoNome"
-    } else {
-        ""
-    }
-
-    val ancestralidadeDisplay = buildString {
-        append("$ancestralidadeValue$monstroInfo")
-        if (heartValue != null) {
-            append("\nCoração: $heartValue")
-        }
-    }
-
-    Column(Modifier.fillMaxWidth()) {
-        IdentityCard(
-            nome = nome,
-            onNomeChange = { state.nomePersonagem = it },
-            ancestralidade = ancestralidadeDisplay,
-        activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
-        )
-
-        if (showDerivedStats) {
-            Spacer(Modifier.height(12.dp))
-            derivedSection?.let {
-                DerivedStatsRow(stats = it.toStats())
-            }
-        }
-    }
-}
-
-@Composable
-fun SummaryCompact(state: CriadorState, viewModel: CriadorViewModel = viewModel()) {
-    val sections = rememberSummarySections(state, viewModel)
-    val traitsSection = sections.firstOrNull { it.title == "Atributos" }
-    val skillsSection = sections.firstOrNull { it.title == "Perícias" }
-    val gearSection = sections.firstOrNull { it.title == "Recursos & Equipamentos" }
-    val inventorySections = sections.filter { it.title in inventoryTitles }
-        .filterNot { it.isEmptyPlaceholder() }
-
-    val cards = listOfNotNull(
-        traitsSection?.let { "Traits" to listOf(it) },
-        skillsSection?.let { "Skills" to listOf(it) },
-        gearSection?.let { "Gear" to listOf(it) },
-        inventorySections.takeIf { it.isNotEmpty() }?.let { "Inventory" to it }
-    )
-
-    Column(Modifier.fillMaxWidth()) {
-        cards.forEachIndexed { idx, (title, cardSections) ->
-            SummaryCompactCard(
-                title = title,
-                sections = cardSections,
-                textStyle = MaterialTheme.typography.bodySmall
-            )
-            if (idx != cards.lastIndex) {
-                Spacer(Modifier.height(12.dp))
-            }
-        }
-    }
-}
-
 private data class SummarySection(
     val title: String,
     val items: List<String>
@@ -689,13 +621,6 @@ private val summaryHeaders = setOf(
     "Atributos",
     "Perícias",
     "Recursos & Equipamentos",
-    "Vantagens",
-    "Complicações",
-    "Poderes arcanos",
-    "Superpoderes"
-)
-
-private val inventoryTitles = setOf(
     "Vantagens",
     "Complicações",
     "Poderes arcanos",
@@ -724,12 +649,6 @@ private fun rememberSummarySections(state: CriadorState, viewModel: CriadorViewM
 
     return remember(lines) { lines.toSummarySections(summaryHeaders) }
 }
-
-private fun SummarySection.isEmptyPlaceholder(): Boolean =
-    items.all { item ->
-        val trimmed = item.trim()
-        trimmed == "– Nenhuma" || trimmed == "– Nenhum"
-    }
 
 private fun List<String>.toSummarySections(headers: Set<String>): List<SummarySection> {
     val sections = mutableListOf<SummarySection>()
@@ -1063,45 +982,6 @@ private fun SummarySectionCard(
 }
 
 @Composable
-private fun SummaryCompactCard(
-    title: String,
-    sections: List<SummarySection>,
-    textStyle: TextStyle
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(Modifier.padding(12.dp)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(Modifier.height(8.dp))
-            sections.forEachIndexed { idx, section ->
-                if (sections.size > 1) {
-                    Text(
-                        text = section.title,
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(Modifier.height(6.dp))
-                }
-                SummarySectionItems(items = section.items, textStyle = textStyle)
-                if (idx != sections.lastIndex) {
-                    Spacer(Modifier.height(10.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
 private fun SummarySectionItems(
     items: List<String>,
     textStyle: TextStyle
@@ -1350,16 +1230,73 @@ private fun SkillChip(text: String) {
     }
 }
 
+/**
+ * Renderização compartilhada do retrato — usada tanto no card do Resumo quanto na
+ * pré-visualização do ImageSettingsDialog, pra garantir que os dois fiquem sempre idênticos.
+ */
+@Composable
+private fun PortraitImage(
+    imageBitmap: ImageBitmap,
+    scaleType: String,
+    offsetY: Float,
+    zoom: Float,
+    modifier: Modifier = Modifier
+) {
+    val contentScale = if (scaleType == "FIT") ContentScale.Fit else ContentScale.Crop
+    val alignment: Alignment = if (scaleType == "CROP") {
+        BiasAlignment(horizontalBias = 0f, verticalBias = (offsetY * 2f - 1f).coerceIn(-1f, 1f))
+    } else {
+        Alignment.Center
+    }
+    val appliedZoom = if (scaleType == "CROP") zoom.coerceIn(1f, 2.5f) else 1f
+
+    Image(
+        bitmap = imageBitmap,
+        contentDescription = "Retrato",
+        contentScale = contentScale,
+        alignment = alignment,
+        modifier = modifier.graphicsLayer(scaleX = appliedZoom, scaleY = appliedZoom)
+    )
+}
+
 @Composable
 private fun ImageSettingsDialog(
     state: CriadorState,
+    imageBitmap: ImageBitmap?,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Ajustes da Foto") },
         text = {
-            Column {
+            Column(
+                modifier = Modifier
+                    .heightIn(max = 420.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                if (imageBitmap != null && state.portraitScaleType == "CROP") {
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Card(
+                            modifier = Modifier
+                                .width(140.dp)
+                                .aspectRatio(0.8f),
+                            border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
+                        ) {
+                            PortraitImage(
+                                imageBitmap = imageBitmap,
+                                scaleType = state.portraitScaleType,
+                                offsetY = state.portraitOffsetY,
+                                zoom = state.portraitZoom,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
+                    Spacer(Modifier.height(16.dp))
+                }
+
                 Text("Modo de Exibição", style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(8.dp))
                 ChoiceButtonRow("Preencher (Corte)", state.portraitScaleType == "CROP") {
@@ -1372,32 +1309,28 @@ private fun ImageSettingsDialog(
                 Spacer(Modifier.height(16.dp))
                 Text("Tamanho", style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(4.dp))
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    androidx.compose.material3.Checkbox(
-                        checked = state.expandirRetrato,
-                        onCheckedChange = { state.expandirRetrato = it }
-                    )
-                    Text(
-                        "Expandir (Ocupar 50% da largura)",
-                        modifier = Modifier.clickable { state.expandirRetrato = !state.expandirRetrato },
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+                com.example.swadebuilder.ui.components.CheckboxRow(
+                    label = "Expandir (Ocupar 50% da largura)",
+                    checked = state.expandirRetrato,
+                    onCheckedChange = { state.expandirRetrato = it }
+                )
 
-                if (state.portraitScaleType == "CROP") {
+                if (state.portraitScaleType == "CROP" && imageBitmap != null) {
                     Spacer(Modifier.height(16.dp))
-                    Text("Alinhamento", style = MaterialTheme.typography.labelLarge)
+                    Text("Posição (rosto ↔ corpo)", style = MaterialTheme.typography.labelLarge)
+                    Slider(
+                        value = state.portraitOffsetY,
+                        onValueChange = { state.portraitOffsetY = it },
+                        valueRange = 0f..1f
+                    )
+
                     Spacer(Modifier.height(8.dp))
-                    Column {
-                        listOf("TOP" to "Topo", "CENTER" to "Centro", "BOTTOM" to "Baixo").forEach { (key, label) ->
-                            ChoiceButtonRow(label, state.portraitAlignment == key) {
-                                state.portraitAlignment = key
-                            }
-                        }
-                    }
+                    Text("Zoom", style = MaterialTheme.typography.labelLarge)
+                    Slider(
+                        value = state.portraitZoom,
+                        onValueChange = { state.portraitZoom = it },
+                        valueRange = 1f..2.5f
+                    )
                 }
             }
         },

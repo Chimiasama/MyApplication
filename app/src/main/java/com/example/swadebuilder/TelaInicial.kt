@@ -37,6 +37,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -62,7 +63,6 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.ui.components.ModuleCard
 import com.example.swadebuilder.util.toEditionDisplayName
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -419,7 +419,7 @@ fun TelaInicial(
                     IconButton(onClick = onCarregarPersonagem) {
                         Icon(Icons.Default.FolderOpen, contentDescription = "Carregar Personagem")
                     }
-                    IconButton(onClick = onOpenSettings) {
+                    FilledTonalIconButton(onClick = onOpenSettings) {
                         Icon(Icons.Default.Settings, contentDescription = "Configurações")
                     }
                     IconButton(onClick = { showCreditsDialog = true }) {

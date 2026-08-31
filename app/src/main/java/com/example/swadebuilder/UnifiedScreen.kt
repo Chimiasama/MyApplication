@@ -63,6 +63,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.EquipamentoCategoria
 import com.example.swadebuilder.model.SuperPoder
@@ -88,7 +89,6 @@ import com.example.swadebuilder.ui.sections.VantagensContent
 import com.example.swadebuilder.ui.sections.XpSection
 import com.example.swadebuilder.util.MoneyUtils
 import com.example.swadebuilder.util.SecurityUtils
-import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
 import kotlinx.coroutines.delay
@@ -96,25 +96,6 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.io.File
 import java.security.MessageDigest
-
-
-// @Preview(showBackground = true) // Commented out to avoid build errors with ViewModel
-@Composable
-fun PreviewApp() {
-    val state = remember { CriadorState() }
-    val vm = remember { CriadorViewModel() }
-
-    UnifiedScreen(
-        state = state,
-        viewModel = vm,
-        equipamentoCategorias = emptyList(),
-        superequipCategorias = emptyList(),
-        listaSuperPoderes = emptyList(),
-        onShowMessage = {},
-        onUserFeedback = {},
-        onRequestProgression = {}
-    )
-}
 
 
 @Composable
@@ -1234,8 +1215,8 @@ private fun EquipamentoSection(
     onUserFeedback: () -> Unit,
     onLogFeedback: (String) -> Unit = {}
 ) {
-    val hasMusculoso = state.vantagensSelecionadas.any { it.nome.keyify() == "MUSCULOSO" }
-    val hasSoldado = state.vantagensSelecionadas.any { it.nome.keyify() == "SOLDADO" }
+    val hasMusculoso = state.vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
+    val hasSoldado = state.vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
     val isPersonagemRobotico = state.isPersonagemRobotico()
     val tensaoLimite = if (isPersonagemRobotico) {
         state.limiteModsRoboticos()

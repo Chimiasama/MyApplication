@@ -157,7 +157,9 @@ fun MechasSection(
                                 onClick = {
                                     highlightedMechaId = mecha.id
                                     state.mechasSelecionados.add(
-                                        mecha.copy(id = "${mecha.id}_${System.currentTimeMillis()}")
+                                        // UUID em vez de currentTimeMillis(): dois cliques rápidos no mesmo
+                                        // mecha podiam cair no mesmo milissegundo e gerar ids duplicados.
+                                        mecha.copy(id = "${mecha.id}_${java.util.UUID.randomUUID()}")
                                     )
                                     onUserFeedback()
                                 },
@@ -201,11 +203,8 @@ fun MechasSection(
 
         if (state.mechasSelecionados.isEmpty()) {
             item {
-                Text(
-                    text = "Nenhum Mecha selecionado. Escolha um modelo acima ou crie um do zero.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(8.dp)
+                com.example.swadebuilder.ui.components.EmptyState(
+                    message = "Nenhum Mecha selecionado. Escolha um modelo acima ou crie um do zero."
                 )
             }
         } else {
@@ -265,7 +264,7 @@ private fun CreateCustomMechaDialog(
             FilledTonalButton(
                 onClick = {
                     val customMecha = MechaItem(
-                        id = "custom_mech_${System.currentTimeMillis()}",
+                        id = "custom_mech_${java.util.UUID.randomUUID()}",
                         nome = nomeText.ifBlank { "Mecha Customizado" },
                         categoria_chassi = categoriaChassiText,
                         tamanho = tamanhoText.toIntOrNull() ?: 7,

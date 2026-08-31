@@ -16,7 +16,11 @@ data class SuperPoder(
     val descricaoLite: String? = null,
     // Mesmas strings de "modificadores" (posição a posição, "Nome (+custo): texto"),
     // reescritas para a edição Lite.
-    val modificadoresLite: List<String>? = null
+    val modificadoresLite: List<String>? = null,
+    // Id estável pra Super Poderes customizados (ver SettingsDialog.kt) — o catálogo oficial
+    // (super_poderes.json) continua identificado por `nome` em todo o app (DataLoader,
+    // CustomStorageManager), então esse campo é aditivo e não muda a regra de identidade.
+    val id: String? = null
 ) {
     fun exibido(): SuperPoder {
         if (EditionConfig.isFullEdition) return this

@@ -64,7 +64,8 @@ object DataLoader {
         val descricao: String? = null,
         // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
         val descricaoLite: String? = null,
-        val livros: List<String>
+        val livros: List<String>,
+        val id: String = ""
     )
 
     // Vantagens vivem em um único arquivo consolidado (vantagens.json), com cada registro
@@ -330,7 +331,8 @@ object DataLoader {
                     atributo = fonte.atributo,
                     basica = fonte.basica,
                     origem = livro,
-                    descricao = descricao
+                    descricao = descricao,
+                    id = fonte.id
                 )
             }
         }
@@ -341,7 +343,8 @@ object DataLoader {
                 atributo = pj.atributo.uppercase().semAcentos(),
                 basica   = pj.basica,
                 origem   = pj.origem,
-                descricao = pj.descricao
+                descricao = pj.descricao,
+                id = pj.id
             )
         }
 

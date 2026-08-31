@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -262,51 +261,36 @@ fun BuySuperPowerDialog(
                         val isModEnabled = !isTensaoSuperficial || baseCost >= 13
 
                         if (mod.options.size == 1) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable(enabled = isModEnabled) { mod.included.value = !mod.included.value }
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                Checkbox(
-                                    checked = mod.included.value,
-                                    onCheckedChange = { if (isModEnabled) mod.included.value = it },
-                                    enabled = isModEnabled
-                                )
-                                Spacer(Modifier.width(8.dp))
-                                val firstOpt = mod.options.first()
-                                val optStr = if (firstOpt > 0) "+$firstOpt" else firstOpt.toString()
-                                Text(
-                                    text = "${mod.name} ($optStr)",
-                                    color = if (isModEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                )
-                            }
+                            val firstOpt = mod.options.first()
+                            val optStr = if (firstOpt > 0) "+$firstOpt" else firstOpt.toString()
+                            com.example.swadebuilder.ui.components.SelectableItemRow(
+                                title = "${mod.name} ($optStr)",
+                                selected = mod.included.value,
+                                onClick = { mod.included.value = !mod.included.value },
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
+                                enabled = isModEnabled
+                            )
                         } else {
                             Column(
                                 Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp)
                             ) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Checkbox(
-                                        checked = mod.included.value,
-                                        onCheckedChange = { if (isModEnabled) mod.included.value = it },
-                                        enabled = isModEnabled
-                                    )
-                                    Spacer(Modifier.width(8.dp))
-                                    val optStr = if (mod.included.value) {
-                                        val sel = mod.selected.value
-                                        if (sel > 0) "+$sel" else sel.toString()
-                                    } else {
-                                        val optList = mod.options.map { if (it > 0) "+$it" else it.toString() }
-                                        optList.joinToString("/")
-                                    }
-                                    Text(
-                                        text = "${mod.name} ($optStr)",
-                                        color = if (isModEnabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                    )
+                                val optStr = if (mod.included.value) {
+                                    val sel = mod.selected.value
+                                    if (sel > 0) "+$sel" else sel.toString()
+                                } else {
+                                    val optList = mod.options.map { if (it > 0) "+$it" else it.toString() }
+                                    optList.joinToString("/")
                                 }
+                                com.example.swadebuilder.ui.components.SelectableItemRow(
+                                    title = "${mod.name} ($optStr)",
+                                    selected = mod.included.value,
+                                    onClick = { mod.included.value = !mod.included.value },
+                                    mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
+                                    enabled = isModEnabled
+                                )
                                 if (mod.included.value) {
                                     val sel = mod.selected.value
                                     Slider(
@@ -1178,22 +1162,13 @@ fun SuperPoderesSection(
                     Spacer(Modifier.height(8.dp))
 
                     state.listaPericias.forEach { per ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { selectedPericia = per }
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Checkbox(
-                                checked = selectedPericia == per,
-                                onCheckedChange = { checked ->
-                                    if (checked) selectedPericia = per
-                                }
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(per.nome)
-                        }
+                        com.example.swadebuilder.ui.components.SelectableItemRow(
+                            title = per.nome,
+                            selected = selectedPericia == per,
+                            onClick = { selectedPericia = per },
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            mode = com.example.swadebuilder.ui.components.SelectionMode.UNICA
+                        )
                     }
                 }
             },

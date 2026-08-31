@@ -401,20 +401,19 @@ object ModifierEngine {
 
         // 3. Complications
         state.complicacoesSelecionadas.entries.forEach { (comp, nivel) ->
-            val key = comp.id.keyify()
-            if (key == "PEQUENO") {
+            if (comp.id == Constants.ID_PEQUENO) {
                 modifiers.add(Modifier("comp_pequeno_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, -1))
                 modifiers.add(Modifier("comp_pequeno_tough", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_TOUGHNESS, -1))
             }
-            if (key == "OBESO") {
+            if (comp.id == Constants.ID_OBESO) {
                 modifiers.add(Modifier("comp_obeso_size", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("comp_obeso_tough", SourceType.COMPLICACAO, comp.name, ModifierTarget.SIZE_TOUGHNESS, 1))
                 modifiers.add(Modifier("comp_obeso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
             }
-            if (key == "IDOSO" || key.endsWith("IDOSO")) {
+            if (comp.id == Constants.ID_IDOSO) {
                 modifiers.add(Modifier("comp_idoso_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, -1))
             }
-            if (key == "LENTO" || key.endsWith("LENTO")) {
+            if (comp.id == Constants.ID_LENTO) {
                 val penalty = if (nivel == "Maior") -2 else -1
                 modifiers.add(Modifier("comp_lento_pace", SourceType.COMPLICACAO, comp.name, ModifierTarget.PACE, penalty))
             }
@@ -422,27 +421,26 @@ object ModifierEngine {
 
         // 4. Advantages
         state.vantagensSelecionadas.forEach { vant ->
-            val key = vant.nome.keyify()
             if (vant.id == "couro_blindado") {
                 modifiers.add(Modifier("edge_couro_blindado_armor", SourceType.VANTAGEM, vant.nome, ModifierTarget.ARMOR, 4))
             }
-            if (key == "MUSCULOSO") {
+            if (vant.id == Constants.ID_MUSCULOSO) {
                 modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))
             }
-            if (key == "BRUTAMONTES" || key == "BRAWNY") {
+            if (vant.id == Constants.ID_BRUTAMONTES) {
                 modifiers.add(Modifier("edge_brutamontes", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
             }
-            if (key == "BRIGAO" || key == "PUGILISTA") {
+            if (vant.id == Constants.ID_BRIGAO || vant.id == Constants.ID_PUGILISTA) {
                 modifiers.add(Modifier("edge_brigao", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
             }
-            if (key == "LIGEIRO") {
+            if (vant.id == Constants.ID_LIGEIRO) {
                 modifiers.add(Modifier("edge_ligeiro_pace", SourceType.VANTAGEM, vant.nome, ModifierTarget.PACE, 2))
             }
-            if (key == "BLOQUEAR") {
+            if (vant.id == Constants.ID_BLOQUEAR) {
                 modifiers.add(Modifier("edge_bloquear_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
             }
-            if (key == "BLOQUEAR APRIMORADO") {
+            if (vant.id == Constants.ID_BLOQUEAR_APRIMORADO) {
                 modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
             }
             if (vant.id == "resistencia_lobo") {

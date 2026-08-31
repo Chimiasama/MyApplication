@@ -133,9 +133,5 @@ class ResolveVariantPointBudgetUseCase {
             custo = custoDeAdicionarComplicacao(complicacao, comoMaior),
             complicacaoId = complicacao.id
         )
-
-        /** Adicionar um traço bespoke do catálogo geral (fora de Vantagem/Complicação), pelo id. */
-        fun tracoComoItemAdicionado(id: String, label: String): VariantBudgetItem =
-            VariantBudgetItem(label = label, custo = RacialTraitPointCatalog.custoDe(id), habilidadeId = id)
     }
 }

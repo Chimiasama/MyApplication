@@ -29,20 +29,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
     }
 
     /**
-     * Ids de ancestralidade cuja Variante Sci-Fi (Básico/Padrão + 1
-     * reconfiguração de cenário) já foi migrada pro AncestryVariantRegistry —
-     * ver comentário no lote 2 do registro. Cobre todas as raças Sci-Fi com
-     * Variante de verdade; o "when" fixo abaixo cuida só das raças com
-     * grants fixos (sem Variante) e do fallback de raças do livro básico.
-     */
-    private val scifiVariantDrivenKeys = setOf(
-        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
-        "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
-        "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
-        "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "ROBOS", "SERES SINTETICOS"
-    )
-
-    /**
      * Casa a Variante efetiva (texto já normalizado por
      * ResolveAncestryVariantUseCase) com o id estável da VariantOption
      * correspondente no registro. Sem opção correspondente (ex.:
@@ -201,7 +187,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 }
             }
 
-            if (ancKey in scifiVariantDrivenKeys) {
+            if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys) {
                 buildResultFromVariantRegistry(ancKey, effectiveVariant)?.let { return it }
             }
 

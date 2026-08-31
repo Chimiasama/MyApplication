@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,18 +45,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.getActiveOrigins
-import com.example.swadebuilder.model.loadJsonAsset
+import com.example.swadebuilder.util.loadJsonAssetAsync
 import com.example.swadebuilder.model.powerAssetOriginKey
 import com.example.swadebuilder.normAAKey
 import com.example.swadebuilder.toArcanoKey
@@ -135,17 +134,19 @@ fun PoderesSection(
         }
     }
 
-    val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
+    val powerCacheState by androidx.compose.runtime.produceState<Map<String, List<Poder>>?>(initialValue = null) {
         value = com.example.swadebuilder.model.poderesPorOrigem(context)
     }
+    val powerCache: Map<String, List<Poder>> = powerCacheState ?: emptyMap()
+    val isPowersLoading = powerCacheState == null
 
     val dominiosCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
-        val list = runCatching { context.loadJsonAsset<List<DominioJson>>("fantasia_dominios.json") }.getOrElse { emptyList() }
+        val list = runCatching { context.loadJsonAssetAsync<List<DominioJson>>("fantasia_dominios.json") }.getOrElse { emptyList() }
         value = list
     }
 
     val dominiosPathfinderCache: List<DominioJson> by androidx.compose.runtime.produceState(initialValue = emptyList()) {
-        val list = runCatching { context.loadJsonAsset<List<DominioJson>>("pathfinder_dominios.json") }.getOrElse { emptyList() }
+        val list = runCatching { context.loadJsonAssetAsync<List<DominioJson>>("pathfinder_dominios.json") }.getOrElse { emptyList() }
         value = list
     }
 
@@ -623,13 +624,16 @@ fun PoderesSection(
                 }
 
                 // POWERS LIST
-                if (poderesParaEsteArcano.isEmpty()) {
+                if (isPowersLoading) {
                     item {
-                        Text(
-                            "Nenhum poder disponível para os filtros selecionados.",
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        com.example.swadebuilder.ui.components.LoadingState(
+                            message = "Carregando poderes..."
+                        )
+                    }
+                } else if (poderesParaEsteArcano.isEmpty()) {
+                    item {
+                        com.example.swadebuilder.ui.components.EmptyState(
+                            message = "Nenhum poder disponível para os filtros selecionados."
                         )
                     }
                 } else {
@@ -659,12 +663,12 @@ fun PoderesSection(
 
                         Card(
                             colors = CardDefaults.cardColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                                containerColor = if (selecionado) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
                             ),
+                            border = if (selecionado) BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp, vertical = 2.dp) // Reduced padding
-                                .alpha(if (selecionado) 0.6f else 1f)
                                 .clickable(enabled = !isCardLocked) {
                                     if (usaPoderesPorEstagioCard) {
                                         expanded = !expanded

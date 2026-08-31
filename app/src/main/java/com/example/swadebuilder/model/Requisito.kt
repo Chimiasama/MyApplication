@@ -147,9 +147,6 @@ private fun parseStageFromLegacyRequirement(raw: String): String {
     }?.let { if (it.equals("Lendario", ignoreCase = true)) "Lendário" else it } ?: ""
 }
 
-fun Vantagem.isClasseOuPrestigio(): Boolean =
-    categoria == Categoria.CLASSE || categoria == Categoria.PRESTIGIO
-
 fun Vantagem.isFamiliaClassePathfinder(): Boolean =
     categoria == Categoria.CLASSE ||
         categoria == Categoria.VANTAGEM_DE_CLASSE ||

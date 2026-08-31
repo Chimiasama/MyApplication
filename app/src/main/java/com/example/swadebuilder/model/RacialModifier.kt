@@ -40,7 +40,19 @@ data class RacialModifier(
     val origem: String = "BASICO",
     val movimentacao: Int = 0,
     val tags: List<String> = emptyList(),
-    val opcoes: List<String> = emptyList()
+    val opcoes: List<String> = emptyList(),
+    // Identificador estável do "conceito de espécie" por trás desta entrada,
+    // compartilhado entre as várias cópias por livro da mesma raça (mesmo
+    // padrão de vantagens.json: um id, reimpresso por livro). Existe
+    // separado de `id` porque `id` já tem uma convenção divergente e mais
+    // antiga (algumas raças usam sufixo de livro, ex. `anc_humano_csv`,
+    // outras não têm id nenhum) — mexer nisso quebraria referências já
+    // existentes. `especieId` é só para o código de regra (SummaryUtils.kt
+    // etc.) checar "esta ficha é da espécie X" sem comparar texto de nome,
+    // e fica `null` em raças customizadas pelo jogador (nunca preenchido na
+    // criação customizada), o que já barra por construção uma raça custom
+    // com nome parecido de acionar uma regra pensada para a raça oficial.
+    val especieId: String? = null
 )
 
 @Serializable
@@ -49,7 +61,11 @@ data class HabilidadeCriacao(
     val custo: Int,
     val descricao: String,
     // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
-    val descricaoLite: String? = null
+    val descricaoLite: String? = null,
+    // Id estável pra Traços Raciais customizados (ver SettingsDialog.kt) — o catálogo oficial
+    // (basico_habilidades_raciais.json) continua identificado por `nome` em todo o app, então
+    // esse campo é aditivo e não muda a regra de identidade.
+    val id: String? = null
 ) {
     fun exibida(): HabilidadeCriacao =
         if (!com.example.swadebuilder.EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this
@@ -119,18 +135,38 @@ fun groupAncestralidadesForDisplay(items: List<RacialModifier>): List<List<Racia
  * CriadorState, ou a lista de Características da aba Ancestralidades — usa
  * estas duas funções em vez de ler só um dos dois lugares.
  */
+private val racialGrantSeveritySuffixRegex = Regex("""\s*\((MAIOR|MENOR)\)\s*$""")
+
+// Chave de dedup tolerante a diferenças de formatação puramente cosméticas entre a
+// mesma vantagem/desvantagem grátis representada de duas formas — id vs nome (ex.:
+// "ANTECEDENTE_ARCANO_MILAGRES" vs "Antecedente Arcano (Milagres)") ou nome cru vs
+// nome com sufixo de gravidade re-anexado (ex.: "Desastrado" vs "Desastrado (Menor)").
+// Reduz a string a só letras/números maiúsculos sem acento — duas grafias que só
+// diferem em espaço/underscore/parênteses/pontuação caem na mesma chave.
+fun String.racialGrantDedupeKey(): String =
+    keyify().replace(racialGrantSeveritySuffixRegex, "").filter { it.isLetterOrDigit() }
+
+// distinctBy(racialGrantDedupeKey) porque algumas raças do catálogo (6 de 121, ex.:
+// Halfling do Pathfinder com "Sorte") têm a mesma vantagem/desvantagem registrada nas
+// DUAS formas ao mesmo tempo — solta em vantagensGratis/desvantagens E de novo dentro
+// de habilidades[] com category=racial_edge/racial_hindrance — em vez de só uma
+// delas, que é o que o resto deste arquivo assume. Sem isso a Vantagem/Complicação
+// aparecia duplicada em qualquer lugar que lesse essa lista (ex.: "Características" da
+// aba Ancestralidades), mesmo a concessão mecânica de verdade só acontecendo uma vez
+// (ResolveGrantedAncestryAdvantagesUseCase já tinha seu próprio distinctBy(id)).
 fun vantagensGratisEfetivas(vantagensGratis: List<String>, habilidades: List<RacialAbility>): List<String> =
-    vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { it.id ?: it.nome }
+    (vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { it.id ?: it.nome })
+        .distinctBy { it.racialGrantDedupeKey() }
 
 fun desvantagensEfetivas(desvantagens: List<String>, habilidades: List<RacialAbility>): List<String> =
-    desvantagens + habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
+    (desvantagens + habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
         val sev = hab.severity
         if (sev != null && !hab.nome.contains("($sev)", ignoreCase = true)) {
             "${hab.nome} ($sev)"
         } else {
             hab.nome
         }
-    }
+    }).distinctBy { it.racialGrantDedupeKey() }
 
 /**
  * Monta a lista "Características" da aba Ancestralidades inteiramente a

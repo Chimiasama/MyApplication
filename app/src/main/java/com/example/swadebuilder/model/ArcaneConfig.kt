@@ -76,6 +76,41 @@ object ArcaneConfig {
         "ressurreicao" to "Heroico"
     )
 
+    // Explosão aparece listada tanto em Novato quanto em Experiente no texto
+    // do livro (docs/swade_csv_livro_dos_mortais, linhas ~7148 e ~7201) — sem
+    // nota explicando a repetição. Mantido como Novato (a ocorrência mais
+    // cedo/permissiva) pra não restringir o poder além do que o texto sugere;
+    // ver docs/reports/book_index/csv.md pra essa ressalva.
+    val SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE = linkedMapOf(
+        "ajuda" to "Novato",
+        "andar_nas_paredes" to "Novato",
+        "atordoar" to "Novato",
+        "aumentar_reduzir_caracteristica" to "Novato",
+        "cegar" to "Novato",
+        "confusao" to "Novato",
+        "deflexao" to "Novato",
+        "devastacao" to "Novato",
+        "detectar_ocultar_arcano" to "Novato",
+        "enredar" to "Novato",
+        "explosao" to "Novato",
+        "iluminar_obscurecer" to "Novato",
+        "medo" to "Novato",
+        "protecao" to "Novato",
+        "protecao_arcana" to "Novato",
+        "raio" to "Novato",
+        "som_silencio" to "Novato",
+        "visao_sombria" to "Novato",
+        "campo_de_dano" to "Experiente",
+        "dissipar" to "Experiente",
+        "ferir" to "Experiente",
+        "invisibilidade" to "Experiente",
+        "morosidade_velocidade" to "Experiente",
+        "sono" to "Experiente",
+        "visao_distante" to "Experiente",
+        "limpeza_mental" to "Veterano",
+        "sobrecarga" to "Veterano"
+    )
+
     val SOL_VAPOR_MILAGRES_POWER_REQUIREMENTS = mapOf(
         "atordoar" to "guerreiro_do_senhor",
         "campo_de_dano" to "guerreiro_do_senhor",
@@ -225,6 +260,13 @@ object ArcaneConfig {
             "MILAGRES" -> SOL_VAPOR_MILAGRES_POWERS_BY_STAGE
             "FEITICEIRO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE
             "DEMONIO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE + SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE
+            "TECNOMAGIA" -> SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE
+            // Anjos usam a mesma lista de poderes dos Abençoados (Milagres),
+            // mas sem precisar de Guerreiro do Senhor/Ira do Senhor pra usar
+            // os poderes de combate — por isso NÃO há entrada correspondente
+            // em getStageBasedPowerRequirement() abaixo pra "ANJO": o default
+            // (null = sem exigência) já reproduz essa regra do livro.
+            "ANJO" -> SOL_VAPOR_MILAGRES_POWERS_BY_STAGE
             else -> emptyMap()
         }
     }

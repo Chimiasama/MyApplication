@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.util.BookCustomContent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
@@ -20,7 +21,14 @@ data class PersonagemSnapshot(
     val selecoes: SnapshotSelecoes,
     val progresso: SnapshotProgresso,
     val supers: SnapshotSupers,
-    val checksum: String? = null
+    val checksum: String? = null,
+    // Conteúdo customizado (Vantagens, Raças, Poderes etc.) referenciado por este
+    // personagem, embutido no próprio backup — sem isso, um backup restaurado em
+    // outro aparelho/instalação (que não tem os mesmos custom_content_*.json em
+    // filesDir) ficaria com ids/nomes de conteúdo custom "pendurados", sem
+    // resolver pra nada. Nulo em backups antigos (versão < desta mudança); ver
+    // aggregateAllCustomContent()/mergeImportedCustomContent() em SettingsDialog.kt.
+    val customContent: BookCustomContent? = null
 )
 
 @Serializable
@@ -139,6 +147,8 @@ data class SnapshotSelecoes(
     val expandirRetrato: Boolean = false,
     val portraitScaleType: String = "CROP",
     val portraitAlignment: String = "CENTER",
+    val portraitOffsetY: Float = 0.5f,
+    val portraitZoom: Float = 1f,
     val signoAdgSelecionado: String? = null,
     val pacoteCulturalFantasiaSelecionado: String? = null,
     val povoDoMarOpcao: String? = null,

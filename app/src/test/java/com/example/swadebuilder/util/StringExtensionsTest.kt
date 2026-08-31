@@ -54,4 +54,25 @@ class StringExtensionsTest {
         assertEquals("d'Arc", "d'arc".toFancyTitleCase())
         assertEquals("\"A Lenda de XP\"", "\"a lenda de xp\"".toFancyTitleCase())
     }
+
+    @Test
+    fun toIdSlug_worksCorrectly() {
+        assertEquals("fogo_do_inferno", "Fogo do Inferno".toIdSlug())
+        assertEquals("acao_adicional", "Ação Adicional".toIdSlug())
+        assertEquals("", "".toIdSlug())
+        assertEquals("", "   ".toIdSlug())
+    }
+
+    @Test
+    fun toIdSlug_treatsAccentAndPunctuationVariantsAsTheSameId() {
+        // Duas grafias diferentes do "mesmo" nome (acento, espaçamento duplo, pontuação)
+        // precisam colapsar pro mesmo slug — é essa propriedade que a checagem de colisão
+        // de conteúdo customizado em SettingsDialog.kt depende pra nunca deixar dois itens
+        // com nomes "iguais na prática" coexistirem sob ids diferentes.
+        val a = "Fogo do Inferno".toIdSlug()
+        val b = "Fôgo do Inferno".toIdSlug()
+        val c = "  Fogo   do Inferno!!  ".toIdSlug()
+        assertEquals(a, b)
+        assertEquals(a, c)
+    }
 }

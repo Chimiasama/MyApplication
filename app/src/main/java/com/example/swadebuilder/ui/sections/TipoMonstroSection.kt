@@ -1,6 +1,5 @@
 package com.example.swadebuilder.ui.sections
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -8,8 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,8 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.paraCaracteristicas
-import com.example.swadebuilder.ui.components.RadioButtonRow
+import com.example.swadebuilder.ui.components.SelectableItemRow
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.SelectionMode
 
 @Composable
 fun TipoMonstroSection(
@@ -48,46 +46,37 @@ fun TipoMonstroSection(
             state.listaMonstroTemplates.forEach { template ->
                 val selected = state.tipoMonstroSelecionado == template.id
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .clickable {
+                Column(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                    SelectableItemRow(
+                        title = template.nome,
+                        selected = selected,
+                        mode = SelectionMode.UNICA,
+                        onClick = {
                             onUserFeedback()
                             state.aplicarTipoMonstro(template.id).forEach(onLogFeedback)
-                        },
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                        }
                     )
-                ) {
-                    Column(modifier = Modifier.padding(8.dp)) {
-                        RadioButtonRow(
-                            selected = selected,
-                            label = template.nome,
-                            onSelect = { state.aplicarTipoMonstro(template.id).forEach(onLogFeedback) }
+
+                    if (selected) {
+                        Text(
+                            text = template.descricao,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(start = 16.dp, end = 8.dp, top = 8.dp)
                         )
 
-                        if (selected) {
+                        val caracteristicas = template.paraCaracteristicas()
+                        if (caracteristicas.isNotEmpty()) {
                             Text(
-                                text = template.descricao,
-                                style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.padding(start = 40.dp, end = 8.dp, bottom = 8.dp)
+                                text = "Características:",
+                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                                modifier = Modifier.padding(start = 16.dp, end = 8.dp, top = 4.dp)
                             )
-
-                            val caracteristicas = template.paraCaracteristicas()
-                            if (caracteristicas.isNotEmpty()) {
+                            caracteristicas.forEach { linha ->
                                 Text(
-                                    text = "Características:",
-                                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                                    modifier = Modifier.padding(start = 40.dp, end = 8.dp)
+                                    text = "• $linha",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier.padding(start = 20.dp, end = 8.dp, bottom = 2.dp)
                                 )
-                                caracteristicas.forEach { linha ->
-                                    Text(
-                                        text = "• $linha",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        modifier = Modifier.padding(start = 44.dp, end = 8.dp, bottom = 2.dp)
-                                    )
-                                }
                             }
                         }
                     }

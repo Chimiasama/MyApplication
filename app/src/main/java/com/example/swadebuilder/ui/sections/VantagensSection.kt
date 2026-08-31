@@ -175,11 +175,13 @@ fun VantagensContent(
     onUserFeedback: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val powerCache: Map<String, List<Poder>> by androidx.compose.runtime.produceState(initialValue = emptyMap()) {
+    val powerCacheState by androidx.compose.runtime.produceState<Map<String, List<Poder>>?>(initialValue = null) {
         withContext(Dispatchers.IO) {
             value = com.example.swadebuilder.model.poderesPorOrigem(context)
         }
     }
+    val powerCache: Map<String, List<Poder>> = powerCacheState ?: emptyMap()
+    val isPowersLoading = powerCacheState == null
 
     val showOfficialNames = EditionConfig.isFullEdition && state.modoOficialAtivo
 
@@ -823,7 +825,9 @@ fun VantagensContent(
                     .padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
                  if (flatList.isEmpty()) {
-                     item(key = "empty_list", contentType = "message") { Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp)) }
+                     item(key = "empty_list", contentType = "message") {
+                         com.example.swadebuilder.ui.components.EmptyState(message = "Nenhuma vantagem encontrada.")
+                     }
                  } else {
                      items(flatList, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
                          VantagemItem(
@@ -1283,7 +1287,9 @@ fun VantagensContent(
             title = { Text("Poder Favorito: Escolha um Poder") },
             text = {
                 Column(Modifier.verticalScroll(rememberScrollState())) {
-                    if (options.isEmpty()) {
+                    if (isPowersLoading) {
+                        com.example.swadebuilder.ui.components.LoadingState(message = "Carregando poderes...")
+                    } else if (options.isEmpty()) {
                         Text("Você não possui poderes elegíveis ou já selecionou todos como favoritos.")
                     } else {
                         Text("Escolha um dos seus poderes para se tornar Favorito:")

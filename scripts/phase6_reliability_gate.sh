@@ -30,8 +30,7 @@ search_any() {
   fi
 }
 
-# 1) Artefatos obrigatórios do plano unificado
-require_file "docs/plano-unificado-execucao-confiabilidade.md"
+# 1) Artefatos obrigatórios do plano unificado (já concluído — só o código permanece)
 require_file "app/src/main/java/com/example/swadebuilder/DiceExtensions.kt"
 require_file "app/src/main/java/com/example/swadebuilder/ProgressionSlotRules.kt"
 require_file "app/src/test/java/com/example/swadebuilder/DiceExtensionsTest.kt"

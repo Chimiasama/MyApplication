@@ -131,7 +131,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas."
+    "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
+    "especieId": "avianos"
   },
   {
     "nome": "AQUARIANOS",
@@ -173,7 +174,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso."
+    "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso.",
+    "especieId": "aquarianos"
   },
   {
     "nome": "ELFOS",
@@ -211,7 +213,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno."
+    "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno.",
+    "especieId": "elfos"
   },
   {
     "nome": "MEIO-ELFOS",
@@ -268,7 +271,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente."
+    "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente.",
+    "especieId": "humano"
   },
   {
     "nome": "PEQUENINOS",
@@ -451,7 +455,8 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos."
+    "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
+    "especieId": "saurios"
   },
   {
     "nome": "CELESTIAIS",
@@ -644,7 +649,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Aparecem em formas variadas, de criaturas com cabeça de peixe a humanoides com guelras discretas; adaptados à pressão das profundezas, mas fragilizados pelo ar seco e pelo calor da superfície."
+    "descricaoLite": "Aparecem em formas variadas, de criaturas com cabeça de peixe a humanoides com guelras discretas; adaptados à pressão das profundezas, mas fragilizados pelo ar seco e pelo calor da superfície.",
+    "especieId": "aquarianos"
   },
   {
     "nome": "AVIANOS",
@@ -700,7 +706,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Vindos de regiões altas, como florestas de copas elevadas ou serras, lembram aves de rapina, corvídeos ou até morcegos; o esqueleto oco os deixa fisicamente franzinos."
+    "descricaoLite": "Vindos de regiões altas, como florestas de copas elevadas ou serras, lembram aves de rapina, corvídeos ou até morcegos; o esqueleto oco os deixa fisicamente franzinos.",
+    "especieId": "avianos"
   },
   {
     "nome": "CELESTIAIS",
@@ -864,7 +871,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Carregam no sangue a marca de um dos quatro elementos naturais; por fora parecem humanos comuns, mas exibem sinais sutis de cor, cabelo ou voz que denunciam sua ligação com ar, terra, fogo ou água."
+    "descricaoLite": "Carregam no sangue a marca de um dos quatro elementos naturais; por fora parecem humanos comuns, mas exibem sinais sutis de cor, cabelo ou voz que denunciam sua ligação com ar, terra, fogo ou água.",
+    "especieId": "descendente_elemental"
   },
   {
     "nome": "DRACONIANOS",
@@ -954,7 +962,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Répteis humanoides de ambientes hostis e quentes, com temperamento tão explosivo quanto o clima de sua terra natal; diferenciam-se de outros lagartos por conseguirem cuspir fogo."
+    "descricaoLite": "Répteis humanoides de ambientes hostis e quentes, com temperamento tão explosivo quanto o clima de sua terra natal; diferenciam-se de outros lagartos por conseguirem cuspir fogo.",
+    "especieId": "draconianos"
   },
   {
     "nome": "ELFOS",
@@ -993,7 +1002,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Longevos e de compleição esguia, reconhecíveis pelas orelhas pontudas e pelos olhos marcantes; habitam bosques densos ou vales escondidos e cultivam ligação espiritual com o mundo."
+    "descricaoLite": "Longevos e de compleição esguia, reconhecíveis pelas orelhas pontudas e pelos olhos marcantes; habitam bosques densos ou vales escondidos e cultivam ligação espiritual com o mundo.",
+    "especieId": "elfos"
   },
   {
     "nome": "FADAS",
@@ -1111,7 +1121,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Humanoides miúdos que preferem esconderijos como matas fechadas ou grutas montanhosas; embora lembrem os pequeninos, têm corpo mais proporcional e menos pelos."
+    "descricaoLite": "Humanoides miúdos que preferem esconderijos como matas fechadas ou grutas montanhosas; embora lembrem os pequeninos, têm corpo mais proporcional e menos pelos.",
+    "especieId": "gnomo"
   },
   {
     "nome": "GOBLINS",
@@ -1264,7 +1275,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Presentes em praticamente todo cenário, distinguem-se menos pela biologia e mais pelos costumes e valores da cultura em que nasceram."
+    "descricaoLite": "Presentes em praticamente todo cenário, distinguem-se menos pela biologia e mais pelos costumes e valores da cultura em que nasceram.",
+    "especieId": "humano"
   },
   {
     "nome": "INFERNAIS",
@@ -2003,7 +2015,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Pequenas criaturas que lembram ratos comuns, porém bípedes e pensantes; suas origens são incertas, podendo vir de mutação mágica ou de uma existência antiga escondida das demais espécies."
+    "descricaoLite": "Pequenas criaturas que lembram ratos comuns, porém bípedes e pensantes; suas origens são incertas, podendo vir de mutação mágica ou de uma existência antiga escondida das demais espécies.",
+    "especieId": "povo_rato"
   },
   {
     "nome": "POVO SERPENTE",
@@ -2317,7 +2330,8 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Homens-lagarto de regiões extremas, como pântanos, desertos ou selvas, que construíram civilizações isoladas e pouco conhecidas fora de seu território."
+    "descricaoLite": "Homens-lagarto de regiões extremas, como pântanos, desertos ou selvas, que construíram civilizações isoladas e pouco conhecidas fora de seu território.",
+    "especieId": "saurios"
   },
   {
     "nome": "TRANSMORFOS",
@@ -2492,7 +2506,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas."
+    "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
+    "especieId": "avianos"
   },
   {
     "nome": "AQUARIANOS",
@@ -2536,7 +2551,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso."
+    "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso.",
+    "especieId": "aquarianos"
   },
   {
     "nome": "ELFOS",
@@ -2576,7 +2592,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno."
+    "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno.",
+    "especieId": "elfos"
   },
   {
     "nome": "MEIO-ELFOS",
@@ -2637,7 +2654,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente."
+    "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente.",
+    "especieId": "humano"
   },
   {
     "nome": "PEQUENINOS",
@@ -2820,7 +2838,8 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos."
+    "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
+    "especieId": "saurios"
   },
   {
     "nome": "ANÕES",
@@ -2911,7 +2930,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Uma vertente que rompe com a imagem clássica de povo atlante: essa gente descende de organismos parecidos com ouriços-do-mar, nativos de mundos aquáticos."
+    "descricaoLite": "Uma vertente que rompe com a imagem clássica de povo atlante: essa gente descende de organismos parecidos com ouriços-do-mar, nativos de mundos aquáticos.",
+    "especieId": "aquarianos"
   },
   {
     "nome": "AVIANOS",
@@ -2971,7 +2991,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Versão alienígena mais próxima de aves de rapina, com cabeça avícola e membros superiores que viraram asas, adaptada a mundos de gravidade reduzida."
+    "descricaoLite": "Versão alienígena mais próxima de aves de rapina, com cabeça avícola e membros superiores que viraram asas, adaptada a mundos de gravidade reduzida.",
+    "especieId": "avianos"
   },
   {
     "nome": "ELFOS",
@@ -3015,7 +3036,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Um povo antigo à beira da extinção: os sobreviventes somam milênios de vida e buscam reverter a infertilidade da espécie enquanto atuam pelas rotas espaciais, inclusive pilhando outras naves."
+    "descricaoLite": "Um povo antigo à beira da extinção: os sobreviventes somam milênios de vida e buscam reverter a infertilidade da espécie enquanto atuam pelas rotas espaciais, inclusive pilhando outras naves.",
+    "especieId": "elfos"
   },
   {
     "nome": "HUMANOS",
@@ -3043,7 +3065,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "No cenário espacial, mantêm a versatilidade de sempre, ajustando-se tanto culturalmente quanto biologicamente a diferentes planetas ou estações onde vivem."
+    "descricaoLite": "No cenário espacial, mantêm a versatilidade de sempre, ajustando-se tanto culturalmente quanto biologicamente a diferentes planetas ou estações onde vivem.",
+    "especieId": "humano"
   },
   {
     "nome": "RAKASHANOS",
@@ -3165,7 +3188,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Linhagem reptiliana que trocou a força da mordida por mecanismos de defesa química como principal recurso de sobrevivência."
+    "descricaoLite": "Linhagem reptiliana que trocou a força da mordida por mecanismos de defesa química como principal recurso de sobrevivência.",
+    "especieId": "saurios"
   },
   {
     "nome": "CENTAUX",
@@ -3223,7 +3247,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Unem tronco humanoide a um corpo inferior de quatro patas, o que garante velocidade e estabilidade em terrenos difíceis; o porte avantajado e o jeito de chamar atenção tornam difícil passarem despercebidos."
+    "descricaoLite": "Unem tronco humanoide a um corpo inferior de quatro patas, o que garante velocidade e estabilidade em terrenos difíceis; o porte avantajado e o jeito de chamar atenção tornam difícil passarem despercebidos.",
+    "especieId": "centaux"
   },
   {
     "nome": "DRAKENS",
@@ -3638,7 +3663,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Trabalhadores geneticamente adaptados ao longo de gerações para tarefas perigosas, como mineração ou construção no espaço profundo; a modificação divide opiniões entre necessidade de sobrevivência e forma de exploração."
+    "descricaoLite": "Trabalhadores geneticamente adaptados ao longo de gerações para tarefas perigosas, como mineração ou construção no espaço profundo; a modificação divide opiniões entre necessidade de sobrevivência e forma de exploração.",
+    "especieId": "mineradores_geneticos"
   },
   {
     "nome": "ORÁCULOS",
@@ -3681,7 +3707,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Nome dado a qualquer povo cujos dons psíquicos, místicos ou além do natural já vêm de nascença."
+    "descricaoLite": "Nome dado a qualquer povo cujos dons psíquicos, místicos ou além do natural já vêm de nascença.",
+    "especieId": "oraculos"
   },
   {
     "nome": "POSSESSORES",
@@ -3882,7 +3909,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Criados por tecnologia de ponta com matéria quase orgânica, possuem consciência própria mas podem estar sujeitos a diretrizes internas; costumam ser destinados a tarefas de risco, como mineração de asteroides ou ambientes tóxicos."
+    "descricaoLite": "Criados por tecnologia de ponta com matéria quase orgânica, possuem consciência própria mas podem estar sujeitos a diretrizes internas; costumam ser destinados a tarefas de risco, como mineração de asteroides ou ambientes tóxicos.",
+    "especieId": "seres_sinteticos"
   },
   {
     "nome": "SOLDADOS GENÉTICOS",
@@ -3941,7 +3969,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Guerreiros moldados geneticamente para o combate letal, criados como armas vivas tão eficientes que até seus próprios criadores temem enfrentá-los."
+    "descricaoLite": "Guerreiros moldados geneticamente para o combate letal, criados como armas vivas tão eficientes que até seus próprios criadores temem enfrentá-los.",
+    "especieId": "soldados_geneticos"
   },
   {
     "nome": "VAZIOS",
@@ -4211,7 +4240,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Parasitas com aspecto de lesma que se fixam permanentemente no tronco cerebral de um corpo sem vida, mantendo-o preservado em trajes especiais; a ligação é definitiva, terminando apenas com a destruição do hospedeiro."
+    "descricaoLite": "Parasitas com aspecto de lesma que se fixam permanentemente no tronco cerebral de um corpo sem vida, mantendo-o preservado em trajes especiais; a ligação é definitiva, terminando apenas com a destruição do hospedeiro.",
+    "especieId": "deaders"
   },
   {
     "nome": "KALIANOS",
@@ -4304,7 +4334,8 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Espécie fisicamente frágil que compensa com um sexto sentido para prever perigos; essa percepção os torna valiosos como batedores, guias, espiões ou navegadores."
+    "descricaoLite": "Espécie fisicamente frágil que compensa com um sexto sentido para prever perigos; essa percepção os torna valiosos como batedores, guias, espiões ou navegadores.",
+    "especieId": "serranos"
   },
   {
     "nome": "HUMANOS",
@@ -4327,7 +4358,8 @@
     "livros": [
       "WISEGUYS"
     ],
-    "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente."
+    "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente.",
+    "especieId": "humano"
   },
   {
     "id": "anc_bogovia",
@@ -4507,7 +4539,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Grupo variado que absorve os valores da família ou do clã em que foi criado; é possível escolher um signo de nascimento ligado a um mês específico, que sugere traços de personalidade, ou simplesmente seguir como humano padrão."
+    "descricaoLite": "Grupo variado que absorve os valores da família ou do clã em que foi criado; é possível escolher um signo de nascimento ligado a um mês específico, que sugere traços de personalidade, ou simplesmente seguir como humano padrão.",
+    "especieId": "humano"
   },
   {
     "id": "anc_akaimimi",
@@ -4818,7 +4851,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Vistos entre seus parentes espirituais como os medianos e simpáticos: têm convicções próprias, mas raramente se destacam em algo específico."
+    "descricaoLite": "Vistos entre seus parentes espirituais como os medianos e simpáticos: têm convicções próprias, mas raramente se destacam em algo específico.",
+    "especieId": "tanukimimi"
   },
   {
     "id": "anc_usagimimi",
@@ -4920,7 +4954,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Almas de qualquer linhagem que retornam para resolver algo inacabado; ganham corpo a partir de argila moldada e impregnada de grande energia espiritual (Chi)."
+    "descricaoLite": "Almas de qualquer linhagem que retornam para resolver algo inacabado; ganham corpo a partir de argila moldada e impregnada de grande energia espiritual (Chi).",
+    "especieId": "terracota"
   },
   {
     "id": "anc_umvee",
@@ -5045,7 +5080,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Descendem de guerreiros que invocaram uma fera em batalha e não perderam a razão; o resultado é uma linhagem híbrida, metade ancestral, metade animal selvagem."
+    "descricaoLite": "Descendem de guerreiros que invocaram uma fera em batalha e não perderam a razão; o resultado é uma linhagem híbrida, metade ancestral, metade animal selvagem.",
+    "especieId": "feral"
   },
   {
     "id": "anc_onigem_adg",
@@ -5116,7 +5152,8 @@
     ],
     "livros": [
       "CIDADE_SOL_VAPOR"
-    ]
+    ],
+    "especieId": "humano"
   },
   {
     "id": "anc_demonio_csv",
@@ -5174,6 +5211,32 @@
     ]
   },
   {
+    "id": "anc_anjo_csv",
+    "nome": "Anjo",
+    "categoria": "ANCESTRALIDADE",
+    "atributos": {},
+    "pericias": {},
+    "habilidades": [
+      {
+        "nome": "Asas de Anjo",
+        "descricao": "Podem voar com uma Movimentação de 12, usando Atletismo para manobrar. Um anjo pode se livrar das asas a qualquer momento ou fazê-las crescerem novamente, o que leva 5 rodadas (30 segundos fora de combate). Com as asas, um anjo não pode nadar e recebe -1 em movimentação devido ao seu tamanho. Os ares do Limbo dificultam o voo dos anjos como a todos os outros: no centro da cidade um anjo não pode voar a mais de 500 metros acima do chão, na periferia mais do que 50 metros, e nos ermos menos do que 10 metros.",
+        "category": "racial_trait_positive",
+        "id": "ASAS_DE_ANJO",
+        "descricaoLite": "Voa com Movimentação 12 (Atletismo para manobrar; 5 rodadas para recolher/recriar as asas), mas não pode nadar com elas, sofre -1 de movimentação pelo próprio tamanho e tem tetos de altitude reduzidos nos ares do Limbo."
+      },
+      {
+        "nome": "Recluso",
+        "descricao": "Anjos têm pouco interesse no que está acontecendo fora do Céu, especialmente nos últimos séculos, então recebem -2 em todas as rolagens de Conhecimento Geral.",
+        "category": "racial_trait_negative",
+        "id": "RECLUSO",
+        "descricaoLite": "-2 em todas as rolagens de Conhecimento Geral, por pouco interesse no que acontece fora do Céu."
+      }
+    ],
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ]
+  },
+  {
     "id": "anc_humano_deadlands",
     "nome": "Humano",
     "categoria": "ANCESTRALIDADE",
@@ -5193,7 +5256,8 @@
     ],
     "livros": [
       "DEADLANDS"
-    ]
+    ],
+    "especieId": "humano"
   },
   {
     "id": "anc_anaopathfinder",
@@ -5245,7 +5309,8 @@
     "originalName": "Anão",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "especieId": "anao"
   },
   {
     "id": "anc_elfopathfinder",
@@ -5375,7 +5440,8 @@
     "originalName": "Gnomo",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "especieId": "gnomo"
   },
   {
     "id": "anc_halflingpathfinder",
@@ -5463,7 +5529,8 @@
     "originalName": "Humano",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "especieId": "humano"
   },
   {
     "id": "anc_meio_elfopathfinder",
@@ -5692,7 +5759,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas."
+    "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
+    "especieId": "avianos"
   },
   {
     "nome": "AQUARIANOS",
@@ -5736,7 +5804,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso."
+    "descricaoLite": "Originários das profundezas do oceano, são resistentes e ágeis na água, mas enfraquecem fora dela ou sob calor intenso.",
+    "especieId": "aquarianos"
   },
   {
     "nome": "ELFOS",
@@ -5776,7 +5845,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno."
+    "descricaoLite": "Humanoides esguios e de traços delicados, com orelhas pontudas e olhar marcante; vivem em florestas ou refúgios isolados e têm temperamento sereno.",
+    "especieId": "elfos"
   },
   {
     "nome": "MEIO-ELFOS",
@@ -5837,7 +5907,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente."
+    "descricaoLite": "Ancestralidade sem traços fixos, marcada pela versatilidade: costuma receber um benefício livre à escolha, refletindo a facilidade humana de se adaptar a qualquer cultura ou ambiente.",
+    "especieId": "humano"
   },
   {
     "nome": "PEQUENINOS",
@@ -6020,7 +6091,8 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos."
+    "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
+    "especieId": "saurios"
   },
   {
     "nome": "CELESTIAIS",

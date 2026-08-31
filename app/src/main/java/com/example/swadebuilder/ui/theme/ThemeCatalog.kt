@@ -121,7 +121,15 @@ val CyberpunkThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = CyberMatrixGreen,
         onPrimary = Color.Black,
+        // primaryContainer/secondaryContainer não eram definidos aqui, então o Material3
+        // preenchia com o lavanda-padrão do baseline (não tem nada a ver com a identidade
+        // preto+verde-neon do tema) sempre que algo (ex.: card "selecionado") usasse esses
+        // tokens. Contraste conferido: onPrimaryContainer 9.46:1, onSecondaryContainer 13.71:1.
+        primaryContainer = CyberMatrixDark,
+        onPrimaryContainer = CyberMatrixGreen,
         secondary = CyberMatrixDark,
+        secondaryContainer = Color(0xFF0A1F0A),
+        onSecondaryContainer = Color(0xFF7CFF9B),
         tertiary = Color(0xFF00E5FF),
         background = CyberMatrixBg,
         onBackground = CyberMatrixText,
@@ -140,7 +148,11 @@ val CyberpunkThemeData = AppThemeData(
     darkColors = darkColorScheme(
         primary = CyberMatrixGreen,
         onPrimary = Color.Black,
+        primaryContainer = CyberMatrixDark,
+        onPrimaryContainer = CyberMatrixGreen,
         secondary = CyberMatrixDark,
+        secondaryContainer = Color(0xFF0A1F0A),
+        onSecondaryContainer = Color(0xFF7CFF9B),
         tertiary = Color(0xFF00E5FF),
         background = Color(0xFF000000),
         onBackground = CyberMatrixText,
@@ -162,8 +174,14 @@ val SciFiThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = SciFiHolo,
         onPrimary = Color.Black,
+        // Sem isso, primaryContainer/secondaryContainer caíam no lavanda-padrão do
+        // Material3 em vez do azul holográfico do tema (contraste conferido: 10.62:1 / 8.32:1).
+        primaryContainer = Color(0xFF0E3A44),
+        onPrimaryContainer = Color(0xFFE6F0F4),
         secondary = Color(0xFF6FD8FF),
         onSecondary = Color(0xFF0C141C),
+        secondaryContainer = Color(0xFF123240),
+        onSecondaryContainer = Color(0xFF6FD8FF),
         tertiary = SciFiSilver,
         onTertiary = Color(0xFF0C141C),
         background = SciFiBlueDeep,
@@ -183,8 +201,12 @@ val SciFiThemeData = AppThemeData(
     darkColors = darkColorScheme(
         primary = SciFiHolo,
         onPrimary = Color.Black,
+        primaryContainer = Color(0xFF0E3A44),
+        onPrimaryContainer = Color(0xFFE6F0F4),
         secondary = Color(0xFF6FD8FF),
         onSecondary = Color(0xFF051018),
+        secondaryContainer = Color(0xFF123240),
+        onSecondaryContainer = Color(0xFF6FD8FF),
         tertiary = SciFiSilver,
         onTertiary = Color(0xFF051018),
         background = Color(0xFF04070D),
@@ -208,8 +230,14 @@ val HorrorThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = HorrorBlood, // Vermelho apenas para destaques
         onPrimary = Color.White,
+        // Sem isso, primaryContainer/secondaryContainer caíam no lavanda-padrão do
+        // Material3 em vez do vinho/sangue do tema (contraste conferido: 9.70:1 / 10.24:1).
+        primaryContainer = Color(0xFF3A1212),
+        onPrimaryContainer = HorrorBone,
         secondary = Color(0xFF4B1A1A),
         onSecondary = HorrorBone,
+        secondaryContainer = Color(0xFF2A1414),
+        onSecondaryContainer = HorrorBone,
         tertiary = Color(0xFF9E7B5B),
         onTertiary = Color(0xFF1A0F0F),
         background = HorrorBg,
@@ -229,8 +257,12 @@ val HorrorThemeData = AppThemeData(
     darkColors = darkColorScheme(
         primary = HorrorBlood,
         onPrimary = Color.White,
+        primaryContainer = Color(0xFF3A1212),
+        onPrimaryContainer = HorrorBone,
         secondary = Color(0xFF4B1A1A),
         onSecondary = HorrorBone,
+        secondaryContainer = Color(0xFF2A1414),
+        onSecondaryContainer = HorrorBone,
         tertiary = Color(0xFF9E7B5B),
         onTertiary = Color(0xFF1A0F0F),
         background = Color(0xFF050505),
@@ -285,7 +317,10 @@ val WW2ThemeData = AppThemeData(
         background = WW2Olive,
         surface = Color(0xFF1B1D16),
         onSurface = WW2Khaki,
-        onBackground = WW2Khaki,
+        // Khaki puro em cima do verde-oliva só fecha 3.89:1 de contraste (abaixo do
+        // mínimo WCAG AA de 4.5:1 pra texto normal) — clareado pra 5.33:1 sem sair
+        // da paleta khaki/militar do tema.
+        onBackground = Color(0xFFDDCFAF),
         surfaceVariant = Color(0xFF2B2F25),
         onSurfaceVariant = WW2Khaki,
         outline = WW2Paper.copy(alpha = 0.35f),
@@ -301,8 +336,14 @@ val HalloweenThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = HalloOrange,
         onPrimary = Color.Black,
+        // Sem isso, primaryContainer/secondaryContainer caíam no lavanda-padrão do
+        // Material3 em vez de abóbora/roxo (contraste conferido: 9.47:1 / 9.94:1).
+        primaryContainer = Color(0xFF3A2200),
+        onPrimaryContainer = Color(0xFFFFC37A),
         secondary = HalloPurple,
         onSecondary = Color.White,
+        secondaryContainer = Color(0xFF241040),
+        onSecondaryContainer = Color(0xFFD6B8FF),
         tertiary = Color(0xFFFFD54F),
         onTertiary = Color.Black,
         background = Color(0xFF0D0A0F),
@@ -319,8 +360,12 @@ val HalloweenThemeData = AppThemeData(
     darkColors = darkColorScheme(
         primary = HalloOrange,
         onPrimary = Color.Black,
+        primaryContainer = Color(0xFF3A2200),
+        onPrimaryContainer = Color(0xFFFFC37A),
         secondary = HalloPurple,
         onSecondary = Color.White,
+        secondaryContainer = Color(0xFF241040),
+        onSecondaryContainer = Color(0xFFD6B8FF),
         tertiary = Color(0xFFFFD54F),
         onTertiary = Color.Black,
         background = Color(0xFF060407),
@@ -342,8 +387,14 @@ val MinimalistThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = MinimalistLightPrimary,
         onPrimary = Color.White,
+        // Sem isso, primaryContainer/secondaryContainer caíam no lavanda-padrão do
+        // Material3, destoando do monocromático do tema (contraste: 16.5:1 / 17.9:1).
+        primaryContainer = Color(0xFFE4E4E4),
+        onPrimaryContainer = Color.Black,
         secondary = Color(0xFF3D3D3D),
         onSecondary = Color.White,
+        secondaryContainer = Color(0xFFE8E8E8),
+        onSecondaryContainer = Color.Black,
         tertiary = MinimalistLightGreen,
         onTertiary = MinimalistLightText,
         background = MinimalistLightBg,
@@ -360,8 +411,12 @@ val MinimalistThemeData = AppThemeData(
     darkColors = darkColorScheme(
         primary = MinimalistDarkPrimary,
         onPrimary = Color.Black,
+        primaryContainer = Color(0xFF333333),
+        onPrimaryContainer = Color.White,
         secondary = Color(0xFFD6D6D6),
         onSecondary = Color.Black,
+        secondaryContainer = Color(0xFF303030),
+        onSecondaryContainer = Color.White,
         tertiary = MinimalistDarkGreen,
         onTertiary = Color.White,
         background = MinimalistDarkBg,

@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.sections
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,7 +21,6 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,7 +51,6 @@ import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.R
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
-import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialCaracteristicasResolver
 import com.example.swadebuilder.model.RacialModifier
@@ -60,9 +59,9 @@ import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
 import com.example.swadebuilder.model.stripAncestralidadeScenarioSuffix
 import com.example.swadebuilder.registry.AncestryVariantRegistry
-import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.ui.theme.emphasis
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toEditionDisplayName
@@ -350,6 +349,13 @@ fun AncestralidadesSection(
                                 selectedKey.value = itemKey
                                 onSelectAncestralidade(item.nome)
                             },
+                        // Mesma linguagem de SelectableItemRow (ver ui/components): borda
+                        // acompanha o preenchimento quando selecionado, em vez de só a cor
+                        // mudar sozinha. O conteúdo aninhado aqui (signo, variante, traços
+                        // de Anão Ciber etc.) é complexo demais pra trocar por
+                        // SelectableItemRow sem QA visual num aparelho de verdade — fica só
+                        // esse acompanhamento de borda por enquanto.
+                        border = if (isSelected) BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
                         colors = CardDefaults.cardColors(
                             containerColor = if (isSelected) {
                                 MaterialTheme.colorScheme.primaryContainer
@@ -371,8 +377,8 @@ fun AncestralidadesSection(
 
                                     Text(
                                         text = displayName,
-                                        style = MaterialTheme.typography.bodyMedium, // Smaller font
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        style = if (isSelected) MaterialTheme.typography.emphasis else MaterialTheme.typography.bodyMedium,
+                                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
                                     )
                                 }
 
@@ -547,36 +553,33 @@ fun AncestralidadesSection(
                                                 val marcado = selecaoAtual != null
                                                 val custoAbs = -trait.custo
                                                 val cabeNoOrcamento = pontosUsados + custoAbs <= AnaoCiberTraitCatalog.MAX_PONTOS
-                                                Row(
-                                                    verticalAlignment = Alignment.CenterVertically,
-                                                    modifier = Modifier.alpha(if (marcado || cabeNoOrcamento) 1f else 0.4f)
-                                                ) {
-                                                    Checkbox(
-                                                        checked = marcado,
-                                                        enabled = marcado || cabeNoOrcamento,
-                                                        onCheckedChange = { checked ->
-                                                            val atualizados = if (checked) {
-                                                                // Traços paramétricos já entram com um alvo padrão
-                                                                // (o primeiro disponível), senão a desvantagem fica
-                                                                // "muda" na ficha até o jogador abrir o dropdown.
-                                                                val novaSelecao = AnaoCiberTraitSelection(
-                                                                    traitId = trait.id,
-                                                                    escolhaAtributo = if (trait.exigeEscolhaAtributo) {
-                                                                        state.listaAtributos.firstOrNull()
-                                                                    } else null,
-                                                                    escolhaPericia = if (trait.exigeEscolhaPericia) {
-                                                                        state.periciasFiltradasPorCompendio.minByOrNull { it.nome }?.nome
-                                                                    } else null
-                                                                )
-                                                                state.anaoCiberTracosSelecionados + novaSelecao
-                                                            } else {
-                                                                state.anaoCiberTracosSelecionados.filterNot { it.traitId == trait.id }
-                                                            }
-                                                            state.selecionarAnaoCiberTracos(atualizados)
+                                                com.example.swadebuilder.ui.components.SelectableItemRow(
+                                                    title = "${trait.nome} (${trait.custo})",
+                                                    selected = marcado,
+                                                    onClick = {
+                                                        val atualizados = if (!marcado) {
+                                                            // Traços paramétricos já entram com um alvo padrão
+                                                            // (o primeiro disponível), senão a desvantagem fica
+                                                            // "muda" na ficha até o jogador abrir o dropdown.
+                                                            val novaSelecao = AnaoCiberTraitSelection(
+                                                                traitId = trait.id,
+                                                                escolhaAtributo = if (trait.exigeEscolhaAtributo) {
+                                                                    state.listaAtributos.firstOrNull()
+                                                                } else null,
+                                                                escolhaPericia = if (trait.exigeEscolhaPericia) {
+                                                                    state.periciasFiltradasPorCompendio.minByOrNull { it.nome }?.nome
+                                                                } else null
+                                                            )
+                                                            state.anaoCiberTracosSelecionados + novaSelecao
+                                                        } else {
+                                                            state.anaoCiberTracosSelecionados.filterNot { it.traitId == trait.id }
                                                         }
-                                                    )
-                                                    Text("${trait.nome} (${trait.custo})", style = MaterialTheme.typography.bodyMedium)
-                                                }
+                                                        state.selecionarAnaoCiberTracos(atualizados)
+                                                    },
+                                                    modifier = Modifier.padding(vertical = 2.dp),
+                                                    mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
+                                                    enabled = marcado || cabeNoOrcamento
+                                                )
 
                                                 if (marcado && trait.exigeEscolhaAtributo) {
                                                     var atributoExpanded by remember { mutableStateOf(false) }
@@ -1043,26 +1046,4 @@ fun AncestralidadesSection(
             }
         }
     }
-}
-
-
-@Composable
-fun TransparentOutlinedReadOnlyField(
-    text: String,
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    trailingIcon: (@Composable (() -> Unit))? = null
-) {
-    androidx.compose.material3.OutlinedTextField(
-        value = text,
-        onValueChange = {},
-        readOnly = true,
-        enabled = enabled,
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(enabled) { onClick() },
-        trailingIcon = trailingIcon,
-        singleLine = true
-    )
 }
