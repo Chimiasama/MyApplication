@@ -11,7 +11,7 @@ O Capítulo 1 ("Criando Personagens", a partir da linha 434) não define categor
 - Qualquer raça jogável do Savage Worlds Edição Aventura (ou de outro Compêndio aprovado pelo Mestre) pode ser usada como base do super-herói; não há uma lista fechada de "origens" tipo Mutante/Alienígena/Artefato.
 - A "origem" da personagem (nasceu com poderes, foi mutado, é alienígena, usa um artefato, foi treinado etc.) é só justificativa narrativa (Manifestação) escolhida livremente para cada Super Poder comprado — cada poder no Capítulo 4 já lista sugestões de "Manifestações" (ex.: Absorção sugere "Forma amorfa, controle de energia ou matéria, desmaterialização, magia").
 - Origens específicas ficam a cargo de Complicações (**Forma Alienígena**, **Transformação**) e do modificador de poder **Dispositivo** (para heróis "Artefato"/gadget), não de um template de raça dedicado.
-- [CONFERIR] — se o app pretende oferecer categorias de "Origem do super-herói" como feature própria (Nascido/Alienígena/Mutante/Artefato/Treinado/Experimento), isso seria uma extrapolação de design do app, não um sistema presente no livro. Recomenda-se não tratar isso como conteúdo faltante do livro, e sim como decisão de UX do app (agrupar Manifestações por tema, se desejado).
+- [OK, confirmado em 2026-08-31] — o app não implementa (nem deveria implementar) categorias fechadas de "Origem do super-herói" (Nascido/Alienígena/Mutante/Artefato/Treinado/Experimento) como feature própria, e isso está correto: confirmado que o livro realmente não define esse sistema, tratando origem como escolha puramente narrativa de Manifestação. Nenhuma ação necessária — não é conteúdo faltante.
 
 ## Sistema de Pontos de Poder
 
@@ -173,8 +173,8 @@ O "Sumário de Modificadores Universais de Poder" (linha ~3388-3400) lista os mo
 
 - **Anulação de Poder (Menor/Maior)** — id: `anulacao_de_poder` — [OK] complicacoes.json (livro SUPER) — Exposição a um gatilho remove todos os superpoderes — linha ~507
 - **Aparência Distinta (Menor)** — id: `aparencia_distinta` — [OK] complicacoes.json (livro SUPER) — Aparência incomum torna a personagem fácil de identificar/rastrear — linha ~522
-- **Dependência (Maior)** — id: `dependencia` — [OK] complicacoes.json, mas tag de livro é `HORROR`, não `SUPER` — [CONFERIR] considerar adicionar tag `SUPER` — reprint explícito da Habilidade Racial Negativa — linha ~535
-- **Dependente (Menor/Maior)** — id: `dependente` — [OK] complicacoes.json, mas tag de livro é `SCI_FI`, não `SUPER` — [CONFERIR] considerar adicionar tag `SUPER` — NPC Carta Selvagem dependente do herói — linha ~600
+- **Dependência (Maior)** — id: `dependencia` — [OK, resolvido em 2026-08-31] — confirmado que o texto do livro (linha 535) é praticamente idêntico ao da entrada já tagueada `HORROR` (que já menciona "o super deve consumir..." e a nota "esta é a versão da Habilidade Racial Negativa"). Adicionada uma cópia com `livros: ["SUPER"]` — mesmo padrão de "uma entrada por livro em que o conteúdo é reimpresso" usado no resto do catálogo.
+- **Dependente (Menor/Maior)** — id: `dependente` — [OK, resolvido em 2026-08-31] — a versão já cadastrada como `SCI_FI` é semelhante mas não idêntica (usa "Extra Resiliente" em vez de "Carta Selvagem de Estágio Novato sem poderes"). Criada uma cópia própria com `livros: ["SUPER"]` usando o texto exato do livro (linha 600) em vez de reaproveitar o texto do Sci-Fi — mesma Complicação, redação específica desta edição.
 - **Doença Terminal (Menor/Maior)** — id: `doenca_terminal` — [OK] complicacoes.json (livro SUPER) — Doença incurável, penalidades em Vigor contra Fadiga — linha ~625
 - **Forma Alienígena (Maior)** — id: `forma_alienigena` — [OK] complicacoes.json (livro SUPER) — Corpo completamente não-humano, -4 em Cura — linha ~658
 - **Fraqueza Ambiental (Menor)** — id: `fraqueza_ambiental` — [OK] complicacoes.json (livro SUPER) — Vulnerabilidade a um Tipo de Poder específico (+4 dano, -4 Resistência) — linha ~683
