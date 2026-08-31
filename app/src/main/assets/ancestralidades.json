@@ -123,7 +123,7 @@
       {
         "nome": "Voo",
         "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
@@ -493,7 +493,7 @@
       {
         "nome": "Voo",
         "descricao": "Anjos voam com Movimentação 12.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 12."
       },
@@ -694,7 +694,7 @@
       {
         "nome": "VOO",
         "descricao": "Avianos voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Voam a 12 quadros de Movimentação por rodada, recorrendo a Atletismo para manobras."
       }
@@ -735,7 +735,7 @@
       {
         "nome": "VOO",
         "descricao": "Celestiais voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Voam com Movimentação 12 por rodada e usam Atletismo para manobras aéreas."
       },
@@ -1055,7 +1055,7 @@
       {
         "nome": "VOO",
         "descricao": "Fadas voam com Movimentação 6.",
-        "id": "VOO",
+        "id": "VOO_MOV_6",
         "category": "racial_trait_positive",
         "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 6."
       }
@@ -2499,7 +2499,7 @@
         "nome": "Voo",
         "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
         "category": "racial_trait_positive",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
     ],
@@ -2979,7 +2979,7 @@
       {
         "nome": "Voo",
         "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
@@ -5752,7 +5752,7 @@
         "nome": "Voo",
         "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
         "category": "racial_trait_positive",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
     ],
@@ -6136,7 +6136,7 @@
         "nome": "Voo",
         "descricao": "Anjos voam com Movimentação 12.",
         "category": "racial_trait_positive",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 12."
       },
       {

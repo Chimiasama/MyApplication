@@ -160,6 +160,15 @@ object RacialTraitPointCatalog {
         "VELOCIDADE_RACIAL" to "Velocidade",
         "VISAO_NO_ESCURO" to "Visão no Escuro",
 
+        // Voo tem 3 tiers oficiais (voo_6/voo_12/voo_24, ver
+        // basico_habilidades_raciais.json) — o rótulo já carrega o valor de
+        // Movimentação pra não precisar abrir a descrição pra saber qual tier
+        // a raça tem (ex.: Fadas é Mov 6, Avianos/Celestiais são Mov 12).
+        "VOO_MOV_6" to "Voo (Movimentação 6)",
+        "VOO_MOV_24" to "Voo (Movimentação 24)",
+        "ASAS_DE_ANJO" to "Voo (Movimentação 12)",
+        "RECLUSO" to "Recluso (-2 Conhecimento Geral)",
+
         // Habilidades puramente narrativas dos 8 Templates de Monstro Heroico
         // (Horror) — sem efeito numérico modelado, então não aparecem em
         // EFEITOS, só aqui, pra "Características" não cair no fallback de
@@ -167,7 +176,7 @@ object RacialTraitPointCatalog {
         "EMBELEZAR_ANJO" to "Embelezar",
         "IMUNE_DOENCAS_VENENOS" to "Imune a Doenças e Venenos",
         "NAO_ENVELHECE" to "Não Envelhece",
-        "VOO_MOV_12" to "Voo",
+        "VOO_MOV_12" to "Voo (Movimentação 12)",
         "ARRUINAR_DEMONIO" to "Arruinar",
         "NEGOCIADOR_DEMONIO" to "Negociador",
         "NAO_RESPIRA" to "Não Respira",
@@ -208,6 +217,7 @@ object RacialTraitPointCatalog {
         "ARROGANTE" to -2, // oficial: complicacao_racial_maior
         "ARTICULACOES_LIMITADAS" to -1, // oficial: movimentacao_reduzida_1
         "AR_INTERNO" to 2, // oficial: nao_respira (+ imune toxina inalada, não afoga/sufoca)
+        "ASAS_DE_ANJO" to 4, // oficial: voo_12 (Movimentação 12) — mesma base de VOO_MOV_12, com regras extras (recolher/recriar asas, tetos de altitude no Limbo, -1 Movimentação por peso) descritas no próprio traço
         "ASTUCIA" to 2, // oficial: aumento_atributo
         "ASTUTO" to 2, // oficial: aumento_atributo
         "ATRAENTE" to 2, // oficial: vantagem_racial
@@ -342,6 +352,7 @@ object RacialTraitPointCatalog {
         "PROGRAMADO" to -2, // oficial: complicacao_racial_maior
         "PRONTIDAO" to 2, // oficial: vantagem_racial
         "RAPIDO" to 2, // oficial: vantagem_racial
+        "RECLUSO" to -2, // oficial: penalidade_pericia_2 (-2 numa perícia comum, Conhecimento Geral)
         "REDUCAO_DE_SONO" to 1, // oficial: reducao_sono
         "REFLEXOS_DE_COMBATE" to 3, // oficial vantagem_racial (2) + bônus extra de +2 Espírito recuperar Abalado
         "RESISTENCIA" to 1, // oficial: resistencia_racial (+1)
@@ -390,7 +401,9 @@ object RacialTraitPointCatalog {
         "VISAO_NA_PENUMBRA" to 1, // oficial: visao_escuro (mesmo tier)
         "VISAO_NO_ESCURO" to 1, // oficial: visao_escuro
         "VISAO_TOTAL_NO_ESCURO" to 1, // oficial: visao_total_escuro
-        "VOO" to 4, // oficial: voo_12 (Movimentação 12)
+        "VOO_MOV_6" to 2, // oficial: voo_6 (Movimentação 6) — Fadas (Fantasia)
+        "VOO_MOV_12" to 4, // oficial: voo_12 (Movimentação 12) — Avianos, Celestiais
+        "VOO_MOV_24" to 6, // oficial: voo_24 (Movimentação 24, corrida +2d6) — sem raça oficial usando este tier ainda, id reservado pra manter os 3 tiers do catálogo oficial
         "VOTO" to -2 // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
     )
 
