@@ -12,7 +12,8 @@ data class PericiaJson(
     val atributo: String = "",
     val basica: Boolean = false,
     val origem: String? = null,
-    val descricao: String? = null
+    val descricao: String? = null,
+    val id: String = ""
 )
 
 @Serializable

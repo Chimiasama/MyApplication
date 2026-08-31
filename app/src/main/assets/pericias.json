@@ -1,5 +1,6 @@
 [
   {
+    "id": "atirar",
     "nome": "Atirar",
     "atributo": "Agilidade",
     "basica": false,
@@ -19,6 +20,7 @@
     "descricaoLite": "Usada para acertar alvos à distância com armas de tiro, como arcos e armas de fogo."
   },
   {
+    "id": "atirar",
     "nome": "Atirar",
     "atributo": "Agilidade",
     "basica": false,
@@ -29,6 +31,7 @@
     "descricaoLite": "Perícia de combate à distância recomendada a quem não se especializa em armas de arremesso."
   },
   {
+    "id": "atletismo",
     "nome": "Atletismo",
     "atributo": "Agilidade",
     "basica": true,
@@ -48,6 +51,7 @@
     "descricaoLite": "Cobre ações físicas gerais como escalar, nadar, saltar e arremessar objetos."
   },
   {
+    "id": "atletismo",
     "nome": "Atletismo",
     "atributo": "Agilidade",
     "basica": true,
@@ -58,6 +62,7 @@
     "descricaoLite": "Representa o condicionamento físico básico de todo agente."
   },
   {
+    "id": "conhecimento_de_batalha",
     "nome": "Conhecimento de Batalha",
     "atributo": "Astúcia",
     "basica": false,
@@ -77,6 +82,7 @@
     "descricaoLite": "Mede o entendimento de estratégia e tática militar; importante para comandar tropas."
   },
   {
+    "id": "cavalgar",
     "nome": "Cavalgar",
     "atributo": "Agilidade",
     "basica": false,
@@ -96,6 +102,7 @@
     "descricaoLite": "Permite montar e controlar animais ou veículos puxados por animais."
   },
   {
+    "id": "cavalgar",
     "nome": "Cavalgar",
     "atributo": "Agilidade",
     "basica": false,
@@ -106,6 +113,7 @@
     "descricaoLite": "Usada para montar os animais e criaturas comuns nas Cinco Terras."
   },
   {
+    "id": "ciencia",
     "nome": "Ciência",
     "atributo": "Astúcia",
     "basica": false,
@@ -125,6 +133,7 @@
     "descricaoLite": "Cobre conhecimento em ciências como biologia, química e engenharia."
   },
   {
+    "id": "ciencia_estranha",
     "nome": "Ciência Estranha",
     "atributo": "Astúcia",
     "basica": false,
@@ -140,6 +149,7 @@
     "descricaoLite": "Perícia arcana de quem usa pseudociência ou tecnologia anômala para produzir efeitos sobrenaturais."
   },
   {
+    "id": "conhecimento_academico",
     "nome": "Conhecimento Acadêmico",
     "atributo": "Astúcia",
     "basica": false,
@@ -159,6 +169,7 @@
     "descricaoLite": "Cobre conhecimento em artes, história, literatura e áreas humanas afins."
   },
   {
+    "id": "conhecimento_academico",
     "nome": "Conhecimento Acadêmico",
     "atributo": "Astúcia",
     "basica": false,
@@ -169,6 +180,7 @@
     "descricaoLite": "Cobre conhecimento erudito, incluindo estudos sobre a Era Antiga e os Cristais."
   },
   {
+    "id": "conhecimento_geral",
     "nome": "Conhecimento Geral",
     "atributo": "Astúcia",
     "basica": true,
@@ -188,6 +200,7 @@
     "descricaoLite": "Cobre familiaridade com costumes, geografia e cultura do mundo do personagem."
   },
   {
+    "id": "conhecimento_geral",
     "nome": "Conhecimento Geral",
     "atributo": "Astúcia",
     "basica": true,
@@ -198,6 +211,7 @@
     "descricaoLite": "Mede o quanto o personagem conhece sobre lugares além de sua terra natal."
   },
   {
+    "id": "conjurar",
     "nome": "Conjurar",
     "atributo": "Astúcia",
     "basica": false,
@@ -215,6 +229,7 @@
     "descricaoLite": "Perícia arcana usada por quem lança feitiços e magias."
   },
   {
+    "id": "consertar",
     "nome": "Consertar",
     "atributo": "Astúcia",
     "basica": false,
@@ -234,6 +249,7 @@
     "descricaoLite": "Usada para reparar ou desmontar máquinas, veículos e dispositivos."
   },
   {
+    "id": "curar",
     "nome": "Curar",
     "atributo": "Astúcia",
     "basica": false,
@@ -253,6 +269,7 @@
     "descricaoLite": "Usada para tratar ferimentos e doenças, e para analisar evidências físicas."
   },
   {
+    "id": "curar",
     "nome": "Curar",
     "atributo": "Astúcia",
     "basica": false,
@@ -263,6 +280,7 @@
     "descricaoLite": "Usada em procedimentos físicos envolvendo Cristais, como sua implantação."
   },
   {
+    "id": "dirigir",
     "nome": "Dirigir",
     "atributo": "Agilidade",
     "basica": false,
@@ -282,6 +300,7 @@
     "descricaoLite": "Permite controlar veículos terrestres motorizados."
   },
   {
+    "id": "dirigir",
     "nome": "Dirigir",
     "atributo": "Agilidade",
     "basica": false,
@@ -292,6 +311,7 @@
     "descricaoLite": "Perícia rara, pouco necessária fora de algumas cidades e da organização Syn."
   },
   {
+    "id": "eletronica",
     "nome": "Eletrônica",
     "atributo": "Astúcia",
     "basica": false,
@@ -307,6 +327,7 @@
     "descricaoLite": "Usada para operar equipamentos eletrônicos complexos e especializados."
   },
   {
+    "id": "fe",
     "nome": "Fé",
     "atributo": "Espírito",
     "basica": false,
@@ -324,6 +345,7 @@
     "descricaoLite": "Perícia arcana de quem recebe poderes sobrenaturais por devoção religiosa."
   },
   {
+    "id": "foco",
     "nome": "Foco",
     "atributo": "Espírito",
     "basica": false,
@@ -341,6 +363,7 @@
     "descricaoLite": "Perícia arcana de quem canaliza um dom sobrenatural inato."
   },
   {
+    "id": "foco",
     "nome": "Foco",
     "atributo": "Espírito",
     "basica": false,
@@ -351,6 +374,7 @@
     "descricaoLite": "Usada para ativar Técnicas Chi, recuperar Pontos de Chi e, alternativamente, resistir ao medo."
   },
   {
+    "id": "furtividade",
     "nome": "Furtividade",
     "atributo": "Agilidade",
     "basica": true,
@@ -370,6 +394,7 @@
     "descricaoLite": "Usada para se mover e se esconder sem ser percebido."
   },
   {
+    "id": "furtividade",
     "nome": "Furtividade",
     "atributo": "Agilidade",
     "basica": true,
@@ -380,6 +405,7 @@
     "descricaoLite": "Usada para evitar ser visto entrando ou saindo de lugares proibidos."
   },
   {
+    "id": "hackear",
     "nome": "Hackear",
     "atributo": "Astúcia",
     "basica": false,
@@ -395,6 +421,7 @@
     "descricaoLite": "Usada para invadir sistemas e criar programas de computador."
   },
   {
+    "id": "idiomas",
     "nome": "Idiomas",
     "atributo": "Astúcia",
     "basica": false,
@@ -413,6 +440,7 @@
     "descricaoLite": "Representa a fluência em uma língua estrangeira; o personagem começa fluente só no idioma nativo."
   },
   {
+    "id": "idiomas",
     "nome": "Idiomas",
     "atributo": "Astúcia",
     "basica": false,
@@ -423,6 +451,7 @@
     "descricaoLite": "Normalmente desnecessária, já que a maior parte do mundo compartilha uma única língua comum."
   },
   {
+    "id": "intimidar",
     "nome": "Intimidar",
     "atributo": "Espírito",
     "basica": false,
@@ -442,6 +471,7 @@
     "descricaoLite": "Usada para amedrontar oponentes, fazendo-os recuar, fugir ou revelar informações."
   },
   {
+    "id": "intimidar",
     "nome": "Intimidar",
     "atributo": "Espírito",
     "basica": false,
@@ -452,6 +482,7 @@
     "descricaoLite": "Reflete o quanto a reputação da organização do personagem intimida os outros."
   },
   {
+    "id": "jogar",
     "nome": "Jogar",
     "atributo": "Astúcia",
     "basica": false,
@@ -471,6 +502,7 @@
     "descricaoLite": "Usada em jogos de azar e apostas."
   },
   {
+    "id": "ladinagem",
     "nome": "Ladinagem",
     "atributo": "Agilidade",
     "basica": false,
@@ -490,6 +522,7 @@
     "descricaoLite": "Cobre arrombar fechaduras, roubar carteiras e manipular objetos com discrição."
   },
   {
+    "id": "ladinagem",
     "nome": "Ladinagem",
     "atributo": "Agilidade",
     "basica": false,
@@ -500,6 +533,7 @@
     "descricaoLite": "Usada principalmente para desarmar armadilhas com rapidez."
   },
   {
+    "id": "lutar",
     "nome": "Lutar",
     "atributo": "Agilidade",
     "basica": false,
@@ -518,6 +552,7 @@
     "descricaoLite": "Cobre todos os ataques em combate corpo a corpo."
   },
   {
+    "id": "lutar",
     "nome": "Lutar",
     "atributo": "Agilidade",
     "basica": false,
@@ -528,6 +563,7 @@
     "descricaoLite": "Representa o treinamento em uma categoria específica de armas corpo a corpo; cada categoria aprendida conta como uma perícia separada."
   },
   {
+    "id": "lutar",
     "nome": "Lutar",
     "atributo": "Agilidade",
     "basica": true,
@@ -538,6 +574,7 @@
     "descricaoLite": "Reflete o treinamento em combate corpo a corpo ou desarmado dos agentes."
   },
   {
+    "id": "navegar",
     "nome": "Navegar",
     "atributo": "Agilidade",
     "basica": false,
@@ -557,6 +594,7 @@
     "descricaoLite": "Permite operar embarcações e realizar tarefas náuticas comuns."
   },
   {
+    "id": "navegar",
     "nome": "Navegar",
     "atributo": "Agilidade",
     "basica": false,
@@ -567,6 +605,7 @@
     "descricaoLite": "Usada para conduzir canoas e embarcações maiores em regiões costeiras e fluviais."
   },
   {
+    "id": "ocultismo",
     "nome": "Ocultismo",
     "atributo": "Astúcia",
     "basica": false,
@@ -586,6 +625,7 @@
     "descricaoLite": "Cobre conhecimento sobre o sobrenatural e criaturas paranormais."
   },
   {
+    "id": "perceber",
     "nome": "Perceber",
     "atributo": "Astúcia",
     "basica": true,
@@ -605,6 +645,7 @@
     "descricaoLite": "Usada para notar pistas, emboscadas e detalhes escondidos."
   },
   {
+    "id": "perceber",
     "nome": "Perceber",
     "atributo": "Astúcia",
     "basica": true,
@@ -615,6 +656,7 @@
     "descricaoLite": "Pode revelar uma pista sobre o tema de um Cristal em ação."
   },
   {
+    "id": "performance",
     "nome": "Performance",
     "atributo": "Espírito",
     "basica": false,
@@ -634,6 +676,7 @@
     "descricaoLite": "Cobre atuação, canto, dança e outras formas de entretenimento, incluindo disfarces."
   },
   {
+    "id": "performance",
     "nome": "Performance",
     "atributo": "Espírito",
     "basica": false,
@@ -644,6 +687,7 @@
     "descricaoLite": "Pouco usada pelos agentes; não serve para arrecadar recursos da organização."
   },
   {
+    "id": "persuadir",
     "nome": "Persuadir",
     "atributo": "Espírito",
     "basica": true,
@@ -663,6 +707,7 @@
     "descricaoLite": "Usada para convencer outras pessoas por meio de conversa, sem controlar sua vontade."
   },
   {
+    "id": "persuadir",
     "nome": "Persuadir",
     "atributo": "Espírito",
     "basica": true,
@@ -673,6 +718,7 @@
     "descricaoLite": "Também usada para requisitar equipamentos e serviços da organização."
   },
   {
+    "id": "pesquisar",
     "nome": "Pesquisar",
     "atributo": "Astúcia",
     "basica": false,
@@ -691,6 +737,7 @@
     "descricaoLite": "Usada para encontrar informações em bibliotecas, arquivos e outras fontes escritas."
   },
   {
+    "id": "pesquisar",
     "nome": "Pesquisar",
     "atributo": "Astúcia",
     "basica": false,
@@ -701,6 +748,7 @@
     "descricaoLite": "Também pode ser usada para requisitar equipamentos e serviços da organização."
   },
   {
+    "id": "pilotar",
     "nome": "Pilotar",
     "atributo": "Agilidade",
     "basica": false,
@@ -720,6 +768,7 @@
     "descricaoLite": "Permite manobrar aeronaves e espaçonaves."
   },
   {
+    "id": "pilotar",
     "nome": "Pilotar",
     "atributo": "Agilidade",
     "basica": false,
@@ -730,6 +779,7 @@
     "descricaoLite": "Perícia rara, usada por poucos pilotos especializados em veículos aéreos."
   },
   {
+    "id": "provocar",
     "nome": "Provocar",
     "atributo": "Astúcia",
     "basica": false,
@@ -749,6 +799,7 @@
     "descricaoLite": "Usada para irritar ou desestabilizar um oponente com deboche."
   },
   {
+    "id": "provocar",
     "nome": "Provocar",
     "atributo": "Astúcia",
     "basica": false,
@@ -759,6 +810,7 @@
     "descricaoLite": "Também usada para se gabar diante de expectativas sociais locais."
   },
   {
+    "id": "psionicos",
     "nome": "Psiônicos",
     "atributo": "Astúcia",
     "basica": false,
@@ -774,6 +826,7 @@
     "descricaoLite": "Perícia arcana usada para ativar e controlar poderes psíquicos."
   },
   {
+    "id": "sobrevivencia",
     "nome": "Sobrevivência",
     "atributo": "Astúcia",
     "basica": false,
@@ -793,6 +846,7 @@
     "descricaoLite": "Usada para encontrar comida, água e abrigo, e para rastrear."
   },
   {
+    "id": "sobrevivencia",
     "nome": "Sobrevivência",
     "atributo": "Astúcia",
     "basica": false,
@@ -803,6 +857,7 @@
     "descricaoLite": "Essencial para expedições em áreas selvagens."
   },
   {
+    "id": "acrobacia",
     "nome": "Acrobacia",
     "atributo": "Agilidade",
     "basica": false,
@@ -813,6 +868,7 @@
     "descricaoLite": "Perícia física refinada para equilíbrio, escaladas sem equipamento, fugir de agarrões e amortecer quedas."
   },
   {
+    "id": "convencao",
     "nome": "Convenção",
     "atributo": "Astúcia",
     "basica": false,
@@ -823,6 +879,7 @@
     "descricaoLite": "Cobre etiqueta social, costumes locais e o reconhecimento de significados culturais implícitos."
   },
   {
+    "id": "oficio",
     "nome": "Ofício",
     "atributo": "Astúcia",
     "basica": false,
@@ -833,6 +890,7 @@
     "descricaoLite": "Representa o domínio de um ofício artesanal específico, escolhido pelo jogador."
   },
   {
+    "id": "oficio",
     "nome": "Ofício",
     "atributo": "Astúcia",
     "basica": false,
@@ -843,6 +901,7 @@
     "descricaoLite": "Representa o domínio das tarefas do dia a dia de um negócio ou comércio."
   },
   {
+    "id": "transicao",
     "nome": "Transição",
     "atributo": "Vigor",
     "basica": false,
@@ -853,6 +912,7 @@
     "descricaoLite": "Perícia exclusiva de Elementalistas, usada para canalizar energia externa e ativar habilidades elementais."
   },
   {
+    "id": "alquimia",
     "nome": "Alquimia",
     "atributo": "Astúcia",
     "basica": false,
@@ -863,6 +923,7 @@
     "descricaoLite": "Perícia arcana de alquimistas, também usada para criar itens alquímicos."
   },
   {
+    "id": "alquimia",
     "nome": "Alquimia",
     "atributo": "Astúcia",
     "basica": false,
@@ -873,6 +934,7 @@
     "descricaoLite": "Perícia arcana de alquimistas, também usada para criar itens alquímicos."
   },
   {
+    "id": "lei",
     "nome": "Lei",
     "atributo": "Astúcia",
     "basica": false,
@@ -883,6 +945,7 @@
     "descricaoLite": "Usada para lidar com questões jurídicas e se defender em tribunal."
   },
   {
+    "id": "tecnomagia",
     "nome": "Tecnomagia",
     "atributo": "Astúcia",
     "basica": false,
@@ -893,6 +956,7 @@
     "descricaoLite": "Perícia arcana que combina tecnologia e magia."
   },
   {
+    "id": "canalizar_cristal",
     "nome": "Canalizar Cristal",
     "atributo": "Espírito",
     "basica": true,
@@ -903,6 +967,7 @@
     "descricaoLite": "Perícia arcana usada para ativar os poderes de um Cristal."
   },
   {
+    "id": "conhecimento_batalha",
     "nome": "Conhecimento Batalha",
     "atributo": "Astúcia",
     "basica": false,
@@ -913,6 +978,7 @@
     "descricaoLite": "Também cobre operações de equipe; pode ser usada para requisitar recursos da organização."
   },
   {
+    "id": "engenharia",
     "nome": "Engenharia",
     "atributo": "Astúcia",
     "basica": false,
