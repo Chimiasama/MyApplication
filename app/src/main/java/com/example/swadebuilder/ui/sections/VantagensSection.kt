@@ -823,7 +823,9 @@ fun VantagensContent(
                     .padding(horizontal = 8.dp, vertical = 8.dp)
             ) {
                  if (flatList.isEmpty()) {
-                     item(key = "empty_list", contentType = "message") { Text("Nenhuma vantagem encontrada.", modifier = Modifier.padding(8.dp)) }
+                     item(key = "empty_list", contentType = "message") {
+                         com.example.swadebuilder.ui.components.EmptyState(message = "Nenhuma vantagem encontrada.")
+                     }
                  } else {
                      items(flatList, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
                          VantagemItem(

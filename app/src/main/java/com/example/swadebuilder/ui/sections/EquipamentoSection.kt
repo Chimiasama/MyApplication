@@ -674,7 +674,9 @@ fun EquipamentoSection(
                         .padding(horizontal = 8.dp)
                 ) {
                     if (finalFlatList.isEmpty()) {
-                        item(key = "empty_list", contentType = "message") { Text("Nenhum equipamento encontrado.", modifier = Modifier.padding(8.dp)) }
+                        item(key = "empty_list", contentType = "message") {
+                            com.example.swadebuilder.ui.components.EmptyState(message = "Nenhum equipamento encontrado.")
+                        }
                     } else {
                         items(finalFlatList, key = { it.item.nome + it.hashCode() }, contentType = { "equip_item" }) { entry ->
                             StandardEquipamentoItem(
