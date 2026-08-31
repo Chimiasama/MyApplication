@@ -37,21 +37,27 @@ jobs:
       - name: Run tests and build
         run: ./gradlew build -q --console=plain
 
+      - name: Report failing unit tests
+        if: failure()
+        run: |
+          echo "### 🧪 Testes que falharam" | tee -a $GITHUB_STEP_SUMMARY
+          echo '```text' | tee -a $GITHUB_STEP_SUMMARY
+          matches=$(find app/build/test-results -name "*.xml" 2>/dev/null | xargs grep -l "<failure" 2>/dev/null)
+          if [ -z "$matches" ]; then
+            echo "Nenhum XML de teste com <failure> encontrado em app/build/test-results." | tee -a $GITHUB_STEP_SUMMARY
+            find app/build/test-results -name "*.xml" 2>/dev/null | tee -a $GITHUB_STEP_SUMMARY
+          else
+            echo "$matches" | while read -r f; do
+              echo "== $f ==" | tee -a $GITHUB_STEP_SUMMARY
+              grep -B 8 -A 15 "<failure" "$f" | tee -a $GITHUB_STEP_SUMMARY
+            done
+          fi
+          echo '```' | tee -a $GITHUB_STEP_SUMMARY
+
       - name: Report Kotlin Errors to Summary
         if: failure()
         run: |
           echo "### ❌ Erros de Compilação Encontrados" >> $GITHUB_STEP_SUMMARY
           echo '```text' >> $GITHUB_STEP_SUMMARY
           ./gradlew build --console=plain 2>&1 | grep "e: file://" >> $GITHUB_STEP_SUMMARY || echo "Não foi possível isolar a linha exata. Abra a etapa 'Run tests and build' para conferir o log." >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-
-      - name: Report failing unit tests to Summary
-        if: failure()
-        run: |
-          echo "### 🧪 Testes que falharam" >> $GITHUB_STEP_SUMMARY
-          echo '```text' >> $GITHUB_STEP_SUMMARY
-          find app/build/test-results -name "*.xml" 2>/dev/null | xargs grep -l "<failure" 2>/dev/null | while read -r f; do
-            echo "== $f ==" >> $GITHUB_STEP_SUMMARY
-            grep -B 8 -A 15 "<failure" "$f" >> $GITHUB_STEP_SUMMARY
-          done
           echo '```' >> $GITHUB_STEP_SUMMARY
