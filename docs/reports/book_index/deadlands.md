@@ -180,7 +180,7 @@ Todas as 10 Complicações novas do Capítulo "Criando Heróis e Heroínas" já 
 ## Poderes (Novos Poderes)
 
 ### Livro básico
-- **Banir** — id: `banir` (tag DEADLANDS já existe) — [CONFERIR] — a entrada cadastrada traz apenas a descrição genérica de Savage Worlds; falta a nota específica de Deadlands sobre manitus dentro de Atormentados ficarem "inertes" por uma hora — linha ~5716 de docs/swade_deadlands
+- **Banir** — id: `banir` (tag DEADLANDS) — [OK, resolvido em 2026-08-31] — a entrada cadastrada trazia apenas a descrição genérica de Savage Worlds; adicionada a nota específica de Deadlands (o manitu dentro de um Atormentado nunca é banido permanentemente, só fica "inerte" por uma hora, sem acesso às Vantagens de Atormentado nem a Deixar o Diabo Sair) — linha ~5716 de docs/swade_deadlands
 - **Bugigangas** — id: `bugigangas_2` — [OK] — linha ~5740
 - **Caminhada Selvagem** — id: `caminhada_selvagem` — [OK] — linha ~5771
 - **Enfeitiçar Munição** — id: `enfeiticar_municao` — [OK] — só para Bruxeiro; 8 efeitos de munição diferentes — linha ~5795
@@ -205,9 +205,14 @@ Todas as 10 Complicações novas do Capítulo "Criando Heróis e Heroínas" já 
 
 Deadlands não usa um sistema único de "tiques"; o conceito mais próximo que afeta diretamente a ficha do personagem é a **Corrupção das Bruxas**, complementado por duas tabelas de "efeito colateral" ligadas a magia/ciência sombria que também geram Complicações:
 
-- **Corrupção (Antecedente Arcano Bruxa)** — [CONFERIR] — cada Falha Crítica em Conjurar dá 1 ponto de Corrupção; cada ponto força uma nova Complicação Menor (ou upgrade de Menor para Maior); se a Corrupção igualar o Espírito, a bruxa vira PNJ controlada pelo Mestre; reduzida participando de reduções de Nível de Medo ou gastando Progresso — mecânica de acompanhamento (contador), não um item de catálogo; verificar se o app tem algum campo de "pontos de corrupção" por personagem — linha ~1609 de docs/swade_deadlands_compendio
-- **Tabela de Loucura (Cientistas Loucos)** — [CONFERIR] — Falha Crítica em Ciência Estranha pode conceder Complicações como Sem Noção, Delirante (Menor), Peculiaridade (Menor), Fobia, Impulsivo, Invejoso (Menor), ou uma "mania" crescente de perseguir inimigos imaginários ("Atos Diabólicos") — todas as Complicações referenciadas já existem no catálogo genérico; só a tabela de sorteio em si não é um dado cadastrável — linha ~6785 de docs/swade_deadlands
-- **Tabela de Tiro pela Culatra (Mascates)** — [CONFERIR] — Falha Crítica ao Barganhar com o Diabo pode causar Loucura (reaproveita a Tabela de Loucura acima), redução permanente de Conjurar, dano, ou deixar o mascate Distraído/Atordoado/Vulnerável — linha ~6503 de docs/swade_deadlands
+Os três itens abaixo foram revisados em 2026-08-31 e marcados **[FORA DE ESCOPO]** — todos são
+mecânicas de acompanhamento/sorteio resolvidas pelo Mestre durante a campanha (contador de pontos,
+tabelas de resultado), não opções compráveis na criação, mesma categoria já excluída no Compêndio
+de Horror (Sistema de Medo e Trauma) e no Compêndio de Fantasia (subsistemas do capítulo Arcano):
+
+- **Corrupção (Antecedente Arcano Bruxa)** — [FORA DE ESCOPO] — cada Falha Crítica em Conjurar dá 1 ponto de Corrupção; cada ponto força uma nova Complicação Menor (ou upgrade de Menor para Maior); se a Corrupção igualar o Espírito, a bruxa vira PNJ controlada pelo Mestre; reduzida participando de reduções de Nível de Medo ou gastando Progresso — contador de estado rastreado durante a campanha, não um item de catálogo — linha ~1609 de docs/swade_deadlands_compendio
+- **Tabela de Loucura (Cientistas Loucos)** — [FORA DE ESCOPO] — Falha Crítica em Ciência Estranha pode conceder Complicações como Sem Noção, Delirante (Menor), Peculiaridade (Menor), Fobia, Impulsivo, Invejoso (Menor), ou uma "mania" crescente de perseguir inimigos imaginários ("Atos Diabólicos") — todas as Complicações referenciadas já existem no catálogo genérico; a tabela de sorteio em si é resolvida em jogo — linha ~6785 de docs/swade_deadlands
+- **Tabela de Tiro pela Culatra (Mascates)** — [FORA DE ESCOPO] — Falha Crítica ao Barganhar com o Diabo pode causar Loucura (reaproveita a Tabela de Loucura acima), redução permanente de Conjurar, dano, ou deixar o mascate Distraído/Atordoado/Vulnerável — tabela de sorteio resolvida em jogo — linha ~6503 de docs/swade_deadlands
 
 ## Equipamento
 

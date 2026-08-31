@@ -6670,7 +6670,7 @@
       "símbolos arcanos",
       "sal"
     ],
-    "descricao": "Banir manda entidades de planos imateriais de volta para suas dimensões nativas. Isso inclui fantasmas, demônios, elementais e criaturas similares (a critério do Mestre).\nBanir uma criatura é uma rolagem resistida da perícia arcana contra o Espírito do alvo. Sucesso significa que o alvo é Abalado e cada ampliação causa um Ferimento.\nSe isso Incapacitar o alvo, ele retorna para seu plano nativo de existência. Entidades Banidas podem retornar quando o Mestre de Jogo considerar apropriado, como na próxima lua cheia, quando conjuradas novamente ou até mesmo algumas rodadas depois se for uma criatura particularmente poderosa sob as condições certas ou em um lugar de poder.",
+    "descricao": "Banir manda entidades de planos imateriais de volta para suas dimensões nativas. Isso inclui fantasmas, demônios, elementais e criaturas similares (a critério do Mestre).\nBanir uma criatura é uma rolagem resistida da perícia arcana contra o Espírito do alvo. Sucesso significa que o alvo é Abalado e cada ampliação causa um Ferimento.\nSe isso Incapacitar o alvo, ele retorna para seu plano nativo de existência. Entidades Banidas podem retornar quando o Mestre de Jogo considerar apropriado, como na próxima lua cheia, quando conjuradas novamente ou até mesmo algumas rodadas depois se for uma criatura particularmente poderosa sob as condições certas ou em um lugar de poder.\n\nEm Deadlands, o manitu dentro de um Atormentado nunca pode ser banido ou destruído permanentemente com este poder — está ligado ao corpo e espírito do hospedeiro. Um banimento bem-sucedido, no entanto, torna a entidade \"inerte\" por uma hora: durante esse tempo, o Atormentado não pode usar nenhuma de suas Vantagens de Atormentado nem Deixar o Diabo Sair, mas mantém as habilidades básicas concedidas por ser um morto-vivo.",
     "modificadores": [],
     "tags": [
       "stage:veterano",
@@ -6681,7 +6681,7 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Numa disputa entre a perícia arcana de quem conjura e o Espírito do alvo, vencer deixa a entidade Abalada, e cada ampliação adicional soma um Ferimento; se isso a Incapacitar, ela é expulsa de volta ao seu plano de origem, podendo retornar depois a critério do Mestre."
+    "descricaoLite": "Numa disputa entre a perícia arcana de quem conjura e o Espírito do alvo, vencer deixa a entidade Abalada, e cada ampliação adicional soma um Ferimento; se isso a Incapacitar, ela é expulsa de volta ao seu plano de origem, podendo retornar depois a critério do Mestre. Em Deadlands, usado contra um Atormentado não bane o manitu permanentemente (ele está ligado ao hospedeiro), só o deixa \"inerte\" por uma hora, sem acesso às Vantagens de Atormentado nem a Deixar o Diabo Sair."
   },
   {
     "id": "barreira",
