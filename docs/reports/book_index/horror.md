@@ -265,8 +265,8 @@ tag `HORROR`; vale confirmar contra a edição física/PDF antes de considerar
 - **Talismã de Proteção** — [OK] — linha ~7412
 - **Vela da Alma** — [OK] — linha ~7421
 - **Vela Sombria** — [OK] — linha ~7437
-- **Algema da Inquisição** — [CONFERIR] — não localizada em `docs/swade_horror`; confirmar fonte (outra edição/produto?) antes de manter a tag `HORROR`.
-- **Anel da Irmandade Eterna** — [CONFERIR] — mesma observação acima.
+- **Algema da Inquisição** — [CONFERIR, investigado em 2026-08-31] — busca ampliada para todos os arquivos `docs/swade_*` do repositório (não só o de Horror) não encontrou nenhuma ocorrência do nome em lugar nenhum. Mecânica bem definida e coerente com o gênero (algema mágica, escolhe resultado de dado, causa Ferimento incurável por uso). Mesma conclusão do Crystal Heart para achados equivalentes: parece conteúdo adicionado pelo app, não transcrição de um texto-fonte disponível. Mantida como está.
+- **Anel da Irmandade Eterna** — [CONFERIR, investigado em 2026-08-31] — mesma busca ampliada, mesmo resultado (nenhuma ocorrência em nenhum arquivo-fonte disponível). Mecânica bem definida (rerrolagem social, transferência de Ferimento). Mesma conclusão do item acima: mantida como está.
 
 Tabela **Demônios Aleatórios** (D12, p.115, linha ~7364) e a lista **Exemplos de
 Grimórios** (5 grimórios nomeados dentro da entrada Grimório, linha ~6797) são
