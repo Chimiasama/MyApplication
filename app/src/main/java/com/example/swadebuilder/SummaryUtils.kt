@@ -207,12 +207,6 @@ fun buildSummaryLines(
         .mapValues { it.value.toMutableList() }
         .toMutableMap()
 
-    val allComplicationsKeys: List<String> =
-        personagem.complicacoes + personagem.desvantagensRaciais + personagem.transtornos
-
-    fun temComp(key: String): Boolean =
-        allComplicationsKeys.any { it.keyify() == key }
-
     fun applySuperStepsFrom(rawStart: Int, steps: Int): Int {
         var raw = rawStart
         var remaining = steps.coerceAtLeast(0)

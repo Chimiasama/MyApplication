@@ -1485,8 +1485,6 @@ class CriadorState {
     fun totalTensaoCibernetica(): Int =
         ciberneticosInstalados.sumOf { it.strain_custo } + equipamentosComprados.sumOf { it.tensao ?: 0 }
 
-    fun totalTensaoAtual(): Int = totalTensaoCibernetica()
-
     fun valorLimiteTensao(): Pair<Int, Int> {
         val espirito = valoresAtributos["ESPIRITO"]?.intValue ?: 4
         val vigor = valoresAtributos["VIGOR"]?.intValue ?: 4
@@ -1583,41 +1581,9 @@ class CriadorState {
         return (baseSlots + bonusSlots).coerceAtLeast(0)
     }
 
-    fun valorAparar(): Int {
-        val perLutar = mapaPericias["LUTAR"]
-        val lutarRaw = perLutar?.let { rawTotalComSupers(it) } ?: 0
-        // "Jutsu" não existe como perícia própria no catálogo (mapaPericias["JUTSU"] nunca
-        // resolvia nada) — as categorias extras vivem em jutsuExtras, uma por especialização
-        // de arma além do slot base (que é a própria perícia Lutar).
-        val jutsuRaw = if (compendioArteDaGuerraAtivo) {
-            jutsuExtras.maxOfOrNull { rawTotalComSupers(it) } ?: 0
-        } else 0
-        val melhorLuta = maxOf(lutarRaw, jutsuRaw)
-        val base     = 2 + (melhorLuta / 2)
-
-        val mods = ModifierEngine.sum(this, ModifierTarget.PARRY)
-
-        val finalValue = base + mods
-        return finalValue.coerceAtLeast(0)
-    }
-
     // Engine Delegation
     fun tamanhoExibido(): Int = ModifierEngine.sizeDisplay(this)
-    fun tamanhoParaResistencia(): Int = ModifierEngine.sizeForToughness(this)
     fun resistenciaBase(): Int = ModifierEngine.toughnessBase(this)
-
-    fun valorResistenciaBase(): Int {
-        // Agora delega para o engine
-        // O engine já inclui bônus de poder, mas se quisermos manter "Base" vs "Final"
-        // para outras lógicas, teríamos que ter cuidado.
-        // O prompt pede para usar engine.
-        return resistenciaBase()
-    }
-
-    fun valorResistenciaFinal(): Int {
-        // resistenciaBase() do engine j inclui bonusResFromPower (via TOUGHNESS_FLAT)
-        return resistenciaBase()
-    }
 
     fun calculaAtaqueDesarmado(): Pair<String, String> {
         val modifiers = mutableListOf<String>()
@@ -2007,26 +1973,10 @@ class CriadorState {
         return weapons
     }
 
-    fun valorChi(): Int {
-        return reservaChi
-    }
-
     fun valorDominio(): Int {
         val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 4
         // Domínio inicial para ressuscitados é geralmente o dado de Espírito
         return espiritoRaw
-    }
-
-    fun valorArmaduraEfetiva(): Int {
-        // Soma armadura de equipamentos (via Engine, já filtrando Mechas) com a
-        // variável 'armadura' de estado (override manual/legado usado por raças
-        // como Sáurios), usa o maior entre isso e a armadura de Poderes, e soma
-        // a armadura natural da raça.
-        val armorFromEquipment = ModifierEngine.sum(this, ModifierTarget.ARMOR)
-        val totalEquipmentArmor = armorFromEquipment + armadura
-
-        val bestArmor = kotlin.math.max(armorFromPower, totalEquipmentArmor)
-        return (bestArmor + naturalArmorFromRace).coerceAtLeast(0)
     }
 
     fun valorTamanho(): Int = tamanhoExibido()
@@ -3537,33 +3487,6 @@ class CriadorState {
 
     val novosPoderesStacksPorArcano = mutableStateMapOf<String, MutableList<List<String>>>()
 
-    fun registrarNovosPoderes(versionKey: String, escolhas: List<String>) {
-        val pilha = novosPoderesStacksPorArcano.getOrPut(versionKey) { mutableListOf() }
-        pilha.add(escolhas)
-    }
-
-    fun desfazerUltimosNovosPoderes(versionKey: String, initialSlots: Int) {
-        val pilha = novosPoderesStacksPorArcano[versionKey] ?: return
-        if (pilha.isEmpty()) return
-
-        val ultima = pilha.removeAt(pilha.lastIndex)
-        val slots = poderSlotsPorArcano[versionKey] ?: return
-
-        ultima.forEach { poderId ->
-            val idx = slots.indexOfLast { it == poderId }
-            if (idx >= 0) slots[idx] = null
-        }
-
-        val extrasAinda = pilha.sumOf { it.size }
-        val tamanhoMinimo = (initialSlots + extrasAinda).coerceAtLeast(initialSlots)
-
-        while (slots.size > tamanhoMinimo && slots.lastOrNull() == null) {
-            slots.removeAt(slots.lastIndex)
-        }
-
-        syncPoderesSelecionadosFromSlots()
-    }
-
     fun syncPoderesSelecionadosFromSlots() {
         ensureTransmorfoFixedDisguisePower()
         ensureDemonioFixedPower()
@@ -4036,11 +3959,6 @@ class CriadorState {
             this[MainSection.RESUMO] = true
         }
 
-    fun toggleSection(section: MainSection) {
-        val current = sectionsExpanded[section] ?: false
-        sectionsExpanded[section] = !current
-    }
-
     // guarda o nome da vantagem que está em foco (usada ao voltar da tela de detalhes)
     var vantagemEmFoco by mutableStateOf<String?>(null)
 
@@ -4246,46 +4164,6 @@ class CriadorState {
     }
     val spCostStackPorPericia = mutableStateMapOf<Pericia, SnapshotStateList<Int>>().also { m ->
         listaPericias.forEach { m[it] = mutableStateListOf() }
-    }
-
-    fun rebuildPericias(desiredRaw: Map<Pericia, Int>) {
-        syncLinguistaIdiomas()
-        val poolSize = totalSpPool // Updated getter usage
-        var cumulativeCost = 0
-
-        periciasComIdiomas().forEach { per ->
-
-            val cap = periciaCapRaw(per)
-            val target = (desiredRaw[per] ?: rawTotal(per)).coerceAtMost(cap)
-
-            val stack = spCostStackPorPericia.getValue(per)
-            stack.clear()
-            baseIncsPorPericia[per] = 0
-
-            var curr = periciaStartRaw(ancestralidade, per)
-            var freeSteps = compIncsPorPericia.getValue(per)
-
-            while (curr < target && cumulativeCost < poolSize) {
-                val next = when {
-                    curr == 0 -> 4
-                    curr < 12 -> curr + 2
-                    else      -> curr + 1
-                }
-
-                val attrKey = atributoBaseParaPericia(per)
-                val cost    = if (next <= valoresAtributos[attrKey]!!.intValue) 1 else 2
-                if (cumulativeCost + cost > poolSize) break
-
-                if (freeSteps > 0) {
-                    freeSteps -= 1
-                } else {
-                    stack.add(cost)
-                    baseIncsPorPericia[per] = baseIncsPorPericia.getValue(per) + 1
-                    cumulativeCost += cost
-                }
-                curr = next
-            }
-        }
     }
 
     fun decreasePericia(per: Pericia) {
@@ -5019,23 +4897,6 @@ class CriadorState {
         recomputeAvailableProgress()
     }
 
-    fun refundProgressAcrossStages(n: Int) {
-        var remaining = n
-        reachedStages()
-            .mapIndexed { idx, est -> idx to est }
-            .asReversed()
-            .forEach { (_, est) ->
-                if (remaining == 0) return@forEach
-                val spent = stageXpSpent.getValue(est.nome)
-                if (spent > 0) {
-                    val refund = spent.coerceAtMost(remaining)
-                    stageXpSpent[est.nome] = spent - refund
-                    remaining -= refund
-                }
-            }
-        recomputeAvailableProgress()
-    }
-
     fun refundProgressAtStage(stageName: String, n: Int) {
         val current = stageXpSpent.getValue(stageName)
         stageXpSpent[stageName] = (current - n).coerceAtLeast(0)
@@ -5232,22 +5093,6 @@ class CriadorState {
 
         recalcularPontosAtributo()
         rebuildAllPericiaStacks()
-    }
-
-    fun selecionarAnoesScifi(opcao: String?) {
-        val ancDef = getAncestralidadeDef("ANÕES")
-        val normalized = if (opcao == null) null else resolveSciFiVariantSelectionFor(
-            ancestryName = "ANÕES",
-            availableOptions = ancDef?.opcoes ?: emptyList(),
-            overrideSelection = opcao
-        )
-        if (anoesScifiSelecionado == normalized && scifiVariant == normalized) return
-        anoesScifiSelecionado = normalized
-        if (scifiVariant != normalized) scifiVariant = normalized
-        if (ancestralidade.keyify().contains("ANOES")) {
-            val msgs = mutableListOf<String>()
-            aplicarAncestralidade(ancestralidade, msgs)
-        }
     }
 
     fun selecionarScifiVariant(opcao: String?) {
@@ -6174,21 +6019,6 @@ class CriadorState {
             pontosPericia == 0 &&
             pontosVantagem == 0 &&
             (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0) == 0
-
-    fun checkIdosoConstraint(pericia: Pericia): Boolean {
-        // Only active if Idoso complication is present
-        val idosoKey = "IDOSO"
-        val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == idosoKey }
-        if (!hasIdoso) return true
-
-        // If trying to reduce a Smarts-based skill
-        if (pericia.atributo == "ASTUCIA") {
-            // Check if removing this point would violate the 5-point minimum IF we have spent points on non-Smarts skills?
-            // Actually, simply returning true allows reduction. The constraint is checked at completion.
-            return true
-        }
-        return true
-    }
 
     fun creationComplete(): Boolean {
         // "Ficha básica completa": todos os pontos iniciais foram distribuídos.
