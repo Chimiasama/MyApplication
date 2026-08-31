@@ -36,7 +36,7 @@ class ModifierEngineAdgAncestryTest {
     }
 
     @Test
-    fun `generic aparar minus from racial disadvantage applies parry penalty`() {
+    fun `tanukimimi despretensiosos e barrigudos aplica aparar e passo negativos por id`() {
         val state = stateWithAncestry(
             ancestralidade = "Tanukimimi (Tanuki)",
             modifier = RacialModifier(
@@ -45,14 +45,22 @@ class ModifierEngineAdgAncestryTest {
                 atributos = emptyMap(),
                 pericias = emptyMap(),
                 vantagensGratis = emptyList(),
-                desvantagens = listOf("APARAR -1"),
-                habilidades = emptyList()
+                desvantagens = emptyList(),
+                habilidades = listOf(
+                    RacialAbility(
+                        nome = "Despretensiosos e Barrigudos",
+                        descricao = "Lentos para agir e se mover. Os tanukimimi têm -1 em Aparar, a Movimentação é reduzida em 1 e seu dado de corrida é d4.",
+                        id = "DESPRETENSIOSOS_E_BARRIGUDOS",
+                        category = "racial_trait_negative"
+                    )
+                )
             )
         )
 
         val modifiers = ModifierEngine.collect(state)
 
-        assertTrue(modifiers.any { it.id == "racial_parry_generic" && it.value == -1 })
+        assertTrue(modifiers.any { it.id == "racial_trait_DESPRETENSIOSOS_E_BARRIGUDOS_parry" && it.value == -1 })
+        assertTrue(modifiers.any { it.id == "racial_trait_DESPRETENSIOSOS_E_BARRIGUDOS_pace" && it.value == -1 })
     }
 
     @Test

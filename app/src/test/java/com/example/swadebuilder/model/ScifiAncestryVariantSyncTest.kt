@@ -247,8 +247,8 @@ class ScifiAncestryVariantSyncTest {
         val mods = ModifierEngine.collect(state)
 
         assertTrue(mods.any { it.id == "racial_trait_LENTO_pace" && it.value == -1 })
-        assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
-        assertFalse(mods.any { it.id == "racial_armor_generic" })
+        assertTrue(mods.any { it.id == "racial_trait_RESISTENCIA_2_res" && it.value == 2 })
+        assertFalse(mods.any { it.target == ModifierTarget.ARMOR && it.sourceType == SourceType.ANCESTRALIDADE })
     }
 
     @Test
@@ -341,7 +341,7 @@ class ScifiAncestryVariantSyncTest {
         }
 
         val mods = ModifierEngine.collect(state)
-        assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
+        assertTrue(mods.any { it.id == "racial_trait_RESISTENCIA_2_res" && it.value == 2 })
     }
 
 

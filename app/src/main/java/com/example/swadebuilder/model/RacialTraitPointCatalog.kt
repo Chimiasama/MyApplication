@@ -73,6 +73,29 @@ sealed class RacialTraitEffect {
     data class ResistenciaBonus(val valor: Int) : RacialTraitEffect()
     data class PassoBonus(val valor: Int) : RacialTraitEffect()
     data class ApararBonus(val valor: Int) : RacialTraitEffect()
+    // Tamanho é ele mesmo (ModifierTarget.SIZE_DISPLAY) e também alimenta a
+    // Resistência (ModifierTarget.SIZE_TOUGHNESS) — mesma fórmula do SWADE
+    // (Resistência = 2 + metade do Vigor + Tamanho). `minusculo` marca as
+    // raças com o traço Diminuto/Minúsculo do livro (Fadas, Povo Rato,
+    // Ferais): Tamanho de personagem normalmente não passa de -1 na tela
+    // (visualmente "trava" em -1), mas Diminuto é a exceção documentada que
+    // permite mostrar -3/-4 de verdade — ModifierEngine.sizeDisplay() já
+    // decide isso a partir de um Modifier com id "racial_diminuto", que o
+    // loop de efeitos abaixo continua emitindo quando minusculo=true.
+    data class TamanhoBonus(val valor: Int, val minusculo: Boolean = false) : RacialTraitEffect()
+    // Armadura Natural de valor fixo (Sáurios, Draconianos, Golens,
+    // Insetoides, Umvee Pedregoso). Não vira Modifier no ModifierEngine (a
+    // Armadura final do personagem já é resolvida à parte, em
+    // ResolveAncestrySpecificAdjustmentsUseCase/naturalArmorFromRace, que lê
+    // este mesmo efeito por id) — existe aqui só pra esse cálculo e o
+    // catálogo de custo/rótulo terem uma única fonte de verdade.
+    data class ArmaduraBonus(val valor: Int) : RacialTraitEffect()
+    // Um traço com mais de um efeito numérico ao mesmo tempo (ex.:
+    // Despretensiosos e Barrigudos dos Tanukimimi: -1 Aparar E -1
+    // Movimentação juntos, não um traço genérico por efeito). Cada
+    // consumidor de RacialTraitEffect resolve os sub-efeitos com a mesma
+    // lógica que já usa pro efeito único.
+    data class Composite(val efeitos: List<RacialTraitEffect>) : RacialTraitEffect()
     data object Nenhum : RacialTraitEffect()
 }
 
@@ -133,7 +156,63 @@ object RacialTraitPointCatalog {
         "METADE_CONSTRUTO" to RacialTraitEffect.ResistenciaBonus(3),
         "MORTO_VIVO" to RacialTraitEffect.ResistenciaBonus(2),
         "RESISTENCIA" to RacialTraitEffect.ResistenciaBonus(1),
-        "VELOCIDADE_RACIAL" to RacialTraitEffect.PassoBonus(2) // sintético: Template de Monstro Heroico Lobisomem (Horror)
+        "VELOCIDADE_RACIAL" to RacialTraitEffect.PassoBonus(2), // sintético: Template de Monstro Heroico Lobisomem (Horror)
+
+        // Resistência de valor VARIÁVEL (a maioria das raças com Resistência
+        // é sempre +1 — id "RESISTENCIA" acima —, só estas duas têm valor
+        // diferente): Drakens +2 (Sci-Fi), Soldados Genéticos +1 (Sci-Fi,
+        // mesmo valor de "RESISTENCIA" mas com id próprio porque a raça
+        // registra assim no catálogo). "RESISTENCIA_1" também é o id
+        // auto-gerado (ver CriadorState.addIfAbsent) do texto "RESISTÊNCIA
+        // +1" que Mímicos (variante Resistente) e Umvee (Dom Pedregoso, que
+        // na verdade usa o id "RESISTENCIA" bare, ver abaixo) injetam.
+        "RESISTENCIA_1" to RacialTraitEffect.ResistenciaBonus(1),
+        "RESISTENCIA_2" to RacialTraitEffect.ResistenciaBonus(2),
+
+        // Tamanho por id — substitui os regex `TAMANHO\s*([+-]\s*\d+)` sobre
+        // nome/descrição do traço que existiam antes em ModifierEngine.
+        // Valores conferidos contra a própria descrição de cada raça em
+        // ancestralidades.json.
+        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder)
+        "PEQUENOS" to RacialTraitEffect.TamanhoBonus(-1), // Goblins (mesmo efeito de Tamanho -1, id próprio)
+        "TAMANHO_MAIS_1" to RacialTraitEffect.TamanhoBonus(1), // Centauros, Minotauros, Ogros, Orcs, Elementais (Sci-Fi)
+        "TAMANHO_MAIS_2" to RacialTraitEffect.TamanhoBonus(2), // Golens, Centaux/Aurax (Sci-Fi), Yetis
+        "TAMANHO_3" to RacialTraitEffect.TamanhoBonus(3), // Meio-Gigantes
+        // Diminuto/Minúsculo: sempre Tamanho -4 nas raças oficiais que usam
+        // este id (Fadas, Povo Rato). "DIMINUTO_TAMANHO_3"/"_4" são os ids
+        // auto-gerados (ver CriadorState.addIfAbsent) dos textos "DIMINUTO
+        // (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a Variante de Ferais
+        // (Padrão/Menor) injeta via AncestryVariantRegistry — mesmo efeito,
+        // só nomeado diferente por vir de outro caminho de dado.
+        "DIMINUTO" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
+        "DIMINUTO_TAMANHO_3" to RacialTraitEffect.TamanhoBonus(-3, minusculo = true),
+        "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
+
+        // Movimentação (Passo) positiva de valor fixo — mesma ideia de
+        // MOVIMENTACAO_REDUZIDA/LENTO acima, mas pra bônus em vez de
+        // penalidade. "MOVIMENTACAO" (bare) é o id que Povo Serpente usa
+        // direto no catálogo; "MOVIMENTACAO_2"/"MOVIMENTACAO_4" cobrem tanto
+        // os ids do catálogo (Centaux/Aurax) quanto os ids auto-gerados dos
+        // textos "MOVIMENTAÇÃO +2"/"+4" que Centauros, a Variante Gazela
+        // (Centaux) e o Dom da Natureza Correnteza (Umvee) injetam.
+        "MOVIMENTACAO" to RacialTraitEffect.PassoBonus(4), // Povo Serpente: Movimentação 10 (padrão 6 + 4)
+        "MOVIMENTACAO_2" to RacialTraitEffect.PassoBonus(2),
+        "MOVIMENTACAO_4" to RacialTraitEffect.PassoBonus(4),
+
+        // Armadura Natural de valor fixo. "ARMADURA" (bare) é o id que o Dom
+        // da Natureza Pedregoso (Umvee) usa; "ARMADURA_2" é o id de
+        // Sáurios/Draconianos/Golens/Insetoides E o id auto-gerado do texto
+        // "ARMADURA +2" que a Variante Padrão de Insetoides (Sci-Fi) injeta.
+        "ARMADURA" to RacialTraitEffect.ArmaduraBonus(2),
+        "ARMADURA_2" to RacialTraitEffect.ArmaduraBonus(2),
+
+        // Único traço do catálogo com dois efeitos numéricos ao mesmo tempo
+        // (ver Composite acima) — Tanukimimi (Arte da Guerra): -1 Aparar e
+        // -1 Movimentação juntos, conferido contra a própria descrição do
+        // traço em ancestralidades.json.
+        "DESPRETENSIOSOS_E_BARRIGUDOS" to RacialTraitEffect.Composite(
+            listOf(RacialTraitEffect.ApararBonus(-1), RacialTraitEffect.PassoBonus(-1))
+        )
     )
 
     fun efeitoDe(id: String?): RacialTraitEffect = id?.let { EFEITOS[it.keyify()] } ?: RacialTraitEffect.Nenhum
@@ -212,6 +291,7 @@ object RacialTraitPointCatalog {
         "APTIDAO_COM_PEDRAS" to 1, // sem equivalente oficial, bônus situacional estreito
         "AQUATICO" to 2, // oficial: aquatico (não se afoga, Movimentação completa)
         "ARISCOS" to -3, // duas perícias a -2 cada (Provocar resistida, Intimidar) — oficial penalidade_pericia_2 é só uma perícia
+        "ARMADURA" to 1, // mesmo efeito de ARMADURA_2 (+2), id usado pelo Dom da Natureza Pedregoso (Umvee)
         "ARMADURA_2" to 1, // oficial: armadura_racial (+2 = 1pt)
         "ARMA_DE_SOPRO" to 2, // oficial: arma_de_sopro
         "ARROGANTE" to -2, // oficial: complicacao_racial_maior
@@ -262,6 +342,8 @@ object RacialTraitPointCatalog {
         "DICAS_CULTURAIS" to 2, // oficial: pericia_racial_d6 (Convenção d6)
         "DIGESTAO_GLORIOSA" to 1, // sem equivalente oficial exato, imunidade estreita (só ingestão)
         "DIMINUTO" to 6, // oficial: diminuto_minusculo (Tamanho -4)
+        "DIMINUTO_TAMANHO_3" to 5, // mesmo pacote de DIMINUTO, só que Tamanho -3 em vez de -4 (Ferais Padrão)
+        "DIMINUTO_TAMANHO_4" to 6, // mesmo valor de DIMINUTO — Tamanho -4 (Ferais Menor)
         "DONS_DA_NATUREZA" to 0, // placeholder de Seleção (Umvee/Feral escolhem 1 de 6 dons; o dom resolvido é que pontua)
         "DURAO" to 2, // oficial: aumento_atributo
         "EM_FORMA" to 2, // oficial: aumento_atributo

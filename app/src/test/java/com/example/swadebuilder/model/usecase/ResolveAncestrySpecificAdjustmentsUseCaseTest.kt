@@ -10,7 +10,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
     @Test
     fun `returns saurios adjustments`() {
-        val result = useCase.execute("SAURIOS", null)
+        val result = useCase.execute("SAURIOS", null, racialAbilityIds = setOf("ARMADURA_2"))
 
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
@@ -20,8 +20,15 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
+    fun `saurios without the armadura_2 trait id gets no natural armor`() {
+        val result = useCase.execute("SAURIOS", null)
+
+        assertEquals(0, result.naturalArmorFromRace)
+    }
+
+    @Test
     fun `returns golens adjustments`() {
-        val result = useCase.execute("GOLENS", null)
+        val result = useCase.execute("GOLENS", null, racialAbilityIds = setOf("ARMADURA_2"))
 
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
@@ -32,7 +39,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
     @Test
     fun `returns draconianos adjustments`() {
-        val result = useCase.execute("DRACONIANOS", null)
+        val result = useCase.execute("DRACONIANOS", null, racialAbilityIds = setOf("ARMADURA_2"))
 
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
@@ -43,7 +50,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
     @Test
     fun `returns insetoides adjustments`() {
-        val result = useCase.execute("INSETOIDES", null)
+        val result = useCase.execute("INSETOIDES", null, racialAbilityIds = setOf("ARMADURA_2"))
 
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)

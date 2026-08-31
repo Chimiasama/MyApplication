@@ -4738,10 +4738,7 @@
     "vantagensGratis": [
       "IMPULSO"
     ],
-    "desvantagens": [
-      "APARAR -1",
-      "MOVIMENTAÇÃO -1"
-    ],
+    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],

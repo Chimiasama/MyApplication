@@ -3,6 +3,8 @@ package com.example.swadebuilder.model.usecase
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.AncestryVariantConfig
+import com.example.swadebuilder.model.RacialTraitEffect
+import com.example.swadebuilder.model.RacialTraitPointCatalog
 import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionAnswer
 import com.example.swadebuilder.model.SelectionDef
@@ -101,8 +103,20 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         ancestryOptions: List<String> = emptyList(),
         isSciFiActive: Boolean = false,
         isSciFiMechasActive: Boolean = false,
-        ancestryOrigin: String = "BASICO"
+        ancestryOrigin: String = "BASICO",
+        // Ids de habilidade[] da raça já resolvida (ver
+        // ApplyAncestryChangeCoordinatorUseCase) — usado pra decidir Armadura
+        // Natural por id de traço (ARMADURA/ARMADURA_2), não pelo nome da
+        // raça no "when" abaixo. Vazio quando o chamador não tem essa lista
+        // (ex.: testes isolados deste use case).
+        racialAbilityIds: Set<String> = emptySet()
     ): Result {
+        val naturalArmorFromAbilityId = RacialTraitPointCatalog.EFEITOS
+            .filterValues { it is RacialTraitEffect.ArmaduraBonus }
+            .entries
+            .firstOrNull { (id, _) -> id in racialAbilityIds }
+            ?.let { (_, efeito) -> (efeito as RacialTraitEffect.ArmaduraBonus).valor }
+            ?: 0
         val ancKey = anc.keyify()
         val effectiveVariant = if (ancestryOptions.isNotEmpty()) {
             resolveAncestryVariantUseCase.execute(
@@ -302,8 +316,12 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         }
 
         return when (ancKey) {
+            // Armadura Natural lida pelo id do traço (ARMADURA_2, ver
+            // ancestralidades.json), não mais fixa por nome de raça — o
+            // valor só é diferente de 0 quando a raça resolvida realmente
+            // carrega esse traço em habilidades[].
             "SAURIOS" -> Result(
-                naturalArmorFromRace = 2,
+                naturalArmorFromRace = naturalArmorFromAbilityId,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
@@ -313,7 +331,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             )
 
             "GOLENS" -> Result(
-                naturalArmorFromRace = 2,
+                naturalArmorFromRace = naturalArmorFromAbilityId,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
@@ -323,7 +341,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             )
 
             "DRACONIANOS" -> Result(
-                naturalArmorFromRace = 2,
+                naturalArmorFromRace = naturalArmorFromAbilityId,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
@@ -333,7 +351,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             )
 
             "INSETOIDES" -> Result(
-                naturalArmorFromRace = 2,
+                naturalArmorFromRace = naturalArmorFromAbilityId,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),

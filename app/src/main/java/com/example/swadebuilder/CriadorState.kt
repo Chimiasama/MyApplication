@@ -79,6 +79,7 @@ import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplication
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
+import com.example.swadebuilder.util.autoTraitId
 import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -599,14 +600,19 @@ class CriadorState {
                     }
                 }
                 RacialTraitEffect.Nenhum -> Unit
-                // ResistenciaBonus/PassoBonus/ApararBonus não têm mapa
-                // numérico próprio em RacialModifier (diferente de
-                // atributos/pericias) — o ModifierEngine já lê o traço
-                // removido/presente direto de tracosRemovidosIds/habilidades,
-                // então não há nada a descontar aqui.
+                // ResistenciaBonus/PassoBonus/ApararBonus/TamanhoBonus/
+                // ArmaduraBonus não têm mapa numérico próprio em
+                // RacialModifier (diferente de atributos/pericias) — o
+                // ModifierEngine já lê o traço removido/presente direto de
+                // tracosRemovidosIds/habilidades, então não há nada a
+                // descontar aqui. Composite só reencaminha pros mesmos casos
+                // acima, um por sub-efeito.
                 is RacialTraitEffect.ResistenciaBonus,
                 is RacialTraitEffect.PassoBonus,
-                is RacialTraitEffect.ApararBonus -> Unit
+                is RacialTraitEffect.ApararBonus,
+                is RacialTraitEffect.TamanhoBonus,
+                is RacialTraitEffect.ArmaduraBonus,
+                is RacialTraitEffect.Composite -> Unit
             }
         }
 
@@ -863,7 +869,7 @@ class CriadorState {
                 pack.desvantagensParaRemover.forEach { nome -> removeByIdOrName(nome, nome) }
 
                 fun addIfAbsent(texto: String, category: String) {
-                    val id = texto.uppercase().semAcentos().replace(Regex("[^A-Z0-9]+"), "_").trim('_')
+                    val id = texto.autoTraitId()
                     if (newHabilidades.none { it.id == id || it.nome.keyify() == texto.keyify() }) {
                         val severidade = Regex("""\((Maior|Menor)\)$""").find(texto)?.groupValues?.get(1)
                         newHabilidades.add(

@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.util.autoTraitId
 import com.example.swadebuilder.util.keyify
 
 enum class ModifierTarget {
@@ -148,61 +149,6 @@ object ModifierEngine {
                     }
                 }
             }.distinctBy { it.keyify() }
-            val abilityDescriptions = anc.habilidades.map { it.descricao }
-
-            // Size from Ancestry (Tamanho X)
-            // Fix: Exclude "DIMINUTO" entries to avoid double-counting if they contain "Tamanho" in text (e.g., "Diminuto (Tamanho -3)")
-            val sizeSource = sources.firstOrNull {
-                it.contains("TAMANHO", ignoreCase = true) && !it.keyify().startsWith("DIMINUTO")
-            }
-
-            val isDiminutoAncestry = sources.any { it.keyify().startsWith("DIMINUTO") } ||
-                                     (state.compendioSciFiAtivo && anc.nome.keyify() == "FERAIS")
-
-            val racialSizeFromText = abilityDescriptions
-                .firstNotNullOfOrNull { desc ->
-                    val key = desc.keyify()
-
-                    val fromSize = Regex("""TAMANHO\s*([+-]\s*\d+)""").find(key)
-                        ?.groupValues
-                        ?.getOrNull(1)
-                        ?.replace(" ", "")
-                        ?.toIntOrNull()
-                    if (fromSize != null) return@firstNotNullOfOrNull fromSize
-
-                    if (key.contains("REDUZINDO SEU TAMANHO") && key.contains("EM 1")) return@firstNotNullOfOrNull -1
-                    if (key.contains("ADICIONE") && key.contains("A SUA RESISTENCIA") && key.contains("TAMANHO +1")) return@firstNotNullOfOrNull 1
-                    null
-                }
-
-            val racialSize = if (sizeSource != null) {
-                sizeSource.substringAfter("TAMANHO", "") // Try uppercase first
-                    .ifBlank { sizeSource.substringAfter("Tamanho", "") } // Try title case
-                    .trim()
-                    .toIntOrNull()
-                    ?: 0
-            } else if (sources.any { it.keyify() == "PEQUENOS" || it.keyify() == "PEQUENO" }) {
-                -1
-            } else {
-                racialSizeFromText ?: 0
-            }
-
-            if (racialSize != 0 && !isDiminutoAncestry) {
-                modifiers.add(Modifier(
-                    id = "racial_size",
-                    sourceType = SourceType.ANCESTRALIDADE,
-                    sourceName = anc.nome,
-                    target = ModifierTarget.SIZE_DISPLAY,
-                    value = racialSize
-                ))
-                modifiers.add(Modifier(
-                    id = "racial_size_toughness",
-                    sourceType = SourceType.ANCESTRALIDADE,
-                    sourceName = anc.nome,
-                    target = ModifierTarget.SIZE_TOUGHNESS,
-                    value = racialSize
-                ))
-            }
 
             // Movimentação Racial (Pace)
             // 1. Explicit Field
@@ -210,75 +156,39 @@ object ModifierEngine {
                 modifiers.add(Modifier("racial_pace_explicit", SourceType.ANCESTRALIDADE, anc.nome, ModifierTarget.PACE, anc.movimentacao))
             }
 
-            // Movimentação Reduzida (Anões, Avianos, Pequeninos...), Lento e
-            // Velocidade (Template de Monstro Heroico: Lobisomem) agora saem
-            // do loop genérico de RacialTraitPointCatalog logo abaixo —
-            // ver bloco "Bônus fixos de Resistência/Passo/Aparar".
-
-            // Diminuto (Ancestralidade)
-            // Se tiver "DIMINUTO" nas desvantagens, habilidades ou vantagens grátis, aplica penalidade de Tamanho
-            val diminutoSource = sources.firstOrNull { it.keyify().startsWith("DIMINUTO") }
-
-            fun addDiminuto(sizeVal: Int, sourceLabel: String) {
-                modifiers.add(Modifier(
-                    id = "racial_diminuto",
-                    sourceType = SourceType.ANCESTRALIDADE,
-                    sourceName = sourceLabel,
-                    target = ModifierTarget.SIZE_DISPLAY,
-                    value = sizeVal
-                ))
-                modifiers.add(Modifier(
-                    id = "racial_diminuto_tough",
-                    sourceType = SourceType.ANCESTRALIDADE,
-                    sourceName = sourceLabel,
-                    target = ModifierTarget.SIZE_TOUGHNESS,
-                    value = sizeVal
-                ))
-            }
-
-            if (diminutoSource != null) {
-                val k = diminutoSource.keyify()
-                // Default is -4 (Tiny) as per Fantasy/Horror standard if not specified
-                val sizeVal = when {
-                    k.contains("TAMANHO -2") -> -2
-                    k.contains("TAMANHO -3") -> -3
-                    k.contains("TAMANHO -4") -> -4
-                    else -> -4
-                }
-                addDiminuto(sizeVal, "Diminuto")
-            } else if (state.compendioSciFiAtivo && anc.nome.keyify() == "FERAIS") {
-                val variant = state.resolveSciFiVariantSelectionFor(
-                    ancestryName = anc.nome,
-                    availableOptions = anc.opcoes
-                )
-                val feralSize = if (variant == "Menor") -4 else -3
-                addDiminuto(feralSize, "Diminuto (Feral)")
-            }
-
-            // Bônus fixos de Resistência/Passo/Aparar concedidos por id de
-            // traço: um loop genérico sobre RacialTraitPointCatalog.EFEITOS
-            // substitui o que antes era um `val hasX = ...; if (hasX)
-            // modifiers.add(...)` por traço (Morto-Vivo, Metade Construto,
-            // Frágil, Esguios, Resistência, Ferocidade Orc, Aparar Baixo,
-            // Lento, Velocidade) — o traço só precisa estar presente (por id
-            // na habilidade da raça/monstro, ou por nome solto pros grants
-            // ainda guardados como texto em vantagensGratis/desvantagens), o
-            // catálogo já diz o alvo e o valor. Ver RacialTraitEffect.
+            // Tamanho, Movimentação Reduzida/aumentada, Resistência,
+            // Aparar e Armadura Natural concedidos por id de traço: um loop
+            // genérico sobre RacialTraitPointCatalog.EFEITOS substitui os
+            // regex que antes liam "TAMANHO ±N"/"RESISTÊNCIA ±N"/
+            // "MOVIMENTAÇÃO ±N"/"ARMADURA +N" do NOME do traço — o traço só
+            // precisa estar presente (por id na habilidade da raça/monstro,
+            // ou por nome solto pros grants ainda guardados como texto em
+            // vantagensGratis/desvantagens), o catálogo já diz o alvo e o
+            // valor. Ver RacialTraitEffect.
             val sourceKeys = sources.map { it.keyify() }.toSet()
             // Ids de habilidade da raça, restritos às que ainda têm o nome
             // presente em `sources` — algumas variantes (Aquarianos Semi-
-            // aquático, Avianos Ave de Rapina) removem uma habilidade da raça
-            // base filtrando o nome dela fora de `sources` (ver bloco de
-            // exclusões por variante logo acima); ler direto de
-            // `anc.habilidades` sem esse filtro reintroduziria o traço
-            // removido por baixo do pano. Habilidades do Monstro Heroico não
-            // passam por essa filtragem de variante de raça, então entram sem
-            // restrição.
+            // aquático, Avianos Ave de Rapina, Centaux Gazela) removem uma
+            // habilidade da raça base filtrando o nome dela fora de
+            // `sources` (ver bloco de exclusões por variante logo acima);
+            // ler direto de `anc.habilidades` sem esse filtro
+            // reintroduziria o traço removido por baixo do pano. Habilidades
+            // do Monstro Heroico não passam por essa filtragem de variante
+            // de raça, então entram sem restrição.
             val traitIds = anc.habilidades
                 .filter { it.nome.keyify() in sourceKeys }
                 .mapNotNull { it.id?.keyify() }
                 .toSet() +
                 (monstro?.habilidades?.mapNotNull { it.id?.keyify() } ?: emptySet())
+
+            // Alguns traços de Variante/Seleção (Centaux Gazela, Drakens/
+            // Mímicos/Ferais "Padrão", Umvee Correnteza/Pedregoso etc.) ainda
+            // chegam como texto solto em vantagensRaciais/desvantagensRaciais
+            // (ver CriadorState.addIfAbsent), não como RacialAbility com id —
+            // autoTraitId() deriva desse texto o MESMO id que addIfAbsent já
+            // atribuiria, então o traço é reconhecido pelo id real dele, não
+            // por regex sobre o texto.
+            val autoIdKeys = sources.map { it.autoTraitId() }.toSet()
 
             // FRAGIL/FRAGIL_MAIOR têm o mesmo nome de exibição ("Frágil"),
             // diferindo só na penalidade (-1 padrão vs -2 dos Demônios) — o
@@ -289,12 +199,14 @@ object ModifierEngine {
             fun traitPresente(id: String): Boolean {
                 if (id in traitIds) return true
                 if (id in idsSoPorHabilidade) return false
-                return sourceKeys.any { it == id || it == id.replace('_', ' ') || it == id.replace('_', '-') }
+                return id in sourceKeys || id in autoIdKeys
             }
 
-            RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
-                if (!traitPresente(id)) return@forEach
-                val nomeExibicao = RacialTraitPointCatalog.LABEL[id] ?: id
+            // sizeDisplay() trava o Tamanho mostrado em -1 no mínimo, exceto
+            // pras raças Diminutas/Minúsculas do livro (Fadas, Povo Rato,
+            // Ferais) — que continuam identificadas pela presença de um
+            // Modifier com este id, não pelo nome da raça.
+            fun aplicarEfeito(id: String, efeito: RacialTraitEffect, nomeExibicao: String) {
                 when (efeito) {
                     is RacialTraitEffect.ResistenciaBonus -> modifiers.add(
                         Modifier("racial_trait_${id}_res", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.TOUGHNESS_FLAT, efeito.valor)
@@ -305,97 +217,32 @@ object ModifierEngine {
                     is RacialTraitEffect.ApararBonus -> modifiers.add(
                         Modifier("racial_trait_${id}_parry", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PARRY, efeito.valor)
                     )
-                    else -> Unit
+                    is RacialTraitEffect.TamanhoBonus -> {
+                        // Id do próprio Modifier de Tamanho vira "racial_diminuto" quando
+                        // minusculo=true — é essa presença que sizeDisplay() já checava
+                        // pra decidir se trava a exibição em -1 ou deixa passar (Fadas,
+                        // Povo Rato, Ferais). Um Modifier extra só pra marcar isso duplicaria
+                        // a contagem de SIZE_DISPLAY (ver ModifierEngineAdgAncestryTest
+                        // "povo rato size penalty is not double counted").
+                        val sizeId = if (efeito.minusculo) "racial_diminuto" else "racial_trait_${id}_size"
+                        modifiers.add(Modifier(sizeId, SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.SIZE_DISPLAY, efeito.valor))
+                        modifiers.add(Modifier("racial_trait_${id}_size_tough", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.SIZE_TOUGHNESS, efeito.valor))
+                    }
+                    // Armadura Natural não vira Modifier aqui — a Armadura final
+                    // do personagem é resolvida à parte
+                    // (ResolveAncestrySpecificAdjustmentsUseCase.naturalArmorFromRace,
+                    // que já lê este mesmo efeito por id), não pelo
+                    // ModifierTarget.ARMOR deste motor.
+                    is RacialTraitEffect.ArmaduraBonus -> Unit
+                    is RacialTraitEffect.Composite -> efeito.efeitos.forEach { sub -> aplicarEfeito(id, sub, nomeExibicao) }
+                    is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum -> Unit
                 }
             }
 
-            if (state.compendioSciFiAtivo && anc.nome.keyify() == "MIMICOS") {
-                val variant = state.resolveSciFiVariantSelectionFor(
-                    ancestryName = anc.nome,
-                    availableOptions = anc.opcoes
-                )
-                val hasResistenciaMaisUm = sources.any { src ->
-                    val key = src.keyify()
-                    key.contains("RESISTENCIA") && key.contains("+1")
-                }
-                if (variant == "Resistente" && !hasResistenciaMaisUm) {
-                    modifiers.add(
-                        Modifier(
-                            id = "racial_mimicos_resistente",
-                            sourceType = SourceType.ANCESTRALIDADE,
-                            sourceName = "Resistente",
-                            target = ModifierTarget.TOUGHNESS_FLAT,
-                            value = 1
-                        )
-                    )
-                }
-            }
-
-            // Generic Parsing
-            sources.forEach { str ->
-                val k = str.keyify()
-                if (k.contains("RESISTENCIA")) {
-                    val match = Regex("""RESISTENCIA\s*([+-])\s*(\d+)""").find(k) // Enhanced regex to capture sign and spaces
-                    if (match != null) {
-                        val sign = match.groupValues[1]
-                        val value = match.groupValues[2].toInt()
-                        val finalValue = if (sign == "-") -value else value
-
-                        // Evita duplicar quando o loop genérico de traços (bloco
-                        // "Bônus fixos de Resistência/Passo/Aparar" acima) já
-                        // cobriu o mesmo valor pra essa raça — ids atualizados
-                        // pra bater com "racial_trait_${id}_res" (ver EFEITOS).
-                        val alreadyAdded = modifiers.any {
-                            (it.id == "racial_trait_RESISTENCIA_res" && finalValue == 1) ||
-                            (it.id == "racial_trait_FRAGIL_res" && finalValue == -1) ||
-                            (it.id == "racial_trait_FRAGIL_MAIOR_res" && finalValue == -2) ||
-                            (it.id == "racial_trait_ESGUIOS_res" && finalValue == -1) ||
-                            (it.id == "racial_trait_FEROCIDADE_ORC_res" && finalValue == 1)
-                        }
-
-                        if (!alreadyAdded) {
-                            modifiers.add(Modifier("racial_res_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.TOUGHNESS_FLAT, finalValue))
-                        }
-                    }
-                }
-                if (k.contains("ARMADURA")) {
-                    val match = Regex("""ARMADURA(.*?)\+(\d+)""").find(k)
-                    if (match != null) {
-                        val valInt = match.groupValues[2].toInt()
-                        if (state.naturalArmorFromRace == 0) {
-                            modifiers.add(Modifier("racial_armor_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.ARMOR, valInt))
-                        }
-                    }
-                }
-                if (k.contains("MOVIMENTACAO")) {
-                    // Only apply generic regex if explicit field is 0 (to match legacy logic fallback)
-                    if (anc.movimentacao == 0) {
-                        val bonusMatch = Regex("""MOVIMENTACAO\s*\+(\d+)""").find(k)
-                        if (bonusMatch != null) {
-                             modifiers.add(Modifier("racial_pace_generic_plus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, bonusMatch.groupValues[1].toInt()))
-                        }
-                        val malusMatch = Regex("""MOVIMENTACAO\s*-(\d+)""").find(k)
-                        if (malusMatch != null) {
-                            // Não aplica o desconto genérico se algum traço (Movimentação
-                            // Reduzida, Lento etc., resolvidos pelo loop de
-                            // RacialTraitPointCatalog acima) já penalizou o Passo, pra não
-                            // descontar duas vezes.
-                            val alreadyReduced = modifiers.any { it.target == ModifierTarget.PACE && it.value < 0 }
-                            if (!alreadyReduced) {
-                                modifiers.add(Modifier("racial_pace_generic_minus", SourceType.ANCESTRALIDADE, str, ModifierTarget.PACE, -malusMatch.groupValues[1].toInt()))
-                            }
-                        }
-                    }
-                }
-                if (k.contains("APARAR")) {
-                    val match = Regex("""APARAR\s*([+-])\s*(\d+)""").find(k)
-                    if (match != null) {
-                        val sign = match.groupValues[1]
-                        val value = match.groupValues[2].toInt()
-                        val finalValue = if (sign == "-") -value else value
-                        modifiers.add(Modifier("racial_parry_generic", SourceType.ANCESTRALIDADE, str, ModifierTarget.PARRY, finalValue))
-                    }
-                }
+            RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
+                if (!traitPresente(id)) return@forEach
+                val nomeExibicao = RacialTraitPointCatalog.LABEL[id] ?: id
+                aplicarEfeito(id, efeito, nomeExibicao)
             }
         }
 

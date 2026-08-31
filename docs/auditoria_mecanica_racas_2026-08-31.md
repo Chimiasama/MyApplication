@@ -56,43 +56,73 @@ e o que ainda precisa de decisão antes de mexer.
   travados por `templatesRequired`, que é mais preciso (trava no monstro
   exato, não em "qualquer um com asas").
 
-## Pendente — precisa de decisão antes de corrigir
+## Segunda rodada — Tamanho, Movimentação, Resistência variável e Armadura Natural (mesma data)
 
-1. **Tamanho (Size) não lido por id, 21 raças**: `TAMANHO_MENOS_1`,
-   `TAMANHO_MAIS_1/2/3`, `DIMINUTO`, `PEQUENOS`, `GRANDE` existem como id no
-   JSON, mas `ModifierEngine` calcula Tamanho com regex sobre nome/descrição
-   do traço, não lendo esses ids. Funciona hoje só porque o nome do traço
-   embute o valor ("TAMANHO +1"). Afeta: Pequeninos (Básico/Fantasia/Horror/
-   Super), Centauros, Fadas, Gnomos (Fantasia e Pathfinder), Goblins, Golens,
-   Meio-Gigantes, Minotauros, Ogros, Orcs, Povo Ratazana/Rato, Halfling
-   (Pathfinder), Aurax, Centaux, Elementais, Yetis (Sci-Fi).
-2. **Movimentação racial positiva só por regex, 3 raças, sem rede de
-   segurança**: Centauros (+4), Centaux (+2), Aurax (+2) — nenhuma tem
-   `movimentacao` estruturado nem entrada em
-   `ResolveAncestrySpecificAdjustmentsUseCase`; dependem 100% do regex
-   genérico `MOVIMENTACAO\s*\+(\d+)` sobre o nome do traço.
-3. **Resistência com valor variável só por regex, 2 raças**: Drakens (+2),
-   Soldados Genéticos (+1) — ids `RESISTENCIA_2`/`RESISTENCIA_1` existem mas
-   não estão em `EFEITOS` (só o id singular `RESISTENCIA`, valor fixo +1,
-   está mapeado).
-4. **Armadura Natural funciona, mas por nome da raça, não por id do
-   traço**: Sáurios, Draconianos, Golens, Insetoides têm o valor certo via
-   `ResolveAncestrySpecificAdjustmentsUseCase` (`when (ancKey) { "SAURIOS"
-   -> ... }`), não pelo id do traço "Armadura +2" (`ARMADURA_2`, que também
-   não está em `EFEITOS`). Resultado certo, mecanismo do jeito que se pediu
-   pra eliminar.
-5. **Hardcode residual por nome de raça**: `CriadorState.kt:4457-4459`
-   (exceção Meio-Orc/Intimidar do Pathfinder) e `CriadorState.kt:4310,4329`
-   (Drakens/Elementais, escolha de atributo por Variante) ainda comparam
-   `ancestralidade.keyify().contains(...)` em vez de id.
+Os 4 itens que ficaram pendentes na primeira rodada foram todos corrigidos
+pra ler por id, seguindo a regra que o dono do projeto fechou: Tamanho
+mínimo -1 / máximo +3 pra raças normais, só raças com indicativo de
+Minúsculo (Fadas, Povo Rato, Ferais) podem ir a -3/-4; e uma Complicação
+como Pequeno pode empurrar a Resistência além do que o Tamanho exibido
+sozinho sugeriria, sem isso precisar aparecer no Tamanho mostrado.
 
-## Como usar este arquivo
+- **`RacialTraitEffect` ganhou 3 casos novos**: `TamanhoBonus(valor,
+  minusculo)` (o `minusculo` é o que deixa a tela mostrar -3/-4 em vez de
+  travar em -1 — mesmo mecanismo que já existia, só que agora ligado por id
+  em vez de nome de raça), `ArmaduraBonus(valor)` e `Composite(efeitos)`
+  (pra um traço com mais de um efeito numérico ao mesmo tempo — só usado
+  por Despretensiosos e Barrigudos dos Tanukimimi, Aparar -1 + Movimentação
+  -1 juntos).
+- **`ModifierEngine`**: removido por completo o bloco "Size from Ancestry",
+  o bloco "Diminuto" e o bloco "Generic Parsing" (Resistência/Armadura/
+  Movimentação/Aparar) — todos regex sobre nome/descrição do traço. Um loop
+  só, por id, cobre Resistência/Passo/Aparar/Tamanho agora (Armadura não
+  entra nesse motor — ver abaixo).
+- **Achado no meio do caminho**: várias raças (Centaux, Aurax, Drakens,
+  Ferais, Mímicos, Umvee) recebem esses traços por Variante/Seleção como
+  texto solto (`vantagensRaciais`/`desvantagensRaciais`), não como
+  `RacialAbility` com id de verdade. Pra não perder esses casos ao tirar o
+  regex, criei `String.autoTraitId()` (`util/StringExtensions.kt`) — a
+  MESMA função que `CriadorState.addIfAbsent` já usava (só extraída pra um
+  lugar só) — e o `ModifierEngine` agora também reconhece um traço por esse
+  id derivado do texto, não só pelo id já anexado à habilidade. Ainda é só
+  id (`"RESISTÊNCIA +2".autoTraitId() == "RESISTENCIA_2"`, comparação exata
+  no mapa), não regex/`contains` sobre o texto.
+- **Armadura Natural**: `ResolveAncestrySpecificAdjustmentsUseCase.execute`
+  ganhou o parâmetro `racialAbilityIds` (ids de `habilidades[]` da raça já
+  resolvida, calculados em `ApplyAncestryChangeCoordinatorUseCase` a partir
+  de `targetAncestryDef.habilidades`) — Sáurios/Golens/Draconianos/
+  Insetoides agora só ganham a Armadura +2 quando o id `ARMADURA_2`
+  realmente está presente na raça resolvida, em vez de fixo por
+  `ancKey == "SAURIOS"` etc. Não precisou de `ModifierTarget.ARMOR` (esse
+  alvo do `ModifierEngine` já não é lido por ninguém no app — achado
+  incidental, registrado abaixo).
+- Ids cobertos: `TAMANHO_MENOS_1/MAIS_1/MAIS_2/3`, `PEQUENOS`, `DIMINUTO`,
+  `DIMINUTO_TAMANHO_3/4` (Ferais), `RESISTENCIA_1/2`, `MOVIMENTACAO`/`_2`/`_4`,
+  `ARMADURA`/`ARMADURA_2`.
+- Testes existentes ajustados pra bater com os novos ids de `Modifier`
+  (`racial_res_generic` → `racial_trait_RESISTENCIA_2_res`, etc.) em
+  `ScifiAncestryVariantSyncTest.kt`, `ModifierEngineAdgAncestryTest.kt`,
+  `ResolveAncestrySpecificAdjustmentsUseCaseTest.kt` (+ 1 teste novo,
+  confirmando que Sáurios sem o id `ARMADURA_2` não ganha mais Armadura de
+  graça) e `ResolveAncestryRacialPackageUseCaseTest.kt`.
 
-Cada item pendente é independente — dá pra atacar um de cada vez. O padrão
-de correção do item 1 (Tamanho) é: adicionar um caso `TamanhoBonus` em
-`RacialTraitEffect`, popular `EFEITOS` pros 7 ids de Tamanho, e trocar o
-bloco de regex em `ModifierEngine.kt:153-256` pra ler o efeito por id (só
-cai no regex/fallback por nome quando não há id — mesmo padrão já usado no
-loop de `ResistenciaBonus/PassoBonus/ApararBonus`). Os itens 2 e 3 seguem o
-mesmo padrão, só que criando entradas em `EFEITOS` pros ids que faltam em
-vez de um case novo.
+## Achado incidental (não mexi, só documentando)
+
+`ModifierTarget.ARMOR` do `ModifierEngine` — usado pelo bloco de Equipamento,
+pela Vantagem "Couro Blindado" e (antes desta rodada) pelo regex de Armadura
+— nunca é somado por ninguém no app (`ModifierEngine.sum(state,
+ModifierTarget.ARMOR)` não aparece em lugar nenhum fora do próprio
+`ModifierEngine`; a Armadura real do personagem é calculada à parte, em
+`SummaryUtils.kt`/`ResumoPdfReferenciador.kt`, direto de
+`naturalArmorFromRace`/equipamento). Ou seja, esse pedaço do motor já era
+morto antes de eu mexer em qualquer coisa — não é uma regressão desta
+rodada, mas fica registrado caso você queira limpar depois.
+
+## Pendente — sem mudança nesta rodada
+
+**Hardcode residual por nome de raça**: `CriadorState.kt` ainda tem a
+exceção Meio-Orc/Intimidar do Pathfinder (linha ~4458) e a escolha de
+atributo por Variante de Drakens/Elementais (linhas ~4310/4329) comparando
+`ancestralidade.keyify().contains(...)`/`== "DRAKENS"` em vez de id. Não
+mexi porque você não pediu esses dois desta vez — ficam pra quando você
+quiser.

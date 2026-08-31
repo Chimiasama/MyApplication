@@ -67,7 +67,8 @@ class ResolveAncestryRacialPackageUseCaseTest {
                 selectedAdvantages = emptyList(),
                 previousFreeAdvantageKeys = emptySet(),
                 ancestryGrantedAdvantages = emptyList(),
-                ancestryAutomaticDisadvantages = emptyList()
+                ancestryAutomaticDisadvantages = emptyList(),
+                racialAbilityIds = setOf("ARMADURA_2")
             )
         )
 
