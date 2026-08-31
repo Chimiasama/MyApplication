@@ -261,10 +261,25 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
      nenhum dos dois afeta a seleção de verdade hoje (o gate real já usa
      `state.podeSelecionar()` em paralelo), só a precisão da
      pré-visualização nas abas de Estágio.
-4. **Dar `id` estável a `pericias.json` e `equipamentos.json`** — pré-requisito
-   estrutural antes de conseguir limpar boa parte do hardcode de
-   Perícias/Equipamento/Ancestralidade (armas naturais, Aparar, Movimentação,
-   Tamanho racial hoje dependem de regex sobre texto livre).
+4. ✅ **Dar `id` estável a `pericias.json` e `equipamentos.json`** — feito
+   (commit `c43a382`). Id gerado como slug (minúsculo, sem acento,
+   `snake_case`) do `nome`, mesmo padrão de `vantagens.json`/
+   `complicacoes.json`: 66 perícias → 42 ids únicos (zero colisão), 3243
+   itens de equipamento em 376 categorias → 1609 ids únicos (as 23
+   "colisões" eram todas o mesmo item com capitalização/acento
+   inconsistente entre impressões de livro — ex. "Cavalo de guerra" vs
+   "Cavalo de Guerra" — então compartilhar id ali é o comportamento
+   correto, não um bug). Conferido programaticamente que remover o campo
+   `id` reproduz o JSON original byte a byte (diff é só uma linha nova por
+   registro). Adicionado `id: String = ""` (com valor padrão, no fim da
+   lista de parâmetros pra não quebrar nenhuma chamada por posição) em
+   `EquipamentoItem`, `Pericia`, `PericiaJson` e no `PericiaFonte` privado
+   do `DataLoader`, com o id passando pelo pipeline
+   Fonte→PericiaJson→Pericia. **Só adiciona o campo — nenhum código
+   consumidor foi migrado para usar `.id` em vez de `.nome` ainda**; isso
+   é o próximo passo natural (as fórmulas de Aparar/Movimentação/Tamanho
+   racial, armas naturais etc. continuam comparando por nome/regex até
+   alguém fazer essa migração, agora que o id existe pra elas usarem).
 5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: Sci-Fi (57),
    Deadlands (36), Crystal Heart (33), CSV (14), Horror (7).
 6. Só depois, revisar os `[CONFERIR]` (custo/requisito/efeito a bater linha a
