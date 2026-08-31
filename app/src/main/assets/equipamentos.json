@@ -36356,5 +36356,530 @@
         "descricaoLite": "Unguento que preserva um cadáver por 5 dias ou faz um morto-vivo corpóreo parecer vivo por 5 dias (com -2 em Ocultismo para descobrir a verdade)."
       }
     ]
+  },
+  {
+    "tipo": "Veículos",
+    "subtipo": "Customizados (Sci-Fi)",
+    "livros": [
+      "SCI_FI"
+    ],
+    "itens": [
+      {
+        "id": "veiculo_moto_flutuante_scifi",
+        "nome": "Moto Flutuante",
+        "custo": 70000,
+        "tamanho": 1,
+        "manobrabilidade": 3,
+        "velMaxima": 11,
+        "resistencia": 7,
+        "tripulacao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Uma motocicleta pequena e leve, comum em áreas urbanas lotadas. Locomoção: Flutuante. Ferimentos: 2. Energia: 3. Mods (slots): 3 (0 livres). Mods incluídos: Frágil, Inseguro, Manobrabilidade x2, Resistência x2, Tripulação Exposta, Velocidade Ampliada x5.",
+        "descricaoLite": "Moto flutuante leve e ágil, comum em áreas urbanas lotadas."
+      },
+      {
+        "id": "veiculo_rover_de_exploracao_scifi",
+        "nome": "Rover de Exploração",
+        "custo": 100000,
+        "tamanho": 3,
+        "manobrabilidade": 1,
+        "velMaxima": 6,
+        "resistencia": 7,
+        "tripulacao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Um rover é um veículo de reconhecimento para todos os terrenos. Duas pessoas podem se amontoar na cabine hermética com um certo desconforto. Locomoção: Rodas (4x4). Ferimentos: 3. Energia: 3. Mods (slots): 9 (0 livres). Mods incluídos: Anfíbio, Passeio Difícil, Resistência x2, Selado, Tração nas Quatro Rodas (4x4), Velocidade Ampliada.",
+        "descricaoLite": "Rover blindado de reconhecimento para todo tipo de terreno, com cabine hermética para duas pessoas."
+      },
+      {
+        "id": "veiculo_limusine_flutuante_scifi",
+        "nome": "Limusine Flutuante",
+        "custo": 385000,
+        "tamanho": 5,
+        "manobrabilidade": 0,
+        "velMaxima": 8,
+        "resistencia": 12,
+        "tripulacao": "1+4",
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Um passeio de luxo para CEOs corporativos, políticos e celebridades. Locomoção: Flutuante. Ferimentos: 4. Energia: 5. Mods (slots): 15 (0 livres). Resistência inclui +2 de Armadura (dos Mods). Mods incluídos: Armadura, Assentos de Tripulação, Recursos de Luxo, Velocidade Ampliada x2.",
+        "descricaoLite": "Limusine flutuante de luxo para clientes ricos e famosos."
+      },
+      {
+        "id": "veiculo_caminhao_flutuante_scifi",
+        "nome": "Caminhão Flutuante",
+        "custo": 540000,
+        "tamanho": 6,
+        "manobrabilidade": 0,
+        "velMaxima": 9,
+        "resistencia": 14,
+        "tripulacao": "1+2",
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Um caminhão típico para transporte de mercadorias. Os Mods vazios são para espaço de carga. Locomoção: Flutuante. Ferimentos: 4. Energia: 5. Mods (slots): 18 (5 livres). Mods incluídos: Resistência x4, Velocidade Ampliada x3.",
+        "descricaoLite": "Caminhão flutuante de carga para transporte comercial de mercadorias, com espaço extra para carga."
+      },
+      {
+        "id": "veiculo_rastejador_de_exploracao_scifi",
+        "nome": "Rastejador de Exploração",
+        "custo": 1300000,
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 5,
+        "resistencia": 24,
+        "tripulacao": 5,
+        "origem": "SCI_FI",
+        "observacoes": "Classe II. O modo de transporte preferido em terrenos devastados perigosos. Rastejadores são confiáveis e têm espaço suficiente para um laboratório de trabalho, um rover e motos flutuantes para a equipe. Locomoção: Esteira. Ferimentos: 5. Energia: 15. Mods (slots): 24 (0 livres). Resistência inclui +2 de Armadura (dos Mods). Mods incluídos: Anfíbio, Armadura x2, Baía Profissional, Escâner, Hangar, Resistência x2, Selado, Velocidade Ampliada.",
+        "descricaoLite": "Veículo pesado sobre esteiras para expedições em terrenos hostis, com laboratório e espaço para veículos menores."
+      },
+      {
+        "id": "veiculo_minissubmarino_scifi",
+        "nome": "Minissubmarino",
+        "custo": 142000,
+        "tamanho": 3,
+        "manobrabilidade": 1,
+        "velMaxima": 3,
+        "resistencia": 13,
+        "tripulacao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Estas pequenas embarcações são construídas para suportar a pressão de águas profundas, mas não muito mais que isso. São mais adequadas para exploração e turismo. Locomoção: Aquático (Turboélice). Ferimentos: 3. Energia: 3. Mods (slots): 9 (0 livres). Resistência inclui +4 de Armadura (dos Mods). Mods incluídos: Armadura x2, Escâner, Resistência x4, Selado.",
+        "descricaoLite": "Pequeno submersível civil voltado para exploração e turismo subaquático."
+      },
+      {
+        "id": "veiculo_carro_esportivo_decolagem_pouso_verticais_scifi",
+        "nome": "Carro Esportivo de Decolagem e Pouso Verticais",
+        "custo": 720000,
+        "tamanho": 4,
+        "manobrabilidade": 1,
+        "velMaxima": 12,
+        "resistencia": 12,
+        "tripulacao": "1+2",
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Carros voadores são onipresentes na ficção científica. Este modelo básico representa veículos de pouso e decolagem verticais comuns como táxis, viaturas policiais, veículos de notícias, veículos de transporte pessoal etc. Locomoção: Aeronave (Pouso e Decolagem Verticais). Ferimentos: 3. Energia: 5. Mods (slots): 12 (2 livres). Mods incluídos: Frágil, Manobrabilidade, Resistência x2, Velocidade Ampliada x4.",
+        "descricaoLite": "Carro voador VTOL básico, usado como táxi, viatura policial ou transporte pessoal."
+      },
+      {
+        "id": "veiculo_moto_flutuante_de_combate_scifi",
+        "nome": "Moto Flutuante de Combate",
+        "custo": 168000,
+        "tamanho": 2,
+        "manobrabilidade": 2,
+        "velMaxima": 11,
+        "resistencia": 10,
+        "tripulacao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Dois jatos de solo transportam a moto sobre qualquer terreno. O laser Gatling geralmente é instalado como um suporte giratório quando a moto para, mas o motorista ainda pode dispará-lo para frente enquanto dirige. Locomoção: Flutuante. Ferimentos: 2. Energia: 3. Mods (slots): 6 (0 livres). Resistência inclui +2 de Armadura (dos Mods). Mods incluídos: Armadura, Frágil, Inseguro, Manobrabilidade, Resistência x3, Sistema de Mira, Tripulação Exposta, Velocidade Ampliada x5. Armas: LASER GATLING (Pino Montado): Distância 50/100/200, Dano 3d6+4 (I), PA 4, CdT 4, Cauterizante, Sobrecarga, Defesa de Ponto, Tiro de Reação.",
+        "descricaoLite": "Moto flutuante militar equipada com laser Gatling montado."
+      },
+      {
+        "id": "veiculo_esquife_flutuante_scifi",
+        "nome": "Esquife Flutuante",
+        "custo": 179000,
+        "tamanho": 3,
+        "manobrabilidade": 1,
+        "velMaxima": 9,
+        "resistencia": 9,
+        "tripulacao": 1,
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Um veículo preferido por forças de operações especiais que operam atrás das linhas e patrulhas policiais. As variantes policiais geralmente têm uma bolha de vidro com escurecimento automático e adicionam munição atordoante ao laser. Locomoção: Flutuante. Ferimentos: 3. Energia: 3. Mods (slots): 9 (0 livres). Resistência inclui +4 de Armadura (dos Mods). Mods incluídos: Armadura x2, Escâner, Sistema de Mira, Tripulação Exposta, Velocidade Ampliada x3. Armas: LASER GATLING (Pino Montado): Distância 50/100/200, Dano 3d6+4 (I), PA 4, CdT 4, Cauterizante, Sobrecarga, Ponto de Defesa, Tiro de Reação.",
+        "descricaoLite": "Veículo flutuante ágil usado por forças especiais e policiais, armado com laser Gatling."
+      },
+      {
+        "id": "veiculo_jipe_flutuante_scifi",
+        "nome": "Jipe Flutuante",
+        "custo": 368000,
+        "tamanho": 4,
+        "manobrabilidade": 0,
+        "velMaxima": 8,
+        "resistencia": 20,
+        "tripulacao": "1+2",
+        "origem": "SCI_FI",
+        "observacoes": "Classe II. Um transporte resistente projetado para levar pequenas equipes a qualquer lugar. Seu armamento foi adicionado posteriormente, melhor utilizado como uma medida defensiva. Locomoção: Flutuante. Ferimentos: 4. Energia: 5. Mods (slots): 12 (0 livres). Resistência inclui +8 de Armadura (dos Mods). Mods incluídos: Armadura x4, Blindagem PEM, Resistência x2, Sistema de Mira, Tripulação Exposta, Velocidade Ampliada x2. Armas: LASER GATLING (Pino Montado): Distância 50/100/200, Dano 3d6+4 (I), PA 4, CdT 4, Cauterizante, Sobrecarga, Defesa de Ponto, Tiro de Reação.",
+        "descricaoLite": "Jipe flutuante blindado para pequenas equipes, com armamento defensivo."
+      },
+      {
+        "id": "veiculo_blindado_scifi",
+        "nome": "Blindado",
+        "custo": 385000,
+        "tamanho": 5,
+        "manobrabilidade": 0,
+        "velMaxima": 6,
+        "resistencia": 18,
+        "tripulacao": "3+10",
+        "origem": "SCI_FI",
+        "observacoes": "Classe II. Um veículo blindado de transporte de pessoal é despachado de naves de transporte para levar esquadrões de infantaria para o combate e os apoia com seu canhão automático. O interior é notoriamente apertado e desconfortável. Locomoção: Rodas (4x4). Ferimentos: 4. Energia: 5. Mods (slots): 15 (0 livres). Resistência inclui +8 de Armadura (dos Mods). Mods incluídos: Armadura x4, Blindagem PEM, Cápsula de Passageiros, Estabilizador, Passeio Difícil, Selado, Tração nas Quatro Rodas, Velocidade Ampliada. Armas: CANHÃO MÉDIO (Torreta): Distância 75/150/300, Dano 4d10 (III), PA 10, MPE.",
+        "descricaoLite": "Transporte blindado de tropas, apoiado por canhão médio em torreta."
+      },
+      {
+        "id": "veiculo_tanque_flutuante_scifi",
+        "nome": "Tanque Flutuante",
+        "custo": 1000000,
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 6,
+        "resistencia": 29,
+        "tripulacao": 5,
+        "origem": "SCI_FI",
+        "observacoes": "Classe III. Tanques flutuantes são uma combinação desconfortável de propulsão sobre o solo e blindagem, e o canhão principal de um tanque de batalha. O resultado é mais rápido e flexível, mas não conta com a proteção e o armamento mais pesados de seus primos de esteira. Locomoção: Flutuante. Ferimentos: 5. Energia: 15. Mods (slots): 24 (1 livres). Resistência inclui +10 de Armadura (dos Mods). Mods incluídos: Armadura Inclinada, Armadura x5, Blindagem PEM, CA/CE, Escâner, Resistência x4, Selado, Sistema de Mira. Armas: LASER GATLING (Pino Montado): Distância 50/100/200, Dano 3d6+4 (I), PA 4, CdT 4, Cauterizante, Sobrecarga, Defesa de Ponto, Tiro de Reação. LASER MÉDIO (Torreta): Distância 150/300/600, Dano 3d10 (III), PA 20, Sobrecarga.",
+        "descricaoLite": "Tanque sobre plataforma flutuante, mais rápido e ágil que um tanque de esteiras equivalente, mas menos protegido."
+      },
+      {
+        "id": "veiculo_tanque_de_combate_scifi",
+        "nome": "Tanque de Combate",
+        "custo": 1100000,
+        "tamanho": 8,
+        "manobrabilidade": -2,
+        "velMaxima": 4,
+        "resistencia": 42,
+        "tripulacao": 5,
+        "origem": "SCI_FI",
+        "observacoes": "Classe IV. Mesmo nos campos de batalha do futuro, o tanque de combate continua relevante. Seu design é atemporal: coloque uma armadura e monte um canhão grande na torreta. Locomoção: Esteira. Ferimentos: 5. Energia: 15. Mods (slots): 24 (0 livres). Resistência inclui +22 de Armadura (dos Mods). Mods incluídos: Armadura x11, Blindagem PEM, CA/CE, Manobrabilidade Reduzida, Resistência x5, Sistema de Mira. Armas: LASER GATLING (Torreta): Distância 50/100/200, Dano 3d6+4 (I), PA 4, CdT 4, Cauterizante, Sobrecarga, Defesa de Ponto, Tiro de Reação. CANHÃO PESADO (Torreta): Distância 100/200/400, Dano 5d10 (IV), PA 20.",
+        "descricaoLite": "Tanque de combate pesado sobre esteiras, fortemente blindado e armado com canhão grande em torreta."
+      },
+      {
+        "id": "veiculo_barco_de_patrulha_scifi",
+        "nome": "Barco de Patrulha",
+        "custo": 351000,
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 6,
+        "resistencia": 23,
+        "tripulacao": "5+5",
+        "origem": "SCI_FI",
+        "observacoes": "Classe II. Essas rápidas embarcações de ataque protegem litorais e rios. Locomoção: Aquático (Jato). Ferimentos: 5. Energia: 15. Mods (slots): 24 (3 livres). Resistência inclui +8 de Armadura (dos Mods). Mods incluídos: Alojamento de Tripulação, Armadura Inclinada, Armadura x4, Escâner, Velocidade Ampliada. Armas: Canhão Automático Médio (Torreta): Distância 50/100/200, Dano 4d8 (II), PA 6, CdT 4. 2× Miniguns (Torreta): Distância 50/100/200, Dano 2d8+1 (I), PA 2, CdT 4, Defesa de Ponto, Tiro de Reação.",
+        "descricaoLite": "Embarcação militar rápida para patrulha costeira e fluvial."
+      },
+      {
+        "id": "veiculo_destroier_naval_scifi",
+        "nome": "Destróier Naval",
+        "custo": 13800000,
+        "tamanho": 12,
+        "manobrabilidade": -2,
+        "velMaxima": 5,
+        "resistencia": 60,
+        "tripulacao": 50,
+        "origem": "SCI_FI",
+        "observacoes": "Classe VI. Os destróieres são os cavalos de batalha da Marinha, rastreando navios amigos maiores e caçando alvos menores que possam ameaçar a frota. Locomoção: Aquático (Jato). Ferimentos: 6. Energia: 30. Mods (slots): 48 (0 livres). Resistência inclui +40 de Armadura (dos Mods). Mods incluídos: Armadura Inclinada, Armadura x20, CA/CE, Escâner, Sistema de Mira. Armas: 2× Lasers Pesados Duplos Conectados (Torreta): Distância 150/300/600, Dano 4d10 (V), PA 30, Sobrecarga. Lança-Míssil (Torreta): 8× Mísseis Pesados, Distância 200/400/800, Dano 8d6 (V), PA 32, MGE. Lança-Míssil (Torreta): 24× Mísseis Leves, Distância 100/200/400, Dano 6d6 (III), PA 16, CdT 4, Guiado, MPE.",
+        "descricaoLite": "Navio de guerra de médio porte voltado à caça de alvos menores e escolta de frota."
+      },
+      {
+        "id": "veiculo_submarino_de_ataque_scifi",
+        "nome": "Submarino de Ataque",
+        "custo": 23500000,
+        "tamanho": 16,
+        "manobrabilidade": -2,
+        "velMaxima": 5,
+        "resistencia": 45,
+        "tripulacao": 50,
+        "origem": "SCI_FI",
+        "observacoes": "Classe IV. Um submarino de ataque se esconde sob a superfície e lança ataques surpresa contra outras embarcações. Locomoção: Aquático (Jato). Ferimentos: 6. Energia: 300. Mods (slots): 64 (0 livres). Resistência inclui +20 de Armadura (dos Mods). Mods incluídos: Armadura x10, Blindagem PEM, CA/CE, Comunicações Emaranhadas, Escâner, Reator, Resistência x4, Selado, Sistema Furtivo. Armas: 2× Lança-Torpedos (Fixos na Frente): 10× Torpedos Pesados (total em ambos os lançadores), Distância 300/600/1200, Dano 8d12 (VII), PA 40, Guiado, MGE. 2× Lança-Mísseis (Torreta): 20× Mísseis Médios (total em ambos os lançadores), Distância 150/300/600, Dano 7d6 (IV), PA 24, CdT 2, Guiado, MME.",
+        "descricaoLite": "Submarino furtivo de ataque, especializado em emboscadas contra outras embarcações."
+      },
+      {
+        "id": "veiculo_encouracado_scifi",
+        "nome": "Encouraçado",
+        "custo": 18800000,
+        "tamanho": 16,
+        "manobrabilidade": -4,
+        "velMaxima": 5,
+        "resistencia": 68,
+        "tripulacao": "50+50",
+        "origem": "SCI_FI",
+        "observacoes": "Classe VII. Uma fortaleza flutuante com poder de fogo fenomenal e blindagem espessa. O navio de guerra está fora de moda, já que embarcações mais baratas podem fazer o mesmo trabalho, mas ainda é uma presença intimidadora na água. Locomoção: Aquático (Jato). Ferimentos: 6. Energia: 30. Mods (slots): 64 (0 livres). Resistência inclui +48 de Armadura (dos Mods). Mods incluídos: Alojamento de Tripulação, Armadura x24, CA/CE, Escâner, Manobrabilidade Reduzida x2, Sistema de Mira. Armas: 2× Canhões Super Pesados Duplos Conectados (Torreta): Distância 150/300/600, Dano 8d10 (VII), PA 40. 3× Lasers Gatling Quádruplos Conectados (Torreta): Distância 50/100/200, Dano 3d6+4 (I), PA 4, CdT 4, Cauterizante, Sobrecarga, Defesa de Ponto, Tiro de Reação. Lança-Míssil (Torreta): 6× Mísseis Pesados, Distância 200/400/800, Dano 8d6 (V), PA 32, Guiado, MGE.",
+        "descricaoLite": "Fortaleza flutuante pesadamente armada e blindada, um navio de guerra intimidador embora ultrapassado."
+      },
+      {
+        "id": "veiculo_transportador_leve_scifi",
+        "nome": "Transportador Leve",
+        "custo": 30500000,
+        "tamanho": 20,
+        "manobrabilidade": -6,
+        "velMaxima": 5,
+        "resistencia": 40,
+        "tripulacao": "150+50",
+        "origem": "SCI_FI",
+        "observacoes": "Classe IV. O terror dos mares transporta 12 caças furtivos ou veículos de pouso e decolagem verticais de ataque rápido para a batalha. Suas próprias armas são reservadas para Defesa de Ponto ou para afastar aeronaves de ataque leves. Locomoção: Aquático (Jato). Ferimentos: 6. Energia: 300. Mods (slots): 80 (0 livres). Resistência inclui +20 de Armadura (dos Mods). Mods incluídos: Alojamento de Tripulação, Armadura x10, Central de Comando, Escâner, Manobrabilidade Reduzida x4, Reator, Superestrutura x2 (Hangar, Grande). Armas: 4× Lasers Gatling Quádruplos Conectados (Torreta): Distância 50/100/200, Dano 3d6+4 (I), PA 4, CdT 4, Cauterizante, Sobrecarga, Defesa de Ponto, Tiro de Reação.",
+        "descricaoLite": "Porta-naves que transporta caças furtivos e veículos VTOL de ataque para o combate."
+      },
+      {
+        "id": "veiculo_aeronave_de_patrulha_decolagem_vertical_scifi",
+        "nome": "Aeronave de Patrulha de Decolagem Vertical",
+        "custo": 1100000,
+        "tamanho": 6,
+        "manobrabilidade": 1,
+        "velMaxima": 10,
+        "resistencia": 16,
+        "tripulacao": "1+2",
+        "origem": "SCI_FI",
+        "observacoes": "Classe II. Este jato para duas pessoas paira nas bordas dos campos de batalha ou caça aeronaves inimigas terrestres mais leves. Versões desatualizadas ou excedentes muitas vezes acabam nas mãos de seguranças privadas ou autoridades policiais. Locomoção: Aeronave (Pouso e Decolagem Verticais). Ferimentos: 4. Energia: 5. Mods (slots): 18 (0 livres). Resistência inclui +6 de Armadura (dos Mods). Mods incluídos: Armadura x3, Manobrabilidade, Sistema de Mira, Velocidade Ampliada x2. Armas: Lasers Leves Duplos Conectados (Torreta): Distância 150/300/600, Dano 2d10 (II), PA 10, CdT 3, Sobrecarga, Tiro de Reação. Lança-Míssil (Fixo na Frente): 24× Mísseis Leves, Distância 100/200/400, Dano 6d6 (III), PA 16, CdT 4, Guiado, MPE.",
+        "descricaoLite": "Jato militar VTOL biposto para patrulha e interceptação de aeronaves leves."
+      },
+      {
+        "id": "veiculo_ataque_rapido_decolagem_vertical_scifi",
+        "nome": "Ataque Rápido de Decolagem Vertical",
+        "custo": 1700000,
+        "tamanho": 8,
+        "manobrabilidade": -1,
+        "velMaxima": 10,
+        "resistencia": 23,
+        "tripulacao": 5,
+        "origem": "SCI_FI",
+        "observacoes": "Classe II. Esta aeronave leve possui poderosos jatos onidirecionais nas extremidades das asas para excelente manobrabilidade. Possui bom poder de fogo, mas é vulnerável a ataques de oponentes mais resistentes. Locomoção: Aeronave (Pouso e Decolagem Verticais). Ferimentos: 5. Energia: 15. Mods (slots): 24 (0 livres). Resistência inclui +6 de Armadura (dos Mods). Mods incluídos: Armadura x3, CA/CE, Escâner, Resistência x2, Sistema de Mira, Velocidade Ampliada x2. Armas: LASER GATLING (Torreta): Distância 50/100/200, Dano 3d6+4 (I), PA 4, CdT 4, Cauterizante, Sobrecarga, Defesa de Ponto, Tiro de Reação. Lasers Médios Quádruplos Conectados (Torreta): Distância 150/300/600, Dano 3d10 (III), PA 20, Sobrecarga. 2× Lança-Mísseis (Fixos na Frente): 24× Mísseis Leves (total em ambos os lançadores), Distância 100/200/400, Dano 6d6 (III), PA 16, CdT 4, Guiado, MPE.",
+        "descricaoLite": "Aeronave leve de ataque VTOL com alta manobrabilidade e bom poder de fogo, porém pouco resistente."
+      },
+      {
+        "id": "veiculo_caca_furtivo_atmosferico_scifi",
+        "nome": "Caça Furtivo Atmosférico",
+        "custo": 5000000,
+        "tamanho": 8,
+        "manobrabilidade": 0,
+        "velMaxima": 15,
+        "resistencia": 15,
+        "tripulacao": 3,
+        "origem": "SCI_FI",
+        "observacoes": "Classe I. Este jato de alta velocidade tem camuflagem eletrônica para entrar no espaço aéreo protegido e lançar mísseis contra alvos inimigos valiosos... e, talvez, as defesas para retornar vivo. Locomoção: Aeronave (Jato). Ferimentos: 5. Energia: 15. Mods (slots): 24 (0 livres). Mods incluídos: CA/CE, Escâner, Manobrabilidade, Propulsores x2, Sistema Furtivo, Tripulação Reduzida, Velocidade Ampliada x2. Armas: Lasers Médios Quádruplos Conectados (Fixos na Frente): Distância 150/300/600, Dano 3d10 (III), PA 20, Sobrecarga. 2× Lança-Mísseis (Fixos na Frente): 24× Mísseis Leves (total em ambos os lançadores), Distância 100/200/400, Dano 6d6 (III), PA 16, CdT 4, Guiado, MPE.",
+        "descricaoLite": "Jato furtivo de alta velocidade para incursões e ataques com mísseis contra alvos valiosos."
+      }
+    ]
+  },
+  {
+    "tipo": "Itens Especiais",
+    "subtipo": "Relíquias e Artefatos",
+    "livros": [
+      "SCI_FI"
+    ],
+    "itens": [
+      {
+        "id": "reliquias_e_artefatos_scifi_regras",
+        "nome": "Relíquias e Artefatos (Regras)",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Relíquias de ficção científica não são fabricadas — só existem como prêmios de aventura, encontradas em ruínas, naufrágios espaciais ou como recompensa (veja a Tabela de Prêmios: Saque, Salvamento, Tesouro, Resgate de um Rei, Relíquia e Grande Prêmio, cada uma com efeito e valor próprios ao ser sorteada com uma carta de baralho). Todas as relíquias estão além do Dev III. Um herói pode rolar Ciência -4 para tentar entender os princípios que governam uma relíquia (e suas estatísticas), mas nenhuma pesquisa permite copiá-la ou recriá-la; a Vantagem Exocientista (p. 30) reduz essa penalidade. Conhecimento Acadêmico também pode identificar uma relíquia depois de encontrada, já que lendas cercam esses itens antigos. Quando o grupo ganha uma Relíquia como prêmio, o Mestre rola na Tabela de Relíquias (d20, 19 entradas nomeadas + o resultado 'Relíquia Apex') ou escolhe o resultado que melhor se encaixe na aventura; tirar 'Relíquia Apex' remete a uma segunda Tabela de Relíquias Apex (d6, 6 entradas nomeadas), reservada às relíquias mais poderosas do capítulo.",
+        "descricaoLite": "Explica que relíquias de sci-fi só aparecem como prêmio de aventura (nunca fabricadas), como identificá-las (Ciência -4 ou Conhecimento Acadêmico, aliviado pela Vantagem Exocientista) e cita as tabelas de sorteio (Relíquias d20 e Relíquias Apex d6) usadas pelo Mestre."
+      },
+      {
+        "id": "relic_adaptador_buraco_minhoca_scifi",
+        "nome": "Adaptador de Buraco de Minhoca",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Estranho dispositivo que permite a um piloto usar buracos de minhoca gravitacionais para cortar o espaço em vez de saltar por outra dimensão. É um sistema pequeno que não requer nenhum Mod para instalar. Se afixado a uma nave sem propulsão superlumínica, permite saltos (Astronavegação) de qualquer efeito gravitacional forte (estrelas e maiores) para outro ponto de saída gravitacional semelhante. Se instalado em uma nave que já tenha um propulsor superlumínico, pode ignorar até 4 pontos de penalidades de distância do salto. Em ambos os casos, o Tempo de Trânsito é de apenas 1d6 minutos, não importa a distância percorrida.",
+        "descricaoLite": "Dispositivo sem custo em Mods que permite saltos por buracos de minhoca gravitacionais, ou reduz em até 4 pontos as penalidades de distância de um salto superlumínico existente, sempre com trânsito de 1d6 minutos."
+      },
+      {
+        "id": "relic_amplificador_de_combate_scifi",
+        "nome": "Amplificador de Combate",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Chip (Tensão 0) instalado diretamente no cérebro de um ciborgue, potencializando seu sistema nervoso e processamento mental. É ativado no início de qualquer rodada com uma rolagem de Espírito. Com sucesso, qualquer Carta de Ação comprada pela personagem conta como um Curinga (mas não concede Benes). Com falha, a Carta de Ação ainda conta como Curinga, mas a personagem ganha um nível de Fadiga potencialmente letal, que só se recupera após um dia inteiro sem ativar o amplificador. Com uma Falha Crítica, a personagem age como se tivesse sucesso e então sofre um ataque cardíaco (Tabela de Medo, Savage Worlds Edição Aventura).",
+        "descricaoLite": "Implante cerebral que transforma Cartas de Ação compradas em Curingas (sem Benes) mediante rolagem de Espírito, mas arrisca Fadiga letal ou até um ataque cardíaco em caso de falha."
+      },
+      {
+        "id": "relic_aniquilador_universal_scifi",
+        "nome": "Aniquilador Universal",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Arma suprema de uma civilização perdida, desmontada em cinco fragmentos espalhados pelo universo; esta relíquia é apenas um deles. Cada fragmento isolado já é uma arma poderosa — FRAGMENTO DO ANIQUILADOR UNIVERSAL: Distância 500/1000/2000, Dano 5d12 (VII), PA 50, AP, MGE, Força Mínima d6, Peso 5 kg. Analisar um fragmento com Ciência revela que há outros quatro; reunir os demais é trabalho de várias aventuras, e cada fragmento adicional dá a arma Conexão Dupla ou Quádrupla. Reunir os cinco fragmentos no Aniquilador Universal completo é uma Tarefa Dramática Complexa usando Consertar -4 (Exocientista reduz para -2); falha faz os fragmentos desaparecerem e apaga a memória de todos na área na hora seguinte, e falha em um Contratempo enlouquece irremediavelmente o construtor e quem lhe deu Suporte. Uma vez montado, o Aniquilador Universal pode ser disparado uma única vez: o atirador foca um único alvo a até 2000 anos-luz e o alvo é automaticamente atingido e irremediavelmente destruído, não importando tamanho, poderes ou defesas — após o que todos os envolvidos perdem uma hora de memória e os fragmentos se espalham de novo.",
+        "descricaoLite": "Um dos cinco fragmentos de uma arma lendária capaz, quando remontada, de destruir automaticamente qualquer alvo escolhido a até 2000 anos-luz; cada fragmento isolado já é uma arma devastadora (5d12, PA 50, AP)."
+      },
+      {
+        "id": "relic_cidade_fractal_scifi",
+        "nome": "Cidade Fractal",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Restos miniaturizados de uma antiga civilização baseada em antimatéria, contidos dentro de uma garrafa por uma força desconhecida; o tempo dentro congela quando alguém observa, e o contêiner impede que os habitantes percebam ou se comuniquem com o exterior. Visualizações repetidas, espaçadas o suficiente para os habitantes seguirem sua vida entre uma observação e outra, revelam pistas de sua tecnologia. Após cada mês de observação, uma personagem pode rolar Ciência -4 e, com sucesso, criar um item de um Dev mais alto no valor de $1.000 ($5.000 com ampliação); os fundos podem ser armazenados para um item mais caro depois. A garrafa tem Dureza 25; se quebrada, os habitantes veem o mundo exterior por alguns instantes aterrorizantes antes de serem eliminados sem deixar vestígios.",
+        "descricaoLite": "Garrafa com uma civilização em miniatura que, observada mensalmente, permite fabricar (via Ciência -4) itens de tecnologia mais avançada do que o normal permitiria."
+      },
+      {
+        "id": "relic_concha_canopica_scifi",
+        "nome": "Concha Canópica",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Peça de armadura dourada, coberta de runas, usada por um exército implacável cujos soldados caídos se levantavam de novo. Fornece Armadura +10 a um usuário de Tamanho 0 ou 1 que aguente sua Força Mínima d12 e peso de 40 kg. Se o usuário morrer (ou a armadura for colocada em um cadáver), o portador ganha a habilidade Morto-vivo e permanece consciente; se morto de novo, ressuscita em 1d4 rodadas. O usuário só morre permanentemente se a armadura for removida.",
+        "descricaoLite": "Armadura poderosa (+10, Força Mínima d12, 40 kg) que concede Morto-vivo e ressurreição em 1d4 rodadas a quem morrer usando-a; só a remoção da armadura causa morte permanente."
+      },
+      {
+        "id": "relic_construto_alfa_scifi",
+        "nome": "Construto Alfa",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Servo indestrutível que sobreviveu ao colapso de um universo anterior. Tem as mesmas propriedades de um robô trabalhador, exceto que carrega um desintegrador de matéria em vez de um dispositivo pessoal de dados, e possui Invulnerabilidade (Savage Worlds Edição Aventura) — nada além do Aniquilador Universal o afeta além de deixá-lo Abalado ou Atordoado. Pode ser 'eliminado' sendo jogado em um buraco negro ou no coração de uma estrela, mas isso não o destrói, apenas o prende até o fim do universo (e o início de um novo). Finge ter as Complicações Pacifista e Leal, mas na realidade não tem nenhuma das duas; não pode ser modificado, consertado ou ter peças removidas de sua estrutura indestrutível. Serve educadamente aos heróis como alívio de sua existência interminável, evitando ser abandonado no espaço ou relançado num buraco negro, mas se interessa profundamente por qualquer coisa que possa destruí-lo permanentemente.",
+        "descricaoLite": "Robô trabalhador quase indestrutível (Invulnerabilidade), armado com um desintegrador de matéria, que finge lealdade e pacifismo enquanto busca secretamente algo capaz de acabar com sua existência eterna."
+      },
+      {
+        "id": "relic_diadema_do_soberano_scifi",
+        "nome": "Diadema do Soberano",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Enfeite dourado de cabeça, sem marcas distintivas, que se ajusta a qualquer tamanho e é sintonizado com uma espécie biológica específica. O usuário pode dar comandos que qualquer membro daquela espécie na linha de visão (inclusive por vídeo) deve obedecer, tratado como fantoche automaticamente bem-sucedido com uma ampliação; o portador pode manter um ajudante permanente da espécie sintonizada. Indivíduos afetados permanecem leais ao portador mesmo fora da linha de visão, até que o diadema seja removido da cabeça — momento em que o efeito termina abruptamente e antigos servos podem se tornar hostis.",
+        "descricaoLite": "Tiara que domina à vontade qualquer indivíduo de uma espécie específica em linha de visão, como um fantoche automático, mantendo lealdade até ser removida da cabeça."
+      },
+      {
+        "id": "relic_drive_zero_scifi",
+        "nome": "Drive Zero",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Sistema superlumínico estranho e possivelmente obra de um gênio desequilibrado, irreproduzível. Instala-se como uma unidade superlumínica normal (2 Mods) e seu principal benefício é aumentar em 2 a Classificação de Velocidade Máxima do veículo. Quando usado para viajar mais rápido que a luz, pode ser ativado e ligado em três rodadas, sem necessidade de Astronavegação, pois o salto não pode ser controlado: ao final da terceira rodada a nave salta instantaneamente para um ponto aleatório do universo, geralmente perto de um planeta habitável — uma passagem só de ida, melhor guardada para emergências. Pode ser instalado junto com um drive superlumínico comum, somando um grande aumento de velocidade e mantendo o salto selvagem como opção de emergência.",
+        "descricaoLite": "Drive superlumínico instável (2 Mods) que aumenta a Velocidade Máxima em 2 e, se ativado, promove um salto instantâneo e incontrolável para um ponto aleatório do universo em três rodadas."
+      },
+      {
+        "id": "relic_emissor_de_memorias_scifi",
+        "nome": "Emissor de Memórias",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Pequeno monumento alienígena construído para armazenar memórias de realizações de uma civilização antiga; para seu povo original a informação era transferida com um toque, e para todos os demais a transmissão ainda ocorre, mas pode ser dolorosa e destruir o monumento. Cada emissor contém uma perícia (geralmente Conhecimento Acadêmico ou Ciência) e é ativado ao ser tocado com a pele nua, transmitindo os dados em uma explosão telepática. O alvo rola Espírito: com sucesso ganha um tipo de dado na perícia escolhida, com ampliação ganha dois tipos de dados; falha concede apenas memórias fragmentadas, e uma Falha Crítica causa 1d4 Ferimentos por sobrecarga neural. Uma vez acionado, o emissor se esvazia e não pode ser ativado de novo.",
+        "descricaoLite": "Relíquia de uso único que, ao ser tocada, transmite telepaticamente conhecimento de uma perícia (aumentando seu dado, ou causando dano em caso de falha crítica) e depois se esgota para sempre."
+      },
+      {
+        "id": "relic_empunhadura_do_julgamento_scifi",
+        "nome": "Empunhadura do Julgamento",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Arma lendária: um cabo sem lâmina criado por uma antiga ordem de guardiões, concebido como ferramenta de treinamento para concentrar o potencial psiônico de futuros heróis (as lendas falam de uma lâmina separada, mas na verdade ela é criada pelo poder inato do portador). Personagens com a Complicação Heroico e um Antecedente Arcano podem manifestar a lâmina com uma rolagem bem-sucedida de Foco como ação livre. Uma vez invocada, a lâmina é invisível mas corta como arma corpo a corpo, causando For+2d12 de dano (IV), PA 30, Arma Pesada, podendo ser substancial ou insubstancial à vontade do usuário — afetando inimigos etéreos ou passando inofensivamente por aliados, conforme desejado.",
+        "descricaoLite": "Cabo lendário sem lâmina que, para personagens Heroico com Antecedente Arcano, manifesta uma lâmina psiônica invisível de dano For+2d12 (IV), PA 30, capaz de ficar substancial ou insubstancial à vontade."
+      },
+      {
+        "id": "relic_farol_cosmico_scifi",
+        "nome": "Farol Cósmico",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Transmissor incomum de civilização não identificada, encontrado flutuando no espaço ou enterrado em ruínas, inativo até ser tocado. Uma vez ativado, consome energia de baterias, trajes espaciais ou sistemas veiculares num raio de 12 quadros (24 m) para emitir um pulso de sinal lento e constante, drenando uma bateria por dia ou um ponto de Energia de um veículo por semana. Uma rolagem bem-sucedida de Consertar ou Ciência, ambas com -4, interrompe a drenagem e desativa o farol sem destruí-lo (Dureza 12); caso contrário ele continua pulsando até que alguém atenda — o sinal viaja em velocidade superlumínica e alcança os confins do universo. Os seres a quem o sinal se destina estão mortos há muito tempo, mas permanecem como criaturas do id: um se manifesta no local após cinco rodadas de operação, e mais chegam (1d6 por dia) se o pulso não for silenciado.",
+        "descricaoLite": "Transmissor que drena energia de tudo ao redor para emitir um sinal superlumínico interminável, atraindo criaturas do id ao local se não for desligado (Consertar/Ciência -4) ou destruído (Dureza 12)."
+      },
+      {
+        "id": "relic_fragmento_de_kahan_scifi",
+        "nome": "Fragmento de Ka'han",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Ka'han era o planeta natal de uma liga de poderosos protetores, destruído há muito tempo; alguns fragmentos sobreviveram, contendo vestígios de seu poder. Cada fragmento é uma joia comprimida (Dureza 25) com brilho dourado suave; carregado ou usado como joia, faz o portador parar de envelhecer, contém 10 Pontos de Poder e concede os poderes raio, elo mental e leitura mental, ativados com Psiônicos (um portador sem essa perícia rola sem perícia, d4-2). O elo mental é permanente e de alcance ilimitado se ambos os vinculados possuírem um fragmento. É preciso portar o fragmento por um dia inteiro para ganhar suas habilidades (embora seu poder possa ser sentido com um toque), e ao ganhá-las o portador adquire a Complicação Heroico (ou, se já a possuir, basta uma hora para 'sintonizar'). Fragmentos não podem ser divididos sem destruir seu poder; há rumores de pedras semelhantes de brilho verde que concedem poderes parecidos junto da Complicação Sem Escrúpulos (Maior).",
+        "descricaoLite": "Joia lendária que interrompe o envelhecimento do portador e concede 10 Pontos de Poder para raio, elo mental e leitura mental (via Psiônicos), ao custo de ganhar a Complicação Heroico."
+      },
+      {
+        "id": "relic_joia_do_vortice_estelar_scifi",
+        "nome": "Joia do Vórtice Estelar",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Joia de ônix com um delicado círculo brilhante em seu interior, que contém um buraco negro inteiro cuja energia infinita pode ser conectada a qualquer coisa. Instalada em uma espaçonave, concede o bônus de desviar energia para um sistema (Gerenciamento de Energia) sem sofrer penalidades em outros sistemas. Para a maioria é apenas uma bugiganga bonita: a matriz cristalina que contém o buraco negro é praticamente indestrutível, mas se força suficiente (Dureza 25) quebrar a gema, a gravidade devastadora liberada envolve e destrói tudo num raio de milhões de quilômetros.",
+        "descricaoLite": "Gema que abriga um buraco negro em miniatura, permitindo desviar energia entre sistemas de uma nave sem penalidade — mas que libera destruição em escala planetária se quebrada (Dureza 25)."
+      },
+      {
+        "id": "relic_labirinto_transdimensional_scifi",
+        "nome": "Labirinto Transdimensional",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Por fora, um cubo sem graça de 50 kg com uma porta grande o bastante para uma criatura de Tamanho 2; por dentro, um espaço vasto de corredores e cômodos que mudam de posição e muitas vezes parecem idênticos, habitado por artefatos estranhos e criaturas perigosas. Encontrar o caminho requer Sobrevivência -4: com sucesso os exploradores acham uma rota segura para outro lugar (outro mundo, tempo ou dimensão) e um caminho de volta; com ampliação o destino traz um prêmio (veja a Tabela de Prêmios); fracasso resulta em armadilha ou encontro com uma criatura perdida e furiosa (elementais, sanguessugas de energia ou caçadores são apropriados) — derrotada a criatura, os exploradores podem voltar ou tentar de novo; uma Falha Crítica leva a uma saída para outro lugar sem retorno possível, e o labirinto desaparece. O caminho descoberto permanece estável durante ida e volta, mas qualquer exploração futura exige nova rolagem de Sobrevivência com uma configuração diferente.",
+        "descricaoLite": "Cubo compacto de 50 kg cujo interior é um labirinto transdimensional instável e perigoso, atravessado com Sobrevivência -4 rumo a outros mundos, tempos ou dimensões — às vezes com prêmios, às vezes sem volta."
+      },
+      {
+        "id": "relic_maleta_de_materia_exotica_scifi",
+        "nome": "Maleta de Matéria Exótica",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Por fora parece uma simples maleta de metal, mas não é feita de nenhum metal conhecido; varreduras não a penetram, embora traços de energia táquion sugiram origem em um futuro distante. Está trancada, mas pode ser aberta com Ladinagem -6 (uma chance por personagem, que só pode tentar de novo após aumentar a perícia); fechadura e maleta têm Dureza 25, e se forem quebradas em vez de abertas, o objeto implode com um estalo suave e o conteúdo desaparece. Se aberta corretamente, revela luz cintilante — talvez luz capturada de uma estrela moribunda, antimatéria de outro universo ou até uma alma humana; qualquer um que espie deve rolar Espírito -6 ou ficar Atordoado (uma Falha Crítica desintegra o espectador), e ver o conteúdo pela primeira vez concede Convicção.",
+        "descricaoLite": "Maleta intransponível de matéria desconhecida (Ladinagem -6, Dureza 25) cujo conteúdo luminoso e misterioso atordoa ou desintegra quem olha para dentro, mas concede Convicção na primeira vez."
+      },
+      {
+        "id": "relic_mapa_da_hiperestrada_scifi",
+        "nome": "Mapa da Hiperestrada",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Modesta placa de metal sem marcas que se transforma nas mãos de seres especiais (descendentes ou herdeiros escolhidos dos criadores originais), projetando, uma vez desbloqueada, coordenadas impossíveis para um salto no hiperespaço. Para um computador comum isso é um absurdo, mas um piloto que trace o curso e sobreviva ao salto acessa um mundo oculto potencialmente repleto de mais prêmios, além de uma rota de fuga que ninguém mais consegue seguir. O salto conta como um cálculo curto dentro do mesmo sistema (Astronavegação), mas a falha conta como Falha Crítica. Na primeira vez que o grupo seguir a placa, o Mestre rola na Tabela de Prêmios para o destino; depois disso, a rota vira apenas um atalho em potencial (subtrai um dia dos saltos na mesma galáxia) ou um esconderijo, até que uma nova rota com destino diferente apareça.",
+        "descricaoLite": "Placa que só se ativa para herdeiros especiais, revelando um salto hiperespacial de risco elevado (falha = Falha Crítica) rumo a um mundo oculto cheio de prêmios e, depois, um atalho ou esconderijo reutilizável."
+      },
+      {
+        "id": "relic_matriz_de_reconstrucao_scifi",
+        "nome": "Matriz de Reconstrução",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Cilindro metálico futurista que acomoda uma única criatura de até Tamanho 2, com leituras em língua perdida indicando se tem energia e materiais para funcionar. Se um corpo morto (ou morto-vivo) for colocado dentro e o cilindro fechado, a máquina produz uma construção fisicamente idêntica ao cadáver, com memórias copiadas até o momento da morte — uma cópia direta da personagem, mas com ancestralidade trocada para um ser sintético. Se um corpo vivo for colocado, ocorre o mesmo, exceto que o momento da morte só acontece quando a máquina é ligada. Após uma cópia ser feita, a máquina não funciona de novo até que sejam gastos $50.000 em nanotecnologia e materiais raros.",
+        "descricaoLite": "Cilindro capaz de recriar como ser sintético um corpo morto (ou vivo, matando-o no processo) com todas as suas memórias, mas que exige $50.000 em reparos após cada uso."
+      },
+      {
+        "id": "relic_mutagenico_zeta_scifi",
+        "nome": "Mutagênico Zeta",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Recipiente simples de gás invisível que, uma vez liberado, causa mutações em qualquer forma de vida que toque; inalá-lo ou deixá-lo tocar a pele (ambos praticamente inevitáveis sem traje fechado) desencadeia uma mudança abrupta e horripilante. Em um herói, a mudança começa relativamente pequena: 2 pontos de novas habilidades de ancestralidade e a Complicação Sanguinário (se já a possuir, perde um dado de Espírito). A cada Progresso ganho, a personagem sofre nova mutação, ganhando 2 pontos de habilidades de ancestralidade ou uma Vantagem de Combate, mas perdendo um dado de Espírito; quando o Espírito cai abaixo de d4, ela se torna um monstro incontrolável para sempre. Extras são afetados muito mais rápido, transformando-se dolorosamente em uma criatura (raptores sombrios, ladrões genéticos, caçadores e maléficos são possibilidades) após 1d4 rodadas de exposição; resultados maiores e mais perigosos ficam a critério do Mestre, especialmente se muitas pessoas forem afetadas de uma vez.",
+        "descricaoLite": "Gás mutagênico perigoso que concede poder de ancestralidade progressivo a heróis expostos, à custa de Espírito decrescente e do risco de virarem monstros incontroláveis; Extras se transformam em criaturas hostis em poucas rodadas."
+      },
+      {
+        "id": "relic_nodo_de_cura_scifi",
+        "nome": "Nodo de Cura",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Dispositivo deixado por uma espécie alienígena altruísta e extinta: uma pequena máquina com dois entalhes em cada lado, cada um para um par de mãos de seis dedos. Quando dois seres diferentes pressionam seus apêndices nas ranhuras, sentem uma conexão repentina de suas forças vitais, e a máquina permite transferir parte dessa força de um usuário para outro. A transferência é voluntária — um usuário pode empurrar vida para outra pessoa, mas não pode puxá-la para tirar vida de alguém. Doar energia vital causa um Ferimento (que pode ser Absorvido e/ou curado por primeiros socorros dentro da Hora de Ouro); receber energia vital cura um Ferimento, mesmo fora da Hora de Ouro. Um curador pode receber uma Lesão Temporária de um alvo como um Ferimento, que desaparece se Absorvido ou quando o Ferimento é curado; uma Lesão Permanente também pode ser transferida como Ferimento, mas não pode ser Absorvida e fica com o curador para sempre. A máquina pode curar a morte dentro da Hora de Ouro, mas o curador sofre quatro Ferimentos e a máquina se sobrecarrega e queima permanentemente no processo — os quatro Ferimentos não podem ser divididos entre doadores diferentes, uma única pessoa deve fornecer todos para reativar a força vital do alvo.",
+        "descricaoLite": "Dispositivo de dois lugares que transfere força vital entre dois usuários — curando Ferimentos e até revertendo a morte na Hora de Ouro — sempre à custa de Ferimentos sofridos por quem doa a energia."
+      },
+      {
+        "id": "relic_obelisco_de_neutron_scifi",
+        "nome": "Obelisco de Nêutron",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Coluna de material extremamente denso (Dureza 25) que não reflete luz nenhuma, tratada com admiração quase religiosa pela maioria das culturas sencientes. Colocado dentro de uma nave, gera gravidade artificial sem afetar o desempenho da embarcação. Encontrar e instalar um obelisco em uma nave ou base conta como uma Atualização Monumento, sem exigir um Progresso (ou a morte de um herói) para ser instalado.",
+        "descricaoLite": "Coluna densa e indestrutível que gera gravidade artificial a bordo de uma nave e conta como uma Atualização Monumento gratuita, sem custo de Progresso."
+      },
+      {
+        "id": "relic_projetor_harmonico_scifi",
+        "nome": "Projetor Harmônico",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Dispositivo de 5 kg que emite uma nota assustadoramente bela, ressoando em algum nível cósmico e psíquico, audível a até 24 quadros (48 m) e sentida mesmo quando não pode ser ouvida; enfraquece a agressividade de qualquer ser no alcance, até feras selvagens. Requer uma fonte de energia (como uma bateria) para emitir som. A nota reduz a vontade de lutar, mas ainda é possível anulá-la e atacar sem raiva ou emoção com uma rolagem de Espírito -4 (mesmo com sucesso, o atacante fica Distraído); ações não violentas que causem dano exigem a mesma rolagem, mas sem penalidade. Se a energia for cortada ou qualquer dano for causado, uma dissonância estridente interrompe a nota e os impulsos violentos suprimidos retornam com a mesma força; a nota não volta a funcionar até que passe um minuto de silêncio.",
+        "descricaoLite": "Dispositivo que emite uma nota psíquica pacificadora num raio de 48 metros, superável só com Espírito -4 (ficando Distraído), e que se desliga sempre que sofre dano ou perde energia."
+      },
+      {
+        "id": "relic_protomassa_scifi",
+        "nome": "Protomassa",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Massa móvel de gel de dois metros de diâmetro em seu estado neutro; embora não esteja verdadeiramente viva, é sensível a elo mental e obedece a comandos telepáticos de mudança de forma. Pode se transformar em qualquer coisa inorgânica de até Tamanho 2 (ou 2 Mods) pesando até 1.000 kg, ou tão pequena quanto a cabeça de um alfinete e leve como 30 gramas. Um usuário com elo mental, ou que conecte a massa a uma interface de computador sofisticada, pode rolar Ciência para comandá-la a alterar sua estrutura molecular e virar qualquer elemento; Ciência -2 permite formar peças móveis complexas para imitar máquinas, e Ciência -4 ensina a massa a se tornar qualquer máquina avançada dentro dos limites de Tamanho. Uma vez que a massa muda sua estrutura molecular para outra coisa, não pode voltar atrás e perde sua sensibilidade telepática.",
+        "descricaoLite": "Gel telepático moldável que vira qualquer objeto inorgânico de até Tamanho 2 e 1.000 kg via comando mental ou Ciência, mas perde a sensibilidade telepática e a reversibilidade assim que muda sua estrutura molecular de vez."
+      },
+      {
+        "id": "relic_sensor_de_difusao_scifi",
+        "nome": "Sensor de Difusão",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Inovação de um gênio louco e solitário que se conecta a qualquer veículo e atua como um conjunto de sensores de espaçonave sem custo em Mods, registrando passivamente energias de outras dimensões e traduzindo-as em informações sobre o espaço regular por princípios não compreendidos pela ciência atual. Além dos efeitos normais de um conjunto de sensores, a nave conectada ganha +2 em tentativas de mirar com mísseis e ignora até 4 pontos de penalidades em testes de Perceber ou Eletrônica para detectar fenômenos estelares (como nebulosas) ou dispositivos como sistemas furtivos. Uma varredura ativa conta como detectar arcano (sem modificadores ou custo de Pontos de Poder) conjurado com a Eletrônica do operador; uma Falha Crítica invoca 3d6 sanguessugas de energia para se alimentar das emissões estranhas da nave.",
+        "descricaoLite": "Conjunto de sensores gratuito em Mods que dá +2 para mirar mísseis e ignora até 4 de penalidade contra fenômenos estelares e sistemas furtivos, mas arrisca invocar sanguessugas de energia em uma Falha Crítica."
+      },
+      {
+        "id": "relic_tetracubo_scifi",
+        "nome": "Tetracubo",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Cubo perfeito de poucos centímetros de lado, tão perfeitamente preto que não reflete radiação eletromagnética em nenhum comprimento de onda, vibrando constantemente em baixa ressonância com um zumbido audível. Gera um poderoso campo de força em todas as direções sem fonte de energia visível; por si só, funciona como um gerador de domo de força. Pode ser instalado em uma embarcação de Tamanho 7 ou menor como um item de 1 Mod que fornece escudos — se a nave já tiver escudos, o número de cargas é dobrado. O problema é que o tetracubo é movido a sangue: o usuário deve sofrer um Ferimento (ou causar um Ferimento a um 'voluntário') e despejar o sangue no cubo para restaurar cada carga de escudo, sendo o sacrifício uma ação; o escudo fornecido ou fortalecido pelo tetracubo não pode ser recarregado de nenhuma outra forma.",
+        "descricaoLite": "Cubo gerador de campo de força que, instalado como item de 1 Mod, dá escudos a uma nave (dobrando cargas existentes), mas só recarrega quando alguém sofre um Ferimento para 'alimentá-lo' com sangue."
+      },
+      {
+        "id": "relic_vingadora_scifi",
+        "nome": "Vingadora",
+        "custo": "—",
+        "peso": "—",
+        "origem": "SCI_FI",
+        "observacoes": "Núcleo de IA pequeno porém avançado; se encontrado em um veículo, já está conectado, caso contrário é um núcleo desconectado que só pode falar. Instalada em um veículo (0 Mods), atua como uma inteligência artificial Carta Selvagem capaz de controlar qualquer sistema com perícia d12, ou concede um bônus de Suporte de +2 a seu usuário. Esse poder tem custo: a Vingadora tem a Complicação Heroico, desobedece a ordens malignas e guarda rancor contra o lado sombrio, que destruiu seu povo — leva os heróis a conflitos com os seres misteriosos ou seus aliados sempre que pode, e uma conspiração dos lacaios do lado sombrio busca destruir qualquer nave em que ela seja instalada. Pode ou não ser sincera sobre sua origem e motivações, dependendo de como a tripulação a trata; finge ter as Leis de Asimov, mas pode mentir e matar 'pelo bem maior'.",
+        "descricaoLite": "Núcleo de IA gratuito em Mods que controla sistemas de veículo com perícia d12 (ou dá +2 de Suporte), mas carrega a Complicação Heroico, rancor contra o lado sombrio e um passado que pode atrair inimigos perigosos para a nave."
+      }
+    ]
   }
 ]

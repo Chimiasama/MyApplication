@@ -199,47 +199,63 @@ sistema de **construção de robô** (companheiro/propriedade compráveis pelo
 personagem, mesmo molde de Mechas/Veículos) que **não tem catálogo dedicado no app**
 — não há `scifi_robos.json` equivalente a `scifi_mechas.json`.
 
-- **Construção de Robôs** (Estruturas Tam. -4 a 3 + Mods: Qualidades Negativas, Sistemas Centrais, Sistemas Defensivos, Locomoção, Sistemas Ofensivos) — id sugerido: `scifi_robo_construcao` — [FALTA] — l.~8953-9282
-- **ROBÔ DIPLOMATA** — id sugerido: `robo_padrao_diplomata` — [FALTA] — l.~9296
-- **ROBÔ ENGENHEIRO** — id sugerido: `robo_padrao_engenheiro` — [FALTA] — l.~9316
-- **ROBÔ DE GUERRA** — id sugerido: `robo_padrao_guerra` — [FALTA] — l.~9345
-- **ROBÔ MÉDICO** — id sugerido: `robo_padrao_medico` — [FALTA] — l.~9373
-- **ROBÔ DE PRAZER** — id sugerido: `robo_padrao_prazer` — [FALTA] — l.~9389
-- **ROBÔ SENTINELA** — id sugerido: `robo_padrao_sentinela` — [FALTA] — l.~9415
-- **ROBÔ TRABALHADOR** — id sugerido: `robo_padrao_trabalhador` — [FALTA] — l.~9457
+**[FORA DE ESCOPO — decisão registrada em 2026-08-31]** Os 7 "Robôs Padrão" abaixo
+são blocos de estatística completos (Atributos, Perícias, Movimentação/Aparar/
+Resistência, Complicações, Vantagens, Habilidades Especiais) para um robô
+**contratável como aliado/propriedade**, não uma opção de build do próprio
+personagem — mesma categoria de conteúdo que bestiário, fora do escopo do app.
+"Construção de Robôs" é o sistema de montagem (Estruturas + dezenas de Mods com
+custo em pontos) por trás deles, equivalente a "criação de item" — também fora de
+escopo. Nenhum dos dois foi implementado.
+
+- **Construção de Robôs** (Estruturas Tam. -4 a 3 + Mods: Qualidades Negativas, Sistemas Centrais, Sistemas Defensivos, Locomoção, Sistemas Ofensivos) — [FORA DE ESCOPO] — sistema de montagem, não catálogo de personagem — l.~8953-9282
+- **ROBÔ DIPLOMATA** — [FORA DE ESCOPO] — bloco de stats de aliado contratável — l.~9296
+- **ROBÔ ENGENHEIRO** — [FORA DE ESCOPO] — bloco de stats de aliado contratável — l.~9316
+- **ROBÔ DE GUERRA** — [FORA DE ESCOPO] — bloco de stats de aliado contratável — l.~9345
+- **ROBÔ MÉDICO** — [FORA DE ESCOPO] — bloco de stats de aliado contratável — l.~9373
+- **ROBÔ DE PRAZER** — [FORA DE ESCOPO] — bloco de stats de aliado contratável — l.~9389
+- **ROBÔ SENTINELA** — [FORA DE ESCOPO] — bloco de stats de aliado contratável — l.~9415
+- **ROBÔ TRABALHADOR** — [FORA DE ESCOPO] — bloco de stats de aliado contratável — l.~9457
 
 ## Veículos (Capítulo 8, l.~11175-12035)
 
 O app cobre veículos genéricos do Savage Worlds básico reaproveitados no cenário
 sci-fi (`Veículos/Terrestres Civis`, `Militares (WWII)`, `Militares Modernos e Sci-Fi`,
-`Aeronaves`, `Embarcações` — 47 itens), **mas não os 20 veículos prontos exclusivos
-deste Compêndio**, que usam o formato de ficha Tamanho/Manobrabilidade/Velocidade
-Máx./Resistência/Ferimentos/Tripulação/Energia/Mods introduzido no capítulo. O
-sistema de construção (Qualidades Negativas, Sistemas Centrais/Defensivos,
-Locomoção e Energia, Sistemas Ofensivos, Pessoal, Estrutura) também não tem
-catálogo dedicado.
+`Aeronaves`, `Embarcações` — 47 itens). **[OK — resolvido em 2026-08-31]** Os 21
+veículos prontos exclusivos deste Compêndio (20 listados abaixo mais um
+"Submarino de Ataque" achado ao conferir o texto completo, que não constava desta
+lista original) foram adicionados em `app/src/main/assets/equipamentos.json`,
+categoria `Veículos / Customizados (Sci-Fi)`, tag `SCI_FI`. Campos
+Tamanho/Manobrabilidade/Velocidade Máx./Resistência/Tripulação mapeados para os
+campos estruturados já existentes em `EquipamentoItem`; Ferimentos/Energia/Mods/
+Locomoção/Armas (sem campo estruturado próprio) ficaram em `observacoes` como
+texto. **O sistema de construção (Qualidades Negativas, Sistemas Centrais/
+Defensivos, Locomoção e Energia, Sistemas Ofensivos) continua fora de escopo** —
+é montagem por Mods com custo em pontos, equivalente a "criação de item", mesma
+decisão dos Robôs acima.
 
-- **Sistema de Veículos Customizados** (Estruturas + Mods) — id sugerido: `scifi_veiculo_construcao` — [FALTA] — l.~11316-12002
-- **MOTO FLUTUANTE** (Classe I) — id sugerido: `veiculo_moto_flutuante` — [FALTA] — l.~11711
-- **ROVER DE EXPLORAÇÃO** (Classe I) — id sugerido: `veiculo_rover_exploracao` — [FALTA] — l.~11718
-- **LIMUSINE FLUTUANTE** (Classe I) — id sugerido: `veiculo_limusine_flutuante` — [FALTA] — l.~11726
-- **CAMINHÃO FLUTUANTE** (Classe I) — id sugerido: `veiculo_caminhao_flutuante` — [FALTA] — l.~11732
-- **RASTEJADOR DE EXPLORAÇÃO** (Classe II) — id sugerido: `veiculo_rastejador_exploracao` — [FALTA] — l.~11738
-- **MINISSUBMARINO** (Classe I) — id sugerido: `veiculo_minissubmarino_scifi` — [FALTA] — l.~11749
-- **CARRO ESPORTIVO DE DECOLAGEM E POUSO VERTICAIS** (Classe I) — id sugerido: `veiculo_carro_esportivo_vtol` — [FALTA] — l.~11757
-- **MOTO FLUTUANTE DE COMBATE** (Classe I) — id sugerido: `veiculo_moto_flutuante_combate` — [FALTA] — l.~11768
-- **ESQUIFE FLUTUANTE** (Classe I) — id sugerido: `veiculo_esquife_flutuante` — [FALTA] — l.~11780
-- **JIPE FLUTUANTE** (Classe II) — id sugerido: `veiculo_jipe_flutuante` — [FALTA] — l.~11791
-- **BLINDADO** (Classe II) — id sugerido: `veiculo_blindado_scifi` — [FALTA] — l.~11802
-- **TANQUE FLUTUANTE** (Classe III) — id sugerido: `veiculo_tanque_flutuante` — [FALTA] — l.~11814
-- **TANQUE DE COMBATE** (Classe IV) — id sugerido: `veiculo_tanque_combate` — [FALTA] — l.~11827
-- **BARCO DE PATRULHA** (Classe II) — id sugerido: `veiculo_barco_patrulha_scifi` — [FALTA] — l.~11842
-- **DESTRÓIER NAVAL** (Classe VI) — id sugerido: `veiculo_destroier_naval` — [FALTA] — l.~11852
-- **ENCOURAÇADO** (Classe VII) — id sugerido: `veiculo_encouracado` — [FALTA] — l.~11885
-- **TRANSPORTADOR LEVE** (Classe IV) — id sugerido: `veiculo_transportador_leve` — [FALTA] — l.~11901
-- **AERONAVE DE PATRULHA DE DECOLAGEM VERTICAL** (Classe II) — id sugerido: `veiculo_aeronave_patrulha_vtol` — [FALTA] — l.~11914
-- **ATAQUE RÁPIDO DE DECOLAGEM VERTICAL** (Classe II) — id sugerido: `veiculo_ataque_rapido_vtol` — [FALTA] — l.~11946
-- **CAÇA FURTIVO ATMOSFÉRICO** (Classe I) — id sugerido: `veiculo_caca_furtivo_atmosferico` — [FALTA] — l.~11961
+- **Sistema de Veículos Customizados** (Estruturas + Mods) — [FORA DE ESCOPO] — sistema de montagem, não catálogo de personagem — l.~11316-12002
+- **MOTO FLUTUANTE** (Classe I) — id: `veiculo_moto_flutuante_scifi` — [OK] — l.~11711
+- **ROVER DE EXPLORAÇÃO** (Classe I) — id: `veiculo_rover_de_exploracao_scifi` — [OK] — l.~11718
+- **LIMUSINE FLUTUANTE** (Classe I) — id: `veiculo_limusine_flutuante_scifi` — [OK] — l.~11726
+- **CAMINHÃO FLUTUANTE** (Classe I) — id: `veiculo_caminhao_flutuante_scifi` — [OK] — l.~11732
+- **RASTEJADOR DE EXPLORAÇÃO** (Classe II) — id: `veiculo_rastejador_de_exploracao_scifi` — [OK] — l.~11738
+- **MINISSUBMARINO** (Classe I) — id: `veiculo_minissubmarino_scifi` — [OK] — l.~11749
+- **CARRO ESPORTIVO DE DECOLAGEM E POUSO VERTICAIS** (Classe I) — id: `veiculo_carro_esportivo_decolagem_pouso_verticais_scifi` — [OK] — l.~11757
+- **MOTO FLUTUANTE DE COMBATE** (Classe I) — id: `veiculo_moto_flutuante_de_combate_scifi` — [OK] — l.~11768
+- **ESQUIFE FLUTUANTE** (Classe I) — id: `veiculo_esquife_flutuante_scifi` — [OK] — l.~11780
+- **JIPE FLUTUANTE** (Classe II) — id: `veiculo_jipe_flutuante_scifi` — [OK] — l.~11791
+- **BLINDADO** (Classe II) — id: `veiculo_blindado_scifi` — [OK] — l.~11802
+- **TANQUE FLUTUANTE** (Classe III) — id: `veiculo_tanque_flutuante_scifi` — [OK] — l.~11814
+- **TANQUE DE COMBATE** (Classe IV) — id: `veiculo_tanque_de_combate_scifi` — [OK] — l.~11827
+- **BARCO DE PATRULHA** (Classe II) — id: `veiculo_barco_de_patrulha_scifi` — [OK] — l.~11842
+- **DESTRÓIER NAVAL** (Classe VI) — id: `veiculo_destroier_naval_scifi` — [OK] — l.~11852
+- **SUBMARINO DE ATAQUE** (Classe IV) — id: `veiculo_submarino_de_ataque_scifi` — [OK] — achado extra, não constava na varredura original — l.~11870 (aprox.)
+- **ENCOURAÇADO** (Classe VII) — id: `veiculo_encouracado_scifi` — [OK] — l.~11885
+- **TRANSPORTADOR LEVE** (Classe IV) — id: `veiculo_transportador_leve_scifi` — [OK] — l.~11901
+- **AERONAVE DE PATRULHA DE DECOLAGEM VERTICAL** (Classe II) — id: `veiculo_aeronave_de_patrulha_decolagem_vertical_scifi` — [OK] — l.~11914
+- **ATAQUE RÁPIDO DE DECOLAGEM VERTICAL** (Classe II) — id: `veiculo_ataque_rapido_decolagem_vertical_scifi` — [OK] — l.~11946
+- **CAÇA FURTIVO ATMOSFÉRICO** (Classe I) — id: `veiculo_caca_furtivo_atmosferico_scifi` — [OK] — l.~11961
 
 ## Mechas (Capítulo 9, l.~12035-12819)
 
@@ -274,39 +290,47 @@ qualquer filtro de "poderes disponíveis no livro Sci-Fi" que dependa só do cam
 
 ## Artefatos / Relíquias (Capítulo 12, l.~14839-15750)
 
-**Gap confirmado — não é um subconjunto genérico, é conteúdo ausente.** A entrada
-"Itens Especiais/Relíquias e Artefatos" já existente em `equipamentos.json` (7 itens:
-Cinzas de Ashur, Estátua da Fera, Ícone da Ruína, Matadora de Titãs, A Muralha,
-Tambores de Oon) está marcada `livros: ["FANTASIA"]` e pertence ao Compêndio de
-Fantasia — nenhuma das 24 relíquias nomeadas deste Compêndio de Ficção Científica
-está no app.
+**[OK — resolvido em 2026-08-31].** A entrada "Itens Especiais/Relíquias e
+Artefatos" já existente em `equipamentos.json` (7 itens: Cinzas de Ashur, Estátua
+da Fera, Ícone da Ruína, Matadora de Titãs, A Muralha, Tambores de Oon) continua
+`livros: ["FANTASIA"]` e pertence ao Compêndio de Fantasia — as relíquias deste
+Compêndio de Ficção Científica foram adicionadas como uma categoria SEPARADA,
+mesmo `tipo`/`subtipo`, tag `livros: ["SCI_FI"]` (o formato do catálogo já suporta
+a mesma categoria aparecer mais de uma vez com tags de livro diferentes). Total: 1
+item de regras (`reliquias_e_artefatos_scifi_regras`, explica que relíquias só
+aparecem como prêmio de aventura via Tabela de Prêmios/Tabela de Relíquias/Tabela
+de Relíquias Apex — as 3 tabelas viraram texto dentro deste item, não catálogo à
+parte) + 25 relíquias nomeadas (19 da Tabela de Relíquias d20 + 6 da Tabela de
+Relíquias Apex d6 — 1 a mais do que os 24 desta lista original: "Fragmento de
+Ka'han", que não tinha sido catalogado na varredura inicial).
 
-- **Tabela de Prêmios** (Saque/Salvamento/Tesouro/Resgate de um Rei/Relíquia/Grande Prêmio por carta) — id sugerido: `scifi_tabela_premios` — [FALTA] — l.~14869
-- **Tabela de Relíquias (d20) e Relíquias Apex (d6)** — [FALTA] — l.~14952, l.~14975
-- **ADAPTADOR DE BURACO DE MINHOCA** — id sugerido: `relic_adaptador_buraco_minhoca` — [FALTA] — l.~14924
-- **AMPLIFICADOR DE COMBATE** — id sugerido: `relic_amplificador_combate` — [FALTA] — l.~14944
-- **ANIQUILADOR UNIVERSAL** — id sugerido: `relic_aniquilador_universal` — [FALTA] — l.~14996
-- **CIDADE FRACTAL** — id sugerido: `relic_cidade_fractal` — [FALTA] — l.~15058
-- **CONCHA CANÓPICA** — id sugerido: `relic_concha_canopica` — [FALTA] — l.~15094
-- **CONSTRUTO ALFA** — id sugerido: `relic_construto_alfa` — [FALTA] — l.~15121
-- **DIADEMA DO SOBERANO** — id sugerido: `relic_diadema_soberano` — [FALTA] — l.~15159
-- **DRIVE ZERO** — id sugerido: `relic_drive_zero` — [FALTA] — l.~15179
-- **EMISSOR DE MEMÓRIAS** — id sugerido: `relic_emissor_memorias` — [FALTA] — l.~15207
-- **EMPUNHADURA DO JULGAMENTO** — id sugerido: `relic_empunhadura_julgamento` — [FALTA] — l.~15233
-- **FAROL CÓSMICO** — id sugerido: `relic_farol_cosmico` — [FALTA] — l.~15258
-- **JOIA DO VÓRTICE ESTELAR** — id sugerido: `relic_joia_vortice_estelar` — [FALTA] — l.~15324
-- **LABIRINTO TRANSDIMENSIONAL** — id sugerido: `relic_labirinto_transdimensional` — [FALTA] — l.~15345
-- **MALETA DE MATÉRIA EXÓTICA** — id sugerido: `relic_maleta_materia_exotica` — [FALTA] — l.~15385
-- **MAPA DA HIPERESTRADA** — id sugerido: `relic_mapa_hiperestrada` — [FALTA] — l.~15413
-- **MATRIZ DE RECONSTRUÇÃO** — id sugerido: `relic_matriz_reconstrucao` — [FALTA] — l.~15437
-- **MUTAGÊNICO ZETA** — id sugerido: `relic_mutagenico_zeta` — [FALTA] — l.~15464
-- **NODO DE CURA** — id sugerido: `relic_nodo_cura` — [FALTA] — l.~15499
-- **OBELISCO DE NÊUTRON** — id sugerido: `relic_obelisco_neutron` — [FALTA] — l.~15535
-- **PROJETOR HARMÔNICO** — id sugerido: `relic_projetor_harmonico` — [FALTA] — l.~15549
-- **PROTOMASSA** — id sugerido: `relic_protomassa` — [FALTA] — l.~15578
-- **SENSOR DE DIFUSÃO** — id sugerido: `relic_sensor_difusao` — [FALTA] — l.~15605
-- **TETRACUBO** — id sugerido: `relic_tetracubo` — [FALTA] — l.~15631
-- **VINGADORA** — id sugerido: `relic_vingadora` — [FALTA] — l.~15657
+- **Tabela de Prêmios** (Saque/Salvamento/Tesouro/Resgate de um Rei/Relíquia/Grande Prêmio por carta) — [OK] — texto incorporado ao item de regras — l.~14869
+- **Tabela de Relíquias (d20) e Relíquias Apex (d6)** — [OK] — texto incorporado ao item de regras — l.~14952, l.~14975
+- **ADAPTADOR DE BURACO DE MINHOCA** — id: `relic_adaptador_buraco_minhoca_scifi` — [OK] — l.~14924
+- **AMPLIFICADOR DE COMBATE** — id: `relic_amplificador_de_combate_scifi` — [OK] — l.~14944
+- **ANIQUILADOR UNIVERSAL** — id: `relic_aniquilador_universal_scifi` — [OK] — l.~14996
+- **CIDADE FRACTAL** — id: `relic_cidade_fractal_scifi` — [OK] — l.~15058
+- **CONCHA CANÓPICA** — id: `relic_concha_canopica_scifi` — [OK] — l.~15094
+- **CONSTRUTO ALFA** — id: `relic_construto_alfa_scifi` — [OK] — l.~15121
+- **DIADEMA DO SOBERANO** — id: `relic_diadema_do_soberano_scifi` — [OK] — l.~15159
+- **DRIVE ZERO** — id: `relic_drive_zero_scifi` — [OK] — l.~15179
+- **EMISSOR DE MEMÓRIAS** — id: `relic_emissor_de_memorias_scifi` — [OK] — l.~15207
+- **EMPUNHADURA DO JULGAMENTO** — id: `relic_empunhadura_do_julgamento_scifi` — [OK] — l.~15233
+- **FAROL CÓSMICO** — id: `relic_farol_cosmico_scifi` — [OK] — l.~15258
+- **FRAGMENTO DE KA'HAN** — id: `relic_fragmento_de_kahan_scifi` — [OK] — achado extra (Tabela Apex), não constava na varredura original — l.~15275 (aprox.)
+- **JOIA DO VÓRTICE ESTELAR** — id: `relic_joia_do_vortice_estelar_scifi` — [OK] — l.~15324
+- **LABIRINTO TRANSDIMENSIONAL** — id: `relic_labirinto_transdimensional_scifi` — [OK] — l.~15345
+- **MALETA DE MATÉRIA EXÓTICA** — id: `relic_maleta_de_materia_exotica_scifi` — [OK] — l.~15385
+- **MAPA DA HIPERESTRADA** — id: `relic_mapa_da_hiperestrada_scifi` — [OK] — l.~15413
+- **MATRIZ DE RECONSTRUÇÃO** — id: `relic_matriz_de_reconstrucao_scifi` — [OK] — l.~15437
+- **MUTAGÊNICO ZETA** — id: `relic_mutagenico_zeta_scifi` — [OK] — l.~15464
+- **NODO DE CURA** — id: `relic_nodo_de_cura_scifi` — [OK] — l.~15499
+- **OBELISCO DE NÊUTRON** — id: `relic_obelisco_de_neutron_scifi` — [OK] — l.~15535
+- **PROJETOR HARMÔNICO** — id: `relic_projetor_harmonico_scifi` — [OK] — l.~15549
+- **PROTOMASSA** — id: `relic_protomassa_scifi` — [OK] — l.~15578
+- **SENSOR DE DIFUSÃO** — id: `relic_sensor_de_difusao_scifi` — [OK] — l.~15605
+- **TETRACUBO** — id: `relic_tetracubo_scifi` — [OK] — l.~15631
+- **VINGADORA** — id: `relic_vingadora_scifi` — [OK] — l.~15657
 
 ## Fora de escopo
 
@@ -316,10 +340,10 @@ está no app.
   que viram Complicações (ex. Dependência Atmosférica) já foram capturados acima.
 - **Capítulo 2 — Postos Avançados** (l.~4185-4897, dentro do capítulo de Equipamento):
   construção de base/posto avançado — sistema de Mestre.
-- **Capítulo 6 — "Robôs Padrão"** (7 templates, listados acima como [FALTA] por via
-  das dúvidas): são robôs prontos para contratar/comprar como PNJ/companheiro, mais
-  perto de um "catálogo de aliados" do que de uma opção de ficha — prioridade baixa
-  se implementados.
+- **Capítulo 6 — "Robôs Padrão"** (7 templates, marcados acima como [FORA DE ESCOPO]):
+  são robôs prontos para contratar/comprar como PNJ/companheiro, mais perto de um
+  "catálogo de aliados" do que de uma opção de ficha — decisão registrada em
+  2026-08-31, não implementados.
 - **Capítulo 7 — Espaçonaves** (l.9536-11175): sistema de nave em escala de campanha
   (Perfil Padrão, Combate, Perseguições/Dogfight, Colisões, Astronavegação, Viagem
   Superlumínica, Escâneres, além do catálogo "Embarcações Civis/Militares", que usa

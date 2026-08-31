@@ -113,7 +113,7 @@ existe mas precisa validação linha a linha):
 |---|---|--:|--:|--:|
 | `BASICO` | [`book_index/basico.md`](reports/book_index/basico.md) | 319 | 1 | 4 |
 | `FANTASIA` | [`book_index/fantasia.md`](reports/book_index/fantasia.md) | 158 | 1 | 7 |
-| `SCIFI` | [`book_index/scifi.md`](reports/book_index/scifi.md) | 122 | **57** | 9 |
+| `SCIFI` | [`book_index/scifi.md`](reports/book_index/scifi.md) | 169 | 0 | 9 |
 | `HORROR` | [`book_index/horror.md`](reports/book_index/horror.md) | 179 | 7 | 3 |
 | `SUPERPODERES` | [`book_index/superpoderes.md`](reports/book_index/superpoderes.md) | 125 | 3 | 3 |
 | `PATHFINDER_BASICO` / `PATHFINDER_COMPENDIO` | [`book_index/pathfinder.md`](reports/book_index/pathfinder.md) | 67 | 1 | 2 |
@@ -122,13 +122,29 @@ existe mas precisa validação linha a linha):
 | `CRYSTAL_HEART` / `CRYSTAL_HEART_MUITOS_CORACOES` | [`book_index/crystal_heart.md`](reports/book_index/crystal_heart.md) | 83 | **33** | 8 |
 | `CSV_LIVRO_CRIADOR` / `CSV_LIVRO_MORTAIS` / `CSV_MOVIMENTO_VERMELHO` | [`book_index/csv.md`](reports/book_index/csv.md) | 62 | 14 | 6 |
 | `WISEGUYS` | [`book_index/wiseguys.md`](reports/book_index/wiseguys.md) | 99 | 1 | 0 |
-| **Total** | | **1473** | **155** | **46** |
+| **Total** | | **1520** | **98** | **46** |
 
-**Leitura rápida:** o Livro Básico, Fantasia, Arte da Guerra e Wiseguys estão
-praticamente 100% cobertos (0-1 `[FALTA]`, os módulos mais antigos/maduros do
-app). As maiores lacunas de conteúdo real estão em **Sci-Fi (57 faltando)**,
-**Deadlands (36 faltando)** e **Crystal Heart (33 faltando)** — ver o motivo
-resumido em cada arquivo de índice antes de decidir prioridade.
+**Leitura rápida:** o Livro Básico, Fantasia, Arte da Guerra, Wiseguys e agora
+**Sci-Fi** estão praticamente 100% cobertos (0-1 `[FALTA]`, os módulos mais
+antigos/maduros do app + Sci-Fi resolvido em 2026-08-31 — ver abaixo). As maiores
+lacunas de conteúdo real agora estão em **Deadlands (36 faltando)** e
+**Crystal Heart (33 faltando)** — ver o motivo resumido em cada arquivo de índice
+antes de decidir prioridade.
+
+**Sci-Fi resolvido (2026-08-31, item 5 da lista de prioridades):** dos 56 itens
+`[FALTA]` reais do relatório, 9 foram marcados `[FORA DE ESCOPO]` (7 "Robôs
+Padrão" — blocos de stats de aliado contratável, mesma categoria de bestiário —
+mais os 2 sistemas de montagem "Construção de Robôs"/"Sistema de Veículos
+Customizados", equivalentes a "criação de item", ambos fora do que você pediu
+pra mapear) e os **47 restantes foram adicionados** a
+`app/src/main/assets/equipamentos.json`: 21 veículos prontos (`Veículos /
+Customizados (Sci-Fi)`, incl. um "Submarino de Ataque" que a varredura original
+não tinha achado) e 26 itens de `Itens Especiais / Relíquias e Artefatos` (1
+regra + 25 relíquias nomeadas, incl. "Fragmento de Ka'han" que também não
+constava na varredura original). Conteúdo transcrito por agente a partir do
+texto de `docs/swade_scifi` e conferido manualmente (spot-check linha a linha
+contra o livro) antes de mesclar — ver `docs/reports/book_index/scifi.md` pra
+cada id e localização.
 
 ## Auditoria de hardcode (nome-texto em vez de ID)
 
@@ -280,8 +296,9 @@ Ordem sugerida de ataque, do que parece mais valioso/barato para o mais caro:
    é o próximo passo natural (as fórmulas de Aparar/Movimentação/Tamanho
    racial, armas naturais etc. continuam comparando por nome/regex até
    alguém fazer essa migração, agora que o id existe pra elas usarem).
-5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: Sci-Fi (57),
-   Deadlands (36), Crystal Heart (33), CSV (14), Horror (7).
+5. **Fechar os `[FALTA]` de conteúdo**, por ordem de volume: ✅ ~~Sci-Fi (57)~~ —
+   feito (ver acima). Restam: Deadlands (36), Crystal Heart (33), CSV (14),
+   Horror (7).
 6. Só depois, revisar os `[CONFERIR]` (custo/requisito/efeito a bater linha a
    linha com o livro) — risco menor que os itens acima, mas ainda vale para
    fechar o ciclo de confiabilidade.
