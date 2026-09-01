@@ -105,10 +105,12 @@ class RacialTraitPointCatalogTest {
     @Test
     fun `todo id usado em ancestralidades tem entrada no catalogo`() {
         // Assinatura mínima de sanidade: nenhum custo positivo nem negativo
-        // extrapola a escala documentada (-4..8, mesma faixa do catálogo
-        // oficial — Construto e Morto-Vivo chegam a 8).
+        // extrapola a escala documentada (-4..10, mesma faixa do catálogo
+        // oficial — Construto e Morto-Vivo chegam a 8, e "Ações Adicionais
+        // (Maior)" do Fantasia chega a 10, o maior valor confirmado nos 3
+        // livros — ver ACOES_ADICIONAIS_MAIOR).
         RacialTraitPointCatalog.CUSTOS.values.forEach { custo ->
-            assertTrue("custo $custo fora da escala documentada", custo in -4..8)
+            assertTrue("custo $custo fora da escala documentada", custo in -4..10)
         }
     }
 }

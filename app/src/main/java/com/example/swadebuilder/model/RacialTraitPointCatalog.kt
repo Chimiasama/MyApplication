@@ -31,8 +31,10 @@ import com.example.swadebuilder.util.keyify
  *       Resistência/Armadura +1, sentido especial simples
  *   +2  um passo de atributo (d4->d6), perícia d6 inicial, Vantagem
  *       concedida de graça, Movimentação +2
- *   +3 a +8  efeitos fortes ou pacotes com vários efeitos combinados
- *       (Espacial=3, Voo Mov 12=4, Robô=6, Construto/Morto-Vivo=8)
+ *   +3 a +10  efeitos fortes ou pacotes com vários efeitos combinados
+ *       (Espacial=3, Voo Mov 12=4, Robô=6, Construto/Morto-Vivo=8,
+ *       Ações Adicionais (Maior) do Fantasia=10 — o maior valor confirmado
+ *       nos 3 livros)
  *   -1  Complicação Menor equivalente, penalidade -1 numa perícia
  *   -2  Complicação Maior equivalente, penalidade -1 num ATRIBUTO,
  *       penalidade -2 numa perícia
