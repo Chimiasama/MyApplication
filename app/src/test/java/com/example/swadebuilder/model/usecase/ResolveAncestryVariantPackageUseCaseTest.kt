@@ -2,6 +2,7 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionAnswer
+import com.example.swadebuilder.model.TraitAddition
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -31,7 +32,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf("VOTO (Maior)"), result.desvantagensParaAdicionar)
+        assertEquals(listOf(TraitAddition("VOTO (Maior)", "VOTO_MAIOR")), result.desvantagensParaAdicionar)
     }
 
     @Test
@@ -44,7 +45,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf("OBRIGAÇÃO (Maior)"), result.desvantagensParaAdicionar)
+        assertEquals(listOf(TraitAddition("OBRIGAÇÃO (Maior)", "OBRIGACAO_MAIOR")), result.desvantagensParaAdicionar)
     }
 
     @Test
@@ -55,7 +56,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             selectionAnswers = emptyList()
         )
 
-        assertEquals(listOf("VOTO (Maior)"), result.desvantagensParaAdicionar)
+        assertEquals(listOf(TraitAddition("VOTO (Maior)", "VOTO_MAIOR")), result.desvantagensParaAdicionar)
     }
 
     @Test
@@ -68,7 +69,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf("SENHOR DAS FERAS"), result.vantagensGratisParaAdicionar)
+        assertEquals(listOf(TraitAddition("SENHOR DAS FERAS", "SENHOR_DAS_FERAS")), result.vantagensGratisParaAdicionar)
         assertTrue(result.tracosParaAdicionar.isEmpty())
     }
 
@@ -82,7 +83,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf("RESISTÊNCIA +1"), result.tracosParaAdicionar)
+        assertEquals(listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")), result.tracosParaAdicionar)
     }
 
     @Test
@@ -93,7 +94,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             selectionAnswers = emptyList()
         )
 
-        assertEquals(listOf("GARRAS"), result.tracosParaAdicionar)
+        assertEquals(listOf(TraitAddition("GARRAS", "GARRAS")), result.tracosParaAdicionar)
     }
 
     @Test
@@ -106,7 +107,10 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.tracosParaAdicionar)
+        assertEquals(
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
+            result.tracosParaAdicionar
+        )
     }
 
     @Test
@@ -119,7 +123,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf("FORMA DE ENERGIA"), result.tracosParaAdicionar)
+        assertEquals(listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")), result.tracosParaAdicionar)
     }
 
     @Test
@@ -130,13 +134,19 @@ class ResolveAncestryVariantPackageUseCaseTest {
             selectionAnswers = emptyList(),
             catalogPackages = mapOf(
                 "anao_ciber_tracos_negativos" to ResolvedTraitPackage(
-                    desvantagensParaAdicionar = listOf("Frágil", "Aparar -1")
+                    desvantagensParaAdicionar = listOf(
+                        TraitAddition("Frágil", "FRAGIL"),
+                        TraitAddition("Aparar -1", "APARAR_BAIXO")
+                    )
                 )
             )
         )
 
-        assertEquals(listOf("CIBERTOLERÂNCIA"), result.vantagensGratisParaAdicionar)
-        assertEquals(listOf("Frágil", "Aparar -1"), result.desvantagensParaAdicionar)
+        assertEquals(listOf(TraitAddition("CIBERTOLERÂNCIA", "CIBERTOLERANCIA")), result.vantagensGratisParaAdicionar)
+        assertEquals(
+            listOf(TraitAddition("Frágil", "FRAGIL"), TraitAddition("Aparar -1", "APARAR_BAIXO")),
+            result.desvantagensParaAdicionar
+        )
     }
 
     @Test

@@ -82,6 +82,7 @@ import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toIdSlug
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.intOrNull
 import java.util.UUID
@@ -553,8 +554,17 @@ class CriadorState {
                 com.example.swadebuilder.model.RacialAbility(
                     nome = trait.nome,
                     descricao = trait.descricao,
-                    id = trait.nome.lowercase().replace(" ", "_"),
-                    category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative"
+                    // Id real do catálogo (basico_habilidades_raciais.json),
+                    // nunca derivado do nome de exibição em tempo de
+                    // execução — o nome pode até mudar (ex.: "Bônus de
+                    // Perícia (+1): Intimidar" pro picker de perícia), mas o
+                    // id escolhido na hora de montar a Variante continua o
+                    // mesmo. `toIdSlug()` só entra pra conteúdo bespoke sem
+                    // id de catálogo (traço com nome livre digitado pelo
+                    // Mestre), igual ao resto do conteúdo customizado.
+                    id = trait.id ?: trait.nome.toIdSlug(),
+                    category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative",
+                    vezes = trait.vezes
                 )
             )
         }
@@ -599,14 +609,19 @@ class CriadorState {
                     }
                 }
                 RacialTraitEffect.Nenhum -> Unit
-                // ResistenciaBonus/PassoBonus/ApararBonus não têm mapa
-                // numérico próprio em RacialModifier (diferente de
-                // atributos/pericias) — o ModifierEngine já lê o traço
-                // removido/presente direto de tracosRemovidosIds/habilidades,
-                // então não há nada a descontar aqui.
+                // ResistenciaBonus/PassoBonus/ApararBonus/TamanhoBonus/
+                // ArmaduraBonus não têm mapa numérico próprio em
+                // RacialModifier (diferente de atributos/pericias) — o
+                // ModifierEngine já lê o traço removido/presente direto de
+                // tracosRemovidosIds/habilidades, então não há nada a
+                // descontar aqui. Composite só reencaminha pros mesmos casos
+                // acima, um por sub-efeito.
                 is RacialTraitEffect.ResistenciaBonus,
                 is RacialTraitEffect.PassoBonus,
-                is RacialTraitEffect.ApararBonus -> Unit
+                is RacialTraitEffect.ApararBonus,
+                is RacialTraitEffect.TamanhoBonus,
+                is RacialTraitEffect.ArmaduraBonus,
+                is RacialTraitEffect.Composite -> Unit
             }
         }
 
@@ -763,7 +778,7 @@ class CriadorState {
                         com.example.swadebuilder.model.RacialAbility(
                             nome = "Aparar +1",
                             descricao = "Pele iluminada pela lua concede +1 de Aparar.",
-                            id = "APARAR_1",
+                            id = "APARAR",
                             category = "racial_trait_positive"
                         )
                     )
@@ -805,7 +820,7 @@ class CriadorState {
                         com.example.swadebuilder.model.RacialAbility(
                             nome = "MOVIMENTAÇÃO +2",
                             descricao = "Correnteza concede +2 em Movimentação.",
-                            id = "MOVIMENTACAO_2",
+                            id = "MOVIMENTACAO",
                             category = "racial_trait_positive"
                         )
                     )
@@ -862,17 +877,21 @@ class CriadorState {
                 // base.desvantagens (que esta função não toca).
                 pack.desvantagensParaRemover.forEach { nome -> removeByIdOrName(nome, nome) }
 
-                fun addIfAbsent(texto: String, category: String) {
-                    val id = texto.uppercase().semAcentos().replace(Regex("[^A-Z0-9]+"), "_").trim('_')
-                    if (newHabilidades.none { it.id == id || it.nome.keyify() == texto.keyify() }) {
+                // Id mecânico vem pronto de TraitAddition (escrito à mão em
+                // AncestryVariantRegistry) — nunca mais derivado do texto
+                // aqui.
+                fun addIfAbsent(traco: com.example.swadebuilder.model.TraitAddition, category: String) {
+                    val texto = traco.nome
+                    if (newHabilidades.none { it.id == traco.id || it.nome.keyify() == texto.keyify() }) {
                         val severidade = Regex("""\((Maior|Menor)\)$""").find(texto)?.groupValues?.get(1)
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
                                 nome = texto,
                                 descricao = "",
-                                id = id,
+                                id = traco.id,
                                 category = category,
-                                severity = if (category == "racial_hindrance") severidade else null
+                                severity = if (category == "racial_hindrance") severidade else null,
+                                vezes = traco.vezes
                             )
                         )
                     }
@@ -3827,6 +3846,12 @@ class CriadorState {
     val vantagensAutomaticas = mutableStateListOf<String>()
     val vantagensRaciais = mutableStateListOf<String>()
     val desvantagensRaciais = mutableStateListOf<String>()
+    // Ids mecânicos reais (+ contagem de compras) dos traços de
+    // vantagensRaciais/desvantagensRaciais injetados por Variante/Seleção
+    // (ResolveAncestryRacialPackageUseCase.Result.racialTraitIds) —
+    // ModifierEngine lê esta lista direto, sem precisar derivar id nenhum do
+    // texto acima.
+    val racialTraitIdsFromVariants = mutableStateListOf<com.example.swadebuilder.model.RacialTraitStack>()
 
     var pontosVantagem by mutableIntStateOf(0)
 
@@ -4680,6 +4705,9 @@ class CriadorState {
 
         desvantagensRaciais.clear()
         desvantagensRaciais.addAll(racialPackage.desvantagensRaciais)
+
+        racialTraitIdsFromVariants.clear()
+        racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
 
         syncPacoteCulturalFantasia()
 

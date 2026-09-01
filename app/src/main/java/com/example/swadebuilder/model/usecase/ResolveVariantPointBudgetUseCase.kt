@@ -4,8 +4,11 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialGrantResolver
 import com.example.swadebuilder.model.RacialModifier
+import com.example.swadebuilder.model.RacialTraitEffect
 import com.example.swadebuilder.model.RacialTraitPointCatalog
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.toDiceString
+import com.example.swadebuilder.util.keyify
 
 /**
  * Item já resolvido (traço racial, Vantagem ou Complicação, oficial ou
@@ -88,8 +91,39 @@ class ResolveVariantPointBudgetUseCase {
         /** Valor de livro total da raça base: soma do custo de TODOS os itens removíveis dela. */
         fun valorTotalDe(base: RacialModifier): Int = itensRemoviveisDe(base).sumOf { it.custo }
 
-        private fun habilidadeComoItem(habilidade: RacialAbility): VariantBudgetItem =
-            VariantBudgetItem(label = habilidade.nome, custo = RacialTraitPointCatalog.custoDe(habilidade.id), habilidadeId = habilidade.id)
+        // Rótulo mecânico (ex.: "Atributo aumentado d6: Vigor", "Voo (Movimentação
+        // 12)") quando o id do traço resolve pra um efeito/rótulo conhecido em
+        // RacialTraitPointCatalog — o mesmo catálogo que a aba "Características"
+        // já usa (ver RacialCaracteristicasResolver). Sem id reconhecido, cai no
+        // nome cru do livro, que é como esses ~200 traços já vinham antes deste
+        // catálogo existir.
+        private fun habilidadeComoItem(habilidade: RacialAbility): VariantBudgetItem {
+            val id = habilidade.id?.let { it.ifBlank { null } }
+            val efeito = RacialTraitPointCatalog.efeitoDe(id)
+            val vezes = habilidade.vezes.coerceAtLeast(1)
+            // Traços EMPILHÁVEIS (ver RacialTraitPointCatalog.VEZES_MAX) mostram
+            // e cobram o valor final (ex.: "Resistência +2", 2 pontos), não o
+            // de 1 compra só — removê-los da raça base tem que devolver o
+            // custo de TODAS as compras que a raça já tinha, senão o saldo da
+            // Variante fecha errado.
+            val label = if (vezes > 1) {
+                RacialTraitPointCatalog.labelComVezes(id, vezes)
+            } else {
+                RacialTraitPointCatalog.LABEL[id?.keyify()]
+                    ?: when (efeito) {
+                        is RacialTraitEffect.AtributoStep -> {
+                            val dado = (4 + 2 * efeito.passos).toDiceString()
+                            "Atributo aumentado $dado: ${efeito.atributo}"
+                        }
+                        is RacialTraitEffect.PericiaStep -> {
+                            val dado = (4 + (efeito.passos - 1) * 2).toDiceString()
+                            "Perícia inicial $dado: ${efeito.pericia}"
+                        }
+                        else -> habilidade.nome
+                    }
+            }
+            return VariantBudgetItem(label = label, custo = RacialTraitPointCatalog.custoDe(id) * vezes, habilidadeId = id)
+        }
 
         /**
          * Custo de adicionar uma Vantagem do catálogo geral como traço racial

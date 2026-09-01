@@ -41,19 +41,44 @@ enum class SelectionType {
     FIXED_PACKAGE
 }
 
-/** Um pacote de efeitos já resolvido — string pronta pra entrar em
+/** Um traço/vantagem/desvantagem a injetar: `nome` é o texto de exibição
+ * (o mesmo que já entrava solto em habilidades[]/desvantagensRaciais/
+ * vantagensGratis), `id` é o id mecânico ESCRITO À MÃO aqui — nunca
+ * derivado do texto em tempo de execução. Antes desta classe, o texto de
+ * exibição sozinho chegava ao ModifierEngine, que precisava rodar
+ * `String.autoTraitId()` sobre ele pra descobrir se batia com algum id de
+ * `RacialTraitPointCatalog.EFEITOS` (ex.: "RESISTÊNCIA +2" -> "RESISTENCIA_2",
+ * um id inventado por valor final que nem existe mais — ver `vezes` abaixo)
+ * — um "tradutor" de texto em tempo real. Com `id` explícito por entrada,
+ * esse tradutor deixou de existir: cada Variante/Seleção já diz, no próprio
+ * código-fonte, qual é o id mecânico do traço que está concedendo, do mesmo
+ * jeito que qualquer entrada de `habilidades[]` em ancestralidades.json já
+ * fazia. Quando o traço não tem efeito numérico modelado (puramente
+ * narrativo, ex.: "Garras", "Visão no Escuro"), o id ainda existe — só não
+ * bate com nenhuma chave de EFEITOS, exatamente como já acontecia com
+ * habilidades sem efeito mecânico. */
+data class TraitAddition(val nome: String, val id: String, val vezes: Int = 1)
+
+/** Id + contagem de compras de um traço empilhável (ver RacialTraitPointCatalog.
+ * VEZES_MAX) já resolvido por Variante/Seleção — a versão "sem nome de
+ * exibição" de [TraitAddition], usada só pra threading do id até o
+ * ModifierEngine (ver ResolveAncestryRacialPackageUseCase.Result.racialTraitIds/
+ * CriadorState.racialTraitIdsFromVariants). */
+data class RacialTraitStack(val id: String, val vezes: Int = 1)
+
+/** Um pacote de efeitos já resolvido — pronto pra entrar em
  * habilidades[]/desvantagensRaciais/vantagensGratis, reaproveitando os
  * mesmos pontos de injeção já usados no resto do app (ModifierEngine,
  * ResolveGrantedAncestryAdvantagesUseCase). Ver AnaoCiberTraits.kt para o
  * precedente desse padrão. */
 data class ResolvedTraitPackage(
-    val tracosParaAdicionar: List<String> = emptyList(),
+    val tracosParaAdicionar: List<TraitAddition> = emptyList(),
     val tracosParaRemoverPorId: List<String> = emptyList(),
-    val vantagensGratisParaAdicionar: List<String> = emptyList(),
+    val vantagensGratisParaAdicionar: List<TraitAddition> = emptyList(),
     // Ids de Vantagem (vantagens.json) que devem ser garantidas, em vez de
     // casadas por nome — ex.: "poderes_misticos" (Oráculos Aterrorizado).
     val vantagensGratisIds: List<String> = emptyList(),
-    val desvantagensParaAdicionar: List<String> = emptyList(),
+    val desvantagensParaAdicionar: List<TraitAddition> = emptyList(),
     // Nomes de traços/vantagens automáticas da raça base que esta opção
     // substitui/revoga (ex.: Aquarianos Semi-aquáticos remove "Aquático").
     val tracosParaRemoverPorNome: List<String> = emptyList(),
@@ -83,13 +108,15 @@ data class SelectionDef(
     val id: String,
     val rotulo: String,
     val tipo: SelectionType,
-    // TARGET_ATTRIBUTE_OR_SKILL — injectionTemplate usa "{alvo}" como placeholder
-    // (ex.: "{alvo} d6"). Escrito à mão por raça, não gerado automaticamente:
-    // strings de injeção precisam ser verificadas contra os regex do
-    // ModifierEngine caso a caso (ver nota em AnaoCiberTraits.kt sobre a
-    // colisão "Aparar Baixo" vs "Aparar -1") — um template genérico "errado"
-    // pode colidir com hardcode de outra raça ou simplesmente não casar com
-    // nenhum regex.
+    // TARGET_ATTRIBUTE_OR_SKILL — injectionTemplate usa "{alvo}" como
+    // placeholder de exibição (ex.: "{alvo} d6"), mas nenhuma raça cadastrada
+    // no registro usa este tipo hoje: um traço de alvo ESCOLHIDO pelo
+    // jogador (ex.: Meio-Orc Força-ou-Vigor) precisaria de um efeito
+    // mecânico dinâmico (o atributo/perícia certo, não um id fixo do
+    // RacialTraitEffect), que ainda não foi desenhado. Até existir esse
+    // desenho, ResolveAncestryVariantPackageUseCase.resolveSelection não
+    // resolve este tipo (retorna null) — não reintroduzir aqui um id
+    // derivado do texto do template como solução provisória.
     val targetKind: TraitTargetKind? = null,
     val targetOptions: List<String>? = null, // null = qualquer atributo/perícia
     val injectionTemplate: String? = null,

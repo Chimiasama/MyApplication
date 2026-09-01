@@ -15,6 +15,16 @@ data class RacialAbility(
     val id: String? = null,
     val category: String? = null,
     val severity: String? = null,
+    // Quantas vezes este traço foi "comprado" — os 3 livros (Básico, Fantasia,
+    // Sci-Fi) marcam cada traço do catálogo de criação de ancestralidade com
+    // um número entre parênteses (e "S" pra sem limite) dizendo quantas vezes
+    // ele pode ser escolhido, e o efeito/custo multiplicam por esse número
+    // (ex.: "Armadura (3): ... Armadura +2 cada vez que é comprada" — 2x
+    // vira Armadura +4). A maioria dos traços tem vezes=1 (o padrão) porque
+    // só pode ser escolhida uma vez; só os que RacialTraitPointCatalog.VEZES_MAX
+    // lista como > 1 usam este campo pra valer mais de 1 — ver
+    // RacialTraitEffect e ModifierEngine.aplicarEfeito.
+    val vezes: Int = 1,
     // Ataque(s) natural(is) concedido(s) por esta habilidade racial, já como
     // dado estruturado — mesmo campo/tipo que MonstroHabilidade.armasNaturais
     // usa pro Template de Monstro Heroico (ver MonstroTemplate.kt). Antes
@@ -65,7 +75,30 @@ data class HabilidadeCriacao(
     // Id estável pra Traços Raciais customizados (ver SettingsDialog.kt) — o catálogo oficial
     // (basico_habilidades_raciais.json) continua identificado por `nome` em todo o app, então
     // esse campo é aditivo e não muda a regra de identidade.
-    val id: String? = null
+    val id: String? = null,
+    // Só preenchido nas ENTRADAS DO CATÁLOGO (basico_habilidades_raciais.json)
+    // — quantas vezes o livro permite comprar este traço (ver
+    // RacialAbility.vezes pro mesmo conceito do lado "traço já escolhido").
+    // null/1 = uma vez só; -1 = "S", sem limite no livro (a UI ainda precisa
+    // de um teto prático — ver SettingsDialog.kt). Vazio numa instância já
+    // ESCOLHIDA (dentro de tracosAdicionados/selectedRacialTraits): ali quem
+    // importa é `vezes`, não `vezesMax`.
+    val vezesMax: Int? = null,
+    // Só preenchido nas instâncias JÁ ESCOLHIDAS: quantas vezes este traço
+    // específico foi comprado (custo/efeito já vêm multiplicados por este
+    // valor em `custo` e, na hora de virar RacialAbility, aqui também).
+    val vezes: Int = 1,
+    // Só preenchido nas ENTRADAS DO CATÁLOGO: id compartilhado por várias
+    // entradas que são, no livro, o MESMO traço "(1)" (pega uma vez só) com
+    // custo/efeito variando por versão — ex.: "Ações Adicionais" custa 4, 5
+    // ou 10 pontos conforme a versão (Sci-Fi condicional, Básico/Sci-Fi
+    // padrão, Fantasia "Maior" — ver docs/swade_basico|fantasia|scifi).
+    // Diferente de vezesMax (que soma o MESMO efeito várias vezes): aqui são
+    // versões ALTERNATIVAS e mutuamente exclusivas do mesmo traço — o
+    // seletor de Traços Raciais (SettingsDialog.kt) mostra as entradas com o
+    // mesmo grupoEscolha como uma linha só, abrindo "Qual versão?" em vez de
+    // "Quantas vezes?".
+    val grupoEscolha: String? = null
 ) {
     fun exibida(): HabilidadeCriacao =
         if (!com.example.swadebuilder.EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this

@@ -123,7 +123,7 @@
       {
         "nome": "Voo",
         "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
@@ -132,7 +132,10 @@
       "BASICO"
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
-    "especieId": "avianos"
+    "especieId": "avianos",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "AQUARIANOS",
@@ -403,7 +406,7 @@
       {
         "nome": "Armadura +2",
         "descricao": "Sua pele escamosa funciona como uma armadura de couro.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
@@ -457,118 +460,6 @@
     ],
     "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
     "especieId": "saurios"
-  },
-  {
-    "nome": "CELESTIAIS",
-    "descricao": "Anjos são uma espécie bastante variada, mas sempre possuem essas características em comum.",
-    "atributos": {},
-    "pericias": {
-      "Fé": 2
-    },
-    "vantagensGratis": [],
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "Desastrado",
-        "descricao": "Celestiais não têm o costume de lidar com tecnologia ou máquinas.",
-        "id": "DESASTRADO",
-        "category": "racial_hindrance",
-        "severity": "Menor",
-        "descricaoLite": "Tem dificuldade e pouca prática com tecnologia e máquinas em geral."
-      },
-      {
-        "nome": "Antecedente Arcano (Milagres)",
-        "descricao": "Celestiais podem invocar uma grande variedade de milagres.",
-        "id": "ANTECEDENTE_ARCANO_MILAGRES",
-        "category": "racial_edge",
-        "descricaoLite": "Tem acesso ao Antecedente Arcano de Milagres, podendo conjurar poderes dessa lista."
-      },
-      {
-        "nome": "Fé",
-        "descricao": "Celestiais começam com um d6 em Fé. Isso aumenta seu máximo para d12 + 1.",
-        "id": "FE",
-        "category": "racial_trait_positive",
-        "descricaoLite": "A perícia Fé começa em d6 em vez de d4, com teto em d12+1."
-      },
-      {
-        "nome": "Voo",
-        "descricao": "Anjos voam com Movimentação 12.",
-        "id": "VOO",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 12."
-      },
-      {
-        "nome": "Inimigo Racial (Demônios e Diabos)",
-        "descricao": "Celestiais não toleram facilmente os saídos do abismo.",
-        "id": "INIMIGO_RACIAL",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Mantém hostilidade natural contra demônios e diabos, tratando-os como inimigos declarados."
-      },
-      {
-        "nome": "Voto (Maior: Proteger a humanidade)",
-        "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
-        "id": "VOTO",
-        "category": "racial_hindrance",
-        "severity": "Maior",
-        "descricaoLite": "Está preso por um Voto de grau Maior a zelar pelos poucos humanos sobreviventes num mundo devastado."
-      }
-    ],
-    "livros": [
-      "BASICO"
-    ],
-    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial."
-  },
-  {
-    "nome": "GUARDIÕES",
-    "descricao": "Seres humanos que servem ao Coro Celestial são chamados de guardiões.",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "Adaptável",
-        "descricao": "Começam o jogo com uma Vantagem Novato de sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).",
-        "id": "ADAPTAVEL",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Inicia o jogo com uma Vantagem de Estágio Novato à sua escolha, cumprindo os requisitos de praxe."
-      },
-      {
-        "nome": "Campeões",
-        "descricao": "Possuem a Vantagem Campeão dando a eles um bônus de +2 em dano contra forças malignas sobrenaturais como demônios e diabos.",
-        "id": "campeao",
-        "category": "racial_edge",
-        "descricaoLite": "Possui a Vantagem Campeão, causando +2 de dano contra criaturas sobrenaturais malignas como demônios e diabos."
-      },
-      {
-        "nome": "Vigoroso",
-        "descricao": "As pessoas que herdaram esta Terra devastada começam o jogo com um d6 em Vigor em vez de um d4. Isso aumenta seu Vigor máximo para d12 + 1.",
-        "id": "VIGOROSO",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Vigor inicial em d6 no lugar de d4, podendo alcançar d12+1."
-      },
-      {
-        "nome": "Voto (Maior: Proteger a humanidade)",
-        "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
-        "id": "VOTO",
-        "category": "racial_hindrance",
-        "severity": "Maior",
-        "descricaoLite": "Está preso por um Voto de grau Maior a zelar pelos poucos humanos sobreviventes num mundo devastado."
-      },
-      {
-        "nome": "CAMPEÃO",
-        "descricao": "CAMPEÃO",
-        "id": "CAMPEAO",
-        "category": "racial_edge",
-        "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
-      }
-    ],
-    "livros": [
-      "BASICO"
-    ],
-    "descricaoLite": "Humanos que colocaram a vida a serviço de poderes celestiais, atuando como representantes ou protetores em nome deles."
   },
   {
     "nome": "ANÕES",
@@ -694,7 +585,7 @@
       {
         "nome": "VOO",
         "descricao": "Avianos voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Voam a 12 quadros de Movimentação por rodada, recorrendo a Atletismo para manobras."
       }
@@ -735,7 +626,7 @@
       {
         "nome": "VOO",
         "descricao": "Celestiais voam com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Voam com Movimentação 12 por rodada e usam Atletismo para manobras aéreas."
       },
@@ -790,16 +681,17 @@
       {
         "nome": "FORMA INCOMUM",
         "descricao": "Centauros não podem montar montarias ou usar certos tipos de armaduras, itens ou outros equipamentos que não se ajustem a sua forma (a critério do Mestre).",
-        "id": "FORMA_INCOMUM",
+        "id": "FORMA_ALIENIGENA",
         "category": "racial_trait_negative",
         "descricaoLite": "Sua anatomia impede o uso de montaria e de armaduras ou equipamentos que não sejam adaptados à sua forma, a critério do mestre."
       },
       {
         "nome": "MOVIMENTAÇÃO +4",
         "descricao": "Centauros são corredores rápidos. Possuem Movimentação 10 e dado de corrida d10.",
-        "id": "MOVIMENTACAO_4",
+        "id": "MOVIMENTACAO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Move-se a 10 quadros por rodada e possui dado de corrida d10."
+        "descricaoLite": "Move-se a 10 quadros por rodada e possui dado de corrida d10.",
+        "vezes": 2
       },
       {
         "nome": "TAMANHO +1",
@@ -892,7 +784,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Draconianos têm pele espessa e escamosa.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "Escamas grossas atuam como armadura natural, concedendo +2 de Armadura."
       },
@@ -1055,7 +947,7 @@
       {
         "nome": "VOO",
         "descricao": "Fadas voam com Movimentação 6.",
-        "id": "VOO",
+        "id": "VOO_MOV_6",
         "category": "racial_trait_positive",
         "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 6."
       }
@@ -1188,7 +1080,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Golens de pedra são feitos de rocha.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "Corpo de pedra: concede +2 de Armadura."
       },
@@ -1209,7 +1101,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Golens subtraem 2 das rolagens de Característica ao usar equipamentos feitos para humanoides de Tamanho 0.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "-2 em testes de Característica ao usar equipamentos pensados para o padrão humanoide de Tamanho 0."
       },
@@ -1244,9 +1136,10 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "Golems são criaturas densas e grandes, pesando cerca de 450 kg. Isso confere Resistência +2.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "Corpo denso e enorme (cerca de 450 kg): +2 de Resistência."
+        "descricaoLite": "Corpo denso e enorme (cerca de 450 kg): +2 de Resistência.",
+        "vezes": 2
       }
     ],
     "vantagensGratis": [],
@@ -1362,7 +1255,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Insetoides possuem exoesqueletos grossos.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "Exoesqueleto resistente: concede +2 de Armadura."
       },
@@ -1384,7 +1277,7 @@
       {
         "nome": "FORMATO CORPORAL INCOMUM",
         "descricao": "Graças à sua fisiologia única, os insetoides não podem usar a maioria das roupas, armaduras ou móveis adequados para humanoides. Podem usar armas e outros equipamentos portáteis normalmente.",
-        "id": "FORMATO_CORPORAL_INCOMUM",
+        "id": "FORMA_ALIENIGENA",
         "category": "racial_trait_negative",
         "descricaoLite": "Fisiologia diferente impede o uso da maior parte de roupas, armaduras e mobílias feitas para humanoides; armas e equipamentos portáteis funcionam normalmente."
       },
@@ -1505,7 +1398,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Meio-gigantes possuem -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras ou roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "-2 ao usar equipamentos pensados para criaturas menores, impossibilidade de vestir roupas ou armaduras humanoides, e gasto em dobro com itens, comida e vestimenta."
       },
@@ -1533,9 +1426,10 @@
       {
         "nome": "TAMANHO +3",
         "descricao": "Meio-gigantes têm 3 metros de altura, elevando-se sobre a maioria dos humanoides. Isso confere Resistência +3.",
-        "id": "TAMANHO_3",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "Cerca de 3 metros de altura: +3 de Resistência."
+        "descricaoLite": "Cerca de 3 metros de altura: +3 de Resistência.",
+        "vezes": 3
       }
     ],
     "vantagensGratis": [],
@@ -1625,7 +1519,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Sua estrutura muscular faz com que minotauros possuam -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras e roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "-2 ao usar equipamentos de criaturas menores, sem poder vestir roupas ou armaduras humanoides, e paga o dobro por suprimentos, comida e roupas."
       },
@@ -1702,7 +1596,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Ogros são criaturas grandes e corpulentas, com ombros largos e grandes barrigas das quais se orgulham imensamente. Possuem -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras ou roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "-2 ao usar equipamentos de criaturas menores, incapacidade de vestir roupas ou armaduras humanoides, e custo dobrado para adquirir equipamento, alimentação e vestuário."
       },
@@ -2084,7 +1978,8 @@
         "descricao": "10, dado de corrida d10. O povo serpente se move tão rapidamente quanto as cobras das quais descendem.",
         "id": "MOVIMENTACAO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Movimentação 10 e dado de Corrida d10."
+        "descricaoLite": "Movimentação 10 e dado de Corrida d10.",
+        "vezes": 2
       },
       {
         "nome": "SANGUE FRIO",
@@ -2284,7 +2179,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Sáurios têm uma pele escamosa que funciona como uma armadura de couro.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "A pele resistente age como uma proteção natural equivalente a uma armadura leve, concedendo +2 de Armadura."
       },
@@ -2499,7 +2394,7 @@
         "nome": "Voo",
         "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
         "category": "racial_trait_positive",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
     ],
@@ -2507,7 +2402,10 @@
       "HORROR"
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
-    "especieId": "avianos"
+    "especieId": "avianos",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "AQUARIANOS",
@@ -2794,7 +2692,7 @@
         "nome": "Armadura +2",
         "descricao": "Sua pele escamosa funciona como uma armadura de couro.",
         "category": "racial_trait_positive",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
       {
@@ -2979,7 +2877,7 @@
       {
         "nome": "Voo",
         "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "category": "racial_trait_positive",
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
@@ -3163,7 +3061,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Pele escamosa ou placas naturais.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "Placas ou escamas naturais oferecem +2 de proteção contra ataques."
       },
@@ -3213,21 +3111,22 @@
       {
         "nome": "MOVIMENTAÇÃO +2",
         "descricao": "Centaux tem passadas largas. +2 em Movimentação e +1d no dado de corrida.",
-        "id": "MOVIMENTACAO_2",
+        "id": "MOVIMENTACAO",
         "category": "racial_trait_positive",
         "descricaoLite": "Passadas largas garantem +2 de Movimentação e aumentam o dado de corrida em um passo."
       },
       {
         "nome": "TAMANHO +2",
         "descricao": "Centaux são criaturas grandes. Adicionam +2 ao Tamanho e Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "Corpo maior que o comum: somam +2 tanto ao Tamanho quanto à Resistência."
+        "descricaoLite": "Corpo maior que o comum: somam +2 tanto ao Tamanho quanto à Resistência.",
+        "vezes": 2
       },
       {
         "nome": "GRANDE",
         "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "Equipamentos não feitos sob medida impõem -2 em testes de Característica, armaduras e roupas comuns simplesmente não servem, e tudo que precisam comprar sai pelo dobro do preço."
       },
@@ -3289,9 +3188,10 @@
       {
         "nome": "RESISTÊNCIA +2",
         "descricao": "Drakens são fortes e resilientes.",
-        "id": "RESISTENCIA_2",
+        "id": "RESISTENCIA",
         "category": "racial_trait_positive",
-        "descricaoLite": "O corpo robusto garante +2 de Resistência."
+        "descricaoLite": "O corpo robusto garante +2 de Resistência.",
+        "vezes": 2
       },
       {
         "nome": "RUDE",
@@ -3334,7 +3234,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Elementais de pedra subtraem 2 das rolagens de Característica quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "Usar equipamentos não adaptados ao seu porte impõe -2 em testes de Característica, e adquirir bens, comida ou roupas sai duas vezes mais caro que o normal."
       },
@@ -3941,7 +3841,7 @@
       {
         "nome": "RESISTÊNCIA +1",
         "descricao": "Soldados genéticos foram criados para aguentar o tranco.",
-        "id": "RESISTENCIA_1",
+        "id": "RESISTENCIA",
         "category": "racial_trait_positive",
         "descricaoLite": "Foram projetados para suportar impactos, recebendo +1 de Resistência."
       },
@@ -4074,7 +3974,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Yetis subtraem 2 de rolagens de Características quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "Equipamentos não feitos sob medida rendem -2 em testes de Característica, e qualquer compra de equipamento, comida ou roupa sai pelo dobro do valor normal."
       },
@@ -4088,9 +3988,10 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "Geralmente têm cerca de 2,1 metros de altura, são muito grandes e densos. Adicionam +2 ao Tamanho e Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "Tamanho e Resistência recebem +2 cada, refletindo um porte físico bem acima do normal."
+        "descricaoLite": "Tamanho e Resistência recebem +2 cada, refletindo um porte físico bem acima do normal.",
+        "vezes": 2
       }
     ],
     "tags": [
@@ -4137,14 +4038,14 @@
       {
         "nome": "GRANDE",
         "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "Equipamentos não feitos sob medida impõem -2 em testes de Característica, armaduras e roupas comuns simplesmente não servem, e tudo que precisam comprar sai pelo dobro do preço."
       },
       {
         "nome": "MOVIMENTAÇÃO +2",
         "descricao": "A Movimentação dos centaux aumenta em +2 e seu dado de corrida aumenta em um tipo.",
-        "id": "MOVIMENTACAO_2",
+        "id": "MOVIMENTACAO",
         "category": "racial_trait_positive",
         "descricaoLite": "Deslocamento base +2 e o dado de corrida sobe um tipo."
       },
@@ -4158,9 +4059,10 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "A parte humanoide de um centaux é um humano robusto e musculoso, enquanto a parte traseira do corpo é do tamanho de um grande mamífero de quatro patas. Adicionam +2 à sua Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "+2 de Resistência, por ter um corpo bem maior que o de um humanoide comum."
+        "descricaoLite": "+2 de Resistência, por ter um corpo bem maior que o de um humanoide comum.",
+        "vezes": 2
       }
     ],
     "tags": [
@@ -4186,7 +4088,8 @@
         "descricao": "Os movimentos lentos e deliberados dos deaders os tornam alvos fáceis em combate corpo a corpo. Aparar -2.",
         "id": "APARAR_BAIXO",
         "category": "racial_trait_negative",
-        "descricaoLite": "-2 no valor de Aparar, por reagir devagar em combate corpo a corpo."
+        "descricaoLite": "-2 no valor de Aparar, por reagir devagar em combate corpo a corpo.",
+        "vezes": 2
       },
       {
         "nome": "CALCULISTA",
@@ -4844,10 +4747,7 @@
     "vantagensGratis": [
       "IMPULSO"
     ],
-    "desvantagens": [
-      "APARAR -1",
-      "MOVIMENTAÇÃO -1"
-    ],
+    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -5176,8 +5076,9 @@
         "nome": "Frágil",
         "descricao": "-2 na Resistência devido à degeneração física secular.",
         "category": "racial_trait_negative",
-        "id": "FRAGIL_MAIOR",
-        "descricaoLite": "-2 de Resistência, resultado de um desgaste físico acumulado ao longo de gerações."
+        "id": "FRAGIL",
+        "descricaoLite": "-2 de Resistência, resultado de um desgaste físico acumulado ao longo de gerações.",
+        "vezes": 2
       }
     ],
     "livros": [
@@ -5234,6 +5135,9 @@
     ],
     "livros": [
       "CIDADE_SOL_VAPOR"
+    ],
+    "tags": [
+      "asas"
     ]
   },
   {
@@ -5752,7 +5656,7 @@
         "nome": "Voo",
         "descricao": "Podem voar com uma Movimentação de 12 quadros por rodada. Use Atletismo ao realizar manobras.",
         "category": "racial_trait_positive",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "descricaoLite": "Voa a 12 quadros por rodada, recorrendo a Atletismo para executar manobras aéreas."
       }
     ],
@@ -5760,7 +5664,10 @@
       "SUPER"
     ],
     "descricaoLite": "Humanoides alados de ossos ocos e corpo leve, cuja cobertura corporal pode variar entre penas, couro ou escamas.",
-    "especieId": "avianos"
+    "especieId": "avianos",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "AQUARIANOS",
@@ -6047,7 +5954,7 @@
         "nome": "Armadura +2",
         "descricao": "Sua pele escamosa funciona como uma armadura de couro.",
         "category": "racial_trait_positive",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
       {
@@ -6136,7 +6043,7 @@
         "nome": "Voo",
         "descricao": "Anjos voam com Movimentação 12.",
         "category": "racial_trait_positive",
-        "id": "VOO",
+        "id": "VOO_MOV_12",
         "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 12."
       },
       {
@@ -6158,7 +6065,10 @@
     "livros": [
       "SUPER"
     ],
-    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial."
+    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial.",
+    "tags": [
+      "asas"
+    ]
   },
   {
     "nome": "GUARDIÕES",

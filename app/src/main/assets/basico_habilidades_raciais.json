@@ -1,30 +1,33 @@
 [
   {
+    "id": "acoes_adicionais",
+    "nome": "Ação Adicional (Física/Mental)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem físicas ou mentais.",
+    "origem": "SCI_FI",
+    "descricaoLite": "Quando todas as ações do turno são físicas ou todas mentais, a penalidade de Ações Múltiplas cai em 2 pontos.",
+    "grupoEscolha": "acao_adicional"
+  },
+  {
     "id": "acao_adicional",
     "nome": "Ação Adicional",
     "custo": 5,
     "categoria": "racial_trait_positive",
     "descricao": "Pode ignorar 2 pontos de penalidades por Ações Múltiplas a cada turno.",
     "origem": "BASICO",
-    "descricaoLite": "A cada turno, 2 pontos das penalidades geradas por Ações Múltiplas deixam de ser aplicados."
+    "descricaoLite": "A cada turno, 2 pontos das penalidades geradas por Ações Múltiplas deixam de ser aplicados.",
+    "grupoEscolha": "acao_adicional"
   },
   {
-    "id": "acao_adicional_4",
-    "nome": "Ação Adicional (Física/Mental)",
-    "custo": 4,
-    "categoria": "racial_trait_positive",
-    "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem físicas ou mentais.",
-    "origem": "BASICO",
-    "descricaoLite": "Quando todas as ações do turno são físicas ou todas mentais, a penalidade de Ações Múltiplas cai em 2 pontos."
-  },
-  {
-    "id": "acao_adicional_10",
+    "id": "acoes_adicionais_maior",
     "nome": "Ações Adicionais (Maior)",
     "custo": 10,
     "categoria": "racial_trait_positive",
     "descricao": "Reduz as penalidades de Ações Múltiplas em 4 para qualquer tipo de ação.",
-    "origem": "BASICO",
-    "descricaoLite": "Qualquer combinação de ações no turno tem sua penalidade de Ações Múltiplas reduzida em 4 pontos."
+    "origem": "FANTASIA",
+    "descricaoLite": "Qualquer combinação de ações no turno tem sua penalidade de Ações Múltiplas reduzida em 4 pontos.",
+    "grupoEscolha": "acao_adicional"
   },
   {
     "id": "adaptavel",
@@ -54,13 +57,14 @@
     "descricaoLite": "Paredes e tetos podem ser percorridos como se fossem chão plano, gastando o dobro do custo normal de Movimentação."
   },
   {
-    "id": "aparar_positivo",
+    "id": "APARAR",
     "nome": "Aparar (+1)",
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "O Aparar natural é aumentado em +1.",
     "origem": "BASICO",
-    "descricaoLite": "A Aparar básica do personagem sobe em +1."
+    "descricaoLite": "A Aparar básica do personagem sobe em +1.",
+    "vezesMax": 3
   },
   {
     "id": "arma_de_sopro",
@@ -90,13 +94,14 @@
     "descricaoLite": "Adaptado à vida aquática, o personagem nada com Movimentação total e nunca corre risco de afogamento em água ou outro líquido oxigenado."
   },
   {
-    "id": "armadura_racial",
+    "id": "ARMADURA",
     "nome": "Armadura (+2)",
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pele grossa, placas ou carapaça garantem Armadura +2.",
     "origem": "BASICO",
-    "descricaoLite": "Uma cobertura natural resistente — pele grossa, placas ou carapaça — soma +2 de Armadura ao corpo."
+    "descricaoLite": "Uma cobertura natural resistente — pele grossa, placas ou carapaça — soma +2 de Armadura ao corpo.",
+    "vezesMax": 3
   },
   {
     "id": "atordoar",
@@ -441,13 +446,14 @@
     "descricaoLite": "A Resistência sobe em +2, assim como a recuperação de Abalado; além disso, 1 ponto de Ferimentos é ignorado e o personagem não respira nem sofre com doenças ou venenos."
   },
   {
-    "id": "movimentacao_bonus",
+    "id": "MOVIMENTACAO",
     "nome": "Movimentação Aumentada (+2)",
     "custo": 2,
     "categoria": "racial_trait_positive",
     "descricao": "+2 na Movimentação e aumenta o dado de corrida em um tipo.",
     "origem": "BASICO",
-    "descricaoLite": "A Movimentação sobe +2 e o dado usado para correr avança um tipo."
+    "descricaoLite": "A Movimentação sobe +2 e o dado usado para correr avança um tipo.",
+    "vezesMax": 2
   },
   {
     "id": "mudanca_forma",
@@ -531,13 +537,14 @@
     "descricaoLite": "Depois que todos os Ferimentos estiverem curados, até lesões permanentes acabam se regenerando."
   },
   {
-    "id": "resistencia_racial",
+    "id": "RESISTENCIA",
     "nome": "Resistência (+1)",
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "Pele endurecida ou músculos densos aumentam a Resistência em +1.",
     "origem": "BASICO",
-    "descricaoLite": "Uma constituição física mais resistente — pele endurecida ou músculos densos — soma +1 à Resistência."
+    "descricaoLite": "Uma constituição física mais resistente — pele endurecida ou músculos densos — soma +1 à Resistência.",
+    "vezesMax": 3
   },
   {
     "id": "resistencia_ambiental",
@@ -621,13 +628,14 @@
     "descricaoLite": "Rastrear um alvo pelo odor concede +2 em testes de Sobrevivência."
   },
   {
-    "id": "tamanho_mais_1",
+    "id": "TAMANHO_MAIS_1",
     "nome": "Tamanho +1",
     "custo": 1,
     "categoria": "racial_trait_positive",
     "descricao": "+1 na Resistência e +1 no máximo de Força.",
     "origem": "BASICO",
-    "descricaoLite": "A Resistência e o limite máximo de Força sobem +1 cada."
+    "descricaoLite": "A Resistência e o limite máximo de Força sobem +1 cada.",
+    "vezesMax": 3
   },
   {
     "id": "telepatia",
@@ -783,13 +791,14 @@
     "descricaoLite": "O personagem ganha a capacidade de voar, com Movimentação 24, correndo com +2d6 adicionais."
   },
   {
-    "id": "aparar_baixo",
+    "id": "APARAR_BAIXO",
     "nome": "Aparar Baixo",
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Aparar -1.",
     "origem": "BASICO",
-    "descricaoLite": "O valor de Aparar do personagem sofre -1."
+    "descricaoLite": "O valor de Aparar do personagem sofre -1.",
+    "vezesMax": 3
   },
   {
     "id": "complicacao_racial_menor",
@@ -873,13 +882,14 @@
     "descricaoLite": "Um corpo de tamanho ou forma incomum exige equipamentos personalizados, custando o dobro do preço normal — sem eles, rolagens de Característica sofrem -1."
   },
   {
-    "id": "fragil",
+    "id": "FRAGIL",
     "nome": "Frágil",
     "custo": -1,
     "categoria": "racial_trait_negative",
     "descricao": "Reduz a Resistência em 1.",
     "origem": "BASICO",
-    "descricaoLite": "A Resistência do personagem cai em 1."
+    "descricaoLite": "A Resistência do personagem cai em 1.",
+    "vezesMax": 2
   },
   {
     "id": "fraqueza_ambiental",

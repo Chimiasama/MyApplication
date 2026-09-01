@@ -222,8 +222,11 @@ class ScifiAncestryVariantSyncTest {
             compendioSciFiAtivo = true
             ancestralidade = "CENTAUX"
             scifiVariant = "Gazela"
-            // Ensure traits are applied for test context (Movimentação +4)
+            // Ensure traits are applied for test context (Movimentação +4) —
+            // id explícito (ver AncestryVariantRegistry.centaux), não mais
+            // derivado do texto por ModifierEngine.
             vantagensRaciais.add("MOVIMENTAÇÃO +4")
+            racialTraitIdsFromVariants.add(RacialTraitStack("MOVIMENTACAO", vezes = 2))
         }
 
         assertEquals(10, state.valorMovimentacao())
@@ -237,18 +240,21 @@ class ScifiAncestryVariantSyncTest {
             compendioSciFiAtivo = true
             ancestralidade = "DRAKENS"
             naturalArmorFromRace = 0
-            // Inject traits manually for unit test isolation
+            // Inject traits manually for unit test isolation — id explícito
+            // pro efeito numérico (RESISTENCIA com vezes=2), igual ao que
+            // AncestryVariantRegistry.drakens já concede pra "Padrão".
             vantagensRaciais.add("FORTE") // Often associated
             vantagensRaciais.add("RESISTÊNCIA +2")
-            // "LENTO" might be intrinsic or a trait depending on implementation. Assuming trait for test.
+            racialTraitIdsFromVariants.add(RacialTraitStack("RESISTENCIA", vezes = 2))
+            // "LENTO" bate direto por keyify (sourceKeys), sem precisar de id à parte.
             desvantagensRaciais.add("LENTO")
         }
 
         val mods = ModifierEngine.collect(state)
 
         assertTrue(mods.any { it.id == "racial_trait_LENTO_pace" && it.value == -1 })
-        assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
-        assertFalse(mods.any { it.id == "racial_armor_generic" })
+        assertTrue(mods.any { it.id == "racial_trait_RESISTENCIA_res" && it.value == 2 })
+        assertFalse(mods.any { it.target == ModifierTarget.ARMOR && it.sourceType == SourceType.ANCESTRALIDADE })
     }
 
     @Test
@@ -338,10 +344,11 @@ class ScifiAncestryVariantSyncTest {
             ancestralidade = "ELEMENTAIS"
             vantagensRaciais.clear()
             vantagensRaciais.add("RESISTÊNCIA +2")
+            racialTraitIdsFromVariants.add(RacialTraitStack("RESISTENCIA", vezes = 2))
         }
 
         val mods = ModifierEngine.collect(state)
-        assertTrue(mods.any { it.id == "racial_res_generic" && it.value == 2 })
+        assertTrue(mods.any { it.id == "racial_trait_RESISTENCIA_res" && it.value == 2 })
     }
 
 
@@ -352,8 +359,9 @@ class ScifiAncestryVariantSyncTest {
             compendioSciFiAtivo = true
             ancestralidade = "FERAIS"
             scifiVariant = "Padrão"
-            // Inject traits
+            // Inject traits — id explícito (ver AncestryVariantRegistry.ferais).
             vantagensRaciais.add("DIMINUTO (Tamanho -3)")
+            racialTraitIdsFromVariants.add(RacialTraitStack("DIMINUTO_TAMANHO_3"))
         }
 
         assertEquals(-3, state.valorTamanho())
@@ -369,8 +377,9 @@ class ScifiAncestryVariantSyncTest {
             compendioSciFiAtivo = true
             ancestralidade = "FERAIS"
             scifiVariant = "Menor"
-             // Inject traits
+             // Inject traits — id explícito (ver AncestryVariantRegistry.ferais).
             vantagensRaciais.add("DIMINUTO (Tamanho -4)")
+            racialTraitIdsFromVariants.add(RacialTraitStack("DIMINUTO_TAMANHO_4"))
         }
 
         assertEquals(-4, state.valorTamanho())
@@ -385,8 +394,9 @@ class ScifiAncestryVariantSyncTest {
             compendioSciFiAtivo = true
             ancestralidade = "MÍMICOS"
             scifiVariant = "Resistente"
-            // Inject trait
+            // Inject trait — id explícito (ver AncestryVariantRegistry.mimicos).
             vantagensRaciais.add("RESISTÊNCIA +1")
+            racialTraitIdsFromVariants.add(RacialTraitStack("RESISTENCIA", vezes = 1))
         }
 
         val mods = ModifierEngine.collect(state)
@@ -405,7 +415,7 @@ class ScifiAncestryVariantSyncTest {
         }
 
         val mods = ModifierEngine.collect(state)
-        assertFalse(mods.any { it.id == "racial_trait_FRAGIL_res" || it.id == "racial_trait_FRAGIL_MAIOR_res" })
+        assertFalse(mods.any { it.id == "racial_trait_FRAGIL_res" })
     }
 
     @Test

@@ -37,6 +37,23 @@ jobs:
       - name: Run tests and build
         run: ./gradlew build -q --console=plain
 
+      - name: Report failing unit tests
+        if: failure()
+        run: |
+          echo "### 🧪 Testes que falharam" | tee -a $GITHUB_STEP_SUMMARY
+          echo '```text' | tee -a $GITHUB_STEP_SUMMARY
+          matches=$(find app/build/test-results -name "*.xml" 2>/dev/null | xargs grep -l "<failure" 2>/dev/null)
+          if [ -z "$matches" ]; then
+            echo "Nenhum XML de teste com <failure> encontrado em app/build/test-results." | tee -a $GITHUB_STEP_SUMMARY
+            find app/build/test-results -name "*.xml" 2>/dev/null | tee -a $GITHUB_STEP_SUMMARY
+          else
+            echo "$matches" | while read -r f; do
+              echo "== $f ==" | tee -a $GITHUB_STEP_SUMMARY
+              grep -B 8 -A 15 "<failure" "$f" | tee -a $GITHUB_STEP_SUMMARY
+            done
+          fi
+          echo '```' | tee -a $GITHUB_STEP_SUMMARY
+
       - name: Report Kotlin Errors to Summary
         if: failure()
         run: |

@@ -3,9 +3,12 @@ package com.example.swadebuilder.model.usecase
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.AncestryVariantConfig
+import com.example.swadebuilder.model.RacialTraitEffect
+import com.example.swadebuilder.model.RacialTraitPointCatalog
 import com.example.swadebuilder.model.ResolvedTraitPackage
 import com.example.swadebuilder.model.SelectionAnswer
 import com.example.swadebuilder.model.SelectionDef
+import com.example.swadebuilder.model.TraitAddition
 import com.example.swadebuilder.model.canonicalOriginKey
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.util.keyify
@@ -61,7 +64,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         return Result(
             naturalArmorFromRace = resolved.naturalArmor,
             forceArmorZero = true,
-            ensureAdvantageNames = resolved.vantagensGratisParaAdicionar,
+            ensureAdvantageNames = resolved.vantagensGratisParaAdicionar.map { it.nome },
             ensureAdvantageIds = resolved.vantagensGratisIds,
             ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
             automaticAdvantagesToRemove = resolved.tracosParaRemoverPorNome,
@@ -81,11 +84,17 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
     data class Result(
         val naturalArmorFromRace: Int,
         val forceArmorZero: Boolean,
+        // Nomes de Vantagem (vantagens.json) casados por nome pra conceder a
+        // Vantagem de verdade — ver ResolveAncestryRacialPackageUseCase.
         val ensureAdvantageNames: List<String>,
         val ensureAdvantageIds: List<String>,
-        val ensureAutomaticAdvantages: List<String>,
+        // Traços/vantagens automáticas que só entram como bookkeeping
+        // (vantagensRaciais/ModifierEngine) — cada um já carrega seu id
+        // mecânico explícito (ver TraitAddition), nunca derivado do texto
+        // em tempo de execução.
+        val ensureAutomaticAdvantages: List<TraitAddition>,
         val automaticAdvantagesToRemove: List<String> = emptyList(),
-        val ensureRacialDisadvantages: List<String>,
+        val ensureRacialDisadvantages: List<TraitAddition>,
         val elementalAction: ElementalAction,
         val anotacoesToAdd: List<String> = emptyList(),
         val racialDisadvantagesToRemove: List<String> = emptyList()
@@ -101,8 +110,24 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         ancestryOptions: List<String> = emptyList(),
         isSciFiActive: Boolean = false,
         isSciFiMechasActive: Boolean = false,
-        ancestryOrigin: String = "BASICO"
+        ancestryOrigin: String = "BASICO",
+        // Ids de habilidade[] da raça já resolvida (ver
+        // ApplyAncestryChangeCoordinatorUseCase) — usado pra decidir Armadura
+        // Natural por id de traço (ARMADURA), não pelo nome da raça no
+        // "when" abaixo. Vazio quando o chamador não tem essa lista (ex.:
+        // testes isolados deste use case). Sem contagem de "vezes" aqui de
+        // propósito: nenhuma raça oficial hoje tem Armadura Natural além de
+        // +2 (1 compra) — se um dia alguma precisar de +4/+6, este cálculo
+        // (e o `racialAbilityIds` que o alimenta) precisa virar Map<String,
+        // Int> igual a `racialTraitIdsFromVariants` do ModifierEngine.
+        racialAbilityIds: Set<String> = emptySet()
     ): Result {
+        val naturalArmorFromAbilityId = RacialTraitPointCatalog.EFEITOS
+            .filterValues { it is RacialTraitEffect.ArmaduraBonus }
+            .entries
+            .firstOrNull { (id, _) -> id in racialAbilityIds }
+            ?.let { (_, efeito) -> (efeito as RacialTraitEffect.ArmaduraBonus).valor }
+            ?: 0
         val ancKey = anc.keyify()
         val effectiveVariant = if (ancestryOptions.isNotEmpty()) {
             resolveAncestryVariantUseCase.execute(
@@ -123,7 +148,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                     forceArmorZero = true,
                     ensureAdvantageNames = listOf("CALCULISTA"),
                     ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf("CALCULISTA"),
+                    ensureAutomaticAdvantages = listOf(TraitAddition("CALCULISTA", "CALCULISTA")),
                     ensureRacialDisadvantages = emptyList(),
                     elementalAction = ElementalAction.NONE
                 )
@@ -145,7 +170,12 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         emptyList()
                     }
                     val racialDisadvantages = AnaoCiberTraitCatalog.buildDesvantagens(tracosValidos).ifEmpty {
-                        listOf("Anões Ciber: escolha até 2 pontos de traços raciais negativos (nenhum maior que -2) na ficha.")
+                        listOf(
+                            TraitAddition(
+                                "Anões Ciber: escolha até 2 pontos de traços raciais negativos (nenhum maior que -2) na ficha.",
+                                "ANAO_CIBER_TRACOS_PENDENTES"
+                            )
+                        )
                     }
                     val catalogSelection = AncestryVariantRegistry.get("ANOES")
                         ?.grupoVariante?.opcoes?.firstOrNull { it.id == "ciber" }
@@ -165,7 +195,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                     Result(
                         naturalArmorFromRace = 0,
                         forceArmorZero = true,
-                        ensureAdvantageNames = resolved.vantagensGratisParaAdicionar,
+                        ensureAdvantageNames = resolved.vantagensGratisParaAdicionar.map { it.nome },
                         ensureAdvantageIds = emptyList(),
                         ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar,
                         ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
@@ -239,7 +269,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             return Result(
                 naturalArmorFromRace = if (effectiveVariant == "Pedregoso") 2 else 0,
                 forceArmorZero = true,
-                ensureAdvantageNames = resolved.vantagensGratisParaAdicionar,
+                ensureAdvantageNames = resolved.vantagensGratisParaAdicionar.map { it.nome },
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
                 ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
@@ -253,8 +283,11 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 forceArmorZero = true,
                 ensureAdvantageNames = listOf("FURIOSO"),
                 ensureAdvantageIds = emptyList(),
-                ensureAutomaticAdvantages = listOf("FURIOSO", "GARRAS"),
-                ensureRacialDisadvantages = listOf("SANGUINÁRIO"),
+                ensureAutomaticAdvantages = listOf(
+                    TraitAddition("FURIOSO", "FURIOSO"),
+                    TraitAddition("GARRAS", "GARRAS")
+                ),
+                ensureRacialDisadvantages = listOf(TraitAddition("SANGUINÁRIO", "SANGUINARIO")),
                 elementalAction = ElementalAction.NONE,
                 anotacoesToAdd = listOf("Feral: não pode canalizar Técnicas de Chi.")
             )
@@ -296,24 +329,28 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
-                ensureRacialDisadvantages = listOf("PECULIARIDADE"),
+                ensureRacialDisadvantages = listOf(TraitAddition("PECULIARIDADE", "PECULIARIDADE")),
                 elementalAction = ElementalAction.NONE
             )
         }
 
         return when (ancKey) {
+            // Armadura Natural lida pelo id do traço (ARMADURA, ver
+            // ancestralidades.json), não mais fixa por nome de raça — o
+            // valor só é diferente de 0 quando a raça resolvida realmente
+            // carrega esse traço em habilidades[].
             "SAURIOS" -> Result(
-                naturalArmorFromRace = 2,
+                naturalArmorFromRace = naturalArmorFromAbilityId,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
-                ensureAutomaticAdvantages = listOf("PRONTIDÃO"),
+                ensureAutomaticAdvantages = listOf(TraitAddition("PRONTIDÃO", "PRONTIDAO")),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )
 
             "GOLENS" -> Result(
-                naturalArmorFromRace = 2,
+                naturalArmorFromRace = naturalArmorFromAbilityId,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
@@ -323,7 +360,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             )
 
             "DRACONIANOS" -> Result(
-                naturalArmorFromRace = 2,
+                naturalArmorFromRace = naturalArmorFromAbilityId,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
@@ -333,11 +370,11 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             )
 
             "INSETOIDES" -> Result(
-                naturalArmorFromRace = 2,
+                naturalArmorFromRace = naturalArmorFromAbilityId,
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = emptyList(),
-                ensureAutomaticAdvantages = listOf("GARRAS"),
+                ensureAutomaticAdvantages = listOf(TraitAddition("GARRAS", "GARRAS")),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )
@@ -348,7 +385,10 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 ensureAdvantageNames = listOf("Sorte", "Espirituoso"),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
-                ensureRacialDisadvantages = listOf("Tamanho -1", "Movimentação Reduzida"),
+                ensureRacialDisadvantages = listOf(
+                    TraitAddition("Tamanho -1", "TAMANHO_MENOS_1"),
+                    TraitAddition("Movimentação Reduzida", "MOVIMENTACAO_REDUZIDA")
+                ),
                 elementalAction = ElementalAction.NONE
             )
 
@@ -359,7 +399,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         forceArmorZero = true,
                         ensureAdvantageNames = emptyList(),
                         ensureAdvantageIds = listOf("antecedente_arcano_milagres"),
-                        ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (MILAGRES)"),
+                        ensureAutomaticAdvantages = listOf(TraitAddition("ANTECEDENTE ARCANO (MILAGRES)", "ANTECEDENTE_ARCANO_MILAGRES")),
                         ensureRacialDisadvantages = emptyList(),
                         elementalAction = ElementalAction.NONE
                     )
@@ -410,7 +450,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = listOf("antecedente_arcano_dom"),
-                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (DOM)"),
+                ensureAutomaticAdvantages = listOf(TraitAddition("ANTECEDENTE ARCANO (DOM)", "ANTECEDENTE_ARCANO_DOM")),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )
@@ -420,7 +460,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 forceArmorZero = true,
                 ensureAdvantageNames = emptyList(),
                 ensureAdvantageIds = listOf("aa_demonio"),
-                ensureAutomaticAdvantages = listOf("ANTECEDENTE ARCANO (DEMÔNIO)"),
+                ensureAutomaticAdvantages = listOf(TraitAddition("ANTECEDENTE ARCANO (DEMÔNIO)", "ANTECEDENTE_ARCANO_DEMONIO")),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
             )

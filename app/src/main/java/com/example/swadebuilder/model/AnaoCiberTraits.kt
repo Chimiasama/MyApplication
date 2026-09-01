@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model
 
+import com.example.swadebuilder.util.keyify
 import kotlinx.serialization.Serializable
 
 /**
@@ -30,6 +31,11 @@ data class AnaoCiberNegativeTrait(
     val custo: Int,
     val descricao: String,
     val injecaoMecanica: String? = null,
+    // Id mecânico real do traço (RacialTraitPointCatalog.EFEITOS), pareado
+    // à mão com `injecaoMecanica` — nunca derivado do texto de exibição em
+    // tempo de execução. Só os traços do Grupo 1 (efeito numérico
+    // verificado) têm um aqui.
+    val injecaoId: String? = null,
     val exigeEscolhaAtributo: Boolean = false,
     val exigeEscolhaPericia: Boolean = false
 )
@@ -45,21 +51,33 @@ object AnaoCiberTraitCatalog {
             nome = "Frágil",
             custo = -1,
             descricao = "Reduz a Resistência em 1.",
-            injecaoMecanica = "Frágil"
+            injecaoMecanica = "Frágil",
+            // FRAGIL só é reconhecido por id de habilidade de verdade (ver
+            // ModifierEngine.idsSoPorHabilidade) — Anão Ciber não tem uma
+            // habilidade própria com este id, então escolher este traço
+            // registra a desvantagem mas não soma a penalidade de
+            // Resistência automaticamente (mesma limitação de antes desta
+            // refatoração; documentado, não uma regressão nova).
+            injecaoId = "FRAGIL"
         ),
         AnaoCiberNegativeTrait(
             id = "tamanho_menos_1",
             nome = "Tamanho -1",
             custo = -1,
             descricao = "Reduz o Tamanho e a Resistência em 1.",
-            injecaoMecanica = "Tamanho -1"
+            injecaoMecanica = "Tamanho -1",
+            injecaoId = "TAMANHO_MENOS_1"
         ),
         AnaoCiberNegativeTrait(
             id = "aparar_baixo",
             nome = "Aparar Baixo",
             custo = -1,
             descricao = "Aparar -1.",
-            injecaoMecanica = "Aparar -1"
+            injecaoMecanica = "Aparar -1",
+            // "APARAR_BAIXO" é o traço empilhável do livro (-1/compra, até 3x
+            // — ver RacialTraitPointCatalog.VEZES_MAX); este traço do Anão
+            // Ciber é 1 compra só (vezes=1, o padrão de RacialAbility).
+            injecaoId = "APARAR_BAIXO"
         ),
         // Grupo 2 — traços narrativos/situacionais (o livro não define um valor de
         // ficha calculável; ficam anotados como desvantagem, sem modifier numérico,
@@ -182,28 +200,34 @@ object AnaoCiberTraitCatalog {
         selecoes.sumOf { sel -> byId(sel.traitId)?.custo?.let { -it } ?: 0 }
 
     /**
-     * Monta as strings a inserir em `desvantagensRaciais` (que o ModifierEngine já
-     * mistura com o JSON da raça antes de rodar suas detecções). Para traços do
-     * Grupo 1 usa a string exata verificada contra o motor (não necessariamente o
-     * `nome` de exibição — ex.: "Aparar Baixo" colide com um hardcode de outra raça
-     * e teria o dobro do efeito pretendido, então injeta-se "Aparar -1"). Para os
-     * demais, usa uma descrição textual que não bate em nenhum regex do motor de
-     * propósito (são narrativos) e para os paramétricos inclui o alvo escolhido.
+     * Monta os traços a inserir em `desvantagensRaciais`. Traços do Grupo 1
+     * carregam `injecaoId` (id mecânico real, verificado contra o
+     * catálogo — ver `AnaoCiberNegativeTrait.injecaoId`). Os demais não têm
+     * efeito numérico modelado, então recebem o próprio id do catálogo
+     * (`trait.id`, já estável e escrito à mão nesta classe) — nunca um id
+     * derivado do texto de exibição.
      */
-    fun buildDesvantagens(selecoes: List<AnaoCiberTraitSelection>): List<String> {
+    fun buildDesvantagens(selecoes: List<AnaoCiberTraitSelection>): List<TraitAddition> {
         return selecoes.mapNotNull { sel ->
             val trait = byId(sel.traitId) ?: return@mapNotNull null
             when {
-                trait.injecaoMecanica != null -> trait.injecaoMecanica
+                trait.injecaoMecanica != null ->
+                    TraitAddition(trait.injecaoMecanica, trait.injecaoId ?: trait.id.keyify())
                 trait.exigeEscolhaAtributo -> {
                     val atributo = sel.escolhaAtributo ?: return@mapNotNull null
-                    "${trait.nome}: testes de $atributo sofrem -1 (escolha do jogador)."
+                    TraitAddition(
+                        "${trait.nome}: testes de $atributo sofrem -1 (escolha do jogador).",
+                        "${trait.id.keyify()}_${atributo.keyify()}"
+                    )
                 }
                 trait.exigeEscolhaPericia -> {
                     val pericia = sel.escolhaPericia ?: return@mapNotNull null
-                    "${trait.nome}: testes de $pericia sofrem penalidade (escolha do jogador)."
+                    TraitAddition(
+                        "${trait.nome}: testes de $pericia sofrem penalidade (escolha do jogador).",
+                        "${trait.id.keyify()}_${pericia.keyify()}"
+                    )
                 }
-                else -> "${trait.nome}: ${trait.descricao}"
+                else -> TraitAddition("${trait.nome}: ${trait.descricao}", trait.id.keyify())
             }
         }
     }

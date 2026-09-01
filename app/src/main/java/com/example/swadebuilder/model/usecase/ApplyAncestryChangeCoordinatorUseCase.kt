@@ -144,7 +144,8 @@ class ApplyAncestryChangeCoordinatorUseCase(
                                 }
                             } ?: emptyList()))
                     .distinctBy { it.racialGrantDedupeKey() },
-                ancestryOrigin = params.targetAncestryDef?.origem ?: "BASICO"
+                ancestryOrigin = params.targetAncestryDef?.origem ?: "BASICO",
+                racialAbilityIds = params.targetAncestryDef?.habilidades?.mapNotNull { it.id?.keyify() }?.toSet() ?: emptySet()
             )
         )
 

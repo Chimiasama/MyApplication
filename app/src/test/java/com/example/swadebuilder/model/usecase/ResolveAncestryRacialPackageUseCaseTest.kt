@@ -67,7 +67,8 @@ class ResolveAncestryRacialPackageUseCaseTest {
                 selectedAdvantages = emptyList(),
                 previousFreeAdvantageKeys = emptySet(),
                 ancestryGrantedAdvantages = emptyList(),
-                ancestryAutomaticDisadvantages = emptyList()
+                ancestryAutomaticDisadvantages = emptyList(),
+                racialAbilityIds = setOf("ARMADURA")
             )
         )
 
@@ -298,10 +299,10 @@ class ResolveAncestryRacialPackageUseCaseTest {
                 ancestryAutomaticDisadvantages = emptyList()
             )
         )
-        // The implementation in ResolveAncestrySpecificAdjustmentsUseCase adds the text to `ensureRacialDisadvantages`,
-        // NOT `anotacoesToAdd` for Possessores Energia.
-        // It's a text string, so it ends up in desvantagensRaciais in the final package.
-        assertTrue(result.desvantagensRaciais.any { it.contains("4 pontos", ignoreCase = true) })
+        // Nota pro mestre, não uma desvantagem de traço real — mora em
+        // anotacoesToAdd (ver AncestryVariantRegistry.possessores), não em
+        // desvantagensRaciais.
+        assertTrue(result.anotacoesToAdd.any { it.contains("4 pontos", ignoreCase = true) })
     }
 
     @Test

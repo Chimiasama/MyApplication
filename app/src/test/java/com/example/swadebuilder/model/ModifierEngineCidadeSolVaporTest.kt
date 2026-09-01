@@ -20,7 +20,8 @@ class ModifierEngineCidadeSolVaporTest {
                 RacialAbility(
                     nome = "Frágil",
                     descricao = "-2 na Resistência devido à degeneração física secular.",
-                    id = "FRAGIL_MAIOR",
+                    id = "FRAGIL",
+                    vezes = 2,
                     category = "racial_trait_negative"
                 )
             )
@@ -57,7 +58,7 @@ class ModifierEngineCidadeSolVaporTest {
         val modifiers = ModifierEngine.collect(state)
 
         assertTrue(
-            modifiers.any { it.id == "racial_trait_FRAGIL_MAIOR_res" && it.target == ModifierTarget.TOUGHNESS_FLAT && it.value == -2 }
+            modifiers.any { it.id == "racial_trait_FRAGIL_res" && it.target == ModifierTarget.TOUGHNESS_FLAT && it.value == -2 }
         )
     }
 }
