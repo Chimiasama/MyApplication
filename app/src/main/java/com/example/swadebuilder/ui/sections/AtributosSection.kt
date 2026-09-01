@@ -41,6 +41,8 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.calcularPericiaRules
+import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
 
@@ -234,27 +236,86 @@ fun AtributosContent(
                     Spacer(Modifier.width(4.dp))
                 }
 
-                if (allowLongTexts && descricao.isNotBlank()) {
-                    Spacer(Modifier.height(2.dp))
-                    TextButton(
-                        onClick = {
-                            val current = detalhesExpandidos[descKey] ?: false
-                            detalhesExpandidos[descKey] = !current
-                        },
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                    ) {
-                        Text(
-                            if (detalhesExpandidos[descKey] == true) "Ocultar detalhes" else "Ver detalhes",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+                val periciasDoAtributo = remember(state.listaPericias, nome) {
+                    state.periciasComIdiomas().filter { per ->
+                        per.atributo.keyify() == nome.keyify()
+                    }.distinctBy { it.nome }
+                }
 
-                    AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
-                        Text(
-                            text = descricao,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                Spacer(Modifier.height(2.dp))
+                TextButton(
+                    onClick = {
+                        val current = detalhesExpandidos[descKey] ?: false
+                        detalhesExpandidos[descKey] = !current
+                    },
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                ) {
+                    Text(
+                        if (detalhesExpandidos[descKey] == true) "Ocultar Perícias" else "Ver Perícias (${periciasDoAtributo.size})",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                AnimatedVisibility(visible = detalhesExpandidos[descKey] == true) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 4.dp),
+                        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp)
+                    ) {
+                        if (periciasDoAtributo.isEmpty()) {
+                            Text(
+                                text = "Nenhuma perícia vinculada a este atributo.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        } else {
+                            periciasDoAtributo.forEach { per ->
+                                val reg = state.calcularPericiaRules(per, state.idosoBonusSp > 0, locked)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
+                                ) {
+                                    Text(
+                                        text = per.nome.toFancyTitleCase(),
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    IconButton(
+                                        onClick = {
+                                            state.decreasePericia(per)
+                                            onUserFeedback()
+                                        },
+                                        enabled = reg.canDecrease,
+                                        modifier = Modifier.size(28.dp)
+                                    ) {
+                                        Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.fillMaxSize())
+                                    }
+                                    Text(
+                                        text = if (reg.displayRaw == 0) "-" else reg.displayRaw.toDiceString(),
+                                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.width(48.dp),
+                                        textAlign = TextAlign.Center
+                                    )
+                                    IconButton(
+                                        onClick = {
+                                            if (!state.modoLivre && state.pontosPericia < reg.cost && pcLivres >= (reg.cost - state.pontosPericia)) {
+                                                repeat(reg.cost - state.pontosPericia) { state.gastarPcParaPericia() }
+                                            }
+                                            state.increasePericiaFromAdvancement(per, reg.cost, null)
+                                            onUserFeedback()
+                                        },
+                                        enabled = reg.canIncrease || (pcLivres >= reg.cost && reg.nextRaw <= reg.capRaw),
+                                        modifier = Modifier.size(28.dp)
+                                    ) {
+                                        Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.fillMaxSize())
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

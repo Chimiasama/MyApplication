@@ -76,7 +76,8 @@ data class RacialModifier(
             val tid = hab.resolvedTraitId().uppercase()
             if (tid == "SKILL_BOOST" && !hab.targetRef.isNullOrBlank()) {
                 val key = hab.targetRef.toFancyTitleCase()
-                map[key] = (map[key] ?: 0) + hab.value
+                val tier = if (hab.value == 1) 2 else hab.value
+                map[key] = (map[key] ?: 0) + tier
             }
         }
         return map
@@ -321,7 +322,8 @@ object RacialCaracteristicasResolver {
         }
 
         habilidades.filter { !it.invisivel }.forEach { hab ->
-            if (hab.category == "racial_hindrance" || hab.category == "racial_edge") return@forEach
+            val tid = hab.resolvedTraitId().uppercase()
+            if (hab.category == "racial_hindrance" || hab.category == "racial_edge" || tid == "RACIAL_HINDRANCE" || tid == "GRANTED_EDGE") return@forEach
             val id = hab.id?.keyify()
             val efeito = RacialTraitPointCatalog.efeitoDe(id, hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep || efeito is RacialTraitEffect.PericiaStep) return@forEach
