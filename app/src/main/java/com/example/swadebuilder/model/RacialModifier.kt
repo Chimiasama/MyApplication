@@ -290,28 +290,33 @@ object RacialCaracteristicasResolver {
         atributos.filterValues { it != 0 }.forEach { (atributo, delta) ->
             val dado = (4 + delta).toDiceString()
             val verbo = if (delta > 0) "aumentado" else "reduzido"
-            val pts = delta // Em SWADE cada passo de dado de atributo vale 2 pontos (delta=2 é 2pts)
-            linhas += "Atributo $verbo $dado: ${atributo.toFancyTitleCase()}${formatPts(pts)}"
+            val pts = delta
+            linhas += "Atributo $verbo: ${atributo.toFancyTitleCase()} ($dado)${formatPts(pts)}"
         }
 
         pericias.filterValues { it > 0 }.forEach { (pericia, tier) ->
             val dado = (4 + (tier - 1) * 2).toDiceString()
             val pts = if (tier >= 2) 2 else 1
-            linhas += "Perícia inicial $dado: ${pericia.toFancyTitleCase()}${formatPts(pts)}"
+            linhas += "Perícia inicial: ${pericia.toFancyTitleCase()} ($dado)${formatPts(pts)}"
         }
 
         vantagensGratisEfetivas(vantagensGratis, habilidades)
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
-            .forEach { linhas += "Vantagem racial: ${it.toFancyTitleCase()}${formatPts(2)}" }
+            .forEach { entrada ->
+                val cleanName = entrada.replace(Regex("(?i)^Vantagem\\s+(Racial|Grátis):\\s*"), "").trim()
+                linhas += "Vantagem Racial: ${cleanName.toFancyTitleCase()}${formatPts(2)}"
+            }
 
         desvantagensEfetivas(desvantagens, habilidades).forEach { entrada ->
-            val match = Regex("""^(.*?)\s*\((Maior|Menor)\)$""").find(entrada)
+            val cleanName = entrada.replace(Regex("(?i)^Complicação\\s+(Racial|Maior|Menor):\\s*"), "").trim()
+            val match = Regex("""^(.*?)\s*\((Maior|Menor)\)$""").find(cleanName)
             if (match != null) {
                 val (nome, severidade) = match.destructured
                 val pts = if (severidade.equals("Maior", ignoreCase = true)) -2 else -1
-                linhas += "Complicação racial ${severidade.lowercase()}: ${nome.toFancyTitleCase()}${formatPts(pts)}"
+                linhas += "Complicação ${severidade.toFancyTitleCase()}: ${nome.toFancyTitleCase()}${formatPts(pts)}"
             } else {
-                linhas += "Complicação racial: ${entrada.toFancyTitleCase()}${formatPts(-2)}"
+                val pts = if (entrada.contains("Maior", ignoreCase = true)) -2 else -1
+                linhas += "Complicação Racial: ${cleanName.toFancyTitleCase()}${formatPts(pts)}"
             }
         }
 

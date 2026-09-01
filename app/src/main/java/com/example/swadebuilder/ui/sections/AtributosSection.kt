@@ -87,11 +87,11 @@ fun AtributosContent(
             .verticalScroll(rememberScrollState())
             .padding(12.dp)
     ) {
-        // Updated Header to show potential BP
+        // Updated Header to show both Attribute and Skill Points
         if (!state.modoLivre) {
             SectionHeader(
                 onHelpClick = null,
-                centerText = "Pontos de Atributo: ${state.pontosAtributo}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
+                centerText = "Atributos: ${state.pontosAtributo}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}  |  Perícias: ${state.pontosPericia}${if (!locked && pcLivres >= 1) " (+${pcLivres} via PB)" else ""}",
                 onListaCompletaClick = null,
                 listaCompletaText = ""
             )
