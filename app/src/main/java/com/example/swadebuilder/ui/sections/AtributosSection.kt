@@ -32,14 +32,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
@@ -370,8 +374,25 @@ fun AtributosContent(
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
                                 ) {
+                                    val isBasica = state.isPericiaBasicaEfetiva(per)
                                     Text(
-                                        text = per.nome.toFancyTitleCase(),
+                                        text = buildAnnotatedString {
+                                            val displayName = per.nome.toFancyTitleCase()
+                                            if (isBasica) {
+                                                withStyle(
+                                                    SpanStyle(
+                                                        color = Color.Red,
+                                                        fontWeight = FontWeight.Bold
+                                                    )
+                                                ) {
+                                                    append("✯ $displayName")
+                                                }
+                                            } else {
+                                                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                                    append(displayName)
+                                                }
+                                            }
+                                        },
                                         style = MaterialTheme.typography.bodyMedium,
                                         modifier = Modifier.weight(1f)
                                     )
@@ -386,7 +407,11 @@ fun AtributosContent(
                                         Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.fillMaxSize())
                                     }
                                     Text(
-                                        text = if (reg.displayRaw == 0) "-" else reg.displayRaw.toDiceString(),
+                                        text = when {
+                                            reg.displayRaw > 0 -> reg.displayRaw.toDiceString()
+                                            isBasica -> "d4"
+                                            else -> "-"
+                                        },
                                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                                         color = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.width(48.dp),
