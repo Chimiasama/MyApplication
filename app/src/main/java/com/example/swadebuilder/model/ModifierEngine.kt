@@ -191,7 +191,9 @@ object ModifierEngine {
             // reintroduziria o traço removido por baixo do pano.
             anc.habilidades
                 .filter { it.nome.keyify() in sourceKeys }
-                .forEach { registrarCompra(it.id, it.vezes) }
+                .forEach { hab ->
+                    registrarCompra(hab.resolvedTraitId(), hab.vezes)
+                }
             // Habilidades do Monstro Heroico não passam pela filtragem de
             // variante de raça acima, então entram sem restrição.
             // MonstroHabilidade não tem campo `vezes` (nenhum Template do
@@ -252,10 +254,24 @@ object ModifierEngine {
                 }
             }
 
+            // Processa habilidades parametrizadas diretamente
+            anc.habilidades
+                .filter { it.nome.keyify() in sourceKeys }
+                .forEach { hab ->
+                    val tid = hab.resolvedTraitId()
+                    val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
+                    if (efeito !is RacialTraitEffect.Nenhum) {
+                        aplicarEfeito(tid, efeito, hab.nome, hab.vezes)
+                    }
+                }
+
             RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
                 val vezes = vezesPorId[id] ?: return@forEach
-                val nomeExibicao = RacialTraitPointCatalog.labelComVezes(id, vezes)
-                aplicarEfeito(id, efeito, nomeExibicao, vezes)
+                // Evita duplicar se a habilidade já foi aplicada via lista parametrizada acima
+                if (anc.habilidades.none { it.resolvedTraitId().keyify() == id.keyify() }) {
+                    val nomeExibicao = RacialTraitPointCatalog.labelComVezes(id, vezes)
+                    aplicarEfeito(id, efeito, nomeExibicao, vezes)
+                }
             }
         }
 

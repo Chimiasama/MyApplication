@@ -124,26 +124,15 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 // Ancestralidades. Reimplementa (não chama) vantagensGratisEfetivas porque
                 // esse filtro tem uma condição extra (Antecedente Arcano por id/nome) que a
                 // versão compartilhada não tem.
-                ancestryGrantedAdvantages = ((params.targetAncestryDef?.vantagensGratis ?: emptyList()) +
+                ancestryGrantedAdvantages = ((params.targetAncestryDef?.resolvedVantagensGratis() ?: emptyList()) +
                         (params.targetAncestryDef?.habilidades
                             ?.filter {
-                                it.category == "racial_edge" ||
-                                    it.id?.contains("ANTECEDENTE_ARCANO", ignoreCase = true) == true ||
+                                it.id?.contains("ANTECEDENTE_ARCANO", ignoreCase = true) == true ||
                                     it.nome.contains("Antecedente Arcano", ignoreCase = true)
                             }
-                            ?.map { it.id ?: it.nome } ?: emptyList()))
+                            ?.map { hab -> hab.targetRef ?: hab.id ?: hab.nome } ?: emptyList()))
                     .distinctBy { it.racialGrantDedupeKey() },
-                ancestryAutomaticDisadvantages = ((params.targetAncestryDef?.desvantagens ?: emptyList()) +
-                        (params.targetAncestryDef?.habilidades
-                            ?.filter { it.category == "racial_hindrance" }
-                            ?.map {
-                                if (!it.severity.isNullOrBlank()) {
-                                    "${it.nome} (${it.severity})"
-                                } else {
-                                    it.nome
-                                }
-                            } ?: emptyList()))
-                    .distinctBy { it.racialGrantDedupeKey() },
+                ancestryAutomaticDisadvantages = params.targetAncestryDef?.resolvedDesvantagens()?.distinctBy { it.racialGrantDedupeKey() } ?: emptyList(),
                 ancestryOrigin = params.targetAncestryDef?.origem ?: "BASICO",
                 racialAbilityIds = params.targetAncestryDef?.habilidades?.mapNotNull { it.id?.keyify() }?.toSet() ?: emptySet()
             )

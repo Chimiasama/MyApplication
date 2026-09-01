@@ -202,7 +202,20 @@ object RacialTraitPointCatalog {
         )
     )
 
-    fun efeitoDe(id: String?): RacialTraitEffect = id?.let { EFEITOS[it.keyify()] } ?: RacialTraitEffect.Nenhum
+    fun efeitoDe(id: String?, targetRef: String? = null, value: Int = 1): RacialTraitEffect {
+        if (id == null) return RacialTraitEffect.Nenhum
+        val key = id.keyify()
+        return when (key) {
+            "ATTRIBUTE_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value) else RacialTraitEffect.Nenhum
+            "SKILL_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value) else RacialTraitEffect.Nenhum
+            "TOUGHNESS_FLAT" -> RacialTraitEffect.ResistenciaBonus(value)
+            "PACE_CHANGE" -> RacialTraitEffect.PassoBonus(value)
+            "PARRY_BOOST" -> RacialTraitEffect.ApararBonus(value)
+            "SIZE_CHANGE" -> RacialTraitEffect.TamanhoBonus(value, minusculo = (value <= -3))
+            "NATURAL_ARMOR" -> RacialTraitEffect.ArmaduraBonus(value)
+            else -> EFEITOS[key] ?: RacialTraitEffect.Nenhum
+        }
+    }
 
     /**
      * Teto de vezes que um traço EMPILHÁVEL pode ser comprado, direto dos 3
@@ -532,6 +545,9 @@ object RacialTraitPointCatalog {
         "VOTO" to -2 // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
     )
 
-    /** Custo em pontos do traço, pelo id (0 se não estiver no catálogo). */
-    fun custoDe(id: String?): Int = id?.let { CUSTOS[it.keyify()] } ?: 0
+    /** Custo em pontos do traço, pelo id ou parâmetro direto `pontos` (0 se não estiver no catálogo). */
+    fun custoDe(id: String?, pontos: Int = 0): Int {
+        if (pontos != 0) return pontos
+        return id?.let { CUSTOS[it.keyify()] } ?: 0
+    }
 }
