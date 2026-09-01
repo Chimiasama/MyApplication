@@ -194,7 +194,9 @@ object ModifierEngine {
                 .forEach { registrarCompra(it.id, it.vezes) }
             // Habilidades do Monstro Heroico não passam pela filtragem de
             // variante de raça acima, então entram sem restrição.
-            monstro?.habilidades?.forEach { registrarCompra(it.id, it.vezes) }
+            // MonstroHabilidade não tem campo `vezes` (nenhum Template do
+            // Horror hoje concede um traço EMPILHÁVEL) — sempre 1 compra.
+            monstro?.habilidades?.forEach { registrarCompra(it.id, 1) }
             // Traços de Variante/Seleção (Centaux Gazela, Drakens/Mímicos/
             // Ferais "Padrão", Umvee Correnteza/Pedregoso etc.) que chegam
             // como texto solto em vantagensRaciais/desvantagensRaciais (ver
