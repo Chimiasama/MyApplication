@@ -651,7 +651,7 @@ private fun MainSection.tabLabel(state: CriadorState): String = when (this) {
     MainSection.ANCESTRALIDADES -> "Ancestr."
     MainSection.TROPOS -> "Tropos"
     MainSection.COMPLICACOES -> "Complic."
-    MainSection.ATRIBUTOS -> "Atributos"
+    MainSection.ATRIBUTOS -> "Atr/Per"
     MainSection.PERICIAS -> "Perícias"
     MainSection.VANTAGENS -> "Vantagens"
     MainSection.EQUIPAMENTOS -> "Equip."
