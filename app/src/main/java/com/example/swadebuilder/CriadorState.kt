@@ -280,6 +280,7 @@ class CriadorState {
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
     var showSystemMessages by mutableStateOf(true)
     var pularSelecaoRegras by mutableStateOf(false)
+    var modoSelecaoPericia by mutableStateOf(com.example.swadebuilder.util.AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER)
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)

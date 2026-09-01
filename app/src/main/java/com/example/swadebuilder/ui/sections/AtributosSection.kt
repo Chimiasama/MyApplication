@@ -50,9 +50,12 @@ import com.example.swadebuilder.R
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.calcularPericiaRules
+import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
+
 
 @Composable
 fun AttributeCarouselPopoverDialog(
@@ -158,7 +161,10 @@ fun AtributosContent(
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
 
+    val showSteppers = state.modoSelecaoPericia != AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER
+
     var attributePopoverTarget by remember { mutableStateOf<String?>(null) }
+    var skillPopoverTarget by remember { mutableStateOf<Pericia?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
@@ -259,33 +265,32 @@ fun AtributosContent(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    IconButton(
-                        onClick = {
-                            if (prevRaw < minReq) return@IconButton
-                            stack.removeAt(stack.lastIndex)
-                            state.valoresAtributos[nome]!!.intValue = prevRaw
-                            state.pontosAtributo++
-                            state.recalcularPontosAtributo()
+                    if (showSteppers) {
+                        IconButton(
+                            onClick = {
+                                if (prevRaw < minReq) return@IconButton
+                                stack.removeAt(stack.lastIndex)
+                                state.valoresAtributos[nome]!!.intValue = prevRaw
+                                state.pontosAtributo++
+                                state.recalcularPontosAtributo()
 
-                            // Auto-Refund BP if we have a surplus and are using BP
-                            // We need to loop because one click might free up a point that allows refunding MULTIPLE BPs if logic was different,
-                            // but for Attributes 1 AP = 2 BP.
-                            if (state.pontosAtributo > 0 && state.cpPaStack.isNotEmpty()) {
-                                state.devolverPcDeAtributo()
-                            }
+                                if (state.pontosAtributo > 0 && state.cpPaStack.isNotEmpty()) {
+                                    state.devolverPcDeAtributo()
+                                }
 
-                            onUserFeedback()
-                        },
-                        enabled = canReduce,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(4.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Remove,
-                            contentDescription = "Diminuir ${mapaAtributosDisplay[nome]}",
-                            modifier = Modifier.fillMaxSize()
-                        )
+                                onUserFeedback()
+                            },
+                            enabled = canReduce,
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(4.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Remove,
+                                contentDescription = "Diminuir ${mapaAtributosDisplay[nome]}",
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
 
                     Text(
@@ -302,31 +307,32 @@ fun AtributosContent(
                         textAlign = TextAlign.Center
                     )
 
-                    IconButton(
-                        onClick = {
-                            if (!state.modoLivre && nextRaw > maxRaw) return@IconButton
+                    if (showSteppers) {
+                        IconButton(
+                            onClick = {
+                                if (!state.modoLivre && nextRaw > maxRaw) return@IconButton
 
-                            if (!state.modoLivre && state.pontosAtributo <= 0) {
-                                // Auto-spend BP
-                                if (!state.gastarPcParaAtributo()) return@IconButton
-                            }
+                                if (!state.modoLivre && state.pontosAtributo <= 0) {
+                                    if (!state.gastarPcParaAtributo()) return@IconButton
+                                }
 
-                            stack.add(1)
-                            state.valoresAtributos[nome]!!.intValue = nextRaw
-                            state.pontosAtributo--
-                            state.recalcularPontosAtributo()
-                            onUserFeedback()
-                        },
-                        enabled = canIncrease,
-                        modifier = Modifier
-                            .size(32.dp)
-                            .padding(4.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Add,
-                            contentDescription = "Aumentar ${mapaAtributosDisplay[nome]}",
-                            modifier = Modifier.fillMaxSize()
-                        )
+                                stack.add(1)
+                                state.valoresAtributos[nome]!!.intValue = nextRaw
+                                state.pontosAtributo--
+                                state.recalcularPontosAtributo()
+                                onUserFeedback()
+                            },
+                            enabled = canIncrease,
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(4.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Add,
+                                contentDescription = "Aumentar ${mapaAtributosDisplay[nome]}",
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
 
                     Spacer(Modifier.width(4.dp))
@@ -396,15 +402,17 @@ fun AtributosContent(
                                         style = MaterialTheme.typography.bodyMedium,
                                         modifier = Modifier.weight(1f)
                                     )
-                                    IconButton(
-                                        onClick = {
-                                            state.decreasePericia(per)
-                                            onUserFeedback()
-                                        },
-                                        enabled = reg.canDecrease,
-                                        modifier = Modifier.size(28.dp)
-                                    ) {
-                                        Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.fillMaxSize())
+                                    if (showSteppers) {
+                                        IconButton(
+                                            onClick = {
+                                                state.decreasePericia(per)
+                                                onUserFeedback()
+                                            },
+                                            enabled = reg.canDecrease,
+                                            modifier = Modifier.size(28.dp)
+                                        ) {
+                                            Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.fillMaxSize())
+                                        }
                                     }
                                     Text(
                                         text = when {
@@ -414,21 +422,28 @@ fun AtributosContent(
                                         },
                                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                                         color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.width(48.dp),
+                                        modifier = Modifier
+                                            .width(48.dp)
+                                            .clickable {
+                                                skillPopoverTarget = per
+                                            },
                                         textAlign = TextAlign.Center
                                     )
-                                    IconButton(
-                                        onClick = {
-                                            if (!state.modoLivre && state.pontosPericia < reg.cost && pcLivres >= (reg.cost - state.pontosPericia)) {
-                                                repeat(reg.cost - state.pontosPericia) { state.gastarPcParaPericia() }
-                                            }
-                                            state.increasePericiaFromAdvancement(per, reg.cost, null)
-                                            onUserFeedback()
-                                        },
-                                        enabled = reg.canIncrease || (pcLivres >= reg.cost && reg.nextRaw <= reg.capRaw),
-                                        modifier = Modifier.size(28.dp)
-                                    ) {
-                                        Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.fillMaxSize())
+                                    if (showSteppers) {
+                                        val canAffordWithBP = (state.pontosPericia + pcLivres) >= reg.cost
+                                        IconButton(
+                                            onClick = {
+                                                if (!state.modoLivre && state.pontosPericia < reg.cost && pcLivres >= (reg.cost - state.pontosPericia)) {
+                                                    repeat(reg.cost - state.pontosPericia) { state.gastarPcParaPericia() }
+                                                }
+                                                state.increasePericiaFromAdvancement(per, reg.cost, null)
+                                                onUserFeedback()
+                                            },
+                                            enabled = reg.canIncrease || (canAffordWithBP && reg.nextRaw <= reg.capRaw),
+                                            modifier = Modifier.size(28.dp)
+                                        ) {
+                                            Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.fillMaxSize())
+                                        }
                                     }
                                 }
                             }
@@ -437,6 +452,45 @@ fun AtributosContent(
                 }
             }
         }
+    }
+
+    if (skillPopoverTarget != null) {
+        val per = skillPopoverTarget!!
+        val startRaw = state.periciaStartRaw(state.ancestralidade, per)
+        val attrName = state.mapaAtributosDisplay[per.atributo] ?: per.atributo
+        val attrRaw = state.valoresAtributos[per.atributo]?.intValue ?: 4
+        val currentRaw = state.rawTotal(per)
+        val idosoActive = state.idosoBonusSp > 0
+
+        SkillCarouselPopoverDialog(
+            skillName = per.nome,
+            startRaw = startRaw,
+            attrName = attrName,
+            attrRaw = attrRaw,
+            currentRaw = currentRaw,
+            onSelectRaw = { targetRaw: Int ->
+                if (targetRaw > currentRaw) {
+                    val stepsToAdd = dieStepsCount(currentRaw, targetRaw)
+                    repeat(stepsToAdd) {
+                        val reg = state.calcularPericiaRules(per, idosoActive, locked)
+                        if (!state.modoLivre && state.pontosPericia < reg.cost) {
+                            val missing = reg.cost - state.pontosPericia
+                            if (pcLivres >= missing) {
+                                repeat(missing) { state.gastarPcParaPericia() }
+                            }
+                        }
+                        state.increasePericiaFromAdvancement(per, reg.cost, null)
+                    }
+                } else if (targetRaw < currentRaw) {
+                    val stepsToRemove = dieStepsCount(targetRaw, currentRaw)
+                    repeat(stepsToRemove) {
+                        state.decreasePericia(per)
+                    }
+                }
+                onUserFeedback()
+            },
+            onDismiss = { skillPopoverTarget = null }
+        )
     }
 
     if (attributePopoverTarget != null) {

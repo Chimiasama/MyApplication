@@ -235,6 +235,7 @@ class MainActivity : ComponentActivity() {
                 state.showSystemMessages = prefs.showSystemMessages
                 state.appTheme = prefs.appTheme
                 state.pularSelecaoRegras = prefs.pularSelecaoRegras
+                state.modoSelecaoPericia = prefs.modoSelecaoPericia
             }
             val persistPrefs: () -> Unit = remember {
                 {
@@ -247,7 +248,8 @@ class MainActivity : ComponentActivity() {
                         state.mostrarDescricaoHome,
                         state.showSystemMessages,
                         state.appTheme,
-                        state.pularSelecaoRegras
+                        state.pularSelecaoRegras,
+                        state.modoSelecaoPericia
                     )
                 }
             }
