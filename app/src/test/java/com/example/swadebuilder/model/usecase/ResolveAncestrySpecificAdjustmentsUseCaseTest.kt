@@ -11,7 +11,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
     @Test
     fun `returns saurios adjustments`() {
-        val result = useCase.execute("SAURIOS", null, racialAbilityIds = setOf("ARMADURA_2"))
+        val result = useCase.execute("SAURIOS", null, racialAbilityIds = setOf("ARMADURA"))
 
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
@@ -29,7 +29,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
     @Test
     fun `returns golens adjustments`() {
-        val result = useCase.execute("GOLENS", null, racialAbilityIds = setOf("ARMADURA_2"))
+        val result = useCase.execute("GOLENS", null, racialAbilityIds = setOf("ARMADURA"))
 
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
@@ -40,7 +40,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
     @Test
     fun `returns draconianos adjustments`() {
-        val result = useCase.execute("DRACONIANOS", null, racialAbilityIds = setOf("ARMADURA_2"))
+        val result = useCase.execute("DRACONIANOS", null, racialAbilityIds = setOf("ARMADURA"))
 
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
@@ -51,7 +51,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
     @Test
     fun `returns insetoides adjustments`() {
-        val result = useCase.execute("INSETOIDES", null, racialAbilityIds = setOf("ARMADURA_2"))
+        val result = useCase.execute("INSETOIDES", null, racialAbilityIds = setOf("ARMADURA"))
 
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
@@ -219,7 +219,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")),
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
             result.ensureAutomaticAdvantages
         )
     }
@@ -238,7 +238,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
         assertEquals(0, result.naturalArmorFromRace)
         assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")),
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
             result.ensureAutomaticAdvantages
         )
     }
@@ -255,7 +255,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")),
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
             result.ensureAutomaticAdvantages
         )
         assertEquals(0, result.naturalArmorFromRace)
@@ -325,7 +325,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf(TraitAddition("MOVIMENTAÇÃO +4", "MOVIMENTACAO_4")), result.ensureAutomaticAdvantages)
+        assertEquals(listOf(TraitAddition("MOVIMENTAÇÃO +4", "MOVIMENTACAO", vezes = 2)), result.ensureAutomaticAdvantages)
         assertEquals(listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"), result.automaticAdvantagesToRemove)
         assertEquals(listOf("GRANDE"), result.racialDisadvantagesToRemove)
     }

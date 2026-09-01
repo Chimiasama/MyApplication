@@ -71,12 +71,29 @@ class RacialTraitPointCatalogTest {
 
     @Test
     fun `efeitoDe retorna bonus fixo de Resistencia Passo e Aparar`() {
+        // FRAGIL e APARAR_BAIXO são EMPILHÁVEIS (ver VEZES_MAX): o valor aqui
+        // é sempre o de UMA compra só — "FRAGIL_MAIOR" não existe mais como id
+        // próprio, virou FRAGIL com vezes=2 (ver labelComVezes abaixo).
         assertEquals(RacialTraitEffect.ResistenciaBonus(-1), RacialTraitPointCatalog.efeitoDe("FRAGIL"))
-        assertEquals(RacialTraitEffect.ResistenciaBonus(-2), RacialTraitPointCatalog.efeitoDe("FRAGIL_MAIOR"))
         assertEquals(RacialTraitEffect.ResistenciaBonus(2), RacialTraitPointCatalog.efeitoDe("MORTO_VIVO"))
         assertEquals(RacialTraitEffect.ResistenciaBonus(3), RacialTraitPointCatalog.efeitoDe("METADE_CONSTRUTO"))
         assertEquals(RacialTraitEffect.PassoBonus(-1), RacialTraitPointCatalog.efeitoDe("LENTO"))
-        assertEquals(RacialTraitEffect.ApararBonus(-2), RacialTraitPointCatalog.efeitoDe("APARAR_BAIXO"))
+        assertEquals(RacialTraitEffect.ApararBonus(-1), RacialTraitPointCatalog.efeitoDe("APARAR_BAIXO"))
+    }
+
+    @Test
+    fun `traços empilháveis escalam efeito e rótulo por vezes`() {
+        assertEquals(3, RacialTraitPointCatalog.vezesMaxDe("RESISTENCIA"))
+        assertEquals(2, RacialTraitPointCatalog.vezesMaxDe("FRAGIL"))
+        assertEquals(1, RacialTraitPointCatalog.vezesMaxDe("MORTO_VIVO")) // não empilhável
+
+        assertEquals("Resistência +2", RacialTraitPointCatalog.labelComVezes("RESISTENCIA", 2))
+        // FRAGIL também é ResistenciaBonus (por baixo dos panos): o rótulo
+        // final mostra o alvo real do efeito (Resistência), não o nome do
+        // traço — mesma convenção usada pra RESISTENCIA acima.
+        assertEquals("Resistência -2", RacialTraitPointCatalog.labelComVezes("FRAGIL", 2))
+        assertEquals("Aparar -3", RacialTraitPointCatalog.labelComVezes("APARAR_BAIXO", 3))
+        assertEquals("Armadura +6", RacialTraitPointCatalog.labelComVezes("ARMADURA", 3))
     }
 
     @Test

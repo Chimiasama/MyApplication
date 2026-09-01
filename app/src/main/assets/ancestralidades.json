@@ -406,7 +406,7 @@
       {
         "nome": "Armadura +2",
         "descricao": "Sua pele escamosa funciona como uma armadura de couro.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
@@ -688,9 +688,10 @@
       {
         "nome": "MOVIMENTAÇÃO +4",
         "descricao": "Centauros são corredores rápidos. Possuem Movimentação 10 e dado de corrida d10.",
-        "id": "MOVIMENTACAO_4",
+        "id": "MOVIMENTACAO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Move-se a 10 quadros por rodada e possui dado de corrida d10."
+        "descricaoLite": "Move-se a 10 quadros por rodada e possui dado de corrida d10.",
+        "vezes": 2
       },
       {
         "nome": "TAMANHO +1",
@@ -783,7 +784,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Draconianos têm pele espessa e escamosa.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "Escamas grossas atuam como armadura natural, concedendo +2 de Armadura."
       },
@@ -1079,7 +1080,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Golens de pedra são feitos de rocha.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "Corpo de pedra: concede +2 de Armadura."
       },
@@ -1135,9 +1136,10 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "Golems são criaturas densas e grandes, pesando cerca de 450 kg. Isso confere Resistência +2.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "Corpo denso e enorme (cerca de 450 kg): +2 de Resistência."
+        "descricaoLite": "Corpo denso e enorme (cerca de 450 kg): +2 de Resistência.",
+        "vezes": 2
       }
     ],
     "vantagensGratis": [],
@@ -1253,7 +1255,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Insetoides possuem exoesqueletos grossos.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "Exoesqueleto resistente: concede +2 de Armadura."
       },
@@ -1424,9 +1426,10 @@
       {
         "nome": "TAMANHO +3",
         "descricao": "Meio-gigantes têm 3 metros de altura, elevando-se sobre a maioria dos humanoides. Isso confere Resistência +3.",
-        "id": "TAMANHO_3",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "Cerca de 3 metros de altura: +3 de Resistência."
+        "descricaoLite": "Cerca de 3 metros de altura: +3 de Resistência.",
+        "vezes": 3
       }
     ],
     "vantagensGratis": [],
@@ -1975,7 +1978,8 @@
         "descricao": "10, dado de corrida d10. O povo serpente se move tão rapidamente quanto as cobras das quais descendem.",
         "id": "MOVIMENTACAO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Movimentação 10 e dado de Corrida d10."
+        "descricaoLite": "Movimentação 10 e dado de Corrida d10.",
+        "vezes": 2
       },
       {
         "nome": "SANGUE FRIO",
@@ -2175,7 +2179,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Sáurios têm uma pele escamosa que funciona como uma armadura de couro.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "A pele resistente age como uma proteção natural equivalente a uma armadura leve, concedendo +2 de Armadura."
       },
@@ -2688,7 +2692,7 @@
         "nome": "Armadura +2",
         "descricao": "Sua pele escamosa funciona como uma armadura de couro.",
         "category": "racial_trait_positive",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
       {
@@ -3057,7 +3061,7 @@
       {
         "nome": "ARMADURA +2",
         "descricao": "Pele escamosa ou placas naturais.",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "category": "racial_trait_positive",
         "descricaoLite": "Placas ou escamas naturais oferecem +2 de proteção contra ataques."
       },
@@ -3107,16 +3111,17 @@
       {
         "nome": "MOVIMENTAÇÃO +2",
         "descricao": "Centaux tem passadas largas. +2 em Movimentação e +1d no dado de corrida.",
-        "id": "MOVIMENTACAO_2",
+        "id": "MOVIMENTACAO",
         "category": "racial_trait_positive",
         "descricaoLite": "Passadas largas garantem +2 de Movimentação e aumentam o dado de corrida em um passo."
       },
       {
         "nome": "TAMANHO +2",
         "descricao": "Centaux são criaturas grandes. Adicionam +2 ao Tamanho e Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "Corpo maior que o comum: somam +2 tanto ao Tamanho quanto à Resistência."
+        "descricaoLite": "Corpo maior que o comum: somam +2 tanto ao Tamanho quanto à Resistência.",
+        "vezes": 2
       },
       {
         "nome": "GRANDE",
@@ -3183,9 +3188,10 @@
       {
         "nome": "RESISTÊNCIA +2",
         "descricao": "Drakens são fortes e resilientes.",
-        "id": "RESISTENCIA_2",
+        "id": "RESISTENCIA",
         "category": "racial_trait_positive",
-        "descricaoLite": "O corpo robusto garante +2 de Resistência."
+        "descricaoLite": "O corpo robusto garante +2 de Resistência.",
+        "vezes": 2
       },
       {
         "nome": "RUDE",
@@ -3835,7 +3841,7 @@
       {
         "nome": "RESISTÊNCIA +1",
         "descricao": "Soldados genéticos foram criados para aguentar o tranco.",
-        "id": "RESISTENCIA_1",
+        "id": "RESISTENCIA",
         "category": "racial_trait_positive",
         "descricaoLite": "Foram projetados para suportar impactos, recebendo +1 de Resistência."
       },
@@ -3982,9 +3988,10 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "Geralmente têm cerca de 2,1 metros de altura, são muito grandes e densos. Adicionam +2 ao Tamanho e Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "Tamanho e Resistência recebem +2 cada, refletindo um porte físico bem acima do normal."
+        "descricaoLite": "Tamanho e Resistência recebem +2 cada, refletindo um porte físico bem acima do normal.",
+        "vezes": 2
       }
     ],
     "tags": [
@@ -4038,7 +4045,7 @@
       {
         "nome": "MOVIMENTAÇÃO +2",
         "descricao": "A Movimentação dos centaux aumenta em +2 e seu dado de corrida aumenta em um tipo.",
-        "id": "MOVIMENTACAO_2",
+        "id": "MOVIMENTACAO",
         "category": "racial_trait_positive",
         "descricaoLite": "Deslocamento base +2 e o dado de corrida sobe um tipo."
       },
@@ -4052,9 +4059,10 @@
       {
         "nome": "TAMANHO +2",
         "descricao": "A parte humanoide de um centaux é um humano robusto e musculoso, enquanto a parte traseira do corpo é do tamanho de um grande mamífero de quatro patas. Adicionam +2 à sua Resistência.",
-        "id": "TAMANHO_MAIS_2",
+        "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
-        "descricaoLite": "+2 de Resistência, por ter um corpo bem maior que o de um humanoide comum."
+        "descricaoLite": "+2 de Resistência, por ter um corpo bem maior que o de um humanoide comum.",
+        "vezes": 2
       }
     ],
     "tags": [
@@ -4080,7 +4088,8 @@
         "descricao": "Os movimentos lentos e deliberados dos deaders os tornam alvos fáceis em combate corpo a corpo. Aparar -2.",
         "id": "APARAR_BAIXO",
         "category": "racial_trait_negative",
-        "descricaoLite": "-2 no valor de Aparar, por reagir devagar em combate corpo a corpo."
+        "descricaoLite": "-2 no valor de Aparar, por reagir devagar em combate corpo a corpo.",
+        "vezes": 2
       },
       {
         "nome": "CALCULISTA",
@@ -5067,8 +5076,9 @@
         "nome": "Frágil",
         "descricao": "-2 na Resistência devido à degeneração física secular.",
         "category": "racial_trait_negative",
-        "id": "FRAGIL_MAIOR",
-        "descricaoLite": "-2 de Resistência, resultado de um desgaste físico acumulado ao longo de gerações."
+        "id": "FRAGIL",
+        "descricaoLite": "-2 de Resistência, resultado de um desgaste físico acumulado ao longo de gerações.",
+        "vezes": 2
       }
     ],
     "livros": [
@@ -5944,7 +5954,7 @@
         "nome": "Armadura +2",
         "descricao": "Sua pele escamosa funciona como uma armadura de couro.",
         "category": "racial_trait_positive",
-        "id": "ARMADURA_2",
+        "id": "ARMADURA",
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
       {

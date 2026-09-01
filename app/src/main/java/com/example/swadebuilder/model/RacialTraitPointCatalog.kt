@@ -143,77 +143,53 @@ object RacialTraitPointCatalog {
         // único e consistente conferido contra a própria descrição da
         // habilidade em ancestralidades.json (ex.: Terracota "recebem +3 em
         // Resistência", Meio-Orc "Recebem Resistência +1") — não são um
-        // "chute" de código. FRAGIL varia por raça (a maioria é -1, Demônios é
-        // -2), então tem dois ids em vez de um só (mesmo padrão de
-        // FORTE/MUITO_FORTE pra AtributoStep).
-        "APARAR_BAIXO" to RacialTraitEffect.ApararBonus(-2),
-        // Achados ao eliminar o "tradutor" de texto (autoTraitId): estes dois
-        // ids já eram escritos à mão em CriadorState/AnaoCiberTraits (Umvee
-        // "Pele Iluminada pela Lua" +1, Anão Ciber "Aparar Baixo" -1), mas
-        // nunca tiveram entrada aqui — o traço aparecia na ficha sem nunca
-        // ter somado o bônus/penalidade de verdade. Corrigido junto.
-        "APARAR_1" to RacialTraitEffect.ApararBonus(1), // Umvee, Dom da Natureza "Pele Iluminada pela Lua"
-        "APARAR_MENOS_1" to RacialTraitEffect.ApararBonus(-1), // Anão Ciber, traço "Aparar Baixo" (-1, distinto de APARAR_BAIXO que vale -2)
-        "ESGUIOS" to RacialTraitEffect.ResistenciaBonus(-1),
-        "FEROCIDADE_ORC" to RacialTraitEffect.ResistenciaBonus(1),
-        "FRAGIL" to RacialTraitEffect.ResistenciaBonus(-1),
-        "FRAGIL_MAIOR" to RacialTraitEffect.ResistenciaBonus(-2), // sintético: Demônios (Horror), Frágil -2 em vez do -1 padrão
+        // "chute" de código.
         "LENTO" to RacialTraitEffect.PassoBonus(-1),
         "MOVIMENTACAO_REDUZIDA" to RacialTraitEffect.PassoBonus(-1),
         "METADE_CONSTRUTO" to RacialTraitEffect.ResistenciaBonus(3),
         "MORTO_VIVO" to RacialTraitEffect.ResistenciaBonus(2),
-        "RESISTENCIA" to RacialTraitEffect.ResistenciaBonus(1),
         "VELOCIDADE_RACIAL" to RacialTraitEffect.PassoBonus(2), // sintético: Template de Monstro Heroico Lobisomem (Horror)
 
-        // Resistência de valor VARIÁVEL (a maioria das raças com Resistência
-        // é sempre +1 — id "RESISTENCIA" acima —, só estas duas têm valor
-        // diferente): Drakens +2 (Sci-Fi), Soldados Genéticos +1 (Sci-Fi,
-        // mesmo valor de "RESISTENCIA" mas com id próprio porque a raça
-        // registra assim no catálogo). "RESISTENCIA_1" também é o id
-        // escrito à mão em AncestryVariantRegistry (ver TraitAddition) pro
-        // texto "RESISTÊNCIA +1" que Mímicos (variante Resistente) injeta
-        // (Umvee Dom Pedregoso usa o id "RESISTENCIA" bare, ver abaixo).
-        "RESISTENCIA_1" to RacialTraitEffect.ResistenciaBonus(1),
-        "RESISTENCIA_2" to RacialTraitEffect.ResistenciaBonus(2),
+        // --- Traços EMPILHÁVEIS (ver VEZES_MAX abaixo) ---
+        // Os 3 livros (Básico/Fantasia/Sci-Fi) marcam cada traço do catálogo
+        // de criação de ancestralidade com "(N)" ou "(S)" — quantas vezes
+        // pode ser comprado — e o efeito escala linearmente por compra (ex.:
+        // "Armadura (3): ... Armadura +2 cada vez que é comprada", até +6).
+        // O valor abaixo é sempre o de UMA compra — RacialAbility.vezes (ou
+        // TraitAddition.vezes) multiplica na hora de aplicar o efeito (ver
+        // ModifierEngine.aplicarEfeito) — nunca um id novo por total
+        // (ex.: não existe mais "RESISTENCIA_2"; é RESISTENCIA com vezes=2).
+        // Isso substitui os ids sintéticos por valor final que essa mesma
+        // rodada de auditoria tinha criado (RESISTENCIA_1/_2, ARMADURA_2,
+        // TAMANHO_MAIS_1/_2/TAMANHO_3, MOVIMENTACAO_2/_4, APARAR_1/
+        // APARAR_MENOS_1, FRAGIL_MAIOR) — cada duplicata colapsa numa só
+        // entrada aqui, com a raça/traço que tinha o valor maior passando a
+        // carregar `vezes` > 1 em vez de um id próprio.
+        "RESISTENCIA" to RacialTraitEffect.ResistenciaBonus(1), // livro: "Resistência (3)", +1/compra
+        "APARAR" to RacialTraitEffect.ApararBonus(1), // livro: "Aparar (3)", +1/compra
+        "APARAR_BAIXO" to RacialTraitEffect.ApararBonus(-1), // livro: "Aparar Baixo (3)", -1/compra
+        "TAMANHO_MAIS_1" to RacialTraitEffect.TamanhoBonus(1), // livro: "Tamanho +1 (3)", +1/compra
+        "FRAGIL" to RacialTraitEffect.ResistenciaBonus(-1), // livro: "Frágil (2)", -1/compra
+        "MOVIMENTACAO" to RacialTraitEffect.PassoBonus(2), // livro: "Movimentação (2)", +2/compra
+        "ARMADURA" to RacialTraitEffect.ArmaduraBonus(2), // livro: "Armadura (3)", +2/compra
 
         // Tamanho por id — substitui os regex `TAMANHO\s*([+-]\s*\d+)` sobre
         // nome/descrição do traço que existiam antes em ModifierEngine.
         // Valores conferidos contra a própria descrição de cada raça em
         // ancestralidades.json.
-        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder)
+        "TAMANHO_MENOS_1" to RacialTraitEffect.TamanhoBonus(-1), // Pequeninos, Gnomos, Povo Ratazana, Gnomo/Halfling (Pathfinder) — livro: "Tamanho -1 (1)", não empilha
         "PEQUENOS" to RacialTraitEffect.TamanhoBonus(-1), // Goblins (mesmo efeito de Tamanho -1, id próprio)
-        "TAMANHO_MAIS_1" to RacialTraitEffect.TamanhoBonus(1), // Centauros, Minotauros, Ogros, Orcs, Elementais (Sci-Fi)
-        "TAMANHO_MAIS_2" to RacialTraitEffect.TamanhoBonus(2), // Golens, Centaux/Aurax (Sci-Fi), Yetis
-        "TAMANHO_3" to RacialTraitEffect.TamanhoBonus(3), // Meio-Gigantes
-        // Diminuto/Minúsculo: sempre Tamanho -4 nas raças oficiais que usam
-        // este id (Fadas, Povo Rato). "DIMINUTO_TAMANHO_3"/"_4" são os ids
-        // escritos à mão em AncestryVariantRegistry (ver TraitAddition) pros
-        // textos "DIMINUTO (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a
-        // Variante de Ferais (Padrão/Menor) injeta — mesmo efeito, só
-        // nomeado diferente por vir de outro caminho de dado.
+        // Diminuto/Minúsculo: traço de TIER único (não empilhável — o livro
+        // marca "(1)" mas com 3 custos internos conforme o tier escolhido:
+        // Pequeno/Muito Pequeno/Minúsculo), diferente do empilhável acima.
+        // Sempre Tamanho -4 nas raças oficiais que usam este id (Fadas, Povo
+        // Rato). "DIMINUTO_TAMANHO_3"/"_4" são os ids escritos à mão em
+        // AncestryVariantRegistry (ver TraitAddition) pros textos "DIMINUTO
+        // (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a Variante de Ferais
+        // (Padrão/Menor) injeta.
         "DIMINUTO" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
         "DIMINUTO_TAMANHO_3" to RacialTraitEffect.TamanhoBonus(-3, minusculo = true),
         "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
-
-        // Movimentação (Passo) positiva de valor fixo — mesma ideia de
-        // MOVIMENTACAO_REDUZIDA/LENTO acima, mas pra bônus em vez de
-        // penalidade. "MOVIMENTACAO" (bare) é o id que Povo Serpente usa
-        // direto no catálogo; "MOVIMENTACAO_2"/"MOVIMENTACAO_4" cobrem tanto
-        // os ids do catálogo (Centaux/Aurax) quanto os ids escritos à mão em
-        // AncestryVariantRegistry pros textos "MOVIMENTAÇÃO +2"/"+4" que
-        // Centauros, a Variante Gazela (Centaux) e o Dom da Natureza
-        // Correnteza (Umvee) injetam.
-        "MOVIMENTACAO" to RacialTraitEffect.PassoBonus(4), // Povo Serpente: Movimentação 10 (padrão 6 + 4)
-        "MOVIMENTACAO_2" to RacialTraitEffect.PassoBonus(2),
-        "MOVIMENTACAO_4" to RacialTraitEffect.PassoBonus(4),
-
-        // Armadura Natural de valor fixo. "ARMADURA" (bare) é o id que o Dom
-        // da Natureza Pedregoso (Umvee) usa; "ARMADURA_2" é o id de
-        // Sáurios/Draconianos/Golens/Insetoides E o id escrito à mão em
-        // AncestryVariantRegistry pro texto "ARMADURA +2" que a Variante
-        // Padrão de Insetoides (Sci-Fi) injeta.
-        "ARMADURA" to RacialTraitEffect.ArmaduraBonus(2),
-        "ARMADURA_2" to RacialTraitEffect.ArmaduraBonus(2),
 
         // Único traço do catálogo com dois efeitos numéricos ao mesmo tempo
         // (ver Composite acima) — Tanukimimi (Arte da Guerra): -1 Aparar e
@@ -227,21 +203,44 @@ object RacialTraitPointCatalog {
     fun efeitoDe(id: String?): RacialTraitEffect = id?.let { EFEITOS[it.keyify()] } ?: RacialTraitEffect.Nenhum
 
     /**
+     * Teto de vezes que um traço EMPILHÁVEL pode ser comprado, direto dos 3
+     * livros (indicador "(N)"/"(S)" ao lado do nome no catálogo de criação de
+     * ancestralidade — ver RacialAbility.vezes). Ausência aqui = 1 (padrão:
+     * não empilha). "-1" representa "S" (sem limite no livro).
+     */
+    val VEZES_MAX: Map<String, Int> = mapOf(
+        "ARMADURA" to 3, // livro: "Armadura (3)"
+        "RESISTENCIA" to 3, // livro: "Resistência (3)"
+        "APARAR" to 3, // livro: "Aparar (3)"
+        "APARAR_BAIXO" to 3, // livro: "Aparar Baixo (3)"
+        "TAMANHO_MAIS_1" to 3, // livro: "Tamanho +1 (3)"
+        "FRAGIL" to 2, // livro: "Frágil (2)"
+        "MOVIMENTACAO" to 2 // livro: "Movimentação (2)"
+    )
+
+    /** Teto de vezes que o id pode ser comprado (1 se não estiver listado). */
+    fun vezesMaxDe(id: String?): Int = id?.let { VEZES_MAX[it.keyify()] } ?: 1
+
+    /**
      * Rótulo de exibição por id de traço — a fonte única que tanto o
      * ModifierEngine (nome da fonte do Modifier) quanto a lista de
      * "Características" da aba Ancestralidades usam. Cobre ids sem efeito
      * mecânico numérico (puramente narrativos, ex.: VISAO_NO_ESCURO) além dos
      * que já estão em EFEITOS — um traço pode ter rótulo sem ter efeito, mas
      * todo traço com efeito devia ter rótulo aqui.
+     *
+     * Pros ids EMPILHÁVEIS (ver VEZES_MAX), este é só o rótulo de 1 compra —
+     * use [labelComVezes] pra mostrar o valor final (ex.: "Resistência +2").
      */
     val LABEL: Map<String, String> = mapOf(
-        "APARAR_BAIXO" to "Aparar Baixo",
-        "APARAR_1" to "Aparar +1",
-        "APARAR_MENOS_1" to "Aparar -1",
+        "APARAR" to "Aparar +1",
+        "APARAR_BAIXO" to "Aparar -1",
+        "ARMADURA" to "Armadura +2",
+        "TAMANHO_MAIS_1" to "Tamanho +1",
+        "MOVIMENTACAO" to "Movimentação +2",
         "ESGUIOS" to "Esguios",
         "FEROCIDADE_ORC" to "Ferocidade Orc",
         "FRAGIL" to "Frágil",
-        "FRAGIL_MAIOR" to "Frágil",
         "LENTO" to "Lento",
         "METADE_CONSTRUTO" to "Metade Construto",
         "MOVIMENTACAO_REDUZIDA" to "Movimentação Reduzida",
@@ -284,6 +283,29 @@ object RacialTraitPointCatalog {
         "MORDIDA_VAMPIRO" to "Mordida"
     )
 
+    /**
+     * Rótulo de exibição já considerando quantas vezes o traço foi comprado
+     * — pros 7 ids EMPILHÁVEIS (ver VEZES_MAX), mostra o valor final (ex.:
+     * vezes=2 em "RESISTENCIA" vira "Resistência +2", igual ao livro), não
+     * "Resistência (x2)". Pra qualquer outro id, ou vezes<=1, cai no rótulo
+     * normal de [LABEL] (ou no próprio id, sem entrada).
+     */
+    fun labelComVezes(id: String?, vezes: Int): String {
+        val key = id?.keyify()
+        val base = key?.let { LABEL[it] } ?: id ?: ""
+        if (vezes <= 1 || key == null) return base
+        val efeito = EFEITOS[key] ?: return base
+        fun sinal(v: Int) = if (v >= 0) "+$v" else "$v"
+        return when (efeito) {
+            is RacialTraitEffect.ResistenciaBonus -> "Resistência ${sinal(efeito.valor * vezes)}"
+            is RacialTraitEffect.PassoBonus -> "Movimentação ${sinal(efeito.valor * vezes)}"
+            is RacialTraitEffect.ApararBonus -> "Aparar ${sinal(efeito.valor * vezes)}"
+            is RacialTraitEffect.TamanhoBonus -> "Tamanho ${sinal(efeito.valor * vezes)}"
+            is RacialTraitEffect.ArmaduraBonus -> "Armadura ${sinal(efeito.valor * vezes)}"
+            else -> base
+        }
+    }
+
     val CUSTOS: Map<String, Int> = mapOf(
         "ACAO_ADICIONAL" to 5, // oficial: acao_adicional
         "ACOES_ADICIONAIS" to 4, // oficial: acao_adicional_4 (variante condicional, exige ação física/mental)
@@ -297,15 +319,12 @@ object RacialTraitPointCatalog {
         "ANDAR_NAS_PAREDES" to 1, // oficial: andar_paredes
         "ANTECEDENTE_ARCANO_DEMONIO" to 4, // sem equivalente oficial (AA completo + poder inicial + 3 extra + 10 PP), acima de vantagem_racial
         "ANTECEDENTE_ARCANO_MILAGRES" to 3, // sem equivalente oficial (AA completo, menos detalhado que o de cima)
-        "APARAR" to 2, // 2x oficial aparar_positivo (+1 = 1pt); este traço é Aparar +2
-        "APARAR_1" to 1, // oficial: aparar_positivo (Umvee, Pele Iluminada pela Lua)
-        "APARAR_BAIXO" to -2, // 2x oficial aparar_baixo (-1 = -1pt); este traço é Aparar -2
-        "APARAR_MENOS_1" to -1, // oficial: aparar_baixo (Anão Ciber, "Aparar Baixo" -1)
+        "APARAR" to 1, // oficial: aparar_positivo (+1 = 1pt/compra — ver VEZES_MAX, até 3x)
+        "APARAR_BAIXO" to -1, // oficial: aparar_baixo (-1 = -1pt/compra — ver VEZES_MAX, até 3x)
         "APTIDAO_COM_PEDRAS" to 1, // sem equivalente oficial, bônus situacional estreito
         "AQUATICO" to 2, // oficial: aquatico (não se afoga, Movimentação completa)
         "ARISCOS" to -3, // duas perícias a -2 cada (Provocar resistida, Intimidar) — oficial penalidade_pericia_2 é só uma perícia
-        "ARMADURA" to 1, // mesmo efeito de ARMADURA_2 (+2), id usado pelo Dom da Natureza Pedregoso (Umvee)
-        "ARMADURA_2" to 1, // oficial: armadura_racial (+2 = 1pt)
+        "ARMADURA" to 1, // oficial: armadura_racial (+2 = 1pt/compra — ver VEZES_MAX, até 3x)
         "ARMA_DE_SOPRO" to 2, // oficial: arma_de_sopro
         "ARROGANTE" to -2, // oficial: complicacao_racial_maior
         "ARTICULACOES_LIMITADAS" to -1, // oficial: movimentacao_reduzida_1
@@ -419,9 +438,7 @@ object RacialTraitPointCatalog {
         "MORDIDA_OU_GARRA" to 1, // oficial: mordida
         "MORDIDA_VENENOSA" to 2, // oficial mordida (1) + toque_venenoso moderado (1)
         "MORTO_VIVO" to 8, // oficial: morto_vivo
-        "MOVIMENTACAO" to 4, // Movimentação 10/corrida d10 (delta +4) — 2x oficial movimentacao_bonus (+2 = 2pts)
-        "MOVIMENTACAO_2" to 2, // oficial: movimentacao_bonus
-        "MOVIMENTACAO_4" to 4, // mesmo delta de MOVIMENTACAO acima
+        "MOVIMENTACAO" to 2, // oficial: movimentacao_bonus (+2 = 2pts/compra — ver VEZES_MAX, até 2x)
         "MOVIMENTACAO_REDUZIDA" to -1, // oficial: movimentacao_reduzida_1
         "MUDAR_DE_FORMA" to 4, // oficial: mudanca_forma
         "MUITO_FORTE" to 4, // 2x oficial aumento_atributo (dois passos de Força)
@@ -450,9 +467,7 @@ object RacialTraitPointCatalog {
         "RECLUSO" to -2, // oficial: penalidade_pericia_2 (-2 numa perícia comum, Conhecimento Geral)
         "REDUCAO_DE_SONO" to 1, // oficial: reducao_sono
         "REFLEXOS_DE_COMBATE" to 3, // oficial vantagem_racial (2) + bônus extra de +2 Espírito recuperar Abalado
-        "RESISTENCIA" to 1, // oficial: resistencia_racial (+1)
-        "RESISTENCIA_1" to 1, // oficial: resistencia_racial (+1)
-        "RESISTENCIA_2" to 2, // 2x oficial resistencia_racial (Resistência +2)
+        "RESISTENCIA" to 1, // oficial: resistencia_racial (+1 = 1pt/compra — ver VEZES_MAX, até 3x)
         "RESISTENCIA_AMBIENTAL" to 1, // oficial: resistencia_ambiental
         "RESISTENCIA_AO_FRIO" to 1, // oficial: resistencia_ambiental (mesmo conceito, frio)
         "RESISTENCIA_NATURAL" to 1, // oficial: imune_doencas_venenos
@@ -480,9 +495,7 @@ object RacialTraitPointCatalog {
         "SORTE" to 2, // sem equivalente oficial exato, Bene extra por sessão (tier de vantagem_racial)
         "SUCATEIRO" to 2, // oficial: vantagem_racial
         "SUSPEITOSO" to -1, // oficial: complicacao_racial_menor
-        "TAMANHO_3" to 3, // 3x oficial tamanho_mais_1 (Resistência +3)
-        "TAMANHO_MAIS_1" to 1, // oficial: tamanho_mais_1
-        "TAMANHO_MAIS_2" to 2, // 2x oficial tamanho_mais_1 (Resistência +2)
+        "TAMANHO_MAIS_1" to 1, // oficial: tamanho_mais_1 (+1pt/compra — ver VEZES_MAX, até 3x)
         "TAMANHO_MENOS_1" to -1, // oficial: tamanho_menos_1 (âncora: AnaoCiberNegativeTrait.tamanho_menos_1)
         "TELEPATIA" to 1, // oficial: telepatia
         "TRANSTORNO_DE_SEPARACAO" to -2, // oficial: transtorno_separacao (âncora: AnaoCiberNegativeTrait.transtorno_separacao)

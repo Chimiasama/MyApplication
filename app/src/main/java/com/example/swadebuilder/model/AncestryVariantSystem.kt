@@ -47,7 +47,8 @@ enum class SelectionType {
  * derivado do texto em tempo de execução. Antes desta classe, o texto de
  * exibição sozinho chegava ao ModifierEngine, que precisava rodar
  * `String.autoTraitId()` sobre ele pra descobrir se batia com algum id de
- * `RacialTraitPointCatalog.EFEITOS` (ex.: "RESISTÊNCIA +2" -> "RESISTENCIA_2")
+ * `RacialTraitPointCatalog.EFEITOS` (ex.: "RESISTÊNCIA +2" -> "RESISTENCIA_2",
+ * um id inventado por valor final que nem existe mais — ver `vezes` abaixo)
  * — um "tradutor" de texto em tempo real. Com `id` explícito por entrada,
  * esse tradutor deixou de existir: cada Variante/Seleção já diz, no próprio
  * código-fonte, qual é o id mecânico do traço que está concedendo, do mesmo
@@ -56,7 +57,14 @@ enum class SelectionType {
  * narrativo, ex.: "Garras", "Visão no Escuro"), o id ainda existe — só não
  * bate com nenhuma chave de EFEITOS, exatamente como já acontecia com
  * habilidades sem efeito mecânico. */
-data class TraitAddition(val nome: String, val id: String)
+data class TraitAddition(val nome: String, val id: String, val vezes: Int = 1)
+
+/** Id + contagem de compras de um traço empilhável (ver RacialTraitPointCatalog.
+ * VEZES_MAX) já resolvido por Variante/Seleção — a versão "sem nome de
+ * exibição" de [TraitAddition], usada só pra threading do id até o
+ * ModifierEngine (ver ResolveAncestryRacialPackageUseCase.Result.racialTraitIds/
+ * CriadorState.racialTraitIdsFromVariants). */
+data class RacialTraitStack(val id: String, val vezes: Int = 1)
 
 /** Um pacote de efeitos já resolvido — pronto pra entrar em
  * habilidades[]/desvantagensRaciais/vantagensGratis, reaproveitando os

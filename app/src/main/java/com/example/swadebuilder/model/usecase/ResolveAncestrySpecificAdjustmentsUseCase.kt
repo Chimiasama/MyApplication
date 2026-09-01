@@ -113,9 +113,13 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         ancestryOrigin: String = "BASICO",
         // Ids de habilidade[] da raça já resolvida (ver
         // ApplyAncestryChangeCoordinatorUseCase) — usado pra decidir Armadura
-        // Natural por id de traço (ARMADURA/ARMADURA_2), não pelo nome da
-        // raça no "when" abaixo. Vazio quando o chamador não tem essa lista
-        // (ex.: testes isolados deste use case).
+        // Natural por id de traço (ARMADURA), não pelo nome da raça no
+        // "when" abaixo. Vazio quando o chamador não tem essa lista (ex.:
+        // testes isolados deste use case). Sem contagem de "vezes" aqui de
+        // propósito: nenhuma raça oficial hoje tem Armadura Natural além de
+        // +2 (1 compra) — se um dia alguma precisar de +4/+6, este cálculo
+        // (e o `racialAbilityIds` que o alimenta) precisa virar Map<String,
+        // Int> igual a `racialTraitIdsFromVariants` do ModifierEngine.
         racialAbilityIds: Set<String> = emptySet()
     ): Result {
         val naturalArmorFromAbilityId = RacialTraitPointCatalog.EFEITOS
@@ -331,7 +335,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         }
 
         return when (ancKey) {
-            // Armadura Natural lida pelo id do traço (ARMADURA_2, ver
+            // Armadura Natural lida pelo id do traço (ARMADURA, ver
             // ancestralidades.json), não mais fixa por nome de raça — o
             // valor só é diferente de 0 quando a raça resolvida realmente
             // carrega esse traço em habilidades[].

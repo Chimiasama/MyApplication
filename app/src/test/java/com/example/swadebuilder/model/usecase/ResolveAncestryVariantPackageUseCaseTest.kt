@@ -108,7 +108,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
         )
 
         assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")),
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
             result.tracosParaAdicionar
         )
     }
@@ -136,7 +136,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
                 "anao_ciber_tracos_negativos" to ResolvedTraitPackage(
                     desvantagensParaAdicionar = listOf(
                         TraitAddition("Frágil", "FRAGIL"),
-                        TraitAddition("Aparar -1", "APARAR_MENOS_1")
+                        TraitAddition("Aparar -1", "APARAR_BAIXO")
                     )
                 )
             )
@@ -144,7 +144,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
 
         assertEquals(listOf(TraitAddition("CIBERTOLERÂNCIA", "CIBERTOLERANCIA")), result.vantagensGratisParaAdicionar)
         assertEquals(
-            listOf(TraitAddition("Frágil", "FRAGIL"), TraitAddition("Aparar -1", "APARAR_MENOS_1")),
+            listOf(TraitAddition("Frágil", "FRAGIL"), TraitAddition("Aparar -1", "APARAR_BAIXO")),
             result.desvantagensParaAdicionar
         )
     }

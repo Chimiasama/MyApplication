@@ -142,7 +142,7 @@ object ModifierEngine {
                 if (isCentauxGazela) {
                     removeAll { trait ->
                         when (trait.keyify()) {
-                            "MOVIMENTACAO +2", "TAMANHO +2", "GRANDE", "TAMANHO_MAIS_2", "MOVIMENTACAO_2" -> true
+                            "MOVIMENTACAO +2", "TAMANHO +2", "GRANDE" -> true
                             else -> false
                         }
                     }
@@ -165,57 +165,68 @@ object ModifierEngine {
             // vantagensGratis/desvantagens), o catálogo já diz o alvo e o
             // valor. Ver RacialTraitEffect.
             val sourceKeys = sources.map { it.keyify() }.toSet()
+
+            // Quantas vezes cada id de traço foi "comprado" (ver
+            // RacialTraitPointCatalog.VEZES_MAX) — junta as 3 fontes
+            // possíveis (habilidade da raça, habilidade do Monstro Heroico,
+            // Variante/Seleção injetada) e, quando o MESMO id aparece em
+            // mais de uma (ex.: redundância deliberada de Umvee — a raça já
+            // injeta a habilidade com id de verdade E o registro de Variante
+            // também aponta o mesmo id), fica com o maior valor, nunca a
+            // SOMA — as fontes descrevem o mesmo traço por caminhos
+            // diferentes, não compras adicionais uma da outra (mesmo motivo
+            // que corrigiu o Tamanho duplicado de Fadas/Povo Rato: um id só
+            // conta uma vez, mesmo citado por vários lados).
+            val vezesPorId = mutableMapOf<String, Int>()
+            fun registrarCompra(id: String?, vezes: Int) {
+                val key = id?.keyify() ?: return
+                vezesPorId[key] = maxOf(vezesPorId[key] ?: 0, vezes.coerceAtLeast(1))
+            }
             // Ids de habilidade da raça, restritos às que ainda têm o nome
             // presente em `sources` — algumas variantes (Aquarianos Semi-
             // aquático, Avianos Ave de Rapina, Centaux Gazela) removem uma
             // habilidade da raça base filtrando o nome dela fora de
             // `sources` (ver bloco de exclusões por variante logo acima);
             // ler direto de `anc.habilidades` sem esse filtro
-            // reintroduziria o traço removido por baixo do pano. Habilidades
-            // do Monstro Heroico não passam por essa filtragem de variante
-            // de raça, então entram sem restrição.
-            val traitIds = anc.habilidades
+            // reintroduziria o traço removido por baixo do pano.
+            anc.habilidades
                 .filter { it.nome.keyify() in sourceKeys }
-                .mapNotNull { it.id?.keyify() }
-                .toSet() +
-                (monstro?.habilidades?.mapNotNull { it.id?.keyify() } ?: emptySet()) +
-                // Traços de Variante/Seleção (Centaux Gazela, Drakens/Mímicos/
-                // Ferais "Padrão", Umvee Correnteza/Pedregoso etc.) que chegam
-                // como texto solto em vantagensRaciais/desvantagensRaciais
-                // (ver AncestryVariantRegistry/TraitAddition) já trazem, desde
-                // a própria Variante/Seleção que os concede, o id mecânico
-                // real escrito à mão — nenhum id é derivado do texto de
-                // exibição aqui, só lido do que ResolveAncestryRacialPackageUseCase
-                // já resolveu.
-                state.racialTraitIdsFromVariants.map { it.keyify() }.toSet()
-
-            // FRAGIL/FRAGIL_MAIOR têm o mesmo nome de exibição ("Frágil"),
-            // diferindo só na penalidade (-1 padrão vs -2 dos Demônios) — o
-            // nome sozinho não distingue qual é qual, então esses dois só
-            // contam por id de habilidade/Variante de verdade (traitIds),
-            // nunca por nome solto batendo direto contra sourceKeys.
-            val idsSoPorHabilidade = setOf("FRAGIL", "FRAGIL_MAIOR")
-
-            fun traitPresente(id: String): Boolean {
-                if (id in traitIds) return true
-                if (id in idsSoPorHabilidade) return false
-                return id in sourceKeys
+                .forEach { registrarCompra(it.id, it.vezes) }
+            // Habilidades do Monstro Heroico não passam pela filtragem de
+            // variante de raça acima, então entram sem restrição.
+            monstro?.habilidades?.forEach { registrarCompra(it.id, it.vezes) }
+            // Traços de Variante/Seleção (Centaux Gazela, Drakens/Mímicos/
+            // Ferais "Padrão", Umvee Correnteza/Pedregoso etc.) que chegam
+            // como texto solto em vantagensRaciais/desvantagensRaciais (ver
+            // AncestryVariantRegistry/TraitAddition) já trazem, desde a
+            // própria Variante/Seleção que os concede, o id mecânico e a
+            // contagem reais — nenhum id ou "vezes" é derivado do texto de
+            // exibição aqui, só lido do que ResolveAncestryRacialPackageUseCase
+            // já resolveu.
+            state.racialTraitIdsFromVariants.forEach { registrarCompra(it.id, it.vezes) }
+            // Grants ainda guardados como nome solto sem id à parte (ex.:
+            // Inumimi "RESISTÊNCIA" bare em vantagensGratis) — presença por
+            // nome normalizado só pode significar 1 compra (o texto não
+            // carrega contagem nenhuma); ids já contados acima por uma fonte
+            // estruturada mantêm o valor real deles (maxOf não reduz).
+            RacialTraitPointCatalog.EFEITOS.keys.forEach { id ->
+                if (id in sourceKeys) registrarCompra(id, 1)
             }
 
             // sizeDisplay() trava o Tamanho mostrado em -1 no mínimo, exceto
             // pras raças Diminutas/Minúsculas do livro (Fadas, Povo Rato,
             // Ferais) — que continuam identificadas pela presença de um
             // Modifier com este id, não pelo nome da raça.
-            fun aplicarEfeito(id: String, efeito: RacialTraitEffect, nomeExibicao: String) {
+            fun aplicarEfeito(id: String, efeito: RacialTraitEffect, nomeExibicao: String, vezes: Int) {
                 when (efeito) {
                     is RacialTraitEffect.ResistenciaBonus -> modifiers.add(
-                        Modifier("racial_trait_${id}_res", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.TOUGHNESS_FLAT, efeito.valor)
+                        Modifier("racial_trait_${id}_res", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.TOUGHNESS_FLAT, efeito.valor * vezes)
                     )
                     is RacialTraitEffect.PassoBonus -> modifiers.add(
-                        Modifier("racial_trait_${id}_pace", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PACE, efeito.valor)
+                        Modifier("racial_trait_${id}_pace", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PACE, efeito.valor * vezes)
                     )
                     is RacialTraitEffect.ApararBonus -> modifiers.add(
-                        Modifier("racial_trait_${id}_parry", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PARRY, efeito.valor)
+                        Modifier("racial_trait_${id}_parry", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.PARRY, efeito.valor * vezes)
                     )
                     is RacialTraitEffect.TamanhoBonus -> {
                         // Id do próprio Modifier de Tamanho vira "racial_diminuto" quando
@@ -225,8 +236,8 @@ object ModifierEngine {
                         // a contagem de SIZE_DISPLAY (ver ModifierEngineAdgAncestryTest
                         // "povo rato size penalty is not double counted").
                         val sizeId = if (efeito.minusculo) "racial_diminuto" else "racial_trait_${id}_size"
-                        modifiers.add(Modifier(sizeId, SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.SIZE_DISPLAY, efeito.valor))
-                        modifiers.add(Modifier("racial_trait_${id}_size_tough", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.SIZE_TOUGHNESS, efeito.valor))
+                        modifiers.add(Modifier(sizeId, SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.SIZE_DISPLAY, efeito.valor * vezes))
+                        modifiers.add(Modifier("racial_trait_${id}_size_tough", SourceType.ANCESTRALIDADE, nomeExibicao, ModifierTarget.SIZE_TOUGHNESS, efeito.valor * vezes))
                     }
                     // Armadura Natural não vira Modifier aqui — a Armadura final
                     // do personagem é resolvida à parte
@@ -234,15 +245,15 @@ object ModifierEngine {
                     // que já lê este mesmo efeito por id), não pelo
                     // ModifierTarget.ARMOR deste motor.
                     is RacialTraitEffect.ArmaduraBonus -> Unit
-                    is RacialTraitEffect.Composite -> efeito.efeitos.forEach { sub -> aplicarEfeito(id, sub, nomeExibicao) }
+                    is RacialTraitEffect.Composite -> efeito.efeitos.forEach { sub -> aplicarEfeito(id, sub, nomeExibicao, vezes) }
                     is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum -> Unit
                 }
             }
 
             RacialTraitPointCatalog.EFEITOS.forEach { (id, efeito) ->
-                if (!traitPresente(id)) return@forEach
-                val nomeExibicao = RacialTraitPointCatalog.LABEL[id] ?: id
-                aplicarEfeito(id, efeito, nomeExibicao)
+                val vezes = vezesPorId[id] ?: return@forEach
+                val nomeExibicao = RacialTraitPointCatalog.labelComVezes(id, vezes)
+                aplicarEfeito(id, efeito, nomeExibicao, vezes)
             }
         }
 

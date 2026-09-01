@@ -468,6 +468,18 @@ fun SettingsDialog(
                             mutableStateOf<Pair<com.example.swadebuilder.model.HabilidadeCriacao, (com.example.swadebuilder.model.HabilidadeCriacao) -> Unit>?>(null)
                         }
 
+                        // "Empilháveis" (Armadura/Resistência/Aparar/Aparar Baixo/
+                        // Tamanho +1/Frágil/Movimentação): os 3 livros marcam cada um
+                        // com "(N)"/"(S)" — quantas vezes pode ser comprado, custo e
+                        // efeito multiplicando por compra (ver
+                        // RacialTraitPointCatalog.VEZES_MAX/basico_habilidades_raciais.json
+                        // "vezesMax"). Mesmo padrão de picker que
+                        // periciaTraitPickerTarget: ao marcar, abre "Quantas vezes?" em
+                        // vez de já adicionar o traço com 1 compra.
+                        var stackPickerTarget by remember {
+                            mutableStateOf<Pair<com.example.swadebuilder.model.HabilidadeCriacao, (com.example.swadebuilder.model.HabilidadeCriacao) -> Unit>?>(null)
+                        }
+
                         // Todas as categorias sempre disponíveis, em qualquer tela — a engrenagem
                         // já é global (tela inicial, criação, fase de XP), então não há mais
                         // motivo pra esconder categorias por causa de "isHomeScreen".
@@ -1463,8 +1475,12 @@ fun SettingsDialog(
                                                             com.example.swadebuilder.model.RacialAbility(
                                                                 nome = trait.nome,
                                                                 descricao = trait.descricao,
-                                                                id = trait.nome.toIdSlug(),
-                                                                category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative"
+                                                                // Id real do catálogo, nunca derivado do nome de
+                                                                // exibição — ver o mesmo ajuste em CriadorState.kt
+                                                                // (applyCustomAncestryVariantIfSelected).
+                                                                id = trait.id ?: trait.nome.toIdSlug(),
+                                                                category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative",
+                                                                vezes = trait.vezes
                                                             )
                                                         }
                                                     } else {
@@ -1818,9 +1834,10 @@ fun SettingsDialog(
                                         allTraitsCatalog.filter { it.nome.contains(filterTraitText, ignoreCase = true) }.forEach { trait ->
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
                                             val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
+                                            val isStackableRow = (trait.vezesMax ?: 1) > 1
                                             val isSel = if (isSuperPoderesRow) {
                                                 selectedRacialTraits.any { it.nome.startsWith("Super Poderes (") }
-                                            } else if (isPericiaChoiceRow) {
+                                            } else if (isPericiaChoiceRow || isStackableRow) {
                                                 selectedRacialTraits.any { it.id == trait.id }
                                             } else {
                                                 selectedRacialTraits.any { it.nome.equals(trait.nome, ignoreCase = true) }
@@ -1833,6 +1850,14 @@ fun SettingsDialog(
                                                         }
                                                     } else {
                                                         selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isStackableRow) {
+                                                    if (checked) {
+                                                        stackPickerTarget = trait to { escolhido ->
+                                                            selectedRacialTraits = selectedRacialTraits + escolhido
+                                                        }
+                                                    } else {
+                                                        selectedRacialTraits = selectedRacialTraits.filterNot { it.id == trait.id }
                                                     }
                                                 } else if (isPericiaChoiceRow) {
                                                     if (checked) {
@@ -1853,7 +1878,13 @@ fun SettingsDialog(
                                                 Checkbox(checked = isSel, onCheckedChange = onToggle)
                                                 Spacer(Modifier.width(8.dp))
                                                 Column {
-                                                    Text("${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                    val jaEscolhido = selectedRacialTraits.firstOrNull { it.id == trait.id }
+                                                    val rotuloCusto = if (isStackableRow && jaEscolhido != null) {
+                                                        "${jaEscolhido.nome} (${if (jaEscolhido.custo > 0) "+${jaEscolhido.custo}" else "${jaEscolhido.custo}"} pts)"
+                                                    } else {
+                                                        "${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)"
+                                                    }
+                                                    Text(rotuloCusto, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
                                                     if (trait.descricao.isNotBlank()) {
                                                         Text(trait.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                     }
@@ -1917,9 +1948,10 @@ fun SettingsDialog(
                                         allVarianteTraitsCatalog.filter { it.nome.contains(filterVarianteTraitText, ignoreCase = true) }.forEach { trait ->
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
                                             val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
+                                            val isStackableRow = (trait.vezesMax ?: 1) > 1
                                             val isSel = if (isSuperPoderesRow) {
                                                 varianteTracosAdicionados.any { it.nome.startsWith("Super Poderes (") }
-                                            } else if (isPericiaChoiceRow) {
+                                            } else if (isPericiaChoiceRow || isStackableRow) {
                                                 varianteTracosAdicionados.any { it.id == trait.id }
                                             } else {
                                                 varianteTracosAdicionados.any { it.nome.equals(trait.nome, ignoreCase = true) }
@@ -1932,6 +1964,14 @@ fun SettingsDialog(
                                                         }
                                                     } else {
                                                         varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isStackableRow) {
+                                                    if (checked) {
+                                                        stackPickerTarget = trait to { escolhido ->
+                                                            varianteTracosAdicionados = varianteTracosAdicionados + escolhido
+                                                        }
+                                                    } else {
+                                                        varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.id == trait.id }
                                                     }
                                                 } else if (isPericiaChoiceRow) {
                                                     if (checked) {
@@ -1952,7 +1992,13 @@ fun SettingsDialog(
                                                 Checkbox(checked = isSel, onCheckedChange = onToggle)
                                                 Spacer(Modifier.width(8.dp))
                                                 Column {
-                                                    Text("${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                    val jaEscolhido = varianteTracosAdicionados.firstOrNull { it.id == trait.id }
+                                                    val rotuloCusto = if (isStackableRow && jaEscolhido != null) {
+                                                        "${jaEscolhido.nome} (${if (jaEscolhido.custo > 0) "+${jaEscolhido.custo}" else "${jaEscolhido.custo}"} pts)"
+                                                    } else {
+                                                        "${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)"
+                                                    }
+                                                    Text(rotuloCusto, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
                                                     if (trait.descricao.isNotBlank()) {
                                                         Text(trait.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                     }
@@ -2062,6 +2108,60 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { periciaTraitPickerTarget = null }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        stackPickerTarget?.let { (trait, onEscolhido) ->
+                            val vezesMax = trait.vezesMax?.takeIf { it > 0 } ?: 1
+                            AlertDialog(
+                                onDismissRequest = { stackPickerTarget = null },
+                                title = { Text("Quantas vezes?") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        Text(
+                                            trait.nome,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        if (trait.descricao.isNotBlank()) {
+                                            Text(
+                                                trait.descricao,
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.padding(bottom = 8.dp)
+                                            )
+                                        }
+                                        Text(
+                                            "O livro permite comprar este traço até $vezesMax ${if (vezesMax == 1) "vez" else "vezes"} — cada compra soma o efeito de novo.",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                        (1..vezesMax).forEach { n ->
+                                            val custoTotal = trait.custo * n
+                                            val rotulo = com.example.swadebuilder.model.RacialTraitPointCatalog.labelComVezes(trait.id, n)
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    onEscolhido(
+                                                        trait.copy(
+                                                            nome = rotulo,
+                                                            custo = custoTotal,
+                                                            vezes = n
+                                                        )
+                                                    )
+                                                    stackPickerTarget = null
+                                                }.padding(vertical = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(
+                                                    "${n}x — $rotulo (${if (custoTotal > 0) "+$custoTotal" else "$custoTotal"} pts)",
+                                                    style = MaterialTheme.typography.bodyMedium
+                                                )
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { stackPickerTarget = null }) { Text("Cancelar") } }
                             )
                         }
 

@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
+import com.example.swadebuilder.model.RacialTraitStack
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.racialGrantDedupeKey
 import com.example.swadebuilder.util.keyify
@@ -40,11 +41,12 @@ class ResolveAncestryRacialPackageUseCase(
         val forceArmorZero: Boolean,
         val elementalAction: ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction,
         val anotacoesToAdd: List<String> = emptyList(),
-        // Ids mecânicos reais dos traços injetados por Variante/Seleção
-        // (ensureAutomaticAdvantages/ensureRacialDisadvantages) — ver
-        // TraitAddition. ModifierEngine lê esta lista direto, sem precisar
-        // derivar id nenhum do texto de vantagensRaciais/desvantagensRaciais.
-        val racialTraitIds: List<String> = emptyList()
+        // Ids mecânicos reais (+ contagem de compras, ver
+        // RacialTraitPointCatalog.VEZES_MAX) dos traços injetados por
+        // Variante/Seleção (ensureAutomaticAdvantages/ensureRacialDisadvantages)
+        // — ver TraitAddition. ModifierEngine lê esta lista direto, sem
+        // precisar derivar id nenhum do texto de vantagensRaciais/desvantagensRaciais.
+        val racialTraitIds: List<RacialTraitStack> = emptyList()
     )
 
     fun execute(params: Params): Result {
@@ -124,7 +126,7 @@ class ResolveAncestryRacialPackageUseCase(
             }
         }
 
-        val racialTraitIds = mutableListOf<String>()
+        val racialTraitIds = mutableListOf<RacialTraitStack>()
 
         ancestrySpecificAdjustments.ensureAutomaticAdvantages.forEach { automaticAdvantage ->
             if (vantagensAutomaticas.none { it.equals(automaticAdvantage.nome, ignoreCase = true) }) {
@@ -133,7 +135,7 @@ class ResolveAncestryRacialPackageUseCase(
             if (vantagensRaciais.none { it.equals(automaticAdvantage.nome, ignoreCase = true) }) {
                 vantagensRaciais.add(automaticAdvantage.nome)
             }
-            racialTraitIds.add(automaticAdvantage.id)
+            racialTraitIds.add(RacialTraitStack(automaticAdvantage.id, automaticAdvantage.vezes))
         }
 
         ancestrySpecificAdjustments.automaticAdvantagesToRemove.forEach { toRemove ->
@@ -147,7 +149,7 @@ class ResolveAncestryRacialPackageUseCase(
             if (desvantagensRaciais.none { it.equals(racialDisadvantage.nome, ignoreCase = true) }) {
                 desvantagensRaciais.add(racialDisadvantage.nome)
             }
-            racialTraitIds.add(racialDisadvantage.id)
+            racialTraitIds.add(RacialTraitStack(racialDisadvantage.id, racialDisadvantage.vezes))
         }
 
         ancestrySpecificAdjustments.racialDisadvantagesToRemove.forEach { toRemove ->

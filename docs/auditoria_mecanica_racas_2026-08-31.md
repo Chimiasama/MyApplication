@@ -210,3 +210,81 @@ traço). Resolver isso de vez pediria estender `atributoBaseRacial()` pra
 também ler `racialTraitIdsFromVariants`, igual ao que já fiz no
 `ModifierEngine` — não fiz porque não é o que você pediu desta vez, mas é o
 mesmo tipo de buraco.
+
+## Quarta rodada — traços empilháveis ("vezes") por indicação (N)/(S) do livro
+
+Pedido do dono do projeto: ele releu o livro e percebeu que cada traço do
+catálogo de criação de ancestralidade traz um indicador `(N)`/`(S)` — quantas
+vezes pode ser comprado, com custo E efeito escalando linearmente por compra
+(ex.: "Armadura (3): ... Armadura +2 cada vez que é comprada", até +6 em 3
+compras) — mecânica que o app não modelava (a rodada anterior já tinha
+resolvido o CÁLCULO de cada traço, mas sempre como compra única).
+
+- **Fonte dos dados**: lidos direto de `docs/swade_basico`, `docs/swade_fantasia`
+  e `docs/swade_scifi` (extratos em texto dos 3 livros), seção "Habilidades
+  de Ancestralidade". Confirmado por citação exata: Básico "-1 Aparar Baixo
+  (3): ... Aparar -1" — a pergunta original do dono do projeto (Aparar Baixo é
+  -1 ponto e pode ser pego até 3x) estava certa; minha resposta anterior,
+  dizendo que não achei repetibilidade nenhuma, tinha checado só o JSON do
+  app, não o livro.
+- **7 traços EMPILHÁVEIS identificados** (mesmo efeito, escala por compra):
+  Armadura (até 3, +2/compra), Resistência (até 3, +1/compra), Aparar (até 3,
+  +1/compra), Aparar Baixo (até 3, -1/compra), Tamanho +1 (até 3, +1/compra),
+  Frágil (até 2, -1/compra), Movimentação (até 2, +2/compra). Traços de TIER
+  único já cobertos corretamente antes (Diminuto/Minúsculo, Voo, Toque
+  Venenoso, Sentidos Aguçados) foram conferidos contra o livro e não mudaram
+  — cada compra ali dá um efeito DIFERENTE (não o mesmo efeito somado), então
+  não são "empilháveis" no sentido desta rodada.
+- **Modelo novo**: `RacialAbility.vezes`/`HabilidadeCriacao.vezes` (compra
+  já feita) e `HabilidadeCriacao.vezesMax` (teto do catálogo), mais
+  `RacialTraitPointCatalog.VEZES_MAX`/`vezesMaxDe()`/`labelComVezes()`. Os ~10
+  ids sintéticos por VALOR FINAL que a rodada anterior tinha criado
+  (`RESISTENCIA_1/_2`, `ARMADURA_2`, `TAMANHO_MAIS_1/_2/TAMANHO_3`,
+  `MOVIMENTACAO_2/_4`, `APARAR_1/APARAR_MENOS_1`, `FRAGIL_MAIOR`) colapsaram
+  em 7 ids base (`RESISTENCIA`, `APARAR`, `APARAR_BAIXO`, `TAMANHO_MAIS_1`,
+  `FRAGIL`, `MOVIMENTACAO`, `ARMADURA`) + `vezes` — exatamente a duplicidade
+  de id que o dono do projeto suspeitava estar causando parte da bagunça.
+  `ModifierEngine` agora junta `vezes` de todas as fontes (habilidade da
+  raça, Monstro Heroico, `racialTraitIdsFromVariants`) pelo MAIOR valor, nunca
+  soma — mesma cautela que corrigiu o Tamanho duplicado de Fadas/Povo Rato na
+  rodada anterior, aplicada de novo aqui pra não somar a mesma compra duas
+  vezes quando o mesmo id aparece por mais de um caminho.
+- **Dois bugs pré-existentes achados e corrigidos no caminho** (fora do
+  escopo original do pedido, mas na mesma categoria de "id derivado de texto
+  em tempo real" que a rodada anterior tinha como missão eliminar):
+  1. `basico_habilidades_raciais.json` (catálogo de criação de raça customizada)
+     e `RacialTraitPointCatalog` viviam em namespaces de id DIFERENTES pros
+     mesmos 7 traços (ex.: `armadura_racial` vs `ARMADURA`) — corrigido
+     renomeando os 7 ids do catálogo pra bater com o namespace mecânico.
+  2. Ao adicionar um traço customizado numa Variante/Raça pelo Mestre
+     (`CriadorState.kt` e `SettingsDialog.kt`, tela "Criar Raça"), o id final
+     do `RacialAbility` era CALCULADO A PARTIR DO TEXTO DE EXIBIÇÃO em tempo
+     de execução (`trait.nome.lowercase().replace(" ", "_")`/`toIdSlug()`) em
+     vez de usar o `id` de verdade que o próprio catálogo já carregava — ou
+     seja, nenhum traço adicionado por essa tela jamais teve efeito mecânico
+     de verdade, empilhável ou não. Corrigido pra `id = trait.id ?:
+     trait.nome.toIdSlug()` (o fallback só entra pra conteúdo bespoke sem id
+     de catálogo).
+- **UI**: novo picker "Quantas vezes?" em `SettingsDialog.kt` (mesmo padrão
+  de `periciaTraitPickerTarget`) — ao marcar um traço com `vezesMax > 1` no
+  seletor de Traços Raciais (tanto "Criar Raça" quanto Variante custom), abre
+  a escolha de 1..vezesMax compras antes de adicionar, já mostrando o rótulo
+  e custo final de cada opção via `labelComVezes`.
+- **Migração de dados**: `ancestralidades.json` (21 entradas de habilidade em
+  raças oficiais) e `basico_habilidades_raciais.json` (7 entradas do catálogo
+  de criação) migrados pros ids/vezes novos; `AncestryVariantRegistry.kt` (9
+  `TraitAddition`) e `AnaoCiberTraits.kt` (1 `injecaoId`) idem.
+  `ResolveVariantPointBudgetUseCase.habilidadeComoItem` também ajustado —
+  sem isso, remover um traço empilhável de 2+ compras da raça base no editor
+  de Variante devolveria só o custo de 1 compra, fechando o orçamento errado.
+- **Escopo confirmado com o dono do projeto**: migração completa, incluindo
+  as raças oficiais (não só o construtor de raça customizada).
+- Testes ajustados: `RacialTraitPointCatalogTest.kt` (`FRAGIL_MAIOR` não
+  existe mais, `APARAR_BAIXO` agora é -1/compra não -2 fixo, teste novo de
+  `vezesMaxDe`/`labelComVezes`), `ScifiAncestryVariantSyncTest.kt`
+  (`racialTraitIdsFromVariants` passou de `List<String>` pra
+  `List<RacialTraitStack>`), `ResolveAncestryVariantPackageUseCaseTest.kt`,
+  `ResolveAncestrySpecificAdjustmentsUseCaseTest.kt`,
+  `ResolveAncestryRacialPackageUseCaseTest.kt` e
+  `ModifierEngineCidadeSolVaporTest.kt` (todos com ids sintéticos removidos
+  trocados pelos 7 ids base + `vezes`).

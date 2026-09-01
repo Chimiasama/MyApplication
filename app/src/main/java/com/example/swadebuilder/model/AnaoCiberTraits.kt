@@ -74,9 +74,10 @@ object AnaoCiberTraitCatalog {
             custo = -1,
             descricao = "Aparar -1.",
             injecaoMecanica = "Aparar -1",
-            // Id próprio (não "APARAR_BAIXO", que no catálogo vale -2) — este
-            // traço do Anão Ciber é -1, não -2.
-            injecaoId = "APARAR_MENOS_1"
+            // "APARAR_BAIXO" é o traço empilhável do livro (-1/compra, até 3x
+            // — ver RacialTraitPointCatalog.VEZES_MAX); este traço do Anão
+            // Ciber é 1 compra só (vezes=1, o padrão de RacialAbility).
+            injecaoId = "APARAR_BAIXO"
         ),
         // Grupo 2 — traços narrativos/situacionais (o livro não define um valor de
         // ficha calculável; ficam anotados como desvantagem, sem modifier numérico,

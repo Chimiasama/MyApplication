@@ -100,19 +100,29 @@ class ResolveVariantPointBudgetUseCase {
         private fun habilidadeComoItem(habilidade: RacialAbility): VariantBudgetItem {
             val id = habilidade.id?.let { it.ifBlank { null } }
             val efeito = RacialTraitPointCatalog.efeitoDe(id)
-            val label = RacialTraitPointCatalog.LABEL[id?.keyify()]
-                ?: when (efeito) {
-                    is RacialTraitEffect.AtributoStep -> {
-                        val dado = (4 + 2 * efeito.passos).toDiceString()
-                        "Atributo aumentado $dado: ${efeito.atributo}"
+            val vezes = habilidade.vezes.coerceAtLeast(1)
+            // Traços EMPILHÁVEIS (ver RacialTraitPointCatalog.VEZES_MAX) mostram
+            // e cobram o valor final (ex.: "Resistência +2", 2 pontos), não o
+            // de 1 compra só — removê-los da raça base tem que devolver o
+            // custo de TODAS as compras que a raça já tinha, senão o saldo da
+            // Variante fecha errado.
+            val label = if (vezes > 1) {
+                RacialTraitPointCatalog.labelComVezes(id, vezes)
+            } else {
+                RacialTraitPointCatalog.LABEL[id?.keyify()]
+                    ?: when (efeito) {
+                        is RacialTraitEffect.AtributoStep -> {
+                            val dado = (4 + 2 * efeito.passos).toDiceString()
+                            "Atributo aumentado $dado: ${efeito.atributo}"
+                        }
+                        is RacialTraitEffect.PericiaStep -> {
+                            val dado = (4 + (efeito.passos - 1) * 2).toDiceString()
+                            "Perícia inicial $dado: ${efeito.pericia}"
+                        }
+                        else -> habilidade.nome
                     }
-                    is RacialTraitEffect.PericiaStep -> {
-                        val dado = (4 + (efeito.passos - 1) * 2).toDiceString()
-                        "Perícia inicial $dado: ${efeito.pericia}"
-                    }
-                    else -> habilidade.nome
-                }
-            return VariantBudgetItem(label = label, custo = RacialTraitPointCatalog.custoDe(id), habilidadeId = id)
+            }
+            return VariantBudgetItem(label = label, custo = RacialTraitPointCatalog.custoDe(id) * vezes, habilidadeId = id)
         }
 
         /**

@@ -254,10 +254,14 @@ object AncestryVariantRegistry {
                         // Mesmos ids que já existem nativamente em
                         // ancestralidades.json pra Centaux/Aurax — "Padrão" só
                         // reafirma o que a raça base já concede (existe pra
-                        // "Gazela" poder trocar por MOVIMENTACAO_4 abaixo).
+                        // "Gazela" poder trocar por 2x MOVIMENTACAO abaixo).
+                        // TAMANHO_MAIS_1/MOVIMENTACAO são os traços empilháveis
+                        // do livro (ver RacialTraitPointCatalog.VEZES_MAX) —
+                        // "vezes" é quantas compras esta raça tem, não um id
+                        // por valor final.
                         tracosParaAdicionar = listOf(
-                            TraitAddition("TAMANHO +2", "TAMANHO_MAIS_2"),
-                            TraitAddition("MOVIMENTAÇÃO +2", "MOVIMENTACAO_2")
+                            TraitAddition("TAMANHO +2", "TAMANHO_MAIS_1", vezes = 2),
+                            TraitAddition("MOVIMENTAÇÃO +2", "MOVIMENTACAO", vezes = 1)
                         )
                     )
                 ),
@@ -265,7 +269,7 @@ object AncestryVariantRegistry {
                     id = "gazela",
                     nome = "Gazela",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("MOVIMENTAÇÃO +4", "MOVIMENTACAO_4")),
+                        tracosParaAdicionar = listOf(TraitAddition("MOVIMENTAÇÃO +4", "MOVIMENTACAO", vezes = 2)),
                         tracosParaRemoverPorNome = listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"),
                         desvantagensParaRemover = listOf("GRANDE")
                     )
@@ -284,7 +288,7 @@ object AncestryVariantRegistry {
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
                             TraitAddition("FORTE", "FORTE"),
-                            TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")
+                            TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)
                         )
                     )
                 ),
@@ -371,7 +375,7 @@ object AncestryVariantRegistry {
                     nome = "Padrão",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition("ARMADURA +2", "ARMADURA_2"),
+                            TraitAddition("ARMADURA +2", "ARMADURA"),
                             TraitAddition("GARRAS", "GARRAS")
                         ),
                         armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Garras", dano = "For+d4", pa = 2, escalavel = true)),
@@ -416,7 +420,7 @@ object AncestryVariantRegistry {
                     nome = "Resistente",
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
-                            TraitAddition("RESISTÊNCIA +1", "RESISTENCIA_1"),
+                            TraitAddition("RESISTÊNCIA +1", "RESISTENCIA"),
                             TraitAddition("MUDANÇA DE FORMA (Sem variação de tamanho)", "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO")
                         )
                     )
@@ -722,7 +726,7 @@ object AncestryVariantRegistry {
                     ),
                     FixedPackageOption(
                         "pele_iluminada_pela_lua", "Pele Iluminada pela Lua",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("APARAR +1", "APARAR_1")))
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("APARAR +1", "APARAR")))
                     ),
                     FixedPackageOption(
                         "gatoruja", "Gatoruja",
@@ -730,18 +734,18 @@ object AncestryVariantRegistry {
                     ),
                     FixedPackageOption(
                         "correnteza", "Correnteza",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("MOVIMENTAÇÃO +2", "MOVIMENTACAO_2")))
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("MOVIMENTAÇÃO +2", "MOVIMENTACAO")))
                     ),
                     FixedPackageOption(
-                        // Id "RESISTENCIA" (bare), não "RESISTENCIA_1": tem que
-                        // ser EXATAMENTE o mesmo id que CriadorState.
-                        // applyAncestryVariantAdjustments já injeta em
-                        // newHabilidades pro caso "Pedregoso" — os dois
-                        // caminhos rodam pra Umvee (esse aqui é só bookkeeping
-                        // redundante de vantagensRaciais), então um id
-                        // diferente pro mesmo efeito contaria a Resistência em
-                        // dobro (o mesmo tipo de bug já corrigido pro Tamanho
-                        // de Fadas/Povo Rato — ver ModifierEngineAdgAncestryTest).
+                        // Id/vezes têm que bater EXATAMENTE com o que
+                        // CriadorState.applyAncestryVariantAdjustments já
+                        // injeta em newHabilidades pro caso "Pedregoso" — os
+                        // dois caminhos rodam pra Umvee (esse aqui é só
+                        // bookkeeping redundante de vantagensRaciais), então
+                        // um id ou vezes diferente pro mesmo efeito contaria a
+                        // Resistência em dobro (o mesmo tipo de bug já
+                        // corrigido pro Tamanho de Fadas/Povo Rato — ver
+                        // ModifierEngineAdgAncestryTest).
                         "pedregoso", "Pedregoso",
                         ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")))
                     )
@@ -774,7 +778,7 @@ object AncestryVariantRegistry {
                         ResolvedTraitPackage(
                             tracosParaAdicionar = listOf(
                                 TraitAddition("FORTE", "FORTE"),
-                                TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")
+                                TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)
                             )
                         )
                     ),
