@@ -15,7 +15,7 @@
         "descricaoLite": "Não precisa respirar e é imune a veneno e doença; recupera-se do Abalado com +2 e sofre um nível a menos de penalidade por Ferimentos. Não cicatriza sozinho — consertá-lo exige a perícia Consertar, gastando uma hora por nível de Ferimento atual do alvo, sem o limite da Hora de Ouro."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "FORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -23,7 +23,7 @@
         "descricaoLite": "Sofre -2 em Persuadir ao lidar com quem não compartilha sua natureza artificial, e costuma ser tratado como propriedade, sem direitos legais reconhecidos na maior parte dos lugares."
       },
       {
-        "nome": "Pacifista",
+        "nome": "Complicação Maior: Pacifista",
         "descricao": "PACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.",
         "id": "PACIFISTA",
         "category": "racial_hindrance",
@@ -31,7 +31,7 @@
         "descricaoLite": "Fica impedido de causar dano a um ser senciente ou de permitir, por omissão, que isso aconteça — restrição que não se aplica a variantes construídas para o combate."
       },
       {
-        "nome": "Voto",
+        "nome": "Complicação Maior: Voto",
         "descricao": "VOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo",
         "id": "VOTO",
         "category": "racial_hindrance",
@@ -62,7 +62,7 @@
         "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal."
       },
       {
-        "nome": "Resistente",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
         "id": "RESISTENTE",
         "category": "racial_trait_positive",
@@ -106,7 +106,7 @@
         "descricaoLite": "Por causa do peso das asas, anda 1 quadro mais devagar e tem o dado de corrida rebaixado em um tipo."
       },
       {
-        "nome": "Não Sabe Nadar",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.",
         "id": "NAO_SABE_NADAR",
         "category": "racial_hindrance",
@@ -114,7 +114,7 @@
         "descricaoLite": "Cada quadro percorrido na água consome 3 quadros de Movimentação, além de -2 em testes de Atletismo para nadar."
       },
       {
-        "nome": "Sentidos Aguçados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
         "id": "SENTIDOS_AGUCADOS",
         "category": "racial_trait_positive",
@@ -191,14 +191,14 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
         "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1."
       },
       {
-        "nome": "Desastrado",
+        "nome": "Complicação Menor: Desastrado",
         "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.",
         "id": "DESASTRADO",
         "category": "racial_hindrance",
@@ -228,7 +228,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -288,7 +288,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Espirituoso",
+        "nome": "Atributo Aumentado: Espírito (d6)",
         "descricao": "Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1.",
         "id": "ESPIRITUOSO",
         "category": "racial_trait_positive",
@@ -302,7 +302,7 @@
         "descricaoLite": "Perde 1 quadro de deslocamento ao andar e um tipo no dado de corrida."
       },
       {
-        "nome": "Sorte",
+        "nome": "Vantagem Grátis: Sortudo",
         "descricao": "Sacam um Bene adicional por sessão de jogo.",
         "id": "SORTE",
         "category": "racial_edge",
@@ -332,14 +332,14 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
         "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1."
       },
       {
-        "nome": "Inimigo Racial",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_RACIAL",
         "category": "racial_trait_negative",
@@ -367,7 +367,7 @@
         ]
       },
       {
-        "nome": "Não Sabe Nadar",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.",
         "id": "NAO_SABE_NADAR",
         "category": "racial_hindrance",
@@ -375,7 +375,7 @@
         "descricaoLite": "Consegue nadar, mas com dificuldade: -2 em Atletismo para natação e 3 quadros de Movimentação gastos por quadro avançado na água."
       },
       {
-        "nome": "Sanguinário",
+        "nome": "Complicação Maior: Sanguinário",
         "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.",
         "id": "SANGUINARIO",
         "category": "racial_hindrance",
@@ -411,7 +411,7 @@
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "A maioria das pessoas desconfia de sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo antigo subconsciente de ancestrais reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todas as demais ancestralidades.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -441,14 +441,14 @@
         ]
       },
       {
-        "nome": "Sentidos Aguçados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
         "id": "SENTIDOS_AGUCADOS",
         "category": "racial_trait_positive",
         "descricaoLite": "Recebe automaticamente a Vantagem Prontidão."
       },
       {
-        "nome": "PRONTIDÃO",
+        "nome": "Vantagem Grátis: Prontidão",
         "descricao": "PRONTIDÃO",
         "id": "PRONTIDAO",
         "category": "racial_edge",
@@ -479,7 +479,7 @@
         "descricaoLite": "Anda 1 quadro a menos por rodada e tem o dado de corrida um tipo abaixo do normal."
       },
       {
-        "nome": "ROBUSTO",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "Anões são fortes e resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
         "id": "ROBUSTO",
         "category": "racial_trait_positive",
@@ -568,7 +568,7 @@
         "descricaoLite": "Perdem 1 quadro de Movimentação ao andar e um tipo no dado de corrida."
       },
       {
-        "nome": "NÃO SABE NADAR",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Colocar as asas debaixo d'água é um risco para os Avianos. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro movido na água custa 3 quadros de Movimentação.",
         "id": "NAO_SABE_NADAR",
         "category": "racial_hindrance",
@@ -576,7 +576,7 @@
         "descricaoLite": "Sofrem -2 em testes de Atletismo para nadar, e cada quadro percorrido na água custa 3 quadros de Movimentação."
       },
       {
-        "nome": "SENTIDOS AGUÇADOS",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Avianos são mais perspicazes do que a maioria das ancestralidades. Começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12+1.",
         "id": "SENTIDOS_AGUCADOS",
         "category": "racial_trait_positive",
@@ -609,14 +609,14 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ATRAENTE",
+        "nome": "Vantagem Grátis: Atraente",
         "descricao": "Celestiais têm uma beleza sobrenatural, o que lhes confere a Vantagem Atraente.",
         "id": "ATRAENTE",
         "category": "racial_edge",
         "descricaoLite": "Possuem a Vantagem Atraente graças a uma beleza fora do comum."
       },
       {
-        "nome": "CÓDIGO DE HONRA",
+        "nome": "Complicação Maior: Código de Honra",
         "descricao": "Celestiais seguem naturalmente uma moral boa. Abominam mentiras, protegem os fracos e buscam por justiça.",
         "id": "CODIGO_DE_HONRA",
         "category": "racial_hindrance",
@@ -631,7 +631,7 @@
         "descricaoLite": "Voam com Movimentação 12 por rodada e usam Atletismo para manobras aéreas."
       },
       {
-        "nome": "VOTO",
+        "nome": "Complicação Maior: Voto",
         "descricao": "Servir à divindade que os criou.",
         "id": "VOTO",
         "category": "racial_hindrance",
@@ -730,7 +730,7 @@
         "descricaoLite": "Dispensam respiração, o que os torna imunes a venenos inalados, afogamento e sufocamento no vácuo."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "A maioria das pessoas acha difícil se relacionar com descendentes dos elementais. Possuem a Complicação Forasteiro (Menor), subtraindo 2 das rolagens de Persuadir com todos, exceto outros de sua própria espécie.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -745,14 +745,14 @@
         "descricaoLite": "Recebem +4 para resistir aos efeitos nocivos ligados a seu elemento de origem, e o dano vindo dessa fonte é reduzido no mesmo valor."
       },
       {
-        "nome": "RÁPIDO",
+        "nome": "Vantagem Grátis: Rápido",
         "descricao": "Descendentes do fogo são frenéticos e estão sempre em movimento. Possuem a Vantagem Rápido.",
         "id": "rapido",
         "category": "racial_edge",
         "descricaoLite": "Possuem a Vantagem Rápido."
       },
       {
-        "nome": "SÓLIDO COMO ROCHA",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "Descendentes da terra são resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
         "id": "SOLIDO_COMO_ROCHA",
         "category": "racial_trait_positive",
@@ -796,7 +796,7 @@
         "descricaoLite": "Sofrem -4 em testes para resistir a efeitos de frio e recebem +4 de dano adicional de ataques desse tipo."
       },
       {
-        "nome": "MAL-HUMORADO",
+        "nome": "Complicação Maior: Arrogante",
         "descricao": "Draconianos têm orgulho dos poderosos dragões dos quais são parentes. Isso lhes dá a Complicação Arrogante. Se os draconianos do seu cenário não tiverem essa característica, escolha dois pontos de penalidades de ancestralidade negativas que melhor se adaptem a sua origem ou sociedade.",
         "id": "MAL_HUMORADO",
         "category": "racial_trait_negative",
@@ -838,7 +838,7 @@
         "descricaoLite": "Após dez minutos expostos a temperaturas abaixo de 18°C, sofrem -1 em testes de Agilidade, Força e Vigor."
       },
       {
-        "nome": "ARROGANTE",
+        "nome": "Complicação Maior: Arrogante",
         "descricao": "ARROGANTE",
         "id": "ARROGANTE",
         "category": "racial_hindrance",
@@ -868,7 +868,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "DESASTRADO",
+        "nome": "Complicação Menor: Desastrado",
         "descricao": "Elfos têm uma aversão inerente a objetos mecânicos em cenários de fantasia tradicionais, o que lhes confere a Complicação Desastrado.",
         "id": "DESASTRADO",
         "category": "racial_hindrance",
@@ -883,7 +883,7 @@
         "descricaoLite": "Enxergam sem prejuízo na escuridão, sem sofrer os modificadores de Penumbra e Escuridão."
       },
       {
-        "nome": "ÁGIL",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "Elfos são graciosos e ágeis. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12+1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
@@ -906,7 +906,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "BOCA GRANDE",
+        "nome": "Complicação Menor: Boca Grande",
         "descricao": "Embora sejam cheias de segredos, raramente os guardam para si.",
         "id": "BOCA_GRANDE",
         "category": "racial_hindrance",
@@ -914,7 +914,7 @@
         "descricaoLite": "Tendem a revelar segredos que deveriam manter guardados."
       },
       {
-        "nome": "CURIOSO",
+        "nome": "Complicação Maior: Curioso",
         "descricao": "Fadas têm inúmeras perguntas e curiosidades sobre a vida, especialmente sobre assuntos fora de sua terra natal.",
         "id": "CURIOSO",
         "category": "racial_hindrance",
@@ -922,7 +922,7 @@
         "descricaoLite": "Sentem forte impulso de investigar e questionar tudo o que foge de seu convívio habitual."
       },
       {
-        "nome": "DESASTRADO",
+        "nome": "Complicação Menor: Desastrado",
         "descricao": "Fadas tradicionais têm grande desdém por objetos mecânicos. Possuem a Complicação Desastrado.",
         "id": "DESASTRADO",
         "category": "racial_hindrance",
@@ -937,7 +937,7 @@
         "descricaoLite": "De porte minúsculo, aplicam os Modificadores de Escala, sofrem -4 em Resistência e no dano causado, e têm a Força limitada a d4."
       },
       {
-        "nome": "IMPULSIVO",
+        "nome": "Complicação Menor: Impulsivo",
         "descricao": "Moderação não é uma qualidade frequentemente encontrada nas fadas.",
         "id": "IMPULSIVO",
         "category": "racial_hindrance",
@@ -974,7 +974,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ASTÚCIA",
+        "nome": "Atributo Aumentado: Astúcia (d6)",
         "descricao": "Gnomos começam com um d6 em Astúcia em vez de um d4. Isso aumenta a Astúcia máxima para d12+1.",
         "id": "ASTUCIA",
         "category": "racial_trait_positive",
@@ -988,7 +988,7 @@
         "descricaoLite": "Andam 1 quadro mais devagar e têm o dado de corrida rebaixado em um tipo."
       },
       {
-        "nome": "SENTIDOS APRIMORADOS",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Gomos começam com um d6 em Perceber em vez de um d4. Isso aumenta seu máximo para d12+1.",
         "id": "SENTIDOS_APRIMORADOS",
         "category": "racial_trait_positive",
@@ -1027,7 +1027,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "DESAGRADÁVEL",
+        "nome": "Complicação Menor: Desagradável",
         "descricao": "“Maligno” e “cruel” são dois adjetivos comumente usados para descrever goblins. Eles subtraem 1 dos testes de Persuadir.",
         "id": "DESAGRADAVEL",
         "category": "racial_hindrance",
@@ -1056,7 +1056,7 @@
         "descricaoLite": "Já entra em jogo com uma Vantagem de Estágio Novato à escolha, desde que cumpra os pré-requisitos normalmente."
       },
       {
-        "nome": "SORRATEIRO",
+        "nome": "Perícia d6 Inicial: Furtividade",
         "descricao": "Goblins aprendem rapidamente como se esgueirar de seres mais ferozes que querem matá-los ou feri-los. Começam com um d6 em Furtividade, o que aumenta seu máximo para d12+1.",
         "id": "SORRATEIRO",
         "category": "racial_trait_positive",
@@ -1113,7 +1113,7 @@
         "descricaoLite": "Movimentação 5 e dado de Corrida d4, por ser lento e pouco ágil."
       },
       {
-        "nome": "PERÍCIAS BÁSICAS REDUZIDAS",
+        "nome": "Complicação Menor: Perícias Básicas Reduzidas",
         "descricao": "Golens não são criados como seres biológicos e, portanto, não começam com Conhecimento Geral, Persuadir ou Furtividade.",
         "id": "PERICIAS_BASICAS_REDUZIDAS",
         "category": "racial_trait_negative",
@@ -1195,7 +1195,7 @@
         ]
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Ninguém realmente confia em alguém de herança diabólica, mesmo em um cenário de alta fantasia. A personagem tem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1210,7 +1210,7 @@
         "descricaoLite": "Ataques de frio causam +4 de dano extra contra ele, e a rolagem para resistir a esses efeitos sofre -4."
       },
       {
-        "nome": "NATUREZA DIABÓLICA",
+        "nome": "Bônus de Perícia: Intimidar (+1)",
         "descricao": "A verdadeira natureza de um infernal está sempre logo abaixo da superfície e ele pode revelá-la quando desejar. Adiciona +1 às rolagens de Intimidar.",
         "id": "NATUREZA_DIABOLICA",
         "category": "racial_trait_positive",
@@ -1267,7 +1267,7 @@
         "descricaoLite": "Quatro braços funcionais reduzem em 2 a penalidade total por realizar múltiplas ações, desde que ao menos uma delas envolva os membros (em geral testes de Agilidade, Força ou perícias ligadas a eles)."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Outras raças consideram o povo inseto perturbador e estranho. A personagem tem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1304,14 +1304,14 @@
         ]
       },
       {
-        "nome": "GUIADO (Maior)",
+        "nome": "Complicação Maior: Guiado",
         "descricao": "GUIADO (Maior)",
         "id": "GUIADO",
         "category": "racial_trait_negative",
         "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
       },
       {
-        "nome": "LEAL",
+        "nome": "Complicação Menor: Leal",
         "descricao": "LEAL",
         "id": "LEAL",
         "category": "racial_trait_negative",
@@ -1333,7 +1333,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Meio-elfos nunca ficam confortáveis na sociedade humana ou na élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com todos menos os seus iguais.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1373,7 +1373,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ANALFABETO",
+        "nome": "Complicação Menor: Analfabeto",
         "descricao": "Meio-gigantes não sabem ler nem escrever. Podem recomprar essa Complicação com um Progresso.",
         "id": "ANALFABETO",
         "category": "racial_hindrance",
@@ -1381,14 +1381,14 @@
         "descricaoLite": "Não sabe ler nem escrever; essa Complicação pode ser removida gastando um Progresso."
       },
       {
-        "nome": "CABEÇAS-DURAS",
+        "nome": "Penalidade em Atributo: Astúcia (-1)",
         "descricao": "O crânio grosso dos meio-gigantes significa que tendem a ser pensadores relativamente simples. Rolagens de Astúcia são feitas com -1.",
         "id": "CABECAS_DURAS",
         "category": "racial_trait_negative",
         "descricaoLite": "-1 em testes de Astúcia."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Meio-gigantes são aterrorizantes para a maioria das raças humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seus próprios clãs.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1403,14 +1403,14 @@
         "descricaoLite": "-2 ao usar equipamentos pensados para criaturas menores, impossibilidade de vestir roupas ou armaduras humanoides, e gasto em dobro com itens, comida e vestimenta."
       },
       {
-        "nome": "MUITO FORTE",
+        "nome": "Atributo Aumentado: Força (d8) (2 Passos)",
         "descricao": "O tamanho dos meio-gigantes aumenta sua Força inicial para d8 e sua Força máxima para d12+2.",
         "id": "MUITO_FORTE",
         "category": "racial_trait_positive",
         "descricaoLite": "Começa com Força d8 e pode elevá-la até d12+2."
       },
       {
-        "nome": "MUITO RESISTENTE",
+        "nome": "Atributo Aumentado: Vigor (d8) (2 Passos)",
         "descricao": "Meio-gigantes são seres resistentes. Seu Vigor inicial é d8 e seu limite é aumentado para d12+2.",
         "id": "MUITO_RESISTENTE",
         "category": "racial_trait_positive",
@@ -1454,7 +1454,7 @@
         "descricaoLite": "Substitui o d4 inicial de Força ou Vigor (à escolha) por d6, elevando o teto desse atributo para d12+1."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Meio-orcs não são confiáveis para a maioria dos povos “civilizados”. Subtraem 2 das rolagens de Persuadir ao interagir com seres além de meio-orcs.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1502,7 +1502,7 @@
         ]
       },
       {
-        "nome": "DESAGRADÁVEL",
+        "nome": "Complicação Menor: Desagradável",
         "descricao": "Ensinados que o mais forte está sempre certo, minotauros lutam contra a diplomacia e o tato. Possuem a Complicação Desagradável.",
         "id": "DESAGRADAVEL",
         "category": "racial_hindrance",
@@ -1510,7 +1510,7 @@
         "descricaoLite": "Carrega a Complicação Desagradável, por dificuldade com diplomacia e tato."
       },
       {
-        "nome": "DURÃO",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "O Vigor inicial dos Minotauros é d6, aumentando o limite para d12+1.",
         "id": "DURAO",
         "category": "racial_trait_positive",
@@ -1524,21 +1524,21 @@
         "descricaoLite": "-2 ao usar equipamentos de criaturas menores, sem poder vestir roupas ou armaduras humanoides, e paga o dobro por suprimentos, comida e roupas."
       },
       {
-        "nome": "MUITO FORTE",
+        "nome": "Atributo Aumentado: Força (d8) (2 Passos)",
         "descricao": "Minotauros começam com Força d8, aumentando sua Força máxima para d12+2.",
         "id": "MUITO_FORTE",
         "category": "racial_trait_positive",
         "descricaoLite": "Força inicial d8, com teto elevado a d12+2."
       },
       {
-        "nome": "SEM INSTRUÇÃO",
+        "nome": "Penalidade em Atributo: Astúcia (-1)",
         "descricao": "A sociedade dos minotauros favorece a habilidade física em detrimento da capacidade intelectual. Rolagens de Astúcia são feitas com -1.",
         "id": "SEM_INSTRUCAO",
         "category": "racial_trait_negative",
         "descricaoLite": "-1 em testes de Astúcia."
       },
       {
-        "nome": "SENSÍVEL",
+        "nome": "Complicação Maior: Sensível",
         "descricao": "Minotauros perdem a paciência rapidamente quando provocados. Possuem a Complicação Sensível (Maior).",
         "id": "SENSIVEL",
         "category": "racial_hindrance",
@@ -1571,7 +1571,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ARROGANTE",
+        "nome": "Complicação Maior: Arrogante",
         "descricao": "A cultura dos ogros é repleta de grandes orgulhos e feitos. Outros os veem como arrogantes e distantes, o que lhes dá a Complicação Arrogante.",
         "id": "ARROGANTE",
         "category": "racial_hindrance",
@@ -1586,7 +1586,7 @@
         "descricaoLite": "-2 em Atletismo e Furtividade."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Seu tamanho estranho e imponente deixa outros seres nervosos. Subtraem 2 das rolagens de Persuadir.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1601,21 +1601,21 @@
         "descricaoLite": "-2 ao usar equipamentos de criaturas menores, incapacidade de vestir roupas ou armaduras humanoides, e custo dobrado para adquirir equipamento, alimentação e vestuário."
       },
       {
-        "nome": "MUITO FORTE",
+        "nome": "Atributo Aumentado: Força (d8) (2 Passos)",
         "descricao": "Ogros têm Força inicial d8 e Força máxima d12+2.",
         "id": "MUITO_FORTE",
         "category": "racial_trait_positive",
         "descricaoLite": "Força inicial d8, com máximo elevado a d12+2."
       },
       {
-        "nome": "MUITO RESISTENTE",
+        "nome": "Atributo Aumentado: Vigor (d8) (2 Passos)",
         "descricao": "Seu Vigor inicial é d8 e o limite é aumentado para d12+2.",
         "id": "MUITO_RESISTENTE",
         "category": "racial_trait_positive",
         "descricaoLite": "Vigor inicial d8, com máximo elevado a d12+2."
       },
       {
-        "nome": "ROBUSTO",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "Ogros são excepcionalmente durões. Um segundo resultado Abalado não causa Ferimento.",
         "id": "ROBUSTO",
         "category": "racial_trait_positive",
@@ -1661,7 +1661,7 @@
         "descricaoLite": "-1 em testes de Persuadir, por resolver conflitos preferencialmente na força."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Orcs subtraem 2 das rolagens de Persuadir e podem ser tratados como monstros fora de seus próprios clãs.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1669,7 +1669,7 @@
         "descricaoLite": "-2 em Persuadir e pode ser tratado como monstro fora do próprio clã."
       },
       {
-        "nome": "FORTE",
+        "nome": "Atributo Aumentado: Força (d6)",
         "descricao": "Orcs começam com Força d6 em vez de d4. Isso aumenta seu máximo para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive",
@@ -1683,7 +1683,7 @@
         "descricaoLite": "Contra quem emite calor ou frio, a penalidade de baixa luminosidade cai à metade, já que enxerga no espectro infravermelho."
       },
       {
-        "nome": "RESISTENTE",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "A Força de um orc é igualada pela sua resistência. Começam com um d6 em Vigor em vez de um d4. Isso aumenta seu máximo para d12+1.",
         "id": "RESISTENTE",
         "category": "racial_trait_positive",
@@ -1714,7 +1714,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ESPIRITUOSO",
+        "nome": "Atributo Aumentado: Espírito (d6)",
         "descricao": "Pequeninos normalmente são seres otimistas. Começam com um d6 em Espírito em vez de um d4. Isso aumenta seu máximo para d12+1.",
         "id": "ESPIRITUOSO",
         "category": "racial_trait_positive",
@@ -1728,7 +1728,7 @@
         "descricaoLite": "Andam 1 quadro mais devagar e têm o dado de corrida rebaixado em um tipo."
       },
       {
-        "nome": "SORTE",
+        "nome": "Vantagem Grátis: Sortudo",
         "descricao": "Pequeninos sacam um Bene adicional por sessão de jogo.",
         "id": "SORTE",
         "category": "racial_edge",
@@ -1757,7 +1757,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "COVARDE",
+        "nome": "Complicação Maior: Covarde",
         "descricao": "O povo ratazana aprende cedo que a discrição é a melhor parte da valentia. Possuem a Complicação Covarde.",
         "id": "COVARDE",
         "category": "racial_hindrance",
@@ -1765,7 +1765,7 @@
         "descricaoLite": "Carrega a Complicação Covarde, priorizando fuga à confrontação."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "O povo ratazana normalmente é desprezado por outros povos. Subtraem 2 das rolagens de Persuadir e são tratados como pragas monstruosas fora de seus próprios bandos.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1773,7 +1773,7 @@
         "descricaoLite": "-2 em Persuadir e é tratado como praga fora do próprio grupo."
       },
       {
-        "nome": "GANANCIOSO",
+        "nome": "Complicação Menor: Ganancioso",
         "descricao": "Adquirir novos tesouros é a obsessão do povo ratazana. Possuem a Complicação Ganancioso (Menor).",
         "id": "GANANCIOSO",
         "category": "racial_hindrance",
@@ -1861,7 +1861,7 @@
         "descricaoLite": "Cerca de 18 cm de altura: Tamanho -4, Força d4, -4 de Resistência, além dos benefícios da escala Minúsculo."
       },
       {
-        "nome": "FOBIA",
+        "nome": "Complicação Menor: Fobia",
         "descricao": "Os gatos provocam um medo instintivo no povo rato.",
         "id": "FOBIA",
         "category": "racial_hindrance",
@@ -1869,7 +1869,7 @@
         "descricaoLite": "Sente medo instintivo diante de gatos."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Membros do povo rato são novidades fofas para a maioria das ancestralidades humanoides. Subtraem 2 das rolagens de Persuadir e não podem ter direitos básicos fora de seu próprio povo.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -1884,7 +1884,7 @@
         "descricaoLite": "Movimentação -1 e dado de Corrida d4, por causa das pernas curtas."
       },
       {
-        "nome": "POUCO IMPONENTE",
+        "nome": "Complicação Menor: Pouco Imponente",
         "descricao": "A maioria dos inimigos não considera o povo rato uma ameaça. Possuem a Complicação Almofadinha.",
         "id": "POUCO_IMPONENTE",
         "category": "racial_trait_negative",
@@ -1898,7 +1898,7 @@
         "descricaoLite": "Acostumado a viver em tocas escuras, não sofre os modificadores de Penumbra ou Escuridão ao agir no escuro."
       },
       {
-        "nome": "ALMOFADINHA",
+        "nome": "Complicação Menor: Almofadinha",
         "descricao": "ALMOFADINHA",
         "id": "ALMOFADINHA",
         "category": "racial_hindrance",
@@ -1922,7 +1922,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "A maioria dos povos não confia no povo serpente. Subtraem 2 das rolagens de Persuadir fora de seus próprios clãs familiares.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -2021,7 +2021,7 @@
         ]
       },
       {
-        "nome": "INIMIGO ANCESTRAL",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "A sociedade rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam uns com os outros e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative",
@@ -2043,7 +2043,7 @@
         ]
       },
       {
-        "nome": "NÃO SABE NADAR",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Rakashanos até podem nadar, eles apenas evitam e não são particularmente bons nisso. Eles subtraem 2 das rolagens de Atletismo (natação) e cada quadro que se movem na água custa 3 quadros de Movimentação.",
         "id": "NAO_SABE_NADAR",
         "category": "racial_hindrance",
@@ -2051,7 +2051,7 @@
         "descricaoLite": "Nadar não é algo natural para eles: sofrem -2 em Atletismo para nadar, e cada quadro percorrido na água consome 3 quadros de deslocamento."
       },
       {
-        "nome": "SANGUINÁRIO",
+        "nome": "Complicação Maior: Sanguinário",
         "descricao": "Rakashanos podem ser cruéis com seus inimigos, muitas vezes brincando com eles por pura diversão. Eles raramente fazem prisioneiros e sentem pouco remorso a respeito de inimigos capturados.",
         "id": "SANGUINARIO",
         "category": "racial_hindrance",
@@ -2066,14 +2066,14 @@
         "descricaoLite": "Enxergam bem no escuro, sem sofrer as penalidades normais de Penumbra ou Escuridão."
       },
       {
-        "nome": "ÁGIL",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "A graça felina concede aos rakashanos um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12+1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
         "descricaoLite": "Têm mais agilidade que o normal: começam com d6 no atributo em vez de d4, podendo evoluir até d12+1."
       },
       {
-        "nome": "INIMIGO RACIAL",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "INIMIGO RACIAL",
         "id": "INIMIGO_RACIAL",
         "category": "racial_trait_negative",
@@ -2097,7 +2097,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "AVERSÃO ANIMAL",
+        "nome": "Complicação Menor: Aversão Animal",
         "descricao": "Os animais acham os renascidos enervantes. Eles não se aproximarão voluntariamente a menos de 5 quadros (10 metros). Além disso, renascidos subtraem 2 das rolagens para controlar ou montar animais, exceto lobos, ratos, corvos e outros animais comumente associados aos mortos-vivos no cenário (a critério do Mestre).",
         "id": "AVERSAO_ANIMAL",
         "category": "racial_trait_negative",
@@ -2111,7 +2111,7 @@
         "descricaoLite": "Uma vez por sessão pode se alimentar de sangue humanoide para tentar uma cura natural: causar um Ferimento com a mordida ou sugar um inimigo já derrubado (ainda vivo) serve como fonte, e nesse segundo caso a vítima testa Vigor para não morrer."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Renascidos emitem uma aura desconfortável até mesmo para seus aliados. Outras pessoas podem confundi-los com verdadeiros vampiros — temendo-os ou caçando-os conforme sua natureza.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -2119,7 +2119,7 @@
         "descricaoLite": "Provoca desconforto até em aliados e às vezes é confundido com um vampiro de verdade, o que pode atrair medo ou perseguição."
       },
       {
-        "nome": "FORÇA SOBRENATURAL",
+        "nome": "Atributo Aumentado: Força (d6)",
         "descricao": "Renascidos são mais fortes que humanos. Sua Força inicial é d6 e seu limite é aumentado para d12+1.",
         "id": "FORCA_SOBRENATURAL",
         "category": "racial_trait_positive",
@@ -2184,7 +2184,7 @@
         "descricaoLite": "A pele resistente age como uma proteção natural equivalente a uma armadura leve, concedendo +2 de Armadura."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "A maioria dos povos desconfia dos sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo subconsciente antigo dos ancestrais dos reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todos menos os seus iguais.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -2214,7 +2214,7 @@
         ]
       },
       {
-        "nome": "SENTIDOS APRIMORADOS",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Sáurios têm sentidos aguçados, ganhando a Vantagem Prontidão.",
         "id": "SENTIDOS_APRIMORADOS",
         "category": "racial_trait_positive",
@@ -2237,7 +2237,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CARISMÁTICO",
+        "nome": "Vantagem Grátis: Carismático",
         "descricao": "Transmorfos aprendem rapidamente a navegar em conversas complicadas para se adaptarem a diferentes grupos sociais. Começam gratuitamente com a Vantagem Carismático.",
         "id": "CARISMATICO",
         "category": "racial_trait_positive",
@@ -2251,7 +2251,7 @@
         "descricaoLite": "Têm o Antecedente Arcano do tipo Dom e, como ação livre limitada, alteram a própria aparência de modo equivalente ao poder Disfarce restrito a si mesmos."
       },
       {
-        "nome": "SEGREDO",
+        "nome": "Complicação Maior: Segredo",
         "descricao": "A verdadeira natureza de um transmorfo raramente é conhecida — até mesmo por outros transmorfos. Eles mantêm sua habilidade em segredo, o que lhes concede a Complicação Segredo (Maior). Caso sejam descobertos por alguém que não seja um aliado próximo, esta Complicação é trocada por Inimigo, Vergonha, Procurado, Forasteiro ou outra Complicação apropriada.",
         "id": "SEGREDO",
         "category": "racial_hindrance",
@@ -2285,7 +2285,7 @@
         "descricaoLite": "Não precisa respirar e é imune a veneno e doença; recupera-se do Abalado com +2 e sofre um nível a menos de penalidade por Ferimentos. Não cicatriza sozinho — consertá-lo exige a perícia Consertar, gastando uma hora por nível de Ferimento atual do alvo, sem o limite da Hora de Ouro."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "FORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -2293,7 +2293,7 @@
         "descricaoLite": "Sofre -2 em Persuadir ao lidar com quem não compartilha sua natureza artificial, e costuma ser tratado como propriedade, sem direitos legais reconhecidos na maior parte dos lugares."
       },
       {
-        "nome": "Pacifista",
+        "nome": "Complicação Maior: Pacifista",
         "descricao": "PACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.",
         "id": "PACIFISTA",
         "category": "racial_hindrance",
@@ -2301,7 +2301,7 @@
         "descricaoLite": "Fica impedido de causar dano a um ser senciente ou de permitir, por omissão, que isso aconteça — restrição que não se aplica a variantes construídas para o combate."
       },
       {
-        "nome": "Voto",
+        "nome": "Complicação Maior: Voto",
         "descricao": "VOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo",
         "id": "VOTO",
         "category": "racial_hindrance",
@@ -2332,7 +2332,7 @@
         "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal."
       },
       {
-        "nome": "Resistente",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
         "category": "racial_trait_positive",
         "id": "RESISTENTE",
@@ -2376,7 +2376,7 @@
         "descricaoLite": "Por causa do peso das asas, anda 1 quadro mais devagar e tem o dado de corrida rebaixado em um tipo."
       },
       {
-        "nome": "Não Sabe Nadar",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.",
         "category": "racial_hindrance",
         "id": "NAO_SABE_NADAR",
@@ -2384,7 +2384,7 @@
         "descricaoLite": "Cada quadro percorrido na água consome 3 quadros de Movimentação, além de -2 em testes de Atletismo para nadar."
       },
       {
-        "nome": "Sentidos Aguçados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_AGUCADOS",
@@ -2465,14 +2465,14 @@
     ],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
         "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1."
       },
       {
-        "nome": "Desastrado",
+        "nome": "Complicação Menor: Desastrado",
         "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -2504,7 +2504,7 @@
     ],
     "habilidades": [
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -2566,7 +2566,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Espirituoso",
+        "nome": "Atributo Aumentado: Espírito (d6)",
         "descricao": "Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "ESPIRITUOSO",
@@ -2580,7 +2580,7 @@
         "descricaoLite": "Perde 1 quadro de deslocamento ao andar e um tipo no dado de corrida."
       },
       {
-        "nome": "Sorte",
+        "nome": "Vantagem Grátis: Sortudo",
         "descricao": "Sacam um Bene adicional por sessão de jogo.",
         "category": "racial_edge",
         "id": "SORTE",
@@ -2612,14 +2612,14 @@
     ],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
         "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1."
       },
       {
-        "nome": "Inimigo Racial",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "category": "racial_trait_negative",
         "id": "INIMIGO_RACIAL",
@@ -2647,7 +2647,7 @@
         ]
       },
       {
-        "nome": "Não Sabe Nadar",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.",
         "category": "racial_hindrance",
         "id": "NAO_SABE_NADAR",
@@ -2655,7 +2655,7 @@
         "descricaoLite": "Consegue nadar, mas com dificuldade: -2 em Atletismo para natação e 3 quadros de Movimentação gastos por quadro avançado na água."
       },
       {
-        "nome": "Sanguinário",
+        "nome": "Complicação Maior: Sanguinário",
         "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.",
         "category": "racial_hindrance",
         "severity": "Maior",
@@ -2696,7 +2696,7 @@
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "A maioria das pessoas desconfia de sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo antigo subconsciente de ancestrais reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todas as demais ancestralidades.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -2726,7 +2726,7 @@
         ]
       },
       {
-        "nome": "Sentidos Aguçados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_AGUCADOS",
@@ -2761,7 +2761,7 @@
         "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal."
       },
       {
-        "nome": "Resistente",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
         "id": "RESISTENTE",
         "category": "racial_trait_positive",
@@ -2860,7 +2860,7 @@
         "descricaoLite": "Por causa do peso das asas, anda 1 quadro mais devagar e tem o dado de corrida rebaixado em um tipo."
       },
       {
-        "nome": "Não Sabe Nadar",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.",
         "id": "NAO_SABE_NADAR",
         "category": "racial_hindrance",
@@ -2868,7 +2868,7 @@
         "descricaoLite": "Cada quadro percorrido na água consome 3 quadros de Movimentação, além de -2 em testes de Atletismo para nadar."
       },
       {
-        "nome": "Sentidos Aguçados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
         "id": "SENTIDOS_AGUCADOS",
         "category": "racial_trait_positive",
@@ -2907,14 +2907,14 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
         "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1."
       },
       {
-        "nome": "Desastrado",
+        "nome": "Complicação Menor: Desastrado",
         "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.",
         "id": "DESASTRADO",
         "category": "racial_hindrance",
@@ -2981,14 +2981,14 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "id": "AGIL",
         "category": "racial_trait_positive",
         "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1."
       },
       {
-        "nome": "Inimigo Racial",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "id": "INIMIGO_RACIAL",
         "category": "racial_trait_negative",
@@ -3016,7 +3016,7 @@
         ]
       },
       {
-        "nome": "Não Sabe Nadar",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.",
         "id": "NAO_SABE_NADAR",
         "category": "racial_hindrance",
@@ -3024,7 +3024,7 @@
         "descricaoLite": "Consegue nadar, mas com dificuldade: -2 em Atletismo para natação e 3 quadros de Movimentação gastos por quadro avançado na água."
       },
       {
-        "nome": "Sanguinário",
+        "nome": "Complicação Maior: Sanguinário",
         "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.",
         "id": "SANGUINARIO",
         "category": "racial_hindrance",
@@ -3066,7 +3066,7 @@
         "descricaoLite": "Placas ou escamas naturais oferecem +2 de proteção contra ataques."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "FORASTEIRO (Menor)",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -3225,7 +3225,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CABEÇA-DURA",
+        "nome": "Penalidade em Atributo: Astúcia (-1)",
         "descricao": "Elementais de pedra não processam pensamentos tão rapidamente quanto outros seres. Rolagens de Astúcia são feitas com -1.",
         "id": "CABECA_DURA",
         "category": "racial_trait_negative",
@@ -3276,7 +3276,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "ALTA/BAIXA TECNOLOGIA",
+        "nome": "Complicação Maior: Alta Tecnologia",
         "descricao": "Devido ao seu tamanho menor, ferais desenvolveram dependência em tecnologia avançada para competir. Ferais possuem a Complicação Alta Tecnologia (Maior).",
         "id": "ALTA_TECNOLOGIA",
         "category": "racial_hindrance",
@@ -3284,14 +3284,14 @@
         "descricaoLite": "Por serem menores fisicamente, dependem de tecnologia avançada para compensar, carregando a Complicação Alta Tecnologia (Maior)."
       },
       {
-        "nome": "ESPIRITUOSO",
+        "nome": "Atributo Aumentado: Espírito (d6)",
         "descricao": "Ferais são determinados e tenazes. Começam com um d6 em Espírito (em vez de um d4). Isso aumenta o Espírito máximo para d12+1.",
         "id": "ESPIRITUOSO",
         "category": "racial_trait_positive",
         "descricaoLite": "O atributo Espírito começa em d6 em vez de d4, elevando o teto para d12+1."
       },
       {
-        "nome": "INIMIGO ANCESTRAL (Insetoide)",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "Gerações deste feral foram presas por insetoides e guardam um ódio ou medo profundos. Subtraem 2 das rolagens de Persuadir ao lidar com insetoides e podem se tornar hostis com pouca provocação.",
         "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative",
@@ -3384,7 +3384,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CIBER-RESISTÊNCIA",
+        "nome": "Complicação Menor: Ciber-Resistência",
         "descricao": "É difícil implantar ciberequipamentos em criaturas feitas de gosma. Gelatinoides têm a Complicação Ciber-Resistência (p. 129).",
         "id": "CIBER_RESISTENCIA",
         "category": "racial_hindrance",
@@ -3392,7 +3392,7 @@
         "descricaoLite": "Sua composição gelatinosa dificulta implantes cibernéticos, o que lhes dá a Complicação Ciber-Resistência."
       },
       {
-        "nome": "FRACO",
+        "nome": "Penalidade em Atributo: Força (-1)",
         "descricao": "Devido à falta de ossos e músculos, gelatinoides têm dificuldade em exercer força física. Eles subtraem 1 de rolagens de Força e dano corpo a corpo.",
         "id": "FRACO",
         "category": "racial_trait_negative",
@@ -3435,7 +3435,7 @@
         "descricaoLite": "Perto de outros da mesma espécie, em até 24 metros, ganham +2 em Espírito."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Tudo, desde os hábitos alimentares dos insetoides até sua mentalidade de colmeia, é estranho e alienígena para a maioria dos outros seres. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -3443,7 +3443,7 @@
         "descricaoLite": "Seus costumes tão diferentes causam estranhamento generalizado, resultando na Complicação Forasteiro (Menor)."
       },
       {
-        "nome": "INCAPAZ DE FALAR",
+        "nome": "Complicação Maior: Incapaz de Falar",
         "descricao": "Insetoides não têm cordas vocais e normalmente só conseguem se comunicar com membros de sua própria espécie. Eles ainda podem ouvir e entender outros idiomas típicos e podem se comunicar por meio de dispositivos eletrônicos, como o tradutor de idiomas encontrado na p. 43.",
         "id": "INCAPAZ_DE_FALAR",
         "category": "racial_hindrance",
@@ -3451,7 +3451,7 @@
         "descricaoLite": "Não conseguem produzir fala compreensível para outras espécies, embora entendam idiomas alheios normalmente; comunicam-se com estranhos por meio de aparelhos eletrônicos, como tradutores."
       },
       {
-        "nome": "TRANSTORNO DE SEPARAÇÃO",
+        "nome": "Complicação Maior: Transtorno de Separação",
         "descricao": "Insetoides são criaturas coletivas e geralmente não se dão bem sozinhos. Quando nenhum outro insetoide estiver na linha de visão, a personagem sofre -2 nas rolagens de Espírito.",
         "id": "TRANSTORNO_DE_SEPARACAO",
         "category": "racial_trait_negative",
@@ -3487,7 +3487,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CIBER-RESISTÊNCIA",
+        "nome": "Complicação Menor: Ciber-Resistência",
         "descricao": "A fisiologia de um mímico não se adapta bem a ciberequipamentos. Possuem a Complicação Ciber-Resistência (p. 129).",
         "id": "CIBER_RESISTENCIA",
         "category": "racial_hindrance",
@@ -3495,7 +3495,7 @@
         "descricaoLite": "A fisiologia peculiar rejeita bem implantes cibernéticos, trazendo a Complicação Ciber-Resistência."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Sociedades por toda a galáxia desconfiam de mímicos. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -3535,7 +3535,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "EM FORMA",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "Mineradores genéticos trabalham longas horas em condições difíceis. Começam com um d6 em Vigor, aumentando o limite para d12+1.",
         "id": "EM_FORMA",
         "category": "racial_trait_positive",
@@ -3549,7 +3549,7 @@
         "descricaoLite": "Acostumaram-se tanto ao ar artificial de colônias e minas que dependem dele para viver bem, o que pode gerar complicações fora desses ambientes."
       },
       {
-        "nome": "FORTE",
+        "nome": "Atributo Aumentado: Força (d6)",
         "descricao": "Começam com Força d6 (no lugar do d4). Isso também eleva o limite de Força da heroína para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive",
@@ -3593,7 +3593,7 @@
         "descricaoLite": "Comunicam-se mentalmente com qualquer ser inteligente dentro de 24 metros, sem barreira de idioma."
       },
       {
-        "nome": "NOÇÃO DO PERIGO",
+        "nome": "Vantagem Grátis: Noção do Perigo",
         "descricao": "Oráculos têm intuição e premonição sobre perigos iminentes. Começam com a Vantagem Noção do Perigo.",
         "id": "NOCAO_DO_PERIGO",
         "category": "racial_edge",
@@ -3637,7 +3637,7 @@
         "descricaoLite": "Com outros de sua espécie a até 24 metros, recebem +2 em Espírito."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Possessores são frequentemente menosprezados, e outros podem ser hostis se os parasitas “vestirem” alguém que conhecem. Possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -3681,7 +3681,7 @@
         "descricaoLite": "Compleição magra reduz sua Resistência em 1."
       },
       {
-        "nome": "INIMIGO ANCESTRAL",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
         "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative",
@@ -3695,7 +3695,7 @@
         "descricaoLite": "Um segundo par de braços, com mão hábil extra, libera os membros principais para outras tarefas: empunhar várias armas rende +1 em Agrupar, e ações de Atletismo que usem esses membros, como escalar ou lutar, recebem +1."
       },
       {
-        "nome": "SENSÍVEL",
+        "nome": "Complicação Maior: Sensível",
         "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
         "id": "SENSIVEL",
         "category": "racial_hindrance",
@@ -3726,7 +3726,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CIRCUITOS DE ASIMOV",
+        "nome": "Complicação Maior: Pacifista",
         "descricao": "O robô não pode causar dano a seres inteligentes. Isso lhes dá a Complicação Pacifista (Maior).",
         "id": "CIRCUITOS_DE_ASIMOV",
         "category": "racial_hindrance",
@@ -3734,7 +3734,7 @@
         "descricaoLite": "Uma trava interna o impede de ferir seres inteligentes, equivalente à Complicação Pacifista (Maior)."
       },
       {
-        "nome": "PROGRAMADO",
+        "nome": "Complicação Maior: Programado",
         "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado (Maior).",
         "id": "PROGRAMADO",
         "category": "racial_hindrance",
@@ -3794,7 +3794,7 @@
         "descricaoLite": "Não realiza testes de cura natural, embora possa se recuperar normalmente por outros meios de cura."
       },
       {
-        "nome": "PROGRAMADO",
+        "nome": "Complicação Maior: Programado",
         "descricao": "Estes seres foram projetados para servir a um propósito, tarefa, ser ou organização específicos, e farão o melhor para executar suas tarefas. Possuem a Complicação Programado.",
         "id": "PROGRAMADO",
         "category": "racial_hindrance",
@@ -3825,14 +3825,14 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "NERVOS DE AÇO",
+        "nome": "Vantagem Grátis: Nervos de Aço",
         "descricao": "Bloqueadores de nervos permitem que o soldado registre dor, mas diminuem seus efeitos, conferindo-lhes a Vantagem Nervos de Aço; isso ignora 1 ponto de penalidades por Ferimentos.",
         "id": "NERVOS_DE_ACO",
         "category": "racial_trait_positive",
         "descricaoLite": "Implantes que atenuam a dor concedem a Vantagem Nervos de Aço, reduzindo em 1 ponto a penalidade imposta por Ferimentos."
       },
       {
-        "nome": "REFLEXOS DE COMBATE",
+        "nome": "Vantagem Grátis: Reflexos de Combate",
         "descricao": "O reflexo de lutar ou fugir destes soldados foi programado em seus sistemas nervosos, dando a eles a Vantagem Reflexos de Combate. Adicionam +2 em Espírito para se recuperar do Estado Abalado.",
         "id": "REFLEXOS_DE_COMBATE",
         "category": "racial_trait_positive",
@@ -3846,7 +3846,7 @@
         "descricaoLite": "Foram projetados para suportar impactos, recebendo +1 de Resistência."
       },
       {
-        "nome": "SEM ESCRÚPULOS",
+        "nome": "Complicação Maior: Sem Escrúpulos",
         "descricao": "Soldados genéticos são treinados para obedecer ordens e completar suas missões a qualquer custo. Caso tenha se libertado de seu condicionamento, substitua isto por Procurado se seu empregador quiser vingança, ou Inimigo para alguém prejudicado no passado que queira o herói morto.",
         "id": "SEM_ESCRUPULOS",
         "category": "racial_hindrance",
@@ -3881,7 +3881,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "CURIOSO",
+        "nome": "Complicação Maior: Curioso",
         "descricao": "Vazios que viajam com outros seres são incrivelmente curiosos, especialmente sobre as muitas facetas da vida orgânica que são completamente desconhecidas para eles.",
         "id": "CURIOSO",
         "category": "racial_hindrance",
@@ -3896,7 +3896,7 @@
         "descricaoLite": "Sobrevivem tranquilamente no vácuo espacial, sem necessidade de respirar."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Seres corpóreos não tendem a confiar em tais formas de vida alienígenas. Vazios possuem a Complicação Forasteiro (Menor).",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -3911,7 +3911,7 @@
         "descricaoLite": "Formado por energia escura, não tem órgãos vitais nem sofre com Ataques Localizados, e ignora dano de quedas, colisões e armas físicas comuns — mas energia, explosões e magia o atingem em cheio. Sem massa relevante, atravessa qualquer abertura não vedada como Terreno Difícil, e só usa armas, veste armadura ou manuseia objetos com um traje de contenção."
       },
       {
-        "nome": "INCAPAZ DE FALAR",
+        "nome": "Complicação Maior: Incapaz de Falar",
         "descricao": "Vazios nunca desenvolveram a capacidade de se comunicar verbalmente uns com os outros. A maioria usa telas de tradução portáteis para traduzir sua fala para outros seres.",
         "id": "INCAPAZ_DE_FALAR",
         "category": "racial_hindrance",
@@ -3926,7 +3926,7 @@
         "descricaoLite": "Estabilizam sozinhos sempre que entram em estado de Sangramento."
       },
       {
-        "nome": "TRANSTORNO DE SEPARAÇÃO",
+        "nome": "Complicação Maior: Transtorno de Separação",
         "descricao": "Estas criaturas são entidades solitárias, subtraindo 2 das rolagens de Espírito quando não houver outros vazios presentes.",
         "id": "TRANSTORNO_DE_SEPARACAO",
         "category": "racial_trait_negative",
@@ -3958,7 +3958,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "FORTE",
+        "nome": "Atributo Aumentado: Força (d6)",
         "descricao": "Yetis são grandes e ferozmente fortes. Começam com um d6 em Força, aumentando o limite para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive",
@@ -4014,7 +4014,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "BAIXA TECNOLOGIA",
+        "nome": "Complicação Maior: Baixa Tecnologia",
         "descricao": "O mundo natal dos aurax é de baixa tecnologia em comparação à maioria dos mundos desenvolvidos. Eles possuem a Complicação Baixa Tecnologia (Maior).",
         "id": "BAIXA_TECNOLOGIA",
         "category": "racial_hindrance",
@@ -4029,7 +4029,7 @@
         "descricaoLite": "Terreno Difícil não reduz seu deslocamento, graças às quatro pernas firmes ou cascos resistentes."
       },
       {
-        "nome": "FORTE",
+        "nome": "Atributo Aumentado: Força (d6)",
         "descricao": "Aurax começam com um d6 em Força, aumentando o limite para d12+1.",
         "id": "FORTE",
         "category": "racial_trait_positive",
@@ -4092,7 +4092,7 @@
         "vezes": 2
       },
       {
-        "nome": "CALCULISTA",
+        "nome": "Vantagem Grátis: Calculista",
         "descricao": "Parasteens são pensadores astutos. Possuem a Vantagem Calculista, o que lhes permite ignorar até 2 pontos de penalidades quando sua Carta de Ação for Cinco ou menor.",
         "id": "CALCULISTA",
         "category": "racial_trait_positive",
@@ -4106,7 +4106,7 @@
         "descricaoLite": "-1 em todas as rolagens de Agilidade."
       },
       {
-        "nome": "FORASTEIRO",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "A maioria das pessoas se sente desconfortável perto de cadáveres animados.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -4114,7 +4114,7 @@
         "descricaoLite": "Tende a causar desconforto nas pessoas ao redor apenas por sua presença, afetando reações sociais iniciais."
       },
       {
-        "nome": "FRACO",
+        "nome": "Penalidade em Atributo: Força (-1)",
         "descricao": "Deaders têm dificuldade em usar todo o potencial dos músculos do hospedeiro. Subtraem 1 das rolagens de Força, incluindo dano.",
         "id": "FRACO",
         "category": "racial_trait_negative",
@@ -4169,7 +4169,7 @@
         "descricaoLite": "Compleição magra reduz sua Resistência em 1."
       },
       {
-        "nome": "INIMIGO ANCESTRAL",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
         "id": "INIMIGO_ANCESTRAL",
         "category": "racial_trait_negative",
@@ -4183,7 +4183,7 @@
         "descricaoLite": "Um segundo par de braços, com mão hábil extra, libera os membros principais para outras tarefas: empunhar várias armas rende +1 em Agrupar, e ações de Atletismo que usem esses membros, como escalar ou lutar, recebem +1."
       },
       {
-        "nome": "SENSÍVEL",
+        "nome": "Complicação Maior: Sensível",
         "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
         "id": "SENSIVEL",
         "category": "racial_hindrance",
@@ -4216,14 +4216,14 @@
         "descricaoLite": "+2 no valor de Aparar, graças a uma percepção que vai além dos sentidos comuns."
       },
       {
-        "nome": "FRACO",
+        "nome": "Penalidade em Atributo: Força (-1)",
         "descricao": "Serranos subtraem 1 das rolagens de Força, incluindo dano.",
         "id": "FRACO",
         "category": "racial_trait_negative",
         "descricaoLite": "-1 em rolagens de Força, dano incluso."
       },
       {
-        "nome": "NOÇÃO DE PERIGO",
+        "nome": "Vantagem Grátis: Noção do Perigo",
         "descricao": "Serranos são intuitivos e têm percepção extrassensorial limitada. Possuem a Vantagem Noção do Perigo (veja Savage Worlds Edição Aventura).",
         "id": "nocao_do_perigo",
         "category": "racial_edge",
@@ -4280,7 +4280,7 @@
     ],
     "habilidades": [
       {
-        "nome": "Forte",
+        "nome": "Atributo Aumentado: Força (d6)",
         "descricao": "Começa com Força d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "FORTE",
@@ -4307,7 +4307,7 @@
     ],
     "habilidades": [
       {
-        "nome": "Astuto",
+        "nome": "Atributo Aumentado: Astúcia (d6)",
         "descricao": "Começa com Astúcia d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "ASTUTO",
@@ -4335,7 +4335,7 @@
     ],
     "habilidades": [
       {
-        "nome": "Vigoroso",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "Começa com Vigor d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "VIGOROSO",
@@ -4369,7 +4369,7 @@
     ],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "Começa com Agilidade d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
@@ -4396,7 +4396,7 @@
     ],
     "habilidades": [
       {
-        "nome": "Espiritual",
+        "nome": "Atributo Aumentado: Espírito (d6)",
         "descricao": "Começa com Espírito d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "ESPIRITUAL",
@@ -4452,21 +4452,21 @@
     "descricao": "A herança dos Akaimimi é atribuída a ações deliberadas dos Kami, que são afeições dos espíritos atenciosos do panda vermelho. Eles são caracterizados como profundamente focados no desenvolvimento espiritual, autorreflexão e estudos filosóficos.",
     "habilidades": [
       {
-        "nome": "Bom Conselheiro",
+        "nome": "Complicação Menor: Peculiaridade (Conselheiro)",
         "descricao": "Os Akaimimi são os mais sábios dos espíritos e sempre têm algo a compartilhar (mesmo que ninguém tenha pedido). Isso se manifesta como a Complicação Peculiaridade (Pedância).",
         "category": "racial_trait_negative",
         "id": "BOM_CONSELHEIRO",
         "descricaoLite": "Traz a Complicação Peculiaridade em sua variante Pedante, pela mania de opinar sobre tudo mesmo sem ser solicitado."
       },
       {
-        "nome": "Dicas Culturais",
+        "nome": "Perícia d6 Inicial: Conhecimento Geral",
         "descricao": "Os Akaimimi estão naturalmente cientes dos estigmas sociais e dos costumes alheios, começando com um d6 em Convenção e o máximo da perícia aumenta para d12+1.",
         "category": "racial_trait_positive",
         "id": "DICAS_CULTURAIS",
         "descricaoLite": "Convenção inicial d6, com teto elevado a d12+1."
       },
       {
-        "nome": "Conhecimento Geral",
+        "nome": "Perícia d6 Inicial: Conhecimento Geral",
         "descricao": "Akaimimi começa com Conhecimento Geral d6 (1).",
         "category": "racial_trait_positive",
         "id": "CONHECIMENTO_GERAL",
@@ -4499,7 +4499,7 @@
     "descricao": "Os Araiguma foram agraciados com o sangue do espírito-guaxinim brincalhão. Uma entidade astuta e sagaz, dizem que o espírito-guaxinim viajou por toda a terra espalhando travessuras, fugindo das consequências de suas ações, provando comidas exóticas e deixando uma ocasional prole mortal.",
     "habilidades": [
       {
-        "nome": "Brincalhão",
+        "nome": "Perícia d4 Inicial: Provocar",
         "descricao": "O Araiguma recebe Provocar d4 (1).",
         "category": "racial_trait_positive",
         "id": "BRINCALHAO",
@@ -4520,7 +4520,7 @@
         "descricaoLite": "Penalidades de iluminação causadas por Penumbra ou Escuridão não se aplicam."
       },
       {
-        "nome": "Trapalhões Travessos",
+        "nome": "Perícia d6 Inicial: Furtividade",
         "descricao": "Os Araiguma sentem um certo encanto na confusão, começando com d6 em Furtividade.",
         "category": "racial_trait_positive",
         "id": "TRAPALHOES_TRAVESSOS",
@@ -4556,7 +4556,7 @@
     "descricao": "Linhagens específicas de Inumimi podem ser rastreadas até espíritos caninos, renomados protetores e amigos da humanidade, frequentemente vistos como a personificação da virtude e lealdade.",
     "habilidades": [
       {
-        "nome": "Vigorosos",
+        "nome": "Resistência Racial (+1)",
         "descricao": "Os Inumimi não são apenas maiores do que outros Kemonomimi, eles têm músculos mais robustos, adicionando +1 à sua Resistência base.",
         "category": "racial_trait_positive",
         "id": "VIGOROSOS",
@@ -4570,7 +4570,7 @@
         "descricaoLite": "Possui um ataque de mordida com dano For+d4, também aproveitável em manobras de Prender ou Enredar."
       },
       {
-        "nome": "Cães de Guarda",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Os Inumimi começam com d6 em Perceber.",
         "category": "racial_trait_positive",
         "id": "CAES_DE_GUARDA",
@@ -4584,7 +4584,7 @@
         "descricaoLite": "Penalidades de iluminação causadas por Penumbra ou Escuridão não se aplicam."
       },
       {
-        "nome": "Matilha",
+        "nome": "Complicação Menor: Leal",
         "descricao": "Os Inumimi formam uma matilha. Membros dessa matilha estão sujeitos a Complicação Leal do Inumimi.",
         "category": "racial_trait_positive",
         "id": "MATILHA",
@@ -4621,21 +4621,21 @@
         "descricaoLite": "Penalidades de iluminação causadas por Penumbra ou Escuridão não se aplicam."
       },
       {
-        "nome": "Excessivamente Detalhistas",
+        "nome": "Complicação Menor: Cauteloso",
         "descricao": "Planejar esquemas e metáforas extravagantes leva tempo, e às vezes um kitsunemimi superestima esse tempo. Todos sofrem com a Complicação Cauteloso.",
         "category": "racial_trait_positive",
         "id": "EXCESSIVAMENTE_DETALHISTAS",
         "descricaoLite": "Carrega a Complicação Cauteloso, por gastar tempo demais elaborando planos elaborados."
       },
       {
-        "nome": "Preparado",
+        "nome": "Perícia d4 Inicial: Perceber",
         "descricao": "Para realizar esquemas, um kitsunemimi deve ter o conhecimento prévio para explorá-lo. Escolha uma das opções da lista para começar com d4: Conhecimento Acadêmico, Convenção, Intimidar, Pesquisar ou Provocar.",
         "category": "racial_trait_positive",
         "id": "PREPARADO",
         "descricaoLite": "Uma perícia à escolha entre Conhecimento Acadêmico, Convenção, Intimidar, Pesquisar ou Provocar começa em d4."
       },
       {
-        "nome": "Socialmente Sofisticados",
+        "nome": "Vantagem Grátis: Atraente",
         "descricao": "Os kitsunemimi direcionam outras pessoas para esquemas complexos. Eles começam com a Vantagem Cativar o Ambiente.",
         "category": "racial_trait_positive",
         "id": "SOCIALMENTE_SOFISTICADOS",
@@ -4669,21 +4669,21 @@
         "descricaoLite": "Penalidades de iluminação causadas por Penumbra ou Escuridão não se aplicam."
       },
       {
-        "nome": "Brincando com o Destino",
+        "nome": "Vantagem Grátis: Sortudo",
         "descricao": "Os nekomimi têm um talento natural para jogos de azar. Começam com d6 em Jogar.",
         "category": "racial_trait_positive",
         "id": "BRINCANDO_COM_O_DESTINO",
         "descricaoLite": "Jogar inicial d6."
       },
       {
-        "nome": "Fortuna Dá",
+        "nome": "Vantagem Grátis: Sortudo",
         "descricao": "A Fortuna dá. Os nekomimi começam cada sessão com um Bene adicional. Esse benefício racial não é a Vantagem Sorte, mas acumula com Sorte e Sorte Grande.",
         "category": "racial_trait_positive",
         "id": "FORTUNA_DA",
         "descricaoLite": "Um Bene extra a cada sessão, benefício separado da Vantagem Sorte mas cumulativo com Sorte e Sorte Grande."
       },
       {
-        "nome": "Azarado",
+        "nome": "Complicação Maior: Azarado",
         "descricao": "A Fortuna tira. Eles têm a Complicação Azarado.",
         "category": "racial_hindrance",
         "id": "AZARADO",
@@ -4712,7 +4712,7 @@
     "descricao": "Entre os kemonomimi, os tanukimimi são considerados os parentes médios amigáveis, relativamente convictos à sua maneira, mas nunca realmente bons em nada.",
     "habilidades": [
       {
-        "nome": "Felizes por Natureza",
+        "nome": "Atributo Aumentado: Espírito (d6)",
         "descricao": "Pessoas resilientes e simples, os tanukimimi são felizes e começam com d6 em Espírito.",
         "category": "racial_trait_positive",
         "id": "FELIZES_POR_NATUREZA",
@@ -4733,7 +4733,7 @@
         "descricaoLite": "Penalidades de iluminação causadas por Penumbra ou Escuridão não se aplicam."
       },
       {
-        "nome": "Pensamentos Positivos",
+        "nome": "Vantagem Grátis: Corajoso",
         "descricao": "Seus espíritos os impulsionam para seguir em frente. Os tanukimimi têm a Vantagem Impulso.",
         "category": "racial_trait_positive",
         "id": "PENSAMENTOS_POSITIVOS",
@@ -4761,7 +4761,7 @@
     "descricao": "A ancestralidade dos usagimimi vem dos espíritos da lebre que habitavam os vasos mortais e viviam entre os humanos, passando características dessa herança adiante.",
     "habilidades": [
       {
-        "nome": "Definido pelo Ofício",
+        "nome": "Perícia d6 Inicial: À Escolha",
         "descricao": "Os Usagimimi respeitam e apreciam o trabalho árduo realizado pelos outros. Eles se esforçam para ter sucesso em uma perícia própria. Os Usagimimi começam com uma perícia (de sua escolha) em d6.",
         "category": "racial_trait_positive",
         "id": "DEFINIDO_PELO_OFICIO",
@@ -4820,7 +4820,7 @@
         "descricaoLite": "Continua precisando de necessidades básicas comuns a humanoides, como se alimentar e meditar para recuperar Chi."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Terracotas são raros o suficiente no mundo que, quando encontrados, são frequentemente alvo de preconceitos, suspeitas e vistos como seres não-naturais.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -4871,14 +4871,14 @@
         "descricaoLite": "Escolhe um dom entre: ataque de garras For+d4; a Vantagem Senhor das Feras; +1 em Aparar; Visão no Escuro com Perceber inicial d6 (máximo d12+1); +2 de deslocamento; ou +1 de Resistência somado a +2 de Armadura."
       },
       {
-        "nome": "Naturalmente Sobrenatural",
+        "nome": "Perícia d4 Inicial: Ocultismo",
         "descricao": "Os Umvee estão ligados ao mundo espiritual e possuem um conhecimento inato dele, começando com Ocultismo d4.",
         "category": "racial_trait_positive",
         "id": "NATURALMENTE_SOBRENATURAL",
         "descricaoLite": "Ocultismo inicial d4."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Por natureza, os Umvee são diferentes e são vistos como seres alienígenas, de natureza não-humana. Isso impacta algumas interações sociais, todos têm a versão menor da Complicação Forasteiro.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -4913,7 +4913,7 @@
     "descricao": "Há uma linhagem de descendentes Umvee dos berserkers que não enlouqueceram. Nascidos da fúria concedida pela besta que uma vez invocaram. Esses Umvee são considerados meio-Umvee e meio-besta, chamados de Feral.",
     "habilidades": [
       {
-        "nome": "Integrado à Natureza",
+        "nome": "Perícia d6 Inicial: Sobrevivência",
         "descricao": "Ferais têm uma ligação mais forte com a natureza que os Umvee e começam com Sobrevivência d6, aumentando seu máximo para d12+1.",
         "category": "racial_trait_positive",
         "id": "INTEGRADO_A_NATUREZA",
@@ -4963,7 +4963,7 @@
         "descricaoLite": "Consegue usar efeitos movidos a Chi vindos de Tropos, Vantagens e afins, mas não tem acesso a Técnicas Chi."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Por natureza, os Umvee são diferentes e são vistos como seres alienígenas, de natureza não-humana. Isso impacta algumas interações sociais, todos têm a versão menor da Complicação Forasteiro.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -5004,14 +5004,14 @@
         "descricaoLite": "A reação inicial de quem não o conhece começa sempre como Não Cooperativa, com -2 em Persuadir contra estranhos."
       },
       {
-        "nome": "Forte",
+        "nome": "Atributo Aumentado: Força (d6)",
         "descricao": "O sangue dos Oni corre nas veias de um Onigem, tornando sua Força inicial em d6 e sua Força máxima em d12+1.",
         "category": "racial_trait_positive",
         "id": "FORTE",
         "descricaoLite": "Força inicial d6, máximo d12+1."
       },
       {
-        "nome": "Suspeitoso",
+        "nome": "Complicação Menor: Suspeitoso",
         "descricao": "Há um preconceito contra os Onigem, não importa onde eles vão.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -5093,7 +5093,7 @@
     "pericias": {},
     "habilidades": [
       {
-        "nome": "Herança Mista",
+        "nome": "Vantagem Grátis: À Escolha",
         "descricao": "Recebe uma Vantagem Novato extra (como humanos).",
         "category": "racial_trait_positive",
         "id": "HERANCA_MISTA",
@@ -5196,7 +5196,7 @@
         "descricaoLite": "-1 no deslocamento e o dado de corrida cai um tipo."
       },
       {
-        "nome": "Resistente",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "Começa com Vigor d6. Vigor máximo d12+1. Força conta um dado maior para Sobrecarga e Força Mínima de armaduras.",
         "category": "racial_trait_positive",
         "id": "RESISTENTE",
@@ -5231,7 +5231,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "Começa com Agilidade d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
@@ -5245,7 +5245,7 @@
         "descricaoLite": "-1 de Resistência e -1 em testes de Vigor."
       },
       {
-        "nome": "Inteligência",
+        "nome": "Atributo Aumentado: Astúcia (d6)",
         "descricao": "Começa com Astúcia d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "INTELIGENCIA",
@@ -5259,7 +5259,7 @@
         "descricaoLite": "Permite rerrolar ao resistir a poderes lançados contra o personagem."
       },
       {
-        "nome": "Sentidos Apurados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Começa com Perceber d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_APURADOS",
@@ -5306,21 +5306,21 @@
         "descricaoLite": "-1 no deslocamento e o dado de corrida cai um tipo."
       },
       {
-        "nome": "Obsessivos",
+        "nome": "Perícia d4 Inicial: À Escolha",
         "descricao": "Começam com d4 em uma Perícia baseada em Astúcia à escolha.",
         "category": "racial_trait_positive",
         "id": "OBSESSIVOS",
         "descricaoLite": "Uma perícia baseada em Astúcia, à escolha, começa em d4."
       },
       {
-        "nome": "Resistente",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "Começam com Vigor d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "RESISTENTE",
         "descricaoLite": "Vigor inicial d6, com teto em d12+1."
       },
       {
-        "nome": "Sentidos Apurados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Começam com Perceber d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_APURADOS",
@@ -5364,7 +5364,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "Começa com Agilidade d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
@@ -5378,21 +5378,21 @@
         "descricaoLite": "-1 no deslocamento e o dado de corrida cai um tipo."
       },
       {
-        "nome": "Pés-Firmes",
+        "nome": "Perícia d6 Inicial: Atletismo",
         "descricao": "Começa com Atletismo d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "PESFIRMES",
         "descricaoLite": "Atletismo inicial d6, com máximo em d12+1."
       },
       {
-        "nome": "Sentidos Aguçados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Começa com Perceber d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_AGUCADOS",
         "descricaoLite": "Perceber inicial d6, com máximo em d12+1."
       },
       {
-        "nome": "Sorte",
+        "nome": "Vantagem Grátis: Sortudo",
         "descricao": "Começa com a Vantagem Sorte.",
         "category": "racial_edge",
         "id": "SORTE",
@@ -5486,14 +5486,14 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Ferocidade Orc",
+        "nome": "Resistência Racial (+1)",
         "descricao": "Recebem Resistência +1.",
         "category": "racial_trait_positive",
         "id": "FEROCIDADE_ORC",
         "descricaoLite": "+1 de Resistência."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "-2 em Persuadir e desconfiança social.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -5501,14 +5501,14 @@
         "descricaoLite": "-2 em Persuadir, além de despertar desconfiança social generalizada."
       },
       {
-        "nome": "Forte",
+        "nome": "Atributo Aumentado: Força (d6)",
         "descricao": "Começam com Força d6. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "FORTE",
         "descricaoLite": "Força inicial d6, máximo d12+1."
       },
       {
-        "nome": "Intimidante",
+        "nome": "Perícia d4 Inicial: Intimidar",
         "descricao": "Começam com Intimidar d4. Máximo d12+1.",
         "category": "racial_trait_positive",
         "id": "INTIMIDANTE",
@@ -5547,7 +5547,7 @@
         "descricaoLite": "Não precisa respirar e é imune a veneno e doença; recupera-se do Abalado com +2 e sofre um nível a menos de penalidade por Ferimentos. Não cicatriza sozinho — consertá-lo exige a perícia Consertar, gastando uma hora por nível de Ferimento atual do alvo, sem o limite da Hora de Ouro."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "FORASTEIRO (Maior): Androides subtraem 2 de rolagens de Persuadir quando interagem com qualquer indivíduo que não seja androide e a maioria das áreas considera androides como propriedade de alguém, não lhes concedendo direitos legais.",
         "id": "FORASTEIRO",
         "category": "racial_hindrance",
@@ -5555,7 +5555,7 @@
         "descricaoLite": "Sofre -2 em Persuadir ao lidar com quem não compartilha sua natureza artificial, e costuma ser tratado como propriedade, sem direitos legais reconhecidos na maior parte dos lugares."
       },
       {
-        "nome": "Pacifista",
+        "nome": "Complicação Maior: Pacifista",
         "descricao": "PACIFISTA (Maior): A menos que seja de uma linha de androides projetada para combate, a maioria das sociedades avançadas requer a instalação de “Circuitos Asimov”, um conceito baseado na “Primeira Lei da Robótica” do escritor de ficção científica Isaac Asimov. O ser artificial não pode ferir um ser senciente ou por ação ou omissão permitir que um seja ferido.",
         "id": "PACIFISTA",
         "category": "racial_hindrance",
@@ -5563,7 +5563,7 @@
         "descricaoLite": "Fica impedido de causar dano a um ser senciente ou de permitir, por omissão, que isso aconteça — restrição que não se aplica a variantes construídas para o combate."
       },
       {
-        "nome": "Voto",
+        "nome": "Complicação Maior: Voto",
         "descricao": "VOTO (Maior): Androides recebem programação para um propósito específico. Isso significa seguir amplas diretrizes para servir a uma corporação ou facção política. Nesse caso em particular, isso funciona como um Voto Maior. Se isso causar conflitos de interesse, a forma como a programação se comporta da personagem se comporta deve ser decidido em acordo",
         "id": "VOTO",
         "category": "racial_hindrance",
@@ -5594,7 +5594,7 @@
         "descricaoLite": "Desloca-se 1 quadro a menos por rodada, com o dado de corrida um tipo abaixo do normal."
       },
       {
-        "nome": "Resistente",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "São fortes e resistentes, começando com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12 + 1",
         "category": "racial_trait_positive",
         "id": "RESISTENTE",
@@ -5638,7 +5638,7 @@
         "descricaoLite": "Por causa do peso das asas, anda 1 quadro mais devagar e tem o dado de corrida rebaixado em um tipo."
       },
       {
-        "nome": "Não Sabe Nadar",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Colocar as asas dentro da água é um risco para os avianos. Subtraia 2 das rolagens de Atletismo (natação) e gaste 3 quadros de Movimentação para cada quadro de deslocamento na água.",
         "category": "racial_hindrance",
         "id": "NAO_SABE_NADAR",
@@ -5646,7 +5646,7 @@
         "descricaoLite": "Cada quadro percorrido na água consome 3 quadros de Movimentação, além de -2 em testes de Atletismo para nadar."
       },
       {
-        "nome": "Sentidos Aguçados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Mais perspicazes do que a maioria, começam com um d6 em Perceber (em vez de um d4) e podem aumentar a perícia até d12 + 1.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_AGUCADOS",
@@ -5727,14 +5727,14 @@
     ],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "São ágeis e graciosos. Começam com um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
         "descricaoLite": "Agilidade inicial em d6 em vez de d4, podendo chegar a d12+1."
       },
       {
-        "nome": "Desastrado",
+        "nome": "Complicação Menor: Desastrado",
         "descricao": "Por sua aversão inata a objetos mecânicos, possuem a Complicação Desastrado. Integrantes deste povo evitam a maioria dos itens e modelos mecânicos.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -5766,7 +5766,7 @@
     ],
     "habilidades": [
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "Nunca ficam completamente à vontade nas sociedades humana ou élfica, tendo um pé em cada um dos mundos, mas nunca pertencendo de fato a nenhum deles. Subtraem 2 de rolagens de Persuadir com qualquer outra ancestralidade além de sua própria.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -5828,7 +5828,7 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "Espirituoso",
+        "nome": "Atributo Aumentado: Espírito (d6)",
         "descricao": "Normalmente são seres otimistas. Eles começam com um d6 em Espírito em vez de um d4. Isso aumenta o Espírito máximo para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "ESPIRITUOSO",
@@ -5842,7 +5842,7 @@
         "descricaoLite": "Perde 1 quadro de deslocamento ao andar e um tipo no dado de corrida."
       },
       {
-        "nome": "Sorte",
+        "nome": "Vantagem Grátis: Sortudo",
         "descricao": "Sacam um Bene adicional por sessão de jogo.",
         "category": "racial_edge",
         "id": "SORTE",
@@ -5874,14 +5874,14 @@
     ],
     "habilidades": [
       {
-        "nome": "Ágil",
+        "nome": "Atributo Aumentado: Agilidade (d6)",
         "descricao": "A graça felina lhes concede um d6 em Agilidade em vez de um d4. Isso aumenta a Agilidade máxima para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "AGIL",
         "descricaoLite": "Começa com Agilidade d6 em vez de d4, podendo subir até d12+1."
       },
       {
-        "nome": "Inimigo Racial",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "A sociedade Rakashana cresceu em detrimento de outra. Escolha uma ancestralidade comum em seu cenário. Membros de cada cultura subtraem 2 de Persuadir quando lidam com os da outra e geralmente se atacam à primeira vista.",
         "category": "racial_trait_negative",
         "id": "INIMIGO_RACIAL",
@@ -5909,7 +5909,7 @@
         ]
       },
       {
-        "nome": "Não Sabe Nadar",
+        "nome": "Complicação Menor: Não Sabe Nadar",
         "descricao": "Até podem nadar, mas evitam e não têm boa habilidade nisso. Subtraem 2 das rolagens de Atletismo (natação) e cada quadro de movimento na água custa 3 quadros de Movimentação.",
         "category": "racial_hindrance",
         "id": "NAO_SABE_NADAR",
@@ -5917,7 +5917,7 @@
         "descricaoLite": "Consegue nadar, mas com dificuldade: -2 em Atletismo para natação e 3 quadros de Movimentação gastos por quadro avançado na água."
       },
       {
-        "nome": "Sanguinário",
+        "nome": "Complicação Maior: Sanguinário",
         "descricao": "Podem ser cruéis com seus por pura diversão. Raramente capturam rivais e quando o fazem não sentem muito remorso.",
         "category": "racial_hindrance",
         "severity": "Maior",
@@ -5958,7 +5958,7 @@
         "descricaoLite": "A pele funciona como armadura natural equivalente a couro, concedendo +2 de Armadura."
       },
       {
-        "nome": "Forasteiro",
+        "nome": "Complicação Maior: Forasteiro",
         "descricao": "A maioria das pessoas desconfia de sáurios por alguma razão. Talvez sejam seus modos e costumes estranhos, sua fala geralmente sibilante ou um medo antigo subconsciente de ancestrais reptilianos. Sáurios subtraem 2 de rolagens de Persuadir com todas as demais ancestralidades.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -5988,7 +5988,7 @@
         ]
       },
       {
-        "nome": "Sentidos Aguçados",
+        "nome": "Perícia d6 Inicial: Perceber",
         "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
         "category": "racial_trait_positive",
         "id": "SENTIDOS_AGUCADOS",
@@ -6018,7 +6018,7 @@
     ],
     "habilidades": [
       {
-        "nome": "Desastrado",
+        "nome": "Complicação Menor: Desastrado",
         "descricao": "Celestiais não têm o costume de lidar com tecnologia ou máquinas.",
         "category": "racial_hindrance",
         "severity": "Menor",
@@ -6033,7 +6033,7 @@
         "descricaoLite": "Tem acesso ao Antecedente Arcano de Milagres, podendo conjurar poderes dessa lista."
       },
       {
-        "nome": "Fé",
+        "nome": "Perícia d6 Inicial: Fé",
         "descricao": "Celestiais começam com um d6 em Fé. Isso aumenta seu máximo para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "FE",
@@ -6047,14 +6047,14 @@
         "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 12."
       },
       {
-        "nome": "Inimigo Racial (Demônios e Diabos)",
+        "nome": "Complicação Menor: Inimigo Racial",
         "descricao": "Celestiais não toleram facilmente os saídos do abismo.",
         "category": "racial_trait_negative",
         "id": "INIMIGO_RACIAL_DEMONIOS_E_DIABOS",
         "descricaoLite": "Mantém hostilidade natural contra demônios e diabos, tratando-os como inimigos declarados."
       },
       {
-        "nome": "Voto (Maior: Proteger a humanidade)",
+        "nome": "Complicação Maior: Voto",
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
         "category": "racial_hindrance",
         "id": "VOTO",
@@ -6093,21 +6093,21 @@
         "descricaoLite": "Inicia o jogo com uma Vantagem de Estágio Novato à sua escolha, cumprindo os requisitos de praxe."
       },
       {
-        "nome": "Campeões",
+        "nome": "Vantagem Grátis: Campeão",
         "descricao": "Possuem a Vantagem Campeão dando a eles um bônus de +2 em dano contra forças malignas sobrenaturais como demônios e diabos.",
         "category": "racial_edge",
         "id": "campeao",
         "descricaoLite": "Possui a Vantagem Campeão, causando +2 de dano contra criaturas sobrenaturais malignas como demônios e diabos."
       },
       {
-        "nome": "Vigoroso",
+        "nome": "Atributo Aumentado: Vigor (d6)",
         "descricao": "As pessoas que herdaram esta Terra devastada começam o jogo com um d6 em Vigor em vez de um d4. Isso aumenta seu Vigor máximo para d12 + 1.",
         "category": "racial_trait_positive",
         "id": "VIGOROSO",
         "descricaoLite": "Vigor inicial em d6 no lugar de d4, podendo alcançar d12+1."
       },
       {
-        "nome": "Voto (Maior: Proteger a humanidade)",
+        "nome": "Complicação Maior: Voto",
         "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
         "category": "racial_hindrance",
         "id": "VOTO",
