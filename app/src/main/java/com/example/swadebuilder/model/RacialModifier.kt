@@ -87,7 +87,18 @@ data class HabilidadeCriacao(
     // Só preenchido nas instâncias JÁ ESCOLHIDAS: quantas vezes este traço
     // específico foi comprado (custo/efeito já vêm multiplicados por este
     // valor em `custo` e, na hora de virar RacialAbility, aqui também).
-    val vezes: Int = 1
+    val vezes: Int = 1,
+    // Só preenchido nas ENTRADAS DO CATÁLOGO: id compartilhado por várias
+    // entradas que são, no livro, o MESMO traço "(1)" (pega uma vez só) com
+    // custo/efeito variando por versão — ex.: "Ações Adicionais" custa 4, 5
+    // ou 10 pontos conforme a versão (Sci-Fi condicional, Básico/Sci-Fi
+    // padrão, Fantasia "Maior" — ver docs/swade_basico|fantasia|scifi).
+    // Diferente de vezesMax (que soma o MESMO efeito várias vezes): aqui são
+    // versões ALTERNATIVAS e mutuamente exclusivas do mesmo traço — o
+    // seletor de Traços Raciais (SettingsDialog.kt) mostra as entradas com o
+    // mesmo grupoEscolha como uma linha só, abrindo "Qual versão?" em vez de
+    // "Quantas vezes?".
+    val grupoEscolha: String? = null
 ) {
     fun exibida(): HabilidadeCriacao =
         if (!com.example.swadebuilder.EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this

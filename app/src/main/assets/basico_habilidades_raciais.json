@@ -1,30 +1,33 @@
 [
   {
+    "id": "acoes_adicionais",
+    "nome": "Ação Adicional (Física/Mental)",
+    "custo": 4,
+    "categoria": "racial_trait_positive",
+    "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem físicas ou mentais.",
+    "origem": "SCI_FI",
+    "descricaoLite": "Quando todas as ações do turno são físicas ou todas mentais, a penalidade de Ações Múltiplas cai em 2 pontos.",
+    "grupoEscolha": "acao_adicional"
+  },
+  {
     "id": "acao_adicional",
     "nome": "Ação Adicional",
     "custo": 5,
     "categoria": "racial_trait_positive",
     "descricao": "Pode ignorar 2 pontos de penalidades por Ações Múltiplas a cada turno.",
     "origem": "BASICO",
-    "descricaoLite": "A cada turno, 2 pontos das penalidades geradas por Ações Múltiplas deixam de ser aplicados."
+    "descricaoLite": "A cada turno, 2 pontos das penalidades geradas por Ações Múltiplas deixam de ser aplicados.",
+    "grupoEscolha": "acao_adicional"
   },
   {
-    "id": "acao_adicional_4",
-    "nome": "Ação Adicional (Física/Mental)",
-    "custo": 4,
-    "categoria": "racial_trait_positive",
-    "descricao": "Reduz as penalidades de Ações Múltiplas em 2 se todas as ações forem físicas ou mentais.",
-    "origem": "BASICO",
-    "descricaoLite": "Quando todas as ações do turno são físicas ou todas mentais, a penalidade de Ações Múltiplas cai em 2 pontos."
-  },
-  {
-    "id": "acao_adicional_10",
+    "id": "acoes_adicionais_maior",
     "nome": "Ações Adicionais (Maior)",
     "custo": 10,
     "categoria": "racial_trait_positive",
     "descricao": "Reduz as penalidades de Ações Múltiplas em 4 para qualquer tipo de ação.",
-    "origem": "BASICO",
-    "descricaoLite": "Qualquer combinação de ações no turno tem sua penalidade de Ações Múltiplas reduzida em 4 pontos."
+    "origem": "FANTASIA",
+    "descricaoLite": "Qualquer combinação de ações no turno tem sua penalidade de Ações Múltiplas reduzida em 4 pontos.",
+    "grupoEscolha": "acao_adicional"
   },
   {
     "id": "adaptavel",

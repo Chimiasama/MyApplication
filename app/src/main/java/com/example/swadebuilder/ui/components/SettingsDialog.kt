@@ -480,6 +480,14 @@ fun SettingsDialog(
                             mutableStateOf<Pair<com.example.swadebuilder.model.HabilidadeCriacao, (com.example.swadebuilder.model.HabilidadeCriacao) -> Unit>?>(null)
                         }
 
+                        // Traços com "grupoEscolha" (ex.: Ações Adicionais 4/5/10 pontos) são
+                        // versões ALTERNATIVAS do mesmo traço "(1)" — mesmo padrão de picker que
+                        // stackPickerTarget, mas escolhendo entre entradas de catálogo distintas
+                        // (nome/custo/id próprios) em vez de multiplicar 1..vezesMax.
+                        var groupPickerTarget by remember {
+                            mutableStateOf<Pair<com.example.swadebuilder.model.HabilidadeCriacao, (com.example.swadebuilder.model.HabilidadeCriacao) -> Unit>?>(null)
+                        }
+
                         // Todas as categorias sempre disponíveis, em qualquer tela — a engrenagem
                         // já é global (tela inicial, criação, fase de XP), então não há mais
                         // motivo pra esconder categorias por causa de "isHomeScreen".
@@ -512,6 +520,15 @@ fun SettingsDialog(
                                 habilidadesRaciais = all.flatMap { it.habilidadesRaciais }.distinctBy { it.nome.lowercase() },
                                 variantesRaciais = all.flatMap { it.variantesRaciais }.distinctBy { it.id }
                             )
+                        }
+
+                        // Catálogo completo (oficial + customizado), sem colapsar por
+                        // grupoEscolha — usado tanto pelas listas de seleção de Traços
+                        // Raciais (que colapsam pra 1 linha por grupo) quanto pelo diálogo
+                        // "Qual versão?" do groupPickerTarget (que precisa ver TODAS as
+                        // alternativas do grupo escolhido).
+                        val fullTraitsCatalog = remember(activeBookCustomData) {
+                            (baseRacialCatalog + activeBookCustomData.habilidadesRaciais).distinctBy { it.nome }
                         }
 
                         AlertDialog(
@@ -1818,7 +1835,7 @@ fun SettingsDialog(
                         }
 
                         if (showTraitSelectDialog) {
-                            val allTraitsCatalog = (baseRacialCatalog + activeBookCustomData.habilidadesRaciais).distinctBy { it.nome }
+                            val allTraitsCatalog = fullTraitsCatalog.distinctBy { it.grupoEscolha ?: it.nome }
                             var filterTraitText by remember { mutableStateOf("") }
                             AlertDialog(
                                 onDismissRequest = { showTraitSelectDialog = false },
@@ -1835,8 +1852,11 @@ fun SettingsDialog(
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
                                             val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
                                             val isStackableRow = (trait.vezesMax ?: 1) > 1
+                                            val isGrupoEscolhaRow = trait.grupoEscolha != null
                                             val isSel = if (isSuperPoderesRow) {
                                                 selectedRacialTraits.any { it.nome.startsWith("Super Poderes (") }
+                                            } else if (isGrupoEscolhaRow) {
+                                                selectedRacialTraits.any { it.grupoEscolha == trait.grupoEscolha }
                                             } else if (isPericiaChoiceRow || isStackableRow) {
                                                 selectedRacialTraits.any { it.id == trait.id }
                                             } else {
@@ -1850,6 +1870,14 @@ fun SettingsDialog(
                                                         }
                                                     } else {
                                                         selectedRacialTraits = selectedRacialTraits.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isGrupoEscolhaRow) {
+                                                    if (checked) {
+                                                        groupPickerTarget = trait to { escolhido ->
+                                                            selectedRacialTraits = selectedRacialTraits + escolhido
+                                                        }
+                                                    } else {
+                                                        selectedRacialTraits = selectedRacialTraits.filterNot { it.grupoEscolha == trait.grupoEscolha }
                                                     }
                                                 } else if (isStackableRow) {
                                                     if (checked) {
@@ -1878,8 +1906,12 @@ fun SettingsDialog(
                                                 Checkbox(checked = isSel, onCheckedChange = onToggle)
                                                 Spacer(Modifier.width(8.dp))
                                                 Column {
-                                                    val jaEscolhido = selectedRacialTraits.firstOrNull { it.id == trait.id }
-                                                    val rotuloCusto = if (isStackableRow && jaEscolhido != null) {
+                                                    val jaEscolhido = if (isGrupoEscolhaRow) {
+                                                        selectedRacialTraits.firstOrNull { it.grupoEscolha == trait.grupoEscolha }
+                                                    } else {
+                                                        selectedRacialTraits.firstOrNull { it.id == trait.id }
+                                                    }
+                                                    val rotuloCusto = if ((isStackableRow || isGrupoEscolhaRow) && jaEscolhido != null) {
                                                         "${jaEscolhido.nome} (${if (jaEscolhido.custo > 0) "+${jaEscolhido.custo}" else "${jaEscolhido.custo}"} pts)"
                                                     } else {
                                                         "${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)"
@@ -1932,7 +1964,7 @@ fun SettingsDialog(
                         }
 
                         if (showVarianteTraitAddDialog) {
-                            val allVarianteTraitsCatalog = (baseRacialCatalog + activeBookCustomData.habilidadesRaciais).distinctBy { it.nome }
+                            val allVarianteTraitsCatalog = fullTraitsCatalog.distinctBy { it.grupoEscolha ?: it.nome }
                             var filterVarianteTraitText by remember { mutableStateOf("") }
                             AlertDialog(
                                 onDismissRequest = { showVarianteTraitAddDialog = false },
@@ -1949,8 +1981,11 @@ fun SettingsDialog(
                                             val isSuperPoderesRow = trait.nome == "Super Poderes"
                                             val isPericiaChoiceRow = trait.id in periciaChoiceTraitIds
                                             val isStackableRow = (trait.vezesMax ?: 1) > 1
+                                            val isGrupoEscolhaRow = trait.grupoEscolha != null
                                             val isSel = if (isSuperPoderesRow) {
                                                 varianteTracosAdicionados.any { it.nome.startsWith("Super Poderes (") }
+                                            } else if (isGrupoEscolhaRow) {
+                                                varianteTracosAdicionados.any { it.grupoEscolha == trait.grupoEscolha }
                                             } else if (isPericiaChoiceRow || isStackableRow) {
                                                 varianteTracosAdicionados.any { it.id == trait.id }
                                             } else {
@@ -1964,6 +1999,14 @@ fun SettingsDialog(
                                                         }
                                                     } else {
                                                         varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.nome.startsWith("Super Poderes (") }
+                                                    }
+                                                } else if (isGrupoEscolhaRow) {
+                                                    if (checked) {
+                                                        groupPickerTarget = trait to { escolhido ->
+                                                            varianteTracosAdicionados = varianteTracosAdicionados + escolhido
+                                                        }
+                                                    } else {
+                                                        varianteTracosAdicionados = varianteTracosAdicionados.filterNot { it.grupoEscolha == trait.grupoEscolha }
                                                     }
                                                 } else if (isStackableRow) {
                                                     if (checked) {
@@ -1992,8 +2035,12 @@ fun SettingsDialog(
                                                 Checkbox(checked = isSel, onCheckedChange = onToggle)
                                                 Spacer(Modifier.width(8.dp))
                                                 Column {
-                                                    val jaEscolhido = varianteTracosAdicionados.firstOrNull { it.id == trait.id }
-                                                    val rotuloCusto = if (isStackableRow && jaEscolhido != null) {
+                                                    val jaEscolhido = if (isGrupoEscolhaRow) {
+                                                        varianteTracosAdicionados.firstOrNull { it.grupoEscolha == trait.grupoEscolha }
+                                                    } else {
+                                                        varianteTracosAdicionados.firstOrNull { it.id == trait.id }
+                                                    }
+                                                    val rotuloCusto = if ((isStackableRow || isGrupoEscolhaRow) && jaEscolhido != null) {
                                                         "${jaEscolhido.nome} (${if (jaEscolhido.custo > 0) "+${jaEscolhido.custo}" else "${jaEscolhido.custo}"} pts)"
                                                     } else {
                                                         "${trait.nome} (${if (trait.custo > 0) "+${trait.custo}" else "${trait.custo}"} pts)"
@@ -2162,6 +2209,51 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { stackPickerTarget = null }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        groupPickerTarget?.let { (trait, onEscolhido) ->
+                            val opcoes = fullTraitsCatalog
+                                .filter { it.grupoEscolha == trait.grupoEscolha }
+                                .sortedBy { it.custo }
+                            AlertDialog(
+                                onDismissRequest = { groupPickerTarget = null },
+                                title = { Text("Qual versão?") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        Text(
+                                            "O livro traz mais de uma versão deste traço, cada uma com seu próprio custo — escolha uma (pode ser trocada removendo e adicionando de novo).",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(bottom = 8.dp)
+                                        )
+                                        opcoes.forEach { opcao ->
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().clickable {
+                                                    onEscolhido(opcao)
+                                                    groupPickerTarget = null
+                                                }.padding(vertical = 8.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Column {
+                                                    Text(
+                                                        "${opcao.nome} (${if (opcao.custo > 0) "+${opcao.custo}" else "${opcao.custo}"} pts)",
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        fontWeight = FontWeight.Bold
+                                                    )
+                                                    if (opcao.descricao.isNotBlank()) {
+                                                        Text(
+                                                            opcao.descricao,
+                                                            style = MaterialTheme.typography.labelSmall,
+                                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { groupPickerTarget = null }) { Text("Cancelar") } }
                             )
                         }
 

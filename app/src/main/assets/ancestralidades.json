@@ -681,7 +681,7 @@
       {
         "nome": "FORMA INCOMUM",
         "descricao": "Centauros não podem montar montarias ou usar certos tipos de armaduras, itens ou outros equipamentos que não se ajustem a sua forma (a critério do Mestre).",
-        "id": "FORMA_INCOMUM",
+        "id": "FORMA_ALIENIGENA",
         "category": "racial_trait_negative",
         "descricaoLite": "Sua anatomia impede o uso de montaria e de armaduras ou equipamentos que não sejam adaptados à sua forma, a critério do mestre."
       },
@@ -1101,7 +1101,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Golens subtraem 2 das rolagens de Característica ao usar equipamentos feitos para humanoides de Tamanho 0.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "-2 em testes de Característica ao usar equipamentos pensados para o padrão humanoide de Tamanho 0."
       },
@@ -1277,7 +1277,7 @@
       {
         "nome": "FORMATO CORPORAL INCOMUM",
         "descricao": "Graças à sua fisiologia única, os insetoides não podem usar a maioria das roupas, armaduras ou móveis adequados para humanoides. Podem usar armas e outros equipamentos portáteis normalmente.",
-        "id": "FORMATO_CORPORAL_INCOMUM",
+        "id": "FORMA_ALIENIGENA",
         "category": "racial_trait_negative",
         "descricaoLite": "Fisiologia diferente impede o uso da maior parte de roupas, armaduras e mobílias feitas para humanoides; armas e equipamentos portáteis funcionam normalmente."
       },
@@ -1398,7 +1398,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Meio-gigantes possuem -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras ou roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "-2 ao usar equipamentos pensados para criaturas menores, impossibilidade de vestir roupas ou armaduras humanoides, e gasto em dobro com itens, comida e vestimenta."
       },
@@ -1519,7 +1519,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Sua estrutura muscular faz com que minotauros possuam -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras e roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "-2 ao usar equipamentos de criaturas menores, sem poder vestir roupas ou armaduras humanoides, e paga o dobro por suprimentos, comida e roupas."
       },
@@ -1596,7 +1596,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Ogros são criaturas grandes e corpulentas, com ombros largos e grandes barrigas das quais se orgulham imensamente. Possuem -2 ao usar equipamentos projetados para seres menores e não podem usar armaduras ou roupas humanoides. Equipamento, comida e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "-2 ao usar equipamentos de criaturas menores, incapacidade de vestir roupas ou armaduras humanoides, e custo dobrado para adquirir equipamento, alimentação e vestuário."
       },
@@ -3126,7 +3126,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "Equipamentos não feitos sob medida impõem -2 em testes de Característica, armaduras e roupas comuns simplesmente não servem, e tudo que precisam comprar sai pelo dobro do preço."
       },
@@ -3234,7 +3234,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Elementais de pedra subtraem 2 das rolagens de Característica quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "Usar equipamentos não adaptados ao seu porte impõe -2 em testes de Característica, e adquirir bens, comida ou roupas sai duas vezes mais caro que o normal."
       },
@@ -3974,7 +3974,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Yetis subtraem 2 de rolagens de Características quando usam equipamento que não foi projetado especificamente para eles. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "Equipamentos não feitos sob medida rendem -2 em testes de Característica, e qualquer compra de equipamento, comida ou roupa sai pelo dobro do valor normal."
       },
@@ -4038,7 +4038,7 @@
       {
         "nome": "GRANDE",
         "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "GRANDE",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
         "descricaoLite": "Equipamentos não feitos sob medida impõem -2 em testes de Característica, armaduras e roupas comuns simplesmente não servem, e tudo que precisam comprar sai pelo dobro do preço."
       },

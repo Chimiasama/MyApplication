@@ -307,8 +307,14 @@ object RacialTraitPointCatalog {
     }
 
     val CUSTOS: Map<String, Int> = mapOf(
+        // "Ação Adicional" é um traço só, comprável uma vez, com 3 versões de
+        // custo/efeito conforme o livro (Básico/Sci-Fi 5, Sci-Fi condicional 4,
+        // Fantasia "Maior" 10 — ver docs/swade_basico|fantasia|scifi e
+        // basico_habilidades_raciais.json "grupoEscolha": "acao_adicional").
+        // Cada versão é um id próprio (não empilhável entre si).
         "ACAO_ADICIONAL" to 5, // oficial: acao_adicional
-        "ACOES_ADICIONAIS" to 4, // oficial: acao_adicional_4 (variante condicional, exige ação física/mental)
+        "ACOES_ADICIONAIS" to 4, // oficial: acoes_adicionais (variante condicional, exige ação física/mental)
+        "ACOES_ADICIONAIS_MAIOR" to 10, // oficial: acoes_adicionais_maior (Fantasia, reduz 4 pontos p/ qualquer ação)
         "ADAPTAVEL" to 2, // oficial: adaptavel
         "ADAPTAVEL_OU_SIGNO" to 2, // mesmo efeito de Adaptável
         "AGIL" to 2, // oficial: aumento_atributo
@@ -394,9 +400,13 @@ object RacialTraitPointCatalog {
         "FOBIA" to -1, // oficial: complicacao_racial_menor
         "FORASTEIRO" to -2, // Complicação real (complicacoes.json), severidade Maior escolhida pela raça
         "FORCA_SOBRENATURAL" to 2, // oficial: aumento_atributo
-        "FORMATO_CORPORAL_INCOMUM" to -1, // sem equivalente oficial, restrição de equipamento
+        "FORMA_ALIENIGENA" to -1, // oficial: forma_alienigena — mesmo traço reaproveitado por
+        // Centauros ("FORMA INCOMUM") e Insetoides Fantasia ("FORMATO CORPORAL INCOMUM"),
+        // cada um com seu próprio nome de exibição em vez de "Forma Alienígena" (nome do
+        // livro Sci-Fi, onde o traço é catalogado com custo -1). Ids antigos removidos
+        // (FORMATO_CORPORAL_INCOMUM/FORMA_INCOMUM) — Avianos "Ave de Rapina" já usava este id
+        // via AncestryVariantRegistry mas não tinha entrada aqui (custava 0 por engano).
         "FORMA_DE_ENERGIA" to 4, // oficial: forma_energia
-        "FORMA_INCOMUM" to -1, // sem equivalente oficial, restrição de equipamento/montaria
         "FORTE" to 2, // oficial: aumento_atributo
         "FORTUNA_DA" to 2, // sem equivalente oficial exato, Bene extra por sessão (tier de vantagem_racial)
         "FRACO" to -2, // oficial penalidade_atributo_1 (-1 num ATRIBUTO, Força)
@@ -405,7 +415,6 @@ object RacialTraitPointCatalog {
         "GANANCIOSO" to -1, // oficial: complicacao_racial_menor
         "GARRAS" to 2, // oficial garras_d4=2 (For+d4, PA 2 e bônus de Atletismo são o extra que já cabe nesse tier)
         "GELATINOSO" to 2, // oficial: gelatinoso_2
-        "GRANDE" to -1, // sem equivalente oficial exato, penalidade de equipamento situacional
         "GUIADO" to -2, // oficial: complicacao_racial_maior
         "HERANCA" to 2, // oficial: vantagem_racial OU aumento_atributo (escolha, mesmo tier)
         "HERANCA_MISTA" to 2, // oficial: vantagem_racial
@@ -509,6 +518,12 @@ object RacialTraitPointCatalog {
         "VISAO_NA_PENUMBRA" to 1, // oficial: visao_escuro (mesmo tier)
         "VISAO_NO_ESCURO" to 1, // oficial: visao_escuro
         "VISAO_TOTAL_NO_ESCURO" to 1, // oficial: visao_total_escuro
+        "VOLUMOSO" to -2, // oficial: volumoso (Básico) — mesmo traço reaproveitado por Golens,
+        // Meio-Gigantes, Minotauros, Ogros, Centaux, Elementais, Yetis e Aurax, cada um com
+        // "GRANDE" como nome de exibição (confirmado contra os 3 livros: descrição idêntica —
+        // -2 em Característica com equipamento não personalizado, sem armadura/roupa, custo em
+        // dobro). Id antigo "GRANDE" tinha -1 por engano (comentário achava que não existia
+        // equivalente oficial); o valor certo é -2, igual ao catálogo de criação de raça.
         "VOO_MOV_6" to 2, // oficial: voo_6 (Movimentação 6) — Fadas (Fantasia)
         "VOO_MOV_12" to 4, // oficial: voo_12 (Movimentação 12) — Avianos, Celestiais
         "VOO_MOV_24" to 6, // oficial: voo_24 (Movimentação 24, corrida +2d6) — sem raça oficial usando este tier ainda, id reservado pra manter os 3 tiers do catálogo oficial
