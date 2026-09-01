@@ -545,9 +545,29 @@ object RacialTraitPointCatalog {
         "VOTO" to -2 // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
     )
 
-    /** Custo em pontos do traço, pelo id ou parâmetro direto `pontos` (0 se não estiver no catálogo). */
-    fun custoDe(id: String?, pontos: Int = 0): Int {
+    /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo). */
+    fun custoDe(
+        id: String?,
+        targetRef: String? = null,
+        value: Int = 1,
+        severity: String? = null,
+        pontos: Int = 0
+    ): Int {
         if (pontos != 0) return pontos
-        return id?.let { CUSTOS[it.keyify()] } ?: 0
+        if (id == null) return 0
+        val key = id.keyify()
+        return when (key) {
+            "ATTRIBUTE_BOOST" -> value * 2
+            "SKILL_BOOST" -> if (value >= 1) 2 else 1
+            "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2
+            "RACIAL_HINDRANCE" -> if (severity?.uppercase() == "MAIOR") -2 else -1
+            "TOUGHNESS_FLAT" -> value
+            "PACE_CHANGE" -> value
+            "SIZE_CHANGE" -> value
+            "POWER_POINTS_BOOST" -> value
+            "CHI_RESERVE_MODIFIER" -> value
+            "ARMOR_MIN_STR_REDUCTION" -> 0
+            else -> CUSTOS[key] ?: 0
+        }
     }
 }

@@ -21,6 +21,7 @@ data class RacialAbility(
     val targetRef: String? = null,         // Ex: "AGILIDADE", "VIGOR", "PERCEBER", "SORTUDO", "FORASTEIRO"
     val value: Int = 1,                    // Passos ou modificadores numéricos (ex: 1 para d6, +2 para movimentação)
     val pontos: Int = 0,                   // Valor no orçamento racial (ex: +2, -2)
+    val invisivel: Boolean = false,        // Traços ocultos da UI/card (ex: bônus interno de carga/armadura)
 
     // Quantas vezes este traço foi "comprado"
     val vezes: Int = 1,
@@ -29,6 +30,12 @@ data class RacialAbility(
 ) {
     /** Retorna o ID mecânico principal — priorizando o novo `traitId` parametrizado, ou o `id` legado. */
     fun resolvedTraitId(): String = traitId ?: id ?: ""
+
+    /** Retorna o valor real de pontos no orçamento racial para este traço. */
+    fun resolvedPontos(): Int {
+        if (pontos != 0) return pontos
+        return RacialTraitPointCatalog.custoDe(resolvedTraitId(), targetRef, value, severity, pontos)
+    }
 }
 
 @Serializable
@@ -274,50 +281,48 @@ object RacialCaracteristicasResolver {
     ): List<String> {
         val linhas = mutableListOf<String>()
 
+        fun formatPts(pts: Int): String = when {
+            pts > 0 -> " (+$pts pts)"
+            pts < 0 -> " ($pts pts)"
+            else -> ""
+        }
+
         atributos.filterValues { it != 0 }.forEach { (atributo, delta) ->
             val dado = (4 + delta).toDiceString()
             val verbo = if (delta > 0) "aumentado" else "reduzido"
-            linhas += "Atributo $verbo $dado: ${atributo.toFancyTitleCase()}"
+            val pts = delta // Em SWADE cada passo de dado de atributo vale 2 pontos (delta=2 é 2pts)
+            linhas += "Atributo $verbo $dado: ${atributo.toFancyTitleCase()}${formatPts(pts)}"
         }
 
-        // Mesma convenção de tier usada na exibição atual: 0 = d4-2, N = d4 +
-        // (N-1) passos de dado.
         pericias.filterValues { it > 0 }.forEach { (pericia, tier) ->
             val dado = (4 + (tier - 1) * 2).toDiceString()
-            linhas += "Perícia inicial $dado: ${pericia.toFancyTitleCase()}"
+            val pts = if (tier >= 2) 2 else 1
+            linhas += "Perícia inicial $dado: ${pericia.toFancyTitleCase()}${formatPts(pts)}"
         }
 
-        // vantagensGratisEfetivas/desvantagensEfetivas somam a lista solta com
-        // o que só existe embutido numa habilidade (category=racial_edge/
-        // racial_hindrance) — várias raças (Elfo incluso) só têm a Complicação
-        // registrada assim, com a lista solta vazia.
         vantagensGratisEfetivas(vantagensGratis, habilidades)
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
-            .forEach { linhas += "Vantagem racial: ${it.toFancyTitleCase()}" }
+            .forEach { linhas += "Vantagem racial: ${it.toFancyTitleCase()}${formatPts(2)}" }
 
         desvantagensEfetivas(desvantagens, habilidades).forEach { entrada ->
-            // Só "(Maior)"/"(Menor)" é severidade — outros parênteses no nome
-            // da complicação (ex.: "Sentidos Aguçados (Olhos de Águia)") são
-            // parte do nome, não devem virar "Complicação racial olhos de
-            // águia: ...".
             val match = Regex("""^(.*?)\s*\((Maior|Menor)\)$""").find(entrada)
             if (match != null) {
                 val (nome, severidade) = match.destructured
-                linhas += "Complicação racial ${severidade.lowercase()}: ${nome.toFancyTitleCase()}"
+                val pts = if (severidade.equals("Maior", ignoreCase = true)) -2 else -1
+                linhas += "Complicação racial ${severidade.lowercase()}: ${nome.toFancyTitleCase()}${formatPts(pts)}"
             } else {
-                linhas += "Complicação racial: ${entrada.toFancyTitleCase()}"
+                linhas += "Complicação racial: ${entrada.toFancyTitleCase()}${formatPts(-2)}"
             }
         }
 
-        habilidades.forEach { hab ->
-            // Já virou linha de Vantagem/Complicação acima — não duplica.
+        habilidades.filter { !it.invisivel }.forEach { hab ->
             if (hab.category == "racial_hindrance" || hab.category == "racial_edge") return@forEach
             val id = hab.id?.keyify()
-            val efeito = RacialTraitPointCatalog.efeitoDe(id)
-            // Já virou a linha de Atributo/Perícia acima — não duplica.
+            val efeito = RacialTraitPointCatalog.efeitoDe(id, hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep || efeito is RacialTraitEffect.PericiaStep) return@forEach
             val rotulo = id?.let { RacialTraitPointCatalog.LABEL[it] } ?: hab.nome.toFancyTitleCase()
-            linhas += rotulo
+            val pts = hab.resolvedPontos()
+            linhas += "$rotulo${formatPts(pts)}"
         }
 
         return linhas
