@@ -82,21 +82,6 @@ fun String.keyify(): String {
 }
 
 /**
- * Deriva o MESMO id estável que `CriadorState.addIfAbsent` já gera pra
- * qualquer texto de traço injetado por Variante/Seleção (ex.: "RESISTÊNCIA
- * +2" -> "RESISTENCIA_2", "DIMINUTO (Tamanho -3)" -> "DIMINUTO_TAMANHO_3").
- * Existe como função própria (em vez de cada chamador reimplementar o
- * regex) pra garantir que os dois lados — quem injeta o traço bruto como
- * texto e quem precisa reconhecê-lo depois por id (ModifierEngine) — nunca
- * saiam de sincronia. Não separa sinal (+/-) do número: ambos viram "_",
- * então o id resultante não diferencia "+2" de "-2" — mesma limitação que
- * `addIfAbsent` já tinha; ids com essa ambiguidade real (Tamanho) usam sinal
- * "MENOS"/"MAIS" escritos por extenso na string de origem, nunca o símbolo.
- */
-fun String.autoTraitId(): String =
-    uppercase().semAcentos().replace(Regex("[^A-Z0-9]+"), "_").trim('_')
-
-/**
  * Normaliza texto pra uso como sufixo de id estável: sem acentos, minúsculo, com espaços e
  * qualquer outra pontuação virando "_" (ex.: "Fôgo do Inferno!" -> "fogo_do_inferno"). Usado
  * pra gerar ids de conteúdo customizado (ver SettingsDialog.kt) de forma consistente com

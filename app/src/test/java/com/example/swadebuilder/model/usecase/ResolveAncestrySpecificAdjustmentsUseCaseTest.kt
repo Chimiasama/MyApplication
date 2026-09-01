@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.TraitAddition
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -15,7 +16,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
-        assertEquals(listOf("PRONTIDÃO"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf(TraitAddition("PRONTIDÃO", "PRONTIDAO")), result.ensureAutomaticAdvantages)
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
     }
 
@@ -55,7 +56,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertEquals(2, result.naturalArmorFromRace)
         assertTrue(result.forceArmorZero)
         assertTrue(result.ensureAdvantageNames.isEmpty())
-        assertEquals(listOf("GARRAS"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf(TraitAddition("GARRAS", "GARRAS")), result.ensureAutomaticAdvantages)
         assertEquals(ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction.NONE, result.elementalAction)
     }
 
@@ -64,7 +65,13 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         val result = useCase.execute("PEQUENINOS", null)
 
         assertEquals(listOf("Sorte", "Espirituoso"), result.ensureAdvantageNames)
-        assertEquals(listOf("Tamanho -1", "Movimentação Reduzida"), result.ensureRacialDisadvantages)
+        assertEquals(
+            listOf(
+                TraitAddition("Tamanho -1", "TAMANHO_MENOS_1"),
+                TraitAddition("Movimentação Reduzida", "MOVIMENTACAO_REDUZIDA")
+            ),
+            result.ensureRacialDisadvantages
+        )
         assertTrue(result.forceArmorZero)
     }
 
@@ -88,7 +95,10 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         val result = useCase.execute("Demônio (Abismo)", null)
 
         assertEquals(listOf("aa_demonio"), result.ensureAdvantageIds)
-        assertEquals(listOf("ANTECEDENTE ARCANO (DEMÔNIO)"), result.ensureAutomaticAdvantages)
+        assertEquals(
+            listOf(TraitAddition("ANTECEDENTE ARCANO (DEMÔNIO)", "ANTECEDENTE_ARCANO_DEMONIO")),
+            result.ensureAutomaticAdvantages
+        )
         assertTrue(result.forceArmorZero)
     }
 
@@ -103,7 +113,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(2, result.naturalArmorFromRace)
-        assertEquals(listOf("RESISTÊNCIA +1"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")), result.ensureAutomaticAdvantages)
     }
 
     @Test
@@ -117,7 +127,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAdvantageNames)
-        assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf(TraitAddition("SENHOR DAS FERAS", "SENHOR_DAS_FERAS")), result.ensureAutomaticAdvantages)
     }
 
     @Test
@@ -134,8 +144,8 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertTrue(result.ensureAdvantageNames.contains("FURIOSO"))
-        assertTrue(result.ensureAutomaticAdvantages.contains("GARRAS"))
-        assertEquals(listOf("SANGUINÁRIO"), result.ensureRacialDisadvantages)
+        assertTrue(result.ensureAutomaticAdvantages.any { it.nome == "GARRAS" })
+        assertEquals(listOf(TraitAddition("SANGUINÁRIO", "SANGUINARIO")), result.ensureRacialDisadvantages)
         assertTrue(result.anotacoesToAdd.any { it.contains("Técnicas de Chi") })
     }
 
@@ -152,7 +162,11 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(
-            listOf("HABITANTE DE GRAVIDADE ZERO/BAIXA", "FORMA ALIENÍGENA", "SENTIDOS AGUÇADOS (Olhos de Águia)"),
+            listOf(
+                TraitAddition("HABITANTE DE GRAVIDADE ZERO/BAIXA", "HABITANTE_DE_GRAVIDADE_ZERO_BAIXA"),
+                TraitAddition("FORMA ALIENÍGENA", "FORMA_ALIENIGENA"),
+                TraitAddition("SENTIDOS AGUÇADOS (Olhos de Águia)", "SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA")
+            ),
             result.ensureRacialDisadvantages
         )
         assertEquals(listOf("NÃO SABE NADAR", "NÃO SABE NADAR (Menor)", "FRÁGIL"), result.racialDisadvantagesToRemove)
@@ -168,7 +182,10 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("FRÁGIL", "NÃO SABE NADAR"), result.ensureRacialDisadvantages)
+        assertEquals(
+            listOf(TraitAddition("FRÁGIL", "FRAGIL"), TraitAddition("NÃO SABE NADAR", "NAO_SABE_NADAR")),
+            result.ensureRacialDisadvantages
+        )
     }
 
     @Test
@@ -181,9 +198,12 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("COMUNITÁRIO"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf(TraitAddition("COMUNITÁRIO", "COMUNITARIO")), result.ensureAutomaticAdvantages)
         assertEquals(listOf("DESASTRADO"), result.automaticAdvantagesToRemove)
-        assertEquals(listOf("TRANSTORNO DE SEPARAÇÃO"), result.ensureRacialDisadvantages)
+        assertEquals(
+            listOf(TraitAddition("TRANSTORNO DE SEPARAÇÃO", "TRANSTORNO_DE_SEPARACAO")),
+            result.ensureRacialDisadvantages
+        )
         assertEquals(listOf("DESASTRADO", "DESASTRADO (Menor)"), result.racialDisadvantagesToRemove)
     }
 
@@ -198,7 +218,10 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
+        assertEquals(
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")),
+            result.ensureAutomaticAdvantages
+        )
     }
 
 
@@ -214,7 +237,10 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(0, result.naturalArmorFromRace)
-        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
+        assertEquals(
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")),
+            result.ensureAutomaticAdvantages
+        )
     }
 
 
@@ -228,7 +254,10 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("FORTE", "RESISTÊNCIA +2"), result.ensureAutomaticAdvantages)
+        assertEquals(
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA_2")),
+            result.ensureAutomaticAdvantages
+        )
         assertEquals(0, result.naturalArmorFromRace)
     }
 
@@ -242,7 +271,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("FORMA DE ENERGIA"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")), result.ensureAutomaticAdvantages)
         assertEquals(0, result.naturalArmorFromRace)
     }
 
@@ -296,7 +325,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf("MOVIMENTAÇÃO +4"), result.ensureAutomaticAdvantages)
+        assertEquals(listOf(TraitAddition("MOVIMENTAÇÃO +4", "MOVIMENTACAO_4")), result.ensureAutomaticAdvantages)
         assertEquals(listOf("TAMANHO +2", "MOVIMENTAÇÃO +2"), result.automaticAdvantagesToRemove)
         assertEquals(listOf("GRANDE"), result.racialDisadvantagesToRemove)
     }
@@ -337,11 +366,14 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
         assertTrue(padrao.automaticAdvantagesToRemove.any { it.contains("NOÇÃO", ignoreCase = true) })
         assertTrue(energia.automaticAdvantagesToRemove.any { it.contains("NOÇÃO", ignoreCase = true) })
-        assertEquals(
-            listOf("Combine com o mestre de jogo para equilibrar com 4 pontos de habilidades negativas que façam sentido\nno cenário."),
-            energia.ensureRacialDisadvantages
+        // A nota pro mestre é anotação, não uma desvantagem de traço real —
+        // mora em anotacoesToAdd (ver AncestryVariantRegistry.possessores).
+        assertTrue(energia.ensureRacialDisadvantages.isEmpty())
+        assertTrue(
+            energia.anotacoesToAdd.any {
+                it.contains("Combine com o mestre de jogo para equilibrar com 4 pontos")
+            }
         )
-        assertTrue(energia.anotacoesToAdd.isEmpty())
     }
 
 
@@ -355,7 +387,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.contains("SENSÍVEL (Maior)"))
+        assertTrue(result.ensureRacialDisadvantages.any { it.nome == "SENSÍVEL (Maior)" })
     }
 
     @Test
@@ -368,9 +400,14 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.contains("SENSÍVEL (Maior)"))
-        assertTrue(result.ensureRacialDisadvantages.contains("Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido ao cenário."))
-        assertTrue(result.anotacoesToAdd.isEmpty())
+        assertTrue(result.ensureRacialDisadvantages.any { it.nome == "SENSÍVEL (Maior)" })
+        // A nota pro mestre é anotação, não uma desvantagem de traço real —
+        // mora em anotacoesToAdd (ver AncestryVariantRegistry.quadroides).
+        assertTrue(
+            result.anotacoesToAdd.any {
+                it.contains("Combine com o mestre de jogo para equilibrar com 1 ponto")
+            }
+        )
     }
 
     @Test
@@ -383,7 +420,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureAutomaticAdvantages.contains("DEPENDÊNCIA ATMOSFÉRICA"))
+        assertTrue(result.ensureAutomaticAdvantages.any { it.nome == "DEPENDÊNCIA ATMOSFÉRICA" })
     }
 
     @Test
@@ -396,7 +433,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.contains("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)"))
+        assertTrue(result.ensureRacialDisadvantages.any { it.nome == "HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)" })
         assertTrue(result.racialDisadvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
         assertTrue(result.ensureAdvantageIds.contains("adaptacao_gravitacional"))
         assertTrue(result.automaticAdvantagesToRemove.contains("FORTE"))
@@ -412,7 +449,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             ancestryOptions = listOf("Voto (Maior)", "Obrigação (Maior)")
         )
 
-        assertEquals(listOf("VOTO (Maior)"), result.ensureRacialDisadvantages)
+        assertEquals(listOf(TraitAddition("VOTO (Maior)", "VOTO_MAIOR")), result.ensureRacialDisadvantages)
     }
 
     @Test
@@ -424,7 +461,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             ancestryOptions = listOf("Voto (Maior)", "Obrigação (Maior)")
         )
 
-        assertEquals(listOf("OBRIGAÇÃO (Maior)"), result.ensureRacialDisadvantages)
+        assertEquals(listOf(TraitAddition("OBRIGAÇÃO (Maior)", "OBRIGACAO_MAIOR")), result.ensureRacialDisadvantages)
     }
 
     @Test
@@ -441,7 +478,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     fun `akaimimi recebe peculiaridade como desvantagem racial`() {
         val result = useCase.execute("Akaimimi (Panda Vermelho)", null)
 
-        assertEquals(listOf("PECULIARIDADE"), result.ensureRacialDisadvantages)
+        assertEquals(listOf(TraitAddition("PECULIARIDADE", "PECULIARIDADE")), result.ensureRacialDisadvantages)
         assertTrue(result.ensureAutomaticAdvantages.isEmpty())
     }
 

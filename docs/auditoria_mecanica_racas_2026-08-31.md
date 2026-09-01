@@ -118,6 +118,72 @@ ModifierTarget.ARMOR)` não aparece em lugar nenhum fora do próprio
 morto antes de eu mexer em qualquer coisa — não é uma regressão desta
 rodada, mas fica registrado caso você queira limpar depois.
 
+## Terceira rodada — eliminação completa do "tradutor" de texto (mesma data)
+
+A segunda rodada corrigiu o cálculo, mas introduziu um `String.autoTraitId()`
+que o `ModifierEngine` chamava em tempo real sobre texto solto de
+`vantagensRaciais`/`desvantagensRaciais` pra "adivinhar" o id mecânico —
+exatamente o tipo de "gambiarra" que o dono do projeto pediu pra eliminar por
+completo (ele mesmo notou o problema: "esse sistema tá lendo texto e gerando
+id em tempo real ao usar o app... isso é mais complexo do que ajustarmos na
+mão"). Essa rodada removeu essa função por completo e ajustou à mão todas as
+raças/Variantes que dependiam dela.
+
+- **`TraitAddition(nome, id)`** (`AncestryVariantSystem.kt`): substitui
+  `List<String>` por `List<TraitAddition>` nos três campos de
+  `ResolvedTraitPackage` que injetam traço novo (`tracosParaAdicionar`,
+  `vantagensGratisParaAdicionar`, `desvantagensParaAdicionar`). Cada uma das
+  ~40 entradas nas 25 raças/Variantes de `AncestryVariantRegistry.kt` (e nas 6
+  do Dom da Natureza do Umvee, e no catálogo de traços negativos do Anão
+  Ciber em `AnaoCiberTraits.kt`) agora carrega um id mecânico ESCRITO À MÃO
+  no código-fonte, nunca calculado a partir do texto de exibição em tempo de
+  execução. Ids já existentes em `RacialTraitPointCatalog.EFEITOS`/`CUSTOS`
+  foram reaproveitados quando o conceito é o mesmo (ex.: Drakens "Padrão"
+  usa "RESISTENCIA_2", igual a qualquer outra raça com Resistência +2); ids
+  novos só onde o traço é genuinamente novo/narrativo.
+- **`state.racialTraitIdsFromVariants`** (`CriadorState.kt`): nova lista,
+  paralela a `vantagensRaciais`/`desvantagensRaciais`, que recebe os ids reais
+  vindos de `ResolveAncestryRacialPackageUseCase.Result.racialTraitIds` —
+  populada no mesmo lugar (`aplicarAncestralidade`) e com o mesmo
+  clear+addAll a cada troca de raça/Variante. `ModifierEngine` agora lê essa
+  lista direto pra somar ao conjunto de ids reconhecidos, e o
+  `autoIdKeys`/`String.autoTraitId()` foi removido por completo (a função
+  não existe mais em `util/StringExtensions.kt`).
+- **Achado ao converter (bug pré-existente, não desta rodada)**: Umvee
+  "Pedregoso" concedia Resistência +1 por DOIS caminhos ao mesmo tempo — o
+  `when(dom)` de `CriadorState.applyAncestryVariantAdjustments` (id
+  `RESISTENCIA`, já existia) e o pacote fixo do `AncestryVariantRegistry`
+  (que teria virado `RESISTENCIA_1` se eu tivesse só copiado o slug antigo).
+  Dois ids diferentes pro mesmo efeito = Resistência contada em dobro pra
+  quem escolhe Pedregoso. Corrigido usando o MESMO id (`RESISTENCIA`) nos
+  dois lugares — não craqueei isso rodando o app (não dá nesta sandbox),
+  conferi lendo os dois caminhos lado a lado.
+- **Achado incidental de efeito faltando (corrigido)**: "Aparar +1" (Umvee,
+  Pele Iluminada pela Lua) e "Aparar -1" (Anão Ciber, traço Aparar Baixo)
+  cada um já tinha um id de verdade escrito à mão há tempos, só que nenhum
+  dos dois tinha entrada em `RacialTraitPointCatalog.EFEITOS` — ou seja, o
+  traço aparecia na ficha mas nunca somava nada no Aparar. Adicionados
+  `APARAR_1` (+1) e `APARAR_MENOS_1` (-1, id próprio pra não colidir com
+  `APARAR_BAIXO` que vale -2).
+- **Monstros do Horror — conferido, já estava certo**: auditei
+  `horror_monstros.json`/`MonstroTemplate.kt` procurando o mesmo padrão
+  (texto solto com "Resistência"/"Tamanho"/"Movimentação"/"Armadura" fora de
+  `habilidades[].id`). Achei só um caso — Múmia, Complicação "Lento:
+  Movimentação reduzida em 1..." — e esse já funciona certo: o
+  `ModifierEngine` só lê o rótulo antes dos ":" (`"Lento"`), que bate direto
+  com a chave `LENTO` do catálogo por normalização de acento/maiúscula
+  (`keyify()`), sem precisar de nenhum "tradutor"/regex. Todo o resto de
+  Anjo/Demônio/Fantasma/Lobisomem/Monstro de Retalhos/Múmia/Revivido/Vampiro
+  já usa `habilidades[].id` de verdade. Nenhuma mudança necessária.
+- Testes ajustados: `ResolveAncestryVariantPackageUseCaseTest.kt`,
+  `ResolveAncestrySpecificAdjustmentsUseCaseTest.kt` (reescrito por completo
+  pros novos tipos, incluindo os dois casos de nota-pro-mestre que passaram a
+  morar em `anotacoesToAdd` em vez de `ensureRacialDisadvantages` —
+  Possessores Energia e Quadroides Habilidoso), `ScifiAncestryVariantSyncTest.kt`
+  (injeta `racialTraitIdsFromVariants` nos testes que simulam Variante
+  manualmente, no lugar do texto sozinho que o `autoTraitId()` removido
+  reconhecia antes).
+
 ## Pendente — sem mudança nesta rodada
 
 **Hardcode residual por nome de raça**: `CriadorState.kt` ainda tem a
@@ -126,3 +192,21 @@ atributo por Variante de Drakens/Elementais (linhas ~4310/4329) comparando
 `ancestralidade.keyify().contains(...)`/`== "DRAKENS"` em vez de id. Não
 mexi porque você não pediu esses dois desta vez — ficam pra quando você
 quiser.
+
+**Passo de atributo (Forte/Robusto etc.) via Variante ainda não chega em
+`atributoBaseRacial()` pra várias raças Sci-Fi**: esse cálculo (Drakens
+"Padrão" começar com Força d6, por exemplo) lê `currentAncestryDef.habilidades`
+direto — não os ids novos de `state.racialTraitIdsFromVariants` que esta
+rodada criou. Pra raça com um candidato só no JSON (a maioria das raças
+Sci-Fi), `getAncestralidadeDef` nem chega a rodar
+`applyAncestryVariantAdjustments`, então o "Forte" da Variante nunca entra em
+`habilidades[]` — o dado de Força fica no valor base mesmo com o traço
+"presente" na lista de vantagens. Isso já era assim antes desta rodada (não é
+regressão: `autoTraitId()` nunca foi chamado por esse caminho, só pelo
+`ModifierEngine`) — fica registrado porque apareceu enquanto eu confirmava
+que os testes de atributo (`elementais scifi comecam com forca d8`, por
+exemplo) continuavam passando por outro motivo (`racialAttrMinMap`, não o
+traço). Resolver isso de vez pediria estender `atributoBaseRacial()` pra
+também ler `racialTraitIdsFromVariants`, igual ao que já fiz no
+`ModifierEngine` — não fiz porque não é o que você pediu desta vez, mas é o
+mesmo tipo de buraco.

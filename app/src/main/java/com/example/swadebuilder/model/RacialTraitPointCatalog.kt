@@ -147,6 +147,13 @@ object RacialTraitPointCatalog {
         // -2), então tem dois ids em vez de um só (mesmo padrão de
         // FORTE/MUITO_FORTE pra AtributoStep).
         "APARAR_BAIXO" to RacialTraitEffect.ApararBonus(-2),
+        // Achados ao eliminar o "tradutor" de texto (autoTraitId): estes dois
+        // ids já eram escritos à mão em CriadorState/AnaoCiberTraits (Umvee
+        // "Pele Iluminada pela Lua" +1, Anão Ciber "Aparar Baixo" -1), mas
+        // nunca tiveram entrada aqui — o traço aparecia na ficha sem nunca
+        // ter somado o bônus/penalidade de verdade. Corrigido junto.
+        "APARAR_1" to RacialTraitEffect.ApararBonus(1), // Umvee, Dom da Natureza "Pele Iluminada pela Lua"
+        "APARAR_MENOS_1" to RacialTraitEffect.ApararBonus(-1), // Anão Ciber, traço "Aparar Baixo" (-1, distinto de APARAR_BAIXO que vale -2)
         "ESGUIOS" to RacialTraitEffect.ResistenciaBonus(-1),
         "FEROCIDADE_ORC" to RacialTraitEffect.ResistenciaBonus(1),
         "FRAGIL" to RacialTraitEffect.ResistenciaBonus(-1),
@@ -163,9 +170,9 @@ object RacialTraitPointCatalog {
         // diferente): Drakens +2 (Sci-Fi), Soldados Genéticos +1 (Sci-Fi,
         // mesmo valor de "RESISTENCIA" mas com id próprio porque a raça
         // registra assim no catálogo). "RESISTENCIA_1" também é o id
-        // auto-gerado (ver CriadorState.addIfAbsent) do texto "RESISTÊNCIA
-        // +1" que Mímicos (variante Resistente) e Umvee (Dom Pedregoso, que
-        // na verdade usa o id "RESISTENCIA" bare, ver abaixo) injetam.
+        // escrito à mão em AncestryVariantRegistry (ver TraitAddition) pro
+        // texto "RESISTÊNCIA +1" que Mímicos (variante Resistente) injeta
+        // (Umvee Dom Pedregoso usa o id "RESISTENCIA" bare, ver abaixo).
         "RESISTENCIA_1" to RacialTraitEffect.ResistenciaBonus(1),
         "RESISTENCIA_2" to RacialTraitEffect.ResistenciaBonus(2),
 
@@ -180,10 +187,10 @@ object RacialTraitPointCatalog {
         "TAMANHO_3" to RacialTraitEffect.TamanhoBonus(3), // Meio-Gigantes
         // Diminuto/Minúsculo: sempre Tamanho -4 nas raças oficiais que usam
         // este id (Fadas, Povo Rato). "DIMINUTO_TAMANHO_3"/"_4" são os ids
-        // auto-gerados (ver CriadorState.addIfAbsent) dos textos "DIMINUTO
-        // (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a Variante de Ferais
-        // (Padrão/Menor) injeta via AncestryVariantRegistry — mesmo efeito,
-        // só nomeado diferente por vir de outro caminho de dado.
+        // escritos à mão em AncestryVariantRegistry (ver TraitAddition) pros
+        // textos "DIMINUTO (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a
+        // Variante de Ferais (Padrão/Menor) injeta — mesmo efeito, só
+        // nomeado diferente por vir de outro caminho de dado.
         "DIMINUTO" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
         "DIMINUTO_TAMANHO_3" to RacialTraitEffect.TamanhoBonus(-3, minusculo = true),
         "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
@@ -192,17 +199,19 @@ object RacialTraitPointCatalog {
         // MOVIMENTACAO_REDUZIDA/LENTO acima, mas pra bônus em vez de
         // penalidade. "MOVIMENTACAO" (bare) é o id que Povo Serpente usa
         // direto no catálogo; "MOVIMENTACAO_2"/"MOVIMENTACAO_4" cobrem tanto
-        // os ids do catálogo (Centaux/Aurax) quanto os ids auto-gerados dos
-        // textos "MOVIMENTAÇÃO +2"/"+4" que Centauros, a Variante Gazela
-        // (Centaux) e o Dom da Natureza Correnteza (Umvee) injetam.
+        // os ids do catálogo (Centaux/Aurax) quanto os ids escritos à mão em
+        // AncestryVariantRegistry pros textos "MOVIMENTAÇÃO +2"/"+4" que
+        // Centauros, a Variante Gazela (Centaux) e o Dom da Natureza
+        // Correnteza (Umvee) injetam.
         "MOVIMENTACAO" to RacialTraitEffect.PassoBonus(4), // Povo Serpente: Movimentação 10 (padrão 6 + 4)
         "MOVIMENTACAO_2" to RacialTraitEffect.PassoBonus(2),
         "MOVIMENTACAO_4" to RacialTraitEffect.PassoBonus(4),
 
         // Armadura Natural de valor fixo. "ARMADURA" (bare) é o id que o Dom
         // da Natureza Pedregoso (Umvee) usa; "ARMADURA_2" é o id de
-        // Sáurios/Draconianos/Golens/Insetoides E o id auto-gerado do texto
-        // "ARMADURA +2" que a Variante Padrão de Insetoides (Sci-Fi) injeta.
+        // Sáurios/Draconianos/Golens/Insetoides E o id escrito à mão em
+        // AncestryVariantRegistry pro texto "ARMADURA +2" que a Variante
+        // Padrão de Insetoides (Sci-Fi) injeta.
         "ARMADURA" to RacialTraitEffect.ArmaduraBonus(2),
         "ARMADURA_2" to RacialTraitEffect.ArmaduraBonus(2),
 
@@ -227,6 +236,8 @@ object RacialTraitPointCatalog {
      */
     val LABEL: Map<String, String> = mapOf(
         "APARAR_BAIXO" to "Aparar Baixo",
+        "APARAR_1" to "Aparar +1",
+        "APARAR_MENOS_1" to "Aparar -1",
         "ESGUIOS" to "Esguios",
         "FEROCIDADE_ORC" to "Ferocidade Orc",
         "FRAGIL" to "Frágil",
@@ -287,7 +298,9 @@ object RacialTraitPointCatalog {
         "ANTECEDENTE_ARCANO_DEMONIO" to 4, // sem equivalente oficial (AA completo + poder inicial + 3 extra + 10 PP), acima de vantagem_racial
         "ANTECEDENTE_ARCANO_MILAGRES" to 3, // sem equivalente oficial (AA completo, menos detalhado que o de cima)
         "APARAR" to 2, // 2x oficial aparar_positivo (+1 = 1pt); este traço é Aparar +2
+        "APARAR_1" to 1, // oficial: aparar_positivo (Umvee, Pele Iluminada pela Lua)
         "APARAR_BAIXO" to -2, // 2x oficial aparar_baixo (-1 = -1pt); este traço é Aparar -2
+        "APARAR_MENOS_1" to -1, // oficial: aparar_baixo (Anão Ciber, "Aparar Baixo" -1)
         "APTIDAO_COM_PEDRAS" to 1, // sem equivalente oficial, bônus situacional estreito
         "AQUATICO" to 2, // oficial: aquatico (não se afoga, Movimentação completa)
         "ARISCOS" to -3, // duas perícias a -2 cada (Provocar resistida, Intimidar) — oficial penalidade_pericia_2 é só uma perícia

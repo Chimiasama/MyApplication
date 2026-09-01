@@ -1,7 +1,6 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
-import com.example.swadebuilder.util.autoTraitId
 import com.example.swadebuilder.util.keyify
 
 enum class ModifierTarget {
@@ -179,40 +178,28 @@ object ModifierEngine {
                 .filter { it.nome.keyify() in sourceKeys }
                 .mapNotNull { it.id?.keyify() }
                 .toSet() +
-                (monstro?.habilidades?.mapNotNull { it.id?.keyify() } ?: emptySet())
-
-            // Alguns traços de Variante/Seleção (Centaux Gazela, Drakens/
-            // Mímicos/Ferais "Padrão", Umvee Correnteza/Pedregoso etc.) ainda
-            // chegam como texto solto em vantagensRaciais/desvantagensRaciais
-            // (ver CriadorState.addIfAbsent), não como RacialAbility com id —
-            // autoTraitId() deriva desse texto o MESMO id que addIfAbsent já
-            // atribuiria, então o traço é reconhecido pelo id real dele, não
-            // por regex sobre o texto. Só entra nesse fallback quem NÃO já
-            // tem uma habilidade própria (com id de verdade) pro mesmo nome —
-            // sem isso, uma raça cujo texto de habilidade já usada por
-            // traitIds (ex.: Povo Rato/Fadas "DIMINUTO (Tamanho -4)", id
-            // "DIMINUTO") também bateria com o auto-slug de outra raça que
-            // injeta o mesmo texto solto por Variante (Ferais "Menor", id
-            // sintético "DIMINUTO_TAMANHO_4") e contaria o efeito em dobro.
-            val habilidadeNomeKeys = (
-                anc.habilidades.map { it.nome.keyify() } +
-                    (monstro?.habilidades?.map { it.nome.keyify() } ?: emptyList())
-                ).toSet()
-            val autoIdKeys = sources
-                .filterNot { it.keyify() in habilidadeNomeKeys }
-                .map { it.autoTraitId() }
-                .toSet()
+                (monstro?.habilidades?.mapNotNull { it.id?.keyify() } ?: emptySet()) +
+                // Traços de Variante/Seleção (Centaux Gazela, Drakens/Mímicos/
+                // Ferais "Padrão", Umvee Correnteza/Pedregoso etc.) que chegam
+                // como texto solto em vantagensRaciais/desvantagensRaciais
+                // (ver AncestryVariantRegistry/TraitAddition) já trazem, desde
+                // a própria Variante/Seleção que os concede, o id mecânico
+                // real escrito à mão — nenhum id é derivado do texto de
+                // exibição aqui, só lido do que ResolveAncestryRacialPackageUseCase
+                // já resolveu.
+                state.racialTraitIdsFromVariants.map { it.keyify() }.toSet()
 
             // FRAGIL/FRAGIL_MAIOR têm o mesmo nome de exibição ("Frágil"),
             // diferindo só na penalidade (-1 padrão vs -2 dos Demônios) — o
             // nome sozinho não distingue qual é qual, então esses dois só
-            // contam por id de habilidade, nunca por nome solto em sources.
+            // contam por id de habilidade/Variante de verdade (traitIds),
+            // nunca por nome solto batendo direto contra sourceKeys.
             val idsSoPorHabilidade = setOf("FRAGIL", "FRAGIL_MAIOR")
 
             fun traitPresente(id: String): Boolean {
                 if (id in traitIds) return true
                 if (id in idsSoPorHabilidade) return false
-                return id in sourceKeys || id in autoIdKeys
+                return id in sourceKeys
             }
 
             // sizeDisplay() trava o Tamanho mostrado em -1 no mínimo, exceto

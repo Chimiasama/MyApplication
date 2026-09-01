@@ -55,13 +55,10 @@ class ResolveAncestryVariantPackageUseCase {
 
     private fun resolveSelection(def: SelectionDef, answer: SelectionAnswer?): ResolvedTraitPackage? {
         return when (def.tipo) {
-            SelectionType.TARGET_ATTRIBUTE_OR_SKILL -> {
-                val template = def.injectionTemplate ?: return null
-                val alvo = answer?.targetChoice
-                    ?: def.targetOptions?.firstOrNull()
-                    ?: return null
-                ResolvedTraitPackage(tracosParaAdicionar = listOf(template.replace("{alvo}", alvo)))
-            }
+            // Nenhuma raça cadastrada usa este tipo hoje — ver o comentário
+            // de SelectionDef.targetKind sobre o desenho de id ainda
+            // pendente pra um alvo escolhido pelo jogador.
+            SelectionType.TARGET_ATTRIBUTE_OR_SKILL -> null
             SelectionType.FIXED_PACKAGE -> {
                 val chosenId = answer?.fixedPackageChoiceId ?: def.pacotesFixos?.firstOrNull()?.id
                 def.pacotesFixos?.firstOrNull { it.id == chosenId }?.pacote

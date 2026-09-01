@@ -79,7 +79,6 @@ import com.example.swadebuilder.model.usecase.ResolveRacialAutomaticComplication
 import com.example.swadebuilder.registry.AncestryVariantRegistry
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.theme.AppTheme
-import com.example.swadebuilder.util.autoTraitId
 import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
@@ -868,15 +867,18 @@ class CriadorState {
                 // base.desvantagens (que esta função não toca).
                 pack.desvantagensParaRemover.forEach { nome -> removeByIdOrName(nome, nome) }
 
-                fun addIfAbsent(texto: String, category: String) {
-                    val id = texto.autoTraitId()
-                    if (newHabilidades.none { it.id == id || it.nome.keyify() == texto.keyify() }) {
+                // Id mecânico vem pronto de TraitAddition (escrito à mão em
+                // AncestryVariantRegistry) — nunca mais derivado do texto
+                // aqui.
+                fun addIfAbsent(traco: com.example.swadebuilder.model.TraitAddition, category: String) {
+                    val texto = traco.nome
+                    if (newHabilidades.none { it.id == traco.id || it.nome.keyify() == texto.keyify() }) {
                         val severidade = Regex("""\((Maior|Menor)\)$""").find(texto)?.groupValues?.get(1)
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
                                 nome = texto,
                                 descricao = "",
-                                id = id,
+                                id = traco.id,
                                 category = category,
                                 severity = if (category == "racial_hindrance") severidade else null
                             )
@@ -3833,6 +3835,11 @@ class CriadorState {
     val vantagensAutomaticas = mutableStateListOf<String>()
     val vantagensRaciais = mutableStateListOf<String>()
     val desvantagensRaciais = mutableStateListOf<String>()
+    // Ids mecânicos reais dos traços de vantagensRaciais/desvantagensRaciais
+    // injetados por Variante/Seleção (ResolveAncestryRacialPackageUseCase.
+    // Result.racialTraitIds) — ModifierEngine lê esta lista direto, sem
+    // precisar derivar id nenhum do texto acima.
+    val racialTraitIdsFromVariants = mutableStateListOf<String>()
 
     var pontosVantagem by mutableIntStateOf(0)
 
@@ -4686,6 +4693,9 @@ class CriadorState {
 
         desvantagensRaciais.clear()
         desvantagensRaciais.addAll(racialPackage.desvantagensRaciais)
+
+        racialTraitIdsFromVariants.clear()
+        racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
 
         syncPacoteCulturalFantasia()
 

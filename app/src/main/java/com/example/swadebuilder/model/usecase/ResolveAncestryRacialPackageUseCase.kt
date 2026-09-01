@@ -39,7 +39,12 @@ class ResolveAncestryRacialPackageUseCase(
         val naturalArmorFromRace: Int,
         val forceArmorZero: Boolean,
         val elementalAction: ResolveAncestrySpecificAdjustmentsUseCase.ElementalAction,
-        val anotacoesToAdd: List<String> = emptyList()
+        val anotacoesToAdd: List<String> = emptyList(),
+        // Ids mecânicos reais dos traços injetados por Variante/Seleção
+        // (ensureAutomaticAdvantages/ensureRacialDisadvantages) — ver
+        // TraitAddition. ModifierEngine lê esta lista direto, sem precisar
+        // derivar id nenhum do texto de vantagensRaciais/desvantagensRaciais.
+        val racialTraitIds: List<String> = emptyList()
     )
 
     fun execute(params: Params): Result {
@@ -119,13 +124,16 @@ class ResolveAncestryRacialPackageUseCase(
             }
         }
 
+        val racialTraitIds = mutableListOf<String>()
+
         ancestrySpecificAdjustments.ensureAutomaticAdvantages.forEach { automaticAdvantage ->
-            if (vantagensAutomaticas.none { it.equals(automaticAdvantage, ignoreCase = true) }) {
-                vantagensAutomaticas.add(automaticAdvantage)
+            if (vantagensAutomaticas.none { it.equals(automaticAdvantage.nome, ignoreCase = true) }) {
+                vantagensAutomaticas.add(automaticAdvantage.nome)
             }
-            if (vantagensRaciais.none { it.equals(automaticAdvantage, ignoreCase = true) }) {
-                vantagensRaciais.add(automaticAdvantage)
+            if (vantagensRaciais.none { it.equals(automaticAdvantage.nome, ignoreCase = true) }) {
+                vantagensRaciais.add(automaticAdvantage.nome)
             }
+            racialTraitIds.add(automaticAdvantage.id)
         }
 
         ancestrySpecificAdjustments.automaticAdvantagesToRemove.forEach { toRemove ->
@@ -136,9 +144,10 @@ class ResolveAncestryRacialPackageUseCase(
         }
 
         ancestrySpecificAdjustments.ensureRacialDisadvantages.forEach { racialDisadvantage ->
-            if (desvantagensRaciais.none { it.equals(racialDisadvantage, ignoreCase = true) }) {
-                desvantagensRaciais.add(racialDisadvantage)
+            if (desvantagensRaciais.none { it.equals(racialDisadvantage.nome, ignoreCase = true) }) {
+                desvantagensRaciais.add(racialDisadvantage.nome)
             }
+            racialTraitIds.add(racialDisadvantage.id)
         }
 
         ancestrySpecificAdjustments.racialDisadvantagesToRemove.forEach { toRemove ->
@@ -153,7 +162,8 @@ class ResolveAncestryRacialPackageUseCase(
             naturalArmorFromRace = ancestrySpecificAdjustments.naturalArmorFromRace,
             forceArmorZero = ancestrySpecificAdjustments.forceArmorZero,
             elementalAction = ancestrySpecificAdjustments.elementalAction,
-            anotacoesToAdd = ancestrySpecificAdjustments.anotacoesToAdd
+            anotacoesToAdd = ancestrySpecificAdjustments.anotacoesToAdd,
+            racialTraitIds = racialTraitIds
         )
     }
 }
