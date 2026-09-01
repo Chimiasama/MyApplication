@@ -781,7 +781,6 @@ private fun availableSectionsFor(state: CriadorState): List<MainSection> {
     }
     sections += MainSection.COMPLICACOES
     sections += MainSection.ATRIBUTOS
-    sections += MainSection.PERICIAS
     sections += MainSection.VANTAGENS
     if (state.compendioCrystalHeartAtivo) {
         sections += MainSection.CRYSTAL_HEART

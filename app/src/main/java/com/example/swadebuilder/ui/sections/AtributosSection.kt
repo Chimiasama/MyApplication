@@ -25,6 +25,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +49,88 @@ import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
+
+@Composable
+fun AttributeCarouselPopoverDialog(
+    attrName: String,
+    minRaw: Int,
+    maxRaw: Int,
+    currentRaw: Int,
+    onSelectRaw: (Int) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val steps = remember(minRaw, maxRaw) {
+        val list = mutableListOf<Int>()
+        var v = maxOf(4, minRaw)
+        while (v <= minOf(12, maxRaw)) {
+            list.add(v)
+            v += 2
+        }
+        list
+    }
+
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(attrName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+        },
+        text = {
+            Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)) {
+                Text(
+                    "Selecione o dado do atributo (cada passo custa 1 Ponto de Atributo ou 2 PB):",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    steps.forEach { targetRaw ->
+                        val cost = (targetRaw - minRaw) / 2
+                        val isSelected = targetRaw == currentRaw
+                        val containerColor = if (isSelected) {
+                            MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surfaceContainerHigh
+                        }
+
+                        androidx.compose.material3.OutlinedCard(
+                            onClick = {
+                                onSelectRaw(targetRaw)
+                                onDismiss()
+                            },
+                            modifier = Modifier.weight(1f),
+                            colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
+                                containerColor = containerColor
+                            ),
+                            border = if (isSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else androidx.compose.material3.CardDefaults.outlinedCardBorder()
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(vertical = 8.dp, horizontal = 2.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                            ) {
+                                Text(
+                                    text = targetRaw.toDiceString(),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = if (cost == 0) "base" else if (cost == 1) "1 pt" else "$cost pts",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("Fechar") }
+        }
+    )
+}
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -67,6 +153,8 @@ fun AtributosContent(
     val pcTotal  = state.pontosComplicacao
     val pcGastos = state.pontosComplicacaoGastos
     val pcLivres = (pcTotal - pcGastos).coerceAtLeast(0)
+
+    var attributePopoverTarget by remember { mutableStateOf<String?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
     val density = LocalDensity.current
@@ -198,9 +286,13 @@ fun AtributosContent(
 
                     Text(
                         text = efetivoRaw.toDiceString(),
-                        modifier = Modifier.width(valorColWidthDp),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = onSurface,
+                        modifier = Modifier
+                            .width(valorColWidthDp)
+                            .clickable {
+                                attributePopoverTarget = nome
+                            },
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colorScheme.primary,
                         maxLines = 1,
                         overflow = TextOverflow.Clip,
                         textAlign = TextAlign.Center
@@ -320,5 +412,50 @@ fun AtributosContent(
                 }
             }
         }
+    }
+
+    if (attributePopoverTarget != null) {
+        val nome = attributePopoverTarget!!
+        val baseRaw = state.valoresAtributos[nome]!!.intValue
+        val minReq = maxOf(state.atributoMinRaw(nome), state.minAttrPorVantagem[nome] ?: 4)
+        val maxRaw = state.atributoMaxRawNaCriacao(nome)
+
+        AttributeCarouselPopoverDialog(
+            attrName = mapaAtributosDisplay[nome] ?: nome,
+            minRaw = minReq,
+            maxRaw = maxRaw,
+            currentRaw = baseRaw,
+            onSelectRaw = { targetRaw ->
+                val stack = state.paCostStackPorAtributo.getValue(nome)
+                if (targetRaw > baseRaw) {
+                    val stepsToAdd = (targetRaw - baseRaw) / 2
+                    repeat(stepsToAdd) {
+                        val currentBase = state.valoresAtributos[nome]!!.intValue
+                        val nextR = if (currentBase < 12) currentBase + 2 else currentBase + 1
+                        if (!state.modoLivre && state.pontosAtributo <= 0) {
+                            if (!state.gastarPcParaAtributo()) return@repeat
+                        }
+                        stack.add(1)
+                        state.valoresAtributos[nome]!!.intValue = nextR
+                        state.pontosAtributo--
+                        state.recalcularPontosAtributo()
+                    }
+                } else if (targetRaw < baseRaw) {
+                    val stepsToRemove = (baseRaw - targetRaw) / 2
+                    repeat(stepsToRemove) {
+                        if (stack.isNotEmpty()) {
+                            stack.removeAt(stack.lastIndex)
+                            val currentBase = state.valoresAtributos[nome]!!.intValue
+                            val prevR = if (currentBase <= 12) currentBase - 2 else currentBase - 1
+                            state.valoresAtributos[nome]!!.intValue = prevR
+                            state.pontosAtributo++
+                            state.recalcularPontosAtributo()
+                        }
+                    }
+                }
+                onUserFeedback()
+            },
+            onDismiss = { attributePopoverTarget = null }
+        )
     }
 }
