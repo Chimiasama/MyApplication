@@ -330,6 +330,7 @@ fun buildSummaryLines(
     }
     lines += "Tamanho: $tamanho"
     lines += "Movimento: $mov"
+    lines += "Corrida: ${personagem.dadoCorrida}"
     lines += ""
 
     lines += "Atributos"
