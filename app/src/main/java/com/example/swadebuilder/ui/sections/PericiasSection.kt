@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.PericiaRuleSnapshot
 import com.example.swadebuilder.R
+import com.example.swadebuilder.atributoBaseParaPericia
 import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.model.EspecializacoesDto
 import com.example.swadebuilder.model.Pericia
@@ -383,10 +384,11 @@ fun PericiasContent(
                         locked = locked
                     )
 
+                    val baseAttr = state.atributoBaseParaPericia(per)
                     val isIdioma = state.isIdiomaPericia(per)
                     val isJutsu = state.isJutsuPericia(per)
                     val rawName = if (isIdioma) "Idiomas" else if (isJutsu) "Jutsu" else per.nome.removePrefix("*").trim()
-                    val descKey = "$rawName (${per.atributo})".uppercase().semAcentos()
+                    val descKey = "$rawName ($baseAttr)".uppercase().semAcentos()
 
                     val descricao = if (isJutsu) {
                         // Slots sintéticos (Jutsu 2, Jutsu 3...) não têm descrição própria no
@@ -992,8 +994,9 @@ fun PericiasContent(
     if (popoverTarget != null) {
         val per = popoverTarget!!
         val startRaw = state.periciaStartRaw(state.ancestralidade, per)
-        val attrName = state.mapaAtributosDisplay[per.atributo] ?: per.atributo
-        val attrRaw = state.valoresAtributos[per.atributo]?.intValue ?: 4
+        val baseAttr = state.atributoBaseParaPericia(per)
+        val attrName = state.mapaAtributosDisplay[baseAttr] ?: baseAttr
+        val attrRaw = state.valoresAtributos[baseAttr]?.intValue ?: 4
         val currentRaw = state.rawTotal(per)
 
         SkillCarouselPopoverDialog(
