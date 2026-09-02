@@ -336,7 +336,7 @@ fun AtributosContent(
                                     infoDialogContent = descricao
                                 }
                             ),
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -359,7 +359,7 @@ fun AtributosContent(
                             },
                             enabled = canReduce,
                             modifier = Modifier
-                                .size(32.dp)
+                                    .size(36.dp)
                                 .padding(4.dp)
                         ) {
                             Icon(
@@ -377,7 +377,7 @@ fun AtributosContent(
                             .clickable {
                                 attributePopoverTarget = nome
                             },
-                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.primary,
                         maxLines = 1,
                         overflow = TextOverflow.Clip,
@@ -401,7 +401,7 @@ fun AtributosContent(
                             },
                             enabled = canIncrease,
                             modifier = Modifier
-                                .size(32.dp)
+                                    .size(36.dp)
                                 .padding(4.dp)
                         ) {
                             Icon(
@@ -483,7 +483,9 @@ fun AtributosContent(
                             periciasDoAtributo.forEach { per ->
                                 val reg = state.calcularPericiaRules(per, state.idosoBonusSp > 0, locked)
                                 Row(
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(vertical = 3.dp),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween
                                 ) {
@@ -524,12 +526,12 @@ fun AtributosContent(
                                                     }
                                                 }
                                             },
-                                            style = MaterialTheme.typography.bodyMedium
+                                            style = MaterialTheme.typography.bodyLarge
                                         )
                                         if (!skillNote.isNullOrBlank()) {
                                             Text(
                                                 text = "($skillNote)",
-                                                style = MaterialTheme.typography.labelSmall,
+                                                style = MaterialTheme.typography.bodySmall,
                                                 color = MaterialTheme.colorScheme.tertiary
                                             )
                                         }
@@ -544,7 +546,7 @@ fun AtributosContent(
                                                 showIdiomaDialog = true
                                             },
                                             modifier = Modifier
-                                                .size(28.dp)
+                                                .size(32.dp)
                                                 .padding(2.dp)
                                         ) {
                                             Icon(
@@ -562,7 +564,7 @@ fun AtributosContent(
                                                 showNoteDialog = true
                                             },
                                             modifier = Modifier
-                                                .size(28.dp)
+                                                .size(32.dp)
                                                 .padding(2.dp)
                                         ) {
                                             Icon(
@@ -590,26 +592,49 @@ fun AtributosContent(
                                                 onUserFeedback()
                                             },
                                             enabled = reg.canDecrease,
-                                            modifier = Modifier.size(28.dp)
+                                            modifier = Modifier.size(32.dp)
                                         ) {
                                             Icon(Icons.Default.Remove, contentDescription = "Diminuir", modifier = Modifier.fillMaxSize())
                                         }
                                     }
-                                    Text(
-                                        text = when {
-                                            reg.displayRaw > 0 -> reg.displayRaw.toDiceString()
-                                            isBasica -> "d4"
-                                            else -> "-"
-                                        },
-                                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier
-                                            .width(48.dp)
-                                            .clickable {
-                                                skillPopoverTarget = per
+
+                                    val isUntrained = reg.displayRaw == 0 && !isBasica
+                                    if (isUntrained) {
+                                        androidx.compose.material3.Surface(
+                                            modifier = Modifier
+                                                .padding(horizontal = 2.dp)
+                                                .clickable {
+                                                    skillPopoverTarget = per
+                                                },
+                                            shape = RoundedCornerShape(8.dp),
+                                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                                        ) {
+                                            Text(
+                                                text = "—",
+                                                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 2.dp),
+                                                textAlign = TextAlign.Center
+                                            )
+                                        }
+                                    } else {
+                                        Text(
+                                            text = when {
+                                                reg.displayRaw > 0 -> reg.displayRaw.toDiceString()
+                                                isBasica -> "d4"
+                                                else -> "—"
                                             },
-                                        textAlign = TextAlign.Center
-                                    )
+                                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                                            color = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier
+                                                .width(52.dp)
+                                                .clickable {
+                                                    skillPopoverTarget = per
+                                                },
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
                                     if (showSteppers) {
                                         val canAffordWithBP = (state.pontosPericia + pcLivres) >= reg.cost
                                         IconButton(
@@ -631,7 +656,7 @@ fun AtributosContent(
                                                 onUserFeedback()
                                             },
                                             enabled = reg.canIncrease || (canAffordWithBP && reg.nextRaw <= reg.capRaw),
-                                            modifier = Modifier.size(28.dp)
+                                            modifier = Modifier.size(32.dp)
                                         ) {
                                             Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.fillMaxSize())
                                         }
@@ -734,7 +759,7 @@ fun AtributosContent(
             text = {
                 Column {
                     Text("Perícia: ${if (isJutsuTarget) "Jutsu" else "Idiomas"}")
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = idiomaText,
                         onValueChange = { idiomaText = it },
@@ -792,7 +817,7 @@ fun AtributosContent(
             text = {
                 Column {
                     Text("Perícia: ${noteTarget!!.nome}")
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = noteText,
                         onValueChange = { noteText = it },
