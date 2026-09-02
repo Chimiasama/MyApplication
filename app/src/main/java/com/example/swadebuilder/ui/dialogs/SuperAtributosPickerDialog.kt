@@ -65,55 +65,76 @@ fun SuperAtributosPickerDialog(
                 Text("Pool: $poolInicial   •   Restante: $restante")
                 Spacer(Modifier.height(8.dp))
 
-                // lista com + / - mostrando o VALOR FINAL (dado) e não mais só o número de steps
-                state.listaAtributos.forEach { attr ->
-                    val steps = alocacoes[attr] ?: 0
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
+                ) {
+                    state.listaAtributos.forEach { attr ->
+                        val currentSteps = alocacoes[attr] ?: 0
+                        val baseRaw = state.atributoRawComSupers(attr)
+                        val attrDisplayName = state.mapaAtributosDisplay[attr] ?: attr
 
-                    // valor atual (já com supers existentes)
-                    val baseRaw = state.atributoRawComSupers(attr)
-                    // simula aplicação dos steps desta compra
-                    val projectedRaw = state.applySuperStepsFrom(baseRaw, steps)
-                    val textoValor = projectedRaw.toDiceString()
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = attr,
-                            modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        IconButton(
-                            onClick = {
-                                if (steps > 0) alocacoes[attr] = steps - 1
-                            },
-                            enabled = steps > 0
-                        ) {
-                            Icon(
-                                Icons.Default.Remove,
-                                contentDescription = "Diminuir $attr"
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = attrDisplayName,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
-                        }
+                            Spacer(Modifier.height(4.dp))
 
-                        Text(
-                            textoValor,
-                            modifier = Modifier.width(48.dp),
-                            textAlign = TextAlign.Center
-                        )
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                val maxStepsPossible = minOf(poolInicial, currentSteps + restante)
+                                val stepOptions = (0..maxStepsPossible).toList()
 
-                        IconButton(
-                            onClick = {
-                                if (restante > 0) alocacoes[attr] = steps + 1
-                            },
-                            enabled = restante > 0
-                        ) {
-                            Icon(
-                                Icons.Default.Add,
-                                contentDescription = "Aumentar $attr"
-                            )
+                                stepOptions.forEach { stepOpt ->
+                                    val projectedRaw = state.applySuperStepsFrom(baseRaw, stepOpt)
+                                    val spCost = stepOpt * 2
+                                    val isSelected = stepOpt == currentSteps
+                                    val canAfford = stepOpt <= currentSteps || (stepOpt - currentSteps) <= restante
+
+                                    val containerColor = when {
+                                        !canAfford -> MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.4f)
+                                        isSelected -> MaterialTheme.colorScheme.primaryContainer
+                                        else -> MaterialTheme.colorScheme.surfaceContainerHigh
+                                    }
+
+                                    androidx.compose.material3.OutlinedCard(
+                                        onClick = {
+                                            if (canAfford) alocacoes[attr] = stepOpt
+                                        },
+                                        enabled = canAfford,
+                                        modifier = Modifier.weight(1f),
+                                        colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
+                                            containerColor = containerColor,
+                                            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)
+                                        ),
+                                        border = if (isSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else androidx.compose.material3.CardDefaults.outlinedCardBorder()
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.padding(vertical = 6.dp, horizontal = 2.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = projectedRaw.toDiceString(),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                                color = if (canAfford) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                            )
+                                            Text(
+                                                text = if (spCost == 0) "base" else "$spCost SP",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
