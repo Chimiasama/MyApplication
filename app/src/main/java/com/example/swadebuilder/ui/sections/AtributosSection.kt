@@ -63,6 +63,7 @@ fun AttributeCarouselPopoverDialog(
     minRaw: Int,
     maxRaw: Int,
     currentRaw: Int,
+    availablePa: Int? = null,
     onSelectRaw: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -94,21 +95,28 @@ fun AttributeCarouselPopoverDialog(
                 ) {
                     steps.forEach { targetRaw ->
                         val cost = (targetRaw - minRaw) / 2
+                        val stepsFromCurrent = if (targetRaw > currentRaw) (targetRaw - currentRaw) / 2 else 0
+                        val canAfford = availablePa == null || targetRaw <= currentRaw || stepsFromCurrent <= availablePa
+
                         val isSelected = targetRaw == currentRaw
-                        val containerColor = if (isSelected) {
-                            MaterialTheme.colorScheme.primaryContainer
-                        } else {
-                            MaterialTheme.colorScheme.surfaceContainerHigh
+                        val containerColor = when {
+                            !canAfford -> MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.4f)
+                            isSelected -> MaterialTheme.colorScheme.primaryContainer
+                            else -> MaterialTheme.colorScheme.surfaceContainerHigh
                         }
 
                         androidx.compose.material3.OutlinedCard(
                             onClick = {
-                                onSelectRaw(targetRaw)
-                                onDismiss()
+                                if (canAfford) {
+                                    onSelectRaw(targetRaw)
+                                    onDismiss()
+                                }
                             },
+                            enabled = canAfford,
                             modifier = Modifier.weight(1f),
                             colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
-                                containerColor = containerColor
+                                containerColor = containerColor,
+                                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)
                             ),
                             border = if (isSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else androidx.compose.material3.CardDefaults.outlinedCardBorder()
                         ) {
@@ -120,7 +128,8 @@ fun AttributeCarouselPopoverDialog(
                                 Text(
                                     text = targetRaw.toDiceString(),
                                     style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (canAfford) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                                 )
                                 Text(
                                     text = if (cost == 0) "base" else if (cost == 1) "1 pt" else "$cost pts",
@@ -468,6 +477,7 @@ fun AtributosContent(
             attrName = attrName,
             attrRaw = attrRaw,
             currentRaw = currentRaw,
+            availableSp = if (state.modoLivre) null else (state.pontosPericia + pcLivres),
             onSelectRaw = { targetRaw: Int ->
                 if (targetRaw > currentRaw) {
                     val stepsToAdd = dieStepsCount(currentRaw, targetRaw)
@@ -475,8 +485,11 @@ fun AtributosContent(
                         val reg = state.calcularPericiaRules(per, idosoActive, locked)
                         if (!state.modoLivre && state.pontosPericia < reg.cost) {
                             val missing = reg.cost - state.pontosPericia
-                            if (pcLivres >= missing) {
+                            val currentPcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
+                            if (currentPcLivres >= missing) {
                                 repeat(missing) { state.gastarPcParaPericia() }
+                            } else {
+                                return@repeat
                             }
                         }
                         state.increasePericiaFromAdvancement(per, reg.cost, null)
@@ -504,6 +517,7 @@ fun AtributosContent(
             minRaw = minReq,
             maxRaw = maxRaw,
             currentRaw = baseRaw,
+            availablePa = if (state.modoLivre) null else (state.pontosAtributo + pcLivres / 2),
             onSelectRaw = { targetRaw ->
                 val stack = state.paCostStackPorAtributo.getValue(nome)
                 if (targetRaw > baseRaw) {

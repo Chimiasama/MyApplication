@@ -6030,6 +6030,13 @@ class CriadorState {
     }
 
     fun increasePericiaFromAdvancement(per: Pericia, cost: Int, feedbackMessages: MutableList<String>? = null) {
+        if (!modoProgressaoAtivo && !modoLivre && !skillAdvancementInProgress) {
+            val pcLivres = (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0)
+            if (pontosPericia < cost && pcLivres < (cost - pontosPericia)) {
+                return
+            }
+        }
+
         // Safety check for creation mode + Idoso
         if (!modoProgressaoAtivo && !modoLivre) {
              val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }

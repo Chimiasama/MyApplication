@@ -114,6 +114,7 @@ fun SkillCarouselPopoverDialog(
     attrName: String,
     attrRaw: Int,
     currentRaw: Int,
+    availableSp: Int? = null,
     onSelectRaw: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -155,24 +156,30 @@ fun SkillCarouselPopoverDialog(
                 ) {
                     steps.forEach { targetRaw ->
                         val cost = calcularCustoAcumuladoPericia(startRaw, attrRaw, targetRaw)
+                        val additionalCost = if (targetRaw > currentRaw) calcularCustoAcumuladoPericia(currentRaw, attrRaw, targetRaw) else 0
+                        val canAfford = availableSp == null || targetRaw <= currentRaw || additionalCost <= availableSp
+
                         val isSelected = targetRaw == currentRaw
                         val isAboveAttr = targetRaw > attrRaw
-                        val containerColor = if (isSelected) {
-                            MaterialTheme.colorScheme.primaryContainer
-                        } else if (isAboveAttr) {
-                            MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
-                        } else {
-                            MaterialTheme.colorScheme.surfaceContainerHigh
+                        val containerColor = when {
+                            !canAfford -> MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.4f)
+                            isSelected -> MaterialTheme.colorScheme.primaryContainer
+                            isAboveAttr -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
+                            else -> MaterialTheme.colorScheme.surfaceContainerHigh
                         }
 
                         androidx.compose.material3.OutlinedCard(
                             onClick = {
-                                onSelectRaw(targetRaw)
-                                onDismiss()
+                                if (canAfford) {
+                                    onSelectRaw(targetRaw)
+                                    onDismiss()
+                                }
                             },
+                            enabled = canAfford,
                             modifier = Modifier.weight(1f),
                             colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
-                                containerColor = containerColor
+                                containerColor = containerColor,
+                                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)
                             ),
                             border = if (isSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else androidx.compose.material3.CardDefaults.outlinedCardBorder()
                         ) {
@@ -184,12 +191,13 @@ fun SkillCarouselPopoverDialog(
                                 Text(
                                     text = if (targetRaw == 0) "-" else targetRaw.toDiceString(),
                                     style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (canAfford) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                                 )
                                 Text(
                                     text = if (cost == 0) "0 pt" else if (cost == 1) "1 pt" else "$cost pts",
                                     style = MaterialTheme.typography.labelSmall,
-                                    color = if (isAboveAttr) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                                    color = if (!canAfford) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f) else if (isAboveAttr) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -1001,8 +1009,11 @@ fun PericiasContent(
                         val regrasAtuais = state.calcularPericiaRules(per, idosoActive, locked)
                         if (!state.modoLivre && state.pontosPericia < regrasAtuais.cost) {
                             val missing = regrasAtuais.cost - state.pontosPericia
-                            if (pcLivres >= missing) {
+                            val currentPcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
+                            if (currentPcLivres >= missing) {
                                 repeat(missing) { state.gastarPcParaPericia() }
+                            } else {
+                                return@repeat
                             }
                         }
                         state.increasePericiaFromAdvancement(per, regrasAtuais.cost, feedbackMessages)
