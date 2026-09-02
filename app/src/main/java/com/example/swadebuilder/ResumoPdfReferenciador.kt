@@ -113,6 +113,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         notasPericia = this.notasPericia.toMap(),
         tamanho = this.tamanhoExibido(),
         movimentacao = this.valorMovimentacao(),
+        dadoCorrida = this.valorDadoCorrida(),
         resistencia = this.resistenciaBase(),
         appTheme = this.appTheme.name,
         portraitFileName = this.portraitFileName,
@@ -1028,10 +1029,10 @@ fun drawDerivedStats(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTh
     val aparar = calcAparar(p, especieId)
     val resistencia = calcResistencia(p)
     val mov = p.movimentacao
-    val boxWidth = rect.width() / 3
-    val labels = listOf("Aparar", "Resistência", "Movimentação")
-    val values = listOf(aparar.toString(), resistencia, mov.toString())
-    for (i in 0..2) {
+    val boxWidth = rect.width() / 5
+    val labels = listOf("Aparar", "Resistência", "Tamanho", "Movimentação", "Corrida")
+    val values = listOf(aparar.toString(), resistencia, p.tamanho.toString(), mov.toString(), p.dadoCorrida)
+    for (i in 0..4) {
         val bx = rect.left + (i * boxWidth)
         val r = RectF(bx, rect.top, bx + boxWidth, rect.bottom)
         val bgPaint = Paint().apply { color = if (i % 2 == 0) theme.headerBackground else theme.backgroundColor; style = Paint.Style.FILL }
