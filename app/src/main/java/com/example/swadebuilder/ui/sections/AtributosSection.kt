@@ -415,11 +415,41 @@ fun AtributosContent(
                     Spacer(Modifier.width(4.dp))
                 }
 
-                val periciasDoAtributo = remember(state.listaPericias, state.vantagensSelecionadas.size, nome) {
-                    state.periciasComIdiomas().filter { per ->
+                val allPericiasDoAtributo = remember(
+                    state.listaPericias,
+                    state.vantagensSelecionadas.size,
+                    state.baseIncsPorPericia.toMap(),
+                    nome
+                ) {
+                    val allForAttr = state.periciasComIdiomas().filter { per ->
                         state.atributoBaseParaPericia(per).keyify() == nome.keyify()
+                    }
+
+                    val rawTotals = allForAttr.associateWith { state.rawTotal(it) }
+
+                    val idiomaSlotsVisiveis = allForAttr
+                        .filter { state.isIdiomaPericia(it) }
+                        .let { slots ->
+                            val ultimaVazia = slots.lastOrNull { (rawTotals[it] ?: 0) == 0 }
+                            slots.filter { per -> (rawTotals[per] ?: 0) > 0 || per == ultimaVazia }.toSet()
+                        }
+
+                    val jutsuSlotsVisiveis = allForAttr
+                        .filter { state.isJutsuPericia(it) }
+                        .let { slots ->
+                            val ultimaVazia = slots.lastOrNull { (rawTotals[it] ?: 0) == 0 }
+                            slots.filter { per -> (rawTotals[per] ?: 0) > 0 || per == ultimaVazia }.toSet()
+                        }
+
+                    allForAttr.filter { per ->
+                        when {
+                            state.isIdiomaPericia(per) -> per in idiomaSlotsVisiveis
+                            state.isJutsuPericia(per) -> per in jutsuSlotsVisiveis
+                            else -> true
+                        }
                     }.distinctBy { it.nome }
                 }
+                val periciasDoAtributo = allPericiasDoAtributo
 
                 Spacer(Modifier.height(2.dp))
                 TextButton(
@@ -547,6 +577,16 @@ fun AtributosContent(
                                         IconButton(
                                             onClick = {
                                                 state.decreasePericia(per)
+                                                if (state.rawTotal(per) == 0) {
+                                                    state.especializacoesPorPericia.remove(per.nome)
+                                                    state.notasPericia.remove(per.nome)
+                                                }
+                                                if (isIdioma) {
+                                                    state.syncIdiomaSlots()
+                                                }
+                                                if (isJutsu) {
+                                                    state.syncJutsuSlots()
+                                                }
                                                 onUserFeedback()
                                             },
                                             enabled = reg.canDecrease,
@@ -713,7 +753,7 @@ fun AtributosContent(
                         }
                         state.notasPericia[per.nome] = label
                         if (!idiomaEditMode) {
-                            if (state.pontosPericia < idiomaPendingCost) {
+                            if (!state.modoLivre && state.pontosPericia < idiomaPendingCost) {
                                 val missing = idiomaPendingCost - state.pontosPericia
                                 if ((state.pontosComplicacao - state.pontosComplicacaoGastos) >= missing) {
                                     repeat(missing) {
