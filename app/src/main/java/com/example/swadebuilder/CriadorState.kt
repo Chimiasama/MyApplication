@@ -1513,24 +1513,36 @@ class CriadorState {
         val lentoEntry = complicacoesSelecionadas.entries.firstOrNull { it.key.id == Constants.ID_LENTO || it.key.id.keyify() == "LENTO" }
         val lentoLevel = lentoEntry?.value
 
-        var step = if (hasLigeiro) 10 else 6
+        // Step index: 0 = d4-1, 1 = d4, 2 = d6 (baseline), 3 = d8, 4 = d10, 5 = d12
+        var stepIndex = 2
+
+        if (hasLigeiro) {
+            stepIndex += 1
+        }
+
         if (hasObeso) {
-            step = 4
+            stepIndex = (stepIndex - 1).coerceAtLeast(1)
         }
 
         if (lentoEntry != null) {
             if (lentoLevel == "Maior") {
-                if (step <= 4) {
-                    return "d4-1"
-                } else {
-                    step = 4
-                }
+                stepIndex -= 2
             } else {
-                step = if (step == 10) 8 else 4
+                stepIndex -= 1
             }
         }
 
-        return "d$step"
+        val stepLabels = mapOf(
+            0 to "d4-1",
+            1 to "d4",
+            2 to "d6",
+            3 to "d8",
+            4 to "d10",
+            5 to "d12"
+        )
+
+        val finalIndex = stepIndex.coerceIn(0, 5)
+        return stepLabels[finalIndex] ?: "d6"
     }
 
     fun totalTensaoCibernetica(): Int =
