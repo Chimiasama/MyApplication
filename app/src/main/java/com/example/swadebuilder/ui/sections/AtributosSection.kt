@@ -49,6 +49,7 @@ import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.R
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.SectionHeader
+import com.example.swadebuilder.atributoBaseParaPericia
 import com.example.swadebuilder.calcularPericiaRules
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.util.AppPreferences
@@ -347,9 +348,9 @@ fun AtributosContent(
                     Spacer(Modifier.width(4.dp))
                 }
 
-                val periciasDoAtributo = remember(state.listaPericias, nome) {
+                val periciasDoAtributo = remember(state.listaPericias, state.vantagensSelecionadas.size, nome) {
                     state.periciasComIdiomas().filter { per ->
-                        per.atributo.keyify() == nome.keyify()
+                        state.atributoBaseParaPericia(per).keyify() == nome.keyify()
                     }.distinctBy { it.nome }
                 }
 
@@ -466,8 +467,9 @@ fun AtributosContent(
     if (skillPopoverTarget != null) {
         val per = skillPopoverTarget!!
         val startRaw = state.periciaStartRaw(state.ancestralidade, per)
-        val attrName = state.mapaAtributosDisplay[per.atributo] ?: per.atributo
-        val attrRaw = state.valoresAtributos[per.atributo]?.intValue ?: 4
+        val baseAttr = state.atributoBaseParaPericia(per)
+        val attrName = state.mapaAtributosDisplay[baseAttr] ?: baseAttr
+        val attrRaw = state.valoresAtributos[baseAttr]?.intValue ?: 4
         val currentRaw = state.rawTotal(per)
         val idosoActive = state.idosoBonusSp > 0
 

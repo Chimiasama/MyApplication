@@ -2373,8 +2373,7 @@ class CriadorState {
             poderFavoritoId = null
         }
 
-        val enforcePoolLimit = !v.isBrutamontes()
-        rebuildAllPericiaStacks(enforcePoolLimit = enforcePoolLimit)
+        rebuildAllPericiaStacks(enforcePoolLimit = true)
         onFeedback(if (shouldRefund) "Vantagem removida (+1 PV)." else "Vantagem gratuita removida.")
     }
 
