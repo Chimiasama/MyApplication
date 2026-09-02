@@ -15,25 +15,28 @@ data class RacialAbility(
     val id: String? = null,
     val category: String? = null,
     val severity: String? = null,
-    // Quantas vezes este traço foi "comprado" — os 3 livros (Básico, Fantasia,
-    // Sci-Fi) marcam cada traço do catálogo de criação de ancestralidade com
-    // um número entre parênteses (e "S" pra sem limite) dizendo quantas vezes
-    // ele pode ser escolhido, e o efeito/custo multiplicam por esse número
-    // (ex.: "Armadura (3): ... Armadura +2 cada vez que é comprada" — 2x
-    // vira Armadura +4). A maioria dos traços tem vezes=1 (o padrão) porque
-    // só pode ser escolhida uma vez; só os que RacialTraitPointCatalog.VEZES_MAX
-    // lista como > 1 usam este campo pra valer mais de 1 — ver
-    // RacialTraitEffect e ModifierEngine.aplicarEfeito.
+
+    // CAMADA MECÂNICA / ENGINE PARAMETRIZADA
+    val traitId: String? = null,           // Ex: "ATTRIBUTE_BOOST", "SKILL_BOOST", "GRANTED_EDGE", "RACIAL_HINDRANCE", "TOUGHNESS_FLAT", "PACE_CHANGE", "SIZE_CHANGE", "NATURAL_ARMOR"
+    val targetRef: String? = null,         // Ex: "AGILIDADE", "VIGOR", "PERCEBER", "SORTUDO", "FORASTEIRO"
+    val value: Int = 1,                    // Passos ou modificadores numéricos (ex: 1 para d6, +2 para movimentação)
+    val pontos: Int = 0,                   // Valor no orçamento racial (ex: +2, -2)
+    val invisivel: Boolean = false,        // Traços ocultos da UI/card (ex: bônus interno de carga/armadura)
+
+    // Quantas vezes este traço foi "comprado"
     val vezes: Int = 1,
-    // Ataque(s) natural(is) concedido(s) por esta habilidade racial, já como
-    // dado estruturado — mesmo campo/tipo que MonstroHabilidade.armasNaturais
-    // usa pro Template de Monstro Heroico (ver MonstroTemplate.kt). Antes
-    // disso, extrairArmasNaturais() extraía dano/PA via regex sobre
-    // `descricao`, casando por palavra-chave no nome; algumas raças (ex.:
-    // Insetoides) precisavam de um valor de PA hardcoded no código porque a
-    // descrição não bastava. Com o dado aqui, o código só lê.
+    // Ataque(s) natural(is) concedido(s) por esta habilidade racial
     val armasNaturais: List<ArmaNatural> = emptyList()
-)
+) {
+    /** Retorna o ID mecânico principal — priorizando o novo `traitId` parametrizado, ou o `id` legado. */
+    fun resolvedTraitId(): String = traitId ?: id ?: ""
+
+    /** Retorna o valor real de pontos no orçamento racial para este traço. */
+    fun resolvedPontos(): Int {
+        if (pontos != 0) return pontos
+        return RacialTraitPointCatalog.custoDe(resolvedTraitId(), targetRef, value, severity, pontos)
+    }
+}
 
 @Serializable
 data class RacialModifier(
@@ -42,8 +45,8 @@ data class RacialModifier(
     val originalName: String? = null,
     val originalDescription: String? = null,
     val descricao: String? = null,
-    val atributos: Map<String, Int>,
-    val pericias: Map<String, Int>,
+    val atributos: Map<String, Int> = emptyMap(),
+    val pericias: Map<String, Int> = emptyMap(),
     val vantagensGratis: List<String> = emptyList(),
     val desvantagens: List<String> = emptyList(),
     val habilidades: List<RacialAbility> = emptyList(),
@@ -51,19 +54,67 @@ data class RacialModifier(
     val movimentacao: Int = 0,
     val tags: List<String> = emptyList(),
     val opcoes: List<String> = emptyList(),
-    // Identificador estável do "conceito de espécie" por trás desta entrada,
-    // compartilhado entre as várias cópias por livro da mesma raça (mesmo
-    // padrão de vantagens.json: um id, reimpresso por livro). Existe
-    // separado de `id` porque `id` já tem uma convenção divergente e mais
-    // antiga (algumas raças usam sufixo de livro, ex. `anc_humano_csv`,
-    // outras não têm id nenhum) — mexer nisso quebraria referências já
-    // existentes. `especieId` é só para o código de regra (SummaryUtils.kt
-    // etc.) checar "esta ficha é da espécie X" sem comparar texto de nome,
-    // e fica `null` em raças customizadas pelo jogador (nunca preenchido na
-    // criação customizada), o que já barra por construção uma raça custom
-    // com nome parecido de acionar uma regra pensada para a raça oficial.
     val especieId: String? = null
-)
+) {
+    /** Retorna atributos mesclando os estáticos de `atributos` com traços `ATTRIBUTE_BOOST` em `habilidades`. */
+    fun resolvedAtributos(): Map<String, Int> {
+        val map = atributos.toMutableMap()
+        habilidades.forEach { hab ->
+            val tid = hab.resolvedTraitId().uppercase()
+            if (tid == "ATTRIBUTE_BOOST" && !hab.targetRef.isNullOrBlank()) {
+                val key = hab.targetRef.toFancyTitleCase()
+                map[key] = (map[key] ?: 0) + (hab.value * 2)
+            }
+        }
+        return map
+    }
+
+    /** Retorna perícias mesclando as estáticas de `pericias` com traços `SKILL_BOOST` em `habilidades`. */
+    fun resolvedPericias(): Map<String, Int> {
+        val map = pericias.toMutableMap()
+        habilidades.forEach { hab ->
+            val tid = hab.resolvedTraitId().uppercase()
+            if (tid == "SKILL_BOOST" && !hab.targetRef.isNullOrBlank()) {
+                val key = hab.targetRef.toFancyTitleCase()
+                val tier = if (hab.value == 1) 2 else hab.value
+                map[key] = (map[key] ?: 0) + tier
+            }
+        }
+        return map
+    }
+
+    /** Retorna vantagens grátis mesclando `vantagensGratis` com traços `GRANTED_EDGE` em `habilidades`. */
+    fun resolvedVantagensGratis(): List<String> {
+        val list = vantagensGratis.toMutableList()
+        habilidades.forEach { hab ->
+            val tid = hab.resolvedTraitId().uppercase()
+            if (tid == "GRANTED_EDGE" && !hab.targetRef.isNullOrBlank()) {
+                if (!list.contains(hab.targetRef)) list.add(hab.targetRef)
+            } else if (hab.category == "racial_edge") {
+                val grant = hab.targetRef ?: hab.id ?: hab.nome
+                if (!list.contains(grant)) list.add(grant)
+            }
+        }
+        return list
+    }
+
+    /** Retorna desvantagens raciais mesclando `desvantagens` com traços `RACIAL_HINDRANCE` em `habilidades`. */
+    fun resolvedDesvantagens(): List<String> {
+        val list = desvantagens.toMutableList()
+        habilidades.forEach { hab ->
+            val tid = hab.resolvedTraitId().uppercase()
+            if (tid == "RACIAL_HINDRANCE" && !hab.targetRef.isNullOrBlank()) {
+                val grant = if (!hab.severity.isNullOrBlank()) "${hab.targetRef} (${hab.severity})" else hab.targetRef
+                if (!list.contains(grant)) list.add(grant)
+            } else if (hab.category == "racial_hindrance") {
+                val sev = hab.severity
+                val grant = if (sev != null && !hab.nome.contains("($sev)", ignoreCase = true)) "${hab.nome} ($sev)" else hab.nome
+                if (!list.contains(grant)) list.add(grant)
+            }
+        }
+        return list
+    }
+}
 
 @Serializable
 data class HabilidadeCriacao(
@@ -231,50 +282,54 @@ object RacialCaracteristicasResolver {
     ): List<String> {
         val linhas = mutableListOf<String>()
 
+        fun formatPts(pts: Int): String = when {
+            pts > 0 -> " (+$pts pts)"
+            pts < 0 -> " ($pts pts)"
+            else -> ""
+        }
+
         atributos.filterValues { it != 0 }.forEach { (atributo, delta) ->
             val dado = (4 + delta).toDiceString()
             val verbo = if (delta > 0) "aumentado" else "reduzido"
-            linhas += "Atributo $verbo $dado: ${atributo.toFancyTitleCase()}"
+            val pts = delta
+            linhas += "Atributo $verbo: ${atributo.toFancyTitleCase()} ($dado)${formatPts(pts)}"
         }
 
-        // Mesma convenção de tier usada na exibição atual: 0 = d4-2, N = d4 +
-        // (N-1) passos de dado.
         pericias.filterValues { it > 0 }.forEach { (pericia, tier) ->
             val dado = (4 + (tier - 1) * 2).toDiceString()
-            linhas += "Perícia inicial $dado: ${pericia.toFancyTitleCase()}"
+            val pts = if (tier >= 2) 2 else 1
+            linhas += "Perícia inicial: ${pericia.toFancyTitleCase()} ($dado)${formatPts(pts)}"
         }
 
-        // vantagensGratisEfetivas/desvantagensEfetivas somam a lista solta com
-        // o que só existe embutido numa habilidade (category=racial_edge/
-        // racial_hindrance) — várias raças (Elfo incluso) só têm a Complicação
-        // registrada assim, com a lista solta vazia.
         vantagensGratisEfetivas(vantagensGratis, habilidades)
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
-            .forEach { linhas += "Vantagem racial: ${it.toFancyTitleCase()}" }
+            .forEach { entrada ->
+                val cleanName = entrada.replace(Regex("(?i)^Vantagem\\s+(Racial|Grátis):\\s*"), "").trim()
+                linhas += "Vantagem Racial: ${cleanName.toFancyTitleCase()}${formatPts(2)}"
+            }
 
         desvantagensEfetivas(desvantagens, habilidades).forEach { entrada ->
-            // Só "(Maior)"/"(Menor)" é severidade — outros parênteses no nome
-            // da complicação (ex.: "Sentidos Aguçados (Olhos de Águia)") são
-            // parte do nome, não devem virar "Complicação racial olhos de
-            // águia: ...".
-            val match = Regex("""^(.*?)\s*\((Maior|Menor)\)$""").find(entrada)
+            val cleanName = entrada.replace(Regex("(?i)^Complicação\\s+(Racial|Maior|Menor):\\s*"), "").trim()
+            val match = Regex("""^(.*?)\s*\((Maior|Menor)\)$""").find(cleanName)
             if (match != null) {
                 val (nome, severidade) = match.destructured
-                linhas += "Complicação racial ${severidade.lowercase()}: ${nome.toFancyTitleCase()}"
+                val pts = if (severidade.equals("Maior", ignoreCase = true)) -2 else -1
+                linhas += "Complicação ${severidade.toFancyTitleCase()}: ${nome.toFancyTitleCase()}${formatPts(pts)}"
             } else {
-                linhas += "Complicação racial: ${entrada.toFancyTitleCase()}"
+                val pts = if (entrada.contains("Maior", ignoreCase = true)) -2 else -1
+                linhas += "Complicação Racial: ${cleanName.toFancyTitleCase()}${formatPts(pts)}"
             }
         }
 
-        habilidades.forEach { hab ->
-            // Já virou linha de Vantagem/Complicação acima — não duplica.
-            if (hab.category == "racial_hindrance" || hab.category == "racial_edge") return@forEach
+        habilidades.filter { !it.invisivel }.forEach { hab ->
+            val tid = hab.resolvedTraitId().uppercase()
+            if (hab.category == "racial_hindrance" || hab.category == "racial_edge" || tid == "RACIAL_HINDRANCE" || tid == "GRANTED_EDGE") return@forEach
             val id = hab.id?.keyify()
-            val efeito = RacialTraitPointCatalog.efeitoDe(id)
-            // Já virou a linha de Atributo/Perícia acima — não duplica.
+            val efeito = RacialTraitPointCatalog.efeitoDe(id, hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep || efeito is RacialTraitEffect.PericiaStep) return@forEach
             val rotulo = id?.let { RacialTraitPointCatalog.LABEL[it] } ?: hab.nome.toFancyTitleCase()
-            linhas += rotulo
+            val pts = hab.resolvedPontos()
+            linhas += "$rotulo${formatPts(pts)}"
         }
 
         return linhas

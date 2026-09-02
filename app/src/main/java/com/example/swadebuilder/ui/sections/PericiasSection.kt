@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui.sections
 
 import com.example.swadebuilder.EditionConfig
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -69,6 +70,147 @@ import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
 
 
+fun dieStepsCount(fromRaw: Int, toRaw: Int): Int {
+    if (fromRaw == toRaw) return 0
+    var steps = 0
+    var curr = minOf(fromRaw, toRaw)
+    val target = maxOf(fromRaw, toRaw)
+    while (curr < target) {
+        steps++
+        curr = when (curr) {
+            0 -> 4
+            12 -> 13
+            else -> curr + 2
+        }
+    }
+    return steps
+}
+
+fun calcularCustoAcumuladoPericia(
+    startRaw: Int,
+    attrRaw: Int,
+    targetRaw: Int
+): Int {
+    if (targetRaw <= startRaw) return 0
+    var cost = 0
+    var curr = startRaw
+    while (curr < targetRaw) {
+        val next = when (curr) {
+            0 -> 4
+            12 -> 13
+            else -> curr + 2
+        }
+        val stepCost = if (curr >= attrRaw) 2 else 1
+        cost += stepCost
+        curr = next
+    }
+    return cost
+}
+
+@Composable
+fun SkillCarouselPopoverDialog(
+    skillName: String,
+    startRaw: Int,
+    attrName: String,
+    attrRaw: Int,
+    currentRaw: Int,
+    availableSp: Int? = null,
+    onSelectRaw: (Int) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val steps = remember(startRaw) {
+        val list = mutableListOf<Int>()
+        if (startRaw == 0) {
+            list.add(0)
+        }
+        var v = maxOf(4, startRaw)
+        while (v <= 12) {
+            if (!list.contains(v)) list.add(v)
+            v += 2
+        }
+        list
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Column {
+                Text(skillName, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(
+                    "Vinculado a $attrName (${attrRaw.toDiceString()})",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    "Selecione o dado desejado (custos normais até ${attrRaw.toDiceString()}, dobrados acima):",
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    steps.forEach { targetRaw ->
+                        val cost = calcularCustoAcumuladoPericia(startRaw, attrRaw, targetRaw)
+                        val additionalCost = if (targetRaw > currentRaw) calcularCustoAcumuladoPericia(currentRaw, attrRaw, targetRaw) else 0
+                        val canAfford = availableSp == null || targetRaw <= currentRaw || additionalCost <= availableSp
+
+                        val isSelected = targetRaw == currentRaw
+                        val isAboveAttr = targetRaw > attrRaw
+                        val containerColor = when {
+                            !canAfford -> MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.4f)
+                            isSelected -> MaterialTheme.colorScheme.primaryContainer
+                            isAboveAttr -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f)
+                            else -> MaterialTheme.colorScheme.surfaceContainerHigh
+                        }
+
+                        androidx.compose.material3.OutlinedCard(
+                            onClick = {
+                                if (canAfford) {
+                                    onSelectRaw(targetRaw)
+                                    onDismiss()
+                                }
+                            },
+                            enabled = canAfford,
+                            modifier = Modifier.weight(1f),
+                            colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
+                                containerColor = containerColor,
+                                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)
+                            ),
+                            border = if (isSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else androidx.compose.material3.CardDefaults.outlinedCardBorder()
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(vertical = 8.dp, horizontal = 2.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    text = if (targetRaw == 0) "-" else targetRaw.toDiceString(),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (canAfford) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                )
+                                Text(
+                                    text = if (cost == 0) "0 pt" else if (cost == 1) "1 pt" else "$cost pts",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = if (!canAfford) MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f) else if (isAboveAttr) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text("Fechar") }
+        }
+    )
+}
+
 @Composable
 fun PericiasContent(
     state: CriadorState,
@@ -105,6 +247,8 @@ fun PericiasContent(
     var idiomaTarget by remember { mutableStateOf<Pericia?>(null) }
     var idiomaPendingCost by rememberSaveable { mutableIntStateOf(0) }
     var idiomaEditMode by rememberSaveable { mutableStateOf(false) }
+
+    var popoverTarget by remember { mutableStateOf<Pericia?>(null) }
 
     val idosoActive = state.idosoBonusSp > 0
 
@@ -402,9 +546,13 @@ fun PericiasContent(
                                     0 -> "-"
                                     else -> regra.displayRaw.toDiceString()
                                 },
-                                modifier = Modifier.width(valorColWidthDp),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier
+                                    .width(valorColWidthDp)
+                                    .clickable {
+                                        popoverTarget = per
+                                    },
+                                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.primary,
                                 textAlign = TextAlign.Center
                             )
 
@@ -838,6 +986,47 @@ fun PericiasContent(
                     Text("Cancelar")
                 }
             }
+        )
+    }
+
+    if (popoverTarget != null) {
+        val per = popoverTarget!!
+        val startRaw = state.periciaStartRaw(state.ancestralidade, per)
+        val attrName = state.mapaAtributosDisplay[per.atributo] ?: per.atributo
+        val attrRaw = state.valoresAtributos[per.atributo]?.intValue ?: 4
+        val currentRaw = state.rawTotal(per)
+
+        SkillCarouselPopoverDialog(
+            skillName = per.nome,
+            startRaw = startRaw,
+            attrName = attrName,
+            attrRaw = attrRaw,
+            currentRaw = currentRaw,
+            onSelectRaw = { targetRaw ->
+                if (targetRaw > currentRaw) {
+                    val stepsToAdd = dieStepsCount(currentRaw, targetRaw)
+                    repeat(stepsToAdd) {
+                        val regrasAtuais = state.calcularPericiaRules(per, idosoActive, locked)
+                        if (!state.modoLivre && state.pontosPericia < regrasAtuais.cost) {
+                            val missing = regrasAtuais.cost - state.pontosPericia
+                            val currentPcLivres = (state.pontosComplicacao - state.pontosComplicacaoGastos).coerceAtLeast(0)
+                            if (currentPcLivres >= missing) {
+                                repeat(missing) { state.gastarPcParaPericia() }
+                            } else {
+                                return@repeat
+                            }
+                        }
+                        state.increasePericiaFromAdvancement(per, regrasAtuais.cost, feedbackMessages)
+                    }
+                } else if (targetRaw < currentRaw) {
+                    val stepsToRemove = dieStepsCount(targetRaw, currentRaw)
+                    repeat(stepsToRemove) {
+                        state.decreasePericia(per)
+                    }
+                }
+                onUserFeedback()
+            },
+            onDismiss = { popoverTarget = null }
         )
     }
 }

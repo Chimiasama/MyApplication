@@ -15,6 +15,13 @@ object AppPreferences {
     private const val KEY_SYSTEM_MESSAGES = "show_system_messages"
     private const val KEY_APP_THEME = "app_theme"
     private const val KEY_PULAR_SELECAO_REGRAS = "pular_selecao_regras"
+    private const val KEY_MODO_PERICIA = "modo_selecao_pericia"
+
+    enum class ModoSelecaoPericia {
+        CARROSSEL_POPOVER,
+        STEPPER_CORES,
+        CHIPS_DIRETOS
+    }
 
     data class GlobalPrefs(
         val hapticStrength: Int,
@@ -24,7 +31,8 @@ object AppPreferences {
         val showDescHome: Boolean,
         val showSystemMessages: Boolean,
         val appTheme: AppTheme,
-        val pularSelecaoRegras: Boolean
+        val pularSelecaoRegras: Boolean,
+        val modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER
     )
 
     fun loadPrefs(context: Context, defaultHaptics: Int, defaultSound: Int): GlobalPrefs {
@@ -51,8 +59,24 @@ object AppPreferences {
         }
 
         val pularSelecaoRegras = prefs.getBoolean(KEY_PULAR_SELECAO_REGRAS, false)
+        val modoPericiaStr = prefs.getString(KEY_MODO_PERICIA, ModoSelecaoPericia.CARROSSEL_POPOVER.name) ?: ModoSelecaoPericia.CARROSSEL_POPOVER.name
+        val modoSelecaoPericia = try {
+            ModoSelecaoPericia.valueOf(modoPericiaStr)
+        } catch (e: IllegalArgumentException) {
+            ModoSelecaoPericia.CARROSSEL_POPOVER
+        }
 
-        return GlobalPrefs(haptics, sound, tabStyle, showBookIcon, showDescHome, showSystemMessages, appTheme, pularSelecaoRegras)
+        return GlobalPrefs(
+            hapticStrength = haptics,
+            soundVolume = sound,
+            tabStyle = tabStyle,
+            showBookIcon = showBookIcon,
+            showDescHome = showDescHome,
+            showSystemMessages = showSystemMessages,
+            appTheme = appTheme,
+            pularSelecaoRegras = pularSelecaoRegras,
+            modoSelecaoPericia = modoSelecaoPericia
+        )
     }
 
     fun savePrefs(
@@ -64,7 +88,8 @@ object AppPreferences {
         showDescHome: Boolean,
         showSystemMessages: Boolean,
         appTheme: AppTheme,
-        pularSelecaoRegras: Boolean
+        pularSelecaoRegras: Boolean,
+        modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER
     ) {
         context
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
@@ -77,6 +102,7 @@ object AppPreferences {
                 putBoolean(KEY_SYSTEM_MESSAGES, showSystemMessages)
                 putString(KEY_APP_THEME, appTheme.name)
                 putBoolean(KEY_PULAR_SELECAO_REGRAS, pularSelecaoRegras)
+                putString(KEY_MODO_PERICIA, modoSelecaoPericia.name)
             }
     }
 

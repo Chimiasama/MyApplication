@@ -202,7 +202,20 @@ object RacialTraitPointCatalog {
         )
     )
 
-    fun efeitoDe(id: String?): RacialTraitEffect = id?.let { EFEITOS[it.keyify()] } ?: RacialTraitEffect.Nenhum
+    fun efeitoDe(id: String?, targetRef: String? = null, value: Int = 1): RacialTraitEffect {
+        if (id == null) return RacialTraitEffect.Nenhum
+        val key = id.keyify()
+        return when (key) {
+            "ATTRIBUTE_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value) else RacialTraitEffect.Nenhum
+            "SKILL_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value) else RacialTraitEffect.Nenhum
+            "TOUGHNESS_FLAT" -> RacialTraitEffect.ResistenciaBonus(value)
+            "PACE_CHANGE" -> RacialTraitEffect.PassoBonus(value)
+            "PARRY_BOOST" -> RacialTraitEffect.ApararBonus(value)
+            "SIZE_CHANGE" -> RacialTraitEffect.TamanhoBonus(value, minusculo = (value <= -3))
+            "NATURAL_ARMOR" -> RacialTraitEffect.ArmaduraBonus(value)
+            else -> EFEITOS[key] ?: RacialTraitEffect.Nenhum
+        }
+    }
 
     /**
      * Teto de vezes que um traço EMPILHÁVEL pode ser comprado, direto dos 3
@@ -532,6 +545,29 @@ object RacialTraitPointCatalog {
         "VOTO" to -2 // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
     )
 
-    /** Custo em pontos do traço, pelo id (0 se não estiver no catálogo). */
-    fun custoDe(id: String?): Int = id?.let { CUSTOS[it.keyify()] } ?: 0
+    /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo). */
+    fun custoDe(
+        id: String?,
+        targetRef: String? = null,
+        value: Int = 1,
+        severity: String? = null,
+        pontos: Int = 0
+    ): Int {
+        if (pontos != 0) return pontos
+        if (id == null) return 0
+        val key = id.keyify()
+        return when (key) {
+            "ATTRIBUTE_BOOST" -> value * 2
+            "SKILL_BOOST" -> if (value >= 1) 2 else 1
+            "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2
+            "RACIAL_HINDRANCE" -> if (severity?.uppercase() == "MAIOR") -2 else -1
+            "TOUGHNESS_FLAT" -> value
+            "PACE_CHANGE" -> value
+            "SIZE_CHANGE" -> value
+            "POWER_POINTS_BOOST" -> value
+            "CHI_RESERVE_MODIFIER" -> value
+            "ARMOR_MIN_STR_REDUCTION" -> 0
+            else -> CUSTOS[key] ?: 0
+        }
+    }
 }

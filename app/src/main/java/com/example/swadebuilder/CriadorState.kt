@@ -280,6 +280,7 @@ class CriadorState {
     var soundVolume by mutableIntStateOf(DEFAULT_SOUND_VOLUME)
     var showSystemMessages by mutableStateOf(true)
     var pularSelecaoRegras by mutableStateOf(false)
+    var modoSelecaoPericia by mutableStateOf(com.example.swadebuilder.util.AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER)
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
@@ -2725,6 +2726,15 @@ class CriadorState {
 
         var modifiedBase = base
 
+        val currentDef = if (ancKey == ancestralidade.keyify()) currentAncestryDef else getAncestralidadeDef(anc)
+        currentDef?.habilidades?.forEach { hab ->
+            val tid = hab.resolvedTraitId()
+            val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.PericiaStep && efeito.pericia.keyify() == perKey) {
+                modifiedBase = maxOf(modifiedBase, 4 + efeito.passos * 2)
+            }
+        }
+
         // Template de Monstro Heroico (Horror): mesma leitura genérica de
         // atributos_bonus que o atributo usa (ver monstroAtributoTraitIds), só
         // que aqui o único caso real é "Fe" — a perícia Fé, id "FE" no mesmo
@@ -4296,6 +4306,14 @@ class CriadorState {
         // qualquer novo traço desse tipo já entram automaticamente).
         habilidadeIds.forEach { id ->
             val efeito = RacialTraitPointCatalog.efeitoDe(id)
+            if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                modifiedBase = maxOf(modifiedBase, 4 + 2 * efeito.passos)
+            }
+        }
+
+        currentAncestryDef?.habilidades?.forEach { hab ->
+            val tid = hab.resolvedTraitId()
+            val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)
             if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
                 modifiedBase = maxOf(modifiedBase, 4 + 2 * efeito.passos)
             }
@@ -6012,6 +6030,13 @@ class CriadorState {
     }
 
     fun increasePericiaFromAdvancement(per: Pericia, cost: Int, feedbackMessages: MutableList<String>? = null) {
+        if (!modoProgressaoAtivo && !modoLivre && !skillAdvancementInProgress) {
+            val pcLivres = (pontosComplicacao - pontosComplicacaoGastos).coerceAtLeast(0)
+            if (pontosPericia < cost && pcLivres < (cost - pontosPericia)) {
+                return
+            }
+        }
+
         // Safety check for creation mode + Idoso
         if (!modoProgressaoAtivo && !modoLivre) {
              val hasIdoso = complicacoesSelecionadas.keys.any { it.id.keyify() == "IDOSO" }
