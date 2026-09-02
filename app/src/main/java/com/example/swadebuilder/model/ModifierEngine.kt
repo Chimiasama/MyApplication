@@ -307,7 +307,7 @@ object ModifierEngine {
             if (vant.id == Constants.ID_BRUTAMONTES) {
                 modifiers.add(Modifier("edge_brutamontes", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
             }
-            if (vant.id == Constants.ID_BRIGAO || vant.id == Constants.ID_PUGILISTA) {
+        if (vant.id == Constants.ID_BRIGAO || vant.id == Constants.ID_PUGILISTA || vant.id.keyify() == "PUGILISTA") {
                 modifiers.add(Modifier("edge_brigao", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
             }
             if (vant.id == Constants.ID_LIGEIRO) {
@@ -319,6 +319,12 @@ object ModifierEngine {
             if (vant.id == Constants.ID_BLOQUEAR_APRIMORADO) {
                 modifiers.add(Modifier("edge_bloquear_imp_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
             }
+        if (vant.id == "mestre_de_arma" || vant.id.keyify() == "MESTRE_DE_ARMA") {
+            modifiers.add(Modifier("edge_mestre_de_arma_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+        }
+        if (vant.id == "mestre_das_armas" || vant.id.keyify() == "MESTRE_DAS_ARMAS") {
+            modifiers.add(Modifier("edge_mestre_das_armas_parry", SourceType.VANTAGEM, vant.nome, ModifierTarget.PARRY, 1))
+        }
             if (vant.id == "resistencia_lobo") {
                 modifiers.add(Modifier("edge_resistencia_lobo", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 2))
             }

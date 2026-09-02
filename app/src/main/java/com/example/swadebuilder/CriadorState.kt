@@ -1506,6 +1506,33 @@ class CriadorState {
         return (base + mods).coerceAtLeast(0)
     }
 
+    fun valorDadoCorrida(): String {
+        val hasLigeiro = vantagensSelecionadas.any { it.id == Constants.ID_LIGEIRO || it.id.keyify() == "LIGEIRO" }
+        val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
+
+        val lentoEntry = complicacoesSelecionadas.entries.firstOrNull { it.key.id == Constants.ID_LENTO || it.key.id.keyify() == "LENTO" }
+        val lentoLevel = lentoEntry?.value
+
+        var step = if (hasLigeiro) 10 else 6
+        if (hasObeso) {
+            step = 4
+        }
+
+        if (lentoEntry != null) {
+            if (lentoLevel == "Maior") {
+                if (step <= 4) {
+                    return "d4-1"
+                } else {
+                    step = 4
+                }
+            } else {
+                step = if (step == 10) 8 else 4
+            }
+        }
+
+        return "d$step"
+    }
+
     fun totalTensaoCibernetica(): Int =
         ciberneticosInstalados.sumOf { it.strain_custo } + equipamentosComprados.sumOf { it.tensao ?: 0 }
 
@@ -2011,35 +2038,35 @@ class CriadorState {
         return famaManual
     }
 
-    // PROMPT 2: Brawny (Brutamontes) Carga calculation
     fun valorCargaMaxima(): Float {
         val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
         val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
         val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
+        val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
         val hasDwarfLoadBonus = compendioPathfinderAtivo && ancestralidade.keyify() == "ANAO"
-        // PROMPT 2: "Brawny treats Strength as one die type higher"
-        val hasBrutamontes = vantagensSelecionadas.any { it.id == Constants.ID_BRUTAMONTES }
 
-        var effectiveStrength = strengthRaw
+        var stepIndex = if (strengthRaw <= 12) strengthRaw / 2 else 6 + (strengthRaw - 12)
 
-        // Brawny logic: treat as one die higher
-        if (hasBrutamontes) {
-             effectiveStrength = if (effectiveStrength < 12) effectiveStrength + 2 else effectiveStrength + 1
-        }
+        if (hasMusculoso) stepIndex += 1
+        if (hasSoldado && soldadoCargaAtivo) stepIndex += 1
+        if (hasDwarfLoadBonus) stepIndex += 1
+        if (hasObeso) stepIndex = (stepIndex - 1).coerceAtLeast(2)
 
-        // Soldier logic: treat as one die higher (if active)
-        if (hasSoldado && soldadoCargaAtivo) {
-             effectiveStrength = if (effectiveStrength < 12) effectiveStrength + 2 else effectiveStrength + 1
-        }
+        return (stepIndex - 1) * 10f
+    }
 
-        // Pathfinder Dwarf logic: treat as one die higher
-        if (hasDwarfLoadBonus) {
-             effectiveStrength = if (effectiveStrength < 12) effectiveStrength + 2 else effectiveStrength + 1
-        }
+    fun forcaEfetivaParaArmaduras(): Int {
+        val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
+        val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
+        val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
+        val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
 
-        val bonusCapacity = if (hasMusculoso) 10f else 0f
-        val baseLimit = if (effectiveStrength >= 4) ((effectiveStrength - 2) / 2) * 10f else 0f
-        return baseLimit + bonusCapacity
+        var stepIndex = if (strengthRaw <= 12) strengthRaw / 2 else 6 + (strengthRaw - 12)
+        if (hasSoldado && soldadoCargaAtivo) stepIndex += 1
+        if (hasMusculoso) stepIndex += 1
+        if (hasObeso) stepIndex = (stepIndex - 1).coerceAtLeast(2)
+
+        return if (stepIndex <= 6) stepIndex * 2 else 12 + (stepIndex - 6)
     }
 
     fun gastarPcParaRecursos(): Boolean {
@@ -2487,8 +2514,12 @@ class CriadorState {
     }
 
     fun adicionarComplicacao(comp: Complicacao, nivel: String) {
-        if (comp.id.keyify() == "CEGO") {
+        val key = comp.id.keyify()
+        if (key == "CEGO") {
             pontosVantagem += 1
+        }
+        if (key == "POBREZA") {
+            dinheiro = (dinheiro / 2).coerceAtLeast(0)
         }
         complicacoesSelecionadas[comp] = nivel
     }
@@ -2501,6 +2532,11 @@ class CriadorState {
                  onFeedback("Não é possível remover Idoso pois os pontos de perícia extras já foram gastos. Remova pontos em perícias de Astúcia primeiro.")
                  return
              }
+        }
+
+        if (key == "POBREZA") {
+            val base = getBaseWealth()
+            dinheiro += base / 2
         }
 
         if (key == "CEGO") {
