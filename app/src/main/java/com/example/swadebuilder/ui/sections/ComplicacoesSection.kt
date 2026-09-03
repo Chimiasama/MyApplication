@@ -704,7 +704,7 @@ private fun ComplicacaoItem(
     androidx.compose.material3.Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = 2.dp),
         colors = androidx.compose.material3.CardDefaults.cardColors(
             containerColor = when {
                 cur != null -> MaterialTheme.colorScheme.tertiaryContainer
@@ -714,38 +714,42 @@ private fun ComplicacaoItem(
         ),
         border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }
     ) {
-        Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { showDetailsDialog = true }
             ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .clickable { showDetailsDialog = true }
-                ) {
-                    val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
-                    val customBadge = if (isCustom) " ⓒ" else ""
+                val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
+                val customBadge = if (isCustom) " ⓒ" else ""
+                Text(
+                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName!!.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
+                    style = MaterialTheme.typography.titleSmall
+                )
+                if (cur != null) {
                     Text(
-                        text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName!!.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
-                        style = MaterialTheme.typography.titleSmall
+                        text = "Selecionada ($cur)",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                } else if (!requisitosOk) {
+                    Text(
+                        text = "Requisitos pendentes",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
-
-                Spacer(Modifier.width(8.dp))
-
-                Text(
-                    statusText,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = statusColor
-                )
             }
 
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.width(6.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (menorOnly || ambos) {
@@ -789,7 +793,8 @@ private fun ComplicacaoItem(
                             }
                             onLogFeedback("Complicação ${comp.name} (Menor) adicionada.")
                         },
-                        enabled = enabledMenor
+                        enabled = enabledMenor,
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text("Menor")
                     }
@@ -836,7 +841,8 @@ private fun ComplicacaoItem(
                             }
                             onLogFeedback("Complicação ${comp.name} (Maior) adicionada.")
                         },
-                        enabled = enabledMaior
+                        enabled = enabledMaior,
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text("Maior")
                     }
