@@ -30,13 +30,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -129,6 +134,7 @@ fun BuySuperPowerDialog(
         val options: List<Int>,
         val included: MutableState<Boolean>,
         val selected: MutableState<Int>,
+        val isNegative: Boolean
     )
 
     val modStates = remember(poder.modificadores) {
@@ -139,20 +145,30 @@ fun BuySuperPowerDialog(
             val opts = paren.split("/")
                 .mapNotNull { it.trim().removePrefix("+").toIntOrNull() }
                 .takeIf { it.isNotEmpty() } ?: listOf(0)
+            val isNeg = opts.all { it < 0 } || paren.contains("-")
             ModState(
                 name = cleanName,
                 options = opts,
                 included = mutableStateOf(value = false),
                 selected = mutableIntStateOf(value = opts.first()),
+                isNegative = isNeg
             )
         }
     }
 
-    val modCost by remember(modStates) {
+    val modPositivesCost by remember(modStates) {
         androidx.compose.runtime.derivedStateOf {
-            modStates.asSequence().filter { it.included.value }.sumOf { it.selected.value }
+            modStates.asSequence().filter { it.included.value && !it.isNegative }.sumOf { it.selected.value }
         }
     }
+
+    val modLimitationsCost by remember(modStates) {
+        androidx.compose.runtime.derivedStateOf {
+            modStates.asSequence().filter { it.included.value && it.isNegative }.sumOf { it.selected.value }
+        }
+    }
+
+    val modCost = modPositivesCost + modLimitationsCost
 
     val totalCap = minOf(limitePorPoder, pontosDisponiveis)
 
@@ -185,139 +201,249 @@ fun BuySuperPowerDialog(
     val podeConfirmar =
         (baseCost in allowedBaseOptions) && (totalAtual in 1..totalCap)
 
+    var showBookDetailsInDialog by remember { mutableStateOf(false) }
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Comprar “${poder.nome}”") },
-        text = {
-            val scroll = rememberScrollState()
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 280.dp)
-                    .verticalScroll(scroll)
-                    .padding(8.dp),
+        title = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Custo base:", fontWeight = FontWeight.SemiBold)
-                Spacer(Modifier.height(4.dp))
-
-                when {
-                    allowedBaseOptions.size == 1 -> {
-                        Text("Custo fixo: ${allowedBaseOptions.first()} SP")
+                Text("Comprar “${poder.nome}”", modifier = Modifier.weight(1f))
+                IconButton(onClick = { showBookDetailsInDialog = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.Info,
+                        contentDescription = "Ver Regra do Livro",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        },
+        text = {
+            if (showBookDetailsInDialog) {
+                val manifestacoesList = remember(poder.nome, poder.manifestacoes) {
+                    when (val m = poder.manifestacoes) {
+                        is JsonArray -> m.mapNotNull { (it as? JsonPrimitive)?.contentOrNull }
+                        is JsonPrimitive -> listOfNotNull(m.contentOrNull)
+                        else -> emptyList()
+                    }.asSequence()
+                        .map { it.trim() }
+                        .filter { it.isNotEmpty() }
+                        .distinct()
+                        .toList()
+                }
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    Text(poder.nome.toFancyTitleCase(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(8.dp))
+                    poder.descricao?.let {
+                        if (it.isNotBlank()) {
+                            Text(it, style = MaterialTheme.typography.bodyMedium)
+                            Spacer(Modifier.height(8.dp))
+                        }
                     }
-                    !isLongRange -> {
-                        FlowRow(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                        ) {
-                            allowedBaseOptions.forEachIndexed { idx, opt ->
-                                FilterChip(
-                                    selected = (idx == baseIdx),
-                                    onClick = { baseIdx = idx },
-                                    label = { Text("$opt SP") },
+                    if (manifestacoesList.isNotEmpty()) {
+                        Text("Manifestações:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                        manifestacoesList.forEach { man -> Text("• $man", style = MaterialTheme.typography.bodySmall) }
+                        Spacer(Modifier.height(8.dp))
+                    }
+                    val mods = poder.modificadores ?: emptyList()
+                    if (mods.isNotEmpty()) {
+                        Text("Modificadores:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                        mods.forEach { mod -> Text("• $mod", style = MaterialTheme.typography.bodySmall) }
+                    }
+                    Spacer(Modifier.height(12.dp))
+                    TextButton(
+                        onClick = { showBookDetailsInDialog = false },
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Text("Voltar à Compra")
+                    }
+                }
+            } else {
+                val scroll = rememberScrollState()
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 380.dp)
+                        .verticalScroll(scroll)
+                        .padding(4.dp),
+                ) {
+                    Text("Custo base:", fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.height(4.dp))
+
+                    when {
+                        allowedBaseOptions.size == 1 -> {
+                            Text("Custo fixo: ${allowedBaseOptions.first()} SP")
+                        }
+                        !isLongRange -> {
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                            ) {
+                                allowedBaseOptions.forEachIndexed { idx, opt ->
+                                    FilterChip(
+                                        selected = (idx == baseIdx),
+                                        onClick = { baseIdx = idx },
+                                        label = { Text("$opt SP") },
+                                    )
+                                }
+                            }
+                        }
+                        else -> {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = "Custo base: $baseCost SP",
+                                    modifier = Modifier.weight(1f)
                                 )
+                                TextButton(
+                                    onClick = { if (baseIdx > 0) baseIdx-- },
+                                    enabled = baseIdx > 0
+                                ) { Text("−") }
+                                TextButton(
+                                    onClick = { if (baseIdx < allowedBaseOptions.lastIndex) baseIdx++ },
+                                    enabled = baseIdx < allowedBaseOptions.lastIndex
+                                ) { Text("+") }
+                            }
+                            Text(
+                                text = "Mín: $minAllowed • Máx: $maxAllowed",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+
+                    Spacer(Modifier.height(12.dp))
+
+                    val positiveMods = modStates.filter { !it.isNegative }
+                    val negativeMods = modStates.filter { it.isNegative }
+
+                    if (positiveMods.isNotEmpty()) {
+                        Surface(
+                            shape = MaterialTheme.shapes.small,
+                            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(
+                                    "🟢 Adicionais Positivos (+)",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(Modifier.height(4.dp))
+                                positiveMods.forEach { mod ->
+                                    val isTensaoSuperficial = poder.nome.keyify() == "VELOCIDADE" &&
+                                            (mod.name.keyify() == "TENSAO SUPERFICIAL" || mod.name.keyify() == "TENSAO_SUPERFICIAL")
+                                    val isModEnabled = !isTensaoSuperficial || baseCost >= 13
+
+                                    Column(Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
+                                        com.example.swadebuilder.ui.components.SelectableItemRow(
+                                            title = mod.name,
+                                            selected = mod.included.value,
+                                            onClick = { mod.included.value = !mod.included.value },
+                                            mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
+                                            enabled = isModEnabled
+                                        )
+                                        if (mod.included.value) {
+                                            FlowRow(
+                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                modifier = Modifier.padding(start = 24.dp, top = 2.dp)
+                                            ) {
+                                                mod.options.forEach { opt ->
+                                                    FilterChip(
+                                                        selected = mod.selected.value == opt,
+                                                        onClick = {
+                                                            val outros = modStates.filter { it.included.value && it != mod }.sumOf { it.selected.value }
+                                                            if (baseCost + outros + opt <= totalCap) {
+                                                                mod.selected.value = opt
+                                                            }
+                                                        },
+                                                        label = { Text("+$opt SP") }
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
-                    else -> {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
+
+                    if (negativeMods.isNotEmpty()) {
+                        Surface(
+                            shape = MaterialTheme.shapes.small,
+                            color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.4f)),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                         ) {
-                            Text(
-                                text = "Custo base: $baseCost SP",
-                                modifier = Modifier.weight(1f)
-                            )
-                            TextButton(
-                                onClick = { if (baseIdx > 0) baseIdx-- },
-                                enabled = baseIdx > 0
-                            ) { Text("−") }
-                            TextButton(
-                                onClick = { if (baseIdx < allowedBaseOptions.lastIndex) baseIdx++ },
-                                enabled = baseIdx < allowedBaseOptions.lastIndex
-                            ) { Text("+") }
-                        }
-                        Text(
-                            text = "Mín: $minAllowed • Máx: $maxAllowed",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(8.dp))
-
-                Text(
-                    text = "Total do poder: $totalAtual SP (máx: $totalCap)",
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-                Spacer(Modifier.height(8.dp))
-
-                if (modStates.isNotEmpty()) {
-                    Text("Modificadores:", style = MaterialTheme.typography.bodyMedium)
-                    Spacer(Modifier.height(4.dp))
-
-                    modStates.forEach { mod ->
-                        val isTensaoSuperficial = poder.nome.keyify() == "VELOCIDADE" &&
-                                (mod.name.keyify() == "TENSAO SUPERFICIAL" || mod.name.keyify() == "TENSAO_SUPERFICIAL")
-                        val isModEnabled = !isTensaoSuperficial || baseCost >= 13
-
-                        if (mod.options.size == 1) {
-                            val firstOpt = mod.options.first()
-                            val optStr = if (firstOpt > 0) "+$firstOpt" else firstOpt.toString()
-                            com.example.swadebuilder.ui.components.SelectableItemRow(
-                                title = "${mod.name} ($optStr)",
-                                selected = mod.included.value,
-                                onClick = { mod.included.value = !mod.included.value },
-                                modifier = Modifier.padding(vertical = 4.dp),
-                                mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
-                                enabled = isModEnabled
-                            )
-                        } else {
-                            Column(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 4.dp)
-                            ) {
-                                val optStr = if (mod.included.value) {
-                                    val sel = mod.selected.value
-                                    if (sel > 0) "+$sel" else sel.toString()
-                                } else {
-                                    val optList = mod.options.map { if (it > 0) "+$it" else it.toString() }
-                                    optList.joinToString("/")
-                                }
-                                com.example.swadebuilder.ui.components.SelectableItemRow(
-                                    title = "${mod.name} ($optStr)",
-                                    selected = mod.included.value,
-                                    onClick = { mod.included.value = !mod.included.value },
-                                    mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
-                                    enabled = isModEnabled
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(
+                                    "🔴 Limitações (-)",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.error
                                 )
-                                if (mod.included.value) {
-                                    val sel = mod.selected.value
-                                    Slider(
-                                        value = sel.toFloat(),
-                                        onValueChange = { novo ->
-                                            val clamp = novo.roundToInt()
-                                                .coerceIn(
-                                                    mod.options.minOrNull() ?: 0,
-                                                    mod.options.maxOrNull() ?: 0
-                                                )
-                                            val outros = modStates
-                                                .asSequence()
-                                                .filter { it.included.value && it != mod }
-                                                .sumOf { it.selected.value }
-                                            val futuroTotal =
-                                                allowedBaseOptions[baseIdx] + outros + clamp
-                                            if (futuroTotal <= totalCap) {
-                                                mod.selected.value = clamp
+                                Spacer(Modifier.height(4.dp))
+                                negativeMods.forEach { mod ->
+                                    Column(Modifier.fillMaxWidth().padding(vertical = 2.dp)) {
+                                        com.example.swadebuilder.ui.components.SelectableItemRow(
+                                            title = mod.name,
+                                            selected = mod.included.value,
+                                            onClick = { mod.included.value = !mod.included.value },
+                                            mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA
+                                        )
+                                        if (mod.included.value && mod.options.size > 1) {
+                                            FlowRow(
+                                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                                modifier = Modifier.padding(start = 24.dp, top = 2.dp)
+                                            ) {
+                                                mod.options.forEach { opt ->
+                                                    FilterChip(
+                                                        selected = mod.selected.value == opt,
+                                                        onClick = { mod.selected.value = opt },
+                                                        label = { Text("$opt SP") }
+                                                    )
+                                                }
                                             }
-                                        },
-                                        valueRange = (mod.options.minOrNull() ?: 0).toFloat()..
-                                                (mod.options.maxOrNull() ?: 0).toFloat(),
-                                        steps = (mod.options.size - 1).coLeastZero(),
-                                        modifier = Modifier.fillMaxWidth()
-                                    )
+                                        }
+                                    }
                                 }
+                            }
+                        }
+                    }
+
+                    Spacer(Modifier.height(12.dp))
+
+                    Surface(
+                        shape = MaterialTheme.shapes.small,
+                        color = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(modifier = Modifier.padding(8.dp)) {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text("Custo Base:", style = MaterialTheme.typography.bodySmall)
+                                Text("$baseCost SP", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                            }
+                            if (modPositivesCost > 0) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text("Adicionais (+):", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+                                    Text("+$modPositivesCost SP", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                                }
+                            }
+                            if (modLimitationsCost < 0) {
+                                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text("Limitações (-):", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                                    Text("$modLimitationsCost SP", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.error)
+                                }
+                            }
+                            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text("TOTAL DO PODER:", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                                Text("$totalAtual / $totalCap SP", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = if (totalAtual > totalCap) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
                             }
                         }
                     }
@@ -326,7 +452,7 @@ fun BuySuperPowerDialog(
         },
         confirmButton = {
             TextButton(
-                enabled = podeConfirmar,
+                enabled = podeConfirmar && !showBookDetailsInDialog,
                 onClick = {
                     val mods = modStates
                         .asSequence()
@@ -334,13 +460,35 @@ fun BuySuperPowerDialog(
                         .associateBy({ it.name }) { it.selected.value }
                     onConfirm(baseCost, totalAtual, mods)
                 }
-            ) { Text("Comprar ($totalAtual)") }
+            ) { Text("Comprar ($totalAtual SP)") }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text("Cancelar") } }
     )
 }
 
 private fun Int.coLeastZero(): Int = if (this < 0) 0 else this
+
+private enum class SuperCategory(val label: String, val icon: String) {
+    TODOS("Todos", ""),
+    COMBATE("Combate", "⚔️"),
+    DEFESA("Defesa", "🛡️"),
+    MOVIMENTO("Movimento", "🏃"),
+    ATRIBUTOS("Atributos", "📊"),
+    UTILITARIOS("Utilitários", "✨");
+
+    companion object {
+        fun fromPowerName(nome: String): SuperCategory {
+            val key = nome.keyify()
+            return when {
+                key in listOf("ATAQUE_CORPO_A_CORPO", "ATAQUE_DE_LONGA_DISTANCIA", "APARAR", "ATORDOAR", "CAMPO_DE_DANO", "DECOMPOR", "EMPURRAR", "ENREDAR", "PRECISAO_MORTAL", "TERREMOTO", "VENENO") -> COMBATE
+                key in listOf("ARMADURA", "CAMPO_DE_FORCA", "ESCUDO_MENTAL", "ESQUIVA", "INTANGIBILIDADE", "INVISIBILIDADE", "RESISTENCIA", "RESISTENCIA_AMBIENTAL", "ROBUSTO", "ABSORCAO", "ANULAR", "DESTEMIDO", "CEGAR", "OBSCURACER", "SEM_ORGAOS_VITAIS") -> DEFESA
+                key in listOf("ALCANCE", "ANDAR_NAS_PAREDES", "BALANCAR", "CAVAR", "ENCOLHIMENTO", "ESPACIAL", "MOVIMENTACAO", "SALTO", "TELEPORTE", "VELOCIDADE", "VOO") -> MOVIMENTO
+                key in listOf("AUMENTAR_REDUZIR_CARACTERISTICA", "BONUS_DE_PERICIA", "SUPERATRIBUTO", "SUPERPERICIA", "SUPERVANTAGEM", "CRESCIMENTO", "REFLEXOS_APRIMORADOS", "SENTIDOS_APRIMORADOS", "MEMBROS_EXTRAS", "SUPER_ATRIBUTO", "SUPER_PERICIA", "SUPER_VANTAGEM") -> ATRIBUTOS
+                else -> UTILITARIOS
+            }
+        }
+    }
+}
 
 private fun Vantagem.bloqueadaComoSuperVantagem(): Boolean {
     if (grupoId?.equals("antecedente_arcano", ignoreCase = true) == true) return true
@@ -418,6 +566,19 @@ fun SuperPoderesSection(
 
     val temOMelhorQueHa = state.oMelhorQueHaSelecionada
 
+    var showSuperAttrPicker by rememberSaveable { mutableStateOf(value = false) }
+    var poolSuperAttr by rememberSaveable { mutableIntStateOf(0) }
+
+    var showSuperPericiaPicker by rememberSaveable { mutableStateOf(value = false) }
+    var poolSuperPericia by rememberSaveable { mutableIntStateOf(0) }
+
+    var showSuperVantPicker by rememberSaveable { mutableStateOf(value = false) }
+    var poolSuperVant by rememberSaveable { mutableIntStateOf(0) }
+
+    var showBonusPericiaPicker by rememberSaveable { mutableStateOf(false) }
+    var bonusPericiaBaseCost by rememberSaveable { mutableIntStateOf(0) }
+    var bonusPericiaTotalCost by rememberSaveable { mutableIntStateOf(0) }
+    var bonusPericiaNivel by rememberSaveable { mutableIntStateOf(0) }
 
     Column(
         Modifier
@@ -425,49 +586,90 @@ fun SuperPoderesSection(
             .padding(8.dp)
     ) {
         if (state.superInvestments.isNotEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    contentPadding = PaddingValues(end = 24.dp) // creates a nice clipped / cut-off effect for the last element
-                ) {
-                    val genericosAgrupados = state.superInvestments
-                        .asSequence()
-                        .filter { it.effect is PowerEffect.Generico }
-                        .groupBy { it.powerId }
+            val genericosAgrupados = state.superInvestments
+                .asSequence()
+                .filter { it.effect is PowerEffect.Generico }
+                .groupBy { it.powerId }
 
-                    val uniqueInvestments = mutableListOf<Pair<SuperInvestment, Int>>()
-                    val emittedIds = mutableSetOf<String>()
+            val uniqueInvestments = mutableListOf<Pair<SuperInvestment, Int>>()
+            val emittedIds = mutableSetOf<String>()
 
-                    state.superInvestments.forEach { investment ->
-                        when (investment.effect) {
-                            is PowerEffect.Generico -> {
-                                if (emittedIds.add(investment.powerId)) {
-                                    val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
-                                    val custoSomado = listaMesmoPoder.sumOf { it.cost }
-                                    uniqueInvestments.add(investment to custoSomado)
-                                }
-                            }
-                            else -> {
-                                uniqueInvestments.add(investment to investment.cost)
-                            }
+            state.superInvestments.forEach { investment ->
+                when (investment.effect) {
+                    is PowerEffect.Generico -> {
+                        if (emittedIds.add(investment.powerId)) {
+                            val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
+                            val custoSomado = listaMesmoPoder.sumOf { it.cost }
+                            uniqueInvestments.add(investment to custoSomado)
                         }
                     }
+                    else -> {
+                        uniqueInvestments.add(investment to investment.cost)
+                    }
+                }
+            }
 
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = "Meus Poderes (${uniqueInvestments.size})",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.height(4.dp))
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(horizontal = 2.dp, vertical = 4.dp)
+                ) {
                     items(uniqueInvestments, key = { it.first.id }) { pair ->
                         val (investment, cost) = pair
                         Surface(
-                            shape = MaterialTheme.shapes.extraSmall,
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            tonalElevation = 1.dp,
-                            modifier = Modifier.padding(vertical = 4.dp)
+                            shape = MaterialTheme.shapes.small,
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)),
+                            color = MaterialTheme.colorScheme.surfaceContainerLow,
+                            tonalElevation = 1.dp
                         ) {
                             Row(
-                                modifier = Modifier
-                                    .clickable {
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(
+                                            text = investment.displayName,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Spacer(Modifier.width(6.dp))
+                                        Surface(
+                                            shape = MaterialTheme.shapes.extraSmall,
+                                            color = MaterialTheme.colorScheme.primaryContainer
+                                        ) {
+                                            Text(
+                                                text = "$cost SP",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                    }
+                                    if (investment.modifiers.isNotEmpty()) {
+                                        val modSummary = investment.modifiers.entries.joinToString(", ") { (modName, modVal) ->
+                                            val sign = if (modVal > 0) "+$modVal" else "$modVal"
+                                            "$modName ($sign)"
+                                        }
+                                        Text(
+                                            text = modSummary,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
+                                Spacer(Modifier.width(8.dp))
+                                IconButton(
+                                    onClick = {
                                         if (investment.effect is PowerEffect.Generico) {
                                             val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
                                             listaMesmoPoder.forEach { inv ->
@@ -482,100 +684,83 @@ fun SuperPoderesSection(
                                                 onShowMessage(r.mensagem)
                                             }
                                         }
-                                    }
-                                    .padding(horizontal = 6.dp, vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.Close,
-                                    contentDescription = "Remover",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                                    modifier = Modifier.size(12.dp)
-                                )
-                                Spacer(Modifier.width(4.dp))
-                                Text(
-                                    text = "${investment.displayName} (+$cost)",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    maxLines = 1
-                                )
+                                    },
+                                    modifier = Modifier.size(20.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Close,
+                                        contentDescription = "Remover ${investment.displayName}",
+                                        tint = MaterialTheme.colorScheme.error,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
                             }
                         }
                     }
                 }
-
-                // Smooth fade gradient overlay at the right edge to indicate horizontal scrollability
-                Box(
-                    modifier = Modifier
-                        .width(24.dp)
-                        .align(Alignment.CenterEnd)
-                        .matchParentSize()
-                        .background(
-                            Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color.Transparent,
-                                    MaterialTheme.colorScheme.surfaceVariant
-                                )
-                            )
-                        )
-                )
             }
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(8.dp))
         }
 
-        Text("Nível de Superpoderes")
-        Spacer(Modifier.height(4.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(enabled = podeEditarNivel) {
-                    if (podeEditarNivel) showNivelDialog = true
-                }
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Column(Modifier.weight(1f)) {
-                Text(
-                    text = if (nivelAtual == null)
-                        "Nível atual: –"
-                    else
-                        "Nível atual: $nivelAtual",
-                    fontWeight = FontWeight.SemiBold
-                )
-                Text(
-                    text = if (!nivelDefinido)
-                        "Pontos: – • Limite por poder: –"
-                    else
-                        "Pontos: ${state.superPontosTotais} • Limite por poder: ${state.superLimite}",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-            Icon(
-                imageVector = Icons.Filled.ExpandMore,
-                contentDescription = "Selecionar nível",
+            val levelLabel = if (!supersLiberados) "🔒 Nível" else if (nivelAtual == null) "⚡ Nível: –" else "⚡ Nível $nivelAtual"
+            AssistChip(
+                onClick = { if (podeEditarNivel) showNivelDialog = true },
+                enabled = podeEditarNivel,
+                label = {
+                    Text(
+                        text = levelLabel,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             )
-        }
 
-        if (!supersLiberados) {
-            Text(
-                "Termine a distribuição inicial do personagem para escolher o nível de superpoderes.",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error
-            )
-        } else {
-            if (!nivelDefinido) {
+            if (nivelDefinido) {
+                val pontosGastos = (state.superPontosTotais - state.superPontosDisponiveis).coerceAtLeast(0)
+                val progress = if (state.superPontosTotais > 0) {
+                    (pontosGastos.toFloat() / state.superPontosTotais.toFloat()).coerceIn(0f, 1f)
+                } else 0f
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "$pontosGastos / ${state.superPontosTotais} SP",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "Máx: ${state.superLimite} SP",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Spacer(Modifier.height(2.dp))
+                    LinearProgressIndicator(
+                        progress = { progress },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp),
+                        color = if (progress >= 1f) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.surfaceContainerHighest
+                    )
+                }
+            } else {
                 Text(
-                    "Defina o nível de superpoderes para liberar a compra de poderes.",
+                    text = if (!supersLiberados) "Conclua a criação base" else "Selecione um nível",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
-                )
-            } else if (jaInvestiuSupers) {
-                Text(
-                    "Para alterar o nível, devolva todos os pontos de superpoder já gastos.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.error
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
@@ -598,12 +783,16 @@ fun SuperPoderesSection(
 
         var searchQuery by rememberSaveable { mutableStateOf("") }
         var isSearchExpanded by rememberSaveable { mutableStateOf(value = false) }
+        var selectedCategory by rememberSaveable { mutableStateOf(SuperCategory.TODOS) }
 
-        val filteredList = remember(listaSuperPoderes, searchQuery) {
-            if (searchQuery.isBlank()) listaSuperPoderes
-            else listaSuperPoderes.filter {
-                it.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
-                        (it.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+        val filteredList = remember(listaSuperPoderes, searchQuery, selectedCategory) {
+            listaSuperPoderes.filter { poder ->
+                val matchesCategory = selectedCategory == SuperCategory.TODOS ||
+                        SuperCategory.fromPowerName(poder.nome) == selectedCategory
+                val matchesQuery = searchQuery.isBlank() ||
+                        poder.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+                        (poder.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+                matchesCategory && matchesQuery
             }
         }
 
@@ -615,6 +804,33 @@ fun SuperPoderesSection(
             onClear = { searchQuery = "" },
             placeholder = "Pesquisar Superpoderes..."
         )
+
+        Spacer(Modifier.height(4.dp))
+
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+            contentPadding = PaddingValues(horizontal = 2.dp, vertical = 2.dp)
+        ) {
+            items(SuperCategory.entries.toTypedArray()) { cat ->
+                val count = remember(listaSuperPoderes, searchQuery, cat) {
+                    listaSuperPoderes.count { poder ->
+                        val matchesCat = cat == SuperCategory.TODOS || SuperCategory.fromPowerName(poder.nome) == cat
+                        val matchesQ = searchQuery.isBlank() ||
+                                poder.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
+                                (poder.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
+                        matchesCat && matchesQ
+                    }
+                }
+                val labelText = if (cat.icon.isEmpty()) "${cat.label} ($count)" else "${cat.icon} ${cat.label} ($count)"
+                FilterChip(
+                    selected = selectedCategory == cat,
+                    onClick = { selectedCategory = cat },
+                    label = { Text(labelText, style = MaterialTheme.typography.labelSmall) },
+                    colors = FilterChipDefaults.filterChipColors()
+                )
+            }
+        }
 
         Spacer(Modifier.height(4.dp))
 
@@ -671,7 +887,48 @@ fun SuperPoderesSection(
                         .padding(vertical = 4.dp)
                         .clickable(enabled = podeComprarSupers) {
                             if (podeComprarSupers) {
-                                poderParaComprar = poder
+                                val nomeUpper = poder.nome.trim().uppercase()
+                                when (nomeUpper) {
+                                    "SUPERATRIBUTO", "SUPER ATRIBUTO" -> {
+                                        val gastoAtual = state.gastosPorPoder["sp_superatributo"] ?: 0
+                                        val limiteInd = viewModel.perPowerLimit("sp_superatributo")
+                                        val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                                        val maxSp = minOf(restoInd, state.superPontosDisponiveis)
+                                        poolSuperAttr = maxSp / 2
+                                        if (poolSuperAttr > 0) {
+                                            showSuperAttrPicker = true
+                                        } else {
+                                            onShowMessage("Limite ou pontos insuficientes para Superatributo.")
+                                        }
+                                    }
+                                    "SUPERPERÍCIA", "SUPER PERÍCIA", "SUPERPERICIA", "SUPER PERICIA" -> {
+                                        val gastoAtual = state.gastosPorPoder["sp_superpericia"] ?: 0
+                                        val limiteInd = viewModel.perPowerLimit("sp_superpericia")
+                                        val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                                        val maxSp = minOf(restoInd, state.superPontosDisponiveis)
+                                        poolSuperPericia = maxSp
+                                        if (poolSuperPericia > 0) {
+                                            showSuperPericiaPicker = true
+                                        } else {
+                                            onShowMessage("Limite ou pontos insuficientes para Superperícia.")
+                                        }
+                                    }
+                                    "SUPERVANTAGEM", "SUPER VANTAGEM" -> {
+                                        val gastoAtual = state.gastosPorPoder["sp_supervantagem"] ?: 0
+                                        val limiteInd = viewModel.perPowerLimit("sp_supervantagem")
+                                        val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                                        val maxSp = minOf(restoInd, state.superPontosDisponiveis)
+                                        poolSuperVant = maxSp / 2
+                                        if (poolSuperVant > 0) {
+                                            showSuperVantPicker = true
+                                        } else {
+                                            onShowMessage("Limite ou pontos insuficientes para Supervantagem.")
+                                        }
+                                    }
+                                    else -> {
+                                        poderParaComprar = poder
+                                    }
+                                }
                             }
                         },
                     colors = androidx.compose.material3.CardDefaults.cardColors(
@@ -688,51 +945,11 @@ fun SuperPoderesSection(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            var showSuperpowerDetailsDialog by remember { mutableStateOf(false) }
-
                             Text(
                                 poder.nome.toFancyTitleCase(),
-                                Modifier
-                                    .weight(1f)
-                                    .clickable { showSuperpowerDetailsDialog = true },
+                                Modifier.weight(1f),
                                 style = MaterialTheme.typography.titleSmall
                             )
-
-                            if (showSuperpowerDetailsDialog) {
-                                AlertDialog(
-                                    onDismissRequest = { showSuperpowerDetailsDialog = false },
-                                    title = {
-                                        Text(poder.nome.toFancyTitleCase(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                                    },
-                                    text = {
-                                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                                            poder.descricao?.let {
-                                                if (it.isNotBlank()) {
-                                                    Text(it, style = MaterialTheme.typography.bodyMedium)
-                                                    Spacer(Modifier.height(8.dp))
-                                                }
-                                            }
-
-                                            if (manifestacoesList.isNotEmpty()) {
-                                                Text("Manifestações:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
-                                                manifestacoesList.forEach { man -> Text("• $man", style = MaterialTheme.typography.bodySmall) }
-                                                Spacer(Modifier.height(8.dp))
-                                            }
-
-                                            val mods = poder.modificadores ?: emptyList()
-                                            if (mods.isNotEmpty()) {
-                                                Text("Modificadores:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
-                                                mods.forEach { mod -> Text("• $mod", style = MaterialTheme.typography.bodySmall) }
-                                            }
-                                        }
-                                    },
-                                    confirmButton = {
-                                        TextButton(onClick = { showSuperpowerDetailsDialog = false }) {
-                                            Text("Fechar")
-                                        }
-                                    }
-                                )
-                            }
 
                             if (temOMelhorQueHa) {
                                 val favoritoAtual = state.poderFavoritoId
@@ -849,20 +1066,6 @@ fun SuperPoderesSection(
             }
         )
     }
-
-    var showSuperAttrPicker by rememberSaveable { mutableStateOf(value = false) }
-    var poolSuperAttr by rememberSaveable { mutableIntStateOf(0) }
-
-    var showSuperPericiaPicker by rememberSaveable { mutableStateOf(value = false) }
-    var poolSuperPericia by rememberSaveable { mutableIntStateOf(0) }
-
-    var showSuperVantPicker by rememberSaveable { mutableStateOf(value = false) }
-    var poolSuperVant by rememberSaveable { mutableIntStateOf(0) }
-
-    var showBonusPericiaPicker by rememberSaveable { mutableStateOf(false) }
-    var bonusPericiaBaseCost by rememberSaveable { mutableIntStateOf(0) }
-    var bonusPericiaTotalCost by rememberSaveable { mutableIntStateOf(0) }
-    var bonusPericiaNivel by rememberSaveable { mutableIntStateOf(0) }
 
     poderParaComprar?.let { poder ->
 
