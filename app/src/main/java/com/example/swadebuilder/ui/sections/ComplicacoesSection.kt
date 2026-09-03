@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
@@ -641,6 +643,7 @@ private fun ComplicacaoItem(
     peqComp: Complicacao?
 ) {
     val themeData = com.example.swadebuilder.ui.theme.LocalAppThemeData.current
+    var showDetailsDialog by remember { mutableStateOf(false) }
 
     // MERGED DESCRIPTION LOGIC
     val mergedDescription = remember(comp, groupedComplications, allowLongTexts) {
@@ -717,7 +720,9 @@ private fun ComplicacaoItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { showDetailsDialog = true }
                 ) {
                     val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
                     val customBadge = if (isCustom) " ⓒ" else ""
@@ -838,31 +843,30 @@ private fun ComplicacaoItem(
                 }
             }
 
-            if (allowLongTexts && mergedDescription.isNotBlank()) {
-                TextButton(
-                    onClick = {
-                        onUserFeedback()
-                        val current = detalhesExpandidos[comp.id] ?: false
-                        detalhesExpandidos[comp.id] = !current
-                    },
-                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
-                ) {
+        }
+    }
+
+    if (showDetailsDialog) {
+        val titleText = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName!!.toFancyTitleCase() else comp.name.toFancyTitleCase()
+        AlertDialog(
+            onDismissRequest = { showDetailsDialog = false },
+            title = {
+                Text(titleText, style = MaterialTheme.typography.titleMedium, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            },
+            text = {
+                Column(modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())) {
                     Text(
-                        if (detalhesExpandidos[comp.id] == true) "Ocultar detalhes" else "Ver detalhes",
-                        style = MaterialTheme.typography.labelMedium,
+                        text = mergedDescription.ifBlank { "Nenhuma descrição disponível." },
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-
-                AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
-                    Text(
-                        text = mergedDescription,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
+            },
+            confirmButton = {
+                TextButton(onClick = { showDetailsDialog = false }) {
+                    Text("Fechar")
                 }
             }
-        }
+        )
     }
 }

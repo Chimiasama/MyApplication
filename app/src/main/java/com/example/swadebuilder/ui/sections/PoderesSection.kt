@@ -16,7 +16,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
@@ -726,75 +729,71 @@ fun PoderesSection(
                                     if (isCustom) {
                                         displayNome = "$displayNome ⓒ"
                                     }
-                                    Text(displayNome, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
+                                var showPowerDetailsDialog by remember { mutableStateOf(false) }
+
+                                Text(
+                                    text = displayNome,
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    modifier = Modifier.clickable { showPowerDetailsDialog = true }
+                                )
                                     val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]
                                     Text(
                                         if (usaPoderesPorEstagioCard && specialStage != null) "$specialStage • PP: $ppExibicao" else "PP: $ppExibicao",
                                         style = MaterialTheme.typography.bodySmall
                                     )
-                                }
 
-                                if (state.usarSemPontosDePoder) {
-                                    Text("Penalidade base: ${custoParaPenalidadeTexto(ppExibicao)}", style = MaterialTheme.typography.bodySmall)
-                                }
-
-                                val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }
-                                val modificadoresDisponiveis = poder.modificadores.filter { mod ->
-                                    mod.nome.isNotBlank() || mod.descricao.isNotBlank()
-                                }
-
-                                val detalhesDisponiveis = allowLongTexts && (
-                                    poder.descricao.isNotBlank() ||
-                                        manifestacoesDisponiveis.isNotEmpty() ||
-                                        modificadoresDisponiveis.isNotEmpty()
-                                )
-
-                                if (detalhesDisponiveis) {
-                                    Spacer(Modifier.height(4.dp))
-                                    TextButton(
-                                        onClick = { expanded = !expanded },
-                                        modifier = Modifier.height(24.dp), // Reduce button height
-                                        contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp)
-                                    ) {
-                                        Text(
-                                            if (expanded) "Ocultar detalhes" else "Ver detalhes",
-                                            fontWeight = FontWeight.Medium,
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurface
-                                        )
+                                if (showPowerDetailsDialog) {
+                                    val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }
+                                    val modificadoresDisponiveis = poder.modificadores.filter { mod ->
+                                        mod.nome.isNotBlank() || mod.descricao.isNotBlank()
                                     }
+                                    AlertDialog(
+                                        onDismissRequest = { showPowerDetailsDialog = false },
+                                        title = {
+                                            Text(displayNome, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                                        },
+                                        text = {
+                                            Column(modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())) {
+                                                if (poder.descricao.isNotBlank()) {
+                                                    Text(poder.descricao, style = MaterialTheme.typography.bodyMedium)
+                                                    Spacer(Modifier.height(8.dp))
+                                                }
+                                                Text("Distância: ${poder.distancia}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                                                Text("Duração: ${poder.duracao}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
 
-                                    AnimatedVisibility(visible = expanded) {
-                                        Column(Modifier.padding(top = 4.dp)) {
-                                            if (poder.descricao.isNotBlank()) {
-                                                Text(poder.descricao, style = MaterialTheme.typography.bodySmall)
-                                                Spacer(Modifier.height(4.dp))
-                                            }
+                                                if (manifestacoesDisponiveis.isNotEmpty()) {
+                                                    Spacer(Modifier.height(8.dp))
+                                                    Text("Manifestações:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                                                    manifestacoesDisponiveis.forEach { man ->
+                                                        Text("• $man", style = MaterialTheme.typography.bodySmall)
+                                                    }
+                                                }
 
-                                            Text("Distância: ${poder.distancia}", style = MaterialTheme.typography.labelSmall)
-                                            Text("Duração: ${poder.duracao}", style = MaterialTheme.typography.labelSmall)
-
-                                            if (manifestacoesDisponiveis.isNotEmpty()) {
-                                                Spacer(Modifier.height(4.dp))
-                                                Text("Manifestações:", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.labelSmall)
-                                                manifestacoesDisponiveis.forEach { man ->
-                                                    Text("• $man", style = MaterialTheme.typography.bodySmall)
+                                                if (modificadoresDisponiveis.isNotEmpty()) {
+                                                    Spacer(Modifier.height(8.dp))
+                                                    Text("Modificadores:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                                                    modificadoresDisponiveis.forEach { mod ->
+                                                        Text(
+                                                            "• ${mod.nome} (${mod.custo}): ${mod.descricao}",
+                                                            style = MaterialTheme.typography.bodySmall
+                                                        )
+                                                    }
+                                                }
+                                                }
+                                        },
+                                        confirmButton = {
+                                            TextButton(onClick = { showPowerDetailsDialog = false }) {
+                                                Text("Fechar")
                                                 }
                                             }
-
-                                            if (modificadoresDisponiveis.isNotEmpty()) {
-                                                Spacer(Modifier.height(4.dp))
-                                                Text("Modificadores:", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.labelSmall)
-                                                modificadoresDisponiveis.forEach { mod ->
-                                                    Text(
-                                                        "${mod.nome} (${mod.custo}): ${mod.descricao}",
-                                                        style = MaterialTheme.typography.bodySmall
-                                                    )
-                                                }
-                                            }
-                                        }
+                                    )
                                     }
                                 }
+
+                            if (state.usarSemPontosDePoder) {
+                                Text("Penalidade base: ${custoParaPenalidadeTexto(ppExibicao)}", style = MaterialTheme.typography.bodySmall)
+                            }
                             }
                         }
                     }

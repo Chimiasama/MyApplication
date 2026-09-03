@@ -688,11 +688,51 @@ fun SuperPoderesSection(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            var showSuperpowerDetailsDialog by remember { mutableStateOf(false) }
+
                             Text(
                                 poder.nome.toFancyTitleCase(),
-                                Modifier.weight(1f),
+                                Modifier
+                                    .weight(1f)
+                                    .clickable { showSuperpowerDetailsDialog = true },
                                 style = MaterialTheme.typography.titleSmall
                             )
+
+                            if (showSuperpowerDetailsDialog) {
+                                AlertDialog(
+                                    onDismissRequest = { showSuperpowerDetailsDialog = false },
+                                    title = {
+                                        Text(poder.nome.toFancyTitleCase(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                                    },
+                                    text = {
+                                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                            poder.descricao?.let {
+                                                if (it.isNotBlank()) {
+                                                    Text(it, style = MaterialTheme.typography.bodyMedium)
+                                                    Spacer(Modifier.height(8.dp))
+                                                }
+                                            }
+
+                                            if (manifestacoesList.isNotEmpty()) {
+                                                Text("Manifestações:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                                                manifestacoesList.forEach { man -> Text("• $man", style = MaterialTheme.typography.bodySmall) }
+                                                Spacer(Modifier.height(8.dp))
+                                            }
+
+                                            val mods = poder.modificadores ?: emptyList()
+                                            if (mods.isNotEmpty()) {
+                                                Text("Modificadores:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                                                mods.forEach { mod -> Text("• $mod", style = MaterialTheme.typography.bodySmall) }
+                                            }
+                                        }
+                                    },
+                                    confirmButton = {
+                                        TextButton(onClick = { showSuperpowerDetailsDialog = false }) {
+                                            Text("Fechar")
+                                        }
+                                    }
+                                )
+                            }
 
                             if (temOMelhorQueHa) {
                                 val favoritoAtual = state.poderFavoritoId
@@ -740,38 +780,6 @@ fun SuperPoderesSection(
                                 style = MaterialTheme.typography.labelMedium,
                                 color = statusColor
                             )
-                        }
-
-                        if (showDetails) {
-                            Spacer(Modifier.height(4.dp))
-                            TextButton(onClick = { detalhesExpandidos[poder.nome] = !expanded }) {
-                                Text(
-                                    if (expanded) "Ocultar detalhes" else "Ver detalhes",
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    style = MaterialTheme.typography.labelMedium
-                                )
-                            }
-
-                            AnimatedVisibility(visible = expanded) {
-                                Column(Modifier.padding(top = 4.dp)) {
-                                    poder.descricao?.let {
-                                        Text(it, style = MaterialTheme.typography.bodySmall)
-                                        Spacer(Modifier.height(4.dp))
-                                    }
-
-                                    if (manifestacoesList.isNotEmpty()) {
-                                        Text("Manifestações:", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.labelSmall)
-                                        manifestacoesList.forEach { man -> Text("• $man", style = MaterialTheme.typography.bodySmall) }
-                                        Spacer(Modifier.height(4.dp))
-                                    }
-
-                                    val mods = poder.modificadores ?: emptyList()
-                                    if (mods.isNotEmpty()) {
-                                        Text("Modificadores:", fontWeight = FontWeight.SemiBold, style = MaterialTheme.typography.labelSmall)
-                                        mods.forEach { mod -> Text("- $mod", style = MaterialTheme.typography.bodySmall) }
-                                    }
-                                }
-                            }
                         }
                     }
                 }
