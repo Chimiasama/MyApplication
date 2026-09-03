@@ -1493,14 +1493,6 @@ fun SuperPoderesContent(
         icon = Icons.Filled.FlashOn,
         showHeader = false
     ) {
-        SectionHeader(
-            onHelpClick = null,
-            centerText = "Pontos de Super: ${state.superPontosDisponiveis}",
-            onCenterClick = null,
-            onListaCompletaClick = null,
-            listaCompletaText = ""
-        )
-
         SuperPoderesSection(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
