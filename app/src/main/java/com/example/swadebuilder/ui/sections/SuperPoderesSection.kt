@@ -78,6 +78,7 @@ import com.example.swadebuilder.ui.dialogs.SuperPericiasPickerDialog
 import com.example.swadebuilder.ui.dialogs.SuperVantagensPickerDialog
 import com.example.swadebuilder.util.keyify
 import com.example.swadebuilder.util.semAcentos
+import com.example.swadebuilder.util.toFancyTitleCase
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.contentOrNull
@@ -620,6 +621,8 @@ fun SuperPoderesSection(
         val allowLongTexts = booleanResource(R.bool.enable_long_texts)
         val detalhesExpandidos = remember { mutableStateMapOf<String, Boolean>() }
 
+        val themeData = com.example.swadebuilder.ui.theme.LocalAppThemeData.current
+
         LazyColumn(
             state = listState,
             modifier = Modifier
@@ -646,98 +649,140 @@ fun SuperPoderesSection(
                         )
                 val expanded = detalhesExpandidos[poder.nome] == true
 
-                Column(
-                    Modifier
+                val poderKey = "sp_${poder.nome.keyify()}"
+                val gastoNestePoder = state.gastosPorPoder[poderKey] ?: 0
+                val jaInvestido = gastoNestePoder > 0
+
+                val statusText = when {
+                    jaInvestido -> "+$gastoNestePoder SP"
+                    podeComprarSupers -> "Disponível"
+                    else -> "Bloqueado"
+                }
+
+                val statusColor = when {
+                    jaInvestido -> MaterialTheme.colorScheme.tertiary
+                    podeComprarSupers -> MaterialTheme.colorScheme.primary
+                    else -> MaterialTheme.colorScheme.error
+                }
+
+                androidx.compose.material3.Card(
+                    modifier = Modifier
                         .fillMaxWidth()
+                        .padding(vertical = 4.dp)
                         .clickable(enabled = podeComprarSupers) {
                             if (podeComprarSupers) {
                                 poderParaComprar = poder
                             }
+                        },
+                    colors = androidx.compose.material3.CardDefaults.cardColors(
+                        containerColor = if (jaInvestido) {
+                            MaterialTheme.colorScheme.tertiaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.surfaceVariant
                         }
-                        .padding(vertical = 6.dp, horizontal = 8.dp)
+                    ),
+                    border = themeData.cardBorderColor?.let { BorderStroke(1.dp, it) }
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            poder.nome,
-                            Modifier.weight(1f),
-                            fontWeight = FontWeight.SemiBold
-                        )
+                    Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            var showSuperpowerDetailsDialog by remember { mutableStateOf(false) }
 
-                        if (temOMelhorQueHa) {
-                            val favoritoAtual = state.poderFavoritoId
-                            val temFavorito = favoritoAtual != null
-
-                            val isFavoriteLocked = favoritoAtual?.let { favId ->
-                                (state.gastosPorPoder[favId] ?: 0) > 0
-                            } ?: false
-
-                            val poderId = "sp_${poder.nome.keyify()}"
-                            val isFav = favoritoAtual == poderId
-
-                            val isBloqueado = poder.nome.keyify() in listOf("ARMADURA", "RESISTENCIA")
-
-                            val showStarForThis = !isBloqueado && (!temFavorito || isFav)
-
-                            if (showStarForThis) {
-                                IconButton(
-                                    onClick = {
-                                        viewModel.definirPoderFavorecido(if (isFav) null else poderId)
-                                    },
-                                    enabled = !isFavoriteLocked
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.StarBorder,
-                                        contentDescription = if (isFav)
-                                            "Desmarcar como poder favorito"
-                                        else
-                                            "Marcar como poder favorito",
-                                        tint = if (isFavoriteLocked)
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
-                                        else if (isFav)
-                                            Color.Red
-                                        else
-                                            MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                        }
-                    }
-
-                    if (showDetails) {
-                        Spacer(Modifier.height(4.dp))
-                        TextButton(onClick = { detalhesExpandidos[poder.nome] = !expanded }) {
                             Text(
-                                if (expanded) "Ocultar detalhes" else "Ver detalhes",
-                                color = MaterialTheme.colorScheme.onSurface
+                                poder.nome.toFancyTitleCase(),
+                                Modifier
+                                    .weight(1f)
+                                    .clickable { showSuperpowerDetailsDialog = true },
+                                style = MaterialTheme.typography.titleSmall
                             )
-                        }
 
-                        AnimatedVisibility(visible = expanded) {
-                            Column(Modifier.padding(top = 4.dp)) {
-                                poder.descricao?.let {
-                                    Text(it)
-                                    Spacer(Modifier.height(4.dp))
-                                }
+                            if (showSuperpowerDetailsDialog) {
+                                AlertDialog(
+                                    onDismissRequest = { showSuperpowerDetailsDialog = false },
+                                    title = {
+                                        Text(poder.nome.toFancyTitleCase(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                                    },
+                                    text = {
+                                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                            poder.descricao?.let {
+                                                if (it.isNotBlank()) {
+                                                    Text(it, style = MaterialTheme.typography.bodyMedium)
+                                                    Spacer(Modifier.height(8.dp))
+                                                }
+                                            }
 
-                                  if (manifestacoesList.isNotEmpty()) {
-                                      Text("Manifestações:", fontWeight = FontWeight.SemiBold)
-                                      manifestacoesList.forEach { man -> Text("• $man") }
-                                      Spacer(Modifier.height(4.dp))
-                                  }
+                                            if (manifestacoesList.isNotEmpty()) {
+                                                Text("Manifestações:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                                                manifestacoesList.forEach { man -> Text("• $man", style = MaterialTheme.typography.bodySmall) }
+                                                Spacer(Modifier.height(8.dp))
+                                            }
 
-                                val mods = poder.modificadores ?: emptyList()
-                                if (mods.isNotEmpty()) {
-                                    Text("Modificadores:", fontWeight = FontWeight.SemiBold)
-                                    mods.forEach { mod -> Text("- $mod") }
+                                            val mods = poder.modificadores ?: emptyList()
+                                            if (mods.isNotEmpty()) {
+                                                Text("Modificadores:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                                                mods.forEach { mod -> Text("• $mod", style = MaterialTheme.typography.bodySmall) }
+                                            }
+                                        }
+                                    },
+                                    confirmButton = {
+                                        TextButton(onClick = { showSuperpowerDetailsDialog = false }) {
+                                            Text("Fechar")
+                                        }
+                                    }
+                                )
+                            }
+
+                            if (temOMelhorQueHa) {
+                                val favoritoAtual = state.poderFavoritoId
+                                val temFavorito = favoritoAtual != null
+
+                                val isFavoriteLocked = favoritoAtual?.let { favId ->
+                                    (state.gastosPorPoder[favId] ?: 0) > 0
+                                } ?: false
+
+                                val poderId = "sp_${poder.nome.keyify()}"
+                                val isFav = favoritoAtual == poderId
+
+                                val isBloqueado = poder.nome.keyify() in listOf("ARMADURA", "RESISTENCIA")
+
+                                val showStarForThis = !isBloqueado && (!temFavorito || isFav)
+
+                                if (showStarForThis) {
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.definirPoderFavorecido(if (isFav) null else poderId)
+                                        },
+                                        enabled = !isFavoriteLocked
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.StarBorder,
+                                            contentDescription = if (isFav)
+                                                "Desmarcar como poder favorito"
+                                            else
+                                                "Marcar como poder favorito",
+                                            tint = if (isFavoriteLocked)
+                                                MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                            else if (isFav)
+                                                Color.Red
+                                            else
+                                                MaterialTheme.colorScheme.primary
+                                        )
+                                    }
                                 }
                             }
+
+                            Spacer(Modifier.width(8.dp))
+
+                            Text(
+                                statusText,
+                                style = MaterialTheme.typography.labelMedium,
+                                color = statusColor
+                            )
                         }
                     }
                 }
-                HorizontalDivider()
             }
         }
     }

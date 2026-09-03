@@ -1,12 +1,16 @@
 package com.example.swadebuilder.ui.dialogs
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
@@ -62,68 +66,92 @@ fun SuperAtributosPickerDialog(
         },
         text = {
             Column(Modifier.fillMaxWidth()) {
-                Text("Pool: $poolInicial   •   Restante: $restante")
+                Text(
+                    "Steps disponíveis: $poolInicial (${poolInicial * 2} SP)   •   Restantes: $restante (${restante * 2} SP)",
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 Spacer(Modifier.height(8.dp))
 
-                // lista com + / - mostrando o VALOR FINAL (dado) e não mais só o número de steps
-                state.listaAtributos.forEach { attr ->
-                    val steps = alocacoes[attr] ?: 0
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    state.listaAtributos.forEach { attr ->
+                        val currentSteps = alocacoes[attr] ?: 0
+                        val baseRaw = state.atributoRawComSupers(attr)
+                        val attrDisplayName = state.mapaAtributosDisplay[attr] ?: attr
 
-                    // valor atual (já com supers existentes)
-                    val baseRaw = state.atributoRawComSupers(attr)
-                    // simula aplicação dos steps desta compra
-                    val projectedRaw = state.applySuperStepsFrom(baseRaw, steps)
-                    val textoValor = projectedRaw.toDiceString()
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = attr,
-                            modifier = Modifier.weight(1f),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        IconButton(
-                            onClick = {
-                                if (steps > 0) alocacoes[attr] = steps - 1
-                            },
-                            enabled = steps > 0
-                        ) {
-                            Icon(
-                                Icons.Default.Remove,
-                                contentDescription = "Diminuir $attr"
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = attrDisplayName,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
-                        }
+                            Spacer(Modifier.height(4.dp))
 
-                        Text(
-                            textoValor,
-                            modifier = Modifier.width(48.dp),
-                            textAlign = TextAlign.Center
-                        )
+                            val maxStepsPossible = currentSteps + restante
+                            val stepOptions = (0..maxStepsPossible).toList()
 
-                        IconButton(
-                            onClick = {
-                                if (restante > 0) alocacoes[attr] = steps + 1
-                            },
-                            enabled = restante > 0
-                        ) {
-                            Icon(
-                                Icons.Default.Add,
-                                contentDescription = "Aumentar $attr"
-                            )
+                            LazyRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                contentPadding = PaddingValues(horizontal = 2.dp)
+                            ) {
+                                items(stepOptions) { stepOpt ->
+                                    val projectedRaw = state.applySuperStepsFrom(baseRaw, stepOpt)
+                                    val spCost = stepOpt * 2
+                                    val isSelected = stepOpt == currentSteps
+                                    val canAfford = stepOpt <= currentSteps || (stepOpt - currentSteps) <= restante
+
+                                    val containerColor = when {
+                                        !canAfford -> MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.4f)
+                                        isSelected -> MaterialTheme.colorScheme.primaryContainer
+                                        else -> MaterialTheme.colorScheme.surfaceContainerHigh
+                                    }
+
+                                    androidx.compose.material3.OutlinedCard(
+                                        onClick = {
+                                            if (canAfford) alocacoes[attr] = stepOpt
+                                        },
+                                        enabled = canAfford,
+                                        modifier = Modifier.width(68.dp),
+                                        colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
+                                            containerColor = containerColor,
+                                            disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)
+                                        ),
+                                        border = if (isSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else androidx.compose.material3.CardDefaults.outlinedCardBorder()
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 2.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.Center
+                                        ) {
+                                            Text(
+                                                text = projectedRaw.toDiceString(),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                                color = if (canAfford) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                            )
+                                            Text(
+                                                text = if (spCost == 0) "base" else "$spCost SP",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                }
 
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    "Cada ponto aqui é 1 step de Superatributo para aquele atributo. " +
-                            "O valor mostrado já é o dado final considerando os supers existentes + estes steps.",
-                    style = MaterialTheme.typography.bodySmall
-                )
+                    Spacer(Modifier.height(6.dp))
+                    Text(
+                        "Cada ponto aqui é 1 step de Superatributo para aquele atributo. " +
+                                "O valor mostrado já é o dado final considerando os supers existentes + estes steps.",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         },
         confirmButton = {

@@ -1669,6 +1669,7 @@ private fun VantagemItem(
     onError: (String) -> Unit
 ) {
     val themeData = LocalAppThemeData.current
+    var showDetailsDialog by remember { mutableStateOf(false) }
 
     val reqList = buildList {
         allEstagios.firstOrNull {
@@ -1772,7 +1773,11 @@ private fun VantagemItem(
                 Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(Modifier.weight(1f)) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { showDetailsDialog = true }
+                ) {
                     val isCustom = vant.origem.equals("CUSTOM", ignoreCase = true) || vant.id.startsWith("custom:") || vant.id.startsWith("fanmade:")
                     val customBadge = if (isCustom) " ⓒ" else ""
                     Text(
@@ -1844,39 +1849,36 @@ private fun VantagemItem(
                     )
                 }
             }
+        }
+    }
 
-            val canShowDetails = allowLongTexts && vant.descricao.isNotBlank()
-            if (canShowDetails) {
-                Spacer(Modifier.size(8.dp))
-                TextButton(
-                    onClick = {
-                        val current = detalhesExpandidos[vant.id] ?: false
-                        detalhesExpandidos[vant.id] = !current
-                    },
-                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp)
-                ) {
+    if (showDetailsDialog) {
+        val titleText = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase()
+        val rawDescription = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) {
+            vant.originalDescription!!.trim()
+        } else {
+            vant.descricao.trim()
+        }
+        AlertDialog(
+            onDismissRequest = { showDetailsDialog = false },
+            title = {
+                Text(titleText, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            },
+            text = {
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     Text(
-                        if (detalhesExpandidos[vant.id] == true) "Ocultar detalhes" else "Ver detalhes",
-                        style = MaterialTheme.typography.labelMedium,
+                        text = applyJutsuSkinToText(rawDescription.ifBlank { "Nenhuma descrição disponível." }, state),
+                        style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                 }
-
-                AnimatedVisibility(visible = detalhesExpandidos[vant.id] == true) {
-                    val rawDescription = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) {
-                        vant.originalDescription!!.trim()
-                    } else {
-                        vant.descricao.trim()
-                    }
-                    Text(
-                        text = applyJutsuSkinToText(rawDescription, state),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(top = 4.dp)
-                    )
+            },
+            confirmButton = {
+                TextButton(onClick = { showDetailsDialog = false }) {
+                    Text("Fechar")
                 }
             }
-        }
+        )
     }
 }
 

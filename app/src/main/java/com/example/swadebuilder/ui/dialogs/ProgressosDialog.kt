@@ -884,66 +884,133 @@ fun ProgressosDialog(
                         (existing + available).distinctBy { it.nome.keyify() }.sortedBy { it.nome }
                     }
 
-                    LazyColumn(modifier = Modifier.fillMaxHeight(0.6f)) {
+                    LazyColumn(modifier = Modifier.fillMaxHeight(0.6f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         items(allSkills) { per ->
                             val current = state.rawTotal(per)
                             val attrVal = state.valoresAtributos[per.atributo]?.intValue ?: 4
                             val cost = if (current >= attrVal) 2 else 1
                             val canBuy = spRemaining >= cost && current < 12
                             val wasIncreased = state.skillsForCurrentAdvancement.contains(per.nome)
+                            val nextRaw = if (current == 0 && per.basica) 4 else if (current == 0) 4 else if (current < 12) current + 2 else current + 1
 
-                            Row(
-                                Modifier
+                            Column(
+                                modifier = Modifier
                                     .fillMaxWidth()
-                                    .alpha(if (canBuy || wasIncreased) 1f else 0.5f)
-                                    .clickable(enabled = canBuy) {
-                                        viewModel.increaseSkillForAdvancement(per)
-                                    }
-                                    .padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                    .padding(vertical = 4.dp)
                             ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(per.nome)
-                                    val nota = state.notasPericia[per.nome]
-                                    if (!nota.isNullOrBlank()) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(per.nome, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                                        val nota = state.notasPericia[per.nome]
+                                        if (!nota.isNullOrBlank()) {
+                                            Text(
+                                                text = "($nota)",
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.tertiary
+                                            )
+                                        }
                                         Text(
-                                            text = "($nota)",
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.tertiary
+                                            "Atributo: ${mapaAtributosDisplay[per.atributo] ?: per.atributo} (${attrVal.toDiceString()})",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
-                                    Text("Atual: ${current.toDiceString()} | Custo: $cost SP", style = MaterialTheme.typography.bodySmall)
-                                }
 
-                                val canEditNote = current > 0 && (
-                                    state.isIdiomaPericia(per) ||
-                                        state.isJutsuPericia(per) ||
-                                        state.usarEspecializacoesDePericia
-                                    )
-
-                                if (canEditNote) {
-                                    IconButton(
-                                        onClick = {
-                                            skillNoteTarget = per
-                                            skillNoteText = state.notasPericia[per.nome] ?: ""
-                                            showSkillNoteDialog = true
-                                        },
-                                        modifier = Modifier.size(28.dp)
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Edit,
-                                            contentDescription = "Editar descrição da perícia",
-                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                    val canEditNote = current > 0 && (
+                                        state.isIdiomaPericia(per) ||
+                                            state.isJutsuPericia(per) ||
+                                            state.usarEspecializacoesDePericia
                                         )
+
+                                    if (canEditNote) {
+                                        IconButton(
+                                            onClick = {
+                                                skillNoteTarget = per
+                                                skillNoteText = state.notasPericia[per.nome] ?: ""
+                                                showSkillNoteDialog = true
+                                            },
+                                            modifier = Modifier.size(28.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.Edit,
+                                                contentDescription = "Editar descrição da perícia",
+                                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
                                     }
                                 }
 
-                                if (wasIncreased) {
-                                    TextButton(
-                                        onClick = { viewModel.decreaseSkillForAdvancement(per) }
+                                Spacer(Modifier.height(4.dp))
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    // Current Level Card
+                                    Card(
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = if (wasIncreased) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                                        ),
+                                        border = if (wasIncreased) androidx.compose.foundation.BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary) else null,
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .clickable(enabled = wasIncreased) {
+                                                viewModel.decreaseSkillForAdvancement(per)
+                                            }
                                     ) {
-                                        Text("-", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                                        Column(
+                                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            val textoAtual = when {
+                                                current == 0 && per.basica -> "d4"
+                                                current == 0 -> "—"
+                                                else -> current.toDiceString()
+                                            }
+                                            Text(
+                                                text = textoAtual,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            Text(
+                                                text = if (wasIncreased) "Tocar p/ desfazer" else "Atual",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
+                                    }
+
+                                    // Next Level Card (+1 step)
+                                    Card(
+                                        colors = CardDefaults.cardColors(
+                                            containerColor = if (canBuy) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.4f)
+                                        ),
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .clickable(enabled = canBuy) {
+                                                viewModel.increaseSkillForAdvancement(per)
+                                            }
+                                    ) {
+                                        Column(
+                                            modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally
+                                        ) {
+                                            Text(
+                                                text = nextRaw.toDiceString(),
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                fontWeight = FontWeight.Bold,
+                                                color = if (canBuy) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                            )
+                                            Text(
+                                                text = "+1 passo ($cost SP)",
+                                                style = MaterialTheme.typography.labelSmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            )
+                                        }
                                     }
                                 }
                             }

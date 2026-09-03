@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Warning
@@ -640,6 +642,9 @@ private fun ComplicacaoItem(
     onError: (String) -> Unit,
     peqComp: Complicacao?
 ) {
+    val themeData = com.example.swadebuilder.ui.theme.LocalAppThemeData.current
+    var showDetailsDialog by remember { mutableStateOf(false) }
+
     // MERGED DESCRIPTION LOGIC
     val mergedDescription = remember(comp, groupedComplications, allowLongTexts) {
         if (allowLongTexts) {
@@ -678,31 +683,73 @@ private fun ComplicacaoItem(
     val maiorOnly = sevRaw.contains("maior") && !sevRaw.contains("menor")
     val ambos     = sevRaw.contains("menor") && sevRaw.contains("maior")
 
-    Column(
+    val (requisitosOk, _) = remember(comp, state.complicacoesSelecionadas.size) {
+        val (pode, msg) = state.podeSelecionarComplicacao(comp)
+        val cMsg = state.mensagemConflitoParaComplicacao(comp)
+        Pair(pode && cMsg == null, msg ?: cMsg)
+    }
+
+    val statusText = when {
+        cur != null -> "Selecionada ($cur)"
+        requisitosOk -> ""
+        else -> "Requisitos pendentes"
+    }
+
+    val statusColor = when {
+        cur != null -> MaterialTheme.colorScheme.tertiary
+        requisitosOk -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.error
+    }
+
+    androidx.compose.material3.Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
+            .padding(vertical = 2.dp),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = when {
+                cur != null -> MaterialTheme.colorScheme.tertiaryContainer
+                requisitosOk -> MaterialTheme.colorScheme.surfaceVariant
+                else -> MaterialTheme.colorScheme.errorContainer
+            }
+        ),
+        border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { showDetailsDialog = true }
             ) {
                 val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
                 val customBadge = if (isCustom) " ⓒ" else ""
                 Text(
                     text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName!!.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    style = MaterialTheme.typography.titleSmall
                 )
+                if (cur != null) {
+                    Text(
+                        text = "Selecionada ($cur)",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.tertiary
+                    )
+                } else if (!requisitosOk) {
+                    Text(
+                        text = "Requisitos pendentes",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
 
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(6.dp))
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (menorOnly || ambos) {
@@ -746,7 +793,8 @@ private fun ComplicacaoItem(
                             }
                             onLogFeedback("Complicação ${comp.name} (Menor) adicionada.")
                         },
-                        enabled = enabledMenor
+                        enabled = enabledMenor,
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text("Menor")
                     }
@@ -793,38 +841,38 @@ private fun ComplicacaoItem(
                             }
                             onLogFeedback("Complicação ${comp.name} (Maior) adicionada.")
                         },
-                        enabled = enabledMaior
+                        enabled = enabledMaior,
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                     ) {
                         Text("Maior")
                     }
                 }
             }
-        }
 
-        if (allowLongTexts && mergedDescription.isNotBlank()) {
-            TextButton(
-                onClick = {
-                    onUserFeedback()
-                    val current = detalhesExpandidos[comp.id] ?: false
-                    detalhesExpandidos[comp.id] = !current
-                },
-                contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
-            ) {
-                Text(
-                    if (detalhesExpandidos[comp.id] == true) "Ocultar detalhes" else "Ver detalhes",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-
-            AnimatedVisibility(visible = detalhesExpandidos[comp.id] == true) {
-                Text(
-                    text = mergedDescription,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
         }
+    }
+
+    if (showDetailsDialog) {
+        val titleText = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName!!.toFancyTitleCase() else comp.name.toFancyTitleCase()
+        AlertDialog(
+            onDismissRequest = { showDetailsDialog = false },
+            title = {
+                Text(titleText, style = MaterialTheme.typography.titleMedium, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            },
+            text = {
+                Column(modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())) {
+                    Text(
+                        text = mergedDescription.ifBlank { "Nenhuma descrição disponível." },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showDetailsDialog = false }) {
+                    Text("Fechar")
+                }
+            }
+        )
     }
 }

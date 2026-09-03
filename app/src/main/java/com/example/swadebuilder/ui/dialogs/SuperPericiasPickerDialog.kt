@@ -3,14 +3,17 @@ package com.example.swadebuilder.ui.dialogs
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -110,53 +113,77 @@ fun SuperPericiasPickerDialog(
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(skillsParaExibir, key = { it.nome }) { per ->
                             val key = per.nome.keyify()
-                            val steps = alocacoes[key] ?: 0
-
+                            val currentSteps = alocacoes[key] ?: 0
                             val baseRaw = state.rawTotal(per)
-                            val projectedRaw = state.applySuperStepsFrom(baseRaw, steps)
 
-                            val textoValor = when {
-                                projectedRaw == 0 && per.basica -> "d4"
-                                projectedRaw == 0 -> "-"
-                                else -> projectedRaw.toDiceString()
-                            }
+                            Column(modifier = Modifier.fillMaxWidth()) {
+                                Text(
+                                    text = per.nome,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(4.dp))
 
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 2.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(Modifier.weight(1f)) {
-                                    Text(per.nome, style = MaterialTheme.typography.bodyMedium)
-                                }
+                                val maxStepsPossible = currentSteps + restante
+                                val stepOptions = (0..maxStepsPossible).toList()
 
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                                LazyRow(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                    contentPadding = PaddingValues(horizontal = 2.dp)
                                 ) {
-                                    TextButton(
-                                        onClick = {
-                                            if (steps > 0) alocacoes[key] = steps - 1
-                                        },
-                                        enabled = steps > 0
-                                    ) { Text("−") }
+                                    items(stepOptions) { stepOpt ->
+                                        val projectedRaw = state.applySuperStepsFrom(baseRaw, stepOpt)
+                                        val isSelected = stepOpt == currentSteps
+                                        val canAfford = stepOpt <= currentSteps || (stepOpt - currentSteps) <= restante
 
-                                    Text(
-                                        textoValor,
-                                        modifier = Modifier.widthIn(min = 48.dp),
-                                        textAlign = TextAlign.Center
-                                    )
+                                        val textoValor = when {
+                                            projectedRaw == 0 && per.basica -> "d4"
+                                            projectedRaw == 0 -> "—"
+                                            else -> projectedRaw.toDiceString()
+                                        }
 
-                                    TextButton(
-                                        onClick = {
-                                            if (restante > 0) alocacoes[key] = steps + 1
-                                        },
-                                        enabled = restante > 0
-                                    ) { Text("+") }
+                                        val containerColor = when {
+                                            !canAfford -> MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.4f)
+                                            isSelected -> MaterialTheme.colorScheme.primaryContainer
+                                            else -> MaterialTheme.colorScheme.surfaceContainerHigh
+                                        }
+
+                                        androidx.compose.material3.OutlinedCard(
+                                            onClick = {
+                                                if (canAfford) alocacoes[key] = stepOpt
+                                            },
+                                            enabled = canAfford,
+                                            modifier = Modifier.width(68.dp),
+                                            colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
+                                                containerColor = containerColor,
+                                                disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)
+                                            ),
+                                            border = if (isSelected) androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else androidx.compose.material3.CardDefaults.outlinedCardBorder()
+                                        ) {
+                                            Column(
+                                                modifier = Modifier.padding(vertical = 8.dp, horizontal = 2.dp),
+                                                horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.Center
+                                            ) {
+                                                Text(
+                                                    text = textoValor,
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
+                                                    color = if (canAfford) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                                                )
+                                                Text(
+                                                    text = if (stepOpt == 0) "base" else "$stepOpt SP",
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
