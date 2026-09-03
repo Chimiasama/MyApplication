@@ -644,6 +644,7 @@ fun PoderesSection(
                         items = poderesParaEsteArcano,
                         key = { "${arcKey}_${it.id}" } // Unique key per AB + Power
                     ) { poder ->
+                        var showPowerDetailsDialog by remember { mutableStateOf(false) }
                         val usaPoderesPorEstagioCard = state.usaPoderesDisponiveisPorEstagio(arcKey)
                         val slots = if (usaPoderesPorEstagioCard) {
                             remember(arcKey) { mutableStateListOf<String?>() }
@@ -729,70 +730,73 @@ fun PoderesSection(
                                     if (isCustom) {
                                         displayNome = "$displayNome ⓒ"
                                     }
-                                var showPowerDetailsDialog by remember { mutableStateOf(false) }
 
-                                Text(
-                                    text = displayNome,
-                                    fontWeight = FontWeight.Bold,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    modifier = Modifier.clickable { showPowerDetailsDialog = true }
-                                )
-                                    val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]
                                     Text(
-                                        if (usaPoderesPorEstagioCard && specialStage != null) "$specialStage • PP: $ppExibicao" else "PP: $ppExibicao",
-                                        style = MaterialTheme.typography.bodySmall
+                                        text = displayNome,
+                                        fontWeight = FontWeight.Bold,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.clickable { showPowerDetailsDialog = true }
                                     )
-
-                                if (showPowerDetailsDialog) {
-                                    val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }
-                                    val modificadoresDisponiveis = poder.modificadores.filter { mod ->
-                                        mod.nome.isNotBlank() || mod.descricao.isNotBlank()
-                                    }
-                                    AlertDialog(
-                                        onDismissRequest = { showPowerDetailsDialog = false },
-                                        title = {
-                                            Text(displayNome, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                                        },
-                                        text = {
-                                            Column(modifier = Modifier.verticalScroll(androidx.compose.foundation.rememberScrollState())) {
-                                                if (poder.descricao.isNotBlank()) {
-                                                    Text(poder.descricao, style = MaterialTheme.typography.bodyMedium)
-                                                    Spacer(Modifier.height(8.dp))
-                                                }
-                                                Text("Distância: ${poder.distancia}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
-                                                Text("Duração: ${poder.duracao}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
-
-                                                if (manifestacoesDisponiveis.isNotEmpty()) {
-                                                    Spacer(Modifier.height(8.dp))
-                                                    Text("Manifestações:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
-                                                    manifestacoesDisponiveis.forEach { man ->
-                                                        Text("• $man", style = MaterialTheme.typography.bodySmall)
-                                                    }
-                                                }
-
-                                                if (modificadoresDisponiveis.isNotEmpty()) {
-                                                    Spacer(Modifier.height(8.dp))
-                                                    Text("Modificadores:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
-                                                    modificadoresDisponiveis.forEach { mod ->
-                                                        Text(
-                                                            "• ${mod.nome} (${mod.custo}): ${mod.descricao}",
-                                                            style = MaterialTheme.typography.bodySmall
-                                                        )
-                                                    }
-                                                }
-                                                }
-                                        },
-                                        confirmButton = {
-                                            TextButton(onClick = { showPowerDetailsDialog = false }) {
-                                                Text("Fechar")
-                                                }
-                                            }
-                                    )
-                                    }
-                                }
+                                val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]
+                                Text(
+                                    if (usaPoderesPorEstagioCard && specialStage != null) "$specialStage • PP: $ppExibicao" else "PP: $ppExibicao",
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
 
                             if (state.usarSemPontosDePoder) {
                                 Text("Penalidade base: ${custoParaPenalidadeTexto(ppExibicao)}", style = MaterialTheme.typography.bodySmall)
+                            }
+
+                            if (showPowerDetailsDialog) {
+                                val manifestacoesDisponiveis = poder.manifestacoes.filter { it.isNotBlank() }
+                                val modificadoresDisponiveis = poder.modificadores.filter { mod ->
+                                    mod.nome.isNotBlank() || mod.descricao.isNotBlank()
+                                }
+                                var displayNomeDialog = poder.nome.toFancyTitleCase()
+                                val isCustomDialog = poder.origem.equals("CUSTOM", ignoreCase = true) || poder.id.startsWith("custom:") || poder.id.startsWith("fanmade:")
+                                if (isCustomDialog) displayNomeDialog = "$displayNomeDialog ⓒ"
+
+                                AlertDialog(
+                                    onDismissRequest = { showPowerDetailsDialog = false },
+                                    title = {
+                                        Text(displayNomeDialog, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                                    },
+                                    text = {
+                                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                            if (poder.descricao.isNotBlank()) {
+                                                Text(poder.descricao, style = MaterialTheme.typography.bodyMedium)
+                                                Spacer(Modifier.height(8.dp))
+                                            }
+                                            Text("Distância: ${poder.distancia}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+                                            Text("Duração: ${poder.duracao}", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.SemiBold)
+
+                                            if (manifestacoesDisponiveis.isNotEmpty()) {
+                                                Spacer(Modifier.height(8.dp))
+                                                Text("Manifestações:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                                                manifestacoesDisponiveis.forEach { man ->
+                                                    Text("• $man", style = MaterialTheme.typography.bodySmall)
+                                                }
+                                            }
+
+                                            if (modificadoresDisponiveis.isNotEmpty()) {
+                                                Spacer(Modifier.height(8.dp))
+                                                Text("Modificadores:", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+                                                modificadoresDisponiveis.forEach { mod ->
+                                                    Text(
+                                                        "• ${mod.nome} (${mod.custo}): ${mod.descricao}",
+                                                        style = MaterialTheme.typography.bodySmall
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    },
+                                    confirmButton = {
+                                        TextButton(onClick = { showPowerDetailsDialog = false }) {
+                                            Text("Fechar")
+                                        }
+                                    }
+                                )
                             }
                             }
                         }

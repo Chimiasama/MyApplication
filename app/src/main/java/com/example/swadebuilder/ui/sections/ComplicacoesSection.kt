@@ -691,7 +691,7 @@ private fun ComplicacaoItem(
 
     val statusText = when {
         cur != null -> "Selecionada ($cur)"
-        requisitosOk -> "Disponível"
+        requisitosOk -> ""
         else -> "Requisitos pendentes"
     }
 
