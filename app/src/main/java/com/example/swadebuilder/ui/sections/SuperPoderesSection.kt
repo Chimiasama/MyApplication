@@ -860,7 +860,7 @@ fun SuperPoderesSection(
 
                 val statusText = when {
                     jaInvestido -> "+$gastoNestePoder SP"
-                    podeComprarSupers -> "Disponível"
+                    podeComprarSupers -> "Selecionar"
                     else -> "Bloqueado"
                 }
 
