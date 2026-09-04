@@ -38,6 +38,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
@@ -132,7 +133,8 @@ fun SummaryContent(
     state: CriadorState,
     viewModel: CriadorViewModel = viewModel(),
     imageUri: Uri? = null,
-    onSelectImage: () -> Unit = {}
+    onSelectImage: () -> Unit = {},
+    onCropExistingImage: () -> Unit = {}
 ) {
 
     val context = LocalContext.current
@@ -410,7 +412,14 @@ fun SummaryContent(
                 if (showImageSettings) {
                     ImageSettingsDialog(
                         state = state,
-                        imageBitmap = imageBitmapState.value,
+                        onSelectNewImage = {
+                            showImageSettings = false
+                            onSelectImage()
+                        },
+                        onCropImage = {
+                            showImageSettings = false
+                            onCropExistingImage()
+                        },
                         onDismiss = { showImageSettings = false }
                     )
                 }
@@ -1262,76 +1271,56 @@ private fun PortraitImage(
 @Composable
 private fun ImageSettingsDialog(
     state: CriadorState,
-    imageBitmap: ImageBitmap?,
+    onSelectNewImage: () -> Unit,
+    onCropImage: () -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Ajustes da Foto") },
+        title = { Text("Ajustes do Retrato") },
         text = {
             Column(
                 modifier = Modifier
-                    .heightIn(max = 420.dp)
+                    .fillMaxWidth()
                     .verticalScroll(rememberScrollState())
             ) {
-                if (imageBitmap != null && state.portraitScaleType == "CROP") {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Card(
-                            modifier = Modifier
-                                .width(140.dp)
-                                .aspectRatio(0.8f),
-                            border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
-                        ) {
-                            PortraitImage(
-                                imageBitmap = imageBitmap,
-                                scaleType = state.portraitScaleType,
-                                offsetY = state.portraitOffsetY,
-                                zoom = state.portraitZoom,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(16.dp))
+                OutlinedButton(
+                    onClick = onCropImage,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text("Re-enquadrar foto atual")
                 }
 
-                Text("Modo de Exibição", style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(8.dp))
-                ChoiceButtonRow("Preencher (Corte)", state.portraitScaleType == "CROP") {
-                    state.portraitScaleType = "CROP"
-                }
-                ChoiceButtonRow("Ajustar (Inteiro)", state.portraitScaleType == "FIT") {
-                    state.portraitScaleType = "FIT"
+
+                OutlinedButton(
+                    onClick = onSelectNewImage,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text("Escolher outra foto da galeria")
                 }
 
                 Spacer(Modifier.height(16.dp))
-                Text("Tamanho", style = MaterialTheme.typography.labelLarge)
+
+                Text("Tamanho no resumo", style = MaterialTheme.typography.labelLarge)
                 Spacer(Modifier.height(4.dp))
                 com.example.swadebuilder.ui.components.CheckboxRow(
                     label = "Expandir (Ocupar 50% da largura)",
                     checked = state.expandirRetrato,
                     onCheckedChange = { state.expandirRetrato = it }
                 )
-
-                if (state.portraitScaleType == "CROP" && imageBitmap != null) {
-                    Spacer(Modifier.height(16.dp))
-                    Text("Posição (rosto ↔ corpo)", style = MaterialTheme.typography.labelLarge)
-                    Slider(
-                        value = state.portraitOffsetY,
-                        onValueChange = { state.portraitOffsetY = it },
-                        valueRange = 0f..1f
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-                    Text("Zoom", style = MaterialTheme.typography.labelLarge)
-                    Slider(
-                        value = state.portraitZoom,
-                        onValueChange = { state.portraitZoom = it },
-                        valueRange = 1f..2.5f
-                    )
-                }
             }
         },
         confirmButton = {
