@@ -133,8 +133,7 @@ fun SummaryContent(
     state: CriadorState,
     viewModel: CriadorViewModel = viewModel(),
     imageUri: Uri? = null,
-    onSelectImage: () -> Unit = {},
-    onCropExistingImage: () -> Unit = {}
+    onSelectImage: () -> Unit = {}
 ) {
 
     val context = LocalContext.current
@@ -340,8 +339,6 @@ fun SummaryContent(
                     }
                 }
 
-                var showImageSettings by remember { mutableStateOf(false) }
-
                 Card(
                     modifier = Modifier
                         .weight(0.7f)
@@ -384,44 +381,7 @@ fun SummaryContent(
                                 )
                             }
                         }
-
-                        if (imageBitmap != null) {
-                            IconButton(
-                                onClick = { showImageSettings = true },
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(4.dp)
-                                    .size(32.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Settings,
-                                    contentDescription = "Ajustes da Foto",
-                                    tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                                    modifier = Modifier
-                                        .background(
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                                            CircleShape
-                                        )
-                                        .padding(4.dp)
-                                )
-                            }
-                        }
                     }
-                }
-
-                if (showImageSettings) {
-                    ImageSettingsDialog(
-                        state = state,
-                        onSelectNewImage = {
-                            showImageSettings = false
-                            onSelectImage()
-                        },
-                        onCropImage = {
-                            showImageSettings = false
-                            onCropExistingImage()
-                        },
-                        onDismiss = { showImageSettings = false }
-                    )
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -1268,54 +1228,3 @@ private fun PortraitImage(
     )
 }
 
-@Composable
-private fun ImageSettingsDialog(
-    state: CriadorState,
-    onSelectNewImage: () -> Unit,
-    onCropImage: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Ajustes do Retrato") },
-        text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                OutlinedButton(
-                    onClick = onCropImage,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text("Re-enquadrar foto atual")
-                }
-
-                Spacer(Modifier.height(8.dp))
-
-                OutlinedButton(
-                    onClick = onSelectNewImage,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text("Escolher outra foto da galeria")
-                }
-
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Concluir") }
-        }
-    )
-}

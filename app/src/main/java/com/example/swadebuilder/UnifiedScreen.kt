@@ -1179,13 +1179,7 @@ private fun SummaryTabContent(
         SummaryContent(
             state = state,
             imageUri = portraitUri,
-            onSelectImage = { portraitLauncher.launch("image/*") },
-            onCropExistingImage = {
-                state.portraitFileName?.let {
-                    pendingCropUri = null
-                    pendingCropFileName = it
-                }
-            }
+            onSelectImage = { portraitLauncher.launch("image/*") }
         )
         Spacer(Modifier.height(12.dp))
 
