@@ -344,7 +344,7 @@ fun SummaryContent(
 
                 Card(
                     modifier = Modifier
-                        .weight(if (state.expandirRetrato) 1f else 0.6f)
+                        .weight(0.7f)
                         .aspectRatio(0.8f) // Fixed aspect ratio
                         .clickable(onClick = onSelectImage),
                     colors = CardDefaults.cardColors(
@@ -1312,15 +1312,6 @@ private fun ImageSettingsDialog(
                     Text("Escolher outra foto da galeria")
                 }
 
-                Spacer(Modifier.height(16.dp))
-
-                Text("Tamanho no resumo", style = MaterialTheme.typography.labelLarge)
-                Spacer(Modifier.height(4.dp))
-                com.example.swadebuilder.ui.components.CheckboxRow(
-                    label = "Expandir (Ocupar 50% da largura)",
-                    checked = state.expandirRetrato,
-                    onCheckedChange = { state.expandirRetrato = it }
-                )
             }
         },
         confirmButton = {
