@@ -1720,7 +1720,7 @@ private fun VantagemItem(
         isAuto -> "Automática / Racial"
         jaTem -> "Já selecionada"
         bloqueioClasse != null -> bloqueioClasse
-        requisitosOk -> "Requisitos OK"
+        requisitosOk -> "Selecionar"
         else -> "Requisitos pendentes"
     }
     val statusColor = when {

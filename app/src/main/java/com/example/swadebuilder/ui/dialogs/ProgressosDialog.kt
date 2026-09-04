@@ -1995,7 +1995,7 @@ private fun DialogVantagemItem(
     val statusText = when {
         jaTem -> "Já selecionada"
         bloqueioClasse != null -> bloqueioClasse
-        requisitosOk -> "Requisitos OK"
+        requisitosOk -> "Selecionar"
         else -> "Requisitos pendentes"
     }
     val statusColor = when {
