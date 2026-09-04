@@ -270,8 +270,6 @@ fun SummaryContent(
     }
 
     Column(Modifier.fillMaxWidth()) {
-        var showArchetypeDialog by remember { mutableStateOf(false) }
-
         HeroIdentityCard(
             nome = nome,
             onNomeChange = { state.nomePersonagem = it },
@@ -281,20 +279,8 @@ fun SummaryContent(
             portraitScaleType = state.portraitScaleType,
             portraitOffsetY = state.portraitOffsetY,
             portraitZoom = state.portraitZoom,
-            onSelectImage = onSelectImage,
-            showArchetypeButton = !state.modoProgressaoAtivo,
-            onApplyArchetypeClick = { showArchetypeDialog = true }
+            onSelectImage = onSelectImage
         )
-
-        if (showArchetypeDialog && !state.modoProgressaoAtivo) {
-            com.example.swadebuilder.ui.dialogs.ArchetypeSelectionDialog(
-                settingKey = state.getActiveOrigins().firstOrNull() ?: "BASICO",
-                onDismiss = { showArchetypeDialog = false },
-                onApplyArchetype = { archetype ->
-                    viewModel.applyArchetype(archetype)
-                }
-            )
-        }
 
         Spacer(Modifier.height(12.dp))
 
@@ -621,9 +607,7 @@ fun HeroIdentityCard(
     portraitScaleType: String = "CROP",
     portraitOffsetY: Float = 0.5f,
     portraitZoom: Float = 1.0f,
-    onSelectImage: () -> Unit = {},
-    showArchetypeButton: Boolean = false,
-    onApplyArchetypeClick: () -> Unit = {}
+    onSelectImage: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, portraitFileName) {
@@ -667,10 +651,10 @@ fun HeroIdentityCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Esquerda: Imagem do personagem (100dp x 100dp, cantos arredondados RoundedCornerShape(12.dp))
+                // Esquerda: Imagem do personagem (110dp x 110dp)
                 Card(
                     modifier = Modifier
-                        .size(100.dp)
+                        .size(110.dp)
                         .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
                         .clickable(onClick = onSelectImage),
                     shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
@@ -697,14 +681,14 @@ fun HeroIdentityCard(
                             Icon(
                                 imageVector = Icons.Default.Person,
                                 contentDescription = "Retrato",
-                                modifier = Modifier.size(48.dp),
+                                modifier = Modifier.size(52.dp),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
                             )
                         }
                     }
                 }
 
-                // Direita (Column em um Modifier.weight(1f)):
+                // Direita:
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -712,7 +696,7 @@ fun HeroIdentityCard(
                     OutlinedTextField(
                         value = nome,
                         onValueChange = { if (it.length <= 60) onNomeChange(it) },
-                        label = { Text("Nome do Personagem") },
+                        label = { Text("Nome") },
                         singleLine = true,
                         textStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         modifier = Modifier.fillMaxWidth(),
@@ -727,27 +711,9 @@ fun HeroIdentityCard(
                     Text(
                         text = ancestralidade,
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                     )
-
-                    if (showArchetypeButton) {
-                        OutlinedButton(
-                            onClick = onApplyArchetypeClick,
-                            modifier = Modifier.fillMaxWidth(),
-                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AutoAwesome,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text(
-                                text = "+ Aplicar Arquétipo / Template",
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                        }
-                    }
                 }
             }
         }
