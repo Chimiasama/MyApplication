@@ -727,6 +727,11 @@ class CriadorViewModel(
         fileName?.let { state.portraitFileName = it }
     }
 
+    suspend fun salvarRetratoRecortado(context: Context, bitmap: android.graphics.Bitmap) {
+        val fileName = CharacterPortraitStorage.saveCroppedBitmap(context, bitmap)
+        fileName?.let { state.portraitFileName = it }
+    }
+
     fun perPowerLimit(poderId: String): Int {
         return calculatePerPowerLimitUseCase.execute(
             CalculatePerPowerLimitUseCase.Input(

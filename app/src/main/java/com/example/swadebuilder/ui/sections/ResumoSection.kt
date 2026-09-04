@@ -38,6 +38,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.RocketLaunch
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
@@ -338,11 +339,9 @@ fun SummaryContent(
                     }
                 }
 
-                var showImageSettings by remember { mutableStateOf(false) }
-
                 Card(
                     modifier = Modifier
-                        .weight(if (state.expandirRetrato) 1f else 0.6f)
+                        .weight(0.7f)
                         .aspectRatio(0.8f) // Fixed aspect ratio
                         .clickable(onClick = onSelectImage),
                     colors = CardDefaults.cardColors(
@@ -382,37 +381,7 @@ fun SummaryContent(
                                 )
                             }
                         }
-
-                        if (imageBitmap != null) {
-                            IconButton(
-                                onClick = { showImageSettings = true },
-                                modifier = Modifier
-                                    .align(Alignment.TopEnd)
-                                    .padding(4.dp)
-                                    .size(32.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Settings,
-                                    contentDescription = "Ajustes da Foto",
-                                    tint = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
-                                    modifier = Modifier
-                                        .background(
-                                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
-                                            CircleShape
-                                        )
-                                        .padding(4.dp)
-                                )
-                            }
-                        }
                     }
-                }
-
-                if (showImageSettings) {
-                    ImageSettingsDialog(
-                        state = state,
-                        imageBitmap = imageBitmapState.value,
-                        onDismiss = { showImageSettings = false }
-                    )
                 }
             }
             Spacer(Modifier.height(12.dp))
@@ -1259,83 +1228,3 @@ private fun PortraitImage(
     )
 }
 
-@Composable
-private fun ImageSettingsDialog(
-    state: CriadorState,
-    imageBitmap: ImageBitmap?,
-    onDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Ajustes da Foto") },
-        text = {
-            Column(
-                modifier = Modifier
-                    .heightIn(max = 420.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                if (imageBitmap != null && state.portraitScaleType == "CROP") {
-                    Box(
-                        modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Card(
-                            modifier = Modifier
-                                .width(140.dp)
-                                .aspectRatio(0.8f),
-                            border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.outlineVariant)
-                        ) {
-                            PortraitImage(
-                                imageBitmap = imageBitmap,
-                                scaleType = state.portraitScaleType,
-                                offsetY = state.portraitOffsetY,
-                                zoom = state.portraitZoom,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                    }
-                    Spacer(Modifier.height(16.dp))
-                }
-
-                Text("Modo de Exibição", style = MaterialTheme.typography.labelLarge)
-                Spacer(Modifier.height(8.dp))
-                ChoiceButtonRow("Preencher (Corte)", state.portraitScaleType == "CROP") {
-                    state.portraitScaleType = "CROP"
-                }
-                ChoiceButtonRow("Ajustar (Inteiro)", state.portraitScaleType == "FIT") {
-                    state.portraitScaleType = "FIT"
-                }
-
-                Spacer(Modifier.height(16.dp))
-                Text("Tamanho", style = MaterialTheme.typography.labelLarge)
-                Spacer(Modifier.height(4.dp))
-                com.example.swadebuilder.ui.components.CheckboxRow(
-                    label = "Expandir (Ocupar 50% da largura)",
-                    checked = state.expandirRetrato,
-                    onCheckedChange = { state.expandirRetrato = it }
-                )
-
-                if (state.portraitScaleType == "CROP" && imageBitmap != null) {
-                    Spacer(Modifier.height(16.dp))
-                    Text("Posição (rosto ↔ corpo)", style = MaterialTheme.typography.labelLarge)
-                    Slider(
-                        value = state.portraitOffsetY,
-                        onValueChange = { state.portraitOffsetY = it },
-                        valueRange = 0f..1f
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-                    Text("Zoom", style = MaterialTheme.typography.labelLarge)
-                    Slider(
-                        value = state.portraitZoom,
-                        onValueChange = { state.portraitZoom = it },
-                        valueRange = 1f..2.5f
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Concluir") }
-        }
-    )
-}

@@ -135,9 +135,36 @@ object CharacterPortraitStorage {
             } ?: return@withContext null
 
             // Validate that the file is actually an image
-            // We need to read it back via EncryptedFile to validate
             val isValid = try {
                  loadPortrait(context, fileName) != null
+            } catch (e: Exception) { false }
+
+            if (!isValid) {
+                if (destination.exists()) destination.delete()
+                return@withContext null
+            }
+
+            fileName
+        } catch (e: Exception) {
+            if (destination.exists()) {
+                destination.delete()
+            }
+            null
+        }
+    }
+
+    suspend fun saveCroppedBitmap(context: Context, bitmap: Bitmap): String? = withContext(Dispatchers.IO) {
+        val dir = portraitsDirectory(context)
+        val fileName = "portrait_${UUID.randomUUID()}.jpg"
+        val destination = File(dir, fileName)
+
+        try {
+            destination.outputStream().use { output ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, output)
+            }
+
+            val isValid = try {
+                loadPortrait(context, fileName) != null
             } catch (e: Exception) { false }
 
             if (!isValid) {

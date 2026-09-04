@@ -1128,12 +1128,16 @@ private fun SummaryTabContent(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    // Restore image selection logic
+    var pendingCropUri by remember { mutableStateOf<Uri?>(null) }
+    var pendingCropFileName by remember { mutableStateOf<String?>(null) }
+
+    // Restore image selection logic with ImageCropperDialog
     val portraitLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-        coroutineScope.launch {
-            viewModel.atualizarRetrato(context, uri)
+        uri?.let {
+            pendingCropFileName = null
+            pendingCropUri = it
         }
     }
     val portraitFile = remember(state.portraitFileName, context) {
@@ -1147,6 +1151,24 @@ private fun SummaryTabContent(
         }
     }
     val portraitUri = portraitFile?.takeIf { it.exists() }?.let(Uri::fromFile)
+
+    if (pendingCropUri != null || pendingCropFileName != null) {
+        com.example.swadebuilder.ui.dialogs.ImageCropperDialog(
+            sourceUri = pendingCropUri,
+            sourceFileName = pendingCropFileName,
+            onDismiss = {
+                pendingCropUri = null
+                pendingCropFileName = null
+            },
+            onCropConfirmed = { croppedBitmap ->
+                coroutineScope.launch {
+                    viewModel.salvarRetratoRecortado(context, croppedBitmap)
+                    pendingCropUri = null
+                    pendingCropFileName = null
+                }
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
