@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui.dialogs
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Matrix
 import android.net.Uri
 import androidx.compose.foundation.Canvas
@@ -70,8 +71,7 @@ import kotlinx.coroutines.withContext
 import kotlin.math.max
 
 /**
- * Diálogo interativo de enquadramento e corte de foto (Pinch-to-zoom, Drag/Pan, Rotação e Crop).
- * Aceita uma Uri de imagem da galeria ou o nome do arquivo de retrato salvo em disco.
+ * Diálogo interativo de enquadramento e corte de foto (Pinch-to-zoom com efeito de pinça, Drag/Pan, Rotação e Zoom Out/Redução).
  */
 @Composable
 fun ImageCropperDialog(
@@ -87,7 +87,6 @@ fun ImageCropperDialog(
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    // Carregar o bitmap original em corrotina para não travar a UI
     LaunchedEffect(sourceUri, sourceFileName) {
         isLoading = true
         withContext(Dispatchers.IO) {
@@ -183,7 +182,6 @@ private fun ImageCropperContent(
     var zoom by remember { mutableFloatStateOf(1f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
 
-    // Obter bitmap com rotação para o Canvas e cálculos
     val currentBitmap = remember(originalBitmap, rotationDegrees) {
         if (rotationDegrees == 0f) {
             originalBitmap
@@ -205,10 +203,9 @@ private fun ImageCropperContent(
 
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
 
-    // Proporção da caixa de enquadramento do retrato (0.8f para caber perfeitamente no card do retrato)
+    // Proporção da caixa de enquadramento do retrato (0.8f para caber no card de retrato 140x175)
     val cropAspectRatio = 0.8f
 
-    // Calcular tamanho da caixa de corte dentro do container
     val cropBoxSize = remember(containerSize) {
         if (containerSize.width == 0 || containerSize.height == 0) {
             Size.Zero
@@ -226,7 +223,7 @@ private fun ImageCropperContent(
         }
     }
 
-    // Escala base para cobrir completamente a caixa de corte a zoom 1.0x
+    // Escala base para cobrir a caixa de corte no tamanho inicial de referência (1.0x)
     val baseScale = remember(currentBitmap, cropBoxSize) {
         if (cropBoxSize.width == 0f || cropBoxSize.height == 0f) 1f
         else {
@@ -237,7 +234,7 @@ private fun ImageCropperContent(
         }
     }
 
-    // Função de ajuste e limitação (clamp) do offset para garantir que a foto cubra a caixa de corte
+    // Função de ajuste e limite do offset permitindo mover tanto fotos ampliadas quanto reduzidas
     fun clampOffset(newOffset: Offset, currentZoom: Float): Offset {
         if (cropBoxSize.width == 0f || cropBoxSize.height == 0f) return Offset.Zero
 
@@ -245,8 +242,19 @@ private fun ImageCropperContent(
         val displayedW = currentBitmap.width * effectiveScale
         val displayedH = currentBitmap.height * effectiveScale
 
-        val maxOffsetX = max(0f, (displayedW - cropBoxSize.width) / 2f)
-        val maxOffsetY = max(0f, (displayedH - cropBoxSize.height) / 2f)
+        // Quando a imagem for maior que a caixa, limitamos para não deixar lacunas.
+        // Quando a imagem for menor (zoom out), permitimos mover em um raio confortável.
+        val maxOffsetX = if (displayedW >= cropBoxSize.width) {
+            (displayedW - cropBoxSize.width) / 2f
+        } else {
+            cropBoxSize.width / 2f
+        }
+
+        val maxOffsetY = if (displayedH >= cropBoxSize.height) {
+            (displayedH - cropBoxSize.height) / 2f
+        } else {
+            cropBoxSize.height / 2f
+        }
 
         return Offset(
             x = newOffset.x.coerceIn(-maxOffsetX, maxOffsetX),
@@ -272,7 +280,7 @@ private fun ImageCropperContent(
             }
         }
 
-        // Área do Cropper Viewport
+        // Área do Cropper Viewport com gesto de pinça (Pinch-to-zoom) e Arraste (Pan)
         Box(
             modifier = Modifier
                 .weight(1f)
@@ -282,7 +290,8 @@ private fun ImageCropperContent(
                 .onGloballyPositioned { containerSize = it.size }
                 .pointerInput(currentBitmap, cropBoxSize) {
                     detectTransformGestures { _, pan, gestureZoom, _ ->
-                        val newZoom = (zoom * gestureZoom).coerceIn(1f, 5f)
+                        // Pinch-to-zoom com limite de 0.2x (Reduzir) até 5.0x (Ampliar)
+                        val newZoom = (zoom * gestureZoom).coerceIn(0.2f, 5.0f)
                         zoom = newZoom
                         offset = clampOffset(offset + pan, newZoom)
                     }
@@ -317,7 +326,7 @@ private fun ImageCropperContent(
                         dstSize = IntSize(imageDrawWidth.toInt(), imageDrawHeight.toInt())
                     )
 
-                    // 2. Máscara Escura para destacar o enquadramento
+                    // 2. Máscara Escura para destacar a área enquadrada
                     val cornerRadiusPx = 16.dp.toPx()
                     val path = Path().apply {
                         addRect(Rect(Offset.Zero, size))
@@ -328,7 +337,7 @@ private fun ImageCropperContent(
                         drawRect(Color.Black.copy(alpha = 0.65f))
                     }
 
-                    // 3. Moldura da Caixa de Corte
+                    // 3. Moldura Branca da Caixa de Enquadramento
                     drawRoundRect(
                         color = Color.White,
                         topLeft = cropRect.topLeft,
@@ -350,7 +359,7 @@ private fun ImageCropperContent(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                // Slider e Botões de Zoom
+                // Slider e Botões (+ e -) para Zoom e Redução
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -358,12 +367,12 @@ private fun ImageCropperContent(
                 ) {
                     IconButton(
                         onClick = {
-                            val newZoom = (zoom - 0.25f).coerceIn(1f, 5f)
+                            val newZoom = (zoom - 0.2f).coerceIn(0.2f, 5.0f)
                             zoom = newZoom
                             offset = clampOffset(offset, newZoom)
                         }
                     ) {
-                        Icon(Icons.Default.Remove, contentDescription = "Diminuir Zoom")
+                        Icon(Icons.Default.Remove, contentDescription = "Diminuir / Reduzir")
                     }
 
                     Slider(
@@ -372,18 +381,18 @@ private fun ImageCropperContent(
                             zoom = newZoom
                             offset = clampOffset(offset, newZoom)
                         },
-                        valueRange = 1f..5f,
+                        valueRange = 0.2f..5.0f,
                         modifier = Modifier.weight(1f)
                     )
 
                     IconButton(
                         onClick = {
-                            val newZoom = (zoom + 0.25f).coerceIn(1f, 5f)
+                            val newZoom = (zoom + 0.2f).coerceIn(0.2f, 5.0f)
                             zoom = newZoom
                             offset = clampOffset(offset, newZoom)
                         }
                     ) {
-                        Icon(Icons.Default.Add, contentDescription = "Aumentar Zoom")
+                        Icon(Icons.Default.Add, contentDescription = "Aumentar / Expandir")
                     }
                 }
 
@@ -436,7 +445,7 @@ private fun ImageCropperContent(
 
                     Button(
                         onClick = {
-                            val cropped = cropBitmap(
+                            val cropped = cropBitmapToPortrait(
                                 currentBitmap = currentBitmap,
                                 cropBoxSize = cropBoxSize,
                                 baseScale = baseScale,
@@ -458,35 +467,49 @@ private fun ImageCropperContent(
 }
 
 /**
- * Função utilitária para calcular a sub-região visível na caixa de corte e gerar o Bitmap recortado.
+ * Gera um Bitmap de alta definição (512 x 640) renderizando a área visível do enquadramento.
+ * Garante fidelidade de 100% com o que o jogador posicionou na tela (incluindo zoom out/redução).
  */
-private fun cropBitmap(
+private fun cropBitmapToPortrait(
     currentBitmap: Bitmap,
     cropBoxSize: Size,
     baseScale: Float,
     zoom: Float,
     offset: Offset
 ): Bitmap {
+    val targetW = 512
+    val targetH = (targetW / 0.8f).toInt() // 640px
+
+    val outputBitmap = Bitmap.createBitmap(targetW, targetH, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(outputBitmap)
+
+    if (cropBoxSize.width <= 0f || cropBoxSize.height <= 0f) return outputBitmap
+
+    val scaleToOutput = targetW / cropBoxSize.width
+
     val effectiveScale = baseScale * zoom
+    val drawW = currentBitmap.width * effectiveScale * scaleToOutput
+    val drawH = currentBitmap.height * effectiveScale * scaleToOutput
 
-    // Tamanho da caixa de corte em coordenadas da imagem original (bitmap)
-    val cropWidthInBmp = cropBoxSize.width / effectiveScale
-    val cropHeightInBmp = cropBoxSize.height / effectiveScale
+    val centerX = targetW / 2f + offset.x * scaleToOutput
+    val centerY = targetH / 2f + offset.y * scaleToOutput
 
-    // Centro da caixa de corte dentro das coordenadas da imagem
-    val bmpCenterX = currentBitmap.width / 2f - (offset.x / effectiveScale)
-    val bmpCenterY = currentBitmap.height / 2f - (offset.y / effectiveScale)
+    val matrix = Matrix().apply {
+        postScale(
+            (drawW / currentBitmap.width.toFloat()),
+            (drawH / currentBitmap.height.toFloat())
+        )
+        postTranslate(
+            centerX - drawW / 2f,
+            centerY - drawH / 2f
+        )
+    }
 
-    val left = (bmpCenterX - cropWidthInBmp / 2f).coerceIn(0f, currentBitmap.width - cropWidthInBmp)
-    val top = (bmpCenterY - cropHeightInBmp / 2f).coerceIn(0f, currentBitmap.height - cropHeightInBmp)
+    val paint = android.graphics.Paint().apply {
+        isAntiAlias = true
+        isFilterBitmap = true
+    }
 
-    val width = cropWidthInBmp.coerceAtMost(currentBitmap.width - left)
-    val height = cropHeightInBmp.coerceAtMost(currentBitmap.height - top)
-
-    val cropX = left.toInt().coerceAtLeast(0)
-    val cropY = top.toInt().coerceAtLeast(0)
-    val cropW = width.toInt().coerceIn(1, currentBitmap.width - cropX)
-    val cropH = height.toInt().coerceIn(1, currentBitmap.height - cropY)
-
-    return Bitmap.createBitmap(currentBitmap, cropX, cropY, cropW, cropH)
+    canvas.drawBitmap(currentBitmap, matrix, paint)
+    return outputBitmap
 }
