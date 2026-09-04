@@ -270,41 +270,44 @@ fun SummaryContent(
     }
 
     Column(Modifier.fillMaxWidth()) {
-        IdentityCard(
+        var showArchetypeDialog by remember { mutableStateOf(false) }
+
+        HeroIdentityCard(
             nome = nome,
             onNomeChange = { state.nomePersonagem = it },
             ancestralidade = ancestralidadeDisplay,
-        activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList()
+            activeCompendiums = if (state.mostrarIdentificadorLivro) getCompendiumIcons(state) else emptyList(),
+            portraitFileName = state.portraitFileName,
+            portraitScaleType = state.portraitScaleType,
+            portraitOffsetY = state.portraitOffsetY,
+            portraitZoom = state.portraitZoom,
+            onSelectImage = onSelectImage,
+            showArchetypeButton = !state.modoProgressaoAtivo,
+            onApplyArchetypeClick = { showArchetypeDialog = true }
         )
 
-        if (!state.modoProgressaoAtivo) {
-            var showArchetypeDialog by remember { mutableStateOf(false) }
-
-            androidx.compose.material3.OutlinedButton(
-                onClick = { showArchetypeDialog = true },
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
-            ) {
-                Icon(Icons.Default.AutoAwesome, contentDescription = null)
-                Spacer(Modifier.size(8.dp))
-                Text("Aplicar Arquétipo / Template")
-            }
-
-            if (showArchetypeDialog) {
-                com.example.swadebuilder.ui.dialogs.ArchetypeSelectionDialog(
-                    settingKey = state.getActiveOrigins().firstOrNull() ?: "BASICO",
-                    onDismiss = { showArchetypeDialog = false },
-                    onApplyArchetype = { archetype ->
-                        viewModel.applyArchetype(archetype)
-                    }
-                )
-            }
+        if (showArchetypeDialog && !state.modoProgressaoAtivo) {
+            com.example.swadebuilder.ui.dialogs.ArchetypeSelectionDialog(
+                settingKey = state.getActiveOrigins().firstOrNull() ?: "BASICO",
+                onDismiss = { showArchetypeDialog = false },
+                onApplyArchetype = { archetype ->
+                    viewModel.applyArchetype(archetype)
+                }
+            )
         }
 
         Spacer(Modifier.height(12.dp))
 
+        attributesSection?.let { attrSection ->
+            PrimaryAttributesRow(
+                attributes = attrSection.toStats()
+            )
+            Spacer(Modifier.height(12.dp))
+        }
+
         derivedSection?.let {
             val showWealthControl = state.modoProgressaoAtivo && state.usaRiqueza
-            DerivedStatsRow(
+            SecondaryAttributesBar(
                 stats = it.toStats(),
                 onFamaChange = if (state.modoProgressaoAtivo && state.optRegraFama) { delta ->
                     state.famaManual += delta
@@ -317,100 +320,8 @@ fun SummaryContent(
             Spacer(Modifier.height(12.dp))
         }
 
-        // Layout: Attributes + Image Placeholder in a Row, then Skills below
-        attributesSection?.let { attrSection ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                SummarySectionCard(
-                    section = attrSection,
-                    modifier = Modifier.weight(1f),
-                    textStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
-                )
-
-                // Image Placeholder
-                val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, state.portraitFileName) {
-                    value = if (state.portraitFileName == null) {
-                        null
-                    } else {
-                        CharacterPortraitStorage.loadPortrait(context, state.portraitFileName!!, targetWidth = 512)?.asImageBitmap()
-                    }
-                }
-
-                Card(
-                    modifier = Modifier
-                        .weight(0.7f)
-                        .aspectRatio(0.8f) // Fixed aspect ratio
-                        .clickable(onClick = onSelectImage),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    border = androidx.compose.foundation.BorderStroke(4.dp, MaterialTheme.colorScheme.surfaceVariant)
-                ) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        val imageBitmap = imageBitmapState.value
-                        val isPortraitLoading = state.portraitFileName != null && imageBitmap == null
-                        if (imageBitmap != null) {
-                            PortraitImage(
-                                imageBitmap = imageBitmap,
-                                scaleType = state.portraitScaleType,
-                                offsetY = state.portraitOffsetY,
-                                zoom = state.portraitZoom,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        } else if (isPortraitLoading) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                com.example.swadebuilder.ui.components.LoadingState(modifier = Modifier.fillMaxWidth())
-                            }
-                        } else {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Person,
-                                    contentDescription = "Retrato",
-                                    modifier = Modifier.size(48.dp),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            Spacer(Modifier.height(12.dp))
-        }
-
-        // Skills Section (Horizontal / Flow)
         skillsSection?.let { skillSection ->
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(Modifier.padding(12.dp)) {
-                    Text(
-                        text = skillSection.title,
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        skillSection.items.forEach { item ->
-                            SkillChip(item)
-                        }
-                    }
-                }
-            }
+            SkillsSection(skills = skillSection.items)
             Spacer(Modifier.height(12.dp))
         }
 
@@ -657,20 +568,81 @@ private fun SummarySection.toStats(): List<Pair<String, String>> =
     }
 
 @Composable
-private fun IdentityCard(
+fun PrimaryAttributesRow(
+    attributes: List<Pair<String, String>>,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            attributes.forEach { (name, value) ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        text = value,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun HeroIdentityCard(
     nome: String,
     onNomeChange: (String) -> Unit,
     ancestralidade: String,
-    activeCompendiums: List<Pair<ImageVector, Color>> = emptyList()
+    activeCompendiums: List<Pair<ImageVector, Color>> = emptyList(),
+    portraitFileName: String? = null,
+    portraitScaleType: String = "CROP",
+    portraitOffsetY: Float = 0.5f,
+    portraitZoom: Float = 1.0f,
+    onSelectImage: () -> Unit = {},
+    showArchetypeButton: Boolean = false,
+    onApplyArchetypeClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val imageBitmapState = produceState<ImageBitmap?>(initialValue = null, portraitFileName) {
+        value = if (portraitFileName == null) {
+            null
+        } else {
+            CharacterPortraitStorage.loadPortrait(context, portraitFileName, targetWidth = 512)?.asImageBitmap()
+        }
+    }
+
     Card(
         modifier = Modifier.fillMaxWidth(),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ),
         border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
-        Column(Modifier.padding(16.dp)) {
+        Column(Modifier.padding(12.dp)) {
             if (activeCompendiums.isNotEmpty()) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -682,34 +654,102 @@ private fun IdentityCard(
                             contentDescription = null,
                             tint = color,
                             modifier = Modifier
-                                .size(24.dp)
-                                .padding(start = 4.dp)
+                                .size(20.dp)
+                                .padding(start = 2.dp)
                         )
                     }
                 }
                 Spacer(Modifier.height(4.dp))
             }
 
-            OutlinedTextField(
-                value = nome,
-                onValueChange = { if (it.length <= 60) onNomeChange(it) },
-                label = { Text("Nome do Personagem") },
-                supportingText = { Text("${nome.length}/60") },
-                singleLine = true,
+            Row(
                 modifier = Modifier.fillMaxWidth(),
-                colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.surface,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                    focusedBorderColor = MaterialTheme.colorScheme.primary,
-                    focusedLabelColor = MaterialTheme.colorScheme.primary
-                )
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = ancestralidade,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Esquerda: Imagem do personagem (100dp x 100dp, cantos arredondados RoundedCornerShape(12.dp))
+                Card(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                        .clickable(onClick = onSelectImage),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                ) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        val imageBitmap = imageBitmapState.value
+                        val isPortraitLoading = portraitFileName != null && imageBitmap == null
+                        if (imageBitmap != null) {
+                            PortraitImage(
+                                imageBitmap = imageBitmap,
+                                scaleType = portraitScaleType,
+                                offsetY = portraitOffsetY,
+                                zoom = portraitZoom,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        } else if (isPortraitLoading) {
+                            com.example.swadebuilder.ui.components.LoadingState(modifier = Modifier.fillMaxWidth())
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = "Retrato",
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                        }
+                    }
+                }
+
+                // Direita (Column em um Modifier.weight(1f)):
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    OutlinedTextField(
+                        value = nome,
+                        onValueChange = { if (it.length <= 60) onNomeChange(it) },
+                        label = { Text("Nome do Personagem") },
+                        singleLine = true,
+                        textStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = MaterialTheme.colorScheme.surface,
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            focusedLabelColor = MaterialTheme.colorScheme.primary
+                        )
+                    )
+
+                    Text(
+                        text = ancestralidade,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    if (showArchetypeButton) {
+                        OutlinedButton(
+                            onClick = onApplyArchetypeClick,
+                            modifier = Modifier.fillMaxWidth(),
+                            contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AutoAwesome,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(Modifier.width(4.dp))
+                            Text(
+                                text = "+ Aplicar Arquétipo / Template",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -838,32 +878,92 @@ private fun CombatRow(name: String, stats: String, notes: String) {
 
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
-private fun DerivedStatsRow(
+fun SecondaryAttributesBar(
     stats: List<Pair<String, String>>,
     onFamaChange: ((Int) -> Unit)? = null,
     onWealthChange: ((Int) -> Unit)? = null,
-    wealthDieValue: String? = null
+    wealthDieValue: String? = null,
+    modifier: Modifier = Modifier
 ) {
-    if (stats.isEmpty()) return
+    val statsMap = stats.toMap()
+    val mainMetrics = listOf(
+        "APARAR" to (statsMap["Aparar"] ?: "-"),
+        "RESIST." to (statsMap["Resistência"] ?: "-"),
+        "TAM." to (statsMap["Tamanho"] ?: "0"),
+        "MOV." to (statsMap["Movimento"] ?: "6"),
+        "CORRIDA" to (statsMap["Corrida"] ?: "d6")
+    )
 
-    FlowRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        stats.forEach { (label, value) ->
-            if (label == "Fama" && onFamaChange != null) {
-                EditableCircleStat(label = label, value = value, onDelta = onFamaChange)
-            } else {
-                CircleStat(label = label, value = value)
+    val extraStats = stats.filterNot { (k, _) ->
+        k in setOf("Aparar", "Resistência", "Tamanho", "Movimento", "Corrida")
+    }
+
+    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
+            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                mainMetrics.forEachIndexed { index, (label, value) ->
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = label,
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = value,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    if (index < mainMetrics.lastIndex) {
+                        androidx.compose.material3.VerticalDivider(
+                            modifier = Modifier.height(28.dp),
+                            thickness = 1.dp,
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+                        )
+                    }
+                }
             }
         }
 
-        // Se a riqueza deve ser mostrada como dado editável (apenas em progresso + regra ativa)
-        if (wealthDieValue != null && onWealthChange != null) {
-             EditableCircleStat(label = "Riqueza", value = wealthDieValue, onDelta = onWealthChange)
+        if (extraStats.isNotEmpty() || (wealthDieValue != null && onWealthChange != null)) {
+            FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                extraStats.forEach { (label, value) ->
+                    if (label == "Fama" && onFamaChange != null) {
+                        EditableCircleStat(label = label, value = value, onDelta = onFamaChange)
+                    } else {
+                        CircleStat(label = label, value = value)
+                    }
+                }
+                if (wealthDieValue != null && onWealthChange != null) {
+                    EditableCircleStat(label = "Riqueza", value = wealthDieValue, onDelta = onWealthChange)
+                }
+            }
         }
     }
 }
@@ -1172,31 +1272,67 @@ private fun SpecializationsSummaryCard(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SkillChip(text: String) {
-    val label = text.substringBefore(":").trim()
-    val value = text.substringAfter(":").trim()
+fun SkillsSection(
+    skills: List<String>,
+    modifier: Modifier = Modifier
+) {
+    if (skills.isEmpty()) return
 
-    androidx.compose.material3.Surface(
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(8.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
         border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {
-        Row(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
+        Column(Modifier.padding(12.dp)) {
             Text(
-                text = label,
-                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                color = MaterialTheme.colorScheme.primary
+                text = "Perícias",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold
             )
-            if (value.isNotBlank() && value != label) {
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                    modifier = Modifier.padding(start = 4.dp)
-                )
+            Spacer(Modifier.height(8.dp))
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                skills.forEach { item ->
+                    SkillChip(item)
+                }
             }
         }
     }
+}
+
+@Composable
+private fun SkillChip(text: String) {
+    val label = text.substringBefore(":").trim()
+    val value = text.substringAfter(":", missingDelimiterValue = "").trim()
+
+    val displayText = if (value.isNotBlank() && value != label) "$label $value" else label
+
+    androidx.compose.material3.AssistChip(
+        onClick = {},
+        label = {
+            Text(
+                text = displayText,
+                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold)
+            )
+        },
+        shape = androidx.compose.foundation.shape.CircleShape,
+        colors = androidx.compose.material3.AssistChipDefaults.assistChipColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+            labelColor = MaterialTheme.colorScheme.onSurface
+        ),
+        border = androidx.compose.material3.AssistChipDefaults.assistChipBorder(
+            enabled = true,
+            borderColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.8f)
+        )
+    )
 }
 
 /**
