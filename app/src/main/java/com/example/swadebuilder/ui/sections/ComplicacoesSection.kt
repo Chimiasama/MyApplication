@@ -538,46 +538,48 @@ fun ComplicacoesSection(
                     }
                 }
 
-                if (!locked) {
-                    val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
-                    val listaParaMostrar = uniqueComplications
-                        .filter { comp ->
-                            val keyId = normalizeUIKey(comp.id)
-                            val keyName = normalizeUIKey(comp.name)
-                            keyId !in autoBaseKeys && keyName !in autoBaseKeys
-                        }
-
-                    items(
-                        items = listaParaMostrar,
-                        key = { it.id }
-                    ) { comp ->
-                        // Using key so state is preserved
-                        ComplicacaoItem(
-                            comp = comp,
-                            state = state,
-                            locked = locked,
-                            allowLongTexts = allowLongTexts,
-                            showOfficialNames = showOfficialNames,
-                            groupedComplications = groupedComplications,
-                            detalhesExpandidos = detalhesExpandidos,
-                            onUserFeedback = onUserFeedback,
-                            onLogFeedback = onLogFeedback,
-                            onError = { msg ->
-                                if (msg.contains("Pontos em uso")) {
-                                    complicationToRemove = comp
-                                    showPcInUseDialog = true
-                                } else {
-                                    tempErrorMsg = msg
-                                    showTempError = true
-                                    scope.launch {
-                                        delay(2000L)
-                                        showTempError = false
-                                    }
-                                }
-                            },
-                            peqComp = pequComp
-                        )
+                // A lista fica sempre visível (mesmo travada em Supers/Progressos) para
+                // que dê pra ler as complicações — ComplicacaoItem já desabilita os
+                // botões de Menor/Maior internamente quando `locked` é true, sem
+                // impedir o toque no card para abrir a descrição completa.
+                val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
+                val listaParaMostrar = uniqueComplications
+                    .filter { comp ->
+                        val keyId = normalizeUIKey(comp.id)
+                        val keyName = normalizeUIKey(comp.name)
+                        keyId !in autoBaseKeys && keyName !in autoBaseKeys
                     }
+
+                items(
+                    items = listaParaMostrar,
+                    key = { it.id }
+                ) { comp ->
+                    // Using key so state is preserved
+                    ComplicacaoItem(
+                        comp = comp,
+                        state = state,
+                        locked = locked,
+                        allowLongTexts = allowLongTexts,
+                        showOfficialNames = showOfficialNames,
+                        groupedComplications = groupedComplications,
+                        detalhesExpandidos = detalhesExpandidos,
+                        onUserFeedback = onUserFeedback,
+                        onLogFeedback = onLogFeedback,
+                        onError = { msg ->
+                            if (msg.contains("Pontos em uso")) {
+                                complicationToRemove = comp
+                                showPcInUseDialog = true
+                            } else {
+                                tempErrorMsg = msg
+                                showTempError = true
+                                scope.launch {
+                                    delay(2000L)
+                                    showTempError = false
+                                }
+                            }
+                        },
+                        peqComp = pequComp
+                    )
                 }
             } // End LazyColumn
         }
