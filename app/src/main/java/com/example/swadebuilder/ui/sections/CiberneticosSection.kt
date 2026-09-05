@@ -43,6 +43,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
+private val ciberneticosSectionJson = Json { ignoreUnknownKeys = true }
+
 @OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun CiberneticosSection(
@@ -54,7 +56,7 @@ fun CiberneticosSection(
     val ciberneticoCatalog = remember(context) {
         runCatching {
             context.assets.open("scifi_ciberneticos.json").use { input ->
-                Json { ignoreUnknownKeys = true }.decodeFromStream<CiberneticoCatalogWrapper>(input).ciberneticos
+                ciberneticosSectionJson.decodeFromStream<CiberneticoCatalogWrapper>(input).ciberneticos
             }
         }.getOrElse { emptyList() }.map { it.exibido() }
     }

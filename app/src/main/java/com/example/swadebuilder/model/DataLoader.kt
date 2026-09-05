@@ -2,6 +2,7 @@ package com.example.swadebuilder.model
 
 import android.content.Context
 import android.util.Log
+import com.example.swadebuilder.BuildConfig
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.keyify
@@ -47,7 +48,7 @@ object DataLoader {
 
     private fun EquipamentoItem.comObservacoesExibidas(): EquipamentoItem =
         if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) {
-            copy(observacoes = JsonPrimitive(descricaoLite!!))
+            copy(observacoes = JsonPrimitive(descricaoLite))
         } else this
 
     // Perícias vivem em um único arquivo consolidado (pericias.json). Diferente do
@@ -143,7 +144,7 @@ object DataLoader {
     }
 
     private fun RacialAbility.exibida(): RacialAbility =
-        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite!!) else this
+        if (!EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this
 
     // Poderes vivem em um único arquivo consolidado (poderes.json). Como em Equipamentos e
     // Ancestralidades, cada nome de poder compartilhado entre livros tem dados diferentes
@@ -389,7 +390,7 @@ object DataLoader {
             }
         }
 
-        if ("CIDADE_SOL_VAPOR" in keys) {
+        if (BuildConfig.DEBUG && "CIDADE_SOL_VAPOR" in keys) {
             val steamAll = todasVantagens.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }
             Log.d(
                 "SWADE_DEBUG",

@@ -577,7 +577,7 @@ fun AncestralidadesSection(
 
                                                 if (marcado && trait.exigeEscolhaAtributo) {
                                                     var atributoExpanded by remember { mutableStateOf(false) }
-                                                    val atributoEscolhido = selecaoAtual?.escolhaAtributo ?: state.listaAtributos.firstOrNull().orEmpty()
+                                                    val atributoEscolhido = selecaoAtual.escolhaAtributo ?: state.listaAtributos.firstOrNull().orEmpty()
                                                     Row(
                                                         modifier = Modifier.padding(start = 32.dp),
                                                         verticalAlignment = Alignment.CenterVertically
@@ -608,7 +608,7 @@ fun AncestralidadesSection(
                                                 if (marcado && trait.exigeEscolhaPericia) {
                                                     var periciaExpanded by remember { mutableStateOf(false) }
                                                     val periciasDisponiveis = state.periciasFiltradasPorCompendio.sortedBy { it.nome }
-                                                    val periciaEscolhida = selecaoAtual?.escolhaPericia
+                                                    val periciaEscolhida = selecaoAtual.escolhaPericia
                                                         ?: periciasDisponiveis.firstOrNull()?.nome.orEmpty()
                                                     Row(
                                                         modifier = Modifier.padding(start = 32.dp),

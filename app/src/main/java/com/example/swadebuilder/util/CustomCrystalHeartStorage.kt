@@ -42,7 +42,7 @@ object CustomCrystalHeartStorage {
     }
 
     fun saveCustomHeart(context: Context, heart: CrystalHeart): CrystalHeart? {
-        val sanitized = sanitize(heart) ?: return null
+        val sanitized = sanitize(heart)
         val current = load(context).toMutableList()
         val existingIndex = current.indexOfFirst { it.id == sanitized.id }
         if (existingIndex >= 0) {

@@ -130,6 +130,8 @@ android {
     // 🔹 Lint (relatório de warnings de código, estilo e sugestões)
     // ------------------------------------------------------------
     lint {
+        // Regras de supressão específicas (ex.: falso positivo de biblioteca terceira).
+        lintConfig = file("lint.xml")
         // Não quebra o build por causa de warnings — apenas reporta.
         abortOnError = false
         warningsAsErrors = false

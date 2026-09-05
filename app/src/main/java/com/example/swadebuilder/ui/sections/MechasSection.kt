@@ -71,6 +71,8 @@ import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
+private val mechasSectionJson = Json { ignoreUnknownKeys = true }
+
 @OptIn(ExperimentalLayoutApi::class, ExperimentalSerializationApi::class)
 @Composable
 fun MechasSection(
@@ -82,7 +84,7 @@ fun MechasSection(
     val mechaCatalog = remember(context) {
         runCatching {
             context.assets.open("scifi_mechas.json").use { input ->
-                Json { ignoreUnknownKeys = true }.decodeFromStream<MechaCatalogWrapper>(input).mechas
+                mechasSectionJson.decodeFromStream<MechaCatalogWrapper>(input).mechas
             }
         }.getOrElse { emptyList() }
     }
@@ -90,7 +92,7 @@ fun MechasSection(
     val modCatalog = remember(context) {
         runCatching {
             context.assets.open("scifi_mecha_mods.json").use { input ->
-                Json { ignoreUnknownKeys = true }.decodeFromStream<MechaModCatalogWrapper>(input).modificadores
+                mechasSectionJson.decodeFromStream<MechaModCatalogWrapper>(input).modificadores
             }
         }.getOrElse { emptyList() }.map { it.exibido() }
     }
@@ -98,7 +100,7 @@ fun MechasSection(
     val weaponCatalog = remember(context) {
         runCatching {
             context.assets.open("scifi_mecha_weapons.json").use { input ->
-                Json { ignoreUnknownKeys = true }.decodeFromStream<MechaWeaponCatalogWrapper>(input).armas
+                mechasSectionJson.decodeFromStream<MechaWeaponCatalogWrapper>(input).armas
             }
         }.getOrElse { emptyList() }.map { it.exibido() }
     }

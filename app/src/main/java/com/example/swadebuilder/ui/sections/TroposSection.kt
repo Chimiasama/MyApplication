@@ -1149,7 +1149,7 @@ fun TroposSection(
                             when (vantagemRoll) {
                                 1, 2, 3, 4, 5, 6 -> {
                                     Text(
-                                        text = "Resultado: ${vantagemOpcoes[(vantagemRoll ?: 1) - 1]}",
+                                        text = "Resultado: ${vantagemOpcoes[vantagemRoll - 1]}",
                                         style = MaterialTheme.typography.bodySmall,
                                         modifier = Modifier.padding(start = 40.dp, top = 4.dp)
                                     )

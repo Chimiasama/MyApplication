@@ -412,7 +412,7 @@ fun UnifiedScreen(
                         }
 
                         state.meioElfoAgil = true
-                        state.recalcularPontosAtributo(viewModel.feedbackMessages as MutableList<String>)
+                        state.recalcularPontosAtributo(viewModel.feedbackMessages)
                         pendingAncestryKey = null
                         showMeioElfoDialog = false
                     }

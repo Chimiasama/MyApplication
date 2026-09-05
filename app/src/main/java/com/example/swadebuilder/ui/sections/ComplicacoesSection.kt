@@ -728,7 +728,7 @@ private fun ComplicacaoItem(
                 val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
                 val customBadge = if (isCustom) " ⓒ" else ""
                 Text(
-                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName!!.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
+                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
                     style = MaterialTheme.typography.titleSmall
                 )
                 if (cur != null) {
@@ -853,7 +853,7 @@ private fun ComplicacaoItem(
     }
 
     if (showDetailsDialog) {
-        val titleText = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName!!.toFancyTitleCase() else comp.name.toFancyTitleCase()
+        val titleText = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName.toFancyTitleCase() else comp.name.toFancyTitleCase()
         AlertDialog(
             onDismissRequest = { showDetailsDialog = false },
             title = {

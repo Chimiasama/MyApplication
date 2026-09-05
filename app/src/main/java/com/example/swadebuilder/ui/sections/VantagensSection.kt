@@ -1781,7 +1781,7 @@ private fun VantagemItem(
                     val isCustom = vant.origem.equals("CUSTOM", ignoreCase = true) || vant.id.startsWith("custom:") || vant.id.startsWith("fanmade:")
                     val customBadge = if (isCustom) " ⓒ" else ""
                     Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) "${vant.originalName!!.toFancyTitleCase()}$customBadge" else "${vant.nomeExibicao.toFancyTitleCase()}$customBadge",
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) "${vant.originalName.toFancyTitleCase()}$customBadge" else "${vant.nomeExibicao.toFancyTitleCase()}$customBadge",
                         style = MaterialTheme.typography.titleSmall
                     )
 
@@ -1853,9 +1853,9 @@ private fun VantagemItem(
     }
 
     if (showDetailsDialog) {
-        val titleText = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase()
+        val titleText = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase()
         val rawDescription = if (showOfficialNames && !vant.originalDescription.isNullOrBlank()) {
-            vant.originalDescription!!.trim()
+            vant.originalDescription.trim()
         } else {
             vant.descricao.trim()
         }

@@ -489,7 +489,7 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
             val paStr = if (isNaturalWeapon && (paVal == null || paVal == "0" || paVal.isBlank())) "-" else paVal ?: "0"
 
             val showOfficialNames = EditionConfig.isFullEdition && p.modoOficialAtivo
-            val nomeArma = if (showOfficialNames && !w.originalName.isNullOrBlank()) w.originalName!! else w.nomeExibicao
+            val nomeArma = if (showOfficialNames && !w.originalName.isNullOrBlank()) w.originalName else w.nomeExibicao
 
             val data = listOf(
                 nomeArma,
@@ -561,7 +561,7 @@ fun gerarFichaEmPdf(
     personagem.complicacoes.forEach { id ->
         val comp = mapPorId[id.keyify()]
         if (comp != null) {
-            val name = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName!! else comp.nomeExibicao
+            val name = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName else comp.nomeExibicao
             val baseName = name.toFancyTitleCase()
 
             val severityStr = comp.severity.trim().lowercase()
@@ -597,7 +597,7 @@ fun gerarFichaEmPdf(
         try {
             val v = listaVantagens.firstOrNull { it.id == id }
             val baseName = if (v != null) {
-                if (showOfficialNames && !v.originalName.isNullOrBlank()) v.originalName!! else v.nomeExibicao
+                if (showOfficialNames && !v.originalName.isNullOrBlank()) v.originalName else v.nomeExibicao
             } else {
                 if (!EditionConfig.isFullEdition) GenericNameMapper.map(id) else id
             }
@@ -690,7 +690,7 @@ fun gerarFichaEmPdf(
 
     // Gear
     val gear = personagem.equipamentos.filterNot { it.dano != null }.map { eq ->
-        val name = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName!! else eq.nomeExibicao
+        val name = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nomeExibicao
         name.toFancyTitleCase()
     }
     if (gear.isNotEmpty()) {
