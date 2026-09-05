@@ -44,14 +44,9 @@ fun CriadorState.calcularPericiaRules(
 
     val minimoBasico: Int = minPericiaPorVantagem[pericia] ?: 0
     val opcionalList: List<Int> = vantagensSelecionadas.flatMap { vant ->
-        val mapaOpc = vant.requisitos.periciaMinOpcional
-        if (mapaOpc != null) {
-            mapaOpc.entries
-                .filter { it.key.equals(pericia.nome, ignoreCase = true) }
-                .map { it.value }
-        } else {
-            emptyList()
-        }
+        vant.requisitos.periciaMinOpcional.entries
+            .filter { it.key.equals(pericia.nome, ignoreCase = true) }
+            .map { it.value }
     }
     val minimoOpcional: Int = opcionalList.maxOrNull() ?: 0
     val linguistaMin = linguistaMinRawFor(pericia)
