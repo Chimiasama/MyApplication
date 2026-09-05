@@ -125,6 +125,26 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    // ------------------------------------------------------------
+    // 🔹 Lint (relatório de warnings de código, estilo e sugestões)
+    // ------------------------------------------------------------
+    lint {
+        // Não quebra o build por causa de warnings — apenas reporta.
+        abortOnError = false
+        warningsAsErrors = false
+        // Roda também nas variantes de release, para não perder avisos.
+        checkReleaseBuilds = false
+        // Habilita todos os checks de lint (inclusive os desligados por padrão),
+        // para refletir o mesmo conjunto de avisos que aparece no Android Studio.
+        checkAllWarnings = true
+        ignoreWarnings = false
+        // Gera relatórios em texto, HTML e XML para consumo humano e por ferramentas.
+        textReport = true
+        textOutput = layout.buildDirectory.file("reports/lint/lint-results.txt").get().asFile
+        htmlReport = true
+        xmlReport = true
+    }
 }
 
 // ------------------------------------------------------------
