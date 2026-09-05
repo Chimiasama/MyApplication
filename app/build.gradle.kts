@@ -139,9 +139,10 @@ android {
         // para refletir o mesmo conjunto de avisos que aparece no Android Studio.
         checkAllWarnings = true
         ignoreWarnings = false
-        // Gera relatórios em texto, HTML e XML para consumo humano e por ferramentas.
+        // Gera relatórios em texto (no próprio console, um por variante — sem
+        // caminho fixo, senão a variante "lite" sobrescreveria o texto da "full"),
+        // além de HTML e XML para consumo humano e por ferramentas.
         textReport = true
-        textOutput = layout.buildDirectory.file("reports/lint/lint-results.txt").get().asFile
         htmlReport = true
         xmlReport = true
     }

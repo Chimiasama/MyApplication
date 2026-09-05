@@ -36,7 +36,7 @@ jobs:
       - name: Run Android Lint (full + lite, debug)
         continue-on-error: true
         run: |
-          ./gradlew :app:lintFullDebug :app:lintLiteDebug --console=plain
+          ./gradlew :app:lintFullDebug :app:lintLiteDebug --console=plain 2>&1 | tee lint_output.txt
 
       - name: Capture Kotlin compiler warnings
         continue-on-error: true
@@ -68,7 +68,7 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload lint reports (HTML/XML)
+      - name: Upload lint reports (HTML/XML/text)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -76,7 +76,7 @@ jobs:
           path: |
             app/build/reports/lint-results-*.html
             app/build/reports/lint-results-*.xml
-            app/build/reports/lint/lint-results.txt
+            lint_output.txt
           if-no-files-found: warn
 
       - name: Upload Kotlin compiler warnings log
