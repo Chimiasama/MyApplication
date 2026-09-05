@@ -398,10 +398,12 @@ object DataLoader {
                     "vantagens_total=${todasVantagens.size}, sol_vapor_total=${steamAll.size}"
             )
             steamAll.take(20).forEach { vant ->
-                Log.d(
-                    "SWADE_DEBUG",
-                    "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
-                )
+                if (BuildConfig.DEBUG) {
+                    Log.d(
+                        "SWADE_DEBUG",
+                        "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
+                    )
+                }
             }
         }
 
