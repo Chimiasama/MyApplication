@@ -1725,7 +1725,7 @@ private fun VantagemItem(
     }
     val statusColor = when {
         isAuto -> MaterialTheme.colorScheme.onSurfaceVariant
-        jaTem -> MaterialTheme.colorScheme.tertiary
+        jaTem -> MaterialTheme.colorScheme.onTertiaryContainer
         bloqueioClasse != null -> MaterialTheme.colorScheme.error
         requisitosOk -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.error

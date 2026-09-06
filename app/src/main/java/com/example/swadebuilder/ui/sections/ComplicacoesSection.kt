@@ -737,7 +737,7 @@ private fun ComplicacaoItem(
                     Text(
                         text = "Selecionada ($cur)",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 } else if (!requisitosOk) {
                     Text(

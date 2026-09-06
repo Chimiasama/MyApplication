@@ -34,6 +34,13 @@ val DefaultThemeData = AppThemeData(
         onSecondaryContainer = OldSchoolInk,
         tertiary = OldSchoolInkSoft,
         onTertiary = Color.White,
+        // tertiaryContainer nunca tinha sido definido em nenhum dos 8 temas —
+        // caía sempre no rosa-claro padrão do Material3 (ex.: card de Vantagem/
+        // Complicação/Poder "já selecionado"), sem nenhuma relação com a
+        // identidade do tema. Tom de pergaminho envelhecido, puxando pro
+        // castanho de OldSchoolInkSoft em vez de rosa.
+        tertiaryContainer = Color(0xFFE3DCD2),
+        onTertiaryContainer = OldSchoolInk,
         background = OldSchoolPaper,
         onBackground = OldSchoolInk,
         surface = OldSchoolSurface,
@@ -56,6 +63,8 @@ val DefaultThemeData = AppThemeData(
         onSecondaryContainer = OldSchoolPaper,
         tertiary = OldSchoolInkSoft,
         onTertiary = OldSchoolPaper,
+        tertiaryContainer = Color(0xFF3A322A),
+        onTertiaryContainer = OldSchoolPaper,
         background = OldSchoolDarkBg,
         onBackground = OldSchoolPaper,
         surface = OldSchoolDarkSurface,
@@ -89,6 +98,10 @@ val MedievalThemeData = AppThemeData(
         onSecondaryContainer = MedInk,
         tertiary = MedGold.copy(alpha = 0.8f),
         onTertiary = MedPaper,
+        // tertiaryContainer nunca tinha sido definido — mesma limpeza do rosa-
+        // padrão do Material3 aplicada aos outros containers deste tema.
+        tertiaryContainer = Color(0xFFF0E4C8),
+        onTertiaryContainer = MedInk,
         background = MedPaper,
         onBackground = MedInk,
         surface = MedPaper.copy(alpha = 0.98f),
@@ -111,6 +124,8 @@ val MedievalThemeData = AppThemeData(
         onSecondaryContainer = MedPaper,
         tertiary = MedGold.copy(alpha = 0.9f),
         onTertiary = MedInk,
+        tertiaryContainer = Color(0xFF5C4A2A),
+        onTertiaryContainer = MedPaper,
         background = MedInk,
         onBackground = MedPaper,
         surface = Color(0xFF2B1E1A),
@@ -143,6 +158,16 @@ val CyberpunkThemeData = AppThemeData(
         secondaryContainer = Color(0xFF0A1F0A),
         onSecondaryContainer = Color(0xFF7CFF9B),
         tertiary = Color(0xFF00E5FF),
+        // tertiaryContainer nunca tinha sido definido — caía no rosa-claro
+        // padrão do Material3 bem no meio da estética preto+neon (ex.: card de
+        // Vantagem "já selecionada" virava uma caixa rosa-pastel, e o texto
+        // "Já selecionada" usava `tertiary` — o cyan claro do tema — que também
+        // ficava ilegível em cima do próprio rosa claro, claro-sobre-claro).
+        // Ciano escuro opaco, com o cyan do tema como "on" (mesmo padrão do
+        // secondaryContainer/onSecondaryContainer verde acima). Contraste
+        // onTertiaryContainer vs tertiaryContainer: 11.16:1.
+        tertiaryContainer = Color(0xFF00272E),
+        onTertiaryContainer = Color(0xFF7CE8FF),
         background = CyberMatrixBg,
         onBackground = CyberMatrixText,
         surface = Color(0xFF050505),
@@ -166,6 +191,8 @@ val CyberpunkThemeData = AppThemeData(
         secondaryContainer = Color(0xFF0A1F0A),
         onSecondaryContainer = Color(0xFF7CFF9B),
         tertiary = Color(0xFF00E5FF),
+        tertiaryContainer = Color(0xFF00272E),
+        onTertiaryContainer = Color(0xFF7CE8FF),
         background = Color(0xFF000000),
         onBackground = CyberMatrixText,
         surface = Color(0xFF060606),
@@ -196,6 +223,11 @@ val SciFiThemeData = AppThemeData(
         onSecondaryContainer = Color(0xFF6FD8FF),
         tertiary = SciFiSilver,
         onTertiary = Color(0xFF0C141C),
+        // tertiaryContainer nunca tinha sido definido — caía no rosa-claro
+        // padrão do Material3 em vez do azul-metal do tema. Contraste
+        // onTertiaryContainer vs tertiaryContainer: 10.46:1.
+        tertiaryContainer = Color(0xFF1C2733),
+        onTertiaryContainer = SciFiSilver,
         background = SciFiBlueDeep,
         surface = Color(0xFF0C131E),
         onBackground = SciFiSilver,
@@ -221,6 +253,8 @@ val SciFiThemeData = AppThemeData(
         onSecondaryContainer = Color(0xFF6FD8FF),
         tertiary = SciFiSilver,
         onTertiary = Color(0xFF051018),
+        tertiaryContainer = Color(0xFF1C2733),
+        onTertiaryContainer = SciFiSilver,
         background = Color(0xFF04070D),
         surface = Color(0xFF0A0F18),
         onBackground = Color(0xFFE6F0F4),
@@ -252,6 +286,11 @@ val HorrorThemeData = AppThemeData(
         onSecondaryContainer = HorrorBone,
         tertiary = Color(0xFF9E7B5B),
         onTertiary = Color(0xFF1A0F0F),
+        // tertiaryContainer nunca tinha sido definido — caía no rosa-claro
+        // padrão do Material3 em vez do castanho/osso do tema. Contraste
+        // onTertiaryContainer vs tertiaryContainer: 11.10:1.
+        tertiaryContainer = Color(0xFF2A1F14),
+        onTertiaryContainer = Color(0xFFE6D4B8),
         background = HorrorBg,
         onBackground = HorrorBone,
         surface = Color(0xFF120B0B),
@@ -277,6 +316,8 @@ val HorrorThemeData = AppThemeData(
         onSecondaryContainer = HorrorBone,
         tertiary = Color(0xFF9E7B5B),
         onTertiary = Color(0xFF1A0F0F),
+        tertiaryContainer = Color(0xFF2A1F14),
+        onTertiaryContainer = Color(0xFFE6D4B8),
         background = Color(0xFF050505),
         onBackground = Color(0xFFEBEBD3),
         surface = Color(0xFF0C0A0A),
@@ -308,6 +349,11 @@ val WW2ThemeData = AppThemeData(
         onSecondaryContainer = Color.Black,
         tertiary = WW2Paper,
         onTertiary = Color.Black,
+        // tertiaryContainer nunca tinha sido definido — caía no rosa-claro
+        // padrão do Material3 em vez do khaki/papel do tema. Contraste
+        // onTertiaryContainer vs tertiaryContainer: 16.04:1.
+        tertiaryContainer = Color(0xFFEDE2A8),
+        onTertiaryContainer = Color.Black,
         background = WW2Paper,
         surface = WW2Khaki,
         onSurface = Color.Black,
@@ -330,6 +376,8 @@ val WW2ThemeData = AppThemeData(
         onSecondaryContainer = WW2Paper,
         tertiary = WW2Paper,
         onTertiary = Color.Black,
+        tertiaryContainer = Color(0xFF4A4526),
+        onTertiaryContainer = WW2Paper,
         background = WW2Olive,
         surface = Color(0xFF1B1D16),
         onSurface = WW2Khaki,
@@ -362,6 +410,11 @@ val HalloweenThemeData = AppThemeData(
         onSecondaryContainer = Color(0xFFD6B8FF),
         tertiary = Color(0xFFFFD54F),
         onTertiary = Color.Black,
+        // tertiaryContainer nunca tinha sido definido — caía no rosa-claro
+        // padrão do Material3 em vez do âmbar do tema. Contraste
+        // onTertiaryContainer vs tertiaryContainer: 11.12:1.
+        tertiaryContainer = Color(0xFF3A2E00),
+        onTertiaryContainer = Color(0xFFFFE9A8),
         background = Color(0xFF0D0A0F),
         onBackground = Color(0xFFFFC37A),
         surface = Color(0xFF131017),
@@ -384,6 +437,8 @@ val HalloweenThemeData = AppThemeData(
         onSecondaryContainer = Color(0xFFD6B8FF),
         tertiary = Color(0xFFFFD54F),
         onTertiary = Color.Black,
+        tertiaryContainer = Color(0xFF3A2E00),
+        onTertiaryContainer = Color(0xFFFFE9A8),
         background = Color(0xFF060407),
         onBackground = Color(0xFFFFE0B2),
         surface = Color(0xFF0F0C12),
@@ -413,6 +468,11 @@ val MinimalistThemeData = AppThemeData(
         onSecondaryContainer = Color.Black,
         tertiary = MinimalistLightGreen,
         onTertiary = MinimalistLightText,
+        // tertiaryContainer nunca tinha sido definido — caía no rosa-claro
+        // padrão do Material3, destoando do monocromático (+ verde pálido)
+        // do tema. Contraste onTertiaryContainer vs tertiaryContainer: 16.88:1.
+        tertiaryContainer = Color(0xFFD7ECD8),
+        onTertiaryContainer = Color.Black,
         background = MinimalistLightBg,
         surface = MinimalistLightSurface,
         onBackground = MinimalistLightText,
@@ -435,6 +495,8 @@ val MinimalistThemeData = AppThemeData(
         onSecondaryContainer = Color.White,
         tertiary = MinimalistDarkGreen,
         onTertiary = Color.White,
+        tertiaryContainer = Color(0xFF1B4020),
+        onTertiaryContainer = Color(0xFFB8E6BA),
         background = MinimalistDarkBg,
         surface = MinimalistDarkSurface,
         onBackground = MinimalistDarkText,

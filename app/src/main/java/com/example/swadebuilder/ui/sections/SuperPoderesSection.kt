@@ -863,7 +863,7 @@ fun SuperPoderesSection(
                 }
 
                 val statusColor = when {
-                    jaInvestido -> MaterialTheme.colorScheme.tertiary
+                    jaInvestido -> MaterialTheme.colorScheme.onTertiaryContainer
                     podeComprarSupers -> MaterialTheme.colorScheme.primary
                     else -> MaterialTheme.colorScheme.error
                 }

@@ -1999,7 +1999,7 @@ private fun DialogVantagemItem(
         else -> "Requisitos pendentes"
     }
     val statusColor = when {
-        jaTem -> MaterialTheme.colorScheme.tertiary
+        jaTem -> MaterialTheme.colorScheme.onTertiaryContainer
         bloqueioClasse != null -> MaterialTheme.colorScheme.error
         requisitosOk -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.error
