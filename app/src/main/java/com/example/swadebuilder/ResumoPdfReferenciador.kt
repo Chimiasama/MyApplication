@@ -382,9 +382,7 @@ class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
     override fun measure(width: Float, theme: PdfTheme): Float {
         if (skills.isEmpty()) return 34f // Title + "None"
         val rowHeight = 14f
-        val count = skills.size
-        val rows = if (count <= 12) count else (count + 1) / 2
-        return 20f + (rows * rowHeight)
+        return 20f + (skills.size * rowHeight)
     }
 
     override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
@@ -399,38 +397,18 @@ class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
             return
         }
 
+        // Uma perícia por linha, sempre — mesmo com muitas, em vez de espremer em duas
+        // colunas (o que forçava truncar nomes de perícia mais longos).
         val rowHeight = 14f
-        val count = skills.size
-
-        if (count <= 12) {
-            skills.forEach { txt ->
-                canvas.drawText(txt, x, currY + 11f, bodyPaint)
-                currY += rowHeight
-            }
-        } else {
-            val mid = (count + 1) / 2
-            val col1 = skills.take(mid)
-            val col2 = skills.drop(mid)
-            val colWidth = width / 2
-            val x2 = x + colWidth
-
-            val startY = currY
-            col1.forEachIndexed { i, txt ->
-                // Truncate
-                val safeTxt = truncate(txt, bodyPaint, colWidth - 5f)
-                canvas.drawText(safeTxt, x, startY + (i * rowHeight) + 11f, bodyPaint)
-            }
-            col2.forEachIndexed { i, txt ->
-                val safeTxt = truncate(txt, bodyPaint, colWidth - 5f)
-                canvas.drawText(safeTxt, x2, startY + (i * rowHeight) + 11f, bodyPaint)
-            }
+        skills.forEach { txt ->
+            canvas.drawText(txt, x, currY + 11f, bodyPaint)
+            currY += rowHeight
         }
     }
 
     override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
         if (measure(width, theme) <= availableHeight) return this to null
-        // If split needed, revert to simple 1-col list logic?
-        // Or just move whole block. Moving whole block is safer/easier for layout.
+        // Moving whole block is safer/easier for layout than splitting mid-list.
         return null to this
     }
 }
