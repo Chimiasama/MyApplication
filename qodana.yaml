@@ -1,0 +1,7 @@
+version: "1.0"
+
+# Linter Community gratuito, sem token, com o mesmo conjunto de inspeções
+# Kotlin/Android que o Android Studio mostra no editor (código nunca usado,
+# convenção de nomes, "if" redundante, etc.) — cobre exatamente a categoria
+# de aviso que o Android Lint e o compilador Kotlin não pegam.
+linter: jetbrains/qodana-jvm-android
