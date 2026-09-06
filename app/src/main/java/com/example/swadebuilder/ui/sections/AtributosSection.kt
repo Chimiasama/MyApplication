@@ -248,12 +248,12 @@ fun AtributosContent(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(pergaminho, shape = RoundedCornerShape(12.dp))
-            .verticalScroll(rememberScrollState())
             .padding(12.dp)
     ) {
-        // Updated Header to show both Attribute and Skill Points
+        // Fixed header (Attribute and Skill Points) — stays visible while the
+        // list below scrolls, so you can always see how many points are left.
         if (!state.modoLivre) {
             SectionHeader(
                 onHelpClick = null,
@@ -266,6 +266,12 @@ fun AtributosContent(
         }
 
         Spacer(Modifier.height(4.dp))
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
 
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue
@@ -667,6 +673,7 @@ fun AtributosContent(
                     }
                 }
             }
+        }
         }
     }
 

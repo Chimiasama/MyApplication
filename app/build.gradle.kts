@@ -176,7 +176,6 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.foundation)
-    androidTestImplementation(libs.androidx.core.testing)
     debugImplementation(libs.androidx.compose.ui.tooling.v170)
 
     // --- Material Components ---
