@@ -528,6 +528,10 @@ fun PericiasContent(
                                     if (isJutsu) {
                                         state.syncJutsuSlots()
                                     }
+                                    // decreasePericia() só ajusta a perícia clicada — sem isso, o custo
+                                    // das demais perícias (dependente do atributo/pool atual) podia ficar
+                                    // dessincronizado do que RebuildSkillStacksUseCase realmente calcularia.
+                                    state.rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit = true)
                                     onUserFeedback()
                                 },
                                 enabled = regra.canDecrease,
@@ -598,6 +602,7 @@ fun PericiasContent(
                                     if (isJutsu) {
                                         state.syncJutsuSlots()
                                     }
+                                    state.rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit = true)
                                     onUserFeedback()
 
                                     if (!isIdioma && !isJutsu && state.usarEspecializacoesDePericia) {
@@ -790,6 +795,7 @@ fun PericiasContent(
 
                             state.increasePericiaFromAdvancement(per, idiomaPendingCost, feedbackMessages)
                             if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
+                            state.rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit = true)
                             onUserFeedback()
                         }
                         showIdiomaDialog = false
@@ -1027,6 +1033,7 @@ fun PericiasContent(
                         state.decreasePericia(per)
                     }
                 }
+                state.rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit = true)
                 onUserFeedback()
             },
             onDismiss = { popoverTarget = null }
