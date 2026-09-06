@@ -5,11 +5,15 @@ version: "1.0"
 # convenção de nomes, "if" redundante, etc.) — cobre exatamente a categoria
 # de aviso que o Android Lint e o compilador Kotlin não pegam.
 #
-# Usamos o linter JVM genérico (não o "-android") de propósito: o
-# "-android" faz sync completo via Android Studio/AGP internamente, e a
-# versão empacotada no Qodana só suporta até AGP 9.1.0 — este projeto usa
-# AGP 9.4.0 (mais novo), o que faz o "-android" falhar no import do
-# projeto antes mesmo de rodar qualquer inspeção. O linter genérico trata
-# como projeto Gradle/Kotlin puro e roda as mesmas inspeções de código
-# Kotlin sem depender do sync específico do Android Gradle Plugin.
-linter: jetbrains/qodana-jvm
+# Duas variantes NÃO servem aqui:
+# - jetbrains/qodana-jvm-android: faz sync completo via Android Studio/AGP
+#   internamente, e a versão empacotada só suporta até AGP 9.1.0 — este
+#   projeto usa AGP 9.4.0 (mais novo), então falha no import do projeto
+#   antes mesmo de rodar qualquer inspeção.
+# - jetbrains/qodana-jvm (sem sufixo): exige QODANA_TOKEN/conta na nuvem
+#   desde a versão 2023.2, mesmo sem usar nenhum recurso pago.
+#
+# qodana-jvm-community é a variante gratuita de verdade: trata o projeto
+# como Gradle/Kotlin puro (sem sync específico do Android Gradle Plugin) e
+# não exige token.
+linter: jetbrains/qodana-jvm-community
