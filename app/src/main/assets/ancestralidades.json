@@ -4286,9 +4286,7 @@
       "Força": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Forte",
@@ -4296,6 +4294,13 @@
         "category": "racial_trait_positive",
         "id": "FORTE",
         "descricaoLite": "Força inicial d6, com máximo em d12+1."
+      },
+      {
+        "nome": "Adaptável",
+        "descricao": "A ancestralidade é bem variada entre seu povo e cultura. Personagens começam com uma Vantagem de nível Novato de sua escolha (e devem preencher todos os requisitos).",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Começa com uma Vantagem de Estágio Novato à escolha, desde que cumpra os requisitos normais."
       }
     ],
     "livros": [
@@ -4314,9 +4319,7 @@
       "Astúcia": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Astuto",
@@ -4324,6 +4327,13 @@
         "category": "racial_trait_positive",
         "id": "ASTUTO",
         "descricaoLite": "Astúcia inicial d6, com máximo em d12+1."
+      },
+      {
+        "nome": "Adaptável",
+        "descricao": "A ancestralidade é bem variada entre seu povo e cultura. Personagens começam com uma Vantagem de nível Novato de sua escolha (e devem preencher todos os requisitos).",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Começa com uma Vantagem de Estágio Novato à escolha, desde que cumpra os requisitos normais."
       }
     ],
     "livros": [
@@ -4342,10 +4352,7 @@
       "Vigor": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn",
-      "ADAPTÁVEL"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Vigoroso",
@@ -4378,9 +4385,7 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -4388,6 +4393,13 @@
         "category": "racial_trait_positive",
         "id": "AGIL",
         "descricaoLite": "Agilidade inicial d6, com máximo em d12+1."
+      },
+      {
+        "nome": "Adaptável",
+        "descricao": "A ancestralidade é bem variada entre seu povo e cultura. Personagens começam com uma Vantagem de nível Novato de sua escolha (e devem preencher todos os requisitos).",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Começa com uma Vantagem de Estágio Novato à escolha, desde que cumpra os requisitos normais."
       }
     ],
     "livros": [
@@ -4406,9 +4418,7 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Espiritual",
@@ -4416,6 +4426,13 @@
         "category": "racial_trait_positive",
         "id": "ESPIRITUAL",
         "descricaoLite": "Espírito inicial d6, com máximo em d12+1."
+      },
+      {
+        "nome": "Adaptável",
+        "descricao": "A ancestralidade é bem variada entre seu povo e cultura. Personagens começam com uma Vantagem de nível Novato de sua escolha (e devem preencher todos os requisitos).",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Começa com uma Vantagem de Estágio Novato à escolha, desde que cumpra os requisitos normais."
       }
     ],
     "livros": [
