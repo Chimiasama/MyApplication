@@ -872,17 +872,15 @@ fun gerarFichaEmPdf(
         // Header on Page 1
         if (pageIndex == 1) {
             val headerH = 140f
-            val derivedH = 60f
             val attributesH = 90f
             val headerRect = RectF(margin, margin, w - margin, margin + headerH)
+            // Estatísticas derivadas (Aparar, Resistência, etc.) agora vão dentro do
+            // próprio cabeçalho, no vão entre o nome e o retrato — ver drawHeader.
             drawHeader(canvas, headerRect, personagem, theme, portrait, especieId)
-
-            val derivedRect = RectF(margin, headerRect.bottom + 10f, w - margin, headerRect.bottom + 10f + derivedH)
-            drawDerivedStats(canvas, derivedRect, personagem, theme, especieId)
 
             // Atributos em uma faixa horizontal (em vez de empilhados na coluna
             // esquerda) — ocupa bem menos altura, sobrando espaço pro resto da página 1.
-            val attributesRect = RectF(margin, derivedRect.bottom + 10f, w - margin, derivedRect.bottom + 10f + attributesH)
+            val attributesRect = RectF(margin, headerRect.bottom + 10f, w - margin, headerRect.bottom + 10f + attributesH)
             drawAttributesRow(canvas, attributesRect, personagem, theme, listaAtributos, mapaAtributosDisplay)
 
             contentTop = attributesRect.bottom + 20f
@@ -1301,7 +1299,11 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
         color = theme.textColor; typeface = theme.typefaceBody; textSize = 12f; isAntiAlias = true
     }
 
-    val textAreaWidth = rect.width() - portraitW - 30f
+    // Vão entre o nome e o retrato: em vez de deixar em branco, mostra as estatísticas
+    // derivadas ali (texto simples, sem caixinha) — o nome passa a truncar antes dessa
+    // coluna, em vez de ir quase até o retrato.
+    val statsColumnLeft = rect.left + 240f
+    val textAreaWidth = statsColumnLeft - rect.left - 20f
     var displayedName = p.nome.ifBlank { "Sem Nome" }
     if (titlePaint.measureText(displayedName) > textAreaWidth) {
         val c = titlePaint.breakText(displayedName, true, textAreaWidth, null)
@@ -1322,6 +1324,22 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     val trackY = if (p.coracaoCrystalSelecionado != null) rect.top + 95f else rect.top + 80f
     drawTrack(canvas, trackX, trackY, "Ferimentos", 3, -1, theme)
     drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
+
+    val statLabelPaint = TextPaint().apply { color = theme.textColor; textSize = 9f; typeface = theme.typefaceBody }
+    val statValuePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
+    val statPairs = listOf(
+        "Aparar" to calcAparar(p, especieId).toString(),
+        "Resistência" to calcResistencia(p),
+        "Tamanho" to p.tamanho.toString(),
+        "Movimentação" to p.movimentacao.toString(),
+        "Corrida" to p.dadoCorrida
+    )
+    var statY = rect.top + 16f
+    statPairs.forEach { (label, value) ->
+        canvas.drawText(label, statsColumnLeft, statY, statLabelPaint)
+        canvas.drawText(value, statsColumnLeft, statY + 14f, statValuePaint)
+        statY += 24f
+    }
 }
 
 fun drawTrack(canvas: Canvas, x: Float, y: Float, label: String, boxes: Int, current: Int, theme: PdfTheme) {
@@ -1338,26 +1356,8 @@ fun drawTrack(canvas: Canvas, x: Float, y: Float, label: String, boxes: Int, cur
     }
 }
 
-fun drawDerivedStats(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, especieId: String? = null) {
-    val aparar = calcAparar(p, especieId)
-    val resistencia = calcResistencia(p)
-    val mov = p.movimentacao
-    val boxWidth = rect.width() / 5
-    val labels = listOf("Aparar", "Resistência", "Tamanho", "Movimentação", "Corrida")
-    val values = listOf(aparar.toString(), resistencia, p.tamanho.toString(), mov.toString(), p.dadoCorrida)
-    for (i in 0..4) {
-        val bx = rect.left + (i * boxWidth)
-        val r = RectF(bx, rect.top, bx + boxWidth, rect.bottom)
-        val bgPaint = Paint().apply { color = if (i % 2 == 0) theme.headerBackground else theme.backgroundColor; style = Paint.Style.FILL }
-        canvas.drawRect(r, bgPaint)
-        val borderPaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1f }
-        canvas.drawRect(r, borderPaint)
-        val labelPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; textAlign = Paint.Align.CENTER; typeface = theme.typefaceBody }
-        val valPaint = TextPaint().apply { color = theme.primaryColor; textSize = 24f; textAlign = Paint.Align.CENTER; typeface = theme.typefaceTitle; isFakeBoldText = true }
-        canvas.drawText(labels[i], r.centerX(), r.top + 15f, labelPaint)
-        canvas.drawText(values[i], r.centerX(), r.bottom - 15f, valPaint)
-    }
-}
+// Estatísticas derivadas: ver drawHeader (agora desenhadas dentro do cabeçalho, no vão
+// entre o nome e o retrato, em vez de numa faixa colorida própria).
 
 /** Atributos numa faixa horizontal (título + uma forma por atributo), em vez de empilhados
  *  numa coluna — o mesmo espaço vertical de antes dava pra só 5 atributos e sobrava
