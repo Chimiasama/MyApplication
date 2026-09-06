@@ -24,6 +24,8 @@ import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.Vantagem
+import com.example.swadebuilder.ui.sections.asText
+import com.example.swadebuilder.ui.sections.toResumo
 import com.example.swadebuilder.ui.theme.AppTheme
 import com.example.swadebuilder.util.GenericNameMapper
 import com.example.swadebuilder.util.SecurityUtils
@@ -131,6 +133,29 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
     )
 }
 
+/**
+ * Páginas extras (opcionais) da ficha, geradas só quando o personagem tem o conteúdo
+ * correspondente. O diálogo de exportação deixa o jogador escolher quais incluir antes
+ * de gerar o PDF — assim ele pode reduzir a contagem de páginas pra imprimir.
+ */
+enum class FichaPdfSecao(val titulo: String) {
+    PODERES("Antecedente Arcano"),
+    MECHAS("Mechas"),
+    EQUIPAMENTOS("Equipamentos"),
+    CIBERNETICOS("Cibernéticos")
+}
+
+fun secoesPdfDisponiveis(personagem: MeuPersonagem): Set<FichaPdfSecao> {
+    val isPathfinderGnome = personagem.compendioPathfinderAtivo && personagem.ancestralidade.uppercase().contains("GNOMO")
+    val gear = personagem.equipamentos.filterNot { it.dano != null }
+    return buildSet {
+        if (personagem.poderes.isNotEmpty() || isPathfinderGnome) add(FichaPdfSecao.PODERES)
+        if (personagem.mechasSelecionados.isNotEmpty()) add(FichaPdfSecao.MECHAS)
+        if (gear.isNotEmpty()) add(FichaPdfSecao.EQUIPAMENTOS)
+        if (personagem.ciberneticosInstalados.isNotEmpty()) add(FichaPdfSecao.CIBERNETICOS)
+    }
+}
+
 // =================================================================================================
 // 2. ENTRY POINT FOR PDF GENERATION
 // =================================================================================================
@@ -145,6 +170,7 @@ suspend fun produzirEExibirFichaPdf(
     listaPoderes: List<Poder>,
     // Ver gerarFichaEmPdf.
     especieId: String? = null,
+    secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
     onShowMessage: (String) -> Unit
 ) {
     withContext(Dispatchers.IO) {
@@ -177,7 +203,8 @@ suspend fun produzirEExibirFichaPdf(
                 listaComplicacoes,
                 listaVantagens,
                 listaPoderes,
-                especieId
+                especieId,
+                secoesIncluidas
             )
 
             val uri: Uri = FileProvider.getUriForFile(
@@ -520,6 +547,177 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
     }
 }
 
+// =================================================================================================
+// 3b. BLOCKS FOR DEDICATED (SEPARATED-BY-TOPIC) PAGES
+// =================================================================================================
+
+/** Cabeçalho leve dentro de uma página dedicada (ex.: nome do Antecedente Arcano). */
+class SmallHeaderBlock(private val text: String) : PdfBlock {
+    private val h = 26f
+    override fun measure(width: Float, theme: PdfTheme): Float = h
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        val paint = TextPaint().apply { color = theme.primaryColor; typeface = theme.typefaceTitle; textSize = 13f; isFakeBoldText = true }
+        canvas.drawText(text, x, y + 14f, paint)
+        val linePaint = Paint().apply { color = theme.accentColor; strokeWidth = 1f }
+        canvas.drawLine(x, y + 20f, x + width, y + 20f, linePaint)
+    }
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        if (h <= availableHeight) return this to null
+        return null to this
+    }
+}
+
+/** Só estatísticas do poder — sem descrição do que ele faz, por pedido explícito. */
+data class PowerCardSpec(
+    val nome: String,
+    val estagio: String,
+    val pp: String,
+    val distancia: String,
+    val duracao: String,
+    val manifestacoes: List<String> = emptyList()
+)
+
+private fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float, title: String, statLines: List<String>, extraLines: List<String>, theme: PdfTheme) {
+    val rect = RectF(x, y, x + w, y + h)
+    val bg = Paint().apply { color = theme.headerBackground; style = Paint.Style.FILL }
+    canvas.drawRoundRect(rect, 6f, 6f, bg)
+    val border = Paint().apply { color = theme.accentColor; style = Paint.Style.STROKE; strokeWidth = 1.2f }
+    canvas.drawRoundRect(rect, 6f, 6f, border)
+
+    val titlePaint = TextPaint().apply { color = theme.primaryColor; typeface = theme.typefaceTitle; textSize = 12.5f; isFakeBoldText = true }
+    canvas.drawText(truncate(title, titlePaint, w - 16f), x + 8f, y + 16f, titlePaint)
+
+    val statPaint = TextPaint().apply { color = theme.textColor; typeface = theme.typefaceBody; textSize = 9.5f }
+    var ty = y + 30f
+    statLines.forEach { line ->
+        canvas.drawText(truncate(line, statPaint, w - 16f), x + 8f, ty, statPaint)
+        ty += 13f
+    }
+    if (extraLines.isNotEmpty()) {
+        val extraPaint = TextPaint().apply { color = theme.accentColor; typeface = theme.typefaceBody; textSize = 9f }
+        extraLines.forEach { line ->
+            canvas.drawText(truncate(line, extraPaint, w - 16f), x + 8f, ty, extraPaint)
+            ty += 12f
+        }
+    }
+}
+
+/** Até dois cards de poder lado a lado, pra parecer uma grade sem sair do fluxo de coluna única. */
+class PowerCardRowBlock(private val cards: List<PowerCardSpec>) : PdfBlock {
+    private val cardHeight = if (cards.any { it.manifestacoes.isNotEmpty() }) 78f else 62f
+    override fun measure(width: Float, theme: PdfTheme): Float = cardHeight
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        val gap = 10f
+        val cardW = if (cards.size > 1) (width - gap) / 2f else width
+        cards.forEachIndexed { i, spec ->
+            val cx = x + i * (cardW + gap)
+            val statLines = listOf(
+                "Estágio: ${spec.estagio}   •   PP: ${spec.pp}",
+                "Alcance: ${spec.distancia}   •   Duração: ${spec.duracao}"
+            )
+            val extraLines = if (spec.manifestacoes.isNotEmpty()) {
+                listOf("Manifestações: " + spec.manifestacoes.joinToString(", "))
+            } else emptyList()
+            drawStatCard(canvas, cx, y, cardW, cardHeight - 8f, spec.nome, statLines, extraLines, theme)
+        }
+    }
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        if (cardHeight <= availableHeight) return this to null
+        return null to this
+    }
+}
+
+/** Estatísticas do mecha — chassi, defesas, mobilidade — sem prosa de mods/sistemas. */
+class MechaCardBlock(private val m: com.example.swadebuilder.model.MechaItem) : PdfBlock {
+    private val extras = buildList {
+        if (m.customizacoes.blindagem_extra > 0) add("Blindagem extra: +${m.customizacoes.blindagem_extra}")
+        if (m.customizacoes.propulsores) add("Propulsores instalados")
+        if (m.mods_instalados.isNotEmpty()) add("Mods: " + m.mods_instalados.joinToString { it.nome })
+        if (m.armas_equipadas.isNotEmpty()) add("Armas: " + m.armas_equipadas.joinToString())
+        if (m.sistemas_instalados.isNotEmpty()) add("Sistemas: " + m.sistemas_instalados.joinToString())
+    }
+    private val cardHeight = 74f + (extras.size * 12f)
+    override fun measure(width: Float, theme: PdfTheme): Float = cardHeight
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        val statLines = listOf(
+            "Chassi: ${m.categoria_chassi}   •   Tamanho: ${m.tamanho}   •   Manobrabilidade: ${m.manobrabilidade}",
+            "Vel. Máxima: ${m.vel_maxima}\"   •   Resistência: ${m.resistencia_base}   •   Armadura: ${m.armadura_base}",
+            "Ferimentos: ${m.ferimentos}   •   Força: ${m.forca}   •   Energia: ${m.energia_dias} dias"
+        )
+        drawStatCard(canvas, x, y, width, cardHeight - 8f, m.nome, statLines, extras, theme)
+    }
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        if (cardHeight <= availableHeight) return this to null
+        return null to this
+    }
+}
+
+/** Estatísticas do cibernético — tensão e modificadores — sem o texto de efeito. */
+class CiberneticoCardBlock(private val c: com.example.swadebuilder.model.CiberneticoItem) : PdfBlock {
+    private val cardHeight = if (c.modificacoes.isNotEmpty()) 62f else 48f
+    override fun measure(width: Float, theme: PdfTheme): Float = cardHeight
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        val statLines = listOf("Tensão: ${c.strain_custo}")
+        val extraLines = if (c.modificacoes.isNotEmpty()) listOf("Modificadores: " + c.modificacoes.joinToString(", ")) else emptyList()
+        drawStatCard(canvas, x, y, width, cardHeight - 8f, c.nome, statLines, extraLines, theme)
+    }
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        if (cardHeight <= availableHeight) return this to null
+        return null to this
+    }
+}
+
+/** Tabela de equipamentos gerais (não-arma) — nome, custo, peso. Sem observações (prosa). */
+class GearTableBlock(private val rows: List<Triple<String, String, String>>) : PdfBlock {
+    override fun measure(width: Float, theme: PdfTheme): Float {
+        if (rows.isEmpty()) return 0f
+        val rowHeight = 20f
+        return 20f + 20f + (rows.size * rowHeight) + 5f
+    }
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        if (rows.isEmpty()) return
+        var currY = y
+        val rowHeight = 20f
+
+        val cols = listOf("Item", "Custo", "Peso")
+        val colWeights = listOf(4f, 1f, 1f)
+        val totalWeight = colWeights.sum()
+        val unitW = width / totalWeight
+        val colWidths = colWeights.map { it * unitW }
+
+        val headerPaint = Paint().apply { color = theme.gridLineColor; style = Paint.Style.FILL }
+        canvas.drawRect(x, currY, x + width, currY + rowHeight, headerPaint)
+        val headerTextPaint = TextPaint().apply { color = Color.WHITE; textSize = 10f; typeface = theme.typefaceBody; isFakeBoldText = true }
+        var cx = x
+        cols.forEachIndexed { i, t ->
+            canvas.drawText(t, cx + 4f, currY + 14f, headerTextPaint)
+            cx += colWidths[i]
+        }
+        currY += rowHeight
+
+        val rowPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody }
+        val linePaint = Paint().apply { color = theme.gridLineColor; strokeWidth = 1f }
+        rows.forEach { (nome, custo, peso) ->
+            cx = x
+            val data = listOf(nome, custo, peso)
+            data.forEachIndexed { i, txt ->
+                val safe = truncate(txt, rowPaint, colWidths[i] - 4f)
+                canvas.drawText(safe, cx + 4f, currY + 14f, rowPaint)
+                cx += colWidths[i]
+            }
+            canvas.drawLine(x, currY + rowHeight, x + width, currY + rowHeight, linePaint)
+            currY += rowHeight
+        }
+        canvas.drawLine(x, y + 20f, x, currY, linePaint)
+        canvas.drawLine(x + width, y + 20f, x + width, currY, linePaint)
+    }
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        val h = measure(width, theme)
+        if (h <= availableHeight) return this to null
+        return null to this
+    }
+}
+
 // Helper
 fun truncate(txt: String, paint: Paint, width: Float): String {
     if (paint.measureText(txt) <= width) return txt
@@ -544,7 +742,8 @@ fun gerarFichaEmPdf(
     // ex.: state.currentAncestryDef?.especieId), resolvido pelo chamador —
     // ver drawHeader/calcAparar. Null pra raça customizada (nunca aciona
     // regra oficial por engano) ou quando o chamador não o resolveu.
-    especieId: String? = null
+    especieId: String? = null,
+    secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet()
 ) {
     val doc = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
@@ -616,48 +815,9 @@ fun gerarFichaEmPdf(
     }
     rightQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
 
-    // Powers
+    // Poderes agora ganham página dedicada (ver renderPoderesPages logo abaixo do loop
+    // principal) — página 1 fica só com o essencial de combate/perícias.
     val isPathfinderGnome = personagem.compendioPathfinderAtivo && personagem.ancestralidade.uppercase().contains("GNOMO")
-    if (personagem.poderes.isNotEmpty() || isPathfinderGnome) {
-        val powerLines = mutableListOf<String>()
-
-        if (isPathfinderGnome) {
-            val astucia = personagem.atributos["Astúcia"] ?: 4
-            val fe = personagem.pericias["Fé"] ?: 0
-            val conjurar = personagem.pericias["Conjurar"] ?: 0
-            val focoMax = maxOf(astucia, fe, conjurar)
-            val astuciaName = mapaAtributosDisplay["Astúcia"] ?: "Astúcia"
-            val focoNome = when {
-                focoMax == astucia -> astuciaName
-                focoMax == fe -> "Fé"
-                else -> "Conjurar"
-            }
-            val abCount = personagem.poderes.size
-            val ppText = if (abCount == 0) " (1 PP)" else ""
-            powerLines.add("Arcano: Truques")
-            powerLines.add("$focoNome$ppText - Iluminar, Som, Telecinese, Amigo das Feras")
-        }
-
-        personagem.poderes.forEach { (arc, list) ->
-            val arcLabel = "Arcano: ${arc.toFancyTitleCase()}".let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
-            powerLines.add(arcLabel)
-            val namedList = list.map { id ->
-                val pName = listaPoderes.firstOrNull { it.id == id }?.nome ?: id
-                var displayNome = if (!EditionConfig.isFullEdition) GenericNameMapper.map(pName) else pName
-                displayNome = displayNome.toFancyTitleCase()
-
-                if (personagem.compendioPathfinderAtivo && arc.uppercase().trim() == "MISTICO") {
-                    displayNome = displayNome
-                        .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
-                        .replace("Morosidade/Velocidade", "Velocidade")
-                }
-
-                displayNome
-            }
-            powerLines.add(namedList.joinToString(", "))
-        }
-        rightQueue.add(object : TextListBlock("Poderes", powerLines) {})
-    }
 
     // Superpoderes
     if (personagem.modoSupers &&
@@ -685,38 +845,10 @@ fun gerarFichaEmPdf(
         rightQueue.add(object : TextListBlock("Superpoderes", superLines) {})
     }
 
-    // Weapons
+    // Weapons — fica na página principal por ser referência constante em combate.
     rightQueue.add(WeaponTableBlock(personagem))
 
-    // Gear
-    val gear = personagem.equipamentos.filterNot { it.dano != null }.map { eq ->
-        val name = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nomeExibicao
-        name.toFancyTitleCase()
-    }
-    if (gear.isNotEmpty()) {
-        rightQueue.add(object : TextListBlock("Outros Equipamentos", gear) {})
-    }
-
-    if (personagem.mechasSelecionados.isNotEmpty()) {
-        val mechaPdfLines = personagem.mechasSelecionados.map { m ->
-            val extras = mutableListOf<String>()
-            if (m.customizacoes.blindagem_extra > 0) extras += "Blindagem +${m.customizacoes.blindagem_extra}"
-            if (m.customizacoes.propulsores) extras += "Propulsores"
-            if (m.mods_instalados.isNotEmpty()) extras += "Mods: " + m.mods_instalados.joinToString { it.nome }
-            if (m.armas_equipadas.isNotEmpty()) extras += "Armas: " + m.armas_equipadas.joinToString()
-            val extraStr = if (extras.isNotEmpty()) " (${extras.joinToString("; ")})" else ""
-            "${m.nome}$extraStr"
-        }
-        rightQueue.add(object : TextListBlock("Mechas", mechaPdfLines) {})
-    }
-
-    if (personagem.ciberneticosInstalados.isNotEmpty()) {
-        val ciberneticosPdfLines = personagem.ciberneticosInstalados.map { c ->
-            val effStr = if (c.efeito.isNotBlank()) " (${c.efeito})" else ""
-            "${c.nome} [Tensão ${c.strain_custo}]$effStr"
-        }
-        rightQueue.add(object : TextListBlock("Cibernéticos Instalados", ciberneticosPdfLines) {})
-    }
+    // Equipamentos gerais, Mechas e Cibernéticos agora têm página dedicada (abaixo).
 
     // Notes
     if (personagem.anotacoes.isNotBlank()) {
@@ -811,8 +943,194 @@ fun gerarFichaEmPdf(
         doc.finishPage(page)
     }
 
+    // Páginas dedicadas, separadas por tópico — só entram se o personagem tiver o
+    // conteúdo correspondente e a seção estiver marcada no diálogo de exportação.
+    if (FichaPdfSecao.PODERES in secoesIncluidas && (personagem.poderes.isNotEmpty() || isPathfinderGnome)) {
+        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.PODERES.titulo, buildPoderesBlocks(personagem, listaPoderes, isPathfinderGnome, mapaAtributosDisplay))
+    }
+    if (FichaPdfSecao.MECHAS in secoesIncluidas && personagem.mechasSelecionados.isNotEmpty()) {
+        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.MECHAS.titulo, buildMechasBlocks(personagem))
+    }
+    if (FichaPdfSecao.EQUIPAMENTOS in secoesIncluidas) {
+        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.EQUIPAMENTOS.titulo, buildEquipamentosBlocks(personagem, showOfficialNames))
+    }
+    if (FichaPdfSecao.CIBERNETICOS in secoesIncluidas && personagem.ciberneticosInstalados.isNotEmpty()) {
+        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.CIBERNETICOS.titulo, buildCiberneticosBlocks(personagem))
+    }
+
     FileOutputStream(destino).use { out -> doc.writeTo(out) }
     doc.close()
+}
+
+// =================================================================================================
+// 4b. DEDICATED PAGE RENDERING (separadas por tópico, coluna única)
+// =================================================================================================
+
+private fun renderSectionPages(
+    doc: PdfDocument,
+    pageInfo: PdfDocument.PageInfo,
+    theme: PdfTheme,
+    sectionTitle: String,
+    blocks: List<PdfBlock>
+) {
+    if (blocks.isEmpty()) return
+    val margin = 30f
+    val queue = ArrayDeque(blocks)
+    val w = pageInfo.pageWidth.toFloat()
+    val h = pageInfo.pageHeight.toFloat()
+    val bottomLimit = h - margin
+    val contentW = w - (margin * 2)
+
+    while (queue.isNotEmpty()) {
+        val page = doc.startPage(pageInfo)
+        val canvas = page.canvas
+        canvas.drawColor(theme.backgroundColor)
+        val borderPaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1f }
+        canvas.drawRect(margin / 2, margin / 2, w - margin / 2, h - margin / 2, borderPaint)
+
+        var currY = drawSectionBanner(canvas, margin, w, sectionTitle, theme)
+
+        while (queue.isNotEmpty()) {
+            val block = queue.first()
+            val available = bottomLimit - currY
+            val (head, tail) = block.split(available, contentW, theme)
+
+            if (head != null) {
+                head.draw(canvas, margin, currY, contentW, theme)
+                currY += head.measure(contentW, theme) + 10f
+            }
+
+            if (tail != null) {
+                queue.removeFirst()
+                queue.addFirst(tail)
+                break
+            } else {
+                queue.removeFirst()
+            }
+
+            if (currY >= bottomLimit) break
+        }
+
+        doc.finishPage(page)
+    }
+}
+
+/** Banner temático no topo de cada página dedicada: cor e forma (círculo/hexágono) seguem o tema do app. */
+private fun drawSectionBanner(canvas: Canvas, margin: Float, pageWidth: Float, title: String, theme: PdfTheme): Float {
+    val bannerHeight = 40f
+    val rect = RectF(margin, margin, pageWidth - margin, margin + bannerHeight)
+    val bgPaint = Paint().apply { color = theme.headerBackground; style = Paint.Style.FILL }
+    canvas.drawRect(rect, bgPaint)
+    val borderPaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1.5f }
+    canvas.drawRect(rect, borderPaint)
+
+    val shapeCx = rect.left + 22f
+    val shapeCy = rect.centerY()
+    val shapePaint = Paint().apply { color = theme.accentColor; style = Paint.Style.FILL; isAntiAlias = true }
+    if (theme.shapeType == ShapeType.HEXAGON) {
+        val path = Path()
+        val r = 11f
+        for (i in 0..5) {
+            val angle = Math.toRadians((60 * i).toDouble())
+            val px = shapeCx + (r * Math.cos(angle)).toFloat()
+            val py = shapeCy + (r * Math.sin(angle)).toFloat()
+            if (i == 0) path.moveTo(px, py) else path.lineTo(px, py)
+        }
+        path.close()
+        canvas.drawPath(path, shapePaint)
+    } else {
+        canvas.drawCircle(shapeCx, shapeCy, 11f, shapePaint)
+    }
+
+    val titlePaint = TextPaint().apply { color = theme.primaryColor; typeface = theme.typefaceTitle; textSize = 18f; isFakeBoldText = true }
+    val metrics = titlePaint.fontMetrics
+    val ty = rect.centerY() - (metrics.descent + metrics.ascent) / 2
+    canvas.drawText(title, rect.left + 44f, ty, titlePaint)
+
+    return rect.bottom + 20f
+}
+
+private fun buildPoderesBlocks(
+    personagem: MeuPersonagem,
+    listaPoderes: List<Poder>,
+    isPathfinderGnome: Boolean,
+    mapaAtributosDisplay: Map<String, String>
+): List<PdfBlock> {
+    val blocks = mutableListOf<PdfBlock>()
+
+    if (isPathfinderGnome) {
+        val astucia = personagem.atributos["Astúcia"] ?: 4
+        val fe = personagem.pericias["Fé"] ?: 0
+        val conjurar = personagem.pericias["Conjurar"] ?: 0
+        val focoMax = maxOf(astucia, fe, conjurar)
+        val astuciaName = mapaAtributosDisplay["Astúcia"] ?: "Astúcia"
+        val focoNome = when {
+            focoMax == astucia -> astuciaName
+            focoMax == fe -> "Fé"
+            else -> "Conjurar"
+        }
+        val ppText = if (personagem.poderes.isEmpty()) "1" else "-"
+        blocks.add(SmallHeaderBlock("Arcano: Truques"))
+        blocks.add(
+            PowerCardRowBlock(
+                listOf(
+                    PowerCardSpec(
+                        nome = "Truques ($focoNome)",
+                        estagio = "Novato",
+                        pp = ppText,
+                        distancia = "-",
+                        duracao = "-",
+                        manifestacoes = listOf("Iluminar", "Som", "Telecinese", "Amigo das Feras")
+                    )
+                )
+            )
+        )
+    }
+
+    personagem.poderes.forEach { (arc, ids) ->
+        val arcLabel = "Arcano: ${arc.toFancyTitleCase()}".let { if (!EditionConfig.isFullEdition) GenericNameMapper.map(it) else it }
+        blocks.add(SmallHeaderBlock(arcLabel))
+        val specs = ids.map { id ->
+            val poder = listaPoderes.firstOrNull { it.id == id }
+            var nome = poder?.nome ?: id
+            if (!EditionConfig.isFullEdition) nome = GenericNameMapper.map(nome)
+            nome = nome.toFancyTitleCase()
+            if (personagem.compendioPathfinderAtivo && arc.uppercase().trim() == "MISTICO") {
+                nome = nome
+                    .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
+                    .replace("Morosidade/Velocidade", "Velocidade")
+            }
+            PowerCardSpec(
+                nome = nome,
+                estagio = poder?.estagio ?: "-",
+                pp = poder?.pontosDePoder ?: "-",
+                distancia = poder?.distancia ?: "-",
+                duracao = poder?.duracao ?: "-",
+                manifestacoes = poder?.manifestacoes ?: emptyList()
+            )
+        }
+        specs.chunked(2).forEach { pair -> blocks.add(PowerCardRowBlock(pair)) }
+    }
+
+    return blocks
+}
+
+private fun buildMechasBlocks(personagem: MeuPersonagem): List<PdfBlock> =
+    personagem.mechasSelecionados.map { MechaCardBlock(it) }
+
+private fun buildCiberneticosBlocks(personagem: MeuPersonagem): List<PdfBlock> =
+    personagem.ciberneticosInstalados.map { CiberneticoCardBlock(it) }
+
+private fun buildEquipamentosBlocks(personagem: MeuPersonagem, showOfficialNames: Boolean): List<PdfBlock> {
+    val gear = personagem.equipamentos.filterNot { it.dano != null }
+    if (gear.isEmpty()) return emptyList()
+    val rows = gear.map { eq ->
+        val name = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nomeExibicao
+        val custo = eq.toResumo().custo ?: "-"
+        val peso = eq.peso.asText() ?: "-"
+        Triple(name.toFancyTitleCase(), custo, peso)
+    }
+    return listOf(GearTableBlock(rows))
 }
 
 // =================================================================================================
