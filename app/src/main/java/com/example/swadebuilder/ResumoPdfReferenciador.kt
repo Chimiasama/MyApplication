@@ -379,10 +379,39 @@ class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
             "$name ${value.toDiceString()}$noteStr"
         }
 
+    private val separator = "    "
+    private val rowHeight = 16f
+
+    // Perícias lado a lado, "fluindo" pela largura toda e só quebrando linha quando não
+    // cabe mais — igual a um parágrafo, em vez de uma coluna estreita com uma por linha
+    // (o layout de coluna cheia dá espaço de sobra pra isso) ou espremidas em duas colunas.
+    private fun wrapIntoLines(width: Float, paint: Paint): List<String> {
+        if (skills.isEmpty()) return emptyList()
+        val sepWidth = paint.measureText(separator)
+        val lines = mutableListOf<String>()
+        var currentLine = StringBuilder()
+        var currentWidth = 0f
+        skills.forEach { txt ->
+            val txtWidth = paint.measureText(txt)
+            val addWidth = if (currentLine.isEmpty()) txtWidth else txtWidth + sepWidth
+            if (currentLine.isNotEmpty() && currentWidth + addWidth > width) {
+                lines.add(currentLine.toString())
+                currentLine = StringBuilder(txt)
+                currentWidth = txtWidth
+            } else {
+                if (currentLine.isNotEmpty()) currentLine.append(separator)
+                currentLine.append(txt)
+                currentWidth += addWidth
+            }
+        }
+        if (currentLine.isNotEmpty()) lines.add(currentLine.toString())
+        return lines
+    }
+
     override fun measure(width: Float, theme: PdfTheme): Float {
         if (skills.isEmpty()) return 34f // Title + "None"
-        val rowHeight = 14f
-        return 20f + (skills.size * rowHeight)
+        val paint = TextPaint().apply { textSize = 11f; typeface = theme.typefaceBody }
+        return 20f + (wrapIntoLines(width, paint).size * rowHeight)
     }
 
     override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
@@ -397,11 +426,8 @@ class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
             return
         }
 
-        // Uma perícia por linha, sempre — mesmo com muitas, em vez de espremer em duas
-        // colunas (o que forçava truncar nomes de perícia mais longos).
-        val rowHeight = 14f
-        skills.forEach { txt ->
-            canvas.drawText(txt, x, currY + 11f, bodyPaint)
+        wrapIntoLines(width, bodyPaint).forEach { line ->
+            canvas.drawText(line, x, currY + 11f, bodyPaint)
             currY += rowHeight
         }
     }
@@ -733,10 +759,11 @@ fun gerarFichaEmPdf(
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
     val theme = getPdfTheme(personagem.appTheme)
 
-    // Queues — Atributos agora é uma faixa horizontal no topo da página 1 (ver
-    // drawAttributesRow), não entra mais na coluna esquerda.
-    val leftQueue = ArrayDeque<PdfBlock>()
-    leftQueue.add(SkillListBlock(personagem))
+    // Fila única, coluna cheia — Atributos vira faixa horizontal (ver drawAttributesRow) e
+    // cada seção abaixo dela (Perícias, Complicações, Vantagens, Armas, Anotações) ocupa
+    // sua própria linha de largura total, em vez das duas colunas fixas de antes.
+    val mainQueue = ArrayDeque<PdfBlock>()
+    mainQueue.add(SkillListBlock(personagem))
 
     val hindranceNames = mutableListOf<String>()
     val mapPorId = listaComplicacoes.associateBy { it.id.keyify() }
@@ -771,9 +798,7 @@ fun gerarFichaEmPdf(
             hindranceNames.add(mappedFallback.toFancyTitleCase())
         }
     }
-    leftQueue.add(object : TextListBlock("Complicações", hindranceNames) {})
-
-    val rightQueue = ArrayDeque<PdfBlock>()
+    mainQueue.add(object : TextListBlock("Complicações", hindranceNames) {})
 
     // Edges
     val edgeNames = personagem.vantagens.map { id ->
@@ -797,7 +822,7 @@ fun gerarFichaEmPdf(
             fallback.toFancyTitleCase()
         }
     }
-    rightQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
+    mainQueue.add(object : TextListBlock("Vantagens", edgeNames) {})
 
     // Poderes agora ganham página dedicada (ver renderPoderesPages logo abaixo do loop
     // principal) — página 1 fica só com o essencial de combate/perícias.
@@ -814,22 +839,22 @@ fun gerarFichaEmPdf(
             "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})",
             "Limite por Poder: ${personagem.limitePorPoderPadrao}"
         )
-        rightQueue.add(object : TextListBlock("Superpoderes", superLines) {})
+        mainQueue.add(object : TextListBlock("Superpoderes", superLines) {})
     }
 
     // Weapons — fica na página principal por ser referência constante em combate.
-    rightQueue.add(WeaponTableBlock(personagem))
+    mainQueue.add(WeaponTableBlock(personagem))
 
     // Equipamentos gerais, Mechas e Cibernéticos agora têm página dedicada (abaixo).
 
     // Notes
     if (personagem.anotacoes.isNotBlank()) {
-        rightQueue.add(object : TextListBlock("Anotações", listOf(personagem.anotacoes)) {})
+        mainQueue.add(object : TextListBlock("Anotações", listOf(personagem.anotacoes)) {})
     }
 
     var pageIndex = 0
 
-    while (leftQueue.isNotEmpty() || rightQueue.isNotEmpty()) {
+    while (mainQueue.isNotEmpty()) {
         pageIndex++
         val page = doc.startPage(pageInfo)
         val canvas = page.canvas
@@ -865,54 +890,28 @@ fun gerarFichaEmPdf(
             contentTop = margin + 20f // Small margin on subsequent pages
         }
 
-        val columnGap = 20f
         val contentW = w - (margin * 2)
-        val leftW = (contentW - columnGap) * 0.35f
-        val rightW = (contentW - columnGap) * 0.65f
-        val rightX = margin + leftW + columnGap
         val bottomLimit = h - margin
 
-        // Fill Left
+        // Cada seção ocupa a largura toda da página, empilhada de cima pra baixo —
+        // sem mais colunas fixas lado a lado.
         var currY = contentTop
-        while (leftQueue.isNotEmpty()) {
-            val block = leftQueue.first()
+        while (mainQueue.isNotEmpty()) {
+            val block = mainQueue.first()
             val available = bottomLimit - currY
-            val (head, tail) = block.split(available, leftW, theme)
+            val (head, tail) = block.split(available, contentW, theme)
 
             if (head != null) {
-                head.draw(canvas, margin, currY, leftW, theme)
-                currY += head.measure(leftW, theme) + 10f
+                head.draw(canvas, margin, currY, contentW, theme)
+                currY += head.measure(contentW, theme) + 10f
             }
 
             if (tail != null) {
-                leftQueue.removeFirst()
-                leftQueue.addFirst(tail)
+                mainQueue.removeFirst()
+                mainQueue.addFirst(tail)
                 break // Page full
             } else {
-                leftQueue.removeFirst() // Fully drawn
-            }
-
-            if (currY >= bottomLimit) break
-        }
-
-        // Fill Right
-        currY = contentTop
-        while (rightQueue.isNotEmpty()) {
-            val block = rightQueue.first()
-            val available = bottomLimit - currY
-            val (head, tail) = block.split(available, rightW, theme)
-
-            if (head != null) {
-                head.draw(canvas, rightX, currY, rightW, theme)
-                currY += head.measure(rightW, theme) + 10f
-            }
-
-            if (tail != null) {
-                rightQueue.removeFirst()
-                rightQueue.addFirst(tail)
-                break
-            } else {
-                rightQueue.removeFirst()
+                mainQueue.removeFirst() // Fully drawn
             }
 
             if (currY >= bottomLimit) break
