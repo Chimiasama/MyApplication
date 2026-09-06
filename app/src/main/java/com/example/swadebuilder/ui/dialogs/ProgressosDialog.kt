@@ -2026,7 +2026,9 @@ private fun DialogVantagemItem(
             containerColor = when {
                 jaTem -> MaterialTheme.colorScheme.tertiaryContainer
                 requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
-                else -> MaterialTheme.colorScheme.errorContainer
+                // Requisito pendente não é bem um "erro" — mesmo cinza neutro de
+                // "indisponível" usado em Vantagens/Complicações, não errorContainer.
+                else -> MaterialTheme.colorScheme.surfaceContainerHighest
             }
         ),
         border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }

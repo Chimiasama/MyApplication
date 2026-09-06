@@ -26,7 +26,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.FilterChip
 import com.example.swadebuilder.util.AppPreferences
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalIconButton
@@ -213,28 +212,27 @@ fun SettingsDialog(
                                 "Modo de Distribuição (Atributos e Perícias)",
                                 style = MaterialTheme.typography.bodyMedium
                             )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            SingleChoiceSegmentedButtonRow(
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                FilterChip(
-                                    selected = state.modoSelecaoPericia == AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER,
-                                    onClick = {
-                                        state.modoSelecaoPericia = AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER
-                                        persistPrefs()
-                                    },
-                                    label = { Text("Tocar e Escolher", style = MaterialTheme.typography.labelSmall) },
-                                    modifier = Modifier.weight(1f)
+                                val options = listOf(
+                                    AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER,
+                                    AppPreferences.ModoSelecaoPericia.STEPPER_CORES
                                 )
-                                FilterChip(
-                                    selected = state.modoSelecaoPericia == AppPreferences.ModoSelecaoPericia.STEPPER_CORES,
-                                    onClick = {
-                                        state.modoSelecaoPericia = AppPreferences.ModoSelecaoPericia.STEPPER_CORES
-                                        persistPrefs()
-                                    },
-                                    label = { Text("Botões + e -", style = MaterialTheme.typography.labelSmall) },
-                                    modifier = Modifier.weight(1f)
-                                )
+                                val labels = listOf("Tocar e Escolher", "Botões + e -")
+
+                                options.forEachIndexed { index, option ->
+                                    SegmentedButton(
+                                        selected = state.modoSelecaoPericia == option,
+                                        onClick = {
+                                            state.modoSelecaoPericia = option
+                                            persistPrefs()
+                                        },
+                                        shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
+                                    ) {
+                                        Text(labels[index], style = MaterialTheme.typography.labelSmall)
+                                    }
+                                }
                             }
                         }
 
@@ -316,15 +314,17 @@ fun SettingsDialog(
                                 statusMessage = null
                                 showCustomContentDialog = true
                             },
+                            shape = MaterialTheme.shapes.small,
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = null,
-                                modifier = Modifier.size(18.dp)
+                                modifier = Modifier.size(16.dp)
                             )
-                            Spacer(Modifier.width(8.dp))
-                            Text("Gerenciar Conteúdo Customizado")
+                            Spacer(Modifier.width(6.dp))
+                            Text("Gerenciar", style = MaterialTheme.typography.labelLarge)
                         }
                     }
 

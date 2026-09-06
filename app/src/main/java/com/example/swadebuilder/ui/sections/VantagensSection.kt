@@ -1763,7 +1763,10 @@ private fun VantagemItem(
                 isAuto -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                 jaTem -> MaterialTheme.colorScheme.tertiaryContainer
                 requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
-                else -> MaterialTheme.colorScheme.errorContainer
+                // Requisito pendente não é bem um "erro" (nada quebrou, só ainda não
+                // dá pra escolher) — usa o mesmo cinza neutro de "indisponível" em vez
+                // de errorContainer, reservado pra alertas de verdade.
+                else -> MaterialTheme.colorScheme.surfaceContainerHighest
             }
         ),
         border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }
