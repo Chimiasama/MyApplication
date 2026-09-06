@@ -13,7 +13,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.json.decodeFromStream
 
 /**
@@ -27,7 +26,7 @@ object DataLoader {
     }
 
     // Cache for loaded file content (FileName -> Any)
-    // Stores List<T> or specific wrapper types (AtributoList, PericiaList)
+    // Stores List<T> or specific wrapper types (e.g. AtributoList)
     private val dataCache = mutableMapOf<String, Any>()
 
     // --- Module Definitions ---
@@ -259,7 +258,7 @@ object DataLoader {
                 runCatching {
                     assets.open("crystal_coracoes.json")
                         .use { input -> json.decodeFromStream<List<CrystalHeart>>(input) }
-                }.getOrElse { emptyList<CrystalHeart>() }
+                }.getOrElse { emptyList() }
             } as List<CrystalHeart>
             val customHearts = CustomCrystalHeartStorage.load(context)
             (hearts.map { it.exibido() } + customHearts).distinctBy { it.id }
@@ -274,7 +273,7 @@ object DataLoader {
                 runCatching {
                     assets.open("super_poderes.json")
                         .use { input -> json.decodeFromStream<List<SuperPoder>>(input) }
-                }.getOrElse { emptyList<SuperPoder>() }
+                }.getOrElse { emptyList() }
             } as List<SuperPoder>
             supers.map { it.exibido() }
         } else {
@@ -287,7 +286,7 @@ object DataLoader {
             runCatching {
                 assets.open("geral_arcano_info.json")
                     .use { input -> json.decodeFromStream<List<ArcanoInfo>>(input) }
-            }.getOrElse { emptyList<ArcanoInfo>() }
+            }.getOrElse { emptyList() }
         } as List<ArcanoInfo>
 
         loadedArcanoInfoList = arcanoList
@@ -338,7 +337,7 @@ object DataLoader {
             }
         }
 
-        val rawPericias = todasPericiasJson.map { pj ->
+        val localListaPericias = todasPericiasJson.map { pj ->
             Pericia(
                 nome     = pj.nome,
                 atributo = pj.atributo.uppercase().semAcentos(),
@@ -349,7 +348,6 @@ object DataLoader {
             )
         }
 
-        val localListaPericias = rawPericias
         val localMapaPericias = localListaPericias.associateBy { it.nome.keyify() }
 
         // Na edição Lite, mostra o resumo genérico (sem reproduzir o texto do livro original)
@@ -398,7 +396,7 @@ object DataLoader {
                     "vantagens_total=${todasVantagens.size}, sol_vapor_total=${steamAll.size}"
             )
             steamAll.take(20).forEach { vant ->
-                if (BuildConfig.DEBUG) {
+                if (Log.isLoggable("SWADE_DEBUG", Log.DEBUG)) {
                     Log.d(
                         "SWADE_DEBUG",
                         "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
@@ -411,7 +409,7 @@ object DataLoader {
         val adgTropos = if ("ARTE_DA_GUERRA" in keys) {
             @Suppress("UNCHECKED_CAST")
             val cached = dataCache.getOrPut("adg_tropos.json") {
-                runCatching { loadJsonAsset<List<Tropo>>(context, "adg_tropos.json") }.getOrElse { emptyList<Tropo>() }
+                runCatching { loadJsonAsset<List<Tropo>>(context, "adg_tropos.json") }.getOrElse { emptyList() }
             } as List<Tropo>
             cached.map { it.exibido() }
         } else emptyList()
@@ -419,7 +417,7 @@ object DataLoader {
         val chTropos = if ("CRYSTAL_HEART" in keys) {
             @Suppress("UNCHECKED_CAST")
             val cached = dataCache.getOrPut("crystal_tropos.json") {
-                runCatching { loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json") }.getOrElse { emptyList<Tropo>() }
+                runCatching { loadJsonAsset<List<Tropo>>(context, "crystal_tropos.json") }.getOrElse { emptyList() }
             } as List<Tropo>
             cached.map { it.exibido() }
         } else emptyList()
@@ -497,7 +495,7 @@ object DataLoader {
                 runCatching {
                     assets.open("horror_monstros.json")
                         .use { input -> json.decodeFromStream<List<MonstroTemplate>>(input) }
-                }.getOrElse { emptyList<MonstroTemplate>() }
+                }.getOrElse { emptyList() }
             } as List<MonstroTemplate>
             monstros.map { it.exibido() }
         } else {
@@ -599,7 +597,7 @@ object DataLoader {
         // Inject custom equipment into categories so they appear in EquipamentoSection
         val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {
             val categorizedCustoms = customEquipamentos.groupBy { it.subtipo ?: "Equipamento Geral" }
-            val existingTypes = localEquipamentoCategorias.map { it.subtipo to it }.toMap().toMutableMap()
+            val existingTypes = localEquipamentoCategorias.associateBy { it.subtipo }.toMutableMap()
             categorizedCustoms.forEach { (subtipo, items) ->
                 val existing = existingTypes[subtipo]
                 if (existing != null) {
@@ -724,7 +722,7 @@ object DataLoader {
         item.pmf?.toString(),
         item.malfuncionamento?.toString(),
         item.tensao?.toString(),
-        item.mods_slots?.toString()
+        item.modsSlots?.toString()
     ).joinToString("|")
 }
 

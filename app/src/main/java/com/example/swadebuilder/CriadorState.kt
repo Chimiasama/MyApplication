@@ -992,7 +992,7 @@ class CriadorState {
         val validAttrKeys = setOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
         if (key !in validAttrKeys) return false
         val monstro = getMonstroSelecionado() ?: return false
-        return monstro.atributos_bonus.keys.any { it.keyify() == key }
+        return monstro.atributosBonus.keys.any { it.keyify() == key }
     }
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
@@ -1589,7 +1589,7 @@ class CriadorState {
     // separar "capacidade" (base) de "gasto" (modificadores) dentro da mesma lista plana
     // de equipamentosComprados, já que o catálogo não guarda a subcategoria por item.
     private fun equipamentosArmaduraEnergizada(): List<EquipamentoItem> =
-        equipamentosComprados.filter { it.mods_slots != null }
+        equipamentosComprados.filter { it.modsSlots != null }
 
     private fun tamanhoArmaduraEnergizadaBase(): Int =
         equipamentosArmaduraEnergizada()
@@ -1597,7 +1597,7 @@ class CriadorState {
             .sumOf { (it.tamanho as? JsonPrimitive)?.intOrNull ?: 0 }
 
     private fun EquipamentoItem.slotsResolvidos(tamanhoBase: Int): Int {
-        val prim = mods_slots as? JsonPrimitive ?: return 0
+        val prim = modsSlots as? JsonPrimitive ?: return 0
         prim.intOrNull?.let { return it }
         val texto = prim.content
         return when {
@@ -1610,7 +1610,7 @@ class CriadorState {
     fun capacidadeSlotsArmaduraEnergizada(): Int =
         equipamentosArmaduraEnergizada()
             .filter { it.armadura != null }
-            .sumOf { (it.mods_slots as? JsonPrimitive)?.intOrNull ?: 0 }
+            .sumOf { (it.modsSlots as? JsonPrimitive)?.intOrNull ?: 0 }
 
     fun totalSlotsMecha(): Int {
         val tamanhoBase = tamanhoArmaduraEnergizadaBase()
@@ -2789,7 +2789,7 @@ class CriadorState {
         // a mesma convenção do resto do app: cada passo é um tipo de dado acima
         // de d4 (1 passo = d6, 2 passos = d8...).
         getMonstroSelecionado()?.let { monstro ->
-            val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
+            val bonusEntry = monstro.atributosBonus.entries.firstOrNull {
                 it.key.keyify() == perKey
             }
             if (bonusEntry != null) {
@@ -4280,7 +4280,7 @@ class CriadorState {
     }
 
     /**
-     * Traduz `MonstroTemplate.atributos_bonus` (mapa "atributo -> passos", ex.:
+     * Traduz `MonstroTemplate.atributosBonus` (mapa "atributo -> passos", ex.:
      * Anjo tem Força:2/Vigor:2) para ids já existentes em
      * `RacialTraitPointCatalog.EFEITOS` — os mesmos que uma Ancestralidade real
      * usaria para o mesmo efeito (ex.: Força +2 é "MUITO_FORTE", o id que
@@ -4292,7 +4292,7 @@ class CriadorState {
      * periciaStartRawInternal, que também usa o id "FE" do mesmo catálogo.
      */
     private fun monstroAtributoTraitIds(monstro: MonstroTemplate): Set<String> =
-        monstro.atributos_bonus.mapNotNull { (atributo, passos) ->
+        monstro.atributosBonus.mapNotNull { (atributo, passos) ->
             when (atributo.keyify()) {
                 "FORCA" -> if (passos >= 2) "MUITO_FORTE" else "FORTE"
                 "VIGOR" -> if (passos >= 2) "MUITO_RESISTENTE" else "RESISTENTE"

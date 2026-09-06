@@ -56,7 +56,12 @@ data class RacialModifier(
     val opcoes: List<String> = emptyList(),
     val especieId: String? = null
 ) {
-    /** Retorna atributos mesclando os estáticos de `atributos` com traços `ATTRIBUTE_BOOST` em `habilidades`. */
+    /** Retorna atributos mesclando os estáticos de `atributos` com traços `ATTRIBUTE_BOOST` em `habilidades`.
+     * Nenhuma raça cadastrada usa ATTRIBUTE_BOOST hoje (todas os declaram via o mapa
+     * estático `atributos`), então isso ainda não tem call site — quando alguma raça
+     * conceder atributo via habilidade dinâmica, os consumidores de `.atributos` (ex.:
+     * DataLoader ao montar o mapa de mínimos raciais) precisam trocar pra esta função. */
+    @Suppress("unused")
     fun resolvedAtributos(): Map<String, Int> {
         val map = atributos.toMutableMap()
         habilidades.forEach { hab ->
@@ -69,7 +74,10 @@ data class RacialModifier(
         return map
     }
 
-    /** Retorna perícias mesclando as estáticas de `pericias` com traços `SKILL_BOOST` em `habilidades`. */
+    /** Retorna perícias mesclando as estáticas de `pericias` com traços `SKILL_BOOST` em `habilidades`.
+     * Mesma situação de resolvedAtributos(): sem call site até alguma raça conceder
+     * perícia via SKILL_BOOST em vez do mapa estático `pericias`. */
+    @Suppress("unused")
     fun resolvedPericias(): Map<String, Int> {
         val map = pericias.toMutableMap()
         habilidades.forEach { hab ->

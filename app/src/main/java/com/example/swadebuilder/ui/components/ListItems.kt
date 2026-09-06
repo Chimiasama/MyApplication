@@ -111,7 +111,7 @@ fun StandardEquipamentoItem(
                 if (showTensao) {
                     equipamento.tensao?.let { add("Tensão: $it") }
                 }
-                equipamento.mods_slots?.let { add("Slots de Mods: $it") }
+                equipamento.modsSlots?.let { add("Slots de Mods: $it") }
             }
 
             if (allowLongTexts && detalhes.isNotEmpty()) {

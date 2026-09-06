@@ -204,8 +204,7 @@ object RacialTraitPointCatalog {
 
     fun efeitoDe(id: String?, targetRef: String? = null, value: Int = 1): RacialTraitEffect {
         if (id == null) return RacialTraitEffect.Nenhum
-        val key = id.keyify()
-        return when (key) {
+        return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value) else RacialTraitEffect.Nenhum
             "SKILL_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value) else RacialTraitEffect.Nenhum
             "TOUGHNESS_FLAT" -> RacialTraitEffect.ResistenciaBonus(value)
@@ -548,15 +547,17 @@ object RacialTraitPointCatalog {
     /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo). */
     fun custoDe(
         id: String?,
-        targetRef: String? = null,
+        // Não usado no cálculo de custo (que só depende de value/severity), mas mantido
+        // pra bater com a assinatura de efeitoDe() — call sites chamam as duas com a
+        // mesma tupla de argumentos (ver RacialModifier.custoRacial()).
+        @Suppress("UNUSED_PARAMETER") targetRef: String? = null,
         value: Int = 1,
         severity: String? = null,
         pontos: Int = 0
     ): Int {
         if (pontos != 0) return pontos
         if (id == null) return 0
-        val key = id.keyify()
-        return when (key) {
+        return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> value * 2
             "SKILL_BOOST" -> if (value >= 1) 2 else 1
             "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2

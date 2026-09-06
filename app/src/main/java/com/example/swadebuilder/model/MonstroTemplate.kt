@@ -2,6 +2,7 @@ package com.example.swadebuilder.model
 
 import com.example.swadebuilder.EditionConfig
 import com.example.swadebuilder.util.keyify
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -11,7 +12,8 @@ data class MonstroTemplate(
     val descricao: String,
     // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
     val descricaoLite: String? = null,
-    val atributos_bonus: Map<String, Int> = emptyMap(),
+    @SerialName("atributos_bonus")
+    val atributosBonus: Map<String, Int> = emptyMap(),
     val habilidades: List<MonstroHabilidade> = emptyList(),
     // Ids/nomes de Vantagem que o template concede de graça (não custam
     // escolha de Vantagem do jogador) — mesmo campo/mecanismo que
@@ -78,11 +80,11 @@ data class MonstroHabilidade(
  *   dos ":" (mesmo corte que ModifierEngine já faz pra aplicar a mecânica).
  */
 fun MonstroTemplate.paraCaracteristicas(): List<String> {
-    val atributosConvertidos = atributos_bonus
+    val atributosConvertidos = atributosBonus
         .filterKeys { it.keyify() != "FE" }
         .mapValues { (_, passos) -> passos * 2 }
 
-    val feEntry = atributos_bonus.entries.firstOrNull { it.key.keyify() == "FE" }
+    val feEntry = atributosBonus.entries.firstOrNull { it.key.keyify() == "FE" }
     val periciasConvertidas = feEntry?.let { mapOf("Fé" to it.value + 1) } ?: emptyMap()
 
     val habilidadesConvertidas = habilidades.map {
