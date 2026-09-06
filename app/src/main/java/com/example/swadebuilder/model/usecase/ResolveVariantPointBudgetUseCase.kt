@@ -126,9 +126,14 @@ class ResolveVariantPointBudgetUseCase {
             // Pacifista, Sem Escrúpulos, Sensível, Voto — ver custoDe) cobrarem
             // certo: sem isso, remover um Forasteiro (Menor) da raça base sempre
             // devolvia o valor de Maior (-2), fechando o saldo da Variante errado.
+            // `pontos` (RacialAbility.pontos) é o mesmo escape-hatch que
+            // resolvedPontos() já prioriza pra traço com valor calibrado à mão,
+            // fora da escala genérica do id (ex.: Draconianos Mordida/Garras
+            // com PA — ver ancestralidades.json) — sem passar aqui, o editor de
+            // Variante ignorava o valor calibrado e usava o genérico do id.
             return VariantBudgetItem(
                 label = label,
-                custo = RacialTraitPointCatalog.custoDe(id, severity = habilidade.severity) * vezes,
+                custo = RacialTraitPointCatalog.custoDe(id, severity = habilidade.severity, pontos = habilidade.pontos) * vezes,
                 habilidadeId = id
             )
         }

@@ -354,7 +354,9 @@ object RacialTraitPointCatalog {
         "PODERES_MISTICOS_TELEPATA" to "Poderes Místicos (Telepata)",
         "DIMINUTO_TAMANHO_2" to "Diminuto (Tamanho -2)",
         "PERICIAS_BASICAS_REDUZIDAS_TOTAL" to "Perícias Básicas Reduzidas (Total)",
-        "REGENERACAO" to "Regeneração"
+        "REGENERACAO" to "Regeneração",
+        "ELEMENTO_ANCESTRAL" to "Elemento Ancestral",
+        "PENALIDADE_PERICIA_1" to "Penalidade em Perícia (-1)"
     )
 
     /**
@@ -499,7 +501,7 @@ object RacialTraitPointCatalog {
         "GUIADO" to -2, // oficial: complicacao_racial_maior
         "HERANCA" to 2, // oficial: vantagem_racial OU aumento_atributo (escolha, mesmo tier)
         "HERANCA_MISTA" to 2, // oficial: vantagem_racial
-        "IMPULSIVO" to -1, // oficial: complicacao_racial_menor
+        "IMPULSIVO" to -2, // Complicação Maior no catálogo real (complicacoes.json "impulsivo" só existe como Maior) — mesmo caso de AZARADO, corrigido pra bater com o catálogo
         "IMUNE_A_DOENCAS_E_VENENOS" to 1, // oficial: imune_doencas_venenos
         "INCAPAZ_DE_FALAR" to -2, // oficial: complicacao_racial_maior
         "INFRAVISAO" to 1, // oficial: infravisao
@@ -701,7 +703,23 @@ object RacialTraitPointCatalog {
         "SENHOR_DAS_FERAS" to 2, // vantagens.json "senhor_das_feras", Estágio Novato
         "CIBERTOLERANCIA" to 2, // vantagens.json "cibertolerancia", Estágio Novato
         "ADAPTACAO_GRAVITACIONAL" to 2, // vantagens.json "adaptacao_gravitacional", Estágio Novato
-        "PODERES_MISTICOS_TELEPATA" to 3 // vantagens.json "poderes_misticos", Estágio Experiente
+        "PODERES_MISTICOS_TELEPATA" to 3, // vantagens.json "poderes_misticos", Estágio Experiente
+
+        // Placeholder de Seleção (custo 0 de propósito — ver comentário de
+        // DONS_DA_NATUREZA acima): Descendente Elemental (Fantasia) escolhe 1
+        // de 4 elementos (Água/Ar/Fogo/Terra), cada um injetando o traço
+        // resolvido de verdade (AQUATICO/AR_INTERNO/RAPIDO/SOLIDO_COMO_ROCHA,
+        // todos já valendo 2) — ver AncestryVariantRegistry.descendenteElemental().
+        "ELEMENTO_ANCESTRAL" to 0,
+
+        // Penalidade genérica de -1 numa perícia comum (oficial:
+        // penalidade_pericia_1) — reaproveitável por qualquer raça que precise
+        // de mais de uma instância (cada instância é uma habilidade própria,
+        // não "vezes" — vezes multiplicaria o mesmo alvo, aqui os alvos são
+        // perícias diferentes). Primeiro uso: Golens (Fantasia) "Desajeitado"
+        // = -1 Atletismo + -1 Furtividade, duas compras separadas, não uma
+        // penalidade -3 arbitrária.
+        "PENALIDADE_PERICIA_1" to -1
     )
 
     /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).

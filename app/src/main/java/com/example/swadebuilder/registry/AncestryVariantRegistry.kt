@@ -52,7 +52,8 @@ object AncestryVariantRegistry {
         soldadosGeneticos(),
         yetis(),
         robos(),
-        seresSinteticos()
+        seresSinteticos(),
+        descendenteElemental()
     ).associateBy { it.ancestralidadeId }
 
     fun get(ancestralidadeId: String): AncestryVariantConfig? = configs[ancestralidadeId]
@@ -786,6 +787,42 @@ object AncestryVariantRegistry {
                         "ar_fogo_ou_agua",
                         "Ar, Fogo ou Água",
                         ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")))
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Descendente Elemental (Fantasia): Seleção de elemento, mesmo padrão
+    // de elementaisScifi() acima (o comentário de lá já citava este caso como
+    // o análogo pendente). Base fixa em ancestralidades.json (Resistência
+    // Ambiental +1, Forasteiro Menor -1) mais o placeholder "Elemento
+    // Ancestral" (ELEMENTO_ANCESTRAL, custo 0 — ver RacialTraitPointCatalog);
+    // cada elemento resolvido vale 2 pontos, então a raça fecha em +2
+    // (-1+1+0 do placeholder, +2 do elemento) qualquer que seja a escolha.
+    private fun descendenteElemental(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "DESCENDENTE ELEMENTAL",
+        selecoes = listOf(
+            SelectionDef(
+                id = "descendente_elemental_elemento",
+                rotulo = "Escolha o elemento ancestral",
+                tipo = SelectionType.FIXED_PACKAGE,
+                pacotesFixos = listOf(
+                    FixedPackageOption(
+                        "agua", "Água",
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("AQUÁTICO", "AQUATICO")))
+                    ),
+                    FixedPackageOption(
+                        "ar", "Ar",
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("AR INTERNO", "AR_INTERNO")))
+                    ),
+                    FixedPackageOption(
+                        "fogo", "Fogo",
+                        ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf(TraitAddition("RÁPIDO", "RAPIDO")))
+                    ),
+                    FixedPackageOption(
+                        "terra", "Terra",
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("SÓLIDO COMO ROCHA", "SOLIDO_COMO_ROCHA")))
                     )
                 )
             )
