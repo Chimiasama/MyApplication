@@ -322,7 +322,11 @@ object RacialTraitPointCatalog {
         "TOQUE_VENENOSO_NOCAUTEADOR" to "Toque Venenoso (Nocauteador)",
         "TOQUE_VENENOSO_PARALISANTE" to "Toque Venenoso (Paralisante)",
         "TOQUE_VENENOSO_LETAL" to "Toque Venenoso (Letal)",
-        "TOQUE_VENENOSO_CUSPIDOR" to "Toque Venenoso (Cuspidor)",
+        "TOQUE_VENENOSO_CUSPIDOR" to "Toque Venenoso (Moderado, Cuspidor)",
+        "TOQUE_VENENOSO_MODERADO_CUSPIDOR" to "Toque Venenoso (Moderado, Cuspidor)",
+        "TOQUE_VENENOSO_NOCAUTEADOR_CUSPIDOR" to "Toque Venenoso (Nocauteador, Cuspidor)",
+        "TOQUE_VENENOSO_PARALISANTE_CUSPIDOR" to "Toque Venenoso (Paralisante, Cuspidor)",
+        "TOQUE_VENENOSO_LETAL_CUSPIDOR" to "Toque Venenoso (Letal, Cuspidor)",
         "FERRAO_MORDIDA_FOR_D4" to "Ferrão",
         "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO" to "Mudança de Forma (Sem variação de Tamanho)",
         "ARMA_DE_SOPRO_FOGO" to "Arma de Sopro (Fogo)",
@@ -637,13 +641,21 @@ object RacialTraitPointCatalog {
         // Básico usa uma versão simplificada (+3 fixo pra qualquer melhoria de
         // veneno), mas nenhuma raça oficial usa Toque Venenoso vindo do
         // Básico — todas as raças/Variantes que têm este traço são Sci-Fi, daí
-        // os ids abaixo seguirem a escala granular de Fantasia/Sci-Fi.
-        "TOQUE_VENENOSO" to 1, // Veneno Moderado (tier base)
+        // os ids abaixo seguirem a escala granular de Fantasia/Sci-Fi. Cada
+        // combinação intensidade×alcance é seu próprio id (nunca dois efeitos
+        // somados em tempo de execução), cobrindo o range de 1 a 6 pontos que
+        // o livro descreve: base(1) + upgrade de veneno(0/+1/+2/+3) +
+        // cuspir/projetar(0/+2).
+        "TOQUE_VENENOSO" to 1, // Veneno Moderado, ataque corpo a corpo (tier base)
         "TOQUE_VENENOSO_MODERADO" to 1, // mesmo tier base, nome explícito (Insetoides Vespa)
         "TOQUE_VENENOSO_NOCAUTEADOR" to 2, // Moderado (1) + Nocauteador (+1)
         "TOQUE_VENENOSO_PARALISANTE" to 3, // Moderado (1) + Paralisante (+2)
         "TOQUE_VENENOSO_LETAL" to 4, // Moderado (1) + Letal (+3)
-        "TOQUE_VENENOSO_CUSPIDOR" to 3, // Moderado (1) + cuspir/projetar à distância (+2)
+        "TOQUE_VENENOSO_CUSPIDOR" to 3, // Moderado (1) + cuspir/projetar à distância (+2) — Sáurios Cuspidor, sem intensidade maior indicada no livro
+        "TOQUE_VENENOSO_MODERADO_CUSPIDOR" to 3, // mesmo valor de TOQUE_VENENOSO_CUSPIDOR, nome explícito
+        "TOQUE_VENENOSO_NOCAUTEADOR_CUSPIDOR" to 4, // Nocauteador (2) + cuspir (+2)
+        "TOQUE_VENENOSO_PARALISANTE_CUSPIDOR" to 5, // Paralisante (3) + cuspir (+2)
+        "TOQUE_VENENOSO_LETAL_CUSPIDOR" to 6, // Letal (4) + cuspir (+2) — o teto de 6 pontos que o livro descreve
         "FERRAO_MORDIDA_FOR_D4" to 1, // mesma arma natural de MORDIDA, só com nome "Ferrão" (Insetoides Vespa)
         "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO" to 4, // mesmo valor de MUDAR_DE_FORMA — versão restrita (sem variar Tamanho), não um tier mais barato no livro
 
