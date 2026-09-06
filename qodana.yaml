@@ -1,7 +1,15 @@
 version: "1.0"
 
 # Linter Community gratuito, sem token, com o mesmo conjunto de inspeções
-# Kotlin/Android que o Android Studio mostra no editor (código nunca usado,
+# Kotlin que o Android Studio mostra no editor (código nunca usado,
 # convenção de nomes, "if" redundante, etc.) — cobre exatamente a categoria
 # de aviso que o Android Lint e o compilador Kotlin não pegam.
-linter: jetbrains/qodana-jvm-android
+#
+# Usamos o linter JVM genérico (não o "-android") de propósito: o
+# "-android" faz sync completo via Android Studio/AGP internamente, e a
+# versão empacotada no Qodana só suporta até AGP 9.1.0 — este projeto usa
+# AGP 9.4.0 (mais novo), o que faz o "-android" falhar no import do
+# projeto antes mesmo de rodar qualquer inspeção. O linter genérico trata
+# como projeto Gradle/Kotlin puro e roda as mesmas inspeções de código
+# Kotlin sem depender do sync específico do Android Gradle Plugin.
+linter: jetbrains/qodana-jvm
