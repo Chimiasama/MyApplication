@@ -20,11 +20,17 @@ val DefaultThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = OldSchoolRed,
         onPrimary = Color.White,
-        primaryContainer = OldSchoolRed.copy(alpha = 0.12f),
+        // Container opacos e propositais, não mais um overlay translúcido de
+        // OldSchoolRed/Gold sobre o fundo — essa técnica antiga lia como um rosa
+        // genérico e desbotado (a cor "legado" removida a pedido), sem relação
+        // com a identidade vinho/dourado/pergaminho do tema. primaryContainer
+        // puxa pro dourado/terracota (não pro vermelho-claro, que sempre lê rosa
+        // quando clareado), secondaryContainer é o pergaminho dourado mais claro.
+        primaryContainer = Color(0xFFE7CCB0),
         onPrimaryContainer = OldSchoolInk,
         secondary = OldSchoolGold,
         onSecondary = OldSchoolInk,
-        secondaryContainer = OldSchoolGold.copy(alpha = 0.18f),
+        secondaryContainer = Color(0xFFF1E2C4),
         onSecondaryContainer = OldSchoolInk,
         tertiary = OldSchoolInkSoft,
         onTertiary = Color.White,
@@ -36,17 +42,17 @@ val DefaultThemeData = AppThemeData(
         onSurfaceVariant = OldSchoolInkSoft,
         outline = OldSchoolOutline,
         outlineVariant = OldSchoolOutline.copy(alpha = 0.6f),
-        errorContainer = Color(0xFFD32F2F).copy(alpha = 0.12f),
+        errorContainer = Color(0xFFF5D9D9),
         onErrorContainer = OldSchoolInk
     ),
     darkColors = darkColorScheme(
         primary = OldSchoolRed,
         onPrimary = Color.White,
-        primaryContainer = OldSchoolRed.copy(alpha = 0.2f),
+        primaryContainer = Color(0xFF4B3626),
         onPrimaryContainer = OldSchoolPaper,
         secondary = OldSchoolGold,
         onSecondary = OldSchoolDarkBg,
-        secondaryContainer = OldSchoolGold.copy(alpha = 0.2f),
+        secondaryContainer = Color(0xFF4F4126),
         onSecondaryContainer = OldSchoolPaper,
         tertiary = OldSchoolInkSoft,
         onTertiary = OldSchoolPaper,
@@ -58,7 +64,7 @@ val DefaultThemeData = AppThemeData(
         onSurfaceVariant = OldSchoolPaper.copy(alpha = 0.9f),
         outline = OldSchoolOutline.copy(alpha = 0.5f),
         outlineVariant = OldSchoolOutline.copy(alpha = 0.35f),
-        errorContainer = Color(0xFFD32F2F).copy(alpha = 0.22f),
+        errorContainer = Color(0xFF4A2220),
         onErrorContainer = OldSchoolPaper
     ),
     typography = DefaultTypography
@@ -69,11 +75,17 @@ val MedievalThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = MedGold,
         onPrimary = Color.White,
-        primaryContainer = MedGold.copy(alpha = 0.18f),
+        // Opacos, não mais um overlay translúcido (mesma limpeza do tema Old
+        // School): primaryContainer/secondaryContainer eram um blend de
+        // MedGold/MedInk que lia como um tom genérico sem identidade própria, e
+        // errorContainer era literalmente MedPaper (o próprio papel, sem tom de
+        // alerta nenhum). Agora são tons de pergaminho/bronze opacos e um
+        // vermelho-terra sóbrio pra erro.
+        primaryContainer = Color(0xFFDED2C2),
         onPrimaryContainer = MedInk,
         secondary = MedInk,
         onSecondary = MedPaper,
-        secondaryContainer = MedInk.copy(alpha = 0.1f),
+        secondaryContainer = Color(0xFFEFE6D3),
         onSecondaryContainer = MedInk,
         tertiary = MedGold.copy(alpha = 0.8f),
         onTertiary = MedPaper,
@@ -85,17 +97,17 @@ val MedievalThemeData = AppThemeData(
         onSurfaceVariant = MedInk.copy(alpha = 0.85f),
         outline = MedGold.copy(alpha = 0.45f),
         outlineVariant = MedGold.copy(alpha = 0.25f),
-        errorContainer = MedPaper.copy(alpha = 0.85f),
+        errorContainer = Color(0xFFF0D6D3),
         onErrorContainer = MedInk
     ),
     darkColors = darkColorScheme(
         primary = MedGold,
         onPrimary = Color.White,
-        primaryContainer = MedGold.copy(alpha = 0.25f),
+        primaryContainer = Color(0xFF55392C),
         onPrimaryContainer = MedPaper,
         secondary = MedPaper,
         onSecondary = MedInk,
-        secondaryContainer = MedInk.copy(alpha = 0.6f),
+        secondaryContainer = Color(0xFF6B4A38),
         onSecondaryContainer = MedPaper,
         tertiary = MedGold.copy(alpha = 0.9f),
         onTertiary = MedInk,
@@ -284,11 +296,15 @@ val WW2ThemeData = AppThemeData(
     lightColors = lightColorScheme(
         primary = WW2Stamp,
         onPrimary = Color.White,
-        primaryContainer = WW2Khaki.copy(alpha = 0.5f),
+        // Opacos, não mais um overlay translúcido sobre o papel de telegrama
+        // (mesma limpeza dos outros temas legados) — inclui trocar o
+        // errorContainer, que usava WW2Olive (verde-oliva, sem nenhum tom de
+        // alerta) por um vermelho-tijolo sóbrio, condizente com o resto do tema.
+        primaryContainer = Color(0xFFD9CB8E),
         onPrimaryContainer = Color.Black,
         secondary = WW2Olive,
         onSecondary = Color.White,
-        secondaryContainer = WW2Olive.copy(alpha = 0.2f),
+        secondaryContainer = Color(0xFFCFC976),
         onSecondaryContainer = Color.Black,
         tertiary = WW2Paper,
         onTertiary = Color.Black,
@@ -300,17 +316,17 @@ val WW2ThemeData = AppThemeData(
         onSurfaceVariant = Color.Black,
         outline = WW2Stamp.copy(alpha = 0.4f),
         outlineVariant = WW2Stamp.copy(alpha = 0.25f),
-        errorContainer = WW2Olive.copy(alpha = 0.3f),
+        errorContainer = Color(0xFFE0B8A8),
         onErrorContainer = Color.Black
     ),
     darkColors = darkColorScheme(
         primary = WW2Paper,
         onPrimary = Color.Black,
-        primaryContainer = WW2Stamp.copy(alpha = 0.4f),
+        primaryContainer = Color(0xFF3D5133),
         onPrimaryContainer = WW2Paper,
         secondary = WW2Khaki,
         onSecondary = Color.Black,
-        secondaryContainer = WW2Stamp.copy(alpha = 0.35f),
+        secondaryContainer = Color(0xFF32433A),
         onSecondaryContainer = WW2Paper,
         tertiary = WW2Paper,
         onTertiary = Color.Black,
