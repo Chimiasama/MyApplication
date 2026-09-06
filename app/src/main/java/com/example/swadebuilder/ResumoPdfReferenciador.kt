@@ -23,6 +23,7 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.sections.asText
 import com.example.swadebuilder.ui.sections.toResumo
@@ -140,6 +141,7 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
  */
 enum class FichaPdfSecao(val titulo: String) {
     PODERES("Antecedente Arcano"),
+    SUPERPODERES("Superpoderes"),
     MECHAS("Mechas"),
     EQUIPAMENTOS("Equipamentos"),
     CIBERNETICOS("Cibernéticos")
@@ -150,6 +152,7 @@ fun secoesPdfDisponiveis(personagem: MeuPersonagem): Set<FichaPdfSecao> {
     val gear = personagem.equipamentos.filterNot { it.dano != null }
     return buildSet {
         if (personagem.poderes.isNotEmpty() || isPathfinderGnome) add(FichaPdfSecao.PODERES)
+        if (personagem.modoSupers && personagem.gastosPorPoder.isNotEmpty()) add(FichaPdfSecao.SUPERPODERES)
         if (personagem.mechasSelecionados.isNotEmpty()) add(FichaPdfSecao.MECHAS)
         if (gear.isNotEmpty()) add(FichaPdfSecao.EQUIPAMENTOS)
         if (personagem.ciberneticosInstalados.isNotEmpty()) add(FichaPdfSecao.CIBERNETICOS)
@@ -168,6 +171,7 @@ suspend fun produzirEExibirFichaPdf(
     listaComplicacoes: List<Complicacao>,
     listaVantagens: List<Vantagem>,
     listaPoderes: List<Poder>,
+    listaSuperPoderes: List<SuperPoder> = emptyList(),
     // Ver gerarFichaEmPdf.
     especieId: String? = null,
     secoesIncluidas: Set<FichaPdfSecao> = FichaPdfSecao.entries.toSet(),
@@ -203,6 +207,7 @@ suspend fun produzirEExibirFichaPdf(
                 listaComplicacoes,
                 listaVantagens,
                 listaPoderes,
+                listaSuperPoderes,
                 especieId,
                 secoesIncluidas
             )
@@ -360,37 +365,7 @@ abstract class TextListBlock(private val title: String, private val items: List<
     }
 }
 
-class AttributeBlock(
-    private val p: MeuPersonagem,
-    private val listaAtributos: List<String>,
-    private val mapaAtributosDisplay: Map<String, String>
-) : PdfBlock {
-    override fun measure(width: Float, theme: PdfTheme): Float {
-        // Fixed height: Title + count * 50f
-        return 30f + (listaAtributos.size * 50f)
-    }
-
-    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
-        val titlePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
-        canvas.drawText("Atributos", x, y + 14f, titlePaint)
-
-        var currY = y + 30f
-        listaAtributos.forEach { attr ->
-            val value = p.atributos[attr] ?: 4
-            val display = mapaAtributosDisplay[attr] ?: attr
-            drawAttributeShape(canvas, x + 25f, currY + 20f, value.toDiceString(), theme)
-            val namePaint = TextPaint().apply { color = theme.textColor; textSize = 12f; typeface = theme.typefaceBody; isFakeBoldText = true }
-            canvas.drawText(display, x + 60f, currY + 25f, namePaint)
-            currY += 50f
-        }
-    }
-
-    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
-        // Attributes are atomic for simplicity. If they don't fit, push to next page.
-        if (measure(width, theme) <= availableHeight) return this to null
-        return null to this
-    }
-}
+// Atributos: ver drawAttributesRow (faixa horizontal na página 1, fora do fluxo de blocos).
 
 class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
     private val skills = p.pericias.entries
@@ -627,6 +602,36 @@ class PowerCardRowBlock(private val cards: List<PowerCardSpec>) : PdfBlock {
     }
 }
 
+/** Só estatísticas do superpoder — sem os modificadores em prosa, mesma regra dos Poderes. */
+data class SuperPoderCardSpec(
+    val nome: String,
+    val estagio: String,
+    val custoBase: String,
+    val investido: Int
+)
+
+/** Até dois cards de superpoder lado a lado, mesmo layout de [PowerCardRowBlock]. */
+class SuperPoderCardRowBlock(private val cards: List<SuperPoderCardSpec>) : PdfBlock {
+    private val cardHeight = 62f
+    override fun measure(width: Float, theme: PdfTheme): Float = cardHeight
+    override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
+        val gap = 10f
+        val cardW = if (cards.size > 1) (width - gap) / 2f else width
+        cards.forEachIndexed { i, spec ->
+            val cx = x + i * (cardW + gap)
+            val statLines = listOf(
+                "Estágio: ${spec.estagio}",
+                "Custo base: ${spec.custoBase}   •   Investido: ${spec.investido} SP"
+            )
+            drawStatCard(canvas, cx, y, cardW, cardHeight - 8f, spec.nome, statLines, emptyList(), theme)
+        }
+    }
+    override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
+        if (cardHeight <= availableHeight) return this to null
+        return null to this
+    }
+}
+
 /** Estatísticas do mecha — chassi, defesas, mobilidade — sem prosa de mods/sistemas. */
 class MechaCardBlock(private val m: com.example.swadebuilder.model.MechaItem) : PdfBlock {
     private val extras = buildList {
@@ -738,6 +743,7 @@ fun gerarFichaEmPdf(
     listaComplicacoes: List<Complicacao>,
     listaVantagens: List<Vantagem>,
     listaPoderes: List<Poder>,
+    listaSuperPoderes: List<SuperPoder> = emptyList(),
     // Id estável da espécie da ancestralidade atual (RacialModifier.especieId,
     // ex.: state.currentAncestryDef?.especieId), resolvido pelo chamador —
     // ver drawHeader/calcAparar. Null pra raça customizada (nunca aciona
@@ -749,9 +755,9 @@ fun gerarFichaEmPdf(
     val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
     val theme = getPdfTheme(personagem.appTheme)
 
-    // Queues
+    // Queues — Atributos agora é uma faixa horizontal no topo da página 1 (ver
+    // drawAttributesRow), não entra mais na coluna esquerda.
     val leftQueue = ArrayDeque<PdfBlock>()
-    leftQueue.add(AttributeBlock(personagem, listaAtributos, mapaAtributosDisplay))
     leftQueue.add(SkillListBlock(personagem))
 
     val hindranceNames = mutableListOf<String>()
@@ -819,29 +825,17 @@ fun gerarFichaEmPdf(
     // principal) — página 1 fica só com o essencial de combate/perícias.
     val isPathfinderGnome = personagem.compendioPathfinderAtivo && personagem.ancestralidade.uppercase().contains("GNOMO")
 
-    // Superpoderes
+    // Superpoderes — resumo de campanha fica na página principal; o detalhamento por
+    // poder (stats) vira página dedicada (ver renderSectionPages abaixo do loop).
     if (personagem.modoSupers &&
         (personagem.superPontosTotais > 0 || personagem.gastosPorPoder.isNotEmpty())
     ) {
-        val superLines = mutableListOf<String>()
         val nivelStr = personagem.superNivelCampanha?.let { "Nível $it" } ?: "–"
-        superLines.add("Nível da Campanha: $nivelStr")
-        superLines.add("Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})")
-        superLines.add("Limite por Poder: ${personagem.limitePorPoderPadrao}")
-        superLines.add("")
-
-        if (personagem.gastosPorPoder.isEmpty()) {
-            superLines.add("– Nenhum superpoder registrado")
-        } else {
-            personagem.gastosPorPoder.forEach { (poderId, custo) ->
-                val cleanId = if (poderId.startsWith("sp_", ignoreCase = true)) {
-                    poderId.substring(3)
-                } else {
-                    poderId
-                }
-                superLines.add("${cleanId.toFancyTitleCase()}: $custo SP")
-            }
-        }
+        val superLines = listOf(
+            "Nível da Campanha: $nivelStr",
+            "Superpontos: ${personagem.superPontosTotais} (disponíveis: ${personagem.superPontosDisponiveis})",
+            "Limite por Poder: ${personagem.limitePorPoderPadrao}"
+        )
         rightQueue.add(object : TextListBlock("Superpoderes", superLines) {})
     }
 
@@ -876,13 +870,19 @@ fun gerarFichaEmPdf(
         if (pageIndex == 1) {
             val headerH = 140f
             val derivedH = 60f
+            val attributesH = 90f
             val headerRect = RectF(margin, margin, w - margin, margin + headerH)
             drawHeader(canvas, headerRect, personagem, theme, portrait, especieId)
 
             val derivedRect = RectF(margin, headerRect.bottom + 10f, w - margin, headerRect.bottom + 10f + derivedH)
             drawDerivedStats(canvas, derivedRect, personagem, theme, especieId)
 
-            contentTop = derivedRect.bottom + 20f
+            // Atributos em uma faixa horizontal (em vez de empilhados na coluna
+            // esquerda) — ocupa bem menos altura, sobrando espaço pro resto da página 1.
+            val attributesRect = RectF(margin, derivedRect.bottom + 10f, w - margin, derivedRect.bottom + 10f + attributesH)
+            drawAttributesRow(canvas, attributesRect, personagem, theme, listaAtributos, mapaAtributosDisplay)
+
+            contentTop = attributesRect.bottom + 20f
         } else {
             contentTop = margin + 20f // Small margin on subsequent pages
         }
@@ -947,6 +947,9 @@ fun gerarFichaEmPdf(
     // conteúdo correspondente e a seção estiver marcada no diálogo de exportação.
     if (FichaPdfSecao.PODERES in secoesIncluidas && (personagem.poderes.isNotEmpty() || isPathfinderGnome)) {
         renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.PODERES.titulo, buildPoderesBlocks(personagem, listaPoderes, isPathfinderGnome, mapaAtributosDisplay))
+    }
+    if (FichaPdfSecao.SUPERPODERES in secoesIncluidas && personagem.modoSupers && personagem.gastosPorPoder.isNotEmpty()) {
+        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.SUPERPODERES.titulo, buildSuperPoderesBlocks(personagem, listaSuperPoderes))
     }
     if (FichaPdfSecao.MECHAS in secoesIncluidas && personagem.mechasSelecionados.isNotEmpty()) {
         renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.MECHAS.titulo, buildMechasBlocks(personagem))
@@ -1113,6 +1116,21 @@ private fun buildPoderesBlocks(
     }
 
     return blocks
+}
+
+private fun buildSuperPoderesBlocks(personagem: MeuPersonagem, listaSuperPoderes: List<SuperPoder>): List<PdfBlock> {
+    if (personagem.gastosPorPoder.isEmpty()) return emptyList()
+    val specs = personagem.gastosPorPoder.map { (poderId, custo) ->
+        val cleanId = if (poderId.startsWith("sp_", ignoreCase = true)) poderId.substring(3) else poderId
+        val sp = listaSuperPoderes.firstOrNull { "sp_${it.nome.keyify()}" == poderId }
+        SuperPoderCardSpec(
+            nome = (sp?.nome ?: cleanId).toFancyTitleCase(),
+            estagio = sp?.estagio?.toFancyTitleCase() ?: "-",
+            custoBase = sp?.custoBase ?: "-",
+            investido = custo
+        )
+    }
+    return specs.chunked(2).map { pair -> SuperPoderCardRowBlock(pair) }
 }
 
 private fun buildMechasBlocks(personagem: MeuPersonagem): List<PdfBlock> =
@@ -1361,6 +1379,28 @@ fun drawDerivedStats(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTh
         val valPaint = TextPaint().apply { color = theme.primaryColor; textSize = 24f; textAlign = Paint.Align.CENTER; typeface = theme.typefaceTitle; isFakeBoldText = true }
         canvas.drawText(labels[i], r.centerX(), r.top + 15f, labelPaint)
         canvas.drawText(values[i], r.centerX(), r.bottom - 15f, valPaint)
+    }
+}
+
+/** Atributos numa faixa horizontal (título + uma forma por atributo), em vez de empilhados
+ *  numa coluna — o mesmo espaço vertical de antes dava pra só 5 atributos e sobrava
+ *  muito vazio na coluna ao lado. */
+fun drawAttributesRow(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, listaAtributos: List<String>, mapaAtributosDisplay: Map<String, String>) {
+    if (listaAtributos.isEmpty()) return
+
+    val titlePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
+    canvas.drawText("Atributos", rect.left, rect.top + 14f, titlePaint)
+
+    val boxWidth = rect.width() / listaAtributos.size
+    val shapeCy = rect.top + 42f
+    val namePaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody; isFakeBoldText = true; textAlign = Paint.Align.CENTER }
+
+    listaAtributos.forEachIndexed { i, attr ->
+        val value = p.atributos[attr] ?: 4
+        val display = mapaAtributosDisplay[attr] ?: attr
+        val cx = rect.left + (boxWidth * i) + (boxWidth / 2f)
+        drawAttributeShape(canvas, cx, shapeCy, value.toDiceString(), theme)
+        canvas.drawText(display, cx, shapeCy + 34f, namePaint)
     }
 }
 

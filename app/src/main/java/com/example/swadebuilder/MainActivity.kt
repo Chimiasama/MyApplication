@@ -96,6 +96,7 @@ import com.example.swadebuilder.model.CriadorViewModel
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.SnapshotFlags
+import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.components.SettingsDialog
@@ -383,6 +384,7 @@ class MainActivity : ComponentActivity() {
                                     request.complications,
                                     request.advantages,
                                     request.powers,
+                                    request.superPowers,
                                     request.especieId,
                                     secoesIncluidas
                                 ) { msg ->
@@ -883,6 +885,7 @@ class MainActivity : ComponentActivity() {
                                                     complications = criadorViewModel.gameDataStore.getComplicacoes(),
                                                     advantages = criadorViewModel.gameDataStore.getVantagens(),
                                                     powers = criadorViewModel.gameDataStore.getPoderes(),
+                                                    superPowers = criadorViewModel.gameDataStore.getSuperPoderes(),
                                                     especieId = state.currentAncestryDef?.especieId,
                                                     availableSections = secoesPdfDisponiveis(personagem)
                                                 )
@@ -949,6 +952,7 @@ private data class PdfExportRequest(
     val complications: List<Complicacao>,
     val advantages: List<Vantagem>,
     val powers: List<Poder>,
+    val superPowers: List<SuperPoder>,
     val especieId: String?,
     val availableSections: Set<FichaPdfSecao>
 )
