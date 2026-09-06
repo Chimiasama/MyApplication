@@ -17,3 +17,12 @@ version: "1.0"
 # como Gradle/Kotlin puro (sem sync específico do Android Gradle Plugin) e
 # não exige token.
 linter: jetbrains/qodana-jvm-community
+
+# O perfil padrão ("qodana.starter") desliga de propósito as inspeções de
+# codestyle/convenção de código (exatamente a categoria "não usado",
+# nomenclatura, "if" redundante, etc. que queremos aqui) e só roda um
+# subconjunto essencial. "qodana.recommended" implementa o perfil padrão
+# do IntelliJ/Android Studio (o mesmo que aparece no editor), que é
+# justamente o que este job existe para reproduzir em CI.
+profile:
+  name: qodana.recommended
