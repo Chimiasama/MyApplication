@@ -59,6 +59,10 @@ data class SnapshotFlags(
     val soldadoCargaAtivo: Boolean,
     val permiteMultiAntecedenteArcano: Boolean,
     val meioElfoAgil: Boolean,
+    // Legado: campo lido só pra migrar saves salvos antes do Meio-Orc passar a
+    // reaproveitar SelecoesPersistidas.humanoMineradorAtributo (mesmo mecanismo
+    // de escolha de atributo já usado por Feral/Minerador Genético) — ver
+    // CriadorState.restoreFromSnapshot. Nunca mais escrito por saves novos.
     val meioOrcForca: Boolean = false,
     val celestialAAMilagresDesabilitado: Boolean,
     val jovemAutoPequeno: Boolean,

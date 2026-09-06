@@ -455,6 +455,7 @@ fun AncestralidadesSection(
                                 // Feral não tem mais "opcoes" (raça própria, ver Tarefa #7) — o
                                 // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
                                 val isFeral = item.nome.keyify() == "FERAL"
+                                val isMeioOrc = item.nome.keyify() == "MEIO-ORCS"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
                                 // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
@@ -699,6 +700,37 @@ fun AncestralidadesSection(
                                         ?.takeIf { it in attributeOptions }
                                         ?: "Força"
                                     Text("Atributo Primitivo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
+                                    Box {
+                                        OutlinedButton(onClick = { attributeExpanded = true }) {
+                                            Text(currentAttributeSelection.toFancyTitleCase())
+                                        }
+                                        DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
+                                            attributeOptions.forEach { option ->
+                                                DropdownMenuItem(
+                                                    text = { Text(option.toFancyTitleCase()) },
+                                                    onClick = {
+                                                        state.selecionarHumanoMineradorAtributo(option)
+                                                        attributeExpanded = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Meio-Orcs: "Endurecido" — escolha entre Força ou Vigor d6 (livro:
+                                // "Começam com um d6 em Força ou Vigor em vez de um d4"). Mesmo
+                                // mecanismo de escolha de atributo já usado por Feral/Minerador
+                                // Genético acima, não um dialog dedicado.
+                                if (isMeioOrc) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Endurecido:", style = MaterialTheme.typography.labelMedium)
+                                    val attributeOptions = listOf("Força", "Vigor")
+                                    var attributeExpanded by remember { mutableStateOf(false) }
+                                    val currentAttributeSelection = state.humanoMineradorAtributo
+                                        ?.takeIf { it in attributeOptions }
+                                        ?: "Vigor"
+                                    Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
                                     Box {
                                         OutlinedButton(onClick = { attributeExpanded = true }) {
                                             Text(currentAttributeSelection.toFancyTitleCase())

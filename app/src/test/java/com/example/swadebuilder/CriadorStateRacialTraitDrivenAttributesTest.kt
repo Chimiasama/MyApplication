@@ -105,16 +105,18 @@ class CriadorStateRacialTraitDrivenAttributesTest {
     }
 
     @Test
-    fun `endurecido aplica escolha entre Forca e Vigor conforme meioOrcForca`() {
+    fun `endurecido aplica escolha entre Forca e Vigor conforme humanoMineradorAtributo`() {
         val state = CriadorState()
         state.updateGameData(snapshotWith(listOf(racaComTraco("MEIO-ORCS", "ENDURECIDO"))))
         state.ancestralidade = "MEIO-ORCS"
 
-        state.meioOrcForca = false
+        // Sem escolha explícita, o default preserva o comportamento de antes desta
+        // raça migrar pro mesmo mecanismo de escolha de atributo de Feral/Minerador.
+        state.humanoMineradorAtributo = null
         assertEquals(6, state.atributoMinRaw("Vigor"))
         assertEquals(4, state.atributoMinRaw("Força"))
 
-        state.meioOrcForca = true
+        state.selecionarHumanoMineradorAtributo("Força")
         assertEquals(4, state.atributoMinRaw("Vigor"))
         assertEquals(6, state.atributoMinRaw("Força"))
     }

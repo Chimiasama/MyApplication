@@ -114,9 +114,9 @@ fun UnifiedScreen(
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
     val context = LocalContext.current
 
-    // --- estados para o MEIO-ELFO / MEIO-ORC ---
+    // --- estado para o MEIO-ELFO (Meio-Orc migrou pro mesmo mecanismo de escolha
+    // de atributo de Feral/Minerador — ver AncestralidadesSection.kt) ---
     var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
-    var showMeioOrcDialog by rememberSaveable { mutableStateOf(false) }
     var pendingAncestryKey by rememberSaveable { mutableStateOf<String?>(null) }
     // --------------------------------
 
@@ -269,9 +269,6 @@ fun UnifiedScreen(
                                 if (key == "MEIO-ELFOS") {
                                     pendingAncestryKey = key
                                     showMeioElfoDialog = true
-                                } else if (key == "MEIO-ORCS") {
-                                    pendingAncestryKey = key
-                                    showMeioOrcDialog = true
                                 } else {
                                     pendingAncestryKey = null
                                     state.aplicarAncestralidade(
@@ -354,9 +351,6 @@ fun UnifiedScreen(
                             if (key == "MEIO-ELFOS") {
                                 pendingAncestryKey = key
                                 showMeioElfoDialog = true
-                            } else if (key == "MEIO-ORCS") {
-                                pendingAncestryKey = key
-                                showMeioOrcDialog = true
                             } else {
                                 pendingAncestryKey = null
                                 state.aplicarAncestralidade(
@@ -452,58 +446,6 @@ fun UnifiedScreen(
                     }
                 ) {
                     Text("Herança Humana (Adaptável)")
-                }
-            }
-        )
-    }
-
-    if (showMeioOrcDialog && pendingAncestryKey != null) {
-        AlertDialog(
-            onDismissRequest = {
-                pendingAncestryKey = null
-                showMeioOrcDialog = false
-            },
-            title = { Text("Meio-Orc: escolha o atributo inicial") },
-            text = {
-                Text(
-                    "Meio-Orcs herdam a força ou resistência de seus ancestrais. Escolha um atributo para começar em d6:"
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val key = pendingAncestryKey ?: return@TextButton
-                        // Vigor (Default state behavior)
-                        state.meioOrcForca = false
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-                        pendingAncestryKey = null
-                        showMeioOrcDialog = false
-                    }
-                ) {
-                    Text("Vigor d6 (Resistência)")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        val key = pendingAncestryKey ?: return@TextButton
-                        // Força
-                        state.meioOrcForca = true
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-                        // O JSON define Vigor 2 (d6) por padrão. O código `atributoBaseRacial` vai sobrescrever
-                        // para Força 6 / Vigor 4 se meioOrcForca=true.
-                        // Mas aplicarAncestralidade chama recalcularPontosAtributo, que deve pegar o novo base.
-                        pendingAncestryKey = null
-                        showMeioOrcDialog = false
-                    }
-                ) {
-                    Text("Força d6")
                 }
             }
         )

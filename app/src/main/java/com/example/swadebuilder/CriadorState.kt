@@ -3893,7 +3893,6 @@ class CriadorState {
     var ancestralidade by mutableStateOf("HUMANOS")
     var celestialAAMilagresDesabilitado by mutableStateOf(false)
     var meioElfoAgil by mutableStateOf(false)
-    var meioOrcForca by mutableStateOf(false)
 
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
@@ -4368,20 +4367,17 @@ class CriadorState {
 
         // Traços de alvo escolhido pelo jogador entre 2-3 atributos: o traço só
         // decide QUE a raça tem a escolha; qual atributo foi escolhido continua
-        // vindo do state dedicado (mesmo padrão usado no restante do app).
-        if (habilidadeIds.contains("ENDURECIDO")) {
-            // Meio-Orc: escolha entre Vigor d6 ou Força d6
-            if (attrKey == "VIGOR") {
-                modifiedBase = if (meioOrcForca) 4 else 6
-            }
-            if (attrKey == "FORCA") {
-                modifiedBase = if (meioOrcForca) 6 else 4
-            }
-        }
-        if (habilidadeIds.contains("PRIMITIVO") || habilidadeIds.contains("MINERADOR_ATRIBUTO")) {
+        // vindo do state dedicado (mesmo padrão usado no restante do app,
+        // reaproveitando o mesmo campo pras 3 raças — nunca duas ativas ao
+        // mesmo tempo, já que só existe uma ancestralidade escolhida por vez).
+        if (habilidadeIds.contains("ENDURECIDO") || habilidadeIds.contains("PRIMITIVO") || habilidadeIds.contains("MINERADOR_ATRIBUTO")) {
+            // Meio-Orc (Fantasia): escolha entre Força/Vigor (livro não define um
+            // padrão; "Vigor" preserva o comportamento default de antes desta raça
+            // migrar pro mesmo mecanismo de Feral/Minerador).
             // Feral (Arte da Guerra): escolha entre Força/Vigor/Agilidade.
             // Humano Sci-Fi "Minerador": escolha entre Força/Vigor.
-            val chosen = humanoMineradorAtributo ?: "Força"
+            val defaultChoice = if (habilidadeIds.contains("ENDURECIDO")) "Vigor" else "Força"
+            val chosen = humanoMineradorAtributo ?: defaultChoice
             if (attrKey == chosen.keyify()) {
                 modifiedBase = maxOf(modifiedBase, 6)
             }
@@ -4731,9 +4727,6 @@ class CriadorState {
         celestialAAMilagresDesabilitado = ancestryChangeCoordination.celestialAAMilagresDesabilitado
         if (ancestryChangeCoordination.resetMeioElfoAgil) {
             meioElfoAgil = false
-        }
-        if (ancestryChangeCoordination.resetMeioOrcForca) {
-            meioOrcForca = false
         }
         if (ancestryChangeCoordination.clearDescendenteElemental) {
             selecionarDescendenteElemental(null)
@@ -6339,7 +6332,6 @@ class CriadorState {
                 soldadoCargaAtivo = soldadoCargaAtivo,
                 permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano,
                 meioElfoAgil = meioElfoAgil,
-                meioOrcForca = meioOrcForca,
                 celestialAAMilagresDesabilitado = celestialAAMilagresDesabilitado,
                 jovemAutoPequeno = jovemAutoPequeno,
                 jovemMalusPa = jovemMalusPa,
@@ -6551,7 +6543,6 @@ class CriadorState {
         soldadoCargaAtivo = flags.soldadoCargaAtivo
         permiteMultiAntecedenteArcano = flags.permiteMultiAntecedenteArcano
         meioElfoAgil = flags.meioElfoAgil
-        meioOrcForca = flags.meioOrcForca
         celestialAAMilagresDesabilitado = flags.celestialAAMilagresDesabilitado
         jovemAutoPequeno = flags.jovemAutoPequeno
         jovemMalusPa = flags.jovemMalusPa
@@ -6611,7 +6602,6 @@ class CriadorState {
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
-        humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
         anaoCiberTracosSelecionados = snapshot.selecoes.anaoCiberTracosSelecionados
         vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
         customVarianteRacialSelecionadaId = snapshot.selecoes.customVarianteRacialSelecionadaId
@@ -6644,6 +6634,23 @@ class CriadorState {
         }
 
         aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages, autoRefund = false)
+
+        // Restaurado só DEPOIS de aplicarAncestralidade, não antes: o reset de
+        // humanoMineradorAtributo dentro dele (resetScifiVariant) dispara sempre
+        // que a raça carregada difere do default "HUMANOS" do state recém-criado
+        // — restaurar antes só pra ter o valor apagado de novo em seguida. Sem
+        // efeito colateral fazer isso depois: humanoMineradorAtributo não é lido
+        // por nenhuma etapa de aplicarAncestralidade (só por atributoBaseRacial,
+        // sempre lido ao vivo, nunca cacheado no momento da troca de raça).
+        humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
+            ?: if (ancestralidade.keyify() == "MEIO-ORCS" && flags.meioOrcForca) {
+                // Compatibilidade com saves salvos antes do Meio-Orc migrar pro
+                // mesmo campo de Feral/Minerador: `meioOrcForca=true` já significava
+                // "Força" (ver a lógica antiga que este campo substituiu).
+                "Força"
+            } else {
+                null
+            }
 
         // Compatibilidade com saves salvos antes da regra "Variantes de Raça"
         // existir: se o personagem já tinha uma Variante de verdade escolhida
