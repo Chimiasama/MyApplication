@@ -426,7 +426,7 @@ object RacialTraitPointCatalog {
         "CABECADA" to 1, // oficial: chifres (For+d4) — o próprio traço diz "conta como Chifres"
         "CABECAS_DURAS" to -2, // oficial: penalidade_atributo_1 (-1 num ATRIBUTO, Astúcia, vale -2 — não -1 de perícia)
         "CABECA_DURA" to -2, // idem (Elementais, -1 Astúcia)
-        "CAES_DE_GUARDA" to 2, // oficial: pericia_racial_d6 (Perceber d6)
+        "CAES_DE_GUARDA" to 1, // oficial: pericia_racial_d6 — Perceber é Perícia Básica (pericias.json "basica"), livro dá desconto pra 1 (d6 sem ser Perícia Básica custaria 2)
         "CALCULISTA" to 2, // oficial: vantagem_racial
         "CAMPEAO" to 2, // oficial: vantagem_racial
         "CANINOS" to 2, // oficial mordida=1 + utilidade extra de Prender/Enredar
@@ -439,7 +439,7 @@ object RacialTraitPointCatalog {
         "CIRCUITOS_DE_ASIMOV" to -2, // oficial: complicacao_racial_maior (Pacifista)
         "CODIGO_DE_HONRA" to -2, // oficial: complicacao_racial_maior
         "COMUNITARIO" to 1, // oficial: comunitario
-        "CONHECIMENTO_GERAL" to 2, // oficial: pericia_racial_d6 (Conhecimento Geral d6, não d4)
+        "CONHECIMENTO_GERAL" to 1, // oficial: pericia_racial_d6 — Conhecimento Geral é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
         "CONSTITUICAO_DE_FERRO" to 1, // sem equivalente oficial, bônus estreito
         "CONSTRUTO" to 8, // oficial: construto
         "COVARDE" to -2, // oficial: complicacao_racial_maior
@@ -546,7 +546,7 @@ object RacialTraitPointCatalog {
         "PENSAMENTOS_POSITIVOS" to 2, // oficial: vantagem_racial
         "PEQUENOS" to -1, // oficial: tamanho_menos_1
         "PERICIAS_BASICAS_REDUZIDAS" to -1, // oficial: pericias_basicas_reduzidas
-        "PESFIRMES" to 2, // oficial: pericia_racial_d6 (Atletismo d6)
+        "PESFIRMES" to 1, // oficial: pericia_racial_d6 — Atletismo é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
         "PONTOS_DE_PERICIA" to 2, // sem equivalente oficial exato, +3 pontos de perícia iniciais
         "POUCO_IMPONENTE" to -1, // oficial: complicacao_racial_menor (Almofadinha)
         "PREPARADO" to 1, // oficial: pericia_racial_d4
@@ -575,13 +575,19 @@ object RacialTraitPointCatalog {
         "SEM_SANGUE" to 1, // oficial: sem_sangue
         "SENSIBILIDADE_A_LUZ_SOLAR" to -2, // sem equivalente oficial exato, Estado Distraído sob luz solar sem proteção
         "SENSIVEL" to -2, // oficial: complicacao_racial_maior
-        "SENTIDOS_AGUCADOS" to 2, // oficial: pericia_racial_d6 (Perceber d6, não é o bônus estreito de "sentidos aguçados")
-        "SENTIDOS_APRIMORADOS" to 2, // oficial: pericia_racial_d6 (Perceber d6)
-        "SENTIDOS_APURADOS" to 2, // oficial: pericia_racial_d6 (Perceber d6)
+        // Perceber é Perícia Básica (pericias.json "basica") — o livro (Básico pág.
+        // 21: "Perícia (1/Perícia)... por 2 pontos, ou 1 se já é uma perícia
+        // básica, ela começa em d6") dá desconto pra 1 ponto nesse caso, não os 2
+        // do d6 genérico. Achado auditando Avianos (que fecham em +2 só com esse
+        // ajuste) e confirmado contra o próprio texto de "Perícias Básicas"
+        // (Atletismo, Conhecimento Geral, Perceber, Persuadir, Furtividade).
+        "SENTIDOS_AGUCADOS" to 1, // oficial: pericia_racial_d6 (Perceber d6, perícia básica) — não é o bônus estreito de "sentidos aguçados" do Sci-Fi (ver SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA)
+        "SENTIDOS_APRIMORADOS" to 1, // oficial: pericia_racial_d6 (Perceber d6, perícia básica)
+        "SENTIDOS_APURADOS" to 1, // oficial: pericia_racial_d6 (Perceber d6, perícia básica)
         "SIGNOS_DE_NASCENCA" to 0, // placeholder de Seleção (Humano Império San escolhe 1 de 13 signos; o signo resolvido é que pontua)
         "SOCIALMENTE_SOFISTICADOS" to 2, // oficial: vantagem_racial
         "SOLIDO_COMO_ROCHA" to 2, // oficial: aumento_atributo
-        "SORRATEIRO" to 2, // oficial: pericia_racial_d6 (Furtividade d6)
+        "SORRATEIRO" to 1, // oficial: pericia_racial_d6 — Furtividade é Perícia Básica, desconto pra 1 (ver SENTIDOS_AGUCADOS)
         "SORTE" to 2, // sem equivalente oficial exato, Bene extra por sessão (tier de vantagem_racial)
         "SUCATEIRO" to 2, // oficial: vantagem_racial
         "SUSPEITOSO" to -1, // oficial: complicacao_racial_menor
@@ -589,7 +595,7 @@ object RacialTraitPointCatalog {
         "TAMANHO_MENOS_1" to -1, // oficial: tamanho_menos_1 (âncora: AnaoCiberNegativeTrait.tamanho_menos_1)
         "TELEPATIA" to 1, // oficial: telepatia
         "TRANSTORNO_DE_SEPARACAO" to -2, // oficial: transtorno_separacao (âncora: AnaoCiberNegativeTrait.transtorno_separacao)
-        "TRAPALHOES_TRAVESSOS" to 2, // oficial: pericia_racial_d6 (Furtividade d6)
+        "TRAPALHOES_TRAVESSOS" to 1, // oficial: pericia_racial_d6 — Furtividade é Perícia Básica, desconto pra 1 (ver SENTIDOS_AGUCADOS)
         "TREINADOS_PARA_A_GUERRA" to -2, // sem equivalente oficial exato, -4 numa perícia só (Conhecimento Geral), tier de penalidade_pericia_2
         "TRIPAS_RESISTENTE" to 2, // sem equivalente oficial exato, +1 em várias rolagens (Medo, Absorção, resistir veneno/náusea)
         "VELOCIDADE_DA_LEBRE" to 2, // oficial: movimentacao_bonus
@@ -714,6 +720,16 @@ object RacialTraitPointCatalog {
             "SKILL_BOOST" -> if (value >= 1) 2 else 1
             "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2
             "RACIAL_HINDRANCE" -> if (severity?.uppercase() == "MAIOR") -2 else -1
+            // Complicações reais de complicacoes.json com severidade "Menor ou
+            // Maior" (a raça escolhe qual) — CUSTOS sozinho não sabe qual
+            // severidade cada raça usa (ex.: Sáurios "Forasteiro" é Menor, a
+            // maioria das outras raças com Forasteiro é Maior), então esses 5
+            // ids leem o campo estruturado `severity` da própria habilidade
+            // (RacialAbility.severity, nunca texto livre) em vez do valor fixo
+            // do mapa. Sem severity informado, mantém o padrão Maior de antes
+            // (não quebra nenhuma chamada existente que não passa esse parâmetro).
+            "FORASTEIRO", "PACIFISTA", "SEM_ESCRUPULOS", "SENSIVEL", "VOTO" ->
+                if (severity?.uppercase() == "MENOR") -1 else CUSTOS[key] ?: 0
             "TOUGHNESS_FLAT" -> value
             "PACE_CHANGE" -> value
             "SIZE_CHANGE" -> value

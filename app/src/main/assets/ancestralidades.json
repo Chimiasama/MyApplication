@@ -346,18 +346,27 @@
         "descricaoLite": "O mestre define uma ancestralidade rival do cenário; membros de cada lado sofrem -2 em Persuadir ao tratar com o outro grupo e costumam partir para o confronto assim que se encontram."
       },
       {
-        "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "MORDIDA_GARRAS",
+        "nome": "Garras",
+        "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 0,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "As presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "descricaoLite": "As presas funcionam como Arma Natural, causando dano de Força+d4.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -442,17 +451,10 @@
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
-        "id": "SENTIDOS_AGUCADOS",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Recebe automaticamente a Vantagem Prontidão."
-      },
-      {
-        "nome": "PRONTIDÃO",
-        "descricao": "PRONTIDÃO",
+        "descricao": "SENTIDOS AGUÇADOS: Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
         "id": "PRONTIDAO",
         "category": "racial_edge",
-        "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
+        "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
     "livros": [
@@ -2215,10 +2217,10 @@
       },
       {
         "nome": "SENTIDOS APRIMORADOS",
-        "descricao": "Sáurios têm sentidos aguçados, ganhando a Vantagem Prontidão.",
-        "id": "SENTIDOS_APRIMORADOS",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Possuem percepção aguçada, recebendo a Vantagem Prontidão."
+        "descricao": "SENTIDOS APRIMORADOS: Sáurios têm sentidos aguçados, ganhando a Vantagem Prontidão.",
+        "id": "PRONTIDAO",
+        "category": "racial_edge",
+        "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
     "vantagensGratis": [],
@@ -2626,18 +2628,27 @@
         "descricaoLite": "O mestre define uma ancestralidade rival do cenário; membros de cada lado sofrem -2 em Persuadir ao tratar com o outro grupo e costumam partir para o confronto assim que se encontram."
       },
       {
-        "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "nome": "Garras",
+        "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "id": "MORDIDAGARRAS",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 0,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "As presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "descricaoLite": "As presas funcionam como Arma Natural, causando dano de Força+d4.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -2727,10 +2738,10 @@
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
-        "category": "racial_trait_positive",
-        "id": "SENTIDOS_AGUCADOS",
-        "descricaoLite": "Recebe automaticamente a Vantagem Prontidão."
+        "descricao": "SENTIDOS AGUÇADOS: Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
+        "id": "PRONTIDAO",
+        "category": "racial_edge",
+        "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
     "livros": [
@@ -2995,18 +3006,27 @@
         "descricaoLite": "O mestre define uma ancestralidade rival do cenário; membros de cada lado sofrem -2 em Persuadir ao tratar com o outro grupo e costumam partir para o confronto assim que se encontram."
       },
       {
-        "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "MORDIDA_GARRAS",
+        "nome": "Garras",
+        "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 0,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "As presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "descricaoLite": "As presas funcionam como Arma Natural, causando dano de Força+d4.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -5888,18 +5908,27 @@
         "descricaoLite": "O mestre define uma ancestralidade rival do cenário; membros de cada lado sofrem -2 em Persuadir ao tratar com o outro grupo e costumam partir para o confronto assim que se encontram."
       },
       {
-        "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "nome": "Garras",
+        "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "id": "MORDIDAGARRAS",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 0,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "As presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "descricaoLite": "As presas funcionam como Arma Natural, causando dano de Força+d4.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -5989,10 +6018,10 @@
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
-        "category": "racial_trait_positive",
-        "id": "SENTIDOS_AGUCADOS",
-        "descricaoLite": "Recebe automaticamente a Vantagem Prontidão."
+        "descricao": "SENTIDOS AGUÇADOS: Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
+        "id": "PRONTIDAO",
+        "category": "racial_edge",
+        "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
     "livros": [

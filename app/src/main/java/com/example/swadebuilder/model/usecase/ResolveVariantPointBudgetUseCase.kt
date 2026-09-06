@@ -122,7 +122,15 @@ class ResolveVariantPointBudgetUseCase {
                         else -> habilidade.nome
                     }
             }
-            return VariantBudgetItem(label = label, custo = RacialTraitPointCatalog.custoDe(id) * vezes, habilidadeId = id)
+            // `severity` precisa ir junto pros 5 ids "Menor ou Maior" (Forasteiro,
+            // Pacifista, Sem Escrúpulos, Sensível, Voto — ver custoDe) cobrarem
+            // certo: sem isso, remover um Forasteiro (Menor) da raça base sempre
+            // devolvia o valor de Maior (-2), fechando o saldo da Variante errado.
+            return VariantBudgetItem(
+                label = label,
+                custo = RacialTraitPointCatalog.custoDe(id, severity = habilidade.severity) * vezes,
+                habilidadeId = id
+            )
         }
 
         /**
