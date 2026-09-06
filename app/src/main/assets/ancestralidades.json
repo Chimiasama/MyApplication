@@ -661,7 +661,7 @@
       {
         "nome": "CASCOS",
         "descricao": "Os cascos de um centauro causam For+d4 de dano, e Vantagens que aumentam o dano de armas naturais, como Artista Marcial, aplicam-se a seus coices, bem como a outros ataques naturais.",
-        "id": "GARRAS",
+        "id": "MORDIDA",
         "category": "racial_trait_positive",
         "descricaoLite": "Os coices causam Força+d4 de dano e se beneficiam de Vantagens que ampliam o dano de ataques naturais, como Artista Marcial.",
         "armasNaturais": [
