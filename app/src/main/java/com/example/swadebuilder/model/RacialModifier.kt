@@ -54,7 +54,19 @@ data class RacialModifier(
     val movimentacao: Int = 0,
     val tags: List<String> = emptyList(),
     val opcoes: List<String> = emptyList(),
-    val especieId: String? = null
+    val especieId: String? = null,
+    // Quase toda raça oficial fecha em ResolveVariantPointBudgetUseCase.
+    // DEFAULT_ORCAMENTO (2) — a mesma calibração que o livro usa pra
+    // qualquer ancestralidade padrão. Um punhado de cenários avisa
+    // explicitamente que usa um orçamento MAIOR pra tudo (ex.: o próprio
+    // exemplo "Celestiais e Guardiões" do Básico, pág. 23: "terão +4 pontos
+    // em habilidades raciais em vez do +2 habitual"; Crystal Heart segue o
+    // mesmo padrão — cada origem já vem com Adaptável + um atributo
+    // aumentado, 4 pontos por design). Guardar isso aqui (por raça, não por
+    // livro inteiro) deixa o editor de Variante já abrir com o orçamento
+    // certo pra essa raça base, em vez do Mestre precisar descobrir sozinho
+    // que precisa marcar "Sem limite de pontos".
+    val pontosRaciaisEsperados: Int = 2
 ) {
     /** Retorna atributos mesclando os estáticos de `atributos` com traços `ATTRIBUTE_BOOST` em `habilidades`.
      * Nenhuma raça cadastrada usa ATTRIBUTE_BOOST hoje (todas os declaram via o mapa

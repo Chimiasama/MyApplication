@@ -136,7 +136,8 @@ object DataLoader {
         val movimentacao: Int = 0,
         val tags: List<String> = emptyList(),
         val opcoes: List<String> = emptyList(),
-        val livros: List<String>
+        val livros: List<String>,
+        val pontosRaciaisEsperados: Int = 2
     ) {
         fun descricaoExibida(): String? =
             if (!EditionConfig.isFullEdition) descricaoLite?.takeIf { it.isNotBlank() } ?: descricao else descricao
@@ -483,7 +484,8 @@ object DataLoader {
                     origem = livro,
                     movimentacao = fonte.movimentacao,
                     tags = fonte.tags,
-                    opcoes = fonte.opcoes
+                    opcoes = fonte.opcoes,
+                    pontosRaciaisEsperados = fonte.pontosRaciaisEsperados
                 )
             }
         }

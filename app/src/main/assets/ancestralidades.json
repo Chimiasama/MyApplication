@@ -4300,7 +4300,8 @@
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_fjordstad",
@@ -4327,7 +4328,8 @@
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_as_ilhas",
@@ -4362,7 +4364,8 @@
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_maseia",
@@ -4389,7 +4392,8 @@
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_zingama",
@@ -4416,7 +4420,8 @@
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_humano_adg",
@@ -6020,124 +6025,5 @@
     ],
     "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
     "especieId": "saurios"
-  },
-  {
-    "nome": "CELESTIAIS",
-    "descricao": "Anjos são uma espécie bastante variada, mas sempre possuem essas características em comum.",
-    "atributos": {},
-    "pericias": {
-      "Fé": 2
-    },
-    "vantagensGratis": [
-      "ANTECEDENTE ARCANO (Milagres)"
-    ],
-    "desvantagens": [
-      "DESASTRADO",
-      "INIMIGO RACIAL (Demônios e Diabos)",
-      "VOTO (Maior: Proteger a Humanidade)"
-    ],
-    "habilidades": [
-      {
-        "nome": "Desastrado",
-        "descricao": "Celestiais não têm o costume de lidar com tecnologia ou máquinas.",
-        "category": "racial_hindrance",
-        "severity": "Menor",
-        "id": "DESASTRADO",
-        "descricaoLite": "Tem dificuldade e pouca prática com tecnologia e máquinas em geral."
-      },
-      {
-        "nome": "Antecedente Arcano (Milagres)",
-        "descricao": "Celestiais podem invocar uma grande variedade de milagres.",
-        "category": "racial_edge",
-        "id": "ANTECEDENTE_ARCANO_MILAGRES",
-        "descricaoLite": "Tem acesso ao Antecedente Arcano de Milagres, podendo conjurar poderes dessa lista."
-      },
-      {
-        "nome": "Fé",
-        "descricao": "Celestiais começam com um d6 em Fé. Isso aumenta seu máximo para d12 + 1.",
-        "category": "racial_trait_positive",
-        "id": "FE",
-        "descricaoLite": "A perícia Fé começa em d6 em vez de d4, com teto em d12+1."
-      },
-      {
-        "nome": "Voo",
-        "descricao": "Anjos voam com Movimentação 12.",
-        "category": "racial_trait_positive",
-        "id": "VOO_MOV_12",
-        "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 12."
-      },
-      {
-        "nome": "Inimigo Racial (Demônios e Diabos)",
-        "descricao": "Celestiais não toleram facilmente os saídos do abismo.",
-        "category": "racial_trait_negative",
-        "id": "INIMIGO_RACIAL_DEMONIOS_E_DIABOS",
-        "descricaoLite": "Mantém hostilidade natural contra demônios e diabos, tratando-os como inimigos declarados."
-      },
-      {
-        "nome": "Voto (Maior: Proteger a humanidade)",
-        "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
-        "category": "racial_hindrance",
-        "id": "VOTO",
-        "severity": "Maior",
-        "descricaoLite": "Está preso por um Voto de grau Maior a zelar pelos poucos humanos sobreviventes num mundo devastado."
-      }
-    ],
-    "livros": [
-      "SUPER"
-    ],
-    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial.",
-    "tags": [
-      "asas"
-    ]
-  },
-  {
-    "nome": "GUARDIÕES",
-    "descricao": "Seres humanos que servem ao Coro Celestial são chamados de guardiões.",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL",
-      "CAMPEÃO"
-    ],
-    "desvantagens": [
-      "VOTO (Maior: Proteger a humanidade)"
-    ],
-    "habilidades": [
-      {
-        "nome": "Adaptável",
-        "descricao": "Começam o jogo com uma Vantagem Novato de sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).",
-        "category": "racial_trait_positive",
-        "id": "ADAPTAVEL",
-        "descricaoLite": "Inicia o jogo com uma Vantagem de Estágio Novato à sua escolha, cumprindo os requisitos de praxe."
-      },
-      {
-        "nome": "Campeões",
-        "descricao": "Possuem a Vantagem Campeão dando a eles um bônus de +2 em dano contra forças malignas sobrenaturais como demônios e diabos.",
-        "category": "racial_edge",
-        "id": "campeao",
-        "descricaoLite": "Possui a Vantagem Campeão, causando +2 de dano contra criaturas sobrenaturais malignas como demônios e diabos."
-      },
-      {
-        "nome": "Vigoroso",
-        "descricao": "As pessoas que herdaram esta Terra devastada começam o jogo com um d6 em Vigor em vez de um d4. Isso aumenta seu Vigor máximo para d12 + 1.",
-        "category": "racial_trait_positive",
-        "id": "VIGOROSO",
-        "descricaoLite": "Vigor inicial em d6 no lugar de d4, podendo alcançar d12+1."
-      },
-      {
-        "nome": "Voto (Maior: Proteger a humanidade)",
-        "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
-        "category": "racial_hindrance",
-        "id": "VOTO",
-        "severity": "Maior",
-        "descricaoLite": "Está preso por um Voto de grau Maior a zelar pelos poucos humanos sobreviventes num mundo devastado."
-      }
-    ],
-    "livros": [
-      "SUPER"
-    ],
-    "descricaoLite": "Humanos que colocaram a vida a serviço de poderes celestiais, atuando como representantes ou protetores em nome deles."
   }
 ]

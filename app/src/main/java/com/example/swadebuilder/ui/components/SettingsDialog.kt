@@ -1042,7 +1042,9 @@ fun SettingsDialog(
                                                         }
                                                         val budgetResult = remember(valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                                valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                                valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados,
+                                                                orcamento = varianteBaseRaca.pontosRaciaisEsperados,
+                                                                semLimite = varianteSemLimite
                                                             )
                                                         }
 
@@ -1546,7 +1548,9 @@ fun SettingsDialog(
 
                                                         val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca)
                                                         val budgetResult = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                            valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                            valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados,
+                                                            orcamento = baseRaca.pontosRaciaisEsperados,
+                                                            semLimite = varianteSemLimite
                                                         )
 
                                                         if (!budgetResult.dentroDoOrcamento) {
