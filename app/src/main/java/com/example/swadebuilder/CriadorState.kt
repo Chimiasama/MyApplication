@@ -4569,12 +4569,20 @@ class CriadorState {
         if (modoLivre && !forceStandard) return 100
         val startRaw = periciaStartRaw(ancestralidade, per)
 
-        // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
-        val isHalfOrcIntimidate = compendioPathfinderAtivo &&
-                ancestralidade.keyify().contains("MEIO-ORC") &&
+        // Meio-Orc (Pathfinder) "Intimidante": começa com d4 em Intimidar (não
+        // d6 — id não cadastrado em RacialTraitPointCatalog.EFEITOS, o d4 vem
+        // do campo estruturado `pericias` em ancestralidades.json, lido por
+        // periciaStartRaw()/racialSkillStartMap), mas o livro ainda amplia o
+        // teto pra d12+1 — a exceção contrária à do Humano (Pathfinder)
+        // Adaptável (d6 sem ampliar o máximo). Antes checava por nome de raça
+        // (ancestralidade.contains("MEIO-ORC") + compendioPathfinderAtivo);
+        // agora lê o id do traço já presente na raça resolvida (INTIMIDANTE,
+        // comentado em CUSTOS como "Intimidar d4, teto ampliado" desde antes
+        // desta correção) — nenhuma outra raça cadastrada usa este id hoje.
+        val temIntimidanteTetoAmpliado = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "INTIMIDANTE" } == true &&
                 per.nome.keyify() == "INTIMIDAR"
 
-        val baseCap = if (startRaw >= 6 || isHalfOrcIntimidate) 13 else 12
+        val baseCap = if (startRaw >= 6 || temIntimidanteTetoAmpliado) 13 else 12
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
