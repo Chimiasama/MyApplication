@@ -356,6 +356,7 @@ object RacialTraitPointCatalog {
         "PERICIAS_BASICAS_REDUZIDAS_TOTAL" to "Perícias Básicas Reduzidas (Total)",
         "REGENERACAO" to "Regeneração",
         "ELEMENTO_ANCESTRAL" to "Elemento Ancestral",
+        "ATRIBUTO_D6_SEM_MAXIMO" to "Atributo d6 (sem elevar o máximo)",
         "PENALIDADE_PERICIA_1" to "Penalidade em Perícia (-1)"
     )
 
@@ -393,6 +394,21 @@ object RacialTraitPointCatalog {
         "ACOES_ADICIONAIS_MAIOR" to 10, // oficial: acoes_adicionais_maior (Fantasia, reduz 4 pontos p/ qualquer ação)
         "ADAPTAVEL" to 2, // oficial: adaptavel
         "ADAPTAVEL_OU_SIGNO" to 2, // mesmo efeito de Adaptável
+        // Humano (Pathfinder): "Adaptável" ali é maior que o normal — além da
+        // Vantagem de Estágio Novato grátis (id ADAPTAVEL, já cadastrado
+        // acima), o livro concede um SEGUNDO efeito na mesma entrada: "Também
+        // recebem um d6 em vez de um d4 em um Atributo a sua escolha. Isso não
+        // aumenta seu atributo máximo." — a única exceção às regras de
+        // atributo inicial d6 que sempre também sobe o máximo pra d12+1.
+        // Cadastrado como traço PRÓPRIO (2 pontos, mesma escala de qualquer
+        // aumento de atributo) em vez de embutido em ADAPTAVEL, pra não afetar
+        // as outras ~15 raças que usam ADAPTAVEL só pela Vantagem. De propósito
+        // SEM entrada em EFEITOS: o alvo é escolha do jogador (não fixo, como
+        // Meio-Orc Força-ou-Vigor), então quem aplica o passo de dado E a
+        // exceção do máximo é CriadorState.atributoBaseRacial()/
+        // atributoMaxRawNaCriacao() direto, reaproveitando o mesmo campo
+        // humanoMineradorAtributo já usado por Meio-Orc/Feral/Minerador.
+        "ATRIBUTO_D6_SEM_MAXIMO" to 2,
         "AGIL" to 2, // oficial: aumento_atributo
         "ALMOFADINHA" to -1, // oficial: complicacao_racial_menor
         "ALTA_TECNOLOGIA" to -2, // oficial: complicacao_racial_maior

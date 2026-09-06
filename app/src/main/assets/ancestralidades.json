@@ -5247,7 +5247,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "especieId": "anao"
+    "especieId": "anao",
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_elfopathfinder",
@@ -5309,7 +5310,8 @@
     "originalName": "Elfo",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_gnomopathfinder",
@@ -5378,7 +5380,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "especieId": "gnomo"
+    "especieId": "gnomo",
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_halflingpathfinder",
@@ -5442,7 +5445,8 @@
     "originalName": "Halfling",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_humanopathfinder",
@@ -5461,13 +5465,21 @@
         "category": "racial_trait_positive",
         "id": "ADAPTAVEL",
         "descricaoLite": "Ganha uma Vantagem extra de Novato e inicia com d6, em vez do d4 padrão, em um atributo à escolha."
+      },
+      {
+        "nome": "Atributo Aumentado (sem elevar o máximo)",
+        "descricao": "Também recebem um d6 em vez de um d4 em um Atributo a sua escolha. Isso não aumenta seu atributo máximo.",
+        "id": "ATRIBUTO_D6_SEM_MAXIMO",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Um atributo à escolha começa em d6 em vez de d4, sem aumentar seu valor máximo (única exceção a essa regra)."
       }
     ],
     "originalName": "Humano",
     "livros": [
       "PATHFINDER"
     ],
-    "especieId": "humano"
+    "especieId": "humano",
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_meio_elfopathfinder",
@@ -5503,7 +5515,8 @@
     "originalName": "Meio-Elfo",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_meio_orcpathfinder",
@@ -5558,7 +5571,8 @@
     "originalName": "Meio-Orc",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "nome": "ANDROIDES",

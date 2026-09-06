@@ -4383,6 +4383,19 @@ class CriadorState {
             }
         }
 
+        // Humano (Pathfinder) "Adaptável": além da Vantagem grátis (traço
+        // ADAPTAVEL), o livro concede um d6 num atributo à escolha do
+        // jogador — mesmo mecanismo de escolha acima, reaproveitando
+        // humanoMineradorAtributo (raça sem sobreposição com Meio-Orc/Feral/
+        // Minerador). A exceção "não aumenta o máximo" é tratada à parte, em
+        // atributoMaxRawNaCriacao() — aqui só o piso mesmo sobe.
+        if (habilidadeIds.contains("ATRIBUTO_D6_SEM_MAXIMO")) {
+            val chosen = humanoMineradorAtributo ?: "Força"
+            if (attrKey == chosen.keyify()) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
         val currentSciFiVariant = if (compendioSciFiAtivo) resolveCurrentSciFiVariantSelection() else scifiVariant
 
         // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens e Elementais
@@ -4484,6 +4497,23 @@ class CriadorState {
         val temMentePrimitiva = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "MENTE_PRIMITIVA" } == true
         if (temMentePrimitiva && a.keyify() == "ASTUCIA") {
             return minOf(baseCap, 6)
+        }
+        // Humano (Pathfinder) "Adaptável": o d6 inicial no atributo escolhido
+        // (ver ATRIBUTO_D6_SEM_MAXIMO em atributoBaseRacial()) é a única
+        // exceção às regras de atributo inicial d6 — não aumenta o máximo,
+        // enquanto atributoMaxRaw() embute automaticamente +1 de tipo de dado
+        // (d12+1) pra QUALQUER piso elevado. Como esta raça não tem nenhuma
+        // outra fonte de bônus inicial no mesmo atributo, basta desfazer
+        // exatamente o passo que este traço concedeu (1 nível = 1 aqui, já
+        // que atributoMaxRaw soma "(minRaw-4)/2" nesse mesmo cálculo) sem
+        // mexer em bônus legítimos de Profissional/Especialista, que
+        // atributoMaxRaw já soma por cima do baseCap.
+        val temAtributoD6SemMaximo = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "ATRIBUTO_D6_SEM_MAXIMO" } == true
+        if (temAtributoD6SemMaximo) {
+            val chosen = humanoMineradorAtributo ?: "Força"
+            if (a.keyify() == chosen.keyify()) {
+                return baseCap - 1
+            }
         }
         return baseCap
     }
