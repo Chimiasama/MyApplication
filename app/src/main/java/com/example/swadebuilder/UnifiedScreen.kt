@@ -32,7 +32,6 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -113,12 +112,6 @@ fun UnifiedScreen(
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
     val context = LocalContext.current
-
-    // --- estado para o MEIO-ELFO (Meio-Orc migrou pro mesmo mecanismo de escolha
-    // de atributo de Feral/Minerador — ver AncestralidadesSection.kt) ---
-    var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
-    var pendingAncestryKey by rememberSaveable { mutableStateOf<String?>(null) }
-    // --------------------------------
 
     val availableSections = availableSectionsFor(state)
     var activeSection by rememberSaveable { mutableStateOf(MainSection.RESUMO) }
@@ -266,16 +259,10 @@ fun UnifiedScreen(
                         onSelectAncestralidade = { nome ->
                             val key = nome.uppercase().semAcentos()
                             if (key != state.ancestralidade) {
-                                if (key == "MEIO-ELFOS") {
-                                    pendingAncestryKey = key
-                                    showMeioElfoDialog = true
-                                } else {
-                                    pendingAncestryKey = null
-                                    state.aplicarAncestralidade(
-                                        key,
-                                        viewModel.feedbackMessages as MutableList<String>
-                                    )
-                                }
+                                state.aplicarAncestralidade(
+                                    key,
+                                    viewModel.feedbackMessages as MutableList<String>
+                                )
                             }
                         },
                         onUseProgress = { index ->
@@ -348,16 +335,10 @@ fun UnifiedScreen(
                     onSelectAncestralidade = { nome ->
                         val key = nome.uppercase().semAcentos()
                         if (key != state.ancestralidade) {
-                            if (key == "MEIO-ELFOS") {
-                                pendingAncestryKey = key
-                                showMeioElfoDialog = true
-                            } else {
-                                pendingAncestryKey = null
-                                state.aplicarAncestralidade(
-                                    key,
-                                    viewModel.feedbackMessages as MutableList<String>
-                                )
-                            }
+                            state.aplicarAncestralidade(
+                                key,
+                                viewModel.feedbackMessages as MutableList<String>
+                            )
                         }
                     },
                     onUseProgress = { index ->
@@ -372,84 +353,6 @@ fun UnifiedScreen(
         }
     }
 
-
-    if (showMeioElfoDialog && pendingAncestryKey != null) {
-        AlertDialog(
-            onDismissRequest = {
-                pendingAncestryKey = null
-                showMeioElfoDialog = false
-            },
-            title = { Text("Meio-Elfo: escolha a herança") },
-            text = {
-                Text(
-                    "Defina como a herança meio-élfica se manifesta:\n\n" +
-                            "• Herança Élfica: começa com Agilidade em d6.\n" +
-                            "• Herança Humana: ganha a habilidade Adaptável (uma Vantagem Novato extra)."
-                )
-            },
-            confirmButton = {
-                // Herança Élfica (Agilidade d6)
-                TextButton(
-                    onClick = {
-                        val key = pendingAncestryKey ?: return@TextButton
-
-                        // Aplica a ancestralidade Meio-Elfo
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-
-                        // Garante Agilidade em d6 (raw = 6) se ainda estiver abaixo
-                        val agiState = state.valoresAtributos["AGILIDADE"]
-                        if (agiState != null && agiState.intValue < 6) {
-                            agiState.intValue = 6
-                        }
-
-                        state.meioElfoAgil = true
-                        state.recalcularPontosAtributo(viewModel.feedbackMessages)
-                        pendingAncestryKey = null
-                        showMeioElfoDialog = false
-                    }
-                ) {
-                    Text("Herança Élfica (Agilidade d6)")
-                }
-            },
-            dismissButton = {
-                // Herança Humana (Adaptável)
-                TextButton(
-                    onClick = {
-                        val key = pendingAncestryKey ?: return@TextButton
-                        val hadMeioElfoAgil = state.meioElfoAgil
-                        state.meioElfoAgil = false
-
-                        // Aplica a ancestralidade Meio-Elfo
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-
-                        // Grants Adaptable trait (free Novice Edge slot). Does NOT add raw PV.
-                        // The 'Adaptável' trait is injected via CriadorState.applyAncestryVariantAdjustments
-                        // and detected by temAdaptavel().
-
-                        if (hadMeioElfoAgil) {
-                            val agilityKey = "AGILIDADE"
-                            val agiState = state.valoresAtributos[agilityKey]
-                            val agiStack = state.paCostStackPorAtributo[agilityKey]
-                            if (agiState != null && agiStack?.isEmpty() == true && agiState.intValue == 6) {
-                                agiState.intValue = 4
-                            }
-                        }
-
-                        pendingAncestryKey = null
-                        showMeioElfoDialog = false
-                    }
-                ) {
-                    Text("Herança Humana (Adaptável)")
-                }
-            }
-        )
-    }
 
     if (showAllocDialog) {
         ProgressosDialog(

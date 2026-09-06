@@ -456,6 +456,12 @@ fun AncestralidadesSection(
                                 // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
                                 val isFeral = item.nome.keyify() == "FERAL"
                                 val isMeioOrc = item.nome.keyify() == "MEIO-ORCS"
+                                // Exato, não .contains(): "MEIO-ELFOS" (Fantasia/outros livros) é uma
+                                // raça diferente de "Meio-Elfo" (Pathfinder, id anc_meio_elfopathfinder),
+                                // que tem "Flexibilidade" (atributo à escolha livre) em vez desta
+                                // Herança Élfica/Humana — keyify() não remove o "S" do plural, então a
+                                // comparação exata já as separa sem precisar checar o livro de origem.
+                                val isMeioElfo = item.nome.keyify() == "MEIO-ELFOS"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
                                 // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
@@ -715,6 +721,28 @@ fun AncestralidadesSection(
                                                 )
                                             }
                                         }
+                                    }
+                                }
+
+                                // Meio-Elfos: escolha entre Herança Élfica (traço "AGIL", Agilidade d6)
+                                // e Herança Humana (traço "ADAPTAVEL", Vantagem de Estágio Novato à
+                                // escolha) — opção da própria raça padrão, não uma Variante de mestre.
+                                // Antes forçava um AlertDialog bloqueante ao selecionar a raça; agora é
+                                // um seletor inline, no mesmo padrão do resto desta seção.
+                                if (isMeioElfo) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Herança:", style = MaterialTheme.typography.labelMedium)
+                                    Column {
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Herança Élfica (Agilidade d6)",
+                                            selected = state.meioElfoAgil,
+                                            onSelect = { state.selecionarMeioElfoHeranca(true) }
+                                        )
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Herança Humana (Adaptável)",
+                                            selected = !state.meioElfoAgil,
+                                            onSelect = { state.selecionarMeioElfoHeranca(false) }
+                                        )
                                     }
                                 }
 

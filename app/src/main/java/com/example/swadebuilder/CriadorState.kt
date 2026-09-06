@@ -5223,6 +5223,24 @@ class CriadorState {
     }
 
     /**
+     * Meio-Elfo: escolhe entre Herança Élfica (Agilidade d6, via traço "AGIL" —
+     * mesmo mecanismo de RacialTraitEffect.AtributoStep usado por qualquer
+     * outra raça) e Herança Humana (traço "ADAPTAVEL", detectado por
+     * temAdaptavel() e concedendo uma Vantagem de Estágio Novato à escolha).
+     * Reaplicar a mesma ancestralidade (não um raça diferente) já recomputa
+     * currentAncestryDef via applyAncestryVariantAdjustments — recalcularPontosAtributo
+     * então ajusta o valor bruto de Agilidade pro novo piso racial, sem precisar
+     * mexer em valoresAtributos["AGILIDADE"] manualmente aqui.
+     */
+    fun selecionarMeioElfoHeranca(agil: Boolean) {
+        if (meioElfoAgil == agil) return
+        meioElfoAgil = agil
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+        recalcularPontosAtributo(msgs)
+    }
+
+    /**
      * Atualiza os traços raciais negativos escolhidos para Anões (variante Ciber).
      * Rejeita silenciosamente qualquer seleção que estoure o orçamento de
      * [AnaoCiberTraitCatalog.MAX_PONTOS] pontos — a UI já deve impedir isso, mas a
