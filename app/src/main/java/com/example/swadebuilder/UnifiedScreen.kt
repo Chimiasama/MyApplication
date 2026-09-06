@@ -32,10 +32,10 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
@@ -47,6 +47,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -60,6 +61,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -70,6 +72,7 @@ import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.ui.MainSection
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
@@ -113,12 +116,6 @@ fun UnifiedScreen(
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
     val context = LocalContext.current
-
-    // --- estados para o MEIO-ELFO / MEIO-ORC ---
-    var showMeioElfoDialog by rememberSaveable { mutableStateOf(false) }
-    var showMeioOrcDialog by rememberSaveable { mutableStateOf(false) }
-    var pendingAncestryKey by rememberSaveable { mutableStateOf<String?>(null) }
-    // --------------------------------
 
     val availableSections = availableSectionsFor(state)
     var activeSection by rememberSaveable { mutableStateOf(MainSection.RESUMO) }
@@ -266,19 +263,10 @@ fun UnifiedScreen(
                         onSelectAncestralidade = { nome ->
                             val key = nome.uppercase().semAcentos()
                             if (key != state.ancestralidade) {
-                                if (key == "MEIO-ELFOS") {
-                                    pendingAncestryKey = key
-                                    showMeioElfoDialog = true
-                                } else if (key == "MEIO-ORCS") {
-                                    pendingAncestryKey = key
-                                    showMeioOrcDialog = true
-                                } else {
-                                    pendingAncestryKey = null
-                                    state.aplicarAncestralidade(
-                                        key,
-                                        viewModel.feedbackMessages as MutableList<String>
-                                    )
-                                }
+                                state.aplicarAncestralidade(
+                                    key,
+                                    viewModel.feedbackMessages as MutableList<String>
+                                )
                             }
                         },
                         onUseProgress = { index ->
@@ -351,19 +339,10 @@ fun UnifiedScreen(
                     onSelectAncestralidade = { nome ->
                         val key = nome.uppercase().semAcentos()
                         if (key != state.ancestralidade) {
-                            if (key == "MEIO-ELFOS") {
-                                pendingAncestryKey = key
-                                showMeioElfoDialog = true
-                            } else if (key == "MEIO-ORCS") {
-                                pendingAncestryKey = key
-                                showMeioOrcDialog = true
-                            } else {
-                                pendingAncestryKey = null
-                                state.aplicarAncestralidade(
-                                    key,
-                                    viewModel.feedbackMessages as MutableList<String>
-                                )
-                            }
+                            state.aplicarAncestralidade(
+                                key,
+                                viewModel.feedbackMessages as MutableList<String>
+                            )
                         }
                     },
                     onUseProgress = { index ->
@@ -378,136 +357,6 @@ fun UnifiedScreen(
         }
     }
 
-
-    if (showMeioElfoDialog && pendingAncestryKey != null) {
-        AlertDialog(
-            onDismissRequest = {
-                pendingAncestryKey = null
-                showMeioElfoDialog = false
-            },
-            title = { Text("Meio-Elfo: escolha a herança") },
-            text = {
-                Text(
-                    "Defina como a herança meio-élfica se manifesta:\n\n" +
-                            "• Herança Élfica: começa com Agilidade em d6.\n" +
-                            "• Herança Humana: ganha a habilidade Adaptável (uma Vantagem Novato extra)."
-                )
-            },
-            confirmButton = {
-                // Herança Élfica (Agilidade d6)
-                TextButton(
-                    onClick = {
-                        val key = pendingAncestryKey ?: return@TextButton
-
-                        // Aplica a ancestralidade Meio-Elfo
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-
-                        // Garante Agilidade em d6 (raw = 6) se ainda estiver abaixo
-                        val agiState = state.valoresAtributos["AGILIDADE"]
-                        if (agiState != null && agiState.intValue < 6) {
-                            agiState.intValue = 6
-                        }
-
-                        state.meioElfoAgil = true
-                        state.recalcularPontosAtributo(viewModel.feedbackMessages as MutableList<String>)
-                        pendingAncestryKey = null
-                        showMeioElfoDialog = false
-                    }
-                ) {
-                    Text("Herança Élfica (Agilidade d6)")
-                }
-            },
-            dismissButton = {
-                // Herança Humana (Adaptável)
-                TextButton(
-                    onClick = {
-                        val key = pendingAncestryKey ?: return@TextButton
-                        val hadMeioElfoAgil = state.meioElfoAgil
-                        state.meioElfoAgil = false
-
-                        // Aplica a ancestralidade Meio-Elfo
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-
-                        // Grants Adaptable trait (free Novice Edge slot). Does NOT add raw PV.
-                        // The 'Adaptável' trait is injected via CriadorState.applyAncestryVariantAdjustments
-                        // and detected by temAdaptavel().
-
-                        if (hadMeioElfoAgil) {
-                            val agilityKey = "AGILIDADE"
-                            val agiState = state.valoresAtributos[agilityKey]
-                            val agiStack = state.paCostStackPorAtributo[agilityKey]
-                            if (agiState != null && agiStack?.isEmpty() == true && agiState.intValue == 6) {
-                                agiState.intValue = 4
-                            }
-                        }
-
-                        pendingAncestryKey = null
-                        showMeioElfoDialog = false
-                    }
-                ) {
-                    Text("Herança Humana (Adaptável)")
-                }
-            }
-        )
-    }
-
-    if (showMeioOrcDialog && pendingAncestryKey != null) {
-        AlertDialog(
-            onDismissRequest = {
-                pendingAncestryKey = null
-                showMeioOrcDialog = false
-            },
-            title = { Text("Meio-Orc: escolha o atributo inicial") },
-            text = {
-                Text(
-                    "Meio-Orcs herdam a força ou resistência de seus ancestrais. Escolha um atributo para começar em d6:"
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val key = pendingAncestryKey ?: return@TextButton
-                        // Vigor (Default state behavior)
-                        state.meioOrcForca = false
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-                        pendingAncestryKey = null
-                        showMeioOrcDialog = false
-                    }
-                ) {
-                    Text("Vigor d6 (Resistência)")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        val key = pendingAncestryKey ?: return@TextButton
-                        // Força
-                        state.meioOrcForca = true
-                        state.aplicarAncestralidade(
-                            key,
-                            viewModel.feedbackMessages as MutableList<String>
-                        )
-                        // O JSON define Vigor 2 (d6) por padrão. O código `atributoBaseRacial` vai sobrescrever
-                        // para Força 6 / Vigor 4 se meioOrcForca=true.
-                        // Mas aplicarAncestralidade chama recalcularPontosAtributo, que deve pegar o novo base.
-                        pendingAncestryKey = null
-                        showMeioOrcDialog = false
-                    }
-                ) {
-                    Text("Força d6")
-                }
-            }
-        )
-    }
 
     if (showAllocDialog) {
         ProgressosDialog(
@@ -577,10 +426,17 @@ private fun CreatorTabRow(
                 onClick = { if (enabled) onSelectSection(tab.section) },
                 text = if (tabStyle == TabStyle.TEXTO) {
                     {
-                        Text(
-                            tab.label,
-                            fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
-                        )
+                        // key(isSelected) remonta o texto quando a aba é selecionada, o que
+                        // faz o MarqueeText tocar a animação de novo a cada visita — em vez
+                        // de o rótulo simplesmente quebrar linha (empilhar) quando não cabe.
+                        key(isSelected) {
+                            MarqueeText(
+                                text = tab.label,
+                                style = LocalTextStyle.current.copy(
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                )
+                            )
+                        }
                     }
                 } else null,
                 icon = if (tabStyle == TabStyle.ICONES) { { Icon(tab.section.icon(), null) } } else null,

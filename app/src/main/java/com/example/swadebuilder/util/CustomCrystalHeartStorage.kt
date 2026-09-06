@@ -42,7 +42,7 @@ object CustomCrystalHeartStorage {
     }
 
     fun saveCustomHeart(context: Context, heart: CrystalHeart): CrystalHeart? {
-        val sanitized = sanitize(heart) ?: return null
+        val sanitized = sanitize(heart)
         val current = load(context).toMutableList()
         val existingIndex = current.indexOfFirst { it.id == sanitized.id }
         if (existingIndex >= 0) {
@@ -78,12 +78,12 @@ object CustomCrystalHeartStorage {
 
         val stage = if (validStages.contains(heart.estagio)) heart.estagio else "Novato"
 
-        val passiva = SecurityUtils.sanitizeText(heart.habilidade_passiva.orEmpty())
+        val passiva = SecurityUtils.sanitizeText(heart.habilidadePassiva.orEmpty())
             .trim()
             .take(MAX_TEXT_LENGTH)
             .ifBlank { null }
 
-        val complicacao = SecurityUtils.sanitizeText(heart.complicacao_inerente.orEmpty())
+        val complicacao = SecurityUtils.sanitizeText(heart.complicacaoInerente.orEmpty())
             .trim()
             .take(MAX_TEXT_LENGTH)
             .ifBlank { null }
@@ -104,9 +104,9 @@ object CustomCrystalHeartStorage {
         return heart.copy(
             nome = safeName,
             estagio = stage,
-            habilidade_passiva = passiva,
+            habilidadePassiva = passiva,
             poderes = poderes,
-            complicacao_inerente = complicacao,
+            complicacaoInerente = complicacao,
             origem = "CRYSTAL_HEART",
             descricao = descricao,
             custom = true,

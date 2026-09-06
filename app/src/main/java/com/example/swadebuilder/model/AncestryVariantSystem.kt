@@ -22,6 +22,11 @@ package com.example.swadebuilder.model
  * não existe "raça normal" à parte).
  */
 
+// ATTRIBUTE/SKILL ainda não são referenciados: nenhuma raça cadastrada usa
+// SelectionType.TARGET_ATTRIBUTE_OR_SKILL hoje (ver o comentário em
+// ResolveAncestryVariantPackageUseCase.resolveSelection) — o desenho de id
+// pra esse tipo de alvo ainda está pendente. Suprimido em vez de removido.
+@Suppress("unused")
 enum class TraitTargetKind { ATTRIBUTE, SKILL }
 
 /** Como uma Seleção resolve a escolha do jogador em efeito mecânico. */

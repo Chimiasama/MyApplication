@@ -52,7 +52,7 @@ fun StandardEquipamentoItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text(
+                    MarqueeText(
                         text = if (showOriginalName && !equipamento.originalName.isNullOrBlank()) {
                             equipamento.originalName.toFancyTitleCase()
                         } else {
@@ -111,7 +111,7 @@ fun StandardEquipamentoItem(
                 if (showTensao) {
                     equipamento.tensao?.let { add("Tensão: $it") }
                 }
-                equipamento.mods_slots?.let { add("Slots de Mods: $it") }
+                equipamento.modsSlots?.let { add("Slots de Mods: $it") }
             }
 
             if (allowLongTexts && detalhes.isNotEmpty()) {

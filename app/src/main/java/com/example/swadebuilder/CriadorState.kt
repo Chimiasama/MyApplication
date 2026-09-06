@@ -992,7 +992,7 @@ class CriadorState {
         val validAttrKeys = setOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR")
         if (key !in validAttrKeys) return false
         val monstro = getMonstroSelecionado() ?: return false
-        return monstro.atributos_bonus.keys.any { it.keyify() == key }
+        return monstro.atributosBonus.keys.any { it.keyify() == key }
     }
 
     val vantagensAutomaticasDoSigno = mutableStateListOf<String>()
@@ -1589,7 +1589,7 @@ class CriadorState {
     // separar "capacidade" (base) de "gasto" (modificadores) dentro da mesma lista plana
     // de equipamentosComprados, já que o catálogo não guarda a subcategoria por item.
     private fun equipamentosArmaduraEnergizada(): List<EquipamentoItem> =
-        equipamentosComprados.filter { it.mods_slots != null }
+        equipamentosComprados.filter { it.modsSlots != null }
 
     private fun tamanhoArmaduraEnergizadaBase(): Int =
         equipamentosArmaduraEnergizada()
@@ -1597,7 +1597,7 @@ class CriadorState {
             .sumOf { (it.tamanho as? JsonPrimitive)?.intOrNull ?: 0 }
 
     private fun EquipamentoItem.slotsResolvidos(tamanhoBase: Int): Int {
-        val prim = mods_slots as? JsonPrimitive ?: return 0
+        val prim = modsSlots as? JsonPrimitive ?: return 0
         prim.intOrNull?.let { return it }
         val texto = prim.content
         return when {
@@ -1610,7 +1610,7 @@ class CriadorState {
     fun capacidadeSlotsArmaduraEnergizada(): Int =
         equipamentosArmaduraEnergizada()
             .filter { it.armadura != null }
-            .sumOf { (it.mods_slots as? JsonPrimitive)?.intOrNull ?: 0 }
+            .sumOf { (it.modsSlots as? JsonPrimitive)?.intOrNull ?: 0 }
 
     fun totalSlotsMecha(): Int {
         val tamanhoBase = tamanhoArmaduraEnergizadaBase()
@@ -2789,7 +2789,7 @@ class CriadorState {
         // a mesma convenção do resto do app: cada passo é um tipo de dado acima
         // de d4 (1 passo = d6, 2 passos = d8...).
         getMonstroSelecionado()?.let { monstro ->
-            val bonusEntry = monstro.atributos_bonus.entries.firstOrNull {
+            val bonusEntry = monstro.atributosBonus.entries.firstOrNull {
                 it.key.keyify() == perKey
             }
             if (bonusEntry != null) {
@@ -3893,7 +3893,6 @@ class CriadorState {
     var ancestralidade by mutableStateOf("HUMANOS")
     var celestialAAMilagresDesabilitado by mutableStateOf(false)
     var meioElfoAgil by mutableStateOf(false)
-    var meioOrcForca by mutableStateOf(false)
 
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
@@ -4280,7 +4279,7 @@ class CriadorState {
     }
 
     /**
-     * Traduz `MonstroTemplate.atributos_bonus` (mapa "atributo -> passos", ex.:
+     * Traduz `MonstroTemplate.atributosBonus` (mapa "atributo -> passos", ex.:
      * Anjo tem Força:2/Vigor:2) para ids já existentes em
      * `RacialTraitPointCatalog.EFEITOS` — os mesmos que uma Ancestralidade real
      * usaria para o mesmo efeito (ex.: Força +2 é "MUITO_FORTE", o id que
@@ -4292,7 +4291,7 @@ class CriadorState {
      * periciaStartRawInternal, que também usa o id "FE" do mesmo catálogo.
      */
     private fun monstroAtributoTraitIds(monstro: MonstroTemplate): Set<String> =
-        monstro.atributos_bonus.mapNotNull { (atributo, passos) ->
+        monstro.atributosBonus.mapNotNull { (atributo, passos) ->
             when (atributo.keyify()) {
                 "FORCA" -> if (passos >= 2) "MUITO_FORTE" else "FORTE"
                 "VIGOR" -> if (passos >= 2) "MUITO_RESISTENTE" else "RESISTENTE"
@@ -4368,20 +4367,17 @@ class CriadorState {
 
         // Traços de alvo escolhido pelo jogador entre 2-3 atributos: o traço só
         // decide QUE a raça tem a escolha; qual atributo foi escolhido continua
-        // vindo do state dedicado (mesmo padrão usado no restante do app).
-        if (habilidadeIds.contains("ENDURECIDO")) {
-            // Meio-Orc: escolha entre Vigor d6 ou Força d6
-            if (attrKey == "VIGOR") {
-                modifiedBase = if (meioOrcForca) 4 else 6
-            }
-            if (attrKey == "FORCA") {
-                modifiedBase = if (meioOrcForca) 6 else 4
-            }
-        }
-        if (habilidadeIds.contains("PRIMITIVO") || habilidadeIds.contains("MINERADOR_ATRIBUTO")) {
+        // vindo do state dedicado (mesmo padrão usado no restante do app,
+        // reaproveitando o mesmo campo pras 3 raças — nunca duas ativas ao
+        // mesmo tempo, já que só existe uma ancestralidade escolhida por vez).
+        if (habilidadeIds.contains("ENDURECIDO") || habilidadeIds.contains("PRIMITIVO") || habilidadeIds.contains("MINERADOR_ATRIBUTO")) {
+            // Meio-Orc (Fantasia): escolha entre Força/Vigor (livro não define um
+            // padrão; "Vigor" preserva o comportamento default de antes desta raça
+            // migrar pro mesmo mecanismo de Feral/Minerador).
             // Feral (Arte da Guerra): escolha entre Força/Vigor/Agilidade.
             // Humano Sci-Fi "Minerador": escolha entre Força/Vigor.
-            val chosen = humanoMineradorAtributo ?: "Força"
+            val defaultChoice = if (habilidadeIds.contains("ENDURECIDO")) "Vigor" else "Força"
+            val chosen = humanoMineradorAtributo ?: defaultChoice
             if (attrKey == chosen.keyify()) {
                 modifiedBase = maxOf(modifiedBase, 6)
             }
@@ -4731,9 +4727,6 @@ class CriadorState {
         celestialAAMilagresDesabilitado = ancestryChangeCoordination.celestialAAMilagresDesabilitado
         if (ancestryChangeCoordination.resetMeioElfoAgil) {
             meioElfoAgil = false
-        }
-        if (ancestryChangeCoordination.resetMeioOrcForca) {
-            meioOrcForca = false
         }
         if (ancestryChangeCoordination.clearDescendenteElemental) {
             selecionarDescendenteElemental(null)
@@ -5227,6 +5220,24 @@ class CriadorState {
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
         recalcularPontosAtributo(msgs) // Ensure re-calc happens as attribute base changes
+    }
+
+    /**
+     * Meio-Elfo: escolhe entre Herança Élfica (Agilidade d6, via traço "AGIL" —
+     * mesmo mecanismo de RacialTraitEffect.AtributoStep usado por qualquer
+     * outra raça) e Herança Humana (traço "ADAPTAVEL", detectado por
+     * temAdaptavel() e concedendo uma Vantagem de Estágio Novato à escolha).
+     * Reaplicar a mesma ancestralidade (não um raça diferente) já recomputa
+     * currentAncestryDef via applyAncestryVariantAdjustments — recalcularPontosAtributo
+     * então ajusta o valor bruto de Agilidade pro novo piso racial, sem precisar
+     * mexer em valoresAtributos["AGILIDADE"] manualmente aqui.
+     */
+    fun selecionarMeioElfoHeranca(agil: Boolean) {
+        if (meioElfoAgil == agil) return
+        meioElfoAgil = agil
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+        recalcularPontosAtributo(msgs)
     }
 
     /**
@@ -6339,7 +6350,6 @@ class CriadorState {
                 soldadoCargaAtivo = soldadoCargaAtivo,
                 permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano,
                 meioElfoAgil = meioElfoAgil,
-                meioOrcForca = meioOrcForca,
                 celestialAAMilagresDesabilitado = celestialAAMilagresDesabilitado,
                 jovemAutoPequeno = jovemAutoPequeno,
                 jovemMalusPa = jovemMalusPa,
@@ -6551,7 +6561,6 @@ class CriadorState {
         soldadoCargaAtivo = flags.soldadoCargaAtivo
         permiteMultiAntecedenteArcano = flags.permiteMultiAntecedenteArcano
         meioElfoAgil = flags.meioElfoAgil
-        meioOrcForca = flags.meioOrcForca
         celestialAAMilagresDesabilitado = flags.celestialAAMilagresDesabilitado
         jovemAutoPequeno = flags.jovemAutoPequeno
         jovemMalusPa = flags.jovemMalusPa
@@ -6611,7 +6620,6 @@ class CriadorState {
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
-        humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
         anaoCiberTracosSelecionados = snapshot.selecoes.anaoCiberTracosSelecionados
         vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
         customVarianteRacialSelecionadaId = snapshot.selecoes.customVarianteRacialSelecionadaId
@@ -6644,6 +6652,23 @@ class CriadorState {
         }
 
         aplicarAncestralidade(snapshot.atributos.ancestralidade, feedbackMessages, autoRefund = false)
+
+        // Restaurado só DEPOIS de aplicarAncestralidade, não antes: o reset de
+        // humanoMineradorAtributo dentro dele (resetScifiVariant) dispara sempre
+        // que a raça carregada difere do default "HUMANOS" do state recém-criado
+        // — restaurar antes só pra ter o valor apagado de novo em seguida. Sem
+        // efeito colateral fazer isso depois: humanoMineradorAtributo não é lido
+        // por nenhuma etapa de aplicarAncestralidade (só por atributoBaseRacial,
+        // sempre lido ao vivo, nunca cacheado no momento da troca de raça).
+        humanoMineradorAtributo = snapshot.selecoes.humanoMineradorAtributo
+            ?: if (ancestralidade.keyify() == "MEIO-ORCS" && flags.meioOrcForca) {
+                // Compatibilidade com saves salvos antes do Meio-Orc migrar pro
+                // mesmo campo de Feral/Minerador: `meioOrcForca=true` já significava
+                // "Força" (ver a lógica antiga que este campo substituiu).
+                "Força"
+            } else {
+                null
+            }
 
         // Compatibilidade com saves salvos antes da regra "Variantes de Raça"
         // existir: se o personagem já tinha uma Variante de verdade escolhida

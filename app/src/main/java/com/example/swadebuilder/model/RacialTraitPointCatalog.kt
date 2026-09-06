@@ -204,8 +204,7 @@ object RacialTraitPointCatalog {
 
     fun efeitoDe(id: String?, targetRef: String? = null, value: Int = 1): RacialTraitEffect {
         if (id == null) return RacialTraitEffect.Nenhum
-        val key = id.keyify()
-        return when (key) {
+        return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.AtributoStep(targetRef, value) else RacialTraitEffect.Nenhum
             "SKILL_BOOST" -> if (!targetRef.isNullOrBlank()) RacialTraitEffect.PericiaStep(targetRef, value) else RacialTraitEffect.Nenhum
             "TOUGHNESS_FLAT" -> RacialTraitEffect.ResistenciaBonus(value)
@@ -545,18 +544,18 @@ object RacialTraitPointCatalog {
         "VOTO" to -2 // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
     )
 
-    /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo). */
+    /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).
+     * Ao contrário de efeitoDe(), não recebe targetRef: o custo de ATTRIBUTE_BOOST/SKILL_BOOST
+     * só depende de value (quanto foi concedido), nunca de qual atributo/perícia recebeu. */
     fun custoDe(
         id: String?,
-        targetRef: String? = null,
         value: Int = 1,
         severity: String? = null,
         pontos: Int = 0
     ): Int {
         if (pontos != 0) return pontos
         if (id == null) return 0
-        val key = id.keyify()
-        return when (key) {
+        return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> value * 2
             "SKILL_BOOST" -> if (value >= 1) 2 else 1
             "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2

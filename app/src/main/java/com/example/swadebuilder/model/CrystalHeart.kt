@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.EditionConfig
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,9 +9,11 @@ data class CrystalHeart(
     val id: String,
     val nome: String,
     val estagio: String, // "Novato", "Experiente", etc.
-    val habilidade_passiva: String? = null,
+    @SerialName("habilidade_passiva")
+    val habilidadePassiva: String? = null,
     val poderes: List<String> = emptyList(),
-    val complicacao_inerente: String? = null,
+    @SerialName("complicacao_inerente")
+    val complicacaoInerente: String? = null,
     val origem: String? = "CRYSTAL_HEART",
     val descricao: String? = null,
     val custom: Boolean = false,
@@ -29,8 +32,8 @@ data class CrystalHeart(
         } else poderes
         return copy(
             descricao = descricaoLite?.takeIf { it.isNotBlank() } ?: descricao,
-            habilidade_passiva = habilidadePassivaLite?.takeIf { it.isNotBlank() } ?: habilidade_passiva,
-            complicacao_inerente = complicacaoInerenteLite?.takeIf { it.isNotBlank() } ?: complicacao_inerente,
+            habilidadePassiva = habilidadePassivaLite?.takeIf { it.isNotBlank() } ?: habilidadePassiva,
+            complicacaoInerente = complicacaoInerenteLite?.takeIf { it.isNotBlank() } ?: complicacaoInerente,
             poderes = poderesExibidos
         )
     }

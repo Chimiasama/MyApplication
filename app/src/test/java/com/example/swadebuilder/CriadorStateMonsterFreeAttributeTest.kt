@@ -32,9 +32,9 @@ class CriadorStateMonsterFreeAttributeTest {
             RacialModifier(nome = "HUMANOS", atributos = emptyMap(), pericias = emptyMap(), origem = "BASICO")
         ),
         listaMonstroTemplates = listOf(
-            MonstroTemplate(id = "fantasma", nome = "Fantasma", descricao = "teste", atributos_bonus = mapOf("Espirito" to 1)),
-            MonstroTemplate(id = "lobisomem", nome = "Lobisomem", descricao = "teste", atributos_bonus = mapOf("Agilidade" to 2, "Forca" to 2, "Vigor" to 2)),
-            MonstroTemplate(id = "anjo", nome = "Anjo", descricao = "teste", atributos_bonus = mapOf("Fe" to 1, "Forca" to 2, "Vigor" to 2))
+            MonstroTemplate(id = "fantasma", nome = "Fantasma", descricao = "teste", atributosBonus = mapOf("Espirito" to 1)),
+            MonstroTemplate(id = "lobisomem", nome = "Lobisomem", descricao = "teste", atributosBonus = mapOf("Agilidade" to 2, "Forca" to 2, "Vigor" to 2)),
+            MonstroTemplate(id = "anjo", nome = "Anjo", descricao = "teste", atributosBonus = mapOf("Fe" to 1, "Forca" to 2, "Vigor" to 2))
         ),
         racialAttrMinMap = emptyMap(),
         racialSkillStartMap = emptyMap(),

@@ -73,6 +73,7 @@ import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
@@ -299,16 +300,15 @@ fun BuySuperPowerDialog(
                 if (positiveMods.isNotEmpty()) {
                     Surface(
                         shape = MaterialTheme.shapes.small,
-                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.4f)),
+                        color = MaterialTheme.colorScheme.primaryContainer,
                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                     ) {
                         Column(modifier = Modifier.padding(8.dp)) {
                             Text(
-                                "🟢 Adicionais Positivos (+)",
+                                "Adicionais Positivos (+)",
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                             Spacer(Modifier.height(4.dp))
                             positiveMods.forEach { mod ->
@@ -359,16 +359,15 @@ fun BuySuperPowerDialog(
                 if (negativeMods.isNotEmpty()) {
                     Surface(
                         shape = MaterialTheme.shapes.small,
-                        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.4f)),
+                        color = MaterialTheme.colorScheme.errorContainer,
                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)
                     ) {
                         Column(modifier = Modifier.padding(8.dp)) {
                             Text(
-                                "🔴 Limitações (-)",
+                                "Limitações (-)",
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.error
+                                color = MaterialTheme.colorScheme.onErrorContainer
                             )
                             Spacer(Modifier.height(4.dp))
                             negativeMods.forEach { mod ->
@@ -865,7 +864,7 @@ fun SuperPoderesSection(
                 }
 
                 val statusColor = when {
-                    jaInvestido -> MaterialTheme.colorScheme.tertiary
+                    jaInvestido -> MaterialTheme.colorScheme.onTertiaryContainer
                     podeComprarSupers -> MaterialTheme.colorScheme.primary
                     else -> MaterialTheme.colorScheme.error
                 }
@@ -934,9 +933,9 @@ fun SuperPoderesSection(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                poder.nome.toFancyTitleCase(),
-                                Modifier.weight(1f),
+                            MarqueeText(
+                                text = poder.nome.toFancyTitleCase(),
+                                modifier = Modifier.weight(1f),
                                 style = MaterialTheme.typography.titleSmall
                             )
 

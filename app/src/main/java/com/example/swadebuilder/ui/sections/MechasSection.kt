@@ -65,11 +65,14 @@ import com.example.swadebuilder.model.MechaModCatalogWrapper
 import com.example.swadebuilder.model.MechaModItem
 import com.example.swadebuilder.model.MechaWeaponCatalogWrapper
 import com.example.swadebuilder.model.MechaWeaponItem
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
+
+private val mechasSectionJson = Json { ignoreUnknownKeys = true }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalSerializationApi::class)
 @Composable
@@ -82,7 +85,7 @@ fun MechasSection(
     val mechaCatalog = remember(context) {
         runCatching {
             context.assets.open("scifi_mechas.json").use { input ->
-                Json { ignoreUnknownKeys = true }.decodeFromStream<MechaCatalogWrapper>(input).mechas
+                mechasSectionJson.decodeFromStream<MechaCatalogWrapper>(input).mechas
             }
         }.getOrElse { emptyList() }
     }
@@ -90,7 +93,7 @@ fun MechasSection(
     val modCatalog = remember(context) {
         runCatching {
             context.assets.open("scifi_mecha_mods.json").use { input ->
-                Json { ignoreUnknownKeys = true }.decodeFromStream<MechaModCatalogWrapper>(input).modificadores
+                mechasSectionJson.decodeFromStream<MechaModCatalogWrapper>(input).modificadores
             }
         }.getOrElse { emptyList() }.map { it.exibido() }
     }
@@ -98,7 +101,7 @@ fun MechasSection(
     val weaponCatalog = remember(context) {
         runCatching {
             context.assets.open("scifi_mecha_weapons.json").use { input ->
-                Json { ignoreUnknownKeys = true }.decodeFromStream<MechaWeaponCatalogWrapper>(input).armas
+                mechasSectionJson.decodeFromStream<MechaWeaponCatalogWrapper>(input).armas
             }
         }.getOrElse { emptyList() }.map { it.exibido() }
     }
@@ -750,10 +753,9 @@ private fun MechaCardItem(
                                             modifier = Modifier.weight(1f),
                                             verticalArrangement = Arrangement.spacedBy(2.dp)
                                         ) {
-                                            Text(
+                                            MarqueeText(
                                                 text = mod.nome,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                fontWeight = FontWeight.Bold
+                                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                                             )
                                             Text(
                                                 text = mod.descricao,

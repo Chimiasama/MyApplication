@@ -1,6 +1,5 @@
 package com.example.swadebuilder.model
 
-import com.example.swadebuilder.util.BookCustomContent
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
@@ -21,14 +20,7 @@ data class PersonagemSnapshot(
     val selecoes: SnapshotSelecoes,
     val progresso: SnapshotProgresso,
     val supers: SnapshotSupers,
-    val checksum: String? = null,
-    // Conteúdo customizado (Vantagens, Raças, Poderes etc.) referenciado por este
-    // personagem, embutido no próprio backup — sem isso, um backup restaurado em
-    // outro aparelho/instalação (que não tem os mesmos custom_content_*.json em
-    // filesDir) ficaria com ids/nomes de conteúdo custom "pendurados", sem
-    // resolver pra nada. Nulo em backups antigos (versão < desta mudança); ver
-    // aggregateAllCustomContent()/mergeImportedCustomContent() em SettingsDialog.kt.
-    val customContent: BookCustomContent? = null
+    val checksum: String? = null
 )
 
 @Serializable
@@ -59,6 +51,10 @@ data class SnapshotFlags(
     val soldadoCargaAtivo: Boolean,
     val permiteMultiAntecedenteArcano: Boolean,
     val meioElfoAgil: Boolean,
+    // Legado: campo lido só pra migrar saves salvos antes do Meio-Orc passar a
+    // reaproveitar SelecoesPersistidas.humanoMineradorAtributo (mesmo mecanismo
+    // de escolha de atributo já usado por Feral/Minerador Genético) — ver
+    // CriadorState.restoreFromSnapshot. Nunca mais escrito por saves novos.
     val meioOrcForca: Boolean = false,
     val celestialAAMilagresDesabilitado: Boolean,
     val jovemAutoPequeno: Boolean,

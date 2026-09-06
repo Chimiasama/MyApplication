@@ -76,8 +76,8 @@ private data class MappedCategory(
 )
 
 private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
-    val t = (cat.tipo ?: "").trim().uppercase().semAcentos()
-    val st = (cat.subtipo ?: "").trim().uppercase().semAcentos()
+    val t = cat.tipo.trim().uppercase().semAcentos()
+    val st = cat.subtipo.trim().uppercase().semAcentos()
 
     // 1. Identify SuperType
     val superType = when {

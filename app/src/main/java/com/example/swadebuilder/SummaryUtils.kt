@@ -162,7 +162,7 @@ fun buildSummaryLines(
             val comp = mapPorId[compId.keyify()]
             if (comp != null) {
                 val baseName = if (showOfficial && !comp.originalName.isNullOrBlank()) {
-                    comp.originalName!!.toFancyTitleCase()
+                    comp.originalName.toFancyTitleCase()
                 } else {
                     comp.nomeExibicao.toFancyTitleCase()
                 }
@@ -410,7 +410,7 @@ fun buildSummaryLines(
     if (personagem.usaRequisicao) {
         lines += "Requisição: ${personagem.requisicao}"
     } else if (personagem.usaRiqueza && (personagem.dadoRiqueza != null && personagem.modoProgressaoAtivo)) {
-        lines += "Riqueza: ${personagem.dadoRiqueza!!.toDiceString()}"
+        lines += "Riqueza: ${personagem.dadoRiqueza.toDiceString()}"
     } else {
         lines += "Dinheiro restante: ${personagem.dinheiro}"
     }
@@ -419,7 +419,7 @@ fun buildSummaryLines(
     } else {
         lines += "Equipamentos:"
         personagem.equipamentos.forEach { eq ->
-            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName!!.toFancyTitleCase() else eq.nomeExibicao.toFancyTitleCase()
+            val nomeEq = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName.toFancyTitleCase() else eq.nomeExibicao.toFancyTitleCase()
             lines += "• $nomeEq"
         }
     }
@@ -441,7 +441,7 @@ fun buildSummaryLines(
 
             val escolha = vantagemChoices[vant.id]?.removeFirstOrNull()
                 ?.takeIf { it.isNotBlank() }
-            val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase()
+            val rawName = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toFancyTitleCase() else vant.nomeExibicao.toFancyTitleCase()
 
         val isCustom = vant.origem.equals("CUSTOM", ignoreCase = true) || vant.id.startsWith("custom:") || vant.id.startsWith("fanmade:")
         val customBadge = if (isCustom) " ⓒ" else ""
@@ -732,7 +732,7 @@ fun buildSummaryLines(
                     // 1. Check Advantages (Grantable Edges)
                     val vant = definitionMap[key]
                     if (vant != null) {
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName!!.toFancyTitleCase() else vant.nome.toFancyTitleCase()
+                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toFancyTitleCase() else vant.nome.toFancyTitleCase()
                     } else {
                         // 2. Check Racial Abilities (Definition Name)
                         val ability = racialAbilityMap[key]

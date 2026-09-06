@@ -36,7 +36,8 @@ data class EquipamentoItem(
     val pmf: JsonElement? = null,
     val malfuncionamento: JsonElement? = null,
     val tensao: Int? = null,
-    val mods_slots: JsonElement? = null,
+    @SerialName("mods_slots")
+    val modsSlots: JsonElement? = null,
     val origemGrant: String? = null,
     // Id estável (slug do nome, gerado a partir de equipamentos.json) — permite endereçar
     // um item por id em vez de comparar nome/texto. Vazio só para instâncias construídas em

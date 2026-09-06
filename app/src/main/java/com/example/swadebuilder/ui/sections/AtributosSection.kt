@@ -248,12 +248,12 @@ fun AtributosContent(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(pergaminho, shape = RoundedCornerShape(12.dp))
-            .verticalScroll(rememberScrollState())
             .padding(12.dp)
     ) {
-        // Updated Header to show both Attribute and Skill Points
+        // Fixed header (Attribute and Skill Points) — stays visible while the
+        // list below scrolls, so you can always see how many points are left.
         if (!state.modoLivre) {
             SectionHeader(
                 onHelpClick = null,
@@ -266,6 +266,12 @@ fun AtributosContent(
         }
 
         Spacer(Modifier.height(4.dp))
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+        ) {
 
         listaAtributos.forEach { nome ->
             val baseRaw = state.valoresAtributos[nome]!!.intValue
@@ -583,12 +589,23 @@ fun AtributosContent(
                                                     state.especializacoesPorPericia.remove(per.nome)
                                                     state.notasPericia.remove(per.nome)
                                                 }
+                                                // Devolve pontos de Complicação (cpSpStack) gastos de mais,
+                                                // mesma lógica de "Auto-Refund" que PericiasContent já tinha
+                                                // pro seu próprio stepper.
+                                                while (state.pontosPericia > 0 && state.cpSpStack.isNotEmpty()) {
+                                                    state.devolverPcDePericia()
+                                                }
                                                 if (isIdioma) {
                                                     state.syncIdiomaSlots()
                                                 }
                                                 if (isJutsu) {
                                                     state.syncJutsuSlots()
                                                 }
+                                                // decreasePericia() só ajusta a perícia clicada — sem isso, o
+                                                // custo das demais perícias (dependente do atributo/pool atual)
+                                                // podia ficar dessincronizado do que RebuildSkillStacksUseCase
+                                                // realmente calcularia.
+                                                state.rebuildAllPericiaStacks(feedbackMessages ?: mutableListOf(), enforcePoolLimit = true)
                                                 onUserFeedback()
                                             },
                                             enabled = reg.canDecrease,
@@ -653,6 +670,7 @@ fun AtributosContent(
                                                 state.increasePericiaFromAdvancement(per, reg.cost, feedbackMessages)
                                                 if (isIdioma) state.syncIdiomaSlots()
                                                 if (isJutsu) state.syncJutsuSlots()
+                                                state.rebuildAllPericiaStacks(feedbackMessages ?: mutableListOf(), enforcePoolLimit = true)
                                                 onUserFeedback()
                                             },
                                             enabled = reg.canIncrease || (canAffordWithBP && reg.nextRaw <= reg.capRaw),
@@ -667,6 +685,7 @@ fun AtributosContent(
                     }
                 }
             }
+        }
         }
     }
 
@@ -708,6 +727,7 @@ fun AtributosContent(
                         state.decreasePericia(per)
                     }
                 }
+                state.rebuildAllPericiaStacks(enforcePoolLimit = true)
                 onUserFeedback()
             },
             onDismiss = { skillPopoverTarget = null }
@@ -790,6 +810,7 @@ fun AtributosContent(
                             }
                             state.increasePericiaFromAdvancement(per, idiomaPendingCost, feedbackMessages)
                             if (isJutsu) state.syncJutsuSlots() else state.syncIdiomaSlots()
+                            state.rebuildAllPericiaStacks(feedbackMessages ?: mutableListOf(), enforcePoolLimit = true)
                             onUserFeedback()
                         }
                         showIdiomaDialog = false

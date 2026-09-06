@@ -11,8 +11,3 @@ data class PericiaJson(
     val descricao: String? = null,
     val id: String = ""
 )
-
-@Serializable
-data class PericiaList(
-    val pericias: List<PericiaJson>
-)

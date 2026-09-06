@@ -87,6 +87,7 @@ import com.example.swadebuilder.stageIndexForSlot
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.RadioButtonRow
 import com.example.swadebuilder.ui.sections.PoderesSection
 import com.example.swadebuilder.ui.sections.VantFilterDialog
@@ -904,7 +905,7 @@ fun ProgressosDialog(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
                                     Column(modifier = Modifier.weight(1f)) {
-                                        Text(per.nome, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+                                        MarqueeText(per.nome, style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold))
                                         val nota = state.notasPericia[per.nome]
                                         if (!nota.isNullOrBlank()) {
                                             Text(
@@ -1999,7 +2000,7 @@ private fun DialogVantagemItem(
         else -> "Requisitos pendentes"
     }
     val statusColor = when {
-        jaTem -> MaterialTheme.colorScheme.tertiary
+        jaTem -> MaterialTheme.colorScheme.onTertiaryContainer
         bloqueioClasse != null -> MaterialTheme.colorScheme.error
         requisitosOk -> MaterialTheme.colorScheme.primary
         else -> MaterialTheme.colorScheme.error
@@ -2026,7 +2027,9 @@ private fun DialogVantagemItem(
             containerColor = when {
                 jaTem -> MaterialTheme.colorScheme.tertiaryContainer
                 requisitosOk && bloqueioClasse == null -> MaterialTheme.colorScheme.surfaceVariant
-                else -> MaterialTheme.colorScheme.errorContainer
+                // Requisito pendente não é bem um "erro" — mesmo cinza neutro de
+                // "indisponível" usado em Vantagens/Complicações, não errorContainer.
+                else -> MaterialTheme.colorScheme.surfaceContainerHighest
             }
         ),
         border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }
@@ -2037,8 +2040,8 @@ private fun DialogVantagemItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
+                    MarqueeText(
+                        text = if (showOfficialNames && !vant.originalName.isNullOrBlank()) vant.originalName.toSentenceCase() else vant.nomeExibicao.toSentenceCase(),
                         style = MaterialTheme.typography.titleSmall
                     )
 

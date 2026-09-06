@@ -90,6 +90,7 @@ import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.toMeuPersonagem
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import com.example.swadebuilder.util.toFancyTitleCase
 
@@ -401,10 +402,9 @@ private fun SkillNotesSummaryCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
+                        MarqueeText(
                             text = displayName,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(

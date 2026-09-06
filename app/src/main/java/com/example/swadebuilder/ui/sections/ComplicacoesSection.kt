@@ -58,6 +58,7 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.isComplicacaoVisible
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
@@ -538,46 +539,48 @@ fun ComplicacoesSection(
                     }
                 }
 
-                if (!locked) {
-                    val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
-                    val listaParaMostrar = uniqueComplications
-                        .filter { comp ->
-                            val keyId = normalizeUIKey(comp.id)
-                            val keyName = normalizeUIKey(comp.name)
-                            keyId !in autoBaseKeys && keyName !in autoBaseKeys
-                        }
-
-                    items(
-                        items = listaParaMostrar,
-                        key = { it.id }
-                    ) { comp ->
-                        // Using key so state is preserved
-                        ComplicacaoItem(
-                            comp = comp,
-                            state = state,
-                            locked = locked,
-                            allowLongTexts = allowLongTexts,
-                            showOfficialNames = showOfficialNames,
-                            groupedComplications = groupedComplications,
-                            detalhesExpandidos = detalhesExpandidos,
-                            onUserFeedback = onUserFeedback,
-                            onLogFeedback = onLogFeedback,
-                            onError = { msg ->
-                                if (msg.contains("Pontos em uso")) {
-                                    complicationToRemove = comp
-                                    showPcInUseDialog = true
-                                } else {
-                                    tempErrorMsg = msg
-                                    showTempError = true
-                                    scope.launch {
-                                        delay(2000L)
-                                        showTempError = false
-                                    }
-                                }
-                            },
-                            peqComp = pequComp
-                        )
+                // A lista fica sempre visível (mesmo travada em Supers/Progressos) para
+                // que dê pra ler as complicações — ComplicacaoItem já desabilita os
+                // botões de Menor/Maior internamente quando `locked` é true, sem
+                // impedir o toque no card para abrir a descrição completa.
+                val pequComp = uniqueComplications.firstOrNull { it.id == "pequeno" }
+                val listaParaMostrar = uniqueComplications
+                    .filter { comp ->
+                        val keyId = normalizeUIKey(comp.id)
+                        val keyName = normalizeUIKey(comp.name)
+                        keyId !in autoBaseKeys && keyName !in autoBaseKeys
                     }
+
+                items(
+                    items = listaParaMostrar,
+                    key = { it.id }
+                ) { comp ->
+                    // Using key so state is preserved
+                    ComplicacaoItem(
+                        comp = comp,
+                        state = state,
+                        locked = locked,
+                        allowLongTexts = allowLongTexts,
+                        showOfficialNames = showOfficialNames,
+                        groupedComplications = groupedComplications,
+                        detalhesExpandidos = detalhesExpandidos,
+                        onUserFeedback = onUserFeedback,
+                        onLogFeedback = onLogFeedback,
+                        onError = { msg ->
+                            if (msg.contains("Pontos em uso")) {
+                                complicationToRemove = comp
+                                showPcInUseDialog = true
+                            } else {
+                                tempErrorMsg = msg
+                                showTempError = true
+                                scope.launch {
+                                    delay(2000L)
+                                    showTempError = false
+                                }
+                            }
+                        },
+                        peqComp = pequComp
+                    )
                 }
             } // End LazyColumn
         }
@@ -709,7 +712,9 @@ private fun ComplicacaoItem(
             containerColor = when {
                 cur != null -> MaterialTheme.colorScheme.tertiaryContainer
                 requisitosOk -> MaterialTheme.colorScheme.surfaceVariant
-                else -> MaterialTheme.colorScheme.errorContainer
+                // Requisito pendente não é bem um "erro" — mesmo cinza neutro de
+                // "indisponível" usado em Vantagens/Progressos, não errorContainer.
+                else -> MaterialTheme.colorScheme.surfaceContainerHighest
             }
         ),
         border = themeData.cardBorderColor?.let { androidx.compose.foundation.BorderStroke(1.dp, it) }
@@ -727,15 +732,15 @@ private fun ComplicacaoItem(
             ) {
                 val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
                 val customBadge = if (isCustom) " ⓒ" else ""
-                Text(
-                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName!!.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
+                MarqueeText(
+                    text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
                     style = MaterialTheme.typography.titleSmall
                 )
                 if (cur != null) {
                     Text(
                         text = "Selecionada ($cur)",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.tertiary
+                        color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                 } else if (!requisitosOk) {
                     Text(
@@ -853,7 +858,7 @@ private fun ComplicacaoItem(
     }
 
     if (showDetailsDialog) {
-        val titleText = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName!!.toFancyTitleCase() else comp.name.toFancyTitleCase()
+        val titleText = if (showOfficialNames && !comp.originalName.isNullOrBlank()) comp.originalName.toFancyTitleCase() else comp.name.toFancyTitleCase()
         AlertDialog(
             onDismissRequest = { showDetailsDialog = false },
             title = {

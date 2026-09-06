@@ -251,8 +251,6 @@ object RequirementValidator {
 
         // 14) Conflitos com complicações
         val compsConfl = IncompatibilityRules.complicacoesIncompativeisCom(v.id)
-        if (state.complicacoesSelecionadas.keys.any { it.id in compsConfl }) return false
-
-        return true
+        return state.complicacoesSelecionadas.keys.none { it.id in compsConfl }
     }
 }

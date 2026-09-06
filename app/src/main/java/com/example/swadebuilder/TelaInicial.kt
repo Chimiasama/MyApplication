@@ -526,39 +526,14 @@ fun TelaInicial(
             dismissButton = {
                 TextButton(onClick = { showRulesDialog = false }) { Text("Cancelar") }
             },
-            title = { Text("Resumo do Módulo e Regras") },
+            title = {
+                Text(
+                    "Selecione as regras a serem utilizadas na criação",
+                    style = MaterialTheme.typography.titleSmall
+                )
+            },
             text = {
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    val activePreset = com.example.swadebuilder.model.CreationPreset.getById(getActiveBookPresetId())
-                    androidx.compose.material3.Card(
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
-                        colors = androidx.compose.material3.CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer
-                        )
-                    ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(
-                                text = "Módulo: ${activePreset.titulo}",
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                            Spacer(Modifier.height(4.dp))
-                            Text(
-                                text = activePreset.subtitulo,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                            Spacer(Modifier.height(4.dp))
-                            val flavorText = if (isFullEdition) "Edição Completa" else "Edição Lite"
-                            Text(
-                                text = "Recursos: $flavorText",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
-                            )
-                        }
-                    }
-
                     val isCrystalHeart = optCompendioCrystalHeart
                     if (optSuperPoderes) {
                         SimpleCheckRow("Nasce um Herói", "Ignora requisitos de Estágio na criação.", optNasceUmHeroi) { optNasceUmHeroi = it }

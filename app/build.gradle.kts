@@ -23,7 +23,7 @@ android {
     defaultConfig {
         applicationId = "com.swadebuilder"
         minSdk = 25
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 23
         versionName = "3.1"
 
@@ -130,6 +130,8 @@ android {
     // 🔹 Lint (relatório de warnings de código, estilo e sugestões)
     // ------------------------------------------------------------
     lint {
+        // Regras de supressão específicas (ex.: falso positivo de biblioteca terceira).
+        lintConfig = file("lint.xml")
         // Não quebra o build por causa de warnings — apenas reporta.
         abortOnError = false
         warningsAsErrors = false
@@ -139,9 +141,10 @@ android {
         // para refletir o mesmo conjunto de avisos que aparece no Android Studio.
         checkAllWarnings = true
         ignoreWarnings = false
-        // Gera relatórios em texto, HTML e XML para consumo humano e por ferramentas.
+        // Gera relatórios em texto (no próprio console, um por variante — sem
+        // caminho fixo, senão a variante "lite" sobrescreveria o texto da "full"),
+        // além de HTML e XML para consumo humano e por ferramentas.
         textReport = true
-        textOutput = layout.buildDirectory.file("reports/lint/lint-results.txt").get().asFile
         htmlReport = true
         xmlReport = true
     }
@@ -173,7 +176,6 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.foundation)
-    androidTestImplementation(libs.androidx.core.testing)
     debugImplementation(libs.androidx.compose.ui.tooling.v170)
 
     // --- Material Components ---

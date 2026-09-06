@@ -108,11 +108,11 @@ fun CrystalHeartSection(
                                 }
                             }
                             Text("Estágio: ${selectedHeart.estagio}")
-                            if (selectedHeart.habilidade_passiva != null) {
-                                Text("Passiva: ${selectedHeart.habilidade_passiva}")
+                            if (selectedHeart.habilidadePassiva != null) {
+                                Text("Passiva: ${selectedHeart.habilidadePassiva}")
                             }
-                            if (selectedHeart.complicacao_inerente != null) {
-                                Text("Complicação: ${selectedHeart.complicacao_inerente}", color = MaterialTheme.colorScheme.error)
+                            if (selectedHeart.complicacaoInerente != null) {
+                                Text("Complicação: ${selectedHeart.complicacaoInerente}", color = MaterialTheme.colorScheme.error)
                             }
                             Spacer(Modifier.height(4.dp))
                             Text("Poderes: ${selectedHeart.poderes.joinToString(", ")}")
@@ -213,11 +213,11 @@ fun CrystalHeartSection(
                                 Spacer(Modifier.height(8.dp))
                                 Text("Estágio: ${previewHeart!!.estagio}")
                                 Spacer(Modifier.height(8.dp))
-                                if (previewHeart!!.habilidade_passiva != null) {
-                                    Text("Passiva: ${previewHeart!!.habilidade_passiva}")
+                                if (previewHeart!!.habilidadePassiva != null) {
+                                    Text("Passiva: ${previewHeart!!.habilidadePassiva}")
                                 }
-                                if (previewHeart!!.complicacao_inerente != null) {
-                                    Text("Complicação: ${previewHeart!!.complicacao_inerente}", color = MaterialTheme.colorScheme.error)
+                                if (previewHeart!!.complicacaoInerente != null) {
+                                    Text("Complicação: ${previewHeart!!.complicacaoInerente}", color = MaterialTheme.colorScheme.error)
                                 }
                                 Spacer(Modifier.height(8.dp))
                                 Text("Poderes: ${previewHeart!!.poderes.joinToString(", ")}")
@@ -264,8 +264,8 @@ fun CrystalHeartSection(
                     val starter = editHeart!!
                     var nome by remember(starter) { mutableStateOf(starter.nome) }
                     var estagio by remember(starter) { mutableStateOf(starter.estagio.ifBlank { "Novato" }) }
-                    var passiva by remember(starter) { mutableStateOf(starter.habilidade_passiva.orEmpty()) }
-                    var complicacao by remember(starter) { mutableStateOf(starter.complicacao_inerente.orEmpty()) }
+                    var passiva by remember(starter) { mutableStateOf(starter.habilidadePassiva.orEmpty()) }
+                    var complicacao by remember(starter) { mutableStateOf(starter.complicacaoInerente.orEmpty()) }
                     var poderes by remember(starter) { mutableStateOf(starter.poderes.joinToString("\n")) }
                     var descricao by remember(starter) { mutableStateOf(starter.descricao.orEmpty()) }
                     var stageExpanded by remember { mutableStateOf(false) }
@@ -379,9 +379,9 @@ fun CrystalHeartSection(
                                             id = "custom_${UUID.randomUUID()}",
                                             nome = nome,
                                             estagio = estagio,
-                                            habilidade_passiva = passiva.ifBlank { null },
+                                            habilidadePassiva = passiva.ifBlank { null },
                                             poderes = poderesList,
-                                            complicacao_inerente = complicacao.ifBlank { null },
+                                            complicacaoInerente = complicacao.ifBlank { null },
                                             origem = "CRYSTAL_HEART",
                                             descricao = descricao.ifBlank { null },
                                             custom = true

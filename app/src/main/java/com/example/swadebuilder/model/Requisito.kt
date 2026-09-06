@@ -140,7 +140,7 @@ object RequisitoSerializer : KSerializer<Requisito> {
     }
 }
 
-private fun parseStageFromLegacyRequirement(raw: String): String {
+internal fun parseStageFromLegacyRequirement(raw: String): String {
     val knownStages = listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário", "Lendario")
     return knownStages.firstOrNull { stage ->
         raw.split(',').firstOrNull()?.trim()?.equals(stage, ignoreCase = true) == true

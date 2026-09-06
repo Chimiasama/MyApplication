@@ -91,10 +91,16 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.CriadorViewModel
+import com.example.swadebuilder.model.MeuPersonagem
+import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.SnapshotFlags
+import com.example.swadebuilder.model.SuperPoder
+import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.security.SecurityHardening
 import com.example.swadebuilder.ui.components.SettingsDialog
+import com.example.swadebuilder.ui.dialogs.PdfExportOptionsDialog
 import com.example.swadebuilder.ui.theme.SWADEbuilderTheme
 import com.example.swadebuilder.util.AppPreferences
 import com.example.swadebuilder.util.CharacterPortraitStorage
@@ -268,6 +274,7 @@ class MainActivity : ComponentActivity() {
                 mutableStateOf<PendingNavigationAction?>(null)
             }
             var showSaveBeforeNavigateDialog by rememberSaveable { mutableStateOf(false) }
+            var pdfExportRequest by remember { mutableStateOf<PdfExportRequest?>(null) }
 
             val savedEntries = remember { mutableStateListOf<CharacterStorage.SaveEntry>() }
             var entryToDelete by remember { mutableStateOf<CharacterStorage.SaveEntry?>(null) }
@@ -361,6 +368,36 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            // -- Pdf Export Options Dialog --
+            pdfExportRequest?.let { request ->
+                SWADEbuilderTheme(appTheme = state.appTheme) {
+                    PdfExportOptionsDialog(
+                        availableSections = request.availableSections,
+                        onConfirm = { secoesIncluidas ->
+                            pdfExportRequest = null
+                            scope.launch(Dispatchers.IO) {
+                                produzirEExibirFichaPdf(
+                                    this@MainActivity,
+                                    request.personagem,
+                                    request.attributes,
+                                    request.mapAttrDisplay,
+                                    request.complications,
+                                    request.advantages,
+                                    request.powers,
+                                    request.superPowers,
+                                    request.especieId,
+                                    secoesIncluidas
+                                ) { msg ->
+                                    scope.launch {
+                                        snackHost.showSnackbar(msg)
+                                    }
+                                }
+                            }
+                        },
+                        onDismiss = { pdfExportRequest = null }
+                    )
+                }
+            }
 
             if (entryToDelete != null) {
                 AlertDialog(
@@ -841,28 +878,17 @@ class MainActivity : ComponentActivity() {
                                             IconButton(onClick = {
                                                 triggerFeedback()
                                                 val personagem = state.toMeuPersonagem()
-                                                val attributes = criadorViewModel.gameDataStore.getAtributos()
-                                                val mapAttrDisplay = criadorViewModel.gameDataStore.getMapaAtributosDisplay()
-                                                val complications = criadorViewModel.gameDataStore.getComplicacoes()
-                                                val advantages = criadorViewModel.gameDataStore.getVantagens()
-                                                val powers = criadorViewModel.gameDataStore.getPoderes()
-
-                                                scope.launch(Dispatchers.IO) {
-                                                    produzirEExibirFichaPdf(
-                                                        this@MainActivity,
-                                                        personagem,
-                                                        attributes,
-                                                        mapAttrDisplay,
-                                                        complications,
-                                                        advantages,
-                                                        powers,
-                                                        state.currentAncestryDef?.especieId
-                                                    ) { msg ->
-                                                        scope.launch {
-                                                            snackHost.showSnackbar(msg)
-                                                        }
-                                                    }
-                                                }
+                                                pdfExportRequest = PdfExportRequest(
+                                                    personagem = personagem,
+                                                    attributes = criadorViewModel.gameDataStore.getAtributos(),
+                                                    mapAttrDisplay = criadorViewModel.gameDataStore.getMapaAtributosDisplay(),
+                                                    complications = criadorViewModel.gameDataStore.getComplicacoes(),
+                                                    advantages = criadorViewModel.gameDataStore.getVantagens(),
+                                                    powers = criadorViewModel.gameDataStore.getPoderes(),
+                                                    superPowers = criadorViewModel.gameDataStore.getSuperPoderes(),
+                                                    especieId = state.currentAncestryDef?.especieId,
+                                                    availableSections = secoesPdfDisponiveis(personagem)
+                                                )
                                             }) {
                                                 Icon(Icons.Default.Print, contentDescription = "Imprimir ficha")
                                             }
@@ -917,3 +943,16 @@ sealed class LoadingState {
     object Success : LoadingState()
     data class Error(val message: String) : LoadingState()
 }
+
+/** Dados já resolvidos pro PDF, guardados enquanto o [PdfExportOptionsDialog] aguarda a escolha do jogador. */
+private data class PdfExportRequest(
+    val personagem: MeuPersonagem,
+    val attributes: List<String>,
+    val mapAttrDisplay: Map<String, String>,
+    val complications: List<Complicacao>,
+    val advantages: List<Vantagem>,
+    val powers: List<Poder>,
+    val superPowers: List<SuperPoder>,
+    val especieId: String?,
+    val availableSections: Set<FichaPdfSecao>
+)

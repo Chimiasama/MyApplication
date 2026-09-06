@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- itextg (biblioteca de geração de PDF) referencia pacotes de assinatura XML
+         (javax.xml.crypto.*) que não existem no Android. O app nunca invoca esse
+         caminho de código (MakeXmlSignature); é uma limitação conhecida da lib,
+         não um bug do projeto. -->
+    <issue id="InvalidPackage">
+        <ignore path="**/itextg*.jar" />
+    </issue>
+</lint>

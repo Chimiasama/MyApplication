@@ -19,12 +19,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.RotateRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.RotateRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.graphics.createBitmap
 import com.example.swadebuilder.util.CharacterPortraitStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -411,7 +412,7 @@ private fun ImageCropperContent(
                             offset = Offset.Zero
                         }
                     ) {
-                        Icon(Icons.Default.RotateRight, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.RotateRight, contentDescription = null)
                         Spacer(Modifier.width(6.dp))
                         Text("Girar 90°")
                     }
@@ -480,7 +481,7 @@ private fun cropBitmapToPortrait(
     val targetW = 512
     val targetH = (targetW / 0.8f).toInt() // 640px
 
-    val outputBitmap = Bitmap.createBitmap(targetW, targetH, Bitmap.Config.ARGB_8888)
+    val outputBitmap = createBitmap(targetW, targetH)
     val canvas = Canvas(outputBitmap)
 
     if (cropBoxSize.width <= 0f || cropBoxSize.height <= 0f) return outputBitmap

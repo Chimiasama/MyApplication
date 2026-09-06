@@ -95,13 +95,13 @@ internal fun normalizeModuleKeys(activeModules: Set<String>): Set<String> =
  */
 private const val GAME_DATA_REPO_TAG = "GameDataRepositoryPerf"
 
-private inline fun perfLogD(message: () -> String) {
+internal inline fun perfLogD(message: () -> String) {
     if (Log.isLoggable(GAME_DATA_REPO_TAG, Log.DEBUG)) {
         Log.d(GAME_DATA_REPO_TAG, message())
     }
 }
 
-private fun perfLogW(message: String, throwable: Throwable) {
+internal fun perfLogW(message: String, throwable: Throwable) {
     if (Log.isLoggable(GAME_DATA_REPO_TAG, Log.WARN)) {
         Log.w(GAME_DATA_REPO_TAG, message, throwable)
     }

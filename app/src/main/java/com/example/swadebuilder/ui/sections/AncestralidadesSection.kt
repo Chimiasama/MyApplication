@@ -59,6 +59,7 @@ import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
 import com.example.swadebuilder.model.stripAncestralidadeScenarioSuffix
 import com.example.swadebuilder.registry.AncestryVariantRegistry
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.theme.emphasis
@@ -369,7 +370,7 @@ fun AncestralidadesSection(
                                 Column(Modifier.weight(1f)) {
                                     val displayName = item.displayName(showOfficialNames).toFancyTitleCase()
 
-                                    Text(
+                                    MarqueeText(
                                         text = displayName,
                                         style = if (isSelected) MaterialTheme.typography.emphasis else MaterialTheme.typography.bodyMedium,
                                         color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
@@ -455,6 +456,13 @@ fun AncestralidadesSection(
                                 // Feral não tem mais "opcoes" (raça própria, ver Tarefa #7) — o
                                 // flag só controla a seção "Dons da Natureza: Ápice" mais abaixo.
                                 val isFeral = item.nome.keyify() == "FERAL"
+                                val isMeioOrc = item.nome.keyify() == "MEIO-ORCS"
+                                // Exato, não .contains(): "MEIO-ELFOS" (Fantasia/outros livros) é uma
+                                // raça diferente de "Meio-Elfo" (Pathfinder, id anc_meio_elfopathfinder),
+                                // que tem "Flexibilidade" (atributo à escolha livre) em vez desta
+                                // Herança Élfica/Humana — keyify() não remove o "S" do plural, então a
+                                // comparação exata já as separa sem precisar checar o livro de origem.
+                                val isMeioElfo = item.nome.keyify() == "MEIO-ELFOS"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
                                 // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
@@ -577,7 +585,7 @@ fun AncestralidadesSection(
 
                                                 if (marcado && trait.exigeEscolhaAtributo) {
                                                     var atributoExpanded by remember { mutableStateOf(false) }
-                                                    val atributoEscolhido = selecaoAtual?.escolhaAtributo ?: state.listaAtributos.firstOrNull().orEmpty()
+                                                    val atributoEscolhido = selecaoAtual.escolhaAtributo ?: state.listaAtributos.firstOrNull().orEmpty()
                                                     Row(
                                                         modifier = Modifier.padding(start = 32.dp),
                                                         verticalAlignment = Alignment.CenterVertically
@@ -608,7 +616,7 @@ fun AncestralidadesSection(
                                                 if (marcado && trait.exigeEscolhaPericia) {
                                                     var periciaExpanded by remember { mutableStateOf(false) }
                                                     val periciasDisponiveis = state.periciasFiltradasPorCompendio.sortedBy { it.nome }
-                                                    val periciaEscolhida = selecaoAtual?.escolhaPericia
+                                                    val periciaEscolhida = selecaoAtual.escolhaPericia
                                                         ?: periciasDisponiveis.firstOrNull()?.nome.orEmpty()
                                                     Row(
                                                         modifier = Modifier.padding(start = 32.dp),
@@ -699,6 +707,59 @@ fun AncestralidadesSection(
                                         ?.takeIf { it in attributeOptions }
                                         ?: "Força"
                                     Text("Atributo Primitivo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
+                                    Box {
+                                        OutlinedButton(onClick = { attributeExpanded = true }) {
+                                            Text(currentAttributeSelection.toFancyTitleCase())
+                                        }
+                                        DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
+                                            attributeOptions.forEach { option ->
+                                                DropdownMenuItem(
+                                                    text = { Text(option.toFancyTitleCase()) },
+                                                    onClick = {
+                                                        state.selecionarHumanoMineradorAtributo(option)
+                                                        attributeExpanded = false
+                                                    }
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Meio-Elfos: escolha entre Herança Élfica (traço "AGIL", Agilidade d6)
+                                // e Herança Humana (traço "ADAPTAVEL", Vantagem de Estágio Novato à
+                                // escolha) — opção da própria raça padrão, não uma Variante de mestre.
+                                // Antes forçava um AlertDialog bloqueante ao selecionar a raça; agora é
+                                // um seletor inline, no mesmo padrão do resto desta seção.
+                                if (isMeioElfo) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Herança:", style = MaterialTheme.typography.labelMedium)
+                                    Column {
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Herança Élfica (Agilidade d6)",
+                                            selected = state.meioElfoAgil,
+                                            onSelect = { state.selecionarMeioElfoHeranca(true) }
+                                        )
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Herança Humana (Adaptável)",
+                                            selected = !state.meioElfoAgil,
+                                            onSelect = { state.selecionarMeioElfoHeranca(false) }
+                                        )
+                                    }
+                                }
+
+                                // Meio-Orcs: "Endurecido" — escolha entre Força ou Vigor d6 (livro:
+                                // "Começam com um d6 em Força ou Vigor em vez de um d4"). Mesmo
+                                // mecanismo de escolha de atributo já usado por Feral/Minerador
+                                // Genético acima, não um dialog dedicado.
+                                if (isMeioOrc) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Endurecido:", style = MaterialTheme.typography.labelMedium)
+                                    val attributeOptions = listOf("Força", "Vigor")
+                                    var attributeExpanded by remember { mutableStateOf(false) }
+                                    val currentAttributeSelection = state.humanoMineradorAtributo
+                                        ?.takeIf { it in attributeOptions }
+                                        ?: "Vigor"
+                                    Text("Bônus de Atributo (d6 inicial):", style = MaterialTheme.typography.labelMedium)
                                     Box {
                                         OutlinedButton(onClick = { attributeExpanded = true }) {
                                             Text(currentAttributeSelection.toFancyTitleCase())

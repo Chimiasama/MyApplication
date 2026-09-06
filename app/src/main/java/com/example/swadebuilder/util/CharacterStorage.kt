@@ -92,6 +92,7 @@ object CharacterStorage {
 
     private fun indexFile(context: Context): File = File(savesDirectory(context), INDEX_FILE_NAME)
 
+    @OptIn(ExperimentalSerializationApi::class)
     private fun loadIndexEntries(context: Context): List<SaveEntry>? {
         val file = indexFile(context)
         if (!file.exists()) return null
