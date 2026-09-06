@@ -1325,8 +1325,8 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     drawTrack(canvas, trackX, trackY, "Ferimentos", 3, -1, theme)
     drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
 
-    val statLabelPaint = TextPaint().apply { color = theme.textColor; textSize = 9f; typeface = theme.typefaceBody }
-    val statValuePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
+    val statLabelPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody }
+    val statValuePaint = TextPaint().apply { color = theme.primaryColor; textSize = 12f; typeface = theme.typefaceTitle; isFakeBoldText = true }
     val statPairs = listOf(
         "Aparar" to calcAparar(p, especieId).toString(),
         "Resistência" to calcResistencia(p),
@@ -1334,11 +1334,12 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
         "Movimentação" to p.movimentacao.toString(),
         "Corrida" to p.dadoCorrida
     )
-    var statY = rect.top + 16f
+    var statY = rect.top + 20f
     statPairs.forEach { (label, value) ->
         canvas.drawText(label, statsColumnLeft, statY, statLabelPaint)
-        canvas.drawText(value, statsColumnLeft, statY + 14f, statValuePaint)
-        statY += 24f
+        val labelWidth = statLabelPaint.measureText(label)
+        canvas.drawText(value, statsColumnLeft + labelWidth + 6f, statY, statValuePaint)
+        statY += 20f
     }
 }
 
