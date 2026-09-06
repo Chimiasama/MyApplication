@@ -778,40 +778,6 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                // Humano (Pathfinder) "Adaptável": além da Vantagem grátis, um d6
-                                // num atributo à escolha (qualquer um dos 5, livro não restringe a
-                                // 2-3 como Meio-Orc/Feral) — id ATRIBUTO_D6_SEM_MAXIMO, gate por id
-                                // presente na raça resolvida (não por nome, já que "Humano" sozinho
-                                // também é usado por Deadlands/Cidade do Sol a Vapor sem este traço).
-                                val temAtributoD6SemMaximo = item.habilidades.any { it.id?.keyify() == "ATRIBUTO_D6_SEM_MAXIMO" }
-                                if (temAtributoD6SemMaximo) {
-                                    Spacer(Modifier.height(8.dp))
-                                    val attributeOptions = state.listaAtributos
-                                    var attributeExpanded by remember { mutableStateOf(false) }
-                                    val currentAttributeSelection = state.humanoMineradorAtributo
-                                        ?.takeIf { it in attributeOptions }
-                                        ?: attributeOptions.firstOrNull { it.keyify() == "FORCA" } ?: attributeOptions.firstOrNull().orEmpty()
-                                    Text(
-                                        "Atributo Aumentado (d6 inicial, não eleva o máximo):",
-                                        style = MaterialTheme.typography.labelMedium
-                                    )
-                                    Box {
-                                        OutlinedButton(onClick = { attributeExpanded = true }) {
-                                            Text(currentAttributeSelection.toFancyTitleCase())
-                                        }
-                                        DropdownMenu(expanded = attributeExpanded, onDismissRequest = { attributeExpanded = false }) {
-                                            attributeOptions.forEach { option ->
-                                                DropdownMenuItem(
-                                                    text = { Text(option.toFancyTitleCase()) },
-                                                    onClick = {
-                                                        state.selecionarHumanoMineradorAtributo(option)
-                                                        attributeExpanded = false
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
                             }
 
 

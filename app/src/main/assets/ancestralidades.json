@@ -5461,15 +5461,15 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Começa com uma Vantagem Novato extra e um d6 em um Atributo à escolha (em vez de d4).",
+        "descricao": "Começa com uma Vantagem Novato extra de graça (deve atender aos requisitos).",
         "category": "racial_trait_positive",
         "id": "ADAPTAVEL",
-        "descricaoLite": "Ganha uma Vantagem extra de Novato e inicia com d6, em vez do d4 padrão, em um atributo à escolha."
+        "descricaoLite": "Ganha de graça uma Vantagem extra de nível Novato, respeitados os requisitos."
       },
       {
         "nome": "Atributo Aumentado (sem elevar o máximo)",
         "descricao": "Também recebem um d6 em vez de um d4 em um Atributo a sua escolha. Isso não aumenta seu atributo máximo.",
-        "id": "ATRIBUTO_D6_SEM_MAXIMO",
+        "id": "FLEXIBILIDADE",
         "category": "racial_trait_positive",
         "descricaoLite": "Um atributo à escolha começa em d6 em vez de d4, sem aumentar seu valor máximo (única exceção a essa regra)."
       }
@@ -5492,10 +5492,10 @@
     "habilidades": [
       {
         "nome": "Flexibilidade",
-        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4.",
+        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4. Isso não aumenta seu atributo máximo.",
         "category": "racial_trait_positive",
         "id": "FLEXIBILIDADE",
-        "descricaoLite": "Um atributo à escolha começa em d6 no lugar do d4 padrão."
+        "descricaoLite": "Um atributo à escolha começa em d6 no lugar do d4 padrão, sem aumentar seu valor máximo."
       },
       {
         "nome": "Magia Élfica",

@@ -4383,19 +4383,6 @@ class CriadorState {
             }
         }
 
-        // Humano (Pathfinder) "Adaptável": além da Vantagem grátis (traço
-        // ADAPTAVEL), o livro concede um d6 num atributo à escolha do
-        // jogador — mesmo mecanismo de escolha acima, reaproveitando
-        // humanoMineradorAtributo (raça sem sobreposição com Meio-Orc/Feral/
-        // Minerador). A exceção "não aumenta o máximo" é tratada à parte, em
-        // atributoMaxRawNaCriacao() — aqui só o piso mesmo sobe.
-        if (habilidadeIds.contains("ATRIBUTO_D6_SEM_MAXIMO")) {
-            val chosen = humanoMineradorAtributo ?: "Força"
-            if (attrKey == chosen.keyify()) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
-
         val currentSciFiVariant = if (compendioSciFiAtivo) resolveCurrentSciFiVariantSelection() else scifiVariant
 
         // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens e Elementais
@@ -4497,23 +4484,6 @@ class CriadorState {
         val temMentePrimitiva = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "MENTE_PRIMITIVA" } == true
         if (temMentePrimitiva && a.keyify() == "ASTUCIA") {
             return minOf(baseCap, 6)
-        }
-        // Humano (Pathfinder) "Adaptável": o d6 inicial no atributo escolhido
-        // (ver ATRIBUTO_D6_SEM_MAXIMO em atributoBaseRacial()) é a única
-        // exceção às regras de atributo inicial d6 — não aumenta o máximo,
-        // enquanto atributoMaxRaw() embute automaticamente +1 de tipo de dado
-        // (d12+1) pra QUALQUER piso elevado. Como esta raça não tem nenhuma
-        // outra fonte de bônus inicial no mesmo atributo, basta desfazer
-        // exatamente o passo que este traço concedeu (1 nível = 1 aqui, já
-        // que atributoMaxRaw soma "(minRaw-4)/2" nesse mesmo cálculo) sem
-        // mexer em bônus legítimos de Profissional/Especialista, que
-        // atributoMaxRaw já soma por cima do baseCap.
-        val temAtributoD6SemMaximo = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "ATRIBUTO_D6_SEM_MAXIMO" } == true
-        if (temAtributoD6SemMaximo) {
-            val chosen = humanoMineradorAtributo ?: "Força"
-            if (a.keyify() == chosen.keyify()) {
-                return baseCap - 1
-            }
         }
         return baseCap
     }
@@ -5109,12 +5079,23 @@ class CriadorState {
             }
         }
 
-        val isPathfinderHuman = compendioPathfinderAtivo &&
-                (ancestralidade.equals("Humano", ignoreCase = true) || ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
-        val isPathfinderHalfElf = compendioPathfinderAtivo &&
-                ancestralidade.keyify().contains("MEIO-ELFO")
+        // Humano (Pathfinder) "Adaptável" e Meio-Elfo (Pathfinder) "Flexibilidade"
+        // concedem "um d6 em vez de um d4 em um Atributo à escolha. Isso não
+        // aumenta seu atributo máximo" — mesmo texto, mesmo id (FLEXIBILIDADE)
+        // nas duas raças. Em vez de elevar o piso do atributo escolhido (o que
+        // exigiria desfazer a elevação automática do teto em
+        // atributoMaxRawNaCriacao(), já que atributoMaxRaw() SEMPRE soma +1 de
+        // tipo de dado pra qualquer piso acima de d4), representamos como +1
+        // Ponto de Atributo: o jogador decide livremente onde gastá-lo, e como
+        // é gasto pelo mecanismo normal de compra (não um piso "de graça"), o
+        // teto de d12 na criação nunca é ultrapassado — sem precisar de
+        // nenhuma exceção especial. Antes checava por nome de raça
+        // (ancestralidade.equals("Humano"/"Humano (Pathfinder)") e
+        // ancestralidade.contains("MEIO-ELFO")); agora lê o id do traço já
+        // presente na raça resolvida.
+        val temAtributoFlexivel = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "FLEXIBILIDADE" } == true
 
-        val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
+        val basePoints = if (temAtributoFlexivel) 6 else 5
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
