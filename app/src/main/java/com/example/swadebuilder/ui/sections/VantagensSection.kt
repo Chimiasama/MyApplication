@@ -74,6 +74,7 @@ import com.example.swadebuilder.toDiceString
 import com.example.swadebuilder.ui.components.ChoiceButtonRow
 import com.example.swadebuilder.ui.components.CollapsibleSection
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
 import com.example.swadebuilder.ui.theme.LocalAppThemeData
@@ -1783,8 +1784,8 @@ private fun VantagemItem(
                 ) {
                     val isCustom = vant.origem.equals("CUSTOM", ignoreCase = true) || vant.id.startsWith("custom:") || vant.id.startsWith("fanmade:")
                     val customBadge = if (isCustom) " ⓒ" else ""
-                    Text(
-                        if (showOfficialNames && !vant.originalName.isNullOrBlank()) "${vant.originalName.toFancyTitleCase()}$customBadge" else "${vant.nomeExibicao.toFancyTitleCase()}$customBadge",
+                    MarqueeText(
+                        text = if (showOfficialNames && !vant.originalName.isNullOrBlank()) "${vant.originalName.toFancyTitleCase()}$customBadge" else "${vant.nomeExibicao.toFancyTitleCase()}$customBadge",
                         style = MaterialTheme.typography.titleSmall
                     )
 

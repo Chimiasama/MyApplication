@@ -59,6 +59,7 @@ import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.groupAncestralidadesForDisplay
 import com.example.swadebuilder.model.stripAncestralidadeScenarioSuffix
 import com.example.swadebuilder.registry.AncestryVariantRegistry
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.theme.emphasis
@@ -369,7 +370,7 @@ fun AncestralidadesSection(
                                 Column(Modifier.weight(1f)) {
                                     val displayName = item.displayName(showOfficialNames).toFancyTitleCase()
 
-                                    Text(
+                                    MarqueeText(
                                         text = displayName,
                                         style = if (isSelected) MaterialTheme.typography.emphasis else MaterialTheme.typography.bodyMedium,
                                         color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface

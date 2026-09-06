@@ -65,6 +65,7 @@ import com.example.swadebuilder.model.MechaModCatalogWrapper
 import com.example.swadebuilder.model.MechaModItem
 import com.example.swadebuilder.model.MechaWeaponCatalogWrapper
 import com.example.swadebuilder.model.MechaWeaponItem
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.coroutines.delay
@@ -752,10 +753,9 @@ private fun MechaCardItem(
                                             modifier = Modifier.weight(1f),
                                             verticalArrangement = Arrangement.spacedBy(2.dp)
                                         ) {
-                                            Text(
+                                            MarqueeText(
                                                 text = mod.nome,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                fontWeight = FontWeight.Bold
+                                                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                                             )
                                             Text(
                                                 text = mod.descricao,

@@ -52,7 +52,7 @@ fun StandardEquipamentoItem(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(Modifier.weight(1f)) {
-                    Text(
+                    MarqueeText(
                         text = if (showOriginalName && !equipamento.originalName.isNullOrBlank()) {
                             equipamento.originalName.toFancyTitleCase()
                         } else {

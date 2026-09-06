@@ -38,6 +38,7 @@ import androidx.compose.foundation.shape.CircleShape
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.CiberneticoCatalogWrapper
 import com.example.swadebuilder.model.CiberneticoItem
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionHeader
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -336,10 +337,9 @@ fun CiberneticosSection(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text(
+                            MarqueeText(
                                 text = installed.nome,
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold)
                             )
                             Text(
                                 text = "Tensão: ${installed.strain_custo} | ${installed.efeito}",

@@ -35,6 +35,7 @@ import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
@@ -46,6 +47,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,6 +61,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -69,6 +72,7 @@ import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.ui.MainSection
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
@@ -422,10 +426,17 @@ private fun CreatorTabRow(
                 onClick = { if (enabled) onSelectSection(tab.section) },
                 text = if (tabStyle == TabStyle.TEXTO) {
                     {
-                        Text(
-                            tab.label,
-                            fontWeight = if (isSelected) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
-                        )
+                        // key(isSelected) remonta o texto quando a aba é selecionada, o que
+                        // faz o MarqueeText tocar a animação de novo a cada visita — em vez
+                        // de o rótulo simplesmente quebrar linha (empilhar) quando não cabe.
+                        key(isSelected) {
+                            MarqueeText(
+                                text = tab.label,
+                                style = LocalTextStyle.current.copy(
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                )
+                            )
+                        }
                     }
                 } else null,
                 icon = if (tabStyle == TabStyle.ICONES) { { Icon(tab.section.icon(), null) } } else null,

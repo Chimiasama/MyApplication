@@ -73,6 +73,7 @@ import com.example.swadebuilder.model.SuperInvestment
 import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.SuperAtributosPickerDialog
@@ -932,9 +933,9 @@ fun SuperPoderesSection(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                poder.nome.toFancyTitleCase(),
-                                Modifier.weight(1f),
+                            MarqueeText(
+                                text = poder.nome.toFancyTitleCase(),
+                                modifier = Modifier.weight(1f),
                                 style = MaterialTheme.typography.titleSmall
                             )
 

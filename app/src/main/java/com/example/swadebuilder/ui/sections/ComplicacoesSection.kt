@@ -58,6 +58,7 @@ import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.getActiveOrigins
 import com.example.swadebuilder.model.isComplicacaoVisible
 import com.example.swadebuilder.ui.components.ExpandableSearchFilter
+import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
 import com.example.swadebuilder.ui.components.SectionHeader
 import com.example.swadebuilder.ui.dialogs.ChoiceDialog
@@ -731,7 +732,7 @@ private fun ComplicacaoItem(
             ) {
                 val isCustom = comp.origem.equals("CUSTOM", ignoreCase = true) || comp.id.startsWith("custom:") || comp.id.startsWith("fanmade:")
                 val customBadge = if (isCustom) " ⓒ" else ""
-                Text(
+                MarqueeText(
                     text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
                     style = MaterialTheme.typography.titleSmall
                 )
