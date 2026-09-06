@@ -544,13 +544,11 @@ object RacialTraitPointCatalog {
         "VOTO" to -2 // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
     )
 
-    /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo). */
+    /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).
+     * Ao contrário de efeitoDe(), não recebe targetRef: o custo de ATTRIBUTE_BOOST/SKILL_BOOST
+     * só depende de value (quanto foi concedido), nunca de qual atributo/perícia recebeu. */
     fun custoDe(
         id: String?,
-        // Não usado no cálculo de custo (que só depende de value/severity), mas mantido
-        // pra bater com a assinatura de efeitoDe() — call sites chamam as duas com a
-        // mesma tupla de argumentos (ver RacialModifier.custoRacial()).
-        @Suppress("UNUSED_PARAMETER") targetRef: String? = null,
         value: Int = 1,
         severity: String? = null,
         pontos: Int = 0

@@ -34,7 +34,7 @@ data class RacialAbility(
     /** Retorna o valor real de pontos no orçamento racial para este traço. */
     fun resolvedPontos(): Int {
         if (pontos != 0) return pontos
-        return RacialTraitPointCatalog.custoDe(resolvedTraitId(), targetRef, value, severity, pontos)
+        return RacialTraitPointCatalog.custoDe(resolvedTraitId(), value, severity, pontos)
     }
 }
 
