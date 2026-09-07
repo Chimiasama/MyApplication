@@ -426,6 +426,20 @@ object ModifierEngine {
         return sum(state, ModifierTarget.SIZE_DISPLAY)
     }
 
+    /**
+     * Só a parcela de Tamanho vinda da própria raça (traço racial, id
+     * ANCESTRALIDADE) — sem contar Vantagens (Musculoso) ou Complicações
+     * (Obeso) que também mexem em SIZE_DISPLAY. Usado por atributoMaxRaw()
+     * pra elevar o teto de Força: regra oficial (SWADE, "Tamanho") é que
+     * cada ponto de Tamanho da raça eleva o dado máximo de Força em um
+     * passo — mas só o Tamanho de raça, Musculoso não amplia esse teto.
+     */
+    fun racialSizeRawDisplay(state: CriadorState): Int {
+        return collect(state)
+            .filter { it.target == ModifierTarget.SIZE_DISPLAY && it.sourceType == SourceType.ANCESTRALIDADE }
+            .sumOf { it.value }
+    }
+
     fun sizeDisplay(state: CriadorState): Int {
         val raw = sizeRawDisplay(state)
         // Check if character is Diminuto/Tiny to bypass clamp

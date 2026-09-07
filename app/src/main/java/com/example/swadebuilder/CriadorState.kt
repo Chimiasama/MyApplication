@@ -4407,17 +4407,20 @@ class CriadorState {
                 }
             }
 
-            // Elementais: base JSON já é d8 (Padrão, "Forte"). Seleção "Ar,
-            // Fogo ou Água" troca Forte por Forma de Energia (ver
-            // AncestryVariantRegistry.elementaisScifi) — sem foco físico,
-            // volta pra d4. Numérico, então fica aqui como exceção pontual
-            // (mesmo padrão do naturalArmorFromRace de Pedregoso/Umvee), não
-            // faz parte do ResolvedTraitPackage genérico.
+            // Elementais: base JSON já é d8 (Padrão, atributos.Força=4 — 2
+            // passos). Seleção "Ar, Fogo ou Água" troca o Forte (d8, +4pts) por
+            // um Forte mais fraco (d6, +2pts) mais Forma de Energia (+4pts) —
+            // ver AncestryVariantRegistry.elementaisScifi: base(-4) + Forma de
+            // Energia(+4) + Força d6(+2) = 2, fecha o orçamento; resetar pra d4
+            // (0pts extra) deixava a raça 2 pontos abaixo. Numérico, então fica
+            // aqui como exceção pontual (mesmo padrão do naturalArmorFromRace de
+            // Pedregoso/Umvee), não faz parte do ResolvedTraitPackage genérico
+            // (AtributoStep não é aplicado por lá — ver ModifierEngine.aplicarEfeito).
             if (ancKey == "ELEMENTAIS") {
                 if (a.keyify() == "FORCA") {
                     val variant = currentSciFiVariant ?: "Padrão"
                     if (variant != "Padrão") {
-                        modifiedBase = 4 // Reset to d4
+                        modifiedBase = 6 // Reset to d6 (Forte fraco, não o d8 de Padrão)
                     }
                 }
             }
@@ -4514,7 +4517,12 @@ class CriadorState {
             it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
 
-        var finalCap = baseCap + (profCount + espCount) * 2
+        // Profissional e Especialista sobem o teto em UM passo cada (a própria
+        // descrição de Especialista diz "um passo adicional" em cima de
+        // Profissional — juntos, +2, não +4). `extras` acima já confirma que
+        // este teto usa 1 unidade = 1 passo (d6 inicial = +1 unidade = d12+1),
+        // então cada Vantagem soma só +1 aqui, não +2.
+        var finalCap = baseCap + (profCount + espCount)
 
         // Limite de Força por Tamanho (Diminutos/Pequenos)
         // Se Tamanho <= -2 (Pequeno/Muito Pequeno): Força Máxima = d8.
@@ -4530,6 +4538,18 @@ class CriadorState {
             }
             if (sizeCap < finalCap) {
                 finalCap = sizeCap
+            }
+
+            // Tamanho positivo (regra oficial SWADE): cada ponto de Tamanho DA
+            // PRÓPRIA RAÇA eleva o teto de Força em um passo — ex.: Meio-Gigante
+            // (Fantasia) começa em Força d8 (+2 passos) e tem Tamanho +3 racial,
+            // então o teto vira d12+2+3 = d12+5, não só d12+2. Só conta Tamanho
+            // de origem racial (racialSizeRawDisplay) — Musculoso/Brutamontes
+            // (Vantagem) e Obeso (Complicação) também mexem em Tamanho, mas não
+            // ampliam este teto (não são "da raça").
+            val racialSize = ModifierEngine.racialSizeRawDisplay(this)
+            if (racialSize > 0) {
+                finalCap += racialSize
             }
         }
 
@@ -4563,7 +4583,10 @@ class CriadorState {
             it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
 
-        return baseCap + (profCount + espCount) * 2
+        // Mesma correção de atributoMaxRaw(): um passo cada, não dois — ver o
+        // comentário lá (a descrição de Especialista é "um passo adicional"
+        // em cima de Profissional, +2 juntos, nunca +4).
+        return baseCap + (profCount + espCount)
     }
 
     fun rawTotal(per: Pericia): Int {

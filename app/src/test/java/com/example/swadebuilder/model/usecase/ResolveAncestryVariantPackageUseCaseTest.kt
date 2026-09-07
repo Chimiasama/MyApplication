@@ -123,7 +123,10 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")), result.tracosParaAdicionar)
+        assertEquals(
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")),
+            result.tracosParaAdicionar
+        )
     }
 
     @Test

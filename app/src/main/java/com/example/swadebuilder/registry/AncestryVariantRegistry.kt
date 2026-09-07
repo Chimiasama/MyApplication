@@ -789,7 +789,18 @@ object AncestryVariantRegistry {
                     FixedPackageOption(
                         "ar_fogo_ou_agua",
                         "Ar, Fogo ou Água",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")))
+                        // Trocam Resistência (não incluída aqui: ela só existe em
+                        // Padrão) pelo Forte mais fraco (Força d6, não d8 — ver
+                        // atributoBaseRacial()) mais Forma de Energia. "livro:
+                        // Elementais do ar, fogo e água têm Forma de Energia em
+                        // vez de Forte e Resistência" — o Forte que sobra aqui é
+                        // o d6 genérico, não o d8 de Padrão.
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("FORTE", "FORTE"),
+                                TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")
+                            )
+                        )
                     )
                 )
             )

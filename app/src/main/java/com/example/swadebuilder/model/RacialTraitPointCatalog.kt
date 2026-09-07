@@ -805,12 +805,18 @@ object RacialTraitPointCatalog {
         "ADAPTACAO_GRAVITACIONAL" to 2, // vantagens.json "adaptacao_gravitacional", Estágio Novato
         "PODERES_MISTICOS_TELEPATA" to 3, // vantagens.json "poderes_misticos", Estágio Experiente
 
-        // Placeholder de Seleção (custo 0 de propósito — ver comentário de
-        // DONS_DA_NATUREZA acima): Descendente Elemental (Fantasia) escolhe 1
-        // de 4 elementos (Água/Ar/Fogo/Terra), cada um injetando o traço
-        // resolvido de verdade (AQUATICO/AR_INTERNO/RAPIDO/SOLIDO_COMO_ROCHA,
-        // todos já valendo 2) — ver AncestryVariantRegistry.descendenteElemental().
-        "ELEMENTO_ANCESTRAL" to 0,
+        // Placeholder de Seleção: Descendente Elemental (Fantasia) escolhe 1 de
+        // 4 elementos (Água/Ar/Fogo/Terra), cada um injetando o traço resolvido
+        // de verdade (AQUATICO/AR_INTERNO/RAPIDO/SOLIDO_COMO_ROCHA, todos já
+        // valendo 2) — ver AncestryVariantRegistry.descendenteElemental().
+        // Custo 2 aqui (não 0): qualquer que seja a escolha, o resultado
+        // SEMPRE vale 2 pontos — não existe opção "não escolher" que valha 0.
+        // Contar como 0 aqui deixaria o valor de livro da raça (usado como
+        // base pro editor de Variante custom, ResolveVariantPointBudgetUseCase)
+        // 2 pontos abaixo do real, abrindo brecha pra uma Variante custom
+        // manter esse traço de graça e ainda somar outros 2 pontos por cima
+        // sem estourar o orçamento calculado.
+        "ELEMENTO_ANCESTRAL" to 2,
 
         // Penalidade genérica de -1 numa perícia comum (oficial:
         // penalidade_pericia_1) — reaproveitável por qualquer raça que precise

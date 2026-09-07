@@ -271,7 +271,13 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")), result.ensureAutomaticAdvantages)
+        // Perdem Resistência (só existe em Padrão) e trocam o Forte d8 pelo
+        // Forte fraco (d6 — ver atributoBaseRacial, reseta pra 6 não 4) mais
+        // Forma de Energia: base(-4) + Forte d6(+2) + Forma de Energia(+4) = 2.
+        assertEquals(
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")),
+            result.ensureAutomaticAdvantages
+        )
         assertEquals(0, result.naturalArmorFromRace)
     }
 
