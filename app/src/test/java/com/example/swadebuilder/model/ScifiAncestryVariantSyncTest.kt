@@ -241,8 +241,11 @@ class ScifiAncestryVariantSyncTest {
             ancestralidade = "DRAKENS"
             naturalArmorFromRace = 0
             // Inject traits manually for unit test isolation — id explícito
-            // pro efeito numérico (RESISTENCIA com vezes=2), igual ao que
-            // AncestryVariantRegistry.drakens já concede pra "Padrão".
+            // pro efeito numérico (RESISTENCIA com vezes=2), igual ao que a
+            // raça base de Drakens já concede via habilidades[] em
+            // ancestralidades.json (RESISTENCIA/FORTE não vêm mais da opção
+            // "Padrão" de AncestryVariantRegistry.drakens, que hoje não
+            // adiciona nada — evita duplicar por cima da base).
             vantagensRaciais.add("FORTE") // Often associated
             vantagensRaciais.add("RESISTÊNCIA +2")
             racialTraitIdsFromVariants.add(RacialTraitStack("RESISTENCIA", vezes = 2))

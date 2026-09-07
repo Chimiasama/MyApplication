@@ -801,15 +801,15 @@
       },
       {
         "nome": "MORDIDA",
-        "descricao": "For+d4, PA 2. Mordida permite que uma personagem morda uma presa agarrada em vez de apenas a esmagar.",
-        "id": "MORDIDA_COM_PA",
+        "descricao": "For+d4. Mordida permite que uma personagem morda uma presa agarrada em vez de apenas a esmagar.",
+        "id": "MORDIDA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Mordida causa Força+d4 com PA 2, e permite atacar um alvo já agarrado em vez de apenas esmagá-lo.",
+        "descricaoLite": "Mordida causa Força+d4, e permite atacar um alvo já agarrado em vez de apenas esmagá-lo.",
         "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
-            "pa": 2,
+            "pa": 0,
             "escalavel": false
           }
         ]
@@ -1774,15 +1774,15 @@
       },
       {
         "nome": "GARRAS",
-        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (escalar).",
-        "id": "GARRAS",
+        "descricao": "Suas garras causam For+d4 de dano e adicionam +2 às jogadas de Atletismo (escalar).",
+        "id": "GARRAS_SEM_PA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Garras causam For+d4 de dano, com PA 2, além de +2 em Atletismo para escalar.",
+        "descricaoLite": "Garras causam For+d4 de dano, além de +2 em Atletismo para escalar.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 2,
+            "pa": 0,
             "escalavel": true
           }
         ]
@@ -1999,15 +1999,15 @@
     "habilidades": [
       {
         "nome": "GARRAS",
-        "descricao": "Suas garras causam For+d4 de dano, têm PA 2 e adicionam +2 às jogadas de Atletismo (Escalar).",
-        "id": "GARRAS",
+        "descricao": "Suas garras causam For+d4 de dano e adicionam +2 às jogadas de Atletismo (Escalar).",
+        "id": "GARRAS_SEM_PA",
         "category": "racial_trait_positive",
-        "descricaoLite": "Garras causam For+d4 de dano, com PA 2, além de +2 em Atletismo para escalar.",
+        "descricaoLite": "Garras causam For+d4 de dano, além de +2 em Atletismo para escalar.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
-            "pa": 2,
+            "pa": 0,
             "escalavel": true
           }
         ]
@@ -3169,7 +3169,7 @@
       {
         "nome": "CABEÇA DURA",
         "descricao": "A crista da cabeça desses drakens permite que deem cabeçadas com força extrema. Isso conta como Chifres e causa For+d4 de dano. Veja Armas Naturais em Savage Worlds Edição Aventura.",
-        "id": "CABECADA",
+        "id": "CHIFRES",
         "category": "racial_trait_positive",
         "descricaoLite": "A crista craniana funciona como arma natural do tipo Chifres, permitindo cabeçadas que causam For+d4 de dano.",
         "armasNaturais": [
@@ -3180,6 +3180,13 @@
             "escalavel": false
           }
         ]
+      },
+      {
+        "nome": "FORTE",
+        "descricao": "Drakens começam com Força d6 (no lugar do d4). Isso também eleva o limite de Força para d12+1.",
+        "id": "FORTE",
+        "category": "racial_trait_positive",
+        "descricaoLite": "A Força inicial já nasce em d6, não em d4, com o limite do atributo esticado até d12+1."
       },
       {
         "nome": "LENTO",

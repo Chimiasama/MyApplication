@@ -283,21 +283,24 @@ object AncestryVariantRegistry {
         ancestralidadeId = "DRAKENS",
         grupoVariante = VariantGroup(
             opcoes = listOf(
+                // Padrão não adiciona nada além da raça base: Força d6 e
+                // Resistência +2 já vêm de habilidades[] em ancestralidades.json
+                // (FORTE/RESISTENCIA), então já estão presentes mesmo com o
+                // compêndio de variantes do Sci-Fi desligado. Antes esta opção
+                // somava os dois de novo por cima da base — dobrava a
+                // Resistência (+4 em vez de +2) sempre que "Padrão" era
+                // selecionado (o default quando o compêndio está ativo).
                 VariantOption(
                     id = "padrao",
                     nome = "Padrão",
-                    pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(
-                            TraitAddition("FORTE", "FORTE"),
-                            TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)
-                        )
-                    )
+                    pacoteFixo = ResolvedTraitPackage()
                 ),
                 VariantOption(
                     id = "dragao",
                     nome = "Dragão",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("ARMA DE SOPRO (Fogo)", "ARMA_DE_SOPRO_FOGO"))
+                        tracosParaAdicionar = listOf(TraitAddition("ARMA DE SOPRO (Fogo)", "ARMA_DE_SOPRO_FOGO")),
+                        tracosParaRemoverPorNome = listOf("FORTE")
                     )
                 )
             )

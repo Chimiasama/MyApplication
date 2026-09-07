@@ -218,10 +218,11 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
-            result.ensureAutomaticAdvantages
-        )
+        // Padrão não adiciona mais Forte/Resistência por cima — os dois já
+        // vêm de habilidades[] na raça base (ancestralidades.json), pra não
+        // duplicar quando "Padrão" é selecionado (era exatamente esse o bug:
+        // Resistência aparecia tanto na base quanto injetada aqui).
+        assertEquals(emptyList<TraitAddition>(), result.ensureAutomaticAdvantages)
     }
 
 
@@ -237,10 +238,9 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(0, result.naturalArmorFromRace)
-        assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
-            result.ensureAutomaticAdvantages
-        )
+        // Resistência +2 vem da própria raça base (habilidades[]), não mais
+        // injetada pela opção "Padrão" — ver comentário no teste acima.
+        assertEquals(emptyList<TraitAddition>(), result.ensureAutomaticAdvantages)
     }
 
 

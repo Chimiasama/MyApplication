@@ -561,14 +561,15 @@ object RacialTraitPointCatalog {
         // (Mordida/Chifres começam em 1) — base 2 pontos = For+d4 sem PA.
         // Quatro tiers, dois eixos independentes (+1 ponto cada): elevar o
         // dano pra For+d6, e adicionar PA 2. GARRAS_SEM_PA (2, For+d4 sem PA
-        // — id do Rakashano no livro Básico/Horror/Sci-Fi/Super e Feral,
-        // cujo texto nunca menciona PA: "causam Força + d4 de dano", sem
-        // mais), GARRAS (3, For+d4+PA — só o Rakashano do Fantasia tem PA no
-        // texto: "têm PA 2 e adicionam +2 às jogadas de Atletismo", também
-        // usado por Povo Ratazana e Draconianos), GARRAS_MAIORES_SEM_PA (3,
-        // For+d6 sem PA — nenhuma raça usa ainda) e GARRAS_MAIORES (4,
-        // For+d6+PA — nenhuma raça usa ainda). Diferente de CHIFRES (sem
-        // opção de PA na tabela, só 2 tiers).
+        // — id do Rakashano no livro Básico/Horror/Sci-Fi/Super, Feral, e
+        // também Rakashano do Fantasia e Povo Ratazana: o texto desses dois
+        // últimos menciona PA 2, mas isso quebra o fechamento de pontos da
+        // raça — tratado como erro editorial do livro, corrigido pra sem PA
+        // "pra fins de cálculo"), GARRAS (3, For+d4+PA — só Draconianos usa,
+        // único cujo texto de PA bate com o resto da raça fechando certo),
+        // GARRAS_MAIORES_SEM_PA (3, For+d6 sem PA — nenhuma raça usa ainda)
+        // e GARRAS_MAIORES (4, For+d6+PA — nenhuma raça usa ainda).
+        // Diferente de CHIFRES (sem opção de PA na tabela, só 2 tiers).
         "GARRAS_SEM_PA" to 2,
         "GARRAS" to 3,
         "GARRAS_MAIORES_SEM_PA" to 3,
@@ -612,10 +613,10 @@ object RacialTraitPointCatalog {
         // Garras: +1 ponto separado eleva pra d6, +1 ponto separado adiciona
         // PA 2 — três tiers cobertos aqui, pulando a combinação "d6 sem PA"
         // (mesma simplificação de Garras, nenhuma raça oficial usa essa
-        // combinação). MORDIDA_COM_PA (2, For+d4+PA — Draconianos, cujo texto
-        // diz "For+d4, PA 2"; migrado do override `pontos=2` que fazia o
-        // mesmo efeito antes desse id existir) e MORDIDA_MAIORES (3, For+d6
-        // com PA — nenhuma raça usa ainda) são os outros dois tiers.
+        // combinação). MORDIDA_COM_PA (2, For+d4+PA — nenhuma raça usa; o
+        // texto de Draconianos dizia "For+d4, PA 2" mas o PA era erro de
+        // tradução/edição, corrigido pra MORDIDA comum) e MORDIDA_MAIORES
+        // (3, For+d6 com PA — nenhuma raça usa ainda) são os outros dois tiers.
         "MORDIDA" to 1, // oficial: mordida (For+d4)
         "MORDIDA_COM_PA" to 2,
         "MORDIDA_MAIORES" to 3,
