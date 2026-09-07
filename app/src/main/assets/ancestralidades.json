@@ -1275,16 +1275,9 @@
         "descricaoLite": "Fisiologia diferente impede o uso da maior parte de roupas, armaduras e mobílias feitas para humanoides; armas e equipamentos portáteis funcionam normalmente."
       },
       {
-        "nome": "MENTE DE COLMEIA",
-        "descricao": "Insetoides têm as Complicações Guiado (Maior) e Leal quando se trata de servir sua “colônia” (sua comunidade, grupo de aventureiros etc.). Uma vez definido um caminho, permanecem nele até que a tarefa seja concluída. Isso lhes causa grande estresse quando seu objetivo contradiz sua lealdade inerente.",
-        "id": "MENTE_DE_COLMEIA",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Carrega as Complicações Guiado (Maior) e Leal voltadas à sua colônia (grupo ou comunidade); uma vez traçado um objetivo, mantém-se nele até concluí-lo, o que gera forte conflito interno quando essa meta esbarra na lealdade devida."
-      },
-      {
         "nome": "MORDIDA OU GARRA",
         "descricao": "As mandíbulas ou pinças do povo inseto causam For+d4 de dano.",
-        "id": "MORDIDA_OU_GARRA",
+        "id": "MORDIDA",
         "category": "racial_trait_positive",
         "descricaoLite": "Mandíbulas ou pinças causam For+d4 de dano.",
         "armasNaturais": [
@@ -1297,18 +1290,19 @@
         ]
       },
       {
-        "nome": "GUIADO (Maior)",
-        "descricao": "GUIADO (Maior)",
+        "nome": "MENTE DE COLMEIA (maior)",
+        "descricao": "Insetoides têm a Complicação Guiado (Maior) quando se trata de servir sua \"colônia\" (sua comunidade, grupo de aventureiros etc.). Uma vez definido um caminho, permanecem nele até que a tarefa seja concluída.",
         "id": "GUIADO",
         "category": "racial_trait_negative",
-        "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
+        "descricaoLite": "Carrega a Complicação Guiado (Maior) voltada à sua colônia: uma vez traçado um objetivo, mantém-se nele até concluí-lo.",
+        "severity": "Maior"
       },
       {
-        "nome": "LEAL",
-        "descricao": "LEAL",
+        "nome": "MENTE DE COLMEIA (menor)",
+        "descricao": "Insetoides têm a Complicação Leal quando se trata de servir sua \"colônia\" (sua comunidade, grupo de aventureiros etc.). Isso lhes causa grande estresse quando um objetivo contradiz sua lealdade inerente.",
         "id": "LEAL",
         "category": "racial_trait_negative",
-        "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
+        "descricaoLite": "Carrega a Complicação Leal voltada à sua colônia, gerando conflito interno quando um objetivo esbarra nessa lealdade."
       }
     ],
     "vantagensGratis": [],
@@ -1482,7 +1476,7 @@
       {
         "nome": "CHIFRES",
         "descricao": "Os chifres do minotauro causam For+d6 de dano, e causam +4 de dano se a personagem correr pelo menos 5 quadros (10 metros) e acertar com eles.",
-        "id": "CHIFRES",
+        "id": "CHIFRES_MAIORES",
         "category": "racial_trait_positive",
         "descricaoLite": "Chifres causam For+d6 de dano, com +4 extra se acertar depois de correr ao menos 5 quadros (10 metros).",
         "armasNaturais": [
@@ -1572,11 +1566,18 @@
         "descricaoLite": "Carrega a Complicação Arrogante, por soberba cultural que os demais notam como distanciamento."
       },
       {
-        "nome": "DESAJEITADO",
+        "nome": "DESAJEITADO (Atletismo)",
         "descricao": "Subtraem 2 das rolagens de Atletismo e Furtividade.",
-        "id": "DESAJEITADO",
+        "id": "PENALIDADE_PERICIA_1",
         "category": "racial_trait_negative",
-        "descricaoLite": "-2 em Atletismo e Furtividade."
+        "descricaoLite": "Penalidade em Atletismo por falta de agilidade natural."
+      },
+      {
+        "nome": "DESAJEITADO (Furtividade)",
+        "descricao": "Subtraem 2 das rolagens de Atletismo e Furtividade.",
+        "id": "PENALIDADE_PERICIA_1",
+        "category": "racial_trait_negative",
+        "descricaoLite": "Penalidade em Furtividade por ser barulhento e pesado."
       },
       {
         "nome": "FORASTEIRO",
@@ -1648,10 +1649,10 @@
     "habilidades": [
       {
         "nome": "BRUTAL",
-        "descricao": "Orcs pensam com os punhos e machados. Subtraem 1 das rolagens de Persuadir.",
-        "id": "BRUTAL",
+        "descricao": "Orcs pensam com os punhos e machados, negligenciando o intelecto. Rolagens de Astúcia são feitas com -1.",
+        "id": "SEM_INSTRUCAO",
         "category": "racial_trait_negative",
-        "descricaoLite": "-1 em testes de Persuadir, por resolver conflitos preferencialmente na força."
+        "descricaoLite": "-1 em Astúcia (não Persuadir — correção de uma tradução errada do livro)."
       },
       {
         "nome": "FORASTEIRO",
@@ -1804,11 +1805,18 @@
         ]
       },
       {
-        "nome": "RESISTÊNCIA NATURAL",
-        "descricao": "O povo ratazana passa a vida vasculhando a sujeira. São imunes a venenos e doenças.",
-        "id": "RESISTENCIA_NATURAL",
+        "nome": "RESISTÊNCIA A DOENÇAS",
+        "descricao": "O povo ratazana passa a vida vasculhando a sujeira. São imunes a doenças.",
+        "id": "IMUNE_A_DOENCAS_E_VENENOS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Imune a venenos e doenças."
+        "descricaoLite": "Imunidade a doenças."
+      },
+      {
+        "nome": "RESISTÊNCIA A VENENOS",
+        "descricao": "O povo ratazana passa a vida vasculhando a sujeira. São imunes a venenos.",
+        "id": "IMUNE_A_DOENCAS_E_VENENOS",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Imunidade a venenos."
       },
       {
         "nome": "SUCATEIRO",
@@ -1875,13 +1883,6 @@
         "id": "MOVIMENTACAO_REDUZIDA",
         "category": "racial_trait_negative",
         "descricaoLite": "Movimentação -1 e dado de Corrida d4, por causa das pernas curtas."
-      },
-      {
-        "nome": "POUCO IMPONENTE",
-        "descricao": "A maioria dos inimigos não considera o povo rato uma ameaça. Possuem a Complicação Almofadinha.",
-        "id": "POUCO_IMPONENTE",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Carrega a Complicação Almofadinha, pois raramente é visto como ameaça."
       },
       {
         "nome": "VISÃO NO ESCURO",
@@ -1953,10 +1954,10 @@
       },
       {
         "nome": "MORDIDA VENENOSA",
-        "descricao": "Vítimas Abaladas ou Feridas pela Mordida do povo serpente devem fazer uma rolagem de Vigor ou sofrem os efeitos de um veneno Moderado.",
-        "id": "MORDIDA_VENENOSA",
+        "descricao": "Vítimas Abaladas ou Feridas pela Mordida do povo serpente devem fazer uma rolagem de Vigor ou sofrem os efeitos de um veneno Leve.",
+        "id": "TOQUE_VENENOSO",
         "category": "racial_trait_positive",
-        "descricaoLite": "Quem for Abalado ou Ferido pela mordida precisa testar Vigor, sob pena de sofrer um veneno de intensidade Moderada.",
+        "descricaoLite": "Quem for Abalado ou Ferido pela mordida precisa testar Vigor, sob pena de sofrer um veneno de intensidade Leve.",
         "armasNaturais": [
           {
             "nome": "Mordida",
@@ -2064,13 +2065,6 @@
         "id": "AGIL",
         "category": "racial_trait_positive",
         "descricaoLite": "Têm mais agilidade que o normal: começam com d6 no atributo em vez de d4, podendo evoluir até d12+1."
-      },
-      {
-        "nome": "INIMIGO RACIAL",
-        "descricao": "INIMIGO RACIAL",
-        "id": "INIMIGO_RACIAL",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
       }
     ],
     "vantagensGratis": [],
@@ -2099,7 +2093,7 @@
       {
         "nome": "BEBEDOR DE SANGUE",
         "descricao": "Uma vez por sessão de jogo, um renascido pode beber sangue humanoide para fazer uma rolagem de cura natural. Causar um Ferimento com sua mordida fornece sangue suficiente para a tentativa, assim como beber de um inimigo abatido (ainda vivo). Nesse último caso, a vítima faz uma rolagem de Vigor para ver se sobrevive.",
-        "id": "BEBEDOR_DE_SANGUE",
+        "id": "REGENERACAO",
         "category": "racial_trait_positive",
         "descricaoLite": "Uma vez por sessão pode se alimentar de sangue humanoide para tentar uma cura natural: causar um Ferimento com a mordida ou sugar um inimigo já derrubado (ainda vivo) serve como fonte, e nesse segundo caso a vítima testa Vigor para não morrer."
       },
@@ -2239,7 +2233,7 @@
       {
         "nome": "MUDAR DE FORMA",
         "descricao": "Transmorfos têm Antecedente Arcano (Dom). Como ação livre limitada, podem mudar sua aparência física da mesma forma que o poder disfarce com a Limitação Pessoal.",
-        "id": "MUDAR_DE_FORMA",
+        "id": "ANTECEDENTE_ARCANO_PODER",
         "category": "racial_trait_positive",
         "descricaoLite": "Têm o Antecedente Arcano do tipo Dom e, como ação livre limitada, alteram a própria aparência de modo equivalente ao poder Disfarce restrito a si mesmos."
       },
@@ -4013,243 +4007,6 @@
       "SCI_FI"
     ],
     "descricaoLite": "Rótulo dado por humanos a qualquer espécie peluda de grande porte; costumam ser altos, cobertos de pelos e ferozes quando provocados, precisando de equipamentos sob medida para seu tamanho."
-  },
-  {
-    "nome": "AURAX",
-    "descricao": "Os aurax vêm de um mundo primitivo de planícies ondulantes e feras hostis. Eles combinam a parte inferior do corpo de um pequeno hipopótamo com a parte superior do corpo de um humanoide de pele cinza. Eles são centaux com estas habilidades adicionais.",
-    "variantes": null,
-    "atributos": {
-      "Força": 2
-    },
-    "pericias": {},
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "BAIXA TECNOLOGIA",
-        "descricao": "O mundo natal dos aurax é de baixa tecnologia em comparação à maioria dos mundos desenvolvidos. Eles possuem a Complicação Baixa Tecnologia (Maior).",
-        "id": "BAIXA_TECNOLOGIA",
-        "category": "racial_hindrance",
-        "severity": "Maior",
-        "descricaoLite": "Carrega a Complicação Baixa Tecnologia em grau Maior, por vir de um mundo tecnologicamente atrasado em relação aos demais."
-      },
-      {
-        "nome": "ESTÁVEL",
-        "descricao": "Centaux têm quatro pernas fortes e pés largos ou cascos resistentes. Sua Movimentação não é reduzida por Terreno Difícil.",
-        "id": "ESTAVEL",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Terreno Difícil não reduz seu deslocamento, graças às quatro pernas firmes ou cascos resistentes."
-      },
-      {
-        "nome": "FORTE",
-        "descricao": "Aurax começam com um d6 em Força, aumentando o limite para d12+1.",
-        "id": "FORTE",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Força inicial d6, com teto elevado para d12+1."
-      },
-      {
-        "nome": "GRANDE",
-        "descricao": "Centaux são grandes e desajeitados. Subtraem 2 de rolagens de Característica quando usam equipamento que não foi especificamente projetado para eles e não podem usar armaduras ou roupas. Equipamentos, alimentos e roupas custam o dobro do preço listado.",
-        "id": "VOLUMOSO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Equipamentos não feitos sob medida impõem -2 em testes de Característica, armaduras e roupas comuns simplesmente não servem, e tudo que precisam comprar sai pelo dobro do preço."
-      },
-      {
-        "nome": "MOVIMENTAÇÃO +2",
-        "descricao": "A Movimentação dos centaux aumenta em +2 e seu dado de corrida aumenta em um tipo.",
-        "id": "MOVIMENTACAO",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Deslocamento base +2 e o dado de corrida sobe um tipo."
-      },
-      {
-        "nome": "ÓBVIO",
-        "descricao": "Centaux são grandes, barulhentos e se destacam na multidão. Subtraem 1 das rolagens de Furtividade.",
-        "id": "OBVIO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "O tamanho e o barulho que fazem chamam atenção, resultando em -1 nos testes de Furtividade."
-      },
-      {
-        "nome": "TAMANHO +2",
-        "descricao": "A parte humanoide de um centaux é um humano robusto e musculoso, enquanto a parte traseira do corpo é do tamanho de um grande mamífero de quatro patas. Adicionam +2 à sua Resistência.",
-        "id": "TAMANHO_MAIS_1",
-        "category": "racial_trait_positive",
-        "descricaoLite": "+2 de Resistência, por ter um corpo bem maior que o de um humanoide comum.",
-        "vezes": 2
-      }
-    ],
-    "tags": [
-      "tamanho_grande",
-      "multiplas_pernas"
-    ],
-    "vantagensGratis": [],
-    "livros": [
-      "SCI_FI"
-    ],
-    "descricaoLite": "Vindos de um mundo selvagem de planícies e criaturas perigosas, unem um tronco humanoide acinzentado a um corpo inferior que lembra o de um hipopótamo pequeno; são uma variante dos centaux."
-  },
-  {
-    "nome": "DEADERS (PARASTEEN)",
-    "descricao": "Os parasteen são parasitas semelhantes a lesmas que se enxertam nos troncos cerebrais de cadáveres humanoides e preservam os corpos em trajes especiais. O enxerto da criatura em seu hospedeiro é permanente, então a personagem geralmente é tratada normalmente e morre quando seu hospedeiro morre.",
-    "variantes": null,
-    "atributos": {},
-    "pericias": {},
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "APARAR BAIXO",
-        "descricao": "Os movimentos lentos e deliberados dos deaders os tornam alvos fáceis em combate corpo a corpo. Aparar -2.",
-        "id": "APARAR_BAIXO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "-2 no valor de Aparar, por reagir devagar em combate corpo a corpo.",
-        "vezes": 2
-      },
-      {
-        "nome": "CALCULISTA",
-        "descricao": "Parasteens são pensadores astutos. Possuem a Vantagem Calculista, o que lhes permite ignorar até 2 pontos de penalidades quando sua Carta de Ação for Cinco ou menor.",
-        "id": "CALCULISTA",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Concede a Vantagem Calculista: até 2 pontos de penalidade deixam de contar quando a Carta de Ação tirada é 5 ou menor."
-      },
-      {
-        "nome": "DESAJEITADO",
-        "descricao": "Os parasitas têm dificuldades em manobrar o cadáver do hospedeiro. Sofrem uma penalidade de -1 nas rolagens de Agilidade.",
-        "id": "DESAJEITADO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "-1 em todas as rolagens de Agilidade."
-      },
-      {
-        "nome": "FORASTEIRO",
-        "descricao": "A maioria das pessoas se sente desconfortável perto de cadáveres animados.",
-        "id": "FORASTEIRO",
-        "category": "racial_hindrance",
-        "severity": "Menor",
-        "descricaoLite": "Tende a causar desconforto nas pessoas ao redor apenas por sua presença, afetando reações sociais iniciais."
-      },
-      {
-        "nome": "FRACO",
-        "descricao": "Deaders têm dificuldade em usar todo o potencial dos músculos do hospedeiro. Subtraem 1 das rolagens de Força, incluindo dano.",
-        "id": "FRACO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "-1 em testes de Força, incluindo o dano causado."
-      },
-      {
-        "nome": "LENTO",
-        "descricao": "Deaders se arrastam conforme se movem, reduzindo a Movimentação para 5 quadros (10 metros) e seu dado de corrida para d4.",
-        "id": "LENTO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Deslocamento reduzido a 5 quadros (10 metros) e dado de corrida rebaixado a d4."
-      },
-      {
-        "nome": "MORTO-VIVO",
-        "descricao": "Resistência +2; +2 para se recuperar de Abalado; sem dano adicional por Ataques Localizados; ignoram 1 ponto de Penalidades por Ferimentos; não respiram; imunes a doenças e venenos.",
-        "id": "MORTO_VIVO",
-        "category": "racial_trait_positive",
-        "descricaoLite": "+2 de Resistência e +2 para se recuperar do estado Abalado; ignora 1 ponto de penalidade por Ferimentos e não sofre dano extra de Ataques Localizados. Dispensa respiração e é imune a doenças e venenos."
-      }
-    ],
-    "tags": [
-      "morto_vivo",
-      "parasita"
-    ],
-    "vantagensGratis": [],
-    "livros": [
-      "SCI_FI"
-    ],
-    "descricaoLite": "Parasitas com aspecto de lesma que se fixam permanentemente no tronco cerebral de um corpo sem vida, mantendo-o preservado em trajes especiais; a ligação é definitiva, terminando apenas com a destruição do hospedeiro.",
-    "especieId": "deaders"
-  },
-  {
-    "nome": "KALIANOS",
-    "descricao": "Uma espécie de humanoide altamente ágil com quatro braços, os kalianos são conhecidos por suas reações rápidas, inteligência afiada, pontaria e esgrima. São quadroides de cabeça-quente, assim como os listados na p. 20.",
-    "variantes": null,
-    "atributos": {},
-    "pericias": {},
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "AÇÃO ADICIONAL",
-        "descricao": "Quadroides têm quatro braços e ignoram 2 pontos de penalidades físicas por Ações Múltiplas a cada rodada.",
-        "id": "ACAO_ADICIONAL",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Com quatro braços, reduzem em 2 os pontos de penalidade sofridos ao tentar Ações Múltiplas numa mesma rodada."
-      },
-      {
-        "nome": "FRÁGIL",
-        "descricao": "Quadroides geralmente são magros, diminuindo em 1 sua Resistência.",
-        "id": "FRAGIL",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Compleição magra reduz sua Resistência em 1."
-      },
-      {
-        "nome": "INIMIGO ANCESTRAL",
-        "descricao": "Quadroides estão em conflito constante com algumas espécies ou culturas relativamente comuns em seu ambiente.",
-        "id": "INIMIGO_ANCESTRAL",
-        "category": "racial_trait_negative",
-        "descricaoLite": "Vivem em atrito permanente com certas espécies ou culturas comuns no ambiente onde surgem."
-      },
-      {
-        "nome": "MEMBROS EXTRAS",
-        "descricao": "Quadroides possuem um conjunto adicional de braços (incluindo uma segunda mão hábil) que pode ser usado para ações sustentadas, deixando outros membros livres para outras coisas. Ao empunharem várias armas, ganham um bônus de +1 em Agrupar e adicionam +1 às rolagens de Atletismo envolvendo membros adicionais (como escalada e luta corpo a corpo).",
-        "id": "MEMBROS_EXTRAS",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Um segundo par de braços, com mão hábil extra, libera os membros principais para outras tarefas: empunhar várias armas rende +1 em Agrupar, e ações de Atletismo que usem esses membros, como escalar ou lutar, recebem +1."
-      },
-      {
-        "nome": "SENSÍVEL",
-        "descricao": "Quadroides são notoriamente cabeças-quentes. Subtraem 4 ao resistir à habilidade Provocar.",
-        "id": "SENSIVEL",
-        "category": "racial_hindrance",
-        "severity": "Maior",
-        "descricaoLite": "São fáceis de irritar: -4 ao resistir a testes de Provocar."
-      }
-    ],
-    "tags": [
-      "multiplos_bracos"
-    ],
-    "vantagensGratis": [],
-    "livros": [
-      "SCI_FI"
-    ],
-    "descricaoLite": "Humanoides ágeis de quatro braços, famosos pelos reflexos rápidos, pela pontaria e pela habilidade com lâminas; costumam ter temperamento impulsivo."
-  },
-  {
-    "nome": "SERRANOS",
-    "descricao": "Serranos são uma espécie frágil que depende de suas habilidades precognitivas para evitar o perigo. São seres pensativos e cautelosos, cuja capacidade de sentir o perigo os torna excelentes assassinos, guias, batedores, espiões e navegadores.",
-    "variantes": null,
-    "atributos": {},
-    "pericias": {},
-    "desvantagens": [],
-    "habilidades": [
-      {
-        "nome": "APARAR",
-        "descricao": "As habilidades extrassensoriais dos serranos aumentam seu Aparar em +2.",
-        "id": "APARAR",
-        "category": "racial_trait_positive",
-        "descricaoLite": "+2 no valor de Aparar, graças a uma percepção que vai além dos sentidos comuns."
-      },
-      {
-        "nome": "FRACO",
-        "descricao": "Serranos subtraem 1 das rolagens de Força, incluindo dano.",
-        "id": "FRACO",
-        "category": "racial_trait_negative",
-        "descricaoLite": "-1 em rolagens de Força, dano incluso."
-      },
-      {
-        "nome": "NOÇÃO DE PERIGO",
-        "descricao": "Serranos são intuitivos e têm percepção extrassensorial limitada. Possuem a Vantagem Noção do Perigo (veja Savage Worlds Edição Aventura).",
-        "id": "nocao_do_perigo",
-        "category": "racial_edge",
-        "descricaoLite": "Concede a Vantagem Noção de Perigo, fruto de uma intuição quase extrassensorial."
-      }
-    ],
-    "tags": [
-      "psiquico"
-    ],
-    "vantagensGratis": [],
-    "livros": [
-      "SCI_FI"
-    ],
-    "descricaoLite": "Espécie fisicamente frágil que compensa com um sexto sentido para prever perigos; essa percepção os torna valiosos como batedores, guias, espiões ou navegadores.",
-    "especieId": "serranos"
   },
   {
     "nome": "HUMANOS",

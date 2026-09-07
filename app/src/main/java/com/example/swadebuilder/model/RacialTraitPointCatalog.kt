@@ -401,6 +401,15 @@ object RacialTraitPointCatalog {
         "ANDAR_NAS_PAREDES" to 1, // oficial: andar_paredes
         "ANTECEDENTE_ARCANO_DEMONIO" to 4, // sem equivalente oficial (AA completo + poder inicial + 3 extra + 10 PP), acima de vantagem_racial
         "ANTECEDENTE_ARCANO_MILAGRES" to 3, // sem equivalente oficial (AA completo, menos detalhado que o de cima)
+        // oficial: "Poder (S)" — AA (Dom) + um poder específico que reflete a
+        // habilidade da raça (2 pontos; cada poder extra depois do primeiro
+        // custa +1). Transmorfos (Fantasia) usavam o id MUDAR_DE_FORMA (4
+        // pontos, tier de transformação completa/ilimitada — sem equivalente
+        // real aqui) quando na verdade só têm AA(Dom) + o poder Disfarce
+        // (com a Limitação Pessoal) nesse único slot, batendo com este tier
+        // de 2 pontos. MUDAR_DE_FORMA continua registrado, sem uso hoje,
+        // pra uma futura raça com transformação completa de verdade.
+        "ANTECEDENTE_ARCANO_PODER" to 2,
         "APARAR" to 1, // oficial: aparar_positivo (+1 = 1pt/compra — ver VEZES_MAX, até 3x)
         "APARAR_BAIXO" to -1, // oficial: aparar_baixo (-1 = -1pt/compra — ver VEZES_MAX, até 3x)
         "APTIDAO_COM_PEDRAS" to 1, // sem equivalente oficial, bônus situacional estreito
@@ -436,6 +445,10 @@ object RacialTraitPointCatalog {
         "CASCA" to 2, // oficial: casca (id igual, mesmo conceito)
         "CASCOS" to 1, // oficial: chifres/mordida (arma natural básica For+d4)
         "CHIFRES" to 1, // oficial: chifres (For+d4; o bônus de corrida é situacional, não muda o tier)
+        "CHIFRES_MAIORES" to 2, // oficial: chifres (For+d6, tier de 2 pontos da mesma tabela) — Minotauros
+        // usavam o id CHIFRES (1pt, For+d4) mesmo com texto de For+d6 na
+        // descrição; id próprio pro tier de 2 pontos, sem afetar Infernais
+        // (Fantasia), que usa o tier de 1 ponto (For+d4) corretamente.
         "CHI_REDUZIDO" to -1, // sem equivalente oficial, -1 na Reserva de Chi inicial
         "CIBER_RESISTENCIA" to -1, // oficial: complicacao_racial_menor
         "CIRCUITOS_DE_ASIMOV" to -2, // oficial: complicacao_racial_maior (Pacifista)

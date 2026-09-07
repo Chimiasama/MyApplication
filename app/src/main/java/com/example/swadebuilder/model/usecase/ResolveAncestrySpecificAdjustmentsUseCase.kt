@@ -142,18 +142,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         }
 
         if (isSciFiActive) {
-            if (ancKey == "DEADERS (PARASTEEN)" || ancKey == "DEADERS") {
-                return Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = listOf("CALCULISTA"),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf(TraitAddition("CALCULISTA", "CALCULISTA")),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
-                )
-            }
-
             if (ancKey == "ANOES") {
                 // Anões "Ciber" é Variante de verdade (o mestre reconfigura a
                 // raça pro cenário) com Seleção aninhada (até 2 pontos de
