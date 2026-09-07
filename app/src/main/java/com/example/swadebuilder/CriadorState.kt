@@ -638,6 +638,8 @@ class CriadorState {
                 is RacialTraitEffect.ApararBonus,
                 is RacialTraitEffect.TamanhoBonus,
                 is RacialTraitEffect.ArmaduraBonus,
+                is RacialTraitEffect.PericiaPoolBonus,
+                is RacialTraitEffect.AtributoPoolBonus,
                 is RacialTraitEffect.Composite -> Unit
             }
         }

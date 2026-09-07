@@ -647,30 +647,30 @@ fun AncestralidadesSection(
                                             }
                                         }
                                     }
-                                }
 
-                                // Quadroides "Habilidoso": escolha única de 1 traço racial negativo
-                                // de -1 ponto (equilibra a Ação Adicional mais forte desta Variante —
-                                // mesma ideia do seletor de Anões Ciber acima, mas escolha simples,
-                                // não um orçamento de vários traços).
-                                if (item.nome.keyify() == "QUADROIDES" && currentSelection == "Habilidoso") {
-                                    Spacer(Modifier.height(12.dp))
-                                    Text(
-                                        "Traço Racial Negativo (-1 ponto, equilibra a Ação Adicional mais forte):",
-                                        style = MaterialTheme.typography.labelMedium
-                                    )
-                                    Spacer(Modifier.height(4.dp))
-                                    val escolhaAtual = state.quadroidesTracoNegativoSelecionado
-                                        ?: AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.first().id
-                                    Column {
-                                        AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.forEach { trait ->
-                                            com.example.swadebuilder.ui.components.SelectableItemRow(
-                                                title = "${trait.nome} (${trait.custo})",
-                                                selected = escolhaAtual == trait.id,
-                                                onClick = { state.selecionarQuadroidesTracoNegativo(trait.id) },
-                                                modifier = Modifier.padding(vertical = 2.dp),
-                                                mode = com.example.swadebuilder.ui.components.SelectionMode.UNICA
-                                            )
+                                    // Quadroides "Habilidoso": escolha única de 1 traço racial negativo
+                                    // de -1 ponto (equilibra a Ação Adicional mais forte desta Variante —
+                                    // mesma ideia do seletor de Anões Ciber acima, mas escolha simples,
+                                    // não um orçamento de vários traços).
+                                    if (item.nome.keyify() == "QUADROIDES" && currentSelection == "Habilidoso") {
+                                        Spacer(Modifier.height(12.dp))
+                                        Text(
+                                            "Traço Racial Negativo (-1 ponto, equilibra a Ação Adicional mais forte):",
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                        Spacer(Modifier.height(4.dp))
+                                        val escolhaAtual = state.quadroidesTracoNegativoSelecionado
+                                            ?: AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.first().id
+                                        Column {
+                                            AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.forEach { trait ->
+                                                com.example.swadebuilder.ui.components.SelectableItemRow(
+                                                    title = "${trait.nome} (${trait.custo})",
+                                                    selected = escolhaAtual == trait.id,
+                                                    onClick = { state.selecionarQuadroidesTracoNegativo(trait.id) },
+                                                    modifier = Modifier.padding(vertical = 2.dp),
+                                                    mode = com.example.swadebuilder.ui.components.SelectionMode.UNICA
+                                                )
+                                            }
                                         }
                                     }
                                 }

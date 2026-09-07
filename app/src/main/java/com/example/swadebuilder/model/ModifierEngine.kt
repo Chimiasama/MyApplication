@@ -250,7 +250,8 @@ object ModifierEngine {
                     // ModifierTarget.ARMOR deste motor.
                     is RacialTraitEffect.ArmaduraBonus -> Unit
                     is RacialTraitEffect.Composite -> efeito.efeitos.forEach { sub -> aplicarEfeito(id, sub, nomeExibicao, vezes) }
-                    is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum -> Unit
+                    is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum,
+                    is RacialTraitEffect.PericiaPoolBonus, is RacialTraitEffect.AtributoPoolBonus -> Unit
                 }
             }
 
