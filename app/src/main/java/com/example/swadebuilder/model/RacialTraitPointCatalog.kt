@@ -98,6 +98,17 @@ sealed class RacialTraitEffect {
     // consumidor de RacialTraitEffect resolve os sub-efeitos com a mesma
     // lógica que já usa pro efeito único.
     data class Composite(val efeitos: List<RacialTraitEffect>) : RacialTraitEffect()
+    // Bônus/penalidade no total de Pontos de Perícia (a reserva gasta na
+    // criação, não um passo de dado numa perícia específica) ou de Pontos de
+    // Atributo — pra traços de raça (oficiais ou criados no editor de
+    // conteúdo customizado) que dão/tiram pontos pro jogador gastar onde
+    // quiser, não um alvo fixo. Ex.: Humano (Império San) "Pontos de
+    // Perícia" (+3, sem signo de nascença). Quem cria o traço decide o
+    // `valor` (positivo = bônus, negativo = penalidade) — ver
+    // HabilidadeCriacao.value/traitId e o seletor de "Tipo de Efeito" no
+    // editor de Traço Racial (SettingsDialog.kt).
+    data class PericiaPoolBonus(val valor: Int) : RacialTraitEffect()
+    data class AtributoPoolBonus(val valor: Int) : RacialTraitEffect()
     data object Nenhum : RacialTraitEffect()
 }
 
@@ -148,6 +159,12 @@ object RacialTraitPointCatalog {
         // "chute" de código.
         "LENTO" to RacialTraitEffect.PassoBonus(-1),
         "MOVIMENTACAO_REDUZIDA" to RacialTraitEffect.PassoBonus(-1),
+        // Inumimi (Arte da Guerra) "Vigorosos": +1 Resistência. Sem efeito
+        // aqui antes, o bônus só existia via o "RESISTÊNCIA" solto em
+        // vantagensGratis (RacialGrantResolver) — que também duplicava o
+        // ponto de VIGOROSOS no orçamento (os dois somando juntos). Agora o
+        // efeito mora aqui e vantagensGratis não precisa mais do texto solto.
+        "VIGOROSOS" to RacialTraitEffect.ResistenciaBonus(1),
         "METADE_CONSTRUTO" to RacialTraitEffect.ResistenciaBonus(3),
         "MORTO_VIVO" to RacialTraitEffect.ResistenciaBonus(2),
         "VELOCIDADE_RACIAL" to RacialTraitEffect.PassoBonus(2), // sintético: Template de Monstro Heroico Lobisomem (Horror)
@@ -213,6 +230,8 @@ object RacialTraitPointCatalog {
             "PARRY_BOOST" -> RacialTraitEffect.ApararBonus(value)
             "SIZE_CHANGE" -> RacialTraitEffect.TamanhoBonus(value, minusculo = (value <= -3))
             "NATURAL_ARMOR" -> RacialTraitEffect.ArmaduraBonus(value)
+            "PERICIA_POINTS_BONUS" -> RacialTraitEffect.PericiaPoolBonus(value)
+            "ATRIBUTO_POINTS_BONUS" -> RacialTraitEffect.AtributoPoolBonus(value)
             else -> EFEITOS[key] ?: RacialTraitEffect.Nenhum
         }
     }
@@ -475,7 +494,12 @@ object RacialTraitPointCatalog {
         "CAES_DE_GUARDA" to 1, // oficial: pericia_racial_d6 — Perceber é Perícia Básica (pericias.json "basica"), livro dá desconto pra 1 (d6 sem ser Perícia Básica custaria 2)
         "CALCULISTA" to 2, // oficial: vantagem_racial
         "CAMPEAO" to 2, // oficial: vantagem_racial
-        "CANINOS" to 2, // oficial mordida=1 + utilidade extra de Prender/Enredar
+        // Inumimi "Caninos" (Arte da Guerra) é Mordida (For+d4) com skin —
+        // "pode ser usada pra Prender e Enredar" é só flavor descrevendo
+        // manobras de combate padrão que qualquer arma natural já permite em
+        // SWADE, não um efeito extra pago à parte. 1pt (mesmo de MORDIDA),
+        // não 2.
+        "CANINOS" to 1,
         "CARISMATICO" to 2, // oficial: vantagem_racial
         "CASCA" to 2, // oficial: casca (id igual, mesmo conceito)
         "CASCOS" to 1, // oficial: chifres/mordida (arma natural básica For+d4)
@@ -605,7 +629,7 @@ object RacialTraitPointCatalog {
         "LENTO" to -1, // oficial: movimentacao_reduzida_1
         "LIMITACOES_TECNICAS" to -1, // sem equivalente oficial, restrição narrativa (Técnicas de Chi)
         "MAGIA_ELFICA" to 1, // sem equivalente oficial, utilidade defensiva estreita
-        "MAGIA_GNOMICA" to 2, // oficial: poder_racial
+        "MAGIA_GNOMICA" to 1, // Gnomo (Pathfinder) fecha com pontosRaciaisEsperados=4 só com este valor (não 2)
         "MAL_HUMORADO" to -2, // oficial: complicacao_racial_maior (Arrogante)
         "MATILHA" to -1, // oficial: complicacao_racial_menor (Leal)
         "MEMBROS_EXTRAS" to 2, // oficial: membros_extras
@@ -650,7 +674,11 @@ object RacialTraitPointCatalog {
         "PEQUENOS" to -1, // oficial: tamanho_menos_1
         "PERICIAS_BASICAS_REDUZIDAS" to -1, // oficial: pericias_basicas_reduzidas
         "PESFIRMES" to 1, // oficial: pericia_racial_d6 — Atletismo é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
-        "PONTOS_DE_PERICIA" to 2, // sem equivalente oficial exato, +3 pontos de perícia iniciais
+        // Humano (Império San, Arte da Guerra) fecha com pontosRaciaisEsperados=3
+        // só com este valor (não 2) — id não cadastrado em
+        // basico_habilidades_raciais.json de propósito (traço escondido,
+        // não aparece pra escolher em nenhum editor de Variante custom).
+        "PONTOS_DE_PERICIA" to 1,
         "POUCO_IMPONENTE" to -1, // oficial: complicacao_racial_menor (Almofadinha)
         "PREPARADO" to 1, // oficial: pericia_racial_d4
         "PRIMITIVO" to 2, // oficial: aumento_atributo (escolha)
@@ -868,6 +896,11 @@ object RacialTraitPointCatalog {
         return when (val key = id.keyify()) {
             "ATTRIBUTE_BOOST" -> value * 2
             "SKILL_BOOST" -> if (value >= 1) 2 else 1
+            // Só usado se quem criar o traço deixar `custo` em 0 (o editor
+            // sempre pede um valor explícito) — 1 ponto de orçamento por
+            // Ponto de Perícia/Atributo concedido ou tirado, o mesmo peso já
+            // usado por BONUS_PERICIA_1/PENALIDADE_PERICIA_1 neste catálogo.
+            "PERICIA_POINTS_BONUS", "ATRIBUTO_POINTS_BONUS" -> value
             "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2
             "RACIAL_HINDRANCE" -> if (severity?.uppercase() == "MAIOR") -2 else -1
             // Complicações reais de complicacoes.json com severidade "Menor ou

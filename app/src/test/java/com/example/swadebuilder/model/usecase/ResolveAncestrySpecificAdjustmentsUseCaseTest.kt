@@ -131,10 +131,14 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
-    fun `feral recebe furioso garras sanguinario e bloqueio de chi sem nenhuma opcao de variante`() {
+    fun `feral nao injeta nada aqui (furioso e sanguinario vem do JSON, nao mais hardcoded)`() {
         // Feral não tem Variante nem Seleção de dom da natureza (diferente do
         // Umvee) — é uma raça própria com traços fixos, por isso o teste não
-        // passa nenhuma ancestryOptions.
+        // passa nenhuma ancestryOptions. Furioso (Vantagem) mora em
+        // vantagensGratis, Sanguinário (Complicação) é o traço SANGUINARIO em
+        // habilidades[], e Garras já é GARRAS_SEM_PA na base — nenhum dos três
+        // precisa mais do "if (ancKey == FERAL)" que existia aqui (mesmo
+        // padrão da Mente de Colmeia dos Insetoides do Fantasia).
         val result = useCase.execute(
             anc = "Feral",
             descendenteElementalSelecionado = null,
@@ -143,10 +147,9 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             ancestryOrigin = "ARTE_DA_GUERRA"
         )
 
-        assertTrue(result.ensureAdvantageNames.contains("FURIOSO"))
-        assertTrue(result.ensureAutomaticAdvantages.any { it.nome == "GARRAS" })
-        assertEquals(listOf(TraitAddition("SANGUINÁRIO", "SANGUINARIO")), result.ensureRacialDisadvantages)
-        assertTrue(result.anotacoesToAdd.any { it.contains("Técnicas de Chi") })
+        assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
+        assertTrue(result.ensureRacialDisadvantages.isEmpty())
     }
 
 

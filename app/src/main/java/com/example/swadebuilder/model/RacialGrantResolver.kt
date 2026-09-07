@@ -37,6 +37,7 @@ object RacialGrantResolver {
         RacialGrantLink("ANTECEDENTE ARCANO (Milagres)", 3, vantagemId = "antecedente_arcano_milagres"),
         RacialGrantLink("CAMPEÃO", 2, vantagemId = "campeao"),
         RacialGrantLink("CATIVAR O AMBIENTE", 2, vantagemId = "cativar_o_ambiente"),
+        RacialGrantLink("Furioso", 2, vantagemId = "furioso"),
         RacialGrantLink("IMPULSO", 2, vantagemId = "impulso"),
         // "Mordida"/"Resistência" nesses dois casos (Inumimi) são o traço de
         // arma natural / Resistência +1 de sempre, só registrados em

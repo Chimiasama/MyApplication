@@ -725,8 +725,10 @@ fun AncestralidadesSection(
 
                                 if (isFeral) {
                                     Spacer(Modifier.height(8.dp))
-                                    Text("Dons da Natureza: Ápice", style = MaterialTheme.typography.labelMedium)
-                                    Spacer(Modifier.height(8.dp))
+                                    // Rótulo "Dons da Natureza: Ápice" removido — texto sobrado de
+                                    // Umvee (Dons da Natureza é a Seleção DELES, "Ápice" uma das
+                                    // opções), copiado aqui sem ajustar; Feral não tem Dons da
+                                    // Natureza nem Ápice, só o Primitivo abaixo.
                                     val attributeOptions = listOf("Força", "Vigor", "Agilidade")
                                     var attributeExpanded by remember { mutableStateOf(false) }
                                     val currentAttributeSelection = state.humanoMineradorAtributo

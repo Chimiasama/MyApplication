@@ -4194,7 +4194,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Grupo variado que absorve os valores da família ou do clã em que foi criado; é possível escolher um signo de nascimento ligado a um mês específico, que sugere traços de personalidade, ou simplesmente seguir como humano padrão.",
-    "especieId": "humano"
+    "especieId": "humano",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_akaimimi",
@@ -4241,7 +4242,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Descendem de uma bênção espiritual ligada ao panda-vermelho, o que os inclina naturalmente à introspecção, à busca espiritual e ao pensamento filosófico."
+    "descricaoLite": "Descendem de uma bênção espiritual ligada ao panda-vermelho, o que os inclina naturalmente à introspecção, à busca espiritual e ao pensamento filosófico.",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_araiguma",
@@ -4291,14 +4293,12 @@
       "Furtividade": 2
     },
     "vantagensGratis": [],
-    "desvantagens": [
-      "HÁBITO",
-      "PECULIARIDADE"
-    ],
+    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Carregam a herança de um espírito-guaxinim travesso e esperto, conhecido por aprontar confusões, escapar das consequências e experimentar tudo o que a vida oferece."
+    "descricaoLite": "Carregam a herança de um espírito-guaxinim travesso e esperto, conhecido por aprontar confusões, escapar das consequências e experimentar tudo o que a vida oferece.",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_inumimi",
@@ -4318,7 +4318,15 @@
         "descricao": "Um cão que ladra e morde: A mordida do Inumimi causa For+d4 de dano e pode ser usada para Prender e Enredar um inimigo.",
         "category": "racial_trait_positive",
         "id": "CANINOS",
-        "descricaoLite": "Possui um ataque de mordida com dano For+d4, também aproveitável em manobras de Prender ou Enredar."
+        "descricaoLite": "Possui um ataque de mordida com dano For+d4, também aproveitável em manobras de Prender ou Enredar.",
+        "armasNaturais": [
+          {
+            "nome": "Mordida",
+            "dano": "For+d4",
+            "pa": 0,
+            "escalavel": true
+          }
+        ]
       },
       {
         "nome": "Cães de Guarda",
@@ -4337,7 +4345,7 @@
       {
         "nome": "Matilha",
         "descricao": "Os Inumimi formam uma matilha. Membros dessa matilha estão sujeitos a Complicação Leal do Inumimi.",
-        "category": "racial_trait_positive",
+        "category": "racial_hindrance",
         "id": "MATILHA",
         "descricaoLite": "Vive em grupo, e cada integrante carrega a Complicação Leal própria dessa espécie."
       }
@@ -4346,17 +4354,13 @@
     "pericias": {
       "Perceber": 2
     },
-    "vantagensGratis": [
-      "RESISTÊNCIA",
-      "MORDIDA"
-    ],
-    "desvantagens": [
-      "LEAL"
-    ],
+    "vantagensGratis": [],
+    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Sua linhagem remonta a espíritos caninos célebres por proteger e acompanhar os humanos, o que os torna símbolos vivos de lealdade e retidão."
+    "descricaoLite": "Sua linhagem remonta a espíritos caninos célebres por proteger e acompanhar os humanos, o que os torna símbolos vivos de lealdade e retidão.",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_kitsunemimi",
@@ -4404,7 +4408,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Herdeiros de espíritos-raposa, costumam ser vistos como espertos demais para o próprio bem, assim como seus ancestrais místicos."
+    "descricaoLite": "Herdeiros de espíritos-raposa, costumam ser vistos como espertos demais para o próprio bem, assim como seus ancestrais místicos.",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_nekomimi",
@@ -4454,7 +4459,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Descendentes de espíritos felinos, têm fama de preguiçosos, vaidosos e imprevisíveis, sempre testando a sorte de alguma maneira."
+    "descricaoLite": "Descendentes de espíritos felinos, têm fama de preguiçosos, vaidosos e imprevisíveis, sempre testando a sorte de alguma maneira.",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_tanukimimi",
@@ -4503,7 +4509,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Vistos entre seus parentes espirituais como os medianos e simpáticos: têm convicções próprias, mas raramente se destacam em algo específico.",
-    "especieId": "tanukimimi"
+    "especieId": "tanukimimi",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_usagimimi",
@@ -4548,7 +4555,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Descendem de espíritos de lebre que um dia habitaram corpos mortais entre os humanos, deixando suas características para as gerações seguintes."
+    "descricaoLite": "Descendem de espíritos de lebre que um dia habitaram corpos mortais entre os humanos, deixando suas características para as gerações seguintes.",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_terracota_adg",
@@ -4606,7 +4614,8 @@
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Almas de qualquer linhagem que retornam para resolver algo inacabado; ganham corpo a partir de argila moldada e impregnada de grande energia espiritual (Chi).",
-    "especieId": "terracota"
+    "especieId": "terracota",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_umvee",
@@ -4655,7 +4664,8 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Segundo sua própria tradição oral, seriam os guardiões originais da natureza, surgidos sob o luar antes mesmo dos humanos existirem."
+    "descricaoLite": "Segundo sua própria tradição oral, seriam os guardiões originais da natureza, surgidos sob o luar antes mesmo dos humanos existirem.",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_feral",
@@ -4671,11 +4681,12 @@
         "descricaoLite": "Sobrevivência inicial d6, com máximo em d12+1."
       },
       {
-        "nome": "Insanidade",
-        "descricao": "Quando a raiva animalística se manifesta, ela é incontrolável, mesmo quando branda. Feral possui a Vantagem Furioso e a Complicação Sanguinário.",
-        "category": "racial_trait_positive",
-        "id": "INSANIDADE",
-        "descricaoLite": "Concede a Vantagem Furioso junto com a Complicação Sanguinário."
+        "nome": "Insanidade (Sanguinário)",
+        "descricao": "Quando a raiva animalística se manifesta, ela é incontrolável, mesmo quando branda. Feral possui a Complicação Sanguinário (Maior) — a metade da Insanidade que sempre acompanha o Feral, nunca desliga.",
+        "category": "racial_hindrance",
+        "severity": "Maior",
+        "id": "SANGUINARIO",
+        "descricaoLite": "A metade de Insanidade que é a Complicação Sanguinário (Maior)."
       },
       {
         "nome": "Garras",
@@ -4726,13 +4737,16 @@
     "pericias": {
       "Sobrevivência": 2
     },
-    "vantagensGratis": [],
+    "vantagensGratis": [
+      "Furioso"
+    ],
     "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
     "descricaoLite": "Descendem de guerreiros que invocaram uma fera em batalha e não perderam a razão; o resultado é uma linhagem híbrida, metade ancestral, metade animal selvagem.",
-    "especieId": "feral"
+    "especieId": "feral",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_onigem_adg",
@@ -4775,13 +4789,12 @@
     },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "Ancestralidade Infame"
-    ],
+    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Carregam sangue de oni na linhagem, seja por descendência direta ou por traços que ainda se manifestam gerações depois."
+    "descricaoLite": "Carregam sangue de oni na linhagem, seja por descendência direta ou por traços que ainda se manifestam gerações depois.",
+    "pontosRaciaisEsperados": 3
   },
   {
     "id": "anc_humano_csv",

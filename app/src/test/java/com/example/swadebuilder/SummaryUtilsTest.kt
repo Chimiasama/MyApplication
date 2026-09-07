@@ -624,7 +624,12 @@ class SummaryUtilsTest {
     }
 
     @Test
-    fun `buildSummaryLines oculta furioso em caracteristicas raciais de feral com insanidade`() {
+    fun `buildSummaryLines mostra furioso normalmente em feral (Insanidade virou dois tracos de verdade)`() {
+        // Insanidade deixou de ser uma habilidade única que só mencionava
+        // Furioso no texto — agora é Sanguinário (Complicação, habilidade
+        // "Insanidade (Sanguinário)") mais Furioso (Vantagem real, concedida
+        // via vantagensGratis). Não tem mais duplicata a esconder: Furioso
+        // aparece normal, como qualquer Vantagem concedida por raça.
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Feral",
@@ -659,7 +664,7 @@ class SummaryUtilsTest {
                     pericias = emptyMap(),
                     desvantagens = emptyList(),
                     habilidades = listOf(
-                        com.example.swadebuilder.model.RacialAbility("Insanidade", ""),
+                        com.example.swadebuilder.model.RacialAbility("Insanidade (Sanguinário)", ""),
                         com.example.swadebuilder.model.RacialAbility("Primitivo", "")
                     ),
                     especieId = "feral"
@@ -676,8 +681,8 @@ class SummaryUtilsTest {
 
         val racialLine = lines.firstOrNull { it.startsWith("Características Raciais:") }
         assertNotNull(racialLine)
-        assertTrue(racialLine!!.contains("Insanidade"))
-        assertFalse(racialLine.contains("Furioso"))
+        assertTrue(racialLine!!.contains("Insanidade (Sanguinário)"))
+        assertTrue(racialLine.contains("Furioso"))
     }
 
 

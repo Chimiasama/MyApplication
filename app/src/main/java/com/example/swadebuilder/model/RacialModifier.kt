@@ -169,7 +169,17 @@ data class HabilidadeCriacao(
     // seletor de Traços Raciais (SettingsDialog.kt) mostra as entradas com o
     // mesmo grupoEscolha como uma linha só, abrindo "Qual versão?" em vez de
     // "Quantas vezes?".
-    val grupoEscolha: String? = null
+    val grupoEscolha: String? = null,
+    // Efeito mecânico parametrizado opcional (mesma "CAMADA MECÂNICA /
+    // ENGINE PARAMETRIZADA" de RacialAbility — ver esses três campos lá).
+    // Hoje só exposto no editor de Traço Racial (SettingsDialog.kt) pros
+    // dois tipos de bônus/penalidade de Pontos de Perícia/Atributo
+    // (PERICIA_POINTS_BONUS/ATRIBUTO_POINTS_BONUS, ver RacialTraitEffect);
+    // null = traço sem efeito numérico modelado (só flavor + custo), como
+    // todo traço customizado antes destes três campos existirem.
+    val traitId: String? = null,
+    val targetRef: String? = null,
+    val value: Int = 0
 ) {
     fun exibida(): HabilidadeCriacao =
         if (!com.example.swadebuilder.EditionConfig.isFullEdition && !descricaoLite.isNullOrBlank()) copy(descricao = descricaoLite) else this

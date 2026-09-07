@@ -299,22 +299,17 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             )
         }
 
-        if (canonicalOriginKey(ancestryOrigin) == "ARTE_DA_GUERRA" && ancKey == "FERAL") {
-            return Result(
-                naturalArmorFromRace = 0,
-                forceArmorZero = true,
-                ensureAdvantageNames = listOf("FURIOSO"),
-                ensureAdvantageIds = emptyList(),
-                ensureAutomaticAdvantages = listOf(
-                    TraitAddition("FURIOSO", "FURIOSO"),
-                    TraitAddition("GARRAS", "GARRAS")
-                ),
-                ensureRacialDisadvantages = listOf(TraitAddition("SANGUINÁRIO", "SANGUINARIO")),
-                elementalAction = ElementalAction.NONE,
-                anotacoesToAdd = listOf("Feral: não pode canalizar Técnicas de Chi.")
-            )
-        }
-
+        // Bloco hardcoded de FERAL removido: Furioso (Vantagem, agora em
+        // vantagensGratis no JSON) e Sanguinário (Complicação, agora o
+        // traço SANGUINARIO em habilidades[]) são resolvidos genericamente
+        // pelo mesmo caminho de qualquer outra raça (ResolveAncestryRacialPackageUseCase
+        // lê vantagensGratis/ModifierEngine lê habilidades[]), igual à Mente
+        // de Colmeia dos Insetoides (Fantasia) — não precisam mais de "if
+        // (ancKey == 'FERAL')" aqui. As Garras (For+d4 sem PA) já vêm de
+        // GARRAS_SEM_PA em habilidades[]; o grant duplicado "GARRAS" (com
+        // PA, custo errado — 3 em vez de 2) que existia aqui foi removido
+        // junto. A nota "não pode canalizar Técnicas de Chi" já está na
+        // descrição do próprio traço Limitações Técnicas.
 
         if (ancKey.contains("TERRACOTA")) {
             // Terracota não tem Variante — é Seleção de pacote fixo: todo

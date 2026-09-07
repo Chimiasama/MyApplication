@@ -375,6 +375,11 @@ fun SettingsDialog(
                         var refreshTrigger by remember { mutableIntStateOf(0) }
 
                         var customTraitCost by remember { mutableStateOf("1") }
+                        // Efeito mecânico opcional do Traço Racial (ver
+                        // RacialTraitEffect.PericiaPoolBonus/AtributoPoolBonus) — "Nenhum"
+                        // = traço só flavor + custo, como sempre foi.
+                        var customTraitEfeitoTipo by remember { mutableStateOf("Nenhum") }
+                        var customTraitEfeitoValor by remember { mutableStateOf("") }
                         var selectedRacialTraits by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
                         var showTraitSelectDialog by remember { mutableStateOf(false) }
 
@@ -986,6 +991,54 @@ fun SettingsDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
+                                                    Spacer(Modifier.height(8.dp))
+                                                    // Efeito mecânico opcional: além do custo (orçamento da raça),
+                                                    // um traço pode dar/tirar Pontos de Perícia ou de Atributo de
+                                                    // verdade (quantos pontos e o custo são decisão de quem cria
+                                                    // — ver RacialTraitEffect.PericiaPoolBonus/AtributoPoolBonus).
+                                                    // "Nenhum" continua sendo o traço puramente de flavor/custo de
+                                                    // sempre, sem efeito numérico modelado.
+                                                    Text(
+                                                        "Efeito mecânico (opcional):",
+                                                        style = MaterialTheme.typography.labelMedium,
+                                                        color = MaterialTheme.colorScheme.primary
+                                                    )
+                                                    @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                    androidx.compose.foundation.layout.FlowRow(
+                                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                    ) {
+                                                        listOf(
+                                                            "Nenhum",
+                                                            "Bônus de Pontos de Perícia",
+                                                            "Penalidade de Pontos de Perícia",
+                                                            "Bônus de Pontos de Atributo",
+                                                            "Penalidade de Pontos de Atributo"
+                                                        ).forEach { tipo ->
+                                                            androidx.compose.material3.FilterChip(
+                                                                selected = customTraitEfeitoTipo == tipo,
+                                                                onClick = { customTraitEfeitoTipo = tipo },
+                                                                label = { Text(tipo, style = MaterialTheme.typography.labelSmall) }
+                                                            )
+                                                        }
+                                                    }
+                                                    if (customTraitEfeitoTipo != "Nenhum") {
+                                                        Spacer(Modifier.height(4.dp))
+                                                        androidx.compose.material3.OutlinedTextField(
+                                                            value = customTraitEfeitoValor,
+                                                            onValueChange = { customTraitEfeitoValor = it },
+                                                            label = {
+                                                                Text(
+                                                                    if (customTraitEfeitoTipo.startsWith("Bônus"))
+                                                                        "Quantos pontos concede (ex: 3)"
+                                                                    else
+                                                                        "Quantos pontos tira (ex: 2 — vai virar penalidade)"
+                                                                )
+                                                            },
+                                                            singleLine = true,
+                                                            modifier = Modifier.fillMaxWidth()
+                                                        )
+                                                    }
                                                 }
                                                 "Variante de Raça" -> {
                                                     val baseRacaOptions = remember(state.listaAncestralidadesJson) {
@@ -1478,7 +1531,10 @@ fun SettingsDialog(
                                                                 // (applyCustomAncestryVariantIfSelected).
                                                                 id = trait.id ?: trait.nome.toIdSlug(),
                                                                 category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative",
-                                                                vezes = trait.vezes
+                                                                vezes = trait.vezes,
+                                                                traitId = trait.traitId,
+                                                                targetRef = trait.targetRef,
+                                                                value = trait.value
                                                             )
                                                         }
                                                     } else {
@@ -1506,11 +1562,21 @@ fun SettingsDialog(
                                                 }
                                                 "Traço Racial" -> {
                                                     val costInt = customTraitCost.toIntOrNull() ?: 1
+                                                    val efeitoMagnitude = customTraitEfeitoValor.toIntOrNull()?.let { kotlin.math.abs(it) } ?: 0
+                                                    val (efeitoTraitId, efeitoValue) = when (customTraitEfeitoTipo) {
+                                                        "Bônus de Pontos de Perícia" -> "PERICIA_POINTS_BONUS" to efeitoMagnitude
+                                                        "Penalidade de Pontos de Perícia" -> "PERICIA_POINTS_BONUS" to -efeitoMagnitude
+                                                        "Bônus de Pontos de Atributo" -> "ATRIBUTO_POINTS_BONUS" to efeitoMagnitude
+                                                        "Penalidade de Pontos de Atributo" -> "ATRIBUTO_POINTS_BONUS" to -efeitoMagnitude
+                                                        else -> null to 0
+                                                    }
                                                     val newTrait = com.example.swadebuilder.model.HabilidadeCriacao(
                                                         nome = customItemName,
                                                         custo = costInt,
                                                         descricao = safeDesc,
-                                                        id = id
+                                                        id = id,
+                                                        traitId = efeitoTraitId,
+                                                        value = efeitoValue
                                                     )
                                                     tags.forEach { tag -> customStorageManager.addHabilidadeRacial(context, tag, newTrait) }
                                                     statusMessage = "Traço racial '$customItemName' salvo em: $tagsLabel"

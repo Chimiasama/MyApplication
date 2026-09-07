@@ -578,7 +578,10 @@ class CriadorState {
                     // Mestre), igual ao resto do conteúdo customizado.
                     id = trait.id ?: trait.nome.toIdSlug(),
                     category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative",
-                    vezes = trait.vezes
+                    vezes = trait.vezes,
+                    traitId = trait.traitId,
+                    targetRef = trait.targetRef,
+                    value = trait.value
                 )
             )
         }
@@ -3769,6 +3772,21 @@ class CriadorState {
 
     val totalSpPool: Int
         get() {
+            // Traço genérico de raça (oficial ou criado no editor de conteúdo
+            // customizado, ver RacialTraitEffect.PericiaPoolBonus) que dá/tira
+            // Pontos de Perícia — soma de todas as habilidades[] com esse
+            // efeito. Humano (Império San) "Pontos de Perícia" continua com o
+            // +3 hardcoded abaixo (id não migrado pra não mexer numa raça já
+            // testada), mas qualquer raça nova pode usar isso.
+            val bonusPontosPericia = currentAncestryDef?.habilidades
+                ?.sumOf { hab ->
+                    val tid = hab.resolvedTraitId()
+                    when (val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)) {
+                        is RacialTraitEffect.PericiaPoolBonus -> efeito.valor
+                        else -> 0
+                    }
+                } ?: 0
+
             // PROMPT: Arte da Guerra skill points adjustment
             if (compendioArteDaGuerraAtivo) {
                 // If AdG active:
@@ -3776,11 +3794,11 @@ class CriadorState {
                 // Humans with "Nenhum" sign: +3 points (15 total)
                 // Ignore "maisPontosPericias" checkbox
                 val isHuman = ancestralidade.keyify().contains("HUMANO")
-                val base = 12 + if (isHuman && signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) 3 else 0
+                val base = 12 + (if (isHuman && signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) 3 else 0) + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
-                val base = if (maisPontosPericias) BASE_SP_POOL else (BASE_SP_POOL - 3)
+                val base = (if (maisPontosPericias) BASE_SP_POOL else (BASE_SP_POOL - 3)) + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                     .coerceAtLeast(0)
             }
@@ -5138,7 +5156,20 @@ class CriadorState {
         // presente na raça resolvida.
         val temAtributoFlexivel = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "FLEXIBILIDADE" } == true
 
-        val basePoints = if (temAtributoFlexivel) 6 else 5
+        // Traço genérico de raça (oficial ou criado no editor de conteúdo
+        // customizado, ver RacialTraitEffect.AtributoPoolBonus) que dá/tira
+        // Pontos de Atributo — soma de todas as habilidades[] com esse
+        // efeito, não um "if" fixo por id como FLEXIBILIDADE acima.
+        val bonusPontosAtributo = currentAncestryDef?.habilidades
+            ?.sumOf { hab ->
+                val tid = hab.resolvedTraitId()
+                when (val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)) {
+                    is RacialTraitEffect.AtributoPoolBonus -> efeito.valor
+                    else -> 0
+                }
+            } ?: 0
+
+        val basePoints = (if (temAtributoFlexivel) 6 else 5) + bonusPontosAtributo
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
