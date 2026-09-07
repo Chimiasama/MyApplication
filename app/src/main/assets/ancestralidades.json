@@ -346,18 +346,27 @@
         "descricaoLite": "O mestre define uma ancestralidade rival do cenário; membros de cada lado sofrem -2 em Persuadir ao tratar com o outro grupo e costumam partir para o confronto assim que se encontram."
       },
       {
-        "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "MORDIDA_GARRAS",
+        "nome": "Garras",
+        "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 0,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "As presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "descricaoLite": "As presas funcionam como Arma Natural, causando dano de Força+d4.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -442,17 +451,10 @@
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
-        "id": "SENTIDOS_AGUCADOS",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Recebe automaticamente a Vantagem Prontidão."
-      },
-      {
-        "nome": "PRONTIDÃO",
-        "descricao": "PRONTIDÃO",
+        "descricao": "SENTIDOS AGUÇADOS: Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
         "id": "PRONTIDAO",
         "category": "racial_edge",
-        "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
+        "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
     "livros": [
@@ -659,7 +661,7 @@
       {
         "nome": "CASCOS",
         "descricao": "Os cascos de um centauro causam For+d4 de dano, e Vantagens que aumentam o dano de armas naturais, como Artista Marcial, aplicam-se a seus coices, bem como a outros ataques naturais.",
-        "id": "CASCOS",
+        "id": "MORDIDA",
         "category": "racial_trait_positive",
         "descricaoLite": "Os coices causam Força+d4 de dano e se beneficiam de Vantagens que ampliam o dano de ataques naturais, como Artista Marcial.",
         "armasNaturais": [
@@ -681,9 +683,9 @@
       {
         "nome": "FORMA INCOMUM",
         "descricao": "Centauros não podem montar montarias ou usar certos tipos de armaduras, itens ou outros equipamentos que não se ajustem a sua forma (a critério do Mestre).",
-        "id": "FORMA_ALIENIGENA",
+        "id": "VOLUMOSO",
         "category": "racial_trait_negative",
-        "descricaoLite": "Sua anatomia impede o uso de montaria e de armaduras ou equipamentos que não sejam adaptados à sua forma, a critério do mestre."
+        "descricaoLite": "Sua anatomia impede o uso de montaria e de equipamentos/armaduras não personalizados para sua forma; itens comuns custam o dobro (mesma Complicação de Golens/Ogros/Minotauros)."
       },
       {
         "nome": "MOVIMENTAÇÃO +4",
@@ -716,18 +718,11 @@
     "desvantagens": [],
     "habilidades": [
       {
-        "nome": "AQUÁTICO",
-        "descricao": "Descendentes da água não podem se afogar na água e se movem com sua Movimentação completa quando estão nadando.",
-        "id": "AQUATICO",
+        "nome": "RESISTÊNCIA AMBIENTAL",
+        "descricao": "Descendentes dos elementais recebem um bônus de +4 para resistir aos efeitos negativos de seu elemento ancestral e o dano desse elemento também é reduzido em 4.",
+        "id": "RESISTENCIA_AMBIENTAL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Nadam na Movimentação completa e não correm risco de afogamento."
-      },
-      {
-        "nome": "AR INTERNO",
-        "descricao": "Descendentes do ar não precisam respirar. Não são afetados por toxinas inaladas, não se afogam e não sufocam no vácuo.",
-        "id": "AR_INTERNO",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Dispensam respiração, o que os torna imunes a venenos inalados, afogamento e sufocamento no vácuo."
+        "descricaoLite": "Recebem +4 para resistir aos efeitos nocivos ligados a seu elemento de origem, e o dano vindo dessa fonte é reduzido no mesmo valor."
       },
       {
         "nome": "FORASTEIRO",
@@ -738,25 +733,11 @@
         "descricaoLite": "Carregam a Complicação Forasteiro (Menor): -2 em Persuadir com qualquer um que não seja da mesma linhagem."
       },
       {
-        "nome": "RESISTÊNCIA AMBIENTAL",
-        "descricao": "Descendentes dos elementais recebem um bônus de +4 para resistir aos efeitos negativos de seu elemento ancestral e o dano desse elemento também é reduzido em 4.",
-        "id": "RESISTENCIA_AMBIENTAL",
+        "nome": "ELEMENTO ANCESTRAL",
+        "descricao": "Escolha 1 elemento ancestral (Água, Ar, Fogo ou Terra) — cada um concede um traço diferente: Água = Aquático; Ar = Ar Interno (Não Respira); Fogo = Vantagem Rápido; Terra = Vigor inicial d6 (Sólido como Rocha). Vale 2 pontos, qualquer que seja a escolha.",
+        "id": "ELEMENTO_ANCESTRAL",
         "category": "racial_trait_positive",
-        "descricaoLite": "Recebem +4 para resistir aos efeitos nocivos ligados a seu elemento de origem, e o dano vindo dessa fonte é reduzido no mesmo valor."
-      },
-      {
-        "nome": "RÁPIDO",
-        "descricao": "Descendentes do fogo são frenéticos e estão sempre em movimento. Possuem a Vantagem Rápido.",
-        "id": "rapido",
-        "category": "racial_edge",
-        "descricaoLite": "Possuem a Vantagem Rápido."
-      },
-      {
-        "nome": "SÓLIDO COMO ROCHA",
-        "descricao": "Descendentes da terra são resistentes. Começam com um d6 em Vigor em vez de um d4. Isso aumenta o Vigor máximo para d12+1.",
-        "id": "SOLIDO_COMO_ROCHA",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Vigor inicial em d6 em vez de d4, com teto em d12+1."
+        "descricaoLite": "Escolhe 1 de 4 elementos ancestrais (Água/Ar/Fogo/Terra), cada um concedendo um traço próprio equivalente a 2 pontos."
       }
     ],
     "vantagensGratis": [],
@@ -798,23 +779,35 @@
       {
         "nome": "MAL-HUMORADO",
         "descricao": "Draconianos têm orgulho dos poderosos dragões dos quais são parentes. Isso lhes dá a Complicação Arrogante. Se os draconianos do seu cenário não tiverem essa característica, escolha dois pontos de penalidades de ancestralidade negativas que melhor se adaptem a sua origem ou sociedade.",
-        "id": "MAL_HUMORADO",
-        "category": "racial_trait_negative",
+        "id": "ARROGANTE",
+        "category": "racial_hindrance",
+        "severity": "Maior",
         "descricaoLite": "Carregam a Complicação Arrogante, fruto do orgulho por sua ascendência dracônica; caso o cenário não use essa característica, duas outras complicações negativas equivalentes podem ser escolhidas em seu lugar."
       },
       {
-        "nome": "MORDIDA/GARRAS",
-        "descricao": "For+d4, PA 2. Observe que Mordida permite que uma personagem morda uma presa agarrada em vez de apenas a esmagar; e Garras adicionam +2 em Atletismo ao escalar a maioria das superfícies.",
-        "id": "MORDIDA_GARRAS",
+        "nome": "GARRAS",
+        "descricao": "For+d4, PA 2. Garras adicionam +2 em Atletismo ao escalar a maioria das superfícies.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Causam Força+d4 com PA 2; a mordida permite atacar um alvo já agarrado em vez de apenas esmagá-lo, e as garras somam +2 em Atletismo para escalar superfícies.",
+        "pontos": 2,
+        "descricaoLite": "Garras causam Força+d4 com PA 2, além de +2 em Atletismo para escalar.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 2,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "MORDIDA",
+        "descricao": "For+d4, PA 2. Mordida permite que uma personagem morda uma presa agarrada em vez de apenas a esmagar.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "pontos": 2,
+        "descricaoLite": "Mordida causa Força+d4 com PA 2, e permite atacar um alvo já agarrado em vez de apenas esmagá-lo.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -836,14 +829,6 @@
         "id": "SANGUE_FRIO",
         "category": "racial_trait_negative",
         "descricaoLite": "Após dez minutos expostos a temperaturas abaixo de 18°C, sofrem -1 em testes de Agilidade, Força e Vigor."
-      },
-      {
-        "nome": "ARROGANTE",
-        "descricao": "ARROGANTE",
-        "id": "ARROGANTE",
-        "category": "racial_hindrance",
-        "severity": "Maior",
-        "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
       }
     ],
     "tags": [
@@ -941,7 +926,7 @@
         "descricao": "Moderação não é uma qualidade frequentemente encontrada nas fadas.",
         "id": "IMPULSIVO",
         "category": "racial_hindrance",
-        "severity": "Menor",
+        "severity": "Maior",
         "descricaoLite": "Agem por impulso, raramente parando para ponderar antes de decidir."
       },
       {
@@ -1092,11 +1077,18 @@
         "descricaoLite": "Por ser um ser mecânico, ganha +2 para se recuperar do estado Abalado, sua penalidade por Ferimento cai 1 ponto, dispensa respiração e alimentação, é imune a veneno e doença, não sofre Sangramento, e repara Ferimentos usando a perícia Consertar como substituta de Curar, sem contar com a janela da Hora de Ouro."
       },
       {
-        "nome": "DESAJEITADO",
+        "nome": "DESAJEITADO (Atletismo)",
         "descricao": "Golens subtraem 2 das rolagens de Atletismo e Furtividade.",
-        "id": "DESAJEITADO",
+        "id": "PENALIDADE_PERICIA_1",
         "category": "racial_trait_negative",
-        "descricaoLite": "-2 em Atletismo e Furtividade."
+        "descricaoLite": "Penalidade em Atletismo por falta de agilidade natural."
+      },
+      {
+        "nome": "DESAJEITADO (Furtividade)",
+        "descricao": "Golens subtraem 2 das rolagens de Atletismo e Furtividade.",
+        "id": "PENALIDADE_PERICIA_1",
+        "category": "racial_trait_negative",
+        "descricaoLite": "Penalidade em Furtividade por ser barulhento e pesado."
       },
       {
         "nome": "GRANDE",
@@ -1117,7 +1109,8 @@
         "descricao": "Golens não são criados como seres biológicos e, portanto, não começam com Conhecimento Geral, Persuadir ou Furtividade.",
         "id": "PERICIAS_BASICAS_REDUZIDAS",
         "category": "racial_trait_negative",
-        "descricaoLite": "Por não ter origem biológica, não recebe de início Conhecimento Geral, Persuadir ou Furtividade."
+        "descricaoLite": "Por não ter origem biológica, não recebe de início Conhecimento Geral, Persuadir ou Furtividade.",
+        "vezes": 3
       },
       {
         "nome": "SEM NOÇÃO",
@@ -2215,10 +2208,10 @@
       },
       {
         "nome": "SENTIDOS APRIMORADOS",
-        "descricao": "Sáurios têm sentidos aguçados, ganhando a Vantagem Prontidão.",
-        "id": "SENTIDOS_APRIMORADOS",
-        "category": "racial_trait_positive",
-        "descricaoLite": "Possuem percepção aguçada, recebendo a Vantagem Prontidão."
+        "descricao": "SENTIDOS APRIMORADOS: Sáurios têm sentidos aguçados, ganhando a Vantagem Prontidão.",
+        "id": "PRONTIDAO",
+        "category": "racial_edge",
+        "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
     "vantagensGratis": [],
@@ -2626,18 +2619,27 @@
         "descricaoLite": "O mestre define uma ancestralidade rival do cenário; membros de cada lado sofrem -2 em Persuadir ao tratar com o outro grupo e costumam partir para o confronto assim que se encontram."
       },
       {
-        "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "nome": "Garras",
+        "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "id": "MORDIDAGARRAS",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 0,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "As presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "descricaoLite": "As presas funcionam como Arma Natural, causando dano de Força+d4.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -2727,10 +2729,10 @@
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
-        "category": "racial_trait_positive",
-        "id": "SENTIDOS_AGUCADOS",
-        "descricaoLite": "Recebe automaticamente a Vantagem Prontidão."
+        "descricao": "SENTIDOS AGUÇADOS: Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
+        "id": "PRONTIDAO",
+        "category": "racial_edge",
+        "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
     "livros": [
@@ -2995,18 +2997,27 @@
         "descricaoLite": "O mestre define uma ancestralidade rival do cenário; membros de cada lado sofrem -2 em Persuadir ao tratar com o outro grupo e costumam partir para o confronto assim que se encontram."
       },
       {
-        "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "MORDIDA_GARRAS",
+        "nome": "Garras",
+        "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 0,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "As presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "descricaoLite": "As presas funcionam como Arma Natural, causando dano de Força+d4.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -4275,9 +4286,7 @@
       "Força": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Forte",
@@ -4285,11 +4294,19 @@
         "category": "racial_trait_positive",
         "id": "FORTE",
         "descricaoLite": "Força inicial d6, com máximo em d12+1."
+      },
+      {
+        "nome": "Adaptável",
+        "descricao": "A ancestralidade é bem variada entre seu povo e cultura. Personagens começam com uma Vantagem de nível Novato de sua escolha (e devem preencher todos os requisitos).",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Começa com uma Vantagem de Estágio Novato à escolha, desde que cumpra os requisitos normais."
       }
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_fjordstad",
@@ -4302,9 +4319,7 @@
       "Astúcia": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Astuto",
@@ -4312,11 +4327,19 @@
         "category": "racial_trait_positive",
         "id": "ASTUTO",
         "descricaoLite": "Astúcia inicial d6, com máximo em d12+1."
+      },
+      {
+        "nome": "Adaptável",
+        "descricao": "A ancestralidade é bem variada entre seu povo e cultura. Personagens começam com uma Vantagem de nível Novato de sua escolha (e devem preencher todos os requisitos).",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Começa com uma Vantagem de Estágio Novato à escolha, desde que cumpra os requisitos normais."
       }
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_as_ilhas",
@@ -4329,10 +4352,7 @@
       "Vigor": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn",
-      "ADAPTÁVEL"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Vigoroso",
@@ -4351,7 +4371,8 @@
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_maseia",
@@ -4364,9 +4385,7 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -4374,11 +4393,19 @@
         "category": "racial_trait_positive",
         "id": "AGIL",
         "descricaoLite": "Agilidade inicial d6, com máximo em d12+1."
+      },
+      {
+        "nome": "Adaptável",
+        "descricao": "A ancestralidade é bem variada entre seu povo e cultura. Personagens começam com uma Vantagem de nível Novato de sua escolha (e devem preencher todos os requisitos).",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Começa com uma Vantagem de Estágio Novato à escolha, desde que cumpra os requisitos normais."
       }
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_zingama",
@@ -4391,9 +4418,7 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "aa_agente_syn"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Espiritual",
@@ -4401,11 +4426,19 @@
         "category": "racial_trait_positive",
         "id": "ESPIRITUAL",
         "descricaoLite": "Espírito inicial d6, com máximo em d12+1."
+      },
+      {
+        "nome": "Adaptável",
+        "descricao": "A ancestralidade é bem variada entre seu povo e cultura. Personagens começam com uma Vantagem de nível Novato de sua escolha (e devem preencher todos os requisitos).",
+        "id": "ADAPTAVEL",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Começa com uma Vantagem de Estágio Novato à escolha, desde que cumpra os requisitos normais."
       }
     ],
     "livros": [
       "CRYSTAL_HEART"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_humano_adg",
@@ -5214,7 +5247,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "especieId": "anao"
+    "especieId": "anao",
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_elfopathfinder",
@@ -5276,7 +5310,8 @@
     "originalName": "Elfo",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_gnomopathfinder",
@@ -5345,7 +5380,8 @@
     "livros": [
       "PATHFINDER"
     ],
-    "especieId": "gnomo"
+    "especieId": "gnomo",
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_halflingpathfinder",
@@ -5409,7 +5445,8 @@
     "originalName": "Halfling",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_humanopathfinder",
@@ -5424,17 +5461,25 @@
     "habilidades": [
       {
         "nome": "Adaptável",
-        "descricao": "Começa com uma Vantagem Novato extra e um d6 em um Atributo à escolha (em vez de d4).",
+        "descricao": "Começa com uma Vantagem Novato extra de graça (deve atender aos requisitos).",
         "category": "racial_trait_positive",
         "id": "ADAPTAVEL",
-        "descricaoLite": "Ganha uma Vantagem extra de Novato e inicia com d6, em vez do d4 padrão, em um atributo à escolha."
+        "descricaoLite": "Ganha de graça uma Vantagem extra de nível Novato, respeitados os requisitos."
+      },
+      {
+        "nome": "Atributo Aumentado (sem elevar o máximo)",
+        "descricao": "Também recebem um d6 em vez de um d4 em um Atributo a sua escolha. Isso não aumenta seu atributo máximo.",
+        "id": "FLEXIBILIDADE",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Um atributo à escolha começa em d6 em vez de d4, sem aumentar seu valor máximo (única exceção a essa regra)."
       }
     ],
     "originalName": "Humano",
     "livros": [
       "PATHFINDER"
     ],
-    "especieId": "humano"
+    "especieId": "humano",
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_meio_elfopathfinder",
@@ -5447,10 +5492,10 @@
     "habilidades": [
       {
         "nome": "Flexibilidade",
-        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4.",
+        "descricao": "Começam com um d6 em um Atributo à escolha em vez de d4. Isso não aumenta seu atributo máximo.",
         "category": "racial_trait_positive",
         "id": "FLEXIBILIDADE",
-        "descricaoLite": "Um atributo à escolha começa em d6 no lugar do d4 padrão."
+        "descricaoLite": "Um atributo à escolha começa em d6 no lugar do d4 padrão, sem aumentar seu valor máximo."
       },
       {
         "nome": "Magia Élfica",
@@ -5470,7 +5515,8 @@
     "originalName": "Meio-Elfo",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "id": "anc_meio_orcpathfinder",
@@ -5525,7 +5571,8 @@
     "originalName": "Meio-Orc",
     "livros": [
       "PATHFINDER"
-    ]
+    ],
+    "pontosRaciaisEsperados": 4
   },
   {
     "nome": "ANDROIDES",
@@ -5888,18 +5935,27 @@
         "descricaoLite": "O mestre define uma ancestralidade rival do cenário; membros de cada lado sofrem -2 em Persuadir ao tratar com o outro grupo e costumam partir para o confronto assim que se encontram."
       },
       {
-        "nome": "Mordida/Garras",
-        "descricao": "As garras e presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "nome": "Garras",
+        "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "GARRAS",
         "category": "racial_trait_positive",
-        "id": "MORDIDAGARRAS",
-        "descricaoLite": "Dentes e garras funcionam como Armas Naturais, causando dano de Força+d4.",
+        "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
           {
             "nome": "Garras",
             "dano": "For+d4",
             "pa": 0,
             "escalavel": true
-          },
+          }
+        ]
+      },
+      {
+        "nome": "Mordida",
+        "descricao": "As presas dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
+        "id": "MORDIDA",
+        "category": "racial_trait_positive",
+        "descricaoLite": "As presas funcionam como Arma Natural, causando dano de Força+d4.",
+        "armasNaturais": [
           {
             "nome": "Mordida",
             "dano": "For+d4",
@@ -5989,10 +6045,10 @@
       },
       {
         "nome": "Sentidos Aguçados",
-        "descricao": "Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
-        "category": "racial_trait_positive",
-        "id": "SENTIDOS_AGUCADOS",
-        "descricaoLite": "Recebe automaticamente a Vantagem Prontidão."
+        "descricao": "SENTIDOS AGUÇADOS: Possuem sentidos aguçados, ganhando a Vantagem Prontidão.",
+        "id": "PRONTIDAO",
+        "category": "racial_edge",
+        "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
     "livros": [
@@ -6000,124 +6056,5 @@
     ],
     "descricaoLite": "Répteis humanoides adaptados a climas extremos, como desertos ou florestas quentes, que desenvolveram sociedades próprias pouco conhecidas de outros povos.",
     "especieId": "saurios"
-  },
-  {
-    "nome": "CELESTIAIS",
-    "descricao": "Anjos são uma espécie bastante variada, mas sempre possuem essas características em comum.",
-    "atributos": {},
-    "pericias": {
-      "Fé": 2
-    },
-    "vantagensGratis": [
-      "ANTECEDENTE ARCANO (Milagres)"
-    ],
-    "desvantagens": [
-      "DESASTRADO",
-      "INIMIGO RACIAL (Demônios e Diabos)",
-      "VOTO (Maior: Proteger a Humanidade)"
-    ],
-    "habilidades": [
-      {
-        "nome": "Desastrado",
-        "descricao": "Celestiais não têm o costume de lidar com tecnologia ou máquinas.",
-        "category": "racial_hindrance",
-        "severity": "Menor",
-        "id": "DESASTRADO",
-        "descricaoLite": "Tem dificuldade e pouca prática com tecnologia e máquinas em geral."
-      },
-      {
-        "nome": "Antecedente Arcano (Milagres)",
-        "descricao": "Celestiais podem invocar uma grande variedade de milagres.",
-        "category": "racial_edge",
-        "id": "ANTECEDENTE_ARCANO_MILAGRES",
-        "descricaoLite": "Tem acesso ao Antecedente Arcano de Milagres, podendo conjurar poderes dessa lista."
-      },
-      {
-        "nome": "Fé",
-        "descricao": "Celestiais começam com um d6 em Fé. Isso aumenta seu máximo para d12 + 1.",
-        "category": "racial_trait_positive",
-        "id": "FE",
-        "descricaoLite": "A perícia Fé começa em d6 em vez de d4, com teto em d12+1."
-      },
-      {
-        "nome": "Voo",
-        "descricao": "Anjos voam com Movimentação 12.",
-        "category": "racial_trait_positive",
-        "id": "VOO_MOV_12",
-        "descricaoLite": "Capacidade de voar, deslocando-se com Movimentação 12."
-      },
-      {
-        "nome": "Inimigo Racial (Demônios e Diabos)",
-        "descricao": "Celestiais não toleram facilmente os saídos do abismo.",
-        "category": "racial_trait_negative",
-        "id": "INIMIGO_RACIAL_DEMONIOS_E_DIABOS",
-        "descricaoLite": "Mantém hostilidade natural contra demônios e diabos, tratando-os como inimigos declarados."
-      },
-      {
-        "nome": "Voto (Maior: Proteger a humanidade)",
-        "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
-        "category": "racial_hindrance",
-        "id": "VOTO",
-        "severity": "Maior",
-        "descricaoLite": "Está preso por um Voto de grau Maior a zelar pelos poucos humanos sobreviventes num mundo devastado."
-      }
-    ],
-    "livros": [
-      "SUPER"
-    ],
-    "descricaoLite": "Seres de origem angelical que, apesar de assumirem formas variadas, compartilham traços que denunciam sua natureza celestial.",
-    "tags": [
-      "asas"
-    ]
-  },
-  {
-    "nome": "GUARDIÕES",
-    "descricao": "Seres humanos que servem ao Coro Celestial são chamados de guardiões.",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL",
-      "CAMPEÃO"
-    ],
-    "desvantagens": [
-      "VOTO (Maior: Proteger a humanidade)"
-    ],
-    "habilidades": [
-      {
-        "nome": "Adaptável",
-        "descricao": "Começam o jogo com uma Vantagem Novato de sua escolha (os requisitos da Vantagem devem ser atendidos normalmente).",
-        "category": "racial_trait_positive",
-        "id": "ADAPTAVEL",
-        "descricaoLite": "Inicia o jogo com uma Vantagem de Estágio Novato à sua escolha, cumprindo os requisitos de praxe."
-      },
-      {
-        "nome": "Campeões",
-        "descricao": "Possuem a Vantagem Campeão dando a eles um bônus de +2 em dano contra forças malignas sobrenaturais como demônios e diabos.",
-        "category": "racial_edge",
-        "id": "campeao",
-        "descricaoLite": "Possui a Vantagem Campeão, causando +2 de dano contra criaturas sobrenaturais malignas como demônios e diabos."
-      },
-      {
-        "nome": "Vigoroso",
-        "descricao": "As pessoas que herdaram esta Terra devastada começam o jogo com um d6 em Vigor em vez de um d4. Isso aumenta seu Vigor máximo para d12 + 1.",
-        "category": "racial_trait_positive",
-        "id": "VIGOROSO",
-        "descricaoLite": "Vigor inicial em d6 no lugar de d4, podendo alcançar d12+1."
-      },
-      {
-        "nome": "Voto (Maior: Proteger a humanidade)",
-        "descricao": "Devem proteger o rebanho que resta na Terra devastada.",
-        "category": "racial_hindrance",
-        "id": "VOTO",
-        "severity": "Maior",
-        "descricaoLite": "Está preso por um Voto de grau Maior a zelar pelos poucos humanos sobreviventes num mundo devastado."
-      }
-    ],
-    "livros": [
-      "SUPER"
-    ],
-    "descricaoLite": "Humanos que colocaram a vida a serviço de poderes celestiais, atuando como representantes ou protetores em nome deles."
   }
 ]

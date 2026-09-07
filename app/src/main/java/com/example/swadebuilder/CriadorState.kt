@@ -4539,12 +4539,20 @@ class CriadorState {
         if (modoLivre && !forceStandard) return 100
         val startRaw = periciaStartRaw(ancestralidade, per)
 
-        // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
-        val isHalfOrcIntimidate = compendioPathfinderAtivo &&
-                ancestralidade.keyify().contains("MEIO-ORC") &&
+        // Meio-Orc (Pathfinder) "Intimidante": começa com d4 em Intimidar (não
+        // d6 — id não cadastrado em RacialTraitPointCatalog.EFEITOS, o d4 vem
+        // do campo estruturado `pericias` em ancestralidades.json, lido por
+        // periciaStartRaw()/racialSkillStartMap), mas o livro ainda amplia o
+        // teto pra d12+1 — a exceção contrária à do Humano (Pathfinder)
+        // Adaptável (d6 sem ampliar o máximo). Antes checava por nome de raça
+        // (ancestralidade.contains("MEIO-ORC") + compendioPathfinderAtivo);
+        // agora lê o id do traço já presente na raça resolvida (INTIMIDANTE,
+        // comentado em CUSTOS como "Intimidar d4, teto ampliado" desde antes
+        // desta correção) — nenhuma outra raça cadastrada usa este id hoje.
+        val temIntimidanteTetoAmpliado = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "INTIMIDANTE" } == true &&
                 per.nome.keyify() == "INTIMIDAR"
 
-        val baseCap = if (startRaw >= 6 || isHalfOrcIntimidate) 13 else 12
+        val baseCap = if (startRaw >= 6 || temIntimidanteTetoAmpliado) 13 else 12
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
@@ -5071,12 +5079,23 @@ class CriadorState {
             }
         }
 
-        val isPathfinderHuman = compendioPathfinderAtivo &&
-                (ancestralidade.equals("Humano", ignoreCase = true) || ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
-        val isPathfinderHalfElf = compendioPathfinderAtivo &&
-                ancestralidade.keyify().contains("MEIO-ELFO")
+        // Humano (Pathfinder) "Adaptável" e Meio-Elfo (Pathfinder) "Flexibilidade"
+        // concedem "um d6 em vez de um d4 em um Atributo à escolha. Isso não
+        // aumenta seu atributo máximo" — mesmo texto, mesmo id (FLEXIBILIDADE)
+        // nas duas raças. Em vez de elevar o piso do atributo escolhido (o que
+        // exigiria desfazer a elevação automática do teto em
+        // atributoMaxRawNaCriacao(), já que atributoMaxRaw() SEMPRE soma +1 de
+        // tipo de dado pra qualquer piso acima de d4), representamos como +1
+        // Ponto de Atributo: o jogador decide livremente onde gastá-lo, e como
+        // é gasto pelo mecanismo normal de compra (não um piso "de graça"), o
+        // teto de d12 na criação nunca é ultrapassado — sem precisar de
+        // nenhuma exceção especial. Antes checava por nome de raça
+        // (ancestralidade.equals("Humano"/"Humano (Pathfinder)") e
+        // ancestralidade.contains("MEIO-ELFO")); agora lê o id do traço já
+        // presente na raça resolvida.
+        val temAtributoFlexivel = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "FLEXIBILIDADE" } == true
 
-        val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
+        val basePoints = if (temAtributoFlexivel) 6 else 5
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }

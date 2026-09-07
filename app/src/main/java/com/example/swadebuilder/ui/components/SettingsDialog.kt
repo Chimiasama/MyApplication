@@ -423,8 +423,24 @@ fun SettingsDialog(
                         // superPoderRacialPickerTarget, embutindo a escolha no nome
                         // ("Bônus de Perícia (+1): Intimidar") sem tocar no id
                         // (bonus_pericia_1/2, penalidade_pericia_1/2 continuam os mesmos).
+                        // "pericia_racial_d4"/"pericia_racial_d6" entraram no mesmo picker por
+                        // outro motivo: o livro (pág. 20/21 do Básico) diz que uma Perícia
+                        // Racial em d6 custa 2 pontos, "ou 1 se já é uma perícia básica" —
+                        // Atletismo/Conhecimento Geral/Furtividade/Perceber/Persuadir (e
+                        // qualquer outra marcada `Pericia.basica` no catálogo, ex.: Canalizar
+                        // Cristal do Crystal Heart) já começam em d4 de graça pra todo mundo,
+                        // então subir pra d6 é só meio caminho, não o traço completo. O picker
+                        // já existia pra registrar QUAL perícia foi escolhida (sem isso, o
+                        // custo certo nem dava pra calcular); o ajuste de custo em si acontece
+                        // no onEscolhido do AlertDialog "Escolher Perícia" abaixo, lendo
+                        // `pericia.basica` — o mesmo campo estruturado que o resto do app já
+                        // usa pra decidir se uma perícia começa em d4 de graça (PericiaRules.kt,
+                        // EnsureDefaultSpecializationsUseCase), nunca um nome comparado em texto.
                         val periciaChoiceTraitIds = remember {
-                            setOf("bonus_pericia_1", "bonus_pericia_2", "penalidade_pericia_1", "penalidade_pericia_2")
+                            setOf(
+                                "bonus_pericia_1", "bonus_pericia_2", "penalidade_pericia_1", "penalidade_pericia_2",
+                                "pericia_racial_d4", "pericia_racial_d6"
+                            )
                         }
                         var periciaTraitPickerTarget by remember {
                             mutableStateOf<Pair<com.example.swadebuilder.model.HabilidadeCriacao, (com.example.swadebuilder.model.HabilidadeCriacao) -> Unit>?>(null)
@@ -1026,7 +1042,9 @@ fun SettingsDialog(
                                                         }
                                                         val budgetResult = remember(valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                                valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                                valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados,
+                                                                orcamento = varianteBaseRaca.pontosRaciaisEsperados,
+                                                                semLimite = varianteSemLimite
                                                             )
                                                         }
 
@@ -1530,7 +1548,9 @@ fun SettingsDialog(
 
                                                         val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca)
                                                         val budgetResult = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                            valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                            valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados,
+                                                            orcamento = baseRaca.pontosRaciaisEsperados,
+                                                            semLimite = varianteSemLimite
                                                         )
 
                                                         if (!budgetResult.dentroDoOrcamento) {
@@ -2096,12 +2116,22 @@ fun SettingsDialog(
                                             .sortedBy { it.nome }
                                             .filter { it.nome.contains(filterPericiaTraitText, ignoreCase = true) }
                                             .forEach { pericia ->
+                                                // "Perícia Racial (d6)" custa 2, mas o livro dá desconto
+                                                // pra 1 quando a perícia escolhida já é uma Perícia
+                                                // Básica (começa em d4 de graça pra qualquer
+                                                // personagem) — ver comentário de periciaChoiceTraitIds.
+                                                val custoFinal = if (trait.id == "pericia_racial_d6" && pericia.basica) 1 else trait.custo
+                                                val nomeComDesconto = if (custoFinal != trait.custo) {
+                                                    "${trait.nome}: ${pericia.nome} (perícia básica, custo reduzido)"
+                                                } else {
+                                                    "${trait.nome}: ${pericia.nome}"
+                                                }
                                                 Row(
                                                     modifier = Modifier.fillMaxWidth().clickable {
                                                         onEscolhido(
                                                             com.example.swadebuilder.model.HabilidadeCriacao(
-                                                                nome = "${trait.nome}: ${pericia.nome}",
-                                                                custo = trait.custo,
+                                                                nome = nomeComDesconto,
+                                                                custo = custoFinal,
                                                                 descricao = "${trait.descricao} Perícia escolhida: ${pericia.nome}.",
                                                                 descricaoLite = trait.descricaoLite,
                                                                 id = trait.id
@@ -2111,7 +2141,10 @@ fun SettingsDialog(
                                                     }.padding(vertical = 6.dp),
                                                     verticalAlignment = Alignment.CenterVertically
                                                 ) {
-                                                    Text(pericia.nome, style = MaterialTheme.typography.bodyMedium)
+                                                    Text(
+                                                        if (trait.id == "pericia_racial_d6") "${pericia.nome} (${if (custoFinal != trait.custo) "+1 pt" else "+2 pts"})" else pericia.nome,
+                                                        style = MaterialTheme.typography.bodyMedium
+                                                    )
                                                 }
                                             }
                                     }

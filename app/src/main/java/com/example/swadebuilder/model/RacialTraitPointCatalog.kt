@@ -229,7 +229,9 @@ object RacialTraitPointCatalog {
         "APARAR_BAIXO" to 3, // livro: "Aparar Baixo (3)"
         "TAMANHO_MAIS_1" to 3, // livro: "Tamanho +1 (3)"
         "FRAGIL" to 2, // livro: "Frágil (2)"
-        "MOVIMENTACAO" to 2 // livro: "Movimentação (2)"
+        "MOVIMENTACAO" to 2, // livro: "Movimentação (2)"
+        "ALCANCE" to 3, // livro: "Alcance (3)", +1 Alcance/compra
+        "PERICIAS_BASICAS_REDUZIDAS" to 5 // livro: "Perícias Básicas Reduzidas (5)", -1/compra (uma perícia básica por vez)
     )
 
     /** Teto de vezes que o id pode ser comprado (1 se não estiver listado). */
@@ -294,7 +296,67 @@ object RacialTraitPointCatalog {
         "PARTES_RECOSTURAR" to "Partes (Recosturar)",
         "REGENERACAO_LENTA" to "Regeneração (Lenta)",
         "ROBUSTO_REVIVIDO" to "Robusto",
-        "MORDIDA_VAMPIRO" to "Mordida"
+        "MORDIDA_VAMPIRO" to "Mordida",
+
+        // Traços novos cadastrados na auditoria de "Habilidades de
+        // Ancestralidade" (Básico/Fantasia/Sci-Fi) — ver comentários de CUSTOS.
+        "ALCANCE" to "Alcance +1",
+        "ATORDOAR" to "Atordoar",
+        "BIOLOGIA_ACIDA" to "Biologia Ácida",
+        "CAVAR" to "Cavar",
+        "CAMUFLAGEM" to "Camuflagem",
+        "ECOLOCALIZACAO" to "Ecolocalização",
+        "FOSFORESCENCIA" to "Fosforescência",
+        "INTERFACE" to "Interface",
+        "INVISIBILIDADE" to "Invisibilidade (Translúcido)",
+        "INVISIBILIDADE_TOTAL" to "Invisibilidade (Total)",
+        "MODS" to "Mods Robóticos",
+        "NAO_FALA" to "Não Fala",
+        "REPUGNANTE" to "Repugnante",
+        "SALTADOR" to "Saltador",
+        "SEM_MANIPULADORES" to "Sem Manipuladores",
+        "SEMIAQUATICO" to "Semiaquático",
+        "TENTACULOS" to "Tentáculos",
+        "TOQUE_VENENOSO" to "Toque Venenoso (Moderado)",
+        "TOQUE_VENENOSO_MODERADO" to "Toque Venenoso (Moderado)",
+        "TOQUE_VENENOSO_NOCAUTEADOR" to "Toque Venenoso (Nocauteador)",
+        "TOQUE_VENENOSO_PARALISANTE" to "Toque Venenoso (Paralisante)",
+        "TOQUE_VENENOSO_LETAL" to "Toque Venenoso (Letal)",
+        "TOQUE_VENENOSO_CUSPIDOR" to "Toque Venenoso (Moderado, Cuspidor)",
+        "TOQUE_VENENOSO_MODERADO_CUSPIDOR" to "Toque Venenoso (Moderado, Cuspidor)",
+        "TOQUE_VENENOSO_NOCAUTEADOR_CUSPIDOR" to "Toque Venenoso (Nocauteador, Cuspidor)",
+        "TOQUE_VENENOSO_PARALISANTE_CUSPIDOR" to "Toque Venenoso (Paralisante, Cuspidor)",
+        "TOQUE_VENENOSO_LETAL_CUSPIDOR" to "Toque Venenoso (Letal, Cuspidor)",
+        "FERRAO_MORDIDA_FOR_D4" to "Ferrão",
+        "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO" to "Mudança de Forma (Sem variação de Tamanho)",
+        "ARMA_DE_SOPRO_FOGO" to "Arma de Sopro (Fogo)",
+        "ARMA_DE_SOPRO_FRIO" to "Arma de Sopro (Frio)",
+        "ACAO_ADICIONAL_FISICA" to "Ação Adicional (Física/Mental)",
+        "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS" to "Ação Adicional",
+        "SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA" to "Sentidos Aguçados (Olhos de Águia)",
+        "DESASTRADO_MENOR" to "Desastrado (Menor)",
+        "SANGUINARIO_MAIOR" to "Sanguinário (Maior)",
+        "CURIOSO_MAIOR" to "Curioso (Maior)",
+        "SEM_ESCRUPULOS_MAIOR" to "Sem Escrúpulos (Maior)",
+        "FORASTEIRO_MAIOR" to "Forasteiro (Maior)",
+        "SENSIVEL_MAIOR" to "Sensível (Maior)",
+        "VOTO_MAIOR" to "Voto (Maior)",
+        "OBRIGACAO_MAIOR" to "Obrigação (Maior)",
+        "PROCURADO_MAIOR" to "Procurado (Maior)",
+        "DEPENDENCIA_ATMOSFERICA_MAIOR" to "Dependência Atmosférica (Maior)",
+        "DEPENDENCIA_ATMOSFERICA_EXTREMA" to "Dependência Atmosférica (Extrema)",
+        "HABITANTE_DE_GRAVIDADE_ZERO_BAIXA" to "Habitante de Gravidade Zero/Baixa (Maior)",
+        "HABITANTE_DE_GRAVIDADE_ZERO_BAIXA_MAIOR" to "Habitante de Gravidade Zero/Baixa (Maior)",
+        "HABITANTE_DE_GRAVIDADE_BAIXA" to "Habitante de Gravidade Baixa (Maior)",
+        "SENHOR_DAS_FERAS" to "Senhor das Feras",
+        "CIBERTOLERANCIA" to "Cibertolerância",
+        "ADAPTACAO_GRAVITACIONAL" to "Adaptação Gravitacional",
+        "PODERES_MISTICOS_TELEPATA" to "Poderes Místicos (Telepata)",
+        "DIMINUTO_TAMANHO_2" to "Diminuto (Tamanho -2)",
+        "PERICIAS_BASICAS_REDUZIDAS_TOTAL" to "Perícias Básicas Reduzidas (Total)",
+        "REGENERACAO" to "Regeneração",
+        "ELEMENTO_ANCESTRAL" to "Elemento Ancestral",
+        "PENALIDADE_PERICIA_1" to "Penalidade em Perícia (-1)"
     )
 
     /**
@@ -366,7 +428,7 @@ object RacialTraitPointCatalog {
         "CABECADA" to 1, // oficial: chifres (For+d4) — o próprio traço diz "conta como Chifres"
         "CABECAS_DURAS" to -2, // oficial: penalidade_atributo_1 (-1 num ATRIBUTO, Astúcia, vale -2 — não -1 de perícia)
         "CABECA_DURA" to -2, // idem (Elementais, -1 Astúcia)
-        "CAES_DE_GUARDA" to 2, // oficial: pericia_racial_d6 (Perceber d6)
+        "CAES_DE_GUARDA" to 1, // oficial: pericia_racial_d6 — Perceber é Perícia Básica (pericias.json "basica"), livro dá desconto pra 1 (d6 sem ser Perícia Básica custaria 2)
         "CALCULISTA" to 2, // oficial: vantagem_racial
         "CAMPEAO" to 2, // oficial: vantagem_racial
         "CANINOS" to 2, // oficial mordida=1 + utilidade extra de Prender/Enredar
@@ -379,7 +441,7 @@ object RacialTraitPointCatalog {
         "CIRCUITOS_DE_ASIMOV" to -2, // oficial: complicacao_racial_maior (Pacifista)
         "CODIGO_DE_HONRA" to -2, // oficial: complicacao_racial_maior
         "COMUNITARIO" to 1, // oficial: comunitario
-        "CONHECIMENTO_GERAL" to 2, // oficial: pericia_racial_d6 (Conhecimento Geral d6, não d4)
+        "CONHECIMENTO_GERAL" to 1, // oficial: pericia_racial_d6 — Conhecimento Geral é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
         "CONSTITUICAO_DE_FERRO" to 1, // sem equivalente oficial, bônus estreito
         "CONSTRUTO" to 8, // oficial: construto
         "COVARDE" to -2, // oficial: complicacao_racial_maior
@@ -394,7 +456,14 @@ object RacialTraitPointCatalog {
         "DICAS_CULTURAIS" to 2, // oficial: pericia_racial_d6 (Convenção d6)
         "DIGESTAO_GLORIOSA" to 1, // sem equivalente oficial exato, imunidade estreita (só ingestão)
         "DIMINUTO" to 6, // oficial: diminuto_minusculo (Tamanho -4)
-        "DIMINUTO_TAMANHO_3" to 5, // mesmo pacote de DIMINUTO, só que Tamanho -3 em vez de -4 (Ferais Padrão)
+        // Confirmado direto no livro (Fantasia/Sci-Fi, "Diminuto (1)"): 2 pontos
+        // Pequeno (Tamanho -2), 4 pontos Muito Pequeno (Tamanho -3), 6 pontos
+        // Minúsculo (Tamanho -4). DIMINUTO_TAMANHO_3 valia 5 por engano (chute
+        // de auditoria anterior sem checar o livro) — corrigido pra 4. Ferais
+        // Padrão (que usa este id) saía ACIMA do orçamento de +2 por causa
+        // desse erro; com o valor certo, fecha em +2.
+        "DIMINUTO_TAMANHO_2" to 2, // livro: Diminuto (1), tier Pequeno — nenhuma raça oficial usa este tier ainda, id reservado
+        "DIMINUTO_TAMANHO_3" to 4, // livro: Diminuto (1), tier Muito Pequeno (Ferais Padrão)
         "DIMINUTO_TAMANHO_4" to 6, // mesmo valor de DIMINUTO — Tamanho -4 (Ferais Menor)
         "DONS_DA_NATUREZA" to 0, // placeholder de Seleção (Umvee/Feral escolhem 1 de 6 dons; o dom resolvido é que pontua)
         "DURAO" to 2, // oficial: aumento_atributo
@@ -410,7 +479,19 @@ object RacialTraitPointCatalog {
         "FE" to 2, // oficial: pericia_racial_d6 (Fé d6)
         "FELIZES_POR_NATUREZA" to 2, // oficial: aumento_atributo
         "FEROCIDADE_ORC" to 1, // oficial: resistencia_racial (+1)
-        "FLEXIBILIDADE" to 2, // oficial: aumento_atributo (escolha)
+        // oficial: aumento_atributo (escolha) — d6 num atributo à escolha do
+        // jogador que NÃO eleva o máximo (única exceção à regra geral de que
+        // iniciar acima de d4 também sobe o teto pra d12+1). Mesmo id usado
+        // por Meio-Elfo (Pathfinder), onde é o único efeito de "Flexibilidade",
+        // e por Humano (Pathfinder), onde é o segundo efeito embutido na
+        // mesma entrada de "Adaptável" (o primeiro é a Vantagem grátis, id
+        // ADAPTAVEL, cadastrada à parte). Implementado em
+        // CriadorState.calcularPontosAtributoRestantes() como +1 Ponto de
+        // Atributo (6 em vez de 5) em vez de elevar o piso do atributo — como
+        // é o jogador quem decide onde gastar esse ponto extra, o próprio
+        // teto de d12 na criação nunca é ultrapassado, sem precisar de
+        // exceção nenhuma em atributoMaxRawNaCriacao().
+        "FLEXIBILIDADE" to 2,
         "FOBIA" to -1, // oficial: complicacao_racial_menor
         "FORASTEIRO" to -2, // Complicação real (complicacoes.json), severidade Maior escolhida pela raça
         "FORCA_SOBRENATURAL" to 2, // oficial: aumento_atributo
@@ -432,7 +513,7 @@ object RacialTraitPointCatalog {
         "GUIADO" to -2, // oficial: complicacao_racial_maior
         "HERANCA" to 2, // oficial: vantagem_racial OU aumento_atributo (escolha, mesmo tier)
         "HERANCA_MISTA" to 2, // oficial: vantagem_racial
-        "IMPULSIVO" to -1, // oficial: complicacao_racial_menor
+        "IMPULSIVO" to -2, // Complicação Maior no catálogo real (complicacoes.json "impulsivo" só existe como Maior) — mesmo caso de AZARADO, corrigido pra bater com o catálogo
         "IMUNE_A_DOENCAS_E_VENENOS" to 1, // oficial: imune_doencas_venenos
         "INCAPAZ_DE_FALAR" to -2, // oficial: complicacao_racial_maior
         "INFRAVISAO" to 1, // oficial: infravisao
@@ -479,7 +560,7 @@ object RacialTraitPointCatalog {
         "PENSAMENTOS_POSITIVOS" to 2, // oficial: vantagem_racial
         "PEQUENOS" to -1, // oficial: tamanho_menos_1
         "PERICIAS_BASICAS_REDUZIDAS" to -1, // oficial: pericias_basicas_reduzidas
-        "PESFIRMES" to 2, // oficial: pericia_racial_d6 (Atletismo d6)
+        "PESFIRMES" to 1, // oficial: pericia_racial_d6 — Atletismo é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
         "PONTOS_DE_PERICIA" to 2, // sem equivalente oficial exato, +3 pontos de perícia iniciais
         "POUCO_IMPONENTE" to -1, // oficial: complicacao_racial_menor (Almofadinha)
         "PREPARADO" to 1, // oficial: pericia_racial_d4
@@ -508,13 +589,19 @@ object RacialTraitPointCatalog {
         "SEM_SANGUE" to 1, // oficial: sem_sangue
         "SENSIBILIDADE_A_LUZ_SOLAR" to -2, // sem equivalente oficial exato, Estado Distraído sob luz solar sem proteção
         "SENSIVEL" to -2, // oficial: complicacao_racial_maior
-        "SENTIDOS_AGUCADOS" to 2, // oficial: pericia_racial_d6 (Perceber d6, não é o bônus estreito de "sentidos aguçados")
-        "SENTIDOS_APRIMORADOS" to 2, // oficial: pericia_racial_d6 (Perceber d6)
-        "SENTIDOS_APURADOS" to 2, // oficial: pericia_racial_d6 (Perceber d6)
+        // Perceber é Perícia Básica (pericias.json "basica") — o livro (Básico pág.
+        // 21: "Perícia (1/Perícia)... por 2 pontos, ou 1 se já é uma perícia
+        // básica, ela começa em d6") dá desconto pra 1 ponto nesse caso, não os 2
+        // do d6 genérico. Achado auditando Avianos (que fecham em +2 só com esse
+        // ajuste) e confirmado contra o próprio texto de "Perícias Básicas"
+        // (Atletismo, Conhecimento Geral, Perceber, Persuadir, Furtividade).
+        "SENTIDOS_AGUCADOS" to 1, // oficial: pericia_racial_d6 (Perceber d6, perícia básica) — não é o bônus estreito de "sentidos aguçados" do Sci-Fi (ver SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA)
+        "SENTIDOS_APRIMORADOS" to 1, // oficial: pericia_racial_d6 (Perceber d6, perícia básica)
+        "SENTIDOS_APURADOS" to 1, // oficial: pericia_racial_d6 (Perceber d6, perícia básica)
         "SIGNOS_DE_NASCENCA" to 0, // placeholder de Seleção (Humano Império San escolhe 1 de 13 signos; o signo resolvido é que pontua)
         "SOCIALMENTE_SOFISTICADOS" to 2, // oficial: vantagem_racial
         "SOLIDO_COMO_ROCHA" to 2, // oficial: aumento_atributo
-        "SORRATEIRO" to 2, // oficial: pericia_racial_d6 (Furtividade d6)
+        "SORRATEIRO" to 1, // oficial: pericia_racial_d6 — Furtividade é Perícia Básica, desconto pra 1 (ver SENTIDOS_AGUCADOS)
         "SORTE" to 2, // sem equivalente oficial exato, Bene extra por sessão (tier de vantagem_racial)
         "SUCATEIRO" to 2, // oficial: vantagem_racial
         "SUSPEITOSO" to -1, // oficial: complicacao_racial_menor
@@ -522,7 +609,7 @@ object RacialTraitPointCatalog {
         "TAMANHO_MENOS_1" to -1, // oficial: tamanho_menos_1 (âncora: AnaoCiberNegativeTrait.tamanho_menos_1)
         "TELEPATIA" to 1, // oficial: telepatia
         "TRANSTORNO_DE_SEPARACAO" to -2, // oficial: transtorno_separacao (âncora: AnaoCiberNegativeTrait.transtorno_separacao)
-        "TRAPALHOES_TRAVESSOS" to 2, // oficial: pericia_racial_d6 (Furtividade d6)
+        "TRAPALHOES_TRAVESSOS" to 1, // oficial: pericia_racial_d6 — Furtividade é Perícia Básica, desconto pra 1 (ver SENTIDOS_AGUCADOS)
         "TREINADOS_PARA_A_GUERRA" to -2, // sem equivalente oficial exato, -4 numa perícia só (Conhecimento Geral), tier de penalidade_pericia_2
         "TRIPAS_RESISTENTE" to 2, // sem equivalente oficial exato, +1 em várias rolagens (Medo, Absorção, resistir veneno/náusea)
         "VELOCIDADE_DA_LEBRE" to 2, // oficial: movimentacao_bonus
@@ -541,7 +628,110 @@ object RacialTraitPointCatalog {
         "VOO_MOV_6" to 2, // oficial: voo_6 (Movimentação 6) — Fadas (Fantasia)
         "VOO_MOV_12" to 4, // oficial: voo_12 (Movimentação 12) — Avianos, Celestiais
         "VOO_MOV_24" to 6, // oficial: voo_24 (Movimentação 24, corrida +2d6) — sem raça oficial usando este tier ainda, id reservado pra manter os 3 tiers do catálogo oficial
-        "VOTO" to -2 // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
+        "VOTO" to -2, // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
+
+        // --- Traços lidos direto de "Habilidades de Ancestralidade" (Básico/
+        // Fantasia/Sci-Fi, docs/swade_basico|fantasia|scifi) que faltavam no
+        // catálogo — auditoria pedida pelo dono do projeto pra achar traços
+        // do livro sem custo cadastrado (ex.: Toque Venenoso, que motivou a
+        // revisão). Cada valor abaixo cita a entrada exata do livro.
+        "ALCANCE" to 1, // Básico "Alcance (3)": +1 Alcance/compra — ver VEZES_MAX, até 3x
+        "ATORDOAR" to 2, // Sci-Fi "Atordoar (1)": ataque desarmado força Vigor ou Atordoado
+        "BIOLOGIA_ACIDA" to 1, // Sci-Fi "Biologia Ácida (1)"
+        "CAVAR" to 1, // Básico "Cavar (1)"
+        "CAMUFLAGEM" to 1, // Fantasia/Sci-Fi "Camuflagem (1)": 1pt por 1 terreno (tier base; a versão "qualquer ambiente" custa 2 no livro)
+        "ECOLOCALIZACAO" to 1, // Fantasia/Sci-Fi "Ecolocalização (1)"
+        "FOSFORESCENCIA" to 1, // Fantasia "Fosforescência (1)": tier base (1 ponto); versão estroboscópica custa 2 no livro
+        "INTERFACE" to 2, // Sci-Fi "Interface (1)"
+        "INVISIBILIDADE" to 4, // Sci-Fi "Invisibilidade (1)": tier translúcido (4 pontos); total custa 8
+        "INVISIBILIDADE_TOTAL" to 8, // Sci-Fi "Invisibilidade (1)": tier totalmente invisível
+        "MODS" to 1, // Sci-Fi "Mods (1)": 3 espaços de Mods Robóticos
+        "NAO_FALA" to -1, // Básico "Não Fala (1)" — versão mais branda de INCAPAZ_DE_FALAR (-2)
+        "REPUGNANTE" to -1, // Sci-Fi "Repugnante (1)"
+        "SALTADOR" to 2, // Básico "Saltador (1)"
+        "SEM_MANIPULADORES" to -4, // Sci-Fi "Sem Manipuladores (1)"
+        "SEMIAQUATICO" to 1, // Básico "Aquático/Semi-Aquático (1)": tier semi-aquático (1pt); tier Aquático completo é AQUATICO (2pts)
+        "TENTACULOS" to 2, // Sci-Fi "Tentáculos (2)": tier base (+2 Agarrar); 2ª ação de tentáculo custa 4
+        "REGENERACAO" to 2, // Básico "Regeneração (1)": tier base (cura 1x/dia); recuperar lesão permanente custa 3
+        "PERICIAS_BASICAS_REDUZIDAS_TOTAL" to -3, // sem tier exato no livro (Perícias Básicas Reduzidas é -1 POR perícia, até 5x) — estimativa própria pra "todas de uma vez" (Robôs Limitado), calibrada acima de -2 (Complicação Maior) mas abaixo do pacote completo de -5
+
+        // Toque Venenoso: MESMA fórmula em Fantasia e Sci-Fi ("Toque Venenoso
+        // (1): ... Veneno Moderado [1pt]. Altere para Nocauteador +1,
+        // Paralisante +2 ou Letal +3. Por +2pts, cuspir/projetar à distância.").
+        // Básico usa uma versão simplificada (+3 fixo pra qualquer melhoria de
+        // veneno), mas nenhuma raça oficial usa Toque Venenoso vindo do
+        // Básico — todas as raças/Variantes que têm este traço são Sci-Fi, daí
+        // os ids abaixo seguirem a escala granular de Fantasia/Sci-Fi. Cada
+        // combinação intensidade×alcance é seu próprio id (nunca dois efeitos
+        // somados em tempo de execução), cobrindo o range de 1 a 6 pontos que
+        // o livro descreve: base(1) + upgrade de veneno(0/+1/+2/+3) +
+        // cuspir/projetar(0/+2).
+        "TOQUE_VENENOSO" to 1, // Veneno Moderado, ataque corpo a corpo (tier base)
+        "TOQUE_VENENOSO_MODERADO" to 1, // mesmo tier base, nome explícito (Insetoides Vespa)
+        "TOQUE_VENENOSO_NOCAUTEADOR" to 2, // Moderado (1) + Nocauteador (+1)
+        "TOQUE_VENENOSO_PARALISANTE" to 3, // Moderado (1) + Paralisante (+2)
+        "TOQUE_VENENOSO_LETAL" to 4, // Moderado (1) + Letal (+3)
+        "TOQUE_VENENOSO_CUSPIDOR" to 3, // Moderado (1) + cuspir/projetar à distância (+2) — Sáurios Cuspidor, sem intensidade maior indicada no livro
+        "TOQUE_VENENOSO_MODERADO_CUSPIDOR" to 3, // mesmo valor de TOQUE_VENENOSO_CUSPIDOR, nome explícito
+        "TOQUE_VENENOSO_NOCAUTEADOR_CUSPIDOR" to 4, // Nocauteador (2) + cuspir (+2)
+        "TOQUE_VENENOSO_PARALISANTE_CUSPIDOR" to 5, // Paralisante (3) + cuspir (+2)
+        "TOQUE_VENENOSO_LETAL_CUSPIDOR" to 6, // Letal (4) + cuspir (+2) — o teto de 6 pontos que o livro descreve
+        "FERRAO_MORDIDA_FOR_D4" to 1, // mesma arma natural de MORDIDA, só com nome "Ferrão" (Insetoides Vespa)
+        "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO" to 4, // mesmo valor de MUDAR_DE_FORMA — versão restrita (sem variar Tamanho), não um tier mais barato no livro
+
+        // Aliases de tiers de traços já cadastrados sob outro id/livro — mesmo
+        // conceito e mesmo valor, só usados por uma Variante com nome/id
+        // próprio (ver AncestryVariantRegistry.kt).
+        "ARMA_DE_SOPRO_FOGO" to 2, // mesmo valor de ARMA_DE_SOPRO, elemento Fogo (Drakens Dragão)
+        "ARMA_DE_SOPRO_FRIO" to 2, // mesmo valor de ARMA_DE_SOPRO, elemento Frio (Yetis Sopro)
+        "ACAO_ADICIONAL_FISICA" to 4, // mesmo valor de ACOES_ADICIONAIS (tier condicional físico/mental)
+        "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS" to 5, // mesmo valor de ACAO_ADICIONAL (tier incondicional)
+        "SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA" to 1, // Sci-Fi "Sentidos Aguçados (3)" tier "Visão de Águia" — 1pt/pick, efeito estreito diferente do pericia_racial_d6 que SENTIDOS_AGUCADOS (2) representa em outras raças
+
+        // Complicações reais (complicacoes.json) usadas como TraitAddition de
+        // Variante com o próprio nome de severidade no id — mesmo valor -2 do
+        // id base já cadastrado acima, só com o sufixo/tier explícito.
+        "DESASTRADO_MENOR" to -1, // mesma Complicação de DESASTRADO (-1)
+        "SANGUINARIO_MAIOR" to -2, // mesma Complicação de SANGUINARIO (-2)
+        "CURIOSO_MAIOR" to -2, // mesma Complicação de CURIOSO (-2)
+        "SEM_ESCRUPULOS_MAIOR" to -2, // mesma Complicação de SEM_ESCRUPULOS (-2)
+        "FORASTEIRO_MAIOR" to -2, // mesma Complicação de FORASTEIRO (-2)
+        "SENSIVEL_MAIOR" to -2, // mesma Complicação de SENSIVEL (-2)
+        "VOTO_MAIOR" to -2, // mesma Complicação de VOTO (-2)
+        "OBRIGACAO_MAIOR" to -2, // complicacoes.json "obrigacao" (Menor ou Maior) — tier Maior
+        "PROCURADO_MAIOR" to -2, // complicacoes.json "procurado" (Menor ou Maior) — tier Maior
+        "DEPENDENCIA_ATMOSFERICA_MAIOR" to -2, // Sci-Fi "Dependência Atmosférica (1)": tier "a cada minuto" (-2), não o tier base (-1) de DEPENDENCIA_ATMOSFERICA
+        "DEPENDENCIA_ATMOSFERICA_EXTREMA" to -4, // Sci-Fi "Dependência Atmosférica (1)": tier "a cada rodada" (-4) — sem raça oficial usando este tier ainda
+        // Complicação real "Habitante de Gravidade Zero/Baixa" (só existe como
+        // Maior no catálogo — complicacoes.json "habitante_gravidade_zero_baixa"),
+        // usada com 3 nomes de exibição diferentes conforme a Variante.
+        "HABITANTE_DE_GRAVIDADE_ZERO_BAIXA" to -2,
+        "HABITANTE_DE_GRAVIDADE_ZERO_BAIXA_MAIOR" to -2,
+        "HABITANTE_DE_GRAVIDADE_BAIXA" to -2,
+
+        // Vantagens reais (vantagens.json) concedidas de graça por Variante —
+        // custo pelo Estágio (ResolveVariantPointBudgetUseCase.custoDeAdicionarVantagem):
+        // Novato/sem estágio = 2, Experiente = 3.
+        "SENHOR_DAS_FERAS" to 2, // vantagens.json "senhor_das_feras", Estágio Novato
+        "CIBERTOLERANCIA" to 2, // vantagens.json "cibertolerancia", Estágio Novato
+        "ADAPTACAO_GRAVITACIONAL" to 2, // vantagens.json "adaptacao_gravitacional", Estágio Novato
+        "PODERES_MISTICOS_TELEPATA" to 3, // vantagens.json "poderes_misticos", Estágio Experiente
+
+        // Placeholder de Seleção (custo 0 de propósito — ver comentário de
+        // DONS_DA_NATUREZA acima): Descendente Elemental (Fantasia) escolhe 1
+        // de 4 elementos (Água/Ar/Fogo/Terra), cada um injetando o traço
+        // resolvido de verdade (AQUATICO/AR_INTERNO/RAPIDO/SOLIDO_COMO_ROCHA,
+        // todos já valendo 2) — ver AncestryVariantRegistry.descendenteElemental().
+        "ELEMENTO_ANCESTRAL" to 0,
+
+        // Penalidade genérica de -1 numa perícia comum (oficial:
+        // penalidade_pericia_1) — reaproveitável por qualquer raça que precise
+        // de mais de uma instância (cada instância é uma habilidade própria,
+        // não "vezes" — vezes multiplicaria o mesmo alvo, aqui os alvos são
+        // perícias diferentes). Primeiro uso: Golens (Fantasia) "Desajeitado"
+        // = -1 Atletismo + -1 Furtividade, duas compras separadas, não uma
+        // penalidade -3 arbitrária.
+        "PENALIDADE_PERICIA_1" to -1
     )
 
     /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).
@@ -560,6 +750,16 @@ object RacialTraitPointCatalog {
             "SKILL_BOOST" -> if (value >= 1) 2 else 1
             "GRANTED_EDGE", "GRANTED_EDGE_CHOICE", "GRANTED_POWER" -> 2
             "RACIAL_HINDRANCE" -> if (severity?.uppercase() == "MAIOR") -2 else -1
+            // Complicações reais de complicacoes.json com severidade "Menor ou
+            // Maior" (a raça escolhe qual) — CUSTOS sozinho não sabe qual
+            // severidade cada raça usa (ex.: Sáurios "Forasteiro" é Menor, a
+            // maioria das outras raças com Forasteiro é Maior), então esses 5
+            // ids leem o campo estruturado `severity` da própria habilidade
+            // (RacialAbility.severity, nunca texto livre) em vez do valor fixo
+            // do mapa. Sem severity informado, mantém o padrão Maior de antes
+            // (não quebra nenhuma chamada existente que não passa esse parâmetro).
+            "FORASTEIRO", "PACIFISTA", "SEM_ESCRUPULOS", "SENSIVEL", "VOTO" ->
+                if (severity?.uppercase() == "MENOR") -1 else CUSTOS[key] ?: 0
             "TOUGHNESS_FLAT" -> value
             "PACE_CHANGE" -> value
             "SIZE_CHANGE" -> value
