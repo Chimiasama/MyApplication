@@ -556,19 +556,23 @@ object RacialTraitPointCatalog {
         "FRAGIL" to -1, // oficial: fragil (âncora: AnaoCiberNegativeTrait.fragil)
         "FRAQUEZA_AMBIENTAL" to -1, // oficial: fraqueza_ambiental
         "GANANCIOSO" to -1, // oficial: complicacao_racial_menor
-        // Garras oficial (livro): base 2 pontos = For+d4+PA 2 (o bônus de
-        // Atletismo pra escalar é só texto explicativo do livro — não custa
-        // ponto à parte). +1 ponto separado eleva o dano pra For+d6. Três
-        // tiers: GARRAS_SEM_PA (1, For+d4 sem PA — id do Rakashano no livro
-        // Básico/Horror/Sci-Fi/Super e Feral, cujo texto nunca menciona PA:
-        // "causam Força + d4 de dano", sem mais), GARRAS (2, For+d4+PA — só o
-        // Rakashano do Fantasia tem PA no texto: "têm PA 2 e adicionam +2 às
-        // jogadas de Atletismo", também usado por Povo Ratazana e Draconianos)
-        // e GARRAS_MAIORES (3, For+d6+PA — nenhuma raça usa ainda). Mesmo
-        // padrão de CHIFRES/CHIFRES_MAIORES.
-        "GARRAS_SEM_PA" to 1,
-        "GARRAS" to 2,
-        "GARRAS_MAIORES" to 3,
+        // Garras oficial (livro): entrada própria de "Garras" na tabela de
+        // criação de raças, com base MAIOR que a de Armas Naturais genéricas
+        // (Mordida/Chifres começam em 1) — base 2 pontos = For+d4 sem PA.
+        // Quatro tiers, dois eixos independentes (+1 ponto cada): elevar o
+        // dano pra For+d6, e adicionar PA 2. GARRAS_SEM_PA (2, For+d4 sem PA
+        // — id do Rakashano no livro Básico/Horror/Sci-Fi/Super e Feral,
+        // cujo texto nunca menciona PA: "causam Força + d4 de dano", sem
+        // mais), GARRAS (3, For+d4+PA — só o Rakashano do Fantasia tem PA no
+        // texto: "têm PA 2 e adicionam +2 às jogadas de Atletismo", também
+        // usado por Povo Ratazana e Draconianos), GARRAS_MAIORES_SEM_PA (3,
+        // For+d6 sem PA — nenhuma raça usa ainda) e GARRAS_MAIORES (4,
+        // For+d6+PA — nenhuma raça usa ainda). Diferente de CHIFRES (sem
+        // opção de PA na tabela, só 2 tiers).
+        "GARRAS_SEM_PA" to 2,
+        "GARRAS" to 3,
+        "GARRAS_MAIORES_SEM_PA" to 3,
+        "GARRAS_MAIORES" to 4,
         "GELATINOSO" to 2, // oficial: gelatinoso_2 — tier base (metade do dano de queda/colisão)
         "GELATINOSO_MAIOR" to 3, // mesmo trecho: também atravessa grades/aberturas como Terreno Difícil
         "GUIADO" to -2, // oficial: complicacao_racial_maior

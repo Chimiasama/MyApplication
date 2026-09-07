@@ -789,7 +789,6 @@
         "descricao": "For+d4, PA 2. Garras adicionam +2 em Atletismo ao escalar a maioria das superfícies.",
         "id": "GARRAS",
         "category": "racial_trait_positive",
-        "pontos": 2,
         "descricaoLite": "Garras causam Força+d4 com PA 2, além de +2 em Atletismo para escalar.",
         "armasNaturais": [
           {
