@@ -563,6 +563,13 @@ object RacialTraitPointCatalog {
         // "Esquisitices (Hábito)"/"Esquisitices (Peculiaridade)" via `nome`,
         // igual ao padrão de Mente de Colmeia (GUIADO/LEAL) dos Insetoides.
         "ESTAVEL" to 1, // oficial: estavel
+        // Kitsunemimi agora usa traitId=RACIAL_HINDRANCE + targetRef=
+        // "Cauteloso" (skin) pra conceder a Complicação real de verdade —
+        // mas o `id` continua aqui porque ResolveVariantPointBudgetUseCase.
+        // habilidadeComoItem() ainda lê custoDe(habilidade.id) direto, sem
+        // passar por resolvedTraitId() (não sabe de `traitId`). Removendo
+        // esta entrada, o editor de Variante custom passaria a devolver 0
+        // pontos ao remover este traço da raça base, em vez de -1.
         "EXCESSIVAMENTE_DETALHISTAS" to -1, // oficial: complicacao_racial_menor (Cauteloso)
         "FE" to 2, // oficial: pericia_racial_d6 (Fé d6)
         "FELIZES_POR_NATUREZA" to 2, // oficial: aumento_atributo
@@ -735,6 +742,10 @@ object RacialTraitPointCatalog {
         "SENTIDOS_APRIMORADOS" to 1, // oficial: pericia_racial_d6 (Perceber d6, perícia básica)
         "SENTIDOS_APURADOS" to 1, // oficial: pericia_racial_d6 (Perceber d6, perícia básica)
         "SIGNOS_DE_NASCENCA" to 0, // placeholder de Seleção (Humano Império San escolhe 1 de 13 signos; o signo resolvido é que pontua)
+        // Kitsunemimi agora usa traitId=GRANTED_EDGE + targetRef="Cativar o
+        // Ambiente" (skin) pra conceder a Vantagem real de verdade — mas o
+        // `id` continua aqui pelo mesmo motivo do EXCESSIVAMENTE_DETALHISTAS
+        // acima (habilidadeComoItem() não sabe de `traitId`).
         "SOCIALMENTE_SOFISTICADOS" to 2, // oficial: vantagem_racial
         "SOLIDO_COMO_ROCHA" to 2, // oficial: aumento_atributo
         "SORRATEIRO" to 1, // oficial: pericia_racial_d6 — Furtividade é Perícia Básica, desconto pra 1 (ver SENTIDOS_AGUCADOS)

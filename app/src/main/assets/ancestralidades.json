@@ -4387,8 +4387,10 @@
       {
         "nome": "Excessivamente Detalhistas",
         "descricao": "Planejar esquemas e metáforas extravagantes leva tempo, e às vezes um kitsunemimi superestima esse tempo. Todos sofrem com a Complicação Cauteloso.",
-        "category": "racial_trait_positive",
+        "category": "racial_hindrance",
         "id": "EXCESSIVAMENTE_DETALHISTAS",
+        "traitId": "RACIAL_HINDRANCE",
+        "targetRef": "Cauteloso",
         "descricaoLite": "Carrega a Complicação Cauteloso, por gastar tempo demais elaborando planos elaborados."
       },
       {
@@ -4401,19 +4403,17 @@
       {
         "nome": "Socialmente Sofisticados",
         "descricao": "Os kitsunemimi direcionam outras pessoas para esquemas complexos. Eles começam com a Vantagem Cativar o Ambiente.",
-        "category": "racial_trait_positive",
+        "category": "racial_edge",
         "id": "SOCIALMENTE_SOFISTICADOS",
+        "traitId": "GRANTED_EDGE",
+        "targetRef": "Cativar o Ambiente",
         "descricaoLite": "Concede a Vantagem Cativar o Ambiente desde a criação do personagem."
       }
     ],
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "CATIVAR O AMBIENTE"
-    ],
-    "desvantagens": [
-      "CAUTELOSO"
-    ],
+    "vantagensGratis": [],
+    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],

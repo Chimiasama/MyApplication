@@ -269,16 +269,25 @@ fun String.racialGrantDedupeKey(): String =
 // aba Ancestralidades), mesmo a concessão mecânica de verdade só acontecendo uma vez
 // (ResolveGrantedAncestryAdvantagesUseCase já tinha seu próprio distinctBy(id)).
 fun vantagensGratisEfetivas(vantagensGratis: List<String>, habilidades: List<RacialAbility>): List<String> =
-    (vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { it.id ?: it.nome })
-        .distinctBy { it.racialGrantDedupeKey() }
+    (vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { hab ->
+        // targetRef (traitId=GRANTED_EDGE) tem prioridade — é o id/nome real
+        // da Vantagem quando `nome` é só skin (ex.: Kitsunemimi "Socialmente
+        // Sofisticados" concedendo "Cativar o Ambiente"). Sem targetRef, cai
+        // pro id ?: nome de sempre (raças antigas onde os dois já coincidem).
+        hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.id ?: hab.nome
+    }).distinctBy { it.racialGrantDedupeKey() }
 
 fun desvantagensEfetivas(desvantagens: List<String>, habilidades: List<RacialAbility>): List<String> =
     (desvantagens + habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
+        // targetRef (traitId=RACIAL_HINDRANCE) tem prioridade, mesmo motivo
+        // do caso GRANTED_EDGE acima (skin de nome, ex.: Kitsunemimi
+        // "Excessivamente Detalhistas" concedendo "Cauteloso").
+        val base = hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.nome
         val sev = hab.severity
-        if (sev != null && !hab.nome.contains("($sev)", ignoreCase = true)) {
-            "${hab.nome} ($sev)"
+        if (sev != null && !base.contains("($sev)", ignoreCase = true)) {
+            "$base ($sev)"
         } else {
-            hab.nome
+            base
         }
     }).distinctBy { it.racialGrantDedupeKey() }
 
