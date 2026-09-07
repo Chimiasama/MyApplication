@@ -240,12 +240,8 @@ fun buildSummaryLines(
         val bloquearAprimoradoBonus =
             if (personagem.vantagens.contains(Constants.ID_BLOQUEAR_APRIMORADO)) 1 else 0
 
-        val isDeaders = especieIdAtual == "deaders"
-        val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
+        val hasApararBaixo = personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
         val apararBaixoMod = if (hasApararBaixo) -2 else 0
-
-        val isSerranos = especieIdAtual == "serranos"
-        val serranosApararMod = if (isSerranos) 2 else 0
 
         val racialParryBonus = (personagem.vantagensRaciais + personagem.desvantagensRaciais)
             .sumOf { raw ->
@@ -268,7 +264,7 @@ fun buildSummaryLines(
 
         val total =
             base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower +
-                apararBaixoMod + serranosApararMod + racialParryBonus + garcaParryBonus
+                apararBaixoMod + racialParryBonus + garcaParryBonus
         return total.coerceAtLeast(0)
     }
 
@@ -719,9 +715,6 @@ fun buildSummaryLines(
             }
             .filterNot { trait ->
                 isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
-            }
-            .filterNot { trait ->
-                especieIdAtual == "serranos" && trait.keyify() == "NOCAO DE PERIGO"
             }
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
             .map { trait ->

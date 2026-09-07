@@ -47,9 +47,9 @@ class RacialModifierGroupingTest {
 
     @Test
     fun `racas diferentes com mecanica identica NAO sao fundidas`() {
-        // Regressão: Kalianos reaproveita literalmente o mesmo bloco de habilidades de
-        // Quadroides no livro Sci-Fi, mas são raças diferentes e devem aparecer como duas
-        // linhas separadas e selecionáveis.
+        // Regressão: duas raças distintas com o mesmo bloco de habilidades por coincidência
+        // (um livro reaproveitando o bloco entre duas entradas com nomes diferentes) devem
+        // aparecer como duas linhas separadas e selecionáveis, não fundidas numa só.
         val habilidadesCompartilhadas = listOf(
             RacialAbility(nome = "Ação Adicional", descricao = "Ignora 2 pontos de penalidade por Ações Múltiplas."),
             RacialAbility(nome = "Frágil", descricao = "Reduz a Resistência em 1.")
@@ -59,13 +59,13 @@ class RacialModifierGroupingTest {
             habilidades = habilidadesCompartilhadas,
             opcoes = listOf("Padrão", "Habilidoso")
         )
-        val kalianos = raca("Kalianos", "SCI_FI", habilidades = habilidadesCompartilhadas)
+        val outraRaca = raca("Outra Raça", "SCI_FI", habilidades = habilidadesCompartilhadas)
 
-        val grupos = groupAncestralidadesForDisplay(listOf(quadroides, kalianos))
+        val grupos = groupAncestralidadesForDisplay(listOf(quadroides, outraRaca))
 
         assertEquals(2, grupos.size)
         val nomes = grupos.map { it.first().nome }.toSet()
-        assertEquals(setOf("Quadroides", "Kalianos"), nomes)
+        assertEquals(setOf("Quadroides", "Outra Raça"), nomes)
     }
 
     @Test

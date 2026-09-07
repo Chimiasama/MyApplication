@@ -253,7 +253,7 @@ object AncestryVariantRegistry {
                     nome = "Padrão",
                     pacoteFixo = ResolvedTraitPackage(
                         // Mesmos ids que já existem nativamente em
-                        // ancestralidades.json pra Centaux/Aurax — "Padrão" só
+                        // ancestralidades.json pra Centaux — "Padrão" só
                         // reafirma o que a raça base já concede (existe pra
                         // "Gazela" poder trocar por 2x MOVIMENTACAO abaixo).
                         // TAMANHO_MAIS_1/MOVIMENTACAO são os traços empilháveis

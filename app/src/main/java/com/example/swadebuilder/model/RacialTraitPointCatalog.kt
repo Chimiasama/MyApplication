@@ -633,7 +633,7 @@ object RacialTraitPointCatalog {
         "VISAO_NO_ESCURO" to 1, // oficial: visao_escuro
         "VISAO_TOTAL_NO_ESCURO" to 1, // oficial: visao_total_escuro
         "VOLUMOSO" to -2, // oficial: volumoso (Básico) — mesmo traço reaproveitado por Golens,
-        // Meio-Gigantes, Minotauros, Ogros, Centaux, Elementais, Yetis e Aurax, cada um com
+        // Meio-Gigantes, Minotauros, Ogros, Centaux, Elementais e Yetis, cada um com
         // "GRANDE" como nome de exibição (confirmado contra os 3 livros: descrição idêntica —
         // -2 em Característica com equipamento não personalizado, sem armadura/roupa, custo em
         // dobro). Id antigo "GRANDE" tinha -1 por engano (comentário achava que não existia

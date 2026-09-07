@@ -213,8 +213,8 @@ fun stripAncestralidadeScenarioSuffix(nome: String): String =
  *    cenário/companheiros costumam trazer uma versão mais específica que o Básico.
  * 2. Por (nome-base sem sufixo de cenário, assinatura mecânica): funde apenas quando AMBOS
  *    coincidem, nunca só a assinatura — duas raças diferentes podem ter atributos/perícias/
- *    habilidades idênticos por coincidência (ex.: Kalianos reaproveita o mesmo bloco de
- *    habilidades de Quadroides no Sci-Fi) sem serem a mesma raça. Exigir o nome-base também
+ *    habilidades idênticos por coincidência (um livro reaproveitando o mesmo bloco de
+ *    habilidades pra duas entradas com nomes distintos) sem serem a mesma raça. Exigir o nome-base também
  *    preserva a fusão legítima de variantes de nome da mesma raça entre livros (ex.: "Humano"
  *    e "Humano (Buscatrilha)").
  */
