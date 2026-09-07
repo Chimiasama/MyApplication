@@ -231,7 +231,8 @@ object RacialTraitPointCatalog {
         "FRAGIL" to 2, // livro: "Frágil (2)"
         "MOVIMENTACAO" to 2, // livro: "Movimentação (2)"
         "ALCANCE" to 3, // livro: "Alcance (3)", +1 Alcance/compra
-        "PERICIAS_BASICAS_REDUZIDAS" to 5 // livro: "Perícias Básicas Reduzidas (5)", -1/compra (uma perícia básica por vez)
+        "PERICIAS_BASICAS_REDUZIDAS" to 5, // livro: "Perícias Básicas Reduzidas (5)", -1/compra (uma perícia básica por vez)
+        "REDUCAO_DE_SONO" to 2 // livro: "Redução de Sono (2)" — 1ª compra reduz o sono pela metade, 2ª compra elimina o sono
     )
 
     /** Teto de vezes que o id pode ser comprado (1 se não estiver listado). */
@@ -317,7 +318,11 @@ object RacialTraitPointCatalog {
         "SEM_MANIPULADORES" to "Sem Manipuladores",
         "SEMIAQUATICO" to "Semiaquático",
         "TENTACULOS" to "Tentáculos",
-        "TOQUE_VENENOSO" to "Toque Venenoso (Moderado)",
+        // Tier base (1pt): Sci-Fi descreve como veneno "Moderado", Fantasia como
+        // "Leve ou Incapacitante" — mesmo custo nos dois livros, só muda o nome do
+        // efeito de veneno aplicado. Rótulo genérico aqui pra não sugerir "Moderado"
+        // em contexto Fantasia; cada raça mostra sua própria descrição no JSON.
+        "TOQUE_VENENOSO" to "Toque Venenoso",
         "TOQUE_VENENOSO_MODERADO" to "Toque Venenoso (Moderado)",
         "TOQUE_VENENOSO_NOCAUTEADOR" to "Toque Venenoso (Nocauteador)",
         "TOQUE_VENENOSO_PARALISANTE" to "Toque Venenoso (Paralisante)",
@@ -356,7 +361,18 @@ object RacialTraitPointCatalog {
         "PERICIAS_BASICAS_REDUZIDAS_TOTAL" to "Perícias Básicas Reduzidas (Total)",
         "REGENERACAO" to "Regeneração",
         "ELEMENTO_ANCESTRAL" to "Elemento Ancestral",
-        "PENALIDADE_PERICIA_1" to "Penalidade em Perícia (-1)"
+        "PENALIDADE_PERICIA_1" to "Penalidade em Perícia (-1)",
+        "PENALIDADE_PERICIA_2" to "Penalidade em Perícia (-2)",
+        "PENALIDADE_ATRIBUTO_2" to "Penalidade em Atributo (-2)",
+        "DOENTE" to "Doente",
+        "DOENTE_MAIOR" to "Doente (Maior)",
+        "BONUS_PERICIA_1" to "Bônus de Perícia (+1)",
+        "BONUS_PERICIA_2" to "Bônus de Perícia (+2)",
+        "CAMUFLAGEM_TOTAL" to "Camuflagem (Qualquer Ambiente)",
+        "FOSFORESCENCIA_ESTROBOSCOPICA" to "Fosforescência (Estroboscópica)",
+        "REGENERACAO_MAIOR" to "Regeneração (Lesão Permanente)",
+        "SENTIDOS_AGUCADOS_AUDICAO" to "Sentidos Aguçados (Audição)",
+        "SENTIDOS_AGUCADOS_OLFATO" to "Sentidos Aguçados (Olfato)"
     )
 
     /**
@@ -431,6 +447,11 @@ object RacialTraitPointCatalog {
         "BEBEDOR_DE_SANGUE" to 1, // sem equivalente oficial, utilidade condicional 1x/sessão
         "BOCA_GRANDE" to -1, // oficial: complicacao_racial_menor
         "BOM_CONSELHEIRO" to -1, // oficial: complicacao_racial_menor (Peculiaridade)
+        // oficial: "Bônus de Perícia" (Básico) — bônus fixo de +1/+2 na rolagem de
+        // uma perícia específica, diferente de "Perícia" (pericia_racial_d4/d6, que
+        // eleva o DADO inicial). Nenhuma raça cadastrada usa isso hoje.
+        "BONUS_PERICIA_1" to 1,
+        "BONUS_PERICIA_2" to 2,
         "BRINCALHAO" to 1, // oficial: pericia_racial_d4 (Provocar d4)
         "BRINCANDO_COM_O_DESTINO" to 2, // oficial: pericia_racial_d6 (Jogar d6, não d4)
         "BRUTAL" to -1, // oficial: penalidade_pericia_1 (-1 Persuadir, perícia)
@@ -478,6 +499,13 @@ object RacialTraitPointCatalog {
         "DIMINUTO_TAMANHO_2" to 2, // livro: Diminuto (1), tier Pequeno — nenhuma raça oficial usa este tier ainda, id reservado
         "DIMINUTO_TAMANHO_3" to 4, // livro: Diminuto (1), tier Muito Pequeno (Ferais Padrão)
         "DIMINUTO_TAMANHO_4" to 6, // mesmo valor de DIMINUTO — Tamanho -4 (Ferais Menor)
+        // oficial: "Doente" (Sci-Fi) — -2 pra resistir/recuperar de doenças. Nenhuma
+        // raça cadastrada usa isso hoje; registrado pra constar na listagem de
+        // traços do sistema de criação (igual Cavar/Saltador, também sem raça).
+        "DOENTE" to -1,
+        // oficial: "Doente", tier maior — some rolar Vigor a cada Ferimento sofrido
+        // ou é infectada (Doença Debilitante).
+        "DOENTE_MAIOR" to -2,
         "DONS_DA_NATUREZA" to 0, // placeholder de Seleção (Umvee/Feral escolhem 1 de 6 dons; o dom resolvido é que pontua)
         "DURAO" to 2, // oficial: aumento_atributo
         "EM_FORMA" to 2, // oficial: aumento_atributo
@@ -652,9 +680,11 @@ object RacialTraitPointCatalog {
         "ATORDOAR" to 2, // Sci-Fi "Atordoar (1)": ataque desarmado força Vigor ou Atordoado
         "BIOLOGIA_ACIDA" to 1, // Sci-Fi "Biologia Ácida (1)"
         "CAVAR" to 1, // Básico "Cavar (1)"
-        "CAMUFLAGEM" to 1, // Fantasia/Sci-Fi "Camuflagem (1)": 1pt por 1 terreno (tier base; a versão "qualquer ambiente" custa 2 no livro)
+        "CAMUFLAGEM" to 1, // Fantasia/Sci-Fi "Camuflagem (1)": 1pt por 1 terreno (tier base)
+        "CAMUFLAGEM_TOTAL" to 2, // mesmo trecho: "qualquer ambiente", cor mutável
         "ECOLOCALIZACAO" to 1, // Fantasia/Sci-Fi "Ecolocalização (1)"
-        "FOSFORESCENCIA" to 1, // Fantasia "Fosforescência (1)": tier base (1 ponto); versão estroboscópica custa 2 no livro
+        "FOSFORESCENCIA" to 1, // Fantasia "Fosforescência (1)": tier base (1 ponto)
+        "FOSFORESCENCIA_ESTROBOSCOPICA" to 2, // mesmo trecho: efeito estroboscópico (-1 ataque corpo a corpo inimigo, +1 Desafio)
         "INTERFACE" to 2, // Sci-Fi "Interface (1)"
         "INVISIBILIDADE" to 4, // Sci-Fi "Invisibilidade (1)": tier translúcido (4 pontos); total custa 8
         "INVISIBILIDADE_TOTAL" to 8, // Sci-Fi "Invisibilidade (1)": tier totalmente invisível
@@ -665,7 +695,8 @@ object RacialTraitPointCatalog {
         "SEM_MANIPULADORES" to -4, // Sci-Fi "Sem Manipuladores (1)"
         "SEMIAQUATICO" to 1, // Básico "Aquático/Semi-Aquático (1)": tier semi-aquático (1pt); tier Aquático completo é AQUATICO (2pts)
         "TENTACULOS" to 2, // Sci-Fi "Tentáculos (2)": tier base (+2 Agarrar); 2ª ação de tentáculo custa 4
-        "REGENERACAO" to 2, // Básico "Regeneração (1)": tier base (cura 1x/dia); recuperar lesão permanente custa 3
+        "REGENERACAO" to 2, // Básico "Regeneração (1)": tier base (cura 1x/dia)
+        "REGENERACAO_MAIOR" to 3, // mesmo trecho: também recupera lesão permanente
         "PERICIAS_BASICAS_REDUZIDAS_TOTAL" to -3, // sem tier exato no livro (Perícias Básicas Reduzidas é -1 POR perícia, até 5x) — estimativa própria pra "todas de uma vez" (Robôs Limitado), calibrada acima de -2 (Complicação Maior) mas abaixo do pacote completo de -5
 
         // Toque Venenoso: MESMA fórmula em Fantasia e Sci-Fi ("Toque Venenoso
@@ -699,7 +730,9 @@ object RacialTraitPointCatalog {
         "ARMA_DE_SOPRO_FRIO" to 2, // mesmo valor de ARMA_DE_SOPRO, elemento Frio (Yetis Sopro)
         "ACAO_ADICIONAL_FISICA" to 4, // mesmo valor de ACOES_ADICIONAIS (tier condicional físico/mental)
         "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS" to 5, // mesmo valor de ACAO_ADICIONAL (tier incondicional)
-        "SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA" to 1, // Sci-Fi "Sentidos Aguçados (3)" tier "Visão de Águia" — 1pt/pick, efeito estreito diferente do pericia_racial_d6 que SENTIDOS_AGUCADOS (2) representa em outras raças
+        "SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA" to 1, // Sci-Fi "Sentidos Aguçados (3)" tier "Visão de Águia" — 1pt/pick, efeito estreito diferente do pericia_racial_d6 que SENTIDOS_AGUCADOS representa em outras raças
+        "SENTIDOS_AGUCADOS_AUDICAO" to 1, // mesmo trecho, opção "Audição" — 1pt/pick. Sem raça cadastrada ainda
+        "SENTIDOS_AGUCADOS_OLFATO" to 1, // mesmo trecho, opção "Olfato" — 1pt/pick. Sem raça cadastrada ainda
 
         // Complicações reais (complicacoes.json) usadas como TraitAddition de
         // Variante com o próprio nome de severidade no id — mesmo valor -2 do
@@ -744,7 +777,15 @@ object RacialTraitPointCatalog {
         // perícias diferentes). Primeiro uso: Golens (Fantasia) "Desajeitado"
         // = -1 Atletismo + -1 Furtividade, duas compras separadas, não uma
         // penalidade -3 arbitrária.
-        "PENALIDADE_PERICIA_1" to -1
+        "PENALIDADE_PERICIA_1" to -1,
+        // oficial: mesmo trecho, tier maior — -2 numa perícia comum (ou -4 numa
+        // incomum). Nenhuma raça cadastrada usa isso hoje.
+        "PENALIDADE_PERICIA_2" to -2,
+        // oficial: "Penalidade em Atributo", tier maior (-2 no atributo, vs a tier
+        // -1 já coberta por SEM_INSTRUCAO — reaproveitada por nome de raça em vez
+        // de um id genérico, já que só Minotauros/Orcs usam essa tier hoje).
+        // Nenhuma raça cadastrada usa este tier maior ainda.
+        "PENALIDADE_ATRIBUTO_2" to -3
     )
 
     /** Custo em pontos do traço, pelo id ou parâmetros dinâmicos (0 se não estiver no catálogo).
