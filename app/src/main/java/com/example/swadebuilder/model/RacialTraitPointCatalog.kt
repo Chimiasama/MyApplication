@@ -446,7 +446,11 @@ object RacialTraitPointCatalog {
         "ALMOFADINHA" to -1, // oficial: complicacao_racial_menor
         "ALTA_TECNOLOGIA" to -2, // oficial: complicacao_racial_maior
         "ANALFABETO" to -1, // oficial: complicacao_racial_menor
-        "ANCESTRALIDADE_INFAME" to -2, // sem equivalente oficial: -2 Persuadir + reações sempre Não Cooperativas
+        // ANCESTRALIDADE_INFAME removido: na realidade é a Complicação real
+        // Forasteiro (Menor) só com nome trocado — Onigem agora usa
+        // id="FORASTEIRO"+severity="Menor" (-1), skin "Ancestralidade
+        // Infame" via `nome`, igual ao padrão já usado por Terracota/Umvee/
+        // Feral/Sáurios.
         "ANDAR_NAS_PAREDES" to 1, // oficial: andar_paredes
         "ANTECEDENTE_ARCANO_DEMONIO" to 4, // sem equivalente oficial (AA completo + poder inicial + 3 extra + 10 PP), acima de vantagem_racial
         "ANTECEDENTE_ARCANO_MILAGRES" to 3, // sem equivalente oficial (AA completo, menos detalhado que o de cima)
@@ -463,7 +467,10 @@ object RacialTraitPointCatalog {
         "APARAR_BAIXO" to -1, // oficial: aparar_baixo (-1 = -1pt/compra — ver VEZES_MAX, até 3x)
         "APTIDAO_COM_PEDRAS" to 1, // sem equivalente oficial, bônus situacional estreito
         "AQUATICO" to 2, // oficial: aquatico (não se afoga, Movimentação completa)
-        "ARISCOS" to -3, // duas perícias a -2 cada (Provocar resistida, Intimidar) — oficial penalidade_pericia_2 é só uma perícia
+        // ARISCOS removido: é a Penalidade em Perícia (-2) genérica de sempre
+        // (Usagimimi aplica o mesmo -2 tanto a Intimidar quanto a resistir
+        // Provocar, mas como UMA compra só do traço, não duas) — usa
+        // id="PENALIDADE_PERICIA_2", skin "Ariscos" via `nome`.
         "ARMADURA" to 1, // oficial: armadura_racial (+2 = 1pt/compra — ver VEZES_MAX, até 3x)
         "ARMA_DE_SOPRO" to 2, // oficial: arma_de_sopro
         "ARROGANTE" to -2, // oficial: complicacao_racial_maior
@@ -526,7 +533,7 @@ object RacialTraitPointCatalog {
         "DESASTRADO" to -1, // oficial: complicacao_racial_menor
         "DESPRETENSIOSOS_E_BARRIGUDOS" to -2, // -1 Aparar + -1 Movimentação + corrida d4, pacote de três penalidades leves
         "DICAS_CULTURAIS" to 2, // oficial: pericia_racial_d6 (Convenção d6)
-        "DIGESTAO_GLORIOSA" to 1, // sem equivalente oficial exato, imunidade estreita (só ingestão)
+        "DIGESTAO_GLORIOSA" to 2, // skin de Imune a Doenças e Venenos (IMUNE_DOENCAS_VENENOS), Araiguma
         // Confirmado direto no livro (Fantasia/Sci-Fi, "Diminuto (1)"): 2 pontos
         // Pequeno (Tamanho -2), 4 pontos Muito Pequeno (Tamanho -3), 6 pontos
         // Minúsculo (Tamanho -4). DIMINUTO_TAMANHO_3 valia 5 por engano (chute
@@ -551,7 +558,10 @@ object RacialTraitPointCatalog {
         "ESPACIAL" to 3, // oficial: espacial
         "ESPIRITUAL" to 2, // oficial: aumento_atributo
         "ESPIRITUOSO" to 2, // oficial: aumento_atributo
-        "ESQUISITICES" to -2, // duas Complicações Menores (Hábito + Peculiaridade), oficial -1 cada
+        // ESQUISITICES removido: Araiguma agora carrega as duas Complicações
+        // Menores reais separadas (HABITO + PECULIARIDADE, -1 cada), skin
+        // "Esquisitices (Hábito)"/"Esquisitices (Peculiaridade)" via `nome`,
+        // igual ao padrão de Mente de Colmeia (GUIADO/LEAL) dos Insetoides.
         "ESTAVEL" to 1, // oficial: estavel
         "EXCESSIVAMENTE_DETALHISTAS" to -1, // oficial: complicacao_racial_menor (Cauteloso)
         "FE" to 2, // oficial: pericia_racial_d6 (Fé d6)
@@ -607,6 +617,7 @@ object RacialTraitPointCatalog {
         "GELATINOSO" to 2, // oficial: gelatinoso_2 — tier base (metade do dano de queda/colisão)
         "GELATINOSO_MAIOR" to 3, // mesmo trecho: também atravessa grades/aberturas como Terreno Difícil
         "GUIADO" to -2, // oficial: complicacao_racial_maior
+        "HABITO" to -1, // oficial: complicacao_racial_menor (Araiguma "Esquisitices", skin)
         "HERANCA" to 2, // oficial: vantagem_racial OU aumento_atributo (escolha, mesmo tier)
         "HERANCA_MISTA" to 2, // oficial: vantagem_racial
         "IMPULSIVO" to -2, // Complicação Maior no catálogo real (complicacoes.json "impulsivo" só existe como Maior) — mesmo caso de AZARADO, corrigido pra bater com o catálogo
@@ -622,6 +633,7 @@ object RacialTraitPointCatalog {
         "INIMIGO_RACIAL" to -1, // oficial: inimigo_racial
         "INIMIGO_RACIAL_DEMONIOS_E_DIABOS" to -1, // oficial: inimigo_racial (escopo mais estreito)
         "INSANIDADE" to 0, // concede Furioso (Vantagem) e Sanguinário (Complicação Maior) juntos - se cancelam no saldo
+        "INSTINTO_DE_SOBREVIVENCIA" to 1, // oficial: pericia_racial_d4 (Sobrevivência d4) — Umvee, base da raça
         "INTEGRADO_A_NATUREZA" to 2, // oficial: pericia_racial_d6 (Sobrevivência d6)
         "INTELIGENCIA" to 2, // oficial: aumento_atributo
         "INTIMIDANTE" to 1, // oficial: pericia_racial_d4 (Intimidar d4, teto ampliado)
@@ -670,8 +682,15 @@ object RacialTraitPointCatalog {
         "OBVIO" to -1, // oficial: penalidade_pericia_1 (-1 Furtividade, perícia)
         "OPCAO_MAGICA" to 2, // sem equivalente oficial exato, acesso a escolher AA (Demônio) como Vantagem Novato
         "PACIFISTA" to -2, // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
+        "PECULIARIDADE" to -1, // oficial: complicacao_racial_menor (Araiguma "Esquisitices", skin)
+        // Umvee "Pele Iluminada pela Lua": metade do dom é o traço Aparar +1
+        // real (id APARAR); esta é a outra metade, sem efeito mecânico
+        // próprio no motor (só narrativo — "emanar luz"), skin "Pele
+        // Iluminada pela Lua (Emanar Luz)" via `nome`, exclusiva da raça.
+        "PELE_LUMINOSA" to 1,
         "PENSAMENTOS_POSITIVOS" to 2, // oficial: vantagem_racial
         "PEQUENOS" to -1, // oficial: tamanho_menos_1
+        "PERCEBER_D6" to 1, // oficial: pericia_racial_d6 — Perceber é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA) — Umvee "Gatoruja"
         "PERICIAS_BASICAS_REDUZIDAS" to -1, // oficial: pericias_basicas_reduzidas
         "PESFIRMES" to 1, // oficial: pericia_racial_d6 — Atletismo é Perícia Básica, desconto pra 1 (ver CAES_DE_GUARDA)
         // Humano (Império San, Arte da Guerra) fecha com pontosRaciaisEsperados=3
@@ -728,7 +747,7 @@ object RacialTraitPointCatalog {
         "TRANSTORNO_DE_SEPARACAO" to -2, // oficial: transtorno_separacao (âncora: AnaoCiberNegativeTrait.transtorno_separacao)
         "TRAPALHOES_TRAVESSOS" to 1, // oficial: pericia_racial_d6 — Furtividade é Perícia Básica, desconto pra 1 (ver SENTIDOS_AGUCADOS)
         "TREINADOS_PARA_A_GUERRA" to -2, // sem equivalente oficial exato, -4 numa perícia só (Conhecimento Geral), tier de penalidade_pericia_2
-        "TRIPAS_RESISTENTE" to 2, // sem equivalente oficial exato, +1 em várias rolagens (Medo, Absorção, resistir veneno/náusea)
+        "TRIPAS_RESISTENTE" to 3, // sem equivalente oficial exato (traço bespoke exclusivo de Onigem), +1 em várias rolagens (Medo, Absorção, resistir veneno/náusea)
         "VELOCIDADE_DA_LEBRE" to 2, // oficial: movimentacao_bonus
         "VIGOROSO" to 2, // oficial: aumento_atributo
         "VIGOROSOS" to 1, // oficial: resistencia_racial (+1)

@@ -83,7 +83,13 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")), result.tracosParaAdicionar)
+        assertEquals(
+            listOf(
+                TraitAddition("Pedregoso (Resistência)", "RESISTENCIA"),
+                TraitAddition("Pedregoso (Armadura)", "ARMADURA")
+            ),
+            result.tracosParaAdicionar
+        )
     }
 
     @Test
@@ -94,7 +100,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             selectionAnswers = emptyList()
         )
 
-        assertEquals(listOf(TraitAddition("GARRAS", "GARRAS")), result.tracosParaAdicionar)
+        assertEquals(listOf(TraitAddition("Ápice", "GARRAS_SEM_PA")), result.tracosParaAdicionar)
     }
 
     @Test

@@ -4280,11 +4280,20 @@
         "descricaoLite": "Furtividade inicial d6."
       },
       {
-        "nome": "Esquisitices",
-        "descricao": "Os Araiguma foram criados como criaturas excêntricas e desenvolveram personalidades que refletem nisso. Não importa a idade, todos possuem as complicações menores Hábito e Peculiaridade.",
-        "category": "racial_trait_positive",
-        "id": "ESQUISITICES",
-        "descricaoLite": "Carrega, em grau menor, as Complicações Hábito e Peculiaridade."
+        "nome": "Esquisitices (Hábito)",
+        "descricao": "Os Araiguma foram criados como criaturas excêntricas e desenvolveram personalidades que refletem nisso. Não importa a idade, todos possuem a Complicação Menor Hábito.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "HABITO",
+        "descricaoLite": "Carrega a Complicação Menor Hábito."
+      },
+      {
+        "nome": "Esquisitices (Peculiaridade)",
+        "descricao": "Os Araiguma foram criados como criaturas excêntricas e desenvolveram personalidades que refletem nisso. Não importa a idade, todos possuem a Complicação Menor Peculiaridade.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "PECULIARIDADE",
+        "descricaoLite": "Carrega a Complicação Menor Peculiaridade."
       }
     ],
     "atributos": {},
@@ -4543,7 +4552,7 @@
         "nome": "Ariscos",
         "descricao": "Os Usagimimi subtraem 2 das rolagens resistidas de Provocar e ao fazer rolagens de Intimidar.",
         "category": "racial_trait_negative",
-        "id": "ARISCOS",
+        "id": "PENALIDADE_PERICIA_2",
         "descricaoLite": "-2 tanto para resistir a Provocar quanto nas próprias rolagens de Intimidar."
       }
     ],
@@ -4636,6 +4645,13 @@
         "category": "racial_trait_positive",
         "id": "NATURALMENTE_SOBRENATURAL",
         "descricaoLite": "Ocultismo inicial d4."
+      },
+      {
+        "nome": "Instinto de Sobrevivência",
+        "descricao": "Filhos da natureza selvagem, os Umvee sabem se virar ao ar livre desde cedo, começando com Sobrevivência d4.",
+        "category": "racial_trait_positive",
+        "id": "INSTINTO_DE_SOBREVIVENCIA",
+        "descricaoLite": "Sobrevivência inicial d4."
       },
       {
         "nome": "Forasteiro",
@@ -4763,9 +4779,10 @@
       },
       {
         "nome": "Ancestralidade Infame",
-        "descricao": "Os Onigem possuem características visíveis de Oni para a maioria dos humanóides e isso não fornece boa confiabilidade. Todas as reações iniciais com um Onigem são tratadas como Não Cooperativas e subtraem 2 nas rolagens de Persuadir contra quem não for familiarizados com o personagem.",
-        "category": "racial_trait_positive",
-        "id": "ANCESTRALIDADE_INFAME",
+        "descricao": "Os Onigem possuem características visíveis de Oni para a maioria dos humanóides e isso não fornece boa confiabilidade. Todas as reações iniciais com um Onigem são tratadas como Não Cooperativas e subtraem 2 nas rolagens de Persuadir contra quem não for familiarizados com o personagem. Na prática, é a Complicação Forasteiro (Menor) com outro nome.",
+        "category": "racial_hindrance",
+        "severity": "Menor",
+        "id": "FORASTEIRO",
         "descricaoLite": "A reação inicial de quem não o conhece começa sempre como Não Cooperativa, com -2 em Persuadir contra estranhos."
       },
       {

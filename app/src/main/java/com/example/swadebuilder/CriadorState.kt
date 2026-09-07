@@ -487,7 +487,7 @@ class CriadorState {
         // Toda raça de candidato único, EXCETO Umvee, mantém o curto-circuito
         // original: sai aqui sem passar por applyAncestryVariantAdjustments.
         // Umvee precisa passar por ele mesmo tendo um candidato só — o Dom da
-        // Natureza "Gatoruja" injeta PERCEBER_D6/OCULTISMO_D4 ali, e cair fora
+        // Natureza "Gatoruja" injeta VISAO_NO_ESCURO/PERCEBER_D6 ali, e cair fora
         // antes disso deixava esse traço de fora (bug real, pego pelo
         // ScifiAncestryVariantSyncTest). Já o Meio-Elfo do Pathfinder (também
         // candidato único) depende do contrário — de sair aqui — pra NÃO entrar
@@ -772,13 +772,18 @@ class CriadorState {
             removeByIdOrName("DONS_DA_NATUREZA", "DONS DA NATUREZA")
 
             when (variant) {
-                "Ápice" -> if (newHabilidades.none { it.id == "GARRAS" || it.nome.keyify() == "GARRAS" }) {
+                // Ápice é só Garras For+d4 SEM PA (id GARRAS_SEM_PA, 2 pontos —
+                // GARRAS puro custa 3 e inclui PA, que o livro não dá aqui).
+                "Ápice" -> if (newHabilidades.none { it.id == "GARRAS_SEM_PA" || it.nome.keyify() == "APICE" }) {
                     newHabilidades.add(
                         com.example.swadebuilder.model.RacialAbility(
-                            nome = "Garras",
-                            descricao = "Ápice concede garras naturais que causam For+d4 de dano.",
-                            id = "GARRAS",
-                            category = "racial_trait_positive"
+                            nome = "Ápice",
+                            descricao = "Ápice concede um ataque de garras naturais que causam For+d4 de dano, sem Penetração de Armadura.",
+                            id = "GARRAS_SEM_PA",
+                            category = "racial_trait_positive",
+                            armasNaturais = listOf(
+                                com.example.swadebuilder.model.ArmaNatural(nome = "Garras", dano = "For+d4", pa = 0, escalavel = true)
+                            )
                         )
                     )
                 }
@@ -792,16 +797,37 @@ class CriadorState {
                         )
                     )
                 }
-                "Pele Iluminada pela Lua" -> if (newHabilidades.none { it.nome.keyify() == "APARAR +1" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Aparar +1",
-                            descricao = "Pele iluminada pela lua concede +1 de Aparar.",
-                            id = "APARAR",
-                            category = "racial_trait_positive"
+                // Pele Iluminada pela Lua é, na prática, dois traços somados
+                // (2 pontos): Aparar +1 de verdade (id APARAR) e "Emanar Luz",
+                // sem efeito mecânico próprio (id PELE_LUMINOSA, 1 ponto,
+                // exclusivo desta raça) — mesmo padrão de duas metades
+                // skinadas usado em Mente de Colmeia/Insanidade.
+                "Pele Iluminada pela Lua" -> {
+                    if (newHabilidades.none { it.id == "APARAR" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Pele Iluminada pela Lua (Aparar)",
+                                descricao = "Pele iluminada pela lua concede +1 de Aparar.",
+                                id = "APARAR",
+                                category = "racial_trait_positive"
+                            )
                         )
-                    )
+                    }
+                    if (newHabilidades.none { it.id == "PELE_LUMINOSA" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Pele Iluminada pela Lua (Emanar Luz)",
+                                descricao = "A pele do Umvee brilha suavemente como a luz da lua, iluminando uma pequena área ao seu redor.",
+                                id = "PELE_LUMINOSA",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
                 }
+                // Gatoruja é Visão no Escuro (1) + Perceber inicial d6 (1) — a
+                // versão anterior também injetava Ocultismo d4, que não existe
+                // no texto deste dom (Ocultismo d4 é NATURALMENTE_SOBRENATURAL,
+                // traço base de todo Umvee, não exclusivo do Gatoruja).
                 "Gatoruja" -> {
                     if (newHabilidades.none { it.id == "VISAO_NO_ESCURO" || it.nome.keyify() == "VISAO NO ESCURO" }) {
                         newHabilidades.add(
@@ -813,22 +839,12 @@ class CriadorState {
                             )
                         )
                     }
-                    if (newHabilidades.none { it.nome.keyify() == "PERCEBER D6" }) {
+                    if (newHabilidades.none { it.id == "PERCEBER_D6" }) {
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
                                 nome = "Perceber d6",
                                 descricao = "Gatoruja aumenta o valor inicial de Perceber para d6 e seu máximo para d12+1.",
                                 id = "PERCEBER_D6",
-                                category = "racial_trait_positive"
-                            )
-                        )
-                    }
-                    if (newHabilidades.none { it.id == "OCULTISMO_D4" }) {
-                        newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
-                                nome = "Ocultismo d4",
-                                descricao = "Gatoruja aumenta o valor inicial de Ocultismo para d4.",
-                                id = "OCULTISMO_D4",
                                 category = "racial_trait_positive"
                             )
                         )
@@ -845,20 +861,20 @@ class CriadorState {
                     )
                 }
                 "Pedregoso" -> {
-                    if (newHabilidades.none { it.nome.keyify() == "RESISTENCIA +1" }) {
+                    if (newHabilidades.none { it.id == "RESISTENCIA" }) {
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
-                                nome = "Resistência +1",
+                                nome = "Pedregoso (Resistência)",
                                 descricao = "Pedregoso concede +1 de Resistência.",
                                 id = "RESISTENCIA",
                                 category = "racial_trait_positive"
                             )
                         )
                     }
-                    if (newHabilidades.none { it.nome.keyify() == "ARMADURA +2" }) {
+                    if (newHabilidades.none { it.id == "ARMADURA" }) {
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
-                                nome = "Armadura +2",
+                                nome = "Pedregoso (Armadura)",
                                 descricao = "Pedregoso concede +2 de Armadura.",
                                 id = "ARMADURA",
                                 category = "racial_trait_positive"
@@ -2948,22 +2964,18 @@ class CriadorState {
         }
 
         if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
-            // Guarantia base de Sobrevivência d4 para Umvee (não é um traço à
-            // parte em habilidades[], é característico da raça em si).
+            // Guarantia base de Sobrevivência d4 para Umvee — traço próprio
+            // (INSTINTO_DE_SOBREVIVENCIA) só pra contar o ponto no orçamento,
+            // o d4 em si é característico da raça, garantido aqui.
             if (perKey == "SOBREVIVENCIA") {
                 modifiedBase = maxOf(modifiedBase, 4)
             }
         }
-        // Gatoruja (Dom da Natureza de Umvee OU Feral): Perceber d6 + Ocultismo d4.
-        // Antes só funcionava para Umvee porque o código comparava o nome da raça;
-        // como Feral compartilha o mesmo Dom da Natureza, ele nunca recebia o
-        // bônus mesmo escolhendo Gatoruja. Ler o traço em vez do nome corrige isso
-        // para as duas raças automaticamente.
+        // Gatoruja (Dom da Natureza de Umvee): Perceber d6. Ocultismo d4 NÃO
+        // faz parte deste dom — é NATURALMENTE_SOBRENATURAL, traço base de
+        // todo Umvee, sempre concedido independente do dom escolhido.
         if (habilidadeIdsPericia.contains("PERCEBER_D6") && perKey == "PERCEBER") {
             modifiedBase = maxOf(modifiedBase, 6)
-        }
-        if (habilidadeIdsPericia.contains("OCULTISMO_D4") && perKey == "OCULTISMO") {
-            modifiedBase = maxOf(modifiedBase, 4)
         }
 
         // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)

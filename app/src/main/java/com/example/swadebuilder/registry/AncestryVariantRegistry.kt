@@ -713,17 +713,16 @@ object AncestryVariantRegistry {
     )
 
     // --- Umvee (Filhos da Lua): Seleção de pacote fixo, 1 de 6 "Dons da
-    // Natureza". Efeitos conferidos exatamente como o código atual já faz em
-    // ResolveAncestrySpecificAdjustmentsUseCase (linhas ~714-780): a maioria
-    // é só texto automático (tracosParaAdicionar -> ensureAutomaticAdvantages
-    // na camada de wiring), mas "Vínculo Bestial" concede uma Vantagem de
-    // verdade (vantagensGratisParaAdicionar -> ensureAdvantageNames, com
-    // todos os ganchos mecânicos da vantagem "Senhor das Feras"). "Pedregoso"
-    // também define naturalArmorFromRace=2 no Result — isso fica como
-    // exceção pontual na camada de wiring, não faz parte do pacote genérico
-    // (não é comum o suficiente pra merecer campo próprio no schema).
-    // A injeção de "Perceber d6"/"Ocultismo d4" do Gatoruja continua vindo
-    // de applyAncestryVariantAdjustments (não duplicada aqui).
+    // Natureza", todos calibrados em 2 pontos. Efeitos conferidos exatamente
+    // como o código atual já faz em ResolveAncestrySpecificAdjustmentsUseCase
+    // (linhas ~714-780): a maioria é só texto automático (tracosParaAdicionar
+    // -> ensureAutomaticAdvantages na camada de wiring), mas "Vínculo
+    // Bestial" concede uma Vantagem de verdade (vantagensGratisParaAdicionar
+    // -> ensureAdvantageNames, com todos os ganchos mecânicos da vantagem
+    // "Senhor das Feras"). "Pedregoso" também define naturalArmorFromRace=2
+    // no Result — isso fica como exceção pontual na camada de wiring, não
+    // faz parte do pacote genérico (não é comum o suficiente pra merecer
+    // campo próprio no schema).
     private fun umvee(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "UMVEE (FILHOS DA LUA)",
         selecoes = listOf(
@@ -732,18 +731,36 @@ object AncestryVariantRegistry {
                 rotulo = "Escolha o Dom da Natureza",
                 tipo = SelectionType.FIXED_PACKAGE,
                 pacotesFixos = listOf(
-                    FixedPackageOption("apice", "Ápice", ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("GARRAS", "GARRAS")))),
+                    // GARRAS_SEM_PA (2, For+d4 sem PA) — GARRAS puro (3) inclui
+                    // PA, que este dom não dá.
+                    FixedPackageOption("apice", "Ápice", ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("Ápice", "GARRAS_SEM_PA")))),
                     FixedPackageOption(
                         "vinculo_bestial", "Vínculo Bestial",
                         ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf(TraitAddition("SENHOR DAS FERAS", "SENHOR_DAS_FERAS")))
                     ),
+                    // Duas metades de 1 ponto cada: Aparar +1 de verdade
+                    // (APARAR) e "Emanar Luz", sem efeito mecânico próprio
+                    // (PELE_LUMINOSA) — ver applyAncestryVariantAdjustments.
                     FixedPackageOption(
                         "pele_iluminada_pela_lua", "Pele Iluminada pela Lua",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("APARAR +1", "APARAR")))
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Pele Iluminada pela Lua (Aparar)", "APARAR"),
+                                TraitAddition("Pele Iluminada pela Lua (Emanar Luz)", "PELE_LUMINOSA")
+                            )
+                        )
                     ),
+                    // Visão no Escuro (1) + Perceber d6 (1) — Ocultismo d4 NÃO
+                    // faz parte deste dom (é NATURALMENTE_SOBRENATURAL, traço
+                    // base de todo Umvee).
                     FixedPackageOption(
                         "gatoruja", "Gatoruja",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("VISÃO NO ESCURO", "VISAO_NO_ESCURO")))
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("VISÃO NO ESCURO", "VISAO_NO_ESCURO"),
+                                TraitAddition("Perceber d6", "PERCEBER_D6")
+                            )
+                        )
                     ),
                     FixedPackageOption(
                         "correnteza", "Correnteza",
@@ -756,11 +773,16 @@ object AncestryVariantRegistry {
                         // dois caminhos rodam pra Umvee (esse aqui é só
                         // bookkeeping redundante de vantagensRaciais), então
                         // um id ou vezes diferente pro mesmo efeito contaria a
-                        // Resistência em dobro (o mesmo tipo de bug já
-                        // corrigido pro Tamanho de Fadas/Povo Rato — ver
+                        // Resistência/Armadura em dobro (o mesmo tipo de bug
+                        // já corrigido pro Tamanho de Fadas/Povo Rato — ver
                         // ModifierEngineAdgAncestryTest).
                         "pedregoso", "Pedregoso",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")))
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Pedregoso (Resistência)", "RESISTENCIA"),
+                                TraitAddition("Pedregoso (Armadura)", "ARMADURA")
+                            )
+                        )
                     )
                 )
             )

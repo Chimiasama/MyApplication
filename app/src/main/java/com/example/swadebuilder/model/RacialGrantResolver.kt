@@ -55,7 +55,8 @@ object RacialGrantResolver {
         // (mesmo padrão usado em toda a Fase 6), sem Complicação real por trás.
         RacialGrantLink("APARAR -1", RacialTraitPointCatalog.custoDe("APARAR_BAIXO")),
         RacialGrantLink("MOVIMENTAÇÃO -1", RacialTraitPointCatalog.custoDe("MOVIMENTACAO_REDUZIDA")),
-        RacialGrantLink("Ancestralidade Infame", RacialTraitPointCatalog.custoDe("ANCESTRALIDADE_INFAME")),
+        // Skin de Forasteiro (Menor) — ver Onigem em ancestralidades.json.
+        RacialGrantLink("Ancestralidade Infame", -1, complicacaoId = "forasteiro"),
         RacialGrantLink("FRÁGIL", RacialTraitPointCatalog.custoDe("FRAGIL")), // não existe como Complicação geral, só traço racial
         RacialGrantLink("FRAQUEZA AMBIENTAL (Frio)", RacialTraitPointCatalog.custoDe("FRAQUEZA_AMBIENTAL")),
         RacialGrantLink("INIMIGO RACIAL", RacialTraitPointCatalog.custoDe("INIMIGO_RACIAL")), // diferente da Complicação geral "Inimigo"

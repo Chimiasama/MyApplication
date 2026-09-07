@@ -113,7 +113,13 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(2, result.naturalArmorFromRace)
-        assertEquals(listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")), result.ensureAutomaticAdvantages)
+        assertEquals(
+            listOf(
+                TraitAddition("Pedregoso (Resistência)", "RESISTENCIA"),
+                TraitAddition("Pedregoso (Armadura)", "ARMADURA")
+            ),
+            result.ensureAutomaticAdvantages
+        )
     }
 
     @Test
