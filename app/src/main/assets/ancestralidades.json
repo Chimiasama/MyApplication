@@ -917,7 +917,7 @@
       {
         "nome": "DIMINUTO (Tamanho -4)",
         "descricao": "Fadas são Minúsculas (veja a descrição da habilidade na página 10). Beneficiam-se de Modificadores de Escala, subtraem 4 de suas jogadas de Resistência e dano e têm Força máxima igual a d4.",
-        "id": "DIMINUTO",
+        "id": "DIMINUTO_TAMANHO_4",
         "category": "racial_trait_positive",
         "descricaoLite": "De porte minúsculo, aplicam os Modificadores de Escala, sofrem -4 em Resistência e no dano causado, e têm a Força limitada a d4."
       },
@@ -1857,7 +1857,7 @@
       {
         "nome": "DIMINUTO (Tamanho -4)",
         "descricao": "Membros do povo rato medem cerca de 18 centímetros de altura. Isso lhes confere Tamanho -4 e concede os benefícios de Minúsculo (veja modificadores de Escala em Savage Worlds Edição Aventura). Subtraem 4 de sua Resistência e têm Força d4. Consulte Diminuto na página 10 para obter mais informações.",
-        "id": "DIMINUTO",
+        "id": "DIMINUTO_TAMANHO_4",
         "category": "racial_trait_positive",
         "descricaoLite": "Cerca de 18 cm de altura: Tamanho -4, Força d4, -4 de Resistência, além dos benefícios da escala Minúsculo."
       },

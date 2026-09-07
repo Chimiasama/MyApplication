@@ -184,12 +184,13 @@ object RacialTraitPointCatalog {
         // Diminuto/Minúsculo: traço de TIER único (não empilhável — o livro
         // marca "(1)" mas com 3 custos internos conforme o tier escolhido:
         // Pequeno/Muito Pequeno/Minúsculo), diferente do empilhável acima.
-        // Sempre Tamanho -4 nas raças oficiais que usam este id (Fadas, Povo
-        // Rato). "DIMINUTO_TAMANHO_3"/"_4" são os ids escritos à mão em
+        // Sempre Tamanho -4 nas raças oficiais que usam o tier Minúsculo
+        // (Fadas, Povo Rato) — id único DIMINUTO_TAMANHO_4 (existia também um
+        // id "DIMINUTO" separado, duplicado com o mesmo custo/efeito, hoje
+        // removido). "DIMINUTO_TAMANHO_3"/"_4" são os ids escritos à mão em
         // AncestryVariantRegistry (ver TraitAddition) pros textos "DIMINUTO
         // (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a Variante de Ferais
         // (Padrão/Menor) injeta.
-        "DIMINUTO" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
         "DIMINUTO_TAMANHO_3" to RacialTraitEffect.TamanhoBonus(-3, minusculo = true),
         "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
 
@@ -489,7 +490,6 @@ object RacialTraitPointCatalog {
         "DESPRETENSIOSOS_E_BARRIGUDOS" to -2, // -1 Aparar + -1 Movimentação + corrida d4, pacote de três penalidades leves
         "DICAS_CULTURAIS" to 2, // oficial: pericia_racial_d6 (Convenção d6)
         "DIGESTAO_GLORIOSA" to 1, // sem equivalente oficial exato, imunidade estreita (só ingestão)
-        "DIMINUTO" to 6, // oficial: diminuto_minusculo (Tamanho -4)
         // Confirmado direto no livro (Fantasia/Sci-Fi, "Diminuto (1)"): 2 pontos
         // Pequeno (Tamanho -2), 4 pontos Muito Pequeno (Tamanho -3), 6 pontos
         // Minúsculo (Tamanho -4). DIMINUTO_TAMANHO_3 valia 5 por engano (chute
@@ -498,7 +498,7 @@ object RacialTraitPointCatalog {
         // desse erro; com o valor certo, fecha em +2.
         "DIMINUTO_TAMANHO_2" to 2, // livro: Diminuto (1), tier Pequeno — nenhuma raça oficial usa este tier ainda, id reservado
         "DIMINUTO_TAMANHO_3" to 4, // livro: Diminuto (1), tier Muito Pequeno (Ferais Padrão)
-        "DIMINUTO_TAMANHO_4" to 6, // mesmo valor de DIMINUTO — Tamanho -4 (Ferais Menor)
+        "DIMINUTO_TAMANHO_4" to 6, // livro: Diminuto (1), tier Minúsculo (Fadas, Povo Rato, Ferais Menor)
         // oficial: "Doente" (Sci-Fi) — -2 pra resistir/recuperar de doenças. Nenhuma
         // raça cadastrada usa isso hoje; registrado pra constar na listagem de
         // traços do sistema de criação (igual Cavar/Saltador, também sem raça).
@@ -549,7 +549,17 @@ object RacialTraitPointCatalog {
         "FRAGIL" to -1, // oficial: fragil (âncora: AnaoCiberNegativeTrait.fragil)
         "FRAQUEZA_AMBIENTAL" to -1, // oficial: fraqueza_ambiental
         "GANANCIOSO" to -1, // oficial: complicacao_racial_menor
-        "GARRAS" to 2, // oficial garras_d4=2 (For+d4, PA 2 e bônus de Atletismo são o extra que já cabe nesse tier)
+        // Garras oficial (livro): base 2 pontos = For+d4 (PA 2 e o bônus de
+        // Atletismo pra escalar já cabem nesse tier, são só texto explicativo
+        // do livro — não custam ponto à parte). +1 ponto separado eleva o dano
+        // pra For+d6. Três tiers cobertos: GARRAS_SEM_PA (1, For+d4 sem PA —
+        // nenhuma raça usa ainda, id reservado), GARRAS (2, tier normal — usado
+        // por Rakashanos/Povo Ratazana/Draconianos/Feral) e GARRAS_MAIORES (3,
+        // For+d6+PA — nenhuma raça usa ainda). Mesmo padrão de CHIFRES/
+        // CHIFRES_MAIORES.
+        "GARRAS_SEM_PA" to 1,
+        "GARRAS" to 2,
+        "GARRAS_MAIORES" to 3,
         "GELATINOSO" to 2, // oficial: gelatinoso_2
         "GUIADO" to -2, // oficial: complicacao_racial_maior
         "HERANCA" to 2, // oficial: vantagem_racial OU aumento_atributo (escolha, mesmo tier)
@@ -577,7 +587,19 @@ object RacialTraitPointCatalog {
         "MENTE_PRIMITIVA" to -1, // sem equivalente oficial, teto de Astúcia travado em d6 na criação
         "METADE_CARNE" to 0, // só esclarece que ainda precisa comer/descansar (contraponto narrativo de Metade Construto, sem efeito mecânico próprio)
         "METADE_CONSTRUTO" to 6, // entre robo (6) e construto (8): pacote quase completo (+3 Resistência, não respira, imune veneno/doença, sem dano extra de Ataque Localizado) mas não cura naturalmente
+        // Mordida oficial (livro): base 1 ponto = For+d4, sem PA (Rakashanos,
+        // Sáurios, Centauros, Insetoides, Povo Ratazana, Povo Serpente,
+        // Renascidos etc.). Mesmo padrão de Garras: +1 ponto separado eleva
+        // pra d6, +1 ponto separado adiciona PA 2 — três tiers cobertos aqui,
+        // pulando a combinação "d6 sem PA" (mesma simplificação de Garras,
+        // nenhuma raça oficial usa essa combinação). MORDIDA_COM_PA (2, For+d4
+        // com PA — nenhuma raça usa ainda; Draconianos consegue o mesmo efeito
+        // hoje via override `pontos` na própria habilidade, não precisou
+        // migrar) e MORDIDA_MAIORES (3, For+d6 com PA — nenhuma raça usa
+        // ainda) são ids reservados.
         "MORDIDA" to 1, // oficial: mordida (For+d4)
+        "MORDIDA_COM_PA" to 2,
+        "MORDIDA_MAIORES" to 3,
         "MORDIDAGARRAS" to 1, // oficial: mordida (mesmo texto/efeito, id duplicado)
         "MORDIDA_GARRAS" to 1, // oficial: mordida
         "MORDIDA_OU_GARRA" to 1, // oficial: mordida
