@@ -779,9 +779,16 @@ object AncestryVariantRegistry {
                     FixedPackageOption(
                         "padrao",
                         "Padrão",
+                        // Força d8 (atributos.Força=4 no JSON, 2 passos) = MUITO_FORTE
+                        // (4pts), não FORTE (2pts, d6 — esse é o da variante "Ar,
+                        // Fogo ou Água", mais fraca). Id errado aqui não muda o dado
+                        // de Força na ficha (AtributoStep não é aplicado por esta
+                        // lista — ver ModifierEngine.aplicarEfeito/atributoBaseRacial),
+                        // mas fazia o traço exibido/custo de auditoria não bater com
+                        // o d8 real.
                         ResolvedTraitPackage(
                             tracosParaAdicionar = listOf(
-                                TraitAddition("FORTE", "FORTE"),
+                                TraitAddition("MUITO FORTE", "MUITO_FORTE"),
                                 TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)
                             )
                         )

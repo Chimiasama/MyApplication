@@ -107,8 +107,10 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
+        // Força d8 = MUITO_FORTE (4pts), não FORTE (2pts, d6 — esse é o da
+        // variante "Ar, Fogo ou Água", mais fraca).
         assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
+            listOf(TraitAddition("MUITO FORTE", "MUITO_FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
             result.tracosParaAdicionar
         )
     }
