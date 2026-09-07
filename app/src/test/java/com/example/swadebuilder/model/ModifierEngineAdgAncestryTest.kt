@@ -99,7 +99,7 @@ class ModifierEngineAdgAncestryTest {
                     RacialAbility(
                         nome = "DIMINUTO (Tamanho -4)",
                         descricao = "Membros do povo rato medem cerca de 18 centímetros de altura. Isso lhes confere Tamanho -4 e concede os benefícios de Minúsculo...",
-                        id = "DIMINUTO",
+                        id = "DIMINUTO_TAMANHO_4",
                         category = "racial_trait_positive"
                     )
                 )

@@ -556,7 +556,7 @@ data class PowerCardSpec(
     val manifestacoes: List<String> = emptyList()
 )
 
-private fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float, title: String, statLines: List<String>, extraLines: List<String>, theme: PdfTheme) {
+internal fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float, title: String, statLines: List<String>, extraLines: List<String>, theme: PdfTheme) {
     val rect = RectF(x, y, x + w, y + h)
     val bg = Paint().apply { color = theme.headerBackground; style = Paint.Style.FILL }
     canvas.drawRoundRect(rect, 6f, 6f, bg)

@@ -38,10 +38,10 @@ fun ModuleCard(
     description: String,
     icon: ImageVector,
     isSelected: Boolean,
-    enabled: Boolean = true,
     onToggle: () -> Unit,
-    showDescription: Boolean = true,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    showDescription: Boolean = true
 ) {
     val scale by animateFloatAsState(targetValue = if (isSelected) 1.04f else if (enabled) 1.0f else 0.97f, label = "scale")
     val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else if (enabled) MaterialTheme.colorScheme.outline else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)

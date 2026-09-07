@@ -2,6 +2,7 @@ package com.example.swadebuilder
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -1333,8 +1334,8 @@ class CriadorState {
     var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM — legado, mantido só pra compatibilidade de saves antigos
     // Posição/zoom contínuos usados de fato pro recorte (substituem portraitAlignment na exibição).
     // portraitOffsetY: 0f = topo do enquadramento, 0.5f = centro, 1f = base.
-    var portraitOffsetY by mutableStateOf(0.5f)
-    var portraitZoom by mutableStateOf(1f) // 1f..2.5f
+    var portraitOffsetY by mutableFloatStateOf(0.5f)
+    var portraitZoom by mutableFloatStateOf(1f) // 1f..2.5f
 
     var coracaoCrystalSelecionado by mutableStateOf<CrystalHeart?>(null)
 

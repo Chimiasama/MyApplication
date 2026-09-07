@@ -45,6 +45,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -371,7 +372,7 @@ fun SettingsDialog(
                         var customRange by remember { mutableStateOf("Toque") }
                         var customDuration by remember { mutableStateOf("3 turnos") }
                         var customRacialTrait by remember { mutableStateOf("") }
-                        var refreshTrigger by remember { mutableStateOf(0) }
+                        var refreshTrigger by remember { mutableIntStateOf(0) }
 
                         var customTraitCost by remember { mutableStateOf("1") }
                         var selectedRacialTraits by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }

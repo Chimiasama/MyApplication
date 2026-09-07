@@ -389,7 +389,7 @@ object DataLoader {
             }
         }
 
-        if (BuildConfig.DEBUG && "CIDADE_SOL_VAPOR" in keys) {
+        if (BuildConfig.DEBUG && "CIDADE_SOL_VAPOR" in keys && Log.isLoggable("SWADE_DEBUG", Log.DEBUG)) {
             val steamAll = todasVantagens.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }
             Log.d(
                 "SWADE_DEBUG",
@@ -397,12 +397,10 @@ object DataLoader {
                     "vantagens_total=${todasVantagens.size}, sol_vapor_total=${steamAll.size}"
             )
             steamAll.take(20).forEach { vant ->
-                if (Log.isLoggable("SWADE_DEBUG", Log.DEBUG)) {
-                    Log.d(
-                        "SWADE_DEBUG",
-                        "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
-                    )
-                }
+                Log.d(
+                    "SWADE_DEBUG",
+                    "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
+                )
             }
         }
 
