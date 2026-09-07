@@ -44,6 +44,28 @@ object ArcaneConfig {
         "drenar_pontos_de_poder_demonio" to "Heroico"
     )
 
+    // Meio-Demônios (Cidade do Sol a Vapor): mesmo Antecedente Arcano dos
+    // Demônios de sangue puro, mas sem Disfarce Demoníaco de graça — o
+    // sangue diluído só sustenta a ilusão a partir do Estágio Experiente, e
+    // mesmo assim exige a Vantagem separada "Disfarce Demoníaco (Estágio
+    // Experiente)" (ver disfarce_demoniaco_meio_demonio em poderes.json e
+    // SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS abaixo, que amarra esse
+    // poder à posse dessa Vantagem via
+    // CriadorState.atendeRequisitoEspecialDePoderPorArcano()).
+    val SOL_VAPOR_DEMONIO_MEIO_EXTRA_POWERS_BY_STAGE = linkedMapOf(
+        "elo_mental_demonio" to "Novato",
+        "telecinese_demonio" to "Experiente",
+        "disfarce_demoniaco_meio_demonio" to "Experiente",
+        "voar_demonio" to "Veterano",
+        "leitura_mental_demonio" to "Veterano",
+        "limpeza_mental_demonio" to "Veterano",
+        "drenar_pontos_de_poder_demonio" to "Heroico"
+    )
+
+    val SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS = mapOf(
+        "disfarce_demoniaco_meio_demonio" to "disfarce_demoniaco_experiente_meio"
+    )
+
     val SOL_VAPOR_MILAGRES_POWERS_BY_STAGE = linkedMapOf(
         "ajuda" to "Novato",
         "aumentar_reduzir_caracteristica" to "Novato",
@@ -260,6 +282,7 @@ object ArcaneConfig {
             "MILAGRES" -> SOL_VAPOR_MILAGRES_POWERS_BY_STAGE
             "FEITICEIRO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE
             "DEMONIO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE + SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE
+            "DEMONIO_MEIO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE + SOL_VAPOR_DEMONIO_MEIO_EXTRA_POWERS_BY_STAGE
             "TECNOMAGIA" -> SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE
             // Anjos usam a mesma lista de poderes dos Abençoados (Milagres),
             // mas sem precisar de Guerreiro do Senhor/Ira do Senhor pra usar
@@ -274,6 +297,7 @@ object ArcaneConfig {
     fun getStageBasedPowerRequirement(arcaneKey: String, powerId: String): String? {
         return when (arcaneKey) {
             "MILAGRES" -> SOL_VAPOR_MILAGRES_POWER_REQUIREMENTS[powerId]
+            "DEMONIO_MEIO" -> SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS[powerId]
             else -> null
         }
     }

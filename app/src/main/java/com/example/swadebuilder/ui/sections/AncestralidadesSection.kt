@@ -463,6 +463,7 @@ fun AncestralidadesSection(
                                 // Herança Élfica/Humana — keyify() não remove o "S" do plural, então a
                                 // comparação exata já as separa sem precisar checar o livro de origem.
                                 val isMeioElfo = item.nome.keyify() == "MEIO-ELFOS"
+                                val isMeioDemonio = item.nome.keyify() == "MEIO-DEMONIO"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
                                 // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
@@ -771,6 +772,27 @@ fun AncestralidadesSection(
                                             label = "Herança Humana (Adaptável)",
                                             selected = !state.meioElfoAgil,
                                             onSelect = { state.selecionarMeioElfoHeranca(false) }
+                                        )
+                                    }
+                                }
+
+                                // Meio-Demônio (Cidade do Sol a Vapor): escolha entre Adaptável
+                                // (Vantagem Novato à escolha, como um humano comum) e o Antecedente
+                                // Arcano (Demônio) diluído — traço racial da própria raça, não uma
+                                // Variante de mestre.
+                                if (isMeioDemonio) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Traço Racial:", style = MaterialTheme.typography.labelMedium)
+                                    Column {
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Adaptável",
+                                            selected = !state.meioDemonioAA,
+                                            onSelect = { state.selecionarMeioDemonioTraco(false) }
+                                        )
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Antecedente Arcano (Demônio)",
+                                            selected = state.meioDemonioAA,
+                                            onSelect = { state.selecionarMeioDemonioTraco(true) }
                                         )
                                     }
                                 }

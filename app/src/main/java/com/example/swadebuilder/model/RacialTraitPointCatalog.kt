@@ -209,15 +209,7 @@ object RacialTraitPointCatalog {
         // (Tamanho -3)"/"DIMINUTO (Tamanho -4)" que a Variante de Ferais
         // (Padrão/Menor) injeta.
         "DIMINUTO_TAMANHO_3" to RacialTraitEffect.TamanhoBonus(-3, minusculo = true),
-        "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true),
-
-        // Único traço do catálogo com dois efeitos numéricos ao mesmo tempo
-        // (ver Composite acima) — Tanukimimi (Arte da Guerra): -1 Aparar e
-        // -1 Movimentação juntos, conferido contra a própria descrição do
-        // traço em ancestralidades.json.
-        "DESPRETENSIOSOS_E_BARRIGUDOS" to RacialTraitEffect.Composite(
-            listOf(RacialTraitEffect.ApararBonus(-1), RacialTraitEffect.PassoBonus(-1))
-        )
+        "DIMINUTO_TAMANHO_4" to RacialTraitEffect.TamanhoBonus(-4, minusculo = true)
     )
 
     fun efeitoDe(id: String?, targetRef: String? = null, value: Int = 1): RacialTraitEffect {
@@ -453,6 +445,15 @@ object RacialTraitPointCatalog {
         // Feral/Sáurios.
         "ANDAR_NAS_PAREDES" to 1, // oficial: andar_paredes
         "ANTECEDENTE_ARCANO_DEMONIO" to 4, // sem equivalente oficial (AA completo + poder inicial + 3 extra + 10 PP), acima de vantagem_racial
+        // Meio-Demônios (Cidade do Sol a Vapor): traço racial que concede o
+        // Antecedente Arcano (Demônio) diluído (aa_demonio_meio_demonio,
+        // vantagem_racial normal — sem Disfarce Demoníaco de graça, por isso
+        // não é o tier 4 do AA completo dos Demônios de sangue puro). Custo
+        // pelo `id` aqui só serve pra ResolveVariantPointBudgetUseCase.
+        // habilidadeComoItem() (não conhece `traitId`) — a concessão de
+        // verdade e o custo ao vivo do personagem vêm de
+        // traitId=GRANTED_EDGE (custoDe("GRANTED_EDGE") = 2, mesmo valor).
+        "ANTECEDENTE_ARCANO_DEMONIO_MEIO" to 2,
         "ANTECEDENTE_ARCANO_MILAGRES" to 3, // sem equivalente oficial (AA completo, menos detalhado que o de cima)
         // oficial: "Poder (S)" — AA (Dom) + um poder específico que reflete a
         // habilidade da raça (2 pontos; cada poder extra depois do primeiro
@@ -531,7 +532,9 @@ object RacialTraitPointCatalog {
         "DESAGRADAVEL" to -1, // oficial: complicacao_racial_menor
         "DESAJEITADO" to -3, // duas perícias a -2 cada (Atletismo, Furtividade) — oficial penalidade_pericia_2 é só uma perícia
         "DESASTRADO" to -1, // oficial: complicacao_racial_menor
-        "DESPRETENSIOSOS_E_BARRIGUDOS" to -2, // -1 Aparar + -1 Movimentação + corrida d4, pacote de três penalidades leves
+        // DESPRETENSIOSOS_E_BARRIGUDOS removido: Tanukimimi agora usa os
+        // dois ids reais separados (APARAR_BAIXO + MOVIMENTACAO_REDUZIDA,
+        // skin no nome), igual ao padrão de Mente de Colmeia.
         "DICAS_CULTURAIS" to 2, // oficial: pericia_racial_d6 (Convenção d6)
         "DIGESTAO_GLORIOSA" to 2, // skin de Imune a Doenças e Venenos (IMUNE_DOENCAS_VENENOS), Araiguma
         // Confirmado direto no livro (Fantasia/Sci-Fi, "Diminuto (1)"): 2 pontos
@@ -626,7 +629,6 @@ object RacialTraitPointCatalog {
         "GUIADO" to -2, // oficial: complicacao_racial_maior
         "HABITO" to -1, // oficial: complicacao_racial_menor (Araiguma "Esquisitices", skin)
         "HERANCA" to 2, // oficial: vantagem_racial OU aumento_atributo (escolha, mesmo tier)
-        "HERANCA_MISTA" to 2, // oficial: vantagem_racial
         "IMPULSIVO" to -2, // Complicação Maior no catálogo real (complicacoes.json "impulsivo" só existe como Maior) — mesmo caso de AZARADO, corrigido pra bater com o catálogo
         "IMUNE_A_DOENCAS_E_VENENOS" to 1, // oficial: imune_doencas_venenos — 1pt cobre SÓ doenças OU venenos (livro: "pode ser comprado duas vezes"); imunidade às duas categorias precisa de vezes=2 (2pts) — ver VEZES_MAX. Seres Sintéticos (Sci-Fi) compram as duas.
         // "INCAPAZ_DE_FALAR" (-2) foi removido — duplicava NAO_FALA (-1), com a
@@ -687,7 +689,6 @@ object RacialTraitPointCatalog {
         "NOCAO_DO_PERIGO" to 2, // oficial: vantagem_racial
         "OBSESSIVOS" to 1, // oficial: pericia_racial_d4
         "OBVIO" to -1, // oficial: penalidade_pericia_1 (-1 Furtividade, perícia)
-        "OPCAO_MAGICA" to 2, // sem equivalente oficial exato, acesso a escolher AA (Demônio) como Vantagem Novato
         "PACIFISTA" to -2, // Complicação real (complicacoes.json)/oficial complicacao_racial_maior
         "PECULIARIDADE" to -1, // oficial: complicacao_racial_menor (Araiguma "Esquisitices", skin)
         // Umvee "Pele Iluminada pela Lua": metade do dom é o traço Aparar +1

@@ -51,6 +51,10 @@ data class SnapshotFlags(
     val soldadoCargaAtivo: Boolean,
     val permiteMultiAntecedenteArcano: Boolean,
     val meioElfoAgil: Boolean,
+    // Meio-Demônio (Cidade do Sol a Vapor): false = Adaptável (padrão), true =
+    // Antecedente Arcano (Demônio) diluído — ver CriadorState.meioDemonioAA.
+    // Default false pra saves salvos antes desse traço existir.
+    val meioDemonioAA: Boolean = false,
     // Legado: campo lido só pra migrar saves salvos antes do Meio-Orc passar a
     // reaproveitar SelecoesPersistidas.humanoMineradorAtributo (mesmo mecanismo
     // de escolha de atributo já usado por Feral/Minerador Genético) — ver

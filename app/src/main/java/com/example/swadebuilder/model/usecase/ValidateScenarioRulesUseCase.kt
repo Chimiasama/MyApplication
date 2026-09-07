@@ -18,12 +18,16 @@ class ValidateScenarioRulesUseCase {
         val vId = input.vantagem.id
         val ancestralidadeKey = input.ancestralidade.keyify()
 
-        // Cidade do Sol a Vapor: AA (Demônio)
+        // Cidade do Sol a Vapor: AA (Demônio) — exclusivo dos Demônios de
+        // sangue puro. Meio-Demônios usam a versão diluída própria
+        // (aa_demonio_meio_demonio, concedida só pelo traço racial —
+        // bloqueada abaixo pra escolha manual de qualquer ancestralidade).
         if (vId == "aa_demonio") {
             val isMeioDemonio = ancestralidadeKey.contains("MEIO-DEMONIO")
             val isDemonio = ancestralidadeKey.contains("DEMONIO") && !isMeioDemonio
-            if (!isMeioDemonio && !isDemonio) return false
+            if (!isDemonio) return false
         }
+        if (vId == "aa_demonio_meio_demonio") return false
 
         // Crystal Heart Blocks
         if (input.compendioCrystalHeartAtivo) {

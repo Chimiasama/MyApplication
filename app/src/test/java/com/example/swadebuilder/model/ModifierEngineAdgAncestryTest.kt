@@ -48,9 +48,15 @@ class ModifierEngineAdgAncestryTest {
                 desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility(
-                        nome = "Despretensiosos e Barrigudos",
-                        descricao = "Lentos para agir e se mover. Os tanukimimi têm -1 em Aparar, a Movimentação é reduzida em 1 e seu dado de corrida é d4.",
-                        id = "DESPRETENSIOSOS_E_BARRIGUDOS",
+                        nome = "Despretensiosos e Barrigudos (Aparar Baixo)",
+                        descricao = "Lentos para agir, os tanukimimi têm -1 em Aparar.",
+                        id = "APARAR_BAIXO",
+                        category = "racial_trait_negative"
+                    ),
+                    RacialAbility(
+                        nome = "Despretensiosos e Barrigudos (Movimentação Reduzida)",
+                        descricao = "Lentos para se mover, a Movimentação dos tanukimimi é reduzida em 1 e seu dado de corrida é d4.",
+                        id = "MOVIMENTACAO_REDUZIDA",
                         category = "racial_trait_negative"
                     )
                 )
@@ -59,8 +65,8 @@ class ModifierEngineAdgAncestryTest {
 
         val modifiers = ModifierEngine.collect(state)
 
-        assertTrue(modifiers.any { it.id == "racial_trait_DESPRETENSIOSOS_E_BARRIGUDOS_parry" && it.value == -1 })
-        assertTrue(modifiers.any { it.id == "racial_trait_DESPRETENSIOSOS_E_BARRIGUDOS_pace" && it.value == -1 })
+        assertTrue(modifiers.any { it.id == "racial_trait_APARAR_BAIXO_parry" && it.value == -1 })
+        assertTrue(modifiers.any { it.id == "racial_trait_MOVIMENTACAO_REDUZIDA_pace" && it.value == -1 })
     }
 
     @Test

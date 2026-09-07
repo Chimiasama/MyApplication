@@ -731,11 +731,7 @@ fun buildSummaryLines(
                         // 2. Check Racial Abilities (Definition Name)
                         val ability = racialAbilityMap[key]
                         if (ability != null) {
-                            // Skin: Nekomimi "Fortuna Dá" should display as "Sorte" (book label),
-                            // while keeping behavior textual (not a free Edge).
-                            if (ability.id?.keyify() == "FORTUNA_DA" || ability.nome.keyify() == "FORTUNA DA") {
-                                "Sorte"
-                            } else if (especieIdAtual == "povo_rato" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
+                            if (especieIdAtual == "povo_rato" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
                                 "Fobia - Gatos (Menor)"
                             } else {
                                 // Use the display name from JSON (preserves symbols like '/')

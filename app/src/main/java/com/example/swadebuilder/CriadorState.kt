@@ -716,6 +716,45 @@ class CriadorState {
             return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
         }
 
+        // Meio-Demônio (Cidade do Sol a Vapor): igual ao livro, escolhe entre
+        // uma Vantagem Novato livre (Adaptável, como um humano comum) OU o
+        // Antecedente Arcano (Demônio) — versão diluída própria
+        // (aa_demonio_meio_demonio, sem Disfarce Demoníaco de graça; ver
+        // ArcaneConfig.SOL_VAPOR_DEMONIO_MEIO_EXTRA_POWERS_BY_STAGE) — como
+        // sua habilidade racial. Mesmo padrão do toggle Ágil/Adaptável do
+        // Meio-Elfo acima, mas sem interação com atributos.
+        if (key.contains("MEIO-DEMONIO")) {
+            val newHabilidades = base.habilidades.toMutableList()
+            newHabilidades.removeAll { it.id == "ADAPTAVEL" || it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }
+
+            if (meioDemonioAA) {
+                if (newHabilidades.none { it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Antecedente Arcano (Demônio)",
+                            descricao = "Pode adquirir o Antecedente Arcano (Demônio) como habilidade racial — versão diluída do sangue demoníaco, sem Disfarce Demoníaco de graça (só disponível a partir do Estágio Experiente, pela Vantagem separada Disfarce Demoníaco (Estágio Experiente)).",
+                            id = "ANTECEDENTE_ARCANO_DEMONIO_MEIO",
+                            category = "racial_edge",
+                            traitId = "GRANTED_EDGE",
+                            targetRef = "aa_demonio_meio_demonio"
+                        )
+                    )
+                }
+            } else {
+                if (newHabilidades.none { it.id == "ADAPTAVEL" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Adaptável",
+                            descricao = "Recebe uma Vantagem Novato extra, como um humano comum.",
+                            id = "ADAPTAVEL",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+            }
+            return base.copy(habilidades = newHabilidades)
+        }
+
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
         val newHabilidades = base.habilidades.toMutableList()
 
@@ -3938,6 +3977,7 @@ class CriadorState {
     var ancestralidade by mutableStateOf("HUMANOS")
     var celestialAAMilagresDesabilitado by mutableStateOf(false)
     var meioElfoAgil by mutableStateOf(false)
+    var meioDemonioAA by mutableStateOf(false)
 
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
@@ -5348,6 +5388,21 @@ class CriadorState {
     }
 
     /**
+     * Meio-Demônio (Cidade do Sol a Vapor): escolhe entre Adaptável (Vantagem
+     * Novato à escolha, como um humano comum) e o Antecedente Arcano
+     * (Demônio) próprio — versão diluída (id "aa_demonio_meio_demonio",
+     * concedida via GRANTED_EDGE/targetRef no traço racial, nunca escolhível
+     * manualmente na lista de Vantagens — ver ValidateScenarioRulesUseCase).
+     * Sem interação com atributos, diferente do Meio-Elfo acima.
+     */
+    fun selecionarMeioDemonioTraco(usaAA: Boolean) {
+        if (meioDemonioAA == usaAA) return
+        meioDemonioAA = usaAA
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+    }
+
+    /**
      * Atualiza os traços raciais negativos escolhidos para Anões (variante Ciber).
      * Rejeita silenciosamente qualquer seleção que estoure o orçamento de
      * [AnaoCiberTraitCatalog.MAX_PONTOS] pontos — a UI já deve impedir isso, mas a
@@ -6465,6 +6520,7 @@ class CriadorState {
                 soldadoCargaAtivo = soldadoCargaAtivo,
                 permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano,
                 meioElfoAgil = meioElfoAgil,
+                meioDemonioAA = meioDemonioAA,
                 celestialAAMilagresDesabilitado = celestialAAMilagresDesabilitado,
                 jovemAutoPequeno = jovemAutoPequeno,
                 jovemMalusPa = jovemMalusPa,
@@ -6677,6 +6733,7 @@ class CriadorState {
         soldadoCargaAtivo = flags.soldadoCargaAtivo
         permiteMultiAntecedenteArcano = flags.permiteMultiAntecedenteArcano
         meioElfoAgil = flags.meioElfoAgil
+        meioDemonioAA = flags.meioDemonioAA
         celestialAAMilagresDesabilitado = flags.celestialAAMilagresDesabilitado
         jovemAutoPequeno = flags.jovemAutoPequeno
         jovemMalusPa = flags.jovemMalusPa

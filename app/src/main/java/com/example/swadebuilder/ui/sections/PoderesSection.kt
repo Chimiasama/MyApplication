@@ -288,24 +288,19 @@ fun PoderesSection(
             }
 
             sourceList.filter { power ->
+                // "_demonio": poderes exclusivos do Antecedente Arcano (Demônio) —
+                // tanto a versão de sangue puro (DEMONIO, aa_demonio) quanto a
+                // diluída dos Meio-Demônios (DEMONIO_MEIO, aa_demonio_meio_demonio
+                // — mesmos poderes, exceto Disfarce Demoníaco, que nesta versão é
+                // "disfarce_demoniaco_meio_demonio" e só libera com a Vantagem
+                // separada "Disfarce Demoníaco (Estágio Experiente)", amarrada via
+                // SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS/
+                // atendeRequisitoEspecialDePoderPorArcano, não por Estágio aqui).
                 val isDemonExclusivePower = power.id.endsWith("_demonio")
-                val hasDemonAb = state.vantagensSelecionadas.any { it.id == "aa_demonio" }
+                val hasDemonAb = state.vantagensSelecionadas.any { it.id == "aa_demonio" || it.id == "aa_demonio_meio_demonio" }
                 if (isDemonExclusivePower) {
-                    if (arcKey != "DEMONIO") return@filter false
+                    if (arcKey != "DEMONIO" && arcKey != "DEMONIO_MEIO") return@filter false
                     if (!hasDemonAb) return@filter false
-                }
-
-                // Meio-Demônio (Cidade do Sol a Vapor):
-                // Disfarce Demoníaco não é inicial e só fica disponível em Experiente.
-                if (
-                    state.compendioCidadeSolVaporAtivo &&
-                    arcKey == "DEMONIO" &&
-                    state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
-                    power.id == "disfarce_demoniaco"
-                ) {
-                    val estagioAtual = state.estagioAtual().nome.semAcentos().uppercase()
-                    val podeUsarDisfarce = estagioAtual in setOf("EXPERIENTE", "VETERANO", "HEROICO", "HEROICO", "LENDARIO")
-                    if (!podeUsarDisfarce) return@filter false
                 }
 
                 // 1. Check permissions/blocks

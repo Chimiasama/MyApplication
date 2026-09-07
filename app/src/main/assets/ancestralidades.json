@@ -4462,8 +4462,7 @@
     },
     "vantagensGratis": [],
     "desvantagens": [
-      "AZARADO",
-      "Bene adicional por sessão (benefício racial; acumula com Sorte e Sorte Grande)."
+      "AZARADO"
     ],
     "livros": [
       "ARTE_DA_GUERRA"
@@ -4485,11 +4484,18 @@
         "descricaoLite": "Espírito inicial d6."
       },
       {
-        "nome": "Despretensiosos e Barrigudos",
-        "descricao": "Lentos para agir e se mover. Os tanukimimi têm -1 em Aparar, a Movimentação é reduzida em 1 e seu dado de corrida é d4.",
+        "nome": "Despretensiosos e Barrigudos (Aparar Baixo)",
+        "descricao": "Lentos para agir, os tanukimimi têm -1 em Aparar.",
         "category": "racial_trait_negative",
-        "id": "DESPRETENSIOSOS_E_BARRIGUDOS",
-        "descricaoLite": "-1 em Aparar, deslocamento reduzido em 1 quadro e dado de corrida fixado em d4."
+        "id": "APARAR_BAIXO",
+        "descricaoLite": "-1 em Aparar."
+      },
+      {
+        "nome": "Despretensiosos e Barrigudos (Movimentação Reduzida)",
+        "descricao": "Lentos para se mover, a Movimentação dos tanukimimi é reduzida em 1 e seu dado de corrida é d4.",
+        "category": "racial_trait_negative",
+        "id": "MOVIMENTACAO_REDUZIDA",
+        "descricaoLite": "Deslocamento reduzido em 1 quadro e dado de corrida fixado em d4."
       },
       {
         "nome": "Visão no Escuro",
@@ -4501,8 +4507,10 @@
       {
         "nome": "Pensamentos Positivos",
         "descricao": "Seus espíritos os impulsionam para seguir em frente. Os tanukimimi têm a Vantagem Impulso.",
-        "category": "racial_trait_positive",
+        "category": "racial_edge",
         "id": "PENSAMENTOS_POSITIVOS",
+        "traitId": "GRANTED_EDGE",
+        "targetRef": "Impulso",
         "descricaoLite": "Concede a Vantagem Impulso."
       }
     ],
@@ -4510,9 +4518,7 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [
-      "IMPULSO"
-    ],
+    "vantagensGratis": [],
     "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
@@ -4842,15 +4848,14 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [
-      "FRÁGIL"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Antecedente Arcano (Demônio)",
         "descricao": "Começa com AA (Demônio), Perícia Conjurar d4 e os poderes Disfarce Demoníaco + 3 outros. 10 PP.",
         "category": "racial_trait_positive",
         "id": "ANTECEDENTE_ARCANO_DEMONIO",
+        "invisivel": true,
         "descricaoLite": "Inicia com o Antecedente Arcano Demônio: Conjurar d4, o poder Disfarce Demoníaco e mais três outros poderes, totalizando 10 Pontos de Poder."
       },
       {
@@ -4874,18 +4879,11 @@
     "pericias": {},
     "habilidades": [
       {
-        "nome": "Herança Mista",
-        "descricao": "Recebe uma Vantagem Novato extra (como humanos).",
+        "nome": "Adaptável",
+        "descricao": "Recebe uma Vantagem Novato extra, como um humano comum.",
         "category": "racial_trait_positive",
-        "id": "HERANCA_MISTA",
-        "descricaoLite": "Ganha uma Vantagem extra de nível Novato, assim como os humanos."
-      },
-      {
-        "nome": "Opção Mágica",
-        "descricao": "Pode escolher AA (Demônio) como uma Vantagem normal (requisito Novato). Se o fizer, Disfarce Demoníaco custa 2 PP e é de estágio Experiente.",
-        "category": "racial_trait_positive",
-        "id": "OPCAO_MAGICA",
-        "descricaoLite": "Pode adquirir o Antecedente Arcano Demônio como Vantagem normal de Novato; nesse caso, o poder Disfarce Demoníaco passa a custar 2 Pontos de Poder e exige estágio Experiente."
+        "id": "ADAPTAVEL",
+        "descricaoLite": "Ganha de graça uma Vantagem adicional de nível Novato."
       }
     ],
     "livros": [
