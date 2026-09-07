@@ -348,7 +348,7 @@
       {
         "nome": "Garras",
         "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "GARRAS",
+        "id": "GARRAS_SEM_PA",
         "category": "racial_trait_positive",
         "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
@@ -803,9 +803,8 @@
       {
         "nome": "MORDIDA",
         "descricao": "For+d4, PA 2. Mordida permite que uma personagem morda uma presa agarrada em vez de apenas a esmagar.",
-        "id": "MORDIDA",
+        "id": "MORDIDA_COM_PA",
         "category": "racial_trait_positive",
-        "pontos": 2,
         "descricaoLite": "Mordida causa Força+d4 com PA 2, e permite atacar um alvo já agarrado em vez de apenas esmagá-lo.",
         "armasNaturais": [
           {
@@ -1255,7 +1254,7 @@
       {
         "nome": "AÇÕES ADICIONAIS",
         "descricao": "A personagem possui quatro braços utilizáveis. Isso reduz a penalidade total de ações múltiplas em 2, desde que pelo menos uma das ações use seus membros (normalmente Agilidade, Força ou perícias associadas).",
-        "id": "ACOES_ADICIONAIS",
+        "id": "ACAO_ADICIONAL_FISICA",
         "category": "racial_trait_positive",
         "descricaoLite": "Quatro braços funcionais reduzem em 2 a penalidade total por realizar múltiplas ações, desde que ao menos uma delas envolva os membros (em geral testes de Agilidade, Força ou perícias ligadas a eles)."
       },
@@ -2615,7 +2614,7 @@
       {
         "nome": "Garras",
         "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "GARRAS",
+        "id": "GARRAS_SEM_PA",
         "category": "racial_trait_positive",
         "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
@@ -2993,7 +2992,7 @@
       {
         "nome": "Garras",
         "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "GARRAS",
+        "id": "GARRAS_SEM_PA",
         "category": "racial_trait_positive",
         "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [
@@ -3450,9 +3449,8 @@
       {
         "nome": "INCAPAZ DE FALAR",
         "descricao": "Insetoides não têm cordas vocais e normalmente só conseguem se comunicar com membros de sua própria espécie. Eles ainda podem ouvir e entender outros idiomas típicos e podem se comunicar por meio de dispositivos eletrônicos, como o tradutor de idiomas encontrado na p. 43.",
-        "id": "INCAPAZ_DE_FALAR",
+        "id": "NAO_FALA",
         "category": "racial_hindrance",
-        "severity": "Maior",
         "descricaoLite": "Não conseguem produzir fala compreensível para outras espécies, embora entendam idiomas alheios normalmente; comunicam-se com estranhos por meio de aparelhos eletrônicos, como tradutores."
       },
       {
@@ -3918,9 +3916,8 @@
       {
         "nome": "INCAPAZ DE FALAR",
         "descricao": "Vazios nunca desenvolveram a capacidade de se comunicar verbalmente uns com os outros. A maioria usa telas de tradução portáteis para traduzir sua fala para outros seres.",
-        "id": "INCAPAZ_DE_FALAR",
+        "id": "NAO_FALA",
         "category": "racial_hindrance",
-        "severity": "Maior",
         "descricaoLite": "Não possuem comunicação verbal e dependem de dispositivos de tradução portáteis para se fazer entender."
       },
       {
@@ -4720,7 +4717,7 @@
         "nome": "Garras",
         "descricao": "Ápice concede garras naturais que causam For+d4 de dano.",
         "category": "racial_trait_positive",
-        "id": "GARRAS",
+        "id": "GARRAS_SEM_PA",
         "descricaoLite": "Garras naturais causam For+d4 de dano.",
         "armasNaturais": [
           {
@@ -5694,7 +5691,7 @@
       {
         "nome": "Garras",
         "descricao": "As garras dos membros são Armas Naturais (pág. 114) e causam Força + d4 de dano.",
-        "id": "GARRAS",
+        "id": "GARRAS_SEM_PA",
         "category": "racial_trait_positive",
         "descricaoLite": "As garras funcionam como Arma Natural, causando dano de Força+d4.",
         "armasNaturais": [

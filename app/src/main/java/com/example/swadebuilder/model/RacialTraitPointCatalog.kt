@@ -406,7 +406,14 @@ object RacialTraitPointCatalog {
         // basico_habilidades_raciais.json "grupoEscolha": "acao_adicional").
         // Cada versão é um id próprio (não empilhável entre si).
         "ACAO_ADICIONAL" to 5, // oficial: acao_adicional
-        "ACOES_ADICIONAIS" to 4, // oficial: acoes_adicionais (variante condicional, exige ação física/mental)
+        // "ACOES_ADICIONAIS" (4, variante condicional físico/mental) foi removido
+        // daqui — duplicava ACAO_ADICIONAL_FISICA (mesmo valor, mesmo efeito).
+        // Insetoides (Fantasia) usava esse id mesmo esse tier condicional só
+        // estar formalizado na tabela do Sci-Fi, não na do Fantasia — o texto
+        // de Insetoides ("desde que pelo menos uma das ações use seus membros")
+        // bate exatamente com esse tier condicional, então o livro do Fantasia
+        // parece ter esquecido de formalizar o próprio tier de 4 pontos que já
+        // usa. Migrado pra ACAO_ADICIONAL_FISICA, ver comentário lá embaixo.
         "ACOES_ADICIONAIS_MAIOR" to 10, // oficial: acoes_adicionais_maior (Fantasia, reduz 4 pontos p/ qualquer ação)
         "ADAPTAVEL" to 2, // oficial: adaptavel
         "ADAPTAVEL_OU_SIGNO" to 2, // mesmo efeito de Adaptável
@@ -549,24 +556,32 @@ object RacialTraitPointCatalog {
         "FRAGIL" to -1, // oficial: fragil (âncora: AnaoCiberNegativeTrait.fragil)
         "FRAQUEZA_AMBIENTAL" to -1, // oficial: fraqueza_ambiental
         "GANANCIOSO" to -1, // oficial: complicacao_racial_menor
-        // Garras oficial (livro): base 2 pontos = For+d4 (PA 2 e o bônus de
-        // Atletismo pra escalar já cabem nesse tier, são só texto explicativo
-        // do livro — não custam ponto à parte). +1 ponto separado eleva o dano
-        // pra For+d6. Três tiers cobertos: GARRAS_SEM_PA (1, For+d4 sem PA —
-        // nenhuma raça usa ainda, id reservado), GARRAS (2, tier normal — usado
-        // por Rakashanos/Povo Ratazana/Draconianos/Feral) e GARRAS_MAIORES (3,
-        // For+d6+PA — nenhuma raça usa ainda). Mesmo padrão de CHIFRES/
-        // CHIFRES_MAIORES.
+        // Garras oficial (livro): base 2 pontos = For+d4+PA 2 (o bônus de
+        // Atletismo pra escalar é só texto explicativo do livro — não custa
+        // ponto à parte). +1 ponto separado eleva o dano pra For+d6. Três
+        // tiers: GARRAS_SEM_PA (1, For+d4 sem PA — id do Rakashano no livro
+        // Básico/Horror/Sci-Fi/Super e Feral, cujo texto nunca menciona PA:
+        // "causam Força + d4 de dano", sem mais), GARRAS (2, For+d4+PA — só o
+        // Rakashano do Fantasia tem PA no texto: "têm PA 2 e adicionam +2 às
+        // jogadas de Atletismo", também usado por Povo Ratazana e Draconianos)
+        // e GARRAS_MAIORES (3, For+d6+PA — nenhuma raça usa ainda). Mesmo
+        // padrão de CHIFRES/CHIFRES_MAIORES.
         "GARRAS_SEM_PA" to 1,
         "GARRAS" to 2,
         "GARRAS_MAIORES" to 3,
-        "GELATINOSO" to 2, // oficial: gelatinoso_2
+        "GELATINOSO" to 2, // oficial: gelatinoso_2 — tier base (metade do dano de queda/colisão)
+        "GELATINOSO_MAIOR" to 3, // mesmo trecho: também atravessa grades/aberturas como Terreno Difícil
         "GUIADO" to -2, // oficial: complicacao_racial_maior
         "HERANCA" to 2, // oficial: vantagem_racial OU aumento_atributo (escolha, mesmo tier)
         "HERANCA_MISTA" to 2, // oficial: vantagem_racial
         "IMPULSIVO" to -2, // Complicação Maior no catálogo real (complicacoes.json "impulsivo" só existe como Maior) — mesmo caso de AZARADO, corrigido pra bater com o catálogo
         "IMUNE_A_DOENCAS_E_VENENOS" to 1, // oficial: imune_doencas_venenos
-        "INCAPAZ_DE_FALAR" to -2, // oficial: complicacao_racial_maior
+        // "INCAPAZ_DE_FALAR" (-2) foi removido — duplicava NAO_FALA (-1), com a
+        // mesma descrição oficial ("Não tem cordas vocais... ainda pode se
+        // comunicar... escuta e entende outros idiomas... comunica-se por
+        // dispositivos"). Insetoides e Vazios (Sci-Fi) usavam esse id ao dobro
+        // do custo oficial; migrados pra NAO_FALA, com "Incapaz de Falar" como
+        // skin (nome de exibição), não como id próprio.
         "INFRAVISAO" to 1, // oficial: infravisao
         "INIMIGO_ANCESTRAL" to -1, // oficial: inimigo_racial
         "INIMIGO_RACIAL" to -1, // oficial: inimigo_racial
@@ -589,14 +604,14 @@ object RacialTraitPointCatalog {
         "METADE_CONSTRUTO" to 6, // entre robo (6) e construto (8): pacote quase completo (+3 Resistência, não respira, imune veneno/doença, sem dano extra de Ataque Localizado) mas não cura naturalmente
         // Mordida oficial (livro): base 1 ponto = For+d4, sem PA (Rakashanos,
         // Sáurios, Centauros, Insetoides, Povo Ratazana, Povo Serpente,
-        // Renascidos etc.). Mesmo padrão de Garras: +1 ponto separado eleva
-        // pra d6, +1 ponto separado adiciona PA 2 — três tiers cobertos aqui,
-        // pulando a combinação "d6 sem PA" (mesma simplificação de Garras,
-        // nenhuma raça oficial usa essa combinação). MORDIDA_COM_PA (2, For+d4
-        // com PA — nenhuma raça usa ainda; Draconianos consegue o mesmo efeito
-        // hoje via override `pontos` na própria habilidade, não precisou
-        // migrar) e MORDIDA_MAIORES (3, For+d6 com PA — nenhuma raça usa
-        // ainda) são ids reservados.
+        // Renascidos etc. — nenhum menciona PA no texto). Mesmo padrão de
+        // Garras: +1 ponto separado eleva pra d6, +1 ponto separado adiciona
+        // PA 2 — três tiers cobertos aqui, pulando a combinação "d6 sem PA"
+        // (mesma simplificação de Garras, nenhuma raça oficial usa essa
+        // combinação). MORDIDA_COM_PA (2, For+d4+PA — Draconianos, cujo texto
+        // diz "For+d4, PA 2"; migrado do override `pontos=2` que fazia o
+        // mesmo efeito antes desse id existir) e MORDIDA_MAIORES (3, For+d6
+        // com PA — nenhuma raça usa ainda) são os outros dois tiers.
         "MORDIDA" to 1, // oficial: mordida (For+d4)
         "MORDIDA_COM_PA" to 2,
         "MORDIDA_MAIORES" to 3,
@@ -711,7 +726,7 @@ object RacialTraitPointCatalog {
         "INVISIBILIDADE" to 4, // Sci-Fi "Invisibilidade (1)": tier translúcido (4 pontos); total custa 8
         "INVISIBILIDADE_TOTAL" to 8, // Sci-Fi "Invisibilidade (1)": tier totalmente invisível
         "MODS" to 1, // Sci-Fi "Mods (1)": 3 espaços de Mods Robóticos
-        "NAO_FALA" to -1, // Básico "Não Fala (1)" — versão mais branda de INCAPAZ_DE_FALAR (-2)
+        "NAO_FALA" to -1, // Básico "Não Fala (1)" — usado também por Insetoides/Vazios (Sci-Fi) com o nome de exibição "Incapaz de Falar" (skin, mesmo id/custo)
         "REPUGNANTE" to -1, // Sci-Fi "Repugnante (1)"
         "SALTADOR" to 2, // Básico "Saltador (1)"
         "SEM_MANIPULADORES" to -4, // Sci-Fi "Sem Manipuladores (1)"
@@ -750,7 +765,7 @@ object RacialTraitPointCatalog {
         // próprio (ver AncestryVariantRegistry.kt).
         "ARMA_DE_SOPRO_FOGO" to 2, // mesmo valor de ARMA_DE_SOPRO, elemento Fogo (Drakens Dragão)
         "ARMA_DE_SOPRO_FRIO" to 2, // mesmo valor de ARMA_DE_SOPRO, elemento Frio (Yetis Sopro)
-        "ACAO_ADICIONAL_FISICA" to 4, // mesmo valor de ACOES_ADICIONAIS (tier condicional físico/mental)
+        "ACAO_ADICIONAL_FISICA" to 4, // oficial Sci-Fi: tier condicional físico/mental — também usado por Insetoides (Fantasia), ver nota acima em ACAO_ADICIONAL
         "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS" to 5, // mesmo valor de ACAO_ADICIONAL (tier incondicional)
         "SENTIDOS_AGUCADOS_OLHOS_DE_AGUIA" to 1, // Sci-Fi "Sentidos Aguçados (3)" tier "Visão de Águia" — 1pt/pick, efeito estreito diferente do pericia_racial_d6 que SENTIDOS_AGUCADOS representa em outras raças
         "SENTIDOS_AGUCADOS_AUDICAO" to 1, // mesmo trecho, opção "Audição" — 1pt/pick. Sem raça cadastrada ainda
