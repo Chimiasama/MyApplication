@@ -194,6 +194,28 @@ object AnaoCiberTraitCatalog {
         )
     )
 
+    /**
+     * Subconjunto reaproveitado por Quadroides "Habilidoso" (ver
+     * ResolveAncestrySpecificAdjustmentsUseCase e
+     * CriadorState.quadroidesTracoNegativoSelecionado): só os traços de -1
+     * ponto sem escolha de alvo (atributo/perícia) — o picker de Quadroides
+     * é uma escolha única, não um orçamento de vários traços como o do Anão
+     * Ciber, então os paramétricos (que exigiriam um segundo dropdown) ficam
+     * de fora.
+     */
+    val TRACOS_MENOS_UM: List<AnaoCiberNegativeTrait> =
+        TRACOS.filter { it.custo == -1 && !it.exigeEscolhaAtributo && !it.exigeEscolhaPericia }
+
+    /**
+     * [TRACOS_MENOS_UM] sem "Frágil": Quadroides já têm Frágil (-1) na raça
+     * base, então escolher de novo não somaria nada de verdade (mesmo motivo
+     * de Movimentação Reduzida ter ficado fora do catálogo do Anão Ciber —
+     * ver comentário da classe) — deixaria o jogador "fugir" do ponto
+     * negativo que a Variante exige pra fechar o orçamento.
+     */
+    val TRACOS_MENOS_UM_QUADROIDES: List<AnaoCiberNegativeTrait> =
+        TRACOS_MENOS_UM.filterNot { it.id == "fragil" }
+
     fun byId(id: String): AnaoCiberNegativeTrait? = TRACOS.firstOrNull { it.id == id }
 
     fun pontosUsados(selecoes: List<AnaoCiberTraitSelection>): Int =

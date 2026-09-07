@@ -258,6 +258,15 @@ fun TelaInicial(
             {
                 optCompendioSciFi = !optCompendioSciFi
                 applyRulesPreset(if (optCompendioSciFi) "scifi" else "basico")
+                // Variantes de Raça é regra independente (não tem contrapartida
+                // em CreationPreset, ver comentário de resetAllRuleFlags acima) —
+                // por isso não fica em applyRulesPreset, que reaplicaria isso
+                // toda vez que o jogador trocasse de livro. Só liga aqui, uma
+                // vez, ao ATIVAR o Sci-Fi (a maioria das raças do compêndio usa
+                // Variante); o jogador ainda pode desmarcar na tela de regras.
+                if (optCompendioSciFi) {
+                    optVariantesDeRaca = true
+                }
             }
         ),
         ModuleItemData(

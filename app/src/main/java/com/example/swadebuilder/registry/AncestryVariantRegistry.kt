@@ -33,7 +33,6 @@ object AncestryVariantRegistry {
         elementaisScifi(),
         anoes(),
         rakashanos(),
-        sauriosScifi(),
         aquarianos(),
         avianos(),
         elfos(),
@@ -71,7 +70,7 @@ object AncestryVariantRegistry {
      * traços/habilidades por um caminho diferente, anterior a este lote.
      */
     val scifiVariantDrivenKeys: Set<String> = setOf(
-        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
+        "RAKASHANOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
         "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
         "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
         "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "ROBOS", "SERES SINTETICOS"
@@ -108,35 +107,10 @@ object AncestryVariantRegistry {
         )
     )
 
-    private fun sauriosScifi(): AncestryVariantConfig = AncestryVariantConfig(
-        ancestralidadeId = "SAURIOS",
-        grupoVariante = VariantGroup(
-            opcoes = listOf(
-                VariantOption(
-                    id = "basico",
-                    nome = "Básico",
-                    pacoteFixo = ResolvedTraitPackage(
-                        vantagensGratisParaAdicionar = listOf(TraitAddition("PRONTIDÃO", "PRONTIDAO")),
-                        tracosParaAdicionar = listOf(TraitAddition("MORDIDA", "MORDIDA")),
-                        // Sáurios "Mordida" nunca foi um campo fixo no JSON
-                        // da raça (só existe pra Básico) — sem isso aqui,
-                        // extrairArmasNaturais só achava a arma por
-                        // casamento de palavra-chave em texto solto.
-                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Mordida", dano = "For+d4")),
-                        naturalArmor = 2
-                    )
-                ),
-                VariantOption(
-                    id = "cuspidor",
-                    nome = "Cuspidor",
-                    pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("TOQUE VENENOSO (Cuspidor)", "TOQUE_VENENOSO_CUSPIDOR")),
-                        naturalArmor = 2
-                    )
-                )
-            )
-        )
-    )
+    // sauriosScifi() removido: Sáurios não é raça do Sci-Fi Companion (só
+    // Básico/Fantasia/Horror/Super) — a entrada "SAÚRIOS"/SCI_FI em
+    // ancestralidades.json era um erro de cadastro (nome com acento errado,
+    // "SAÚRIOS" em vez de "SÁURIOS"), removida junto com este config.
 
     private fun aquarianos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "AQUARIANOS",
@@ -344,8 +318,11 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "defensivo",
                     nome = "Defensivo",
+                    // Toque Venenoso (Paralisante) custa 3 — deixava a raça 1
+                    // ponto acima do orçamento. O livro é Nocauteador (2), não
+                    // Paralisante (3): base(0) + Nocauteador(2) = 2, fecha.
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("TOQUE VENENOSO (Paralisante)", "TOQUE_VENENOSO_PARALISANTE"))
+                        tracosParaAdicionar = listOf(TraitAddition("TOQUE VENENOSO (Nocauteador)", "TOQUE_VENENOSO_NOCAUTEADOR"))
                     )
                 )
             )
@@ -364,7 +341,10 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "ameba",
                     nome = "Ameba",
-                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("CAMUFLAGEM", "CAMUFLAGEM")))
+                    // Camuflagem Total (2), não a Camuflagem básica (1) — bate
+                    // com a Regeneração (2) que a raça perde ao trocar de
+                    // Padrão pra Ameba.
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("CAMUFLAGEM TOTAL", "CAMUFLAGEM_TOTAL")))
                 )
             )
         )
@@ -422,10 +402,19 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "resistente",
                     nome = "Resistente",
+                    // Livro: usa o valor oficial de "Mudança de Forma (Sem
+                    // variação de Tamanho)" (4) e a Variante fica 1 ponto
+                    // acima do orçamento. Provavelmente o livro pretendia um
+                    // tier de 3 pontos pra esse traço aqui e não formalizou —
+                    // sem fonte oficial, usamos um id pontual só pra esta
+                    // raça fechar a conta (MUDAR_DE_FORMA_AJUSTE_MIMICOS, 3
+                    // pontos, mesmo texto de exibição — não muda Tamanho, ver
+                    // RacialTraitPointCatalog). Não cadastrado como traço
+                    // oficial escolhível em nenhum editor de Variante custom.
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
                             TraitAddition("RESISTÊNCIA +1", "RESISTENCIA"),
-                            TraitAddition("MUDANÇA DE FORMA (Sem variação de tamanho)", "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO")
+                            TraitAddition("MUDANÇA DE FORMA (Sem variação de tamanho)", "MUDAR_DE_FORMA_AJUSTE_MIMICOS")
                         )
                     )
                 )
@@ -441,9 +430,13 @@ object AncestryVariantRegistry {
                     id = "padrao",
                     nome = "Padrão",
                     pacoteFixo = ResolvedTraitPackage(
+                        // Livro: tier "a cada minuto" (-2), não o tier base (-1) de
+                        // DEPENDENCIA_ATMOSFERICA — ver RacialTraitPointCatalog.
+                        // Id igual ao de habilidades[] na raça base (dedupe por
+                        // addIfAbsent em CriadorState.kt), senão soma duas vezes.
                         tracosParaAdicionar = listOf(
                             TraitAddition("FORTE", "FORTE"),
-                            TraitAddition("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDENCIA_ATMOSFERICA")
+                            TraitAddition("DEPENDÊNCIA ATMOSFÉRICA (Maior)", "DEPENDENCIA_ATMOSFERICA_MAIOR")
                         )
                     )
                 ),
@@ -453,7 +446,7 @@ object AncestryVariantRegistry {
                     pacoteFixo = ResolvedTraitPackage(
                         vantagensGratisParaAdicionar = listOf(TraitAddition("ADAPTAÇÃO GRAVITACIONAL", "ADAPTACAO_GRAVITACIONAL")),
                         vantagensGratisIds = listOf("adaptacao_gravitacional"),
-                        tracosParaRemoverPorNome = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
+                        tracosParaRemoverPorNome = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         desvantagensParaAdicionar = listOf(
                             TraitAddition("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)", "HABITANTE_DE_GRAVIDADE_ZERO_BAIXA_MAIOR")
                         ),
@@ -520,17 +513,25 @@ object AncestryVariantRegistry {
         ancestralidadeId = "QUADROIDES",
         grupoVariante = VariantGroup(
             opcoes = listOf(
-                VariantOption(
-                    id = "padrao",
-                    nome = "Padrão",
-                    pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("AÇÃO ADICIONAL (Física)", "ACAO_ADICIONAL_FISICA")),
-                        desvantagensParaAdicionar = listOf(TraitAddition("SENSÍVEL (Maior)", "SENSIVEL_MAIOR"))
-                    )
-                ),
+                // "Padrão" não é uma Variante de verdade — Ação Adicional
+                // (Física) e Sensível (Maior) já vêm de habilidades[] na raça
+                // base (ancestralidades.json), então esta opção não precisa
+                // adicionar nada (mesmo padrão de Drakens/Elementais — ver
+                // auditoria de raças).
+                VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
                 VariantOption(
                     id = "habilidoso",
                     nome = "Habilidoso",
+                    // Troca Ação Adicional (Física, 4) pela versão que ignora
+                    // penalidade de Ações Múltiplas (5) — 1 ponto mais forte,
+                    // por isso o livro pede pro mestre equilibrar com 1 ponto
+                    // de traço negativo. Isso agora é escolha de verdade do
+                    // jogador (ver quadroidesTracoNegativoSelecionado em
+                    // CriadorState + o bloco QUADROIDES em
+                    // ResolveAncestrySpecificAdjustmentsUseCase, que injeta o
+                    // traço escolhido — ou o primeiro da lista, se nada foi
+                    // escolhido ainda), não mais um lembrete solto em
+                    // anotações.
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
                             TraitAddition(
@@ -538,11 +539,19 @@ object AncestryVariantRegistry {
                                 "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS"
                             )
                         ),
-                        desvantagensParaAdicionar = listOf(TraitAddition("SENSÍVEL (Maior)", "SENSIVEL_MAIOR")),
-                        // Nota pro mestre, não uma desvantagem de verdade —
-                        // pertence a `anotacoes`, não a `desvantagensParaAdicionar`.
-                        anotacoes = listOf(
-                            "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido ao cenário."
+                        tracosParaRemoverPorNome = listOf("AÇÃO ADICIONAL (Física)")
+                    ),
+                    // Âncora só de documentação/lookup (ver
+                    // ResolveAncestrySpecificAdjustmentsUseCase, mesmo padrão
+                    // de anao_ciber_tracos_negativos em anoes() acima) — não é
+                    // interpretada genericamente, o traço negativo é injetado
+                    // à mão no use case.
+                    selecoes = listOf(
+                        SelectionDef(
+                            id = "quadroides_traco_negativo",
+                            rotulo = "Escolha 1 ponto de traço racial negativo",
+                            tipo = SelectionType.BUDGETED_CATALOG,
+                            catalogId = "quadroides_negativo"
                         )
                     )
                 )

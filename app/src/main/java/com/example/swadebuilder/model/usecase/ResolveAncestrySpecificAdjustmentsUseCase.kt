@@ -107,6 +107,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         scifiVariant: String? = null,
         humanoMineradorAtributo: String? = null,
         anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
+        quadroidesTracoNegativoSelecionado: String? = null,
         ancestryOptions: List<String> = emptyList(),
         isSciFiActive: Boolean = false,
         isSciFiMechasActive: Boolean = false,
@@ -203,6 +204,39 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                         elementalAction = ElementalAction.NONE
                     )
                 }
+            }
+
+            if (ancKey == "QUADROIDES" && effectiveVariant == "Habilidoso") {
+                // Ação Adicional (Ignora Penalidade) é 1 ponto mais forte que
+                // a Física que ela substitui — o livro pede pro mestre
+                // equilibrar com 1 ponto de traço negativo. Isso é resolvido
+                // como escolha de verdade do jogador (catálogo reaproveitado
+                // de AnaoCiberTraitCatalog, mesmo padrão do Anão Ciber acima)
+                // em vez de um lembrete solto: sem escolha ainda, usa o
+                // primeiro traço da lista.
+                val trait = AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.firstOrNull { it.id == quadroidesTracoNegativoSelecionado }
+                    ?: AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.first()
+                val racialDisadvantages = AnaoCiberTraitCatalog.buildDesvantagens(
+                    listOf(AnaoCiberTraitSelection(traitId = trait.id))
+                )
+                val resolved = resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "QUADROIDES",
+                    variantOptionId = "habilidoso",
+                    selectionAnswers = emptyList(),
+                    catalogPackages = mapOf(
+                        "quadroides_traco_negativo" to ResolvedTraitPackage(desvantagensParaAdicionar = racialDisadvantages)
+                    )
+                )
+                return Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = resolved.tracosParaAdicionar,
+                    automaticAdvantagesToRemove = resolved.tracosParaRemoverPorNome,
+                    ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
+                    elementalAction = ElementalAction.NONE
+                )
             }
 
             if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys) {

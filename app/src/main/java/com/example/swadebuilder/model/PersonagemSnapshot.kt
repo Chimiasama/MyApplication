@@ -181,6 +181,7 @@ data class SnapshotSelecoes(
     val scifiVariant: String? = null,
     val humanoMineradorAtributo: String? = null,
     val anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
+    val quadroidesTracoNegativoSelecionado: String? = null,
     val vantagemAdaptavelSelecionadaId: String? = null,
     val customVarianteRacialSelecionadaId: String? = null,
     val mechasSelecionados: List<MechaItem> = emptyList(),

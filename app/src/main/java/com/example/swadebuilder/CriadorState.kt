@@ -352,6 +352,18 @@ class CriadorState {
     /** Id de CustomAncestryVariant selecionada pra raça atual (Variante custom, ver Tarefa #18). */
     var customVarianteRacialSelecionadaId by mutableStateOf<String?>(null)
     var anaoCiberTracosSelecionados by mutableStateOf<List<AnaoCiberTraitSelection>>(emptyList())
+    /**
+     * Traço racial negativo (-1 ponto) escolhido pra Quadroides "Habilidoso" —
+     * a Variante troca Ação Adicional (Física) por Ação Adicional (Ignora
+     * Penalidade), 1 ponto mais forte, e precisa desse traço extra pra
+     * fechar o orçamento (livro pede pro mestre equilibrar com 1 ponto de
+     * habilidade negativa; aqui isso vira escolha de verdade em vez de
+     * lembrete). Reaproveita o catálogo de AnaoCiberTraitCatalog (traços não
+     * paramétricos de -1) em vez de duplicar dados. Null = ainda não
+     * escolhido; nesse caso o primeiro da lista é usado como padrão (ver
+     * ResolveAncestrySpecificAdjustmentsUseCase).
+     */
+    var quadroidesTracoNegativoSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var kitsunemimiPericiaEscolhida by mutableStateOf<String?>(null)
     var usagimimiPericiaEscolhida by mutableStateOf<String?>(null)
@@ -4643,6 +4655,12 @@ class CriadorState {
             anaoCiberTracosSelecionados = emptyList()
         }
 
+        // Mesma lógica acima, pro traço negativo de Quadroides "Habilidoso".
+        val isQuadroidesHabilidosoAgora = anc.keyify() == "QUADROIDES" && effectiveScifiVariant == "Habilidoso"
+        if (!isQuadroidesHabilidosoAgora && quadroidesTracoNegativoSelecionado != null) {
+            quadroidesTracoNegativoSelecionado = null
+        }
+
         // Limpa a Variante custom selecionada se ela não pertencer à raça de destino.
         if (customVarianteRacialSelecionadaId != null) {
             val selectedVariant = listaVariantesRaciaisCustom.firstOrNull { it.id == customVarianteRacialSelecionadaId }
@@ -4693,7 +4711,8 @@ class CriadorState {
                 anoesScifiSelecionado = anoesScifiSelecionado,
                 scifiVariant = effectiveScifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo,
-                anaoCiberTracosSelecionados = anaoCiberTracosSelecionados
+                anaoCiberTracosSelecionados = anaoCiberTracosSelecionados,
+                quadroidesTracoNegativoSelecionado = quadroidesTracoNegativoSelecionado
             )
         )
 
@@ -5293,6 +5312,14 @@ class CriadorState {
         if (AnaoCiberTraitCatalog.pontosUsados(novosTracos) > AnaoCiberTraitCatalog.MAX_PONTOS) return
         if (anaoCiberTracosSelecionados == novosTracos) return
         anaoCiberTracosSelecionados = novosTracos
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+    }
+
+    /** Atualiza o traço negativo escolhido pra Quadroides "Habilidoso" — ver campo. */
+    fun selecionarQuadroidesTracoNegativo(traitId: String?) {
+        if (quadroidesTracoNegativoSelecionado == traitId) return
+        quadroidesTracoNegativoSelecionado = traitId
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
     }
@@ -6505,6 +6532,7 @@ class CriadorState {
                 scifiVariant = scifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo,
                 anaoCiberTracosSelecionados = anaoCiberTracosSelecionados,
+                quadroidesTracoNegativoSelecionado = quadroidesTracoNegativoSelecionado,
                 vantagemAdaptavelSelecionadaId = vantagemAdaptavelSelecionadaId,
                 customVarianteRacialSelecionadaId = customVarianteRacialSelecionadaId
             ),
@@ -6664,6 +6692,7 @@ class CriadorState {
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
         anaoCiberTracosSelecionados = snapshot.selecoes.anaoCiberTracosSelecionados
+        quadroidesTracoNegativoSelecionado = snapshot.selecoes.quadroidesTracoNegativoSelecionado
         vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
         customVarianteRacialSelecionadaId = snapshot.selecoes.customVarianteRacialSelecionadaId
 

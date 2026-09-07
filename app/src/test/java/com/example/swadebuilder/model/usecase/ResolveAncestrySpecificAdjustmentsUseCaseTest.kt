@@ -386,7 +386,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
 
     @Test
-    fun `quadroides padrao inclui sensivel maior`() {
+    fun `quadroides padrao nao injeta nada (sensivel maior ja vem da base)`() {
         val result = useCase.execute(
             anc = "QUADROIDES",
             descendenteElementalSelecionado = null,
@@ -395,11 +395,14 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.any { it.nome == "SENSÍVEL (Maior)" })
+        // "Padrão" não é Variante de verdade — Ação Adicional (Física) e
+        // Sensível (Maior) já são habilidades[] da raça base.
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
+        assertTrue(result.ensureRacialDisadvantages.isEmpty())
     }
 
     @Test
-    fun `quadroides habilidoso inclui anotacao racial e sensivel maior`() {
+    fun `quadroides habilidoso troca acao adicional e usa o primeiro traco negativo por padrao`() {
         val result = useCase.execute(
             anc = "QUADROIDES",
             descendenteElementalSelecionado = null,
@@ -408,14 +411,33 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.any { it.nome == "SENSÍVEL (Maior)" })
-        // A nota pro mestre é anotação, não uma desvantagem de traço real —
-        // mora em anotacoesToAdd (ver AncestryVariantRegistry.quadroides).
-        assertTrue(
-            result.anotacoesToAdd.any {
-                it.contains("Combine com o mestre de jogo para equilibrar com 1 ponto")
-            }
+        assertEquals(
+            listOf(
+                TraitAddition(
+                    "AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)",
+                    "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS"
+                )
+            ),
+            result.ensureAutomaticAdvantages
         )
+        assertTrue(result.automaticAdvantagesToRemove.contains("AÇÃO ADICIONAL (Física)"))
+        // Sem escolha do jogador (quadroidesTracoNegativoSelecionado = null),
+        // usa o primeiro traço de -1 ponto do catálogo (Frágil).
+        assertTrue(result.ensureRacialDisadvantages.any { it.nome.contains("Frágil") })
+    }
+
+    @Test
+    fun `quadroides habilidoso usa o traco negativo escolhido pelo jogador`() {
+        val result = useCase.execute(
+            anc = "QUADROIDES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Habilidoso",
+            ancestryOptions = listOf("Padrão", "Habilidoso"),
+            isSciFiActive = true,
+            quadroidesTracoNegativoSelecionado = "nao_fala"
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.any { it.nome.contains("Não Fala") })
     }
 
     @Test
@@ -428,7 +450,9 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureAutomaticAdvantages.any { it.nome == "DEPENDÊNCIA ATMOSFÉRICA" })
+        // Livro: tier "a cada minuto" (-2), não o tier base (-1) — sem o
+        // "(Maior)" a raça ficava 1 ponto acima do orçamento.
+        assertTrue(result.ensureAutomaticAdvantages.any { it.nome == "DEPENDÊNCIA ATMOSFÉRICA (Maior)" })
     }
 
     @Test
@@ -445,7 +469,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertTrue(result.racialDisadvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
         assertTrue(result.ensureAdvantageIds.contains("adaptacao_gravitacional"))
         assertTrue(result.automaticAdvantagesToRemove.contains("FORTE"))
-        assertTrue(result.automaticAdvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA"))
+        assertTrue(result.automaticAdvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
     }
 
     @Test

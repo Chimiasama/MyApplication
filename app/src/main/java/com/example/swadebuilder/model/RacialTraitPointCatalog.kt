@@ -233,7 +233,8 @@ object RacialTraitPointCatalog {
         "MOVIMENTACAO" to 2, // livro: "Movimentação (2)"
         "ALCANCE" to 3, // livro: "Alcance (3)", +1 Alcance/compra
         "PERICIAS_BASICAS_REDUZIDAS" to 5, // livro: "Perícias Básicas Reduzidas (5)", -1/compra (uma perícia básica por vez)
-        "REDUCAO_DE_SONO" to 2 // livro: "Redução de Sono (2)" — 1ª compra reduz o sono pela metade, 2ª compra elimina o sono
+        "REDUCAO_DE_SONO" to 2, // livro: "Redução de Sono (2)" — 1ª compra reduz o sono pela metade, 2ª compra elimina o sono
+        "IMUNE_A_DOENCAS_E_VENENOS" to 2 // livro: "pode ser comprado duas vezes" — 1ª cobre doenças OU venenos, a 2ª cobre a outra categoria (Seres Sintéticos compram as duas)
     )
 
     /** Teto de vezes que o id pode ser comprado (1 se não estiver listado). */
@@ -335,6 +336,11 @@ object RacialTraitPointCatalog {
         "TOQUE_VENENOSO_LETAL_CUSPIDOR" to "Toque Venenoso (Letal, Cuspidor)",
         "FERRAO_MORDIDA_FOR_D4" to "Ferrão",
         "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO" to "Mudança de Forma (Sem variação de Tamanho)",
+        // Gambiarra deliberada, só pra Mímicos "Resistente" fechar o
+        // orçamento — ver custo e comentário em CUSTOS abaixo. Mesmo texto de
+        // exibição do id oficial acima (idêntico pro jogador), não muda
+        // Tamanho.
+        "MUDAR_DE_FORMA_AJUSTE_MIMICOS" to "Mudança de Forma (Sem variação de Tamanho)",
         "ARMA_DE_SOPRO_FOGO" to "Arma de Sopro (Fogo)",
         "ARMA_DE_SOPRO_FRIO" to "Arma de Sopro (Frio)",
         "ACAO_ADICIONAL_FISICA" to "Ação Adicional (Física/Mental)",
@@ -580,7 +586,7 @@ object RacialTraitPointCatalog {
         "HERANCA" to 2, // oficial: vantagem_racial OU aumento_atributo (escolha, mesmo tier)
         "HERANCA_MISTA" to 2, // oficial: vantagem_racial
         "IMPULSIVO" to -2, // Complicação Maior no catálogo real (complicacoes.json "impulsivo" só existe como Maior) — mesmo caso de AZARADO, corrigido pra bater com o catálogo
-        "IMUNE_A_DOENCAS_E_VENENOS" to 1, // oficial: imune_doencas_venenos
+        "IMUNE_A_DOENCAS_E_VENENOS" to 1, // oficial: imune_doencas_venenos — 1pt cobre SÓ doenças OU venenos (livro: "pode ser comprado duas vezes"); imunidade às duas categorias precisa de vezes=2 (2pts) — ver VEZES_MAX. Seres Sintéticos (Sci-Fi) compram as duas.
         // "INCAPAZ_DE_FALAR" (-2) foi removido — duplicava NAO_FALA (-1), com a
         // mesma descrição oficial ("Não tem cordas vocais... ainda pode se
         // comunicar... escuta e entende outros idiomas... comunica-se por
@@ -764,6 +770,18 @@ object RacialTraitPointCatalog {
         "TOQUE_VENENOSO_LETAL_CUSPIDOR" to 6, // Letal (4) + cuspir (+2) — o teto de 6 pontos que o livro descreve
         "FERRAO_MORDIDA_FOR_D4" to 1, // mesma arma natural de MORDIDA, só com nome "Ferrão" (Insetoides Vespa)
         "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO" to 4, // mesmo valor de MUDAR_DE_FORMA — versão restrita (sem variar Tamanho), não um tier mais barato no livro
+        // Gambiarra deliberada (não é id oficial do livro, por isso NÃO
+        // cadastrado em basico_habilidades_raciais.json — fica invisível pro
+        // "Criar Raça"/editor de Variante custom, só usado direto por
+        // AncestryVariantRegistry.mimicos()). Mímicos "Resistente" ganham
+        // Resistência +1 (1pt) e, na prática, uma Mudança de Forma sem variar
+        // Tamanho — mas com o valor oficial de 4 (MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO)
+        // a Variante fica 1 ponto acima do orçamento. Provavelmente o livro
+        // pretendia ter um tier 3/4 pra esse traço e não chegou a formalizar
+        // os dois — sem fonte oficial pro tier 3, criamos só esse id pontual
+        // pra fechar a conta desta raça, sem alterar o valor oficial usado
+        // por outras raças.
+        "MUDAR_DE_FORMA_AJUSTE_MIMICOS" to 3,
 
         // Aliases de tiers de traços já cadastrados sob outro id/livro — mesmo
         // conceito e mesmo valor, só usados por uma Variante com nome/id
