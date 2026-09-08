@@ -1513,22 +1513,42 @@ fun SettingsDialog(
                                                             )
                                                         )
                                                     }
-                                                    // RacialModifier.atributos/pericias guardam a DIFERENÇA sobre a
-                                                    // base d4 (ex.: Anão oficial = {"Vigor": 2}, ou seja Vigor d6 —
-                                                    // ver DataLoader "11. Mapas Raciais", `.mapValues { 4 + it.value }`),
-                                                    // não o dado absoluto — por isso a conversão abaixo. O picker
-                                                    // (racaAtributosMin/racaPericiasIniciais) guarda o dado absoluto
-                                                    // (4/6/8/10/12/13) só porque é mais intuitivo de mostrar pro
-                                                    // jogador ("Vigor d6" em vez de "Vigor +2").
+                                                    // Atributos Mínimos/Perícias Iniciais viram traços ATTRIBUTE_BOOST/
+                                                    // SKILL_BOOST em habilidades[] — RacialModifier não tem mais mapas
+                                                    // numéricos `atributos`/`pericias` em paralelo (removidos: eram
+                                                    // redundantes com um traço de id resolvível pra toda raça oficial
+                                                    // já auditada, ver RacialTraitPointCatalog.EFEITOS). O picker
+                                                    // guarda o dado absoluto (4/6/8/10/12) só porque é mais intuitivo
+                                                    // de mostrar pro jogador ("Vigor d6" em vez de "Vigor, 1 passo");
+                                                    // `value` do traço sintético é sempre "passos acima de d4"
+                                                    // (dado-4)/2, a mesma unidade que AtributoStep/PericiaStep usam.
+                                                    val atributoTracos = racaAtributosMin.filterValues { it > 4 }.map { (attr, dado) ->
+                                                        com.example.swadebuilder.model.RacialAbility(
+                                                            nome = "Atributo Aumentado: $attr",
+                                                            descricao = "",
+                                                            traitId = "ATTRIBUTE_BOOST",
+                                                            targetRef = attr,
+                                                            value = (dado - 4) / 2,
+                                                            invisivel = true
+                                                        )
+                                                    }
+                                                    val periciaTracos = racaPericiasIniciais.filterValues { it > 4 }.map { (per, dado) ->
+                                                        com.example.swadebuilder.model.RacialAbility(
+                                                            nome = "Perícia Inicial: $per",
+                                                            descricao = "",
+                                                            traitId = "SKILL_BOOST",
+                                                            targetRef = per,
+                                                            value = (dado - 4) / 2,
+                                                            invisivel = true
+                                                        )
+                                                    }
                                                     val newRace = com.example.swadebuilder.model.RacialModifier(
                                                         id = id,
                                                         nome = customItemName,
                                                         descricao = safeDesc,
-                                                        atributos = racaAtributosMin.mapValues { it.value - 4 },
-                                                        pericias = racaPericiasIniciais.mapValues { it.value - 4 },
                                                         movimentacao = racaMovimentacao.toIntOrNull() ?: 0,
                                                         origem = tags.first(),
-                                                        habilidades = raceAbilities
+                                                        habilidades = raceAbilities + atributoTracos + periciaTracos
                                                     )
                                                     tags.forEach { tag -> customStorageManager.addRaca(context, tag, newRace.copy(origem = tag)) }
                                                     state.listaAncestralidadesJson = state.listaAncestralidadesJson + newRace
@@ -1785,7 +1805,11 @@ fun SettingsDialog(
                         // em vez de num requisito de Vantagem.
                         if (showRacaAttrDialog) {
                             val attrs = listOf("AGILIDADE" to "Agilidade", "ASTUCIA" to "Astúcia", "ESPIRITO" to "Espírito", "FORCA" to "Força", "VIGOR" to "Vigor")
-                            val steps = listOf(0, 4, 6, 8, 10, 12, 13)
+                            // Sem "13" (d12+1): o traço ATTRIBUTE_BOOST sintetizado ao salvar guarda
+                            // "passos acima de d4" como inteiro — (dado-4)/2 só é exato pros dados
+                            // pares abaixo. Um mínimo racial de d12+1 também não faz sentido de
+                            // qualquer forma (nenhuma raça oficial começa tão alta).
+                            val steps = listOf(0, 4, 6, 8, 10, 12)
                             AlertDialog(
                                 onDismissRequest = { showRacaAttrDialog = false },
                                 title = { Text("Atributos Mínimos da Raça") },
@@ -1841,7 +1865,8 @@ fun SettingsDialog(
                         // racaPericiasIniciais (perícia inicial da Raça) em vez de requisito.
                         if (showRacaSkillDialog) {
                             val allSkillsList = state.listaPericias.map { it.nome }.distinct().sorted()
-                            val steps = listOf(0, 4, 6, 8, 10, 12, 13)
+                            // Sem "13" (d12+1) — mesmo motivo do picker de Atributos Mínimos acima.
+                            val steps = listOf(0, 4, 6, 8, 10, 12)
                             var filterSkillText by remember { mutableStateOf("") }
                             AlertDialog(
                                 onDismissRequest = { showRacaSkillDialog = false },

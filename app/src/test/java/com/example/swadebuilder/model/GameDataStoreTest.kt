@@ -48,8 +48,6 @@ class GameDataStoreTest {
             listaCoracoesCrystal = coracoes,
             listaAncestralidadesJson = emptyList(),
             listaMonstroTemplates = emptyList(),
-            racialAttrMinMap = emptyMap(),
-            racialSkillStartMap = emptyMap(),
             listaAtributos = emptyList(),
             mapaAtributosDisplay = emptyMap(),
             listaPericias = pericias,

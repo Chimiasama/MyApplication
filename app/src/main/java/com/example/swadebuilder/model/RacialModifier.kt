@@ -45,8 +45,6 @@ data class RacialModifier(
     val originalName: String? = null,
     val originalDescription: String? = null,
     val descricao: String? = null,
-    val atributos: Map<String, Int> = emptyMap(),
-    val pericias: Map<String, Int> = emptyMap(),
     val habilidades: List<RacialAbility> = emptyList(),
     val origem: String = "BASICO",
     val movimentacao: Int = 0,
@@ -66,41 +64,6 @@ data class RacialModifier(
     // que precisa marcar "Sem limite de pontos".
     val pontosRaciaisEsperados: Int = 2
 ) {
-    /** Retorna atributos mesclando os estáticos de `atributos` com traços `ATTRIBUTE_BOOST` em `habilidades`.
-     * Nenhuma raça cadastrada usa ATTRIBUTE_BOOST hoje (todas os declaram via o mapa
-     * estático `atributos`), então isso ainda não tem call site — quando alguma raça
-     * conceder atributo via habilidade dinâmica, os consumidores de `.atributos` (ex.:
-     * DataLoader ao montar o mapa de mínimos raciais) precisam trocar pra esta função. */
-    @Suppress("unused")
-    fun resolvedAtributos(): Map<String, Int> {
-        val map = atributos.toMutableMap()
-        habilidades.forEach { hab ->
-            val tid = hab.resolvedTraitId().uppercase()
-            if (tid == "ATTRIBUTE_BOOST" && !hab.targetRef.isNullOrBlank()) {
-                val key = hab.targetRef.toFancyTitleCase()
-                map[key] = (map[key] ?: 0) + (hab.value * 2)
-            }
-        }
-        return map
-    }
-
-    /** Retorna perícias mesclando as estáticas de `pericias` com traços `SKILL_BOOST` em `habilidades`.
-     * Mesma situação de resolvedAtributos(): sem call site até alguma raça conceder
-     * perícia via SKILL_BOOST em vez do mapa estático `pericias`. */
-    @Suppress("unused")
-    fun resolvedPericias(): Map<String, Int> {
-        val map = pericias.toMutableMap()
-        habilidades.forEach { hab ->
-            val tid = hab.resolvedTraitId().uppercase()
-            if (tid == "SKILL_BOOST" && !hab.targetRef.isNullOrBlank()) {
-                val key = hab.targetRef.toFancyTitleCase()
-                val tier = if (hab.value == 1) 2 else hab.value
-                map[key] = (map[key] ?: 0) + tier
-            }
-        }
-        return map
-    }
-
     /** Retorna vantagens grátis concedidas por traços `GRANTED_EDGE`/`racial_edge` em `habilidades`. */
     fun resolvedVantagensGratis(): List<String> {
         val list = mutableListOf<String>()
@@ -185,16 +148,18 @@ data class HabilidadeCriacao(
 
 data class RacialAbilitySignature(val nome: String, val descricao: String)
 
+// Só `habilidades` — atributo/perícia aumentados não são mais um mapa numérico
+// à parte de RacialModifier, então já estão implícitos no texto (nome +
+// descrição) do traço correspondente em habilidades[] (ex.: "Resistente"
+// descreve "começam com um d6 em Vigor"); duas raças com bônus numéricos
+// diferentes já produzem traços com texto diferente, então a fusão continua
+// tolerante só a diferenças puramente cosméticas de formatação, igual antes.
 data class RacialSignature(
-    val atributos: Map<String, Int>,
-    val pericias: Map<String, Int>,
     val habilidades: List<RacialAbilitySignature>
 )
 
 fun RacialModifier.signature(): RacialSignature =
     RacialSignature(
-        atributos = atributos,
-        pericias = pericias,
         habilidades = habilidades
             .map { RacialAbilitySignature(it.nome, it.descricao) }
             .sortedWith(compareBy({ it.nome.uppercase().semAcentos() }, { it.descricao.uppercase().semAcentos() }))
@@ -277,29 +242,26 @@ fun desvantagensEfetivas(habilidades: List<RacialAbility>): List<String> =
 /**
  * Monta a lista "Características" da aba Ancestralidades inteiramente a
  * partir de dado estruturado — nunca de `RacialAbility.descricao`. A raça não
- * "diz" o que tem em texto livre; ela só carrega atributos/perícias
- * (mapas numéricos já existentes), vantagens/complicações grátis (ids/nomes
- * já existentes) e um id por habilidade solta, e é só esse conjunto que essa
- * função lê. Rótulos de exibição vêm de `RacialTraitPointCatalog.LABEL` por
- * id — se um id não tem entrada lá, cai no `nome` cru da habilidade (nunca na
- * descrição longa), como ponte até o catálogo de rótulos cobrir mais ids.
+ * "diz" o que tem em texto livre; ela só carrega habilidades (atributo/
+ * perícia aumentados via `AtributoStep`/`PericiaStep`, vantagens/complicações
+ * grátis via ids/nomes já existentes, e um id por habilidade solta), e é só
+ * esse conjunto que essa função lê. Rótulos de exibição vêm de
+ * `RacialTraitPointCatalog.LABEL` por id — se um id não tem entrada lá, cai no
+ * `nome` cru da habilidade (nunca na descrição longa), como ponte até o
+ * catálogo de rótulos cobrir mais ids.
  *
- * Ex. Elfo (Básico): atributos={Agilidade:2}, desvantagens=[Desastrado
- * (Menor)], habilidades=[Ágil(id=AGIL), Desastrado(id=DESASTRADO,
+ * Ex. Elfo (Básico): habilidades=[Ágil(id=AGIL, resolve pra
+ * AtributoStep(Agilidade)), Desastrado(id=DESASTRADO,
  * category=racial_hindrance), Visão no Escuro(id=VISAO_NO_ESCURO)] produz:
- * ["Atributo aumentado d6: Agilidade", "Complicação racial menor:
- * Desastrado", "Visão no Escuro"] — Ágil não vira linha própria porque seu id
- * já resolve pra AtributoStep(Agilidade), a mesma informação da primeira
- * linha; Desastrado não vira linha própria porque sua categoria já virou a
- * segunda linha via `desvantagens`.
+ * ["Atributo aumentado: Agilidade (d6)", "Complicação racial menor:
+ * Desastrado", "Visão no Escuro"] — Ágil não vira linha própria SEGUNDA vez
+ * na varredura final porque seu id já virou a primeira linha acima;
+ * Desastrado não vira linha própria porque sua categoria já virou a segunda
+ * linha via `desvantagens`.
  */
 object RacialCaracteristicasResolver {
 
-    fun resolver(
-        atributos: Map<String, Int>,
-        pericias: Map<String, Int>,
-        habilidades: List<RacialAbility>
-    ): List<String> {
+    fun resolver(habilidades: List<RacialAbility>): List<String> {
         val linhas = mutableListOf<String>()
 
         fun formatPts(pts: Int): String = when {
@@ -308,17 +270,29 @@ object RacialCaracteristicasResolver {
             else -> ""
         }
 
-        atributos.filterValues { it != 0 }.forEach { (atributo, delta) ->
-            val dado = (4 + delta).toDiceString()
-            val verbo = if (delta > 0) "aumentado" else "reduzido"
-            val pts = delta
-            linhas += "Atributo $verbo: ${atributo.toFancyTitleCase()} ($dado)${formatPts(pts)}"
+        // Atributo/Perícia racial aumentados: lidos direto de habilidades[] via
+        // AtributoStep/PericiaStep — RacialModifier não carrega mais os mapas
+        // numéricos estáticos `atributos`/`pericias` que faziam isso em paralelo
+        // (removidos: a mesma informação já vinha, redundante, de um traço com id
+        // resolvível — ver auditoria da migração; Elementais [Sci-Fi] é o único
+        // caso tratado à parte, direto em CriadorState.atributoBaseRacial()).
+        habilidades.forEach { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.AtributoStep) {
+                val delta = efeito.passos * 2
+                val dado = (4 + delta).toDiceString()
+                val verbo = if (delta >= 0) "aumentado" else "reduzido"
+                linhas += "Atributo $verbo: ${efeito.atributo.toFancyTitleCase()} ($dado)${formatPts(delta)}"
+            }
         }
-
-        pericias.filterValues { it > 0 }.forEach { (pericia, tier) ->
-            val dado = (4 + (tier - 1) * 2).toDiceString()
-            val pts = if (tier >= 2) 2 else 1
-            linhas += "Perícia inicial: ${pericia.toFancyTitleCase()} ($dado)${formatPts(pts)}"
+        habilidades.forEach { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.PericiaStep) {
+                val dado = (4 + efeito.passos * 2).toDiceString()
+                // Custo real (não um formato fixo por passo): perícias básicas têm
+                // desconto — ver RacialTraitPointCatalog.custoDe/CUSTOS.
+                linhas += "Perícia inicial: ${efeito.pericia.toFancyTitleCase()} ($dado)${formatPts(hab.resolvedPontos())}"
+            }
         }
 
         vantagensGratisEfetivas(habilidades)

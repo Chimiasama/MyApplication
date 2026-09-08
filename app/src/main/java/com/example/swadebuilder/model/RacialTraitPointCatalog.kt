@@ -151,6 +151,14 @@ object RacialTraitPointCatalog {
         "SENTIDOS_APURADOS" to RacialTraitEffect.PericiaStep("Perceber"),
         "SORRATEIRO" to RacialTraitEffect.PericiaStep("Furtividade"),
         "TRAPALHOES_TRAVESSOS" to RacialTraitEffect.PericiaStep("Furtividade"),
+        // Traços já existiam com texto de livro descrevendo o bônus numérico
+        // ("começa com d6 em X"), mas nunca tinham sido ligados a um efeito
+        // mecânico aqui — descoberto ao remover o mapa estático `pericias` de
+        // RacialModifier (ver auditoria da migração), que era quem cobria
+        // esse bônus até então pra Akaimimi/Nekomimi (Arte da Guerra).
+        "CONHECIMENTO_GERAL" to RacialTraitEffect.PericiaStep("Conhecimento Geral"), // Akaimimi: "começa com Conhecimento Geral d6"
+        "DICAS_CULTURAIS" to RacialTraitEffect.PericiaStep("Convenção"), // Akaimimi: "começando com um d6 em Convenção"
+        "BRINCANDO_COM_O_DESTINO" to RacialTraitEffect.PericiaStep("Jogar"), // Nekomimi: "Começam com d6 em Jogar"
 
         // Resistência/Passo/Aparar de valor fixo. Cada id abaixo tem um valor
         // único e consistente conferido contra a própria descrição da

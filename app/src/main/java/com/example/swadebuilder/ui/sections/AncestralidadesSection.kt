@@ -87,8 +87,6 @@ data class RacialModifierLite(
     val aliases: Set<String> = emptySet(),
     val origens: Set<String> = emptySet(),
     val habilidades: List<RacialAbilityLite> = emptyList(),
-    val atributos: Map<String, Int> = emptyMap(),
-    val pericias: Map<String, Int> = emptyMap(),
     val opcoes: List<String> = emptyList()
 )
 
@@ -230,8 +228,6 @@ fun AncestralidadesSection(
                     aliases = aliasKeys,
                     origens = originsInGroup,
                     habilidades = habilidadesLite,
-                    atributos = representative.atributos,
-                    pericias = representative.pericias,
                     opcoes = representative.opcoes
                 )
             }.sortedBy { it.nome }
@@ -1077,8 +1073,6 @@ fun AncestralidadesSection(
                                         // "Resistente"/Vigor d6 aqui enquanto o Resumo já mostra o traço
                                         // removido e Vigor d4.
                                         val ancestryDefAtivo = if (isSelected) state.currentAncestryDef else null
-                                        val atributosEfetivos = ancestryDefAtivo?.atributos ?: item.atributos
-                                        val periciasEfetivas = ancestryDefAtivo?.pericias ?: item.pericias
                                         val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
                                             RacialAbilityLite(nome = it.nome, descricao = it.descricao, id = it.id, category = it.category, severity = it.severity)
                                         } ?: item.habilidades
@@ -1112,8 +1106,6 @@ fun AncestralidadesSection(
                                         }
 
                                         val caracteristicas = RacialCaracteristicasResolver.resolver(
-                                            atributos = atributosEfetivos,
-                                            pericias = periciasEfetivas,
                                             habilidades = habilidadesParaCaracteristicas.map {
                                                 RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
                                             }

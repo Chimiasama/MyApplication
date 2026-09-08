@@ -74,8 +74,6 @@ class CriadorStateKirinSignTest {
         }
         val humanosAdg = RacialModifier(
             nome = "HUMANOS",
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             habilidades = listOf(
                 RacialAbility(
                     nome = "Adaptável ou Signo",
@@ -91,8 +89,6 @@ class CriadorStateKirinSignTest {
                 listaCoracoesCrystal = emptyList<CrystalHeart>(),
                 listaAncestralidadesJson = listOf(humanosAdg),
                 listaMonstroTemplates = emptyList<MonstroTemplate>(),
-                racialAttrMinMap = emptyMap(),
-                racialSkillStartMap = emptyMap(),
                 listaAtributos = emptyList(),
                 mapaAtributosDisplay = emptyMap(),
                 listaPericias = emptyList<Pericia>(),
@@ -171,13 +167,36 @@ class CriadorStateKirinSignTest {
         val state = CriadorState().apply {
             compendioArteDaGuerraAtivo = true
             ancestralidade = "Akaimimi (Panda Vermelho)"
-            racialSkillStartMap = mapOf(
-                "AKAIMIMI (PANDA VERMELHO)" to mapOf(
-                    "CONVENCAO" to 6,
-                    "CONHECIMENTO GERAL" to 8
-                )
-            )
         }
+        val akaimimi = RacialModifier(
+            nome = "Akaimimi (Panda Vermelho)",
+            origem = "ARTE_DA_GUERRA",
+            habilidades = listOf(
+                RacialAbility(nome = "Convenção", descricao = "", traitId = "SKILL_BOOST", targetRef = "Convenção", value = 1),
+                RacialAbility(nome = "Conhecimento Geral", descricao = "", traitId = "SKILL_BOOST", targetRef = "Conhecimento Geral", value = 2)
+            )
+        )
+        state.updateGameData(
+            GameDataSnapshot(
+                listaComplicacoes = emptyList<Complicacao>(),
+                listaCoracoesCrystal = emptyList<CrystalHeart>(),
+                listaAncestralidadesJson = listOf(akaimimi),
+                listaMonstroTemplates = emptyList<MonstroTemplate>(),
+                listaAtributos = emptyList(),
+                mapaAtributosDisplay = emptyMap(),
+                listaPericias = emptyList<Pericia>(),
+                mapaPericias = emptyMap(),
+                mapaAtributosDescricao = emptyMap(),
+                listaVantagens = emptyList<Vantagem>(),
+                listaPoderes = emptyList<Poder>(),
+                listaTropos = emptyList<Tropo>(),
+                listaEquipamentos = emptyList<EquipamentoItem>(),
+                equipamentoCategorias = emptyList<EquipamentoCategoria>(),
+                superequipCategorias = emptyList<EquipamentoCategoria>(),
+                listaSuperPoderes = emptyList<SuperPoder>(),
+                arcanoInfo = emptyList()
+            )
+        )
 
         val convencao = Pericia("Convenção", "ASTUCIA", true)
         val conhecimento = Pericia("Conhecimento Geral", "ASTUCIA", true)
@@ -195,7 +214,6 @@ class CriadorStateKirinSignTest {
         state.listaAncestralidadesJson = listOf(
             RacialModifier(
                 nome = "Kitsunemimi (Raposa)", origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = listOf(
                     RacialAbility("Visão no Escuro", "", id = "VISAO_NO_ESCURO"),
                     RacialAbility("Excessivamente Detalhistas", "", id = "EXCESSIVAMENTE_DETALHISTAS"),
@@ -205,7 +223,6 @@ class CriadorStateKirinSignTest {
             ),
             RacialModifier(
                 nome = "Usagimimi (Coelho)", origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = listOf(
                     RacialAbility("Definido pelo Ofício", "", id = "DEFINIDO_PELO_OFICIO"),
                     RacialAbility("Visão no Escuro", "", id = "VISAO_NO_ESCURO"),
@@ -231,8 +248,6 @@ class CriadorStateKirinSignTest {
                 superequipCategorias = emptyList(),
                 mapaAtributosDisplay = emptyMap(),
                 mapaPericias = emptyMap(),
-                racialAttrMinMap = emptyMap(),
-                racialSkillStartMap = emptyMap(),
                 arcanoInfo = emptyList(),
                 mapaAtributosDescricao = emptyMap()
             )

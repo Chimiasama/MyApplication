@@ -23,11 +23,9 @@ class CriadorViewModelNewCharacterResetTest {
         listaComplicacoes = emptyList(),
         listaCoracoesCrystal = emptyList(),
         listaAncestralidadesJson = listOf(
-            RacialModifier(nome = "HUMANOS", atributos = emptyMap(), pericias = emptyMap(), origem = "BASICO")
+            RacialModifier(nome = "HUMANOS", origem = "BASICO")
         ),
         listaMonstroTemplates = emptyList(),
-        racialAttrMinMap = emptyMap(),
-        racialSkillStartMap = emptyMap(),
         listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
         mapaAtributosDisplay = emptyMap(),
         listaPericias = emptyList(),

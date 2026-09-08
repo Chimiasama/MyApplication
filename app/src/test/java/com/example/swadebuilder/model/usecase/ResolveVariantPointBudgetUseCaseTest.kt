@@ -135,8 +135,6 @@ class ResolveVariantPointBudgetUseCaseTest {
         // Vantagem real (traitId=GRANTED_EDGE) é removível só por ela mesma.
         val raca = RacialModifier(
             nome = "RAÇA_TESTE",
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             habilidades = listOf(
                 RacialAbility(nome = "Forte", descricao = "teste", id = "FORTE", category = "racial_trait_positive"),
                 RacialAbility(
@@ -159,8 +157,6 @@ class ResolveVariantPointBudgetUseCaseTest {
         // Escuro = 2 — o valor de livro que toda raça oficial deve fechar.
         val anoes = RacialModifier(
             nome = "ANÕES",
-            atributos = mapOf("Vigor" to 2),
-            pericias = emptyMap(),
             habilidades = listOf(
                 RacialAbility(nome = "Movimentação Reduzida", descricao = "", id = "MOVIMENTACAO_REDUZIDA", category = "racial_trait_negative"),
                 RacialAbility(nome = "Resistente", descricao = "", id = "RESISTENTE", category = "racial_trait_positive"),

@@ -5,6 +5,7 @@ import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.GameDataSnapshot
 import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
@@ -33,22 +34,24 @@ class Phase0CriticalFlowsTest {
         val mapaPericias = listaPericias.associateBy { it.nome }
 
         val listaAncestralidadesJson = listOf(
-            RacialModifier(nome = "HUMANOS", atributos = emptyMap(), pericias = emptyMap()),
-            RacialModifier(nome = "ELFOS", atributos = emptyMap(), pericias = mapOf("ATLETISMO" to 6))
+            RacialModifier(nome = "HUMANOS"),
+            // Piso de perícia vem só de habilidades[] (SKILL_BOOST/PericiaStep) —
+            // value=1 passo = +2 sobre d4 = d6, o mesmo "ATLETISMO" a 6 que o
+            // racialSkillStartMap injetado manualmente fazia antes de
+            // RacialModifier parar de carregar mapas numéricos estáticos.
+            RacialModifier(
+                nome = "ELFOS",
+                habilidades = listOf(
+                    RacialAbility(nome = "Atlético", descricao = "", traitId = "SKILL_BOOST", targetRef = "ATLETISMO", value = 1)
+                )
+            )
         )
-
-        val racialSkillStartMap = mapOf(
-            "ELFOS" to mapOf("ATLETISMO" to 6)
-        )
-        val racialAttrMinMap = emptyMap<String, Map<String, Int>>()
 
         testSnapshot = GameDataSnapshot(
             listaComplicacoes = emptyList(),
             listaCoracoesCrystal = emptyList(),
             listaAncestralidadesJson = listaAncestralidadesJson,
             listaMonstroTemplates = emptyList(),
-            racialAttrMinMap = racialAttrMinMap,
-            racialSkillStartMap = racialSkillStartMap,
             listaAtributos = listaAtributos,
             mapaAtributosDisplay = mapaAtributosDisplay,
             listaPericias = listaPericias,

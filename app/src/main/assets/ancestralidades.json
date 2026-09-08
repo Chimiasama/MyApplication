@@ -2,8 +2,6 @@
   {
     "nome": "ANDROIDES",
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Construto",
@@ -45,10 +43,6 @@
   {
     "nome": "ANÕES",
     "descricao": "São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas. São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins. \nGeralmente vivem mais de 200 anos. Na maioria das campanhas de fantasia possuem pele avermelhada e todas as cores de cabelo dos humanos.",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Movimentação Reduzida",
@@ -80,10 +74,6 @@
   {
     "nome": "AVIANOS",
     "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
-    "atributos": {},
-    "pericias": {
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "Frágil",
@@ -134,8 +124,6 @@
   {
     "nome": "AQUARIANOS",
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Aquático",
@@ -175,10 +163,6 @@
   {
     "nome": "ELFOS",
     "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos, embora seus corpos não sejam tão diferentes. Seus cabelos incluem todas as cores humanas, além de tonalidades de prata, azul e ouro.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Ágil",
@@ -212,8 +196,6 @@
   {
     "nome": "MEIO-ELFOS",
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Forasteiro",
@@ -246,8 +228,6 @@
   {
     "nome": "HUMANOS",
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -266,10 +246,6 @@
   {
     "nome": "PEQUENINOS",
     "descricao": "Este é um povo composto por seres baixos e ágeis com cabelos ondulados castanhos ou negros. Mesmo sendo frágeis em comparação às demais ancestralidades, seu otimismo entusiástico (ou astúcia ardilosa) lhes concede uma atitude de “nunca diga nunca”, fazendo com que sejam adversários à altura mesmo para criaturas com o dobro de seu tamanho. Não veem razão para atrair problemas e tendem a viver em suas pequenas comunidades afastadas dos caminhos mais usados.",
-    "atributos": {
-      "Espírito": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Espirituoso",
@@ -308,10 +284,6 @@
   {
     "nome": "RAKASHANOS",
     "descricao": "Esta ancestralidade é composta por humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa. \nÉ possível encontrar esse povo em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade normal. Sua beleza impede que sejam rejeitados, mas sagazes o suficiente para ganhar a confiança de outras pessoas.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Ágil",
@@ -389,8 +361,6 @@
   {
     "nome": "SÁURIOS",
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Armadura +2",
@@ -447,10 +417,6 @@
     "nome": "ANÕES",
     "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins.",
     "variantes": "Ideias Variantes: Os anões sombrios, ou duergar, são uma ramificação dos anões que migraram ainda mais para as profundezas, perdendo toda a conexão com o mundo da superfície e os povos que nele habitam. Podem não ser malignos, mas vivem em isolamento, são rígidos e muitas vezes brigam com seus primos. Substitua Visão no Escuro por Visão Total no Escuro.\nA maioria dos indivíduos tem Complicações negativas de personalidade, como Ganancioso, Teimoso e Vingativo, características que sua sociedade isolada considera necessárias para sua sobrevivência.\nAnões do fogo abraçam o caos e a destruição. São os inimigos da maioria das outras civilizações, que consideram, na melhor das hipóteses, como um incômodo e, na pior, como ameaças existenciais. São mestres em canhões, fogo e armas de fogo e se deleitam com a destruição em massa que essas armas causam a seus inimigos.\nSuas habilidades permanecem as mesmas, mas em sua maioria são artesãos experientes (começam com um d4 em Consertar) e carregam várias armas de pólvora negra e talvez até algumas granadas.",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
@@ -483,8 +449,6 @@
     "nome": "AQUARIANOS",
     "descricao": "O povo aquático vem das profundezas esmagadoras do oceano. Eles assumem uma variedade de formas, desde habitantes das profundezas com cabeça de peixe até humanoides com guelras pouco visíveis nas laterais ou no pescoço. As profundezas os tornam robustos e resistentes, mas sofrem muito com o ar seco ou com o calor escaldante da superfície.",
     "variantes": "Ideias Variantes: Aquarianos de águas profundas podem ter Fosforescência e maior Resistência ou Vigor. Aqueles que vivem na escuridão também podem ter Ecolocalização.\nConsidere Vantagens como Rugido se a espécie tiver Ecolocalização, ou Antecedente Arcano (Dom) com manipulação elemental ou até mesmo explosão se puderem controlar a água.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "AQUÁTICO",
@@ -525,10 +489,6 @@
     "nome": "AVIANOS",
     "descricao": "Avianos são humanoides com asas, geralmente oriundos de florestas altas ou regiões montanhosas. Podem ser pássaros parecidos com corvos, aves de rapina parecidas com falcões ou ter asas de couro de morcegos, mas todos tendem a ter uma constituição franzina devido aos seus ossos ocos.",
     "variantes": "Ideias Variantes: Avianos descendentes de aves de rapina mais vorazes podem ter bicos que concedem a habilidade Mordida ou Garras. Esses caçadores também podem ter velocidade de Voo maior do que a habilidade listada aqui.\nAvianos noturnos podem se assemelhar a morcegos, com Infravisão, Visão no Escuro ou Visão Total no Escuro.",
-    "atributos": {},
-    "pericias": {
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "FRÁGIL",
@@ -580,8 +540,6 @@
     "nome": "CELESTIAIS",
     "descricao": "Em muitos mundos, deuses e deusas têm um interesse ativo nos assuntos dos mortais, enviando anjos ao reino mortal para servirem como seus representantes. Celestiais têm muitas formas, mas sua característica mais notável é um par de asas brancas e emplumadas que brota de suas costas.",
     "variantes": "Ideias Variantes: Nem todos os celestiais servem à luz. Avatares de poderes mais sombrios trocam Código de Honra por Complicações como Arrogante, Implacável ou algum Voto destrutivo. São frequentemente conhecidos por sua crueldade ou ódio para com os mortais. Como uma ironia cruel, podem manter suas asas angelicais ou elas podem se parecer com asas de morcego ou demônios.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ATRAENTE",
@@ -626,8 +584,6 @@
     "nome": "CENTAUROS",
     "descricao": "Centauros têm a parte inferior do corpo de um cavalo e a parte superior do corpo de um humano. A maioria é tão alta quanto os humanos, embora existam maiores. Esta ancestralidade abrange todos os híbridos de cavalos e humanos, incluindo aqueles descendentes de espécies exóticas como pégasos ou zebras.",
     "variantes": "Ideias Variantes: Aumente o Tamanho para +2 e considere Musculoso para representar centauros descendentes de cavalos de guerra, clydesdales ou similares. Balanceie com Inimigo, ou uma escolha de tendências como Teimosia ou até mesmo uma penalidade em Astúcia ou a Complicação Sem Noção se a cultura enfatizar a batalha em vez da educação.\nCentauros relacionados aos pégasos podem ter asas (Voo), compensadas por Movimentação mais lenta em terra (reduza Movimentação para 8 e um dado de corrida d8).",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CASCOS",
@@ -683,8 +639,6 @@
     "nome": "DESCENDENTE ELEMENTAL",
     "descricao": "Descendentes elementais estão de alguma forma conectados por nascimento a um dos quatro elementos: terra, fogo, água ou ar. Parecem humanos à primeira vista, mas podem ter sinais de sua herança. Descendentes do ar têm cabelos brancos que se agitam continuamente como se fossem soprados por um vento fantasma. Descendentes da terra têm vozes roucas, corpos musculosos e um tom avermelhado em sua pele. Descendentes do fogo têm cabelos de um laranja ou amarelo brilhante, vozes sibilantes e pupilas vermelhas. Descendentes da água têm uma tonalidade azulada na pele e no cabelo e falam com vozes mansas.",
     "variantes": "Ideias Variantes: Descendentes elementais “mais próximos” de sua herança podem ter poderes mais desenvolvidos sobre os elementos. Podem ser capazes de voar, começar com manipulação elemental (Antecedente Arcano (Dom)), ser mais fortes, mais resistentes ou ter outras vantagens concedidas por seus laços com o plano elemental. Equilibre isso com a versão maior de Forasteiro, Fraquezas Ambientais ou outras Complicações que reflitam a “personalidade” do elemento.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "RESISTÊNCIA AMBIENTAL",
@@ -719,8 +673,6 @@
     "nome": "DRACONIANOS",
     "descricao": "Draconianos humanoides vêm de desertos escaldantes, cavernas vulcânicas ou selvas fumegantes. Alguns dizem que seu temperamento é quase tão impetuoso quanto o das terras que chamam de lar. São semelhantes a outros humanoides parecidos a lagartos, mas têm a capacidade de cuspir fogo como os próprios dragões.",
     "variantes": "Ideias Variantes: Os draconianos apresentados aqui nascem do fogo e do calor. Ajuste a Resistência Ambiental, a Fraqueza Ambiental e a Arma de Sopro conforme desejado para refletir outras ancestralidades. Se draconianos em seu cenário tiverem asas, adicione Voo à lista e equilibre-os com características de ancestralidade negativas adicionais.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ARMA DE SOPRO",
@@ -810,10 +762,6 @@
     "nome": "ELFOS",
     "descricao": "Elfos são seres altos e esguios com orelhas pontudas e olhos profundos de cores variadas. Quer venham de florestas fechadas ou de vales escondidos, são um povo gracioso e espiritual que pode viver por vários séculos. A maioria tem pele clara com cabelos de várias tonalidades, incluindo tons de prata, azul e dourado.",
     "variantes": "Ideias Variantes: As cidades brilhantes dos altos elfos são frequentemente dedicadas ao estudo da magia, da habilidade marcial e do conhecimento. Personagens jogadoras podem começar com uma escolha de Vantagens, como Antecedente Arcano, Vantagens de Combate de Estágio Novato ou pontos de perícia em Conhecimento Acadêmico e Ocultismo para refletir sua dedicação a esses campos. Tais seres podem ter desvantagens culturais, como Arrogante ou Excesso de Confiança, refletindo a sua visão das sociedades menos desenvolvidas do seu mundo.\nElfos que vêm das florestas profundas podem começar o jogo com um d4 ou d6 em Sobrevivência e Furtividade e a Vantagem Mateiro. Isso pode ser equilibrado com Inimigo, Voto para com suas comunidades ou para proteger as florestas, ou penalidades para habilidades mecânicas como Consertar.\nEm muitos cenários de fantasia, os chamados elfos sombrios são retratados como criaturas malignas e intrigantes. A Vantagem Enganador combina bem com eles. Heróis e heroínas oriundos de tais sociedades são indivíduos exemplares dispostos a se opor à sua cultura e talvez até às suas famílias. Provavelmente ainda são arrogantes e distantes em comparação com outras ancestralidades, então deixe-os compensar suas vantagens com Complicações pessoais ou de antecedente apropriadas, como Inimigo, Forasteiro ou Procurado.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "DESASTRADO",
@@ -848,8 +796,6 @@
     "nome": "FADAS",
     "descricao": "Fadas são parte integral de cenários de alta fantasia. São criaturas aladas pequenas e muitas vezes impetuosas que servem a uma rainha, rei ou corte das fadas. O perigo está sempre próximo num mundo de criaturas muito maiores, por isso devem escolher cuidadosamente as suas batalhas, talvez contando com armadilhas, truques ou alianças com seres maiores para derrotar os seus inimigos.",
     "variantes": "Ideias Variantes: Fadas criadas na corte Seelie podem ter perícias aprimoradas, como Persuadir, compensadas por um Voto de servir seu rei ou rainha. Fadas malignas da corte Unseelie adoram travessuras e são cheias de rancor. Elas têm a Complicação Desagradável e abraçam suas Complicações Curioso e Boca Grande para espalhar discórdia em qualquer lugar por onde andam. Isso pode lhes dar uma velocidade de Voo maior ou habilidades como Robusto para ajudá-las a sobreviver aos problemas que causam.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "BOCA GRANDE",
@@ -910,12 +856,6 @@
     "nome": "GNOMOS",
     "descricao": "Gnomos são pequenos humanoides que vivem em florestas profundas, cavernas nas montanhas ou outros lugares escuros e isolados. Muitas vezes são confundidos com pequeninos, mas são mais proporcionais e têm menos cabelo.",
     "variantes": "Ideias Variantes: A maioria dos gnomos é curiosa e tem inclinações mecânicas, mas essa não é uma característica universal. Aqueles que vêm de comunidades tecnológicas podem começar com Consertar ou até mesmo preferir armas de fogo para equilibrar as chances contra inimigos maiores.\nGnomos têm uma história longa e complicada na literatura. Alguns são grandes, gentis e curiosos, enquanto outros são almas travessas que causam grandes problemas quando humanos ou outros invadem seus domínios. Adicione Obeso para gnomos corpulentos e Vingativo (Menor) para aqueles que se ressentem de estranhos.",
-    "atributos": {
-      "Astúcia": 2
-    },
-    "pericias": {
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "ASTÚCIA",
@@ -963,10 +903,6 @@
     "nome": "GOBLINS",
     "descricao": "Alguns argumentam que goblins são seres briguentos. A maioria serve orcs, ogros ou outros humanoides maiores, atuando como batedores, carregadores de armas ou até mesmo alimento. Às vezes, as tribos são unidas pelas circunstâncias, oportunidades ou líderes astutos, mas a maioria tem vida curta e brutal graças a seus primos maiores, aventureiros sedentos de sangue ou predadores famintos.",
     "variantes": "Ideias Variantes: Goblins da Meia-Noite habitam na escuridão total de cavernas profundas, dando-lhes Visão Total no Escuro em vez de Infravisão. Eles caçam à noite para atacar seus inimigos e fugir de predadores mais perigosos.",
-    "atributos": {},
-    "pericias": {
-      "Furtividade": 2
-    },
     "habilidades": [
       {
         "nome": "DESAGRADÁVEL",
@@ -1014,8 +950,6 @@
     "nome": "GOLENS",
     "descricao": "Golens geralmente são autômatos irracionais criados por um feiticeiro ou inventor para proteger seus covis. Alguns são dotados de senciência ou a alcançam devido a acidentes misteriosos, feitiços poderosos, bênçãos de divindades benevolentes ou outros meios pouco ortodoxos.",
     "variantes": "Ideias Variantes: É fácil adaptar o golem de pedra aqui apresentado para aqueles construídos com outros materiais, como metal, osso, cinzas ou até mesmo carne. Adicione a habilidade de ancestralidade Mordida, Garras ou Chifres para refletir armas integradas. Se o golem puder curar suas feridas absorvendo material, considere a habilidade de ancestralidade Regeneração. Reduza o custo em 1 se o material for relativamente incomum.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ARMADURA +2",
@@ -1099,8 +1033,6 @@
     "nome": "HUMANOS",
     "descricao": "Humanos são adaptáveis e onipresentes na maioria dos cenários de fantasia, com características comuns à sua cultura natal e não à sua espécie.",
     "variantes": "Pacotes Culturais: Humano padrão (Adaptável), Nômade (Sem Adaptável), Nômades do Deserto (Sobrevivência d6 e Fraqueza Ambiental), Povo da Montanha (Vigor d6 e Fraqueza Ambiental), Povo do Mar (Atletismo d6 e Navegar d6), Senhores dos Cavalos (Cavalgar d6).",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ADAPTÁVEL",
@@ -1120,8 +1052,6 @@
     "nome": "INFERNAIS",
     "descricao": "Infernais têm sangue demoníaco ou diabólico em sua linhagem. Não são inerentemente maus, mas a maioria é maliciosa, seja por natureza ou talvez porque os outros esperam que o sejam. Eles não têm uma forma ou tamanho específico, mas todos têm algum sinal de sua herança, como cauda, chifres ou pupilas verticais.\nAs habilidades abaixo refletem um indivíduo diabólico com pele avermelhada, chifres pequenos e cauda fina. O modelo reflete um mundo de alta fantasia onde infernais talvez sejam vistos com suspeita, mas geralmente não são caçados à primeira vista.",
     "variantes": "Ideias Variantes: Troque o fogo por outros tipos de energia, como frio ou escuridão, para refletir origens demoníacas alternativas. Aumente o dano dos chifres do infernal para For+d6 se tiver chifres maiores e adicione Voo se tiver asas. Isso pode aumentar sua Complicação Forasteiro para Maior, dependendo do mundo.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CHIFRES",
@@ -1184,8 +1114,6 @@
     "nome": "INSETOIDES",
     "descricao": "Insetoides, ou povo inseto, possuem muitas variedades. O modelo aqui apresenta um ser parecido com uma formiga, de tamanho aproximadamente humano.\nCulturalmente, a maioria dos insetoides vem de sociedades altamente organizadas, construídas em torno de papéis atribuídos no nascimento e tendem a ser extremamente obedientes.",
     "variantes": "Ideias Variantes: Alguns insetoides vêm de espécies mais independentes, como besouros ou louva-a-deus. Abandone a Complicação Mente de Colmeia e adicione habilidades adequadas a essa espécie, como mais armadura para besouros ou pinças mais perigosas para louva-a-deus. Insetoides voadores também são comuns. Adicione Voo no nível apropriado e equilibre com Complicações como Dependência de uma dieta específica ou incapacidade de falar.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ANDAR NAS PAREDES",
@@ -1263,8 +1191,6 @@
     "nome": "MEIO-ELFOS",
     "descricao": "Meio-elfos ganham a graça élfica ou a adaptabilidade humana. A maioria é bem aceita, mas alguns são rejeitados por um lado ou outro de sua família e crescem ressentidos. Outros podem até mesmo ser maltratados. Sua expectativa de vida é mais próxima da dos humanos que da sua herança élfica, vivendo cerca de 100 anos.",
     "variantes": "Ideias Variantes: Em alguns mundos, elfos são resistentes à magia de oponentes, concedendo-lhes Sangue Feérico ou a Vantagem Resistência Arcana como uma habilidade inerente. Em ambientes selvagens, meio-elfos podem ser caçados por elfos, humanos ou ambos! Possuem a Complicação Procurado, mas ganham outras habilidades que refletem sua vida em fuga, como Características aumentadas ou Vantagens adicionais à sua escolha.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "FORASTEIRO",
@@ -1298,11 +1224,6 @@
     "nome": "MEIO-GIGANTES",
     "descricao": "Tribos desses párias podem ser encontradas em colinas distantes, abismos e montanhas imponentes. São fortes e imparáveis, adequados para abrir caminho nos ambientes mais selvagens.",
     "variantes": "Ideias Variantes: Se um meio-gigante descende de um tipo específico de gigante, como um gigante do fogo, conceda-lhe Resistência Ambiental (Fogo) e equilibre-o com seu oposto, como Fraqueza Ambiental (Frio). Para algo como o descendente de um gigante da tempestade, dê-lhe Resistência Ambiental (Raios) e equilibre-o com uma habilidade ou Complicação negativa de um ponto, como Teimoso ou o que fizer sentido em seu mundo de campanha.",
-    "atributos": {
-      "Força": 4,
-      "Vigor": 4
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ANALFABETO",
@@ -1373,8 +1294,6 @@
     "nome": "MEIO-ORCS",
     "descricao": "Meio-orcs são descendentes de um orc e um humano ou de outro meio-orc. Geralmente são aceitos pelas comunidades orcs, mas evitados pela maioria das outras ancestralidades, incluindo humanos, elfos e anões. Alguns meio-orcs optam por se juntar às ancestralidades “civilizadas”, virando as costas às suas raízes selvagens. Eles variam muito na aparência. Alguns são grandes e poderosos, como os orcs, enquanto outros podem passar por humanos se não forem examinados de perto.",
     "variantes": "Ideias Variantes: Meio-orcs podem ser mais do que simplesmente brutais em alguns cenários, ganhando Agilidade, Espírito ou Sorte em vez de Força e Vigor.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ENDURECIDO",
@@ -1408,11 +1327,6 @@
     "nome": "MINOTAUROS",
     "descricao": "Minotauros possuem um corpo humano e cabeça e musculatura de um touro. Podem ser criaturas mitológicas, criadas por divindades como forma de punição, ou simplesmente uma espécie humanoide com sua própria cultura e costumes. Independentemente da origem, minotauros são conhecidos por sua força física, mau humor e chifres perversos. São temíveis em combates um contra um.",
     "variantes": "Ideias Variantes: Adapte os atributos de acordo para personagens que misturam corpos humanos com outros tipos de bovinos, como iaques, bisões ou búfalos. Aumente o dano e o PA dos chifres dos minotauros que descendem de espécies com chifres longos.",
-    "atributos": {
-      "Força": 4,
-      "Vigor": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CHIFRES",
@@ -1490,11 +1404,6 @@
     "nome": "OGROS",
     "descricao": "Orgulhosos e malignos, os ogros vivem em tribos que a maioria considera como selvagens e cruéis. Eles se orgulham de sua gula e de grandes feitos de bravura ou astúcia. Quer vaguem como nômades, governem uma passagem vital nas montanhas mais altas ou residam em enormes cavernas perto de seus “primos”, os orcs e goblins, seus banquetes turbulentos à fogueira e as histórias que os acompanham são lendários.",
     "variantes": "Ideias Variantes: Ogros mais selvagens podem ser ainda mais fortes em troca de uma penalidade em Astúcia. Ogros-dracônicos podem ter sopros flamejantes — úteis para ataques e também para assar suas refeições!",
-    "atributos": {
-      "Força": 4,
-      "Vigor": 4
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ARROGANTE",
@@ -1578,11 +1487,6 @@
     "nome": "ORCS",
     "descricao": "Orcs têm a reputação de serem selvagens, ferozes, brutais e violentos. Isso não é totalmente imerecido — bandos de orcs saqueadores são terrores na maioria dos mundos de fantasia. Mas onde outros veem predação e crueldade, os orcs veem uma luta descomplicada pela sobrevivência. Afinal, na natureza, os mais fortes sobrevivem aos seus inimigos, e os orcs não se veem de maneira diferente. A sua estrutura social reflete isso, uma vez que as tribos são governadas pelos maiores e mais duros guerreiros, que conquistam seus tronos por meio de combates honestos e sangrentos, em vez de astúcia e manipulação como as sociedades mais “civilizadas”.",
     "variantes": "Ideias Variantes: Alguns orcs são ainda maiores e mais brutais que seus primos mais comuns. Aumente sua Força e Vigor iniciais e dê-lhes desvantagens apropriadas, como penalidades mais altas em Astúcia ou Complicações como Analfabeto, Desagradável e Sem Escrúpulos.",
-    "atributos": {
-      "Força": 2,
-      "Vigor": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "BRUTAL",
@@ -1637,10 +1541,6 @@
     "nome": "PEQUENINOS",
     "descricao": "Pequeninos são pessoas de baixa estatura, peludas e normalmente amáveis. Seu otimismo alegre (ou manha astuta) lhes dá uma atitude de “nunca desista” que os torna um osso duro para aqueles que os incomodariam. A maioria dos pequeninos desfruta dos pequenos luxos da vida — boa comida, bebida forte e música animada. Poucos são aventureiros, preferindo ficar em comunidades pequenas e unidas, longe de problemas.",
     "variantes": "Ideias Variantes: Em mundos mais selvagens, pequeninos podem ter que evitar seu lado mais gentil em prol de proezas marciais. Ameaças avassaladoras podem aumentar suas habilidades físicas ou dar-lhes Vantagens de Combate para sobreviver em ambientes tão hostis. Talvez isso custe sua natureza boa, dando-lhes Complicações como Desagradável ou Sem Escrúpulos.\nVocê também pode considerar inverter o roteiro de pequeninos tradicionais inspirados em Tolkien. Talvez venham de cidades cruéis e severas e não de condados florestais. Nesse caso, troque seu aumento de Espírito e Sorte por Vantagens de Combate ou Liderança para refletir seu contexto mais beligerante.\nOutras variantes podem ser otimistas e infantis, mas também cleptomaníacas descaradas. Esses começam com a Vantagem Sucateiro, equilibrada com a Complicação Guiado (Maior) (que representa seu desejo irresistível de embolsar bugigangas de aparência interessante onde quer que vão).",
-    "atributos": {
-      "Espírito": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ESPIRITUOSO",
@@ -1680,8 +1580,6 @@
     "nome": "POVO RATAZANA",
     "descricao": "Sobreviventes natos, o povo ratazana é formado por humanoides peludos com corpos curvados, rostos de rato e caudas sem pelos. Oportunistas por necessidade, a sua espécie é relegada aos esgotos, túneis e favelas pelos seus muitos inimigos. Lá, formam grupos independentes, trabalhando juntos enquanto for conveniente, mas sua coesão social tende a desmoronar diante de ameaças perigosas ou oportunidades inegáveis.",
     "variantes": "Ideias Variantes: Membros do povo ratazana têm mordidas muito mais afiadas em alguns mundos e também podem espalhar veneno. Equilibre esses benefícios com Complicações como Sem Escrúpulos ou Desagradável para representar sua natureza selvagem.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "COVARDE",
@@ -1782,8 +1680,6 @@
     "nome": "POVO RATO",
     "descricao": "Essas criaturas minúsculas se assemelham a ratos comuns, exceto por serem bípedes e inteligentes. Talvez fossem ratos normais, até ganharem senciência por causa de um acidente mágico. Ou talvez sempre tenham existido, escondidos nas sombras das ancestralidades maiores.",
     "variantes": "Ideias Variantes: O povo rato pode ser inerentemente tímido, conferindo uma penalidade em Intimidar ao lidar com alguém maior ou mais poderoso que eles. Você também pode usar este modelo para criaturas descendentes de esquilos ou roedores semelhantes. Troque Visão no Escuro por Voo para esquilos-voadores, Atletismo aumentado para esquilos e assim por diante.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "DIMINUTO (Tamanho -4)",
@@ -1841,8 +1737,6 @@
     "movimentacao": 4,
     "descricao": "Vindos de grandes tocas ou ninhos isolados, há vários tipos de humanoides serpentinos. As espécies variam muito, indo desde constritores a uma variedade de víboras, mas compartilham a mesma fisiologia humanoide e as cabeças ofídicas.",
     "variantes": "Ideias Variantes: O povo serpente pode ter o corpo de uma cobra em vez de pernas humanoides. Essas nagas podem ter sua Movimentação aumentada ou a Vantagem Corredor equilibrada pela Forma Incomum (veja Centauros na página 14).\nVocê também pode melhorar o veneno do povo serpente para Nocaute, Letal ou Paralisante adquirindo 2 pontos adicionais em habilidades de ancestralidades negativas ou Complicações. Personagens relacionadas a cascavéis, por exemplo, podem ser Desagradáveis ou ter Inimigos Ancestrais, e aquelas que se assemelham a cobras podem ter a habilidade de cuspir seu veneno (veja a página 59).",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "FORASTEIRO",
@@ -1921,10 +1815,6 @@
     "nome": "RAKASHANOS",
     "descricao": "Rakashanos são felinos humanoides. Alguns têm as cores vibrantes dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa. Eles podem ser encontrados em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade. São inteligentes e belos demais para serem rejeitados, mas ardilosos demais para ganharem a confiança dos outros.",
     "variantes": "Ideias Variantes: Algumas linhagens podem ter garras e presas maiores (For+d6 e adicionar PA 2 à Mordida), compensadas por Complicações como Sanguinário ou Sem Escrúpulos.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "GARRAS",
@@ -2003,10 +1893,6 @@
     "nome": "RENASCIDOS",
     "descricao": "Os misteriosos e raros renascidos — às vezes chamados de dhampyrs — são filhos de um ser vivo e de um vampiro. A maioria não sobrevive até a idade adulta, sucumbindo a problemas de saúde, ao sol implacável ou a aldeões supersticiosos, mas aqueles que sobrevivem podem se tornar realmente muito poderosos.\nRenascidos não são mortos-vivos, mas têm uma pele pálida doentia, cabelos pegajosos e olhos escuros. Entretanto, sua aparência frágil esconde uma força anormal. Possuem uma conexão inata com os mortos e fazem com que outras criaturas vivas ao seu redor — especialmente animais — se sintam desconfortáveis.",
     "variantes": "Ideias variantes: Renascidos descendentes de vampiros mais selvagens podem ter poderes mais fantásticos, como Voo (com asas de morcego!). Outros podem ter Regeneração, Andar nas Paredes ou a habilidade de se transformar em névoa (Antecedente Arcano (Dom) ou usa o Compêndio de Superpoderes). Equilibre essas habilidades com algumas desvantagens ou aumente o nível de habilidades positivas para todas as personagens jogadoras na campanha.",
-    "atributos": {
-      "Força": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "AVERSÃO ANIMAL",
@@ -2083,8 +1969,6 @@
     "nome": "SÁURIOS",
     "descricao": "Homens-lagarto normalmente vêm de selvas escaldantes, pântanos úmidos ou de desertos ermos, onde possuem civilizações ímpares desconhecidas por outras ancestralidades.",
     "variantes": "Ideias Variantes: Os sáurios em alguns mundos podem se parecer com os lendários dinossauros! Aumente seu Tamanho e Força e aumente sua Mordida para For+d6. Compense essas habilidades poderosas com desvantagens como Grande, Forasteiro ou outras que reflitam o medo que a maioria tem para com eles.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ARMADURA +2",
@@ -2141,8 +2025,6 @@
     "nome": "TRANSMORFOS",
     "descricao": "Estas criaturas peculiares e geralmente malvistas conseguem mudar sua aparência para se parecer com outra pessoa. São camaleões sociais, que se movem furtivamente pela sociedade. Alguns transmorfos inescrupulosos usam essa habilidade para se tornarem vigaristas, ladrões ou até mesmo assassinos, enquanto outros a usam em apresentações para melhorar suas performances. Sua forma verdadeira é perturbadora de ver — um humanoide sem expressão, com pele cinza e olhos sem pupilas.",
     "variantes": "Ideias Variantes: Alguns transmorfos são limitados em suas habilidades e só conseguem imitar a aparência de alguém com quem interagiram ou que tocaram. Podem manter a nova aparência por muito mais tempo do que outros transmorfos, estendendo a duração de sua habilidade Mudar de Forma para um dia (veja a seguir).\nTransmorfos não precisam necessariamente ser uma ancestralidade de humanoides misteriosos que podem imitar os outros. Alguns se parecem com qualquer outro ser humano, mas podem transformar-se em animais à vontade. A habilidade Mudar de Forma do transmorfo usa o poder mudança de forma em vez de disfarce. Se só puderem se transformar sob certas circunstâncias — como enquanto estão Feridos, sob a luz da lua cheia e assim por diante — ou precisarem gastar uma rodada inteira sem realizar outras ações além da transformação, podem reduzir o custo em Pontos de Poder em 2 (a critério do Mestre).",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CARISMÁTICO",
@@ -2175,8 +2057,6 @@
   {
     "nome": "ANDROIDES",
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Construto",
@@ -2218,10 +2098,6 @@
   {
     "nome": "ANÕES",
     "descricao": "São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas. São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins. \nGeralmente vivem mais de 200 anos. Na maioria das campanhas de fantasia possuem pele avermelhada e todas as cores de cabelo dos humanos.",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Movimentação Reduzida",
@@ -2253,10 +2129,6 @@
   {
     "nome": "AVIANOS",
     "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
-    "atributos": {},
-    "pericias": {
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "Frágil",
@@ -2307,8 +2179,6 @@
   {
     "nome": "AQUARIANOS",
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Aquático",
@@ -2348,10 +2218,6 @@
   {
     "nome": "ELFOS",
     "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos, embora seus corpos não sejam tão diferentes. Seus cabelos incluem todas as cores humanas, além de tonalidades de prata, azul e ouro.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Ágil",
@@ -2385,8 +2251,6 @@
   {
     "nome": "MEIO-ELFOS",
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Forasteiro",
@@ -2419,8 +2283,6 @@
   {
     "nome": "HUMANOS",
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -2439,10 +2301,6 @@
   {
     "nome": "PEQUENINOS",
     "descricao": "Este é um povo composto por seres baixos e ágeis com cabelos ondulados castanhos ou negros. Mesmo sendo frágeis em comparação às demais ancestralidades, seu otimismo entusiástico (ou astúcia ardilosa) lhes concede uma atitude de “nunca diga nunca”, fazendo com que sejam adversários à altura mesmo para criaturas com o dobro de seu tamanho. Não veem razão para atrair problemas e tendem a viver em suas pequenas comunidades afastadas dos caminhos mais usados.",
-    "atributos": {
-      "Espírito": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Espirituoso",
@@ -2481,10 +2339,6 @@
   {
     "nome": "RAKASHANOS",
     "descricao": "Esta ancestralidade é composta por humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa. \nÉ possível encontrar esse povo em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade normal. Sua beleza impede que sejam rejeitados, mas sagazes o suficiente para ganhar a confiança de outras pessoas.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Ágil",
@@ -2562,8 +2416,6 @@
   {
     "nome": "SÁURIOS",
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Armadura +2",
@@ -2620,10 +2472,6 @@
     "nome": "ANÕES",
     "descricao": "Nesta ambientação, o amor dos anões por artesanato se traduz em afinidade tecnológica. Muitos utilizam aprimoramentos cibernéticos para melhorar sua eficiência em mineração e engenharia espacial.",
     "variantes": null,
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
     "opcoes": [
       "Básico",
       "Ciber"
@@ -2661,8 +2509,6 @@
     "nome": "AQUARIANOS",
     "descricao": "Diferente dos atlantes clássicos, esta variante evoluiu de seres semelhantes a ouriços-do-mar em planetas oceânicos.",
     "variantes": null,
-    "atributos": {},
-    "pericias": {},
     "opcoes": [
       "Básico",
       "Semi-aquáticos"
@@ -2708,14 +2554,10 @@
     "nome": "AVIANOS",
     "descricao": "Mais próximos de aves de rapina alienígenas, possuem cabeças avícolas e muitas vezes asas no lugar dos braços, adaptados para mundos de baixa gravidade.",
     "variantes": null,
-    "atributos": {},
     "opcoes": [
       "Básico",
       "Ave de rapina"
     ],
-    "pericias": {
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "Frágil",
@@ -2767,10 +2609,6 @@
     "nome": "ELFOS",
     "descricao": "Um povo enigmático e moribundo. Os poucos restantes têm milênios de idade e vivem em 'mundos de criação' tentando curar a infertilidade de sua espécie enquanto pilham rotas espaciais.",
     "variantes": null,
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "opcoes": [
       "Básico",
       "Comunitário"
@@ -2815,8 +2653,6 @@
       "Baixa Gravidade",
       "Minerador"
     ],
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -2837,14 +2673,10 @@
     "nome": "RAKASHANOS",
     "descricao": "Variante mais brincalhona e curiosa dos humanoides felinos, menos focada na crueldade predatória e mais na exploração.",
     "variantes": null,
-    "atributos": {
-      "Agilidade": 2
-    },
     "opcoes": [
       "Básico",
       "Brincalhão"
     ],
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Ágil",
@@ -2928,8 +2760,6 @@
       "Padrão",
       "Gazela"
     ],
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ESTÁVEL",
@@ -2986,10 +2816,6 @@
       "Padrão",
       "Dragão"
     ],
-    "atributos": {
-      "Força": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CABEÇA DURA",
@@ -3052,10 +2878,6 @@
       "Padrão",
       "Ar, Fogo ou Água"
     ],
-    "atributos": {
-      "Força": 4
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CABEÇA-DURA",
@@ -3103,8 +2925,6 @@
       "Padrão",
       "Menor"
     ],
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "ALTA/BAIXA TECNOLOGIA",
@@ -3152,8 +2972,6 @@
       "Padrão",
       "Defensivo"
     ],
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "DEPENDÊNCIA",
@@ -3207,8 +3025,6 @@
       "Padrão",
       "Ameba"
     ],
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CIBER-RESISTÊNCIA",
@@ -3249,8 +3065,6 @@
       "Padrão",
       "Vespa"
     ],
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "COMUNITÁRIO",
@@ -3305,8 +3119,6 @@
       "Padrão",
       "Resistente"
     ],
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CIBER-RESISTÊNCIA",
@@ -3348,11 +3160,6 @@
       "Padrão",
       "Zero G"
     ],
-    "atributos": {
-      "Vigor": 2,
-      "Força": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "EM FORMA",
@@ -3393,8 +3200,6 @@
       "Padrão",
       "Aterrorizado"
     ],
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "FRÁGIL",
@@ -3431,8 +3236,6 @@
     "nome": "POSSESSORES",
     "descricao": "Possessores são parasitas, seres de energia ou até mesmo IAs que, de alguma forma, habitaram ou interagiram com um hospedeiro orgânico. Esta versão se integra perfeitamente à casca e pode sobreviver à sua destruição e habitar uma nova forma. Possessores podem ser combinados com outras ancestralidades, como sáurios ou centaux. Como o pacote tem 2 pontos de habilidades, você precisará equilibrá-lo com 2 pontos de habilidades negativas antes de adicioná-lo a outra ancestralidade predefinida. Uma penalidade -1 em Agilidade é comum, refletindo o delay entre a mente da personagem e o corpo que ocupa.",
     "variantes": "Ideias Variantes: Seres de energia podem ser capazes de assumir uma forma física. Adicione Forma de Energia e equilibre com 4 pontos de habilidades negativas que façam sentido no seu cenário, como Curioso e Sem Noção, se tiverem pouca experiência em um mundo orgânico.",
-    "atributos": {},
-    "pericias": {},
     "opcoes": [
       "Padrão",
       "Energia"
@@ -3473,8 +3276,6 @@
     "nome": "QUADROIDES",
     "descricao": "Qualquer espécie que tenha desenvolvido membros superiores funcionais adicionais é conhecida como quadroide. São frequentemente contratados como guarda-costas ou soldados graças à eficiência em combate garantida por seus braços adicionais.",
     "variantes": "Ideias Variantes: Para criar um Quadrioide que ignore 2 pontos de quaisquer penalidades por Ações Múltiplas (físicas ou mentais), equilibre-o com uma habilidade -1, como Dependência Atmosférica.",
-    "atributos": {},
-    "pericias": {},
     "opcoes": [
       "Padrão",
       "Habilidoso"
@@ -3529,8 +3330,6 @@
     "nome": "ROBÔS",
     "descricao": "Sejam companheiros fiéis, instrumentos de guerra ou simplesmente máquinas projetadas para um propósito específico, robôs são onipresentes no universo da ficção científica. Este pacote foi projetado para acompanhar companheiros vivos e ajudá-los em suas tarefas.",
     "variantes": "Ideias Variantes: Troque a Complicação Pacifista por Sem Escrúpulos (Maior) e ganhe um guerreiro robótico ou um droide de segurança. Para robôs dedicados com experiência limitada além de seu propósito, considere Perícias Básicas Reduzidas para refletir o fato de que não conhecem os conceitos básicos de Atletismo, Conhecimento Geral, Perceber, Persuadir ou Furtividade.",
-    "atributos": {},
-    "pericias": {},
     "opcoes": [
       "Padrão",
       "Guerreiro",
@@ -3574,8 +3373,6 @@
     "nome": "SERES SINTÉTICOS",
     "descricao": "A tecnologia avançada pode criar seres realistas de matéria quase biológica. Estes indivíduos têm vontade e consciência, mas podem ter diretrizes e parâmetros que devem seguir (refletidos em sua Complicação Programado). Geralmente são criados para trabalhar em condições perigosas, como no espaço profundo, mineração de asteroides ou selvas tóxicas.",
     "variantes": "Ideias Variantes: Troque a Complicação Programado por Procurado (Maior) ou Forasteiro (Maior) para um ser que se tornou renegado em uma sociedade em que sintéticos são tratados mais como máquinas do que como pessoas.",
-    "atributos": {},
-    "pericias": {},
     "opcoes": [
       "Padrão",
       "Máquina (Procurado)",
@@ -3626,8 +3423,6 @@
     "nome": "SOLDADOS GENÉTICOS",
     "descricao": "Eles criaram as máquinas de matar perfeitas… e esperavam não ter que lutar contra elas! Soldados genéticos são guerreiros geneticamente modificados, projetados para um combate mortal e eficiente.",
     "variantes": "Ideias Variantes: Soldados geneticamente modificados podem ser projetados para uso geral, como apresentado, ou para propósitos muito específicos, como fuzileiros de gravidade zero. Troque Nervos de Aço pela Vantagem Adaptação Gravitacional.",
-    "atributos": {},
-    "pericias": {},
     "opcoes": [
       "Padrão",
       "Fuzileiro Zero G"
@@ -3684,8 +3479,6 @@
     "nome": "VAZIOS",
     "descricao": "Vazios são criaturas de energia que evoluíram na vastidão do espaço. São seres solitários devido ao vazio de seu ambiente, mas ganham vida quando o acaso os reúne com outros de sua espécie. Acham os seres orgânicos curiosos e ocasionalmente viajam com eles por um tempo para tentar entender seus costumes alienígenas.",
     "variantes": "Ideias variantes: A criatura aqui foi projetada para usar um traje de contenção (veja a p. 49). Para um ser de energia muito mais poderoso, dê a ele superpoderes (veja Savage Worlds Edição Aventura e o Compêndio de Superpoderes), como ataques de longa distância e campo de dano.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "CURIOSO",
@@ -3756,10 +3549,6 @@
       "Padrão",
       "Sopro"
     ],
-    "atributos": {
-      "Força": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "FORTE",
@@ -3809,8 +3598,6 @@
   {
     "nome": "HUMANOS",
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -3833,10 +3620,6 @@
     "tags": [
       "BOGOVIANO"
     ],
-    "atributos": {
-      "Força": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Forte",
@@ -3865,10 +3648,6 @@
     "tags": [
       "FJORDSTADIANO"
     ],
-    "atributos": {
-      "Astúcia": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Astuto",
@@ -3897,10 +3676,6 @@
     "tags": [
       "ILHEU"
     ],
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Vigoroso",
@@ -3929,10 +3704,6 @@
     "tags": [
       "MASEIANO"
     ],
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Ágil",
@@ -3961,10 +3732,6 @@
     "tags": [
       "ZINGAMAIANO"
     ],
-    "atributos": {
-      "Espírito": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Espiritual",
@@ -3991,8 +3758,6 @@
     "nome": "Humano (Império San)",
     "categoria": "ANCESTRALIDADE",
     "descricao": "Os humanos são um grupo diversificado e adaptável que se conformam com valores e ensinamentos dos clãs ou famílias em que cresceram. Ao criar um herói humano, você pode escolher um dos seguintes signos de nascença. Os signos de nascença são o equivalente a um signo do zodíaco, correspondendo a um mês específico. Cada um menciona, de forma não exata, características comuns de personalidade daqueles que nasceram sob esse signo. Também será listada um benefício humano alternativo para o personagem. Você também pode optar por não escolher um signo de nascença. Em vez disso, você pode começar como um humano padrão com uma Vantagem gratuita.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Pontos de Perícia",
@@ -4058,11 +3823,6 @@
         "descricaoLite": "Penalidades de iluminação causadas por Penumbra ou Escuridão não se aplicam."
       }
     ],
-    "atributos": {},
-    "pericias": {
-      "Convenção": 2,
-      "Conhecimento Geral": 2
-    },
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4120,11 +3880,6 @@
         "descricaoLite": "Carrega a Complicação Menor Peculiaridade."
       }
     ],
-    "atributos": {},
-    "pericias": {
-      "Provocar": 0,
-      "Furtividade": 2
-    },
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4181,10 +3936,6 @@
         "descricaoLite": "Vive em grupo, e cada integrante carrega a Complicação Leal própria dessa espécie."
       }
     ],
-    "atributos": {},
-    "pericias": {
-      "Perceber": 2
-    },
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4230,8 +3981,6 @@
         "descricaoLite": "Concede a Vantagem Cativar o Ambiente desde a criação do personagem."
       }
     ],
-    "atributos": {},
-    "pericias": {},
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4274,10 +4023,6 @@
         "descricaoLite": "Carrega a Complicação Azarado."
       }
     ],
-    "atributos": {},
-    "pericias": {
-      "Jogar": 2
-    },
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4328,10 +4073,6 @@
         "descricaoLite": "Concede a Vantagem Impulso."
       }
     ],
-    "atributos": {
-      "Espírito": 2
-    },
-    "pericias": {},
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4374,8 +4115,6 @@
         "descricaoLite": "-2 tanto para resistir a Provocar quanto nas próprias rolagens de Intimidar."
       }
     ],
-    "atributos": {},
-    "pericias": {},
     "movimentacao": 2,
     "livros": [
       "ARTE_DA_GUERRA"
@@ -4426,8 +4165,6 @@
         "descricaoLite": "Deslocamento inicial de 5 quadros e dado de corrida d4."
       }
     ],
-    "atributos": {},
-    "pericias": {},
     "opcoes": [
       "Voto (Maior)",
       "Obrigação (Maior)"
@@ -4476,11 +4213,6 @@
         "descricaoLite": "Carrega a Complicação Forasteiro em grau menor."
       }
     ],
-    "atributos": {},
-    "pericias": {
-      "Ocultismo": 0,
-      "Sobrevivência": 0
-    },
     "opcoes": [
       "Ápice",
       "Vínculo Bestial",
@@ -4568,10 +4300,6 @@
         "descricaoLite": "Ganha a Vantagem Furioso de graça."
       }
     ],
-    "atributos": {},
-    "pericias": {
-      "Sobrevivência": 2
-    },
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4616,10 +4344,6 @@
         "descricaoLite": "Enfrenta preconceito social recorrente, não importa o lugar."
       }
     ],
-    "atributos": {
-      "Força": 2
-    },
-    "pericias": {},
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4630,8 +4354,6 @@
     "id": "anc_humano_csv",
     "nome": "Humano",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -4650,8 +4372,6 @@
     "id": "anc_demonio_csv",
     "nome": "Demônios",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Antecedente Arcano (Demônio)",
@@ -4680,8 +4400,6 @@
     "id": "anc_meio_demonio_csv",
     "nome": "Meio-Demônio",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -4699,8 +4417,6 @@
     "id": "anc_anjo_csv",
     "nome": "Anjo",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Asas de Anjo",
@@ -4728,8 +4444,6 @@
     "id": "anc_humano_deadlands",
     "nome": "Humano",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -4748,10 +4462,6 @@
     "id": "anc_anaopathfinder",
     "nome": "Anão",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Aptidão com Pedras",
@@ -4800,13 +4510,6 @@
     "id": "anc_elfopathfinder",
     "nome": "Elfo",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {
-      "Agilidade": 2,
-      "Astúcia": 2
-    },
-    "pericias": {
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "Ágil",
@@ -4861,12 +4564,6 @@
     "id": "anc_gnomopathfinder",
     "nome": "Gnomo",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "Magia Gnômica",
@@ -4929,13 +4626,6 @@
     "id": "anc_halflingpathfinder",
     "nome": "Halfling",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {
-      "Atletismo": 2,
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "Ágil",
@@ -4990,8 +4680,6 @@
     "id": "anc_humanopathfinder",
     "nome": "Humano",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -5019,8 +4707,6 @@
     "id": "anc_meio_elfopathfinder",
     "nome": "Meio-Elfo",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Flexibilidade",
@@ -5054,12 +4740,6 @@
     "id": "anc_meio_orcpathfinder",
     "nome": "Meio-Orc",
     "categoria": "ANCESTRALIDADE",
-    "atributos": {
-      "Força": 2
-    },
-    "pericias": {
-      "Intimidar": 0
-    },
     "habilidades": [
       {
         "nome": "Ferocidade Orc",
@@ -5107,8 +4787,6 @@
   {
     "nome": "ANDROIDES",
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Construto",
@@ -5150,10 +4828,6 @@
   {
     "nome": "ANÕES",
     "descricao": "São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas. São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins. \nGeralmente vivem mais de 200 anos. Na maioria das campanhas de fantasia possuem pele avermelhada e todas as cores de cabelo dos humanos.",
-    "atributos": {
-      "Vigor": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Movimentação Reduzida",
@@ -5185,10 +4859,6 @@
   {
     "nome": "AVIANOS",
     "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
-    "atributos": {},
-    "pericias": {
-      "Perceber": 2
-    },
     "habilidades": [
       {
         "nome": "Frágil",
@@ -5239,8 +4909,6 @@
   {
     "nome": "AQUARIANOS",
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Aquático",
@@ -5280,10 +4948,6 @@
   {
     "nome": "ELFOS",
     "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos, embora seus corpos não sejam tão diferentes. Seus cabelos incluem todas as cores humanas, além de tonalidades de prata, azul e ouro.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Ágil",
@@ -5317,8 +4981,6 @@
   {
     "nome": "MEIO-ELFOS",
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Forasteiro",
@@ -5351,8 +5013,6 @@
   {
     "nome": "HUMANOS",
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -5371,10 +5031,6 @@
   {
     "nome": "PEQUENINOS",
     "descricao": "Este é um povo composto por seres baixos e ágeis com cabelos ondulados castanhos ou negros. Mesmo sendo frágeis em comparação às demais ancestralidades, seu otimismo entusiástico (ou astúcia ardilosa) lhes concede uma atitude de “nunca diga nunca”, fazendo com que sejam adversários à altura mesmo para criaturas com o dobro de seu tamanho. Não veem razão para atrair problemas e tendem a viver em suas pequenas comunidades afastadas dos caminhos mais usados.",
-    "atributos": {
-      "Espírito": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Espirituoso",
@@ -5413,10 +5069,6 @@
   {
     "nome": "RAKASHANOS",
     "descricao": "Esta ancestralidade é composta por humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa. \nÉ possível encontrar esse povo em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade normal. Sua beleza impede que sejam rejeitados, mas sagazes o suficiente para ganhar a confiança de outras pessoas.",
-    "atributos": {
-      "Agilidade": 2
-    },
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Ágil",
@@ -5494,8 +5146,6 @@
   {
     "nome": "SÁURIOS",
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
-    "atributos": {},
-    "pericias": {},
     "habilidades": [
       {
         "nome": "Armadura +2",

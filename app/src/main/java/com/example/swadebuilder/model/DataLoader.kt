@@ -128,8 +128,6 @@ object DataLoader {
         val descricao: String? = null,
         // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
         val descricaoLite: String? = null,
-        val atributos: Map<String, Int>,
-        val pericias: Map<String, Int>,
         val habilidades: List<RacialAbility> = emptyList(),
         val movimentacao: Int = 0,
         val tags: List<String> = emptyList(),
@@ -478,8 +476,6 @@ object DataLoader {
                     originalName = fonte.originalName,
                     originalDescription = fonte.originalDescription,
                     descricao = fonte.descricaoExibida(),
-                    atributos = fonte.atributos,
-                    pericias = fonte.pericias,
                     habilidades = fonte.habilidades.map { it.exibida() },
                     origem = livro,
                     movimentacao = fonte.movimentacao,
@@ -504,20 +500,11 @@ object DataLoader {
             emptyList()
         }
 
-        // 11. Mapas Raciais
-        val localRacialAttrMinMap = localListaAncestralidadesJson.associate { rm ->
-            val m = rm.atributos
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
-
-        val localRacialSkillStartMap = localListaAncestralidadesJson.associate { rm ->
-            val m = rm.pericias
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
+        // 11. Mapas Raciais: removidos (racialAttrMinMap/racialSkillStartMap liam
+        // RacialModifier.atributos/pericias, os mapas numéricos estáticos que
+        // duplicavam em paralelo o que os traços de habilidades[] já expressam —
+        // ver CriadorState.atributoBaseRacial()/perícia equivalente, que agora
+        // computam o piso racial só a partir de habilidades[]).
 
         // 12. Regras de Criação de Raça (Unused mostly but cached)
         // Kept for consistency if needed later
@@ -634,8 +621,6 @@ object DataLoader {
             listaCoracoesCrystal = localListaCoracoesCrystal,
             listaAncestralidadesJson = mergedAncestralidades,
             listaMonstroTemplates = localListaMonstroTemplates,
-            racialAttrMinMap = localRacialAttrMinMap,
-            racialSkillStartMap = localRacialSkillStartMap,
             listaAtributos = localListaAtributos,
             mapaAtributosDisplay = localMapaAtributosDisplay,
             listaPericias = localListaPericias,

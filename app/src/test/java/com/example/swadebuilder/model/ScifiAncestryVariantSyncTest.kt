@@ -14,47 +14,38 @@ class ScifiAncestryVariantSyncTest {
         state.listaAncestralidadesJson = listOf(
             RacialModifier(
                 nome = "ANÕES", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ciber")
             ),
             RacialModifier(
                 nome = "CENTAUX", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Gazela")
             ),
             RacialModifier(
                 nome = "AQUARIANOS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Semi-aquáticos")
             ),
             RacialModifier(
                 nome = "DRAKENS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Dragão")
             ),
             RacialModifier(
                 nome = "ELEMENTAIS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Ar, Fogo ou Água")
             ),
             RacialModifier(
                 nome = "FERAIS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Menor")
             ),
             RacialModifier(
                 nome = "MÍMICOS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Resistente")
             ),
             RacialModifier(
                 nome = "AVIANOS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ave de rapina")
             ),
             RacialModifier(
                 nome = "Umvee (Filhos da Lua)", origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(), pericias = mapOf("Ocultismo" to 0),
                 habilidades = listOf(
                     RacialAbility("Dons da Natureza", "", id = "DONS_DA_NATUREZA"),
                     RacialAbility("Naturalmente Sobrenatural", "", id = "NATURALMENTE_SOBRENATURAL"),
@@ -64,7 +55,6 @@ class ScifiAncestryVariantSyncTest {
             ),
             RacialModifier(
                 nome = "Feral", origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(), pericias = mapOf("Sobrevivência" to 2),
                 habilidades = listOf(
                     RacialAbility("Integrado à Natureza", "", id = "INTEGRADO_A_NATUREZA"),
                     RacialAbility("Insanidade", "", id = "INSANIDADE"),
@@ -94,10 +84,6 @@ class ScifiAncestryVariantSyncTest {
                 superequipCategorias = emptyList(),
                 mapaAtributosDisplay = emptyMap(),
                 mapaPericias = emptyMap(),
-                racialAttrMinMap = mapOf(
-                    "ELEMENTAIS" to mapOf("FORCA" to 8)
-                ),
-                racialSkillStartMap = emptyMap(),
                 arcanoInfo = emptyList(),
                 mapaAtributosDescricao = emptyMap()
             )

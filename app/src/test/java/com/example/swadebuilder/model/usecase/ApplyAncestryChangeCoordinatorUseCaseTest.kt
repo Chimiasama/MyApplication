@@ -96,15 +96,11 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             scifiVariant = "Ave de rapina",
             previousAncestryDef = RacialModifier(
                 nome = "AVIANOS",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 habilidades = emptyList(),
                 origem = "SCIFI"
             ),
             targetAncestryDef = RacialModifier(
                 nome = "AVIANOS",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 habilidades = emptyList(),
                 origem = "SCIFI",
                 opcoes = listOf("Básico", "Ave de rapina")
@@ -148,8 +144,6 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             scifiVariant = "Baixa Gravidade",
             previousAncestryDef = RacialModifier(
                 nome = "HUMANOS",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 habilidades = listOf(
                     RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
                 ),
@@ -158,8 +152,6 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             ),
             targetAncestryDef = RacialModifier(
                 nome = "HUMANOS",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 habilidades = listOf(
                     RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
                 ),
@@ -187,15 +179,11 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
     ): ApplyAncestryChangeCoordinatorUseCase.Params {
         val previousDef = RacialModifier(
             nome = previousAncestry,
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             habilidades = emptyList(),
             origem = "BASICO"
         )
         val targetDef = RacialModifier(
             nome = targetAncestry,
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             // Target grants Sorte de graça, via traço vinculado (id já bate
             // com o id real do catálogo "sorte" — ver sampleAdvantages()).
             habilidades = listOf(

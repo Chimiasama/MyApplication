@@ -154,8 +154,6 @@ class CriadorState {
 
     var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
     var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
-    var racialAttrMinMap by mutableStateOf<Map<String, Map<String, Int>>>(emptyMap())
-    var racialSkillStartMap by mutableStateOf<Map<String, Map<String, Int>>>(emptyMap())
     var arcanoInfo by mutableStateOf<Map<String, Triple<Int, Int, String>>>(emptyMap())
 
     // Optimization: Cache ancestry lookup to avoid O(N) filtering on every access.
@@ -215,8 +213,6 @@ class CriadorState {
         this.superequipCategorias = snapshot.superequipCategorias
         this.mapaAtributosDisplay = snapshot.mapaAtributosDisplay
         this.mapaPericias = snapshot.mapaPericias
-        this.racialAttrMinMap = snapshot.racialAttrMinMap
-        this.racialSkillStartMap = snapshot.racialSkillStartMap
 
         this.arcanoInfo = snapshot.arcanoInfo.associate {
             it.key.uppercase().trim() to Triple(it.slots, it.pp, it.foco)
@@ -634,53 +630,13 @@ class CriadorState {
             }
         }
 
-        // Desconta de base.atributos/base.pericias (mapas numéricos "passos*2
-        // acima de d4", independentes de habilidades[]) o mesmo passo que
-        // RacialTraitPointCatalog atribui a cada traço removido — mesma lógica
-        // de atributoBaseRacial(), mas aplicada aqui pra que currentAncestryDef
-        // já saia correto pra qualquer tela que leia .atributos/.pericias
-        // direto (ex.: o "Ver detalhes" de AncestralidadesSection), não só o
-        // cálculo ao vivo do atributo do personagem.
-        val newAtributos = base.atributos.toMutableMap()
-        val newPericias = base.pericias.toMutableMap()
-        variant.tracosRemovidosIds.forEach { removedId ->
-            when (val efeito = RacialTraitPointCatalog.efeitoDe(removedId)) {
-                is RacialTraitEffect.AtributoStep -> {
-                    val key = newAtributos.keys.firstOrNull { it.keyify() == efeito.atributo.keyify() }
-                    if (key != null) {
-                        newAtributos[key] = maxOf(0, (newAtributos[key] ?: 0) - 2 * efeito.passos)
-                    }
-                }
-                is RacialTraitEffect.PericiaStep -> {
-                    val key = newPericias.keys.firstOrNull { it.keyify() == efeito.pericia.keyify() }
-                    if (key != null) {
-                        newPericias[key] = maxOf(0, (newPericias[key] ?: 0) - efeito.passos)
-                    }
-                }
-                RacialTraitEffect.Nenhum -> Unit
-                // ResistenciaBonus/PassoBonus/ApararBonus/TamanhoBonus/
-                // ArmaduraBonus não têm mapa numérico próprio em
-                // RacialModifier (diferente de atributos/pericias) — o
-                // ModifierEngine já lê o traço removido/presente direto de
-                // tracosRemovidosIds/habilidades, então não há nada a
-                // descontar aqui. Composite só reencaminha pros mesmos casos
-                // acima, um por sub-efeito.
-                is RacialTraitEffect.ResistenciaBonus,
-                is RacialTraitEffect.PassoBonus,
-                is RacialTraitEffect.ApararBonus,
-                is RacialTraitEffect.TamanhoBonus,
-                is RacialTraitEffect.ArmaduraBonus,
-                is RacialTraitEffect.PericiaPoolBonus,
-                is RacialTraitEffect.AtributoPoolBonus,
-                is RacialTraitEffect.Composite -> Unit
-            }
-        }
-
-        return base.copy(
-            habilidades = newHabilidades,
-            atributos = newAtributos,
-            pericias = newPericias
-        )
+        // Não precisa mais descontar manualmente o passo de atributo/perícia de
+        // um traço removido: RacialModifier não carrega mapas numéricos
+        // `atributos`/`pericias` em paralelo a habilidades[] — o traço removido
+        // já sai de `newHabilidades` acima, então qualquer leitura de atributo/
+        // perícia (ao vivo no personagem, ou "Ver detalhes" de
+        // AncestralidadesSection) simplesmente não o encontra mais.
+        return base.copy(habilidades = newHabilidades)
     }
 
     private fun applyAncestryVariantAdjustments(base: RacialModifier, key: String): RacialModifier {
@@ -2865,9 +2821,10 @@ class CriadorState {
             }
         }
 
-        val base = racialSkillStartMap[ancKey]?.get(perKey) ?: defaultBase
-
-        var modifiedBase = base
+        // Piso racial vem só de habilidades[] (SKILL_BOOST/PericiaStep, ver loop
+        // abaixo) — RacialModifier não carrega mais um mapa `pericias` estático
+        // em paralelo.
+        var modifiedBase = defaultBase
 
         val currentDef = if (ancKey == ancestralidade.keyify()) currentAncestryDef else getAncestralidadeDef(anc)
         currentDef?.habilidades?.forEach { hab ->
@@ -4413,30 +4370,15 @@ class CriadorState {
         }.toSet()
 
     private fun atributoBaseRacial(a: String): Int {
-        // Fix: Use keyified ancestry to match DataLoader map keys
-        var base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
+        // Piso racial vem só de habilidades[] (ATTRIBUTE_BOOST/AtributoStep, ver
+        // loop abaixo) — RacialModifier não carrega mais um mapa `atributos`
+        // estático em paralelo. Isso também elimina a necessidade de descontar
+        // manualmente o bônus de um traço removido por Variante de Raça: o traço
+        // já sai de `currentAncestryDef.habilidades` na origem (ver
+        // applyCustomAncestryVariantIfSelected), então o loop abaixo já nunca o
+        // encontra — nada para "desfazer" num mapa que não existe mais.
+        var base = 4
         val attrKey = a.keyify()
-
-        // Se uma Variante custom de raça está ativa e removeu um traço que,
-        // segundo RacialTraitPointCatalog, concedia esse mesmo passo de
-        // atributo (ex.: Anões perdendo Resistente/ROBUSTO = Vigor d6), desconta
-        // o mesmo delta do `base` estático. Sem isso, o bônus continuava vindo
-        // do campo numérico `atributos` da raça (usado pra montar
-        // racialAttrMinMap uma única vez, pro app inteiro, na carga dos dados) —
-        // que nunca é tocado pela Variante, só o habilidades[] descritivo é
-        // (ver applyCustomAncestryVariantIfSelected). Resultado sem este ajuste:
-        // o ponto da Variante fecha (o traço "sai" da lista e devolve o custo),
-        // mas o dado do atributo continua alto de graça.
-        customVarianteRacialSelecionadaId
-            ?.let { id -> listaVariantesRaciaisCustom.firstOrNull { it.id == id } }
-            ?.takeIf { it.ancestralidadeId == ancestralidade.keyify() }
-            ?.tracosRemovidosIds
-            ?.forEach { removedId ->
-                val efeito = RacialTraitPointCatalog.efeitoDe(removedId)
-                if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
-                    base = maxOf(4, base - 2 * efeito.passos)
-                }
-            }
 
         var modifiedBase = base
 
@@ -4516,20 +4458,24 @@ class CriadorState {
                 }
             }
 
-            // Elementais: base JSON já é d8 (Padrão, atributos.Força=4 — 2
-            // passos). Seleção "Ar, Fogo ou Água" troca o Forte (d8, +4pts) por
-            // um Forte mais fraco (d6, +2pts) mais Forma de Energia (+4pts) —
-            // ver AncestryVariantRegistry.elementaisScifi: base(-4) + Forma de
-            // Energia(+4) + Força d6(+2) = 2, fecha o orçamento; resetar pra d4
-            // (0pts extra) deixava a raça 2 pontos abaixo. Numérico, então fica
-            // aqui como exceção pontual (mesmo padrão do naturalArmorFromRace de
-            // Pedregoso/Umvee), não faz parte do ResolvedTraitPackage genérico
-            // (AtributoStep não é aplicado por lá — ver ModifierEngine.aplicarEfeito).
+            // Elementais: Padrão é Força d8 (MUITO_FORTE, 2 passos). Seleção "Ar,
+            // Fogo ou Água" troca isso por um Forte mais fraco (d6, 1 passo) mais
+            // Forma de Energia — ver AncestryVariantRegistry.elementaisScifi:
+            // base(-4) + Forma de Energia(+4) + Força d6(+2) = 2, fecha o
+            // orçamento. Único caso do catálogo onde a Força "Padrão" não tem um
+            // traço próprio em habilidades[] pra carregar o passo (o pacote
+            // ResolvedTraitPackage da variante Sci-Fi só afeta custo/exibição, não
+            // o dado calculado aqui — ver ModifierEngine.aplicarEfeito), então
+            // fica como exceção numérica pontual (mesmo padrão do
+            // naturalArmorFromRace de Pedregoso/Umvee) em vez de tentar forçar
+            // pela via genérica de habilidades[].
             if (ancKey == "ELEMENTAIS") {
                 if (a.keyify() == "FORCA") {
                     val variant = currentSciFiVariant ?: "Padrão"
-                    if (variant != "Padrão") {
-                        modifiedBase = 6 // Reset to d6 (Forte fraco, não o d8 de Padrão)
+                    modifiedBase = if (variant != "Padrão") {
+                        6 // Forte fraco, não o d8 de Padrão
+                    } else {
+                        maxOf(modifiedBase, 8)
                     }
                 }
             }
@@ -4586,6 +4532,27 @@ class CriadorState {
         }
 
         return modifiedBase
+    }
+
+    /**
+     * Piso de atributo (raw 4/6/8/10/12) concedido por uma raça a partir só das
+     * `habilidades[]` dela — sem os ajustes de personagem (Variante ativa,
+     * Signo, escolha de cultura etc.) que `atributoBaseRacial()` também aplica
+     * pra CURRENT ancestry. Usado pelos poucos lugares que precisam do piso de
+     * uma raça arbitrária (por nome) fora do fluxo normal de cálculo do
+     * personagem — ver `atributoRawBaseSemSupers()` e a restauração de snapshot.
+     */
+    private fun atributoFloorDeRaca(nomeRaca: String, atributo: String): Int {
+        val habilidades = getAncestralidadeDef(nomeRaca)?.habilidades ?: return 4
+        val attrKey = atributo.keyify()
+        var base = 4
+        habilidades.forEach { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                base = maxOf(base, 4 + 2 * efeito.passos)
+            }
+        }
+        return base
     }
 
     fun atributoMaxRawNaCriacao(a: String, forceStandard: Boolean = false): Int {
@@ -4669,11 +4636,10 @@ class CriadorState {
         if (modoLivre && !forceStandard) return 100
         val startRaw = periciaStartRaw(ancestralidade, per)
 
-        // Meio-Orc (Pathfinder) "Intimidante": começa com d4 em Intimidar (não
-        // d6 — id não cadastrado em RacialTraitPointCatalog.EFEITOS, o d4 vem
-        // do campo estruturado `pericias` em ancestralidades.json, lido por
-        // periciaStartRaw()/racialSkillStartMap), mas o livro ainda amplia o
-        // teto pra d12+1 — a exceção contrária à do Humano (Pathfinder)
+        // Meio-Orc (Pathfinder) "Intimidante": começa com d4 em Intimidar (sem
+        // bônus de dado — não é um AtributoStep/PericiaStep, só o INTIMIDANTE
+        // abaixo), mas o livro ainda amplia o teto pra d12+1 — a exceção
+        // contrária à do Humano (Pathfinder)
         // Adaptável (d6 sem ampliar o máximo). Antes checava por nome de raça
         // (ancestralidade.contains("MEIO-ORC") + compendioPathfinderAtivo);
         // agora lê o id do traço já presente na raça resolvida (INTIMIDANTE,
@@ -6407,8 +6373,7 @@ class CriadorState {
 
     fun atributoRawBaseSemSupers(attrKey: String): Int {
         val key = attrKey.uppercase().trim()
-        val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
-        val baseMin = mods[key] ?: 4
+        val baseMin = atributoFloorDeRaca(ancestralidade, key)
 
         // Quantos "steps" base foram comprados na criação
         val stepsBase = paCostStackPorAtributo[key]?.size ?: 0
@@ -6896,7 +6861,7 @@ class CriadorState {
         paCostStackPorAtributo.forEach { (attr, stack) ->
             stack.clear()
             stack.addAll(snapshot.atributos.paCostStackPorAtributo[attr].orEmpty())
-            val base = racialAttrMinMap[snapshot.atributos.ancestralidade]?.get(attr) ?: 4
+            val base = atributoFloorDeRaca(snapshot.atributos.ancestralidade, attr)
             valoresAtributos[attr]!!.intValue = applySuperStepsFrom(base, stack.size)
         }
         pontosAtributo = snapshot.recursos.pontosAtributo

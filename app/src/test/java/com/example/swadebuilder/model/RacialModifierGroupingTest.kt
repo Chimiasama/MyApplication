@@ -9,14 +9,11 @@ class RacialModifierGroupingTest {
     private fun raca(
         nome: String,
         origem: String,
-        atributos: Map<String, Int> = emptyMap(),
         habilidades: List<RacialAbility> = emptyList(),
         opcoes: List<String> = emptyList()
     ) = RacialModifier(
         nome = nome,
         origem = origem,
-        atributos = atributos,
-        pericias = emptyMap(),
         habilidades = habilidades,
         opcoes = opcoes
     )
@@ -73,9 +70,9 @@ class RacialModifierGroupingTest {
         // "Humano" e "Humano (Buscatrilha)" representam a mesma raça em livros diferentes;
         // quando a mecânica é idêntica, devem continuar sendo tratados como uma única entrada
         // (permitindo remover o sufixo de cenário na exibição).
-        val atributosHumano = mapOf("Astúcia" to 1)
-        val humanoBasico = raca("Humano", "BASICO", atributos = atributosHumano)
-        val humanoBuscatrilha = raca("Humano (Buscatrilha)", "PATHFINDER", atributos = atributosHumano)
+        val habilidadesHumano = listOf(RacialAbility(nome = "Astuto", descricao = "", id = "ASTUCIA"))
+        val humanoBasico = raca("Humano", "BASICO", habilidades = habilidadesHumano)
+        val humanoBuscatrilha = raca("Humano (Buscatrilha)", "PATHFINDER", habilidades = habilidadesHumano)
 
         val grupos = groupAncestralidadesForDisplay(listOf(humanoBasico, humanoBuscatrilha))
 
