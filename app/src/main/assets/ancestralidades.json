@@ -1,5 +1,6 @@
 [
   {
+    "id": "anc_androides_basico",
     "nome": "ANDROIDES",
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
     "habilidades": [
@@ -41,6 +42,7 @@
     "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias."
   },
   {
+    "id": "anc_anoes_basico",
     "nome": "ANÕES",
     "descricao": "São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas. São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins. \nGeralmente vivem mais de 200 anos. Na maioria das campanhas de fantasia possuem pele avermelhada e todas as cores de cabelo dos humanos.",
     "habilidades": [
@@ -72,6 +74,7 @@
     "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana."
   },
   {
+    "id": "anc_avianos_basico",
     "nome": "AVIANOS",
     "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
     "habilidades": [
@@ -122,6 +125,7 @@
     ]
   },
   {
+    "id": "anc_aquarianos_basico",
     "nome": "AQUARIANOS",
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
     "habilidades": [
@@ -161,6 +165,7 @@
     "especieId": "aquarianos"
   },
   {
+    "id": "anc_elfos_basico",
     "nome": "ELFOS",
     "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos, embora seus corpos não sejam tão diferentes. Seus cabelos incluem todas as cores humanas, além de tonalidades de prata, azul e ouro.",
     "habilidades": [
@@ -194,6 +199,7 @@
     "especieId": "elfos"
   },
   {
+    "id": "anc_meio_elfos_basico",
     "nome": "MEIO-ELFOS",
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
     "habilidades": [
@@ -245,6 +251,7 @@
     "especieId": "humano"
   },
   {
+    "id": "anc_pequeninos_basico",
     "nome": "PEQUENINOS",
     "descricao": "Este é um povo composto por seres baixos e ágeis com cabelos ondulados castanhos ou negros. Mesmo sendo frágeis em comparação às demais ancestralidades, seu otimismo entusiástico (ou astúcia ardilosa) lhes concede uma atitude de “nunca diga nunca”, fazendo com que sejam adversários à altura mesmo para criaturas com o dobro de seu tamanho. Não veem razão para atrair problemas e tendem a viver em suas pequenas comunidades afastadas dos caminhos mais usados.",
     "habilidades": [
@@ -283,6 +290,7 @@
     "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas."
   },
   {
+    "id": "anc_rakashanos_basico",
     "nome": "RAKASHANOS",
     "descricao": "Esta ancestralidade é composta por humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa. \nÉ possível encontrar esse povo em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade normal. Sua beleza impede que sejam rejeitados, mas sagazes o suficiente para ganhar a confiança de outras pessoas.",
     "habilidades": [
@@ -360,6 +368,7 @@
     "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos."
   },
   {
+    "id": "anc_saurios_basico",
     "nome": "SÁURIOS",
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "habilidades": [
@@ -415,6 +424,7 @@
     "especieId": "saurios"
   },
   {
+    "id": "anc_anoes_fantasia",
     "nome": "ANÕES",
     "descricao": "Os anões são um povo de baixa estatura, robusto e resistente que vem de cavernas imensas nas altas fortalezas montanhosas. São orgulhosos e belicosos, normalmente devido ao contato constante com ancestralidades hostis como orcs e goblins.",
     "variantes": "Ideias Variantes: Os anões sombrios, ou duergar, são uma ramificação dos anões que migraram ainda mais para as profundezas, perdendo toda a conexão com o mundo da superfície e os povos que nele habitam. Podem não ser malignos, mas vivem em isolamento, são rígidos e muitas vezes brigam com seus primos. Substitua Visão no Escuro por Visão Total no Escuro.\nA maioria dos indivíduos tem Complicações negativas de personalidade, como Ganancioso, Teimoso e Vingativo, características que sua sociedade isolada considera necessárias para sua sobrevivência.\nAnões do fogo abraçam o caos e a destruição. São os inimigos da maioria das outras civilizações, que consideram, na melhor das hipóteses, como um incômodo e, na pior, como ameaças existenciais. São mestres em canhões, fogo e armas de fogo e se deleitam com a destruição em massa que essas armas causam a seus inimigos.\nSuas habilidades permanecem as mesmas, mas em sua maioria são artesãos experientes (começam com um d4 em Consertar) e carregam várias armas de pólvora negra e talvez até algumas granadas.",
@@ -447,6 +457,7 @@
     "descricaoLite": "Baixos e corpulentos, vêm de grandes cavernas ou fortalezas montanhosas; séculos de conflito com povos hostis moldaram um caráter altivo e voltado à guerra."
   },
   {
+    "id": "anc_aquarianos_fantasia",
     "nome": "AQUARIANOS",
     "descricao": "O povo aquático vem das profundezas esmagadoras do oceano. Eles assumem uma variedade de formas, desde habitantes das profundezas com cabeça de peixe até humanoides com guelras pouco visíveis nas laterais ou no pescoço. As profundezas os tornam robustos e resistentes, mas sofrem muito com o ar seco ou com o calor escaldante da superfície.",
     "variantes": "Ideias Variantes: Aquarianos de águas profundas podem ter Fosforescência e maior Resistência ou Vigor. Aqueles que vivem na escuridão também podem ter Ecolocalização.\nConsidere Vantagens como Rugido se a espécie tiver Ecolocalização, ou Antecedente Arcano (Dom) com manipulação elemental ou até mesmo explosão se puderem controlar a água.",
@@ -487,6 +498,7 @@
     "especieId": "aquarianos"
   },
   {
+    "id": "anc_avianos_fantasia",
     "nome": "AVIANOS",
     "descricao": "Avianos são humanoides com asas, geralmente oriundos de florestas altas ou regiões montanhosas. Podem ser pássaros parecidos com corvos, aves de rapina parecidas com falcões ou ter asas de couro de morcegos, mas todos tendem a ter uma constituição franzina devido aos seus ossos ocos.",
     "variantes": "Ideias Variantes: Avianos descendentes de aves de rapina mais vorazes podem ter bicos que concedem a habilidade Mordida ou Garras. Esses caçadores também podem ter velocidade de Voo maior do que a habilidade listada aqui.\nAvianos noturnos podem se assemelhar a morcegos, com Infravisão, Visão no Escuro ou Visão Total no Escuro.",
@@ -760,6 +772,7 @@
     "especieId": "draconianos"
   },
   {
+    "id": "anc_elfos_fantasia",
     "nome": "ELFOS",
     "descricao": "Elfos são seres altos e esguios com orelhas pontudas e olhos profundos de cores variadas. Quer venham de florestas fechadas ou de vales escondidos, são um povo gracioso e espiritual que pode viver por vários séculos. A maioria tem pele clara com cabelos de várias tonalidades, incluindo tons de prata, azul e dourado.",
     "variantes": "Ideias Variantes: As cidades brilhantes dos altos elfos são frequentemente dedicadas ao estudo da magia, da habilidade marcial e do conhecimento. Personagens jogadoras podem começar com uma escolha de Vantagens, como Antecedente Arcano, Vantagens de Combate de Estágio Novato ou pontos de perícia em Conhecimento Acadêmico e Ocultismo para refletir sua dedicação a esses campos. Tais seres podem ter desvantagens culturais, como Arrogante ou Excesso de Confiança, refletindo a sua visão das sociedades menos desenvolvidas do seu mundo.\nElfos que vêm das florestas profundas podem começar o jogo com um d4 ou d6 em Sobrevivência e Furtividade e a Vantagem Mateiro. Isso pode ser equilibrado com Inimigo, Voto para com suas comunidades ou para proteger as florestas, ou penalidades para habilidades mecânicas como Consertar.\nEm muitos cenários de fantasia, os chamados elfos sombrios são retratados como criaturas malignas e intrigantes. A Vantagem Enganador combina bem com eles. Heróis e heroínas oriundos de tais sociedades são indivíduos exemplares dispostos a se opor à sua cultura e talvez até às suas famílias. Provavelmente ainda são arrogantes e distantes em comparação com outras ancestralidades, então deixe-os compensar suas vantagens com Complicações pessoais ou de antecedente apropriadas, como Inimigo, Forasteiro ou Procurado.",
@@ -1120,6 +1133,7 @@
     "descricaoLite": "Descendem de linhagens demoníacas e costumam carregar algum sinal físico dessa herança, como chifres, cauda ou pupilas verticais; nem sempre são malignos, mas convivem com a desconfiança alheia."
   },
   {
+    "id": "anc_insetoides_fantasia",
     "nome": "INSETOIDES",
     "descricao": "Insetoides, ou povo inseto, possuem muitas variedades. O modelo aqui apresenta um ser parecido com uma formiga, de tamanho aproximadamente humano.\nCulturalmente, a maioria dos insetoides vem de sociedades altamente organizadas, construídas em torno de papéis atribuídos no nascimento e tendem a ser extremamente obedientes.",
     "variantes": "Ideias Variantes: Alguns insetoides vêm de espécies mais independentes, como besouros ou louva-a-deus. Abandone a Complicação Mente de Colmeia e adicione habilidades adequadas a essa espécie, como mais armadura para besouros ou pinças mais perigosas para louva-a-deus. Insetoides voadores também são comuns. Adicione Voo no nível apropriado e equilibre com Complicações como Dependência de uma dieta específica ou incapacidade de falar.",
@@ -1197,6 +1211,7 @@
     "descricaoLite": "Povo de aparência insetoide, aqui numa variante que lembra formigas; vêm de sociedades rigidamente organizadas em papéis definidos desde o nascimento, com forte senso de obediência."
   },
   {
+    "id": "anc_meio_elfos_fantasia",
     "nome": "MEIO-ELFOS",
     "descricao": "Meio-elfos ganham a graça élfica ou a adaptabilidade humana. A maioria é bem aceita, mas alguns são rejeitados por um lado ou outro de sua família e crescem ressentidos. Outros podem até mesmo ser maltratados. Sua expectativa de vida é mais próxima da dos humanos que da sua herança élfica, vivendo cerca de 100 anos.",
     "variantes": "Ideias Variantes: Em alguns mundos, elfos são resistentes à magia de oponentes, concedendo-lhes Sangue Feérico ou a Vantagem Resistência Arcana como uma habilidade inerente. Em ambientes selvagens, meio-elfos podem ser caçados por elfos, humanos ou ambos! Possuem a Complicação Procurado, mas ganham outras habilidades que refletem sua vida em fuga, como Características aumentadas ou Vantagens adicionais à sua escolha.",
@@ -1547,6 +1562,7 @@
     "descricaoLite": "Vistos de fora como violentos e implacáveis, mas entendem sua conduta como simples lei do mais forte; o poder nas tribos é conquistado no combate direto, não por manipulação política."
   },
   {
+    "id": "anc_pequeninos_fantasia",
     "nome": "PEQUENINOS",
     "descricao": "Pequeninos são pessoas de baixa estatura, peludas e normalmente amáveis. Seu otimismo alegre (ou manha astuta) lhes dá uma atitude de “nunca desista” que os torna um osso duro para aqueles que os incomodariam. A maioria dos pequeninos desfruta dos pequenos luxos da vida — boa comida, bebida forte e música animada. Poucos são aventureiros, preferindo ficar em comunidades pequenas e unidas, longe de problemas.",
     "variantes": "Ideias Variantes: Em mundos mais selvagens, pequeninos podem ter que evitar seu lado mais gentil em prol de proezas marciais. Ameaças avassaladoras podem aumentar suas habilidades físicas ou dar-lhes Vantagens de Combate para sobreviver em ambientes tão hostis. Talvez isso custe sua natureza boa, dando-lhes Complicações como Desagradável ou Sem Escrúpulos.\nVocê também pode considerar inverter o roteiro de pequeninos tradicionais inspirados em Tolkien. Talvez venham de cidades cruéis e severas e não de condados florestais. Nesse caso, troque seu aumento de Espírito e Sorte por Vantagens de Combate ou Liderança para refletir seu contexto mais beligerante.\nOutras variantes podem ser otimistas e infantis, mas também cleptomaníacas descaradas. Esses começam com a Vantagem Sucateiro, equilibrada com a Complicação Guiado (Maior) (que representa seu desejo irresistível de embolsar bugigangas de aparência interessante onde quer que vão).",
@@ -1821,6 +1837,7 @@
     "descricaoLite": "Humanoides de cabeça ofídica originários de tocas ou ninhos afastados; existem várias linhagens, inspiradas em diferentes tipos de serpentes, das constritoras às peçonhentas."
   },
   {
+    "id": "anc_rakashanos_fantasia",
     "nome": "RAKASHANOS",
     "descricao": "Rakashanos são felinos humanoides. Alguns têm as cores vibrantes dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa. Eles podem ser encontrados em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade. São inteligentes e belos demais para serem rejeitados, mas ardilosos demais para ganharem a confiança dos outros.",
     "variantes": "Ideias Variantes: Algumas linhagens podem ter garras e presas maiores (For+d6 e adicionar PA 2 à Mordida), compensadas por Complicações como Sanguinário ou Sem Escrúpulos.",
@@ -1975,6 +1992,7 @@
     "descricaoLite": "Raros descendentes de um vampiro com um ser vivo; a maioria não sobrevive à infância, mas os que resistem ganham força incomum. Não são mortos-vivos, ainda que a pele pálida e o vínculo com o além causem desconforto em animais e pessoas."
   },
   {
+    "id": "anc_saurios_fantasia",
     "nome": "SÁURIOS",
     "descricao": "Homens-lagarto normalmente vêm de selvas escaldantes, pântanos úmidos ou de desertos ermos, onde possuem civilizações ímpares desconhecidas por outras ancestralidades.",
     "variantes": "Ideias Variantes: Os sáurios em alguns mundos podem se parecer com os lendários dinossauros! Aumente seu Tamanho e Força e aumente sua Mordida para For+d6. Compense essas habilidades poderosas com desvantagens como Grande, Forasteiro ou outras que reflitam o medo que a maioria tem para com eles.",
@@ -2064,6 +2082,7 @@
     "descricaoLite": "Capazes de assumir a aparência de outras pessoas, movem-se disfarçados pela sociedade, alguns para enganar ou roubar, outros para se apresentar em espetáculos; sob a forma verdadeira, revelam um humanoide cinzento e sem expressão, de olhos vazios."
   },
   {
+    "id": "anc_androides_horror",
     "nome": "ANDROIDES",
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
     "habilidades": [
@@ -2105,6 +2124,7 @@
     "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias."
   },
   {
+    "id": "anc_anoes_horror",
     "nome": "ANÕES",
     "descricao": "São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas. São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins. \nGeralmente vivem mais de 200 anos. Na maioria das campanhas de fantasia possuem pele avermelhada e todas as cores de cabelo dos humanos.",
     "habilidades": [
@@ -2136,6 +2156,7 @@
     "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana."
   },
   {
+    "id": "anc_avianos_horror",
     "nome": "AVIANOS",
     "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
     "habilidades": [
@@ -2186,6 +2207,7 @@
     ]
   },
   {
+    "id": "anc_aquarianos_horror",
     "nome": "AQUARIANOS",
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
     "habilidades": [
@@ -2225,6 +2247,7 @@
     "especieId": "aquarianos"
   },
   {
+    "id": "anc_elfos_horror",
     "nome": "ELFOS",
     "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos, embora seus corpos não sejam tão diferentes. Seus cabelos incluem todas as cores humanas, além de tonalidades de prata, azul e ouro.",
     "habilidades": [
@@ -2258,6 +2281,7 @@
     "especieId": "elfos"
   },
   {
+    "id": "anc_meio_elfos_horror",
     "nome": "MEIO-ELFOS",
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
     "habilidades": [
@@ -2309,6 +2333,7 @@
     "especieId": "humano"
   },
   {
+    "id": "anc_pequeninos_horror",
     "nome": "PEQUENINOS",
     "descricao": "Este é um povo composto por seres baixos e ágeis com cabelos ondulados castanhos ou negros. Mesmo sendo frágeis em comparação às demais ancestralidades, seu otimismo entusiástico (ou astúcia ardilosa) lhes concede uma atitude de “nunca diga nunca”, fazendo com que sejam adversários à altura mesmo para criaturas com o dobro de seu tamanho. Não veem razão para atrair problemas e tendem a viver em suas pequenas comunidades afastadas dos caminhos mais usados.",
     "habilidades": [
@@ -2347,6 +2372,7 @@
     "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas."
   },
   {
+    "id": "anc_rakashanos_horror",
     "nome": "RAKASHANOS",
     "descricao": "Esta ancestralidade é composta por humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa. \nÉ possível encontrar esse povo em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade normal. Sua beleza impede que sejam rejeitados, mas sagazes o suficiente para ganhar a confiança de outras pessoas.",
     "habilidades": [
@@ -2424,6 +2450,7 @@
     "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos."
   },
   {
+    "id": "anc_saurios_horror",
     "nome": "SÁURIOS",
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "habilidades": [
@@ -2479,6 +2506,7 @@
     "especieId": "saurios"
   },
   {
+    "id": "anc_anoes_scifi",
     "nome": "ANÕES",
     "descricao": "Nesta ambientação, o amor dos anões por artesanato se traduz em afinidade tecnológica. Muitos utilizam aprimoramentos cibernéticos para melhorar sua eficiência em mineração e engenharia espacial.",
     "variantes": null,
@@ -2516,6 +2544,7 @@
     "descricaoLite": "Nesta versão futurista, a tradicional habilidade manual se volta à tecnologia, incorporando implantes cibernéticos que otimizam mineração e engenharia espacial."
   },
   {
+    "id": "anc_aquarianos_scifi",
     "nome": "AQUARIANOS",
     "descricao": "Diferente dos atlantes clássicos, esta variante evoluiu de seres semelhantes a ouriços-do-mar em planetas oceânicos.",
     "variantes": null,
@@ -2561,6 +2590,7 @@
     "especieId": "aquarianos"
   },
   {
+    "id": "anc_avianos_scifi",
     "nome": "AVIANOS",
     "descricao": "Mais próximos de aves de rapina alienígenas, possuem cabeças avícolas e muitas vezes asas no lugar dos braços, adaptados para mundos de baixa gravidade.",
     "variantes": null,
@@ -2616,6 +2646,7 @@
     "especieId": "avianos"
   },
   {
+    "id": "anc_elfos_scifi",
     "nome": "ELFOS",
     "descricao": "Um povo enigmático e moribundo. Os poucos restantes têm milênios de idade e vivem em 'mundos de criação' tentando curar a infertilidade de sua espécie enquanto pilham rotas espaciais.",
     "variantes": null,
@@ -2681,6 +2712,7 @@
     "especieId": "humano"
   },
   {
+    "id": "anc_rakashanos_scifi",
     "nome": "RAKASHANOS",
     "descricao": "Variante mais brincalhona e curiosa dos humanoides felinos, menos focada na crueldade predatória e mais na exploração.",
     "variantes": null,
@@ -3084,6 +3116,7 @@
     "descricaoLite": "Formas de vida gelatinosas e translúcidas, capazes de mudar de forma e absorver nutrientes diretamente pelo corpo; comunicam-se por feromônios e percebem sons através de vibrações na membrana."
   },
   {
+    "id": "anc_insetoides_scifi",
     "nome": "INSETOIDES",
     "descricao": "Insetoides superam em número a maioria das outras espécies na galáxia e provavelmente poderiam dominá-la, se conseguissem organizar suas colmeias separadas em uma única força. A espécie aqui apresentada é baseada em criaturas que lembram formigas e louva-a-deus.",
     "variantes": "Ideias Variantes: Uma variante insetoide baseada em vespas troca Armadura +2 e Garras por um ferrão (trate como Mordida (For+d4)), Voo (Movimentação 6) e Toque Venenoso (Moderado).",
@@ -4819,6 +4852,7 @@
     "pontosRaciaisEsperados": 4
   },
   {
+    "id": "anc_androides_super",
     "nome": "ANDROIDES",
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
     "habilidades": [
@@ -4860,6 +4894,7 @@
     "descricaoLite": "Máquinas com componentes orgânicos criadas por tecnologia avançada, capazes de imitar a aparência humana e de desenvolver personalidade e emoções próprias."
   },
   {
+    "id": "anc_anoes_super",
     "nome": "ANÕES",
     "descricao": "São um povo baixo, robusto e resistente que vêm de cavernas imensas ou altas montanhas. São um povo orgulhoso e guerreiro, graças ao contato constante com criaturas hostis como orcs e goblins. \nGeralmente vivem mais de 200 anos. Na maioria das campanhas de fantasia possuem pele avermelhada e todas as cores de cabelo dos humanos.",
     "habilidades": [
@@ -4891,6 +4926,7 @@
     "descricaoLite": "Povo de estatura baixa e compleição forte, habituado à vida em cavernas ou nas montanhas; a convivência constante com ameaças forjou uma cultura guerreira e orgulhosa, com vida bem mais longa que a humana."
   },
   {
+    "id": "anc_avianos_super",
     "nome": "AVIANOS",
     "descricao": "São humanoides com asas. Tendem a ser bem leves devido a seus ossos ocos. Podem ter penas, pele coriácea ou até mesmo escamas.",
     "habilidades": [
@@ -4941,6 +4977,7 @@
     ]
   },
   {
+    "id": "anc_aquarianos_super",
     "nome": "AQUARIANOS",
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
     "habilidades": [
@@ -4980,6 +5017,7 @@
     "especieId": "aquarianos"
   },
   {
+    "id": "anc_elfos_super",
     "nome": "ELFOS",
     "descricao": "Possuem altura avantajada, almas gentis, orelhas pontudas e olhos profundos de cores variadas. Sejam habitantes de florestas ou vales ocultos, todos possuem delicadeza naturalmente maior que a dos humanos, embora seus corpos não sejam tão diferentes. Seus cabelos incluem todas as cores humanas, além de tonalidades de prata, azul e ouro.",
     "habilidades": [
@@ -5013,6 +5051,7 @@
     "especieId": "elfos"
   },
   {
+    "id": "anc_meio_elfos_super",
     "nome": "MEIO-ELFOS",
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
     "habilidades": [
@@ -5064,6 +5103,7 @@
     "especieId": "humano"
   },
   {
+    "id": "anc_pequeninos_super",
     "nome": "PEQUENINOS",
     "descricao": "Este é um povo composto por seres baixos e ágeis com cabelos ondulados castanhos ou negros. Mesmo sendo frágeis em comparação às demais ancestralidades, seu otimismo entusiástico (ou astúcia ardilosa) lhes concede uma atitude de “nunca diga nunca”, fazendo com que sejam adversários à altura mesmo para criaturas com o dobro de seu tamanho. Não veem razão para atrair problemas e tendem a viver em suas pequenas comunidades afastadas dos caminhos mais usados.",
     "habilidades": [
@@ -5102,6 +5142,7 @@
     "descricaoLite": "Pequenos e ágeis, de cabelos cacheados escuros; apesar do porte frágil, compensam com atitude destemida e preferem comunidades isoladas e tranquilas."
   },
   {
+    "id": "anc_rakashanos_super",
     "nome": "RAKASHANOS",
     "descricao": "Esta ancestralidade é composta por humanoides de aparência felina. Podem ter as cores lustrosas dos tigres, a pele manchada dos leopardos ou a aparência exótica dos gatos siameses. Possuem garras e presas afiadas e uma natureza cruel ao lidar com sua presa. \nÉ possível encontrar esse povo em suas próprias cidades exóticas e remotas ou como elementos marginais da sociedade normal. Sua beleza impede que sejam rejeitados, mas sagazes o suficiente para ganhar a confiança de outras pessoas.",
     "habilidades": [
@@ -5179,6 +5220,7 @@
     "descricaoLite": "Humanoides de traços felinos, com dentes pontudos e unhas cortantes, além de pelagem que lembra grandes gatos; transitam entre cidades próprias e a margem da sociedade, usando charme e astúcia para se infiltrar em outros grupos."
   },
   {
+    "id": "anc_saurios_super",
     "nome": "SÁURIOS",
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "habilidades": [
