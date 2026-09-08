@@ -247,7 +247,18 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 )
             }
 
-            if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys) {
+            // Guarda extra por livro: alguns ids de scifiVariantDrivenKeys (ex.:
+            // "HUMANOS") são um nome de exibição compartilhado por raças
+            // DIFERENTES em livros diferentes (Sci-Fi "Humanos" — Baixa
+            // Gravidade/Minerador — vs. Fantasia "Humanos" — Pacotes
+            // Culturais). Sem checar o livro de origem da raça atual aqui,
+            // um jogador com Sci-Fi E Fantasia ativos ao mesmo tempo, jogando
+            // um Humano de Fantasia, caía neste bloco genérico (que só
+            // conhece a config Sci-Fi), sempre resolvendo pra "Padrão" —
+            // Pacotes Culturais nunca era aplicado (bug relatado pelo
+            // usuário: Senhores dos Cavalos não concedia nada e Adaptável
+            // continuava presente).
+            if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys && canonicalOriginKey(ancestryOrigin) == "SCI_FI") {
                 buildResultFromVariantRegistry(ancKey, effectiveVariant)?.let { return it }
             }
 
