@@ -9,6 +9,7 @@ import com.example.swadebuilder.model.GameDataSnapshot
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Poder
+import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Tropo
@@ -26,7 +27,9 @@ class CriadorStateAdaptavelInitTest {
             nome = "HUMANOS",
             atributos = emptyMap(),
             pericias = emptyMap(),
-            vantagensGratis = listOf("ADAPTAVEL"),
+            habilidades = listOf(
+                RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
+            ),
             origem = "BASICO"
         )
 

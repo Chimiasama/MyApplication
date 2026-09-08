@@ -89,8 +89,6 @@ data class RacialModifierLite(
     val habilidades: List<RacialAbilityLite> = emptyList(),
     val atributos: Map<String, Int> = emptyMap(),
     val pericias: Map<String, Int> = emptyMap(),
-    val vantagensGratis: List<String> = emptyList(),
-    val desvantagens: List<String> = emptyList(),
     val opcoes: List<String> = emptyList()
 )
 
@@ -234,8 +232,6 @@ fun AncestralidadesSection(
                     habilidades = habilidadesLite,
                     atributos = representative.atributos,
                     pericias = representative.pericias,
-                    vantagensGratis = representative.vantagensGratis,
-                    desvantagens = representative.desvantagens,
                     opcoes = representative.opcoes
                 )
             }.sortedBy { it.nome }
@@ -1076,15 +1072,13 @@ fun AncestralidadesSection(
                                     Column(modifier = Modifier.padding(top = 4.dp)) {
                                         // Quando esta é a raça atualmente selecionada, currentAncestryDef já
                                         // vem com os ajustes de uma eventual Variante custom aplicados
-                                        // (traços/atributos/perícias/vantagens/desvantagens) — usa esses
-                                        // valores em vez dos crus de `item` pra não mostrar, por exemplo,
+                                        // (traços/atributos/perícias) — usa esses valores em vez dos crus
+                                        // de `item` pra não mostrar, por exemplo,
                                         // "Resistente"/Vigor d6 aqui enquanto o Resumo já mostra o traço
                                         // removido e Vigor d4.
                                         val ancestryDefAtivo = if (isSelected) state.currentAncestryDef else null
                                         val atributosEfetivos = ancestryDefAtivo?.atributos ?: item.atributos
                                         val periciasEfetivas = ancestryDefAtivo?.pericias ?: item.pericias
-                                        val vantagensGratisEfetivas = ancestryDefAtivo?.vantagensGratis ?: item.vantagensGratis
-                                        val desvantagensEfetivas = ancestryDefAtivo?.desvantagens ?: item.desvantagens
                                         val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
                                             RacialAbilityLite(nome = it.nome, descricao = it.descricao, id = it.id, category = it.category, severity = it.severity)
                                         } ?: item.habilidades
@@ -1120,8 +1114,8 @@ fun AncestralidadesSection(
                                         val caracteristicas = RacialCaracteristicasResolver.resolver(
                                             atributos = atributosEfetivos,
                                             pericias = periciasEfetivas,
-                                            vantagensGratis = vantagensGratisEfetivas,
-                                            desvantagens = desvantagensEfetivas,
+                                            vantagensGratis = emptyList(),
+                                            desvantagens = emptyList(),
                                             habilidades = habilidadesParaCaracteristicas.map {
                                                 RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
                                             }

@@ -4,8 +4,6 @@
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Construto",
@@ -51,8 +49,6 @@
       "Vigor": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Movimentação Reduzida",
@@ -88,8 +84,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Frágil",
@@ -142,8 +136,6 @@
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Aquático",
@@ -187,8 +179,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -224,8 +214,6 @@
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Forasteiro",
@@ -260,8 +248,6 @@
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -284,8 +270,6 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Espirituoso",
@@ -328,8 +312,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -409,8 +391,6 @@
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Armadura +2",
@@ -471,7 +451,6 @@
       "Vigor": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "MOVIMENTAÇÃO REDUZIDA",
@@ -495,7 +474,6 @@
         "descricaoLite": "Não sofre penalidades de Penumbra nem de Escuridão para enxergar."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -507,7 +485,6 @@
     "variantes": "Ideias Variantes: Aquarianos de águas profundas podem ter Fosforescência e maior Resistência ou Vigor. Aqueles que vivem na escuridão também podem ter Ecolocalização.\nConsidere Vantagens como Rugido se a espécie tiver Ecolocalização, ou Antecedente Arcano (Dom) com manipulação elemental ou até mesmo explosão se puderem controlar a água.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "AQUÁTICO",
@@ -538,7 +515,6 @@
         "descricaoLite": "Ignoram as penalidades causadas por Penumbra e Escuridão."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -553,7 +529,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FRÁGIL",
@@ -595,7 +570,6 @@
     "tags": [
       "asas"
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -608,7 +582,6 @@
     "variantes": "Ideias Variantes: Nem todos os celestiais servem à luz. Avatares de poderes mais sombrios trocam Código de Honra por Complicações como Arrogante, Implacável ou algum Voto destrutivo. São frequentemente conhecidos por sua crueldade ou ódio para com os mortais. Como uma ironia cruel, podem manter suas asas angelicais ou elas podem se parecer com asas de morcego ou demônios.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ATRAENTE",
@@ -644,7 +617,6 @@
     "tags": [
       "asas"
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -656,7 +628,6 @@
     "variantes": "Ideias Variantes: Aumente o Tamanho para +2 e considere Musculoso para representar centauros descendentes de cavalos de guerra, clydesdales ou similares. Balanceie com Inimigo, ou uma escolha de tendências como Teimosia ou até mesmo uma penalidade em Astúcia ou a Complicação Sem Noção se a cultura enfatizar a batalha em vez da educação.\nCentauros relacionados aos pégasos podem ter asas (Voo), compensadas por Movimentação mais lenta em terra (reduza Movimentação para 8 e um dado de corrida d8).",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CASCOS",
@@ -703,7 +674,6 @@
         "descricaoLite": "O corpo maior concede +1 de Resistência."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -715,7 +685,6 @@
     "variantes": "Ideias Variantes: Descendentes elementais “mais próximos” de sua herança podem ter poderes mais desenvolvidos sobre os elementos. Podem ser capazes de voar, começar com manipulação elemental (Antecedente Arcano (Dom)), ser mais fortes, mais resistentes ou ter outras vantagens concedidas por seus laços com o plano elemental. Equilibre isso com a versão maior de Forasteiro, Fraquezas Ambientais ou outras Complicações que reflitam a “personalidade” do elemento.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "RESISTÊNCIA AMBIENTAL",
@@ -740,7 +709,6 @@
         "descricaoLite": "Escolhe 1 de 4 elementos ancestrais (Água/Ar/Fogo/Terra), cada um concedendo um traço próprio equivalente a 2 pontos."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -753,7 +721,6 @@
     "variantes": "Ideias Variantes: Os draconianos apresentados aqui nascem do fogo e do calor. Ajuste a Resistência Ambiental, a Fraqueza Ambiental e a Arma de Sopro conforme desejado para refletir outras ancestralidades. Se draconianos em seu cenário tiverem asas, adicione Voo à lista e equilibre-os com características de ancestralidade negativas adicionais.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ARMA DE SOPRO",
@@ -833,7 +800,6 @@
       "arma_de_sopro",
       "asas"
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -848,7 +814,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "DESASTRADO",
@@ -873,7 +838,6 @@
         "descricaoLite": "Agilidade começa em d6 em vez de d4, com limite elevado a d12+1."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -886,7 +850,6 @@
     "variantes": "Ideias Variantes: Fadas criadas na corte Seelie podem ter perícias aprimoradas, como Persuadir, compensadas por um Voto de servir seu rei ou rainha. Fadas malignas da corte Unseelie adoram travessuras e são cheias de rancor. Elas têm a Complicação Desagradável e abraçam suas Complicações Curioso e Boca Grande para espalhar discórdia em qualquer lugar por onde andam. Isso pode lhes dar uma velocidade de Voo maior ou habilidades como Robusto para ajudá-las a sobreviver aos problemas que causam.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "BOCA GRANDE",
@@ -938,7 +901,6 @@
     "tags": [
       "asas"
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -954,7 +916,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ASTÚCIA",
@@ -992,7 +953,6 @@
         "descricaoLite": "Enxerga bem mesmo no escuro, sem sofrer os modificadores de baixa luminosidade (Penumbra ou Escuridão)."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1007,7 +967,6 @@
     "pericias": {
       "Furtividade": 2
     },
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "DESAGRADÁVEL",
@@ -1046,7 +1005,6 @@
         "descricaoLite": "Começa com d6 em Furtividade, podendo evoluir essa perícia até d12+1."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1058,7 +1016,6 @@
     "variantes": "Ideias Variantes: É fácil adaptar o golem de pedra aqui apresentado para aqueles construídos com outros materiais, como metal, osso, cinzas ou até mesmo carne. Adicione a habilidade de ancestralidade Mordida, Garras ou Chifres para refletir armas integradas. Se o golem puder curar suas feridas absorvendo material, considere a habilidade de ancestralidade Regeneração. Reduza o custo em 1 se o material for relativamente incomum.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ARMADURA +2",
@@ -1133,7 +1090,6 @@
         "vezes": 2
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1145,7 +1101,6 @@
     "variantes": "Pacotes Culturais: Humano padrão (Adaptável), Nômade (Sem Adaptável), Nômades do Deserto (Sobrevivência d6 e Fraqueza Ambiental), Povo da Montanha (Vigor d6 e Fraqueza Ambiental), Povo do Mar (Atletismo d6 e Navegar d6), Senhores dos Cavalos (Cavalgar d6).",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ADAPTÁVEL",
@@ -1155,7 +1110,6 @@
         "descricaoLite": "Recebe de início uma Vantagem de Estágio Novato à escolha, cumprindo os requisitos normalmente."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1168,7 +1122,6 @@
     "variantes": "Ideias Variantes: Troque o fogo por outros tipos de energia, como frio ou escuridão, para refletir origens demoníacas alternativas. Aumente o dano dos chifres do infernal para For+d6 se tiver chifres maiores e adicione Voo se tiver asas. Isso pode aumentar sua Complicação Forasteiro para Maior, dependendo do mundo.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CHIFRES",
@@ -1222,7 +1175,6 @@
         "descricaoLite": "Consegue enxergar sem prejuízo até 10 quadros (20 metros) de distância, mesmo em escuridão total."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1234,7 +1186,6 @@
     "variantes": "Ideias Variantes: Alguns insetoides vêm de espécies mais independentes, como besouros ou louva-a-deus. Abandone a Complicação Mente de Colmeia e adicione habilidades adequadas a essa espécie, como mais armadura para besouros ou pinças mais perigosas para louva-a-deus. Insetoides voadores também são comuns. Adicione Voo no nível apropriado e equilibre com Complicações como Dependência de uma dieta específica ou incapacidade de falar.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ANDAR NAS PAREDES",
@@ -1303,7 +1254,6 @@
         "descricaoLite": "Carrega a Complicação Leal voltada à sua colônia, gerando conflito interno quando um objetivo esbarra nessa lealdade."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1315,7 +1265,6 @@
     "variantes": "Ideias Variantes: Em alguns mundos, elfos são resistentes à magia de oponentes, concedendo-lhes Sangue Feérico ou a Vantagem Resistência Arcana como uma habilidade inerente. Em ambientes selvagens, meio-elfos podem ser caçados por elfos, humanos ou ambos! Possuem a Complicação Procurado, mas ganham outras habilidades que refletem sua vida em fuga, como Características aumentadas ou Vantagens adicionais à sua escolha.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FORASTEIRO",
@@ -1340,7 +1289,6 @@
         "descricaoLite": "Enxerga sem prejuízo em ambientes de pouca luz, ficando imune aos modificadores de Penumbra e Escuridão."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1355,7 +1303,6 @@
       "Vigor": 4
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ANALFABETO",
@@ -1417,7 +1364,6 @@
         "vezes": 3
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1429,7 +1375,6 @@
     "variantes": "Ideias Variantes: Meio-orcs podem ser mais do que simplesmente brutais em alguns cenários, ganhando Agilidade, Espírito ou Sorte em vez de Força e Vigor.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ENDURECIDO",
@@ -1454,7 +1399,6 @@
         "descricaoLite": "Ao mirar quem emite calor ou frio, sofre apenas metade da penalidade normal de baixa luminosidade, pois enxerga na faixa infravermelha."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1469,7 +1413,6 @@
       "Vigor": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CHIFRES",
@@ -1538,7 +1481,6 @@
         "descricaoLite": "Porte alto e largo: +1 de Resistência."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1553,7 +1495,6 @@
       "Vigor": 4
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ARROGANTE",
@@ -1628,7 +1569,6 @@
         "descricaoLite": "Com cerca de 2,70 m de altura: +1 de Resistência."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1643,7 +1583,6 @@
       "Vigor": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "BRUTAL",
@@ -1689,7 +1628,6 @@
         "descricaoLite": "Com cerca de 2,40 m de altura: +1 de Resistência."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1703,7 +1641,6 @@
       "Espírito": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ESPIRITUOSO",
@@ -1734,7 +1671,6 @@
         "descricaoLite": "Com cerca de 1,20 m de altura: -1 em Tamanho e Resistência."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1746,7 +1682,6 @@
     "variantes": "Ideias Variantes: Membros do povo ratazana têm mordidas muito mais afiadas em alguns mundos e também podem espalhar veneno. Equilibre esses benefícios com Complicações como Sem Escrúpulos ou Desagradável para representar sua natureza selvagem.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "COVARDE",
@@ -1838,7 +1773,6 @@
         "descricaoLite": "Também enxerga bem no escuro, sem sofrer os modificadores associados à Penumbra ou à Escuridão."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1850,7 +1784,6 @@
     "variantes": "Ideias Variantes: O povo rato pode ser inerentemente tímido, conferindo uma penalidade em Intimidar ao lidar com alguém maior ou mais poderoso que eles. Você também pode usar este modelo para criaturas descendentes de esquilos ou roedores semelhantes. Troque Visão no Escuro por Voo para esquilos-voadores, Atletismo aumentado para esquilos e assim por diante.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "DIMINUTO (Tamanho -4)",
@@ -1897,7 +1830,6 @@
         "descricaoLite": "Detalhes mecânicos desta habilidade não constam no material de origem consultado."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1911,7 +1843,6 @@
     "variantes": "Ideias Variantes: O povo serpente pode ter o corpo de uma cobra em vez de pernas humanoides. Essas nagas podem ter sua Movimentação aumentada ou a Vantagem Corredor equilibrada pela Forma Incomum (veja Centauros na página 14).\nVocê também pode melhorar o veneno do povo serpente para Nocaute, Letal ou Paralisante adquirindo 2 pontos adicionais em habilidades de ancestralidades negativas ou Complicações. Personagens relacionadas a cascavéis, por exemplo, podem ser Desagradáveis ou ter Inimigos Ancestrais, e aquelas que se assemelham a cobras podem ter a habilidade de cuspir seu veneno (veja a página 59).",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FORASTEIRO",
@@ -1981,7 +1912,6 @@
         "descricaoLite": "-1 em testes de Agilidade, Força e Vigor após ficar mais de dez minutos exposto a temperaturas abaixo de 18°C."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -1995,7 +1925,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "GARRAS",
@@ -2065,7 +1994,6 @@
         "descricaoLite": "Têm mais agilidade que o normal: começam com d6 no atributo em vez de d4, podendo evoluir até d12+1."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -2079,7 +2007,6 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "AVERSÃO ANIMAL",
@@ -2147,7 +2074,6 @@
         "descricaoLite": "Ignoram as penalidades de Penumbra e Escuridão para enxergar."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -2159,7 +2085,6 @@
     "variantes": "Ideias Variantes: Os sáurios em alguns mundos podem se parecer com os lendários dinossauros! Aumente seu Tamanho e Força e aumente sua Mordida para For+d6. Compense essas habilidades poderosas com desvantagens como Grande, Forasteiro ou outras que reflitam o medo que a maioria tem para com eles.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ARMADURA +2",
@@ -2206,7 +2131,6 @@
         "descricaoLite": "Sentidos afiados o suficiente para conceder a Vantagem Prontidão."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -2219,7 +2143,6 @@
     "variantes": "Ideias Variantes: Alguns transmorfos são limitados em suas habilidades e só conseguem imitar a aparência de alguém com quem interagiram ou que tocaram. Podem manter a nova aparência por muito mais tempo do que outros transmorfos, estendendo a duração de sua habilidade Mudar de Forma para um dia (veja a seguir).\nTransmorfos não precisam necessariamente ser uma ancestralidade de humanoides misteriosos que podem imitar os outros. Alguns se parecem com qualquer outro ser humano, mas podem transformar-se em animais à vontade. A habilidade Mudar de Forma do transmorfo usa o poder mudança de forma em vez de disfarce. Se só puderem se transformar sob certas circunstâncias — como enquanto estão Feridos, sob a luz da lua cheia e assim por diante — ou precisarem gastar uma rodada inteira sem realizar outras ações além da transformação, podem reduzir o custo em Pontos de Poder em 2 (a critério do Mestre).",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CARISMÁTICO",
@@ -2244,7 +2167,6 @@
         "descricaoLite": "Escondem sua verdadeira natureza sob a Complicação Segredo (Maior); caso sejam expostos, ela é substituída por outra Complicação adequada, como Inimigo, Vergonha, Procurado ou Forasteiro."
       }
     ],
-    "vantagensGratis": [],
     "livros": [
       "FANTASIA"
     ],
@@ -2255,8 +2177,6 @@
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Construto",
@@ -2302,8 +2222,6 @@
       "Vigor": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Movimentação Reduzida",
@@ -2339,8 +2257,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Frágil",
@@ -2393,8 +2309,6 @@
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Aquático",
@@ -2438,8 +2352,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -2475,8 +2387,6 @@
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Forasteiro",
@@ -2511,8 +2421,6 @@
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -2535,8 +2443,6 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Espirituoso",
@@ -2579,8 +2485,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -2660,8 +2564,6 @@
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Armadura +2",
@@ -2726,7 +2628,6 @@
       "Básico",
       "Ciber"
     ],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Movimentação Reduzida",
@@ -2751,7 +2652,6 @@
       }
     ],
     "tags": [],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -2763,7 +2663,6 @@
     "variantes": null,
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "opcoes": [
       "Básico",
       "Semi-aquáticos"
@@ -2799,7 +2698,6 @@
       }
     ],
     "tags": [],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -2818,7 +2716,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Frágil",
@@ -2860,7 +2757,6 @@
     "tags": [
       "asas"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -2879,7 +2775,6 @@
       "Básico",
       "Comunitário"
     ],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -2905,7 +2800,6 @@
       }
     ],
     "tags": [],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -2923,7 +2817,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -2934,7 +2827,6 @@
       }
     ],
     "tags": [],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -2953,7 +2845,6 @@
       "Brincalhão"
     ],
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -3024,7 +2915,6 @@
       }
     ],
     "tags": [],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3040,7 +2930,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ESTÁVEL",
@@ -3083,7 +2972,6 @@
       "tamanho_grande",
       "multiplas_pernas"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3102,7 +2990,6 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CABEÇA DURA",
@@ -3152,7 +3039,6 @@
     "tags": [
       "arma_natural"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3170,7 +3056,6 @@
       "Força": 4
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CABEÇA-DURA",
@@ -3205,7 +3090,6 @@
       "tamanho_grande",
       "elemental"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3221,7 +3105,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ALTA/BAIXA TECNOLOGIA",
@@ -3256,7 +3139,6 @@
     "tags": [
       "pequeno"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3272,7 +3154,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "DEPENDÊNCIA",
@@ -3313,7 +3194,6 @@
     "tags": [
       "planta"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3329,7 +3209,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CIBER-RESISTÊNCIA",
@@ -3357,7 +3236,6 @@
     "tags": [
       "amorfo"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3373,7 +3251,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "COMUNITÁRIO",
@@ -3415,7 +3292,6 @@
     "tags": [
       "inseto"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3431,7 +3307,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CIBER-RESISTÊNCIA",
@@ -3460,7 +3335,6 @@
     "tags": [
       "metamorfo"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3479,7 +3353,6 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "EM FORMA",
@@ -3506,7 +3379,6 @@
     "tags": [
       "humano_modificado"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3523,7 +3395,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FRÁGIL",
@@ -3550,7 +3421,6 @@
     "tags": [
       "psiquico"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3567,7 +3437,6 @@
       "Padrão",
       "Energia"
     ],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CASCA",
@@ -3595,7 +3464,6 @@
     "tags": [
       "parasita"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3611,7 +3479,6 @@
       "Padrão",
       "Habilidoso"
     ],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "AÇÃO ADICIONAL (Física)",
@@ -3653,7 +3520,6 @@
     "tags": [
       "multiplos_bracos"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3670,7 +3536,6 @@
       "Guerreiro",
       "Limitado"
     ],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CIRCUITOS DE ASIMOV",
@@ -3700,7 +3565,6 @@
       "construto",
       "robo"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3717,7 +3581,6 @@
       "Máquina (Procurado)",
       "Máquina (Forasteiro)"
     ],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "ESPACIAL",
@@ -3753,7 +3616,6 @@
     "tags": [
       "androide"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3770,7 +3632,6 @@
       "Padrão",
       "Fuzileiro Zero G"
     ],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "NERVOS DE AÇO",
@@ -3813,7 +3674,6 @@
       "humano_modificado",
       "soldado"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3826,7 +3686,6 @@
     "variantes": "Ideias variantes: A criatura aqui foi projetada para usar um traje de contenção (veja a p. 49). Para um ser de energia muito mais poderoso, dê a ele superpoderes (veja Savage Worlds Edição Aventura e o Compêndio de Superpoderes), como ataques de longa distância e campo de dano.",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "CURIOSO",
@@ -3884,7 +3743,6 @@
       "energia",
       "incorporeo"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3902,7 +3760,6 @@
       "Força": 2
     },
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "FORTE",
@@ -3944,7 +3801,6 @@
     "tags": [
       "tamanho_grande"
     ],
-    "vantagensGratis": [],
     "livros": [
       "SCI_FI"
     ],
@@ -3955,8 +3811,6 @@
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -3983,7 +3837,6 @@
       "Força": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Forte",
@@ -4016,7 +3869,6 @@
       "Astúcia": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Astuto",
@@ -4049,7 +3901,6 @@
       "Vigor": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Vigoroso",
@@ -4082,7 +3933,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -4115,7 +3965,6 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Espiritual",
@@ -4144,8 +3993,6 @@
     "descricao": "Os humanos são um grupo diversificado e adaptável que se conformam com valores e ensinamentos dos clãs ou famílias em que cresceram. Ao criar um herói humano, você pode escolher um dos seguintes signos de nascença. Os signos de nascença são o equivalente a um signo do zodíaco, correspondendo a um mês específico. Cada um menciona, de forma não exata, características comuns de personalidade daqueles que nasceram sob esse signo. Também será listada um benefício humano alternativo para o personagem. Você também pode optar por não escolher um signo de nascença. Em vez disso, você pode começar como um humano padrão com uma Vantagem gratuita.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Pontos de Perícia",
@@ -4216,8 +4063,6 @@
       "Convenção": 2,
       "Conhecimento Geral": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4280,8 +4125,6 @@
       "Provocar": 0,
       "Furtividade": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4342,8 +4185,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4391,8 +4232,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4439,8 +4278,6 @@
     "pericias": {
       "Jogar": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4495,8 +4332,6 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4541,8 +4376,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "movimentacao": 2,
     "livros": [
       "ARTE_DA_GUERRA"
@@ -4595,8 +4428,6 @@
     ],
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "opcoes": [
       "Voto (Maior)",
       "Obrigação (Maior)"
@@ -4650,8 +4481,6 @@
       "Ocultismo": 0,
       "Sobrevivência": 0
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "opcoes": [
       "Ápice",
       "Vínculo Bestial",
@@ -4743,8 +4572,6 @@
     "pericias": {
       "Sobrevivência": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4793,8 +4620,6 @@
       "Força": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4807,7 +4632,6 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -4828,7 +4652,6 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Antecedente Arcano (Demônio)",
@@ -4905,7 +4728,6 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -4928,8 +4750,6 @@
       "Vigor": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Aptidão com Pedras",
@@ -4985,8 +4805,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -5047,8 +4865,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Magia Gnômica",
@@ -5118,8 +4934,6 @@
       "Atletismo": 2,
       "Perceber": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -5176,8 +4990,6 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -5207,8 +5019,6 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Flexibilidade",
@@ -5248,8 +5058,6 @@
     "pericias": {
       "Intimidar": 0
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ferocidade Orc",
@@ -5299,8 +5107,6 @@
     "descricao": "São criaturas semi-orgânicas criadas por tecnologia avançada. O exemplo aqui simula seres humanos em muitos aspectos, podendo ter passabilidade humana quando desejar (desde que não seja submetido a exames médicos). Sua rede neural avançada lhes dá uma inteligência artificial completa, com personalidades individuais, peculiaridades e emoções como qualquer outro ser consciente. \nA visão de androide aqui apresentada é um modelo genérico. Para criar androides com maiores especializações, use as habilidades raciais personalizadas na pág. 19. ",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Construto",
@@ -5346,8 +5152,6 @@
       "Vigor": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Movimentação Reduzida",
@@ -5383,8 +5187,6 @@
     "pericias": {
       "Perceber": 2
     },
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Frágil",
@@ -5437,8 +5239,6 @@
     "descricao": "Povo aquático oriundo das profundezas esmagadoras do oceano. São fortes e resistentes debaixo das ondas, mas geralmente são vulneráveis ao ar livre ou ao calor abrasador da superfície.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Aquático",
@@ -5482,8 +5282,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -5519,8 +5317,6 @@
     "descricao": "Com a graciosidade élfica, mas sem sua fragilidade elegante, a maioria é bem aceita, mas pode ocorrer rejeição por qualquer lado de sua família, levando a ressentimentos, ou mesmo a maus tratos. Sua expectativa de vida se aproxima mais da sua descendência humana, vivendo cerca de cem anos.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Forasteiro",
@@ -5555,8 +5351,6 @@
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -5579,8 +5373,6 @@
       "Espírito": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Espirituoso",
@@ -5623,8 +5415,6 @@
       "Agilidade": 2
     },
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -5704,8 +5494,6 @@
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [],
-    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Armadura +2",

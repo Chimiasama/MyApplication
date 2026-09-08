@@ -299,13 +299,12 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             )
         }
 
-        // Bloco hardcoded de FERAL removido: Furioso (Vantagem, agora em
-        // vantagensGratis no JSON) e Sanguinário (Complicação, agora o
-        // traço SANGUINARIO em habilidades[]) são resolvidos genericamente
-        // pelo mesmo caminho de qualquer outra raça (ResolveAncestryRacialPackageUseCase
-        // lê vantagensGratis/ModifierEngine lê habilidades[]), igual à Mente
-        // de Colmeia dos Insetoides (Fantasia) — não precisam mais de "if
-        // (ancKey == 'FERAL')" aqui. As Garras (For+d4 sem PA) já vêm de
+        // Bloco hardcoded de FERAL removido: Furioso e Sanguinário (traços
+        // FURIOSO/SANGUINARIO em habilidades[], com traitId=GRANTED_EDGE pro
+        // primeiro) são resolvidos genericamente pelo mesmo caminho de
+        // qualquer outra raça, igual à Mente de Colmeia dos Insetoides
+        // (Fantasia) — não precisam mais de "if (ancKey == 'FERAL')" aqui.
+        // As Garras (For+d4 sem PA) já vêm de
         // GARRAS_SEM_PA em habilidades[]; o grant duplicado "GARRAS" (com
         // PA, custo errado — 3 em vez de 2) que existia aqui foi removido
         // junto. A nota "não pode canalizar Técnicas de Chi" já está na

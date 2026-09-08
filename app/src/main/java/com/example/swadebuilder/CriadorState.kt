@@ -685,10 +685,6 @@ class CriadorState {
                     idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
                 }
 
-                val newVantagensGratis = base.vantagensGratis.filter {
-                    it.keyify() != "ADAPTAVEL"
-                }
-
                 when (pacoteCulturalFantasiaSelecionado) {
                     "Nômades do Deserto" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Frio)", descricao = "Nômades do deserto possuem fraqueza ambiental ao frio.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
                     "Povo da Montanha" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Calor)", descricao = "O povo da montanha possui fraqueza ambiental ao calor.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
@@ -699,7 +695,7 @@ class CriadorState {
                     }
                 }
 
-                return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
+                return base.copy(habilidades = newHabilidades)
             }
             return base
         }
@@ -707,9 +703,6 @@ class CriadorState {
         if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
-
-            // Ensure explicit removal from legacy list
-            val newVantagensGratis = base.vantagensGratis.filter { it.keyify() != "HERANCA" }
 
             if (meioElfoAgil) {
                 if (newHabilidades.none { it.id == "AGIL" }) {
@@ -734,7 +727,7 @@ class CriadorState {
                     )
                 }
             }
-            return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
+            return base.copy(habilidades = newHabilidades)
         }
 
         // Meio-Demônio (Cidade do Sol a Vapor): igual ao livro, escolhe entre
@@ -966,10 +959,9 @@ class CriadorState {
                 )
 
                 pack.tracosParaRemoverPorNome.forEach { nome -> removeByIdOrName(nome, nome) }
-                // Complicações removidas também podem existir como habilidade
-                // embutida (category=racial_hindrance) na raça base — ex.:
-                // Seres Sintéticos "PROGRAMADO" — não só como string solta em
-                // base.desvantagens (que esta função não toca).
+                // Complicações removidas existem como habilidade embutida
+                // (category=racial_hindrance) na raça base — ex.: Seres
+                // Sintéticos "PROGRAMADO" — nunca mais como string solta.
                 pack.desvantagensParaRemover.forEach { nome -> removeByIdOrName(nome, nome) }
 
                 // Id mecânico vem pronto de TraitAddition (escrito à mão em
@@ -4034,14 +4026,15 @@ class CriadorState {
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
     // Delegam pras versões compartilhadas em RacialModifier.kt — mesma lógica
-    // que a lista de Características da aba Ancestralidades usa, pra não ter
-    // dois lugares combinando lista solta + habilidade embutida cada um do
-    // seu jeito.
+    // que a lista de Características da aba Ancestralidades usa. O primeiro
+    // parâmetro é sempre emptyList() do lado de RacialModifier (nenhuma
+    // Ancestralidade usa mais lista solta) — a função continua genérica só
+    // porque é compartilhada com MonstroTemplate.paraCaracteristicas().
     private fun effectiveVantagensGratis(rm: RacialModifier): List<String> =
-        vantagensGratisEfetivas(rm.vantagensGratis, rm.habilidades)
+        vantagensGratisEfetivas(emptyList(), rm.habilidades)
 
     private fun effectiveDesvantagens(rm: RacialModifier): List<String> =
-        desvantagensEfetivas(rm.desvantagens, rm.habilidades)
+        desvantagensEfetivas(emptyList(), rm.habilidades)
 
     val pontosComplicacao: Int
         get() {
@@ -4890,7 +4883,7 @@ class CriadorState {
         vantagensSelecionadas.addAll(advantagesToRestore)
 
         desvantagensAutomaticas.clear()
-        desvantagensAutomaticas.addAll(ancDef?.desvantagens ?: emptyList())
+        desvantagensAutomaticas.addAll(ancDef?.resolvedDesvantagens() ?: emptyList())
 
         vantagensAutomaticas.clear()
         vantagensAutomaticas.addAll(racialPackage.vantagensAutomaticas)

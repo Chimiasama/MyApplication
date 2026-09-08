@@ -72,7 +72,6 @@ class SummaryUtilsTest {
                 nome = "AVIANOS",
                 atributos = emptyMap(),
                 pericias = mapOf("Perceber" to 2),
-                desvantagens = emptyList(),
                 habilidades = listOf(
                     com.example.swadebuilder.model.RacialAbility("Frágil", ""),
                     com.example.swadebuilder.model.RacialAbility("Movimentação Reduzida", ""),
@@ -209,7 +208,6 @@ class SummaryUtilsTest {
                     origem = "FC",
                     atributos = emptyMap(),
                     pericias = emptyMap(),
-                    desvantagens = listOf("DESASTRADO"),
                     opcoes = listOf("Básico", "Comunitário"),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Ágil", ""),
@@ -366,7 +364,6 @@ class SummaryUtilsTest {
                     origem = "FC",
                     atributos = emptyMap(),
                     pericias = emptyMap(),
-                    desvantagens = emptyList(),
                     opcoes = listOf("Padrão", "Gazela"),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Estável", ""),
@@ -557,7 +554,6 @@ class SummaryUtilsTest {
                     origem = "ARTE_DA_GUERRA",
                     atributos = emptyMap(),
                     pericias = emptyMap(),
-                    desvantagens = emptyList(),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Pensamentos Positivos", ""),
                         com.example.swadebuilder.model.RacialAbility("Lentos para Agir", "")
@@ -662,7 +658,6 @@ class SummaryUtilsTest {
                     origem = "ARTE_DA_GUERRA",
                     atributos = emptyMap(),
                     pericias = emptyMap(),
-                    desvantagens = emptyList(),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Insanidade (Sanguinário)", ""),
                         com.example.swadebuilder.model.RacialAbility("Primitivo", "")
@@ -758,7 +753,6 @@ class SummaryUtilsTest {
                     origem = "ARTE_DA_GUERRA",
                     atributos = emptyMap(),
                     pericias = emptyMap(),
-                    desvantagens = emptyList(),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Pontos de Perícia", ""),
                         com.example.swadebuilder.model.RacialAbility("Adaptável ou Signo", ""),

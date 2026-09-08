@@ -47,8 +47,6 @@ data class RacialModifier(
     val descricao: String? = null,
     val atributos: Map<String, Int> = emptyMap(),
     val pericias: Map<String, Int> = emptyMap(),
-    val vantagensGratis: List<String> = emptyList(),
-    val desvantagens: List<String> = emptyList(),
     val habilidades: List<RacialAbility> = emptyList(),
     val origem: String = "BASICO",
     val movimentacao: Int = 0,
@@ -103,9 +101,9 @@ data class RacialModifier(
         return map
     }
 
-    /** Retorna vantagens grátis mesclando `vantagensGratis` com traços `GRANTED_EDGE` em `habilidades`. */
+    /** Retorna vantagens grátis concedidas por traços `GRANTED_EDGE`/`racial_edge` em `habilidades`. */
     fun resolvedVantagensGratis(): List<String> {
-        val list = vantagensGratis.toMutableList()
+        val list = mutableListOf<String>()
         habilidades.forEach { hab ->
             val tid = hab.resolvedTraitId().uppercase()
             if (tid == "GRANTED_EDGE" && !hab.targetRef.isNullOrBlank()) {
@@ -118,9 +116,9 @@ data class RacialModifier(
         return list
     }
 
-    /** Retorna desvantagens raciais mesclando `desvantagens` com traços `RACIAL_HINDRANCE` em `habilidades`. */
+    /** Retorna desvantagens raciais concedidas por traços `RACIAL_HINDRANCE`/`racial_hindrance` em `habilidades`. */
     fun resolvedDesvantagens(): List<String> {
-        val list = desvantagens.toMutableList()
+        val list = mutableListOf<String>()
         habilidades.forEach { hab ->
             val tid = hab.resolvedTraitId().uppercase()
             if (tid == "RACIAL_HINDRANCE" && !hab.targetRef.isNullOrBlank()) {
@@ -190,24 +188,17 @@ data class RacialAbilitySignature(val nome: String, val descricao: String)
 data class RacialSignature(
     val atributos: Map<String, Int>,
     val pericias: Map<String, Int>,
-    val vantagensGratis: List<String>,
-    val desvantagens: List<String>,
     val habilidades: List<RacialAbilitySignature>
 )
 
-fun RacialModifier.signature(): RacialSignature {
-    fun normalizeList(values: List<String>): List<String> = values.sortedBy { it.uppercase().semAcentos() }
-
-    return RacialSignature(
+fun RacialModifier.signature(): RacialSignature =
+    RacialSignature(
         atributos = atributos,
         pericias = pericias,
-        vantagensGratis = normalizeList(vantagensGratis),
-        desvantagens = normalizeList(desvantagens),
         habilidades = habilidades
             .map { RacialAbilitySignature(it.nome, it.descricao) }
             .sortedWith(compareBy({ it.nome.uppercase().semAcentos() }, { it.descricao.uppercase().semAcentos() }))
     )
-}
 
 fun stripAncestralidadeScenarioSuffix(nome: String): String =
     nome.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "").trim()
@@ -241,13 +232,14 @@ fun groupAncestralidadesForDisplay(items: List<RacialModifier>): List<List<Racia
 }
 
 /**
- * Uma raça pode registrar uma Vantagem/Complicação grátis de duas formas:
- * numa lista solta (`vantagensGratis`/`desvantagens`) ou embutida numa
- * habilidade (`category == "racial_edge"`/`"racial_hindrance"`). As duas
- * formas coexistem nos dados (histórico de quando cada raça foi cadastrada),
- * então qualquer código que precise da lista completa — cálculo de pontos em
- * CriadorState, ou a lista de Características da aba Ancestralidades — usa
- * estas duas funções em vez de ler só um dos dois lugares.
+ * Uma Vantagem/Complicação grátis pode vir embutida numa habilidade
+ * (`category == "racial_edge"`/`"racial_hindrance"`, opcionalmente com
+ * `traitId="GRANTED_EDGE"/"RACIAL_HINDRANCE"` + `targetRef` quando o `nome`
+ * é só skin do livro) ou, só pro Template de Monstro Heroico (que não é uma
+ * RacialModifier — ver `MonstroTemplate.vantagensGratis`), numa lista solta
+ * de nomes/ids. Nenhuma Ancestralidade usa mais a lista solta (sempre vazia
+ * hoje) — o parâmetro continua aqui só porque a função é compartilhada com
+ * `MonstroTemplate.paraCaracteristicas()`.
  */
 private val racialGrantSeveritySuffixRegex = Regex("""\s*\((MAIOR|MENOR)\)\s*$""")
 
@@ -260,14 +252,10 @@ private val racialGrantSeveritySuffixRegex = Regex("""\s*\((MAIOR|MENOR)\)\s*$""
 fun String.racialGrantDedupeKey(): String =
     keyify().replace(racialGrantSeveritySuffixRegex, "").filter { it.isLetterOrDigit() }
 
-// distinctBy(racialGrantDedupeKey) porque algumas raças do catálogo (6 de 121, ex.:
-// Halfling do Pathfinder com "Sorte") têm a mesma vantagem/desvantagem registrada nas
-// DUAS formas ao mesmo tempo — solta em vantagensGratis/desvantagens E de novo dentro
-// de habilidades[] com category=racial_edge/racial_hindrance — em vez de só uma
-// delas, que é o que o resto deste arquivo assume. Sem isso a Vantagem/Complicação
-// aparecia duplicada em qualquer lugar que lesse essa lista (ex.: "Características" da
-// aba Ancestralidades), mesmo a concessão mecânica de verdade só acontecendo uma vez
-// (ResolveGrantedAncestryAdvantagesUseCase já tinha seu próprio distinctBy(id)).
+// distinctBy(racialGrantDedupeKey): defesa pro caso de MonstroTemplate.vantagensGratis
+// registrar o mesmo grant que já vem embutido em habilidades[] (nenhuma Ancestralidade
+// dispara isso mais — o parâmetro vantagensGratis/desvantagens abaixo é sempre
+// emptyList() do lado de RacialModifier, ver comentário da classe acima).
 fun vantagensGratisEfetivas(vantagensGratis: List<String>, habilidades: List<RacialAbility>): List<String> =
     (vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { hab ->
         // targetRef (traitId=GRANTED_EDGE) tem prioridade — é o id/nome real

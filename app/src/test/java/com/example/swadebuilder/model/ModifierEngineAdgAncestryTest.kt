@@ -44,8 +44,6 @@ class ModifierEngineAdgAncestryTest {
                 origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility(
                         nome = "Despretensiosos e Barrigudos (Aparar Baixo)",
@@ -78,8 +76,6 @@ class ModifierEngineAdgAncestryTest {
                 origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 habilidades = emptyList(),
                 movimentacao = 2
             )
@@ -99,8 +95,6 @@ class ModifierEngineAdgAncestryTest {
                 origem = "FANTASIA",
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility(
                         nome = "DIMINUTO (Tamanho -4)",
@@ -128,8 +122,6 @@ class ModifierEngineAdgAncestryTest {
                 origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility(
                         nome = "Metade Construto",

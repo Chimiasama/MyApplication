@@ -16,9 +16,11 @@ data class MonstroTemplate(
     val atributosBonus: Map<String, Int> = emptyMap(),
     val habilidades: List<MonstroHabilidade> = emptyList(),
     // Ids/nomes de Vantagem que o template concede de graça (não custam
-    // escolha de Vantagem do jogador) — mesmo campo/mecanismo que
-    // RacialModifier.vantagensGratis usa pra Ancestralidade, aplicado aqui a
-    // uma habilidade do monstro (ex.: "Fúria" do Monstro de Retalhos concede
+    // escolha de Vantagem do jogador) — mesmo mecanismo de lista solta que
+    // Ancestralidade usava antes de migrar pra traço vinculado por id em
+    // habilidades[] (ver RacialModifier.resolvedVantagensGratis()); Monstro
+    // Heroico continua nessa forma mais simples, aplicada aqui a uma
+    // habilidade do monstro (ex.: "Fúria" do Monstro de Retalhos concede
     // Furioso; "Ciência!" concede Resistência Arcana).
     val vantagensGratis: List<String> = emptyList(),
     val complicacoes: List<String> = emptyList(),
@@ -73,8 +75,8 @@ data class MonstroHabilidade(
  *   Fé, não atributo) sai à parte, convertida pro "tier" que o resolver
  *   espera pra perícias (passos+1: 1 passo = tier 2 = d6).
  * - `complicacoes` são frases completas ("Fraqueza (Estaca no Coração):
- *   Ataque Localizado..."), não o par "Nome (Severidade)" que
- *   RacialModifier.desvantagens usa — o resolver tentaria ler errado o que
+ *   Ataque Localizado..."), não o par "Nome (Severidade)" que o parâmetro
+ *   `desvantagens` do resolver espera — ele tentaria ler errado o que
  *   vem entre parênteses como severidade. Em vez de forçar no mesmo
  *   parâmetro, cada complicação vira uma linha própria só com o rótulo antes
  *   dos ":" (mesmo corte que ModifierEngine já faz pra aplicar a mecânica).

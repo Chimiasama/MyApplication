@@ -87,9 +87,7 @@ object ModifierEngine {
             } ?: emptyList()
 
             val rawSources =
-                anc.vantagensGratis +
-                    anc.habilidades.map { it.nome } +
-                    anc.desvantagens +
+                anc.habilidades.map { it.nome } +
                     state.vantagensRaciais +
                     state.vantagensAutomaticas +
                     state.desvantagensRaciais +
@@ -161,9 +159,9 @@ object ModifierEngine {
             // regex que antes liam "TAMANHO ±N"/"RESISTÊNCIA ±N"/
             // "MOVIMENTAÇÃO ±N"/"ARMADURA +N" do NOME do traço — o traço só
             // precisa estar presente (por id na habilidade da raça/monstro,
-            // ou por nome solto pros grants ainda guardados como texto em
-            // vantagensGratis/desvantagens), o catálogo já diz o alvo e o
-            // valor. Ver RacialTraitEffect.
+            // ou por nome solto em vantagensRaciais/desvantagensRaciais —
+            // ver TraitAddition), o catálogo já diz o alvo e o valor. Ver
+            // RacialTraitEffect.
             val sourceKeys = sources.map { it.keyify() }.toSet()
 
             // Quantas vezes cada id de traço foi "comprado" (ver
@@ -208,11 +206,11 @@ object ModifierEngine {
             // exibição aqui, só lido do que ResolveAncestryRacialPackageUseCase
             // já resolveu.
             state.racialTraitIdsFromVariants.forEach { registrarCompra(it.id, it.vezes) }
-            // Grants ainda guardados como nome solto sem id à parte (ex.:
-            // Inumimi "RESISTÊNCIA" bare em vantagensGratis) — presença por
-            // nome normalizado só pode significar 1 compra (o texto não
-            // carrega contagem nenhuma); ids já contados acima por uma fonte
-            // estruturada mantêm o valor real deles (maxOf não reduz).
+            // Grants que chegam como nome solto sem id à parte (ex.: texto de
+            // Monstro Heroico) — presença por nome normalizado só pode
+            // significar 1 compra (o texto não carrega contagem nenhuma);
+            // ids já contados acima por uma fonte estruturada mantêm o valor
+            // real deles (maxOf não reduz).
             RacialTraitPointCatalog.EFEITOS.keys.forEach { id ->
                 if (id in sourceKeys) registrarCompra(id, 1)
             }

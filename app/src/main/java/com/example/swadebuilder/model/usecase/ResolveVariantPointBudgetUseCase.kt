@@ -26,8 +26,8 @@ data class VariantBudgetItem(
 /**
  * Calcula o saldo TOTAL em pontos de uma Variante custom de raça: começa do
  * valor de livro da própria raça base (soma do custo de TODOS os seus
- * traços/vantagensGratis/desvantagens, tocados ou não — ver [valorTotalDe]),
- * subtrai o custo de cada item removido e soma o custo de cada item
+ * traços, tocados ou não — ver [valorTotalDe]), subtrai o custo de cada
+ * item removido e soma o custo de cada item
  * adicionado. Não é o delta só das mudanças: é quanto a raça resultante
  * vale no total, do mesmo jeito que se estivesse sendo construída do zero.
  *

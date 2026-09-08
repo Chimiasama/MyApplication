@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialModifier
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -34,11 +35,11 @@ class ResolveAncestryTransitionBootstrapUseCaseTest {
     fun `uses transition context free keys but does not change points when leaving humano via adaptavel ancestry (legacy logic disabled)`() {
         val previousDef = RacialModifier(
             nome = "Povo Adaptado",
-            vantagensGratis = listOf("Adaptável"),
-            desvantagens = emptyList(),
             atributos = emptyMap(),
             pericias = emptyMap(),
-            habilidades = emptyList(),
+            habilidades = listOf(
+                RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
+            ),
             origem = "BASICO"
         )
 

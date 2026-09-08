@@ -196,7 +196,6 @@ class CriadorStateKirinSignTest {
             RacialModifier(
                 nome = "Kitsunemimi (Raposa)", origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility("Visão no Escuro", "", id = "VISAO_NO_ESCURO"),
                     RacialAbility("Excessivamente Detalhistas", "", id = "EXCESSIVAMENTE_DETALHISTAS"),
@@ -207,7 +206,6 @@ class CriadorStateKirinSignTest {
             RacialModifier(
                 nome = "Usagimimi (Coelho)", origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility("Definido pelo Ofício", "", id = "DEFINIDO_PELO_OFICIO"),
                     RacialAbility("Visão no Escuro", "", id = "VISAO_NO_ESCURO"),
