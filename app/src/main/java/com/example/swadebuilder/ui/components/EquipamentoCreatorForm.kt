@@ -94,7 +94,7 @@ class EquipamentoFormState {
 
     /**
      * "tipo" de EquipamentoCategoria a gravar no item — decide em qual seção da tela de
-     * Equipamento ele aparece (ver DataLoader.updateActiveModules e
+     * Equipamento ele aparece (ver updateActiveModules em DataLoader e
      * EquipamentoSection.mapCategory) em vez de cair sempre em "Equipamento Geral".
      */
     fun categoriaTipo(): String = when (superType) {
@@ -234,7 +234,7 @@ fun EquipamentoCreatorFields(state: EquipamentoFormState) {
     // Tipo escolhido aqui decide (a) quais campos mecânicos aparecem abaixo e (b) o
     // `categoriaTipo` gravado no item — é o que faz o item cair na seção certa
     // (Armas/Armaduras/Veículos/etc.) da tela de Equipamento em vez de sempre em
-    // "Equipamento Geral" (ver DataLoader.updateActiveModules e EquipamentoSection.mapCategory).
+    // "Equipamento Geral" (ver updateActiveModules em DataLoader e EquipamentoSection.mapCategory).
     LabeledChipGroup("Tipo de Item:") {
         listOf("Arma", "Armadura", "Escudo", "Munição", "Veículo", "Geral").forEach { st ->
             FilterChip(

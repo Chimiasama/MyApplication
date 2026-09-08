@@ -56,7 +56,7 @@ data class EquipamentoItem(
     // código (armas naturais, itens sintéticos) que nunca passaram pelo catálogo JSON.
     val id: String = "",
     // "tipo" de EquipamentoCategoria (ex.: "Armas de Fogo", "Armaduras", "Veículos") a usar
-    // quando este item é mesclado numa categoria em DataLoader.updateActiveModules().
+    // quando este item é mesclado numa categoria (ver updateActiveModules em DataLoader).
     // Só preenchido por itens criados no formulário de Equipamento customizado (ver
     // SettingsDialog.kt) — itens do catálogo oficial já carregam o `tipo` na própria
     // EquipamentoCategoria que os contém e não precisam disso. Nulo cai em "Equipamento Geral".

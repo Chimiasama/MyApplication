@@ -237,7 +237,7 @@ object DataLoader {
                 // (ver SettingsDialog.kt) tinham `categoriaTipo`, e a ficha (ResumoSection.kt)
                 // não tinha como separar arma corpo a corpo de arma à distância de armadura
                 // pros ~3300 itens do catálogo oficial sem depender de comparar `subtipo`
-                // (que se repete entre tipos bem diferentes — ver DataLoader.updateActiveModules).
+                // (que se repete entre tipos bem diferentes — ver updateActiveModules acima).
                 itens = cat.itens.map { it.comObservacoesExibidas().copy(categoriaTipo = cat.tipo) }
             )
         }
