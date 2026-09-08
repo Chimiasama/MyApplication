@@ -494,15 +494,17 @@ class CriadorState {
         // mora a troca Adaptável/Antecedente Arcano (Demônio) por
         // meioDemonioAA; sem isso o toggle nunca era aplicado, mesmo com o
         // jogador escolhendo o AA (bug real, raça sempre ficava travada em
-        // Adaptável). Elementais (Sci-Fi) também precisa passar — é onde
-        // MUITO_FORTE/RESISTENCIA (Padrão) são trocados por FORMA_DE_ENERGIA
-        // (Ar, Fogo ou Água); sem isso a Força ficava hardcoded por nome de
-        // raça em vez de vir de habilidades[] (bug real, corrigido a pedido
-        // do usuário). Já o Meio-Elfo do Pathfinder (também candidato único)
-        // depende do contrário — de sair aqui — pra NÃO entrar no ramo
-        // Herança/Adaptável de applyAncestryVariantAdjustments, pensado pra
-        // variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
-        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS") {
+        // Adaptável). Elementais e Drakens (Sci-Fi) também precisam passar —
+        // é onde MUITO_FORTE/RESISTENCIA (Elementais Padrão) viram
+        // FORMA_DE_ENERGIA (Ar, Fogo ou Água), e onde FORTE (Drakens Padrão)
+        // é removido pra "Dragão"; sem isso a Força de ambas ficava
+        // hardcoded por nome de raça em vez de vir de habilidades[] (bug
+        // real, corrigido a pedido do usuário). Já o Meio-Elfo do Pathfinder
+        // (também candidato único) depende do contrário — de sair aqui — pra
+        // NÃO entrar no ramo Herança/Adaptável de
+        // applyAncestryVariantAdjustments, pensado pra variante Meio-Elfo de
+        // outros livros (CriadorStateRacialTraitDrivenAttributesTest).
+        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS") {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
@@ -823,6 +825,14 @@ class CriadorState {
                 )
             }
         }
+
+        // Drakens (Sci-Fi) não precisa de um bloco dedicado aqui como
+        // Elementais: já está em AncestryVariantRegistry.scifiVariantDrivenKeys,
+        // então o bloco genérico mais abaixo (que lê
+        // AncestryVariantRegistry.drakens() — FORTE removido/Arma de Sopro
+        // (Fogo) adicionada pra "Dragão") já resolve a troca sozinho, agora
+        // que Drakens deixou de cair no curto-circuito de candidato único em
+        // getAncestralidadeDef() (ver comentário lá).
 
         if (key == "QUADROIDES" && variant == "Habilidoso") {
             newHabilidades.removeAll {
@@ -4477,39 +4487,12 @@ class CriadorState {
             }
         }
 
-        val currentSciFiVariant = if (compendioSciFiAtivo) resolveCurrentSciFiVariantSelection() else scifiVariant
-
-        // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens ainda não tem
-        // o traço "Forte"/substituto estruturado de um jeito que chegue até
-        // aqui (ver nota abaixo), então continua hardcoded por nome de raça
-        // por enquanto. Elementais foi migrado: ver applyAncestryVariantAdjustments,
-        // que agora injeta/remove MUITO_FORTE e RESISTENCIA de verdade em
-        // habilidades[] conforme a opção "Padrão"/"Ar, Fogo ou Água" —
-        // resolvido pelo loop genérico de AtributoStep logo acima, sem
-        // exceção numérica aqui.
-        if (compendioSciFiAtivo) {
-            val ancKey = ancestralidade.keyify()
-
-            // Drakens: Padrão (Forte - Str d6), Dragão (No Forte - Str d4).
-            // AncestryVariantRegistry.drakens() já declara a remoção de FORTE
-            // pra "Dragão", mas Drakens é candidato único em ancestralidades.json
-            // e cai no curto-circuito de getAncestralidadeDef() que pula
-            // applyAncestryVariantAdjustments pra esse caso (só Umvee/
-            // Meio-Demônio/Elementais têm a exceção que força a passagem por
-            // ali) — então a remoção nunca chega a acontecer em habilidades[]
-            // de verdade. Mesmo problema que Elementais tinha; segue
-            // hardcoded aqui até receber o mesmo tratamento.
-            if (ancKey == "DRAKENS") {
-                if (a.keyify() == "FORCA") {
-                    val variant = currentSciFiVariant ?: "Padrão"
-                    if (variant == "Padrão") {
-                        modifiedBase = maxOf(modifiedBase, 6)
-                    } else {
-                        modifiedBase = 4 // Reset to d4
-                    }
-                }
-            }
-        }
+        // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens e Elementais
+        // não precisam mais de exceção numérica aqui: MUITO_FORTE/RESISTENCIA
+        // (Elementais) e FORTE (Drakens) são habilidades base em
+        // ancestralidades.json, e applyAncestryVariantAdjustments troca/remove
+        // o traço certo conforme a opção selecionada — tudo resolvido pelo
+        // loop genérico de AtributoStep logo acima.
 
         // Descendente Elemental (Terra) agora é resolvido genericamente acima via
         // habilidadeIds.contains("SOLIDO_COMO_ROCHA") — esse traço já só existe em

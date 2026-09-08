@@ -26,7 +26,12 @@ class ScifiAncestryVariantSyncTest {
             ),
             RacialModifier(
                 nome = "DRAKENS", origem = "SCI_FI",
-                habilidades = emptyList(), opcoes = listOf("Padrão", "Dragão")
+                // FORTE (Força d6) é a raça base ("Padrão"); "Dragão" troca
+                // por Arma de Sopro (Fogo) — ver AncestryVariantRegistry.drakens()
+                // e CriadorState.getAncestralidadeDef() (Drakens não cai mais
+                // no curto-circuito de candidato único).
+                habilidades = listOf(RacialAbility("FORTE", "", id = "FORTE")),
+                opcoes = listOf("Padrão", "Dragão")
             ),
             RacialModifier(
                 nome = "ELEMENTAIS", origem = "SCI_FI",
