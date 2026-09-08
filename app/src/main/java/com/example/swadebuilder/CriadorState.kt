@@ -2851,7 +2851,8 @@ class CriadorState {
     private fun periciaStartRawInternal(
         anc: String,
         per: Pericia,
-        includeArcaneVantage: ((Vantagem) -> Boolean)?
+        includeArcaneVantage: ((Vantagem) -> Boolean)?,
+        includeTropo: Boolean = true
     ): Int {
         val ancKey = anc.keyify()
         val perKey = per.nome.keyify()
@@ -2941,58 +2942,81 @@ class CriadorState {
             }
         }
 
-        // Arte da Guerra - Protagonista
+        // Piso "sem Tropo": raça + Monstro + Signo + Pacote Cultural — só isso
+        // alimenta o teto da perícia (periciaCapRaw chama esta função com
+        // includeTropo=false). Um bônus de Tropo pode somar ao valor final
+        // abaixo, mas nunca esticar o teto — só um traço de raça faz isso (a
+        // pedido do usuário: "o bônus do tropo não é o mesmo que perícia de
+        // raça que pode aumentar o valor máximo do teto dela"). Cada bloco de
+        // Tropo abaixo soma em cima de `pisoSemTropo`, nunca em cima de
+        // `modifiedBase` de outro bloco — só um Tropo pode estar selecionado
+        // por vez, mas isso evita qualquer acoplamento acidental entre eles.
+        val pisoSemTropo = modifiedBase
+        if (!includeTropo) return pisoSemTropo
+
+        // Arte da Guerra - Protagonista: livro diz "Essa perícia é aumentada
+        // em um tipo de dado" — bônus RELATIVO ao que o herói já tem (de
+        // raça, por exemplo), não um piso fixo de d6. Isso é a sinergia
+        // raça+tropo pedida: se a raça já concede d6 numa dessas perícias, o
+        // Protagonista sobe pra d8, não trava em d6.
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
             val pericias = protagonistaPericiasDoTropo()
             if (perKey in pericias) {
-                modifiedBase = maxOf(modifiedBase, 6)
+                modifiedBase = applySuperStepsFrom(pisoSemTropo, 1)
             }
         }
 
-        // Arte da Guerra - Bu Xista
+        // Arte da Guerra - Bu Xista: livro diz "começam com um d4 em
+        // Convenção e Ocultismo, ou podem aumentar esses dados em um tipo" —
+        // mesma sinergia relativa do Protagonista.
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_buxista") {
             if (perKey == "CONVENCAO" || perKey == "OCULTISMO") {
-                modifiedBase = if (modifiedBase > 0) {
-                    maxOf(modifiedBase, applySuperStepsFrom(modifiedBase, 1))
-                } else {
-                    maxOf(modifiedBase, 4)
-                }
+                modifiedBase = applySuperStepsFrom(pisoSemTropo, 1)
             }
         }
 
-        // Arte da Guerra - Samurai
+        // Arte da Guerra - Samurai: livro diz "começa com Conhecimento
+        // Batalha d6" e "pode escolher iniciar com Jutsu ou Atirar em d6" —
+        // piso fixo (sem "aumenta em um tipo"), mas ainda assim não deve
+        // esticar o teto (por isso soma em pisoSemTropo, não seria incluído
+        // se includeTropo=false).
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_samurai") {
             val samuraiChoice = samuraiPericiaEscolhida?.keyify()
             val isJutsuChoice = samuraiChoice == "JUTSU"
             val chosenKey = if (isJutsuChoice) "LUTAR" else samuraiChoice
             if (chosenKey != null && perKey == chosenKey) {
-                modifiedBase = maxOf(modifiedBase, 6)
+                modifiedBase = maxOf(pisoSemTropo, 6)
             }
         }
 
-        // Arte da Guerra - Youxia (Kensai)
+        // Arte da Guerra - Youxia (Kensai): livro diz "Ele aumenta seu Jutsu
+        // inicial associado à arma em um tipo de dado" — relativo, igual ao
+        // Protagonista/Bu Xista.
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_youxia") {
             if (perKey == "LUTAR" && !youxiaJutsuSelecionado.isNullOrBlank()) {
-                modifiedBase = maxOf(modifiedBase, 4)
+                modifiedBase = applySuperStepsFrom(pisoSemTropo, 1)
             }
         }
 
-        // Arte da Guerra - Artista Marcial (Jutsu inicial)
+        // Arte da Guerra - Artista Marcial (Jutsu inicial): piso fixo (livro
+        // não usa "aumenta em um tipo" aqui).
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_artista_marcial") {
             val slotIndex = jutsuSlotIndex(per)
             if (slotIndex != null) {
                 when (artistaMarcialJutsuOpcao) {
                     ARTISTA_MARCIAL_JUTSU_D6 -> if (slotIndex == 1) {
-                        modifiedBase = maxOf(modifiedBase, 6)
+                        modifiedBase = maxOf(pisoSemTropo, 6)
                     }
                     ARTISTA_MARCIAL_JUTSU_D4_D4 -> if (slotIndex == 2) {
-                        modifiedBase = maxOf(modifiedBase, 4)
+                        modifiedBase = maxOf(pisoSemTropo, 4)
                     }
                 }
             }
         }
 
-        // Arte da Guerra - Tropos
+        // Arte da Guerra - Tropos: bônus fixo genérico direto do catálogo do
+        // próprio Tropo (Samurai/Conhecimento Batalha, Elementalista/Jutsu+
+        // Transição etc.) — piso fixo, mesma regra de não esticar o teto.
         if (compendioArteDaGuerraAtivo) {
             tropoSelecionado?.let { tropo ->
                 val bonusMap = tropo.periciasGratuitas.mapKeys {
@@ -3001,7 +3025,12 @@ class CriadorState {
                 }
                 val bonus = bonusMap[perKey]
                 if (bonus != null) {
-                    modifiedBase = maxOf(modifiedBase, bonus)
+                    // maxOf(modifiedBase, ...), não pisoSemTropo: Bu Xista já
+                    // recebeu seu bônus relativo (maior que este piso fixo)
+                    // no bloco dedicado acima — este bloco genérico não pode
+                    // regredir esse valor pras mesmas perícias (Convenção/
+                    // Ocultismo aparecem nos dois lugares).
+                    modifiedBase = maxOf(modifiedBase, maxOf(pisoSemTropo, bonus))
                 }
             }
         }
@@ -4419,7 +4448,7 @@ class CriadorState {
             }
         }.toSet()
 
-    private fun atributoBaseRacial(a: String): Int {
+    private fun atributoBaseRacial(a: String, includeTropo: Boolean = true): Int {
         // Piso racial vem só de habilidades[] (ATTRIBUTE_BOOST/AtributoStep, ver
         // loop abaixo) — RacialModifier não carrega mais um mapa `atributos`
         // estático em paralelo. Isso também elimina a necessidade de descontar
@@ -4518,23 +4547,42 @@ class CriadorState {
             }
         }
 
-        // Arte da Guerra - Protagonista (Qualidades de Herói)
-        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
-            val attrKey = a.keyify()
-            when (protagonistaRollQualidade) {
-                2 -> if (attrKey == "ASTUCIA") modifiedBase = maxOf(modifiedBase, 6)
-                4 -> if (attrKey == "FORCA") modifiedBase = maxOf(modifiedBase, 6)
-                6 -> if (attrKey == "ESPIRITO") modifiedBase = maxOf(modifiedBase, 6)
-                8 -> if (attrKey == "AGILIDADE") modifiedBase = maxOf(modifiedBase, 6)
-                10 -> if (attrKey == "VIGOR") modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
-
         if (isHumanoFantasiaSelecionado() &&
             pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado) == "POVO_DA_MONTANHA" &&
             a.keyify() == "VIGOR"
         ) {
             modifiedBase = maxOf(modifiedBase, 6)
+        }
+
+        // Piso "sem Tropo": raça + Monstro + escolha racial + Signo + Pacote
+        // Cultural — é isso, e só isso, que alimenta o teto do atributo
+        // (atributoMaxRaw chama esta função com includeTropo=false). Um bônus
+        // de Tropo pode somar ao valor final abaixo, mas nunca esticar o teto
+        // — só um traço de raça faz isso (a pedido do usuário: "o bônus do
+        // tropo não é o mesmo que perícia de raça que pode aumentar o valor
+        // máximo do teto dela").
+        val pisoSemTropo = modifiedBase
+        if (!includeTropo) return pisoSemTropo
+
+        // Arte da Guerra - Protagonista (Qualidades de Herói): livro diz
+        // "aumenta [o atributo] em um tipo de dado" — é um bônus RELATIVO ao
+        // que o herói já tem (de raça, por exemplo), não um piso fixo de d6.
+        // Soma em cima de pisoSemTropo (nunca em cima de modifiedBase, que
+        // aqui é o mesmo valor) via applySuperStepsFrom, igual ao Bu
+        // Xista/Youxia em periciaStartRawInternal.
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
+            val attrKey = a.keyify()
+            val qualidadeAttrKey = when (protagonistaRollQualidade) {
+                2 -> "ASTUCIA"
+                4 -> "FORCA"
+                6 -> "ESPIRITO"
+                8 -> "AGILIDADE"
+                10 -> "VIGOR"
+                else -> null
+            }
+            if (qualidadeAttrKey == attrKey) {
+                modifiedBase = maxOf(modifiedBase, applySuperStepsFrom(pisoSemTropo, 1))
+            }
         }
 
         return modifiedBase
@@ -4586,7 +4634,11 @@ class CriadorState {
 
     fun atributoMaxRaw(a: String, forceStandard: Boolean = false): Int {
         if (modoLivre && !forceStandard) return 100
-        val minRaw = atributoMinRaw(a)
+        // Teto vem só do piso "sem Tropo" (raça/Monstro/Signo/Pacote Cultural)
+        // — um bônus de Tropo nunca deve esticar o teto do atributo (ver
+        // atributoBaseRacial). atributoMinRaw() continua incluindo o Tropo,
+        // pois é o valor mínimo de verdade que o jogador pode ver/usar.
+        val minRaw = atributoBaseRacial(a, includeTropo = false)
 
         var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
         val baseCap = 12 + extras
@@ -4640,7 +4692,11 @@ class CriadorState {
 
     fun periciaCapRaw(per: Pericia, forceStandard: Boolean = false): Int {
         if (modoLivre && !forceStandard) return 100
-        val startRaw = periciaStartRaw(ancestralidade, per)
+        // Teto vem só do piso "sem Tropo" (raça/Monstro/Signo/Pacote Cultural)
+        // — um bônus de Tropo nunca deve esticar o teto da perícia (ver
+        // periciaStartRawInternal). O valor inicial de fato exibido/usado
+        // continua vindo de periciaStartRaw(), que inclui o Tropo.
+        val startRaw = periciaStartRawInternal(ancestralidade, per, includeArcaneVantage = { true }, includeTropo = false)
 
         // Meio-Orc (Pathfinder) "Intimidante": começa com d4 em Intimidar (sem
         // bônus de dado — não é um AtributoStep/PericiaStep, só o INTIMIDANTE
