@@ -785,7 +785,11 @@ private fun CombatAndEquipmentCard(
             val todasArmas = state.equipamentosComprados.filter { it.dano != null }
             val armasCorpoACorpo = todasArmas.filter { weapon ->
                 val danoTxt = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
-                weapon.distancia == null || com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, danoTxt)
+                // usavelCorpoACorpo, quando definido no formulário de criação (ver
+                // SettingsDialog.kt), tem prioridade sobre a heurística — só o catálogo
+                // oficial (que não tem esse campo) cai de volta em ehArmaDeArremesso().
+                weapon.distancia == null || (weapon.usavelCorpoACorpo
+                    ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, danoTxt))
             }
             val armasADistancia = todasArmas.filter { it.distancia != null }
             val temBrutamontes = state.vantagensSelecionadas.any { it.id == Constants.ID_BRUTAMONTES }
@@ -860,9 +864,9 @@ private fun CombatAndEquipmentCard(
                     // Vantagem Brutamontes (livro básico, pág. 42): +1 na Curta Distância de
                     // qualquer item ARREMESSADO (arcos/fundas não contam — ver
                     // ehArmaDeArremesso), dobrado pra Média e dobrado de novo pra Longa.
-                    if (temBrutamontes && range.isNotBlank() &&
-                        com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, dmg)
-                    ) {
+                    val ehArremesso = weapon.usavelCorpoACorpo
+                        ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, dmg)
+                    if (temBrutamontes && range.isNotBlank() && ehArremesso) {
                         com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceComBrutamontes(range)?.let {
                             notasExtras.add("Alcance com Brutamontes: $it")
                         }

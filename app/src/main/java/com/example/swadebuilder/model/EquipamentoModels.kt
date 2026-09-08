@@ -61,7 +61,15 @@ data class EquipamentoItem(
     // SettingsDialog.kt) — itens do catálogo oficial já carregam o `tipo` na própria
     // EquipamentoCategoria que os contém e não precisam disso. Nulo cai em "Equipamento Geral".
     @SerialName("categoria_tipo")
-    val categoriaTipo: String? = null
+    val categoriaTipo: String? = null,
+    // Override explícito de "esta arma à distância também serve corpo a corpo/arremesso"
+    // (ex.: machado/adaga de arremesso) — definido no formulário de Equipamento
+    // customizado (ver SettingsDialog.kt), onde o jogador marca isso diretamente em vez
+    // de o app adivinhar pelo nome. Nulo = sem override, ResumoSection.kt cai de volta na
+    // heurística de ForcaMinimaCalculator.ehArmaDeArremesso() usada pelo catálogo oficial
+    // (que não tem esse campo).
+    @SerialName("usavel_corpo_a_corpo")
+    val usavelCorpoACorpo: Boolean? = null
 ) {
     val nomeExibicao: String
         get() = if (EditionConfig.isFullEdition) {

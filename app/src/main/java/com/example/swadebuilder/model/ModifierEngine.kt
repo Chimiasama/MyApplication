@@ -335,9 +335,6 @@ object ModifierEngine {
                 modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))
             }
-            if (vant.id == Constants.ID_BRUTAMONTES) {
-                modifiers.add(Modifier("edge_brutamontes", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
-            }
         if (vant.id == Constants.ID_BRIGAO || vant.id == Constants.ID_PUGILISTA || vant.id.keyify() == "PUGILISTA") {
                 modifiers.add(Modifier("edge_brigao", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
             }
