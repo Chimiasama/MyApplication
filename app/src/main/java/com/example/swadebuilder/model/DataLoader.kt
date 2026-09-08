@@ -590,17 +590,28 @@ object DataLoader {
             localListaSuperPoderes
         }
 
-        // Inject custom equipment into categories so they appear in EquipamentoSection
+        // Inject custom equipment into categories so they appear in EquipamentoSection.
+        // Chave é o par (tipo, subtipo), não só subtipo: vários grupos oficiais reaproveitam o
+        // mesmo texto de subtipo sob tipos diferentes (ex.: subtipo "Geral" existe tanto em
+        // "Escudos" quanto em "Munição" dentro do próprio livro básico) — agrupar só por
+        // subtipo colidia essas categorias via associateBy() e descartava em silêncio todas
+        // menos a última, sumindo com escudos, munição ou armas inteiras da tela de Equipamento
+        // assim que qualquer item customizado existisse. O `tipo` de cada item novo vem de
+        // `categoriaTipo` (definido no formulário de criação, ver SettingsDialog.kt) pra cair na
+        // seção certa (Armas/Armaduras/Veículos/etc.) em vez de sempre em "Equipamento Geral".
         val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {
-            val categorizedCustoms = customEquipamentos.groupBy { it.subtipo ?: "Equipamento Geral" }
-            val existingTypes = localEquipamentoCategorias.associateBy { it.subtipo }.toMutableMap()
-            categorizedCustoms.forEach { (subtipo, items) ->
-                val existing = existingTypes[subtipo]
+            val categorizedCustoms = customEquipamentos.groupBy {
+                (it.categoriaTipo ?: "Equipamento Geral") to (it.subtipo ?: "Equipamento Geral")
+            }
+            val existingTypes = localEquipamentoCategorias.associateBy { it.tipo to it.subtipo }.toMutableMap()
+            categorizedCustoms.forEach { (chave, items) ->
+                val (tipo, subtipo) = chave
+                val existing = existingTypes[chave]
                 if (existing != null) {
-                    existingTypes[subtipo] = existing.copy(itens = (existing.itens + items).distinctBy { it.nome.keyify() })
+                    existingTypes[chave] = existing.copy(itens = (existing.itens + items).distinctBy { it.nome.keyify() })
                 } else {
-                    existingTypes[subtipo] = EquipamentoCategoria(
-                        tipo = "EQUIPAMENTO GERAL",
+                    existingTypes[chave] = EquipamentoCategoria(
+                        tipo = tipo,
                         subtipo = subtipo,
                         origem = "CUSTOM",
                         itens = items
@@ -718,7 +729,9 @@ object DataLoader {
         item.pmf?.toString(),
         item.malfuncionamento?.toString(),
         item.tensao?.toString(),
-        item.modsSlots?.toString()
+        item.modsSlots?.toString(),
+        item.explosao?.toString(),
+        item.cobertura?.toString()
     ).joinToString("|")
 }
 
