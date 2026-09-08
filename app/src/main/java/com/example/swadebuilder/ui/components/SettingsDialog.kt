@@ -1,8 +1,6 @@
 package com.example.swadebuilder.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -90,9 +88,14 @@ private fun primeiroCustoSuperPoder(custoBase: String?): Int =
  * categoria com pequenas inconsistências (algumas usavam Row sem quebra de linha, que cortava
  * os chips em telas estreitas quando havia várias opções).
  */
+/**
+ * Sem `private`: além de usado nas outras categorias deste diálogo, é reaproveitado por
+ * EquipamentoCreatorForm.kt (categoria "Equipamento" foi extraída pra lá — ver comentário
+ * no topo daquele arquivo).
+ */
 @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
-private fun LabeledChipGroup(
+fun LabeledChipGroup(
     label: String,
     modifier: Modifier = Modifier,
     content: @Composable androidx.compose.foundation.layout.FlowRowScope.() -> Unit
@@ -104,22 +107,6 @@ private fun LabeledChipGroup(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             content = content
         )
-    }
-}
-
-// Chips de dado pra Força Mínima em vez de texto livre — só os 5 dados válidos de SWADE
-// (d4/d6/d8/d10/d12) mais "-" (sem mínimo cadastrado), pra nunca deixar salvar algo como
-// "d7" que o ForcaMinimaCalculator não saberia interpretar.
-@Composable
-private fun ForcaMinimaChipPicker(value: String, onValueChange: (String) -> Unit) {
-    LabeledChipGroup("Força Mínima:") {
-        listOf("-", "d4", "d6", "d8", "d10", "d12").forEach { dado ->
-            androidx.compose.material3.FilterChip(
-                selected = value == dado,
-                onClick = { onValueChange(dado) },
-                label = { Text(dado, style = MaterialTheme.typography.labelSmall) }
-            )
-        }
     }
 }
 
@@ -370,67 +357,11 @@ fun SettingsDialog(
                         var showEdgeDialog by remember { mutableStateOf(false) }
                         var showCompDialog by remember { mutableStateOf(false) }
                         var customSeverity by remember { mutableStateOf("Maior") }
-                        var customEquipSuperType by remember { mutableStateOf("Arma") }
-                        var customEquipSubtype by remember { mutableStateOf("Corpo a Corpo") }
-                        var customCost by remember { mutableStateOf("0") }
-                        var customWeight by remember { mutableStateOf("0") }
-                        // Dano de armas (construído pelos campos estruturados abaixo, ver
-                        // montarDanoArma()) / Efeito livre (equip. geral) — ver bloco
-                        // "Equipamento" mais abaixo.
-                        var customDamage by remember { mutableStateOf("") }
-                        // Construtor de dano: em vez de um campo de texto livre (onde "3d7"
-                        // passava batido — d7 não existe em SWADE), o dado só pode vir dos
-                        // chips de dado válido; "Baseado em Força" monta "For+dX", "Dado fixo"
-                        // monta "NdX" (arma de fogo/energia). Ver montarDanoArma().
-                        var customDanoBaseadoEmForca by remember { mutableStateOf(true) }
-                        var customDanoDado by remember { mutableStateOf("d6") }
-                        var customDanoQtd by remember { mutableStateOf("2") }
-                        var customDanoBonus by remember { mutableStateOf("") }
-                        // Tags mecânicas do SWADE, uma var por campo do bloco de estatísticas do
-                        // livro básico (Cap. 2 "Equipamento") — só as relevantes ao tipo/subtipo
-                        // escolhido aparecem no formulário (ver `when (customEquipSuperType)` mais
-                        // abaixo). Todas ficam vazias quando não se aplicam e não entram no
-                        // EquipamentoItem salvo.
-                        var customPa by remember { mutableStateOf("") } // PA (Perfurante de Armadura)
-                        var customAlcance by remember { mutableStateOf("") } // Alcance (curto/médio/longo)
-                        var customTiros by remember { mutableStateOf("") } // Tiros (capacidade do carregador)
-                        var customCdt by remember { mutableStateOf("") } // Cadência de Tiro
-                        // "-" = sem Força Mínima cadastrada; qualquer outro valor é sempre um
-                        // dos 5 dados válidos de SWADE (ver ForcaMinimaChipPicker).
-                        var customForcaMin by remember { mutableStateOf("-") } // Força Mínima
-                        var customAparar by remember { mutableStateOf("") } // Bônus de Aparar (corpo a corpo/escudo)
-                        var customArmadura by remember { mutableStateOf("") } // Bônus de Armadura
-                        var customTamanho by remember { mutableStateOf("") } // Tamanho (veículo)
-                        var customManobrabilidade by remember { mutableStateOf("") } // Manobrabilidade (veículo)
-                        var customVelMaxima by remember { mutableStateOf("") } // Vel. Máxima (veículo)
-                        var customResistencia by remember { mutableStateOf("") } // Resistência (veículo)
-                        var customTripulacao by remember { mutableStateOf("") } // Tripulação (veículo)
-                        var customExplosao by remember { mutableStateOf("") } // Área de Efeito (armas/explosivos)
-                        var customCobertura by remember { mutableStateOf("") } // Cobertura (penalidade de Ataque Chamado do escudo)
-                        // Só relevante pro subtipo "Distância": machado/adaga/lança de arremesso
-                        // servem corpo a corpo E à distância a partir de uma única compra; arco/
-                        // funda/estilingue não. O jogador decide explicitamente em vez do app
-                        // adivinhar pelo nome (ver EquipamentoItem.usavelCorpoACorpo).
-                        var customUsavelCorpoACorpo by remember { mutableStateOf(false) }
-
-                        // Monta a string de dano (ex.: "For+d6", "For+d8+1", "2d6", "3d6+2") a
-                        // partir dos chips acima — chamada tanto na prévia exibida no formulário
-                        // quanto na hora de salvar o EquipamentoItem, pra nunca divergir.
-                        fun montarDanoArma(): String {
-                            val bonus = customDanoBonus.toIntOrNull()?.takeIf { it != 0 }
-                            val sufixoBonus = when {
-                                bonus == null -> ""
-                                bonus > 0 -> "+$bonus"
-                                else -> "$bonus"
-                            }
-                            return if (customDanoBaseadoEmForca) {
-                                "For+$customDanoDado$sufixoBonus"
-                            } else {
-                                val qtd = customDanoQtd.toIntOrNull()?.coerceAtLeast(1) ?: 1
-                                val base = if (qtd <= 1) customDanoDado else "$qtd$customDanoDado"
-                                "$base$sufixoBonus"
-                            }
-                        }
+                        // Categoria "Equipamento" extraída pra EquipamentoCreatorForm.kt — já
+                        // tinha crescido demais (Tipo/Subtipo, dano estruturado, Força Mínima,
+                        // estatísticas de arma/armadura/escudo/veículo) pra continuar inline
+                        // aqui junto com as outras 8 categorias deste diálogo.
+                        val equipForm = rememberEquipamentoFormState()
                         var customPp by remember { mutableStateOf("1") }
                         var customSuperPoderCustoBase by remember { mutableStateOf("2") }
                         // Um modificador por linha, no mesmo formato usado pelo catálogo oficial
@@ -456,6 +387,15 @@ fun SettingsDialog(
                         var customTraitEfeitoValor by remember { mutableStateOf("") }
                         var selectedRacialTraits by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
                         var showTraitSelectDialog by remember { mutableStateOf(false) }
+                        // Completude da criação de Raça: RacialModifier.atributos/pericias/
+                        // movimentacao já existiam no modelo (toda raça oficial os usa — ex.:
+                        // Anão com Vigor d6 mínimo), mas o formulário de Raça customizada nunca
+                        // os preenchia — só dava pra montar a raça via Traços Raciais soltos.
+                        var racaAtributosMin by remember { mutableStateOf(mapOf<String, Int>()) }
+                        var racaPericiasIniciais by remember { mutableStateOf(mapOf<String, Int>()) }
+                        var racaMovimentacao by remember { mutableStateOf("0") } // bônus/penalidade, não valor absoluto
+                        var showRacaAttrDialog by remember { mutableStateOf(false) }
+                        var showRacaSkillDialog by remember { mutableStateOf(false) }
 
                         // Estado da Variante de Raça custom (ver ResolveVariantPointBudgetUseCase / CustomAncestryVariant).
                         var varianteBaseRacaId by remember { mutableStateOf<String?>(null) }
@@ -839,307 +779,7 @@ fun SettingsDialog(
                                                     }
                                                 }
                                                 "Equipamento" -> {
-                                                    // Tipo escolhido aqui decide (a) quais campos mecânicos aparecem
-                                                    // abaixo e (b) o `categoriaTipo` gravado no item — é o que faz o
-                                                    // item cair na seção certa (Armas/Armaduras/Veículos/etc.) da tela
-                                                    // de Equipamento em vez de sempre em "Equipamento Geral" (ver
-                                                    // DataLoader.updateActiveModules e EquipamentoSection.mapCategory).
-                                                    LabeledChipGroup("Tipo de Item:") {
-                                                        listOf("Arma", "Armadura", "Escudo", "Munição", "Veículo", "Geral").forEach { st ->
-                                                            androidx.compose.material3.FilterChip(
-                                                                selected = customEquipSuperType == st,
-                                                                onClick = {
-                                                                    customEquipSuperType = st
-                                                                    customEquipSubtype = when (st) {
-                                                                        "Arma" -> "Corpo a Corpo"
-                                                                        "Armadura" -> "Armadura Corporal"
-                                                                        "Escudo" -> "Escudo"
-                                                                        "Munição" -> "Munição"
-                                                                        "Veículo" -> "Veículo"
-                                                                        else -> "Equipamento Geral"
-                                                                    }
-                                                                    // Cada tipo cuida só das próprias tags mecânicas — troca de
-                                                                    // tipo limpa os campos do tipo anterior pra não salvar, por
-                                                                    // exemplo, Manobrabilidade de veículo numa arma.
-                                                                    customPa = ""; customAlcance = ""; customTiros = ""; customCdt = ""
-                                                                    customForcaMin = "-"; customAparar = ""; customArmadura = ""
-                                                                    customTamanho = ""; customManobrabilidade = ""
-                                                                    customVelMaxima = ""; customResistencia = ""; customTripulacao = ""
-                                                                    customExplosao = ""; customCobertura = ""
-                                                                    customDamage = ""
-                                                                    customDanoBaseadoEmForca = true
-                                                                    customDanoDado = "d6"; customDanoQtd = "2"; customDanoBonus = ""
-                                                                    customUsavelCorpoACorpo = false
-                                                                },
-                                                                label = { Text(st, style = MaterialTheme.typography.labelSmall) }
-                                                            )
-                                                        }
-                                                    }
-                                                    if (customEquipSuperType == "Arma") {
-                                                        LabeledChipGroup("Subtipo de Arma:") {
-                                                            listOf("Corpo a Corpo", "Distância", "Fogo", "Energia").forEach { sub ->
-                                                                androidx.compose.material3.FilterChip(
-                                                                    selected = customEquipSubtype == sub,
-                                                                    onClick = {
-                                                                        customEquipSubtype = sub
-                                                                        // Corpo a corpo/arremesso é sempre For+dado no SWADE;
-                                                                        // fogo/energia é dado fixo por padrão (dá pra trocar).
-                                                                        customDanoBaseadoEmForca = sub == "Corpo a Corpo" || sub == "Distância"
-                                                                        // O checkbox de "também corpo a corpo" só existe pro
-                                                                        // subtipo Distância — sair dele descarta a marcação.
-                                                                        if (sub != "Distância") customUsavelCorpoACorpo = false
-                                                                    },
-                                                                    label = { Text(sub, style = MaterialTheme.typography.labelSmall) }
-                                                                )
-                                                            }
-                                                        }
-                                                    }
-
-                                                    // Custo e Peso valem pra qualquer tipo de item (livro básico, Cap. 2).
-                                                    Row(
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                                    ) {
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customCost,
-                                                            onValueChange = { customCost = it },
-                                                            label = { Text("Custo ($)") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.weight(1f)
-                                                        )
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customWeight,
-                                                            onValueChange = { customWeight = it },
-                                                            label = { Text("Peso (kg)") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.weight(1f)
-                                                        )
-                                                    }
-
-                                                    val isArma = customEquipSuperType == "Arma"
-                                                    val isArmaADistancia = isArma && customEquipSubtype in listOf("Distância", "Fogo", "Energia")
-                                                    val isArmaCorpoACorpo = isArma && customEquipSubtype == "Corpo a Corpo"
-
-                                                    if (isArma) {
-                                                        LabeledChipGroup("Dano baseado em:") {
-                                                            androidx.compose.material3.FilterChip(
-                                                                selected = customDanoBaseadoEmForca,
-                                                                onClick = { customDanoBaseadoEmForca = true },
-                                                                label = { Text("Força + dado", style = MaterialTheme.typography.labelSmall) }
-                                                            )
-                                                            androidx.compose.material3.FilterChip(
-                                                                selected = !customDanoBaseadoEmForca,
-                                                                onClick = { customDanoBaseadoEmForca = false },
-                                                                label = { Text("Dado fixo", style = MaterialTheme.typography.labelSmall) }
-                                                            )
-                                                        }
-                                                        if (!customDanoBaseadoEmForca) {
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customDanoQtd,
-                                                                onValueChange = { customDanoQtd = it },
-                                                                label = { Text("Quantidade de dados (ex: 2)") },
-                                                                singleLine = true,
-                                                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                                                modifier = Modifier.fillMaxWidth()
-                                                            )
-                                                        }
-                                                        // Só os 5 dados válidos de SWADE — nada de "d7" ou outro
-                                                        // valor que o resto do app (ForcaMinimaCalculator incluso)
-                                                        // não saberia interpretar.
-                                                        LabeledChipGroup(if (customDanoBaseadoEmForca) "Dado (For+):" else "Dado:") {
-                                                            listOf("d4", "d6", "d8", "d10", "d12").forEach { dado ->
-                                                                androidx.compose.material3.FilterChip(
-                                                                    selected = customDanoDado == dado,
-                                                                    onClick = { customDanoDado = dado },
-                                                                    label = { Text(dado, style = MaterialTheme.typography.labelSmall) }
-                                                                )
-                                                            }
-                                                        }
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customDanoBonus,
-                                                            onValueChange = { customDanoBonus = it },
-                                                            label = { Text("Bônus fixo (opcional, ex: 2 ou -1)") },
-                                                            singleLine = true,
-                                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        )
-                                                        Text(
-                                                            "Dano final: ${montarDanoArma()}",
-                                                            style = MaterialTheme.typography.bodyMedium,
-                                                            fontWeight = FontWeight.Bold,
-                                                            color = MaterialTheme.colorScheme.primary
-                                                        )
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(),
-                                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                                        ) {
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customPa,
-                                                                onValueChange = { customPa = it },
-                                                                label = { Text("PA (Perf. Armadura)") },
-                                                                singleLine = true,
-                                                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                        }
-                                                        ForcaMinimaChipPicker(value = customForcaMin, onValueChange = { customForcaMin = it })
-                                                    }
-                                                    if (isArmaCorpoACorpo) {
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customAparar,
-                                                            onValueChange = { customAparar = it },
-                                                            label = { Text("Bônus de Aparar (ex: +1)") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        )
-                                                    }
-                                                    if (isArmaADistancia) {
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(),
-                                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                                        ) {
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customAlcance,
-                                                                onValueChange = { customAlcance = it },
-                                                                label = { Text("Alcance (curto/médio/longo)") },
-                                                                singleLine = true,
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customTiros,
-                                                                onValueChange = { customTiros = it },
-                                                                label = { Text("Tiros") },
-                                                                singleLine = true,
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                        }
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customCdt,
-                                                            onValueChange = { customCdt = it },
-                                                            label = { Text("CdT (Cadência de Tiro)") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        )
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customExplosao,
-                                                            onValueChange = { customExplosao = it },
-                                                            label = { Text("Área de Efeito (opcional, ex: MPE/MME/MGE)") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        )
-                                                        // Só faz sentido pro subtipo "Distância" (arco, funda, faca/
-                                                        // machado/lança de arremesso) — arma de fogo/energia nunca
-                                                        // dobra como arma corpo a corpo. Machado/faca/lança de
-                                                        // arremesso marcam isso; arco/funda/estilingue não (mesmo
-                                                        // usando "For" no dano, a Força ali é a força de puxada).
-                                                        if (customEquipSubtype == "Distância") {
-                                                            Row(
-                                                                verticalAlignment = Alignment.CenterVertically,
-                                                                modifier = Modifier.fillMaxWidth()
-                                                            ) {
-                                                                Checkbox(
-                                                                    checked = customUsavelCorpoACorpo,
-                                                                    onCheckedChange = { customUsavelCorpoACorpo = it }
-                                                                )
-                                                                Text(
-                                                                    "Também serve corpo a corpo (arma de arremesso, ex.: machado/adaga)",
-                                                                    style = MaterialTheme.typography.bodySmall
-                                                                )
-                                                            }
-                                                        }
-                                                    }
-
-                                                    if (customEquipSuperType == "Armadura") {
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customArmadura,
-                                                            onValueChange = { customArmadura = it },
-                                                            label = { Text("Bônus de Armadura (ex: +2)") },
-                                                            singleLine = true,
-                                                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        )
-                                                        ForcaMinimaChipPicker(value = customForcaMin, onValueChange = { customForcaMin = it })
-                                                    }
-
-                                                    if (customEquipSuperType == "Escudo") {
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(),
-                                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                                        ) {
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customAparar,
-                                                                onValueChange = { customAparar = it },
-                                                                label = { Text("Bônus de Aparar (ex: +1)") },
-                                                                singleLine = true,
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customCobertura,
-                                                                onValueChange = { customCobertura = it },
-                                                                label = { Text("Cobertura (ex: -2)") },
-                                                                singleLine = true,
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                        }
-                                                    }
-
-                                                    if (customEquipSuperType == "Veículo") {
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(),
-                                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                                        ) {
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customTamanho,
-                                                                onValueChange = { customTamanho = it },
-                                                                label = { Text("Tamanho") },
-                                                                singleLine = true,
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customManobrabilidade,
-                                                                onValueChange = { customManobrabilidade = it },
-                                                                label = { Text("Manobrabilidade") },
-                                                                singleLine = true,
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                        }
-                                                        Row(
-                                                            modifier = Modifier.fillMaxWidth(),
-                                                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                                        ) {
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customVelMaxima,
-                                                                onValueChange = { customVelMaxima = it },
-                                                                label = { Text("Vel. Máxima") },
-                                                                singleLine = true,
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                            androidx.compose.material3.OutlinedTextField(
-                                                                value = customResistencia,
-                                                                onValueChange = { customResistencia = it },
-                                                                label = { Text("Resistência") },
-                                                                singleLine = true,
-                                                                modifier = Modifier.weight(1f)
-                                                            )
-                                                        }
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customTripulacao,
-                                                            onValueChange = { customTripulacao = it },
-                                                            label = { Text("Tripulação") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        )
-                                                    }
-
-                                                    if (customEquipSuperType == "Geral" || customEquipSuperType == "Munição") {
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customDamage,
-                                                            onValueChange = { customDamage = it },
-                                                            label = { Text("Efeito (opcional)") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        )
-                                                    }
+                                                    EquipamentoCreatorFields(equipForm)
                                                 }
                                                 "Poder" -> {
                                                     Row(
@@ -1298,6 +938,57 @@ fun SettingsDialog(
                                                                     }
                                                                 }
                                                             }
+                                                        }
+                                                    }
+
+                                                    Spacer(Modifier.height(8.dp))
+
+                                                    OutlinedCard(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        colors = CardDefaults.outlinedCardColors(
+                                                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                                                        )
+                                                    ) {
+                                                        Column(
+                                                            modifier = Modifier.padding(12.dp),
+                                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                                        ) {
+                                                            Text(
+                                                                text = "Atributos, Perícias e Movimentação",
+                                                                style = MaterialTheme.typography.titleSmall,
+                                                                fontWeight = FontWeight.Bold
+                                                            )
+                                                            val racaReqSummary = buildList {
+                                                                if (racaAtributosMin.isNotEmpty()) add("Atributos: " + racaAtributosMin.entries.joinToString { "${it.key} ${it.value.toDiceString()}" })
+                                                                if (racaPericiasIniciais.isNotEmpty()) add("Perícias: " + racaPericiasIniciais.entries.joinToString { "${it.key} ${it.value.toDiceString()}" })
+                                                            }
+                                                            if (racaReqSummary.isNotEmpty()) {
+                                                                Text(
+                                                                    text = racaReqSummary.joinToString(" | "),
+                                                                    style = MaterialTheme.typography.bodySmall,
+                                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                                )
+                                                            }
+                                                            @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                            androidx.compose.foundation.layout.FlowRow(
+                                                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                            ) {
+                                                                OutlinedButton(onClick = { showRacaAttrDialog = true }) {
+                                                                    Text(if (racaAtributosMin.isEmpty()) "+ Atributos Mínimos" else "Atributos (${racaAtributosMin.size})", style = MaterialTheme.typography.labelSmall)
+                                                                }
+                                                                OutlinedButton(onClick = { showRacaSkillDialog = true }) {
+                                                                    Text(if (racaPericiasIniciais.isEmpty()) "+ Perícias Iniciais" else "Perícias (${racaPericiasIniciais.size})", style = MaterialTheme.typography.labelSmall)
+                                                                }
+                                                            }
+                                                            androidx.compose.material3.OutlinedTextField(
+                                                                value = racaMovimentacao,
+                                                                onValueChange = { racaMovimentacao = it },
+                                                                label = { Text("Bônus de Movimentação (opcional, ex: +2 ou -1)") },
+                                                                singleLine = true,
+                                                                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
+                                                                modifier = Modifier.fillMaxWidth()
+                                                            )
                                                         }
                                                     }
                                                 }
@@ -1737,70 +1428,7 @@ fun SettingsDialog(
                                                             statusMessage = "Complicação '$customItemName' salva em: $tagsLabel"
                                                 }
                                                 "Equipamento" -> {
-                                                    // categoriaTipo decide em qual seção (Armas/Armaduras/Escudos/
-                                                    // Munição/Veículos/Geral) o item aparece na tela de Equipamento —
-                                                    // ver DataLoader.updateActiveModules e EquipamentoSection.mapCategory.
-                                                    val categoriaTipo = when (customEquipSuperType) {
-                                                        "Arma" -> when (customEquipSubtype) {
-                                                            "Distância" -> "Armas à Distância"
-                                                            "Fogo" -> "Armas de Fogo"
-                                                            "Energia" -> "Armas de Energia"
-                                                            else -> "Armas Corpo a Corpo"
-                                                        }
-                                                        "Armadura" -> "Armaduras"
-                                                        "Escudo" -> "Escudos"
-                                                        "Munição" -> "Munição"
-                                                        "Veículo" -> "Veículos"
-                                                        else -> "Equipamento Geral"
-                                                    }
-                                                    fun textoOuNulo(v: String) = v.takeIf { it.isNotBlank() }
-                                                        ?.let { kotlinx.serialization.json.JsonPrimitive(it) }
-                                                    val isArmaSalva = customEquipSuperType == "Arma"
-                                                    // "Efeito" (Geral/Munição) não é dano de arma — vai pra observação em
-                                                    // vez do campo `dano`, senão EquipamentoFormatters.toResumo() mostraria
-                                                    // "Dano: <texto>" num item que não é arma.
-                                                    val efeitoGeral = if (!isArmaSalva) customDamage else ""
-                                                    val observacoesTexto = if (efeitoGeral.isNotBlank()) {
-                                                        if (safeDesc == "-") efeitoGeral else "$safeDesc\n$efeitoGeral"
-                                                    } else safeDesc
-                                                    // "-" no picker de Força Mínima quer dizer "sem mínimo cadastrado".
-                                                    val forcaMinValor = customForcaMin.takeIf { it != "-" }
-                                                        ?.let { kotlinx.serialization.json.JsonPrimitive(it) }
-                                                    // Só o subtipo "Distância" pergunta explicitamente (checkbox); fogo/
-                                                    // energia nunca servem corpo a corpo; corpo a corpo já cai como
-                                                    // melee só por não ter `distancia`, sem precisar do flag.
-                                                    val usavelCorpoACorpoValor: Boolean? = when {
-                                                        !isArmaSalva -> null
-                                                        customEquipSubtype == "Distância" -> customUsavelCorpoACorpo
-                                                        customEquipSubtype == "Fogo" || customEquipSubtype == "Energia" -> false
-                                                        else -> null
-                                                    }
-                                                    val newEquip = com.example.swadebuilder.model.EquipamentoItem(
-                                                        nome = customItemName,
-                                                        custo = kotlinx.serialization.json.JsonPrimitive(customCost.toIntOrNull() ?: 0),
-                                                        peso = kotlinx.serialization.json.JsonPrimitive(customWeight.toFloatOrNull() ?: 0f),
-                                                        dano = if (isArmaSalva) kotlinx.serialization.json.JsonPrimitive(montarDanoArma()) else null,
-                                                        pa = textoOuNulo(customPa),
-                                                        distancia = textoOuNulo(customAlcance),
-                                                        tiros = textoOuNulo(customTiros),
-                                                        cdt = textoOuNulo(customCdt),
-                                                        forcaMin = forcaMinValor,
-                                                        aparar = textoOuNulo(customAparar),
-                                                        armadura = textoOuNulo(customArmadura),
-                                                        tamanho = textoOuNulo(customTamanho),
-                                                        manobrabilidade = textoOuNulo(customManobrabilidade),
-                                                        velMaxima = textoOuNulo(customVelMaxima),
-                                                        resistencia = textoOuNulo(customResistencia),
-                                                        tripulacao = textoOuNulo(customTripulacao),
-                                                        explosao = textoOuNulo(customExplosao),
-                                                        cobertura = textoOuNulo(customCobertura),
-                                                                observacoes = kotlinx.serialization.json.JsonPrimitive(observacoesTexto),
-                                                                origem = tags.first(),
-                                                                subtipo = customEquipSubtype,
-                                                                categoriaTipo = categoriaTipo,
-                                                                usavelCorpoACorpo = usavelCorpoACorpoValor,
-                                                                id = id
-                                                    )
+                                                    val newEquip = equipForm.build(customItemName, safeDesc, tags.first(), id)
                                                             tags.forEach { tag -> customStorageManager.addEquipamento(context, tag, newEquip.copy(origem = tag)) }
                                                     state.addCustomEquipamento(newEquip)
                                                             statusMessage = "Equipamento '$customItemName' salvo em: $tagsLabel"
@@ -1885,12 +1513,20 @@ fun SettingsDialog(
                                                             )
                                                         )
                                                     }
+                                                    // RacialModifier.atributos/pericias guardam a DIFERENÇA sobre a
+                                                    // base d4 (ex.: Anão oficial = {"Vigor": 2}, ou seja Vigor d6 —
+                                                    // ver DataLoader "11. Mapas Raciais", `.mapValues { 4 + it.value }`),
+                                                    // não o dado absoluto — por isso a conversão abaixo. O picker
+                                                    // (racaAtributosMin/racaPericiasIniciais) guarda o dado absoluto
+                                                    // (4/6/8/10/12/13) só porque é mais intuitivo de mostrar pro
+                                                    // jogador ("Vigor d6" em vez de "Vigor +2").
                                                     val newRace = com.example.swadebuilder.model.RacialModifier(
                                                         id = id,
                                                         nome = customItemName,
                                                         descricao = safeDesc,
-                                                        atributos = emptyMap(),
-                                                        pericias = emptyMap(),
+                                                        atributos = racaAtributosMin.mapValues { it.value - 4 },
+                                                        pericias = racaPericiasIniciais.mapValues { it.value - 4 },
+                                                        movimentacao = racaMovimentacao.toIntOrNull() ?: 0,
                                                         origem = tags.first(),
                                                         habilidades = raceAbilities
                                                     )
@@ -1988,26 +1624,10 @@ fun SettingsDialog(
                                             customSkillMin = emptyMap()
                                             customPrereqEdges = emptyList()
                                             customPrereqComps = emptyList()
-                                            customDamage = ""
-                                            customDanoBaseadoEmForca = true
-                                            customDanoDado = "d6"
-                                            customDanoQtd = "2"
-                                            customDanoBonus = ""
-                                            customUsavelCorpoACorpo = false
-                                            customPa = ""
-                                            customAlcance = ""
-                                            customTiros = ""
-                                            customCdt = ""
-                                            customForcaMin = "-"
-                                            customAparar = ""
-                                            customArmadura = ""
-                                            customTamanho = ""
-                                            customManobrabilidade = ""
-                                            customVelMaxima = ""
-                                            customResistencia = ""
-                                            customTripulacao = ""
-                                            customExplosao = ""
-                                            customCobertura = ""
+                                            equipForm.reset()
+                                            racaAtributosMin = emptyMap()
+                                            racaPericiasIniciais = emptyMap()
+                                            racaMovimentacao = "0"
                                             customRacialTrait = ""
                                             }
                                         } else {
@@ -2157,6 +1777,126 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { showSkillDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        // Mesmo padrão de stepper de showAttrDialog acima, mas gravando em
+                        // racaAtributosMin (mínimo de atributo da Raça, ex.: Anão = Vigor d6)
+                        // em vez de num requisito de Vantagem.
+                        if (showRacaAttrDialog) {
+                            val attrs = listOf("AGILIDADE" to "Agilidade", "ASTUCIA" to "Astúcia", "ESPIRITO" to "Espírito", "FORCA" to "Força", "VIGOR" to "Vigor")
+                            val steps = listOf(0, 4, 6, 8, 10, 12, 13)
+                            AlertDialog(
+                                onDismissRequest = { showRacaAttrDialog = false },
+                                title = { Text("Atributos Mínimos da Raça") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        attrs.forEach { (key, name) ->
+                                            val currentDie = racaAtributosMin[key] ?: 0
+                                            val currentIndex = steps.indexOf(currentDie).coerceAtLeast(0)
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(text = name, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex > 0) {
+                                                                val newDie = steps[currentIndex - 1]
+                                                                val mut = racaAtributosMin.toMutableMap()
+                                                                if (newDie == 0) mut.remove(key) else mut[key] = newDie
+                                                                racaAtributosMin = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex > 0
+                                                    ) { Icon(Icons.Default.Remove, contentDescription = "Diminuir") }
+                                                    Text(
+                                                        text = currentDie.toDiceString(),
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        modifier = Modifier.width(48.dp),
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex < steps.lastIndex) {
+                                                                val mut = racaAtributosMin.toMutableMap()
+                                                                mut[key] = steps[currentIndex + 1]
+                                                                racaAtributosMin = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex < steps.lastIndex
+                                                    ) { Icon(Icons.Default.Add, contentDescription = "Aumentar") }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showRacaAttrDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        // Mesmo padrão de showSkillDialog acima, gravando em
+                        // racaPericiasIniciais (perícia inicial da Raça) em vez de requisito.
+                        if (showRacaSkillDialog) {
+                            val allSkillsList = state.listaPericias.map { it.nome }.distinct().sorted()
+                            val steps = listOf(0, 4, 6, 8, 10, 12, 13)
+                            var filterSkillText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showRacaSkillDialog = false },
+                                title = { Text("Perícias Iniciais da Raça") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterSkillText,
+                                            onValueChange = { filterSkillText = it },
+                                            label = { Text("Filtrar Perícia") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        allSkillsList.filter { it.contains(filterSkillText, ignoreCase = true) }.forEach { skillName ->
+                                            val currentDie = racaPericiasIniciais[skillName] ?: 0
+                                            val currentIndex = steps.indexOf(currentDie).coerceAtLeast(0)
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(text = skillName, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex > 0) {
+                                                                val newDie = steps[currentIndex - 1]
+                                                                val mut = racaPericiasIniciais.toMutableMap()
+                                                                if (newDie == 0) mut.remove(skillName) else mut[skillName] = newDie
+                                                                racaPericiasIniciais = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex > 0
+                                                    ) { Icon(Icons.Default.Remove, contentDescription = "Diminuir") }
+                                                    Text(
+                                                        text = currentDie.toDiceString(),
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        modifier = Modifier.width(48.dp),
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex < steps.lastIndex) {
+                                                                val mut = racaPericiasIniciais.toMutableMap()
+                                                                mut[skillName] = steps[currentIndex + 1]
+                                                                racaPericiasIniciais = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex < steps.lastIndex
+                                                    ) { Icon(Icons.Default.Add, contentDescription = "Aumentar") }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showRacaSkillDialog = false }) { Text("OK") } }
                             )
                         }
 
