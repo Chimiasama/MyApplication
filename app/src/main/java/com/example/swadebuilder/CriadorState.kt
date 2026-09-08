@@ -2977,6 +2977,57 @@ class CriadorState {
         // applyAncestryVariantAdjustments, e o loop genérico de PericiaStep
         // logo acima já os lê como qualquer outro traço racial.
 
+        // Traços que concedem d4/d6 inicial numa perícia à escolha do jogador, ou
+        // numa perícia fixa — lidos de habilidades[] (id do traço), não do nome da
+        // raça. O traço só decide QUE a raça tem o bônus; qual perícia foi
+        // escolhida continua vindo do state dedicado, como antes. São traços de
+        // RAÇA (não de Tropo), então entram antes do corte de `pisoSemTropo` —
+        // igual a qualquer outro bônus racial, podem esticar o teto da perícia.
+        val habilidadeIdsPericia = (if (anc == ancestralidade) currentAncestryDef else getAncestralidadeDef(anc))
+            ?.habilidades
+            ?.mapNotNull { it.id?.keyify() }
+            ?.toSet()
+            ?: emptySet()
+
+        // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
+        if (habilidadeIdsPericia.contains("OBSESSIVOS")) {
+            val chosen = gnomoPericiaEscolhida?.keyify()
+            if (chosen != null && perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
+        // Kitsunemimi (ADG) - Preparado (d4 em 1 perícia à escolha)
+        if (habilidadeIdsPericia.contains("PREPARADO")) {
+            val chosen = kitsunemimiPericiaEscolhida?.keyify()
+            if (chosen != null && perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+
+        if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
+            // Guarantia base de Sobrevivência d4 para Umvee — traço próprio
+            // (INSTINTO_DE_SOBREVIVENCIA) só pra contar o ponto no orçamento,
+            // o d4 em si é característico da raça, garantido aqui.
+            if (perKey == "SOBREVIVENCIA") {
+                modifiedBase = maxOf(modifiedBase, 4)
+            }
+        }
+        // Gatoruja (Dom da Natureza de Umvee): Perceber d6. Ocultismo d4 NÃO
+        // faz parte deste dom — é NATURALMENTE_SOBRENATURAL, traço base de
+        // todo Umvee, sempre concedido independente do dom escolhido.
+        if (habilidadeIdsPericia.contains("PERCEBER_D6") && perKey == "PERCEBER") {
+            modifiedBase = maxOf(modifiedBase, 6)
+        }
+
+        // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
+        if (habilidadeIdsPericia.contains("DEFINIDO_PELO_OFICIO")) {
+            val chosen = usagimimiPericiaEscolhida?.keyify()
+            if (chosen != null && perKey == chosen) {
+                modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
         // Piso "sem Tropo": raça + Monstro + Signo + Pacote Cultural — só isso
         // alimenta o teto da perícia (periciaCapRaw chama esta função com
         // includeTropo=false). Um bônus de Tropo pode somar ao valor final
@@ -3067,55 +3118,6 @@ class CriadorState {
                     // Ocultismo aparecem nos dois lugares).
                     modifiedBase = maxOf(modifiedBase, maxOf(pisoSemTropo, bonus))
                 }
-            }
-        }
-
-        // Traços que concedem d4/d6 inicial numa perícia à escolha do jogador, ou
-        // numa perícia fixa — lidos de habilidades[] (id do traço), não do nome da
-        // raça. O traço só decide QUE a raça tem o bônus; qual perícia foi
-        // escolhida continua vindo do state dedicado, como antes.
-        val habilidadeIdsPericia = (if (anc == ancestralidade) currentAncestryDef else getAncestralidadeDef(anc))
-            ?.habilidades
-            ?.mapNotNull { it.id?.keyify() }
-            ?.toSet()
-            ?: emptySet()
-
-        // Gnomo Buscatrilha - Obsessivos (d4 em perícia de Astúcia à escolha)
-        if (habilidadeIdsPericia.contains("OBSESSIVOS")) {
-            val chosen = gnomoPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
-
-        // Kitsunemimi (ADG) - Preparado (d4 em 1 perícia à escolha)
-        if (habilidadeIdsPericia.contains("PREPARADO")) {
-            val chosen = kitsunemimiPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
-
-        if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
-            // Guarantia base de Sobrevivência d4 para Umvee — traço próprio
-            // (INSTINTO_DE_SOBREVIVENCIA) só pra contar o ponto no orçamento,
-            // o d4 em si é característico da raça, garantido aqui.
-            if (perKey == "SOBREVIVENCIA") {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
-        // Gatoruja (Dom da Natureza de Umvee): Perceber d6. Ocultismo d4 NÃO
-        // faz parte deste dom — é NATURALMENTE_SOBRENATURAL, traço base de
-        // todo Umvee, sempre concedido independente do dom escolhido.
-        if (habilidadeIdsPericia.contains("PERCEBER_D6") && perKey == "PERCEBER") {
-            modifiedBase = maxOf(modifiedBase, 6)
-        }
-
-        // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
-        if (habilidadeIdsPericia.contains("DEFINIDO_PELO_OFICIO")) {
-            val chosen = usagimimiPericiaEscolhida?.keyify()
-            if (chosen != null && perKey == chosen) {
-                modifiedBase = maxOf(modifiedBase, 6)
             }
         }
 
