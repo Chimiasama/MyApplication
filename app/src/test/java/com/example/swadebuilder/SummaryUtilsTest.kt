@@ -39,6 +39,7 @@ class SummaryUtilsTest {
             equipamentos = emptyList(),
             poderes = emptyMap(),
             dinheiro = 500,
+            atributos = emptyMap(),
             pontosRestantes = 0
         )
 
@@ -111,6 +112,7 @@ class SummaryUtilsTest {
             poderes = emptyMap(),
             dinheiro = 0,
             pontosRestantes = 0,
+            atributos = emptyMap(),
             compendioSciFiAtivo = true
         )
 
@@ -150,6 +152,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -191,6 +195,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -246,6 +252,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -285,6 +293,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -339,6 +349,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -393,6 +405,8 @@ class SummaryUtilsTest {
             poderes = emptyMap(),
             dinheiro = 0,
             pontosRestantes = 0,
+            atributos = emptyMap(),
+            pericias = emptyMap(),
             compendioSciFiAtivo = true
         )
 
@@ -444,6 +458,7 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -480,6 +495,7 @@ class SummaryUtilsTest {
                 equipamentos = emptyList(),
                 poderes = emptyMap(),
                 dinheiro = 0,
+                atributos = emptyMap(),
                 pontosRestantes = 0
             ),
             allAdvantages = emptyList(),
@@ -511,6 +527,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = listOf(
@@ -562,6 +580,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -609,6 +629,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = listOf(
@@ -662,6 +684,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             ancestralidadeNomeBase = "Humano (Império San)"
@@ -680,6 +704,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             ancestralidadeNomeBase = "Humano (Império San)"
@@ -704,6 +730,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -776,6 +804,8 @@ class SummaryUtilsTest {
             equipamentos = eq,
             poderes = emptyMap(),
             dinheiro = 100,
+            atributos = emptyMap(),
+            pericias = emptyMap(),
             pontosRestantes = 0
         )
 
