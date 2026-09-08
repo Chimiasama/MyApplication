@@ -78,6 +78,12 @@ data class RacialTraitStack(val id: String, val vezes: Int = 1)
  * precedente desse padrão. */
 data class ResolvedTraitPackage(
     val tracosParaAdicionar: List<TraitAddition> = emptyList(),
+    // Traços narrativos NEGATIVOS que não são Complicação de verdade (ex.:
+    // Fraqueza Ambiental, Penalidade em Cavalgar) — categoria
+    // "racial_trait_negative" em habilidades[], igual a Chifres/Cabeça Dura
+    // do lado positivo. Diferente de `desvantagensParaAdicionar`, que é só
+    // pra Complicação real do catálogo (complicacoes.json).
+    val tracosNegativosParaAdicionar: List<TraitAddition> = emptyList(),
     val tracosParaRemoverPorId: List<String> = emptyList(),
     val vantagensGratisParaAdicionar: List<TraitAddition> = emptyList(),
     // Ids de Vantagem (vantagens.json) que devem ser garantidas, em vez de
@@ -144,9 +150,17 @@ data class VariantGroup(
 )
 
 /** Config de variante/seleção de uma ancestralidade — indexada por id
- * estável (keyify do nome), não pelo texto de exibição. */
+ * estável (keyify do nome) + `livro` (mesmo vocabulário de
+ * `canonicalOriginKey()`: "SCI_FI", "FANTASIA", "ARTE_DA_GUERRA" etc.), não
+ * pelo texto de exibição. O par (livro, ancestralidadeId) existe porque
+ * várias raças de livros diferentes compartilham o mesmo nome de exibição
+ * (ex.: "HUMANOS" existe tanto no Sci-Fi quanto no Fantasia, cada um com
+ * suas próprias Variantes) — sem o livro, a segunda registrada sobrescreveria
+ * a primeira no mapa. Cada livro tem seu próprio conjunto de Variantes
+ * registradas; nada aqui é compartilhado entre livros. */
 data class AncestryVariantConfig(
     val ancestralidadeId: String,
+    val livro: String,
     val grupoVariante: VariantGroup? = null,
     val selecoes: List<SelectionDef> = emptyList()
 )

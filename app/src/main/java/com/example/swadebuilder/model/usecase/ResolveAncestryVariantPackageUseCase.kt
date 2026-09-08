@@ -26,11 +26,12 @@ class ResolveAncestryVariantPackageUseCase {
 
     fun resolve(
         ancestralidadeId: String,
+        livro: String,
         variantOptionId: String?,
         selectionAnswers: List<SelectionAnswer>,
         catalogPackages: Map<String, ResolvedTraitPackage> = emptyMap()
     ): ResolvedTraitPackage {
-        val config = AncestryVariantRegistry.get(ancestralidadeId) ?: return ResolvedTraitPackage()
+        val config = AncestryVariantRegistry.get(ancestralidadeId, livro) ?: return ResolvedTraitPackage()
         val answersById = selectionAnswers.associateBy { it.selectionId }
 
         val variantOption: VariantOption? = variantOptionId?.let { id ->
@@ -69,6 +70,7 @@ class ResolveAncestryVariantPackageUseCase {
 
     private fun merge(packages: List<ResolvedTraitPackage>): ResolvedTraitPackage = ResolvedTraitPackage(
         tracosParaAdicionar = packages.flatMap { it.tracosParaAdicionar },
+        tracosNegativosParaAdicionar = packages.flatMap { it.tracosNegativosParaAdicionar },
         tracosParaRemoverPorId = packages.flatMap { it.tracosParaRemoverPorId },
         vantagensGratisParaAdicionar = packages.flatMap { it.vantagensGratisParaAdicionar },
         vantagensGratisIds = packages.flatMap { it.vantagensGratisIds },

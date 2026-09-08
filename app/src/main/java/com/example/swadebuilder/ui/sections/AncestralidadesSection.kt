@@ -465,7 +465,8 @@ fun AncestralidadesSection(
                                 // ligada. Raças ainda não migradas pro AncestryVariantRegistry
                                 // são tratadas como Variante (todas têm Básico/Padrão entre as
                                 // opções, o sinal que o próprio usuário definiu para o caso).
-                                val variantConfig = AncestryVariantRegistry.get(item.nome.keyify())
+                                val itemLivro = item.origens.firstOrNull() ?: "BASICO"
+                                val variantConfig = AncestryVariantRegistry.get(item.nome.keyify(), itemLivro)
                                 val isSelecaoPura = variantConfig != null && variantConfig.grupoVariante == null
                                 val showOpcoesPicker = opcoesValidas.size > 1 && (isSelecaoPura || state.optVariantesDeRacaAtivo)
                                 if (showOpcoesPicker) {
@@ -821,98 +822,49 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                            }
-
-
-                            if (isSelected && item.origens.contains("FANTASIA") && item.nome.contains("Humano", ignoreCase = true)) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Pacote Cultural:", style = MaterialTheme.typography.labelMedium)
-
-                                var expanded by remember { mutableStateOf(false) }
-
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.pacoteCulturalFantasiaSelecionado)
-                                    }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        CriadorState.PACOTES_CULTURAIS_FANTASIA.forEach { pacote ->
-                                            DropdownMenuItem(
-                                                text = { Text(pacote.nome) },
-                                                onClick = {
-                                                    state.selecionarPacoteCulturalFantasia(pacote.nome)
-                                                    expanded = false
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-
-                                Spacer(Modifier.height(4.dp))
-                                val selectedPacoteEntry = CriadorState.pacoteCulturalByNome(state.pacoteCulturalFantasiaSelecionado)
-                                val packageDesc = if (EditionConfig.isFullEdition) {
-                                    selectedPacoteEntry?.descricao
-                                } else {
-                                    selectedPacoteEntry?.descricaoLite ?: selectedPacoteEntry?.descricao
-                                }
-                                if (packageDesc != null) {
-                                    Text(
-                                        text = packageDesc,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-
-                                if (selectedPacoteEntry?.id == "POVO_DO_MAR") {
+                                // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si já
+                                // é o dropdown genérico de Variante acima (currentSelection); aqui só
+                                // a Seleção aninhada de dentro de Povo do Mar/Senhores dos Cavalos
+                                // (ver AncestryVariantRegistry.humanoFantasia() — mesmo padrão de
+                                // Anões Ciber, um bloco dedicado por raça em vez de um componente
+                                // genérico de SelectionDef).
+                                val isHumanoFantasia = item.nome.keyify() == "HUMANOS" && item.origens.contains("FANTASIA")
+                                if (isHumanoFantasia && currentSelection.equals("Povo do Mar", ignoreCase = true)) {
                                     Spacer(Modifier.height(8.dp))
-                                    Text("Compensação:", style = MaterialTheme.typography.labelMedium)
+                                    Text("Compensação (a critério do Mestre):", style = MaterialTheme.typography.labelMedium)
                                     Column {
-                                        com.example.swadebuilder.ui.components.RadioButtonRow(
-                                            label = "Penalidade em Cavalgar (-1)",
-                                            selected = state.povoDoMarOpcao == "Penalidade em Cavalgar",
-                                            onSelect = {
-                                                val error = state.selecionarPovoDoMarOpcao("Penalidade em Cavalgar")
-                                                if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
-                                            }
-                                        )
-                                        com.example.swadebuilder.ui.components.RadioButtonRow(
-                                            label = "Procurado (Maior)",
-                                            selected = state.povoDoMarOpcao == "Procurado (Maior)",
-                                            onSelect = {
-                                                val error = state.selecionarPovoDoMarOpcao("Procurado (Maior)")
-                                                if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
-                                            }
-                                        )
-                                    }
-                                }
-
-                                if (selectedPacoteEntry?.id == "SENHORES_DOS_CAVALOS") {
-                                    Spacer(Modifier.height(8.dp))
-                                    com.example.swadebuilder.ui.components.CheckboxRow(
-                                        label = "Receber Vantagem 'Nascido na Sela'?",
-                                        checked = state.senhoresCavalosExtra,
-                                        onCheckedChange = {
-                                            val error = state.toggleSenhoresCavalosExtra(it)
-                                            if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
-                                        }
-                                    )
-
-                                    if (state.senhoresCavalosExtra) {
-                                        Spacer(Modifier.height(4.dp))
-                                        Text("Compensação:", style = MaterialTheme.typography.labelMedium)
-                                        Column {
+                                        listOf(
+                                            null to "Nenhuma",
+                                            "Penalidade em Cavalgar" to "Penalidade em Cavalgar (-1)",
+                                            "Procurado (Maior)" to "Procurado (Maior)"
+                                        ).forEach { (valor, label) ->
                                             com.example.swadebuilder.ui.components.RadioButtonRow(
-                                                label = "Código de Honra (Maior)",
-                                                selected = state.senhoresCavalosCompensacao == "Código de Honra",
+                                                label = label,
+                                                selected = state.humanoFantasiaSelecaoAninhada == valor,
                                                 onSelect = {
-                                                    val error = state.selecionarSenhoresCavalosCompensacao("Código de Honra")
+                                                    val error = state.selecionarHumanoFantasiaSelecaoAninhada(valor)
                                                     if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
                                                 }
                                             )
+                                        }
+                                    }
+                                }
+
+                                if (isHumanoFantasia && currentSelection.equals("Senhores dos Cavalos", ignoreCase = true)) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Grupo cultural (a critério do Mestre):", style = MaterialTheme.typography.labelMedium)
+                                    Column {
+                                        listOf(
+                                            null to "Nenhum",
+                                            "Nascido na Sela" to "Nascido na Sela",
+                                            "Nascido na Sela + Código de Honra" to "Nascido na Sela + Código de Honra (Maior)",
+                                            "Nascido na Sela + Sem Escrúpulos e Analfabeto" to "Nascido na Sela + Sem Escrúpulos (Menor) e Analfabeto (Menor)"
+                                        ).forEach { (valor, label) ->
                                             com.example.swadebuilder.ui.components.RadioButtonRow(
-                                                label = "Sem Escrúpulos (Menor) e Analfabeto (Menor)",
-                                                selected = state.senhoresCavalosCompensacao == "Sem Escrúpulos e Analfabeto",
+                                                label = label,
+                                                selected = state.humanoFantasiaSelecaoAninhada == valor,
                                                 onSelect = {
-                                                    val error = state.selecionarSenhoresCavalosCompensacao("Sem Escrúpulos e Analfabeto")
+                                                    val error = state.selecionarHumanoFantasiaSelecaoAninhada(valor)
                                                     if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
                                                 }
                                             )

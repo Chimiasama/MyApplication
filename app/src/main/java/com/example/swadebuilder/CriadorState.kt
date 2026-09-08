@@ -315,10 +315,15 @@ class CriadorState {
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
-    var pacoteCulturalFantasiaSelecionado by mutableStateOf("Humano padrão")
-    var povoDoMarOpcao by mutableStateOf<String?>(null)
-    var senhoresCavalosExtra by mutableStateOf(false)
-    var senhoresCavalosCompensacao by mutableStateOf<String?>(null)
+    // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si (ex.:
+    // "Nômades do Deserto") é uma Variante de verdade, guardada no mesmo
+    // campo genérico `scifiVariant` que Terracota/Umvee/Elementais já usam
+    // (ver AncestryVariantRegistry.humanoFantasia() — apesar do nome, não é
+    // exclusivo do Sci-Fi). Este campo aqui é só a resposta da Seleção
+    // ANINHADA de dentro de um pacote (compensação de Povo do Mar, grupo
+    // cultural de Senhores dos Cavalos) — guarda o `nome` do FixedPackageOption
+    // escolhido (ex.: "Procurado (Maior)", "Nascido na Sela + Código de Honra").
+    var humanoFantasiaSelecaoAninhada by mutableStateOf<String?>(null)
     var protagonistaRollTecnicas by mutableStateOf<Int?>(null)
     var protagonistaRollPericia by mutableStateOf<Int?>(null)
     var protagonistaRollVantagem by mutableStateOf<Int?>(null)
@@ -647,25 +652,62 @@ class CriadorState {
 
     private fun applyAncestryVariantAdjustments(base: RacialModifier, key: String): RacialModifier {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
-            val pacoteId = pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado)
-            if (pacoteId != "HUMANO_PADRAO") {
-                val newHabilidades = base.habilidades.toMutableList()
+            // Pacotes Culturais: Variante de verdade (mesmo sistema genérico de
+            // Terracota/Umvee/Elementais, ver AncestryVariantRegistry.humanoFantasia()),
+            // não mais um subsistema dedicado. "Humano padrão" não tem VariantOption
+            // própria com conteúdo — resolve() com variantOptionId nulo já devolve um
+            // ResolvedTraitPackage() vazio, então cai no `return base` abaixo.
+            val opcoes = AncestryVariantRegistry.get("HUMANOS", "FANTASIA")?.grupoVariante?.opcoes
+            if (opcoes != null) {
+                val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes)
+                val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id
+                    ?: opcoes.firstOrNull { it.nome.keyify() == "PADRAO" }?.id
+                val isPadrao = variantOptionId == null || opcoes.firstOrNull { it.id == variantOptionId }?.nome?.keyify() == "PADRAO"
+                if (isPadrao) return base
 
+                val nestedDef = opcoes.firstOrNull { it.id == variantOptionId }?.selecoes?.firstOrNull()
+                val nestedAnswer = nestedDef?.let { def ->
+                    val matchId = def.pacotesFixos?.firstOrNull {
+                        it.nome.equals(humanoFantasiaSelecaoAninhada, ignoreCase = true)
+                    }?.id
+                    com.example.swadebuilder.model.SelectionAnswer(selectionId = def.id, fixedPackageChoiceId = matchId)
+                }
+                val pack = resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "HUMANOS",
+                    livro = "FANTASIA",
+                    variantOptionId = variantOptionId,
+                    selectionAnswers = listOfNotNull(nestedAnswer)
+                )
+
+                val newHabilidades = base.habilidades.toMutableList()
                 newHabilidades.removeAll {
                     val idKey = (it.id ?: "").keyify()
                     val nameKey = it.nome.keyify()
                     idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
                 }
 
-                when (pacoteId) {
-                    "NOMADES_DO_DESERTO" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Frio)", descricao = "Nômades do deserto possuem fraqueza ambiental ao frio.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
-                    "POVO_DA_MONTANHA" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Calor)", descricao = "O povo da montanha possui fraqueza ambiental ao calor.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
-                    "POVO_DO_MAR" -> {
-                        if (povoDoMarOpcao == "Penalidade em Cavalgar") {
-                            newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Penalidade em Cavalgar", descricao = "Subtrai 1 de rolagens de Cavalgar.", id = "PENALIDADE_CAVALGAR", category = "racial_trait_negative"))
-                        }
+                // Só os traços de construção mecânica (aumento de perícia/atributo,
+                // categoria positiva; Fraqueza Ambiental/Penalidade em Cavalgar,
+                // narrativos, categoria negativa) entram em habilidades[] — Vantagens/
+                // Complicações reais (Resistência Ambiental, Procurado, Código de
+                // Honra, Nascido na Sela) são concedidas pelo canal de bookkeeping em
+                // ResolveAncestrySpecificAdjustmentsUseCase, não aqui (mesmo padrão de
+                // Terracota/Umvee).
+                fun addIfAbsent(traco: com.example.swadebuilder.model.TraitAddition, category: String) {
+                    if (newHabilidades.none { it.id == traco.id || it.nome.keyify() == traco.nome.keyify() }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = traco.nome,
+                                descricao = "",
+                                id = traco.id,
+                                category = category,
+                                vezes = traco.vezes
+                            )
+                        )
                     }
                 }
+                pack.tracosParaAdicionar.forEach { addIfAbsent(it, "racial_trait_positive") }
+                pack.tracosNegativosParaAdicionar.forEach { addIfAbsent(it, "racial_trait_negative") }
 
                 return base.copy(habilidades = newHabilidades)
             }
@@ -968,12 +1010,13 @@ class CriadorState {
         // agora — fonte única, sem risco de as duas cópias saírem do
         // sincronismo de novo.
         if (key in AncestryVariantRegistry.scifiVariantDrivenKeys) {
-            val opcoes = AncestryVariantRegistry.get(key)?.grupoVariante?.opcoes
+            val opcoes = AncestryVariantRegistry.get(key, "SCI_FI")?.grupoVariante?.opcoes
             if (opcoes != null) {
                 val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id
                     ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
                 val pack = resolveAncestryVariantPackageUseCase.resolve(
                     ancestralidadeId = key,
+                    livro = "SCI_FI",
                     variantOptionId = variantOptionId,
                     selectionAnswers = emptyList()
                 )
@@ -1206,19 +1249,19 @@ class CriadorState {
         const val DEFAULT_SOUND_VOLUME = 70
         const val ARTISTA_MARCIAL_JUTSU_D6 = "D6"
         const val ARTISTA_MARCIAL_JUTSU_D4_D4 = "D4_D4"
-        // Signos de Nascença (Arte da Guerra, Humanos) e Pacotes Culturais
-        // (Fantasia, Humanos): cada opção carrega seu próprio `id` estável,
-        // independente do `nome` de exibição — mesmo princípio de
-        // RacialAbility.id/RacialModifier — em vez de todo o resto do código
-        // comparar contra o texto do nome (`.equals("Garça", ignoreCase =
-        // true)`) espalhado por várias funções e arquivos. `signoAdgSelecionado`/
-        // `pacoteCulturalFantasiaSelecionado` continuam guardando o `nome`
-        // (compatibilidade com saves antigos e com o dropdown da UI, que já
-        // seleciona por nome) — `signoIdFromNome()`/`pacoteCulturalIdFromNome()`
-        // são o único lugar que traduz nome -> id; toda mecânica (perícia,
-        // atributo, vantagem automática, Modifier) passa a comparar o id.
+        // Signos de Nascença (Arte da Guerra, Humanos): cada opção carrega seu
+        // próprio `id` estável, independente do `nome` de exibição — mesmo
+        // princípio de RacialAbility.id/RacialModifier — em vez de todo o
+        // resto do código comparar contra o texto do nome (`.equals("Garça",
+        // ignoreCase = true)`) espalhado por várias funções e arquivos.
+        // `signoAdgSelecionado` continua guardando o `nome` (compatibilidade
+        // com saves antigos e com o dropdown da UI, que já seleciona por
+        // nome) — `signoIdFromNome()` é o único lugar que traduz nome -> id;
+        // toda mecânica (perícia, atributo, vantagem automática, Modifier)
+        // passa a comparar o id. Pacotes Culturais (Fantasia, Humanos) usam
+        // o sistema genérico de Variante (AncestryVariantRegistry.humanoFantasia())
+        // em vez de um catálogo dedicado como este.
         data class SignoAdg(val id: String, val nome: String, val descricao: String, val descricaoLite: String)
-        data class PacoteCulturalFantasia(val id: String, val nome: String, val descricao: String, val descricaoLite: String)
 
         val SIGNOS_ADG: List<SignoAdg> = listOf(
             SignoAdg("NENHUM", "Nenhum", "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e slot gratuito de Adaptável).", "Não possui signo; conserva os benefícios padrão do humano Adaptável (15 pontos de perícia e um slot gratuito de Adaptável)."),
@@ -1249,19 +1292,6 @@ class CriadorState {
             nome?.let { n -> SIGNOS_ADG.firstOrNull { it.nome.equals(n, ignoreCase = true) } }
 
         fun signoIdFromNome(nome: String?): String? = signoByNome(nome)?.id
-
-        val PACOTES_CULTURAIS_FANTASIA: List<PacoteCulturalFantasia> = listOf(
-            PacoteCulturalFantasia("HUMANO_PADRAO", "Humano padrão", "Mantém o pacote padrão de humanos de Fantasia: Adaptável (uma Vantagem Novato à escolha).", "Segue o pacote humano genérico: recebe uma Vantagem de Novato à sua escolha."),
-            PacoteCulturalFantasia("NOMADES_DO_DESERTO", "Nômades do Deserto", "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).", "Iniciam com Sobrevivência d6 e resistência a ambientes quentes, mas sofrem penalidade em climas frios."),
-            PacoteCulturalFantasia("POVO_DA_MONTANHA", "Povo da Montanha", "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).", "Vigor inicial d6 e tolerância ao frio, compensados por uma fraqueza a ambientes quentes."),
-            PacoteCulturalFantasia("POVO_DO_MAR", "Povo do Mar", "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.", "Atletismo e Navegar iniciam em d6; dependendo da campanha, o Mestre pode aplicar penalidade em Cavalgar ou a Complicação Procurado (Maior)."),
-            PacoteCulturalFantasia("SENHORES_DOS_CAVALOS", "Senhores dos Cavalos", "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Sem Escrúpulos e Analfabeto, a critério do Mestre.", "Cavalgar inicial d6; a critério do Mestre, o grupo pode ainda conceder Nascido na Sela ou complicações culturais como Código de Honra, Sem Escrúpulos ou Analfabeto.")
-        )
-
-        fun pacoteCulturalByNome(nome: String?): PacoteCulturalFantasia? =
-            nome?.let { n -> PACOTES_CULTURAIS_FANTASIA.firstOrNull { it.nome.equals(n, ignoreCase = true) } }
-
-        fun pacoteCulturalIdFromNome(nome: String?): String? = pacoteCulturalByNome(nome)?.id
     }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
@@ -1952,7 +1982,7 @@ class CriadorState {
             // têm `opcoes`, então resolveCurrentSciFiVariantSelection()
             // cairia no Básico do registro Sci-Fi e duplicaria a arma.
             val opcoes = if (compendioSciFiAtivo) {
-                AncestryVariantRegistry.get(ancKey)?.grupoVariante?.opcoes
+                AncestryVariantRegistry.get(ancKey, "SCI_FI")?.grupoVariante?.opcoes
             } else {
                 null
             }
@@ -1962,6 +1992,7 @@ class CriadorState {
                     ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
                 resolveAncestryVariantPackageUseCase.resolve(
                     ancestralidadeId = ancKey,
+                    livro = "SCI_FI",
                     variantOptionId = variantOptionId,
                     selectionAnswers = emptyList()
                 ).armasNaturaisParaAdicionar.forEach { arma -> adicionarArmaNatural(arma) }
@@ -2925,22 +2956,12 @@ class CriadorState {
             }
         }
 
-        // Fantasia - Pacotes Culturais (only for Fantasy Humans)
-        if (isHumanoFantasiaSelecionado()) {
-            when (pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado)) {
-                "NOMADES_DO_DESERTO" -> {
-                    if (perKey == "SOBREVIVENCIA") modifiedBase = maxOf(modifiedBase, 6)
-                }
-                "POVO_DO_MAR" -> {
-                    if (perKey == "ATLETISMO" || perKey == "NAVEGAR") {
-                        modifiedBase = maxOf(modifiedBase, 6)
-                    }
-                }
-                "SENHORES_DOS_CAVALOS" -> {
-                    if (perKey == "CAVALGAR") modifiedBase = maxOf(modifiedBase, 6)
-                }
-            }
-        }
+        // Pacotes Culturais de Humanos (Fantasia): Sobrevivência/Atletismo/
+        // Navegar/Cavalgar d6 não são mais um "when" hardcoded aqui — os ids
+        // NOMADES_DESERTO_SOBREVIVENCIA/POVO_MAR_ATLETISMO/POVO_MAR_NAVEGAR/
+        // SENHORES_CAVALOS_CAVALGAR entram em habilidades[] via
+        // applyAncestryVariantAdjustments, e o loop genérico de PericiaStep
+        // logo acima já os lê como qualquer outro traço racial.
 
         // Piso "sem Tropo": raça + Monstro + Signo + Pacote Cultural — só isso
         // alimenta o teto da perícia (periciaCapRaw chama esta função com
@@ -4124,10 +4145,10 @@ class CriadorState {
     }
 
     fun temAdaptavel(): Boolean {
-        if (isHumanoFantasiaSelecionado() && pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado) != "HUMANO_PADRAO") {
-            return false
-        }
-
+        // Pacote Cultural de Humanos (Fantasia) diferente de Padrão: Adaptável
+        // já sai de habilidades[] em applyAncestryVariantAdjustments, então o
+        // check genérico logo abaixo (ADAPTAVEL em ancDef.habilidades) já
+        // reflete isso sem precisar de um caso especial aqui.
         val ancDef = currentAncestryDef
         if (ancDef == null) {
             return false
@@ -4547,12 +4568,10 @@ class CriadorState {
             }
         }
 
-        if (isHumanoFantasiaSelecionado() &&
-            pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado) == "POVO_DA_MONTANHA" &&
-            a.keyify() == "VIGOR"
-        ) {
-            modifiedBase = maxOf(modifiedBase, 6)
-        }
+        // Povo da Montanha (Pacote Cultural de Humanos, Fantasia): Vigor d6 não
+        // é mais um "if" hardcoded aqui — o id POVO_MONTANHA_VIGOR entra em
+        // habilidades[] via applyAncestryVariantAdjustments, e o loop genérico
+        // de AtributoStep logo acima já o lê como qualquer outro traço racial.
 
         // Piso "sem Tropo": raça + Monstro + escolha racial + Signo + Pacote
         // Cultural — é isso, e só isso, que alimenta o teto do atributo
@@ -4622,7 +4641,7 @@ class CriadorState {
         return baseCap
     }
 
-    private fun isHumanoFantasiaSelecionado(): Boolean {
+    fun isHumanoFantasiaSelecionado(): Boolean {
         if (!compendioFantasiaAtivo) return false
         if (!ancestralidade.keyify().contains("HUMANO")) return false
         val ancDef = currentAncestryDef ?: return false
@@ -4836,6 +4855,7 @@ class CriadorState {
                 anoesScifiSelecionado = anoesScifiSelecionado,
                 scifiVariant = effectiveScifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo,
+                humanoFantasiaSelecaoAninhada = humanoFantasiaSelecaoAninhada,
                 anaoCiberTracosSelecionados = anaoCiberTracosSelecionados,
                 quadroidesTracoNegativoSelecionado = quadroidesTracoNegativoSelecionado
             )
@@ -4897,9 +4917,6 @@ class CriadorState {
             ApplyAncestryChangeCoordinatorUseCase.SignoAction.CLEAR -> selecionarSigno(null)
             ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP -> Unit
         }
-        if (!isHumanoFantasiaSelecionado()) {
-            pacoteCulturalFantasiaSelecionado = "Humano padrão"
-        }
         celestialAAMilagresDesabilitado = ancestryChangeCoordination.celestialAAMilagresDesabilitado
         if (ancestryChangeCoordination.resetMeioElfoAgil) {
             meioElfoAgil = false
@@ -4913,6 +4930,7 @@ class CriadorState {
         if (ancestryChangeCoordination.resetScifiVariant) {
             scifiVariant = null
             humanoMineradorAtributo = null
+            humanoFantasiaSelecaoAninhada = null
         }
         if (ancestryChangeCoordination.clearPericiaGnomo) {
             selecionarPericiaGnomo(null)
@@ -4942,8 +4960,6 @@ class CriadorState {
 
         racialTraitIdsFromVariants.clear()
         racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
-
-        syncPacoteCulturalFantasia()
 
         naturalArmorFromRace = racialPackage.naturalArmorFromRace
         if (racialPackage.forceArmorZero) {
@@ -5392,6 +5408,12 @@ class CriadorState {
         if (ancestralidade.keyify().contains("ANOES") && anoesScifiSelecionado != normalized) {
             anoesScifiSelecionado = normalized
         }
+        // Trocar de Pacote Cultural (Humanos/Fantasia) invalida qualquer Seleção
+        // aninhada da escolha anterior (compensação de Povo do Mar, grupo
+        // cultural de Senhores dos Cavalos).
+        if (ancestralidade.keyify().contains("HUMANO") && humanoFantasiaSelecaoAninhada != null) {
+            humanoFantasiaSelecaoAninhada = null
+        }
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
     }
@@ -5496,30 +5518,17 @@ class CriadorState {
         }
     }
 
-    fun selecionarPacoteCulturalFantasia(novoPacote: String) {
-        if (pacoteCulturalFantasiaSelecionado == novoPacote) return
-        pacoteCulturalFantasiaSelecionado = novoPacote
-
-        // Reset sub-options when changing package
-        povoDoMarOpcao = null
-        senhoresCavalosExtra = false
-        senhoresCavalosCompensacao = null
-
-        if (!temAdaptavel() && vantagemAdaptavelSelecionadaId != null) {
-            val toRemove = vantagensSelecionadas.find { it.id == vantagemAdaptavelSelecionadaId }
-            if (toRemove != null) {
-                removerVantagem(toRemove)
-            }
-            vantagemAdaptavelSelecionadaId = null
-        }
-
-        syncPacoteCulturalFantasia()
-        recalcularPontosAtributo()
-        rebuildAllPericiaStacks()
-    }
-
-    fun selecionarPovoDoMarOpcao(opcao: String?): String? {
-        if (povoDoMarOpcao == opcao) return null
+    /**
+     * Seleção aninhada de dentro de um Pacote Cultural de Humanos (Fantasia):
+     * compensação de Povo do Mar (Nenhuma/Penalidade em Cavalgar/Procurado
+     * (Maior)) ou grupo cultural de Senhores dos Cavalos (Nenhum/Nascido na
+     * Sela+Código de Honra/Nascido na Sela+Sem Escrúpulos e Analfabeto) — ver
+     * AncestryVariantRegistry.humanoFantasia(). A escolha do Pacote em si
+     * (Variante externa) usa `selecionarScifiVariant()`, mesmo campo genérico
+     * que Terracota/Umvee/Elementais já usam.
+     */
+    fun selecionarHumanoFantasiaSelecaoAninhada(opcao: String?): String? {
+        if (humanoFantasiaSelecaoAninhada == opcao) return null
 
         if (opcao == "Procurado (Maior)") {
             val temManual = complicacoesSelecionadas.keys.any {
@@ -5528,124 +5537,28 @@ class CriadorState {
             if (temManual) {
                 return "Remova 'Procurado (Maior)' das complicações manuais antes de escolher esta opção."
             }
-        }
-
-        povoDoMarOpcao = opcao
-        syncPacoteCulturalFantasia()
-        rebuildAllPericiaStacks()
-        return null
-    }
-
-    fun toggleSenhoresCavalosExtra(checked: Boolean): String? {
-        if (senhoresCavalosExtra == checked) return null
-
-        if (checked) {
-            val jaTemNascido = vantagensSelecionadas.any { it.id == "nascido_na_sela" && !vantagensRaciais.contains("nascido_na_sela") }
-            if (jaTemNascido) {
-                return "Remova a Vantagem 'Nascido na Sela' manual antes de escolher esta opção."
-            }
-        }
-
-        senhoresCavalosExtra = checked
-        if (!checked) senhoresCavalosCompensacao = null
-        syncPacoteCulturalFantasia()
-        rebuildAllPericiaStacks()
-        return null
-    }
-
-    fun selecionarSenhoresCavalosCompensacao(opcao: String?): String? {
-        if (senhoresCavalosCompensacao == opcao) return null
-
-        if (opcao == "Código de Honra") {
+        } else if (opcao?.contains("Código de Honra") == true) {
             val temManual = complicacoesSelecionadas.keys.any {
                 it.id.keyify() == "CODIGO DE HONRA" && !desvantagensRaciais.contains(it.name)
             }
-            if (temManual) {
-                return "Remova 'Código de Honra' das complicações manuais antes de escolher esta opção."
-            }
-        } else if (opcao == "Sem Escrúpulos e Analfabeto") {
-             val temSemEscrupulos = complicacoesSelecionadas.keys.any { it.id.keyify() == "SEM_ESCRUPULOS" && !desvantagensRaciais.contains(it.name) }
-             val temAnalfabeto = complicacoesSelecionadas.keys.any { it.id.keyify() == "ANALFABETO" && !desvantagensRaciais.contains(it.name) }
+            val jaTemNascido = vantagensSelecionadas.any { it.id == "nascido_na_sela" && !vantagensRaciais.contains("nascido_na_sela") }
+            if (temManual) return "Remova 'Código de Honra' das complicações manuais antes de escolher esta opção."
+            if (jaTemNascido) return "Remova a Vantagem 'Nascido na Sela' manual antes de escolher esta opção."
+        } else if (opcao?.contains("Sem Escrúpulos e Analfabeto") == true) {
+            val temSemEscrupulos = complicacoesSelecionadas.keys.any { it.id.keyify() == "SEM_ESCRUPULOS" && !desvantagensRaciais.contains(it.name) }
+            val temAnalfabeto = complicacoesSelecionadas.keys.any { it.id.keyify() == "ANALFABETO" && !desvantagensRaciais.contains(it.name) }
+            val jaTemNascido = vantagensSelecionadas.any { it.id == "nascido_na_sela" && !vantagensRaciais.contains("nascido_na_sela") }
 
-             if (temSemEscrupulos && temAnalfabeto) return "Remova 'Sem Escrúpulos' e 'Analfabeto' das complicações manuais antes de escolher esta opção."
-             if (temSemEscrupulos) return "Remova 'Sem Escrúpulos' das complicações manuais antes de escolher esta opção."
-             if (temAnalfabeto) return "Remova 'Analfabeto' das complicações manuais antes de escolher esta opção."
+            if (temSemEscrupulos && temAnalfabeto) return "Remova 'Sem Escrúpulos' e 'Analfabeto' das complicações manuais antes de escolher esta opção."
+            if (temSemEscrupulos) return "Remova 'Sem Escrúpulos' das complicações manuais antes de escolher esta opção."
+            if (temAnalfabeto) return "Remova 'Analfabeto' das complicações manuais antes de escolher esta opção."
+            if (jaTemNascido) return "Remova a Vantagem 'Nascido na Sela' manual antes de escolher esta opção."
         }
 
-        senhoresCavalosCompensacao = opcao
-        syncPacoteCulturalFantasia()
-        rebuildAllPericiaStacks()
+        humanoFantasiaSelecaoAninhada = opcao
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
         return null
-    }
-
-    private fun syncPacoteCulturalFantasia() {
-        if (!isHumanoFantasiaSelecionado()) return
-
-        val ancDef = currentAncestryDef
-        val pacoteId = pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado)
-
-        // --- Atualiza Vantagens Raciais ---
-        val baseVantagens = ancDef?.let { effectiveVantagensGratis(it) } ?: emptyList()
-        val extrasVantagens = mutableListOf<String>()
-
-        when (pacoteId) {
-            "NOMADES_DO_DESERTO" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Calor)")
-            "POVO_DA_MONTANHA" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Frio)")
-            "SENHORES_DOS_CAVALOS" -> {
-                if (senhoresCavalosExtra) {
-                    extrasVantagens.add("nascido_na_sela")
-                }
-            }
-        }
-
-        // Remove "ADAPTAVEL" se não for Humano Padrão (embora temAdaptavel() já trate a lógica,
-        // é bom limpar a lista visual se estiver sendo usada para display)
-        val filteredBaseVantagens = if (pacoteId != "HUMANO_PADRAO") {
-            baseVantagens.filter { it.keyify() != "ADAPTAVEL" }
-        } else {
-            baseVantagens
-        }
-
-        vantagensRaciais.clear()
-        vantagensRaciais.addAll(filteredBaseVantagens + extrasVantagens)
-
-        // --- Atualiza Desvantagens Raciais ---
-        val baseDesvantagens = ancDef?.let { effectiveDesvantagens(it) } ?: emptyList()
-        val extrasDesvantagens = mutableListOf<String>()
-
-        when (pacoteId) {
-            "POVO_DO_MAR" -> {
-                if (povoDoMarOpcao == "Procurado (Maior)") {
-                    extrasDesvantagens.add("PROCURADO (Maior)")
-                }
-            }
-            "SENHORES_DOS_CAVALOS" -> {
-                if (senhoresCavalosExtra) {
-                    if (senhoresCavalosCompensacao == "Código de Honra") {
-                        extrasDesvantagens.add("CODIGO DE HONRA")
-                    } else if (senhoresCavalosCompensacao == "Sem Escrúpulos e Analfabeto") {
-                        extrasDesvantagens.add("SEM ESCRÚPULOS (Menor)")
-                        extrasDesvantagens.add("ANALFABETO")
-                    }
-                }
-            }
-        }
-
-        val oldAuto = desvantagensRaciais.toList()
-        desvantagensRaciais.clear()
-        desvantagensRaciais.addAll(baseDesvantagens + extrasDesvantagens)
-
-        val snapshot = resolveAncestryComplicationsSnapshotUseCase.execute(
-            ResolveAncestryComplicationsSnapshotUseCase.Params(
-                previousAutomaticDisadvantages = oldAuto,
-                currentAutomaticDisadvantages = desvantagensRaciais.toList(),
-                availableComplications = listaComplicacoes,
-                selectedComplications = complicacoesSelecionadas,
-                originPriorityResolver = { getOriginPriority(it) }
-            )
-        )
-        complicacoesSelecionadas.clear()
-        complicacoesSelecionadas.putAll(snapshot.selectedComplications)
     }
 
     private fun syncArtistaMarcialPotencialFisico() {
@@ -6652,10 +6565,7 @@ class CriadorState {
                 portraitOffsetY = portraitOffsetY,
                 portraitZoom = portraitZoom,
                 signoAdgSelecionado = signoAdgSelecionado,
-                pacoteCulturalFantasiaSelecionado = pacoteCulturalFantasiaSelecionado,
-                povoDoMarOpcao = povoDoMarOpcao,
-                senhoresCavalosExtra = senhoresCavalosExtra,
-                senhoresCavalosCompensacao = senhoresCavalosCompensacao,
+                humanoFantasiaSelecaoAninhada = humanoFantasiaSelecaoAninhada,
                 artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
@@ -6803,10 +6713,7 @@ class CriadorState {
         vantagensAutomaticasDoSigno.clear()
         vantagensAutomaticasDoSigno.addAll(SIGNO_VANTAGENS_AUTOMATICAS[signoIdFromNome(signoAdgSelecionado)].orEmpty())
 
-        pacoteCulturalFantasiaSelecionado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado ?: "Humano padrão"
-        povoDoMarOpcao = snapshot.selecoes.povoDoMarOpcao
-        senhoresCavalosExtra = snapshot.selecoes.senhoresCavalosExtra ?: false
-        senhoresCavalosCompensacao = snapshot.selecoes.senhoresCavalosCompensacao
+        humanoFantasiaSelecaoAninhada = snapshot.selecoes.humanoFantasiaSelecaoAninhada
         artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
         artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
         artistaMarcialTecnicasSelecionadas.clear()
@@ -6840,6 +6747,28 @@ class CriadorState {
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
+
+        // Compatibilidade com saves salvos antes do Pacote Cultural de Humanos
+        // (Fantasia) migrar pro sistema genérico de Variante: o nome do pacote
+        // batia 1:1 com o nome da VariantOption nova, então dá pra migrar por
+        // igualdade direta de texto. Só roda quando o save é realmente antigo
+        // (`scifiVariant` vazio E um pacote legado != "Humano padrão" salvo) —
+        // um save já migrado nunca teria os dois campos preenchidos ao mesmo
+        // tempo, então isto nunca sobrescreve uma escolha nova.
+        val pacoteLegado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado
+        if (scifiVariant == null && pacoteLegado != null && pacoteLegado != "Humano padrão") {
+            scifiVariant = pacoteLegado
+            humanoFantasiaSelecaoAninhada = when {
+                snapshot.selecoes.povoDoMarOpcao != null -> snapshot.selecoes.povoDoMarOpcao
+                snapshot.selecoes.senhoresCavalosExtra == true -> when (snapshot.selecoes.senhoresCavalosCompensacao) {
+                    "Código de Honra" -> "Nascido na Sela + Código de Honra"
+                    "Sem Escrúpulos e Analfabeto" -> "Nascido na Sela + Sem Escrúpulos e Analfabeto"
+                    else -> "Nascido na Sela"
+                }
+                else -> null
+            }
+        }
+
         anaoCiberTracosSelecionados = snapshot.selecoes.anaoCiberTracosSelecionados
         quadroidesTracoNegativoSelecionado = snapshot.selecoes.quadroidesTracoNegativoSelecionado
         vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
@@ -6899,7 +6828,9 @@ class CriadorState {
         // o toggle automaticamente pra não esconder a escolha que o jogador
         // já tinha feito.
         if (!optVariantesDeRacaAtivo) {
-            val config = AncestryVariantRegistry.get(snapshot.atributos.ancestralidade.keyify())
+            val livroSnapshot = getAncestralidadeDef(snapshot.atributos.ancestralidade)?.origem
+                ?.let { canonicalOriginKey(it) } ?: "BASICO"
+            val config = AncestryVariantRegistry.get(snapshot.atributos.ancestralidade.keyify(), livroSnapshot)
             val isSelecaoPura = config != null && config.grupoVariante == null
             if (!isSelecaoPura) {
                 val scifiVariantJaEscolhida = scifiVariant != null && scifiVariant !in setOf("Básico", "Padrão")

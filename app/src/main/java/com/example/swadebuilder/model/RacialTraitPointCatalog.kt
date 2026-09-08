@@ -160,6 +160,15 @@ object RacialTraitPointCatalog {
         "DICAS_CULTURAIS" to RacialTraitEffect.PericiaStep("Convenção"), // Akaimimi: "começando com um d6 em Convenção"
         "BRINCANDO_COM_O_DESTINO" to RacialTraitEffect.PericiaStep("Jogar"), // Nekomimi: "Começam com d6 em Jogar"
 
+        // Humanos (Fantasia) - Pacotes Culturais: cada opção de Variante
+        // concede um piso de atributo/perícia igual a qualquer outra raça —
+        // ver AncestryVariantRegistry.humanoFantasia().
+        "NOMADES_DESERTO_SOBREVIVENCIA" to RacialTraitEffect.PericiaStep("Sobrevivência"), // livro: "começam com um d6 em Sobrevivência"
+        "POVO_MONTANHA_VIGOR" to RacialTraitEffect.AtributoStep("Vigor"), // livro: "Começam com Vigor d6"
+        "POVO_MAR_ATLETISMO" to RacialTraitEffect.PericiaStep("Atletismo"), // livro: "começando com um d6 em Atletismo e Navegar"
+        "POVO_MAR_NAVEGAR" to RacialTraitEffect.PericiaStep("Navegar"),
+        "SENHORES_CAVALOS_CAVALGAR" to RacialTraitEffect.PericiaStep("Cavalgar"), // livro: "devem começar com um d6 em Cavalgar"
+
         // Resistência/Passo/Aparar de valor fixo. Cada id abaixo tem um valor
         // único e consistente conferido contra a própria descrição da
         // habilidade em ancestralidades.json (ex.: Terracota "recebem +3 em
@@ -545,6 +554,12 @@ object RacialTraitPointCatalog {
         // skin no nome), igual ao padrão de Mente de Colmeia.
         "DICAS_CULTURAIS" to 2, // oficial: pericia_racial_d6 (Convenção d6)
         "DIGESTAO_GLORIOSA" to 2, // skin de Imune a Doenças e Venenos (IMUNE_DOENCAS_VENENOS), Araiguma
+        // Humanos (Fantasia) - Pacotes Culturais (ver AncestryVariantRegistry.humanoFantasia())
+        "NOMADES_DESERTO_SOBREVIVENCIA" to 2, // oficial: pericia_racial_d6 (Sobrevivência d6)
+        "POVO_MONTANHA_VIGOR" to 2, // oficial: aumento_atributo (Vigor d6)
+        "POVO_MAR_ATLETISMO" to 2, // oficial: pericia_racial_d6 (Atletismo d6)
+        "POVO_MAR_NAVEGAR" to 2, // oficial: pericia_racial_d6 (Navegar d6)
+        "SENHORES_CAVALOS_CAVALGAR" to 2, // oficial: pericia_racial_d6 (Cavalgar d6)
         // Confirmado direto no livro (Fantasia/Sci-Fi, "Diminuto (1)"): 2 pontos
         // Pequeno (Tamanho -2), 4 pontos Muito Pequeno (Tamanho -3), 6 pontos
         // Minúsculo (Tamanho -4). DIMINUTO_TAMANHO_3 valia 5 por engano (chute

@@ -50,8 +50,11 @@ fun CriadorState.toMeuPersonagem(): MeuPersonagem {
         ancestralidade = this.ancestralidade,
         signoAdgSelecionado = this.signoAdgSelecionado,
         descendenteElementalSelecionado = this.descendenteElementalSelecionado,
-        pacoteCulturalFantasiaSelecionado = this.pacoteCulturalFantasiaSelecionado,
-        povoDoMarOpcao = this.povoDoMarOpcao,
+        // MeuPersonagem mantém o nome de campo antigo (é só um DTO de leitura
+        // pra resumo/PDF); a fonte real virou o sistema genérico de Variante —
+        // ver CriadorState.scifiVariant/humanoFantasiaSelecaoAninhada.
+        pacoteCulturalFantasiaSelecionado = if (this.isHumanoFantasiaSelecionado()) this.scifiVariant ?: "Padrão" else null,
+        povoDoMarOpcao = this.humanoFantasiaSelecaoAninhada,
         celestialAAMilagresDesabilitado = this.celestialAAMilagresDesabilitado,
         tropoSelecionadoId = this.tropoSelecionado?.id,
         vantagens = this.vantagensSelecionadas.map { it.id },

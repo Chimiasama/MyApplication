@@ -59,7 +59,7 @@ fun buildAncestralidadeDisplay(
     val sufixo = when {
         isHuman && !personagem.pacoteCulturalFantasiaSelecionado.isNullOrBlank() -> {
             val pack = personagem.pacoteCulturalFantasiaSelecionado
-            if (pack.equals("Humano padrão", ignoreCase = true)) null else pack
+            if (pack.equals("Humano padrão", ignoreCase = true) || pack.equals("Padrão", ignoreCase = true)) null else pack
         }
         isDescendenteElemental && !personagem.descendenteElementalSelecionado.isNullOrBlank() -> {
             personagem.descendenteElementalSelecionado
@@ -567,31 +567,14 @@ fun buildSummaryLines(
             removeAll { it.keyify() == "DESASTRADO" }
         }
 
-        if (especieIdAtual == "humano") {
-            val pacoteId = CriadorState.pacoteCulturalIdFromNome(personagem.pacoteCulturalFantasiaSelecionado)
-            if (pacoteId != null && pacoteId != "HUMANO_PADRAO") {
-                removeAll { it.keyify() == "ADAPTAVEL" }
-            }
-            if (personagem.compendioFantasiaAtivo) {
-                when (pacoteId) {
-                    "NOMADES_DO_DESERTO" -> {
-                        if (none { it.keyify() == "FRAQUEZA_AMBIENTAL" }) {
-                            add("Fraqueza Ambiental (Frio)")
-                        }
-                    }
-                    "POVO_DA_MONTANHA" -> {
-                        if (none { it.keyify() == "FRAQUEZA_AMBIENTAL" }) {
-                            add("Fraqueza Ambiental (Calor)")
-                        }
-                    }
-                    "POVO_DO_MAR" -> {
-                        if (personagem.povoDoMarOpcao == "Penalidade em Cavalgar" && none { it.keyify() == "PENALIDADE_CAVALGAR" }) {
-                            add("Penalidade em Cavalgar")
-                        }
-                    }
-                }
-            }
-        }
+        // Pacote Cultural de Humanos (Fantasia): Adaptável removido/Fraqueza
+        // Ambiental e Penalidade em Cavalgar adicionados não são mais um
+        // "when" hardcoded aqui — CriadorState.applyAncestryVariantAdjustments
+        // já resolve isso direto em habilidades[] da raça (Adaptável
+        // removido de verdade, traços negativos com category=
+        // "racial_trait_negative"), então `habilidadesRaciaisBaseRaw` acima
+        // (lido de `ancestralidadeAtual.habilidades`) já reflete os dois sem
+        // precisar de ajuste manual aqui.
 
         if (isCentauxGazela) {
             removeAll { it.keyify() == "MOVIMENTACAO +2" || it.keyify() == "TAMANHO +2" }

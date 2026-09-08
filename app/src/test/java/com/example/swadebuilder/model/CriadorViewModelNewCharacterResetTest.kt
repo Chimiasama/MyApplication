@@ -12,7 +12,7 @@ import org.junit.Test
  * zerar manualmente todo campo que não seja recomputado do zero. Uma
  * auditoria encontrou vários campos que ficavam "grudados" no valor do
  * personagem anterior porque só eram limpos por métodos específicos (ex.:
- * `removeYoung()`, `selecionarPacoteCulturalFantasia()`) que o reset nunca
+ * `removeYoung()`, `selecionarHumanoFantasiaSelecaoAninhada()`) que o reset nunca
  * chamava. Este teste finge um personagem "sujo" com esses campos preenchidos
  * e confere que `resetToEmptyState()` (usado por "Novo Personagem"/"Limpar
  * Ficha") os devolve ao padrão.
@@ -50,9 +50,7 @@ class CriadorViewModelNewCharacterResetTest {
         // opções — nenhuma delas é reescrita pela transição de ancestralidade
         // em si, só pelo reset explícito (ou por handlers que o reset ignora).
         val state = vm.state
-        state.povoDoMarOpcao = "Penalidade em Cavalgar"
-        state.senhoresCavalosExtra = true
-        state.senhoresCavalosCompensacao = "Código de Honra"
+        state.humanoFantasiaSelecaoAninhada = "Penalidade em Cavalgar"
         state.protagonistaRollTecnicas = 4
         state.protagonistaRollPericia = 8
         state.protagonistaRollVantagem = 6
@@ -84,9 +82,7 @@ class CriadorViewModelNewCharacterResetTest {
 
         vm.resetToEmptyState()
 
-        assertNull(state.povoDoMarOpcao)
-        assertFalse(state.senhoresCavalosExtra)
-        assertNull(state.senhoresCavalosCompensacao)
+        assertNull(state.humanoFantasiaSelecaoAninhada)
         assertNull(state.protagonistaRollTecnicas)
         assertNull(state.protagonistaRollPericia)
         assertNull(state.protagonistaRollVantagem)

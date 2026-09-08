@@ -1046,7 +1046,14 @@
       "FANTASIA"
     ],
     "descricaoLite": "Presentes em praticamente todo cenário, distinguem-se menos pela biologia e mais pelos costumes e valores da cultura em que nasceram.",
-    "especieId": "humano"
+    "especieId": "humano",
+    "opcoes": [
+      "Padrão",
+      "Nômades do Deserto",
+      "Povo da Montanha",
+      "Povo do Mar",
+      "Senhores dos Cavalos"
+    ]
   },
   {
     "nome": "INFERNAIS",
