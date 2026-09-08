@@ -823,13 +823,22 @@ fun AncestralidadesSection(
                                 }
 
                                 // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si já
-                                // é o dropdown genérico de Variante acima (currentSelection); aqui só
-                                // a Seleção aninhada de dentro de Povo do Mar/Senhores dos Cavalos
-                                // (ver AncestryVariantRegistry.humanoFantasia() — mesmo padrão de
-                                // Anões Ciber, um bloco dedicado por raça em vez de um componente
-                                // genérico de SelectionDef).
+                                // é o dropdown genérico de Variante lá em cima (dentro do
+                                // `if (showOpcoesPicker)`, fora de escopo aqui — por isso recalcula
+                                // localmente); aqui só a Seleção aninhada de dentro de Povo do Mar/
+                                // Senhores dos Cavalos (ver AncestryVariantRegistry.humanoFantasia()
+                                // — mesmo padrão de Anões Ciber, um bloco dedicado por raça em vez de
+                                // um componente genérico de SelectionDef).
                                 val isHumanoFantasia = item.nome.keyify() == "HUMANOS" && item.origens.contains("FANTASIA")
-                                if (isHumanoFantasia && currentSelection.equals("Povo do Mar", ignoreCase = true)) {
+                                val humanoFantasiaSelection = if (isHumanoFantasia) {
+                                    state.resolveSciFiVariantSelectionFor(
+                                        ancestryName = item.nome,
+                                        availableOptions = opcoesValidas
+                                    ) ?: opcoesValidas.firstOrNull().orEmpty()
+                                } else {
+                                    ""
+                                }
+                                if (isHumanoFantasia && humanoFantasiaSelection.equals("Povo do Mar", ignoreCase = true)) {
                                     Spacer(Modifier.height(8.dp))
                                     Text("Compensação (a critério do Mestre):", style = MaterialTheme.typography.labelMedium)
                                     Column {
@@ -850,7 +859,7 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                if (isHumanoFantasia && currentSelection.equals("Senhores dos Cavalos", ignoreCase = true)) {
+                                if (isHumanoFantasia && humanoFantasiaSelection.equals("Senhores dos Cavalos", ignoreCase = true)) {
                                     Spacer(Modifier.height(8.dp))
                                     Text("Grupo cultural (a critério do Mestre):", style = MaterialTheme.typography.labelMedium)
                                     Column {
