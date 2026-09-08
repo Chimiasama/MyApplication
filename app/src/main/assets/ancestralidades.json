@@ -4656,10 +4656,12 @@
       {
         "nome": "Antecedente Arcano (Demônio)",
         "descricao": "Começa com AA (Demônio), Perícia Conjurar d4 e os poderes Disfarce Demoníaco + 3 outros. 10 PP.",
-        "category": "racial_trait_positive",
+        "category": "racial_edge",
         "id": "ANTECEDENTE_ARCANO_DEMONIO",
         "invisivel": true,
-        "descricaoLite": "Inicia com o Antecedente Arcano Demônio: Conjurar d4, o poder Disfarce Demoníaco e mais três outros poderes, totalizando 10 Pontos de Poder."
+        "descricaoLite": "Inicia com o Antecedente Arcano Demônio: Conjurar d4, o poder Disfarce Demoníaco e mais três outros poderes, totalizando 10 Pontos de Poder.",
+        "traitId": "GRANTED_EDGE",
+        "targetRef": "aa_demonio"
       },
       {
         "nome": "Frágil",

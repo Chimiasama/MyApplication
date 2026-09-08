@@ -488,16 +488,21 @@ class CriadorState {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
 
-        // Toda raça de candidato único, EXCETO Umvee, mantém o curto-circuito
-        // original: sai aqui sem passar por applyAncestryVariantAdjustments.
-        // Umvee precisa passar por ele mesmo tendo um candidato só — o Dom da
-        // Natureza "Gatoruja" injeta VISAO_NO_ESCURO/PERCEBER_D6 ali, e cair fora
-        // antes disso deixava esse traço de fora (bug real, pego pelo
-        // ScifiAncestryVariantSyncTest). Já o Meio-Elfo do Pathfinder (também
-        // candidato único) depende do contrário — de sair aqui — pra NÃO entrar
-        // no ramo Herança/Adaptável de applyAncestryVariantAdjustments, pensado
-        // pra variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
-        if (candidates.size == 1 && !key.contains("UMVEE")) {
+        // Toda raça de candidato único, EXCETO Umvee e Meio-Demônio, mantém o
+        // curto-circuito original: sai aqui sem passar por
+        // applyAncestryVariantAdjustments. Umvee precisa passar por ele mesmo
+        // tendo um candidato só — o Dom da Natureza "Gatoruja" injeta
+        // VISAO_NO_ESCURO/PERCEBER_D6 ali, e cair fora antes disso deixava
+        // esse traço de fora (bug real, pego pelo ScifiAncestryVariantSyncTest).
+        // Meio-Demônio (Cidade do Sol a Vapor) também precisa passar — é onde
+        // mora a troca Adaptável/Antecedente Arcano (Demônio) por
+        // meioDemonioAA; sem isso o toggle nunca era aplicado, mesmo com o
+        // jogador escolhendo o AA (bug real, raça sempre ficava travada em
+        // Adaptável). Já o Meio-Elfo do Pathfinder (também candidato único)
+        // depende do contrário — de sair aqui — pra NÃO entrar no ramo
+        // Herança/Adaptável de applyAncestryVariantAdjustments, pensado pra
+        // variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
+        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO")) {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
@@ -527,7 +532,7 @@ class CriadorState {
             }) ?: return null
         }
 
-        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE")) {
+        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || key.contains("MEIO-DEMONIO")) {
             applyAncestryVariantAdjustments(selected, key)
         } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             applyAncestryVariantAdjustments(selected, key)
