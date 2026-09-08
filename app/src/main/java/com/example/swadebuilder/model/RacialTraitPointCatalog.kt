@@ -287,6 +287,7 @@ object RacialTraitPointCatalog {
         "MOVIMENTACAO" to "Movimentação +2",
         "ESGUIOS" to "Esguios",
         "FEROCIDADE_ORC" to "Ferocidade Orc",
+        "FORCA_CARGA_ARMADURA" to "Robustez (Força +1 para Carga/Armadura)",
         "FRAGIL" to "Frágil",
         "LENTO" to "Lento",
         "METADE_CONSTRUTO" to "Metade Construto",
@@ -615,6 +616,13 @@ object RacialTraitPointCatalog {
         "FLEXIBILIDADE" to 2,
         "FOBIA" to -1, // oficial: complicacao_racial_menor
         "FORASTEIRO" to -2, // Complicação real (complicacoes.json), severidade Maior escolhida pela raça
+        // Anão (Pathfinder): "Força conta um dado maior para Sobrecarga e
+        // Força Mínima de armaduras" — separado de RESISTENTE (que só cobre o
+        // Vigor d6) pra virar um id próprio em vez de comparar nome de raça
+        // em valorCargaMaxima()/forcaEfetivaParaArmaduras(). Custo 0: já
+        // embutido no custo de RESISTENTE (2) pra esta raça — as duas juntas
+        // ainda fecham em pontosRaciaisEsperados=4, igual antes da divisão.
+        "FORCA_CARGA_ARMADURA" to 0,
         "FORCA_SOBRENATURAL" to 2, // oficial: aumento_atributo
         "FORMA_ALIENIGENA" to -1, // oficial: forma_alienigena — mesmo traço reaproveitado por
         // Centauros ("FORMA INCOMUM") e Insetoides Fantasia ("FORMATO CORPORAL INCOMUM"),

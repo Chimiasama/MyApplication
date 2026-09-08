@@ -2150,9 +2150,14 @@ class CriadorState {
                 key.contains("TOQUE DA MORTE") ||
                 key.contains("CABECA DURA")
         }
-        val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
+        // Suprimir "Ataque Natural" pra Insetoides por nome de raça (removido)
+        // era redundante: tanto Insetoides Fantasia (MORDIDA em habilidades[])
+        // quanto Insetoides Sci-Fi Padrão/Vespa (GARRAS/FERRÃO injetados via
+        // AncestryVariantRegistry.insetoidesScifi()) já produzem uma arma
+        // cujo nome bate em `hasSpecificNaturalWeapons` acima — a checagem
+        // por nome nunca chegava a fazer diferença na prática.
 
-        if (!hasSpecificNaturalWeapons && !isInsectoid) {
+        if (!hasSpecificNaturalWeapons) {
             val (unarmedDmg, unarmedNotes) = calculaAtaqueDesarmado()
             weapons.add(
                 EquipamentoItem(
@@ -2183,12 +2188,19 @@ class CriadorState {
         return famaManual
     }
 
+    // Anão (Pathfinder) "Robustez": "Força conta um dado maior para Sobrecarga
+    // e Força Mínima de armaduras" — id próprio (FORCA_CARGA_ARMADURA, ver
+    // ancestralidades.json), lido de habilidades[] em vez de comparar o nome
+    // da raça. Qualquer raça com esse traço ganha o mesmo bônus, não só Anão.
+    private fun temForcaParaCargaEArmadura(): Boolean =
+        currentAncestryDef?.habilidades?.any { it.resolvedTraitId() == "FORCA_CARGA_ARMADURA" } ?: false
+
     fun valorCargaMaxima(): Float {
         val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
         val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
         val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
         val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
-        val hasDwarfLoadBonus = compendioPathfinderAtivo && ancestralidade.keyify() == "ANAO"
+        val hasDwarfLoadBonus = temForcaParaCargaEArmadura()
 
         var stepIndex = if (strengthRaw <= 12) strengthRaw / 2 else 6 + (strengthRaw - 12)
 
@@ -2205,10 +2217,12 @@ class CriadorState {
         val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
         val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
         val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
+        val hasDwarfLoadBonus = temForcaParaCargaEArmadura()
 
         var stepIndex = if (strengthRaw <= 12) strengthRaw / 2 else 6 + (strengthRaw - 12)
         if (hasSoldado && soldadoCargaAtivo) stepIndex += 1
         if (hasMusculoso) stepIndex += 1
+        if (hasDwarfLoadBonus) stepIndex += 1
         if (hasObeso) stepIndex = (stepIndex - 1).coerceAtLeast(2)
 
         return if (stepIndex <= 6) stepIndex * 2 else 12 + (stepIndex - 6)
@@ -3959,7 +3973,10 @@ class CriadorState {
     val reservaChi by derivedStateOf {
         // PROMPT: Chi = 2 + (Spirit/2) + bonuses
         val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 0
-        val racialPenalty = if (ancestralidade.keyify() == "TERRACOTA") 1 else 0
+        // Terracota "Chi Reduzido" (id CHI_REDUZIDO, ver ancestralidades.json)
+        // já existe em habilidades[] — lido pelo id em vez de comparar o nome
+        // da raça, igual a qualquer outro traço racial.
+        val racialPenalty = if (currentAncestryDef?.habilidades?.any { it.resolvedTraitId() == "CHI_REDUZIDO" } == true) 1 else 0
         val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
         val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
