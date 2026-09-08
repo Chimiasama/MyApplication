@@ -431,8 +431,11 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
         assertTrue(result.automaticAdvantagesToRemove.contains("AÇÃO ADICIONAL (Física)"))
         // Sem escolha do jogador (quadroidesTracoNegativoSelecionado = null),
-        // usa o primeiro traço de -1 ponto do catálogo (Frágil).
-        assertTrue(result.ensureRacialDisadvantages.any { it.nome.contains("Frágil") })
+        // usa o primeiro traço de -1 ponto do catálogo QUADROIDES (Frágil é
+        // excluído dessa lista — a raça já tem Frágil na base, ver
+        // AnaoCiberTraits.TRACOS_MENOS_UM_QUADROIDES — então o primeiro é
+        // Tamanho -1).
+        assertTrue(result.ensureRacialDisadvantages.any { it.nome.contains("Tamanho") })
     }
 
     @Test
