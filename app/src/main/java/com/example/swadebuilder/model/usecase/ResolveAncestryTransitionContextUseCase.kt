@@ -66,9 +66,6 @@ class ResolveAncestryTransitionContextUseCase {
             .replace(")", "")
             .replace(Regex("\\s+"), "_")
 
-    private fun RacialModifier.hasAdaptable(): Boolean {
-        // Check new structure (habilidades ID/Name) or legacy (vantagensGratis)
-        return habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" } ||
-            vantagensGratis.any { it.keyify() == "ADAPTAVEL" }
-    }
+    private fun RacialModifier.hasAdaptable(): Boolean =
+        habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }
 }

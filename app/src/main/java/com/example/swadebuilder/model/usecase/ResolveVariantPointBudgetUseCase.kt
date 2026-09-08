@@ -2,7 +2,6 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.RacialAbility
-import com.example.swadebuilder.model.RacialGrantResolver
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.RacialTraitEffect
 import com.example.swadebuilder.model.RacialTraitPointCatalog
@@ -14,7 +13,7 @@ import com.example.swadebuilder.util.keyify
  * Item já resolvido (traço racial, Vantagem ou Complicação, oficial ou
  * removido da raça base) com seu custo em pontos, pronto pra entrar no
  * cálculo de orçamento de uma Variante custom. Ver `RacialTraitPointCatalog`
- * e `RacialGrantResolver` pra como cada custo é decidido.
+ * pra como cada custo é decidido.
  */
 data class VariantBudgetItem(
     val label: String,
@@ -74,19 +73,14 @@ class ResolveVariantPointBudgetUseCase {
         /** Valor de livro que toda raça oficial fecha — ver o comentário da classe. */
         const val DEFAULT_ORCAMENTO = 2
 
-        /** Todos os itens removíveis da raça base: habilidades[], vantagensGratis e desvantagens. */
-        fun itensRemoviveisDe(base: RacialModifier): List<VariantBudgetItem> {
-            val doHabilidades = base.habilidades.map { habilidadeComoItem(it) }
-            val doVantagensGratis = base.vantagensGratis.map { texto ->
-                val link = RacialGrantResolver.resolveVantagemGratis(texto)
-                VariantBudgetItem(label = texto, custo = link.custo, vantagemId = link.vantagemId)
-            }
-            val doDesvantagens = base.desvantagens.map { texto ->
-                val link = RacialGrantResolver.resolveDesvantagem(texto)
-                VariantBudgetItem(label = texto, custo = link.custo, complicacaoId = link.complicacaoId)
-            }
-            return doHabilidades + doVantagensGratis + doDesvantagens
-        }
+        /**
+         * Todos os itens removíveis da raça base: só `habilidades[]` — toda raça
+         * (oficial ou custom) representa Vantagem/Complicação de graça como
+         * traço vinculado por id ali (traitId=GRANTED_EDGE/RACIAL_HINDRANCE +
+         * targetRef), nunca mais como string solta em vantagensGratis/desvantagens.
+         */
+        fun itensRemoviveisDe(base: RacialModifier): List<VariantBudgetItem> =
+            base.habilidades.map { habilidadeComoItem(it) }
 
         /** Valor de livro total da raça base: soma do custo de TODOS os itens removíveis dela. */
         fun valorTotalDe(base: RacialModifier): Int = itensRemoviveisDe(base).sumOf { it.custo }
@@ -143,8 +137,8 @@ class ResolveVariantPointBudgetUseCase {
          * da Variante: não existe uma escala oficial de "pontos de Vantagem"
          * no livro, então usa o Estágio (Novato/Experiente/Veterano/Heroico)
          * como proxy de força — mesma ideia de "uma Vantagem grátis custa 2"
-         * já usada em RacialTraitPointCatalog/RacialGrantResolver, um degrau
-         * a mais por Estágio acima de Novato.
+         * já usada em RacialTraitPointCatalog, um degrau a mais por Estágio
+         * acima de Novato.
          */
         fun custoDeAdicionarVantagem(vantagem: Vantagem): Int = when (vantagem.requisitos.estagio.trim().lowercase()) {
             "experiente" -> 3

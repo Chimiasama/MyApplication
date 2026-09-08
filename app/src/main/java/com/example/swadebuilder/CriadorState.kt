@@ -538,11 +538,14 @@ class CriadorState {
 
     /**
      * Aplica, se houver, a CustomAncestryVariant selecionada pra raça `base`: remove os
-     * traços/vantagens-grátis/desvantagens indicados e adiciona os traços bespoke, Vantagens
-     * e Complicações escolhidos na criação da Variante. Roda por cima do RacialModifier já
-     * resolvido (após applyAncestryVariantAdjustments), então todo o resto do app — que lê
-     * habilidades/vantagensGratis/desvantagens de currentAncestryDef — passa a refletir a
-     * Variante automaticamente, sem precisar tocar em ResolveAncestrySpecificAdjustmentsUseCase.
+     * traços indicados e adiciona os traços bespoke, Vantagens e Complicações escolhidos na
+     * criação da Variante — Vantagem/Complicação sempre vira traço vinculado por id
+     * (traitId=GRANTED_EDGE/RACIAL_HINDRANCE + targetRef) em `habilidades[]`, nunca uma
+     * string solta em vantagensGratis/desvantagens (que toda raça, oficial ou custom, mantém
+     * sempre vazios hoje). Roda por cima do RacialModifier já resolvido (após
+     * applyAncestryVariantAdjustments), então todo o resto do app — que lê habilidades de
+     * currentAncestryDef — passa a refletir a Variante automaticamente, sem precisar tocar em
+     * ResolveAncestrySpecificAdjustmentsUseCase.
      */
     private fun applyCustomAncestryVariantIfSelected(base: RacialModifier): RacialModifier {
         val variantId = customVarianteRacialSelecionadaId ?: return base
@@ -553,14 +556,6 @@ class CriadorState {
         val newHabilidades = base.habilidades.filterNot { hab ->
             val idKey = hab.id?.keyify()
             idKey != null && idKey in tracosRemovidosKeys
-        }.toMutableList()
-
-        val vantagensGratisRemovidasKeys = variant.vantagensGratisRemovidas.map { it.keyify() }.toSet()
-        val newVantagensGratis = base.vantagensGratis.filterNot { it.keyify() in vantagensGratisRemovidasKeys }.toMutableList()
-
-        val desvantagensRemovidasKeys = variant.desvantagensRemovidas.map { it.keyify() }.toSet()
-        val newDesvantagens = base.desvantagens.filterNot { entry ->
-            entry.keyify() in desvantagensRemovidasKeys || entry.substringBefore("(").trim().keyify() in desvantagensRemovidasKeys
         }.toMutableList()
 
         variant.tracosAdicionados.forEach { trait ->
@@ -586,19 +581,47 @@ class CriadorState {
             )
         }
 
+        // Vantagem/Complicação do catálogo geral adicionada à Variante: vira
+        // traço de raça vinculado por id (traitId=GRANTED_EDGE/RACIAL_HINDRANCE
+        // + targetRef), igual ao padrão das raças oficiais (Kitsunemimi,
+        // Tanukimimi, Meio-Demônio) — nunca mais uma string solta em
+        // vantagensGratis/desvantagens só com o nome de exibição.
+        // `invisivel`: a Vantagem/Complicação concedida já aparece nas abas
+        // de Vantagens/Complicações do personagem; o card de traço seria
+        // redundante (mesmo motivo do Antecedente Arcano dos Demônios).
         variant.vantagensAdicionadasIds.forEach { vantagemId ->
-            val grant = listaVantagens.firstOrNull { it.id == vantagemId }?.id ?: vantagemId
-            if (newVantagensGratis.none { it.keyify() == grant.keyify() }) {
-                newVantagensGratis.add(grant)
+            if (newHabilidades.none { it.traitId == "GRANTED_EDGE" && it.targetRef == vantagemId }) {
+                val vantagem = listaVantagens.firstOrNull { it.id == vantagemId }
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = vantagem?.nome ?: vantagemId,
+                        descricao = "Vantagem concedida de graça por esta Variante.",
+                        id = "variante_vantagem_${vantagemId}".toIdSlug(),
+                        category = "racial_edge",
+                        traitId = "GRANTED_EDGE",
+                        targetRef = vantagemId,
+                        invisivel = true
+                    )
+                )
             }
         }
 
         variant.complicacoesAdicionadas.forEach { escolha ->
             val complicacao = listaComplicacoes.firstOrNull { it.id == escolha.complicacaoId } ?: return@forEach
-            val severidade = if (escolha.comoMaior) "Maior" else "Menor"
-            val entry = "${complicacao.name} ($severidade)"
-            if (newDesvantagens.none { it.keyify() == entry.keyify() }) {
-                newDesvantagens.add(entry)
+            if (newHabilidades.none { it.traitId == "RACIAL_HINDRANCE" && it.targetRef == escolha.complicacaoId }) {
+                val severidade = if (escolha.comoMaior) "Maior" else "Menor"
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = complicacao.name,
+                        descricao = "Complicação imposta por esta Variante.",
+                        id = "variante_complicacao_${escolha.complicacaoId}".toIdSlug(),
+                        category = "racial_hindrance",
+                        severity = severidade,
+                        traitId = "RACIAL_HINDRANCE",
+                        targetRef = escolha.complicacaoId,
+                        invisivel = true
+                    )
+                )
             }
         }
 
@@ -646,8 +669,6 @@ class CriadorState {
 
         return base.copy(
             habilidades = newHabilidades,
-            vantagensGratis = newVantagensGratis,
-            desvantagens = newDesvantagens,
             atributos = newAtributos,
             pericias = newPericias
         )
@@ -1739,8 +1760,7 @@ class CriadorState {
 
         // Check Claws (Garra)
         val ancestry = currentAncestryDef
-        val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true ||
-                ancestry?.vantagensGratis?.any { it.keyify().contains("GARRA") } == true
+        val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true
 
         // Check Edge Claws
         val hasEdgeClaws = vantagensSelecionadas.any { it.nome.keyify().contains("GARRA") }
@@ -4066,13 +4086,7 @@ class CriadorState {
             return false
         }
 
-        val free = effectiveVantagensGratis(ancDef)
-        // 1. Explicitly in Free Edges (legacy list or racial_edge)
-        if (free.any { it.keyify() == "ADAPTAVEL" }) {
-            return true
-        }
-
-        // 2. Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
+        // Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
         if (ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) {
             return true
         }

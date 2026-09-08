@@ -387,8 +387,6 @@ fun SettingsDialog(
                         var varianteBaseRacaId by remember { mutableStateOf<String?>(null) }
                         var showVarianteBaseRacaDialog by remember { mutableStateOf(false) }
                         var varianteTracosRemovidos by remember { mutableStateOf(listOf<String>()) }
-                        var varianteVantagensGratisRemovidas by remember { mutableStateOf(listOf<String>()) }
-                        var varianteDesvantagensRemovidas by remember { mutableStateOf(listOf<String>()) }
                         var varianteTracosAdicionados by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
                         var showVarianteTraitAddDialog by remember { mutableStateOf(false) }
                         var varianteVantagensAdicionadas by remember { mutableStateOf(listOf<String>()) }
@@ -1062,18 +1060,12 @@ fun SettingsDialog(
                                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                                         )
                                                     } else {
-                                                        val itensRemoviveis = remember(varianteBaseRaca) {
+                                                        val habilidadeItems = remember(varianteBaseRaca) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca)
+                                                                .filter { it.habilidadeId != null }
                                                         }
-                                                        val nHab = varianteBaseRaca.habilidades.size
-                                                        val nVant = varianteBaseRaca.vantagensGratis.size
-                                                        val habilidadeItems = itensRemoviveis.take(nHab).filter { it.habilidadeId != null }
-                                                        val vantagemGratisItems = itensRemoviveis.drop(nHab).take(nVant)
-                                                        val desvantagemItems = itensRemoviveis.drop(nHab + nVant)
 
-                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos } +
-                                                            vantagemGratisItems.filter { it.label in varianteVantagensGratisRemovidas } +
-                                                            desvantagemItems.filter { it.label in varianteDesvantagensRemovidas }
+                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos }
 
                                                         val itensAdicionadosSelecionados = buildList {
                                                             varianteTracosAdicionados.forEach { trait ->
@@ -1123,7 +1115,7 @@ fun SettingsDialog(
                                                                 HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
                                                                 Text("Remover da raça base:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
 
-                                                                if (habilidadeItems.isEmpty() && vantagemGratisItems.isEmpty() && desvantagemItems.isEmpty()) {
+                                                                if (habilidadeItems.isEmpty()) {
                                                                     Text("Esta raça não tem traços removíveis.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                                 } else {
                                                                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -1137,34 +1129,6 @@ fun SettingsDialog(
                                                                             ) {
                                                                                 Checkbox(checked = isSel, onCheckedChange = {
                                                                                     varianteTracosRemovidos = if (it) varianteTracosRemovidos + item.habilidadeId!! else varianteTracosRemovidos - item.habilidadeId!!
-                                                                                })
-                                                                                Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
-                                                                            }
-                                                                        }
-                                                                        vantagemGratisItems.forEach { item ->
-                                                                            val isSel = item.label in varianteVantagensGratisRemovidas
-                                                                            Row(
-                                                                                modifier = Modifier.fillMaxWidth().clickable {
-                                                                                    varianteVantagensGratisRemovidas = if (isSel) varianteVantagensGratisRemovidas - item.label else varianteVantagensGratisRemovidas + item.label
-                                                                                },
-                                                                                verticalAlignment = Alignment.CenterVertically
-                                                                            ) {
-                                                                                Checkbox(checked = isSel, onCheckedChange = {
-                                                                                    varianteVantagensGratisRemovidas = if (it) varianteVantagensGratisRemovidas + item.label else varianteVantagensGratisRemovidas - item.label
-                                                                                })
-                                                                                Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
-                                                                            }
-                                                                        }
-                                                                        desvantagemItems.forEach { item ->
-                                                                            val isSel = item.label in varianteDesvantagensRemovidas
-                                                                            Row(
-                                                                                modifier = Modifier.fillMaxWidth().clickable {
-                                                                                    varianteDesvantagensRemovidas = if (isSel) varianteDesvantagensRemovidas - item.label else varianteDesvantagensRemovidas + item.label
-                                                                                },
-                                                                                verticalAlignment = Alignment.CenterVertically
-                                                                            ) {
-                                                                                Checkbox(checked = isSel, onCheckedChange = {
-                                                                                    varianteDesvantagensRemovidas = if (it) varianteDesvantagensRemovidas + item.label else varianteDesvantagensRemovidas - item.label
                                                                                 })
                                                                                 Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
                                                                             }
@@ -1586,16 +1550,10 @@ fun SettingsDialog(
                                                     if (baseRaca == null) {
                                                         statusMessage = "Selecione a raça base da Variante."
                                                     } else {
-                                                        val itensRemoviveis = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca)
-                                                        val nHab = baseRaca.habilidades.size
-                                                        val nVant = baseRaca.vantagensGratis.size
-                                                        val habilidadeItems = itensRemoviveis.take(nHab).filter { it.habilidadeId != null }
-                                                        val vantagemGratisItems = itensRemoviveis.drop(nHab).take(nVant)
-                                                        val desvantagemItems = itensRemoviveis.drop(nHab + nVant)
+                                                        val habilidadeItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca)
+                                                            .filter { it.habilidadeId != null }
 
-                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos } +
-                                                            vantagemGratisItems.filter { it.label in varianteVantagensGratisRemovidas } +
-                                                            desvantagemItems.filter { it.label in varianteDesvantagensRemovidas }
+                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos }
 
                                                         val itensAdicionadosSelecionados = buildList {
                                                             varianteTracosAdicionados.forEach { trait ->
@@ -1629,8 +1587,6 @@ fun SettingsDialog(
                                                                 nome = customItemName,
                                                                 descricao = safeDesc,
                                                                 tracosRemovidosIds = varianteTracosRemovidos,
-                                                                vantagensGratisRemovidas = varianteVantagensGratisRemovidas,
-                                                                desvantagensRemovidas = varianteDesvantagensRemovidas,
                                                                 tracosAdicionados = varianteTracosAdicionados,
                                                                 vantagensAdicionadasIds = varianteVantagensAdicionadas,
                                                                 complicacoesAdicionadas = varianteComplicacoesAdicionadas,
@@ -1641,8 +1597,6 @@ fun SettingsDialog(
                                                             statusMessage = "Variante '$customItemName' salva em: $tagsLabel"
                                                             varianteBaseRacaId = null
                                                             varianteTracosRemovidos = emptyList()
-                                                            varianteVantagensGratisRemovidas = emptyList()
-                                                            varianteDesvantagensRemovidas = emptyList()
                                                             varianteTracosAdicionados = emptyList()
                                                             varianteVantagensAdicionadas = emptyList()
                                                             varianteComplicacoesAdicionadas = emptyList()
@@ -1997,8 +1951,6 @@ fun SettingsDialog(
                                                 modifier = Modifier.fillMaxWidth().clickable {
                                                     varianteBaseRacaId = raca.nome.keyify()
                                                     varianteTracosRemovidos = emptyList()
-                                                    varianteVantagensGratisRemovidas = emptyList()
-                                                    varianteDesvantagensRemovidas = emptyList()
                                                     showVarianteBaseRacaDialog = false
                                                 }.padding(vertical = 6.dp),
                                                 verticalAlignment = Alignment.CenterVertically

@@ -161,9 +161,9 @@ object RacialTraitPointCatalog {
         "MOVIMENTACAO_REDUZIDA" to RacialTraitEffect.PassoBonus(-1),
         // Inumimi (Arte da Guerra) "Vigorosos": +1 Resistência. Sem efeito
         // aqui antes, o bônus só existia via o "RESISTÊNCIA" solto em
-        // vantagensGratis (RacialGrantResolver) — que também duplicava o
-        // ponto de VIGOROSOS no orçamento (os dois somando juntos). Agora o
-        // efeito mora aqui e vantagensGratis não precisa mais do texto solto.
+        // vantagensGratis — que também duplicava o ponto de VIGOROSOS no
+        // orçamento (os dois somando juntos). Agora o efeito mora aqui e
+        // vantagensGratis não precisa mais do texto solto.
         "VIGOROSOS" to RacialTraitEffect.ResistenciaBonus(1),
         "METADE_CONSTRUTO" to RacialTraitEffect.ResistenciaBonus(3),
         "MORTO_VIVO" to RacialTraitEffect.ResistenciaBonus(2),
