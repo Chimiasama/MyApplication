@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.util.ForcaMinimaCalculator
 import com.example.swadebuilder.util.keyify
 
 enum class ModifierTarget {
@@ -62,6 +63,37 @@ object ModifierEngine {
                         )
                     )
                 }
+            }
+        }
+
+        // 1b. Penalidade de Movimentação por Força insuficiente (livro básico, "Força
+        // Mínima > Armadura/Equipamento Vestidos"): -1 Movimentação por passo de tipo de
+        // dado que a Força do personagem fica abaixo do mínimo da peça, cumulativo entre
+        // itens vestidos. A perna gêmea dessa regra (mesma penalidade em Agilidade e em
+        // perícias ligadas a Agilidade) é uma penalidade situacional de ROLAGEM, não um
+        // stat fixo — por isso só vira nota de texto na ficha (ver ResumoSection.kt),
+        // nunca um Modifier aqui.
+        val forcaRawParaArmadura = state.valoresAtributos["FORCA"]?.intValue ?: 4
+        state.equipamentosComprados.forEach { item ->
+            if (item.armadura == null) return@forEach
+            val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
+                s.contains("VEICULO") || s.contains("VEÍCULO") ||
+                        s.contains("CHASSIS") || s.contains("MECHA")
+            } == true
+            if (isMechaOrVehicle) return@forEach
+
+            val forcaMinTexto = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+            val passos = ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRawParaArmadura, forcaMinTexto)
+            if (passos > 0) {
+                modifiers.add(
+                    Modifier(
+                        id = "forca_min_pace_${item.nome.keyify()}",
+                        sourceType = SourceType.OUTRO,
+                        sourceName = item.nome,
+                        target = ModifierTarget.PACE,
+                        value = -passos
+                    )
+                )
             }
         }
 

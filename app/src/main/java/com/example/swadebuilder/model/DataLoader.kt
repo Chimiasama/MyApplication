@@ -234,7 +234,13 @@ object DataLoader {
                 subtipo = cat.subtipo,
                 subsubtipo = cat.subsubtipo,
                 origem = cat.livros.first(),
-                itens = cat.itens.map { it.comObservacoesExibidas() }
+                // Carimba o `tipo` da categoria em cada item (ex.: "Armas Corpo a Corpo",
+                // "Armas de Fogo", "Armaduras", "Veículos") — sem isso só itens customizados
+                // (ver SettingsDialog.kt) tinham `categoriaTipo`, e a ficha (ResumoSection.kt)
+                // não tinha como separar arma corpo a corpo de arma à distância de armadura
+                // pros ~3300 itens do catálogo oficial sem depender de comparar `subtipo`
+                // (que se repete entre tipos bem diferentes — ver DataLoader.updateActiveModules).
+                itens = cat.itens.map { it.comObservacoesExibidas().copy(categoriaTipo = cat.tipo) }
             )
         }
         val localListaEquipamentos = allEquip.flatMap { it.itens }
