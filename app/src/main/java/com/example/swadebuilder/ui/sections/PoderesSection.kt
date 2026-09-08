@@ -84,6 +84,30 @@ private fun custoParaPenalidadeTexto(custo: String): String {
     return "—"
 }
 
+/**
+ * Poderes com nome "Aspecto1/Aspecto2" (ex.: "Iluminar/Obscurecer") existem
+ * como um único id no catálogo — não há um poder "só Iluminar" separado de
+ * um "só Obscurecer" (ver ArcaneConfig.SOL_VAPOR_DEMONIO_ALLOWED_POWERS).
+ * Quando o livro restringe um Antecedente Arcano a só um dos dois aspectos
+ * (ex.: Feiticeiro/Demônio só tem "Obscurecer", nunca "Iluminar"), isso é
+ * puramente cosmético — id, custo e efeito mecânico continuam os mesmos do
+ * poder combinado. Mesma técnica já usada pro Místico (Pathfinder) logo
+ * abaixo, só que centralizada por arcKey em vez de replicada inline.
+ */
+private fun aspectOnlyPowerDisplayName(rawDisplayName: String, arcKey: String): String {
+    return when (arcKey) {
+        "DEMONIO", "DEMONIO_MEIO" -> rawDisplayName
+            .replace("Iluminar/Obscurecer", "Obscurecer")
+            .replace("Aumentar/Reduzir Característica", "Reduzir Característica")
+            .replace("Morosidade/Velocidade", "Morosidade")
+        "MILAGRES", "ANJO" -> rawDisplayName
+            .replace("Iluminar/Obscurecer", "Iluminar")
+            .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
+            .replace("Morosidade/Velocidade", "Velocidade")
+        else -> rawDisplayName
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PoderesSection(
@@ -594,7 +618,7 @@ fun PoderesSection(
                                 Spacer(Modifier.height(4.dp))
                                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     slots.forEachIndexed { idx, poderId ->
-                                        val label = if (poderId == null) "— vazio —" else (idToName[poderId] ?: poderId.toFancyTitleCase())
+                                        val label = if (poderId == null) "— vazio —" else aspectOnlyPowerDisplayName(idToName[poderId] ?: poderId.toFancyTitleCase(), arcKey)
                                         val isFixed = state.isFixedPower(arcKey, poderId)
                                         val isSlotLocked = locked || idx < lockedCount || isFixed
                                         AssistChip(
@@ -728,6 +752,7 @@ fun PoderesSection(
                                             .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
                                             .replace("Morosidade/Velocidade", "Velocidade")
                                     }
+                                    displayNome = aspectOnlyPowerDisplayName(displayNome, arcKey)
                                     val isCustom = poder.origem.equals("CUSTOM", ignoreCase = true) || poder.id.startsWith("custom:") || poder.id.startsWith("fanmade:")
                                     if (isCustom) {
                                         displayNome = "$displayNome ⓒ"
@@ -755,7 +780,7 @@ fun PoderesSection(
                                 val modificadoresDisponiveis = poder.modificadores.filter { mod ->
                                     mod.nome.isNotBlank() || mod.descricao.isNotBlank()
                                 }
-                                var displayNomeDialog = poder.nome.toFancyTitleCase()
+                                var displayNomeDialog = aspectOnlyPowerDisplayName(poder.nome.toFancyTitleCase(), arcKey)
                                 val isCustomDialog = poder.origem.equals("CUSTOM", ignoreCase = true) || poder.id.startsWith("custom:") || poder.id.startsWith("fanmade:")
                                 if (isCustomDialog) displayNomeDialog = "$displayNomeDialog ⓒ"
 
