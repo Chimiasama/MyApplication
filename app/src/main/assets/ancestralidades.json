@@ -2256,11 +2256,7 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "FORASTEIRO (Maior)",
-      "PACIFISTA (Maior)",
-      "VOTO (Maior)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Construto",
@@ -2398,9 +2394,7 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "DEPENDÊNCIA"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Aquático",
@@ -2445,9 +2439,7 @@
     },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "DESASTRADO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -2484,9 +2476,7 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "FORASTEIRO (Menor)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Forasteiro",
@@ -2521,9 +2511,7 @@
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL"
-    ],
+    "vantagensGratis": [],
     "desvantagens": [],
     "habilidades": [
       {
@@ -2592,9 +2580,7 @@
     },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "INIMIGO RACIAL"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -2674,13 +2660,8 @@
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "PRONTIDÃO"
-    ],
-    "desvantagens": [
-      "FORASTEIRO (Menor)",
-      "FRAQUEZA AMBIENTAL (Frio)"
-    ],
+    "vantagensGratis": [],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Armadura +2",
@@ -3974,9 +3955,7 @@
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL"
-    ],
+    "vantagensGratis": [],
     "desvantagens": [],
     "habilidades": [
       {
@@ -4461,9 +4440,7 @@
       "Jogar": 2
     },
     "vantagensGratis": [],
-    "desvantagens": [
-      "AZARADO"
-    ],
+    "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -4753,15 +4730,20 @@
         "severity": "Menor",
         "id": "FORASTEIRO",
         "descricaoLite": "Carrega a Complicação Forasteiro em grau menor."
+      },
+      {
+        "nome": "Furioso",
+        "descricao": "Os ferais têm um temperamento selvagem: recebem a Vantagem Furioso de graça.",
+        "category": "racial_edge",
+        "id": "FURIOSO",
+        "descricaoLite": "Ganha a Vantagem Furioso de graça."
       }
     ],
     "atributos": {},
     "pericias": {
       "Sobrevivência": 2
     },
-    "vantagensGratis": [
-      "Furioso"
-    ],
+    "vantagensGratis": [],
     "desvantagens": [],
     "livros": [
       "ARTE_DA_GUERRA"
@@ -4825,9 +4807,7 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -4925,9 +4905,7 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL"
-    ],
+    "vantagensGratis": [],
     "habilidades": [
       {
         "nome": "Adaptável",
@@ -5140,9 +5118,7 @@
       "Atletismo": 2,
       "Perceber": 2
     },
-    "vantagensGratis": [
-      "Sorte"
-    ],
+    "vantagensGratis": [],
     "desvantagens": [],
     "habilidades": [
       {
@@ -5200,9 +5176,7 @@
     "categoria": "ANCESTRALIDADE",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL"
-    ],
+    "vantagensGratis": [],
     "desvantagens": [],
     "habilidades": [
       {
@@ -5326,11 +5300,7 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "FORASTEIRO (Maior)",
-      "PACIFISTA (Maior)",
-      "VOTO (Maior)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Construto",
@@ -5468,9 +5438,7 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "DEPENDÊNCIA"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Aquático",
@@ -5515,9 +5483,7 @@
     },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "DESASTRADO"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -5554,9 +5520,7 @@
     "atributos": {},
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "FORASTEIRO (Menor)"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Forasteiro",
@@ -5591,9 +5555,7 @@
     "descricao": "Em muitos cenários seres humanos recebem uma Vantagem gratuita à sua escolha. Esta opção reflete a sua versatilidade e adaptabilidade em comparação a outras ancestralidades. \nPara uma maior variedade, o Mestre também pode conceder habilidades humanas baseadas na cultura em vez da ancestralidade. Por exemplo, uma sociedade nômade que usa cavalos poderia começar com pontos em Cavalgar e Sobrevivência. Modelos culturais são desenvolvidos da mesma forma que a criação de novas ancestralidades, mas quem estiver mestrando deve permitir mais exceções do que o habitual já que habilidades tendem a ser aprendidas e não inatas de fato.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "ADAPTÁVEL"
-    ],
+    "vantagensGratis": [],
     "desvantagens": [],
     "habilidades": [
       {
@@ -5662,9 +5624,7 @@
     },
     "pericias": {},
     "vantagensGratis": [],
-    "desvantagens": [
-      "INIMIGO RACIAL"
-    ],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Ágil",
@@ -5744,13 +5704,8 @@
     "descricao": "Lagartos humanoides que normalmente vêm de selvas escaldantes ou de desertos ermos onde possuem civilizações únicas que são desconhecidas por outros seres sencientes.",
     "atributos": {},
     "pericias": {},
-    "vantagensGratis": [
-      "PRONTIDÃO"
-    ],
-    "desvantagens": [
-      "FORASTEIRO (Menor)",
-      "FRAQUEZA AMBIENTAL (Frio)"
-    ],
+    "vantagensGratis": [],
+    "desvantagens": [],
     "habilidades": [
       {
         "nome": "Armadura +2",

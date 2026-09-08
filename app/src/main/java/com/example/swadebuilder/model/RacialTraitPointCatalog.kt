@@ -605,6 +605,7 @@ object RacialTraitPointCatalog {
         "FRACO" to -2, // oficial penalidade_atributo_1 (-1 num ATRIBUTO, Força)
         "FRAGIL" to -1, // oficial: fragil (âncora: AnaoCiberNegativeTrait.fragil)
         "FRAQUEZA_AMBIENTAL" to -1, // oficial: fraqueza_ambiental
+        "FURIOSO" to 2, // Vantagem real (vantagens.json) — Feral (Arte da Guerra)
         "GANANCIOSO" to -1, // oficial: complicacao_racial_menor
         // Garras oficial (livro): entrada própria de "Garras" na tabela de
         // criação de raças, com base MAIOR que a de Armas Naturais genéricas
