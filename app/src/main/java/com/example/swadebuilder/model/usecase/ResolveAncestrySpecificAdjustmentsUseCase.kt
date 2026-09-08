@@ -247,18 +247,23 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 )
             }
 
-            // Guarda extra por livro: alguns ids de scifiVariantDrivenKeys (ex.:
-            // "HUMANOS") são um nome de exibição compartilhado por raças
-            // DIFERENTES em livros diferentes (Sci-Fi "Humanos" — Baixa
-            // Gravidade/Minerador — vs. Fantasia "Humanos" — Pacotes
-            // Culturais). Sem checar o livro de origem da raça atual aqui,
-            // um jogador com Sci-Fi E Fantasia ativos ao mesmo tempo, jogando
-            // um Humano de Fantasia, caía neste bloco genérico (que só
-            // conhece a config Sci-Fi), sempre resolvendo pra "Padrão" —
-            // Pacotes Culturais nunca era aplicado (bug relatado pelo
-            // usuário: Senhores dos Cavalos não concedia nada e Adaptável
-            // continuava presente).
-            if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys && canonicalOriginKey(ancestryOrigin) == "SCI_FI") {
+            // Guarda extra só pra "HUMANOS": é o único id de
+            // scifiVariantDrivenKeys que é um nome de exibição compartilhado
+            // por raças DIFERENTES em livros diferentes (Sci-Fi "Humanos" —
+            // Baixa Gravidade/Minerador — vs. Fantasia "Humanos" — Pacotes
+            // Culturais). As outras 19 raças do set não têm esse tipo de
+            // colisão, então não precisam checar o livro (e os testes
+            // existentes desse use case não passam `ancestryOrigin`, só
+            // `isSciFiActive` — exigir o livro pra todas quebraria esses
+            // testes sem ganho real). Sem essa checagem pra HUMANOS
+            // especificamente, um jogador com Sci-Fi E Fantasia ativos ao
+            // mesmo tempo, jogando um Humano de Fantasia, caía neste bloco
+            // genérico (que só conhece a config Sci-Fi), sempre resolvendo
+            // pra "Padrão" — Pacotes Culturais nunca era aplicado (bug
+            // relatado pelo usuário: Senhores dos Cavalos não concedia nada
+            // e Adaptável continuava presente).
+            val isHumanosDeOutroLivro = ancKey == "HUMANOS" && canonicalOriginKey(ancestryOrigin) != "SCI_FI"
+            if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys && !isHumanosDeOutroLivro) {
                 buildResultFromVariantRegistry(ancKey, effectiveVariant)?.let { return it }
             }
 

@@ -325,7 +325,8 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             descendenteElementalSelecionado = null,
             scifiVariant = "Baixa Gravidade",
             ancestryOptions = listOf("Básico", "Baixa Gravidade", "Minerador"),
-            isSciFiActive = true
+            isSciFiActive = true,
+            ancestryOrigin = "SCI_FI"
         )
 
         assertEquals(listOf("ADAPTÁVEL", "ADAPTAVEL"), result.automaticAdvantagesToRemove)
