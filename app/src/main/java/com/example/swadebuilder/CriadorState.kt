@@ -504,12 +504,27 @@ class CriadorState {
         // FORMA_DE_ENERGIA (Ar, Fogo ou Água), e onde FORTE (Drakens Padrão)
         // é removido pra "Dragão"; sem isso a Força de ambas ficava
         // hardcoded por nome de raça em vez de vir de habilidades[] (bug
-        // real, corrigido a pedido do usuário). Já o Meio-Elfo do Pathfinder
-        // (também candidato único) depende do contrário — de sair aqui — pra
-        // NÃO entrar no ramo Herança/Adaptável de
-        // applyAncestryVariantAdjustments, pensado pra variante Meio-Elfo de
-        // outros livros (CriadorStateRacialTraitDrivenAttributesTest).
-        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS") {
+        // real, corrigido a pedido do usuário). Humanos e Descendente
+        // Elemental (Fantasia) também precisam passar — é onde os Pacotes
+        // Culturais (Povo do Mar/Senhores dos Cavalos) trocam Adaptável
+        // pelos traços do pacote, e onde o elemento escolhido troca a
+        // Resistência Ambiental genérica pela específica; como
+        // `mergedAncestralidades` já dedupa por origem (só sobra 1 entrada
+        // de "Humanos"/"Descendente Elemental" quando apenas o compêndio de
+        // Fantasia está ativo — o caso normal de criação de personagem, um
+        // livro por vez), esses candidatos chegam aqui como candidato único
+        // na prática, não só quando vários livros estão ativos ao mesmo
+        // tempo — cair fora antes de applyAncestryVariantAdjustments deixava
+        // o Pacote Cultural inteiro sem efeito (bug real relatado pelo
+        // usuário: Senhores dos Cavalos não concedia nada e Adaptável
+        // continuava presente). Já o Meio-Elfo do Pathfinder (também
+        // candidato único) depende do contrário — de sair aqui — pra NÃO
+        // entrar no ramo Herança/Adaptável de applyAncestryVariantAdjustments,
+        // pensado pra variante Meio-Elfo de outros livros
+        // (CriadorStateRacialTraitDrivenAttributesTest).
+        val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
+            (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
+        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS" && !isFantasiaHumanoOuDescElemental) {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
