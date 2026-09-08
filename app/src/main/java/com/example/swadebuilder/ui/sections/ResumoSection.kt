@@ -776,18 +776,19 @@ private fun CombatAndEquipmentCard(
 
             // Armas: uma arma corpo a corpo/arremesso E uma arma à distância não são
             // categorias que se excluem — um item de arremesso (ex.: Machado de Arremesso,
-            // Adaga) já vem do catálogo com `dano` E `distancia` preenchidos ao mesmo tempo,
-            // então aparece nas duas listas a partir de uma única compra. "Usável corpo a
-            // corpo" é: não tem distância cadastrada, OU o dano usa "For" (só armas cujo
-            // dano depende da Força do usuário fazem sentido empunhadas/arremessadas — a
-            // única exceção conhecida no catálogo é o Arco Composto, que usa "For+d6" sem
-            // ser uma arma corpo a corpo de verdade; aceito como caso raro e inofensivo).
+            // Adaga/Faca (Arremesso)) já vem do catálogo com `dano` E `distancia`
+            // preenchidos ao mesmo tempo, então aparece nas duas listas a partir de uma
+            // única compra. "Usável corpo a corpo" é: não tem distância cadastrada, OU é
+            // uma arma de arremesso de verdade (ForcaMinimaCalculator.ehArmaDeArremesso
+            // exclui arcos/fundas/boleadeiras, que usam "For" no dano sem nunca serem
+            // empunhadas pra golpear).
             val todasArmas = state.equipamentosComprados.filter { it.dano != null }
             val armasCorpoACorpo = todasArmas.filter { weapon ->
                 val danoTxt = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
-                weapon.distancia == null || Regex("(For|Str|Força)", RegexOption.IGNORE_CASE).containsMatchIn(danoTxt)
+                weapon.distancia == null || com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, danoTxt)
             }
             val armasADistancia = todasArmas.filter { it.distancia != null }
+            val temBrutamontes = state.vantagensSelecionadas.any { it.id == Constants.ID_BRUTAMONTES }
 
             Text(text = "Armas Corpo a Corpo", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
@@ -853,7 +854,19 @@ private fun CombatAndEquipmentCard(
                     // ataque por passo de tipo de dado abaixo do mínimo da arma.
                     val forcaMinTxt = (weapon.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
                     val passos = com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
-                    val notasExtras = if (passos > 0) listOf("Ataque -$passos (Força abaixo da Força Mínima)") else emptyList()
+                    val notasExtras = mutableListOf<String>()
+                    if (passos > 0) notasExtras.add("Ataque -$passos (Força abaixo da Força Mínima)")
+
+                    // Vantagem Brutamontes (livro básico, pág. 42): +1 na Curta Distância de
+                    // qualquer item ARREMESSADO (arcos/fundas não contam — ver
+                    // ehArmaDeArremesso), dobrado pra Média e dobrado de novo pra Longa.
+                    if (temBrutamontes && range.isNotBlank() &&
+                        com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, dmg)
+                    ) {
+                        com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceComBrutamontes(range)?.let {
+                            notasExtras.add("Alcance com Brutamontes: $it")
+                        }
+                    }
                     val notesBase = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
                     val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
                     CombatRow(name = weapon.nome.toFancyTitleCase(), stats = stats.ifBlank { dmg }, notes = notes)

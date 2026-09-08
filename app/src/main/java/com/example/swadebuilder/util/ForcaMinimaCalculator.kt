@@ -13,6 +13,46 @@ object ForcaMinimaCalculator {
 
     private val DADO_REGEX = Regex("""d(\d+)(?:\+(\d+))?""", RegexOption.IGNORE_CASE)
     private val DANO_FORCA_REGEX = Regex("""(For|Str|Força)\s*\+\s*d(\d+)""", RegexOption.IGNORE_CASE)
+    private val CONTEM_FORCA_REGEX = Regex("(For|Str|Força)", RegexOption.IGNORE_CASE)
+
+    // Armas cujo dano usa "For" mas que nunca são empunhadas pra golpear — a Força ali
+    // representa a "puxada" (arco) ou o giro/arremesso do próprio item (funda,
+    // boleadeira), não uma arma de combate corpo a corpo. Não há campo estruturado no
+    // catálogo pra essa distinção (tipo/subtipo se repetem entre arco e arma de
+    // arremesso de verdade, ex.: os dois vivem em "Armas à Distância / Medievais") —
+    // curated à mão por palavra-chave do nome; revisar/estender se aparecerem mais
+    // exceções (ver PR do usuário pedindo esse ajuste pro Arco Composto).
+    private val PALAVRAS_SO_A_DISTANCIA_MESMO_COM_FORCA = listOf(
+        "arco", "funda", "estilingue", "zarabatana", "boleadeira", "bolea"
+    )
+
+    /**
+     * Uma arma com dano baseado em Força ("For+dN") E alcance cadastrado é, pela regra
+     * do livro básico, tanto arma corpo a corpo quanto arma de arremesso a partir da
+     * MESMA compra (ex.: Machado de Arremesso, Adaga/Faca (Arremesso) — o catálogo já
+     * cadastra `dano` e `distancia` juntos no mesmo item). A exceção são armas com "For"
+     * no dano que nunca são usadas corpo a corpo (arcos, fundas, boleadeiras — ver lista
+     * acima).
+     */
+    fun ehArmaDeArremesso(nome: String, dano: String): Boolean {
+        if (!CONTEM_FORCA_REGEX.containsMatchIn(dano)) return false
+        val nomeNormalizado = nome.lowercase()
+        return PALAVRAS_SO_A_DISTANCIA_MESMO_COM_FORCA.none { nomeNormalizado.contains(it) }
+    }
+
+    /**
+     * Bônus de Alcance da Vantagem Brutamontes (livro básico, pág. 42, Vantagens de
+     * Antecedente): "+1 a Curta Distância de qualquer item arremessado. Dobre isso para
+     * a Média Distância ajustada e dobre novamente para a Longa Distância" — 3/6/12 vira
+     * 4/8/16. Espera `distancia` no formato "curta/média/longa"; retorna null se o texto
+     * não tiver esse formato (arma sem alcance em três faixas, texto livre etc.).
+     */
+    fun alcanceComBrutamontes(distancia: String): String? {
+        val partes = distancia.split("/").mapNotNull { it.trim().toIntOrNull() }
+        if (partes.size != 3) return null
+        val curta = partes[0] + 1
+        return "$curta/${curta * 2}/${curta * 4}"
+    }
 
     /** "d4".."d12+2"... -> raw-int (4,6,8,10,12,13,14...). Null se não reconhecer o formato. */
     fun paraRaw(dado: String): Int? {
