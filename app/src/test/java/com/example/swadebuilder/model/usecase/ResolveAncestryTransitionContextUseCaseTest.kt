@@ -1,5 +1,6 @@
 package com.example.swadebuilder.model.usecase
 
+import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialModifier
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -13,11 +14,11 @@ class ResolveAncestryTransitionContextUseCaseTest {
     fun `detects human transitions through adaptavel and computes previous free keys`() {
         val previousDef = RacialModifier(
             nome = "Povo Adaptado",
-            vantagensGratis = listOf("Adaptável"),
-            desvantagens = emptyList(),
             atributos = emptyMap(),
             pericias = emptyMap(),
-            habilidades = emptyList(),
+            habilidades = listOf(
+                RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
+            ),
             origem = "BASICO"
         )
 

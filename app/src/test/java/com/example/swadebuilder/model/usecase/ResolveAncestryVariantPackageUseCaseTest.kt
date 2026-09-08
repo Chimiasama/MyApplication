@@ -83,7 +83,13 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")), result.tracosParaAdicionar)
+        assertEquals(
+            listOf(
+                TraitAddition("Pedregoso (Resistência)", "RESISTENCIA"),
+                TraitAddition("Pedregoso (Armadura)", "ARMADURA")
+            ),
+            result.tracosParaAdicionar
+        )
     }
 
     @Test
@@ -94,7 +100,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
             selectionAnswers = emptyList()
         )
 
-        assertEquals(listOf(TraitAddition("GARRAS", "GARRAS")), result.tracosParaAdicionar)
+        assertEquals(listOf(TraitAddition("Ápice", "GARRAS_SEM_PA")), result.tracosParaAdicionar)
     }
 
     @Test
@@ -107,8 +113,10 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
+        // Força d8 = MUITO_FORTE (4pts), não FORTE (2pts, d6 — esse é o da
+        // variante "Ar, Fogo ou Água", mais fraca).
         assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
+            listOf(TraitAddition("MUITO FORTE", "MUITO_FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
             result.tracosParaAdicionar
         )
     }
@@ -123,7 +131,10 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")), result.tracosParaAdicionar)
+        assertEquals(
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")),
+            result.tracosParaAdicionar
+        )
     }
 
     @Test

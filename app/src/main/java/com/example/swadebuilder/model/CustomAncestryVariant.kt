@@ -5,9 +5,13 @@ import kotlinx.serialization.Serializable
 /**
  * Variante custom de uma raça, criada pelo mestre no conteúdo customizado:
  * pega uma raça existente (oficial ou custom) como base, remove alguns dos
- * traços/vantagens/desvantagens dela e/ou adiciona traços novos, Vantagens
- * e Complicações do catálogo geral — dentro do orçamento de pontos de
- * `ResolveVariantPointBudgetUseCase`.
+ * traços dela (sempre por id, via `tracosRemovidosIds`) e/ou adiciona traços
+ * novos, Vantagens e Complicações do catálogo geral — dentro do orçamento de
+ * pontos de `ResolveVariantPointBudgetUseCase`. Vantagem/Complicação
+ * adicionada nunca vira string solta: `CriadorState.applyCustomAncestryVariantIfSelected()`
+ * converte `vantagensAdicionadasIds`/`complicacoesAdicionadas` num traço de
+ * `habilidades[]` vinculado por id (traitId=GRANTED_EDGE/RACIAL_HINDRANCE +
+ * targetRef).
  *
  * É uma Variante de verdade (o mestre reconfigura a raça pro cenário/mesa),
  * não uma Seleção — some da lista quando a regra de livro "Variantes de
@@ -22,10 +26,6 @@ data class CustomAncestryVariant(
     val descricao: String = "",
     /** Ids de habilidades[] da raça base removidos nesta Variante. */
     val tracosRemovidosIds: List<String> = emptyList(),
-    /** Strings de vantagensGratis da raça base removidas nesta Variante. */
-    val vantagensGratisRemovidas: List<String> = emptyList(),
-    /** Strings de desvantagens da raça base removidas nesta Variante. */
-    val desvantagensRemovidas: List<String> = emptyList(),
     /** Traços bespoke adicionados, escolhidos do catálogo geral (basico_habilidades_raciais.json). */
     val tracosAdicionados: List<HabilidadeCriacao> = emptyList(),
     /** Ids de Vantagem (vantagens.json) adicionadas de graça nesta Variante. */

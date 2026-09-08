@@ -27829,6 +27829,34 @@
     "usaPoderesPorEstagio": true
   },
   {
+    "id": "aa_demonio_meio_demonio",
+    "nome": "ANTECEDENTE ARCANO (Demônio)",
+    "categoria": "PODER",
+    "requisitos": "Novato, exclusivo do traço racial dos Meio-Demônios (não é uma escolha livre de Vantagem)",
+    "descricao": "Perícia: Conjurar (Astúcia)\nPoderes Iniciais: 3\nPontos de Poder Iniciais: 10\n\nVersão diluída do sangue demoníaco dos meio-demônios: o mesmo acesso a poderes exclusivos dos demônios de sangue puro, exceto Disfarce Demoníaco — que só se manifesta plenamente no Estágio Experiente (veja a Vantagem Disfarce Demoníaco (Estágio Experiente)).",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "Concede a perícia Conjurar (Astúcia), 3 poderes iniciais à escolha e 10 Pontos de Poder iniciais; mesmos poderes exclusivos dos demônios, exceto Disfarce Demoníaco, que exige a Vantagem Disfarce Demoníaco (Estágio Experiente).",
+    "subtipoArcano": "DEMONIO_MEIO",
+    "usaPoderesPorEstagio": true
+  },
+  {
+    "id": "disfarce_demoniaco_experiente_meio",
+    "nome": "DISFARCE DEMONÍACO (Estágio Experiente)",
+    "categoria": "PODER",
+    "requisitos": {
+      "estagio": "Experiente",
+      "vantagens_previas": ["aa_demonio_meio_demonio"],
+      "observacoes": "Antecedente Arcano (Demônio) do traço racial dos Meio-Demônios"
+    },
+    "descricao": "O sangue demoníaco do meio-demônio finalmente se manifesta o bastante para sustentar uma ilusão sobre a própria forma. Adiciona o poder Disfarce Demoníaco à lista de poderes conhecidos, por um custo de 2 Pontos de Poder por ativação — em vez dos 0 PP que os demônios de sangue puro pagam.",
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "Requer o Antecedente Arcano (Demônio) dos Meio-Demônios em Estágio Experiente; adiciona Disfarce Demoníaco à lista de poderes conhecidos, custando 2 PP por ativação em vez de 0."
+  },
+  {
     "id": "aa_anjo",
     "nome": "ANTECEDENTE ARCANO (Anjo)",
     "categoria": "PODER",

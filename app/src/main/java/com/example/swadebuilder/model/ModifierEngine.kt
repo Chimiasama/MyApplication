@@ -87,9 +87,7 @@ object ModifierEngine {
             } ?: emptyList()
 
             val rawSources =
-                anc.vantagensGratis +
-                    anc.habilidades.map { it.nome } +
-                    anc.desvantagens +
+                anc.habilidades.map { it.nome } +
                     state.vantagensRaciais +
                     state.vantagensAutomaticas +
                     state.desvantagensRaciais +
@@ -161,9 +159,9 @@ object ModifierEngine {
             // regex que antes liam "TAMANHO ±N"/"RESISTÊNCIA ±N"/
             // "MOVIMENTAÇÃO ±N"/"ARMADURA +N" do NOME do traço — o traço só
             // precisa estar presente (por id na habilidade da raça/monstro,
-            // ou por nome solto pros grants ainda guardados como texto em
-            // vantagensGratis/desvantagens), o catálogo já diz o alvo e o
-            // valor. Ver RacialTraitEffect.
+            // ou por nome solto em vantagensRaciais/desvantagensRaciais —
+            // ver TraitAddition), o catálogo já diz o alvo e o valor. Ver
+            // RacialTraitEffect.
             val sourceKeys = sources.map { it.keyify() }.toSet()
 
             // Quantas vezes cada id de traço foi "comprado" (ver
@@ -208,11 +206,11 @@ object ModifierEngine {
             // exibição aqui, só lido do que ResolveAncestryRacialPackageUseCase
             // já resolveu.
             state.racialTraitIdsFromVariants.forEach { registrarCompra(it.id, it.vezes) }
-            // Grants ainda guardados como nome solto sem id à parte (ex.:
-            // Inumimi "RESISTÊNCIA" bare em vantagensGratis) — presença por
-            // nome normalizado só pode significar 1 compra (o texto não
-            // carrega contagem nenhuma); ids já contados acima por uma fonte
-            // estruturada mantêm o valor real deles (maxOf não reduz).
+            // Grants que chegam como nome solto sem id à parte (ex.: texto de
+            // Monstro Heroico) — presença por nome normalizado só pode
+            // significar 1 compra (o texto não carrega contagem nenhuma);
+            // ids já contados acima por uma fonte estruturada mantêm o valor
+            // real deles (maxOf não reduz).
             RacialTraitPointCatalog.EFEITOS.keys.forEach { id ->
                 if (id in sourceKeys) registrarCompra(id, 1)
             }
@@ -250,7 +248,8 @@ object ModifierEngine {
                     // ModifierTarget.ARMOR deste motor.
                     is RacialTraitEffect.ArmaduraBonus -> Unit
                     is RacialTraitEffect.Composite -> efeito.efeitos.forEach { sub -> aplicarEfeito(id, sub, nomeExibicao, vezes) }
-                    is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum -> Unit
+                    is RacialTraitEffect.AtributoStep, is RacialTraitEffect.PericiaStep, RacialTraitEffect.Nenhum,
+                    is RacialTraitEffect.PericiaPoolBonus, is RacialTraitEffect.AtributoPoolBonus -> Unit
                 }
             }
 
@@ -424,6 +423,20 @@ object ModifierEngine {
 
     fun sizeRawDisplay(state: CriadorState): Int {
         return sum(state, ModifierTarget.SIZE_DISPLAY)
+    }
+
+    /**
+     * Só a parcela de Tamanho vinda da própria raça (traço racial, id
+     * ANCESTRALIDADE) — sem contar Vantagens (Musculoso) ou Complicações
+     * (Obeso) que também mexem em SIZE_DISPLAY. Usado por atributoMaxRaw()
+     * pra elevar o teto de Força: regra oficial (SWADE, "Tamanho") é que
+     * cada ponto de Tamanho da raça eleva o dado máximo de Força em um
+     * passo — mas só o Tamanho de raça, Musculoso não amplia esse teto.
+     */
+    fun racialSizeRawDisplay(state: CriadorState): Int {
+        return collect(state)
+            .filter { it.target == ModifierTarget.SIZE_DISPLAY && it.sourceType == SourceType.ANCESTRALIDADE }
+            .sumOf { it.value }
     }
 
     fun sizeDisplay(state: CriadorState): Int {

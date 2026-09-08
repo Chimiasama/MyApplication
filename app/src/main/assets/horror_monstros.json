@@ -228,22 +228,24 @@
       "Forca": 2,
       "Vigor": 2
     },
-    "vantagensGratis": [
-      "resistencia_arcana",
-      "furioso"
-    ],
     "habilidades": [
       {
         "nome": "Ciência!",
         "descricao": "Criados por cientistas loucos, possuem a Vantagem Resistência Arcana.",
         "descricaoLite": "Fruto da obra de um cientista insano, possui a Vantagem Resistência Arcana.",
-        "id": "CIENCIA_RETALHOS"
+        "id": "CIENCIA_RETALHOS",
+        "category": "racial_edge",
+        "traitId": "GRANTED_EDGE",
+        "targetRef": "resistencia_arcana"
       },
       {
         "nome": "Fúria",
         "descricao": "Todos os monstros de retalhos possuem a Vantagem Furioso.",
         "descricaoLite": "Possui a Vantagem Furioso.",
-        "id": "FURIA_RETALHOS"
+        "id": "FURIA_RETALHOS",
+        "category": "racial_edge",
+        "traitId": "GRANTED_EDGE",
+        "targetRef": "furioso"
       },
       {
         "nome": "Morto-Vivo",

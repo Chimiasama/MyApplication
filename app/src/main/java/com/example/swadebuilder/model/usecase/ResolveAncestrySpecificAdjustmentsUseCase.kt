@@ -107,6 +107,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         scifiVariant: String? = null,
         humanoMineradorAtributo: String? = null,
         anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
+        quadroidesTracoNegativoSelecionado: String? = null,
         ancestryOptions: List<String> = emptyList(),
         isSciFiActive: Boolean = false,
         isSciFiMechasActive: Boolean = false,
@@ -142,18 +143,6 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         }
 
         if (isSciFiActive) {
-            if (ancKey == "DEADERS (PARASTEEN)" || ancKey == "DEADERS") {
-                return Result(
-                    naturalArmorFromRace = 0,
-                    forceArmorZero = true,
-                    ensureAdvantageNames = listOf("CALCULISTA"),
-                    ensureAdvantageIds = emptyList(),
-                    ensureAutomaticAdvantages = listOf(TraitAddition("CALCULISTA", "CALCULISTA")),
-                    ensureRacialDisadvantages = emptyList(),
-                    elementalAction = ElementalAction.NONE
-                )
-            }
-
             if (ancKey == "ANOES") {
                 // Anões "Ciber" é Variante de verdade (o mestre reconfigura a
                 // raça pro cenário) com Seleção aninhada (até 2 pontos de
@@ -217,6 +206,39 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 }
             }
 
+            if (ancKey == "QUADROIDES" && effectiveVariant == "Habilidoso") {
+                // Ação Adicional (Ignora Penalidade) é 1 ponto mais forte que
+                // a Física que ela substitui — o livro pede pro mestre
+                // equilibrar com 1 ponto de traço negativo. Isso é resolvido
+                // como escolha de verdade do jogador (catálogo reaproveitado
+                // de AnaoCiberTraitCatalog, mesmo padrão do Anão Ciber acima)
+                // em vez de um lembrete solto: sem escolha ainda, usa o
+                // primeiro traço da lista.
+                val trait = AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.firstOrNull { it.id == quadroidesTracoNegativoSelecionado }
+                    ?: AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.first()
+                val racialDisadvantages = AnaoCiberTraitCatalog.buildDesvantagens(
+                    listOf(AnaoCiberTraitSelection(traitId = trait.id))
+                )
+                val resolved = resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "QUADROIDES",
+                    variantOptionId = "habilidoso",
+                    selectionAnswers = emptyList(),
+                    catalogPackages = mapOf(
+                        "quadroides_traco_negativo" to ResolvedTraitPackage(desvantagensParaAdicionar = racialDisadvantages)
+                    )
+                )
+                return Result(
+                    naturalArmorFromRace = 0,
+                    forceArmorZero = true,
+                    ensureAdvantageNames = emptyList(),
+                    ensureAdvantageIds = emptyList(),
+                    ensureAutomaticAdvantages = resolved.tracosParaAdicionar,
+                    automaticAdvantagesToRemove = resolved.tracosParaRemoverPorNome,
+                    ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
+                    elementalAction = ElementalAction.NONE
+                )
+            }
+
             if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys) {
                 buildResultFromVariantRegistry(ancKey, effectiveVariant)?.let { return it }
             }
@@ -277,22 +299,16 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             )
         }
 
-        if (canonicalOriginKey(ancestryOrigin) == "ARTE_DA_GUERRA" && ancKey == "FERAL") {
-            return Result(
-                naturalArmorFromRace = 0,
-                forceArmorZero = true,
-                ensureAdvantageNames = listOf("FURIOSO"),
-                ensureAdvantageIds = emptyList(),
-                ensureAutomaticAdvantages = listOf(
-                    TraitAddition("FURIOSO", "FURIOSO"),
-                    TraitAddition("GARRAS", "GARRAS")
-                ),
-                ensureRacialDisadvantages = listOf(TraitAddition("SANGUINÁRIO", "SANGUINARIO")),
-                elementalAction = ElementalAction.NONE,
-                anotacoesToAdd = listOf("Feral: não pode canalizar Técnicas de Chi.")
-            )
-        }
-
+        // Bloco hardcoded de FERAL removido: Furioso e Sanguinário (traços
+        // FURIOSO/SANGUINARIO em habilidades[], com traitId=GRANTED_EDGE pro
+        // primeiro) são resolvidos genericamente pelo mesmo caminho de
+        // qualquer outra raça, igual à Mente de Colmeia dos Insetoides
+        // (Fantasia) — não precisam mais de "if (ancKey == 'FERAL')" aqui.
+        // As Garras (For+d4 sem PA) já vêm de
+        // GARRAS_SEM_PA em habilidades[]; o grant duplicado "GARRAS" (com
+        // PA, custo errado — 3 em vez de 2) que existia aqui foi removido
+        // junto. A nota "não pode canalizar Técnicas de Chi" já está na
+        // descrição do próprio traço Limitações Técnicas.
 
         if (ancKey.contains("TERRACOTA")) {
             // Terracota não tem Variante — é Seleção de pacote fixo: todo

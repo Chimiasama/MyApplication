@@ -44,13 +44,17 @@ class ModifierEngineAdgAncestryTest {
                 origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility(
-                        nome = "Despretensiosos e Barrigudos",
-                        descricao = "Lentos para agir e se mover. Os tanukimimi têm -1 em Aparar, a Movimentação é reduzida em 1 e seu dado de corrida é d4.",
-                        id = "DESPRETENSIOSOS_E_BARRIGUDOS",
+                        nome = "Despretensiosos e Barrigudos (Aparar Baixo)",
+                        descricao = "Lentos para agir, os tanukimimi têm -1 em Aparar.",
+                        id = "APARAR_BAIXO",
+                        category = "racial_trait_negative"
+                    ),
+                    RacialAbility(
+                        nome = "Despretensiosos e Barrigudos (Movimentação Reduzida)",
+                        descricao = "Lentos para se mover, a Movimentação dos tanukimimi é reduzida em 1 e seu dado de corrida é d4.",
+                        id = "MOVIMENTACAO_REDUZIDA",
                         category = "racial_trait_negative"
                     )
                 )
@@ -59,8 +63,8 @@ class ModifierEngineAdgAncestryTest {
 
         val modifiers = ModifierEngine.collect(state)
 
-        assertTrue(modifiers.any { it.id == "racial_trait_DESPRETENSIOSOS_E_BARRIGUDOS_parry" && it.value == -1 })
-        assertTrue(modifiers.any { it.id == "racial_trait_DESPRETENSIOSOS_E_BARRIGUDOS_pace" && it.value == -1 })
+        assertTrue(modifiers.any { it.id == "racial_trait_APARAR_BAIXO_parry" && it.value == -1 })
+        assertTrue(modifiers.any { it.id == "racial_trait_MOVIMENTACAO_REDUZIDA_pace" && it.value == -1 })
     }
 
     @Test
@@ -72,8 +76,6 @@ class ModifierEngineAdgAncestryTest {
                 origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 habilidades = emptyList(),
                 movimentacao = 2
             )
@@ -93,13 +95,11 @@ class ModifierEngineAdgAncestryTest {
                 origem = "FANTASIA",
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility(
                         nome = "DIMINUTO (Tamanho -4)",
                         descricao = "Membros do povo rato medem cerca de 18 centímetros de altura. Isso lhes confere Tamanho -4 e concede os benefícios de Minúsculo...",
-                        id = "DIMINUTO",
+                        id = "DIMINUTO_TAMANHO_4",
                         category = "racial_trait_positive"
                     )
                 )
@@ -122,8 +122,6 @@ class ModifierEngineAdgAncestryTest {
                 origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility(
                         nome = "Metade Construto",

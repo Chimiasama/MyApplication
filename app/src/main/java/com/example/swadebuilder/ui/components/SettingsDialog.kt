@@ -45,6 +45,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -371,9 +372,14 @@ fun SettingsDialog(
                         var customRange by remember { mutableStateOf("Toque") }
                         var customDuration by remember { mutableStateOf("3 turnos") }
                         var customRacialTrait by remember { mutableStateOf("") }
-                        var refreshTrigger by remember { mutableStateOf(0) }
+                        var refreshTrigger by remember { mutableIntStateOf(0) }
 
                         var customTraitCost by remember { mutableStateOf("1") }
+                        // Efeito mecânico opcional do Traço Racial (ver
+                        // RacialTraitEffect.PericiaPoolBonus/AtributoPoolBonus) — "Nenhum"
+                        // = traço só flavor + custo, como sempre foi.
+                        var customTraitEfeitoTipo by remember { mutableStateOf("Nenhum") }
+                        var customTraitEfeitoValor by remember { mutableStateOf("") }
                         var selectedRacialTraits by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
                         var showTraitSelectDialog by remember { mutableStateOf(false) }
 
@@ -381,8 +387,6 @@ fun SettingsDialog(
                         var varianteBaseRacaId by remember { mutableStateOf<String?>(null) }
                         var showVarianteBaseRacaDialog by remember { mutableStateOf(false) }
                         var varianteTracosRemovidos by remember { mutableStateOf(listOf<String>()) }
-                        var varianteVantagensGratisRemovidas by remember { mutableStateOf(listOf<String>()) }
-                        var varianteDesvantagensRemovidas by remember { mutableStateOf(listOf<String>()) }
                         var varianteTracosAdicionados by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
                         var showVarianteTraitAddDialog by remember { mutableStateOf(false) }
                         var varianteVantagensAdicionadas by remember { mutableStateOf(listOf<String>()) }
@@ -423,8 +427,24 @@ fun SettingsDialog(
                         // superPoderRacialPickerTarget, embutindo a escolha no nome
                         // ("Bônus de Perícia (+1): Intimidar") sem tocar no id
                         // (bonus_pericia_1/2, penalidade_pericia_1/2 continuam os mesmos).
+                        // "pericia_racial_d4"/"pericia_racial_d6" entraram no mesmo picker por
+                        // outro motivo: o livro (pág. 20/21 do Básico) diz que uma Perícia
+                        // Racial em d6 custa 2 pontos, "ou 1 se já é uma perícia básica" —
+                        // Atletismo/Conhecimento Geral/Furtividade/Perceber/Persuadir (e
+                        // qualquer outra marcada `Pericia.basica` no catálogo, ex.: Canalizar
+                        // Cristal do Crystal Heart) já começam em d4 de graça pra todo mundo,
+                        // então subir pra d6 é só meio caminho, não o traço completo. O picker
+                        // já existia pra registrar QUAL perícia foi escolhida (sem isso, o
+                        // custo certo nem dava pra calcular); o ajuste de custo em si acontece
+                        // no onEscolhido do AlertDialog "Escolher Perícia" abaixo, lendo
+                        // `pericia.basica` — o mesmo campo estruturado que o resto do app já
+                        // usa pra decidir se uma perícia começa em d4 de graça (PericiaRules.kt,
+                        // EnsureDefaultSpecializationsUseCase), nunca um nome comparado em texto.
                         val periciaChoiceTraitIds = remember {
-                            setOf("bonus_pericia_1", "bonus_pericia_2", "penalidade_pericia_1", "penalidade_pericia_2")
+                            setOf(
+                                "bonus_pericia_1", "bonus_pericia_2", "penalidade_pericia_1", "penalidade_pericia_2",
+                                "pericia_racial_d4", "pericia_racial_d6"
+                            )
                         }
                         var periciaTraitPickerTarget by remember {
                             mutableStateOf<Pair<com.example.swadebuilder.model.HabilidadeCriacao, (com.example.swadebuilder.model.HabilidadeCriacao) -> Unit>?>(null)
@@ -969,6 +989,54 @@ fun SettingsDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
+                                                    Spacer(Modifier.height(8.dp))
+                                                    // Efeito mecânico opcional: além do custo (orçamento da raça),
+                                                    // um traço pode dar/tirar Pontos de Perícia ou de Atributo de
+                                                    // verdade (quantos pontos e o custo são decisão de quem cria
+                                                    // — ver RacialTraitEffect.PericiaPoolBonus/AtributoPoolBonus).
+                                                    // "Nenhum" continua sendo o traço puramente de flavor/custo de
+                                                    // sempre, sem efeito numérico modelado.
+                                                    Text(
+                                                        "Efeito mecânico (opcional):",
+                                                        style = MaterialTheme.typography.labelMedium,
+                                                        color = MaterialTheme.colorScheme.primary
+                                                    )
+                                                    @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                    androidx.compose.foundation.layout.FlowRow(
+                                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                    ) {
+                                                        listOf(
+                                                            "Nenhum",
+                                                            "Bônus de Pontos de Perícia",
+                                                            "Penalidade de Pontos de Perícia",
+                                                            "Bônus de Pontos de Atributo",
+                                                            "Penalidade de Pontos de Atributo"
+                                                        ).forEach { tipo ->
+                                                            androidx.compose.material3.FilterChip(
+                                                                selected = customTraitEfeitoTipo == tipo,
+                                                                onClick = { customTraitEfeitoTipo = tipo },
+                                                                label = { Text(tipo, style = MaterialTheme.typography.labelSmall) }
+                                                            )
+                                                        }
+                                                    }
+                                                    if (customTraitEfeitoTipo != "Nenhum") {
+                                                        Spacer(Modifier.height(4.dp))
+                                                        androidx.compose.material3.OutlinedTextField(
+                                                            value = customTraitEfeitoValor,
+                                                            onValueChange = { customTraitEfeitoValor = it },
+                                                            label = {
+                                                                Text(
+                                                                    if (customTraitEfeitoTipo.startsWith("Bônus"))
+                                                                        "Quantos pontos concede (ex: 3)"
+                                                                    else
+                                                                        "Quantos pontos tira (ex: 2 — vai virar penalidade)"
+                                                                )
+                                                            },
+                                                            singleLine = true,
+                                                            modifier = Modifier.fillMaxWidth()
+                                                        )
+                                                    }
                                                 }
                                                 "Variante de Raça" -> {
                                                     val baseRacaOptions = remember(state.listaAncestralidadesJson) {
@@ -992,18 +1060,12 @@ fun SettingsDialog(
                                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                                         )
                                                     } else {
-                                                        val itensRemoviveis = remember(varianteBaseRaca) {
+                                                        val habilidadeItems = remember(varianteBaseRaca) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(varianteBaseRaca)
+                                                                .filter { it.habilidadeId != null }
                                                         }
-                                                        val nHab = varianteBaseRaca.habilidades.size
-                                                        val nVant = varianteBaseRaca.vantagensGratis.size
-                                                        val habilidadeItems = itensRemoviveis.take(nHab).filter { it.habilidadeId != null }
-                                                        val vantagemGratisItems = itensRemoviveis.drop(nHab).take(nVant)
-                                                        val desvantagemItems = itensRemoviveis.drop(nHab + nVant)
 
-                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos } +
-                                                            vantagemGratisItems.filter { it.label in varianteVantagensGratisRemovidas } +
-                                                            desvantagemItems.filter { it.label in varianteDesvantagensRemovidas }
+                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos }
 
                                                         val itensAdicionadosSelecionados = buildList {
                                                             varianteTracosAdicionados.forEach { trait ->
@@ -1026,7 +1088,9 @@ fun SettingsDialog(
                                                         }
                                                         val budgetResult = remember(valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, varianteSemLimite) {
                                                             com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                                valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                                valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados,
+                                                                orcamento = varianteBaseRaca.pontosRaciaisEsperados,
+                                                                semLimite = varianteSemLimite
                                                             )
                                                         }
 
@@ -1051,7 +1115,7 @@ fun SettingsDialog(
                                                                 HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
                                                                 Text("Remover da raça base:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
 
-                                                                if (habilidadeItems.isEmpty() && vantagemGratisItems.isEmpty() && desvantagemItems.isEmpty()) {
+                                                                if (habilidadeItems.isEmpty()) {
                                                                     Text("Esta raça não tem traços removíveis.", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                                                 } else {
                                                                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -1065,34 +1129,6 @@ fun SettingsDialog(
                                                                             ) {
                                                                                 Checkbox(checked = isSel, onCheckedChange = {
                                                                                     varianteTracosRemovidos = if (it) varianteTracosRemovidos + item.habilidadeId!! else varianteTracosRemovidos - item.habilidadeId!!
-                                                                                })
-                                                                                Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
-                                                                            }
-                                                                        }
-                                                                        vantagemGratisItems.forEach { item ->
-                                                                            val isSel = item.label in varianteVantagensGratisRemovidas
-                                                                            Row(
-                                                                                modifier = Modifier.fillMaxWidth().clickable {
-                                                                                    varianteVantagensGratisRemovidas = if (isSel) varianteVantagensGratisRemovidas - item.label else varianteVantagensGratisRemovidas + item.label
-                                                                                },
-                                                                                verticalAlignment = Alignment.CenterVertically
-                                                                            ) {
-                                                                                Checkbox(checked = isSel, onCheckedChange = {
-                                                                                    varianteVantagensGratisRemovidas = if (it) varianteVantagensGratisRemovidas + item.label else varianteVantagensGratisRemovidas - item.label
-                                                                                })
-                                                                                Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
-                                                                            }
-                                                                        }
-                                                                        desvantagemItems.forEach { item ->
-                                                                            val isSel = item.label in varianteDesvantagensRemovidas
-                                                                            Row(
-                                                                                modifier = Modifier.fillMaxWidth().clickable {
-                                                                                    varianteDesvantagensRemovidas = if (isSel) varianteDesvantagensRemovidas - item.label else varianteDesvantagensRemovidas + item.label
-                                                                                },
-                                                                                verticalAlignment = Alignment.CenterVertically
-                                                                            ) {
-                                                                                Checkbox(checked = isSel, onCheckedChange = {
-                                                                                    varianteDesvantagensRemovidas = if (it) varianteDesvantagensRemovidas + item.label else varianteDesvantagensRemovidas - item.label
                                                                                 })
                                                                                 Text("${item.label} (${item.custo})", style = MaterialTheme.typography.bodySmall, modifier = Modifier.weight(1f))
                                                                             }
@@ -1459,7 +1495,10 @@ fun SettingsDialog(
                                                                 // (applyCustomAncestryVariantIfSelected).
                                                                 id = trait.id ?: trait.nome.toIdSlug(),
                                                                 category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative",
-                                                                vezes = trait.vezes
+                                                                vezes = trait.vezes,
+                                                                traitId = trait.traitId,
+                                                                targetRef = trait.targetRef,
+                                                                value = trait.value
                                                             )
                                                         }
                                                     } else {
@@ -1487,11 +1526,21 @@ fun SettingsDialog(
                                                 }
                                                 "Traço Racial" -> {
                                                     val costInt = customTraitCost.toIntOrNull() ?: 1
+                                                    val efeitoMagnitude = customTraitEfeitoValor.toIntOrNull()?.let { kotlin.math.abs(it) } ?: 0
+                                                    val (efeitoTraitId, efeitoValue) = when (customTraitEfeitoTipo) {
+                                                        "Bônus de Pontos de Perícia" -> "PERICIA_POINTS_BONUS" to efeitoMagnitude
+                                                        "Penalidade de Pontos de Perícia" -> "PERICIA_POINTS_BONUS" to -efeitoMagnitude
+                                                        "Bônus de Pontos de Atributo" -> "ATRIBUTO_POINTS_BONUS" to efeitoMagnitude
+                                                        "Penalidade de Pontos de Atributo" -> "ATRIBUTO_POINTS_BONUS" to -efeitoMagnitude
+                                                        else -> null to 0
+                                                    }
                                                     val newTrait = com.example.swadebuilder.model.HabilidadeCriacao(
                                                         nome = customItemName,
                                                         custo = costInt,
                                                         descricao = safeDesc,
-                                                        id = id
+                                                        id = id,
+                                                        traitId = efeitoTraitId,
+                                                        value = efeitoValue
                                                     )
                                                     tags.forEach { tag -> customStorageManager.addHabilidadeRacial(context, tag, newTrait) }
                                                     statusMessage = "Traço racial '$customItemName' salvo em: $tagsLabel"
@@ -1501,16 +1550,10 @@ fun SettingsDialog(
                                                     if (baseRaca == null) {
                                                         statusMessage = "Selecione a raça base da Variante."
                                                     } else {
-                                                        val itensRemoviveis = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca)
-                                                        val nHab = baseRaca.habilidades.size
-                                                        val nVant = baseRaca.vantagensGratis.size
-                                                        val habilidadeItems = itensRemoviveis.take(nHab).filter { it.habilidadeId != null }
-                                                        val vantagemGratisItems = itensRemoviveis.drop(nHab).take(nVant)
-                                                        val desvantagemItems = itensRemoviveis.drop(nHab + nVant)
+                                                        val habilidadeItems = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.itensRemoviveisDe(baseRaca)
+                                                            .filter { it.habilidadeId != null }
 
-                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos } +
-                                                            vantagemGratisItems.filter { it.label in varianteVantagensGratisRemovidas } +
-                                                            desvantagemItems.filter { it.label in varianteDesvantagensRemovidas }
+                                                        val itensRemovidosSelecionados = habilidadeItems.filter { it.habilidadeId in varianteTracosRemovidos }
 
                                                         val itensAdicionadosSelecionados = buildList {
                                                             varianteTracosAdicionados.forEach { trait ->
@@ -1530,7 +1573,9 @@ fun SettingsDialog(
 
                                                         val valorBaseRaca = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase.valorTotalDe(baseRaca)
                                                         val budgetResult = com.example.swadebuilder.model.usecase.ResolveVariantPointBudgetUseCase().resolve(
-                                                            valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados, semLimite = varianteSemLimite
+                                                            valorBaseRaca, itensRemovidosSelecionados, itensAdicionadosSelecionados,
+                                                            orcamento = baseRaca.pontosRaciaisEsperados,
+                                                            semLimite = varianteSemLimite
                                                         )
 
                                                         if (!budgetResult.dentroDoOrcamento) {
@@ -1542,8 +1587,6 @@ fun SettingsDialog(
                                                                 nome = customItemName,
                                                                 descricao = safeDesc,
                                                                 tracosRemovidosIds = varianteTracosRemovidos,
-                                                                vantagensGratisRemovidas = varianteVantagensGratisRemovidas,
-                                                                desvantagensRemovidas = varianteDesvantagensRemovidas,
                                                                 tracosAdicionados = varianteTracosAdicionados,
                                                                 vantagensAdicionadasIds = varianteVantagensAdicionadas,
                                                                 complicacoesAdicionadas = varianteComplicacoesAdicionadas,
@@ -1554,8 +1597,6 @@ fun SettingsDialog(
                                                             statusMessage = "Variante '$customItemName' salva em: $tagsLabel"
                                                             varianteBaseRacaId = null
                                                             varianteTracosRemovidos = emptyList()
-                                                            varianteVantagensGratisRemovidas = emptyList()
-                                                            varianteDesvantagensRemovidas = emptyList()
                                                             varianteTracosAdicionados = emptyList()
                                                             varianteVantagensAdicionadas = emptyList()
                                                             varianteComplicacoesAdicionadas = emptyList()
@@ -1910,8 +1951,6 @@ fun SettingsDialog(
                                                 modifier = Modifier.fillMaxWidth().clickable {
                                                     varianteBaseRacaId = raca.nome.keyify()
                                                     varianteTracosRemovidos = emptyList()
-                                                    varianteVantagensGratisRemovidas = emptyList()
-                                                    varianteDesvantagensRemovidas = emptyList()
                                                     showVarianteBaseRacaDialog = false
                                                 }.padding(vertical = 6.dp),
                                                 verticalAlignment = Alignment.CenterVertically
@@ -2096,12 +2135,22 @@ fun SettingsDialog(
                                             .sortedBy { it.nome }
                                             .filter { it.nome.contains(filterPericiaTraitText, ignoreCase = true) }
                                             .forEach { pericia ->
+                                                // "Perícia Racial (d6)" custa 2, mas o livro dá desconto
+                                                // pra 1 quando a perícia escolhida já é uma Perícia
+                                                // Básica (começa em d4 de graça pra qualquer
+                                                // personagem) — ver comentário de periciaChoiceTraitIds.
+                                                val custoFinal = if (trait.id == "pericia_racial_d6" && pericia.basica) 1 else trait.custo
+                                                val nomeComDesconto = if (custoFinal != trait.custo) {
+                                                    "${trait.nome}: ${pericia.nome} (perícia básica, custo reduzido)"
+                                                } else {
+                                                    "${trait.nome}: ${pericia.nome}"
+                                                }
                                                 Row(
                                                     modifier = Modifier.fillMaxWidth().clickable {
                                                         onEscolhido(
                                                             com.example.swadebuilder.model.HabilidadeCriacao(
-                                                                nome = "${trait.nome}: ${pericia.nome}",
-                                                                custo = trait.custo,
+                                                                nome = nomeComDesconto,
+                                                                custo = custoFinal,
                                                                 descricao = "${trait.descricao} Perícia escolhida: ${pericia.nome}.",
                                                                 descricaoLite = trait.descricaoLite,
                                                                 id = trait.id
@@ -2111,7 +2160,10 @@ fun SettingsDialog(
                                                     }.padding(vertical = 6.dp),
                                                     verticalAlignment = Alignment.CenterVertically
                                                 ) {
-                                                    Text(pericia.nome, style = MaterialTheme.typography.bodyMedium)
+                                                    Text(
+                                                        if (trait.id == "pericia_racial_d6") "${pericia.nome} (${if (custoFinal != trait.custo) "+1 pt" else "+2 pts"})" else pericia.nome,
+                                                        style = MaterialTheme.typography.bodyMedium
+                                                    )
                                                 }
                                             }
                                     }

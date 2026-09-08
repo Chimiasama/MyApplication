@@ -89,8 +89,6 @@ data class RacialModifierLite(
     val habilidades: List<RacialAbilityLite> = emptyList(),
     val atributos: Map<String, Int> = emptyMap(),
     val pericias: Map<String, Int> = emptyMap(),
-    val vantagensGratis: List<String> = emptyList(),
-    val desvantagens: List<String> = emptyList(),
     val opcoes: List<String> = emptyList()
 )
 
@@ -234,8 +232,6 @@ fun AncestralidadesSection(
                     habilidades = habilidadesLite,
                     atributos = representative.atributos,
                     pericias = representative.pericias,
-                    vantagensGratis = representative.vantagensGratis,
-                    desvantagens = representative.desvantagens,
                     opcoes = representative.opcoes
                 )
             }.sortedBy { it.nome }
@@ -463,6 +459,7 @@ fun AncestralidadesSection(
                                 // Herança Élfica/Humana — keyify() não remove o "S" do plural, então a
                                 // comparação exata já as separa sem precisar checar o livro de origem.
                                 val isMeioElfo = item.nome.keyify() == "MEIO-ELFOS"
+                                val isMeioDemonio = item.nome.keyify() == "MEIO-DEMONIO"
                                 val isUmvee = item.nome.keyify().contains("UMVEE")
                                 // Seleção (o jogador escolhe entre opções que a própria raça já
                                 // oferece, ex.: Terracota Voto/Obrigação) fica sempre visível.
@@ -647,6 +644,32 @@ fun AncestralidadesSection(
                                             }
                                         }
                                     }
+
+                                    // Quadroides "Habilidoso": escolha única de 1 traço racial negativo
+                                    // de -1 ponto (equilibra a Ação Adicional mais forte desta Variante —
+                                    // mesma ideia do seletor de Anões Ciber acima, mas escolha simples,
+                                    // não um orçamento de vários traços).
+                                    if (item.nome.keyify() == "QUADROIDES" && currentSelection == "Habilidoso") {
+                                        Spacer(Modifier.height(12.dp))
+                                        Text(
+                                            "Traço Racial Negativo (-1 ponto, equilibra a Ação Adicional mais forte):",
+                                            style = MaterialTheme.typography.labelMedium
+                                        )
+                                        Spacer(Modifier.height(4.dp))
+                                        val escolhaAtual = state.quadroidesTracoNegativoSelecionado
+                                            ?: AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.first().id
+                                        Column {
+                                            AnaoCiberTraitCatalog.TRACOS_MENOS_UM_QUADROIDES.forEach { trait ->
+                                                com.example.swadebuilder.ui.components.SelectableItemRow(
+                                                    title = "${trait.nome} (${trait.custo})",
+                                                    selected = escolhaAtual == trait.id,
+                                                    onClick = { state.selecionarQuadroidesTracoNegativo(trait.id) },
+                                                    modifier = Modifier.padding(vertical = 2.dp),
+                                                    mode = com.example.swadebuilder.ui.components.SelectionMode.UNICA
+                                                )
+                                            }
+                                        }
+                                    }
                                 }
 
                                 // Variantes custom (Tarefa #20): reconfigurações da raça criadas em
@@ -699,8 +722,10 @@ fun AncestralidadesSection(
 
                                 if (isFeral) {
                                     Spacer(Modifier.height(8.dp))
-                                    Text("Dons da Natureza: Ápice", style = MaterialTheme.typography.labelMedium)
-                                    Spacer(Modifier.height(8.dp))
+                                    // Rótulo "Dons da Natureza: Ápice" removido — texto sobrado de
+                                    // Umvee (Dons da Natureza é a Seleção DELES, "Ápice" uma das
+                                    // opções), copiado aqui sem ajustar; Feral não tem Dons da
+                                    // Natureza nem Ápice, só o Primitivo abaixo.
                                     val attributeOptions = listOf("Força", "Vigor", "Agilidade")
                                     var attributeExpanded by remember { mutableStateOf(false) }
                                     val currentAttributeSelection = state.humanoMineradorAtributo
@@ -747,6 +772,27 @@ fun AncestralidadesSection(
                                     }
                                 }
 
+                                // Meio-Demônio (Cidade do Sol a Vapor): escolha entre Adaptável
+                                // (Vantagem Novato à escolha, como um humano comum) e o Antecedente
+                                // Arcano (Demônio) diluído — traço racial da própria raça, não uma
+                                // Variante de mestre.
+                                if (isMeioDemonio) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Traço Racial:", style = MaterialTheme.typography.labelMedium)
+                                    Column {
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Adaptável",
+                                            selected = !state.meioDemonioAA,
+                                            onSelect = { state.selecionarMeioDemonioTraco(false) }
+                                        )
+                                        com.example.swadebuilder.ui.components.RadioButtonRow(
+                                            label = "Antecedente Arcano (Demônio)",
+                                            selected = state.meioDemonioAA,
+                                            onSelect = { state.selecionarMeioDemonioTraco(true) }
+                                        )
+                                    }
+                                }
+
                                 // Meio-Orcs: "Endurecido" — escolha entre Força ou Vigor d6 (livro:
                                 // "Começam com um d6 em Força ou Vigor em vez de um d4"). Mesmo
                                 // mecanismo de escolha de atributo já usado por Feral/Minerador
@@ -777,6 +823,7 @@ fun AncestralidadesSection(
                                         }
                                     }
                                 }
+
                             }
 
 
@@ -1025,15 +1072,13 @@ fun AncestralidadesSection(
                                     Column(modifier = Modifier.padding(top = 4.dp)) {
                                         // Quando esta é a raça atualmente selecionada, currentAncestryDef já
                                         // vem com os ajustes de uma eventual Variante custom aplicados
-                                        // (traços/atributos/perícias/vantagens/desvantagens) — usa esses
-                                        // valores em vez dos crus de `item` pra não mostrar, por exemplo,
+                                        // (traços/atributos/perícias) — usa esses valores em vez dos crus
+                                        // de `item` pra não mostrar, por exemplo,
                                         // "Resistente"/Vigor d6 aqui enquanto o Resumo já mostra o traço
                                         // removido e Vigor d4.
                                         val ancestryDefAtivo = if (isSelected) state.currentAncestryDef else null
                                         val atributosEfetivos = ancestryDefAtivo?.atributos ?: item.atributos
                                         val periciasEfetivas = ancestryDefAtivo?.pericias ?: item.pericias
-                                        val vantagensGratisEfetivas = ancestryDefAtivo?.vantagensGratis ?: item.vantagensGratis
-                                        val desvantagensEfetivas = ancestryDefAtivo?.desvantagens ?: item.desvantagens
                                         val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
                                             RacialAbilityLite(nome = it.nome, descricao = it.descricao, id = it.id, category = it.category, severity = it.severity)
                                         } ?: item.habilidades
@@ -1069,8 +1114,6 @@ fun AncestralidadesSection(
                                         val caracteristicas = RacialCaracteristicasResolver.resolver(
                                             atributos = atributosEfetivos,
                                             pericias = periciasEfetivas,
-                                            vantagensGratis = vantagensGratisEfetivas,
-                                            desvantagens = desvantagensEfetivas,
                                             habilidades = habilidadesParaCaracteristicas.map {
                                                 RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
                                             }

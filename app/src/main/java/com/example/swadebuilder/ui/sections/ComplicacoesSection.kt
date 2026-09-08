@@ -87,7 +87,7 @@ fun ComplicacoesSection(
 
     fun normalizeUIKey(s: String): String = s.keyify().replace("_", "").replace("-", "").replace(" ", "")
 
-    val ancestryAuto = state.getAncestralidadeDef(state.ancestralidade)?.desvantagens.orEmpty()
+    val ancestryAuto = state.getAncestralidadeDef(state.ancestralidade)?.resolvedDesvantagens().orEmpty()
     val autoBaseKeys = (state.desvantagensAutomaticas + state.desvantagensRaciais + ancestryAuto)
         .map { normalizeUIKey(it.substringBefore("(").trim()) }
         .toSet()

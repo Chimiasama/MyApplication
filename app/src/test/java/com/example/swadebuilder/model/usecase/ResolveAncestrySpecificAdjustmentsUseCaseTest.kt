@@ -113,7 +113,13 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(2, result.naturalArmorFromRace)
-        assertEquals(listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")), result.ensureAutomaticAdvantages)
+        assertEquals(
+            listOf(
+                TraitAddition("Pedregoso (Resistência)", "RESISTENCIA"),
+                TraitAddition("Pedregoso (Armadura)", "ARMADURA")
+            ),
+            result.ensureAutomaticAdvantages
+        )
     }
 
     @Test
@@ -131,10 +137,14 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     }
 
     @Test
-    fun `feral recebe furioso garras sanguinario e bloqueio de chi sem nenhuma opcao de variante`() {
+    fun `feral nao injeta nada aqui (furioso e sanguinario vem do JSON, nao mais hardcoded)`() {
         // Feral não tem Variante nem Seleção de dom da natureza (diferente do
         // Umvee) — é uma raça própria com traços fixos, por isso o teste não
-        // passa nenhuma ancestryOptions.
+        // passa nenhuma ancestryOptions. Furioso (Vantagem) mora em
+        // vantagensGratis, Sanguinário (Complicação) é o traço SANGUINARIO em
+        // habilidades[], e Garras já é GARRAS_SEM_PA na base — nenhum dos três
+        // precisa mais do "if (ancKey == FERAL)" que existia aqui (mesmo
+        // padrão da Mente de Colmeia dos Insetoides do Fantasia).
         val result = useCase.execute(
             anc = "Feral",
             descendenteElementalSelecionado = null,
@@ -143,10 +153,9 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             ancestryOrigin = "ARTE_DA_GUERRA"
         )
 
-        assertTrue(result.ensureAdvantageNames.contains("FURIOSO"))
-        assertTrue(result.ensureAutomaticAdvantages.any { it.nome == "GARRAS" })
-        assertEquals(listOf(TraitAddition("SANGUINÁRIO", "SANGUINARIO")), result.ensureRacialDisadvantages)
-        assertTrue(result.anotacoesToAdd.any { it.contains("Técnicas de Chi") })
+        assertTrue(result.ensureAdvantageNames.isEmpty())
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
+        assertTrue(result.ensureRacialDisadvantages.isEmpty())
     }
 
 
@@ -218,10 +227,11 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
-            result.ensureAutomaticAdvantages
-        )
+        // Padrão não adiciona mais Forte/Resistência por cima — os dois já
+        // vêm de habilidades[] na raça base (ancestralidades.json), pra não
+        // duplicar quando "Padrão" é selecionado (era exatamente esse o bug:
+        // Resistência aparecia tanto na base quanto injetada aqui).
+        assertEquals(emptyList<TraitAddition>(), result.ensureAutomaticAdvantages)
     }
 
 
@@ -237,10 +247,9 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         )
 
         assertEquals(0, result.naturalArmorFromRace)
-        assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
-            result.ensureAutomaticAdvantages
-        )
+        // Resistência +2 vem da própria raça base (habilidades[]), não mais
+        // injetada pela opção "Padrão" — ver comentário no teste acima.
+        assertEquals(emptyList<TraitAddition>(), result.ensureAutomaticAdvantages)
     }
 
 
@@ -254,8 +263,10 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
+        // Força d8 = MUITO_FORTE (4pts, dois passos), não FORTE (2pts, d6 — esse
+        // é o da variante "Ar, Fogo ou Água", mais fraca).
         assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
+            listOf(TraitAddition("MUITO FORTE", "MUITO_FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
             result.ensureAutomaticAdvantages
         )
         assertEquals(0, result.naturalArmorFromRace)
@@ -271,7 +282,13 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertEquals(listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")), result.ensureAutomaticAdvantages)
+        // Perdem Resistência (só existe em Padrão) e trocam o Forte d8 pelo
+        // Forte fraco (d6 — ver atributoBaseRacial, reseta pra 6 não 4) mais
+        // Forma de Energia: base(-4) + Forte d6(+2) + Forma de Energia(+4) = 2.
+        assertEquals(
+            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")),
+            result.ensureAutomaticAdvantages
+        )
         assertEquals(0, result.naturalArmorFromRace)
     }
 
@@ -378,7 +395,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
 
     @Test
-    fun `quadroides padrao inclui sensivel maior`() {
+    fun `quadroides padrao nao injeta nada (sensivel maior ja vem da base)`() {
         val result = useCase.execute(
             anc = "QUADROIDES",
             descendenteElementalSelecionado = null,
@@ -387,11 +404,14 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.any { it.nome == "SENSÍVEL (Maior)" })
+        // "Padrão" não é Variante de verdade — Ação Adicional (Física) e
+        // Sensível (Maior) já são habilidades[] da raça base.
+        assertTrue(result.ensureAutomaticAdvantages.isEmpty())
+        assertTrue(result.ensureRacialDisadvantages.isEmpty())
     }
 
     @Test
-    fun `quadroides habilidoso inclui anotacao racial e sensivel maior`() {
+    fun `quadroides habilidoso troca acao adicional e usa o primeiro traco negativo por padrao`() {
         val result = useCase.execute(
             anc = "QUADROIDES",
             descendenteElementalSelecionado = null,
@@ -400,14 +420,36 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureRacialDisadvantages.any { it.nome == "SENSÍVEL (Maior)" })
-        // A nota pro mestre é anotação, não uma desvantagem de traço real —
-        // mora em anotacoesToAdd (ver AncestryVariantRegistry.quadroides).
-        assertTrue(
-            result.anotacoesToAdd.any {
-                it.contains("Combine com o mestre de jogo para equilibrar com 1 ponto")
-            }
+        assertEquals(
+            listOf(
+                TraitAddition(
+                    "AÇÃO ADICIONAL (Ignora 2 pontos de penalidade por Ações Múltiplas)",
+                    "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS"
+                )
+            ),
+            result.ensureAutomaticAdvantages
         )
+        assertTrue(result.automaticAdvantagesToRemove.contains("AÇÃO ADICIONAL (Física)"))
+        // Sem escolha do jogador (quadroidesTracoNegativoSelecionado = null),
+        // usa o primeiro traço de -1 ponto do catálogo QUADROIDES (Frágil é
+        // excluído dessa lista — a raça já tem Frágil na base, ver
+        // AnaoCiberTraits.TRACOS_MENOS_UM_QUADROIDES — então o primeiro é
+        // Tamanho -1).
+        assertTrue(result.ensureRacialDisadvantages.any { it.nome.contains("Tamanho") })
+    }
+
+    @Test
+    fun `quadroides habilidoso usa o traco negativo escolhido pelo jogador`() {
+        val result = useCase.execute(
+            anc = "QUADROIDES",
+            descendenteElementalSelecionado = null,
+            scifiVariant = "Habilidoso",
+            ancestryOptions = listOf("Padrão", "Habilidoso"),
+            isSciFiActive = true,
+            quadroidesTracoNegativoSelecionado = "nao_fala"
+        )
+
+        assertTrue(result.ensureRacialDisadvantages.any { it.nome.contains("Não Fala") })
     }
 
     @Test
@@ -420,7 +462,9 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        assertTrue(result.ensureAutomaticAdvantages.any { it.nome == "DEPENDÊNCIA ATMOSFÉRICA" })
+        // Livro: tier "a cada minuto" (-2), não o tier base (-1) — sem o
+        // "(Maior)" a raça ficava 1 ponto acima do orçamento.
+        assertTrue(result.ensureAutomaticAdvantages.any { it.nome == "DEPENDÊNCIA ATMOSFÉRICA (Maior)" })
     }
 
     @Test
@@ -437,7 +481,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
         assertTrue(result.racialDisadvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
         assertTrue(result.ensureAdvantageIds.contains("adaptacao_gravitacional"))
         assertTrue(result.automaticAdvantagesToRemove.contains("FORTE"))
-        assertTrue(result.automaticAdvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA"))
+        assertTrue(result.automaticAdvantagesToRemove.contains("DEPENDÊNCIA ATMOSFÉRICA (Maior)"))
     }
 
     @Test

@@ -556,7 +556,7 @@ data class PowerCardSpec(
     val manifestacoes: List<String> = emptyList()
 )
 
-private fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float, title: String, statLines: List<String>, extraLines: List<String>, theme: PdfTheme) {
+internal fun drawStatCard(canvas: Canvas, x: Float, y: Float, w: Float, h: Float, title: String, statLines: List<String>, extraLines: List<String>, theme: PdfTheme) {
     val rect = RectF(x, y, x + w, y + h)
     val bg = Paint().apply { color = theme.headerBackground; style = Paint.Style.FILL }
     canvas.drawRoundRect(rect, 6f, 6f, bg)
@@ -1412,14 +1412,10 @@ fun calcAparar(personagem: MeuPersonagem, especieId: String? = null): Int {
 
     // especieId (RacialModifier.especieId) resolvido pelo chamador — ver
     // gerarFichaEmPdf. Fica null pra raça customizada, então nunca casa com
-    // "deaders"/"serranos"/"humano" por acidente; se ausente (chamador
-    // antigo que não resolveu), cai no heurístico por nome de antes.
-    val isDeaders = if (especieId != null) especieId == "deaders" else personagem.ancestralidade.keyify().contains("DEADERS")
-    val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
+    // "humano" por acidente; se ausente (chamador antigo que não resolveu),
+    // cai no heurístico por nome de antes.
+    val hasApararBaixo = personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
     val apararBaixoMod = if (hasApararBaixo) -2 else 0
-
-    val isSerranos = if (especieId != null) especieId == "serranos" else personagem.ancestralidade.keyify().contains("SERRANOS")
-    val serranosApararMod = if (isSerranos) 2 else 0
 
     val racialParryBonus = (personagem.vantagensRaciais + personagem.desvantagensRaciais)
         .sumOf { raw ->
@@ -1441,7 +1437,7 @@ fun calcAparar(personagem: MeuPersonagem, especieId: String? = null): Int {
             personagem.signoAdgSelecionado.equals("Garça", ignoreCase = true)
         ) 1 else 0
 
-    return (base + bloq + bloqImp + personagem.bonusApararFromPower + apararBaixoMod + serranosApararMod + racialParryBonus + garcaParryBonus).coerceAtLeast(0)
+    return (base + bloq + bloqImp + personagem.bonusApararFromPower + apararBaixoMod + racialParryBonus + garcaParryBonus).coerceAtLeast(0)
 }
 
 fun calcResistencia(personagem: MeuPersonagem): String {

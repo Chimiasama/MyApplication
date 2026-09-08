@@ -846,10 +846,10 @@ private fun CombatRow(name: String, stats: String, notes: String) {
 @OptIn(ExperimentalLayoutApi::class)
 fun SecondaryAttributesBar(
     stats: List<Pair<String, String>>,
+    modifier: Modifier = Modifier,
     onFamaChange: ((Int) -> Unit)? = null,
     onWealthChange: ((Int) -> Unit)? = null,
-    wealthDieValue: String? = null,
-    modifier: Modifier = Modifier
+    wealthDieValue: String? = null
 ) {
     val statsMap = stats.toMap()
     val mainMetrics = listOf(

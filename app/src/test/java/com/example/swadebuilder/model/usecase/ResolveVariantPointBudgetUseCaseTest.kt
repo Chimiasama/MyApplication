@@ -129,24 +129,28 @@ class ResolveVariantPointBudgetUseCaseTest {
     }
 
     @Test
-    fun `itens removiveis de uma raca base cobrem habilidades vantagensGratis e desvantagens`() {
+    fun `itens removiveis de uma raca base cobrem so habilidades - vantagensGratis e desvantagens ficam sempre vazios`() {
+        // Vantagem/Complicação de raça nunca mais vira string solta em
+        // vantagensGratis/desvantagens — mesmo uma habilidade que concede uma
+        // Vantagem real (traitId=GRANTED_EDGE) é removível só por ela mesma.
         val raca = RacialModifier(
             nome = "RAÇA_TESTE",
             atributos = emptyMap(),
             pericias = emptyMap(),
-            vantagensGratis = listOf("PRONTIDÃO"),
-            desvantagens = listOf("DESASTRADO"),
             habilidades = listOf(
-                RacialAbility(nome = "Forte", descricao = "teste", id = "FORTE", category = "racial_trait_positive")
+                RacialAbility(nome = "Forte", descricao = "teste", id = "FORTE", category = "racial_trait_positive"),
+                RacialAbility(
+                    nome = "Sentidos Aguçados", descricao = "teste", id = "PRONTIDAO",
+                    category = "racial_edge", traitId = "GRANTED_EDGE", targetRef = "PRONTIDÃO"
+                )
             )
         )
 
         val itens = itensRemoviveisDe(raca)
 
-        assertEquals(3, itens.size)
+        assertEquals(2, itens.size)
         assertTrue(itens.any { it.habilidadeId == "FORTE" && it.custo == 2 })
-        assertTrue(itens.any { it.vantagemId == "prontidao" && it.custo == 2 })
-        assertTrue(itens.any { it.complicacaoId == "desastrado" && it.custo == -1 })
+        assertTrue(itens.any { it.habilidadeId == "PRONTIDAO" && it.custo == 2 })
     }
 
     @Test

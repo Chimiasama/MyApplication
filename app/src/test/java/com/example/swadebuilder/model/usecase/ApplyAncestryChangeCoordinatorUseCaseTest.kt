@@ -2,6 +2,7 @@ package com.example.swadebuilder.model.usecase
 
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.Complicacao
+import com.example.swadebuilder.model.RacialAbility
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.Vantagem
@@ -95,8 +96,6 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             scifiVariant = "Ave de rapina",
             previousAncestryDef = RacialModifier(
                 nome = "AVIANOS",
-                vantagensGratis = emptyList(),
-                desvantagens = listOf("NÃO SABE NADAR"),
                 atributos = emptyMap(),
                 pericias = emptyMap(),
                 habilidades = emptyList(),
@@ -104,8 +103,6 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             ),
             targetAncestryDef = RacialModifier(
                 nome = "AVIANOS",
-                vantagensGratis = emptyList(),
-                desvantagens = emptyList(),
                 atributos = emptyMap(),
                 pericias = emptyMap(),
                 habilidades = emptyList(),
@@ -151,21 +148,21 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
             scifiVariant = "Baixa Gravidade",
             previousAncestryDef = RacialModifier(
                 nome = "HUMANOS",
-                vantagensGratis = listOf("ADAPTÁVEL"),
-                desvantagens = emptyList(),
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                habilidades = emptyList(),
+                habilidades = listOf(
+                    RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
+                ),
                 origem = "SCIFI",
                 opcoes = listOf("Básico", "Baixa Gravidade")
             ),
             targetAncestryDef = RacialModifier(
                 nome = "HUMANOS",
-                vantagensGratis = listOf("ADAPTÁVEL"),
-                desvantagens = emptyList(),
                 atributos = emptyMap(),
                 pericias = emptyMap(),
-                habilidades = emptyList(),
+                habilidades = listOf(
+                    RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
+                ),
                 origem = "SCIFI",
                 opcoes = listOf("Básico", "Baixa Gravidade")
             ),
@@ -190,8 +187,6 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
     ): ApplyAncestryChangeCoordinatorUseCase.Params {
         val previousDef = RacialModifier(
             nome = previousAncestry,
-            vantagensGratis = emptyList(),
-            desvantagens = emptyList(),
             atributos = emptyMap(),
             pericias = emptyMap(),
             habilidades = emptyList(),
@@ -199,11 +194,13 @@ class ApplyAncestryChangeCoordinatorUseCaseTest {
         )
         val targetDef = RacialModifier(
             nome = targetAncestry,
-            vantagensGratis = listOf("Sorte"), // Target grants Sorte
-            desvantagens = emptyList(),
             atributos = emptyMap(),
             pericias = emptyMap(),
-            habilidades = emptyList(),
+            // Target grants Sorte de graça, via traço vinculado (id já bate
+            // com o id real do catálogo "sorte" — ver sampleAdvantages()).
+            habilidades = listOf(
+                RacialAbility(nome = "Sorte", descricao = "", id = "SORTE", category = "racial_edge")
+            ),
             origem = "BASICO"
         )
         val complicacao = Complicacao(

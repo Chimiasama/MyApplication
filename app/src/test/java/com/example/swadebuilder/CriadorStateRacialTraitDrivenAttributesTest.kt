@@ -188,11 +188,13 @@ class CriadorStateRacialTraitDrivenAttributesTest {
     }
 
     @Test
-    fun `perceber d6 e ocultismo d4 (Gatoruja) funcionam para qualquer raca com o traco, corrigindo o bug do Feral`() {
+    fun `perceber d6 (Gatoruja) funciona para qualquer raca com o traco, corrigindo o bug do Feral`() {
         // Bug encontrado na auditoria: o código só reconhecia esse bônus quando o
         // NOME da raça continha "UMVEE" — Feral, que compartilha o mesmo Dom da
         // Natureza "Gatoruja", nunca recebia o bônus mesmo com o traço certo na
         // ficha. Ler pelo `id` do traço corrige os dois casos com o mesmo código.
+        // (Ocultismo d4 não faz parte de Gatoruja — é NATURALMENTE_SOBRENATURAL,
+        // traço base de todo Umvee, sempre concedido independente do dom.)
         val state = CriadorState()
         state.updateGameData(
             snapshotWith(
@@ -202,8 +204,7 @@ class CriadorStateRacialTraitDrivenAttributesTest {
                         atributos = emptyMap(),
                         pericias = emptyMap(),
                         habilidades = listOf(
-                            RacialAbility(nome = "Perceber d6", descricao = "teste", id = "PERCEBER_D6"),
-                            RacialAbility(nome = "Ocultismo d4", descricao = "teste", id = "OCULTISMO_D4")
+                            RacialAbility(nome = "Perceber d6", descricao = "teste", id = "PERCEBER_D6")
                         ),
                         origem = "ARTE_DA_GUERRA"
                     )
@@ -214,9 +215,7 @@ class CriadorStateRacialTraitDrivenAttributesTest {
         state.compendioArteDaGuerraAtivo = true
 
         val perceber = Pericia(nome = "Perceber", atributo = "ASTUCIA", basica = true)
-        val ocultismo = Pericia(nome = "Ocultismo", atributo = "ASTUCIA", basica = false)
 
         assertEquals(6, state.periciaStartRaw("FERAL", perceber))
-        assertEquals(4, state.periciaStartRaw("FERAL", ocultismo))
     }
 }

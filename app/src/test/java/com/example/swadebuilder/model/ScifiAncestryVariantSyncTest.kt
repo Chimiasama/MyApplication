@@ -15,55 +15,46 @@ class ScifiAncestryVariantSyncTest {
             RacialModifier(
                 nome = "ANÕES", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ciber")
             ),
             RacialModifier(
                 nome = "CENTAUX", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Gazela")
             ),
             RacialModifier(
                 nome = "AQUARIANOS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Semi-aquáticos")
             ),
             RacialModifier(
                 nome = "DRAKENS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Dragão")
             ),
             RacialModifier(
                 nome = "ELEMENTAIS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Ar, Fogo ou Água")
             ),
             RacialModifier(
                 nome = "FERAIS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Menor")
             ),
             RacialModifier(
                 nome = "MÍMICOS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Resistente")
             ),
             RacialModifier(
                 nome = "AVIANOS", origem = "SCI_FI",
                 atributos = emptyMap(), pericias = emptyMap(),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ave de rapina")
             ),
             RacialModifier(
                 nome = "Umvee (Filhos da Lua)", origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(), pericias = mapOf("Ocultismo" to 0),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility("Dons da Natureza", "", id = "DONS_DA_NATUREZA"),
                     RacialAbility("Naturalmente Sobrenatural", "", id = "NATURALMENTE_SOBRENATURAL"),
@@ -74,7 +65,6 @@ class ScifiAncestryVariantSyncTest {
             RacialModifier(
                 nome = "Feral", origem = "ARTE_DA_GUERRA",
                 atributos = emptyMap(), pericias = mapOf("Sobrevivência" to 2),
-                vantagensGratis = emptyList(), desvantagens = emptyList(),
                 habilidades = listOf(
                     RacialAbility("Integrado à Natureza", "", id = "INTEGRADO_A_NATUREZA"),
                     RacialAbility("Insanidade", "", id = "INSANIDADE"),
@@ -241,8 +231,11 @@ class ScifiAncestryVariantSyncTest {
             ancestralidade = "DRAKENS"
             naturalArmorFromRace = 0
             // Inject traits manually for unit test isolation — id explícito
-            // pro efeito numérico (RESISTENCIA com vezes=2), igual ao que
-            // AncestryVariantRegistry.drakens já concede pra "Padrão".
+            // pro efeito numérico (RESISTENCIA com vezes=2), igual ao que a
+            // raça base de Drakens já concede via habilidades[] em
+            // ancestralidades.json (RESISTENCIA/FORTE não vêm mais da opção
+            // "Padrão" de AncestryVariantRegistry.drakens, que hoje não
+            // adiciona nada — evita duplicar por cima da base).
             vantagensRaciais.add("FORTE") // Often associated
             vantagensRaciais.add("RESISTÊNCIA +2")
             racialTraitIdsFromVariants.add(RacialTraitStack("RESISTENCIA", vezes = 2))
@@ -433,7 +426,10 @@ class ScifiAncestryVariantSyncTest {
         )
 
         assertEquals("Gatoruja", selecionada)
-        assertEquals(4, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Ocultismo", atributo = "Astúcia", basica = false)))
+        // Ocultismo d4 não é concedido pelo dom Gatoruja — é
+        // NATURALMENTE_SOBRENATURAL, traço base de todo Umvee (sem
+        // mecanismo próprio neste fixture sintético, que não inclui
+        // racialSkillStartMap).
         assertEquals(4, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Sobrevivência", atributo = "Astúcia", basica = false)))
         assertEquals(6, state.periciaStartRaw("Umvee (Filhos da Lua)", Pericia(nome = "Perceber", atributo = "Astúcia", basica = true)))
         assertEquals(13, state.periciaCapRaw(Pericia(nome = "Perceber", atributo = "Astúcia", basica = true)))

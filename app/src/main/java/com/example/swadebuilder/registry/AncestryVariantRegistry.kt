@@ -33,7 +33,6 @@ object AncestryVariantRegistry {
         elementaisScifi(),
         anoes(),
         rakashanos(),
-        sauriosScifi(),
         aquarianos(),
         avianos(),
         elfos(),
@@ -52,7 +51,8 @@ object AncestryVariantRegistry {
         soldadosGeneticos(),
         yetis(),
         robos(),
-        seresSinteticos()
+        seresSinteticos(),
+        descendenteElemental()
     ).associateBy { it.ancestralidadeId }
 
     fun get(ancestralidadeId: String): AncestryVariantConfig? = configs[ancestralidadeId]
@@ -70,7 +70,7 @@ object AncestryVariantRegistry {
      * traços/habilidades por um caminho diferente, anterior a este lote.
      */
     val scifiVariantDrivenKeys: Set<String> = setOf(
-        "RAKASHANOS", "SAURIOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
+        "RAKASHANOS", "AQUARIANOS", "AVIANOS", "ELFOS", "HUMANOS",
         "CENTAUX", "DRAKENS", "FERAIS", "FLORANS", "GELATINOIDES", "INSETOIDES",
         "MIMICOS", "MINERADORES GENETICOS", "ORACULOS", "POSSESSORES",
         "QUADROIDES", "SOLDADOS GENETICOS", "YETIS", "ROBOS", "SERES SINTETICOS"
@@ -107,35 +107,10 @@ object AncestryVariantRegistry {
         )
     )
 
-    private fun sauriosScifi(): AncestryVariantConfig = AncestryVariantConfig(
-        ancestralidadeId = "SAURIOS",
-        grupoVariante = VariantGroup(
-            opcoes = listOf(
-                VariantOption(
-                    id = "basico",
-                    nome = "Básico",
-                    pacoteFixo = ResolvedTraitPackage(
-                        vantagensGratisParaAdicionar = listOf(TraitAddition("PRONTIDÃO", "PRONTIDAO")),
-                        tracosParaAdicionar = listOf(TraitAddition("MORDIDA", "MORDIDA")),
-                        // Sáurios "Mordida" nunca foi um campo fixo no JSON
-                        // da raça (só existe pra Básico) — sem isso aqui,
-                        // extrairArmasNaturais só achava a arma por
-                        // casamento de palavra-chave em texto solto.
-                        armasNaturaisParaAdicionar = listOf(ArmaNatural(nome = "Mordida", dano = "For+d4")),
-                        naturalArmor = 2
-                    )
-                ),
-                VariantOption(
-                    id = "cuspidor",
-                    nome = "Cuspidor",
-                    pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("TOQUE VENENOSO (Cuspidor)", "TOQUE_VENENOSO_CUSPIDOR")),
-                        naturalArmor = 2
-                    )
-                )
-            )
-        )
-    )
+    // sauriosScifi() removido: Sáurios não é raça do Sci-Fi Companion (só
+    // Básico/Fantasia/Horror/Super) — a entrada "SAÚRIOS"/SCI_FI em
+    // ancestralidades.json era um erro de cadastro (nome com acento errado,
+    // "SAÚRIOS" em vez de "SÁURIOS"), removida junto com este config.
 
     private fun aquarianos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "AQUARIANOS",
@@ -252,7 +227,7 @@ object AncestryVariantRegistry {
                     nome = "Padrão",
                     pacoteFixo = ResolvedTraitPackage(
                         // Mesmos ids que já existem nativamente em
-                        // ancestralidades.json pra Centaux/Aurax — "Padrão" só
+                        // ancestralidades.json pra Centaux — "Padrão" só
                         // reafirma o que a raça base já concede (existe pra
                         // "Gazela" poder trocar por 2x MOVIMENTACAO abaixo).
                         // TAMANHO_MAIS_1/MOVIMENTACAO são os traços empilháveis
@@ -282,21 +257,24 @@ object AncestryVariantRegistry {
         ancestralidadeId = "DRAKENS",
         grupoVariante = VariantGroup(
             opcoes = listOf(
+                // Padrão não adiciona nada além da raça base: Força d6 e
+                // Resistência +2 já vêm de habilidades[] em ancestralidades.json
+                // (FORTE/RESISTENCIA), então já estão presentes mesmo com o
+                // compêndio de variantes do Sci-Fi desligado. Antes esta opção
+                // somava os dois de novo por cima da base — dobrava a
+                // Resistência (+4 em vez de +2) sempre que "Padrão" era
+                // selecionado (o default quando o compêndio está ativo).
                 VariantOption(
                     id = "padrao",
                     nome = "Padrão",
-                    pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(
-                            TraitAddition("FORTE", "FORTE"),
-                            TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)
-                        )
-                    )
+                    pacoteFixo = ResolvedTraitPackage()
                 ),
                 VariantOption(
                     id = "dragao",
                     nome = "Dragão",
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("ARMA DE SOPRO (Fogo)", "ARMA_DE_SOPRO_FOGO"))
+                        tracosParaAdicionar = listOf(TraitAddition("ARMA DE SOPRO (Fogo)", "ARMA_DE_SOPRO_FOGO")),
+                        tracosParaRemoverPorNome = listOf("FORTE")
                     )
                 )
             )
@@ -340,8 +318,11 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "defensivo",
                     nome = "Defensivo",
+                    // Toque Venenoso (Paralisante) custa 3 — deixava a raça 1
+                    // ponto acima do orçamento. O livro é Nocauteador (2), não
+                    // Paralisante (3): base(0) + Nocauteador(2) = 2, fecha.
                     pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("TOQUE VENENOSO (Paralisante)", "TOQUE_VENENOSO_PARALISANTE"))
+                        tracosParaAdicionar = listOf(TraitAddition("TOQUE VENENOSO (Nocauteador)", "TOQUE_VENENOSO_NOCAUTEADOR"))
                     )
                 )
             )
@@ -360,7 +341,10 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "ameba",
                     nome = "Ameba",
-                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("CAMUFLAGEM", "CAMUFLAGEM")))
+                    // Camuflagem Total (2), não a Camuflagem básica (1) — bate
+                    // com a Regeneração (2) que a raça perde ao trocar de
+                    // Padrão pra Ameba.
+                    pacoteFixo = ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("CAMUFLAGEM TOTAL", "CAMUFLAGEM_TOTAL")))
                 )
             )
         )
@@ -418,10 +402,19 @@ object AncestryVariantRegistry {
                 VariantOption(
                     id = "resistente",
                     nome = "Resistente",
+                    // Livro: usa o valor oficial de "Mudança de Forma (Sem
+                    // variação de Tamanho)" (4) e a Variante fica 1 ponto
+                    // acima do orçamento. Provavelmente o livro pretendia um
+                    // tier de 3 pontos pra esse traço aqui e não formalizou —
+                    // sem fonte oficial, usamos um id pontual só pra esta
+                    // raça fechar a conta (MUDAR_DE_FORMA_AJUSTE_MIMICOS, 3
+                    // pontos, mesmo texto de exibição — não muda Tamanho, ver
+                    // RacialTraitPointCatalog). Não cadastrado como traço
+                    // oficial escolhível em nenhum editor de Variante custom.
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
                             TraitAddition("RESISTÊNCIA +1", "RESISTENCIA"),
-                            TraitAddition("MUDANÇA DE FORMA (Sem variação de tamanho)", "MUDAR_DE_FORMA_SEM_VARIACAO_DE_TAMANHO")
+                            TraitAddition("MUDANÇA DE FORMA (Sem variação de tamanho)", "MUDAR_DE_FORMA_AJUSTE_MIMICOS")
                         )
                     )
                 )
@@ -437,9 +430,13 @@ object AncestryVariantRegistry {
                     id = "padrao",
                     nome = "Padrão",
                     pacoteFixo = ResolvedTraitPackage(
+                        // Livro: tier "a cada minuto" (-2), não o tier base (-1) de
+                        // DEPENDENCIA_ATMOSFERICA — ver RacialTraitPointCatalog.
+                        // Id igual ao de habilidades[] na raça base (dedupe por
+                        // addIfAbsent em CriadorState.kt), senão soma duas vezes.
                         tracosParaAdicionar = listOf(
                             TraitAddition("FORTE", "FORTE"),
-                            TraitAddition("DEPENDÊNCIA ATMOSFÉRICA", "DEPENDENCIA_ATMOSFERICA")
+                            TraitAddition("DEPENDÊNCIA ATMOSFÉRICA (Maior)", "DEPENDENCIA_ATMOSFERICA_MAIOR")
                         )
                     )
                 ),
@@ -449,7 +446,7 @@ object AncestryVariantRegistry {
                     pacoteFixo = ResolvedTraitPackage(
                         vantagensGratisParaAdicionar = listOf(TraitAddition("ADAPTAÇÃO GRAVITACIONAL", "ADAPTACAO_GRAVITACIONAL")),
                         vantagensGratisIds = listOf("adaptacao_gravitacional"),
-                        tracosParaRemoverPorNome = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA"),
+                        tracosParaRemoverPorNome = listOf("FORTE", "DEPENDÊNCIA ATMOSFÉRICA (Maior)"),
                         desvantagensParaAdicionar = listOf(
                             TraitAddition("HABITANTE DE GRAVIDADE ZERO/BAIXA (Maior)", "HABITANTE_DE_GRAVIDADE_ZERO_BAIXA_MAIOR")
                         ),
@@ -516,17 +513,25 @@ object AncestryVariantRegistry {
         ancestralidadeId = "QUADROIDES",
         grupoVariante = VariantGroup(
             opcoes = listOf(
-                VariantOption(
-                    id = "padrao",
-                    nome = "Padrão",
-                    pacoteFixo = ResolvedTraitPackage(
-                        tracosParaAdicionar = listOf(TraitAddition("AÇÃO ADICIONAL (Física)", "ACAO_ADICIONAL_FISICA")),
-                        desvantagensParaAdicionar = listOf(TraitAddition("SENSÍVEL (Maior)", "SENSIVEL_MAIOR"))
-                    )
-                ),
+                // "Padrão" não é uma Variante de verdade — Ação Adicional
+                // (Física) e Sensível (Maior) já vêm de habilidades[] na raça
+                // base (ancestralidades.json), então esta opção não precisa
+                // adicionar nada (mesmo padrão de Drakens/Elementais — ver
+                // auditoria de raças).
+                VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
                 VariantOption(
                     id = "habilidoso",
                     nome = "Habilidoso",
+                    // Troca Ação Adicional (Física, 4) pela versão que ignora
+                    // penalidade de Ações Múltiplas (5) — 1 ponto mais forte,
+                    // por isso o livro pede pro mestre equilibrar com 1 ponto
+                    // de traço negativo. Isso agora é escolha de verdade do
+                    // jogador (ver quadroidesTracoNegativoSelecionado em
+                    // CriadorState + o bloco QUADROIDES em
+                    // ResolveAncestrySpecificAdjustmentsUseCase, que injeta o
+                    // traço escolhido — ou o primeiro da lista, se nada foi
+                    // escolhido ainda), não mais um lembrete solto em
+                    // anotações.
                     pacoteFixo = ResolvedTraitPackage(
                         tracosParaAdicionar = listOf(
                             TraitAddition(
@@ -534,11 +539,19 @@ object AncestryVariantRegistry {
                                 "ACAO_ADICIONAL_IGNORA_PENALIDADE_ACOES_MULTIPLAS"
                             )
                         ),
-                        desvantagensParaAdicionar = listOf(TraitAddition("SENSÍVEL (Maior)", "SENSIVEL_MAIOR")),
-                        // Nota pro mestre, não uma desvantagem de verdade —
-                        // pertence a `anotacoes`, não a `desvantagensParaAdicionar`.
-                        anotacoes = listOf(
-                            "Combine com o mestre de jogo para equilibrar com 1 ponto de habilidade negativa que faça sentido ao cenário."
+                        tracosParaRemoverPorNome = listOf("AÇÃO ADICIONAL (Física)")
+                    ),
+                    // Âncora só de documentação/lookup (ver
+                    // ResolveAncestrySpecificAdjustmentsUseCase, mesmo padrão
+                    // de anao_ciber_tracos_negativos em anoes() acima) — não é
+                    // interpretada genericamente, o traço negativo é injetado
+                    // à mão no use case.
+                    selecoes = listOf(
+                        SelectionDef(
+                            id = "quadroides_traco_negativo",
+                            rotulo = "Escolha 1 ponto de traço racial negativo",
+                            tipo = SelectionType.BUDGETED_CATALOG,
+                            catalogId = "quadroides_negativo"
                         )
                     )
                 )
@@ -700,17 +713,16 @@ object AncestryVariantRegistry {
     )
 
     // --- Umvee (Filhos da Lua): Seleção de pacote fixo, 1 de 6 "Dons da
-    // Natureza". Efeitos conferidos exatamente como o código atual já faz em
-    // ResolveAncestrySpecificAdjustmentsUseCase (linhas ~714-780): a maioria
-    // é só texto automático (tracosParaAdicionar -> ensureAutomaticAdvantages
-    // na camada de wiring), mas "Vínculo Bestial" concede uma Vantagem de
-    // verdade (vantagensGratisParaAdicionar -> ensureAdvantageNames, com
-    // todos os ganchos mecânicos da vantagem "Senhor das Feras"). "Pedregoso"
-    // também define naturalArmorFromRace=2 no Result — isso fica como
-    // exceção pontual na camada de wiring, não faz parte do pacote genérico
-    // (não é comum o suficiente pra merecer campo próprio no schema).
-    // A injeção de "Perceber d6"/"Ocultismo d4" do Gatoruja continua vindo
-    // de applyAncestryVariantAdjustments (não duplicada aqui).
+    // Natureza", todos calibrados em 2 pontos. Efeitos conferidos exatamente
+    // como o código atual já faz em ResolveAncestrySpecificAdjustmentsUseCase
+    // (linhas ~714-780): a maioria é só texto automático (tracosParaAdicionar
+    // -> ensureAutomaticAdvantages na camada de wiring), mas "Vínculo
+    // Bestial" concede uma Vantagem de verdade (vantagensGratisParaAdicionar
+    // -> ensureAdvantageNames, com todos os ganchos mecânicos da vantagem
+    // "Senhor das Feras"). "Pedregoso" também define naturalArmorFromRace=2
+    // no Result — isso fica como exceção pontual na camada de wiring, não
+    // faz parte do pacote genérico (não é comum o suficiente pra merecer
+    // campo próprio no schema).
     private fun umvee(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "UMVEE (FILHOS DA LUA)",
         selecoes = listOf(
@@ -719,18 +731,36 @@ object AncestryVariantRegistry {
                 rotulo = "Escolha o Dom da Natureza",
                 tipo = SelectionType.FIXED_PACKAGE,
                 pacotesFixos = listOf(
-                    FixedPackageOption("apice", "Ápice", ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("GARRAS", "GARRAS")))),
+                    // GARRAS_SEM_PA (2, For+d4 sem PA) — GARRAS puro (3) inclui
+                    // PA, que este dom não dá.
+                    FixedPackageOption("apice", "Ápice", ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("Ápice", "GARRAS_SEM_PA")))),
                     FixedPackageOption(
                         "vinculo_bestial", "Vínculo Bestial",
                         ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf(TraitAddition("SENHOR DAS FERAS", "SENHOR_DAS_FERAS")))
                     ),
+                    // Duas metades de 1 ponto cada: Aparar +1 de verdade
+                    // (APARAR) e "Emanar Luz", sem efeito mecânico próprio
+                    // (PELE_LUMINOSA) — ver applyAncestryVariantAdjustments.
                     FixedPackageOption(
                         "pele_iluminada_pela_lua", "Pele Iluminada pela Lua",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("APARAR +1", "APARAR")))
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Pele Iluminada pela Lua (Aparar)", "APARAR"),
+                                TraitAddition("Pele Iluminada pela Lua (Emanar Luz)", "PELE_LUMINOSA")
+                            )
+                        )
                     ),
+                    // Visão no Escuro (1) + Perceber d6 (1) — Ocultismo d4 NÃO
+                    // faz parte deste dom (é NATURALMENTE_SOBRENATURAL, traço
+                    // base de todo Umvee).
                     FixedPackageOption(
                         "gatoruja", "Gatoruja",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("VISÃO NO ESCURO", "VISAO_NO_ESCURO")))
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("VISÃO NO ESCURO", "VISAO_NO_ESCURO"),
+                                TraitAddition("Perceber d6", "PERCEBER_D6")
+                            )
+                        )
                     ),
                     FixedPackageOption(
                         "correnteza", "Correnteza",
@@ -743,11 +773,16 @@ object AncestryVariantRegistry {
                         // dois caminhos rodam pra Umvee (esse aqui é só
                         // bookkeeping redundante de vantagensRaciais), então
                         // um id ou vezes diferente pro mesmo efeito contaria a
-                        // Resistência em dobro (o mesmo tipo de bug já
-                        // corrigido pro Tamanho de Fadas/Povo Rato — ver
+                        // Resistência/Armadura em dobro (o mesmo tipo de bug
+                        // já corrigido pro Tamanho de Fadas/Povo Rato — ver
                         // ModifierEngineAdgAncestryTest).
                         "pedregoso", "Pedregoso",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("RESISTÊNCIA +1", "RESISTENCIA")))
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("Pedregoso (Resistência)", "RESISTENCIA"),
+                                TraitAddition("Pedregoso (Armadura)", "ARMADURA")
+                            )
+                        )
                     )
                 )
             )
@@ -775,9 +810,16 @@ object AncestryVariantRegistry {
                     FixedPackageOption(
                         "padrao",
                         "Padrão",
+                        // Força d8 (atributos.Força=4 no JSON, 2 passos) = MUITO_FORTE
+                        // (4pts), não FORTE (2pts, d6 — esse é o da variante "Ar,
+                        // Fogo ou Água", mais fraca). Id errado aqui não muda o dado
+                        // de Força na ficha (AtributoStep não é aplicado por esta
+                        // lista — ver ModifierEngine.aplicarEfeito/atributoBaseRacial),
+                        // mas fazia o traço exibido/custo de auditoria não bater com
+                        // o d8 real.
                         ResolvedTraitPackage(
                             tracosParaAdicionar = listOf(
-                                TraitAddition("FORTE", "FORTE"),
+                                TraitAddition("MUITO FORTE", "MUITO_FORTE"),
                                 TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)
                             )
                         )
@@ -785,7 +827,54 @@ object AncestryVariantRegistry {
                     FixedPackageOption(
                         "ar_fogo_ou_agua",
                         "Ar, Fogo ou Água",
-                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")))
+                        // Trocam Resistência (não incluída aqui: ela só existe em
+                        // Padrão) pelo Forte mais fraco (Força d6, não d8 — ver
+                        // atributoBaseRacial()) mais Forma de Energia. "livro:
+                        // Elementais do ar, fogo e água têm Forma de Energia em
+                        // vez de Forte e Resistência" — o Forte que sobra aqui é
+                        // o d6 genérico, não o d8 de Padrão.
+                        ResolvedTraitPackage(
+                            tracosParaAdicionar = listOf(
+                                TraitAddition("FORTE", "FORTE"),
+                                TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Descendente Elemental (Fantasia): Seleção de elemento, mesmo padrão
+    // de elementaisScifi() acima (o comentário de lá já citava este caso como
+    // o análogo pendente). Base fixa em ancestralidades.json (Resistência
+    // Ambiental +1, Forasteiro Menor -1) mais o placeholder "Elemento
+    // Ancestral" (ELEMENTO_ANCESTRAL, custo 0 — ver RacialTraitPointCatalog);
+    // cada elemento resolvido vale 2 pontos, então a raça fecha em +2
+    // (-1+1+0 do placeholder, +2 do elemento) qualquer que seja a escolha.
+    private fun descendenteElemental(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "DESCENDENTE ELEMENTAL",
+        selecoes = listOf(
+            SelectionDef(
+                id = "descendente_elemental_elemento",
+                rotulo = "Escolha o elemento ancestral",
+                tipo = SelectionType.FIXED_PACKAGE,
+                pacotesFixos = listOf(
+                    FixedPackageOption(
+                        "agua", "Água",
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("AQUÁTICO", "AQUATICO")))
+                    ),
+                    FixedPackageOption(
+                        "ar", "Ar",
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("AR INTERNO", "AR_INTERNO")))
+                    ),
+                    FixedPackageOption(
+                        "fogo", "Fogo",
+                        ResolvedTraitPackage(vantagensGratisParaAdicionar = listOf(TraitAddition("RÁPIDO", "RAPIDO")))
+                    ),
+                    FixedPackageOption(
+                        "terra", "Terra",
+                        ResolvedTraitPackage(tracosParaAdicionar = listOf(TraitAddition("SÓLIDO COMO ROCHA", "SOLIDO_COMO_ROCHA")))
                     )
                 )
             )

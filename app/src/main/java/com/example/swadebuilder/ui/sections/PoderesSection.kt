@@ -84,6 +84,30 @@ private fun custoParaPenalidadeTexto(custo: String): String {
     return "—"
 }
 
+/**
+ * Poderes com nome "Aspecto1/Aspecto2" (ex.: "Iluminar/Obscurecer") existem
+ * como um único id no catálogo — não há um poder "só Iluminar" separado de
+ * um "só Obscurecer" (ver ArcaneConfig.SOL_VAPOR_DEMONIO_ALLOWED_POWERS).
+ * Quando o livro restringe um Antecedente Arcano a só um dos dois aspectos
+ * (ex.: Feiticeiro/Demônio só tem "Obscurecer", nunca "Iluminar"), isso é
+ * puramente cosmético — id, custo e efeito mecânico continuam os mesmos do
+ * poder combinado. Mesma técnica já usada pro Místico (Pathfinder) logo
+ * abaixo, só que centralizada por arcKey em vez de replicada inline.
+ */
+private fun aspectOnlyPowerDisplayName(rawDisplayName: String, arcKey: String): String {
+    return when (arcKey) {
+        "DEMONIO", "DEMONIO_MEIO" -> rawDisplayName
+            .replace("Iluminar/Obscurecer", "Obscurecer")
+            .replace("Aumentar/Reduzir Característica", "Reduzir Característica")
+            .replace("Morosidade/Velocidade", "Morosidade")
+        "MILAGRES", "ANJO" -> rawDisplayName
+            .replace("Iluminar/Obscurecer", "Iluminar")
+            .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
+            .replace("Morosidade/Velocidade", "Velocidade")
+        else -> rawDisplayName
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun PoderesSection(
@@ -288,24 +312,20 @@ fun PoderesSection(
             }
 
             sourceList.filter { power ->
+                // "_demonio": poderes exclusivos do Antecedente Arcano (Demônio) —
+                // tanto a versão de sangue puro (DEMONIO, aa_demonio) quanto a
+                // diluída dos Meio-Demônios (DEMONIO_MEIO, aa_demonio_meio_demonio).
+                // Quais ids exatos cada um pode ver (incluindo excluir Disfarce
+                // Demoníaco "puro" da versão diluída) já vem de
+                // ArcaneConfig.SOL_VAPOR_DEMONIO_ALLOWED_POWERS/
+                // SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS via permittedSet logo
+                // abaixo — este bloco só bloqueia vazamento pra OUTROS Antecedentes
+                // (ex.: um AA Customizado "Geral" que puxa allPoderes inteiro).
                 val isDemonExclusivePower = power.id.endsWith("_demonio")
-                val hasDemonAb = state.vantagensSelecionadas.any { it.id == "aa_demonio" }
+                val hasDemonAb = state.vantagensSelecionadas.any { it.id == "aa_demonio" || it.id == "aa_demonio_meio_demonio" }
                 if (isDemonExclusivePower) {
-                    if (arcKey != "DEMONIO") return@filter false
+                    if (arcKey != "DEMONIO" && arcKey != "DEMONIO_MEIO") return@filter false
                     if (!hasDemonAb) return@filter false
-                }
-
-                // Meio-Demônio (Cidade do Sol a Vapor):
-                // Disfarce Demoníaco não é inicial e só fica disponível em Experiente.
-                if (
-                    state.compendioCidadeSolVaporAtivo &&
-                    arcKey == "DEMONIO" &&
-                    state.ancestralidade.keyify().contains("MEIO-DEMONIO") &&
-                    power.id == "disfarce_demoniaco"
-                ) {
-                    val estagioAtual = state.estagioAtual().nome.semAcentos().uppercase()
-                    val podeUsarDisfarce = estagioAtual in setOf("EXPERIENTE", "VETERANO", "HEROICO", "HEROICO", "LENDARIO")
-                    if (!podeUsarDisfarce) return@filter false
                 }
 
                 // 1. Check permissions/blocks
@@ -334,8 +354,14 @@ fun PoderesSection(
                 if (usaPoderesPorEstagio) {
                     val requiredStage = stageBasedPowers[power.id] ?: return@filter false
                     if (!state.estagioAtinge(requiredStage)) return@filter false
-                    if (!state.atendeRequisitoEspecialDePoderPorArcano(arcKey, power.id)) return@filter false
                 }
+
+                // Requisito de "precisa ter outra Vantagem antes" (ex.: Disfarce
+                // Demoníaco diluído do Meio-Demônio exige Disfarce Demoníaco
+                // Experiente) vale independente do arcano estar em modo por
+                // estágio ou no sistema normal de slots — ver
+                // requisitoEspecialDePoderPorArcano.
+                if (!state.atendeRequisitoEspecialDePoderPorArcano(arcKey, power.id)) return@filter false
 
                 // 2. Check Search
                 val matchSearch = if (searchQuery.isBlank()) true else {
@@ -592,7 +618,7 @@ fun PoderesSection(
                                 Spacer(Modifier.height(4.dp))
                                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     slots.forEachIndexed { idx, poderId ->
-                                        val label = if (poderId == null) "— vazio —" else (idToName[poderId] ?: poderId.toFancyTitleCase())
+                                        val label = if (poderId == null) "— vazio —" else aspectOnlyPowerDisplayName(idToName[poderId] ?: poderId.toFancyTitleCase(), arcKey)
                                         val isFixed = state.isFixedPower(arcKey, poderId)
                                         val isSlotLocked = locked || idx < lockedCount || isFixed
                                         AssistChip(
@@ -726,6 +752,7 @@ fun PoderesSection(
                                             .replace("Aumentar/Reduzir Característica", "Aumentar Característica")
                                             .replace("Morosidade/Velocidade", "Velocidade")
                                     }
+                                    displayNome = aspectOnlyPowerDisplayName(displayNome, arcKey)
                                     val isCustom = poder.origem.equals("CUSTOM", ignoreCase = true) || poder.id.startsWith("custom:") || poder.id.startsWith("fanmade:")
                                     if (isCustom) {
                                         displayNome = "$displayNome ⓒ"
@@ -753,7 +780,7 @@ fun PoderesSection(
                                 val modificadoresDisponiveis = poder.modificadores.filter { mod ->
                                     mod.nome.isNotBlank() || mod.descricao.isNotBlank()
                                 }
-                                var displayNomeDialog = poder.nome.toFancyTitleCase()
+                                var displayNomeDialog = aspectOnlyPowerDisplayName(poder.nome.toFancyTitleCase(), arcKey)
                                 val isCustomDialog = poder.origem.equals("CUSTOM", ignoreCase = true) || poder.id.startsWith("custom:") || poder.id.startsWith("fanmade:")
                                 if (isCustomDialog) displayNomeDialog = "$displayNomeDialog ⓒ"
 

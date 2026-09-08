@@ -44,6 +44,38 @@ object ArcaneConfig {
         "drenar_pontos_de_poder_demonio" to "Heroico"
     )
 
+    // Meio-Demônios (Cidade do Sol a Vapor): mesmo Antecedente Arcano dos
+    // Demônios de sangue puro, mas via o sistema normal de slots/PP (3
+    // slots, sem o slot fixo extra de Disfarce Demoníaco que os Demônios de
+    // sangue puro têm — ver CriadorState.isStageBasedArcanoVariant, que
+    // tira aa_demonio_meio_demonio do modo por estágio incondicionalmente).
+    // A versão diluída de Disfarce Demoníaco continua exigindo a Vantagem
+    // separada "Disfarce Demoníaco (Estágio Experiente)" antes de poder ser
+    // escolhida como poder normal — CriadorState.atendeRequisitoEspecialDePoderPorArcano()
+    // usa o mapa abaixo pra isso, independente de estar em modo por estágio.
+    val SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS = mapOf(
+        "disfarce_demoniaco_meio_demonio" to "disfarce_demoniaco_experiente_meio"
+    )
+
+    // Lista de poderes do AA (Demônio), fora do modo por estágio (sistema
+    // normal de slots): o livro "Antecedente Arcano" de Demônio é Magia
+    // Negra (SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE) mais os poderes exclusivos
+    // de demônio (SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE) — sem isso, como
+    // o livro Cidade do Sol a Vapor mistura poderes de todos os Antecedentes
+    // Arcanos dele (Milagres, Tecnomagia etc.) num único pool por origem,
+    // getPermittedPowers(arcKey) == null deixaria vazar poderes de outros
+    // Antecedentes (Ajuda, Cura, Ressurreição, Santuário, Sobrecarga...) pra
+    // demônios/meio-demônios.
+    val SOL_VAPOR_DEMONIO_ALLOWED_POWERS: Set<String> =
+        SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE.keys + SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE.keys
+
+    // Igual ao Demônio de sangue puro, exceto Disfarce Demoníaco "puro"
+    // (slot fixo exclusivo de sangue puro) trocado pela versão diluída
+    // (disfarce_demoniaco_meio_demonio, gated por
+    // SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS).
+    val SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS: Set<String> =
+        (SOL_VAPOR_DEMONIO_ALLOWED_POWERS - "disfarce_demoniaco") + "disfarce_demoniaco_meio_demonio"
+
     val SOL_VAPOR_MILAGRES_POWERS_BY_STAGE = linkedMapOf(
         "ajuda" to "Novato",
         "aumentar_reduzir_caracteristica" to "Novato",
@@ -243,6 +275,8 @@ object ArcaneConfig {
             "aa_voduista" -> HORROR_VODUISTA
             "aa_bruxa" -> DEADLANDS_BRUXA
             "ELEMENTALISTA" -> ARTE_GUERRA_ELEMENTALISTA
+            "DEMONIO" -> SOL_VAPOR_DEMONIO_ALLOWED_POWERS
+            "DEMONIO_MEIO" -> SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS
             // Mad Scientist is special, returning null here to signify "check blocked" or handle differently
             else -> null
         }
@@ -260,6 +294,8 @@ object ArcaneConfig {
             "MILAGRES" -> SOL_VAPOR_MILAGRES_POWERS_BY_STAGE
             "FEITICEIRO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE
             "DEMONIO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE + SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE
+            // DEMONIO_MEIO não usa mais o sistema por estágio (ver
+            // CriadorState.isStageBasedArcanoVariant) — sem ramo aqui.
             "TECNOMAGIA" -> SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE
             // Anjos usam a mesma lista de poderes dos Abençoados (Milagres),
             // mas sem precisar de Guerreiro do Senhor/Ira do Senhor pra usar
@@ -274,6 +310,7 @@ object ArcaneConfig {
     fun getStageBasedPowerRequirement(arcaneKey: String, powerId: String): String? {
         return when (arcaneKey) {
             "MILAGRES" -> SOL_VAPOR_MILAGRES_POWER_REQUIREMENTS[powerId]
+            "DEMONIO_MEIO" -> SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS[powerId]
             else -> null
         }
     }

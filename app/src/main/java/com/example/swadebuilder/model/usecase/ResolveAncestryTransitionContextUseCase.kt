@@ -41,7 +41,6 @@ class ResolveAncestryTransitionContextUseCase {
                     previousAncestryKey.contains("DEMONIO") -> setOf("AA_DEMONIO", "ANTECEDENTE ARCANO DEMONIO", "ANTECEDENTE ARCANO (DEMONIO)")
                     previousAncestryKey == "TRANSMORFOS" -> setOf("ANTECEDENTE ARCANO (DOM)", "ANTECEDENTE ARCANO DOM")
                     previousAncestryKey == "ANOES" -> setOf("CIBERTOLERÂNCIA", "CIBERTOLERANCIA")
-                    previousAncestryKey == "SERRANOS" -> setOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO", "NOÇÃO DE PERIGO", "NOCAO DE PERIGO")
                     previousAncestryKey == "MINERADORES GENÉTICOS" || previousAncestryKey == "MINERADORES GENETICOS" -> setOf("ADAPTAÇÃO GRAVITACIONAL", "ADAPTACAO GRAVITACIONAL")
                     previousAncestryKey == "ORÁCULOS" || previousAncestryKey == "ORACULOS" -> setOf("NOÇÃO DO PERIGO", "NOCAO DO PERIGO", "NOÇÃO DE PERIGO", "NOCAO DE PERIGO", "PODERES MISTICOS (TELEPATA)", "PODERES MÍSTICOS (TELEPATA)", "PODERES_MISTICOS")
                     previousAncestryKey.contains("ELEMENTAL") -> setOf("RAPIDO", "RÁPIDO")
@@ -67,9 +66,6 @@ class ResolveAncestryTransitionContextUseCase {
             .replace(")", "")
             .replace(Regex("\\s+"), "_")
 
-    private fun RacialModifier.hasAdaptable(): Boolean {
-        // Check new structure (habilidades ID/Name) or legacy (vantagensGratis)
-        return habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" } ||
-            vantagensGratis.any { it.keyify() == "ADAPTAVEL" }
-    }
+    private fun RacialModifier.hasAdaptable(): Boolean =
+        habilidades.any { it.id == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }
 }

@@ -2,6 +2,7 @@ package com.example.swadebuilder
 
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -351,6 +352,18 @@ class CriadorState {
     /** Id de CustomAncestryVariant selecionada pra raça atual (Variante custom, ver Tarefa #18). */
     var customVarianteRacialSelecionadaId by mutableStateOf<String?>(null)
     var anaoCiberTracosSelecionados by mutableStateOf<List<AnaoCiberTraitSelection>>(emptyList())
+    /**
+     * Traço racial negativo (-1 ponto) escolhido pra Quadroides "Habilidoso" —
+     * a Variante troca Ação Adicional (Física) por Ação Adicional (Ignora
+     * Penalidade), 1 ponto mais forte, e precisa desse traço extra pra
+     * fechar o orçamento (livro pede pro mestre equilibrar com 1 ponto de
+     * habilidade negativa; aqui isso vira escolha de verdade em vez de
+     * lembrete). Reaproveita o catálogo de AnaoCiberTraitCatalog (traços não
+     * paramétricos de -1) em vez de duplicar dados. Null = ainda não
+     * escolhido; nesse caso o primeiro da lista é usado como padrão (ver
+     * ResolveAncestrySpecificAdjustmentsUseCase).
+     */
+    var quadroidesTracoNegativoSelecionado by mutableStateOf<String?>(null)
     var gnomoPericiaEscolhida by mutableStateOf<String?>(null)
     var kitsunemimiPericiaEscolhida by mutableStateOf<String?>(null)
     var usagimimiPericiaEscolhida by mutableStateOf<String?>(null)
@@ -402,14 +415,18 @@ class CriadorState {
         if (modoMonstroAtivo) {
             // Vantagens grátis do Template de Monstro Heroico (ex.: Monstro de
             // Retalhos possui Furioso e Resistência Arcana de graça — não é
-            // escolha do jogador, é o template quem concede). Usa o mesmo
+            // escolha do jogador, é o template quem concede, via traço
+            // vinculado em habilidades[] — traitId=GRANTED_EDGE/category=
+            // racial_edge, mesmo padrão de Ancestralidade). Usa o mesmo
             // mecanismo (vantagensRaciais) que uma Ancestralidade usa pros
             // próprios grants automáticos, só que a fonte aqui é o monstro.
-            val novasKeys = monstroNovo?.vantagensGratis?.map { it.keyify() }.orEmpty()
-            monstroAnterior?.vantagensGratis
-                ?.filterNot { it.keyify() in novasKeys }
-                ?.forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
-            monstroNovo?.vantagensGratis?.forEach { grant ->
+            val grantsAnteriores = monstroAnterior?.resolvedVantagensGratis().orEmpty()
+            val grantsNovos = monstroNovo?.resolvedVantagensGratis().orEmpty()
+            val novasKeys = grantsNovos.map { it.keyify() }
+            grantsAnteriores
+                .filterNot { it.keyify() in novasKeys }
+                .forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
+            grantsNovos.forEach { grant ->
                 if (vantagensRaciais.none { it.keyify() == grant.keyify() }) {
                     vantagensRaciais.add(grant)
                 }
@@ -471,16 +488,21 @@ class CriadorState {
             debugLog("AdaptavelDebug", "[getAncestralidadeDef] fallback de chave para '$name' keys=$lookupKeys")
         }
 
-        // Toda raça de candidato único, EXCETO Umvee, mantém o curto-circuito
-        // original: sai aqui sem passar por applyAncestryVariantAdjustments.
-        // Umvee precisa passar por ele mesmo tendo um candidato só — o Dom da
-        // Natureza "Gatoruja" injeta PERCEBER_D6/OCULTISMO_D4 ali, e cair fora
-        // antes disso deixava esse traço de fora (bug real, pego pelo
-        // ScifiAncestryVariantSyncTest). Já o Meio-Elfo do Pathfinder (também
-        // candidato único) depende do contrário — de sair aqui — pra NÃO entrar
-        // no ramo Herança/Adaptável de applyAncestryVariantAdjustments, pensado
-        // pra variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
-        if (candidates.size == 1 && !key.contains("UMVEE")) {
+        // Toda raça de candidato único, EXCETO Umvee e Meio-Demônio, mantém o
+        // curto-circuito original: sai aqui sem passar por
+        // applyAncestryVariantAdjustments. Umvee precisa passar por ele mesmo
+        // tendo um candidato só — o Dom da Natureza "Gatoruja" injeta
+        // VISAO_NO_ESCURO/PERCEBER_D6 ali, e cair fora antes disso deixava
+        // esse traço de fora (bug real, pego pelo ScifiAncestryVariantSyncTest).
+        // Meio-Demônio (Cidade do Sol a Vapor) também precisa passar — é onde
+        // mora a troca Adaptável/Antecedente Arcano (Demônio) por
+        // meioDemonioAA; sem isso o toggle nunca era aplicado, mesmo com o
+        // jogador escolhendo o AA (bug real, raça sempre ficava travada em
+        // Adaptável). Já o Meio-Elfo do Pathfinder (também candidato único)
+        // depende do contrário — de sair aqui — pra NÃO entrar no ramo
+        // Herança/Adaptável de applyAncestryVariantAdjustments, pensado pra
+        // variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
+        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO")) {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
@@ -510,7 +532,7 @@ class CriadorState {
             }) ?: return null
         }
 
-        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE")) {
+        val withVariant = if (selected.origem == "FC" || selected.origem == "SCI_FI" || key.contains("UMVEE") || key.contains("MEIO-DEMONIO")) {
             applyAncestryVariantAdjustments(selected, key)
         } else if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             applyAncestryVariantAdjustments(selected, key)
@@ -525,11 +547,14 @@ class CriadorState {
 
     /**
      * Aplica, se houver, a CustomAncestryVariant selecionada pra raça `base`: remove os
-     * traços/vantagens-grátis/desvantagens indicados e adiciona os traços bespoke, Vantagens
-     * e Complicações escolhidos na criação da Variante. Roda por cima do RacialModifier já
-     * resolvido (após applyAncestryVariantAdjustments), então todo o resto do app — que lê
-     * habilidades/vantagensGratis/desvantagens de currentAncestryDef — passa a refletir a
-     * Variante automaticamente, sem precisar tocar em ResolveAncestrySpecificAdjustmentsUseCase.
+     * traços indicados e adiciona os traços bespoke, Vantagens e Complicações escolhidos na
+     * criação da Variante — Vantagem/Complicação sempre vira traço vinculado por id
+     * (traitId=GRANTED_EDGE/RACIAL_HINDRANCE + targetRef) em `habilidades[]`, nunca uma
+     * string solta em vantagensGratis/desvantagens (que toda raça, oficial ou custom, mantém
+     * sempre vazios hoje). Roda por cima do RacialModifier já resolvido (após
+     * applyAncestryVariantAdjustments), então todo o resto do app — que lê habilidades de
+     * currentAncestryDef — passa a refletir a Variante automaticamente, sem precisar tocar em
+     * ResolveAncestrySpecificAdjustmentsUseCase.
      */
     private fun applyCustomAncestryVariantIfSelected(base: RacialModifier): RacialModifier {
         val variantId = customVarianteRacialSelecionadaId ?: return base
@@ -540,14 +565,6 @@ class CriadorState {
         val newHabilidades = base.habilidades.filterNot { hab ->
             val idKey = hab.id?.keyify()
             idKey != null && idKey in tracosRemovidosKeys
-        }.toMutableList()
-
-        val vantagensGratisRemovidasKeys = variant.vantagensGratisRemovidas.map { it.keyify() }.toSet()
-        val newVantagensGratis = base.vantagensGratis.filterNot { it.keyify() in vantagensGratisRemovidasKeys }.toMutableList()
-
-        val desvantagensRemovidasKeys = variant.desvantagensRemovidas.map { it.keyify() }.toSet()
-        val newDesvantagens = base.desvantagens.filterNot { entry ->
-            entry.keyify() in desvantagensRemovidasKeys || entry.substringBefore("(").trim().keyify() in desvantagensRemovidasKeys
         }.toMutableList()
 
         variant.tracosAdicionados.forEach { trait ->
@@ -565,24 +582,55 @@ class CriadorState {
                     // Mestre), igual ao resto do conteúdo customizado.
                     id = trait.id ?: trait.nome.toIdSlug(),
                     category = if (trait.custo >= 0) "racial_trait_positive" else "racial_trait_negative",
-                    vezes = trait.vezes
+                    vezes = trait.vezes,
+                    traitId = trait.traitId,
+                    targetRef = trait.targetRef,
+                    value = trait.value
                 )
             )
         }
 
+        // Vantagem/Complicação do catálogo geral adicionada à Variante: vira
+        // traço de raça vinculado por id (traitId=GRANTED_EDGE/RACIAL_HINDRANCE
+        // + targetRef), igual ao padrão das raças oficiais (Kitsunemimi,
+        // Tanukimimi, Meio-Demônio) — nunca mais uma string solta em
+        // vantagensGratis/desvantagens só com o nome de exibição.
+        // `invisivel`: a Vantagem/Complicação concedida já aparece nas abas
+        // de Vantagens/Complicações do personagem; o card de traço seria
+        // redundante (mesmo motivo do Antecedente Arcano dos Demônios).
         variant.vantagensAdicionadasIds.forEach { vantagemId ->
-            val grant = listaVantagens.firstOrNull { it.id == vantagemId }?.id ?: vantagemId
-            if (newVantagensGratis.none { it.keyify() == grant.keyify() }) {
-                newVantagensGratis.add(grant)
+            if (newHabilidades.none { it.traitId == "GRANTED_EDGE" && it.targetRef == vantagemId }) {
+                val vantagem = listaVantagens.firstOrNull { it.id == vantagemId }
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = vantagem?.nome ?: vantagemId,
+                        descricao = "Vantagem concedida de graça por esta Variante.",
+                        id = "variante_vantagem_${vantagemId}".toIdSlug(),
+                        category = "racial_edge",
+                        traitId = "GRANTED_EDGE",
+                        targetRef = vantagemId,
+                        invisivel = true
+                    )
+                )
             }
         }
 
         variant.complicacoesAdicionadas.forEach { escolha ->
             val complicacao = listaComplicacoes.firstOrNull { it.id == escolha.complicacaoId } ?: return@forEach
-            val severidade = if (escolha.comoMaior) "Maior" else "Menor"
-            val entry = "${complicacao.name} ($severidade)"
-            if (newDesvantagens.none { it.keyify() == entry.keyify() }) {
-                newDesvantagens.add(entry)
+            if (newHabilidades.none { it.traitId == "RACIAL_HINDRANCE" && it.targetRef == escolha.complicacaoId }) {
+                val severidade = if (escolha.comoMaior) "Maior" else "Menor"
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = complicacao.name,
+                        descricao = "Complicação imposta por esta Variante.",
+                        id = "variante_complicacao_${escolha.complicacaoId}".toIdSlug(),
+                        category = "racial_hindrance",
+                        severity = severidade,
+                        traitId = "RACIAL_HINDRANCE",
+                        targetRef = escolha.complicacaoId,
+                        invisivel = true
+                    )
+                )
             }
         }
 
@@ -622,14 +670,14 @@ class CriadorState {
                 is RacialTraitEffect.ApararBonus,
                 is RacialTraitEffect.TamanhoBonus,
                 is RacialTraitEffect.ArmaduraBonus,
+                is RacialTraitEffect.PericiaPoolBonus,
+                is RacialTraitEffect.AtributoPoolBonus,
                 is RacialTraitEffect.Composite -> Unit
             }
         }
 
         return base.copy(
             habilidades = newHabilidades,
-            vantagensGratis = newVantagensGratis,
-            desvantagens = newDesvantagens,
             atributos = newAtributos,
             pericias = newPericias
         )
@@ -646,10 +694,6 @@ class CriadorState {
                     idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
                 }
 
-                val newVantagensGratis = base.vantagensGratis.filter {
-                    it.keyify() != "ADAPTAVEL"
-                }
-
                 when (pacoteCulturalFantasiaSelecionado) {
                     "Nômades do Deserto" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Frio)", descricao = "Nômades do deserto possuem fraqueza ambiental ao frio.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
                     "Povo da Montanha" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Calor)", descricao = "O povo da montanha possui fraqueza ambiental ao calor.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
@@ -660,7 +704,7 @@ class CriadorState {
                     }
                 }
 
-                return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
+                return base.copy(habilidades = newHabilidades)
             }
             return base
         }
@@ -668,9 +712,6 @@ class CriadorState {
         if ((key.contains("MEIO-ELFOS") || key.contains("MEIO-ELFO")) && !key.contains("PATHFINDER")) {
             val newHabilidades = base.habilidades.toMutableList()
             newHabilidades.removeAll { it.id == "HERANCA" || it.nome.keyify() == "HERANCA" }
-
-            // Ensure explicit removal from legacy list
-            val newVantagensGratis = base.vantagensGratis.filter { it.keyify() != "HERANCA" }
 
             if (meioElfoAgil) {
                 if (newHabilidades.none { it.id == "AGIL" }) {
@@ -695,7 +736,48 @@ class CriadorState {
                     )
                 }
             }
-            return base.copy(habilidades = newHabilidades, vantagensGratis = newVantagensGratis)
+            return base.copy(habilidades = newHabilidades)
+        }
+
+        // Meio-Demônio (Cidade do Sol a Vapor): igual ao livro, escolhe entre
+        // uma Vantagem Novato livre (Adaptável, como um humano comum) OU o
+        // Antecedente Arcano (Demônio) — versão diluída própria
+        // (aa_demonio_meio_demonio, clone "capenga" do aa_demonio: mesmo
+        // sistema normal de slots/PP, 3 slots, mas sem o slot fixo extra de
+        // Disfarce Demoníaco — ver isStageBasedArcanoVariant e
+        // ArcaneConfig.SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS) — como sua
+        // habilidade racial. Mesmo padrão do toggle Ágil/Adaptável do
+        // Meio-Elfo acima, mas sem interação com atributos.
+        if (key.contains("MEIO-DEMONIO")) {
+            val newHabilidades = base.habilidades.toMutableList()
+            newHabilidades.removeAll { it.id == "ADAPTAVEL" || it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }
+
+            if (meioDemonioAA) {
+                if (newHabilidades.none { it.id == "ANTECEDENTE_ARCANO_DEMONIO_MEIO" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Antecedente Arcano (Demônio)",
+                            descricao = "Pode adquirir o Antecedente Arcano (Demônio) como habilidade racial — versão diluída do sangue demoníaco, sem Disfarce Demoníaco de graça (só disponível a partir do Estágio Experiente, pela Vantagem separada Disfarce Demoníaco (Estágio Experiente)).",
+                            id = "ANTECEDENTE_ARCANO_DEMONIO_MEIO",
+                            category = "racial_edge",
+                            traitId = "GRANTED_EDGE",
+                            targetRef = "aa_demonio_meio_demonio"
+                        )
+                    )
+                }
+            } else {
+                if (newHabilidades.none { it.id == "ADAPTAVEL" }) {
+                    newHabilidades.add(
+                        com.example.swadebuilder.model.RacialAbility(
+                            nome = "Adaptável",
+                            descricao = "Recebe uma Vantagem Novato extra, como um humano comum.",
+                            id = "ADAPTAVEL",
+                            category = "racial_trait_positive"
+                        )
+                    )
+                }
+            }
+            return base.copy(habilidades = newHabilidades)
         }
 
         val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes) ?: return base
@@ -754,13 +836,18 @@ class CriadorState {
             removeByIdOrName("DONS_DA_NATUREZA", "DONS DA NATUREZA")
 
             when (variant) {
-                "Ápice" -> if (newHabilidades.none { it.id == "GARRAS" || it.nome.keyify() == "GARRAS" }) {
+                // Ápice é só Garras For+d4 SEM PA (id GARRAS_SEM_PA, 2 pontos —
+                // GARRAS puro custa 3 e inclui PA, que o livro não dá aqui).
+                "Ápice" -> if (newHabilidades.none { it.id == "GARRAS_SEM_PA" || it.nome.keyify() == "APICE" }) {
                     newHabilidades.add(
                         com.example.swadebuilder.model.RacialAbility(
-                            nome = "Garras",
-                            descricao = "Ápice concede garras naturais que causam For+d4 de dano.",
-                            id = "GARRAS",
-                            category = "racial_trait_positive"
+                            nome = "Ápice",
+                            descricao = "Ápice concede um ataque de garras naturais que causam For+d4 de dano, sem Penetração de Armadura.",
+                            id = "GARRAS_SEM_PA",
+                            category = "racial_trait_positive",
+                            armasNaturais = listOf(
+                                com.example.swadebuilder.model.ArmaNatural(nome = "Garras", dano = "For+d4", pa = 0, escalavel = true)
+                            )
                         )
                     )
                 }
@@ -774,16 +861,37 @@ class CriadorState {
                         )
                     )
                 }
-                "Pele Iluminada pela Lua" -> if (newHabilidades.none { it.nome.keyify() == "APARAR +1" }) {
-                    newHabilidades.add(
-                        com.example.swadebuilder.model.RacialAbility(
-                            nome = "Aparar +1",
-                            descricao = "Pele iluminada pela lua concede +1 de Aparar.",
-                            id = "APARAR",
-                            category = "racial_trait_positive"
+                // Pele Iluminada pela Lua é, na prática, dois traços somados
+                // (2 pontos): Aparar +1 de verdade (id APARAR) e "Emanar Luz",
+                // sem efeito mecânico próprio (id PELE_LUMINOSA, 1 ponto,
+                // exclusivo desta raça) — mesmo padrão de duas metades
+                // skinadas usado em Mente de Colmeia/Insanidade.
+                "Pele Iluminada pela Lua" -> {
+                    if (newHabilidades.none { it.id == "APARAR" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Pele Iluminada pela Lua (Aparar)",
+                                descricao = "Pele iluminada pela lua concede +1 de Aparar.",
+                                id = "APARAR",
+                                category = "racial_trait_positive"
+                            )
                         )
-                    )
+                    }
+                    if (newHabilidades.none { it.id == "PELE_LUMINOSA" }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = "Pele Iluminada pela Lua (Emanar Luz)",
+                                descricao = "A pele do Umvee brilha suavemente como a luz da lua, iluminando uma pequena área ao seu redor.",
+                                id = "PELE_LUMINOSA",
+                                category = "racial_trait_positive"
+                            )
+                        )
+                    }
                 }
+                // Gatoruja é Visão no Escuro (1) + Perceber inicial d6 (1) — a
+                // versão anterior também injetava Ocultismo d4, que não existe
+                // no texto deste dom (Ocultismo d4 é NATURALMENTE_SOBRENATURAL,
+                // traço base de todo Umvee, não exclusivo do Gatoruja).
                 "Gatoruja" -> {
                     if (newHabilidades.none { it.id == "VISAO_NO_ESCURO" || it.nome.keyify() == "VISAO NO ESCURO" }) {
                         newHabilidades.add(
@@ -795,22 +903,12 @@ class CriadorState {
                             )
                         )
                     }
-                    if (newHabilidades.none { it.nome.keyify() == "PERCEBER D6" }) {
+                    if (newHabilidades.none { it.id == "PERCEBER_D6" }) {
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
                                 nome = "Perceber d6",
                                 descricao = "Gatoruja aumenta o valor inicial de Perceber para d6 e seu máximo para d12+1.",
                                 id = "PERCEBER_D6",
-                                category = "racial_trait_positive"
-                            )
-                        )
-                    }
-                    if (newHabilidades.none { it.id == "OCULTISMO_D4" }) {
-                        newHabilidades.add(
-                            com.example.swadebuilder.model.RacialAbility(
-                                nome = "Ocultismo d4",
-                                descricao = "Gatoruja aumenta o valor inicial de Ocultismo para d4.",
-                                id = "OCULTISMO_D4",
                                 category = "racial_trait_positive"
                             )
                         )
@@ -827,20 +925,20 @@ class CriadorState {
                     )
                 }
                 "Pedregoso" -> {
-                    if (newHabilidades.none { it.nome.keyify() == "RESISTENCIA +1" }) {
+                    if (newHabilidades.none { it.id == "RESISTENCIA" }) {
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
-                                nome = "Resistência +1",
+                                nome = "Pedregoso (Resistência)",
                                 descricao = "Pedregoso concede +1 de Resistência.",
                                 id = "RESISTENCIA",
                                 category = "racial_trait_positive"
                             )
                         )
                     }
-                    if (newHabilidades.none { it.nome.keyify() == "ARMADURA +2" }) {
+                    if (newHabilidades.none { it.id == "ARMADURA" }) {
                         newHabilidades.add(
                             com.example.swadebuilder.model.RacialAbility(
-                                nome = "Armadura +2",
+                                nome = "Pedregoso (Armadura)",
                                 descricao = "Pedregoso concede +2 de Armadura.",
                                 id = "ARMADURA",
                                 category = "racial_trait_positive"
@@ -872,10 +970,9 @@ class CriadorState {
                 )
 
                 pack.tracosParaRemoverPorNome.forEach { nome -> removeByIdOrName(nome, nome) }
-                // Complicações removidas também podem existir como habilidade
-                // embutida (category=racial_hindrance) na raça base — ex.:
-                // Seres Sintéticos "PROGRAMADO" — não só como string solta em
-                // base.desvantagens (que esta função não toca).
+                // Complicações removidas existem como habilidade embutida
+                // (category=racial_hindrance) na raça base — ex.: Seres
+                // Sintéticos "PROGRAMADO" — nunca mais como string solta.
                 pack.desvantagensParaRemover.forEach { nome -> removeByIdOrName(nome, nome) }
 
                 // Id mecânico vem pronto de TraitAddition (escrito à mão em
@@ -1333,8 +1430,8 @@ class CriadorState {
     var portraitAlignment by mutableStateOf("CENTER") // TOP, CENTER, BOTTOM — legado, mantido só pra compatibilidade de saves antigos
     // Posição/zoom contínuos usados de fato pro recorte (substituem portraitAlignment na exibição).
     // portraitOffsetY: 0f = topo do enquadramento, 0.5f = centro, 1f = base.
-    var portraitOffsetY by mutableStateOf(0.5f)
-    var portraitZoom by mutableStateOf(1f) // 1f..2.5f
+    var portraitOffsetY by mutableFloatStateOf(0.5f)
+    var portraitZoom by mutableFloatStateOf(1f) // 1f..2.5f
 
     var coracaoCrystalSelecionado by mutableStateOf<CrystalHeart?>(null)
 
@@ -1666,8 +1763,7 @@ class CriadorState {
 
         // Check Claws (Garra)
         val ancestry = currentAncestryDef
-        val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true ||
-                ancestry?.vantagensGratis?.any { it.keyify().contains("GARRA") } == true
+        val hasRacialClaws = ancestry?.habilidades?.any { it.nome.keyify().contains("GARRA") } == true
 
         // Check Edge Claws
         val hasEdgeClaws = vantagensSelecionadas.any { it.nome.keyify().contains("GARRA") }
@@ -2930,22 +3026,18 @@ class CriadorState {
         }
 
         if (compendioArteDaGuerraAtivo && ancKey.contains("UMVEE")) {
-            // Guarantia base de Sobrevivência d4 para Umvee (não é um traço à
-            // parte em habilidades[], é característico da raça em si).
+            // Guarantia base de Sobrevivência d4 para Umvee — traço próprio
+            // (INSTINTO_DE_SOBREVIVENCIA) só pra contar o ponto no orçamento,
+            // o d4 em si é característico da raça, garantido aqui.
             if (perKey == "SOBREVIVENCIA") {
                 modifiedBase = maxOf(modifiedBase, 4)
             }
         }
-        // Gatoruja (Dom da Natureza de Umvee OU Feral): Perceber d6 + Ocultismo d4.
-        // Antes só funcionava para Umvee porque o código comparava o nome da raça;
-        // como Feral compartilha o mesmo Dom da Natureza, ele nunca recebia o
-        // bônus mesmo escolhendo Gatoruja. Ler o traço em vez do nome corrige isso
-        // para as duas raças automaticamente.
+        // Gatoruja (Dom da Natureza de Umvee): Perceber d6. Ocultismo d4 NÃO
+        // faz parte deste dom — é NATURALMENTE_SOBRENATURAL, traço base de
+        // todo Umvee, sempre concedido independente do dom escolhido.
         if (habilidadeIdsPericia.contains("PERCEBER_D6") && perKey == "PERCEBER") {
             modifiedBase = maxOf(modifiedBase, 6)
-        }
-        if (habilidadeIdsPericia.contains("OCULTISMO_D4") && perKey == "OCULTISMO") {
-            modifiedBase = maxOf(modifiedBase, 4)
         }
 
         // Usagimimi (ADG) - Definido pelo Ofício (d6 em 1 perícia da AdG à escolha)
@@ -3756,6 +3848,21 @@ class CriadorState {
 
     val totalSpPool: Int
         get() {
+            // Traço genérico de raça (oficial ou criado no editor de conteúdo
+            // customizado, ver RacialTraitEffect.PericiaPoolBonus) que dá/tira
+            // Pontos de Perícia — soma de todas as habilidades[] com esse
+            // efeito. Humano (Império San) "Pontos de Perícia" continua com o
+            // +3 hardcoded abaixo (id não migrado pra não mexer numa raça já
+            // testada), mas qualquer raça nova pode usar isso.
+            val bonusPontosPericia = currentAncestryDef?.habilidades
+                ?.sumOf { hab ->
+                    val tid = hab.resolvedTraitId()
+                    when (val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)) {
+                        is RacialTraitEffect.PericiaPoolBonus -> efeito.valor
+                        else -> 0
+                    }
+                } ?: 0
+
             // PROMPT: Arte da Guerra skill points adjustment
             if (compendioArteDaGuerraAtivo) {
                 // If AdG active:
@@ -3763,11 +3870,11 @@ class CriadorState {
                 // Humans with "Nenhum" sign: +3 points (15 total)
                 // Ignore "maisPontosPericias" checkbox
                 val isHuman = ancestralidade.keyify().contains("HUMANO")
-                val base = 12 + if (isHuman && signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) 3 else 0
+                val base = 12 + (if (isHuman && signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) 3 else 0) + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
-                val base = if (maisPontosPericias) BASE_SP_POOL else (BASE_SP_POOL - 3)
+                val base = (if (maisPontosPericias) BASE_SP_POOL else (BASE_SP_POOL - 3)) + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp)
                     .coerceAtLeast(0)
             }
@@ -3826,6 +3933,13 @@ class CriadorState {
      */
     private fun Vantagem.isStageBasedArcanoVariant(): Boolean {
         if (!usaPoderesPorEstagio) return false
+        // aa_demonio_meio_demonio é clone "capenga" do aa_demonio: usa o
+        // mecanismo normal de slots/PP (3 slots, sem o slot fixo extra de
+        // Disfarce Demoníaco que o aa_demonio puro tem), nunca o sistema de
+        // desbloqueio por estágio — exceção incondicional, diferente de
+        // aa_demonio (que só sai do modo por estágio quando a ancestralidade
+        // do personagem é Demônios de Cidade do Sol a Vapor).
+        if (id == "aa_demonio_meio_demonio") return false
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
         if (id == "aa_demonio" && isCidadeSolVaporDemonAncestry) return false
@@ -3855,8 +3969,11 @@ class CriadorState {
     }
 
     fun requisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): String? {
+        // Sem o gate de "só vale em modo por estágio": aa_demonio_meio_demonio
+        // usa o sistema normal de slots (ver isStageBasedArcanoVariant), mas o
+        // requisito de possuir "Disfarce Demoníaco (Estágio Experiente)" antes
+        // de destravar a versão diluída do poder precisa continuar valendo.
         val key = arcKey.normAAKey()
-        if (!usaPoderesDisponiveisPorEstagio(key)) return null
         return ArcaneConfig.getStageBasedPowerRequirement(key, powerId)
     }
 
@@ -3893,6 +4010,7 @@ class CriadorState {
     var ancestralidade by mutableStateOf("HUMANOS")
     var celestialAAMilagresDesabilitado by mutableStateOf(false)
     var meioElfoAgil by mutableStateOf(false)
+    var meioDemonioAA by mutableStateOf(false)
 
     var tropoSelecionado by mutableStateOf<Tropo?>(null)
     val vantagensAutomaticasDoTropo = mutableStateListOf<String>()
@@ -3929,14 +4047,12 @@ class CriadorState {
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
     // Delegam pras versões compartilhadas em RacialModifier.kt — mesma lógica
-    // que a lista de Características da aba Ancestralidades usa, pra não ter
-    // dois lugares combinando lista solta + habilidade embutida cada um do
-    // seu jeito.
+    // que a lista de Características da aba Ancestralidades usa.
     private fun effectiveVantagensGratis(rm: RacialModifier): List<String> =
-        vantagensGratisEfetivas(rm.vantagensGratis, rm.habilidades)
+        vantagensGratisEfetivas(rm.habilidades)
 
     private fun effectiveDesvantagens(rm: RacialModifier): List<String> =
-        desvantagensEfetivas(rm.desvantagens, rm.habilidades)
+        desvantagensEfetivas(rm.habilidades)
 
     val pontosComplicacao: Int
         get() {
@@ -3981,13 +4097,7 @@ class CriadorState {
             return false
         }
 
-        val free = effectiveVantagensGratis(ancDef)
-        // 1. Explicitly in Free Edges (legacy list or racial_edge)
-        if (free.any { it.keyify() == "ADAPTAVEL" }) {
-            return true
-        }
-
-        // 2. Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
+        // Explicit ID or Name in Abilities (e.g. Basic Humans, Guardians)
         if (ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL" || it.nome.keyify() == "ADAPTAVEL" }) {
             return true
         }
@@ -4406,17 +4516,20 @@ class CriadorState {
                 }
             }
 
-            // Elementais: base JSON já é d8 (Padrão, "Forte"). Seleção "Ar,
-            // Fogo ou Água" troca Forte por Forma de Energia (ver
-            // AncestryVariantRegistry.elementaisScifi) — sem foco físico,
-            // volta pra d4. Numérico, então fica aqui como exceção pontual
-            // (mesmo padrão do naturalArmorFromRace de Pedregoso/Umvee), não
-            // faz parte do ResolvedTraitPackage genérico.
+            // Elementais: base JSON já é d8 (Padrão, atributos.Força=4 — 2
+            // passos). Seleção "Ar, Fogo ou Água" troca o Forte (d8, +4pts) por
+            // um Forte mais fraco (d6, +2pts) mais Forma de Energia (+4pts) —
+            // ver AncestryVariantRegistry.elementaisScifi: base(-4) + Forma de
+            // Energia(+4) + Força d6(+2) = 2, fecha o orçamento; resetar pra d4
+            // (0pts extra) deixava a raça 2 pontos abaixo. Numérico, então fica
+            // aqui como exceção pontual (mesmo padrão do naturalArmorFromRace de
+            // Pedregoso/Umvee), não faz parte do ResolvedTraitPackage genérico
+            // (AtributoStep não é aplicado por lá — ver ModifierEngine.aplicarEfeito).
             if (ancKey == "ELEMENTAIS") {
                 if (a.keyify() == "FORCA") {
                     val variant = currentSciFiVariant ?: "Padrão"
                     if (variant != "Padrão") {
-                        modifiedBase = 4 // Reset to d4
+                        modifiedBase = 6 // Reset to d6 (Forte fraco, não o d8 de Padrão)
                     }
                 }
             }
@@ -4513,7 +4626,12 @@ class CriadorState {
             it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
 
-        var finalCap = baseCap + (profCount + espCount) * 2
+        // Profissional e Especialista sobem o teto em UM passo cada (a própria
+        // descrição de Especialista diz "um passo adicional" em cima de
+        // Profissional — juntos, +2, não +4). `extras` acima já confirma que
+        // este teto usa 1 unidade = 1 passo (d6 inicial = +1 unidade = d12+1),
+        // então cada Vantagem soma só +1 aqui, não +2.
+        var finalCap = baseCap + (profCount + espCount)
 
         // Limite de Força por Tamanho (Diminutos/Pequenos)
         // Se Tamanho <= -2 (Pequeno/Muito Pequeno): Força Máxima = d8.
@@ -4530,6 +4648,18 @@ class CriadorState {
             if (sizeCap < finalCap) {
                 finalCap = sizeCap
             }
+
+            // Tamanho positivo (regra oficial SWADE): cada ponto de Tamanho DA
+            // PRÓPRIA RAÇA eleva o teto de Força em um passo — ex.: Meio-Gigante
+            // (Fantasia) começa em Força d8 (+2 passos) e tem Tamanho +3 racial,
+            // então o teto vira d12+2+3 = d12+5, não só d12+2. Só conta Tamanho
+            // de origem racial (racialSizeRawDisplay) — Musculoso/Brutamontes
+            // (Vantagem) e Obeso (Complicação) também mexem em Tamanho, mas não
+            // ampliam este teto (não são "da raça").
+            val racialSize = ModifierEngine.racialSizeRawDisplay(this)
+            if (racialSize > 0) {
+                finalCap += racialSize
+            }
         }
 
         return finalCap
@@ -4539,12 +4669,20 @@ class CriadorState {
         if (modoLivre && !forceStandard) return 100
         val startRaw = periciaStartRaw(ancestralidade, per)
 
-        // Half-Orc Buscatrilha Intimidate Exception (starts d4 but gets cap increase)
-        val isHalfOrcIntimidate = compendioPathfinderAtivo &&
-                ancestralidade.keyify().contains("MEIO-ORC") &&
+        // Meio-Orc (Pathfinder) "Intimidante": começa com d4 em Intimidar (não
+        // d6 — id não cadastrado em RacialTraitPointCatalog.EFEITOS, o d4 vem
+        // do campo estruturado `pericias` em ancestralidades.json, lido por
+        // periciaStartRaw()/racialSkillStartMap), mas o livro ainda amplia o
+        // teto pra d12+1 — a exceção contrária à do Humano (Pathfinder)
+        // Adaptável (d6 sem ampliar o máximo). Antes checava por nome de raça
+        // (ancestralidade.contains("MEIO-ORC") + compendioPathfinderAtivo);
+        // agora lê o id do traço já presente na raça resolvida (INTIMIDANTE,
+        // comentado em CUSTOS como "Intimidar d4, teto ampliado" desde antes
+        // desta correção) — nenhuma outra raça cadastrada usa este id hoje.
+        val temIntimidanteTetoAmpliado = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "INTIMIDANTE" } == true &&
                 per.nome.keyify() == "INTIMIDAR"
 
-        val baseCap = if (startRaw >= 6 || isHalfOrcIntimidate) 13 else 12
+        val baseCap = if (startRaw >= 6 || temIntimidanteTetoAmpliado) 13 else 12
 
         val chave = per.nome.keyify()
         val profCount = vantagensSelecionadas.count {
@@ -4554,7 +4692,10 @@ class CriadorState {
             it.id == Constants.ID_ESPECIALISTA && it.choice?.keyify() == chave
         }
 
-        return baseCap + (profCount + espCount) * 2
+        // Mesma correção de atributoMaxRaw(): um passo cada, não dois — ver o
+        // comentário lá (a descrição de Especialista é "um passo adicional"
+        // em cima de Profissional, +2 juntos, nunca +4).
+        return baseCap + (profCount + espCount)
     }
 
     fun rawTotal(per: Pericia): Int {
@@ -4611,6 +4752,12 @@ class CriadorState {
             anaoCiberTracosSelecionados = emptyList()
         }
 
+        // Mesma lógica acima, pro traço negativo de Quadroides "Habilidoso".
+        val isQuadroidesHabilidosoAgora = anc.keyify() == "QUADROIDES" && effectiveScifiVariant == "Habilidoso"
+        if (!isQuadroidesHabilidosoAgora && quadroidesTracoNegativoSelecionado != null) {
+            quadroidesTracoNegativoSelecionado = null
+        }
+
         // Limpa a Variante custom selecionada se ela não pertencer à raça de destino.
         if (customVarianteRacialSelecionadaId != null) {
             val selectedVariant = listaVariantesRaciaisCustom.firstOrNull { it.id == customVarianteRacialSelecionadaId }
@@ -4661,7 +4808,8 @@ class CriadorState {
                 anoesScifiSelecionado = anoesScifiSelecionado,
                 scifiVariant = effectiveScifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo,
-                anaoCiberTracosSelecionados = anaoCiberTracosSelecionados
+                anaoCiberTracosSelecionados = anaoCiberTracosSelecionados,
+                quadroidesTracoNegativoSelecionado = quadroidesTracoNegativoSelecionado
             )
         )
 
@@ -4753,7 +4901,7 @@ class CriadorState {
         vantagensSelecionadas.addAll(advantagesToRestore)
 
         desvantagensAutomaticas.clear()
-        desvantagensAutomaticas.addAll(ancDef?.desvantagens ?: emptyList())
+        desvantagensAutomaticas.addAll(ancDef?.resolvedDesvantagens() ?: emptyList())
 
         vantagensAutomaticas.clear()
         vantagensAutomaticas.addAll(racialPackage.vantagensAutomaticas)
@@ -5071,12 +5219,36 @@ class CriadorState {
             }
         }
 
-        val isPathfinderHuman = compendioPathfinderAtivo &&
-                (ancestralidade.equals("Humano", ignoreCase = true) || ancestralidade.equals("Humano (Pathfinder)", ignoreCase = true))
-        val isPathfinderHalfElf = compendioPathfinderAtivo &&
-                ancestralidade.keyify().contains("MEIO-ELFO")
+        // Humano (Pathfinder) "Adaptável" e Meio-Elfo (Pathfinder) "Flexibilidade"
+        // concedem "um d6 em vez de um d4 em um Atributo à escolha. Isso não
+        // aumenta seu atributo máximo" — mesmo texto, mesmo id (FLEXIBILIDADE)
+        // nas duas raças. Em vez de elevar o piso do atributo escolhido (o que
+        // exigiria desfazer a elevação automática do teto em
+        // atributoMaxRawNaCriacao(), já que atributoMaxRaw() SEMPRE soma +1 de
+        // tipo de dado pra qualquer piso acima de d4), representamos como +1
+        // Ponto de Atributo: o jogador decide livremente onde gastá-lo, e como
+        // é gasto pelo mecanismo normal de compra (não um piso "de graça"), o
+        // teto de d12 na criação nunca é ultrapassado — sem precisar de
+        // nenhuma exceção especial. Antes checava por nome de raça
+        // (ancestralidade.equals("Humano"/"Humano (Pathfinder)") e
+        // ancestralidade.contains("MEIO-ELFO")); agora lê o id do traço já
+        // presente na raça resolvida.
+        val temAtributoFlexivel = currentAncestryDef?.habilidades?.any { it.id?.keyify() == "FLEXIBILIDADE" } == true
 
-        val basePoints = if (isPathfinderHuman || isPathfinderHalfElf) 6 else 5
+        // Traço genérico de raça (oficial ou criado no editor de conteúdo
+        // customizado, ver RacialTraitEffect.AtributoPoolBonus) que dá/tira
+        // Pontos de Atributo — soma de todas as habilidades[] com esse
+        // efeito, não um "if" fixo por id como FLEXIBILIDADE acima.
+        val bonusPontosAtributo = currentAncestryDef?.habilidades
+            ?.sumOf { hab ->
+                val tid = hab.resolvedTraitId()
+                when (val efeito = RacialTraitPointCatalog.efeitoDe(tid, hab.targetRef, hab.value)) {
+                    is RacialTraitEffect.AtributoPoolBonus -> efeito.valor
+                    else -> 0
+                }
+            } ?: 0
+
+        val basePoints = (if (temAtributoFlexivel) 6 else 5) + bonusPontosAtributo
 
         return (basePoints + cpPaStack.size + paFromProgress - jovemMalusPa) - usados
     }
@@ -5241,6 +5413,21 @@ class CriadorState {
     }
 
     /**
+     * Meio-Demônio (Cidade do Sol a Vapor): escolhe entre Adaptável (Vantagem
+     * Novato à escolha, como um humano comum) e o Antecedente Arcano
+     * (Demônio) próprio — versão diluída (id "aa_demonio_meio_demonio",
+     * concedida via GRANTED_EDGE/targetRef no traço racial, nunca escolhível
+     * manualmente na lista de Vantagens — ver ValidateScenarioRulesUseCase).
+     * Sem interação com atributos, diferente do Meio-Elfo acima.
+     */
+    fun selecionarMeioDemonioTraco(usaAA: Boolean) {
+        if (meioDemonioAA == usaAA) return
+        meioDemonioAA = usaAA
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+    }
+
+    /**
      * Atualiza os traços raciais negativos escolhidos para Anões (variante Ciber).
      * Rejeita silenciosamente qualquer seleção que estoure o orçamento de
      * [AnaoCiberTraitCatalog.MAX_PONTOS] pontos — a UI já deve impedir isso, mas a
@@ -5250,6 +5437,14 @@ class CriadorState {
         if (AnaoCiberTraitCatalog.pontosUsados(novosTracos) > AnaoCiberTraitCatalog.MAX_PONTOS) return
         if (anaoCiberTracosSelecionados == novosTracos) return
         anaoCiberTracosSelecionados = novosTracos
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
+    }
+
+    /** Atualiza o traço negativo escolhido pra Quadroides "Habilidoso" — ver campo. */
+    fun selecionarQuadroidesTracoNegativo(traitId: String?) {
+        if (quadroidesTracoNegativoSelecionado == traitId) return
+        quadroidesTracoNegativoSelecionado = traitId
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
     }
@@ -6350,6 +6545,7 @@ class CriadorState {
                 soldadoCargaAtivo = soldadoCargaAtivo,
                 permiteMultiAntecedenteArcano = permiteMultiAntecedenteArcano,
                 meioElfoAgil = meioElfoAgil,
+                meioDemonioAA = meioDemonioAA,
                 celestialAAMilagresDesabilitado = celestialAAMilagresDesabilitado,
                 jovemAutoPequeno = jovemAutoPequeno,
                 jovemMalusPa = jovemMalusPa,
@@ -6462,6 +6658,7 @@ class CriadorState {
                 scifiVariant = scifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo,
                 anaoCiberTracosSelecionados = anaoCiberTracosSelecionados,
+                quadroidesTracoNegativoSelecionado = quadroidesTracoNegativoSelecionado,
                 vantagemAdaptavelSelecionadaId = vantagemAdaptavelSelecionadaId,
                 customVarianteRacialSelecionadaId = customVarianteRacialSelecionadaId
             ),
@@ -6561,6 +6758,7 @@ class CriadorState {
         soldadoCargaAtivo = flags.soldadoCargaAtivo
         permiteMultiAntecedenteArcano = flags.permiteMultiAntecedenteArcano
         meioElfoAgil = flags.meioElfoAgil
+        meioDemonioAA = flags.meioDemonioAA
         celestialAAMilagresDesabilitado = flags.celestialAAMilagresDesabilitado
         jovemAutoPequeno = flags.jovemAutoPequeno
         jovemMalusPa = flags.jovemMalusPa
@@ -6621,6 +6819,7 @@ class CriadorState {
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
         anaoCiberTracosSelecionados = snapshot.selecoes.anaoCiberTracosSelecionados
+        quadroidesTracoNegativoSelecionado = snapshot.selecoes.quadroidesTracoNegativoSelecionado
         vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
         customVarianteRacialSelecionadaId = snapshot.selecoes.customVarianteRacialSelecionadaId
 

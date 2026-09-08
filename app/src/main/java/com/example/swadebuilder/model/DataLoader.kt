@@ -130,13 +130,12 @@ object DataLoader {
         val descricaoLite: String? = null,
         val atributos: Map<String, Int>,
         val pericias: Map<String, Int>,
-        val vantagensGratis: List<String> = emptyList(),
-        val desvantagens: List<String> = emptyList(),
         val habilidades: List<RacialAbility> = emptyList(),
         val movimentacao: Int = 0,
         val tags: List<String> = emptyList(),
         val opcoes: List<String> = emptyList(),
-        val livros: List<String>
+        val livros: List<String>,
+        val pontosRaciaisEsperados: Int = 2
     ) {
         fun descricaoExibida(): String? =
             if (!EditionConfig.isFullEdition) descricaoLite?.takeIf { it.isNotBlank() } ?: descricao else descricao
@@ -388,7 +387,7 @@ object DataLoader {
             }
         }
 
-        if (BuildConfig.DEBUG && "CIDADE_SOL_VAPOR" in keys) {
+        if (BuildConfig.DEBUG && "CIDADE_SOL_VAPOR" in keys && Log.isLoggable("SWADE_DEBUG", Log.DEBUG)) {
             val steamAll = todasVantagens.filter { canonicalOriginKey(it.origem) == "CIDADE_SOL_VAPOR" }
             Log.d(
                 "SWADE_DEBUG",
@@ -396,12 +395,10 @@ object DataLoader {
                     "vantagens_total=${todasVantagens.size}, sol_vapor_total=${steamAll.size}"
             )
             steamAll.take(20).forEach { vant ->
-                if (Log.isLoggable("SWADE_DEBUG", Log.DEBUG)) {
-                    Log.d(
-                        "SWADE_DEBUG",
-                        "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
-                    )
-                }
+                Log.d(
+                    "SWADE_DEBUG",
+                    "[DataLoader] sol_vapor id=${vant.id}, origem=${vant.origem}, nome=${vant.nomeExibicao}"
+                )
             }
         }
 
@@ -477,13 +474,12 @@ object DataLoader {
                     descricao = fonte.descricaoExibida(),
                     atributos = fonte.atributos,
                     pericias = fonte.pericias,
-                    vantagensGratis = fonte.vantagensGratis,
-                    desvantagens = fonte.desvantagens,
                     habilidades = fonte.habilidades.map { it.exibida() },
                     origem = livro,
                     movimentacao = fonte.movimentacao,
                     tags = fonte.tags,
-                    opcoes = fonte.opcoes
+                    opcoes = fonte.opcoes,
+                    pontosRaciaisEsperados = fonte.pontosRaciaisEsperados
                 )
             }
         }

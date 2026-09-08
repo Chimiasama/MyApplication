@@ -240,12 +240,8 @@ fun buildSummaryLines(
         val bloquearAprimoradoBonus =
             if (personagem.vantagens.contains(Constants.ID_BLOQUEAR_APRIMORADO)) 1 else 0
 
-        val isDeaders = especieIdAtual == "deaders"
-        val hasApararBaixo = isDeaders || personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
+        val hasApararBaixo = personagem.desvantagensRaciais.any { it.keyify() == "APARAR BAIXO" || it.keyify() == "APARAR_BAIXO" }
         val apararBaixoMod = if (hasApararBaixo) -2 else 0
-
-        val isSerranos = especieIdAtual == "serranos"
-        val serranosApararMod = if (isSerranos) 2 else 0
 
         val racialParryBonus = (personagem.vantagensRaciais + personagem.desvantagensRaciais)
             .sumOf { raw ->
@@ -268,7 +264,7 @@ fun buildSummaryLines(
 
         val total =
             base + bloquearBonus + bloquearAprimoradoBonus + personagem.bonusApararFromPower +
-                apararBaixoMod + serranosApararMod + racialParryBonus + garcaParryBonus
+                apararBaixoMod + racialParryBonus + garcaParryBonus
         return total.coerceAtLeast(0)
     }
 
@@ -705,8 +701,12 @@ fun buildSummaryLines(
     } else {
         val isTanukimimiWithPositiveThoughts = especieIdAtual == "tanukimimi" &&
             habilidadesRaciais.any { it.keyify() == "PENSAMENTOS POSITIVOS" }
-        val isFeralWithInsanidade = especieIdAtual == "feral" &&
-            habilidadesRaciais.any { it.keyify() == "INSANIDADE" }
+        // isFeralWithInsanidade removido: "Insanidade" (habilidade única que
+        // mencionava Furioso E Sanguinário no texto) virou dois traços de
+        // verdade — SANGUINARIO (Complicação, habilidade própria "Insanidade
+        // (Sanguinário)") e Furioso (Vantagem real, concedida via
+        // vantagensGratis) — não tem mais duplicata pra esconder aqui, Furioso
+        // deve aparecer normalmente como qualquer outra Vantagem concedida.
         (habilidadesRaciais + personagem.vantagensRaciais)
             .filterNot { trait ->
                 isElfosComunitario && trait.keyify() == "DESASTRADO"
@@ -715,13 +715,7 @@ fun buildSummaryLines(
                 isTanukimimiWithPositiveThoughts && trait.keyify() == "IMPULSO"
             }
             .filterNot { trait ->
-                isFeralWithInsanidade && trait.keyify() == "FURIOSO"
-            }
-            .filterNot { trait ->
                 isCentauxGazela && (trait.keyify() == "MOVIMENTACAO +2" || trait.keyify() == "TAMANHO +2")
-            }
-            .filterNot { trait ->
-                especieIdAtual == "serranos" && trait.keyify() == "NOCAO DE PERIGO"
             }
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
             .map { trait ->
@@ -737,11 +731,7 @@ fun buildSummaryLines(
                         // 2. Check Racial Abilities (Definition Name)
                         val ability = racialAbilityMap[key]
                         if (ability != null) {
-                            // Skin: Nekomimi "Fortuna Dá" should display as "Sorte" (book label),
-                            // while keeping behavior textual (not a free Edge).
-                            if (ability.id?.keyify() == "FORTUNA_DA" || ability.nome.keyify() == "FORTUNA DA") {
-                                "Sorte"
-                            } else if (especieIdAtual == "povo_rato" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
+                            if (especieIdAtual == "povo_rato" && (ability.id?.keyify() == "FOBIA" || ability.nome.keyify() == "FOBIA")) {
                                 "Fobia - Gatos (Menor)"
                             } else {
                                 // Use the display name from JSON (preserves symbols like '/')

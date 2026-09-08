@@ -14672,6 +14672,30 @@
     "descricaoLite": "Permite ao demônio disfarçar sua aparência por meio de uma ilusão convincente, sustentada por rolagens periódicas de Conjurar; o disfarce sobrevive ao sono, mas cai se a criatura for nocauteada contra a vontade, e pode ser removido por dissipar. Quanto maior o Grau do demônio, menor o tempo para mudar de forma, maior a duração do efeito e mais difícil fica notar o embuste. A farsa pode ser percebida por quem conhece o original ou por um tecnomago com óculos especiais, em teste de Perceber penalizado pelo Grau (com -2 extra em caso de ampliação), ou revelada por detectar arcano em rolagem resistida de Arcana, sem o modificador de Grau."
   },
   {
+    "id": "disfarce_demoniaco_meio_demonio",
+    "nome": "DISFARCE DEMONÍACO",
+    "estagio": "Experiente",
+    "pontosDePoder": 2,
+    "distancia": "Pessoal",
+    "duracao": "Especial",
+    "manifestacoes": [
+      "Ilusão qualitativa",
+      "Mudança de aparência"
+    ],
+    "descricao": "Versão diluída do Disfarce Demoníaco dos demônios de sangue puro. Nos Meio-Demônios, o sangue demoníaco só se manifesta o bastante para sustentar a ilusão a partir do Estágio Experiente, e mesmo assim exige um esforço maior — o poder custa 2 Pontos de Poder por ativação, em vez dos 0 PP dos demônios de sangue puro. Fora isso, funciona de forma idêntica: mesmas manifestações, mesmo tempo de conjuração e duração por Estágio (veja Disfarce Demoníaco).",
+    "modificadores": [],
+    "tags": [
+      "stage:experiente",
+      "tipo:utilitario",
+      "ilusao",
+      "demonio"
+    ],
+    "livros": [
+      "CIDADE_SOL_VAPOR"
+    ],
+    "descricaoLite": "Versão dos Meio-Demônios do Disfarce Demoníaco: só fica disponível a partir do Estágio Experiente e custa 2 Pontos de Poder por ativação (os demônios de sangue puro pagam 0 PP). Fora isso, mesmo efeito do poder original."
+  },
+  {
     "id": "sobrecarga",
     "nome": "SOBRECARGA",
     "estagio": "Veterano",

@@ -14,8 +14,6 @@ class ModifierEngineCidadeSolVaporTest {
             origem = "CIDADE_SOL_VAPOR",
             atributos = emptyMap(),
             pericias = emptyMap(),
-            vantagensGratis = emptyList(),
-            desvantagens = listOf("FRÁGIL"),
             habilidades = listOf(
                 RacialAbility(
                     nome = "Frágil",
