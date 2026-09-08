@@ -1114,8 +1114,6 @@ fun AncestralidadesSection(
                                         val caracteristicas = RacialCaracteristicasResolver.resolver(
                                             atributos = atributosEfetivos,
                                             pericias = periciasEfetivas,
-                                            vantagensGratis = emptyList(),
-                                            desvantagens = emptyList(),
                                             habilidades = habilidadesParaCaracteristicas.map {
                                                 RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
                                             }

@@ -415,14 +415,18 @@ class CriadorState {
         if (modoMonstroAtivo) {
             // Vantagens grátis do Template de Monstro Heroico (ex.: Monstro de
             // Retalhos possui Furioso e Resistência Arcana de graça — não é
-            // escolha do jogador, é o template quem concede). Usa o mesmo
+            // escolha do jogador, é o template quem concede, via traço
+            // vinculado em habilidades[] — traitId=GRANTED_EDGE/category=
+            // racial_edge, mesmo padrão de Ancestralidade). Usa o mesmo
             // mecanismo (vantagensRaciais) que uma Ancestralidade usa pros
             // próprios grants automáticos, só que a fonte aqui é o monstro.
-            val novasKeys = monstroNovo?.vantagensGratis?.map { it.keyify() }.orEmpty()
-            monstroAnterior?.vantagensGratis
-                ?.filterNot { it.keyify() in novasKeys }
-                ?.forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
-            monstroNovo?.vantagensGratis?.forEach { grant ->
+            val grantsAnteriores = monstroAnterior?.resolvedVantagensGratis().orEmpty()
+            val grantsNovos = monstroNovo?.resolvedVantagensGratis().orEmpty()
+            val novasKeys = grantsNovos.map { it.keyify() }
+            grantsAnteriores
+                .filterNot { it.keyify() in novasKeys }
+                .forEach { grant -> vantagensRaciais.removeAll { it.keyify() == grant.keyify() } }
+            grantsNovos.forEach { grant ->
                 if (vantagensRaciais.none { it.keyify() == grant.keyify() }) {
                     vantagensRaciais.add(grant)
                 }
@@ -4026,15 +4030,12 @@ class CriadorState {
     val reservasComplicacaoMaior: SnapshotStateMap<String, Boolean> = mutableStateMapOf()
 
     // Delegam pras versões compartilhadas em RacialModifier.kt — mesma lógica
-    // que a lista de Características da aba Ancestralidades usa. O primeiro
-    // parâmetro é sempre emptyList() do lado de RacialModifier (nenhuma
-    // Ancestralidade usa mais lista solta) — a função continua genérica só
-    // porque é compartilhada com MonstroTemplate.paraCaracteristicas().
+    // que a lista de Características da aba Ancestralidades usa.
     private fun effectiveVantagensGratis(rm: RacialModifier): List<String> =
-        vantagensGratisEfetivas(emptyList(), rm.habilidades)
+        vantagensGratisEfetivas(rm.habilidades)
 
     private fun effectiveDesvantagens(rm: RacialModifier): List<String> =
-        desvantagensEfetivas(emptyList(), rm.habilidades)
+        desvantagensEfetivas(rm.habilidades)
 
     val pontosComplicacao: Int
         get() {

@@ -232,14 +232,13 @@ fun groupAncestralidadesForDisplay(items: List<RacialModifier>): List<List<Racia
 }
 
 /**
- * Uma Vantagem/Complicação grátis pode vir embutida numa habilidade
+ * Uma Vantagem/Complicação grátis vem sempre embutida numa habilidade
  * (`category == "racial_edge"`/`"racial_hindrance"`, opcionalmente com
  * `traitId="GRANTED_EDGE"/"RACIAL_HINDRANCE"` + `targetRef` quando o `nome`
- * é só skin do livro) ou, só pro Template de Monstro Heroico (que não é uma
- * RacialModifier — ver `MonstroTemplate.vantagensGratis`), numa lista solta
- * de nomes/ids. Nenhuma Ancestralidade usa mais a lista solta (sempre vazia
- * hoje) — o parâmetro continua aqui só porque a função é compartilhada com
- * `MonstroTemplate.paraCaracteristicas()`.
+ * é só skin do livro) — tanto pra Ancestralidade (`RacialAbility`) quanto
+ * pro Template de Monstro Heroico (`MonstroHabilidade`, ver
+ * `MonstroTemplate.paraCaracteristicas()`). Nenhum dos dois usa mais lista
+ * solta de nomes/ids à parte.
  */
 private val racialGrantSeveritySuffixRegex = Regex("""\s*\((MAIOR|MENOR)\)\s*$""")
 
@@ -252,21 +251,17 @@ private val racialGrantSeveritySuffixRegex = Regex("""\s*\((MAIOR|MENOR)\)\s*$""
 fun String.racialGrantDedupeKey(): String =
     keyify().replace(racialGrantSeveritySuffixRegex, "").filter { it.isLetterOrDigit() }
 
-// distinctBy(racialGrantDedupeKey): defesa pro caso de MonstroTemplate.vantagensGratis
-// registrar o mesmo grant que já vem embutido em habilidades[] (nenhuma Ancestralidade
-// dispara isso mais — o parâmetro vantagensGratis/desvantagens abaixo é sempre
-// emptyList() do lado de RacialModifier, ver comentário da classe acima).
-fun vantagensGratisEfetivas(vantagensGratis: List<String>, habilidades: List<RacialAbility>): List<String> =
-    (vantagensGratis + habilidades.filter { it.category == "racial_edge" }.map { hab ->
+fun vantagensGratisEfetivas(habilidades: List<RacialAbility>): List<String> =
+    habilidades.filter { it.category == "racial_edge" }.map { hab ->
         // targetRef (traitId=GRANTED_EDGE) tem prioridade — é o id/nome real
         // da Vantagem quando `nome` é só skin (ex.: Kitsunemimi "Socialmente
         // Sofisticados" concedendo "Cativar o Ambiente"). Sem targetRef, cai
         // pro id ?: nome de sempre (raças antigas onde os dois já coincidem).
         hab.targetRef?.takeIf { it.isNotBlank() } ?: hab.id ?: hab.nome
-    }).distinctBy { it.racialGrantDedupeKey() }
+    }.distinctBy { it.racialGrantDedupeKey() }
 
-fun desvantagensEfetivas(desvantagens: List<String>, habilidades: List<RacialAbility>): List<String> =
-    (desvantagens + habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
+fun desvantagensEfetivas(habilidades: List<RacialAbility>): List<String> =
+    habilidades.filter { it.category == "racial_hindrance" }.map { hab ->
         // targetRef (traitId=RACIAL_HINDRANCE) tem prioridade, mesmo motivo
         // do caso GRANTED_EDGE acima (skin de nome, ex.: Kitsunemimi
         // "Excessivamente Detalhistas" concedendo "Cauteloso").
@@ -277,7 +272,7 @@ fun desvantagensEfetivas(desvantagens: List<String>, habilidades: List<RacialAbi
         } else {
             base
         }
-    }).distinctBy { it.racialGrantDedupeKey() }
+    }.distinctBy { it.racialGrantDedupeKey() }
 
 /**
  * Monta a lista "Características" da aba Ancestralidades inteiramente a
@@ -303,8 +298,6 @@ object RacialCaracteristicasResolver {
     fun resolver(
         atributos: Map<String, Int>,
         pericias: Map<String, Int>,
-        vantagensGratis: List<String>,
-        desvantagens: List<String>,
         habilidades: List<RacialAbility>
     ): List<String> {
         val linhas = mutableListOf<String>()
@@ -328,14 +321,14 @@ object RacialCaracteristicasResolver {
             linhas += "Perícia inicial: ${pericia.toFancyTitleCase()} ($dado)${formatPts(pts)}"
         }
 
-        vantagensGratisEfetivas(vantagensGratis, habilidades)
+        vantagensGratisEfetivas(habilidades)
             .filterNot { it.keyify() == Constants.ID_AA_AGENT_SYN.keyify() }
             .forEach { entrada ->
                 val cleanName = entrada.replace(Regex("(?i)^Vantagem\\s+(Racial|Grátis):\\s*"), "").trim()
                 linhas += "Vantagem Racial: ${cleanName.toFancyTitleCase()}${formatPts(2)}"
             }
 
-        desvantagensEfetivas(desvantagens, habilidades).forEach { entrada ->
+        desvantagensEfetivas(habilidades).forEach { entrada ->
             val cleanName = entrada.replace(Regex("(?i)^Complicação\\s+(Racial|Maior|Menor):\\s*"), "").trim()
             val match = Regex("""^(.*?)\s*\((Maior|Menor)\)$""").find(cleanName)
             if (match != null) {
