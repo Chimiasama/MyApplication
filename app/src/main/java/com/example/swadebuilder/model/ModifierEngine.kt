@@ -385,12 +385,12 @@ object ModifierEngine {
 
         // 6. Signos (Arte da Guerra)
         if (state.compendioArteDaGuerraAtivo && state.ancestralidade.keyify().contains("HUMANO")) {
-            val sign = state.signoAdgSelecionado
-            if (sign != null) {
-                if (sign.equals("Tartaruga", ignoreCase = true)) {
+            val signId = CriadorState.signoIdFromNome(state.signoAdgSelecionado)
+            if (signId != null) {
+                if (signId == "TARTARUGA") {
                     modifiers.add(Modifier("sign_tartaruga_tough", SourceType.OUTRO, "Signo Tartaruga", ModifierTarget.TOUGHNESS_FLAT, 1))
                 }
-                if (sign.equals("Garça", ignoreCase = true)) {
+                if (signId == "GARCA") {
                     modifiers.add(Modifier("sign_garca_parry", SourceType.OUTRO, "Signo Garça", ModifierTarget.PARRY, 1))
                 }
             }

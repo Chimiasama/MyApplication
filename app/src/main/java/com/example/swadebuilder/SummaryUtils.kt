@@ -259,7 +259,7 @@ fun buildSummaryLines(
             if (
                 personagem.compendioArteDaGuerraAtivo &&
                 especieIdAtual == "humano" &&
-                personagem.signoAdgSelecionado.equals("Garça", ignoreCase = true)
+                CriadorState.signoIdFromNome(personagem.signoAdgSelecionado) == "GARCA"
             ) 1 else 0
 
         val total =
@@ -568,23 +568,23 @@ fun buildSummaryLines(
         }
 
         if (especieIdAtual == "humano") {
-            val pack = personagem.pacoteCulturalFantasiaSelecionado
-            if (!pack.isNullOrBlank() && !pack.equals("Humano padrão", ignoreCase = true)) {
+            val pacoteId = CriadorState.pacoteCulturalIdFromNome(personagem.pacoteCulturalFantasiaSelecionado)
+            if (pacoteId != null && pacoteId != "HUMANO_PADRAO") {
                 removeAll { it.keyify() == "ADAPTAVEL" }
             }
             if (personagem.compendioFantasiaAtivo) {
-                when (pack) {
-                    "Nômades do Deserto" -> {
+                when (pacoteId) {
+                    "NOMADES_DO_DESERTO" -> {
                         if (none { it.keyify() == "FRAQUEZA_AMBIENTAL" }) {
                             add("Fraqueza Ambiental (Frio)")
                         }
                     }
-                    "Povo da Montanha" -> {
+                    "POVO_DA_MONTANHA" -> {
                         if (none { it.keyify() == "FRAQUEZA_AMBIENTAL" }) {
                             add("Fraqueza Ambiental (Calor)")
                         }
                     }
-                    "Povo do Mar" -> {
+                    "POVO_DO_MAR" -> {
                         if (personagem.povoDoMarOpcao == "Penalidade em Cavalgar" && none { it.keyify() == "PENALIDADE_CAVALGAR" }) {
                             add("Penalidade em Cavalgar")
                         }

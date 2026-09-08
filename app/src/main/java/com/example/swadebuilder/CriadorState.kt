@@ -647,7 +647,8 @@ class CriadorState {
 
     private fun applyAncestryVariantAdjustments(base: RacialModifier, key: String): RacialModifier {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
-            if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
+            val pacoteId = pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado)
+            if (pacoteId != "HUMANO_PADRAO") {
                 val newHabilidades = base.habilidades.toMutableList()
 
                 newHabilidades.removeAll {
@@ -656,10 +657,10 @@ class CriadorState {
                     idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
                 }
 
-                when (pacoteCulturalFantasiaSelecionado) {
-                    "Nômades do Deserto" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Frio)", descricao = "Nômades do deserto possuem fraqueza ambiental ao frio.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
-                    "Povo da Montanha" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Calor)", descricao = "O povo da montanha possui fraqueza ambiental ao calor.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
-                    "Povo do Mar" -> {
+                when (pacoteId) {
+                    "NOMADES_DO_DESERTO" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Frio)", descricao = "Nômades do deserto possuem fraqueza ambiental ao frio.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
+                    "POVO_DA_MONTANHA" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Calor)", descricao = "O povo da montanha possui fraqueza ambiental ao calor.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
+                    "POVO_DO_MAR" -> {
                         if (povoDoMarOpcao == "Penalidade em Cavalgar") {
                             newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Penalidade em Cavalgar", descricao = "Subtrai 1 de rolagens de Cavalgar.", id = "PENALIDADE_CAVALGAR", category = "racial_trait_negative"))
                         }
@@ -1205,65 +1206,62 @@ class CriadorState {
         const val DEFAULT_SOUND_VOLUME = 70
         const val ARTISTA_MARCIAL_JUTSU_D6 = "D6"
         const val ARTISTA_MARCIAL_JUTSU_D4_D4 = "D4_D4"
-        val SIGNOS_ADG = listOf(
-            "Nenhum", "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
-            "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
+        // Signos de Nascença (Arte da Guerra, Humanos) e Pacotes Culturais
+        // (Fantasia, Humanos): cada opção carrega seu próprio `id` estável,
+        // independente do `nome` de exibição — mesmo princípio de
+        // RacialAbility.id/RacialModifier — em vez de todo o resto do código
+        // comparar contra o texto do nome (`.equals("Garça", ignoreCase =
+        // true)`) espalhado por várias funções e arquivos. `signoAdgSelecionado`/
+        // `pacoteCulturalFantasiaSelecionado` continuam guardando o `nome`
+        // (compatibilidade com saves antigos e com o dropdown da UI, que já
+        // seleciona por nome) — `signoIdFromNome()`/`pacoteCulturalIdFromNome()`
+        // são o único lugar que traduz nome -> id; toda mecânica (perícia,
+        // atributo, vantagem automática, Modifier) passa a comparar o id.
+        data class SignoAdg(val id: String, val nome: String, val descricao: String, val descricaoLite: String)
+        data class PacoteCulturalFantasia(val id: String, val nome: String, val descricao: String, val descricaoLite: String)
+
+        val SIGNOS_ADG: List<SignoAdg> = listOf(
+            SignoAdg("NENHUM", "Nenhum", "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e slot gratuito de Adaptável).", "Não possui signo; conserva os benefícios padrão do humano Adaptável (15 pontos de perícia e um slot gratuito de Adaptável)."),
+            SignoAdg("BASABASA", "Basabasa", "Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói.", "Concede a Vantagem Atraente; na criação, escolha +1 em Provocar ou em Intimidar contra alvos que se sintam atraídos ou enojados pelo herói."),
+            SignoAdg("BOI", "Boi", "Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir Força (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1.", "Dá +1 em Atletismo em testes baseados em Força (ou em todos os testes de Atletismo, com a Vantagem Brutamontes); também eleva a Força em um tipo de dado, com máximo em d12+1."),
+            SignoAdg("TIGRE", "Tigre", "A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso).", "Aumenta o Raio de Comando em +4 quadros e concede +1 em testes de Medo, reduzindo em 1 o resultado na Tabela de Medo (cumulativo com Corajoso)."),
+            SignoAdg("LEBRE", "Lebre", "Heróis nascidos sob o signo da Lebre exibem qualidades gentis, amáveis e compassivas, com um toque de modéstia. Lebres podem demonstrar características comportamentais de sonhar acordado, escapismo, falta de perspectiva ou timidez em interações sociais. Uma Lebre tem um toque natural (Cura d6) e, com os suprimentos médicos adequados, pode gastar um Bene para tratar um Ferimento com horas ou dias (até 4 dias), como se estivesse sendo tratada dentro da Hora de Ouro. Um personagem pode se beneficiar desse tratamento uma única vez por aventura.", "Começa com Cura d6 e pode gastar um Bene, uma vez por aventura, para tratar um Ferimento até 4 dias depois como se ainda estivesse dentro da Hora de Ouro (com os suprimentos médicos certos)."),
+            SignoAdg("GARCA", "Garça", "Nascidos com o signo da Garça, os indivíduos buscam uma vida de perfeito equilíbrio entre os altos e baixos que ela oferece. Uma Garça é agraciada com graça em seus movimentos e se destaca contra adversários em todas as formas. A Garça possui a fraqueza da insegurança e depende muito dos outros em momentos de dúvida. As garças recebem +1 em Aparar, d4 em Acrobacia e aumentam Atletismo em um tipo de dado.", "Concede +1 em Aparar, Acrobacia inicial d4 e eleva Atletismo em um tipo de dado."),
+            SignoAdg("SERPENTE", "Serpente", "Muitos veem a serpente como astuta e sorrateira, no entanto, o signo da Serpente é um símbolo de sabedoria e mantém um alto nível de astúcia. Serpentes são consideradas sensíveis e emotivas, a maioria é talentosa nas artes. Com essa sensibilidade vem a hesitação e pequenos surtos de leve paranoia. Uma Serpente começa com Jogar d6 ou Performance d6. Usando Jogar, uma Serpente adiciona +1 ao total da diferença se vencer e -1 ao total da diferença se perder. Usando Performance para captação de recursos, altera a porcentagem para 30% e 40% com um sucesso.", "Escolha entre Jogar d6 ou Performance d6 iniciais; em Jogar, soma +1 ao saldo se vencer e -1 se perder, e em Performance para arrecadar fundos, os percentuais sobem para 30%/40% em caso de sucesso."),
+            SignoAdg("DRAGAO", "Dragão", "Nascidos sob o signo do Dragão, os indivíduos são respeitados por serem animados, pacientes e sábios em sua experiência. Muitos dos melhores estrategistas da história são do signo do Dragão. Os dragões tendem a odiar hipocrisia, fofocas e calúnias, e desprezam ser usados ou controlados pelos outros. O Dragão aumenta seu Espírito em um tipo de dado e aumenta seu máximo neste atributo para d12+1. Dragões se beneficiam de +1 em rolagens de Conhecimento Geral quando estão em situações desconhecidas.", "Eleva o Espírito em um tipo de dado (máximo d12+1) e concede +1 em Conhecimento Geral em situações desconhecidas."),
+            SignoAdg("KIRIN", "Kirin", "O nascimento de um Kirin coincide com o final da estação de verão à medida que se aproxima o outono, representando um tempo de coleta e colheita. Um Kirin é proativo e percebe a malícia dos outros por meio de ações independentes. No entanto, um Kirin tende a fazer o que é necessário por conta própria, desconfiando que os outros cumpram suas obrigações. Um Kirin precisa de um incentivo a mais para prosseguir, começando com +1 em sua Reserva de Chi e uma Bene adicional em cada sessão.", "Começa com +1 na Reserva de Chi e recebe um Bene extra a cada sessão."),
+            SignoAdg("MACACO", "Macaco", "O signo do Macaco está associado ao ser cheio de vida, de raciocínio rápido e versátil. Um Macaco é conhecido por tirar o máximo de qualquer situação, mas muitas vezes olha com menosprezo àqueles que não aprendem rapidamente. Muitas vezes, um temperamento impetuoso será a causa das ações de um Macaco. Com este signo de nascença, a Astúcia de um Macaco aumenta em um tipo de dado e seu máximo em aumenta d12+1. Um Macaco rola d4+1 nas perícias não treinadas baseadas em Astúcia, este bônus não se aplica ao dado selvagem.", "Eleva a Astúcia em um tipo de dado (máximo d12+1) e usa d4+1, em vez do padrão, em perícias não treinadas baseadas em Astúcia (o Dado Selvagem não recebe esse bônus)."),
+            SignoAdg("RAPOSA", "Raposa", "Dizem que a Raposa possui uma intuição incrível. Capaz de ler situações sociais e saber exatamente o que as outras pessoas precisam ouvir. Isso não quer dizer que a Raposa seja falsa, é uma demonstração de habilidade e grande cuidado em aspectos de \"Manter as Aparências\". Traição e confiança são preocupações comuns de uma Raposa, levando-a a questionar a lealdade e a amizade de outros. Uma Raposa começa com a Vantagem Elevar a Moral e recebe +1 em Persuadir e nas rolagens da Tabela de Reação.", "Concede a Vantagem Elevar a Moral, além de +1 em Persuadir e nos testes da Tabela de Reação."),
+            SignoAdg("LOBO", "Lobo", "Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial..", "Concede a Vantagem Elo Comum e +1 na Tabela de Reação usada na Reação Inicial."),
+            SignoAdg("TARTARUGA", "Tartaruga", "Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa.", "Concede +1 na Resistência; quem tentar a manobra Finalização contra esse personagem sofre -1 no ataque e no dano dessa tentativa."),
+            SignoAdg("URSO", "Urso", "Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2.", "Eleva o Vigor em um tipo de dado (máximo d12+1) e reduz a penalidade de Exausto para -1 em vez de -2.")
         )
-        val PACOTES_CULTURAIS_FANTASIA = listOf(
-            "Humano padrão",
-            "Nômades do Deserto",
-            "Povo da Montanha",
-            "Povo do Mar",
-            "Senhores dos Cavalos"
+
+        /** Vantagens (por id de vantagens.json) que cada Signo concede automaticamente — única fonte, usada tanto ao selecionar quanto ao restaurar um save. */
+        val SIGNO_VANTAGENS_AUTOMATICAS: Map<String, List<String>> = mapOf(
+            "BASABASA" to listOf("atraente"),
+            "RAPOSA" to listOf("elevar_o_moral"),
+            "LOBO" to listOf("elo_comum"),
+            "KIRIN" to listOf("sorte")
         )
-        val PACOTES_CULTURAIS_FANTASIA_DESC = mapOf(
-            "Humano padrão" to "Mantém o pacote padrão de humanos de Fantasia: Adaptável (uma Vantagem Novato à escolha).",
-            "Nômades do Deserto" to "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).",
-            "Povo da Montanha" to "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).",
-            "Povo do Mar" to "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.",
-            "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Sem Escrúpulos e Analfabeto, a critério do Mestre."
+
+        fun signoByNome(nome: String?): SignoAdg? =
+            nome?.let { n -> SIGNOS_ADG.firstOrNull { it.nome.equals(n, ignoreCase = true) } }
+
+        fun signoIdFromNome(nome: String?): String? = signoByNome(nome)?.id
+
+        val PACOTES_CULTURAIS_FANTASIA: List<PacoteCulturalFantasia> = listOf(
+            PacoteCulturalFantasia("HUMANO_PADRAO", "Humano padrão", "Mantém o pacote padrão de humanos de Fantasia: Adaptável (uma Vantagem Novato à escolha).", "Segue o pacote humano genérico: recebe uma Vantagem de Novato à sua escolha."),
+            PacoteCulturalFantasia("NOMADES_DO_DESERTO", "Nômades do Deserto", "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).", "Iniciam com Sobrevivência d6 e resistência a ambientes quentes, mas sofrem penalidade em climas frios."),
+            PacoteCulturalFantasia("POVO_DA_MONTANHA", "Povo da Montanha", "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).", "Vigor inicial d6 e tolerância ao frio, compensados por uma fraqueza a ambientes quentes."),
+            PacoteCulturalFantasia("POVO_DO_MAR", "Povo do Mar", "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.", "Atletismo e Navegar iniciam em d6; dependendo da campanha, o Mestre pode aplicar penalidade em Cavalgar ou a Complicação Procurado (Maior)."),
+            PacoteCulturalFantasia("SENHORES_DOS_CAVALOS", "Senhores dos Cavalos", "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Sem Escrúpulos e Analfabeto, a critério do Mestre.", "Cavalgar inicial d6; a critério do Mestre, o grupo pode ainda conceder Nascido na Sela ou complicações culturais como Código de Honra, Sem Escrúpulos ou Analfabeto.")
         )
-        // Resumos genéricos para a edição Lite (não reproduzem o texto do livro original).
-        val PACOTES_CULTURAIS_FANTASIA_DESC_LITE = mapOf(
-            "Humano padrão" to "Segue o pacote humano genérico: recebe uma Vantagem de Novato à sua escolha.",
-            "Nômades do Deserto" to "Iniciam com Sobrevivência d6 e resistência a ambientes quentes, mas sofrem penalidade em climas frios.",
-            "Povo da Montanha" to "Vigor inicial d6 e tolerância ao frio, compensados por uma fraqueza a ambientes quentes.",
-            "Povo do Mar" to "Atletismo e Navegar iniciam em d6; dependendo da campanha, o Mestre pode aplicar penalidade em Cavalgar ou a Complicação Procurado (Maior).",
-            "Senhores dos Cavalos" to "Cavalgar inicial d6; a critério do Mestre, o grupo pode ainda conceder Nascido na Sela ou complicações culturais como Código de Honra, Sem Escrúpulos ou Analfabeto."
-        )
-        val SIGNOS_ADG_DESC = mapOf(
-            "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e slot gratuito de Adaptável).",
-            "Basabasa" to "Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói.",
-            "Boi" to "Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir Força (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1.",
-            "Tigre" to "A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso).",
-            "Lebre" to "Heróis nascidos sob o signo da Lebre exibem qualidades gentis, amáveis e compassivas, com um toque de modéstia. Lebres podem demonstrar características comportamentais de sonhar acordado, escapismo, falta de perspectiva ou timidez em interações sociais. Uma Lebre tem um toque natural (Cura d6) e, com os suprimentos médicos adequados, pode gastar um Bene para tratar um Ferimento com horas ou dias (até 4 dias), como se estivesse sendo tratada dentro da Hora de Ouro. Um personagem pode se beneficiar desse tratamento uma única vez por aventura.",
-            "Garça" to "Nascidos com o signo da Garça, os indivíduos buscam uma vida de perfeito equilíbrio entre os altos e baixos que ela oferece. Uma Garça é agraciada com graça em seus movimentos e se destaca contra adversários em todas as formas. A Garça possui a fraqueza da insegurança e depende muito dos outros em momentos de dúvida. As garças recebem +1 em Aparar, d4 em Acrobacia e aumentam Atletismo em um tipo de dado.",
-            "Serpente" to "Muitos veem a serpente como astuta e sorrateira, no entanto, o signo da Serpente é um símbolo de sabedoria e mantém um alto nível de astúcia. Serpentes são consideradas sensíveis e emotivas, a maioria é talentosa nas artes. Com essa sensibilidade vem a hesitação e pequenos surtos de leve paranoia. Uma Serpente começa com Jogar d6 ou Performance d6. Usando Jogar, uma Serpente adiciona +1 ao total da diferença se vencer e -1 ao total da diferença se perder. Usando Performance para captação de recursos, altera a porcentagem para 30% e 40% com um sucesso.",
-            "Dragão" to "Nascidos sob o signo do Dragão, os indivíduos são respeitados por serem animados, pacientes e sábios em sua experiência. Muitos dos melhores estrategistas da história são do signo do Dragão. Os dragões tendem a odiar hipocrisia, fofocas e calúnias, e desprezam ser usados ou controlados pelos outros. O Dragão aumenta seu Espírito em um tipo de dado e aumenta seu máximo neste atributo para d12+1. Dragões se beneficiam de +1 em rolagens de Conhecimento Geral quando estão em situações desconhecidas.",
-            "Kirin" to "O nascimento de um Kirin coincide com o final da estação de verão à medida que se aproxima o outono, representando um tempo de coleta e colheita. Um Kirin é proativo e percebe a malícia dos outros por meio de ações independentes. No entanto, um Kirin tende a fazer o que é necessário por conta própria, desconfiando que os outros cumpram suas obrigações. Um Kirin precisa de um incentivo a mais para prosseguir, começando com +1 em sua Reserva de Chi e uma Bene adicional em cada sessão.",
-            "Macaco" to "O signo do Macaco está associado ao ser cheio de vida, de raciocínio rápido e versátil. Um Macaco é conhecido por tirar o máximo de qualquer situação, mas muitas vezes olha com menosprezo àqueles que não aprendem rapidamente. Muitas vezes, um temperamento impetuoso será a causa das ações de um Macaco. Com este signo de nascença, a Astúcia de um Macaco aumenta em um tipo de dado e seu máximo em aumenta d12+1. Um Macaco rola d4+1 nas perícias não treinadas baseadas em Astúcia, este bônus não se aplica ao dado selvagem.",
-            "Raposa" to "Dizem que a Raposa possui uma intuição incrível. Capaz de ler situações sociais e saber exatamente o que as outras pessoas precisam ouvir. Isso não quer dizer que a Raposa seja falsa, é uma demonstração de habilidade e grande cuidado em aspectos de \"Manter as Aparências\". Traição e confiança são preocupações comuns de uma Raposa, levando-a a questionar a lealdade e a amizade de outros. Uma Raposa começa com a Vantagem Elevar a Moral e recebe +1 em Persuadir e nas rolagens da Tabela de Reação.",
-            "Lobo" to "Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial..",
-            "Tartaruga" to "Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa.",
-            "Urso" to "Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2."
-        )
-        // Resumos genéricos para a edição Lite (não reproduzem o texto do livro original).
-        val SIGNOS_ADG_DESC_LITE = mapOf(
-            "Nenhum" to "Não possui signo; conserva os benefícios padrão do humano Adaptável (15 pontos de perícia e um slot gratuito de Adaptável).",
-            "Basabasa" to "Concede a Vantagem Atraente; na criação, escolha +1 em Provocar ou em Intimidar contra alvos que se sintam atraídos ou enojados pelo herói.",
-            "Boi" to "Dá +1 em Atletismo em testes baseados em Força (ou em todos os testes de Atletismo, com a Vantagem Brutamontes); também eleva a Força em um tipo de dado, com máximo em d12+1.",
-            "Tigre" to "Aumenta o Raio de Comando em +4 quadros e concede +1 em testes de Medo, reduzindo em 1 o resultado na Tabela de Medo (cumulativo com Corajoso).",
-            "Lebre" to "Começa com Cura d6 e pode gastar um Bene, uma vez por aventura, para tratar um Ferimento até 4 dias depois como se ainda estivesse dentro da Hora de Ouro (com os suprimentos médicos certos).",
-            "Garça" to "Concede +1 em Aparar, Acrobacia inicial d4 e eleva Atletismo em um tipo de dado.",
-            "Serpente" to "Escolha entre Jogar d6 ou Performance d6 iniciais; em Jogar, soma +1 ao saldo se vencer e -1 se perder, e em Performance para arrecadar fundos, os percentuais sobem para 30%/40% em caso de sucesso.",
-            "Dragão" to "Eleva o Espírito em um tipo de dado (máximo d12+1) e concede +1 em Conhecimento Geral em situações desconhecidas.",
-            "Kirin" to "Começa com +1 na Reserva de Chi e recebe um Bene extra a cada sessão.",
-            "Macaco" to "Eleva a Astúcia em um tipo de dado (máximo d12+1) e usa d4+1, em vez do padrão, em perícias não treinadas baseadas em Astúcia (o Dado Selvagem não recebe esse bônus).",
-            "Raposa" to "Concede a Vantagem Elevar a Moral, além de +1 em Persuadir e nos testes da Tabela de Reação.",
-            "Lobo" to "Concede a Vantagem Elo Comum e +1 na Tabela de Reação usada na Reação Inicial.",
-            "Tartaruga" to "Concede +1 na Resistência; quem tentar a manobra Finalização contra esse personagem sofre -1 no ataque e no dano dessa tentativa.",
-            "Urso" to "Eleva o Vigor em um tipo de dado (máximo d12+1) e reduz a penalidade de Exausto para -1 em vez de -2."
-        )
+
+        fun pacoteCulturalByNome(nome: String?): PacoteCulturalFantasia? =
+            nome?.let { n -> PACOTES_CULTURAIS_FANTASIA.firstOrNull { it.nome.equals(n, ignoreCase = true) } }
+
+        fun pacoteCulturalIdFromNome(nome: String?): String? = pacoteCulturalByNome(nome)?.id
     }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
@@ -2350,7 +2348,7 @@ class CriadorState {
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
             ancestralidade.keyify().contains("HUMANO") &&
-            signoAdgSelecionado.equals("Kirin", ignoreCase = true) &&
+            signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             v.id == "sorte"
 
         return kirinSorteAutomatica ||
@@ -2904,19 +2902,19 @@ class CriadorState {
 
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancKey.contains("HUMANO")) {
-            val sign = signoAdgSelecionado
-            if (sign != null) {
+            val signId = signoIdFromNome(signoAdgSelecionado)
+            if (signId != null) {
                 // Lebre: Cura d6
-                if (sign.equals("Lebre", ignoreCase = true) && perKey == "CURAR") {
+                if (signId == "LEBRE" && perKey == "CURAR") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
                 // Garça: Acrobacia d4, Atletismo +1 die type (from base)
-                if (sign.equals("Garça", ignoreCase = true)) {
+                if (signId == "GARCA") {
                     if (perKey == "ACROBACIA") modifiedBase = maxOf(modifiedBase, 4)
                     if (perKey == "ATLETISMO") modifiedBase = maxOf(modifiedBase, 6) // Base d4 -> d6
                 }
                 // Serpente: Jogar OR Performance d6
-                if (sign.equals("Serpente", ignoreCase = true)) {
+                if (signId == "SERPENTE") {
                     val chosen = signoSerpentePericiaEscolhida.keyify()
                     if (perKey == chosen) {
                         modifiedBase = maxOf(modifiedBase, 6)
@@ -2928,16 +2926,16 @@ class CriadorState {
 
         // Fantasia - Pacotes Culturais (only for Fantasy Humans)
         if (isHumanoFantasiaSelecionado()) {
-            when (pacoteCulturalFantasiaSelecionado) {
-                "Nômades do Deserto" -> {
+            when (pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado)) {
+                "NOMADES_DO_DESERTO" -> {
                     if (perKey == "SOBREVIVENCIA") modifiedBase = maxOf(modifiedBase, 6)
                 }
-                "Povo do Mar" -> {
+                "POVO_DO_MAR" -> {
                     if (perKey == "ATLETISMO" || perKey == "NAVEGAR") {
                         modifiedBase = maxOf(modifiedBase, 6)
                     }
                 }
-                "Senhores dos Cavalos" -> {
+                "SENHORES_DOS_CAVALOS" -> {
                     if (perKey == "CAVALGAR") modifiedBase = maxOf(modifiedBase, 6)
                 }
             }
@@ -3879,7 +3877,7 @@ class CriadorState {
                 // Humans with "Nenhum" sign: +3 points (15 total)
                 // Ignore "maisPontosPericias" checkbox
                 val isHuman = ancestralidade.keyify().contains("HUMANO")
-                val base = 12 + (if (isHuman && signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) 3 else 0) + bonusPontosPericia
+                val base = 12 + (if (isHuman && signoIdFromNome(signoAdgSelecionado) == "NENHUM") 3 else 0) + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
@@ -3914,7 +3912,7 @@ class CriadorState {
         val racialPenalty = if (ancestralidade.keyify() == "TERRACOTA") 1 else 0
         val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
-        val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoAdgSelecionado?.equals("Kirin", ignoreCase = true) == true) 1 else 0
+        val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
 
         // Base 2 added as requested
         val baseChi = if (compendioArteDaGuerraAtivo) 2 else 0
@@ -4097,7 +4095,7 @@ class CriadorState {
     }
 
     fun temAdaptavel(): Boolean {
-        if (isHumanoFantasiaSelecionado() && pacoteCulturalFantasiaSelecionado != "Humano padrão") {
+        if (isHumanoFantasiaSelecionado() && pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado) != "HUMANO_PADRAO") {
             return false
         }
 
@@ -4123,7 +4121,7 @@ class CriadorState {
 
         // 4. Arte da Guerra Human: "Nenhum" sign grants Adaptável
         if (compendioArteDaGuerraAtivo && ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }) {
-            if (signoAdgSelecionado == null || signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) {
+            if (signoAdgSelecionado == null || signoIdFromNome(signoAdgSelecionado) == "NENHUM") {
                 return true
             }
         }
@@ -4287,7 +4285,7 @@ class CriadorState {
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
             ancestralidade.keyify().contains("HUMANO") &&
-            signoAdgSelecionado.equals("Kirin", ignoreCase = true) &&
+            signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             vantagem.id == "sorte"
         if (kirinSorteAutomatica) {
             return false to "Vantagem automática do Signo."
@@ -4502,19 +4500,19 @@ class CriadorState {
 
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")) {
-            val sign = signoAdgSelecionado
+            val signId = signoIdFromNome(signoAdgSelecionado)
             val attrKey = a.keyify()
-            if (sign != null) {
-                if (sign.equals("Boi", ignoreCase = true) && attrKey == "FORCA") {
+            if (signId != null) {
+                if (signId == "BOI" && attrKey == "FORCA") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
-                if (sign.equals("Dragão", ignoreCase = true) && attrKey == "ESPIRITO") {
+                if (signId == "DRAGAO" && attrKey == "ESPIRITO") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
-                if (sign.equals("Macaco", ignoreCase = true) && attrKey == "ASTUCIA") {
+                if (signId == "MACACO" && attrKey == "ASTUCIA") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
-                if (sign.equals("Urso", ignoreCase = true) && attrKey == "VIGOR") {
+                if (signId == "URSO" && attrKey == "VIGOR") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
             }
@@ -4533,7 +4531,7 @@ class CriadorState {
         }
 
         if (isHumanoFantasiaSelecionado() &&
-            pacoteCulturalFantasiaSelecionado == "Povo da Montanha" &&
+            pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado) == "POVO_DA_MONTANHA" &&
             a.keyify() == "VIGOR"
         ) {
             modifiedBase = maxOf(modifiedBase, 6)
@@ -5310,13 +5308,7 @@ class CriadorState {
 
         // 2. Add new edges
         if (novoSigno != null) {
-            val edgesToAdd = mutableListOf<String>()
-            when (novoSigno) {
-                "Basabasa" -> edgesToAdd.add("atraente")
-                "Raposa" -> edgesToAdd.add("elevar_o_moral")
-                "Lobo" -> edgesToAdd.add("elo_comum")
-                "Kirin" -> edgesToAdd.add("sorte")
-            }
+            val edgesToAdd = SIGNO_VANTAGENS_AUTOMATICAS[signoIdFromNome(novoSigno)].orEmpty()
 
             edgesToAdd.forEach { edgeId ->
                 val vant = listaVantagens.firstOrNull { it.id == edgeId }
@@ -5534,15 +5526,16 @@ class CriadorState {
         if (!isHumanoFantasiaSelecionado()) return
 
         val ancDef = currentAncestryDef
+        val pacoteId = pacoteCulturalIdFromNome(pacoteCulturalFantasiaSelecionado)
 
         // --- Atualiza Vantagens Raciais ---
         val baseVantagens = ancDef?.let { effectiveVantagensGratis(it) } ?: emptyList()
         val extrasVantagens = mutableListOf<String>()
 
-        when (pacoteCulturalFantasiaSelecionado) {
-            "Nômades do Deserto" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Calor)")
-            "Povo da Montanha" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Frio)")
-            "Senhores dos Cavalos" -> {
+        when (pacoteId) {
+            "NOMADES_DO_DESERTO" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Calor)")
+            "POVO_DA_MONTANHA" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Frio)")
+            "SENHORES_DOS_CAVALOS" -> {
                 if (senhoresCavalosExtra) {
                     extrasVantagens.add("nascido_na_sela")
                 }
@@ -5551,7 +5544,7 @@ class CriadorState {
 
         // Remove "ADAPTAVEL" se não for Humano Padrão (embora temAdaptavel() já trate a lógica,
         // é bom limpar a lista visual se estiver sendo usada para display)
-        val filteredBaseVantagens = if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
+        val filteredBaseVantagens = if (pacoteId != "HUMANO_PADRAO") {
             baseVantagens.filter { it.keyify() != "ADAPTAVEL" }
         } else {
             baseVantagens
@@ -5564,13 +5557,13 @@ class CriadorState {
         val baseDesvantagens = ancDef?.let { effectiveDesvantagens(it) } ?: emptyList()
         val extrasDesvantagens = mutableListOf<String>()
 
-        when (pacoteCulturalFantasiaSelecionado) {
-            "Povo do Mar" -> {
+        when (pacoteId) {
+            "POVO_DO_MAR" -> {
                 if (povoDoMarOpcao == "Procurado (Maior)") {
                     extrasDesvantagens.add("PROCURADO (Maior)")
                 }
             }
-            "Senhores dos Cavalos" -> {
+            "SENHORES_DOS_CAVALOS" -> {
                 if (senhoresCavalosExtra) {
                     if (senhoresCavalosCompensacao == "Código de Honra") {
                         extrasDesvantagens.add("CODIGO DE HONRA")
@@ -6745,14 +6738,7 @@ class CriadorState {
 
         // Restore sign automatic advantages logic
         vantagensAutomaticasDoSigno.clear()
-        if (signoAdgSelecionado != null) {
-            when (signoAdgSelecionado) {
-                "Basabasa" -> vantagensAutomaticasDoSigno.add("atraente")
-                "Raposa" -> vantagensAutomaticasDoSigno.add("elevar_o_moral")
-                "Lobo" -> vantagensAutomaticasDoSigno.add("elo_comum")
-                "Kirin" -> vantagensAutomaticasDoSigno.add("sorte")
-            }
-        }
+        vantagensAutomaticasDoSigno.addAll(SIGNO_VANTAGENS_AUTOMATICAS[signoIdFromNome(signoAdgSelecionado)].orEmpty())
 
         pacoteCulturalFantasiaSelecionado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado ?: "Humano padrão"
         povoDoMarOpcao = snapshot.selecoes.povoDoMarOpcao

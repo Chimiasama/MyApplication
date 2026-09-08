@@ -1434,7 +1434,7 @@ fun calcAparar(personagem: MeuPersonagem, especieId: String? = null): Int {
         if (
             personagem.compendioArteDaGuerraAtivo &&
             isHumano &&
-            personagem.signoAdgSelecionado.equals("Garça", ignoreCase = true)
+            CriadorState.signoIdFromNome(personagem.signoAdgSelecionado) == "GARCA"
         ) 1 else 0
 
     return (base + bloq + bloqImp + personagem.bonusApararFromPower + apararBaixoMod + racialParryBonus + garcaParryBonus).coerceAtLeast(0)

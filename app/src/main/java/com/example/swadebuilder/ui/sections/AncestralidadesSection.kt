@@ -391,9 +391,9 @@ fun AncestralidadesSection(
                                     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                                         CriadorState.SIGNOS_ADG.forEach { signo ->
                                             DropdownMenuItem(
-                                                text = { Text(signo) },
+                                                text = { Text(signo.nome) },
                                                 onClick = {
-                                                    state.selecionarSigno(signo)
+                                                    state.selecionarSigno(signo.nome)
                                                     expanded = false
                                                 }
                                             )
@@ -402,12 +402,13 @@ fun AncestralidadesSection(
                                 }
 
                                 val selectedSign = state.signoAdgSelecionado
+                                val selectedSignEntry = CriadorState.signoByNome(selectedSign)
                                 if (selectedSign != null) {
                                     Spacer(Modifier.height(4.dp))
                                     val signDesc = if (EditionConfig.isFullEdition) {
-                                        CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                        selectedSignEntry?.descricao
                                     } else {
-                                        CriadorState.SIGNOS_ADG_DESC_LITE[selectedSign] ?: CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                        selectedSignEntry?.descricaoLite ?: selectedSignEntry?.descricao
                                     }
                                     if (signDesc != null) {
                                         Text(
@@ -417,7 +418,7 @@ fun AncestralidadesSection(
                                         )
                                     }
 
-                                    if (selectedSign.equals("Serpente", ignoreCase = true)) {
+                                    if (selectedSignEntry?.id == "SERPENTE") {
                                         Spacer(Modifier.height(8.dp))
                                         Text("Perícia Bônus:", style = MaterialTheme.typography.labelMedium)
                                         Column {
@@ -836,9 +837,9 @@ fun AncestralidadesSection(
                                     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                                         CriadorState.PACOTES_CULTURAIS_FANTASIA.forEach { pacote ->
                                             DropdownMenuItem(
-                                                text = { Text(pacote) },
+                                                text = { Text(pacote.nome) },
                                                 onClick = {
-                                                    state.selecionarPacoteCulturalFantasia(pacote)
+                                                    state.selecionarPacoteCulturalFantasia(pacote.nome)
                                                     expanded = false
                                                 }
                                             )
@@ -847,11 +848,11 @@ fun AncestralidadesSection(
                                 }
 
                                 Spacer(Modifier.height(4.dp))
+                                val selectedPacoteEntry = CriadorState.pacoteCulturalByNome(state.pacoteCulturalFantasiaSelecionado)
                                 val packageDesc = if (EditionConfig.isFullEdition) {
-                                    CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                    selectedPacoteEntry?.descricao
                                 } else {
-                                    CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC_LITE[state.pacoteCulturalFantasiaSelecionado]
-                                        ?: CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                    selectedPacoteEntry?.descricaoLite ?: selectedPacoteEntry?.descricao
                                 }
                                 if (packageDesc != null) {
                                     Text(
@@ -861,7 +862,7 @@ fun AncestralidadesSection(
                                     )
                                 }
 
-                                if (state.pacoteCulturalFantasiaSelecionado == "Povo do Mar") {
+                                if (selectedPacoteEntry?.id == "POVO_DO_MAR") {
                                     Spacer(Modifier.height(8.dp))
                                     Text("Compensação:", style = MaterialTheme.typography.labelMedium)
                                     Column {
@@ -884,7 +885,7 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                                if (state.pacoteCulturalFantasiaSelecionado == "Senhores dos Cavalos") {
+                                if (selectedPacoteEntry?.id == "SENHORES_DOS_CAVALOS") {
                                     Spacer(Modifier.height(8.dp))
                                     com.example.swadebuilder.ui.components.CheckboxRow(
                                         label = "Receber Vantagem 'Nascido na Sela'?",
