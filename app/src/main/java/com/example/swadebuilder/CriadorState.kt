@@ -494,11 +494,15 @@ class CriadorState {
         // mora a troca Adaptável/Antecedente Arcano (Demônio) por
         // meioDemonioAA; sem isso o toggle nunca era aplicado, mesmo com o
         // jogador escolhendo o AA (bug real, raça sempre ficava travada em
-        // Adaptável). Já o Meio-Elfo do Pathfinder (também candidato único)
+        // Adaptável). Elementais (Sci-Fi) também precisa passar — é onde
+        // MUITO_FORTE/RESISTENCIA (Padrão) são trocados por FORMA_DE_ENERGIA
+        // (Ar, Fogo ou Água); sem isso a Força ficava hardcoded por nome de
+        // raça em vez de vir de habilidades[] (bug real, corrigido a pedido
+        // do usuário). Já o Meio-Elfo do Pathfinder (também candidato único)
         // depende do contrário — de sair aqui — pra NÃO entrar no ramo
         // Herança/Adaptável de applyAncestryVariantAdjustments, pensado pra
         // variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
-        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO")) {
+        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS") {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
@@ -779,6 +783,44 @@ class CriadorState {
                 // Logic in selecionarDescendenteElemental adds specific one. If none selected, none added.
                 // So removing generic here is correct if we want to enforce selection.
                 // But if selection is null, we show filtered list (all - generic).
+            }
+        }
+
+        // Elementais (Sci-Fi): MUITO_FORTE (Força d8) e RESISTENCIA +2 são
+        // habilidades base em ancestralidades.json, representando a opção
+        // "Padrão". A opção "Ar, Fogo ou Água" troca as duas por Forma de
+        // Energia (livro: "Elementais do ar, fogo e água têm Forma de
+        // Energia em vez de Forte e Resistência") — Força cai pra d4 puro,
+        // sem nenhum traço de atributo (resolvido pelo loop genérico de
+        // AtributoStep em atributoBaseRacial(), sem hardcode de nome de
+        // raça). Isso tira 6 pontos da raça (MUITO_FORTE=4 + RESISTENCIA+2=2)
+        // e Forma de Energia sozinha só repõe 4, então um traço invisível
+        // sem efeito mecânico nenhum (id não cadastrado em EFEITOS, cai em
+        // Nenhum) fecha os 2 pontos que faltam pra manter o total da
+        // variante igual ao de Padrão (ambos em pontosRaciaisEsperados = 2).
+        if (key == "ELEMENTAIS" && variant != "Padrão") {
+            removeByIdOrName("MUITO_FORTE", "MUITO FORTE")
+            removeByIdOrName("RESISTENCIA", "RESISTÊNCIA +2")
+            if (newHabilidades.none { it.id == "FORMA_DE_ENERGIA" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Forma de Energia",
+                        descricao = "Elementais de ar, fogo ou água trocam Forte e Resistência por Forma de Energia.",
+                        id = "FORMA_DE_ENERGIA",
+                        category = "racial_trait_positive"
+                    )
+                )
+            }
+            if (newHabilidades.none { it.id == "AJUSTE_FORMA_DE_ENERGIA" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Ajuste de Orçamento (Forma de Energia)",
+                        descricao = "",
+                        id = "AJUSTE_FORMA_DE_ENERGIA",
+                        pontos = 2,
+                        invisivel = true
+                    )
+                )
             }
         }
 
@@ -4437,18 +4479,28 @@ class CriadorState {
 
         val currentSciFiVariant = if (compendioSciFiAtivo) resolveCurrentSciFiVariantSelection() else scifiVariant
 
-        // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens e Elementais
-        // ainda não têm o traço "Forte"/substituto estruturado no JSON (a
-        // ambientação só descreve a troca em texto livre), então continuam
-        // hardcoded por nome de raça por enquanto; ver nota na revisão.
+        // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens ainda não tem
+        // o traço "Forte"/substituto estruturado de um jeito que chegue até
+        // aqui (ver nota abaixo), então continua hardcoded por nome de raça
+        // por enquanto. Elementais foi migrado: ver applyAncestryVariantAdjustments,
+        // que agora injeta/remove MUITO_FORTE e RESISTENCIA de verdade em
+        // habilidades[] conforme a opção "Padrão"/"Ar, Fogo ou Água" —
+        // resolvido pelo loop genérico de AtributoStep logo acima, sem
+        // exceção numérica aqui.
         if (compendioSciFiAtivo) {
             val ancKey = ancestralidade.keyify()
 
-            // Drakens: Padrão (Forte - Str d6), Dragão (No Forte - Str d4)
+            // Drakens: Padrão (Forte - Str d6), Dragão (No Forte - Str d4).
+            // AncestryVariantRegistry.drakens() já declara a remoção de FORTE
+            // pra "Dragão", mas Drakens é candidato único em ancestralidades.json
+            // e cai no curto-circuito de getAncestralidadeDef() que pula
+            // applyAncestryVariantAdjustments pra esse caso (só Umvee/
+            // Meio-Demônio/Elementais têm a exceção que força a passagem por
+            // ali) — então a remoção nunca chega a acontecer em habilidades[]
+            // de verdade. Mesmo problema que Elementais tinha; segue
+            // hardcoded aqui até receber o mesmo tratamento.
             if (ancKey == "DRAKENS") {
                 if (a.keyify() == "FORCA") {
-                    // JSON was cleared to d4. Padrão grants "Forte" (Start d6). Variant grants "Arma de Sopro".
-                    // If Padrão (or default), start d6 (6). If Dragão, start d4 (4).
                     val variant = currentSciFiVariant ?: "Padrão"
                     if (variant == "Padrão") {
                         modifiedBase = maxOf(modifiedBase, 6)
@@ -4457,33 +4509,6 @@ class CriadorState {
                     }
                 }
             }
-
-            // Elementais: Padrão é Força d8 (MUITO_FORTE, 2 passos). Seleção "Ar,
-            // Fogo ou Água" troca isso por um Forte mais fraco (d6, 1 passo) mais
-            // Forma de Energia — ver AncestryVariantRegistry.elementaisScifi:
-            // base(-4) + Forma de Energia(+4) + Força d6(+2) = 2, fecha o
-            // orçamento. Único caso do catálogo onde a Força "Padrão" não tem um
-            // traço próprio em habilidades[] pra carregar o passo (o pacote
-            // ResolvedTraitPackage da variante Sci-Fi só afeta custo/exibição, não
-            // o dado calculado aqui — ver ModifierEngine.aplicarEfeito), então
-            // fica como exceção numérica pontual (mesmo padrão do
-            // naturalArmorFromRace de Pedregoso/Umvee) em vez de tentar forçar
-            // pela via genérica de habilidades[].
-            if (ancKey == "ELEMENTAIS") {
-                if (a.keyify() == "FORCA") {
-                    val variant = currentSciFiVariant ?: "Padrão"
-                    modifiedBase = if (variant != "Padrão") {
-                        6 // Forte fraco, não o d8 de Padrão
-                    } else {
-                        maxOf(modifiedBase, 8)
-                    }
-                }
-            }
-
-            // Mineradores Genéticos (FORTE) e Ferais Sci-Fi (ESPIRITUOSO) agora são
-            // resolvidos genericamente acima via habilidadeIds — a remoção do
-            // traço nas variantes Zero G / Menor acontece em
-            // applyAncestryVariantAdjustments, então não precisa de hardcode aqui.
         }
 
         // Descendente Elemental (Terra) agora é resolvido genericamente acima via

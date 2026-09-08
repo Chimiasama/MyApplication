@@ -799,6 +799,20 @@ object AncestryVariantRegistry {
     // Resistência +2 (a raça é de pedra/terra, física e resistente); Ar,
     // Fogo ou Água troca os dois por Forma de Energia (o corpo já não é mais
     // sólido nem musculoso). ---
+    // Elementais é candidato único em ancestralidades.json (só existe no
+    // Sci-Fi), então cai fora de getAncestralidadeDef() antes de chegar a ler
+    // este registro pro caminho genérico de scifiVariantDrivenKeys (ver o
+    // curto-circuito de candidato único lá, e a exceção específica que
+    // Elementais ganhou nele) — os pacotes abaixo, portanto, não são
+    // resolvidos/aplicados por esse caminho genérico. A troca real
+    // Padrão↔"Ar, Fogo ou Água" (MUITO_FORTE + RESISTENCIA vira FORMA_DE_ENERGIA
+    // + um traço invisível de ajuste de orçamento) mora direto num bloco
+    // dedicado em CriadorState.applyAncestryVariantAdjustments(), que já entra
+    // em habilidades[] de verdade — mesmo padrão de exceção que Umvee/
+    // Meio-Demônio usam. Mantido com `selecoes`/FIXED_PACKAGE (em vez de
+    // `grupoVariante`) só pra preservar o rótulo "Seleção:" já exibido em
+    // AncestralidadesSection (isSelecaoPura), sem trocas paralelas de
+    // conteúdo mecânico que já não são lidas por ninguém.
     private fun elementaisScifi(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ELEMENTAIS",
         selecoes = listOf(
@@ -807,39 +821,8 @@ object AncestryVariantRegistry {
                 rotulo = "Escolha o elemento",
                 tipo = SelectionType.FIXED_PACKAGE,
                 pacotesFixos = listOf(
-                    FixedPackageOption(
-                        "padrao",
-                        "Padrão",
-                        // Força d8 (atributos.Força=4 no JSON, 2 passos) = MUITO_FORTE
-                        // (4pts), não FORTE (2pts, d6 — esse é o da variante "Ar,
-                        // Fogo ou Água", mais fraca). Id errado aqui não muda o dado
-                        // de Força na ficha (AtributoStep não é aplicado por esta
-                        // lista — ver ModifierEngine.aplicarEfeito/atributoBaseRacial),
-                        // mas fazia o traço exibido/custo de auditoria não bater com
-                        // o d8 real.
-                        ResolvedTraitPackage(
-                            tracosParaAdicionar = listOf(
-                                TraitAddition("MUITO FORTE", "MUITO_FORTE"),
-                                TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)
-                            )
-                        )
-                    ),
-                    FixedPackageOption(
-                        "ar_fogo_ou_agua",
-                        "Ar, Fogo ou Água",
-                        // Trocam Resistência (não incluída aqui: ela só existe em
-                        // Padrão) pelo Forte mais fraco (Força d6, não d8 — ver
-                        // atributoBaseRacial()) mais Forma de Energia. "livro:
-                        // Elementais do ar, fogo e água têm Forma de Energia em
-                        // vez de Forte e Resistência" — o Forte que sobra aqui é
-                        // o d6 genérico, não o d8 de Padrão.
-                        ResolvedTraitPackage(
-                            tracosParaAdicionar = listOf(
-                                TraitAddition("FORTE", "FORTE"),
-                                TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")
-                            )
-                        )
-                    )
+                    FixedPackageOption("padrao", "Padrão", ResolvedTraitPackage()),
+                    FixedPackageOption("ar_fogo_ou_agua", "Ar, Fogo ou Água", ResolvedTraitPackage())
                 )
             )
         )

@@ -2906,6 +2906,21 @@
         "id": "TAMANHO_MAIS_1",
         "category": "racial_trait_positive",
         "descricaoLite": "Com mais de dois metros de altura, ganham +1 de Resistência."
+      },
+      {
+        "nome": "MUITO FORTE",
+        "descricao": "Elementais padrão são extremamente fortes, começando com Força d8. Isso também eleva o limite de Força para d12+2. Elementais de ar, fogo ou água trocam isso (e a Resistência abaixo) por Forma de Energia.",
+        "id": "MUITO_FORTE",
+        "category": "racial_trait_positive",
+        "descricaoLite": "Força inicial d8, com o teto elevado a d12+2. Trocado por Forma de Energia nas variantes de Ar, Fogo ou Água."
+      },
+      {
+        "nome": "RESISTÊNCIA +2",
+        "descricao": "Elementais de pedra têm uma composição densa e robusta, ganhando +2 de Resistência. Elementais de ar, fogo ou água trocam isso (e a Força acima) por Forma de Energia.",
+        "id": "RESISTENCIA",
+        "category": "racial_trait_positive",
+        "vezes": 2,
+        "descricaoLite": "Ganham +2 de Resistência. Trocado por Forma de Energia nas variantes de Ar, Fogo ou Água."
       }
     ],
     "tags": [

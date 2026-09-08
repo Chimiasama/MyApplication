@@ -104,7 +104,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     }
 
     @Test
-    fun `elementais padrao mantem forte e resistencia`() {
+    fun `elementais padrao nao injeta traco por aqui`() {
         val result = useCase.resolve(
             ancestralidadeId = "ELEMENTAIS",
             variantOptionId = null,
@@ -113,16 +113,19 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        // Força d8 = MUITO_FORTE (4pts), não FORTE (2pts, d6 — esse é o da
-        // variante "Ar, Fogo ou Água", mais fraca).
-        assertEquals(
-            listOf(TraitAddition("MUITO FORTE", "MUITO_FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
-            result.tracosParaAdicionar
-        )
+        // MUITO_FORTE (Força d8) e RESISTENCIA +2 são habilidades base da
+        // raça em ancestralidades.json ("Padrão" é o default, nada extra a
+        // adicionar) — os pacotes fixos deste registro ficaram vazios de
+        // propósito porque Elementais é candidato único e nunca passa pelo
+        // caminho genérico que os leria (scifiVariantDrivenKeys); a troca
+        // real Padrão↔"Ar, Fogo ou Água" mora em
+        // CriadorState.applyAncestryVariantAdjustments, direto em
+        // habilidades[].
+        assertEquals(emptyList<TraitAddition>(), result.tracosParaAdicionar)
     }
 
     @Test
-    fun `elementais ar fogo ou agua troca por forma de energia`() {
+    fun `elementais ar fogo ou agua tambem nao injeta traco por aqui`() {
         val result = useCase.resolve(
             ancestralidadeId = "ELEMENTAIS",
             variantOptionId = null,
@@ -131,10 +134,8 @@ class ResolveAncestryVariantPackageUseCaseTest {
             )
         )
 
-        assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")),
-            result.tracosParaAdicionar
-        )
+        // Ver comentário do teste "padrao" acima.
+        assertEquals(emptyList<TraitAddition>(), result.tracosParaAdicionar)
     }
 
     @Test
