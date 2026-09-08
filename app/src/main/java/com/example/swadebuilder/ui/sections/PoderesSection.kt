@@ -290,19 +290,15 @@ fun PoderesSection(
             sourceList.filter { power ->
                 // "_demonio": poderes exclusivos do Antecedente Arcano (Demônio) —
                 // tanto a versão de sangue puro (DEMONIO, aa_demonio) quanto a
-                // diluída dos Meio-Demônios (DEMONIO_MEIO, aa_demonio_meio_demonio
-                // — mesmos poderes, exceto Disfarce Demoníaco, que nesta versão é
-                // "disfarce_demoniaco_meio_demonio" e só libera com a Vantagem
-                // separada "Disfarce Demoníaco (Estágio Experiente)", amarrada via
-                // SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS/
-                // atendeRequisitoEspecialDePoderPorArcano, não por Estágio aqui).
+                // diluída dos Meio-Demônios (DEMONIO_MEIO, aa_demonio_meio_demonio).
+                // Quais ids exatos cada um pode ver (incluindo excluir Disfarce
+                // Demoníaco "puro" da versão diluída) já vem de
+                // ArcaneConfig.SOL_VAPOR_DEMONIO_ALLOWED_POWERS/
+                // SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS via permittedSet logo
+                // abaixo — este bloco só bloqueia vazamento pra OUTROS Antecedentes
+                // (ex.: um AA Customizado "Geral" que puxa allPoderes inteiro).
                 val isDemonExclusivePower = power.id.endsWith("_demonio")
                 val hasDemonAb = state.vantagensSelecionadas.any { it.id == "aa_demonio" || it.id == "aa_demonio_meio_demonio" }
-                // Disfarce Demoníaco "puro" é slot fixo exclusivo de sangue puro
-                // (fixedPowersByArcano["DEMONIO"]) — sangue diluído nunca tem
-                // acesso a ele, nem como poder normal; só à versão diluída
-                // gated (disfarce_demoniaco_meio_demonio).
-                if (power.id == "disfarce_demoniaco" && arcKey == "DEMONIO_MEIO") return@filter false
                 if (isDemonExclusivePower) {
                     if (arcKey != "DEMONIO" && arcKey != "DEMONIO_MEIO") return@filter false
                     if (!hasDemonAb) return@filter false

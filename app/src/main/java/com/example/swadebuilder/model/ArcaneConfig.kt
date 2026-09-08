@@ -57,6 +57,25 @@ object ArcaneConfig {
         "disfarce_demoniaco_meio_demonio" to "disfarce_demoniaco_experiente_meio"
     )
 
+    // Lista de poderes do AA (Demônio), fora do modo por estágio (sistema
+    // normal de slots): o livro "Antecedente Arcano" de Demônio é Magia
+    // Negra (SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE) mais os poderes exclusivos
+    // de demônio (SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE) — sem isso, como
+    // o livro Cidade do Sol a Vapor mistura poderes de todos os Antecedentes
+    // Arcanos dele (Milagres, Tecnomagia etc.) num único pool por origem,
+    // getPermittedPowers(arcKey) == null deixaria vazar poderes de outros
+    // Antecedentes (Ajuda, Cura, Ressurreição, Santuário, Sobrecarga...) pra
+    // demônios/meio-demônios.
+    val SOL_VAPOR_DEMONIO_ALLOWED_POWERS: Set<String> =
+        SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE.keys + SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE.keys
+
+    // Igual ao Demônio de sangue puro, exceto Disfarce Demoníaco "puro"
+    // (slot fixo exclusivo de sangue puro) trocado pela versão diluída
+    // (disfarce_demoniaco_meio_demonio, gated por
+    // SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS).
+    val SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS: Set<String> =
+        (SOL_VAPOR_DEMONIO_ALLOWED_POWERS - "disfarce_demoniaco") + "disfarce_demoniaco_meio_demonio"
+
     val SOL_VAPOR_MILAGRES_POWERS_BY_STAGE = linkedMapOf(
         "ajuda" to "Novato",
         "aumentar_reduzir_caracteristica" to "Novato",
@@ -256,6 +275,8 @@ object ArcaneConfig {
             "aa_voduista" -> HORROR_VODUISTA
             "aa_bruxa" -> DEADLANDS_BRUXA
             "ELEMENTALISTA" -> ARTE_GUERRA_ELEMENTALISTA
+            "DEMONIO" -> SOL_VAPOR_DEMONIO_ALLOWED_POWERS
+            "DEMONIO_MEIO" -> SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS
             // Mad Scientist is special, returning null here to signify "check blocked" or handle differently
             else -> null
         }

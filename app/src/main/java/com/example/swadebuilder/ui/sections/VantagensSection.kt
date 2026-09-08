@@ -519,7 +519,16 @@ fun VantagensContent(
                             label = {
                                 val baseName = vant.nomeExibicao.toFancyTitleCase()
                                 val subtipo = vant.subtipoArcano?.toFancyTitleCase()
-                                val adjustedName = if (!subtipo.isNullOrBlank() && !baseName.contains(subtipo, ignoreCase = true)) {
+                                // aa_demonio_meio_demonio usa subtipoArcano "DEMONIO_MEIO" só como
+                                // chave interna (slots/poderes) — nome já é idêntico ao aa_demonio
+                                // ("Antecedente Arcano (Demônio)") e os dois nunca coexistem no
+                                // mesmo personagem, então o sufixo "(Demonio Meio)" só duplicava a
+                                // info sem desambiguar nada de verdade.
+                                val adjustedName = if (
+                                    vant.id != "aa_demonio_meio_demonio" &&
+                                    !subtipo.isNullOrBlank() &&
+                                    !baseName.contains(subtipo, ignoreCase = true)
+                                ) {
                                     "$baseName ($subtipo)"
                                 } else {
                                     baseName
