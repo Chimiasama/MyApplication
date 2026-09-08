@@ -298,6 +298,11 @@ fun PoderesSection(
                 // atendeRequisitoEspecialDePoderPorArcano, não por Estágio aqui).
                 val isDemonExclusivePower = power.id.endsWith("_demonio")
                 val hasDemonAb = state.vantagensSelecionadas.any { it.id == "aa_demonio" || it.id == "aa_demonio_meio_demonio" }
+                // Disfarce Demoníaco "puro" é slot fixo exclusivo de sangue puro
+                // (fixedPowersByArcano["DEMONIO"]) — sangue diluído nunca tem
+                // acesso a ele, nem como poder normal; só à versão diluída
+                // gated (disfarce_demoniaco_meio_demonio).
+                if (power.id == "disfarce_demoniaco" && arcKey == "DEMONIO_MEIO") return@filter false
                 if (isDemonExclusivePower) {
                     if (arcKey != "DEMONIO" && arcKey != "DEMONIO_MEIO") return@filter false
                     if (!hasDemonAb) return@filter false
@@ -329,8 +334,14 @@ fun PoderesSection(
                 if (usaPoderesPorEstagio) {
                     val requiredStage = stageBasedPowers[power.id] ?: return@filter false
                     if (!state.estagioAtinge(requiredStage)) return@filter false
-                    if (!state.atendeRequisitoEspecialDePoderPorArcano(arcKey, power.id)) return@filter false
                 }
+
+                // Requisito de "precisa ter outra Vantagem antes" (ex.: Disfarce
+                // Demoníaco diluído do Meio-Demônio exige Disfarce Demoníaco
+                // Experiente) vale independente do arcano estar em modo por
+                // estágio ou no sistema normal de slots — ver
+                // requisitoEspecialDePoderPorArcano.
+                if (!state.atendeRequisitoEspecialDePoderPorArcano(arcKey, power.id)) return@filter false
 
                 // 2. Check Search
                 val matchSearch = if (searchQuery.isBlank()) true else {

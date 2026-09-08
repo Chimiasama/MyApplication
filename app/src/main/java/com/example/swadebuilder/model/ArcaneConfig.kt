@@ -45,23 +45,14 @@ object ArcaneConfig {
     )
 
     // Meio-Demônios (Cidade do Sol a Vapor): mesmo Antecedente Arcano dos
-    // Demônios de sangue puro, mas sem Disfarce Demoníaco de graça — o
-    // sangue diluído só sustenta a ilusão a partir do Estágio Experiente, e
-    // mesmo assim exige a Vantagem separada "Disfarce Demoníaco (Estágio
-    // Experiente)" (ver disfarce_demoniaco_meio_demonio em poderes.json e
-    // SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS abaixo, que amarra esse
-    // poder à posse dessa Vantagem via
-    // CriadorState.atendeRequisitoEspecialDePoderPorArcano()).
-    val SOL_VAPOR_DEMONIO_MEIO_EXTRA_POWERS_BY_STAGE = linkedMapOf(
-        "elo_mental_demonio" to "Novato",
-        "telecinese_demonio" to "Experiente",
-        "disfarce_demoniaco_meio_demonio" to "Experiente",
-        "voar_demonio" to "Veterano",
-        "leitura_mental_demonio" to "Veterano",
-        "limpeza_mental_demonio" to "Veterano",
-        "drenar_pontos_de_poder_demonio" to "Heroico"
-    )
-
+    // Demônios de sangue puro, mas via o sistema normal de slots/PP (3
+    // slots, sem o slot fixo extra de Disfarce Demoníaco que os Demônios de
+    // sangue puro têm — ver CriadorState.isStageBasedArcanoVariant, que
+    // tira aa_demonio_meio_demonio do modo por estágio incondicionalmente).
+    // A versão diluída de Disfarce Demoníaco continua exigindo a Vantagem
+    // separada "Disfarce Demoníaco (Estágio Experiente)" antes de poder ser
+    // escolhida como poder normal — CriadorState.atendeRequisitoEspecialDePoderPorArcano()
+    // usa o mapa abaixo pra isso, independente de estar em modo por estágio.
     val SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS = mapOf(
         "disfarce_demoniaco_meio_demonio" to "disfarce_demoniaco_experiente_meio"
     )
@@ -282,7 +273,8 @@ object ArcaneConfig {
             "MILAGRES" -> SOL_VAPOR_MILAGRES_POWERS_BY_STAGE
             "FEITICEIRO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE
             "DEMONIO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE + SOL_VAPOR_DEMONIO_EXTRA_POWERS_BY_STAGE
-            "DEMONIO_MEIO" -> SOL_VAPOR_FEITICEIRO_POWERS_BY_STAGE + SOL_VAPOR_DEMONIO_MEIO_EXTRA_POWERS_BY_STAGE
+            // DEMONIO_MEIO não usa mais o sistema por estágio (ver
+            // CriadorState.isStageBasedArcanoVariant) — sem ramo aqui.
             "TECNOMAGIA" -> SOL_VAPOR_TECNOMAGIA_POWERS_BY_STAGE
             // Anjos usam a mesma lista de poderes dos Abençoados (Milagres),
             // mas sem precisar de Guerreiro do Senhor/Ira do Senhor pra usar

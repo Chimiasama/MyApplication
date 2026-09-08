@@ -348,6 +348,12 @@
     "foco": "Conjurar"
   },
   {
+    "key": "DEMONIO_MEIO",
+    "slots": 3,
+    "pp": 10,
+    "foco": "Conjurar"
+  },
+  {
     "key": "TECNOMAGIA",
     "slots": 3,
     "pp": 0,

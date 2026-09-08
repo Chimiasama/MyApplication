@@ -16,6 +16,7 @@ import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.SuperPoder
 import com.example.swadebuilder.model.Tropo
 import com.example.swadebuilder.model.Vantagem
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -46,7 +47,8 @@ class CriadorStateMeioDemonioTest {
         nome = "ANTECEDENTE ARCANO (Demônio)",
         categoria = Categoria.PODER,
         requisitos = Requisito(estagio = "Novato"),
-        subtipoArcano = "DEMONIO_MEIO"
+        subtipoArcano = "DEMONIO_MEIO",
+        usaPoderesPorEstagio = true
     )
 
     private fun snapshot(): GameDataSnapshot = GameDataSnapshot(
@@ -68,7 +70,7 @@ class CriadorStateMeioDemonioTest {
         equipamentoCategorias = emptyList<EquipamentoCategoria>(),
         superequipCategorias = emptyList<EquipamentoCategoria>(),
         listaSuperPoderes = emptyList<SuperPoder>(),
-        arcanoInfo = emptyList<ArcanoInfo>()
+        arcanoInfo = listOf(ArcanoInfo(key = "DEMONIO_MEIO", slots = 3, pp = 10, foco = "Conjurar"))
     )
 
     @Test
@@ -116,5 +118,55 @@ class CriadorStateMeioDemonioTest {
 
         assertTrue(state.temAdaptavel())
         assertFalse(state.vantagensSelecionadas.any { it.id == "aa_demonio_meio_demonio" })
+    }
+
+    /**
+     * aa_demonio_meio_demonio é clone "capenga" do aa_demonio: mesmo sistema
+     * normal de slots/PP (3 slots) do aa_demonio, mas sem o slot fixo extra
+     * de Disfarce Demoníaco que o Antecedente Arcano de sangue puro tem —
+     * nunca o sistema de desbloqueio de poderes por estágio (esse é
+     * exclusivo do aa_demonio de sangue puro na ancestralidade Demônios).
+     */
+    @Test
+    fun `aa meio demonio usa 3 slots normais, nunca o sistema por estagio`() {
+        val state = CriadorState()
+        state.updateGameData(snapshot())
+        state.aplicarAncestralidade("Meio-Demônio", mutableListOf(), autoRefund = false)
+        state.selecionarMeioDemonioTraco(true)
+
+        assertFalse(state.usaPoderesDisponiveisPorEstagio("DEMONIO_MEIO"))
+        assertEquals(3, state.getSlotsCountForArcano("DEMONIO_MEIO"))
+        assertFalse(state.isFixedPower("DEMONIO_MEIO", "disfarce_demoniaco_meio_demonio"))
+    }
+
+    /**
+     * Disfarce Demoníaco diluído (disfarce_demoniaco_meio_demonio) continua
+     * travado atrás da Vantagem separada "Disfarce Demoníaco (Estágio
+     * Experiente)" mesmo fora do sistema por estágio — o requisito não pode
+     * virar um no-op só porque o AA agora usa o mecanismo normal de slots.
+     */
+    @Test
+    fun `disfarce demoniaco diluido continua exigindo a vantagem separada`() {
+        val state = CriadorState()
+        state.updateGameData(snapshot())
+        state.aplicarAncestralidade("Meio-Demônio", mutableListOf(), autoRefund = false)
+        state.selecionarMeioDemonioTraco(true)
+
+        assertFalse(
+            state.atendeRequisitoEspecialDePoderPorArcano("DEMONIO_MEIO", "disfarce_demoniaco_meio_demonio")
+        )
+
+        state.vantagensSelecionadas.add(
+            Vantagem(
+                id = "disfarce_demoniaco_experiente_meio",
+                nome = "DISFARCE DEMONÍACO (Estágio Experiente)",
+                categoria = Categoria.PODER,
+                requisitos = Requisito(estagio = "Experiente")
+            )
+        )
+
+        assertTrue(
+            state.atendeRequisitoEspecialDePoderPorArcano("DEMONIO_MEIO", "disfarce_demoniaco_meio_demonio")
+        )
     }
 }

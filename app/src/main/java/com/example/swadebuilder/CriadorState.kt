@@ -742,9 +742,11 @@ class CriadorState {
         // Meio-Demônio (Cidade do Sol a Vapor): igual ao livro, escolhe entre
         // uma Vantagem Novato livre (Adaptável, como um humano comum) OU o
         // Antecedente Arcano (Demônio) — versão diluída própria
-        // (aa_demonio_meio_demonio, sem Disfarce Demoníaco de graça; ver
-        // ArcaneConfig.SOL_VAPOR_DEMONIO_MEIO_EXTRA_POWERS_BY_STAGE) — como
-        // sua habilidade racial. Mesmo padrão do toggle Ágil/Adaptável do
+        // (aa_demonio_meio_demonio, clone "capenga" do aa_demonio: mesmo
+        // sistema normal de slots/PP, 3 slots, mas sem o slot fixo extra de
+        // Disfarce Demoníaco — ver isStageBasedArcanoVariant e
+        // ArcaneConfig.SOL_VAPOR_DEMONIO_MEIO_POWER_REQUIREMENTS) — como sua
+        // habilidade racial. Mesmo padrão do toggle Ágil/Adaptável do
         // Meio-Elfo acima, mas sem interação com atributos.
         if (key.contains("MEIO-DEMONIO")) {
             val newHabilidades = base.habilidades.toMutableList()
@@ -3931,6 +3933,13 @@ class CriadorState {
      */
     private fun Vantagem.isStageBasedArcanoVariant(): Boolean {
         if (!usaPoderesPorEstagio) return false
+        // aa_demonio_meio_demonio é clone "capenga" do aa_demonio: usa o
+        // mecanismo normal de slots/PP (3 slots, sem o slot fixo extra de
+        // Disfarce Demoníaco que o aa_demonio puro tem), nunca o sistema de
+        // desbloqueio por estágio — exceção incondicional, diferente de
+        // aa_demonio (que só sai do modo por estágio quando a ancestralidade
+        // do personagem é Demônios de Cidade do Sol a Vapor).
+        if (id == "aa_demonio_meio_demonio") return false
         val isCidadeSolVaporDemonAncestry =
             compendioCidadeSolVaporAtivo && ancestralidade.keyify().contains("DEMONIOS")
         if (id == "aa_demonio" && isCidadeSolVaporDemonAncestry) return false
@@ -3960,8 +3969,11 @@ class CriadorState {
     }
 
     fun requisitoEspecialDePoderPorArcano(arcKey: String, powerId: String): String? {
+        // Sem o gate de "só vale em modo por estágio": aa_demonio_meio_demonio
+        // usa o sistema normal de slots (ver isStageBasedArcanoVariant), mas o
+        // requisito de possuir "Disfarce Demoníaco (Estágio Experiente)" antes
+        // de destravar a versão diluída do poder precisa continuar valendo.
         val key = arcKey.normAAKey()
-        if (!usaPoderesDisponiveisPorEstagio(key)) return null
         return ArcaneConfig.getStageBasedPowerRequirement(key, powerId)
     }
 
