@@ -396,6 +396,18 @@ object ModifierEngine {
             }
         }
 
+        // 6b. Arte da Guerra - Protagonista, Habilidades (d12) resultado 9
+        // "Velocidade Incomum": livro diz "dobra sua Movimentação básica" —
+        // a base é sempre 6 neste app (valorMovimentacao()), então +6 aqui
+        // dobra exatamente a base, mantendo os outros modificadores de Passo
+        // (raça, Vantagens, Complicações) somando normalmente por cima.
+        if (state.compendioArteDaGuerraAtivo &&
+            state.tropoSelecionado?.id == "tropo_protagonista" &&
+            state.protagonistaRollHabilidade == 9
+        ) {
+            modifiers.add(Modifier("protagonista_velocidade_incomum_pace", SourceType.OUTRO, "Velocidade Incomum", ModifierTarget.PACE, 6))
+        }
+
         // 7. Equipment Toughness (Resistência)
         val nonStackingArmorToughness = mutableListOf<Pair<String, Int>>()
 

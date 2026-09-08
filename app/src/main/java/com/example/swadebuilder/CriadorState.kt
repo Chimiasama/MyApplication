@@ -5847,6 +5847,7 @@ class CriadorState {
         if (protagonistaRollHabilidade == value) return
         protagonistaRollHabilidade = value?.coerceIn(1, 12)
         syncProtagonistaBonusPv()
+        atualizarProtagonistaAutoVantagens()
     }
 
     fun updateProtagonistaPericiasEscolhidas(value: List<String>) {
@@ -5900,11 +5901,17 @@ class CriadorState {
             vantagensAutomaticasDoProtagonista.clear()
         }
 
-        val qualidade = protagonistaRollQualidade ?: return
-        val edgesToAdd = when (qualidade) {
-            1 -> listOf("corajoso", "elevar_o_moral")
-            3 -> listOf("confiavel", "comando")
-            else -> emptyList()
+        val edgesToAdd = mutableListOf<String>()
+        when (protagonistaRollQualidade) {
+            1 -> edgesToAdd.addAll(listOf("corajoso", "elevar_o_moral"))
+            3 -> edgesToAdd.addAll(listOf("confiavel", "comando"))
+        }
+        // Habilidades (d12) resultado 7 "Companheiro": ganha a Vantagem Senhor
+        // das Feras. O companheiro Carta Selvagem em si (a criatura) não tem
+        // sistema de ajudante/animal no app — fora de escopo por enquanto —
+        // então só a Vantagem concedida é resolvida aqui.
+        if (protagonistaRollHabilidade == 7) {
+            edgesToAdd.add("senhor_das_feras")
         }
 
         edgesToAdd.forEach { edgeId ->
