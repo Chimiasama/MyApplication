@@ -132,7 +132,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             ancestryOrigin = "ARTE_DA_GUERRA"
         )
 
-        assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAdvantageNames)
+        assertEquals(listOf("SENHOR_DAS_FERAS"), result.ensureAdvantageIds)
         assertEquals(listOf(TraitAddition("SENHOR DAS FERAS", "SENHOR_DAS_FERAS")), result.ensureAutomaticAdvantages)
     }
 
