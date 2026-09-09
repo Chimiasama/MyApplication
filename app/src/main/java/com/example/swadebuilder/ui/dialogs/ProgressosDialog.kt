@@ -1289,6 +1289,79 @@ fun ProgressosDialog(
 
                     Spacer(Modifier.height(8.dp))
 
+                    // Extraído pra fora do loop de categorias porque agora é chamado de dois
+                    // lugares (categorias oficiais e, dentro de CUSTOMIZADA, um por subgrupo de
+                    // CategoriaCustomizada — ver mais abaixo) — evitava duplicar essa lambda de
+                    // onSelect inteira duas vezes.
+                    val renderDialogVantagemItem: @Composable (Vantagem) -> Unit = { vant ->
+                        DialogVantagemItem(
+                            vant = vant,
+                            state = state,
+                            locked = false,
+                            allowLongTexts = true,
+                            showOfficialNames = state.modoOficialAtivo,
+                            idParaNome = idParaNome,
+                            detalhesExpandidos = detalhesExpandidos,
+                            stages = stages,
+                            onSelect = {
+                                val qtdJaTemClick = state.vantagensSelecionadas.count {
+                                    it.nome.equals(vant.nome, ignoreCase = true)
+                                }
+                                when (val maxEff = maxEffectiveSelections(vant)) {
+                                    null -> {}
+                                    else -> if (qtdJaTemClick >= maxEff) {
+                                        showSnack("Você já atingiu o limite para ${vant.nome}.")
+                                        return@DialogVantagemItem
+                                    }
+                                }
+                                if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
+                                    showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
+                                    return@DialogVantagemItem
+                                }
+                                if (bloquearExclusividadeClasse(vant, estSel.nome)) {
+                                    return@DialogVantagemItem
+                                }
+                                if (!hasReservedProgress) {
+                                    showSnack("Você não tem progressos suficientes.")
+                                    return@DialogVantagemItem
+                                }
+
+                                if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo" || vant.id == "poderes_misticos_demonio" || vant.id == "poderes_misticos_mumia") {
+                                    pendingMysticPowersAdv = vant
+                                    advSelectedStageIndex = estIndex
+                                    showMysticPowersSelection = true
+                                } else if (vant.requiresChoice || vant.vinculadoPericia || vant.id == "arma_predileta_aprimorada") {
+                                    pendingAdv = vant
+                                    advSelectedStageIndex = estIndex
+                                    showPendingChoice = true
+                                } else {
+                                    viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
+                                    viewModel.selectAdvantageForAdvancement(vant)
+
+                                    val requiresPowerFlow =
+                                        vant.id == "novos_poderes" ||
+                                            vant.id.startsWith("antecedente_arcano") ||
+                                            state.arcanoCompraPendente()
+
+                                    if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
+                                        debugLog(
+                                            debugTag,
+                                            "Abrindo fluxo de poderes para ${vant.id} (stage=${estSel.nome}, arcanoPendente=${state.arcanoCompraPendente()})"
+                                        )
+                                        showAdvSelection = false
+                                        showPowerSelection = true
+                                    } else {
+                                        viewModel.finishAdvantageAdvancement()
+                                        onDismiss()
+                                    }
+                                }
+                            },
+                            onError = { showSnack(it) },
+                            stageName = estSel.nome,
+                            allAdvantages = allAdvantages
+                        )
+                    }
+
                     LazyColumn {
                         Categoria.entries.forEach { cat ->
                             val listaCategoria = candidatasPorCategoria[cat] ?: return@forEach
@@ -1318,76 +1391,37 @@ fun ProgressosDialog(
                             }
 
                             if (expanded) {
-                                items(
-                                    items = listaCategoria,
-                                    key = { vant -> "${vant.id}_${vant.nome}_${vant.origem}" }
-                                ) { vant ->
-                                    DialogVantagemItem(
-                                        vant = vant,
-                                        state = state,
-                                        locked = false,
-                                        allowLongTexts = true,
-                                        showOfficialNames = state.modoOficialAtivo,
-                                        idParaNome = idParaNome,
-                                        detalhesExpandidos = detalhesExpandidos,
-                                        stages = stages,
-                                        onSelect = {
-                                            val qtdJaTemClick = state.vantagensSelecionadas.count {
-                                                it.nome.equals(vant.nome, ignoreCase = true)
-                                            }
-                                            when (val maxEff = maxEffectiveSelections(vant)) {
-                                                null -> {}
-                                                else -> if (qtdJaTemClick >= maxEff) {
-                                                    showSnack("Você já atingiu o limite para ${vant.nome}.")
-                                                    return@DialogVantagemItem
-                                                }
-                                            }
-                                            if (!state.podeSelecionar(vant) || !strictRequirementsOk(vant, estIndex)) {
-                                                showSnack("Você não cumpre os requisitos (ou já atingiu o limite) para ${vant.nome}.")
-                                                return@DialogVantagemItem
-                                            }
-                                            if (bloquearExclusividadeClasse(vant, estSel.nome)) {
-                                                return@DialogVantagemItem
-                                            }
-                                            if (!hasReservedProgress) {
-                                                showSnack("Você não tem progressos suficientes.")
-                                                return@DialogVantagemItem
-                                            }
-
-                                            if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo" || vant.id == "poderes_misticos_demonio" || vant.id == "poderes_misticos_mumia") {
-                                                pendingMysticPowersAdv = vant
-                                                advSelectedStageIndex = estIndex
-                                                showMysticPowersSelection = true
-                                            } else if (vant.requiresChoice || vant.vinculadoPericia || vant.id == "arma_predileta_aprimorada") {
-                                                pendingAdv = vant
-                                                advSelectedStageIndex = estIndex
-                                                showPendingChoice = true
-                                            } else {
-                                                viewModel.startAdvantageAdvancement(slotIndex, estSel.nome)
-                                                viewModel.selectAdvantageForAdvancement(vant)
-
-                                                val requiresPowerFlow =
-                                                    vant.id == "novos_poderes" ||
-                                                        vant.id.startsWith("antecedente_arcano") ||
-                                                        state.arcanoCompraPendente()
-
-                                                if (requiresPowerFlow && (state.arcanoCompraPendente() || state.mostrandoPoderesProgresso)) {
-                                                    debugLog(
-                                                        debugTag,
-                                                        "Abrindo fluxo de poderes para ${vant.id} (stage=${estSel.nome}, arcanoPendente=${state.arcanoCompraPendente()})"
-                                                    )
-                                                    showAdvSelection = false
-                                                    showPowerSelection = true
-                                                } else {
-                                                    viewModel.finishAdvantageAdvancement()
-                                                    onDismiss()
-                                                }
-                                            }
-                                        },
-                                        onError = { showSnack(it) },
-                                        stageName = estSel.nome,
-                                        allAdvantages = allAdvantages
-                                    )
+                                // Categoria.CUSTOMIZADA agrupa vantagens de VÁRIAS
+                                // CategoriaCustomizada distintas (ver model/CategoriaCustomizada.kt)
+                                // — mesmo tratamento que VantagensSection.kt: um subtítulo por
+                                // categoria customizada em vez de um único rótulo "Personalizada".
+                                if (cat == Categoria.CUSTOMIZADA) {
+                                    val gruposCustom = listaCategoria.groupBy { it.categoriaCustomizadaId }
+                                        .toList()
+                                        .sortedBy { (id, _) ->
+                                            id?.let { cid -> state.listaCategoriasCustomizadas.firstOrNull { c -> c.id == cid }?.nome } ?: "Personalizada"
+                                        }
+                                    gruposCustom.forEach { (catId, vants) ->
+                                        val nomeGrupo = catId?.let { cid -> state.listaCategoriasCustomizadas.firstOrNull { c -> c.id == cid }?.nome } ?: "Personalizada"
+                                        item(key = "adv_cat_customgroup_${catId ?: "none"}") {
+                                            Text(
+                                                text = nomeGrupo,
+                                                style = MaterialTheme.typography.labelLarge,
+                                                fontWeight = FontWeight.Bold,
+                                                color = MaterialTheme.colorScheme.secondary,
+                                                modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 2.dp)
+                                            )
+                                        }
+                                        items(
+                                            items = vants,
+                                            key = { vant -> "${vant.id}_${vant.nome}_${vant.origem}" }
+                                        ) { vant -> renderDialogVantagemItem(vant) }
+                                    }
+                                } else {
+                                    items(
+                                        items = listaCategoria,
+                                        key = { vant -> "${vant.id}_${vant.nome}_${vant.origem}" }
+                                    ) { vant -> renderDialogVantagemItem(vant) }
                                 }
                             }
                         }

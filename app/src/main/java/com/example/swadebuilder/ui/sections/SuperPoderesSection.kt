@@ -933,11 +933,24 @@ fun SuperPoderesSection(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            MarqueeText(
-                                text = poder.nome.toFancyTitleCase(),
-                                modifier = Modifier.weight(1f),
-                                style = MaterialTheme.typography.titleSmall
-                            )
+                            Column(modifier = Modifier.weight(1f)) {
+                                MarqueeText(
+                                    text = poder.nome.toFancyTitleCase(),
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                                // Categoria Customizada (ver model/CategoriaCustomizada.kt) — só
+                                // aparece pra Super Poderes customizados organizados numa categoria.
+                                poder.categoriaCustomizadaId?.let { catId ->
+                                    val nomeCategoria = state.listaCategoriasCustomizadas.firstOrNull { it.id == catId }?.nome
+                                    if (nomeCategoria != null) {
+                                        Text(
+                                            text = nomeCategoria,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.secondary
+                                        )
+                                    }
+                                }
+                            }
 
                             if (temOMelhorQueHa) {
                                 val favoritoAtual = state.poderFavoritoId

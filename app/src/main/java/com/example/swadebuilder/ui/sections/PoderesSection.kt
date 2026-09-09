@@ -758,12 +758,25 @@ fun PoderesSection(
                                         displayNome = "$displayNome ⓒ"
                                     }
 
-                                    Text(
-                                        text = displayNome,
-                                        fontWeight = FontWeight.Bold,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        modifier = Modifier.clickable { showPowerDetailsDialog = true }
-                                    )
+                                    Column(modifier = Modifier.clickable { showPowerDetailsDialog = true }) {
+                                        Text(
+                                            text = displayNome,
+                                            fontWeight = FontWeight.Bold,
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                        // Categoria Customizada (ver model/CategoriaCustomizada.kt) — só
+                                        // aparece pra Poderes customizados que o Mestre organizou numa categoria.
+                                        poder.categoriaCustomizadaId?.let { catId ->
+                                            val nomeCategoria = state.listaCategoriasCustomizadas.firstOrNull { it.id == catId }?.nome
+                                            if (nomeCategoria != null) {
+                                                Text(
+                                                    text = nomeCategoria,
+                                                    style = MaterialTheme.typography.labelSmall,
+                                                    color = MaterialTheme.colorScheme.secondary
+                                                )
+                                            }
+                                        }
+                                    }
                                 val specialStage = state.poderesDisponiveisPorEstagioParaArcano(arcKey)[poder.id]
                                 Text(
                                     if (usaPoderesPorEstagioCard && specialStage != null) "$specialStage • PP: $ppExibicao" else "PP: $ppExibicao",

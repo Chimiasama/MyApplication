@@ -736,6 +736,18 @@ private fun ComplicacaoItem(
                     text = if (showOfficialNames && !comp.originalName.isNullOrBlank()) "${comp.originalName.toFancyTitleCase()}$customBadge" else "${comp.name.toFancyTitleCase()}$customBadge",
                     style = MaterialTheme.typography.titleSmall
                 )
+                // Categoria Customizada (ver model/CategoriaCustomizada.kt) — só aparece
+                // pra Complicações customizadas que o Mestre organizou numa categoria.
+                comp.categoriaCustomizadaId?.let { catId ->
+                    val nomeCategoria = state.listaCategoriasCustomizadas.firstOrNull { it.id == catId }?.nome
+                    if (nomeCategoria != null) {
+                        Text(
+                            text = nomeCategoria,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
+                }
                 if (cur != null) {
                     Text(
                         text = "Selecionada ($cur)",
