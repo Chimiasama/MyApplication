@@ -64,7 +64,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     fun `returns pequeninos adjustments`() {
         val result = useCase.execute("PEQUENINOS", null)
 
-        assertEquals(listOf("Sorte", "Espirituoso"), result.ensureAdvantageNames)
+        assertEquals(listOf("Sorte"), result.ensureAdvantageNames)
         assertEquals(
             listOf(
                 TraitAddition("Tamanho -1", "TAMANHO_MENOS_1"),

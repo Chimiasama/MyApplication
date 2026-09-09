@@ -317,8 +317,13 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             return Result(
                 naturalArmorFromRace = if (effectiveVariant == "Pedregoso") 2 else 0,
                 forceArmorZero = true,
-                ensureAdvantageNames = resolved.vantagensGratisParaAdicionar.map { it.nome },
-                ensureAdvantageIds = emptyList(),
+                ensureAdvantageNames = emptyList(),
+                // Casa por id (TraitAddition.id), não mais por nome — o
+                // comparador em ResolveAncestryRacialPackageUseCase agora
+                // normaliza via keyify(), então bate certo com o catálogo
+                // mesmo o id interno vindo em maiúsculo/underscore (ex.:
+                // "SENHOR_DAS_FERAS" → "senhor_das_feras" no catálogo).
+                ensureAdvantageIds = resolved.vantagensGratisParaAdicionar.map { it.id },
                 ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
                 ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
                 elementalAction = ElementalAction.NONE
@@ -466,7 +471,14 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             "PEQUENINOS" -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = true,
-                ensureAdvantageNames = listOf("Sorte", "Espirituoso"),
+                // "Espirituoso" nunca foi uma Vantagem de catálogo — é o traço
+                // racial (habilidades[], category "racial_trait_positive") que dá
+                // Espírito d6, já resolvido por atributoBaseRacial(); estava aqui
+                // por engano e nunca batia com nada. "Sorte" já é concedida pelo
+                // caminho genérico de vantagensGratisEfetivas (habilidade
+                // "SORTE" com category "racial_edge" no JSON da raça); mantida
+                // aqui só como reforço redundante (idempotente, sem duplicar).
+                ensureAdvantageNames = listOf("Sorte"),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
                 ensureRacialDisadvantages = listOf(
@@ -503,8 +515,15 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             "HUMANO (WISEGUYS)".keyify() -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = false,
-                ensureAdvantageNames = listOf("Conexões (Máfia)"),
-                ensureAdvantageIds = emptyList(),
+                ensureAdvantageNames = emptyList(),
+                // "conexoes_mafia": pseudo-id tratado em
+                // ResolveAncestryRacialPackageUseCase (concede "Conexões" com a
+                // escolha "Máfia" pré-marcada). Era `ensureAdvantageNames =
+                // listOf("Conexões (Máfia)")`, que nunca batia com nenhuma
+                // Vantagem do catálogo (lá é só "Conexões", sem esse sufixo) —
+                // Humano (Wiseguys) nunca recebia a Vantagem de raça de verdade
+                // (bug real, silencioso).
+                ensureAdvantageIds = listOf("conexoes_mafia"),
                 ensureAutomaticAdvantages = emptyList(),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE

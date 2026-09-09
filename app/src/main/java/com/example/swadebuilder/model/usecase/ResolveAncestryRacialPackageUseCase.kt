@@ -131,7 +131,34 @@ class ResolveAncestryRacialPackageUseCase(
         }
 
         ancestrySpecificAdjustments.ensureAdvantageIds.forEach { advantageId ->
-            val edge = params.allAdvantages.firstOrNull { it.id == advantageId }
+            // "conexoes_mafia" é pseudo-id (não existe no catálogo): Humano
+            // (Wiseguys) concede a Vantagem real "Conexões" já com a escolha
+            // "Máfia" pré-marcada, igual ao fallback de Antecedente Arcano (Dom)
+            // logo abaixo — antes disso tentava casar por NOME exato contra
+            // "Conexões (Máfia)", que não existe no catálogo (lá é só
+            // "Conexões", com a escolha num campo separado), então nunca batia
+            // e o Humano (Wiseguys) nunca recebia a Vantagem de raça (bug real,
+            // silencioso — só o toggle separado "Cosa Nostra" concedia).
+            if (advantageId == "conexoes_mafia") {
+                val conexoes = params.allAdvantages.firstOrNull { it.id.keyify() == "CONEXOES" }
+                if (conexoes != null) {
+                    if (selected.none { it.id == conexoes.id && (it.choice ?: "").keyify() == "MAFIA" }) {
+                        selected.add(conexoes.copy(choice = "Máfia"))
+                    }
+                    if (vantagensRaciais.none { it.equals(conexoes.nome, ignoreCase = true) }) {
+                        vantagensRaciais.add(conexoes.nome)
+                    }
+                }
+                return@forEach
+            }
+
+            // Comparação por id normalizada (keyify): os ids sintéticos usados
+            // pelos pacotes raciais (TraitAddition.id, ex.: "SENHOR_DAS_FERAS")
+            // seguem a convenção interna (maiúsculo com underscore), enquanto o
+            // catálogo real (vantagens.json) usa minúsculo (ex.:
+            // "senhor_das_feras") — == exato nunca batia por causa disso, e
+            // silenciosamente caía pro fallback (raça sem a Vantagem).
+            val edge = params.allAdvantages.firstOrNull { it.id.keyify() == advantageId.keyify() }
             if (edge != null) {
                 if (selected.none { it.id == edge.id }) {
                     selected.add(edge)
