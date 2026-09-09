@@ -777,9 +777,9 @@ private fun ProgressionDetailContent(
             ) {
                 AtributosContent(
                     state = state,
-                    listaAtributos = viewModel.gameDataStore.getAtributos(),
-                    mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
-                    mapaAtributosDescricao = viewModel.gameDataStore.currentSnapshot()?.mapaAtributosDescricao ?: emptyMap(),
+                    listaAtributos = state.listaAtributos,
+                    mapaAtributosDisplay = state.mapaAtributosDisplay,
+                    mapaAtributosDescricao = state.mapaAtributosDescricao,
                     onUserFeedback = onUserFeedback
                 )
             }
@@ -902,9 +902,9 @@ private fun CreationDetailContent(
         ) {
             AtributosContent(
                 state = state,
-                listaAtributos = viewModel.gameDataStore.getAtributos(),
-                mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
-                mapaAtributosDescricao = viewModel.gameDataStore.currentSnapshot()?.mapaAtributosDescricao ?: emptyMap(),
+                listaAtributos = state.listaAtributos,
+                mapaAtributosDisplay = state.mapaAtributosDisplay,
+                mapaAtributosDescricao = state.mapaAtributosDescricao,
                 onUserFeedback = onUserFeedback
             )
         }

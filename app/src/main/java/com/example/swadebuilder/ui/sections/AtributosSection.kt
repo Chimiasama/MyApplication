@@ -214,9 +214,9 @@ fun AttributeCarouselPopoverDialog(
 @Composable
 fun AtributosContent(
     state: CriadorState,
-    listaAtributos: List<String>,
-    mapaAtributosDisplay: Map<String, String>,
-    mapaAtributosDescricao: Map<String, String>,
+    listaAtributos: List<String> = state.listaAtributos,
+    mapaAtributosDisplay: Map<String, String> = state.mapaAtributosDisplay,
+    mapaAtributosDescricao: Map<String, String> = state.mapaAtributosDescricao,
     onUserFeedback: () -> Unit,
     feedbackMessages: MutableList<String>? = null
 ) {

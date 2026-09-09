@@ -158,6 +158,7 @@ class CriadorState {
     var superequipCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
 
     var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
+    var mapaAtributosDescricao by mutableStateOf<Map<String, String>>(emptyMap())
     var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
     var arcanoInfo by mutableStateOf<Map<String, Triple<Int, Int, String>>>(emptyMap())
 
@@ -257,6 +258,9 @@ class CriadorState {
             listaAtributos = listaAtributos + key
         }
         mapaAtributosDisplay = mapaAtributosDisplay + (key to atributo.nome)
+        if (!atributo.descricao.isNullOrBlank()) {
+            mapaAtributosDescricao = mapaAtributosDescricao + (atributo.nome.uppercase().semAcentos() to atributo.descricao)
+        }
         // Reaproveita a mesma função usada no load inicial (ver updateGameData) pra
         // registrar os mapas de estado por atributo (valoresAtributos, pilha de PA) —
         // evita duplicar essa lógica aqui.
@@ -267,6 +271,7 @@ class CriadorState {
         val key = nome.keyify()
         listaAtributos = listaAtributos.filterNot { it == key }
         mapaAtributosDisplay = mapaAtributosDisplay - key
+        mapaAtributosDescricao = mapaAtributosDescricao - nome.uppercase().semAcentos()
         valoresAtributos.remove(key)
         paCostStackPorAtributo.remove(key)
     }
@@ -314,6 +319,7 @@ class CriadorState {
         this.equipamentoCategorias = snapshot.equipamentoCategorias
         this.superequipCategorias = snapshot.superequipCategorias
         this.mapaAtributosDisplay = snapshot.mapaAtributosDisplay
+        this.mapaAtributosDescricao = snapshot.mapaAtributosDescricao
         this.mapaPericias = snapshot.mapaPericias
 
         this.arcanoInfo = snapshot.arcanoInfo.associate {
