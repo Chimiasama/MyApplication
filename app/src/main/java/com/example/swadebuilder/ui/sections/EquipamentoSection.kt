@@ -160,7 +160,12 @@ private fun mapCategory(cat: EquipamentoCategoria): MappedCategory {
                  group = "Munição"
              } else if (t == "ACESSÓRIOS") {
                  group = "Acessórios"
-             } else {
+             } else if (t == "EQUIPAMENTO GERAL") {
+                 // Só o "tipo" genérico de verdade (sem categoria própria) vira "Itens
+                 // Gerais" — qualquer outro `tipo` que caia em GERAL (inclusive uma
+                 // Categoria Customizada do Mestre, ver CategoriaCustomizada.kt) mantém
+                 // o próprio nome como título do grupo, em vez de todos colapsarem
+                 // juntos sob o mesmo rótulo genérico.
                  group = "Itens Gerais"
              }
         }

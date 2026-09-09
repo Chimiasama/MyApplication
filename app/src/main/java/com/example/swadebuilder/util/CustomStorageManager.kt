@@ -1,6 +1,7 @@
 package com.example.swadebuilder.util
 
 import android.content.Context
+import com.example.swadebuilder.model.CategoriaCustomizada
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EquipamentoItem
 import com.example.swadebuilder.model.Poder
@@ -49,7 +50,8 @@ data class BookCustomContent(
     val superPoderes: List<SuperPoder> = emptyList(),
     val racas: List<RacialModifier> = emptyList(),
     val habilidadesRaciais: List<HabilidadeCriacao> = emptyList(),
-    val variantesRaciais: List<CustomAncestryVariant> = emptyList()
+    val variantesRaciais: List<CustomAncestryVariant> = emptyList(),
+    val categoriasCustomizadas: List<CategoriaCustomizada> = emptyList()
 )
 
 class CustomStorageManager(
@@ -259,6 +261,61 @@ class CustomStorageManager(
 
     fun deleteVarianteRacial(context: Context, bookKey: String, itemId: String) {
         deleteVarianteRacial(context.filesDir, bookKey, itemId)
+    }
+
+    fun addCategoriaCustomizada(baseDir: File, bookKey: String, item: CategoriaCustomizada) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            categoriasCustomizadas = (current.categoriasCustomizadas.filterNot { it.id == item.id } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addCategoriaCustomizada(context: Context, bookKey: String, item: CategoriaCustomizada) {
+        addCategoriaCustomizada(context.filesDir, bookKey, item)
+    }
+
+    // Apaga a categoria e desvincula (não apaga) todo item deste livro que a
+    // referenciava — eles voltam a ficar sem categoria em vez de sumir da lista.
+    fun deleteCategoriaCustomizada(baseDir: File, bookKey: String, categoriaId: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            categoriasCustomizadas = current.categoriasCustomizadas.filterNot { it.id == categoriaId },
+            vantagens = current.vantagens.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            },
+            equipamentos = current.equipamentos.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            },
+            poderes = current.poderes.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            },
+            superPoderes = current.superPoderes.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            },
+            complicacoes = current.complicacoes.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            }
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteCategoriaCustomizada(context: Context, bookKey: String, categoriaId: String) {
+        deleteCategoriaCustomizada(context.filesDir, bookKey, categoriaId)
+    }
+
+    fun renameCategoriaCustomizada(baseDir: File, bookKey: String, categoriaId: String, novoNome: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            categoriasCustomizadas = current.categoriasCustomizadas.map {
+                if (it.id == categoriaId) it.copy(nome = novoNome) else it
+            }
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun renameCategoriaCustomizada(context: Context, bookKey: String, categoriaId: String, novoNome: String) {
+        renameCategoriaCustomizada(context.filesDir, bookKey, categoriaId, novoNome)
     }
 
     fun importItemFromAnotherBook(baseDir: File, targetBookKey: String, sourceBookKey: String, itemType: String, itemIdOrName: String): Boolean {

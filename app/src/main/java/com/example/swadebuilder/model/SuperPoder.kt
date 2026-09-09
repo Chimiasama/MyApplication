@@ -20,7 +20,10 @@ data class SuperPoder(
     // Id estável pra Super Poderes customizados (ver SettingsDialog.kt) — o catálogo oficial
     // (super_poderes.json) continua identificado por `nome` em todo o app (DataLoader,
     // CustomStorageManager), então esse campo é aditivo e não muda a regra de identidade.
-    val id: String? = null
+    val id: String? = null,
+    // Id de CategoriaCustomizada (ver model/CategoriaCustomizada.kt) — só se aplica a
+    // Super Poderes customizados criados pelo Mestre.
+    val categoriaCustomizadaId: String? = null
 ) {
     fun exibido(): SuperPoder {
         if (EditionConfig.isFullEdition) return this

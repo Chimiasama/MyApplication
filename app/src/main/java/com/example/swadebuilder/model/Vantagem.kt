@@ -14,6 +14,12 @@ data class Vantagem(
 
     val categoria: Categoria,
 
+    // Id de CategoriaCustomizada (ver model/CategoriaCustomizada.kt), só usado quando
+    // categoria == Categoria.CUSTOMIZADA — a categoria "de verdade" desta vantagem
+    // é a que o Mestre criou, não um valor real do enum.
+    @SerialName("categoriaCustomizadaId")
+    val categoriaCustomizadaId: String? = null,
+
     val origem: String = "",
 
     val requisitos: Requisito,
@@ -72,4 +78,15 @@ data class Vantagem(
         } else {
             GenericNameMapper.map(nome)
         }
+}
+
+// Nome de exibição da categoria, resolvendo CategoriaCustomizada quando aplicável —
+// use isto em vez de `categoria.getDisplayName()` direto em qualquer tela que também
+// lide com vantagens customizadas.
+fun Vantagem.categoriaExibicao(categoriasCustomizadas: List<CategoriaCustomizada>): String {
+    if (categoria == Categoria.CUSTOMIZADA) {
+        val nome = categoriaCustomizadaId?.let { id -> categoriasCustomizadas.firstOrNull { it.id == id }?.nome }
+        return nome ?: categoria.getDisplayName()
+    }
+    return categoria.getDisplayName()
 }

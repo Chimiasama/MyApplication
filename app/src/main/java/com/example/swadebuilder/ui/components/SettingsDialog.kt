@@ -419,6 +419,17 @@ fun SettingsDialog(
                         var selectedCategory by remember { mutableStateOf("Vantagem") }
                         var customRequirements by remember { mutableStateOf("") }
                         var customAdvCategory by remember { mutableStateOf(com.example.swadebuilder.model.Categoria.PROFISSIONAL) }
+                        // Categoria Customizada (ver model/CategoriaCustomizada.kt) escolhida pelo
+                        // Mestre pra Vantagem/Poder/Super Poder/Complicação — só relevante quando
+                        // não nulo; pra Vantagem, escolher uma categoria customizada também força
+                        // customAdvCategory = Categoria.CUSTOMIZADA (ver seletor abaixo).
+                        var customAdvCategoriaCustomizadaId by remember { mutableStateOf<String?>(null) }
+                        var customPoderCategoriaId by remember { mutableStateOf<String?>(null) }
+                        var customSuperPoderCategoriaId by remember { mutableStateOf<String?>(null) }
+                        var customComplicacaoCategoriaId by remember { mutableStateOf<String?>(null) }
+                        // Item (tipo, nome) selecionado pra reatribuir de categoria na lista
+                        // "Itens Customizados" abaixo, sem reabrir o formulário inteiro.
+                        var moverCategoriaTarget by remember { mutableStateOf<Pair<String, String>?>(null) }
                         var customStage by remember { mutableStateOf("Novato") }
                         var customAttrMin by remember { mutableStateOf(mapOf<String, Int>()) }
                         var customSkillMin by remember { mutableStateOf(mapOf<String, Int>()) }
@@ -593,8 +604,38 @@ fun SettingsDialog(
                                 superPoderes = all.flatMap { it.superPoderes }.distinctBy { it.nome.lowercase() },
                                 racas = all.flatMap { it.racas }.distinctBy { it.nome.lowercase() },
                                 habilidadesRaciais = all.flatMap { it.habilidadesRaciais }.distinctBy { it.nome.lowercase() },
-                                variantesRaciais = all.flatMap { it.variantesRaciais }.distinctBy { it.id }
+                                variantesRaciais = all.flatMap { it.variantesRaciais }.distinctBy { it.id },
+                                categoriasCustomizadas = all.flatMap { it.categoriasCustomizadas }.distinctBy { it.id }
                             )
+                        }
+
+                        // Cria/renomeia/exclui uma Categoria Customizada (ver model/CategoriaCustomizada.kt),
+                        // gravando em todos os livros marcados no Seletor de Livros (criação) ou em
+                        // todos os livros de armazenamento (renomear/excluir, já que a categoria pode
+                        // ter sido salva sob mais de uma tag).
+                        fun criarCategoriaCustomizada(nome: String, tipo: com.example.swadebuilder.model.TipoEntidadeCategoria): com.example.swadebuilder.model.CategoriaCustomizada {
+                            val newCat = com.example.swadebuilder.model.CategoriaCustomizada(
+                                id = "catcustom:${tipo.name.lowercase()}:${nome.toIdSlug()}",
+                                nome = nome,
+                                tipoEntidade = tipo
+                            )
+                            val tags = selectedBookTags.ifEmpty {
+                                setOf(state.getActiveOrigins().firstOrNull() ?: "BASICO")
+                            }
+                            tags.forEach { tag -> customStorageManager.addCategoriaCustomizada(context, tag, newCat) }
+                            state.addCustomCategoriaCustomizada(newCat)
+                            refreshTrigger++
+                            return newCat
+                        }
+                        fun renomearCategoriaCustomizada(id: String, novoNome: String) {
+                            todosOsLivrosDeArmazenamento.forEach { customStorageManager.renameCategoriaCustomizada(context, it, id, novoNome) }
+                            state.renameCustomCategoriaCustomizada(id, novoNome)
+                            refreshTrigger++
+                        }
+                        fun excluirCategoriaCustomizada(id: String) {
+                            todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteCategoriaCustomizada(context, it, id) }
+                            state.removeCustomCategoriaCustomizada(id)
+                            refreshTrigger++
                         }
 
                         // Catálogo completo (oficial + customizado), sem colapsar por
@@ -789,19 +830,44 @@ fun SettingsDialog(
                                                         Categoria.entries.filter { it in baseCategories }
                                                     }
 
-                                                    if (customAdvCategory !in availableAdvCategories) {
+                                                    // CUSTOMIZADA nunca está em availableAdvCategories (não é uma
+                                                    // categoria oficial escolhível nos chips acima) — sem essa
+                                                    // exceção, este reset rodaria a cada recomposição e desfaria
+                                                    // a escolha de categoria customizada assim que o Mestre a
+                                                    // selecionasse no CategoriaCustomizadaChipRow abaixo.
+                                                    if (customAdvCategory != Categoria.CUSTOMIZADA && customAdvCategory !in availableAdvCategories) {
                                                         customAdvCategory = availableAdvCategories.firstOrNull() ?: Categoria.PROFISSIONAL
                                                     }
 
                                                     LabeledChipGroup("Categoria da Vantagem:") {
                                                         availableAdvCategories.forEach { catEnum ->
                                                             androidx.compose.material3.FilterChip(
-                                                                selected = customAdvCategory == catEnum,
-                                                                onClick = { customAdvCategory = catEnum },
+                                                                selected = customAdvCategory == catEnum && customAdvCategoriaCustomizadaId == null,
+                                                                onClick = {
+                                                                    customAdvCategory = catEnum
+                                                                    customAdvCategoriaCustomizadaId = null
+                                                                },
                                                                 label = { Text(catEnum.getDisplayName(), style = MaterialTheme.typography.labelSmall) }
                                                             )
                                                         }
                                                     }
+                                                    // Categoria Customizada do Mestre: alternativa às categorias oficiais
+                                                    // fixas acima — escolher uma força customAdvCategory = CUSTOMIZADA
+                                                    // (ver Vantagem.categoriaExibicao()).
+                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
+                                                        label = "Ou categoria customizada:",
+                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM },
+                                                        selectedId = customAdvCategoriaCustomizadaId,
+                                                        onSelect = { id ->
+                                                            customAdvCategoriaCustomizadaId = id
+                                                            if (id != null) customAdvCategory = com.example.swadebuilder.model.Categoria.CUSTOMIZADA
+                                                        },
+                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM) },
+                                                        onRename = ::renomearCategoriaCustomizada,
+                                                        onDelete = ::excluirCategoriaCustomizada,
+                                                        allowNone = true,
+                                                        noneLabel = "Nenhuma (usar acima)"
+                                                    )
                                                     LabeledChipGroup("Estágio Mínimo:") {
                                                         listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário").forEach { stage ->
                                                             androidx.compose.material3.FilterChip(
@@ -822,9 +888,24 @@ fun SettingsDialog(
                                                             )
                                                         }
                                                     }
+                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
+                                                        label = "Categoria (opcional):",
+                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO },
+                                                        selectedId = customComplicacaoCategoriaId,
+                                                        onSelect = { customComplicacaoCategoriaId = it },
+                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO) },
+                                                        onRename = ::renomearCategoriaCustomizada,
+                                                        onDelete = ::excluirCategoriaCustomizada
+                                                    )
                                                 }
                                                 "Equipamento" -> {
-                                                    EquipamentoCreatorFields(equipForm)
+                                                    EquipamentoCreatorFields(
+                                                        equipForm,
+                                                        categoriasCustomizadas = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.EQUIPAMENTO },
+                                                        onCreateCategoria = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.EQUIPAMENTO) },
+                                                        onRenameCategoria = ::renomearCategoriaCustomizada,
+                                                        onDeleteCategoria = ::excluirCategoriaCustomizada
+                                                    )
                                                 }
                                                 "Poder" -> {
                                                     Row(
@@ -853,6 +934,15 @@ fun SettingsDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
+                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
+                                                        label = "Categoria (opcional):",
+                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.PODER },
+                                                        selectedId = customPoderCategoriaId,
+                                                        onSelect = { customPoderCategoriaId = it },
+                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.PODER) },
+                                                        onRename = ::renomearCategoriaCustomizada,
+                                                        onDelete = ::excluirCategoriaCustomizada
+                                                    )
                                                 }
                                                 "Super Poder" -> {
                                                     androidx.compose.material3.OutlinedTextField(
@@ -867,6 +957,15 @@ fun SettingsDialog(
                                                         onValueChange = { customSuperPoderModificadores = it },
                                                         label = { Text("Modificadores (1 por linha, ex: Área (+2): Modelo Médio de Explosão)") },
                                                         modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
+                                                    )
+                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
+                                                        label = "Categoria (opcional):",
+                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER },
+                                                        selectedId = customSuperPoderCategoriaId,
+                                                        onSelect = { customSuperPoderCategoriaId = it },
+                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER) },
+                                                        onRename = ::renomearCategoriaCustomizada,
+                                                        onDelete = ::excluirCategoriaCustomizada
                                                     )
                                                 }
                                                 "Antecedente Arcano" -> {
@@ -1309,8 +1408,14 @@ fun SettingsDialog(
                                                     Text(
                                                         text = "[$type] $name ⓒ",
                                                         style = MaterialTheme.typography.bodySmall,
-                                                        fontWeight = FontWeight.Medium
+                                                        fontWeight = FontWeight.Medium,
+                                                        modifier = Modifier.weight(1f)
                                                     )
+                                                    if (type in setOf("Vantagem", "Equipamento", "Poder", "Super Poder", "Complicação")) {
+                                                        TextButton(onClick = { moverCategoriaTarget = type to name }) {
+                                                            Text("Categoria", style = MaterialTheme.typography.labelSmall)
+                                                        }
+                                                    }
                                                     TextButton(onClick = {
                                                         // Apaga em TODOS os livros de armazenamento: o mesmo item pode ter
                                                         // sido salvo sob várias tags (ver selectedBookTags na criação), e
@@ -1371,6 +1476,92 @@ fun SettingsDialog(
                                                 }
                                             }
                                         }
+                                    }
+
+                                    moverCategoriaTarget?.let { (moveType, moveName) ->
+                                        val tipoEntidade = when (moveType) {
+                                            "Vantagem" -> com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM
+                                            "Equipamento" -> com.example.swadebuilder.model.TipoEntidadeCategoria.EQUIPAMENTO
+                                            "Poder" -> com.example.swadebuilder.model.TipoEntidadeCategoria.PODER
+                                            "Super Poder" -> com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER
+                                            else -> com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO
+                                        }
+                                        val categoriasDoTipo = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == tipoEntidade }
+                                        val categoriaAtualId = when (moveType) {
+                                            "Vantagem" -> activeBookCustomData.vantagens.firstOrNull { it.nome == moveName }?.categoriaCustomizadaId
+                                            "Equipamento" -> activeBookCustomData.equipamentos.firstOrNull { it.nome.equals(moveName, ignoreCase = true) }?.categoriaCustomizadaId
+                                            "Poder" -> activeBookCustomData.poderes.firstOrNull { it.nome == moveName }?.categoriaCustomizadaId
+                                            "Super Poder" -> activeBookCustomData.superPoderes.firstOrNull { it.nome.equals(moveName, ignoreCase = true) }?.categoriaCustomizadaId
+                                            else -> activeBookCustomData.complicacoes.firstOrNull { it.name == moveName }?.categoriaCustomizadaId
+                                        }
+                                        com.example.swadebuilder.ui.components.MoverCategoriaDialog(
+                                            itemNome = moveName,
+                                            categorias = categoriasDoTipo,
+                                            categoriaAtualId = categoriaAtualId,
+                                            onConfirm = { novaCategoriaId ->
+                                                when (moveType) {
+                                                    "Vantagem" -> {
+                                                        val item = activeBookCustomData.vantagens.firstOrNull { it.nome == moveName }
+                                                        item?.let { i ->
+                                                            val novaCategoriaEnum = if (novaCategoriaId != null) com.example.swadebuilder.model.Categoria.CUSTOMIZADA else com.example.swadebuilder.model.Categoria.PROFISSIONAL
+                                                            todosOsLivrosDeArmazenamento.forEach { tag ->
+                                                                val existente = customStorageManager.loadCustomContent(context, tag).vantagens.firstOrNull { v -> v.id == i.id }
+                                                                if (existente != null) {
+                                                                    customStorageManager.addVantagem(context, tag, existente.copy(categoria = novaCategoriaEnum, categoriaCustomizadaId = novaCategoriaId))
+                                                                }
+                                                            }
+                                                            state.listaVantagens = state.listaVantagens.map { v -> if (v.id == i.id) v.copy(categoria = novaCategoriaEnum, categoriaCustomizadaId = novaCategoriaId) else v }
+                                                        }
+                                                    }
+                                                    "Equipamento" -> {
+                                                        todosOsLivrosDeArmazenamento.forEach { tag ->
+                                                            val existente = customStorageManager.loadCustomContent(context, tag).equipamentos.firstOrNull { e -> e.nome.equals(moveName, ignoreCase = true) }
+                                                            if (existente != null) {
+                                                                customStorageManager.addEquipamento(context, tag, existente.copy(categoriaCustomizadaId = novaCategoriaId))
+                                                            }
+                                                        }
+                                                        state.listaEquipamentos = state.listaEquipamentos.map { e -> if (e.nome.equals(moveName, ignoreCase = true)) e.copy(categoriaCustomizadaId = novaCategoriaId) else e }
+                                                    }
+                                                    "Poder" -> {
+                                                        val item = activeBookCustomData.poderes.firstOrNull { it.nome == moveName }
+                                                        item?.let { i ->
+                                                            todosOsLivrosDeArmazenamento.forEach { tag ->
+                                                                val existente = customStorageManager.loadCustomContent(context, tag).poderes.firstOrNull { p -> p.id == i.id }
+                                                                if (existente != null) {
+                                                                    customStorageManager.addPoder(context, tag, existente.copy(categoriaCustomizadaId = novaCategoriaId))
+                                                                }
+                                                            }
+                                                            state.listaPoderes = state.listaPoderes.map { p -> if (p.id == i.id) p.copy(categoriaCustomizadaId = novaCategoriaId) else p }
+                                                        }
+                                                    }
+                                                    "Super Poder" -> {
+                                                        todosOsLivrosDeArmazenamento.forEach { tag ->
+                                                            val existente = customStorageManager.loadCustomContent(context, tag).superPoderes.firstOrNull { sp -> sp.nome.equals(moveName, ignoreCase = true) }
+                                                            if (existente != null) {
+                                                                customStorageManager.addSuperPoder(context, tag, existente.copy(categoriaCustomizadaId = novaCategoriaId))
+                                                            }
+                                                        }
+                                                        state.listaSuperPoderes = state.listaSuperPoderes.map { sp -> if (sp.nome.equals(moveName, ignoreCase = true)) sp.copy(categoriaCustomizadaId = novaCategoriaId) else sp }
+                                                    }
+                                                    else -> {
+                                                        val item = activeBookCustomData.complicacoes.firstOrNull { it.name == moveName }
+                                                        item?.let { i ->
+                                                            todosOsLivrosDeArmazenamento.forEach { tag ->
+                                                                val existente = customStorageManager.loadCustomContent(context, tag).complicacoes.firstOrNull { c -> c.id == i.id }
+                                                                if (existente != null) {
+                                                                    customStorageManager.addComplicacao(context, tag, existente.copy(categoriaCustomizadaId = novaCategoriaId))
+                                                                }
+                                                            }
+                                                            state.listaComplicacoes = state.listaComplicacoes.map { c -> if (c.id == i.id) c.copy(categoriaCustomizadaId = novaCategoriaId) else c }
+                                                        }
+                                                    }
+                                                }
+                                                refreshTrigger++
+                                                onCustomContentChanged()
+                                                moverCategoriaTarget = null
+                                            },
+                                            onDismiss = { moverCategoriaTarget = null }
+                                        )
                                     }
                                 }
                             },
@@ -1452,6 +1643,7 @@ fun SettingsDialog(
                                                         id = id,
                                                         nome = customItemName,
                                                         categoria = customAdvCategory,
+                                                        categoriaCustomizadaId = customAdvCategoriaCustomizadaId,
                                                         descricao = safeDesc,
                                                         origem = tags.first(),
                                                         requisitos = reqObj
@@ -1466,7 +1658,8 @@ fun SettingsDialog(
                                                         name = customItemName,
                                                         severity = customSeverity,
                                                                 description = safeDesc,
-                                                                origem = tags.first()
+                                                                origem = tags.first(),
+                                                                categoriaCustomizadaId = customComplicacaoCategoriaId
                                                     )
                                                             tags.forEach { tag -> customStorageManager.addComplicacao(context, tag, newComp.copy(origem = tag)) }
                                                     state.addCustomComplicacao(newComp)
@@ -1487,7 +1680,8 @@ fun SettingsDialog(
                                                         duracao = customDuration.ifBlank { "3 turnos" },
                                                                 descricao = safeDesc,
                                                         estagio = "Novato",
-                                                                origem = tags.first()
+                                                                origem = tags.first(),
+                                                                categoriaCustomizadaId = customPoderCategoriaId
                                                     )
                                                             tags.forEach { tag -> customStorageManager.addPoder(context, tag, newPoder.copy(origem = tag)) }
                                                     state.addCustomPoder(newPoder)
@@ -1503,7 +1697,8 @@ fun SettingsDialog(
                                                         custoBase = customSuperPoderCustoBase.ifBlank { "2" },
                                                         descricao = safeDesc,
                                                         modificadores = modificadoresList.ifEmpty { null },
-                                                        id = id
+                                                        id = id,
+                                                        categoriaCustomizadaId = customSuperPoderCategoriaId
                                                     )
                                                     tags.forEach { tag -> customStorageManager.addSuperPoder(context, tag, newSuperPoder) }
                                                     state.addCustomSuperPoder(newSuperPoder)

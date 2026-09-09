@@ -17,6 +17,7 @@ import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.ArmaNatural
 import com.example.swadebuilder.model.Categoria
+import com.example.swadebuilder.model.CategoriaCustomizada
 import com.example.swadebuilder.model.CiberneticoItem
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.ComplicacaoSnapshot
@@ -146,6 +147,7 @@ class CriadorState {
     var listaSuperPoderes by mutableStateOf<List<SuperPoder>>(emptyList())
     var listaAncestralidadesJson by mutableStateOf<List<RacialModifier>>(emptyList())
     var listaVariantesRaciaisCustom by mutableStateOf<List<CustomAncestryVariant>>(emptyList())
+    var listaCategoriasCustomizadas by mutableStateOf<List<CategoriaCustomizada>>(emptyList())
     var listaMonstroTemplates by mutableStateOf<List<MonstroTemplate>>(emptyList())
     var listaCoracoesCrystal by mutableStateOf<List<CrystalHeart>>(emptyList())
 
@@ -194,6 +196,28 @@ class CriadorState {
         }
     }
 
+    fun addCustomCategoriaCustomizada(categoria: CategoriaCustomizada) {
+        if (listaCategoriasCustomizadas.none { it.id == categoria.id }) {
+            listaCategoriasCustomizadas = listaCategoriasCustomizadas + categoria
+        }
+    }
+
+    fun removeCustomCategoriaCustomizada(categoriaId: String) {
+        listaCategoriasCustomizadas = listaCategoriasCustomizadas.filterNot { it.id == categoriaId }
+        // Desvincula em memória do mesmo jeito que CustomStorageManager.deleteCategoriaCustomizada
+        // já faz em disco — sem isso os itens continuariam "presos" à categoria apagada
+        // até o app recarregar os dados do zero.
+        listaVantagens = listaVantagens.map { if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it }
+        listaEquipamentos = listaEquipamentos.map { if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it }
+        listaPoderes = listaPoderes.map { if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it }
+        listaSuperPoderes = listaSuperPoderes.map { if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it }
+        listaComplicacoes = listaComplicacoes.map { if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it }
+    }
+
+    fun renameCustomCategoriaCustomizada(categoriaId: String, novoNome: String) {
+        listaCategoriasCustomizadas = listaCategoriasCustomizadas.map { if (it.id == categoriaId) it.copy(nome = novoNome) else it }
+    }
+
     fun updateGameData(snapshot: GameDataSnapshot) {
         this.listaAtributos = snapshot.listaAtributos
         this.listaPericias = snapshot.listaPericias
@@ -205,6 +229,7 @@ class CriadorState {
         this.listaSuperPoderes = snapshot.listaSuperPoderes
         this.listaAncestralidadesJson = snapshot.listaAncestralidadesJson
         this.listaVariantesRaciaisCustom = snapshot.listaVariantesRaciaisCustom
+        this.listaCategoriasCustomizadas = snapshot.listaCategoriasCustomizadas
         // Build the cache once when data loads.
         this.ancestryMap = this.listaAncestralidadesJson.groupBy { it.nome.keyify() }
         this.listaMonstroTemplates = snapshot.listaMonstroTemplates

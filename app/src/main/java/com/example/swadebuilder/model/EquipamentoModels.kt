@@ -69,7 +69,14 @@ data class EquipamentoItem(
     // heurística de ForcaMinimaCalculator.ehArmaDeArremesso() usada pelo catálogo oficial
     // (que não tem esse campo).
     @SerialName("usavel_corpo_a_corpo")
-    val usavelCorpoACorpo: Boolean? = null
+    val usavelCorpoACorpo: Boolean? = null,
+    // Id de CategoriaCustomizada (ver model/CategoriaCustomizada.kt) do tipo
+    // EQUIPAMENTO. Quando presente, tem prioridade sobre `categoriaTipo` pra decidir
+    // em qual seção da tela de Equipamento o item aparece (ver DataLoader.kt) — o
+    // nome da categoria é resolvido dinamicamente, então renomear a categoria
+    // atualiza a seção sem precisar editar cada item.
+    @SerialName("categoriaCustomizadaId")
+    val categoriaCustomizadaId: String? = null
 ) {
     val nomeExibicao: String
         get() = if (EditionConfig.isFullEdition) {

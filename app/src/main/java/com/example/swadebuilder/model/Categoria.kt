@@ -26,7 +26,14 @@ enum class Categoria {
     @SerialName("VANTAGEM_DE_CLASSE") VANTAGEM_DE_CLASSE,
     @SerialName("PRESTIGIO")     PRESTIGIO,
     @SerialName("TROPO")         TROPO,
-    @SerialName("ANCESTRALIDADE") ANCESTRALIDADE
+    @SerialName("ANCESTRALIDADE") ANCESTRALIDADE,
+    // Vantagem cuja categoria "de verdade" é uma CategoriaCustomizada criada pelo
+    // Mestre (ver Vantagem.categoriaCustomizadaId) — não corresponde a nenhum valor
+    // real do JSON oficial, só existe pra vantagens customizadas. Como não é uma
+    // categoria de regra conhecida (Classe/Profissional/Antecedente etc.), cai
+    // corretamente no `else` de qualquer regra que dependa de categorias específicas
+    // (ex.: CriadorState.isPathfinderEligible).
+    @SerialName("CUSTOMIZADA")   CUSTOMIZADA
 }
 
 fun Categoria.getDisplayName(): String = when (this) {
@@ -48,4 +55,8 @@ fun Categoria.getDisplayName(): String = when (this) {
     Categoria.PRESTIGIO -> "Prestígio"
     Categoria.TROPO -> "Tropo"
     Categoria.ANCESTRALIDADE -> "Ancestralidade"
+    // Fallback genérico: quem quiser o nome real da categoria customizada precisa
+    // resolver Vantagem.categoriaCustomizadaId contra a lista de CategoriaCustomizada
+    // ativa (ver Vantagem.categoriaExibicao()) — este enum não carrega esse nome.
+    Categoria.CUSTOMIZADA -> "Personalizada"
 }

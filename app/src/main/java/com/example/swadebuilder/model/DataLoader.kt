@@ -550,6 +550,7 @@ object DataLoader {
         val customSuperPoderes = mutableListOf<SuperPoder>()
         val customRacas = mutableListOf<RacialModifier>()
         val customVariantesRaciais = mutableListOf<CustomAncestryVariant>()
+        val customCategoriasCustomizadas = mutableListOf<CategoriaCustomizada>()
 
         // TAG_GERAL sempre entra, além dos livros realmente ativos: é onde fica
         // o conteúdo customizado que o jogador marcou como "Geral" na criação,
@@ -563,7 +564,11 @@ object DataLoader {
             customSuperPoderes += customData.superPoderes
             customRacas += customData.racas
             customVariantesRaciais += customData.variantesRaciais
+            customCategoriasCustomizadas += customData.categoriasCustomizadas
         }
+        // Mesma categoria (mesmo id) pode existir em mais de um livro de armazenamento
+        // se o Mestre marcou vários livros ao criá-la — distinctBy fica só com uma cópia.
+        val mergedCategoriasCustomizadas = customCategoriasCustomizadas.distinctBy { it.id }
 
         // Usa distinctByOriginPriority (não distinctBy simples) porque um mesmo id/nome pode
         // existir em mais de um livro ativo ao mesmo tempo (Modo Livre, ou um livro
@@ -594,9 +599,19 @@ object DataLoader {
         // assim que qualquer item customizado existisse. O `tipo` de cada item novo vem de
         // `categoriaTipo` (definido no formulário de criação, ver SettingsDialog.kt) pra cair na
         // seção certa (Armas/Armaduras/Veículos/etc.) em vez de sempre em "Equipamento Geral".
+        // Resolve o "tipo" efetivo de cada item customizado: uma CategoriaCustomizada
+        // (Mestre) tem prioridade sobre `categoriaTipo` — e como é resolvida pelo nome
+        // atual da categoria (não uma cópia congelada), renomear a categoria já reflete
+        // na seção do item sem precisar reescrever cada item no disco.
+        val categoriasCustomizadasPorId = mergedCategoriasCustomizadas.associateBy { it.id }
+        fun tipoEfetivo(item: EquipamentoItem): String {
+            val categoriaCustom = item.categoriaCustomizadaId?.let { categoriasCustomizadasPorId[it] }
+            return categoriaCustom?.nome ?: item.categoriaTipo ?: "Equipamento Geral"
+        }
+
         val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {
             val categorizedCustoms = customEquipamentos.groupBy {
-                (it.categoriaTipo ?: "Equipamento Geral") to (it.subtipo ?: "Equipamento Geral")
+                tipoEfetivo(it) to (it.subtipo ?: "Equipamento Geral")
             }
             val existingTypes = localEquipamentoCategorias.associateBy { it.tipo to it.subtipo }.toMutableMap()
             categorizedCustoms.forEach { (chave, items) ->
@@ -636,7 +651,8 @@ object DataLoader {
             superequipCategorias = localSuperequipCategorias,
             listaSuperPoderes = mergedSuperPoderes,
             arcanoInfo = loadedArcanoInfoList,
-            listaVariantesRaciaisCustom = customVariantesRaciais
+            listaVariantesRaciaisCustom = customVariantesRaciais,
+            listaCategoriasCustomizadas = mergedCategoriasCustomizadas
         )
     }
 

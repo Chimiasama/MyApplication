@@ -32,7 +32,8 @@ data class GameDataSnapshot(
     val superequipCategorias: List<EquipamentoCategoria>,
     val listaSuperPoderes: List<SuperPoder>,
     val arcanoInfo: List<ArcanoInfo>,
-    val listaVariantesRaciaisCustom: List<CustomAncestryVariant> = emptyList()
+    val listaVariantesRaciaisCustom: List<CustomAncestryVariant> = emptyList(),
+    val listaCategoriasCustomizadas: List<CategoriaCustomizada> = emptyList()
 )
 
 interface GameDataRepository {

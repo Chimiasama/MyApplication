@@ -747,6 +747,82 @@ fun VantagensContent(
 
                     // Category Content (Only if expanded)
                     if (expanded) {
+                        // Categoria.CUSTOMIZADA agrupa vantagens de VÁRIAS CategoriaCustomizada
+                        // distintas (ver model/CategoriaCustomizada.kt) — mostra um subtítulo por
+                        // categoria customizada em vez de misturar tudo sob um único rótulo
+                        // "Personalizada", sem precisar de outro nível de accordion/expand.
+                        if (cat == Categoria.CUSTOMIZADA) {
+                            val gruposCustom = lista.groupBy { it.categoriaCustomizadaId }
+                                .toList()
+                                .sortedBy { (id, _) ->
+                                    id?.let { cid -> state.listaCategoriasCustomizadas.firstOrNull { c -> c.id == cid }?.nome } ?: "Personalizada"
+                                }
+                            gruposCustom.forEach { (catId, vants) ->
+                                val nomeGrupo = catId?.let { cid -> state.listaCategoriasCustomizadas.firstOrNull { c -> c.id == cid }?.nome } ?: "Personalizada"
+                                item(key = "customgroup_${catId ?: "none"}") {
+                                    Text(
+                                        text = nomeGrupo,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.secondary,
+                                        modifier = Modifier.padding(start = 8.dp, top = 6.dp, bottom = 2.dp)
+                                    )
+                                }
+                                items(vants, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
+                                     Column(modifier = Modifier.padding(start = 8.dp, bottom = 0.dp)) {
+                                         VantagemItem(
+                                             vant = vant,
+                                             state = state,
+                                             allEstagios = allEstagios,
+                                             locked = locked,
+                                             allowLongTexts = allowLongTexts,
+                                             showOfficialNames = showOfficialNames,
+                                             idParaNome = idParaNome,
+                                             detalhesExpandidos = detalhesExpandidos,
+                                             protagonistaSlotCategoria = protagonistaSlotCategoria,
+                                             pcLivres = pcLivres,
+                                             onSelect = {
+                                                if (vant.vinculadoPericia) {
+                                                    pendingVantagem = vant
+                                                    showChoiceDialog = true
+                                                } else if (vant.id == "antecedente_arcano") {
+                                                    dialogMostrandoAntecedente = vant
+                                                } else if (vant.id == "poderes_misticos" || vant.id == "poderes_misticos_anjo" || vant.id == "poderes_misticos_demonio" || vant.id == "poderes_misticos_mumia") {
+                                                    dialogMostrandoPoderesMisticos = vant
+                                                } else if (vant.nome.keyify() == "CAVALEIRO") {
+                                                    dialogMostrandoCavaleiro = vant
+                                                } else if (vant.nome.keyify() == "MONTARIA") {
+                                                    dialogMostrandoMontaria = vant
+                                                } else if (vant.id == "novos_poderes") {
+                                                    val activeABs = state.vantagensSelecionadas
+                                                        .mapNotNull { it.toArcanoKey() }
+                                                        .distinct()
+                                                    if (activeABs.size > 1) {
+                                                        dialogMostrandoNovosPoderes = vant
+                                                    } else {
+                                                        attemptPurchase(vant) {}
+                                                    }
+                                                } else if (vant.id == "poder_favorito") {
+                                                    val ownedPowers = state.poderesSelecionados.filterNotNull()
+                                                    if (ownedPowers.isEmpty()) {
+                                                        viewModel.logFeedback("Escolha ao menos um poder na seção de Poderes!")
+                                                        onUserFeedback()
+                                                    } else {
+                                                        dialogMostrandoPoderFavorito = vant
+                                                    }
+                                                } else {
+                                                    attemptPurchase(vant) {}
+                                                }
+                                             },
+                                             onError = { msg ->
+                                                 viewModel.logFeedback(msg)
+                                                 onUserFeedback()
+                                             }
+                                         )
+                                     }
+                                }
+                            }
+                        } else {
                         items(lista, key = { it.id }, contentType = { "vantagem_item" }) { vant ->
                              // We need a wrapper to provide the padding used in the original Column
                              Column(modifier = Modifier.padding(start = 8.dp, bottom = 0.dp)) {
@@ -800,6 +876,7 @@ fun VantagensContent(
                                      }
                                  )
                              }
+                        }
                         }
                     }
                 }
