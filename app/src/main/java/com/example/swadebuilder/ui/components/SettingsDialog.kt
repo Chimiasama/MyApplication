@@ -25,6 +25,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import com.example.swadebuilder.util.AppPreferences
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -107,6 +109,76 @@ fun LabeledChipGroup(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             content = content
         )
+    }
+}
+
+// Seletor de livros do formulário de Conteúdo Customizado, como lista suspensa (em vez de
+// uma fileira de FilterChips sempre expandida com "Geral" + todos os livros do app, que
+// ocupava bastante espaço vertical). Fechado, mostra só os livros já marcados — por padrão
+// o livro ativo no momento (ver selectedBookTags em SettingsDialog); aberto, lista "Geral" e
+// todos os livros pra marcar/desmarcar, no mesmo padrão multi-seleção do EraDropdownPicker
+// de EquipamentoCreatorForm.kt.
+@Composable
+private fun BookTagsDropdownPicker(selected: Set<String>, onChange: (Set<String>) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    val resumo = remember(selected) {
+        selected.joinToString(", ") {
+            if (it == com.example.swadebuilder.util.TAG_GERAL) "Geral" else it.toEditionDisplayName()
+        }
+    }
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text("Vincular a quais livros:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
+            Text(
+                resumo.ifBlank { "Nenhum livro marcado" },
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+            )
+            Text("▾", style = MaterialTheme.typography.bodyMedium)
+        }
+        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            DropdownMenuItem(
+                text = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Checkbox(checked = com.example.swadebuilder.util.TAG_GERAL in selected, onCheckedChange = null)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Geral", fontWeight = FontWeight.Bold)
+                    }
+                },
+                onClick = {
+                    onChange(
+                        if (com.example.swadebuilder.util.TAG_GERAL in selected) {
+                            selected - com.example.swadebuilder.util.TAG_GERAL
+                        } else {
+                            selected + com.example.swadebuilder.util.TAG_GERAL
+                        }
+                    )
+                }
+            )
+            com.example.swadebuilder.util.TODOS_OS_LIVROS.forEach { bookKey ->
+                DropdownMenuItem(
+                    text = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Checkbox(checked = bookKey in selected, onCheckedChange = null)
+                            Spacer(Modifier.width(8.dp))
+                            Text(bookKey.toEditionDisplayName())
+                        }
+                    },
+                    onClick = {
+                        onChange(if (bookKey in selected) selected - bookKey else selected + bookKey)
+                    }
+                )
+            }
+        }
+        if (selected.isEmpty()) {
+            Text(
+                "Nenhum livro marcado — vai salvar no livro ativo no momento.",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
     }
 }
 
@@ -493,6 +565,13 @@ fun SettingsDialog(
                         if (selectedCategory !in categories) {
                             selectedCategory = categories.first()
                         }
+                        // Categorias de gênero masculino, pra concordância em "Nome do/da
+                        // <categoria>" abaixo — as demais ("Vantagem", "Complicação", "Raça",
+                        // "Variante de Raça") são femininas e usam "da" por padrão.
+                        val categoriasMasculinas = remember {
+                            setOf("Equipamento", "Poder", "Super Poder", "Antecedente Arcano", "Traço Racial")
+                        }
+                        val artigoCategoria = if (selectedCategory in categoriasMasculinas) "do" else "da"
                         // Todos os "livros" de armazenamento que existem (livros reais + Geral).
                         // Conteúdo customizado não fica mais preso a um livro só: é gravado sob
                         // cada tag escolhida (ver selectedBookTags), então pra ler/listar/apagar
@@ -611,7 +690,7 @@ fun SettingsDialog(
                                             androidx.compose.material3.OutlinedTextField(
                                                 value = customItemName,
                                                 onValueChange = { customItemName = it },
-                                                label = { Text("Nome da $selectedCategory") },
+                                                label = { Text("Nome $artigoCategoria $selectedCategory") },
                                                 singleLine = true,
                                                 modifier = Modifier.fillMaxWidth()
                                             )
@@ -619,47 +698,13 @@ fun SettingsDialog(
                                             // Seletor de Livros: em quais livros esse item vai aparecer. "Geral"
                                             // funciona em qualquer combinação de livros ativos; os demais são
                                             // específicos. Vale pra todas as categorias, é escolhido uma vez só
-                                            // aqui e usado na hora de salvar.
-                                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                Text("Vincular a quais livros:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                                                @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
-                                                androidx.compose.foundation.layout.FlowRow(
-                                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                                                ) {
-                                                    androidx.compose.material3.FilterChip(
-                                                        selected = com.example.swadebuilder.util.TAG_GERAL in selectedBookTags,
-                                                        onClick = {
-                                                            selectedBookTags = if (com.example.swadebuilder.util.TAG_GERAL in selectedBookTags) {
-                                                                selectedBookTags - com.example.swadebuilder.util.TAG_GERAL
-                                                            } else {
-                                                                selectedBookTags + com.example.swadebuilder.util.TAG_GERAL
-                                                            }
-                                                        },
-                                                        label = { Text("Geral", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold) }
-                                                    )
-                                                    com.example.swadebuilder.util.TODOS_OS_LIVROS.forEach { bookKey ->
-                                                        androidx.compose.material3.FilterChip(
-                                                            selected = bookKey in selectedBookTags,
-                                                            onClick = {
-                                                                selectedBookTags = if (bookKey in selectedBookTags) {
-                                                                    selectedBookTags - bookKey
-                                                                } else {
-                                                                    selectedBookTags + bookKey
-                                                                }
-                                                            },
-                                                            label = { Text(bookKey.toEditionDisplayName(), style = MaterialTheme.typography.labelSmall) }
-                                                        )
-                                                    }
-                                                }
-                                                if (selectedBookTags.isEmpty()) {
-                                                    Text(
-                                                        "Nenhum livro marcado — vai salvar no livro ativo no momento.",
-                                                        style = MaterialTheme.typography.labelSmall,
-                                                        color = MaterialTheme.colorScheme.error
-                                                    )
-                                                }
-                                            }
+                                            // aqui e usado na hora de salvar. Lista suspensa em vez de chips
+                                            // sempre expandidos: por padrão já vem só com o livro ativo marcado
+                                            // (ver selectedBookTags acima), abrindo é que mostra os demais.
+                                            BookTagsDropdownPicker(
+                                                selected = selectedBookTags,
+                                                onChange = { selectedBookTags = it }
+                                            )
 
                                             // Category-specific fields
                                             when (selectedCategory) {
