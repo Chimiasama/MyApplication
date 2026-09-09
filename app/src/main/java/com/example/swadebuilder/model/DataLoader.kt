@@ -553,6 +553,7 @@ object DataLoader {
         val customCategoriasCustomizadas = mutableListOf<CategoriaCustomizada>()
         val customAtributosJson = mutableListOf<AtributoJson>()
         val customPericiasJson = mutableListOf<PericiaJson>()
+        val customModificadoresCustomizados = mutableListOf<ModificadorCustomizado>()
 
         // TAG_GERAL sempre entra, além dos livros realmente ativos: é onde fica
         // o conteúdo customizado que o jogador marcou como "Geral" na criação,
@@ -569,6 +570,7 @@ object DataLoader {
             customCategoriasCustomizadas += customData.categoriasCustomizadas
             customAtributosJson += customData.atributosCustomizados
             customPericiasJson += customData.periciasCustomizadas
+            customModificadoresCustomizados += customData.modificadoresCustomizados
         }
         // Mesma categoria (mesmo id) pode existir em mais de um livro de armazenamento
         // se o Mestre marcou vários livros ao criá-la — distinctBy fica só com uma cópia.
@@ -615,10 +617,31 @@ object DataLoader {
         // gate que já vale pro catálogo oficial (super_poderes.json só carrega
         // com "SUPER" em keys), já que o traço só faz sentido junto com o
         // Antecedente Arcano (Super Poderes) desse cenário.
-        val mergedSuperPoderes = if ("SUPER" in keys) {
+        val mergedSuperPoderesSemModificadores = if ("SUPER" in keys) {
             (localListaSuperPoderes + customSuperPoderes).distinctBy { it.nome.keyify() }
         } else {
             localListaSuperPoderes
+        }
+        // Injeta modificadores customizados (ver model/ModificadorCustomizado.kt) no poder
+        // alvo depois do merge acima — funciona tanto pra poder oficial (só existe em
+        // memória, nunca reescreve super_poderes.json) quanto pra poder customizado.
+        // Acrescenta o mesmo texto em modificadoresLite quando presente pra manter as
+        // duas listas do mesmo tamanho (ver SuperPoder.exibido()); sem isso a rewrite pra
+        // edição Lite seria ignorada pro poder inteiro, não só pro modificador novo.
+        val modificadoresCustomizadosPorPoder = customModificadoresCustomizados.groupBy { it.poderAlvoNome.keyify() }
+        val mergedSuperPoderes = if (modificadoresCustomizadosPorPoder.isEmpty()) {
+            mergedSuperPoderesSemModificadores
+        } else {
+            mergedSuperPoderesSemModificadores.map { sp ->
+                val extras = modificadoresCustomizadosPorPoder[sp.nome.keyify()]
+                if (extras.isNullOrEmpty()) sp else {
+                    val textos = extras.map { it.paraTexto() }
+                    sp.copy(
+                        modificadores = (sp.modificadores.orEmpty() + textos),
+                        modificadoresLite = sp.modificadoresLite?.let { it + textos }
+                    )
+                }
+            }
         }
 
         // Inject custom equipment into categories so they appear in EquipamentoSection.

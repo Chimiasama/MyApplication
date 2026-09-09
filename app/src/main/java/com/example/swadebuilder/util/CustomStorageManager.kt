@@ -5,6 +5,7 @@ import com.example.swadebuilder.model.AtributoJson
 import com.example.swadebuilder.model.CategoriaCustomizada
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.ModificadorCustomizado
 import com.example.swadebuilder.model.PericiaJson
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
@@ -55,7 +56,8 @@ data class BookCustomContent(
     val variantesRaciais: List<CustomAncestryVariant> = emptyList(),
     val categoriasCustomizadas: List<CategoriaCustomizada> = emptyList(),
     val atributosCustomizados: List<AtributoJson> = emptyList(),
-    val periciasCustomizadas: List<PericiaJson> = emptyList()
+    val periciasCustomizadas: List<PericiaJson> = emptyList(),
+    val modificadoresCustomizados: List<ModificadorCustomizado> = emptyList()
 )
 
 class CustomStorageManager(
@@ -191,9 +193,17 @@ class CustomStorageManager(
         addSuperPoder(context.filesDir, bookKey, item)
     }
 
+    // Também derruba modificadores customizados (ver ModificadorCustomizado) que
+    // apontavam pro poder apagado, deste mesmo livro — diferente da categoria
+    // customizada (que só desvincula), aqui não faz sentido manter um
+    // modificador órfão sem poder alvo.
     fun deleteSuperPoder(baseDir: File, bookKey: String, itemNome: String) {
         val current = loadCustomContent(baseDir, bookKey)
-        val updated = current.copy(superPoderes = current.superPoderes.filterNot { it.nome.equals(itemNome, ignoreCase = true) })
+        val alvoKey = itemNome.keyify()
+        val updated = current.copy(
+            superPoderes = current.superPoderes.filterNot { it.nome.equals(itemNome, ignoreCase = true) },
+            modificadoresCustomizados = current.modificadoresCustomizados.filterNot { it.poderAlvoNome.keyify() == alvoKey }
+        )
         saveCustomContent(baseDir, updated)
     }
 
@@ -364,6 +374,28 @@ class CustomStorageManager(
 
     fun deletePericiaCustomizada(context: Context, bookKey: String, itemNome: String) {
         deletePericiaCustomizada(context.filesDir, bookKey, itemNome)
+    }
+
+    fun addModificadorCustomizado(baseDir: File, bookKey: String, item: ModificadorCustomizado) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            modificadoresCustomizados = (current.modificadoresCustomizados.filterNot { it.id == item.id } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addModificadorCustomizado(context: Context, bookKey: String, item: ModificadorCustomizado) {
+        addModificadorCustomizado(context.filesDir, bookKey, item)
+    }
+
+    fun deleteModificadorCustomizado(baseDir: File, bookKey: String, itemId: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(modificadoresCustomizados = current.modificadoresCustomizados.filterNot { it.id == itemId })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteModificadorCustomizado(context: Context, bookKey: String, itemId: String) {
+        deleteModificadorCustomizado(context.filesDir, bookKey, itemId)
     }
 
     fun importItemFromAnotherBook(baseDir: File, targetBookKey: String, sourceBookKey: String, itemType: String, itemIdOrName: String): Boolean {

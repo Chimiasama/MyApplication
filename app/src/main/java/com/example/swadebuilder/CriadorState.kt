@@ -33,6 +33,7 @@ import com.example.swadebuilder.model.Estagio
 import com.example.swadebuilder.model.GameDataSnapshot
 import com.example.swadebuilder.model.IncompatibilityRules
 import com.example.swadebuilder.model.MechaItem
+import com.example.swadebuilder.model.ModificadorCustomizado
 import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
 import com.example.swadebuilder.model.MonstroTemplate
@@ -195,6 +196,36 @@ class CriadorState {
     fun addCustomSuperPoder(superPoder: SuperPoder) {
         if (listaSuperPoderes.none { it.nome.equals(superPoder.nome, ignoreCase = true) }) {
             listaSuperPoderes = listaSuperPoderes + superPoder
+        }
+    }
+
+    // Espelha em memória o merge que model/DataLoader faz em disco pra um
+    // ModificadorCustomizado (ver model/ModificadorCustomizado.kt) recém-criado —
+    // sem isso o modificador só apareceria depois de um reload completo dos
+    // dados de jogo (onCustomContentChanged), em vez de imediatamente na tela.
+    fun addCustomModificador(modificador: ModificadorCustomizado) {
+        val alvoKey = modificador.poderAlvoNome.keyify()
+        val texto = modificador.paraTexto()
+        listaSuperPoderes = listaSuperPoderes.map { sp ->
+            if (sp.nome.keyify() == alvoKey) {
+                sp.copy(
+                    modificadores = (sp.modificadores.orEmpty() + texto),
+                    modificadoresLite = sp.modificadoresLite?.let { it + texto }
+                )
+            } else sp
+        }
+    }
+
+    fun removeCustomModificador(modificador: ModificadorCustomizado) {
+        val alvoKey = modificador.poderAlvoNome.keyify()
+        val texto = modificador.paraTexto()
+        listaSuperPoderes = listaSuperPoderes.map { sp ->
+            if (sp.nome.keyify() == alvoKey) {
+                sp.copy(
+                    modificadores = sp.modificadores?.filterNot { it == texto },
+                    modificadoresLite = sp.modificadoresLite?.filterNot { it == texto }
+                )
+            } else sp
         }
     }
 

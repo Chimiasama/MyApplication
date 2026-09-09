@@ -460,6 +460,14 @@ fun SettingsDialog(
                         // Um modificador por linha, no mesmo formato usado pelo catálogo oficial
                         // ("Nome (+custo): descrição"), ex.: "Área (+2): Modelo Médio de Explosão".
                         var customSuperPoderModificadores by remember { mutableStateOf("") }
+                        // Modificador de Poder (ver model/ModificadorCustomizado.kt): não cria um
+                        // Super Poder novo, cria um modificador avulso e o anexa a um poder já
+                        // existente (oficial ou customizado) — cobre o modificador "Especial" do
+                        // livro (negociado à mesa, sem texto fixo) e qualquer outro modificador
+                        // de casa que o Mestre queira adicionar a um poder específico.
+                        var customModificadorCusto by remember { mutableStateOf("+2") }
+                        var customModificadorPoderAlvoNome by remember { mutableStateOf<String?>(null) }
+                        var showModificadorPoderPickerDialog by remember { mutableStateOf(false) }
                         // Antecedente Arcano customizado: "lista aberta" usa todos os poderes
                         // do(s) livro(s) marcado(s) no Seletor de Livros (ou de todos, se for
                         // "Geral") — ver Vantagem.poderesPermitidos/origem e o hook em
@@ -581,7 +589,7 @@ fun SettingsDialog(
                         // já é global (tela inicial, criação, fase de XP), então não há mais
                         // motivo pra esconder categorias por causa de "isHomeScreen".
                         val categories = remember {
-                            listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Super Poder", "Antecedente Arcano", "Raça", "Traço Racial", "Variante de Raça", "Atributo", "Perícia")
+                            listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Super Poder", "Modificador de Poder", "Antecedente Arcano", "Raça", "Traço Racial", "Variante de Raça", "Atributo", "Perícia")
                         }
                         if (selectedCategory !in categories) {
                             selectedCategory = categories.first()
@@ -590,7 +598,7 @@ fun SettingsDialog(
                         // <categoria>" abaixo — as demais ("Vantagem", "Complicação", "Raça",
                         // "Variante de Raça") são femininas e usam "da" por padrão.
                         val categoriasMasculinas = remember {
-                            setOf("Equipamento", "Poder", "Super Poder", "Antecedente Arcano", "Traço Racial", "Atributo")
+                            setOf("Equipamento", "Poder", "Super Poder", "Modificador de Poder", "Antecedente Arcano", "Traço Racial", "Atributo")
                         }
                         val artigoCategoria = if (selectedCategory in categoriasMasculinas) "do" else "da"
                         // Todos os "livros" de armazenamento que existem (livros reais + Geral).
@@ -617,8 +625,16 @@ fun SettingsDialog(
                                 variantesRaciais = all.flatMap { it.variantesRaciais }.distinctBy { it.id },
                                 categoriasCustomizadas = all.flatMap { it.categoriasCustomizadas }.distinctBy { it.id },
                                 atributosCustomizados = all.flatMap { it.atributosCustomizados }.distinctBy { it.nome.lowercase() },
-                                periciasCustomizadas = all.flatMap { it.periciasCustomizadas }.distinctBy { it.nome.lowercase() }
+                                periciasCustomizadas = all.flatMap { it.periciasCustomizadas }.distinctBy { it.nome.lowercase() },
+                                modificadoresCustomizados = all.flatMap { it.modificadoresCustomizados }.distinctBy { it.id }
                             )
+                        }
+
+                        // Todos os Super Poderes que podem receber um Modificador de Poder
+                        // (ver "Modificador de Poder" mais abaixo): catálogo oficial + qualquer
+                        // Super Poder customizado já criado em qualquer livro de armazenamento.
+                        val superPoderesParaModificador = remember(activeBookCustomData) {
+                            (superPoderesCatalog + activeBookCustomData.superPoderes).distinctBy { it.nome.keyify() }
                         }
 
                         // Cria/renomeia/exclui uma Categoria Customizada (ver model/CategoriaCustomizada.kt),
@@ -1004,6 +1020,28 @@ fun SettingsDialog(
                                                         onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER) },
                                                         onRename = ::renomearCategoriaCustomizada,
                                                         onDelete = ::excluirCategoriaCustomizada
+                                                    )
+                                                }
+                                                "Modificador de Poder" -> {
+                                                    Text(
+                                                        "Cria um modificador avulso (ex.: o \"Especial\" do livro, negociado à mesa) e o anexa a um Super Poder já existente — oficial ou customizado. O nome acima é o nome do modificador; a descrição abaixo é o texto que vai aparecer nele.",
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                    OutlinedButton(
+                                                        onClick = { showModificadorPoderPickerDialog = true },
+                                                        modifier = Modifier.fillMaxWidth()
+                                                    ) {
+                                                        Text(
+                                                            customModificadorPoderAlvoNome?.let { "Poder alvo: $it" } ?: "Escolher Super Poder alvo"
+                                                        )
+                                                    }
+                                                    androidx.compose.material3.OutlinedTextField(
+                                                        value = customModificadorCusto,
+                                                        onValueChange = { customModificadorCusto = it },
+                                                        label = { Text("Custo (ex: +2 ou -1/-2)") },
+                                                        singleLine = true,
+                                                        modifier = Modifier.fillMaxWidth()
                                                     )
                                                 }
                                                 "Antecedente Arcano" -> {
@@ -1462,6 +1500,7 @@ fun SettingsDialog(
                                             activeBookCustomData.variantesRaciais.forEach { add("Variante de Raça" to it.nome) }
                                             activeBookCustomData.atributosCustomizados.forEach { add("Atributo" to it.nome) }
                                             activeBookCustomData.periciasCustomizadas.forEach { add("Perícia" to it.nome) }
+                                            activeBookCustomData.modificadoresCustomizados.forEach { add("Modificador de Poder" to "${it.nome} (→ ${it.poderAlvoNome})") }
                                         }
                                     }
 
@@ -1548,6 +1587,13 @@ fun SettingsDialog(
                                                             "Perícia" -> {
                                                                 todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePericiaCustomizada(context, it, name) }
                                                                 state.removeCustomPericia(name)
+                                                            }
+                                                            "Modificador de Poder" -> {
+                                                                val item = activeBookCustomData.modificadoresCustomizados.firstOrNull { "${it.nome} (→ ${it.poderAlvoNome})" == name }
+                                                                item?.let { i ->
+                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteModificadorCustomizado(context, it, i.id) }
+                                                                    state.removeCustomModificador(i)
+                                                                }
                                                             }
                                                         }
                                                         refreshTrigger++
@@ -1791,6 +1837,23 @@ fun SettingsDialog(
                                                     state.addCustomSuperPoder(newSuperPoder)
                                                     statusMessage = "Super Poder '$customItemName' salvo em: $tagsLabel"
                                                 }
+                                                "Modificador de Poder" -> {
+                                                    val poderAlvo = customModificadorPoderAlvoNome
+                                                    if (poderAlvo == null) {
+                                                        statusMessage = "Escolha o Super Poder alvo do modificador."
+                                                    } else {
+                                                        val newModificador = com.example.swadebuilder.model.ModificadorCustomizado(
+                                                            id = "custom:mod:${poderAlvo.toIdSlug()}:${customItemName.toIdSlug()}",
+                                                            poderAlvoNome = poderAlvo,
+                                                            nome = customItemName,
+                                                            custo = customModificadorCusto.ifBlank { "+0" },
+                                                            descricao = safeDesc
+                                                        )
+                                                        tags.forEach { tag -> customStorageManager.addModificadorCustomizado(context, tag, newModificador) }
+                                                        state.addCustomModificador(newModificador)
+                                                        statusMessage = "Modificador '$customItemName' anexado a '$poderAlvo' em: $tagsLabel"
+                                                    }
+                                                }
                                                 "Antecedente Arcano" -> {
                                                     // Vira uma Vantagem categoria ANTECEDENTE de verdade — reaproveita
                                                     // 100% do pipeline de Vantagem customizada (armazenamento, merge,
@@ -2003,6 +2066,8 @@ fun SettingsDialog(
                                             customAaPoderesEspecificos = emptySet()
                                             customPericiaAtributoVinculado = null
                                             customPericiaBasica = false
+                                            customModificadorPoderAlvoNome = null
+                                            customModificadorCusto = "+2"
                                             }
                                         } else {
                                                     statusMessage = "Preencha o Nome do item."
@@ -2624,6 +2689,43 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { superPoderRacialPickerTarget = null }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        if (showModificadorPoderPickerDialog) {
+                            var filterModificadorPoderText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showModificadorPoderPickerDialog = false },
+                                title = { Text("Escolher Super Poder alvo") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterModificadorPoderText,
+                                            onValueChange = { filterModificadorPoderText = it },
+                                            label = { Text("Filtrar Super Poder") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        superPoderesParaModificador
+                                            .filter { it.nome.contains(filterModificadorPoderText, ignoreCase = true) }
+                                            .forEach { poder ->
+                                                Row(
+                                                    modifier = Modifier.fillMaxWidth().clickable {
+                                                        customModificadorPoderAlvoNome = poder.nome
+                                                        showModificadorPoderPickerDialog = false
+                                                    }.padding(vertical = 6.dp),
+                                                    verticalAlignment = Alignment.CenterVertically
+                                                ) {
+                                                    Column {
+                                                        Text(poder.nome, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+                                                        if (!poder.descricao.isNullOrBlank()) {
+                                                            Text(poder.descricao, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 2)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showModificadorPoderPickerDialog = false }) { Text("Cancelar") } }
                             )
                         }
 
