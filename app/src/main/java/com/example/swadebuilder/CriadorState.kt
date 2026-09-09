@@ -260,9 +260,14 @@ class CriadorState {
                     }
                 }
                 else -> {
-                    vantagensSelecionadas.none { poss ->
-                        poss.id.keyify().replace(" ", "_") == prevId.keyify().replace(" ", "_")
+                    val idNorm = prevId.keyify().replace(" ", "_")
+                    val temVantagem = vantagensSelecionadas.any { poss ->
+                        poss.id.keyify().replace(" ", "_") == idNorm
                     }
+                    val temComplicacao = complicacoesSelecionadas.keys.any {
+                        it.id.keyify().replace(" ", "_") == idNorm
+                    }
+                    !temVantagem && !temComplicacao
                 }
             }
         }
@@ -2163,7 +2168,9 @@ class CriadorState {
                 key.contains("CASCO") ||
                 key.contains("TOQUE ARREPIANTE") ||
                 key.contains("TOQUE DA MORTE") ||
-                key.contains("CABECA DURA")
+                key.contains("CABECA DURA") ||
+                key.contains("FERRAO") ||
+                key.contains("TOQUE VENENOSO")
         }
         // Suprimir "Ataque Natural" pra Insetoides por nome de raça (removido)
         // era redundante: tanto Insetoides Fantasia (MORDIDA em habilidades[])
@@ -3504,6 +3511,9 @@ class CriadorState {
             if (desfazerNoLedger) {
                 desfazerGastoDePoder(poder.powerId, poder.cost)
             }
+            if (poderFavoritoId == poder.powerId && superInvestments.none { it.powerId == poder.powerId }) {
+                poderFavoritoId = null
+            }
         }
     }
 
@@ -4387,6 +4397,17 @@ class CriadorState {
                 }
             }
         }
+
+        val idNormalizado = vantagem.id.keyify().replace(" ", "_")
+        val dependente = vantagensSelecionadas.firstOrNull { other ->
+            other != vantagem && other.requisitos.vantagensPrevias.any {
+                it.keyify().replace(" ", "_") == idNormalizado
+            }
+        }
+        if (dependente != null) {
+            return false to "Remova antes a vantagem ${dependente.nome}, que depende desta."
+        }
+
         return true to null
     }
 

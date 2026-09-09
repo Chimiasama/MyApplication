@@ -421,7 +421,7 @@ private fun MechaCardItem(
     // Dynamic stat calculations with modifiers and equipped weapons MOD costs
     val modsDoModifiers = mecha.mods_instalados.sumOf { it.mods_cost }
     val modsDasArmas = mecha.armas_equipadas.sumOf { armaStr ->
-        val found = weaponCatalog.firstOrNull { w -> armaStr.contains(w.nome, ignoreCase = true) || w.nome.contains(armaStr, ignoreCase = true) }
+        val found = weaponCatalog.firstOrNull { w -> w.nome.equals(armaStr.trim(), ignoreCase = true) }
         found?.mods_cost ?: 0
     }
     val modsGasto = modsDoModifiers + modsDasArmas

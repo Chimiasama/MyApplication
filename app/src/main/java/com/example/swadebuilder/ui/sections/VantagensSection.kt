@@ -191,13 +191,6 @@ fun VantagensContent(
             allAdvantages
         }
 
-    remember(state.modoSupers) {
-        buildSet {
-            add("BASICO")
-            if (state.modoSupers) add("SUPER")
-        }
-    }
-
     val listaVantagensAtivas: List<Vantagem> = remember(
         listaVantagens,
         state.modoSupers,

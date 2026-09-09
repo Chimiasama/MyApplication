@@ -222,7 +222,13 @@ fun SummaryContent(
     }
 
     // Calculate weight info separately to pass to the custom card
-    val weightInfoLines = remember(state.equipamentosComprados, state.valoresAtributos, state.vantagensSelecionadas) {
+    val weightInfoLines = remember(
+        state.equipamentosComprados,
+        state.valoresAtributos,
+        state.vantagensSelecionadas,
+        state.soldadoCargaAtivo,
+        state.compendioSciFiAtivo
+    ) {
         val soldierLabel = when {
             hasSoldado && state.soldadoCargaAtivo && hasDwarfLoadBonus -> " (Soldado e Anão +2 dados)"
             hasSoldado && state.soldadoCargaAtivo -> " (Soldado +1 dado)"

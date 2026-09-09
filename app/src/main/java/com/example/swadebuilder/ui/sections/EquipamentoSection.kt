@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
@@ -368,7 +369,7 @@ fun EquipamentoSection(
             fun isItemAllowedByPathfinderRule(item: EquipamentoItem, origemKey: String): Boolean {
                 if (!compendioPathfinderAtivo) return true
                 // If the item is explicitly from Pathfinder module, allow it
-                if (origemKey == "PATHFINDER" || origemKey == "PATHFINDER") return true
+                if (origemKey == "PATHFINDER") return true
 
                 // Allow Sci-Fi items if the Mecha rule is active (Explicit exception)
                 // Includes "SUPER" because some sci-fi equipment files might have mixed origins
@@ -552,8 +553,8 @@ fun EquipamentoSection(
                             label = { Text(eq.nome.toFancyTitleCase()) },
                             leadingIcon = {
                                 Icon(
-                                    if (isLocked) Icons.Default.Close else Icons.Default.Close,
-                                    contentDescription = "Remover"
+                                    if (isLocked) Icons.Default.Lock else Icons.Default.Close,
+                                    contentDescription = if (isLocked) "Concedido por vantagem" else "Remover"
                                 )
                             },
                             colors = chipColors
@@ -661,7 +662,13 @@ fun EquipamentoSection(
                             val origemKey = (item.origem?.ifBlank { mapped.original.origem ?: "BASICO" } ?: (mapped.original.origem ?: "BASICO")).uppercase()
                             EquipamentoListEntry(item, origemKey)
                         }
-                    }.filter { entry ->
+                    }.groupBy { it.item.nome.keyify() }
+                    .map { (_, duplicates) ->
+                        // Mesmo item reimpresso em mais de uma origem/compêndio: mantém só a
+                        // cópia de maior prioridade, igual ao modo Navegar (evita duplicata na busca).
+                        duplicates.maxByOrNull { CriadorState.getOriginPriority(it.origemKey) }!!
+                    }
+                    .filter { entry ->
                         // Strict Pathfinder Filter
                         if (!isItemAllowedByPathfinderRule(entry.item, entry.origemKey)) return@filter false
                         true

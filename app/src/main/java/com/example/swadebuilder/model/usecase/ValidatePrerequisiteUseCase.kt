@@ -49,9 +49,14 @@ class ValidatePrerequisiteUseCase {
                     }
                 }
                 else -> {
-                    input.vantagensSelecionadas.none { poss ->
-                        poss.id.keyify().replace(" ", "_") == prevId.keyify().replace(" ", "_")
+                    val idNorm = prevId.keyify().replace(" ", "_")
+                    val temVantagem = input.vantagensSelecionadas.any { poss ->
+                        poss.id.keyify().replace(" ", "_") == idNorm
                     }
+                    val temComplicacao = input.complicacoesSelecionadas.any {
+                        it.id.keyify().replace(" ", "_") == idNorm
+                    }
+                    !temVantagem && !temComplicacao
                 }
             }
         }

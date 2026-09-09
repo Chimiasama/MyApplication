@@ -1076,12 +1076,15 @@ fun TroposSection(
                             val d12Options = (1..12).map { it.toString() }
 
                             fun rollDie(sides: Int): Int = random.nextInt(1, sides + 1)
-                            fun applyVantagemRoll(value: Int) {
-                                var roll = value
+                            // Só a rolagem automática (d8) rerola sozinha ao cair em 7 — a
+                            // seleção manual no dropdown deve gravar o valor escolhido, inclusive
+                            // 7 (que sinaliza "Rerrole" na própria UI de resultado).
+                            fun rollVantagemDie(): Int {
+                                var roll = rollDie(8)
                                 while (roll == 7) {
                                     roll = rollDie(8)
                                 }
-                                state.updateProtagonistaRollVantagem(roll)
+                                return roll
                             }
 
                             Spacer(Modifier.size(8.dp))
@@ -1118,7 +1121,7 @@ fun TroposSection(
                                     label = "d8",
                                     options = d8Options,
                                     selected = vantagemRoll?.toString(),
-                                    onSelect = { applyVantagemRoll(it.toInt()) }
+                                    onSelect = { state.updateProtagonistaRollVantagem(it.toInt()) }
                                 )
                                 DropdownField(
                                     label = "d10",
@@ -1142,7 +1145,7 @@ fun TroposSection(
                                     onClick = {
                                         state.updateProtagonistaRollTecnicas(rollDie(4))
                                         state.updateProtagonistaRollPericia(rollDie(6))
-                                        applyVantagemRoll(rollDie(8))
+                                        state.updateProtagonistaRollVantagem(rollVantagemDie())
                                         state.updateProtagonistaRollQualidade(rollDie(10))
                                         state.updateProtagonistaRollHabilidade(rollDie(12))
                                         state.updateProtagonistaPericiasEscolhidas(emptyList())

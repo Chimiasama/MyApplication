@@ -1106,7 +1106,10 @@ fun ProgressosDialog(
     if (showAdvSelection) {
         val estIndex = if (advSelectedStageIndex >= 0) advSelectedStageIndex else selectedTab
         val estSel   = stages[estIndex]
-        val prevStageSpent = state.stageXpSpent.getValue(estSel.nome)
+        // Precisa ser capturado uma única vez, ao abrir o diálogo pra este estágio — não
+        // recalculado a cada recomposição, senão "prevStageSpent" sempre bate com o valor
+        // atual e o revert em onDismissRequest (mais abaixo) vira um no-op.
+        val prevStageSpent = remember(estSel.nome) { state.stageXpSpent.getValue(estSel.nome) }
         val hasProfissional = state.vantagensSelecionadas.any { it.id == "profissional" }
         val vantagensSnapshotKey = remember(state.vantagensSelecionadas) {
             state.vantagensSelecionadas.joinToString("|") { "${it.id}:${it.choice.orEmpty()}" }

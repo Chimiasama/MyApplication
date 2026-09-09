@@ -902,6 +902,16 @@ fun gerarFichaEmPdf(
             val available = bottomLimit - currY
             val (head, tail) = block.split(available, contentW, theme)
 
+            if (head == null && currY <= contentTop) {
+                // Bloco maior que uma página inteira e ainda estamos no topo (nada
+                // desenhado nesta página): desenha estourando o limite pra garantir
+                // progresso, em vez de reenfileirar o mesmo bloco pra sempre.
+                block.draw(canvas, margin, currY, contentW, theme)
+                currY += block.measure(contentW, theme) + 10f
+                mainQueue.removeFirst()
+                break
+            }
+
             if (head != null) {
                 head.draw(canvas, margin, currY, contentW, theme)
                 currY += head.measure(contentW, theme) + 10f
@@ -969,12 +979,23 @@ private fun renderSectionPages(
         val borderPaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1f }
         canvas.drawRect(margin / 2, margin / 2, w - margin / 2, h - margin / 2, borderPaint)
 
-        var currY = drawSectionBanner(canvas, margin, w, sectionTitle, theme)
+        val contentTop = drawSectionBanner(canvas, margin, w, sectionTitle, theme)
+        var currY = contentTop
 
         while (queue.isNotEmpty()) {
             val block = queue.first()
             val available = bottomLimit - currY
             val (head, tail) = block.split(available, contentW, theme)
+
+            if (head == null && currY <= contentTop) {
+                // Bloco maior que uma página inteira e ainda estamos no topo (nada
+                // desenhado nesta página): desenha estourando o limite pra garantir
+                // progresso, em vez de reenfileirar o mesmo bloco pra sempre.
+                block.draw(canvas, margin, currY, contentW, theme)
+                currY += block.measure(contentW, theme) + 10f
+                queue.removeFirst()
+                break
+            }
 
             if (head != null) {
                 head.draw(canvas, margin, currY, contentW, theme)

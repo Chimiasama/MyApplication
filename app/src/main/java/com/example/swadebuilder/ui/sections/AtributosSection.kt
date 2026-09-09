@@ -144,8 +144,13 @@ fun AttributeCarouselPopoverDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     steps.forEach { targetRaw ->
-                        val cost = dieStepsCount(minRaw, targetRaw)
-                        val stepsFromCurrent = if (targetRaw > currentRaw) dieStepsCount(currentRaw, targetRaw) else 0
+                        // O rótulo mostra o mesmo valor que será de fato cobrado/devolvido ao
+                        // clicar (a partir do valor atual), não o custo acumulado desde o mínimo.
+                        val stepsFromCurrent = when {
+                            targetRaw > currentRaw -> dieStepsCount(currentRaw, targetRaw)
+                            targetRaw < currentRaw -> dieStepsCount(targetRaw, currentRaw)
+                            else -> 0
+                        }
                         val canAfford = availablePa == null || targetRaw <= currentRaw || stepsFromCurrent <= availablePa
 
                         val isSelected = targetRaw == currentRaw
@@ -182,7 +187,11 @@ fun AttributeCarouselPopoverDialog(
                                     color = if (canAfford) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
                                 )
                                 Text(
-                                    text = if (cost == 0) "base" else if (cost == 1) "1 pt" else "$cost pts",
+                                    text = when {
+                                        targetRaw == currentRaw -> "atual"
+                                        targetRaw > currentRaw -> if (stepsFromCurrent == 1) "1 pt" else "$stepsFromCurrent pts"
+                                        else -> if (stepsFromCurrent == 1) "-1 pt" else "-$stepsFromCurrent pts"
+                                    },
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
