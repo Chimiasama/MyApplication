@@ -128,8 +128,6 @@ object DataLoader {
         val descricao: String? = null,
         // Resumo genérico para a edição Lite (não reproduz o texto do livro original).
         val descricaoLite: String? = null,
-        val atributos: Map<String, Int>,
-        val pericias: Map<String, Int>,
         val habilidades: List<RacialAbility> = emptyList(),
         val movimentacao: Int = 0,
         val tags: List<String> = emptyList(),
@@ -234,7 +232,13 @@ object DataLoader {
                 subtipo = cat.subtipo,
                 subsubtipo = cat.subsubtipo,
                 origem = cat.livros.first(),
-                itens = cat.itens.map { it.comObservacoesExibidas() }
+                // Carimba o `tipo` da categoria em cada item (ex.: "Armas Corpo a Corpo",
+                // "Armas de Fogo", "Armaduras", "Veículos") — sem isso só itens customizados
+                // (ver SettingsDialog.kt) tinham `categoriaTipo`, e a ficha (ResumoSection.kt)
+                // não tinha como separar arma corpo a corpo de arma à distância de armadura
+                // pros ~3300 itens do catálogo oficial sem depender de comparar `subtipo`
+                // (que se repete entre tipos bem diferentes — ver updateActiveModules acima).
+                itens = cat.itens.map { it.comObservacoesExibidas().copy(categoriaTipo = cat.tipo) }
             )
         }
         val localListaEquipamentos = allEquip.flatMap { it.itens }
@@ -472,8 +476,6 @@ object DataLoader {
                     originalName = fonte.originalName,
                     originalDescription = fonte.originalDescription,
                     descricao = fonte.descricaoExibida(),
-                    atributos = fonte.atributos,
-                    pericias = fonte.pericias,
                     habilidades = fonte.habilidades.map { it.exibida() },
                     origem = livro,
                     movimentacao = fonte.movimentacao,
@@ -498,20 +500,11 @@ object DataLoader {
             emptyList()
         }
 
-        // 11. Mapas Raciais
-        val localRacialAttrMinMap = localListaAncestralidadesJson.associate { rm ->
-            val m = rm.atributos
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
-
-        val localRacialSkillStartMap = localListaAncestralidadesJson.associate { rm ->
-            val m = rm.pericias
-                .mapKeys   { it.key.keyify() }
-                .mapValues { 4 + it.value }
-            rm.nome.keyify() to m
-        }
+        // 11. Mapas Raciais: removidos (racialAttrMinMap/racialSkillStartMap liam
+        // RacialModifier.atributos/pericias, os mapas numéricos estáticos que
+        // duplicavam em paralelo o que os traços de habilidades[] já expressam —
+        // ver CriadorState.atributoBaseRacial()/perícia equivalente, que agora
+        // computam o piso racial só a partir de habilidades[]).
 
         // 12. Regras de Criação de Raça (Unused mostly but cached)
         // Kept for consistency if needed later
@@ -590,17 +583,28 @@ object DataLoader {
             localListaSuperPoderes
         }
 
-        // Inject custom equipment into categories so they appear in EquipamentoSection
+        // Inject custom equipment into categories so they appear in EquipamentoSection.
+        // Chave é o par (tipo, subtipo), não só subtipo: vários grupos oficiais reaproveitam o
+        // mesmo texto de subtipo sob tipos diferentes (ex.: subtipo "Geral" existe tanto em
+        // "Escudos" quanto em "Munição" dentro do próprio livro básico) — agrupar só por
+        // subtipo colidia essas categorias via associateBy() e descartava em silêncio todas
+        // menos a última, sumindo com escudos, munição ou armas inteiras da tela de Equipamento
+        // assim que qualquer item customizado existisse. O `tipo` de cada item novo vem de
+        // `categoriaTipo` (definido no formulário de criação, ver SettingsDialog.kt) pra cair na
+        // seção certa (Armas/Armaduras/Veículos/etc.) em vez de sempre em "Equipamento Geral".
         val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {
-            val categorizedCustoms = customEquipamentos.groupBy { it.subtipo ?: "Equipamento Geral" }
-            val existingTypes = localEquipamentoCategorias.associateBy { it.subtipo }.toMutableMap()
-            categorizedCustoms.forEach { (subtipo, items) ->
-                val existing = existingTypes[subtipo]
+            val categorizedCustoms = customEquipamentos.groupBy {
+                (it.categoriaTipo ?: "Equipamento Geral") to (it.subtipo ?: "Equipamento Geral")
+            }
+            val existingTypes = localEquipamentoCategorias.associateBy { it.tipo to it.subtipo }.toMutableMap()
+            categorizedCustoms.forEach { (chave, items) ->
+                val (tipo, subtipo) = chave
+                val existing = existingTypes[chave]
                 if (existing != null) {
-                    existingTypes[subtipo] = existing.copy(itens = (existing.itens + items).distinctBy { it.nome.keyify() })
+                    existingTypes[chave] = existing.copy(itens = (existing.itens + items).distinctBy { it.nome.keyify() })
                 } else {
-                    existingTypes[subtipo] = EquipamentoCategoria(
-                        tipo = "EQUIPAMENTO GERAL",
+                    existingTypes[chave] = EquipamentoCategoria(
+                        tipo = tipo,
                         subtipo = subtipo,
                         origem = "CUSTOM",
                         itens = items
@@ -617,8 +621,6 @@ object DataLoader {
             listaCoracoesCrystal = localListaCoracoesCrystal,
             listaAncestralidadesJson = mergedAncestralidades,
             listaMonstroTemplates = localListaMonstroTemplates,
-            racialAttrMinMap = localRacialAttrMinMap,
-            racialSkillStartMap = localRacialSkillStartMap,
             listaAtributos = localListaAtributos,
             mapaAtributosDisplay = localMapaAtributosDisplay,
             listaPericias = localListaPericias,
@@ -718,7 +720,9 @@ object DataLoader {
         item.pmf?.toString(),
         item.malfuncionamento?.toString(),
         item.tensao?.toString(),
-        item.modsSlots?.toString()
+        item.modsSlots?.toString(),
+        item.explosao?.toString(),
+        item.cobertura?.toString()
     ).joinToString("|")
 }
 

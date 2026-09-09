@@ -14,47 +14,52 @@ class ScifiAncestryVariantSyncTest {
         state.listaAncestralidadesJson = listOf(
             RacialModifier(
                 nome = "ANÕES", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ciber")
             ),
             RacialModifier(
                 nome = "CENTAUX", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Gazela")
             ),
             RacialModifier(
                 nome = "AQUARIANOS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Semi-aquáticos")
             ),
             RacialModifier(
                 nome = "DRAKENS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
-                habilidades = emptyList(), opcoes = listOf("Padrão", "Dragão")
+                // FORTE (Força d6) é a raça base ("Padrão"); "Dragão" troca
+                // por Arma de Sopro (Fogo) — ver AncestryVariantRegistry.drakens()
+                // e CriadorState.getAncestralidadeDef() (Drakens não cai mais
+                // no curto-circuito de candidato único).
+                habilidades = listOf(RacialAbility("FORTE", "", id = "FORTE")),
+                opcoes = listOf("Padrão", "Dragão")
             ),
             RacialModifier(
                 nome = "ELEMENTAIS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
-                habilidades = emptyList(), opcoes = listOf("Padrão", "Ar, Fogo ou Água")
+                // MUITO_FORTE (Força d8) e RESISTENCIA +2 são a raça base
+                // ("Padrão"); CriadorState.applyAncestryVariantAdjustments
+                // troca as duas por FORMA_DE_ENERGIA quando "Ar, Fogo ou
+                // Água" é selecionado — ver ancestralidades.json real, que
+                // segue o mesmo formato.
+                habilidades = listOf(
+                    RacialAbility("MUITO FORTE", "", id = "MUITO_FORTE"),
+                    RacialAbility("RESISTÊNCIA +2", "", id = "RESISTENCIA", vezes = 2)
+                ),
+                opcoes = listOf("Padrão", "Ar, Fogo ou Água")
             ),
             RacialModifier(
                 nome = "FERAIS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Menor")
             ),
             RacialModifier(
                 nome = "MÍMICOS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Padrão", "Resistente")
             ),
             RacialModifier(
                 nome = "AVIANOS", origem = "SCI_FI",
-                atributos = emptyMap(), pericias = emptyMap(),
                 habilidades = emptyList(), opcoes = listOf("Básico", "Ave de rapina")
             ),
             RacialModifier(
                 nome = "Umvee (Filhos da Lua)", origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(), pericias = mapOf("Ocultismo" to 0),
                 habilidades = listOf(
                     RacialAbility("Dons da Natureza", "", id = "DONS_DA_NATUREZA"),
                     RacialAbility("Naturalmente Sobrenatural", "", id = "NATURALMENTE_SOBRENATURAL"),
@@ -64,7 +69,6 @@ class ScifiAncestryVariantSyncTest {
             ),
             RacialModifier(
                 nome = "Feral", origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(), pericias = mapOf("Sobrevivência" to 2),
                 habilidades = listOf(
                     RacialAbility("Integrado à Natureza", "", id = "INTEGRADO_A_NATUREZA"),
                     RacialAbility("Insanidade", "", id = "INSANIDADE"),
@@ -94,10 +98,6 @@ class ScifiAncestryVariantSyncTest {
                 superequipCategorias = emptyList(),
                 mapaAtributosDisplay = emptyMap(),
                 mapaPericias = emptyMap(),
-                racialAttrMinMap = mapOf(
-                    "ELEMENTAIS" to mapOf("FORCA" to 8)
-                ),
-                racialSkillStartMap = emptyMap(),
                 arcanoInfo = emptyList(),
                 mapaAtributosDescricao = emptyMap()
             )

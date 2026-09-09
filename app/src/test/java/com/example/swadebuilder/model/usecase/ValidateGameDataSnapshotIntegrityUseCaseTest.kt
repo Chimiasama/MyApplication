@@ -50,8 +50,6 @@ class ValidateGameDataSnapshotIntegrityUseCaseTest {
         listaCoracoesCrystal = emptyList<CrystalHeart>(),
         listaAncestralidadesJson = emptyList<RacialModifier>(),
         listaMonstroTemplates = emptyList(),
-        racialAttrMinMap = emptyMap(),
-        racialSkillStartMap = emptyMap(),
         listaAtributos = emptyList(),
         mapaAtributosDisplay = emptyMap(),
         listaPericias = pericias,

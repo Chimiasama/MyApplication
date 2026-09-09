@@ -38,8 +38,6 @@ class ModuleSnapshotCacheTest {
         listaCoracoesCrystal = emptyList(),
         listaAncestralidadesJson = emptyList(),
         listaMonstroTemplates = emptyList(),
-        racialAttrMinMap = emptyMap(),
-        racialSkillStartMap = emptyMap(),
         listaAtributos = emptyList(),
         mapaAtributosDisplay = emptyMap(),
         listaPericias = listOf(Pericia(nome = "Atirar", atributo = "AGILIDADE", basica = true)),

@@ -154,8 +154,6 @@ class CriadorState {
 
     var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
     var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
-    var racialAttrMinMap by mutableStateOf<Map<String, Map<String, Int>>>(emptyMap())
-    var racialSkillStartMap by mutableStateOf<Map<String, Map<String, Int>>>(emptyMap())
     var arcanoInfo by mutableStateOf<Map<String, Triple<Int, Int, String>>>(emptyMap())
 
     // Optimization: Cache ancestry lookup to avoid O(N) filtering on every access.
@@ -215,8 +213,6 @@ class CriadorState {
         this.superequipCategorias = snapshot.superequipCategorias
         this.mapaAtributosDisplay = snapshot.mapaAtributosDisplay
         this.mapaPericias = snapshot.mapaPericias
-        this.racialAttrMinMap = snapshot.racialAttrMinMap
-        this.racialSkillStartMap = snapshot.racialSkillStartMap
 
         this.arcanoInfo = snapshot.arcanoInfo.associate {
             it.key.uppercase().trim() to Triple(it.slots, it.pp, it.foco)
@@ -319,10 +315,15 @@ class CriadorState {
     var tipoMonstroSelecionado by mutableStateOf<String?>(null)
     var grandesResponsabilidades by mutableStateOf(false)
     var signoAdgSelecionado by mutableStateOf<String?>(null)
-    var pacoteCulturalFantasiaSelecionado by mutableStateOf("Humano padrão")
-    var povoDoMarOpcao by mutableStateOf<String?>(null)
-    var senhoresCavalosExtra by mutableStateOf(false)
-    var senhoresCavalosCompensacao by mutableStateOf<String?>(null)
+    // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si (ex.:
+    // "Nômades do Deserto") é uma Variante de verdade, guardada no mesmo
+    // campo genérico `scifiVariant` que Terracota/Umvee/Elementais já usam
+    // (ver AncestryVariantRegistry.humanoFantasia() — apesar do nome, não é
+    // exclusivo do Sci-Fi). Este campo aqui é só a resposta da Seleção
+    // ANINHADA de dentro de um pacote (compensação de Povo do Mar, grupo
+    // cultural de Senhores dos Cavalos) — guarda o `nome` do FixedPackageOption
+    // escolhido (ex.: "Procurado (Maior)", "Nascido na Sela + Código de Honra").
+    var humanoFantasiaSelecaoAninhada by mutableStateOf<String?>(null)
     var protagonistaRollTecnicas by mutableStateOf<Int?>(null)
     var protagonistaRollPericia by mutableStateOf<Int?>(null)
     var protagonistaRollVantagem by mutableStateOf<Int?>(null)
@@ -498,11 +499,32 @@ class CriadorState {
         // mora a troca Adaptável/Antecedente Arcano (Demônio) por
         // meioDemonioAA; sem isso o toggle nunca era aplicado, mesmo com o
         // jogador escolhendo o AA (bug real, raça sempre ficava travada em
-        // Adaptável). Já o Meio-Elfo do Pathfinder (também candidato único)
-        // depende do contrário — de sair aqui — pra NÃO entrar no ramo
-        // Herança/Adaptável de applyAncestryVariantAdjustments, pensado pra
-        // variante Meio-Elfo de outros livros (CriadorStateRacialTraitDrivenAttributesTest).
-        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO")) {
+        // Adaptável). Elementais e Drakens (Sci-Fi) também precisam passar —
+        // é onde MUITO_FORTE/RESISTENCIA (Elementais Padrão) viram
+        // FORMA_DE_ENERGIA (Ar, Fogo ou Água), e onde FORTE (Drakens Padrão)
+        // é removido pra "Dragão"; sem isso a Força de ambas ficava
+        // hardcoded por nome de raça em vez de vir de habilidades[] (bug
+        // real, corrigido a pedido do usuário). Humanos e Descendente
+        // Elemental (Fantasia) também precisam passar — é onde os Pacotes
+        // Culturais (Povo do Mar/Senhores dos Cavalos) trocam Adaptável
+        // pelos traços do pacote, e onde o elemento escolhido troca a
+        // Resistência Ambiental genérica pela específica; como
+        // `mergedAncestralidades` já dedupa por origem (só sobra 1 entrada
+        // de "Humanos"/"Descendente Elemental" quando apenas o compêndio de
+        // Fantasia está ativo — o caso normal de criação de personagem, um
+        // livro por vez), esses candidatos chegam aqui como candidato único
+        // na prática, não só quando vários livros estão ativos ao mesmo
+        // tempo — cair fora antes de applyAncestryVariantAdjustments deixava
+        // o Pacote Cultural inteiro sem efeito (bug real relatado pelo
+        // usuário: Senhores dos Cavalos não concedia nada e Adaptável
+        // continuava presente). Já o Meio-Elfo do Pathfinder (também
+        // candidato único) depende do contrário — de sair aqui — pra NÃO
+        // entrar no ramo Herança/Adaptável de applyAncestryVariantAdjustments,
+        // pensado pra variante Meio-Elfo de outros livros
+        // (CriadorStateRacialTraitDrivenAttributesTest).
+        val isFantasiaHumanoOuDescElemental = canonicalOriginKey(candidates.first().origem) == "FANTASIA" &&
+            (key.contains("HUMANO") || key == "DESCENDENTE ELEMENTAL" || key == "DESC_ELEMENTAL")
+        if (candidates.size == 1 && !key.contains("UMVEE") && !key.contains("MEIO-DEMONIO") && key != "ELEMENTAIS" && key != "DRAKENS" && !isFantasiaHumanoOuDescElemental) {
             return applyCustomAncestryVariantIfSelected(candidates.first())
         }
 
@@ -634,75 +656,73 @@ class CriadorState {
             }
         }
 
-        // Desconta de base.atributos/base.pericias (mapas numéricos "passos*2
-        // acima de d4", independentes de habilidades[]) o mesmo passo que
-        // RacialTraitPointCatalog atribui a cada traço removido — mesma lógica
-        // de atributoBaseRacial(), mas aplicada aqui pra que currentAncestryDef
-        // já saia correto pra qualquer tela que leia .atributos/.pericias
-        // direto (ex.: o "Ver detalhes" de AncestralidadesSection), não só o
-        // cálculo ao vivo do atributo do personagem.
-        val newAtributos = base.atributos.toMutableMap()
-        val newPericias = base.pericias.toMutableMap()
-        variant.tracosRemovidosIds.forEach { removedId ->
-            when (val efeito = RacialTraitPointCatalog.efeitoDe(removedId)) {
-                is RacialTraitEffect.AtributoStep -> {
-                    val key = newAtributos.keys.firstOrNull { it.keyify() == efeito.atributo.keyify() }
-                    if (key != null) {
-                        newAtributos[key] = maxOf(0, (newAtributos[key] ?: 0) - 2 * efeito.passos)
-                    }
-                }
-                is RacialTraitEffect.PericiaStep -> {
-                    val key = newPericias.keys.firstOrNull { it.keyify() == efeito.pericia.keyify() }
-                    if (key != null) {
-                        newPericias[key] = maxOf(0, (newPericias[key] ?: 0) - efeito.passos)
-                    }
-                }
-                RacialTraitEffect.Nenhum -> Unit
-                // ResistenciaBonus/PassoBonus/ApararBonus/TamanhoBonus/
-                // ArmaduraBonus não têm mapa numérico próprio em
-                // RacialModifier (diferente de atributos/pericias) — o
-                // ModifierEngine já lê o traço removido/presente direto de
-                // tracosRemovidosIds/habilidades, então não há nada a
-                // descontar aqui. Composite só reencaminha pros mesmos casos
-                // acima, um por sub-efeito.
-                is RacialTraitEffect.ResistenciaBonus,
-                is RacialTraitEffect.PassoBonus,
-                is RacialTraitEffect.ApararBonus,
-                is RacialTraitEffect.TamanhoBonus,
-                is RacialTraitEffect.ArmaduraBonus,
-                is RacialTraitEffect.PericiaPoolBonus,
-                is RacialTraitEffect.AtributoPoolBonus,
-                is RacialTraitEffect.Composite -> Unit
-            }
-        }
-
-        return base.copy(
-            habilidades = newHabilidades,
-            atributos = newAtributos,
-            pericias = newPericias
-        )
+        // Não precisa mais descontar manualmente o passo de atributo/perícia de
+        // um traço removido: RacialModifier não carrega mapas numéricos
+        // `atributos`/`pericias` em paralelo a habilidades[] — o traço removido
+        // já sai de `newHabilidades` acima, então qualquer leitura de atributo/
+        // perícia (ao vivo no personagem, ou "Ver detalhes" de
+        // AncestralidadesSection) simplesmente não o encontra mais.
+        return base.copy(habilidades = newHabilidades)
     }
 
     private fun applyAncestryVariantAdjustments(base: RacialModifier, key: String): RacialModifier {
         if (canonicalOriginKey(base.origem) == "FANTASIA" && key.contains("HUMANO")) {
-            if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
-                val newHabilidades = base.habilidades.toMutableList()
+            // Pacotes Culturais: Variante de verdade (mesmo sistema genérico de
+            // Terracota/Umvee/Elementais, ver AncestryVariantRegistry.humanoFantasia()),
+            // não mais um subsistema dedicado. "Humano padrão" não tem VariantOption
+            // própria com conteúdo — resolve() com variantOptionId nulo já devolve um
+            // ResolvedTraitPackage() vazio, então cai no `return base` abaixo.
+            val opcoes = AncestryVariantRegistry.get("HUMANOS", "FANTASIA")?.grupoVariante?.opcoes
+            if (opcoes != null) {
+                val variant = resolveSciFiVariantSelectionFor(base.nome, base.opcoes)
+                val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id
+                    ?: opcoes.firstOrNull { it.nome.keyify() == "PADRAO" }?.id
+                val isPadrao = variantOptionId == null || opcoes.firstOrNull { it.id == variantOptionId }?.nome?.keyify() == "PADRAO"
+                if (isPadrao) return base
 
+                val nestedDef = opcoes.firstOrNull { it.id == variantOptionId }?.selecoes?.firstOrNull()
+                val nestedAnswer = nestedDef?.let { def ->
+                    val matchId = def.pacotesFixos?.firstOrNull {
+                        it.nome.equals(humanoFantasiaSelecaoAninhada, ignoreCase = true)
+                    }?.id
+                    com.example.swadebuilder.model.SelectionAnswer(selectionId = def.id, fixedPackageChoiceId = matchId)
+                }
+                val pack = resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "HUMANOS",
+                    livro = "FANTASIA",
+                    variantOptionId = variantOptionId,
+                    selectionAnswers = listOfNotNull(nestedAnswer)
+                )
+
+                val newHabilidades = base.habilidades.toMutableList()
                 newHabilidades.removeAll {
                     val idKey = (it.id ?: "").keyify()
                     val nameKey = it.nome.keyify()
                     idKey == "ADAPTAVEL" || nameKey == "ADAPTAVEL"
                 }
 
-                when (pacoteCulturalFantasiaSelecionado) {
-                    "Nômades do Deserto" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Frio)", descricao = "Nômades do deserto possuem fraqueza ambiental ao frio.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
-                    "Povo da Montanha" -> newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Fraqueza Ambiental (Calor)", descricao = "O povo da montanha possui fraqueza ambiental ao calor.", id = "FRAQUEZA_AMBIENTAL", category = "racial_trait_negative"))
-                    "Povo do Mar" -> {
-                        if (povoDoMarOpcao == "Penalidade em Cavalgar") {
-                            newHabilidades.add(com.example.swadebuilder.model.RacialAbility(nome = "Penalidade em Cavalgar", descricao = "Subtrai 1 de rolagens de Cavalgar.", id = "PENALIDADE_CAVALGAR", category = "racial_trait_negative"))
-                        }
+                // Só os traços de construção mecânica (aumento de perícia/atributo,
+                // categoria positiva; Fraqueza Ambiental/Penalidade em Cavalgar,
+                // narrativos, categoria negativa) entram em habilidades[] — Vantagens/
+                // Complicações reais (Resistência Ambiental, Procurado, Código de
+                // Honra, Nascido na Sela) são concedidas pelo canal de bookkeeping em
+                // ResolveAncestrySpecificAdjustmentsUseCase, não aqui (mesmo padrão de
+                // Terracota/Umvee).
+                fun addIfAbsent(traco: com.example.swadebuilder.model.TraitAddition, category: String) {
+                    if (newHabilidades.none { it.id == traco.id || it.nome.keyify() == traco.nome.keyify() }) {
+                        newHabilidades.add(
+                            com.example.swadebuilder.model.RacialAbility(
+                                nome = traco.nome,
+                                descricao = "",
+                                id = traco.id,
+                                category = category,
+                                vezes = traco.vezes
+                            )
+                        )
                     }
                 }
+                pack.tracosParaAdicionar.forEach { addIfAbsent(it, "racial_trait_positive") }
+                pack.tracosNegativosParaAdicionar.forEach { addIfAbsent(it, "racial_trait_negative") }
 
                 return base.copy(habilidades = newHabilidades)
             }
@@ -825,6 +845,52 @@ class CriadorState {
                 // But if selection is null, we show filtered list (all - generic).
             }
         }
+
+        // Elementais (Sci-Fi): MUITO_FORTE (Força d8) e RESISTENCIA +2 são
+        // habilidades base em ancestralidades.json, representando a opção
+        // "Padrão". A opção "Ar, Fogo ou Água" troca as duas por Forma de
+        // Energia (livro: "Elementais do ar, fogo e água têm Forma de
+        // Energia em vez de Forte e Resistência") — Força cai pra d4 puro,
+        // sem nenhum traço de atributo (resolvido pelo loop genérico de
+        // AtributoStep em atributoBaseRacial(), sem hardcode de nome de
+        // raça). Isso tira 6 pontos da raça (MUITO_FORTE=4 + RESISTENCIA+2=2)
+        // e Forma de Energia sozinha só repõe 4, então um traço invisível
+        // sem efeito mecânico nenhum (id não cadastrado em EFEITOS, cai em
+        // Nenhum) fecha os 2 pontos que faltam pra manter o total da
+        // variante igual ao de Padrão (ambos em pontosRaciaisEsperados = 2).
+        if (key == "ELEMENTAIS" && variant != "Padrão") {
+            removeByIdOrName("MUITO_FORTE", "MUITO FORTE")
+            removeByIdOrName("RESISTENCIA", "RESISTÊNCIA +2")
+            if (newHabilidades.none { it.id == "FORMA_DE_ENERGIA" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Forma de Energia",
+                        descricao = "Elementais de ar, fogo ou água trocam Forte e Resistência por Forma de Energia.",
+                        id = "FORMA_DE_ENERGIA",
+                        category = "racial_trait_positive"
+                    )
+                )
+            }
+            if (newHabilidades.none { it.id == "AJUSTE_FORMA_DE_ENERGIA" }) {
+                newHabilidades.add(
+                    com.example.swadebuilder.model.RacialAbility(
+                        nome = "Ajuste de Orçamento (Forma de Energia)",
+                        descricao = "",
+                        id = "AJUSTE_FORMA_DE_ENERGIA",
+                        pontos = 2,
+                        invisivel = true
+                    )
+                )
+            }
+        }
+
+        // Drakens (Sci-Fi) não precisa de um bloco dedicado aqui como
+        // Elementais: já está em AncestryVariantRegistry.scifiVariantDrivenKeys,
+        // então o bloco genérico mais abaixo (que lê
+        // AncestryVariantRegistry.drakens() — FORTE removido/Arma de Sopro
+        // (Fogo) adicionada pra "Dragão") já resolve a troca sozinho, agora
+        // que Drakens deixou de cair no curto-circuito de candidato único em
+        // getAncestralidadeDef() (ver comentário lá).
 
         if (key == "QUADROIDES" && variant == "Habilidoso") {
             newHabilidades.removeAll {
@@ -959,12 +1025,13 @@ class CriadorState {
         // agora — fonte única, sem risco de as duas cópias saírem do
         // sincronismo de novo.
         if (key in AncestryVariantRegistry.scifiVariantDrivenKeys) {
-            val opcoes = AncestryVariantRegistry.get(key)?.grupoVariante?.opcoes
+            val opcoes = AncestryVariantRegistry.get(key, "SCI_FI")?.grupoVariante?.opcoes
             if (opcoes != null) {
                 val variantOptionId = opcoes.firstOrNull { it.nome.equals(variant, ignoreCase = true) }?.id
                     ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
                 val pack = resolveAncestryVariantPackageUseCase.resolve(
                     ancestralidadeId = key,
+                    livro = "SCI_FI",
                     variantOptionId = variantOptionId,
                     selectionAnswers = emptyList()
                 )
@@ -1197,65 +1264,49 @@ class CriadorState {
         const val DEFAULT_SOUND_VOLUME = 70
         const val ARTISTA_MARCIAL_JUTSU_D6 = "D6"
         const val ARTISTA_MARCIAL_JUTSU_D4_D4 = "D4_D4"
-        val SIGNOS_ADG = listOf(
-            "Nenhum", "Basabasa", "Boi", "Tigre", "Lebre", "Garça", "Serpente",
-            "Dragão", "Kirin", "Macaco", "Raposa", "Lobo", "Tartaruga", "Urso"
+        // Signos de Nascença (Arte da Guerra, Humanos): cada opção carrega seu
+        // próprio `id` estável, independente do `nome` de exibição — mesmo
+        // princípio de RacialAbility.id/RacialModifier — em vez de todo o
+        // resto do código comparar contra o texto do nome (`.equals("Garça",
+        // ignoreCase = true)`) espalhado por várias funções e arquivos.
+        // `signoAdgSelecionado` continua guardando o `nome` (compatibilidade
+        // com saves antigos e com o dropdown da UI, que já seleciona por
+        // nome) — `signoIdFromNome()` é o único lugar que traduz nome -> id;
+        // toda mecânica (perícia, atributo, vantagem automática, Modifier)
+        // passa a comparar o id. Pacotes Culturais (Fantasia, Humanos) usam
+        // o sistema genérico de Variante (AncestryVariantRegistry.humanoFantasia())
+        // em vez de um catálogo dedicado como este.
+        data class SignoAdg(val id: String, val nome: String, val descricao: String, val descricaoLite: String)
+
+        val SIGNOS_ADG: List<SignoAdg> = listOf(
+            SignoAdg("NENHUM", "Nenhum", "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e slot gratuito de Adaptável).", "Não possui signo; conserva os benefícios padrão do humano Adaptável (15 pontos de perícia e um slot gratuito de Adaptável)."),
+            SignoAdg("BASABASA", "Basabasa", "Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói.", "Concede a Vantagem Atraente; na criação, escolha +1 em Provocar ou em Intimidar contra alvos que se sintam atraídos ou enojados pelo herói."),
+            SignoAdg("BOI", "Boi", "Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir Força (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1.", "Dá +1 em Atletismo em testes baseados em Força (ou em todos os testes de Atletismo, com a Vantagem Brutamontes); também eleva a Força em um tipo de dado, com máximo em d12+1."),
+            SignoAdg("TIGRE", "Tigre", "A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso).", "Aumenta o Raio de Comando em +4 quadros e concede +1 em testes de Medo, reduzindo em 1 o resultado na Tabela de Medo (cumulativo com Corajoso)."),
+            SignoAdg("LEBRE", "Lebre", "Heróis nascidos sob o signo da Lebre exibem qualidades gentis, amáveis e compassivas, com um toque de modéstia. Lebres podem demonstrar características comportamentais de sonhar acordado, escapismo, falta de perspectiva ou timidez em interações sociais. Uma Lebre tem um toque natural (Cura d6) e, com os suprimentos médicos adequados, pode gastar um Bene para tratar um Ferimento com horas ou dias (até 4 dias), como se estivesse sendo tratada dentro da Hora de Ouro. Um personagem pode se beneficiar desse tratamento uma única vez por aventura.", "Começa com Cura d6 e pode gastar um Bene, uma vez por aventura, para tratar um Ferimento até 4 dias depois como se ainda estivesse dentro da Hora de Ouro (com os suprimentos médicos certos)."),
+            SignoAdg("GARCA", "Garça", "Nascidos com o signo da Garça, os indivíduos buscam uma vida de perfeito equilíbrio entre os altos e baixos que ela oferece. Uma Garça é agraciada com graça em seus movimentos e se destaca contra adversários em todas as formas. A Garça possui a fraqueza da insegurança e depende muito dos outros em momentos de dúvida. As garças recebem +1 em Aparar, d4 em Acrobacia e aumentam Atletismo em um tipo de dado.", "Concede +1 em Aparar, Acrobacia inicial d4 e eleva Atletismo em um tipo de dado."),
+            SignoAdg("SERPENTE", "Serpente", "Muitos veem a serpente como astuta e sorrateira, no entanto, o signo da Serpente é um símbolo de sabedoria e mantém um alto nível de astúcia. Serpentes são consideradas sensíveis e emotivas, a maioria é talentosa nas artes. Com essa sensibilidade vem a hesitação e pequenos surtos de leve paranoia. Uma Serpente começa com Jogar d6 ou Performance d6. Usando Jogar, uma Serpente adiciona +1 ao total da diferença se vencer e -1 ao total da diferença se perder. Usando Performance para captação de recursos, altera a porcentagem para 30% e 40% com um sucesso.", "Escolha entre Jogar d6 ou Performance d6 iniciais; em Jogar, soma +1 ao saldo se vencer e -1 se perder, e em Performance para arrecadar fundos, os percentuais sobem para 30%/40% em caso de sucesso."),
+            SignoAdg("DRAGAO", "Dragão", "Nascidos sob o signo do Dragão, os indivíduos são respeitados por serem animados, pacientes e sábios em sua experiência. Muitos dos melhores estrategistas da história são do signo do Dragão. Os dragões tendem a odiar hipocrisia, fofocas e calúnias, e desprezam ser usados ou controlados pelos outros. O Dragão aumenta seu Espírito em um tipo de dado e aumenta seu máximo neste atributo para d12+1. Dragões se beneficiam de +1 em rolagens de Conhecimento Geral quando estão em situações desconhecidas.", "Eleva o Espírito em um tipo de dado (máximo d12+1) e concede +1 em Conhecimento Geral em situações desconhecidas."),
+            SignoAdg("KIRIN", "Kirin", "O nascimento de um Kirin coincide com o final da estação de verão à medida que se aproxima o outono, representando um tempo de coleta e colheita. Um Kirin é proativo e percebe a malícia dos outros por meio de ações independentes. No entanto, um Kirin tende a fazer o que é necessário por conta própria, desconfiando que os outros cumpram suas obrigações. Um Kirin precisa de um incentivo a mais para prosseguir, começando com +1 em sua Reserva de Chi e uma Bene adicional em cada sessão.", "Começa com +1 na Reserva de Chi e recebe um Bene extra a cada sessão."),
+            SignoAdg("MACACO", "Macaco", "O signo do Macaco está associado ao ser cheio de vida, de raciocínio rápido e versátil. Um Macaco é conhecido por tirar o máximo de qualquer situação, mas muitas vezes olha com menosprezo àqueles que não aprendem rapidamente. Muitas vezes, um temperamento impetuoso será a causa das ações de um Macaco. Com este signo de nascença, a Astúcia de um Macaco aumenta em um tipo de dado e seu máximo em aumenta d12+1. Um Macaco rola d4+1 nas perícias não treinadas baseadas em Astúcia, este bônus não se aplica ao dado selvagem.", "Eleva a Astúcia em um tipo de dado (máximo d12+1) e usa d4+1, em vez do padrão, em perícias não treinadas baseadas em Astúcia (o Dado Selvagem não recebe esse bônus)."),
+            SignoAdg("RAPOSA", "Raposa", "Dizem que a Raposa possui uma intuição incrível. Capaz de ler situações sociais e saber exatamente o que as outras pessoas precisam ouvir. Isso não quer dizer que a Raposa seja falsa, é uma demonstração de habilidade e grande cuidado em aspectos de \"Manter as Aparências\". Traição e confiança são preocupações comuns de uma Raposa, levando-a a questionar a lealdade e a amizade de outros. Uma Raposa começa com a Vantagem Elevar a Moral e recebe +1 em Persuadir e nas rolagens da Tabela de Reação.", "Concede a Vantagem Elevar a Moral, além de +1 em Persuadir e nos testes da Tabela de Reação."),
+            SignoAdg("LOBO", "Lobo", "Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial..", "Concede a Vantagem Elo Comum e +1 na Tabela de Reação usada na Reação Inicial."),
+            SignoAdg("TARTARUGA", "Tartaruga", "Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa.", "Concede +1 na Resistência; quem tentar a manobra Finalização contra esse personagem sofre -1 no ataque e no dano dessa tentativa."),
+            SignoAdg("URSO", "Urso", "Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2.", "Eleva o Vigor em um tipo de dado (máximo d12+1) e reduz a penalidade de Exausto para -1 em vez de -2.")
         )
-        val PACOTES_CULTURAIS_FANTASIA = listOf(
-            "Humano padrão",
-            "Nômades do Deserto",
-            "Povo da Montanha",
-            "Povo do Mar",
-            "Senhores dos Cavalos"
+
+        /** Vantagens (por id de vantagens.json) que cada Signo concede automaticamente — única fonte, usada tanto ao selecionar quanto ao restaurar um save. */
+        val SIGNO_VANTAGENS_AUTOMATICAS: Map<String, List<String>> = mapOf(
+            "BASABASA" to listOf("atraente"),
+            "RAPOSA" to listOf("elevar_o_moral"),
+            "LOBO" to listOf("elo_comum"),
+            "KIRIN" to listOf("sorte")
         )
-        val PACOTES_CULTURAIS_FANTASIA_DESC = mapOf(
-            "Humano padrão" to "Mantém o pacote padrão de humanos de Fantasia: Adaptável (uma Vantagem Novato à escolha).",
-            "Nômades do Deserto" to "Começam com d6 em Sobrevivência e Resistência Ambiental (Calor). Também possuem Fraqueza Ambiental (Frio).",
-            "Povo da Montanha" to "Começam com Vigor d6 e Resistência Ambiental (Frio). Também possuem Fraqueza Ambiental (Calor).",
-            "Povo do Mar" to "Começam com d6 em Atletismo e Navegar. Em algumas campanhas, podem ter penalidade em Cavalgar ou Procurado (Maior), a critério do Mestre.",
-            "Senhores dos Cavalos" to "Começam com d6 em Cavalgar. Alguns grupos também concedem Nascido na Sela e/ou complicações culturais como Código de Honra, Sem Escrúpulos e Analfabeto, a critério do Mestre."
-        )
-        // Resumos genéricos para a edição Lite (não reproduzem o texto do livro original).
-        val PACOTES_CULTURAIS_FANTASIA_DESC_LITE = mapOf(
-            "Humano padrão" to "Segue o pacote humano genérico: recebe uma Vantagem de Novato à sua escolha.",
-            "Nômades do Deserto" to "Iniciam com Sobrevivência d6 e resistência a ambientes quentes, mas sofrem penalidade em climas frios.",
-            "Povo da Montanha" to "Vigor inicial d6 e tolerância ao frio, compensados por uma fraqueza a ambientes quentes.",
-            "Povo do Mar" to "Atletismo e Navegar iniciam em d6; dependendo da campanha, o Mestre pode aplicar penalidade em Cavalgar ou a Complicação Procurado (Maior).",
-            "Senhores dos Cavalos" to "Cavalgar inicial d6; a critério do Mestre, o grupo pode ainda conceder Nascido na Sela ou complicações culturais como Código de Honra, Sem Escrúpulos ou Analfabeto."
-        )
-        val SIGNOS_ADG_DESC = mapOf(
-            "Nenhum" to "Sem signo de nascença. Você mantém os benefícios de Humano Adaptável (15 pontos de perícia e slot gratuito de Adaptável).",
-            "Basabasa" to "Aqueles que nasceram no primeiro mês sob o signo de Basabasa geralmente são indivíduos honestos e ambiciosos, conhecidos por uma beleza sobrenatural. Tal alinhamento celestial é ofuscado por uma oscilação de humores excêntricos. Começam as coisas com entusiasmo e logo perdem o interesse, tornando-se voláteis. Um Basabasa tem a Vantagem Atraente e escolhe na criação do personagem entre adicionar +1 às rolagens de Provocar ou Intimidar contra alvos que se sintam atraídos ou desprezem o Herói.",
-            "Boi" to "Aqueles que nasceram sob o signo do Boi são grandes e imponentes, conhecidos por serem diretos e persistentes. Falhas comuns incluem teimosia, franqueza excessiva e inabilidade em expressar emoções. Um Boi recebe +1 em rolagens em Atletismo quando utilizado em situações que podem exigir Força (como escalar ou nadar). Caso o personagem possua a Vantagem Brutamontes, esse benefício se aplica a todas as rolagens de Atletismo. Além disso, este benefício aumenta a Força em um tipo de dado e aumenta seu limite máximo no atributo em d12+1.",
-            "Tigre" to "A herança do signo do Tigre faz com que se tornem destemidos e precisos, realizando atos cavalheirescos dignos de respeito enquanto assumem a liderança. Tigres são naturalmente temperamentais. Em um papel de liderança ou posição de autoridade, tomarão decisões para obter o melhor resultado possível, sem considerar o efeito sobre os outros. Um Tigre tem um alcance de comando de +4 quadros, adiciona +1 nas rolagens de Medo e subtrai 1 dos resultados da Tabela de Medo (isso acumula com a Vantagem Corajoso).",
-            "Lebre" to "Heróis nascidos sob o signo da Lebre exibem qualidades gentis, amáveis e compassivas, com um toque de modéstia. Lebres podem demonstrar características comportamentais de sonhar acordado, escapismo, falta de perspectiva ou timidez em interações sociais. Uma Lebre tem um toque natural (Cura d6) e, com os suprimentos médicos adequados, pode gastar um Bene para tratar um Ferimento com horas ou dias (até 4 dias), como se estivesse sendo tratada dentro da Hora de Ouro. Um personagem pode se beneficiar desse tratamento uma única vez por aventura.",
-            "Garça" to "Nascidos com o signo da Garça, os indivíduos buscam uma vida de perfeito equilíbrio entre os altos e baixos que ela oferece. Uma Garça é agraciada com graça em seus movimentos e se destaca contra adversários em todas as formas. A Garça possui a fraqueza da insegurança e depende muito dos outros em momentos de dúvida. As garças recebem +1 em Aparar, d4 em Acrobacia e aumentam Atletismo em um tipo de dado.",
-            "Serpente" to "Muitos veem a serpente como astuta e sorrateira, no entanto, o signo da Serpente é um símbolo de sabedoria e mantém um alto nível de astúcia. Serpentes são consideradas sensíveis e emotivas, a maioria é talentosa nas artes. Com essa sensibilidade vem a hesitação e pequenos surtos de leve paranoia. Uma Serpente começa com Jogar d6 ou Performance d6. Usando Jogar, uma Serpente adiciona +1 ao total da diferença se vencer e -1 ao total da diferença se perder. Usando Performance para captação de recursos, altera a porcentagem para 30% e 40% com um sucesso.",
-            "Dragão" to "Nascidos sob o signo do Dragão, os indivíduos são respeitados por serem animados, pacientes e sábios em sua experiência. Muitos dos melhores estrategistas da história são do signo do Dragão. Os dragões tendem a odiar hipocrisia, fofocas e calúnias, e desprezam ser usados ou controlados pelos outros. O Dragão aumenta seu Espírito em um tipo de dado e aumenta seu máximo neste atributo para d12+1. Dragões se beneficiam de +1 em rolagens de Conhecimento Geral quando estão em situações desconhecidas.",
-            "Kirin" to "O nascimento de um Kirin coincide com o final da estação de verão à medida que se aproxima o outono, representando um tempo de coleta e colheita. Um Kirin é proativo e percebe a malícia dos outros por meio de ações independentes. No entanto, um Kirin tende a fazer o que é necessário por conta própria, desconfiando que os outros cumpram suas obrigações. Um Kirin precisa de um incentivo a mais para prosseguir, começando com +1 em sua Reserva de Chi e uma Bene adicional em cada sessão.",
-            "Macaco" to "O signo do Macaco está associado ao ser cheio de vida, de raciocínio rápido e versátil. Um Macaco é conhecido por tirar o máximo de qualquer situação, mas muitas vezes olha com menosprezo àqueles que não aprendem rapidamente. Muitas vezes, um temperamento impetuoso será a causa das ações de um Macaco. Com este signo de nascença, a Astúcia de um Macaco aumenta em um tipo de dado e seu máximo em aumenta d12+1. Um Macaco rola d4+1 nas perícias não treinadas baseadas em Astúcia, este bônus não se aplica ao dado selvagem.",
-            "Raposa" to "Dizem que a Raposa possui uma intuição incrível. Capaz de ler situações sociais e saber exatamente o que as outras pessoas precisam ouvir. Isso não quer dizer que a Raposa seja falsa, é uma demonstração de habilidade e grande cuidado em aspectos de \"Manter as Aparências\". Traição e confiança são preocupações comuns de uma Raposa, levando-a a questionar a lealdade e a amizade de outros. Uma Raposa começa com a Vantagem Elevar a Moral e recebe +1 em Persuadir e nas rolagens da Tabela de Reação.",
-            "Lobo" to "Um lobo é um animal social que se sente em casa quando pertence a uma matilha, assim como é verdadeiro para aqueles nascidos sob o signo do Lobo. Um Lobo exibe risos, alegria e comportamento solidário entre amigos, preferindo estar em companhia a sobreviver sozinho. Um Lobo pode sobreviver sozinho, mas prospera dentro de um grupo. Um Lobo começa com as Vantagens Elo Comum e adiciona +1 nas rolagens da Tabela de Reação para Reação Inicial..",
-            "Tartaruga" to "Uma Tartaruga de casca dura é vista como lenta e covarde pelos outros, no entanto, uma Tartaruga possui mais longevidade, paciência e consciência do que aqueles que estão à sua volta. Hesitações na hora de tomar decisões frequentemente fazem uma Tartaruga perder oportunidades. Nascer sob o signo da Tartaruga concede +1 à Resistência. Aqueles que tentarem realizar a manobra “Finalização” em uma Tartaruga recebem -1 nas rolagens de ataque e dano na tentativa.",
-            "Urso" to "Nascido no inverno, um Urso é considerado focado nas necessidades de sobrevivência. Na verdade, um Urso é centrado na família e focado na sobrevivência de cada membro. Isso pode significar que um Urso seja isolacionista e indiferente àqueles que não conhece. Por essa razão, o Vigor de um Urso aumenta em um tipo de dado e seu máximo aumenta para d12+1. Ursos reduzem a penalidade recebida de Exausto para -1 em vez de -2."
-        )
-        // Resumos genéricos para a edição Lite (não reproduzem o texto do livro original).
-        val SIGNOS_ADG_DESC_LITE = mapOf(
-            "Nenhum" to "Não possui signo; conserva os benefícios padrão do humano Adaptável (15 pontos de perícia e um slot gratuito de Adaptável).",
-            "Basabasa" to "Concede a Vantagem Atraente; na criação, escolha +1 em Provocar ou em Intimidar contra alvos que se sintam atraídos ou enojados pelo herói.",
-            "Boi" to "Dá +1 em Atletismo em testes baseados em Força (ou em todos os testes de Atletismo, com a Vantagem Brutamontes); também eleva a Força em um tipo de dado, com máximo em d12+1.",
-            "Tigre" to "Aumenta o Raio de Comando em +4 quadros e concede +1 em testes de Medo, reduzindo em 1 o resultado na Tabela de Medo (cumulativo com Corajoso).",
-            "Lebre" to "Começa com Cura d6 e pode gastar um Bene, uma vez por aventura, para tratar um Ferimento até 4 dias depois como se ainda estivesse dentro da Hora de Ouro (com os suprimentos médicos certos).",
-            "Garça" to "Concede +1 em Aparar, Acrobacia inicial d4 e eleva Atletismo em um tipo de dado.",
-            "Serpente" to "Escolha entre Jogar d6 ou Performance d6 iniciais; em Jogar, soma +1 ao saldo se vencer e -1 se perder, e em Performance para arrecadar fundos, os percentuais sobem para 30%/40% em caso de sucesso.",
-            "Dragão" to "Eleva o Espírito em um tipo de dado (máximo d12+1) e concede +1 em Conhecimento Geral em situações desconhecidas.",
-            "Kirin" to "Começa com +1 na Reserva de Chi e recebe um Bene extra a cada sessão.",
-            "Macaco" to "Eleva a Astúcia em um tipo de dado (máximo d12+1) e usa d4+1, em vez do padrão, em perícias não treinadas baseadas em Astúcia (o Dado Selvagem não recebe esse bônus).",
-            "Raposa" to "Concede a Vantagem Elevar a Moral, além de +1 em Persuadir e nos testes da Tabela de Reação.",
-            "Lobo" to "Concede a Vantagem Elo Comum e +1 na Tabela de Reação usada na Reação Inicial.",
-            "Tartaruga" to "Concede +1 na Resistência; quem tentar a manobra Finalização contra esse personagem sofre -1 no ataque e no dano dessa tentativa.",
-            "Urso" to "Eleva o Vigor em um tipo de dado (máximo d12+1) e reduz a penalidade de Exausto para -1 em vez de -2."
-        )
+
+        fun signoByNome(nome: String?): SignoAdg? =
+            nome?.let { n -> SIGNOS_ADG.firstOrNull { it.nome.equals(n, ignoreCase = true) } }
+
+        fun signoIdFromNome(nome: String?): String? = signoByNome(nome)?.id
     }
     var maisPontosPericias by mutableStateOf(true)
     var cartaSelvagem       by mutableStateOf(true)
@@ -1946,7 +1997,7 @@ class CriadorState {
             // têm `opcoes`, então resolveCurrentSciFiVariantSelection()
             // cairia no Básico do registro Sci-Fi e duplicaria a arma.
             val opcoes = if (compendioSciFiAtivo) {
-                AncestryVariantRegistry.get(ancKey)?.grupoVariante?.opcoes
+                AncestryVariantRegistry.get(ancKey, "SCI_FI")?.grupoVariante?.opcoes
             } else {
                 null
             }
@@ -1956,6 +2007,7 @@ class CriadorState {
                     ?: opcoes.firstOrNull { it.nome.keyify() == "BASICO" || it.nome.keyify() == "PADRAO" }?.id
                 resolveAncestryVariantPackageUseCase.resolve(
                     ancestralidadeId = ancKey,
+                    livro = "SCI_FI",
                     variantOptionId = variantOptionId,
                     selectionAnswers = emptyList()
                 ).armasNaturaisParaAdicionar.forEach { arma -> adicionarArmaNatural(arma) }
@@ -2113,9 +2165,14 @@ class CriadorState {
                 key.contains("TOQUE DA MORTE") ||
                 key.contains("CABECA DURA")
         }
-        val isInsectoid = ancestralidade.keyify().contains("INSETOIDE")
+        // Suprimir "Ataque Natural" pra Insetoides por nome de raça (removido)
+        // era redundante: tanto Insetoides Fantasia (MORDIDA em habilidades[])
+        // quanto Insetoides Sci-Fi Padrão/Vespa (GARRAS/FERRÃO injetados via
+        // AncestryVariantRegistry.insetoidesScifi()) já produzem uma arma
+        // cujo nome bate em `hasSpecificNaturalWeapons` acima — a checagem
+        // por nome nunca chegava a fazer diferença na prática.
 
-        if (!hasSpecificNaturalWeapons && !isInsectoid) {
+        if (!hasSpecificNaturalWeapons) {
             val (unarmedDmg, unarmedNotes) = calculaAtaqueDesarmado()
             weapons.add(
                 EquipamentoItem(
@@ -2146,12 +2203,19 @@ class CriadorState {
         return famaManual
     }
 
+    // Anão (Pathfinder) "Robustez": "Força conta um dado maior para Sobrecarga
+    // e Força Mínima de armaduras" — id próprio (FORCA_CARGA_ARMADURA, ver
+    // ancestralidades.json), lido de habilidades[] em vez de comparar o nome
+    // da raça. Qualquer raça com esse traço ganha o mesmo bônus, não só Anão.
+    private fun temForcaParaCargaEArmadura(): Boolean =
+        currentAncestryDef?.habilidades?.any { it.resolvedTraitId() == "FORCA_CARGA_ARMADURA" } ?: false
+
     fun valorCargaMaxima(): Float {
         val strengthRaw = valoresAtributos["FORCA"]?.intValue ?: 4
         val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
         val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
         val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
-        val hasDwarfLoadBonus = compendioPathfinderAtivo && ancestralidade.keyify() == "ANAO"
+        val hasDwarfLoadBonus = temForcaParaCargaEArmadura()
 
         var stepIndex = if (strengthRaw <= 12) strengthRaw / 2 else 6 + (strengthRaw - 12)
 
@@ -2168,10 +2232,12 @@ class CriadorState {
         val hasSoldado = vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
         val hasMusculoso = vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
         val hasObeso = complicacoesSelecionadas.keys.any { it.id == Constants.ID_OBESO || it.id.keyify() == "OBESO" }
+        val hasDwarfLoadBonus = temForcaParaCargaEArmadura()
 
         var stepIndex = if (strengthRaw <= 12) strengthRaw / 2 else 6 + (strengthRaw - 12)
         if (hasSoldado && soldadoCargaAtivo) stepIndex += 1
         if (hasMusculoso) stepIndex += 1
+        if (hasDwarfLoadBonus) stepIndex += 1
         if (hasObeso) stepIndex = (stepIndex - 1).coerceAtLeast(2)
 
         return if (stepIndex <= 6) stepIndex * 2 else 12 + (stepIndex - 6)
@@ -2342,7 +2408,7 @@ class CriadorState {
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
             ancestralidade.keyify().contains("HUMANO") &&
-            signoAdgSelecionado.equals("Kirin", ignoreCase = true) &&
+            signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             v.id == "sorte"
 
         return kirinSorteAutomatica ||
@@ -2845,7 +2911,8 @@ class CriadorState {
     private fun periciaStartRawInternal(
         anc: String,
         per: Pericia,
-        includeArcaneVantage: ((Vantagem) -> Boolean)?
+        includeArcaneVantage: ((Vantagem) -> Boolean)?,
+        includeTropo: Boolean = true
     ): Int {
         val ancKey = anc.keyify()
         val perKey = per.nome.keyify()
@@ -2865,9 +2932,10 @@ class CriadorState {
             }
         }
 
-        val base = racialSkillStartMap[ancKey]?.get(perKey) ?: defaultBase
-
-        var modifiedBase = base
+        // Piso racial vem só de habilidades[] (SKILL_BOOST/PericiaStep, ver loop
+        // abaixo) — RacialModifier não carrega mais um mapa `pericias` estático
+        // em paralelo.
+        var modifiedBase = defaultBase
 
         val currentDef = if (ancKey == ancestralidade.keyify()) currentAncestryDef else getAncestralidadeDef(anc)
         currentDef?.habilidades?.forEach { hab ->
@@ -2895,19 +2963,19 @@ class CriadorState {
 
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancKey.contains("HUMANO")) {
-            val sign = signoAdgSelecionado
-            if (sign != null) {
+            val signId = signoIdFromNome(signoAdgSelecionado)
+            if (signId != null) {
                 // Lebre: Cura d6
-                if (sign.equals("Lebre", ignoreCase = true) && perKey == "CURAR") {
+                if (signId == "LEBRE" && perKey == "CURAR") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
                 // Garça: Acrobacia d4, Atletismo +1 die type (from base)
-                if (sign.equals("Garça", ignoreCase = true)) {
+                if (signId == "GARCA") {
                     if (perKey == "ACROBACIA") modifiedBase = maxOf(modifiedBase, 4)
                     if (perKey == "ATLETISMO") modifiedBase = maxOf(modifiedBase, 6) // Base d4 -> d6
                 }
                 // Serpente: Jogar OR Performance d6
-                if (sign.equals("Serpente", ignoreCase = true)) {
+                if (signId == "SERPENTE") {
                     val chosen = signoSerpentePericiaEscolhida.keyify()
                     if (perKey == chosen) {
                         modifiedBase = maxOf(modifiedBase, 6)
@@ -2917,92 +2985,19 @@ class CriadorState {
             }
         }
 
-        // Fantasia - Pacotes Culturais (only for Fantasy Humans)
-        if (isHumanoFantasiaSelecionado()) {
-            when (pacoteCulturalFantasiaSelecionado) {
-                "Nômades do Deserto" -> {
-                    if (perKey == "SOBREVIVENCIA") modifiedBase = maxOf(modifiedBase, 6)
-                }
-                "Povo do Mar" -> {
-                    if (perKey == "ATLETISMO" || perKey == "NAVEGAR") {
-                        modifiedBase = maxOf(modifiedBase, 6)
-                    }
-                }
-                "Senhores dos Cavalos" -> {
-                    if (perKey == "CAVALGAR") modifiedBase = maxOf(modifiedBase, 6)
-                }
-            }
-        }
-
-        // Arte da Guerra - Protagonista
-        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
-            val pericias = protagonistaPericiasDoTropo()
-            if (perKey in pericias) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
-
-        // Arte da Guerra - Bu Xista
-        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_buxista") {
-            if (perKey == "CONVENCAO" || perKey == "OCULTISMO") {
-                modifiedBase = if (modifiedBase > 0) {
-                    maxOf(modifiedBase, applySuperStepsFrom(modifiedBase, 1))
-                } else {
-                    maxOf(modifiedBase, 4)
-                }
-            }
-        }
-
-        // Arte da Guerra - Samurai
-        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_samurai") {
-            val samuraiChoice = samuraiPericiaEscolhida?.keyify()
-            val isJutsuChoice = samuraiChoice == "JUTSU"
-            val chosenKey = if (isJutsuChoice) "LUTAR" else samuraiChoice
-            if (chosenKey != null && perKey == chosenKey) {
-                modifiedBase = maxOf(modifiedBase, 6)
-            }
-        }
-
-        // Arte da Guerra - Youxia (Kensai)
-        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_youxia") {
-            if (perKey == "LUTAR" && !youxiaJutsuSelecionado.isNullOrBlank()) {
-                modifiedBase = maxOf(modifiedBase, 4)
-            }
-        }
-
-        // Arte da Guerra - Artista Marcial (Jutsu inicial)
-        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_artista_marcial") {
-            val slotIndex = jutsuSlotIndex(per)
-            if (slotIndex != null) {
-                when (artistaMarcialJutsuOpcao) {
-                    ARTISTA_MARCIAL_JUTSU_D6 -> if (slotIndex == 1) {
-                        modifiedBase = maxOf(modifiedBase, 6)
-                    }
-                    ARTISTA_MARCIAL_JUTSU_D4_D4 -> if (slotIndex == 2) {
-                        modifiedBase = maxOf(modifiedBase, 4)
-                    }
-                }
-            }
-        }
-
-        // Arte da Guerra - Tropos
-        if (compendioArteDaGuerraAtivo) {
-            tropoSelecionado?.let { tropo ->
-                val bonusMap = tropo.periciasGratuitas.mapKeys {
-                    val k = it.key.keyify()
-                    if (k == "JUTSU") "LUTAR" else k
-                }
-                val bonus = bonusMap[perKey]
-                if (bonus != null) {
-                    modifiedBase = maxOf(modifiedBase, bonus)
-                }
-            }
-        }
+        // Pacotes Culturais de Humanos (Fantasia): Sobrevivência/Atletismo/
+        // Navegar/Cavalgar d6 não são mais um "when" hardcoded aqui — os ids
+        // NOMADES_DESERTO_SOBREVIVENCIA/POVO_MAR_ATLETISMO/POVO_MAR_NAVEGAR/
+        // SENHORES_CAVALOS_CAVALGAR entram em habilidades[] via
+        // applyAncestryVariantAdjustments, e o loop genérico de PericiaStep
+        // logo acima já os lê como qualquer outro traço racial.
 
         // Traços que concedem d4/d6 inicial numa perícia à escolha do jogador, ou
         // numa perícia fixa — lidos de habilidades[] (id do traço), não do nome da
         // raça. O traço só decide QUE a raça tem o bônus; qual perícia foi
-        // escolhida continua vindo do state dedicado, como antes.
+        // escolhida continua vindo do state dedicado, como antes. São traços de
+        // RAÇA (não de Tropo), então entram antes do corte de `pisoSemTropo` —
+        // igual a qualquer outro bônus racial, podem esticar o teto da perícia.
         val habilidadeIdsPericia = (if (anc == ancestralidade) currentAncestryDef else getAncestralidadeDef(anc))
             ?.habilidades
             ?.mapNotNull { it.id?.keyify() }
@@ -3045,6 +3040,99 @@ class CriadorState {
             val chosen = usagimimiPericiaEscolhida?.keyify()
             if (chosen != null && perKey == chosen) {
                 modifiedBase = maxOf(modifiedBase, 6)
+            }
+        }
+
+        // Piso "sem Tropo": raça + Monstro + Signo + Pacote Cultural — só isso
+        // alimenta o teto da perícia (periciaCapRaw chama esta função com
+        // includeTropo=false). Um bônus de Tropo pode somar ao valor final
+        // abaixo, mas nunca esticar o teto — só um traço de raça faz isso (a
+        // pedido do usuário: "o bônus do tropo não é o mesmo que perícia de
+        // raça que pode aumentar o valor máximo do teto dela"). Cada bloco de
+        // Tropo abaixo soma em cima de `pisoSemTropo`, nunca em cima de
+        // `modifiedBase` de outro bloco — só um Tropo pode estar selecionado
+        // por vez, mas isso evita qualquer acoplamento acidental entre eles.
+        val pisoSemTropo = modifiedBase
+        if (!includeTropo) return pisoSemTropo
+
+        // Arte da Guerra - Protagonista: livro diz "Essa perícia é aumentada
+        // em um tipo de dado" — bônus RELATIVO ao que o herói já tem (de
+        // raça, por exemplo), não um piso fixo de d6. Isso é a sinergia
+        // raça+tropo pedida: se a raça já concede d6 numa dessas perícias, o
+        // Protagonista sobe pra d8, não trava em d6.
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
+            val pericias = protagonistaPericiasDoTropo()
+            if (perKey in pericias) {
+                modifiedBase = applySuperStepsFrom(pisoSemTropo, 1)
+            }
+        }
+
+        // Arte da Guerra - Bu Xista: livro diz "começam com um d4 em
+        // Convenção e Ocultismo, ou podem aumentar esses dados em um tipo" —
+        // mesma sinergia relativa do Protagonista.
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_buxista") {
+            if (perKey == "CONVENCAO" || perKey == "OCULTISMO") {
+                modifiedBase = applySuperStepsFrom(pisoSemTropo, 1)
+            }
+        }
+
+        // Arte da Guerra - Samurai: livro diz "começa com Conhecimento
+        // Batalha d6" e "pode escolher iniciar com Jutsu ou Atirar em d6" —
+        // piso fixo (sem "aumenta em um tipo"), mas ainda assim não deve
+        // esticar o teto (por isso soma em pisoSemTropo, não seria incluído
+        // se includeTropo=false).
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_samurai") {
+            val samuraiChoice = samuraiPericiaEscolhida?.keyify()
+            val isJutsuChoice = samuraiChoice == "JUTSU"
+            val chosenKey = if (isJutsuChoice) "LUTAR" else samuraiChoice
+            if (chosenKey != null && perKey == chosenKey) {
+                modifiedBase = maxOf(pisoSemTropo, 6)
+            }
+        }
+
+        // Arte da Guerra - Youxia (Kensai): livro diz "Ele aumenta seu Jutsu
+        // inicial associado à arma em um tipo de dado" — relativo, igual ao
+        // Protagonista/Bu Xista.
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_youxia") {
+            if (perKey == "LUTAR" && !youxiaJutsuSelecionado.isNullOrBlank()) {
+                modifiedBase = applySuperStepsFrom(pisoSemTropo, 1)
+            }
+        }
+
+        // Arte da Guerra - Artista Marcial (Jutsu inicial): piso fixo (livro
+        // não usa "aumenta em um tipo" aqui).
+        if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_artista_marcial") {
+            val slotIndex = jutsuSlotIndex(per)
+            if (slotIndex != null) {
+                when (artistaMarcialJutsuOpcao) {
+                    ARTISTA_MARCIAL_JUTSU_D6 -> if (slotIndex == 1) {
+                        modifiedBase = maxOf(pisoSemTropo, 6)
+                    }
+                    ARTISTA_MARCIAL_JUTSU_D4_D4 -> if (slotIndex == 2) {
+                        modifiedBase = maxOf(pisoSemTropo, 4)
+                    }
+                }
+            }
+        }
+
+        // Arte da Guerra - Tropos: bônus fixo genérico direto do catálogo do
+        // próprio Tropo (Samurai/Conhecimento Batalha, Elementalista/Jutsu+
+        // Transição etc.) — piso fixo, mesma regra de não esticar o teto.
+        if (compendioArteDaGuerraAtivo) {
+            tropoSelecionado?.let { tropo ->
+                val bonusMap = tropo.periciasGratuitas.mapKeys {
+                    val k = it.key.keyify()
+                    if (k == "JUTSU") "LUTAR" else k
+                }
+                val bonus = bonusMap[perKey]
+                if (bonus != null) {
+                    // maxOf(modifiedBase, ...), não pisoSemTropo: Bu Xista já
+                    // recebeu seu bônus relativo (maior que este piso fixo)
+                    // no bloco dedicado acima — este bloco genérico não pode
+                    // regredir esse valor pras mesmas perícias (Convenção/
+                    // Ocultismo aparecem nos dois lugares).
+                    modifiedBase = maxOf(modifiedBase, maxOf(pisoSemTropo, bonus))
+                }
             }
         }
 
@@ -3870,7 +3958,7 @@ class CriadorState {
                 // Humans with "Nenhum" sign: +3 points (15 total)
                 // Ignore "maisPontosPericias" checkbox
                 val isHuman = ancestralidade.keyify().contains("HUMANO")
-                val base = 12 + (if (isHuman && signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) 3 else 0) + bonusPontosPericia
+                val base = 12 + (if (isHuman && signoIdFromNome(signoAdgSelecionado) == "NENHUM") 3 else 0) + bonusPontosPericia
                 return (base + cpSpStack.size + spFromProgress + idosoBonusSp - jovemMalusSp).coerceAtLeast(0)
             } else {
                 // Standard Logic
@@ -3902,10 +3990,13 @@ class CriadorState {
     val reservaChi by derivedStateOf {
         // PROMPT: Chi = 2 + (Spirit/2) + bonuses
         val espiritoRaw = valoresAtributos["ESPIRITO"]?.intValue ?: 0
-        val racialPenalty = if (ancestralidade.keyify() == "TERRACOTA") 1 else 0
+        // Terracota "Chi Reduzido" (id CHI_REDUZIDO, ver ancestralidades.json)
+        // já existe em habilidades[] — lido pelo id em vez de comparar o nome
+        // da raça, igual a qualquer outro traço racial.
+        val racialPenalty = if (currentAncestryDef?.habilidades?.any { it.resolvedTraitId() == "CHI_REDUZIDO" } == true) 1 else 0
         val bonusFromChiEdges = vantagensSelecionadas.count { it.categoria == Categoria.CHI }
         val bonusFromTropo = if (compendioArteDaGuerraAtivo) tecnicasIniciaisFromTropo else 0
-        val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoAdgSelecionado?.equals("Kirin", ignoreCase = true) == true) 1 else 0
+        val bonusFromSign = if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO") && signoIdFromNome(signoAdgSelecionado) == "KIRIN") 1 else 0
 
         // Base 2 added as requested
         val baseChi = if (compendioArteDaGuerraAtivo) 2 else 0
@@ -4088,10 +4179,10 @@ class CriadorState {
     }
 
     fun temAdaptavel(): Boolean {
-        if (isHumanoFantasiaSelecionado() && pacoteCulturalFantasiaSelecionado != "Humano padrão") {
-            return false
-        }
-
+        // Pacote Cultural de Humanos (Fantasia) diferente de Padrão: Adaptável
+        // já sai de habilidades[] em applyAncestryVariantAdjustments, então o
+        // check genérico logo abaixo (ADAPTAVEL em ancDef.habilidades) já
+        // reflete isso sem precisar de um caso especial aqui.
         val ancDef = currentAncestryDef
         if (ancDef == null) {
             return false
@@ -4114,7 +4205,7 @@ class CriadorState {
 
         // 4. Arte da Guerra Human: "Nenhum" sign grants Adaptável
         if (compendioArteDaGuerraAtivo && ancDef.habilidades.any { it.id?.keyify() == "ADAPTAVEL_OU_SIGNO" }) {
-            if (signoAdgSelecionado == null || signoAdgSelecionado.equals("Nenhum", ignoreCase = true)) {
+            if (signoAdgSelecionado == null || signoIdFromNome(signoAdgSelecionado) == "NENHUM") {
                 return true
             }
         }
@@ -4278,7 +4369,7 @@ class CriadorState {
         val kirinSorteAutomatica =
             compendioArteDaGuerraAtivo &&
             ancestralidade.keyify().contains("HUMANO") &&
-            signoAdgSelecionado.equals("Kirin", ignoreCase = true) &&
+            signoIdFromNome(signoAdgSelecionado) == "KIRIN" &&
             vantagem.id == "sorte"
         if (kirinSorteAutomatica) {
             return false to "Vantagem automática do Signo."
@@ -4412,31 +4503,16 @@ class CriadorState {
             }
         }.toSet()
 
-    private fun atributoBaseRacial(a: String): Int {
-        // Fix: Use keyified ancestry to match DataLoader map keys
-        var base = racialAttrMinMap[ancestralidade.keyify()]?.get(a.keyify()) ?: 4
+    private fun atributoBaseRacial(a: String, includeTropo: Boolean = true): Int {
+        // Piso racial vem só de habilidades[] (ATTRIBUTE_BOOST/AtributoStep, ver
+        // loop abaixo) — RacialModifier não carrega mais um mapa `atributos`
+        // estático em paralelo. Isso também elimina a necessidade de descontar
+        // manualmente o bônus de um traço removido por Variante de Raça: o traço
+        // já sai de `currentAncestryDef.habilidades` na origem (ver
+        // applyCustomAncestryVariantIfSelected), então o loop abaixo já nunca o
+        // encontra — nada para "desfazer" num mapa que não existe mais.
+        var base = 4
         val attrKey = a.keyify()
-
-        // Se uma Variante custom de raça está ativa e removeu um traço que,
-        // segundo RacialTraitPointCatalog, concedia esse mesmo passo de
-        // atributo (ex.: Anões perdendo Resistente/ROBUSTO = Vigor d6), desconta
-        // o mesmo delta do `base` estático. Sem isso, o bônus continuava vindo
-        // do campo numérico `atributos` da raça (usado pra montar
-        // racialAttrMinMap uma única vez, pro app inteiro, na carga dos dados) —
-        // que nunca é tocado pela Variante, só o habilidades[] descritivo é
-        // (ver applyCustomAncestryVariantIfSelected). Resultado sem este ajuste:
-        // o ponto da Variante fecha (o traço "sai" da lista e devolve o custo),
-        // mas o dado do atributo continua alto de graça.
-        customVarianteRacialSelecionadaId
-            ?.let { id -> listaVariantesRaciaisCustom.firstOrNull { it.id == id } }
-            ?.takeIf { it.ancestralidadeId == ancestralidade.keyify() }
-            ?.tracosRemovidosIds
-            ?.forEach { removedId ->
-                val efeito = RacialTraitPointCatalog.efeitoDe(removedId)
-                if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
-                    base = maxOf(4, base - 2 * efeito.passos)
-                }
-            }
 
         var modifiedBase = base
 
@@ -4493,52 +4569,12 @@ class CriadorState {
             }
         }
 
-        val currentSciFiVariant = if (compendioSciFiAtivo) resolveCurrentSciFiVariantSelection() else scifiVariant
-
         // Sci-Fi Attribute Variants (Padrão vs Variant) — Drakens e Elementais
-        // ainda não têm o traço "Forte"/substituto estruturado no JSON (a
-        // ambientação só descreve a troca em texto livre), então continuam
-        // hardcoded por nome de raça por enquanto; ver nota na revisão.
-        if (compendioSciFiAtivo) {
-            val ancKey = ancestralidade.keyify()
-
-            // Drakens: Padrão (Forte - Str d6), Dragão (No Forte - Str d4)
-            if (ancKey == "DRAKENS") {
-                if (a.keyify() == "FORCA") {
-                    // JSON was cleared to d4. Padrão grants "Forte" (Start d6). Variant grants "Arma de Sopro".
-                    // If Padrão (or default), start d6 (6). If Dragão, start d4 (4).
-                    val variant = currentSciFiVariant ?: "Padrão"
-                    if (variant == "Padrão") {
-                        modifiedBase = maxOf(modifiedBase, 6)
-                    } else {
-                        modifiedBase = 4 // Reset to d4
-                    }
-                }
-            }
-
-            // Elementais: base JSON já é d8 (Padrão, atributos.Força=4 — 2
-            // passos). Seleção "Ar, Fogo ou Água" troca o Forte (d8, +4pts) por
-            // um Forte mais fraco (d6, +2pts) mais Forma de Energia (+4pts) —
-            // ver AncestryVariantRegistry.elementaisScifi: base(-4) + Forma de
-            // Energia(+4) + Força d6(+2) = 2, fecha o orçamento; resetar pra d4
-            // (0pts extra) deixava a raça 2 pontos abaixo. Numérico, então fica
-            // aqui como exceção pontual (mesmo padrão do naturalArmorFromRace de
-            // Pedregoso/Umvee), não faz parte do ResolvedTraitPackage genérico
-            // (AtributoStep não é aplicado por lá — ver ModifierEngine.aplicarEfeito).
-            if (ancKey == "ELEMENTAIS") {
-                if (a.keyify() == "FORCA") {
-                    val variant = currentSciFiVariant ?: "Padrão"
-                    if (variant != "Padrão") {
-                        modifiedBase = 6 // Reset to d6 (Forte fraco, não o d8 de Padrão)
-                    }
-                }
-            }
-
-            // Mineradores Genéticos (FORTE) e Ferais Sci-Fi (ESPIRITUOSO) agora são
-            // resolvidos genericamente acima via habilidadeIds — a remoção do
-            // traço nas variantes Zero G / Menor acontece em
-            // applyAncestryVariantAdjustments, então não precisa de hardcode aqui.
-        }
+        // não precisam mais de exceção numérica aqui: MUITO_FORTE/RESISTENCIA
+        // (Elementais) e FORTE (Drakens) são habilidades base em
+        // ancestralidades.json, e applyAncestryVariantAdjustments troca/remove
+        // o traço certo conforme a opção selecionada — tudo resolvido pelo
+        // loop genérico de AtributoStep logo acima.
 
         // Descendente Elemental (Terra) agora é resolvido genericamente acima via
         // habilidadeIds.contains("SOLIDO_COMO_ROCHA") — esse traço já só existe em
@@ -4548,44 +4584,82 @@ class CriadorState {
 
         // Arte da Guerra - Signos (only for Humans)
         if (compendioArteDaGuerraAtivo && ancestralidade.keyify().contains("HUMANO")) {
-            val sign = signoAdgSelecionado
+            val signId = signoIdFromNome(signoAdgSelecionado)
             val attrKey = a.keyify()
-            if (sign != null) {
-                if (sign.equals("Boi", ignoreCase = true) && attrKey == "FORCA") {
+            if (signId != null) {
+                if (signId == "BOI" && attrKey == "FORCA") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
-                if (sign.equals("Dragão", ignoreCase = true) && attrKey == "ESPIRITO") {
+                if (signId == "DRAGAO" && attrKey == "ESPIRITO") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
-                if (sign.equals("Macaco", ignoreCase = true) && attrKey == "ASTUCIA") {
+                if (signId == "MACACO" && attrKey == "ASTUCIA") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
-                if (sign.equals("Urso", ignoreCase = true) && attrKey == "VIGOR") {
+                if (signId == "URSO" && attrKey == "VIGOR") {
                     modifiedBase = maxOf(modifiedBase, 6)
                 }
             }
         }
 
-        // Arte da Guerra - Protagonista (Qualidades de Herói)
+        // Povo da Montanha (Pacote Cultural de Humanos, Fantasia): Vigor d6 não
+        // é mais um "if" hardcoded aqui — o id POVO_MONTANHA_VIGOR entra em
+        // habilidades[] via applyAncestryVariantAdjustments, e o loop genérico
+        // de AtributoStep logo acima já o lê como qualquer outro traço racial.
+
+        // Piso "sem Tropo": raça + Monstro + escolha racial + Signo + Pacote
+        // Cultural — é isso, e só isso, que alimenta o teto do atributo
+        // (atributoMaxRaw chama esta função com includeTropo=false). Um bônus
+        // de Tropo pode somar ao valor final abaixo, mas nunca esticar o teto
+        // — só um traço de raça faz isso (a pedido do usuário: "o bônus do
+        // tropo não é o mesmo que perícia de raça que pode aumentar o valor
+        // máximo do teto dela").
+        val pisoSemTropo = modifiedBase
+        if (!includeTropo) return pisoSemTropo
+
+        // Arte da Guerra - Protagonista (Qualidades de Herói): livro diz
+        // "aumenta [o atributo] em um tipo de dado" — é um bônus RELATIVO ao
+        // que o herói já tem (de raça, por exemplo), não um piso fixo de d6.
+        // Soma em cima de pisoSemTropo (nunca em cima de modifiedBase, que
+        // aqui é o mesmo valor) via applySuperStepsFrom, igual ao Bu
+        // Xista/Youxia em periciaStartRawInternal.
         if (compendioArteDaGuerraAtivo && tropoSelecionado?.id == "tropo_protagonista") {
             val attrKey = a.keyify()
-            when (protagonistaRollQualidade) {
-                2 -> if (attrKey == "ASTUCIA") modifiedBase = maxOf(modifiedBase, 6)
-                4 -> if (attrKey == "FORCA") modifiedBase = maxOf(modifiedBase, 6)
-                6 -> if (attrKey == "ESPIRITO") modifiedBase = maxOf(modifiedBase, 6)
-                8 -> if (attrKey == "AGILIDADE") modifiedBase = maxOf(modifiedBase, 6)
-                10 -> if (attrKey == "VIGOR") modifiedBase = maxOf(modifiedBase, 6)
+            val qualidadeAttrKey = when (protagonistaRollQualidade) {
+                2 -> "ASTUCIA"
+                4 -> "FORCA"
+                6 -> "ESPIRITO"
+                8 -> "AGILIDADE"
+                10 -> "VIGOR"
+                else -> null
             }
-        }
-
-        if (isHumanoFantasiaSelecionado() &&
-            pacoteCulturalFantasiaSelecionado == "Povo da Montanha" &&
-            a.keyify() == "VIGOR"
-        ) {
-            modifiedBase = maxOf(modifiedBase, 6)
+            if (qualidadeAttrKey == attrKey) {
+                modifiedBase = maxOf(modifiedBase, applySuperStepsFrom(pisoSemTropo, 1))
+            }
         }
 
         return modifiedBase
+    }
+
+    /**
+     * Piso de atributo (raw 4/6/8/10/12) concedido por uma raça a partir só das
+     * `habilidades[]` dela — sem os ajustes de personagem (Variante ativa,
+     * Signo, escolha de cultura etc.) que `atributoBaseRacial()` também aplica
+     * pra CURRENT ancestry. Usado pelos poucos lugares que precisam do piso de
+     * uma raça arbitrária (por nome) fora do fluxo normal de cálculo do
+     * personagem — ver `atributoRawBaseSemSupers()` e a restauração de snapshot.
+     */
+    private fun atributoFloorDeRaca(nomeRaca: String, atributo: String): Int {
+        val habilidades = getAncestralidadeDef(nomeRaca)?.habilidades ?: return 4
+        val attrKey = atributo.keyify()
+        var base = 4
+        habilidades.forEach { hab ->
+            val efeito = RacialTraitPointCatalog.efeitoDe(hab.resolvedTraitId(), hab.targetRef, hab.value)
+            if (efeito is RacialTraitEffect.AtributoStep && efeito.atributo.keyify() == attrKey) {
+                base = maxOf(base, 4 + 2 * efeito.passos)
+            }
+        }
+        return base
     }
 
     fun atributoMaxRawNaCriacao(a: String, forceStandard: Boolean = false): Int {
@@ -4601,7 +4675,7 @@ class CriadorState {
         return baseCap
     }
 
-    private fun isHumanoFantasiaSelecionado(): Boolean {
+    fun isHumanoFantasiaSelecionado(): Boolean {
         if (!compendioFantasiaAtivo) return false
         if (!ancestralidade.keyify().contains("HUMANO")) return false
         val ancDef = currentAncestryDef ?: return false
@@ -4613,7 +4687,11 @@ class CriadorState {
 
     fun atributoMaxRaw(a: String, forceStandard: Boolean = false): Int {
         if (modoLivre && !forceStandard) return 100
-        val minRaw = atributoMinRaw(a)
+        // Teto vem só do piso "sem Tropo" (raça/Monstro/Signo/Pacote Cultural)
+        // — um bônus de Tropo nunca deve esticar o teto do atributo (ver
+        // atributoBaseRacial). atributoMinRaw() continua incluindo o Tropo,
+        // pois é o valor mínimo de verdade que o jogador pode ver/usar.
+        val minRaw = atributoBaseRacial(a, includeTropo = false)
 
         var extras = ((minRaw - 4).coerceAtLeast(0) / 2)
         val baseCap = 12 + extras
@@ -4667,13 +4745,16 @@ class CriadorState {
 
     fun periciaCapRaw(per: Pericia, forceStandard: Boolean = false): Int {
         if (modoLivre && !forceStandard) return 100
-        val startRaw = periciaStartRaw(ancestralidade, per)
+        // Teto vem só do piso "sem Tropo" (raça/Monstro/Signo/Pacote Cultural)
+        // — um bônus de Tropo nunca deve esticar o teto da perícia (ver
+        // periciaStartRawInternal). O valor inicial de fato exibido/usado
+        // continua vindo de periciaStartRaw(), que inclui o Tropo.
+        val startRaw = periciaStartRawInternal(ancestralidade, per, includeArcaneVantage = { true }, includeTropo = false)
 
-        // Meio-Orc (Pathfinder) "Intimidante": começa com d4 em Intimidar (não
-        // d6 — id não cadastrado em RacialTraitPointCatalog.EFEITOS, o d4 vem
-        // do campo estruturado `pericias` em ancestralidades.json, lido por
-        // periciaStartRaw()/racialSkillStartMap), mas o livro ainda amplia o
-        // teto pra d12+1 — a exceção contrária à do Humano (Pathfinder)
+        // Meio-Orc (Pathfinder) "Intimidante": começa com d4 em Intimidar (sem
+        // bônus de dado — não é um AtributoStep/PericiaStep, só o INTIMIDANTE
+        // abaixo), mas o livro ainda amplia o teto pra d12+1 — a exceção
+        // contrária à do Humano (Pathfinder)
         // Adaptável (d6 sem ampliar o máximo). Antes checava por nome de raça
         // (ancestralidade.contains("MEIO-ORC") + compendioPathfinderAtivo);
         // agora lê o id do traço já presente na raça resolvida (INTIMIDANTE,
@@ -4797,6 +4878,15 @@ class CriadorState {
                 availableComplications = listaComplicacoes,
                 selectedComplications = complicacoesSelecionadas,
                 automaticTropoAdvantageIds = vantagensAutomaticasDoTropo.toSet(),
+                additionalProtectedAdvantageIds = (
+                    vantagensAutomaticasDoSigno +
+                        vantagensAutomaticasDoPotencialFisico +
+                        vantagensAutomaticasDoProtagonista +
+                        vantagensSlotProtagonista +
+                        vantagensAutomaticasDoElemento +
+                        samuraiCombatSlotIds +
+                        listOfNotNull(pathfinderFreeSlotId, vantagemAdaptavelSelecionadaId)
+                    ).toSet(),
                 meetsRequirements = { atendeRequisitosMantidos(it) },
                 originPriorityResolver = { getOriginPriority(it) },
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
@@ -4808,6 +4898,7 @@ class CriadorState {
                 anoesScifiSelecionado = anoesScifiSelecionado,
                 scifiVariant = effectiveScifiVariant,
                 humanoMineradorAtributo = humanoMineradorAtributo,
+                humanoFantasiaSelecaoAninhada = humanoFantasiaSelecaoAninhada,
                 anaoCiberTracosSelecionados = anaoCiberTracosSelecionados,
                 quadroidesTracoNegativoSelecionado = quadroidesTracoNegativoSelecionado
             )
@@ -4869,9 +4960,6 @@ class CriadorState {
             ApplyAncestryChangeCoordinatorUseCase.SignoAction.CLEAR -> selecionarSigno(null)
             ApplyAncestryChangeCoordinatorUseCase.SignoAction.KEEP -> Unit
         }
-        if (!isHumanoFantasiaSelecionado()) {
-            pacoteCulturalFantasiaSelecionado = "Humano padrão"
-        }
         celestialAAMilagresDesabilitado = ancestryChangeCoordination.celestialAAMilagresDesabilitado
         if (ancestryChangeCoordination.resetMeioElfoAgil) {
             meioElfoAgil = false
@@ -4885,6 +4973,7 @@ class CriadorState {
         if (ancestryChangeCoordination.resetScifiVariant) {
             scifiVariant = null
             humanoMineradorAtributo = null
+            humanoFantasiaSelecaoAninhada = null
         }
         if (ancestryChangeCoordination.clearPericiaGnomo) {
             selecionarPericiaGnomo(null)
@@ -4914,8 +5003,6 @@ class CriadorState {
 
         racialTraitIdsFromVariants.clear()
         racialTraitIdsFromVariants.addAll(racialPackage.racialTraitIds)
-
-        syncPacoteCulturalFantasia()
 
         naturalArmorFromRace = racialPackage.naturalArmorFromRace
         if (racialPackage.forceArmorZero) {
@@ -5336,13 +5423,7 @@ class CriadorState {
 
         // 2. Add new edges
         if (novoSigno != null) {
-            val edgesToAdd = mutableListOf<String>()
-            when (novoSigno) {
-                "Basabasa" -> edgesToAdd.add("atraente")
-                "Raposa" -> edgesToAdd.add("elevar_o_moral")
-                "Lobo" -> edgesToAdd.add("elo_comum")
-                "Kirin" -> edgesToAdd.add("sorte")
-            }
+            val edgesToAdd = SIGNO_VANTAGENS_AUTOMATICAS[signoIdFromNome(novoSigno)].orEmpty()
 
             edgesToAdd.forEach { edgeId ->
                 val vant = listaVantagens.firstOrNull { it.id == edgeId }
@@ -5369,6 +5450,12 @@ class CriadorState {
         // Also sync legacy state if applicable to avoid mismatches
         if (ancestralidade.keyify().contains("ANOES") && anoesScifiSelecionado != normalized) {
             anoesScifiSelecionado = normalized
+        }
+        // Trocar de Pacote Cultural (Humanos/Fantasia) invalida qualquer Seleção
+        // aninhada da escolha anterior (compensação de Povo do Mar, grupo
+        // cultural de Senhores dos Cavalos).
+        if (ancestralidade.keyify().contains("HUMANO") && humanoFantasiaSelecaoAninhada != null) {
+            humanoFantasiaSelecaoAninhada = null
         }
         val msgs = mutableListOf<String>()
         aplicarAncestralidade(ancestralidade, msgs)
@@ -5474,30 +5561,17 @@ class CriadorState {
         }
     }
 
-    fun selecionarPacoteCulturalFantasia(novoPacote: String) {
-        if (pacoteCulturalFantasiaSelecionado == novoPacote) return
-        pacoteCulturalFantasiaSelecionado = novoPacote
-
-        // Reset sub-options when changing package
-        povoDoMarOpcao = null
-        senhoresCavalosExtra = false
-        senhoresCavalosCompensacao = null
-
-        if (!temAdaptavel() && vantagemAdaptavelSelecionadaId != null) {
-            val toRemove = vantagensSelecionadas.find { it.id == vantagemAdaptavelSelecionadaId }
-            if (toRemove != null) {
-                removerVantagem(toRemove)
-            }
-            vantagemAdaptavelSelecionadaId = null
-        }
-
-        syncPacoteCulturalFantasia()
-        recalcularPontosAtributo()
-        rebuildAllPericiaStacks()
-    }
-
-    fun selecionarPovoDoMarOpcao(opcao: String?): String? {
-        if (povoDoMarOpcao == opcao) return null
+    /**
+     * Seleção aninhada de dentro de um Pacote Cultural de Humanos (Fantasia):
+     * compensação de Povo do Mar (Nenhuma/Penalidade em Cavalgar/Procurado
+     * (Maior)) ou grupo cultural de Senhores dos Cavalos (Nenhum/Nascido na
+     * Sela+Código de Honra/Nascido na Sela+Sem Escrúpulos e Analfabeto) — ver
+     * AncestryVariantRegistry.humanoFantasia(). A escolha do Pacote em si
+     * (Variante externa) usa `selecionarScifiVariant()`, mesmo campo genérico
+     * que Terracota/Umvee/Elementais já usam.
+     */
+    fun selecionarHumanoFantasiaSelecaoAninhada(opcao: String?): String? {
+        if (humanoFantasiaSelecaoAninhada == opcao) return null
 
         if (opcao == "Procurado (Maior)") {
             val temManual = complicacoesSelecionadas.keys.any {
@@ -5506,123 +5580,28 @@ class CriadorState {
             if (temManual) {
                 return "Remova 'Procurado (Maior)' das complicações manuais antes de escolher esta opção."
             }
-        }
-
-        povoDoMarOpcao = opcao
-        syncPacoteCulturalFantasia()
-        rebuildAllPericiaStacks()
-        return null
-    }
-
-    fun toggleSenhoresCavalosExtra(checked: Boolean): String? {
-        if (senhoresCavalosExtra == checked) return null
-
-        if (checked) {
-            val jaTemNascido = vantagensSelecionadas.any { it.id == "nascido_na_sela" && !vantagensRaciais.contains("nascido_na_sela") }
-            if (jaTemNascido) {
-                return "Remova a Vantagem 'Nascido na Sela' manual antes de escolher esta opção."
-            }
-        }
-
-        senhoresCavalosExtra = checked
-        if (!checked) senhoresCavalosCompensacao = null
-        syncPacoteCulturalFantasia()
-        rebuildAllPericiaStacks()
-        return null
-    }
-
-    fun selecionarSenhoresCavalosCompensacao(opcao: String?): String? {
-        if (senhoresCavalosCompensacao == opcao) return null
-
-        if (opcao == "Código de Honra") {
+        } else if (opcao?.contains("Código de Honra") == true) {
             val temManual = complicacoesSelecionadas.keys.any {
                 it.id.keyify() == "CODIGO DE HONRA" && !desvantagensRaciais.contains(it.name)
             }
-            if (temManual) {
-                return "Remova 'Código de Honra' das complicações manuais antes de escolher esta opção."
-            }
-        } else if (opcao == "Sem Escrúpulos e Analfabeto") {
-             val temSemEscrupulos = complicacoesSelecionadas.keys.any { it.id.keyify() == "SEM_ESCRUPULOS" && !desvantagensRaciais.contains(it.name) }
-             val temAnalfabeto = complicacoesSelecionadas.keys.any { it.id.keyify() == "ANALFABETO" && !desvantagensRaciais.contains(it.name) }
+            val jaTemNascido = vantagensSelecionadas.any { it.id == "nascido_na_sela" && !vantagensRaciais.contains("nascido_na_sela") }
+            if (temManual) return "Remova 'Código de Honra' das complicações manuais antes de escolher esta opção."
+            if (jaTemNascido) return "Remova a Vantagem 'Nascido na Sela' manual antes de escolher esta opção."
+        } else if (opcao?.contains("Sem Escrúpulos e Analfabeto") == true) {
+            val temSemEscrupulos = complicacoesSelecionadas.keys.any { it.id.keyify() == "SEM_ESCRUPULOS" && !desvantagensRaciais.contains(it.name) }
+            val temAnalfabeto = complicacoesSelecionadas.keys.any { it.id.keyify() == "ANALFABETO" && !desvantagensRaciais.contains(it.name) }
+            val jaTemNascido = vantagensSelecionadas.any { it.id == "nascido_na_sela" && !vantagensRaciais.contains("nascido_na_sela") }
 
-             if (temSemEscrupulos && temAnalfabeto) return "Remova 'Sem Escrúpulos' e 'Analfabeto' das complicações manuais antes de escolher esta opção."
-             if (temSemEscrupulos) return "Remova 'Sem Escrúpulos' das complicações manuais antes de escolher esta opção."
-             if (temAnalfabeto) return "Remova 'Analfabeto' das complicações manuais antes de escolher esta opção."
+            if (temSemEscrupulos && temAnalfabeto) return "Remova 'Sem Escrúpulos' e 'Analfabeto' das complicações manuais antes de escolher esta opção."
+            if (temSemEscrupulos) return "Remova 'Sem Escrúpulos' das complicações manuais antes de escolher esta opção."
+            if (temAnalfabeto) return "Remova 'Analfabeto' das complicações manuais antes de escolher esta opção."
+            if (jaTemNascido) return "Remova a Vantagem 'Nascido na Sela' manual antes de escolher esta opção."
         }
 
-        senhoresCavalosCompensacao = opcao
-        syncPacoteCulturalFantasia()
-        rebuildAllPericiaStacks()
+        humanoFantasiaSelecaoAninhada = opcao
+        val msgs = mutableListOf<String>()
+        aplicarAncestralidade(ancestralidade, msgs)
         return null
-    }
-
-    private fun syncPacoteCulturalFantasia() {
-        if (!isHumanoFantasiaSelecionado()) return
-
-        val ancDef = currentAncestryDef
-
-        // --- Atualiza Vantagens Raciais ---
-        val baseVantagens = ancDef?.let { effectiveVantagensGratis(it) } ?: emptyList()
-        val extrasVantagens = mutableListOf<String>()
-
-        when (pacoteCulturalFantasiaSelecionado) {
-            "Nômades do Deserto" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Calor)")
-            "Povo da Montanha" -> extrasVantagens.add("RESISTÊNCIA AMBIENTAL (Frio)")
-            "Senhores dos Cavalos" -> {
-                if (senhoresCavalosExtra) {
-                    extrasVantagens.add("nascido_na_sela")
-                }
-            }
-        }
-
-        // Remove "ADAPTAVEL" se não for Humano Padrão (embora temAdaptavel() já trate a lógica,
-        // é bom limpar a lista visual se estiver sendo usada para display)
-        val filteredBaseVantagens = if (pacoteCulturalFantasiaSelecionado != "Humano padrão") {
-            baseVantagens.filter { it.keyify() != "ADAPTAVEL" }
-        } else {
-            baseVantagens
-        }
-
-        vantagensRaciais.clear()
-        vantagensRaciais.addAll(filteredBaseVantagens + extrasVantagens)
-
-        // --- Atualiza Desvantagens Raciais ---
-        val baseDesvantagens = ancDef?.let { effectiveDesvantagens(it) } ?: emptyList()
-        val extrasDesvantagens = mutableListOf<String>()
-
-        when (pacoteCulturalFantasiaSelecionado) {
-            "Povo do Mar" -> {
-                if (povoDoMarOpcao == "Procurado (Maior)") {
-                    extrasDesvantagens.add("PROCURADO (Maior)")
-                }
-            }
-            "Senhores dos Cavalos" -> {
-                if (senhoresCavalosExtra) {
-                    if (senhoresCavalosCompensacao == "Código de Honra") {
-                        extrasDesvantagens.add("CODIGO DE HONRA")
-                    } else if (senhoresCavalosCompensacao == "Sem Escrúpulos e Analfabeto") {
-                        extrasDesvantagens.add("SEM ESCRÚPULOS (Menor)")
-                        extrasDesvantagens.add("ANALFABETO")
-                    }
-                }
-            }
-        }
-
-        val oldAuto = desvantagensRaciais.toList()
-        desvantagensRaciais.clear()
-        desvantagensRaciais.addAll(baseDesvantagens + extrasDesvantagens)
-
-        val snapshot = resolveAncestryComplicationsSnapshotUseCase.execute(
-            ResolveAncestryComplicationsSnapshotUseCase.Params(
-                previousAutomaticDisadvantages = oldAuto,
-                currentAutomaticDisadvantages = desvantagensRaciais.toList(),
-                availableComplications = listaComplicacoes,
-                selectedComplications = complicacoesSelecionadas,
-                originPriorityResolver = { getOriginPriority(it) }
-            )
-        )
-        complicacoesSelecionadas.clear()
-        complicacoesSelecionadas.putAll(snapshot.selectedComplications)
     }
 
     private fun syncArtistaMarcialPotencialFisico() {
@@ -5824,6 +5803,7 @@ class CriadorState {
         if (protagonistaRollHabilidade == value) return
         protagonistaRollHabilidade = value?.coerceIn(1, 12)
         syncProtagonistaBonusPv()
+        atualizarProtagonistaAutoVantagens()
     }
 
     fun updateProtagonistaPericiasEscolhidas(value: List<String>) {
@@ -5877,11 +5857,17 @@ class CriadorState {
             vantagensAutomaticasDoProtagonista.clear()
         }
 
-        val qualidade = protagonistaRollQualidade ?: return
-        val edgesToAdd = when (qualidade) {
-            1 -> listOf("corajoso", "elevar_o_moral")
-            3 -> listOf("confiavel", "comando")
-            else -> emptyList()
+        val edgesToAdd = mutableListOf<String>()
+        when (protagonistaRollQualidade) {
+            1 -> edgesToAdd.addAll(listOf("corajoso", "elevar_o_moral"))
+            3 -> edgesToAdd.addAll(listOf("confiavel", "comando"))
+        }
+        // Habilidades (d12) resultado 7 "Companheiro": ganha a Vantagem Senhor
+        // das Feras. O companheiro Carta Selvagem em si (a criatura) não tem
+        // sistema de ajudante/animal no app — fora de escopo por enquanto —
+        // então só a Vantagem concedida é resolvida aqui.
+        if (protagonistaRollHabilidade == 7) {
+            edgesToAdd.add("senhor_das_feras")
         }
 
         edgesToAdd.forEach { edgeId ->
@@ -6407,8 +6393,7 @@ class CriadorState {
 
     fun atributoRawBaseSemSupers(attrKey: String): Int {
         val key = attrKey.uppercase().trim()
-        val mods = racialAttrMinMap[ancestralidade] ?: emptyMap()
-        val baseMin = mods[key] ?: 4
+        val baseMin = atributoFloorDeRaca(ancestralidade, key)
 
         // Quantos "steps" base foram comprados na criação
         val stepsBase = paCostStackPorAtributo[key]?.size ?: 0
@@ -6623,10 +6608,7 @@ class CriadorState {
                 portraitOffsetY = portraitOffsetY,
                 portraitZoom = portraitZoom,
                 signoAdgSelecionado = signoAdgSelecionado,
-                pacoteCulturalFantasiaSelecionado = pacoteCulturalFantasiaSelecionado,
-                povoDoMarOpcao = povoDoMarOpcao,
-                senhoresCavalosExtra = senhoresCavalosExtra,
-                senhoresCavalosCompensacao = senhoresCavalosCompensacao,
+                humanoFantasiaSelecaoAninhada = humanoFantasiaSelecaoAninhada,
                 artistaMarcialJutsuOpcao = artistaMarcialJutsuOpcao,
                 artistaMarcialPotencialFisico = artistaMarcialPotencialFisico,
                 artistaMarcialTecnicasSelecionadas = artistaMarcialTecnicasSelecionadas.toList(),
@@ -6772,19 +6754,9 @@ class CriadorState {
 
         // Restore sign automatic advantages logic
         vantagensAutomaticasDoSigno.clear()
-        if (signoAdgSelecionado != null) {
-            when (signoAdgSelecionado) {
-                "Basabasa" -> vantagensAutomaticasDoSigno.add("atraente")
-                "Raposa" -> vantagensAutomaticasDoSigno.add("elevar_o_moral")
-                "Lobo" -> vantagensAutomaticasDoSigno.add("elo_comum")
-                "Kirin" -> vantagensAutomaticasDoSigno.add("sorte")
-            }
-        }
+        vantagensAutomaticasDoSigno.addAll(SIGNO_VANTAGENS_AUTOMATICAS[signoIdFromNome(signoAdgSelecionado)].orEmpty())
 
-        pacoteCulturalFantasiaSelecionado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado ?: "Humano padrão"
-        povoDoMarOpcao = snapshot.selecoes.povoDoMarOpcao
-        senhoresCavalosExtra = snapshot.selecoes.senhoresCavalosExtra ?: false
-        senhoresCavalosCompensacao = snapshot.selecoes.senhoresCavalosCompensacao
+        humanoFantasiaSelecaoAninhada = snapshot.selecoes.humanoFantasiaSelecaoAninhada
         artistaMarcialJutsuOpcao = snapshot.selecoes.artistaMarcialJutsuOpcao ?: ARTISTA_MARCIAL_JUTSU_D6
         artistaMarcialPotencialFisico = snapshot.selecoes.artistaMarcialPotencialFisico
         artistaMarcialTecnicasSelecionadas.clear()
@@ -6818,6 +6790,28 @@ class CriadorState {
         dominioClerigoPathfinderSelecionado = snapshot.selecoes.dominioClerigoPathfinderSelecionado
         anoesScifiSelecionado = snapshot.selecoes.anoesScifiSelecionado
         scifiVariant = snapshot.selecoes.scifiVariant
+
+        // Compatibilidade com saves salvos antes do Pacote Cultural de Humanos
+        // (Fantasia) migrar pro sistema genérico de Variante: o nome do pacote
+        // batia 1:1 com o nome da VariantOption nova, então dá pra migrar por
+        // igualdade direta de texto. Só roda quando o save é realmente antigo
+        // (`scifiVariant` vazio E um pacote legado != "Humano padrão" salvo) —
+        // um save já migrado nunca teria os dois campos preenchidos ao mesmo
+        // tempo, então isto nunca sobrescreve uma escolha nova.
+        val pacoteLegado = snapshot.selecoes.pacoteCulturalFantasiaSelecionado
+        if (scifiVariant == null && pacoteLegado != null && pacoteLegado != "Humano padrão") {
+            scifiVariant = pacoteLegado
+            humanoFantasiaSelecaoAninhada = when {
+                snapshot.selecoes.povoDoMarOpcao != null -> snapshot.selecoes.povoDoMarOpcao
+                snapshot.selecoes.senhoresCavalosExtra == true -> when (snapshot.selecoes.senhoresCavalosCompensacao) {
+                    "Código de Honra" -> "Nascido na Sela + Código de Honra"
+                    "Sem Escrúpulos e Analfabeto" -> "Nascido na Sela + Sem Escrúpulos e Analfabeto"
+                    else -> "Nascido na Sela"
+                }
+                else -> null
+            }
+        }
+
         anaoCiberTracosSelecionados = snapshot.selecoes.anaoCiberTracosSelecionados
         quadroidesTracoNegativoSelecionado = snapshot.selecoes.quadroidesTracoNegativoSelecionado
         vantagemAdaptavelSelecionadaId = snapshot.selecoes.vantagemAdaptavelSelecionadaId
@@ -6877,7 +6871,9 @@ class CriadorState {
         // o toggle automaticamente pra não esconder a escolha que o jogador
         // já tinha feito.
         if (!optVariantesDeRacaAtivo) {
-            val config = AncestryVariantRegistry.get(snapshot.atributos.ancestralidade.keyify())
+            val livroSnapshot = getAncestralidadeDef(snapshot.atributos.ancestralidade)?.origem
+                ?.let { canonicalOriginKey(it) } ?: "BASICO"
+            val config = AncestryVariantRegistry.get(snapshot.atributos.ancestralidade.keyify(), livroSnapshot)
             val isSelecaoPura = config != null && config.grupoVariante == null
             if (!isSelecaoPura) {
                 val scifiVariantJaEscolhida = scifiVariant != null && scifiVariant !in setOf("Básico", "Padrão")
@@ -6896,7 +6892,7 @@ class CriadorState {
         paCostStackPorAtributo.forEach { (attr, stack) ->
             stack.clear()
             stack.addAll(snapshot.atributos.paCostStackPorAtributo[attr].orEmpty())
-            val base = racialAttrMinMap[snapshot.atributos.ancestralidade]?.get(attr) ?: 4
+            val base = atributoFloorDeRaca(snapshot.atributos.ancestralidade, attr)
             valoresAtributos[attr]!!.intValue = applySuperStepsFrom(base, stack.size)
         }
         pontosAtributo = snapshot.recursos.pontosAtributo

@@ -151,6 +151,23 @@ object RacialTraitPointCatalog {
         "SENTIDOS_APURADOS" to RacialTraitEffect.PericiaStep("Perceber"),
         "SORRATEIRO" to RacialTraitEffect.PericiaStep("Furtividade"),
         "TRAPALHOES_TRAVESSOS" to RacialTraitEffect.PericiaStep("Furtividade"),
+        // Traços já existiam com texto de livro descrevendo o bônus numérico
+        // ("começa com d6 em X"), mas nunca tinham sido ligados a um efeito
+        // mecânico aqui — descoberto ao remover o mapa estático `pericias` de
+        // RacialModifier (ver auditoria da migração), que era quem cobria
+        // esse bônus até então pra Akaimimi/Nekomimi (Arte da Guerra).
+        "CONHECIMENTO_GERAL" to RacialTraitEffect.PericiaStep("Conhecimento Geral"), // Akaimimi: "começa com Conhecimento Geral d6"
+        "DICAS_CULTURAIS" to RacialTraitEffect.PericiaStep("Convenção"), // Akaimimi: "começando com um d6 em Convenção"
+        "BRINCANDO_COM_O_DESTINO" to RacialTraitEffect.PericiaStep("Jogar"), // Nekomimi: "Começam com d6 em Jogar"
+
+        // Humanos (Fantasia) - Pacotes Culturais: cada opção de Variante
+        // concede um piso de atributo/perícia igual a qualquer outra raça —
+        // ver AncestryVariantRegistry.humanoFantasia().
+        "NOMADES_DESERTO_SOBREVIVENCIA" to RacialTraitEffect.PericiaStep("Sobrevivência"), // livro: "começam com um d6 em Sobrevivência"
+        "POVO_MONTANHA_VIGOR" to RacialTraitEffect.AtributoStep("Vigor"), // livro: "Começam com Vigor d6"
+        "POVO_MAR_ATLETISMO" to RacialTraitEffect.PericiaStep("Atletismo"), // livro: "começando com um d6 em Atletismo e Navegar"
+        "POVO_MAR_NAVEGAR" to RacialTraitEffect.PericiaStep("Navegar"),
+        "SENHORES_CAVALOS_CAVALGAR" to RacialTraitEffect.PericiaStep("Cavalgar"), // livro: "devem começar com um d6 em Cavalgar"
 
         // Resistência/Passo/Aparar de valor fixo. Cada id abaixo tem um valor
         // único e consistente conferido contra a própria descrição da
@@ -270,6 +287,7 @@ object RacialTraitPointCatalog {
         "MOVIMENTACAO" to "Movimentação +2",
         "ESGUIOS" to "Esguios",
         "FEROCIDADE_ORC" to "Ferocidade Orc",
+        "FORCA_CARGA_ARMADURA" to "Robustez (Força +1 para Carga/Armadura)",
         "FRAGIL" to "Frágil",
         "LENTO" to "Lento",
         "METADE_CONSTRUTO" to "Metade Construto",
@@ -537,6 +555,12 @@ object RacialTraitPointCatalog {
         // skin no nome), igual ao padrão de Mente de Colmeia.
         "DICAS_CULTURAIS" to 2, // oficial: pericia_racial_d6 (Convenção d6)
         "DIGESTAO_GLORIOSA" to 2, // skin de Imune a Doenças e Venenos (IMUNE_DOENCAS_VENENOS), Araiguma
+        // Humanos (Fantasia) - Pacotes Culturais (ver AncestryVariantRegistry.humanoFantasia())
+        "NOMADES_DESERTO_SOBREVIVENCIA" to 2, // oficial: pericia_racial_d6 (Sobrevivência d6)
+        "POVO_MONTANHA_VIGOR" to 2, // oficial: aumento_atributo (Vigor d6)
+        "POVO_MAR_ATLETISMO" to 2, // oficial: pericia_racial_d6 (Atletismo d6)
+        "POVO_MAR_NAVEGAR" to 2, // oficial: pericia_racial_d6 (Navegar d6)
+        "SENHORES_CAVALOS_CAVALGAR" to 2, // oficial: pericia_racial_d6 (Cavalgar d6)
         // Confirmado direto no livro (Fantasia/Sci-Fi, "Diminuto (1)"): 2 pontos
         // Pequeno (Tamanho -2), 4 pontos Muito Pequeno (Tamanho -3), 6 pontos
         // Minúsculo (Tamanho -4). DIMINUTO_TAMANHO_3 valia 5 por engano (chute
@@ -592,6 +616,13 @@ object RacialTraitPointCatalog {
         "FLEXIBILIDADE" to 2,
         "FOBIA" to -1, // oficial: complicacao_racial_menor
         "FORASTEIRO" to -2, // Complicação real (complicacoes.json), severidade Maior escolhida pela raça
+        // Anão (Pathfinder): "Força conta um dado maior para Sobrecarga e
+        // Força Mínima de armaduras" — separado de RESISTENTE (que só cobre o
+        // Vigor d6) pra virar um id próprio em vez de comparar nome de raça
+        // em valorCargaMaxima()/forcaEfetivaParaArmaduras(). Custo 0: já
+        // embutido no custo de RESISTENTE (2) pra esta raça — as duas juntas
+        // ainda fecham em pontosRaciaisEsperados=4, igual antes da divisão.
+        "FORCA_CARGA_ARMADURA" to 0,
         "FORCA_SOBRENATURAL" to 2, // oficial: aumento_atributo
         "FORMA_ALIENIGENA" to -1, // oficial: forma_alienigena — mesmo traço reaproveitado por
         // Centauros ("FORMA INCOMUM") e Insetoides Fantasia ("FORMATO CORPORAL INCOMUM"),

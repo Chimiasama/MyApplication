@@ -1,6 +1,7 @@
 package com.example.swadebuilder.model
 
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.util.ForcaMinimaCalculator
 import com.example.swadebuilder.util.keyify
 
 enum class ModifierTarget {
@@ -62,6 +63,37 @@ object ModifierEngine {
                         )
                     )
                 }
+            }
+        }
+
+        // 1b. Penalidade de Movimentação por Força insuficiente (livro básico, "Força
+        // Mínima > Armadura/Equipamento Vestidos"): -1 Movimentação por passo de tipo de
+        // dado que a Força do personagem fica abaixo do mínimo da peça, cumulativo entre
+        // itens vestidos. A perna gêmea dessa regra (mesma penalidade em Agilidade e em
+        // perícias ligadas a Agilidade) é uma penalidade situacional de ROLAGEM, não um
+        // stat fixo — por isso só vira nota de texto na ficha (ver ResumoSection.kt),
+        // nunca um Modifier aqui.
+        val forcaRawParaArmadura = state.valoresAtributos["FORCA"]?.intValue ?: 4
+        state.equipamentosComprados.forEach { item ->
+            if (item.armadura == null) return@forEach
+            val isMechaOrVehicle = item.subtipo?.uppercase()?.let { s ->
+                s.contains("VEICULO") || s.contains("VEÍCULO") ||
+                        s.contains("CHASSIS") || s.contains("MECHA")
+            } == true
+            if (isMechaOrVehicle) return@forEach
+
+            val forcaMinTexto = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+            val passos = ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRawParaArmadura, forcaMinTexto)
+            if (passos > 0) {
+                modifiers.add(
+                    Modifier(
+                        id = "forca_min_pace_${item.nome.keyify()}",
+                        sourceType = SourceType.OUTRO,
+                        sourceName = item.nome,
+                        target = ModifierTarget.PACE,
+                        value = -passos
+                    )
+                )
             }
         }
 
@@ -303,9 +335,6 @@ object ModifierEngine {
                 modifiers.add(Modifier("edge_musculoso_size", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_DISPLAY, 1))
                 modifiers.add(Modifier("edge_musculoso_tough", SourceType.VANTAGEM, vant.nome, ModifierTarget.SIZE_TOUGHNESS, 1))
             }
-            if (vant.id == Constants.ID_BRUTAMONTES) {
-                modifiers.add(Modifier("edge_brutamontes", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
-            }
         if (vant.id == Constants.ID_BRIGAO || vant.id == Constants.ID_PUGILISTA || vant.id.keyify() == "PUGILISTA") {
                 modifiers.add(Modifier("edge_brigao", SourceType.VANTAGEM, vant.nome, ModifierTarget.TOUGHNESS_FLAT, 1))
             }
@@ -356,15 +385,27 @@ object ModifierEngine {
 
         // 6. Signos (Arte da Guerra)
         if (state.compendioArteDaGuerraAtivo && state.ancestralidade.keyify().contains("HUMANO")) {
-            val sign = state.signoAdgSelecionado
-            if (sign != null) {
-                if (sign.equals("Tartaruga", ignoreCase = true)) {
+            val signId = CriadorState.signoIdFromNome(state.signoAdgSelecionado)
+            if (signId != null) {
+                if (signId == "TARTARUGA") {
                     modifiers.add(Modifier("sign_tartaruga_tough", SourceType.OUTRO, "Signo Tartaruga", ModifierTarget.TOUGHNESS_FLAT, 1))
                 }
-                if (sign.equals("Garça", ignoreCase = true)) {
+                if (signId == "GARCA") {
                     modifiers.add(Modifier("sign_garca_parry", SourceType.OUTRO, "Signo Garça", ModifierTarget.PARRY, 1))
                 }
             }
+        }
+
+        // 6b. Arte da Guerra - Protagonista, Habilidades (d12) resultado 9
+        // "Velocidade Incomum": livro diz "dobra sua Movimentação básica" —
+        // a base é sempre 6 neste app (valorMovimentacao()), então +6 aqui
+        // dobra exatamente a base, mantendo os outros modificadores de Passo
+        // (raça, Vantagens, Complicações) somando normalmente por cima.
+        if (state.compendioArteDaGuerraAtivo &&
+            state.tropoSelecionado?.id == "tropo_protagonista" &&
+            state.protagonistaRollHabilidade == 9
+        ) {
+            modifiers.add(Modifier("protagonista_velocidade_incomum_pace", SourceType.OUTRO, "Velocidade Incomum", ModifierTarget.PACE, 6))
         }
 
         // 7. Equipment Toughness (Resistência)

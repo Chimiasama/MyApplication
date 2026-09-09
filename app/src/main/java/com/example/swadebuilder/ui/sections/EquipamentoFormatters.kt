@@ -25,6 +25,7 @@ fun EquipamentoItem.toResumo(): EquipamentoResumo {
         distancia.asText()?.let { "Distância: $it" },
         tiros.asText()?.let { "Tiros: $it" },
         pmf.asText()?.let { "PMF: $it" },
+        explosao.asText()?.let { "Área de Efeito: $it" },
     ).joinToString("  •  ")
         .takeIf { it.isNotBlank() }
 
@@ -33,6 +34,7 @@ fun EquipamentoItem.toResumo(): EquipamentoResumo {
         forcaMin.asText()?.let { "Força mín.: $it" },
         armadura.asText()?.let { "Armadura: $it" },
         aparar.asText()?.let { "Aparar: $it" },
+        cobertura.asText()?.let { "Cobertura: $it" },
     ).joinToString("  •  ")
         .takeIf { it.isNotBlank() }
 

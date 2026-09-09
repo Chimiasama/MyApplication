@@ -88,9 +88,14 @@ private fun primeiroCustoSuperPoder(custoBase: String?): Int =
  * categoria com pequenas inconsistências (algumas usavam Row sem quebra de linha, que cortava
  * os chips em telas estreitas quando havia várias opções).
  */
+/**
+ * Sem `private`: além de usado nas outras categorias deste diálogo, é reaproveitado por
+ * EquipamentoCreatorForm.kt (categoria "Equipamento" foi extraída pra lá — ver comentário
+ * no topo daquele arquivo).
+ */
 @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
-private fun LabeledChipGroup(
+fun LabeledChipGroup(
     label: String,
     modifier: Modifier = Modifier,
     content: @Composable androidx.compose.foundation.layout.FlowRowScope.() -> Unit
@@ -352,11 +357,11 @@ fun SettingsDialog(
                         var showEdgeDialog by remember { mutableStateOf(false) }
                         var showCompDialog by remember { mutableStateOf(false) }
                         var customSeverity by remember { mutableStateOf("Maior") }
-                        var customEquipSuperType by remember { mutableStateOf("Arma") }
-                        var customEquipSubtype by remember { mutableStateOf("Corpo a Corpo") }
-                        var customCost by remember { mutableStateOf("0") }
-                        var customWeight by remember { mutableStateOf("0") }
-                        var customDamage by remember { mutableStateOf("") }
+                        // Categoria "Equipamento" extraída pra EquipamentoCreatorForm.kt — já
+                        // tinha crescido demais (Tipo/Subtipo, dano estruturado, Força Mínima,
+                        // estatísticas de arma/armadura/escudo/veículo) pra continuar inline
+                        // aqui junto com as outras 8 categorias deste diálogo.
+                        val equipForm = rememberEquipamentoFormState()
                         var customPp by remember { mutableStateOf("1") }
                         var customSuperPoderCustoBase by remember { mutableStateOf("2") }
                         // Um modificador por linha, no mesmo formato usado pelo catálogo oficial
@@ -382,6 +387,15 @@ fun SettingsDialog(
                         var customTraitEfeitoValor by remember { mutableStateOf("") }
                         var selectedRacialTraits by remember { mutableStateOf(listOf<com.example.swadebuilder.model.HabilidadeCriacao>()) }
                         var showTraitSelectDialog by remember { mutableStateOf(false) }
+                        // Completude da criação de Raça: RacialModifier.atributos/pericias/
+                        // movimentacao já existiam no modelo (toda raça oficial os usa — ex.:
+                        // Anão com Vigor d6 mínimo), mas o formulário de Raça customizada nunca
+                        // os preenchia — só dava pra montar a raça via Traços Raciais soltos.
+                        var racaAtributosMin by remember { mutableStateOf(mapOf<String, Int>()) }
+                        var racaPericiasIniciais by remember { mutableStateOf(mapOf<String, Int>()) }
+                        var racaMovimentacao by remember { mutableStateOf("0") } // bônus/penalidade, não valor absoluto
+                        var showRacaAttrDialog by remember { mutableStateOf(false) }
+                        var showRacaSkillDialog by remember { mutableStateOf(false) }
 
                         // Estado da Variante de Raça custom (ver ResolveVariantPointBudgetUseCase / CustomAncestryVariant).
                         var varianteBaseRacaId by remember { mutableStateOf<String?>(null) }
@@ -765,61 +779,7 @@ fun SettingsDialog(
                                                     }
                                                 }
                                                 "Equipamento" -> {
-                                                    LabeledChipGroup("Tipo de Equipamento:") {
-                                                        listOf("Arma", "Armadura", "Escudo", "Geral", "Veículo").forEach { st ->
-                                                            androidx.compose.material3.FilterChip(
-                                                                selected = customEquipSuperType == st,
-                                                                onClick = {
-                                                                    customEquipSuperType = st
-                                                                    customEquipSubtype = when (st) {
-                                                                        "Arma" -> "Corpo a Corpo"
-                                                                        "Armadura" -> "Armadura Corporal"
-                                                                        "Escudo" -> "Escudo"
-                                                                        "Veículo" -> "Veículo"
-                                                                        else -> "Equipamento Geral"
-                                                                    }
-                                                                },
-                                                                label = { Text(st, style = MaterialTheme.typography.labelSmall) }
-                                                            )
-                                                        }
-                                                    }
-                                                    if (customEquipSuperType == "Arma") {
-                                                        LabeledChipGroup("Subtipo de Arma:") {
-                                                            listOf("Corpo a Corpo", "Ataque a Distância", "Futurista").forEach { sub ->
-                                                                androidx.compose.material3.FilterChip(
-                                                                    selected = customEquipSubtype == sub,
-                                                                    onClick = { customEquipSubtype = sub },
-                                                                    label = { Text(sub, style = MaterialTheme.typography.labelSmall) }
-                                                                )
-                                                            }
-                                                        }
-                                                    }
-                                                    Row(
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                                    ) {
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customCost,
-                                                            onValueChange = { customCost = it },
-                                                            label = { Text("Custo ($)") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.weight(1f)
-                                                        )
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customWeight,
-                                                            onValueChange = { customWeight = it },
-                                                            label = { Text("Peso (kg)") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.weight(1f)
-                                                        )
-                                                    }
-                                                    androidx.compose.material3.OutlinedTextField(
-                                                        value = customDamage,
-                                                        onValueChange = { customDamage = it },
-                                                        label = { Text("Dano / Armadura / Efeito (ex: For+d12+5)") },
-                                                        singleLine = true,
-                                                        modifier = Modifier.fillMaxWidth()
-                                                    )
+                                                    EquipamentoCreatorFields(equipForm)
                                                 }
                                                 "Poder" -> {
                                                     Row(
@@ -978,6 +938,57 @@ fun SettingsDialog(
                                                                     }
                                                                 }
                                                             }
+                                                        }
+                                                    }
+
+                                                    Spacer(Modifier.height(8.dp))
+
+                                                    OutlinedCard(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        colors = CardDefaults.outlinedCardColors(
+                                                            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                                                        )
+                                                    ) {
+                                                        Column(
+                                                            modifier = Modifier.padding(12.dp),
+                                                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                                                        ) {
+                                                            Text(
+                                                                text = "Atributos, Perícias e Movimentação",
+                                                                style = MaterialTheme.typography.titleSmall,
+                                                                fontWeight = FontWeight.Bold
+                                                            )
+                                                            val racaReqSummary = buildList {
+                                                                if (racaAtributosMin.isNotEmpty()) add("Atributos: " + racaAtributosMin.entries.joinToString { "${it.key} ${it.value.toDiceString()}" })
+                                                                if (racaPericiasIniciais.isNotEmpty()) add("Perícias: " + racaPericiasIniciais.entries.joinToString { "${it.key} ${it.value.toDiceString()}" })
+                                                            }
+                                                            if (racaReqSummary.isNotEmpty()) {
+                                                                Text(
+                                                                    text = racaReqSummary.joinToString(" | "),
+                                                                    style = MaterialTheme.typography.bodySmall,
+                                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                                )
+                                                            }
+                                                            @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+                                                            androidx.compose.foundation.layout.FlowRow(
+                                                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                            ) {
+                                                                OutlinedButton(onClick = { showRacaAttrDialog = true }) {
+                                                                    Text(if (racaAtributosMin.isEmpty()) "+ Atributos Mínimos" else "Atributos (${racaAtributosMin.size})", style = MaterialTheme.typography.labelSmall)
+                                                                }
+                                                                OutlinedButton(onClick = { showRacaSkillDialog = true }) {
+                                                                    Text(if (racaPericiasIniciais.isEmpty()) "+ Perícias Iniciais" else "Perícias (${racaPericiasIniciais.size})", style = MaterialTheme.typography.labelSmall)
+                                                                }
+                                                            }
+                                                            androidx.compose.material3.OutlinedTextField(
+                                                                value = racaMovimentacao,
+                                                                onValueChange = { racaMovimentacao = it },
+                                                                label = { Text("Bônus de Movimentação (opcional, ex: +2 ou -1)") },
+                                                                singleLine = true,
+                                                                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
+                                                                modifier = Modifier.fillMaxWidth()
+                                                            )
                                                         }
                                                     }
                                                 }
@@ -1417,16 +1428,7 @@ fun SettingsDialog(
                                                             statusMessage = "Complicação '$customItemName' salva em: $tagsLabel"
                                                 }
                                                 "Equipamento" -> {
-                                                    val newEquip = com.example.swadebuilder.model.EquipamentoItem(
-                                                        nome = customItemName,
-                                                        custo = kotlinx.serialization.json.JsonPrimitive(customCost.toIntOrNull() ?: 0),
-                                                        peso = kotlinx.serialization.json.JsonPrimitive(customWeight.toFloatOrNull() ?: 0f),
-                                                        dano = if (customDamage.isNotBlank()) kotlinx.serialization.json.JsonPrimitive(customDamage) else null,
-                                                                observacoes = kotlinx.serialization.json.JsonPrimitive(safeDesc),
-                                                                origem = tags.first(),
-                                                                subtipo = customEquipSubtype,
-                                                                id = id
-                                                    )
+                                                    val newEquip = equipForm.build(customItemName, safeDesc, tags.first(), id)
                                                             tags.forEach { tag -> customStorageManager.addEquipamento(context, tag, newEquip.copy(origem = tag)) }
                                                     state.addCustomEquipamento(newEquip)
                                                             statusMessage = "Equipamento '$customItemName' salvo em: $tagsLabel"
@@ -1511,14 +1513,42 @@ fun SettingsDialog(
                                                             )
                                                         )
                                                     }
+                                                    // Atributos Mínimos/Perícias Iniciais viram traços ATTRIBUTE_BOOST/
+                                                    // SKILL_BOOST em habilidades[] — RacialModifier não tem mais mapas
+                                                    // numéricos `atributos`/`pericias` em paralelo (removidos: eram
+                                                    // redundantes com um traço de id resolvível pra toda raça oficial
+                                                    // já auditada, ver RacialTraitPointCatalog.EFEITOS). O picker
+                                                    // guarda o dado absoluto (4/6/8/10/12) só porque é mais intuitivo
+                                                    // de mostrar pro jogador ("Vigor d6" em vez de "Vigor, 1 passo");
+                                                    // `value` do traço sintético é sempre "passos acima de d4"
+                                                    // (dado-4)/2, a mesma unidade que AtributoStep/PericiaStep usam.
+                                                    val atributoTracos = racaAtributosMin.filterValues { it > 4 }.map { (attr, dado) ->
+                                                        com.example.swadebuilder.model.RacialAbility(
+                                                            nome = "Atributo Aumentado: $attr",
+                                                            descricao = "",
+                                                            traitId = "ATTRIBUTE_BOOST",
+                                                            targetRef = attr,
+                                                            value = (dado - 4) / 2,
+                                                            invisivel = true
+                                                        )
+                                                    }
+                                                    val periciaTracos = racaPericiasIniciais.filterValues { it > 4 }.map { (per, dado) ->
+                                                        com.example.swadebuilder.model.RacialAbility(
+                                                            nome = "Perícia Inicial: $per",
+                                                            descricao = "",
+                                                            traitId = "SKILL_BOOST",
+                                                            targetRef = per,
+                                                            value = (dado - 4) / 2,
+                                                            invisivel = true
+                                                        )
+                                                    }
                                                     val newRace = com.example.swadebuilder.model.RacialModifier(
                                                         id = id,
                                                         nome = customItemName,
                                                         descricao = safeDesc,
-                                                        atributos = emptyMap(),
-                                                        pericias = emptyMap(),
+                                                        movimentacao = racaMovimentacao.toIntOrNull() ?: 0,
                                                         origem = tags.first(),
-                                                        habilidades = raceAbilities
+                                                        habilidades = raceAbilities + atributoTracos + periciaTracos
                                                     )
                                                     tags.forEach { tag -> customStorageManager.addRaca(context, tag, newRace.copy(origem = tag)) }
                                                     state.listaAncestralidadesJson = state.listaAncestralidadesJson + newRace
@@ -1614,7 +1644,10 @@ fun SettingsDialog(
                                             customSkillMin = emptyMap()
                                             customPrereqEdges = emptyList()
                                             customPrereqComps = emptyList()
-                                            customDamage = ""
+                                            equipForm.reset()
+                                            racaAtributosMin = emptyMap()
+                                            racaPericiasIniciais = emptyMap()
+                                            racaMovimentacao = "0"
                                             customRacialTrait = ""
                                             }
                                         } else {
@@ -1764,6 +1797,131 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { showSkillDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        // Mesmo padrão de stepper de showAttrDialog acima, mas gravando em
+                        // racaAtributosMin (mínimo de atributo da Raça, ex.: Anão = Vigor d6)
+                        // em vez de num requisito de Vantagem.
+                        if (showRacaAttrDialog) {
+                            val attrs = listOf("AGILIDADE" to "Agilidade", "ASTUCIA" to "Astúcia", "ESPIRITO" to "Espírito", "FORCA" to "Força", "VIGOR" to "Vigor")
+                            // Sem "13" (d12+1): o traço ATTRIBUTE_BOOST sintetizado ao salvar guarda
+                            // "passos acima de d4" como inteiro — (dado-4)/2 só é exato pros dados
+                            // pares abaixo. Um mínimo racial de d12+1 também não faz sentido de
+                            // qualquer forma (nenhuma raça oficial começa tão alta).
+                            val steps = listOf(0, 4, 6, 8, 10, 12)
+                            AlertDialog(
+                                onDismissRequest = { showRacaAttrDialog = false },
+                                title = { Text("Atributos Mínimos da Raça") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        attrs.forEach { (key, name) ->
+                                            val currentDie = racaAtributosMin[key] ?: 0
+                                            val currentIndex = steps.indexOf(currentDie).coerceAtLeast(0)
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(text = name, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex > 0) {
+                                                                val newDie = steps[currentIndex - 1]
+                                                                val mut = racaAtributosMin.toMutableMap()
+                                                                if (newDie == 0) mut.remove(key) else mut[key] = newDie
+                                                                racaAtributosMin = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex > 0
+                                                    ) { Icon(Icons.Default.Remove, contentDescription = "Diminuir") }
+                                                    Text(
+                                                        text = currentDie.toDiceString(),
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        modifier = Modifier.width(48.dp),
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex < steps.lastIndex) {
+                                                                val mut = racaAtributosMin.toMutableMap()
+                                                                mut[key] = steps[currentIndex + 1]
+                                                                racaAtributosMin = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex < steps.lastIndex
+                                                    ) { Icon(Icons.Default.Add, contentDescription = "Aumentar") }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showRacaAttrDialog = false }) { Text("OK") } }
+                            )
+                        }
+
+                        // Mesmo padrão de showSkillDialog acima, gravando em
+                        // racaPericiasIniciais (perícia inicial da Raça) em vez de requisito.
+                        if (showRacaSkillDialog) {
+                            val allSkillsList = state.listaPericias.map { it.nome }.distinct().sorted()
+                            // Sem "13" (d12+1) — mesmo motivo do picker de Atributos Mínimos acima.
+                            val steps = listOf(0, 4, 6, 8, 10, 12)
+                            var filterSkillText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showRacaSkillDialog = false },
+                                title = { Text("Perícias Iniciais da Raça") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterSkillText,
+                                            onValueChange = { filterSkillText = it },
+                                            label = { Text("Filtrar Perícia") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        allSkillsList.filter { it.contains(filterSkillText, ignoreCase = true) }.forEach { skillName ->
+                                            val currentDie = racaPericiasIniciais[skillName] ?: 0
+                                            val currentIndex = steps.indexOf(currentDie).coerceAtLeast(0)
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                                                horizontalArrangement = Arrangement.SpaceBetween,
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Text(text = skillName, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
+                                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex > 0) {
+                                                                val newDie = steps[currentIndex - 1]
+                                                                val mut = racaPericiasIniciais.toMutableMap()
+                                                                if (newDie == 0) mut.remove(skillName) else mut[skillName] = newDie
+                                                                racaPericiasIniciais = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex > 0
+                                                    ) { Icon(Icons.Default.Remove, contentDescription = "Diminuir") }
+                                                    Text(
+                                                        text = currentDie.toDiceString(),
+                                                        style = MaterialTheme.typography.bodyMedium,
+                                                        modifier = Modifier.width(48.dp),
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                    IconButton(
+                                                        onClick = {
+                                                            if (currentIndex < steps.lastIndex) {
+                                                                val mut = racaPericiasIniciais.toMutableMap()
+                                                                mut[skillName] = steps[currentIndex + 1]
+                                                                racaPericiasIniciais = mut
+                                                            }
+                                                        },
+                                                        enabled = currentIndex < steps.lastIndex
+                                                    ) { Icon(Icons.Default.Add, contentDescription = "Aumentar") }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showRacaSkillDialog = false }) { Text("OK") } }
                             )
                         }
 

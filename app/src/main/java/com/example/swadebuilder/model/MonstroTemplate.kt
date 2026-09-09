@@ -85,14 +85,16 @@ data class MonstroHabilidade(
  * Mesma lista "Características" que a aba Ancestralidades usa (ver
  * RacialCaracteristicasResolver), adaptada pro Template de Monstro Heroico —
  * que não é uma RacialModifier, então precisa converter duas coisas antes de
- * reaproveitar o resolver:
+ * reaproveitar o resolver (que só lê `habilidades[]`, sem mapas numéricos
+ * estáticos em paralelo):
  *
- * - `atributos_bonus` guarda PASSOS (ex.: Anjo Força:2 = 2 passos de dado,
- *   RacialTraitEffect.AtributoStep(passos=2)), não o delta bruto que
- *   RacialModifier.atributos usa (onde Elfo Agilidade:2 já É "+2" pronto pra
- *   somar a 4). Multiplica por 2 pra entrar no mesmo formato. "Fe" (perícia
- *   Fé, não atributo) sai à parte, convertida pro "tier" que o resolver
- *   espera pra perícias (passos+1: 1 passo = tier 2 = d6).
+ * - `atributos_bonus` guarda PASSOS (ex.: Anjo Força:2 = 2 passos de dado) —
+ *   a mesma unidade de `RacialTraitEffect.AtributoStep.passos`, então vira
+ *   uma RacialAbility sintética por entrada (traitId="ATTRIBUTE_BOOST",
+ *   value=passos) em vez de precisar converter pra delta bruto. "Fe"
+ *   (perícia Fé, não atributo) sai à parte, virando uma sintética
+ *   traitId="SKILL_BOOST" — mesma unidade de passos, sem a conversão de
+ *   "tier" que o resolver antigo baseado em mapa exigia.
  * - Vantagem/Complicação de graça do template já vem embutida em
  *   `habilidades[]` (category=racial_edge/racial_hindrance, ver
  *   MonstroHabilidade) — o resolver lê isso direto, igual Ancestralidade.
@@ -103,21 +105,23 @@ data class MonstroHabilidade(
  *   a mecânica).
  */
 fun MonstroTemplate.paraCaracteristicas(): List<String> {
-    val atributosConvertidos = atributosBonus
+    val atributosSinteticos = atributosBonus
         .filterKeys { it.keyify() != "FE" }
-        .mapValues { (_, passos) -> passos * 2 }
+        .map { (atributo, passos) ->
+            RacialAbility(nome = atributo, descricao = "", traitId = "ATTRIBUTE_BOOST", targetRef = atributo, value = passos, invisivel = true)
+        }
 
     val feEntry = atributosBonus.entries.firstOrNull { it.key.keyify() == "FE" }
-    val periciasConvertidas = feEntry?.let { mapOf("Fé" to it.value + 1) } ?: emptyMap()
+    val periciaSintetica = feEntry?.let {
+        RacialAbility(nome = "Fé", descricao = "", traitId = "SKILL_BOOST", targetRef = "Fé", value = it.value, invisivel = true)
+    }
 
     val habilidadesConvertidas = habilidades.map {
         RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, traitId = it.traitId, targetRef = it.targetRef)
     }
 
     val linhas = RacialCaracteristicasResolver.resolver(
-        atributos = atributosConvertidos,
-        pericias = periciasConvertidas,
-        habilidades = habilidadesConvertidas
+        habilidades = atributosSinteticos + listOfNotNull(periciaSintetica) + habilidadesConvertidas
     ).toMutableList()
 
     complicacoes.forEach { linhas += it.substringBefore(":").trim() }

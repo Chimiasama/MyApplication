@@ -29,15 +29,13 @@ class CriadorStateMonsterFreeAttributeTest {
         listaComplicacoes = emptyList<Complicacao>(),
         listaCoracoesCrystal = emptyList<CrystalHeart>(),
         listaAncestralidadesJson = listOf(
-            RacialModifier(nome = "HUMANOS", atributos = emptyMap(), pericias = emptyMap(), origem = "BASICO")
+            RacialModifier(nome = "HUMANOS", origem = "BASICO")
         ),
         listaMonstroTemplates = listOf(
             MonstroTemplate(id = "fantasma", nome = "Fantasma", descricao = "teste", atributosBonus = mapOf("Espirito" to 1)),
             MonstroTemplate(id = "lobisomem", nome = "Lobisomem", descricao = "teste", atributosBonus = mapOf("Agilidade" to 2, "Forca" to 2, "Vigor" to 2)),
             MonstroTemplate(id = "anjo", nome = "Anjo", descricao = "teste", atributosBonus = mapOf("Fe" to 1, "Forca" to 2, "Vigor" to 2))
         ),
-        racialAttrMinMap = emptyMap(),
-        racialSkillStartMap = emptyMap(),
         listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
         mapaAtributosDisplay = emptyMap(),
         listaPericias = listOf(Pericia(nome = "Fé", atributo = "ESPIRITO", basica = false)),

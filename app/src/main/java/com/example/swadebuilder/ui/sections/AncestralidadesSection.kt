@@ -87,8 +87,6 @@ data class RacialModifierLite(
     val aliases: Set<String> = emptySet(),
     val origens: Set<String> = emptySet(),
     val habilidades: List<RacialAbilityLite> = emptyList(),
-    val atributos: Map<String, Int> = emptyMap(),
-    val pericias: Map<String, Int> = emptyMap(),
     val opcoes: List<String> = emptyList()
 )
 
@@ -230,8 +228,6 @@ fun AncestralidadesSection(
                     aliases = aliasKeys,
                     origens = originsInGroup,
                     habilidades = habilidadesLite,
-                    atributos = representative.atributos,
-                    pericias = representative.pericias,
                     opcoes = representative.opcoes
                 )
             }.sortedBy { it.nome }
@@ -395,9 +391,9 @@ fun AncestralidadesSection(
                                     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
                                         CriadorState.SIGNOS_ADG.forEach { signo ->
                                             DropdownMenuItem(
-                                                text = { Text(signo) },
+                                                text = { Text(signo.nome) },
                                                 onClick = {
-                                                    state.selecionarSigno(signo)
+                                                    state.selecionarSigno(signo.nome)
                                                     expanded = false
                                                 }
                                             )
@@ -406,12 +402,13 @@ fun AncestralidadesSection(
                                 }
 
                                 val selectedSign = state.signoAdgSelecionado
+                                val selectedSignEntry = CriadorState.signoByNome(selectedSign)
                                 if (selectedSign != null) {
                                     Spacer(Modifier.height(4.dp))
                                     val signDesc = if (EditionConfig.isFullEdition) {
-                                        CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                        selectedSignEntry?.descricao
                                     } else {
-                                        CriadorState.SIGNOS_ADG_DESC_LITE[selectedSign] ?: CriadorState.SIGNOS_ADG_DESC[selectedSign]
+                                        selectedSignEntry?.descricaoLite ?: selectedSignEntry?.descricao
                                     }
                                     if (signDesc != null) {
                                         Text(
@@ -421,7 +418,7 @@ fun AncestralidadesSection(
                                         )
                                     }
 
-                                    if (selectedSign.equals("Serpente", ignoreCase = true)) {
+                                    if (selectedSignEntry?.id == "SERPENTE") {
                                         Spacer(Modifier.height(8.dp))
                                         Text("Perícia Bônus:", style = MaterialTheme.typography.labelMedium)
                                         Column {
@@ -468,7 +465,8 @@ fun AncestralidadesSection(
                                 // ligada. Raças ainda não migradas pro AncestryVariantRegistry
                                 // são tratadas como Variante (todas têm Básico/Padrão entre as
                                 // opções, o sinal que o próprio usuário definiu para o caso).
-                                val variantConfig = AncestryVariantRegistry.get(item.nome.keyify())
+                                val itemLivro = item.origens.firstOrNull() ?: "BASICO"
+                                val variantConfig = AncestryVariantRegistry.get(item.nome.keyify(), itemLivro)
                                 val isSelecaoPura = variantConfig != null && variantConfig.grupoVariante == null
                                 val showOpcoesPicker = opcoesValidas.size > 1 && (isSelecaoPura || state.optVariantesDeRacaAtivo)
                                 if (showOpcoesPicker) {
@@ -824,98 +822,57 @@ fun AncestralidadesSection(
                                     }
                                 }
 
-                            }
-
-
-                            if (isSelected && item.origens.contains("FANTASIA") && item.nome.contains("Humano", ignoreCase = true)) {
-                                Spacer(Modifier.height(8.dp))
-                                Text("Pacote Cultural:", style = MaterialTheme.typography.labelMedium)
-
-                                var expanded by remember { mutableStateOf(false) }
-
-                                Box {
-                                    OutlinedButton(onClick = { expanded = true }) {
-                                        Text(state.pacoteCulturalFantasiaSelecionado)
-                                    }
-                                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                                        CriadorState.PACOTES_CULTURAIS_FANTASIA.forEach { pacote ->
-                                            DropdownMenuItem(
-                                                text = { Text(pacote) },
-                                                onClick = {
-                                                    state.selecionarPacoteCulturalFantasia(pacote)
-                                                    expanded = false
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-
-                                Spacer(Modifier.height(4.dp))
-                                val packageDesc = if (EditionConfig.isFullEdition) {
-                                    CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si já
+                                // é o dropdown genérico de Variante lá em cima (dentro do
+                                // `if (showOpcoesPicker)`, fora de escopo aqui — por isso recalcula
+                                // localmente); aqui só a Seleção aninhada de dentro de Povo do Mar/
+                                // Senhores dos Cavalos (ver AncestryVariantRegistry.humanoFantasia()
+                                // — mesmo padrão de Anões Ciber, um bloco dedicado por raça em vez de
+                                // um componente genérico de SelectionDef).
+                                val isHumanoFantasia = item.nome.keyify() == "HUMANOS" && item.origens.contains("FANTASIA")
+                                val humanoFantasiaSelection = if (isHumanoFantasia) {
+                                    state.resolveSciFiVariantSelectionFor(
+                                        ancestryName = item.nome,
+                                        availableOptions = opcoesValidas
+                                    ) ?: opcoesValidas.firstOrNull().orEmpty()
                                 } else {
-                                    CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC_LITE[state.pacoteCulturalFantasiaSelecionado]
-                                        ?: CriadorState.PACOTES_CULTURAIS_FANTASIA_DESC[state.pacoteCulturalFantasiaSelecionado]
+                                    ""
                                 }
-                                if (packageDesc != null) {
-                                    Text(
-                                        text = packageDesc,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
-
-                                if (state.pacoteCulturalFantasiaSelecionado == "Povo do Mar") {
+                                if (isHumanoFantasia && humanoFantasiaSelection.equals("Povo do Mar", ignoreCase = true)) {
                                     Spacer(Modifier.height(8.dp))
-                                    Text("Compensação:", style = MaterialTheme.typography.labelMedium)
+                                    Text("Compensação (a critério do Mestre):", style = MaterialTheme.typography.labelMedium)
                                     Column {
-                                        com.example.swadebuilder.ui.components.RadioButtonRow(
-                                            label = "Penalidade em Cavalgar (-1)",
-                                            selected = state.povoDoMarOpcao == "Penalidade em Cavalgar",
-                                            onSelect = {
-                                                val error = state.selecionarPovoDoMarOpcao("Penalidade em Cavalgar")
-                                                if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
-                                            }
-                                        )
-                                        com.example.swadebuilder.ui.components.RadioButtonRow(
-                                            label = "Procurado (Maior)",
-                                            selected = state.povoDoMarOpcao == "Procurado (Maior)",
-                                            onSelect = {
-                                                val error = state.selecionarPovoDoMarOpcao("Procurado (Maior)")
-                                                if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
-                                            }
-                                        )
-                                    }
-                                }
-
-                                if (state.pacoteCulturalFantasiaSelecionado == "Senhores dos Cavalos") {
-                                    Spacer(Modifier.height(8.dp))
-                                    com.example.swadebuilder.ui.components.CheckboxRow(
-                                        label = "Receber Vantagem 'Nascido na Sela'?",
-                                        checked = state.senhoresCavalosExtra,
-                                        onCheckedChange = {
-                                            val error = state.toggleSenhoresCavalosExtra(it)
-                                            if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
-                                        }
-                                    )
-
-                                    if (state.senhoresCavalosExtra) {
-                                        Spacer(Modifier.height(4.dp))
-                                        Text("Compensação:", style = MaterialTheme.typography.labelMedium)
-                                        Column {
+                                        listOf(
+                                            null to "Nenhuma",
+                                            "Penalidade em Cavalgar" to "Penalidade em Cavalgar (-1)",
+                                            "Procurado (Maior)" to "Procurado (Maior)"
+                                        ).forEach { (valor, label) ->
                                             com.example.swadebuilder.ui.components.RadioButtonRow(
-                                                label = "Código de Honra (Maior)",
-                                                selected = state.senhoresCavalosCompensacao == "Código de Honra",
+                                                label = label,
+                                                selected = state.humanoFantasiaSelecaoAninhada == valor,
                                                 onSelect = {
-                                                    val error = state.selecionarSenhoresCavalosCompensacao("Código de Honra")
+                                                    val error = state.selecionarHumanoFantasiaSelecaoAninhada(valor)
                                                     if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
                                                 }
                                             )
+                                        }
+                                    }
+                                }
+
+                                if (isHumanoFantasia && humanoFantasiaSelection.equals("Senhores dos Cavalos", ignoreCase = true)) {
+                                    Spacer(Modifier.height(8.dp))
+                                    Text("Grupo cultural (a critério do Mestre):", style = MaterialTheme.typography.labelMedium)
+                                    Column {
+                                        listOf(
+                                            null to "Nenhum",
+                                            "Nascido na Sela + Código de Honra" to "Nascido na Sela + Código de Honra (Maior)",
+                                            "Nascido na Sela + Sem Escrúpulos e Analfabeto" to "Nascido na Sela + Sem Escrúpulos (Menor) e Analfabeto (Menor)"
+                                        ).forEach { (valor, label) ->
                                             com.example.swadebuilder.ui.components.RadioButtonRow(
-                                                label = "Sem Escrúpulos (Menor) e Analfabeto (Menor)",
-                                                selected = state.senhoresCavalosCompensacao == "Sem Escrúpulos e Analfabeto",
+                                                label = label,
+                                                selected = state.humanoFantasiaSelecaoAninhada == valor,
                                                 onSelect = {
-                                                    val error = state.selecionarSenhoresCavalosCompensacao("Sem Escrúpulos e Analfabeto")
+                                                    val error = state.selecionarHumanoFantasiaSelecaoAninhada(valor)
                                                     if (error != null) android.widget.Toast.makeText(context, error, android.widget.Toast.LENGTH_LONG).show()
                                                 }
                                             )
@@ -1077,8 +1034,6 @@ fun AncestralidadesSection(
                                         // "Resistente"/Vigor d6 aqui enquanto o Resumo já mostra o traço
                                         // removido e Vigor d4.
                                         val ancestryDefAtivo = if (isSelected) state.currentAncestryDef else null
-                                        val atributosEfetivos = ancestryDefAtivo?.atributos ?: item.atributos
-                                        val periciasEfetivas = ancestryDefAtivo?.pericias ?: item.pericias
                                         val habilidadesEfetivas = ancestryDefAtivo?.habilidades?.map {
                                             RacialAbilityLite(nome = it.nome, descricao = it.descricao, id = it.id, category = it.category, severity = it.severity)
                                         } ?: item.habilidades
@@ -1112,8 +1067,6 @@ fun AncestralidadesSection(
                                         }
 
                                         val caracteristicas = RacialCaracteristicasResolver.resolver(
-                                            atributos = atributosEfetivos,
-                                            pericias = periciasEfetivas,
                                             habilidades = habilidadesParaCaracteristicas.map {
                                                 RacialAbility(nome = it.nome, descricao = "", id = it.id, category = it.category, severity = it.severity)
                                             }

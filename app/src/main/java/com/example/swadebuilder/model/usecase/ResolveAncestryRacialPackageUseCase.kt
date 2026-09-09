@@ -17,6 +17,7 @@ class ResolveAncestryRacialPackageUseCase(
         val anoesScifiSelecionado: String? = null,
         val scifiVariant: String? = null,
         val humanoMineradorAtributo: String? = null,
+        val humanoFantasiaSelecaoAninhada: String? = null,
         val anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
         val quadroidesTracoNegativoSelecionado: String? = null,
         val ancestryOptions: List<String> = emptyList(),
@@ -93,6 +94,7 @@ class ResolveAncestryRacialPackageUseCase(
             anoesScifiSelecionado = params.anoesScifiSelecionado,
             scifiVariant = params.scifiVariant,
             humanoMineradorAtributo = params.humanoMineradorAtributo,
+            humanoFantasiaSelecaoAninhada = params.humanoFantasiaSelecaoAninhada,
             anaoCiberTracosSelecionados = params.anaoCiberTracosSelecionados,
             quadroidesTracoNegativoSelecionado = params.quadroidesTracoNegativoSelecionado,
             ancestryOptions = params.ancestryOptions,
@@ -102,19 +104,68 @@ class ResolveAncestryRacialPackageUseCase(
             racialAbilityIds = params.racialAbilityIds
         )
 
+        // Ambos os blocos abaixo (ensureAdvantageNames/ensureAdvantageIds) concedem a
+        // Vantagem de verdade — igual a uma comprada manualmente, pra herdar toda a
+        // mecânica dela (rerrolagem, bônus, etc.) — mas são grátis (parte do pacote
+        // racial, sem gastar PV). Sem marcar em `vantagensRaciais`, essa Vantagem cai
+        // sem proteção em RemoveInvalidAdvantagesAfterAncestryChangeUseCase (que só
+        // pula a checagem de requisitos pra quem está em `automaticAdvantages`/
+        // `automaticRacialAdvantages`) — se ela tiver um requisito de atributo/perícia
+        // que o personagem não atenda ainda (ex.: Nascido na Sela exige Agilidade d8,
+        // que um Humano recém-criado não tem), a validação a remove na mesma hora que
+        // a concede, e como não está em `previousFreeAdvantageKeys` (que só lê
+        // vantagensAutomaticas/vantagensRaciais), CriadorState.aplicarAncestralidade
+        // trata a remoção como se fosse uma Vantagem comprada perdendo requisito e
+        // devolve 1 PV — um PV fantasma, já que o jogador nunca gastou nada nela (bug
+        // relatado pelo usuário com Senhores dos Cavalos/Nascido na Sela).
         ancestrySpecificAdjustments.ensureAdvantageNames.forEach { advantageName ->
             params.allAdvantages.firstOrNull { it.nome.equals(advantageName, ignoreCase = true) }
                 ?.let { edge ->
                     if (selected.none { it.id == edge.id }) {
                         selected.add(edge)
                     }
+                    if (vantagensRaciais.none { it.equals(edge.nome, ignoreCase = true) }) {
+                        vantagensRaciais.add(edge.nome)
+                    }
                 }
         }
 
         ancestrySpecificAdjustments.ensureAdvantageIds.forEach { advantageId ->
-            val edge = params.allAdvantages.firstOrNull { it.id == advantageId }
-            if (edge != null && selected.none { it.id == edge.id }) {
-                selected.add(edge)
+            // "conexoes_mafia" é pseudo-id (não existe no catálogo): Humano
+            // (Wiseguys) concede a Vantagem real "Conexões" já com a escolha
+            // "Máfia" pré-marcada, igual ao fallback de Antecedente Arcano (Dom)
+            // logo abaixo — antes disso tentava casar por NOME exato contra
+            // "Conexões (Máfia)", que não existe no catálogo (lá é só
+            // "Conexões", com a escolha num campo separado), então nunca batia
+            // e o Humano (Wiseguys) nunca recebia a Vantagem de raça (bug real,
+            // silencioso — só o toggle separado "Cosa Nostra" concedia).
+            if (advantageId == "conexoes_mafia") {
+                val conexoes = params.allAdvantages.firstOrNull { it.id.keyify() == "CONEXOES" }
+                if (conexoes != null) {
+                    if (selected.none { it.id == conexoes.id && (it.choice ?: "").keyify() == "MAFIA" }) {
+                        selected.add(conexoes.copy(choice = "Máfia"))
+                    }
+                    if (vantagensRaciais.none { it.equals(conexoes.nome, ignoreCase = true) }) {
+                        vantagensRaciais.add(conexoes.nome)
+                    }
+                }
+                return@forEach
+            }
+
+            // Comparação por id normalizada (keyify): os ids sintéticos usados
+            // pelos pacotes raciais (TraitAddition.id, ex.: "SENHOR_DAS_FERAS")
+            // seguem a convenção interna (maiúsculo com underscore), enquanto o
+            // catálogo real (vantagens.json) usa minúsculo (ex.:
+            // "senhor_das_feras") — == exato nunca batia por causa disso, e
+            // silenciosamente caía pro fallback (raça sem a Vantagem).
+            val edge = params.allAdvantages.firstOrNull { it.id.keyify() == advantageId.keyify() }
+            if (edge != null) {
+                if (selected.none { it.id == edge.id }) {
+                    selected.add(edge)
+                }
+                if (vantagensRaciais.none { it.equals(edge.nome, ignoreCase = true) }) {
+                    vantagensRaciais.add(edge.nome)
+                }
                 return@forEach
             }
 
@@ -122,8 +173,13 @@ class ResolveAncestryRacialPackageUseCase(
             // Example: Transmorfos need AA (Dom) even when "antecedente_arcano_dom" is not present in loaded advantages.
             if (advantageId == "antecedente_arcano_dom") {
                 val genericArcane = params.allAdvantages.firstOrNull { it.id == "antecedente_arcano" }
-                if (genericArcane != null && selected.none { it.id == genericArcane.id && (it.choice ?: "").keyify() == "DOM" }) {
-                    selected.add(genericArcane.copy(choice = "DOM"))
+                if (genericArcane != null) {
+                    if (selected.none { it.id == genericArcane.id && (it.choice ?: "").keyify() == "DOM" }) {
+                        selected.add(genericArcane.copy(choice = "DOM"))
+                    }
+                    if (vantagensRaciais.none { it.equals(genericArcane.nome, ignoreCase = true) }) {
+                        vantagensRaciais.add(genericArcane.nome)
+                    }
                 }
             }
         }

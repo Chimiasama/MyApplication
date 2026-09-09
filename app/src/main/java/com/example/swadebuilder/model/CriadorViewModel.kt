@@ -452,10 +452,7 @@ class CriadorViewModel(
 
         state.tropoSelecionado = null
         state.signoAdgSelecionado = null
-        state.pacoteCulturalFantasiaSelecionado = "Humano padrão"
-        state.povoDoMarOpcao = null
-        state.senhoresCavalosExtra = false
-        state.senhoresCavalosCompensacao = null
+        state.humanoFantasiaSelecaoAninhada = null
         state.protagonistaRollTecnicas = null
         state.protagonistaRollPericia = null
         state.protagonistaRollVantagem = null

@@ -64,7 +64,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
     fun `returns pequeninos adjustments`() {
         val result = useCase.execute("PEQUENINOS", null)
 
-        assertEquals(listOf("Sorte", "Espirituoso"), result.ensureAdvantageNames)
+        assertEquals(listOf("Sorte"), result.ensureAdvantageNames)
         assertEquals(
             listOf(
                 TraitAddition("Tamanho -1", "TAMANHO_MENOS_1"),
@@ -132,7 +132,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             ancestryOrigin = "ARTE_DA_GUERRA"
         )
 
-        assertEquals(listOf("SENHOR DAS FERAS"), result.ensureAdvantageNames)
+        assertEquals(listOf("SENHOR_DAS_FERAS"), result.ensureAdvantageIds)
         assertEquals(listOf(TraitAddition("SENHOR DAS FERAS", "SENHOR_DAS_FERAS")), result.ensureAutomaticAdvantages)
     }
 
@@ -254,7 +254,7 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
 
 
     @Test
-    fun `elementais scifi padrao mantem forte e resistencia mais dois`() {
+    fun `elementais scifi padrao nao injeta traco pela variante`() {
         val result = useCase.execute(
             anc = "ELEMENTAIS",
             descendenteElementalSelecionado = null,
@@ -263,17 +263,19 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        // Força d8 = MUITO_FORTE (4pts, dois passos), não FORTE (2pts, d6 — esse
-        // é o da variante "Ar, Fogo ou Água", mais fraca).
-        assertEquals(
-            listOf(TraitAddition("MUITO FORTE", "MUITO_FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
-            result.ensureAutomaticAdvantages
-        )
+        // MUITO_FORTE (Força d8) e RESISTENCIA +2 já vêm de habilidades[] na
+        // raça base (ancestralidades.json) — "Padrão" é o estado default, sem
+        // nada a adicionar por cima. A troca real pra "Ar, Fogo ou Água"
+        // (remover os dois, adicionar Forma de Energia + o ajuste de
+        // orçamento invisível) mora em CriadorState.applyAncestryVariantAdjustments,
+        // não neste use case nem em AncestryVariantRegistry.elementaisScifi()
+        // (mantido só pro rótulo "Seleção:" da UI).
+        assertEquals(emptyList<TraitAddition>(), result.ensureAutomaticAdvantages)
         assertEquals(0, result.naturalArmorFromRace)
     }
 
     @Test
-    fun `elementais scifi ar fogo ou agua troca forte por forma de energia`() {
+    fun `elementais scifi ar fogo ou agua nao injeta traco por aqui`() {
         val result = useCase.execute(
             anc = "ELEMENTAIS",
             descendenteElementalSelecionado = null,
@@ -282,13 +284,11 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             isSciFiActive = true
         )
 
-        // Perdem Resistência (só existe em Padrão) e trocam o Forte d8 pelo
-        // Forte fraco (d6 — ver atributoBaseRacial, reseta pra 6 não 4) mais
-        // Forma de Energia: base(-4) + Forte d6(+2) + Forma de Energia(+4) = 2.
-        assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")),
-            result.ensureAutomaticAdvantages
-        )
+        // Ver comentário do teste "padrao" acima — a troca de MUITO_FORTE/
+        // RESISTENCIA por Forma de Energia é feita direto em habilidades[]
+        // por CriadorState.applyAncestryVariantAdjustments, não por este
+        // use case.
+        assertEquals(emptyList<TraitAddition>(), result.ensureAutomaticAdvantages)
         assertEquals(0, result.naturalArmorFromRace)
     }
 
@@ -325,7 +325,8 @@ class ResolveAncestrySpecificAdjustmentsUseCaseTest {
             descendenteElementalSelecionado = null,
             scifiVariant = "Baixa Gravidade",
             ancestryOptions = listOf("Básico", "Baixa Gravidade", "Minerador"),
-            isSciFiActive = true
+            isSciFiActive = true,
+            ancestryOrigin = "SCI_FI"
         )
 
         assertEquals(listOf("ADAPTÁVEL", "ADAPTAVEL"), result.automaticAdvantagesToRemove)

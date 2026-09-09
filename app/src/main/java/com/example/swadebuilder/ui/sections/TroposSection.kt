@@ -236,6 +236,19 @@ fun TroposSection(
                         if (selecionado && tropo.id == "tropo_buxista") {
                             Spacer(Modifier.size(8.dp))
                             Text(
+                                text = "Mente sobre a Matéria",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Gastando um turno inteiro numa rolagem de Foco, entra em transe por metade do dado de Astúcia em rodadas (ou o valor total com uma Ampliação). Em transe, a carta de ação é sempre de Espadas, ignora penalidades de Ferimento e recebe +2 para resistir ao estado Distraído. Ao encerrar, rola Foco com -1 por Ferimento sofrido ou sofre dano não-letal equivalente. Uma vez por cena (usos extras custam 1 Chi cada).",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
                                 text = "Caminho Sagrado",
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
@@ -357,6 +370,32 @@ fun TroposSection(
                         if (selecionado && tropo.id == "tropo_kui") {
                             Spacer(Modifier.size(8.dp))
                             Text(
+                                text = "Exorcizar",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Tocando o alvo, força uma rolagem de Foco contra o Espírito dele. Com sucesso, o alvo fica Abalado; cada Ampliação causa um Ferimento. Se o alvo chegar à Incapacitação, é expulso do hospedeiro e banido. Gastando um ponto de Chi, pode banir/expulsar imediatamente após um sucesso.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Sentido Espiritual",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Enquanto mantiver ao menos 1 ponto na Reserva de Chi, pode gastar um turno inteiro numa rolagem de Foco para sentir fantasmas, espíritos, demônios, oni e outros mortos-vivos num Modelo Pequeno de Explosão a seu alcance de Espírito (raio +1 quadro por Ampliação).",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
                                 text = "Ferramentas do Ofício",
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
@@ -413,6 +452,19 @@ fun TroposSection(
                         }
 
                         if (selecionado && tropo.id == "tropo_samurai") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Estoico",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Gastando um ponto de Chi, tem sucesso automático como defensor em Desafios de Intimidar ou Provocar. Recebe +2 para se recuperar do estado Abalado e para resistir a efeitos de Medo. Quem tentar Intimidar este Samurai sofre -1 na rolagem.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+
                             Spacer(Modifier.size(8.dp))
                             Text(
                                 text = "Treinamento de Elite",
@@ -568,6 +620,19 @@ fun TroposSection(
                         if (selecionado && tropo.id == "tropo_shinobi") {
                             Spacer(Modifier.size(8.dp))
                             Text(
+                                text = "Caçador Silencioso",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Adiciona +1d6 de dano ao ter \"a Finalização\" sobre um alvo.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
                                 text = "Talento Shinobi",
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
@@ -683,6 +748,19 @@ fun TroposSection(
                         if (selecionado && tropo.id == "tropo_youxia") {
                             Spacer(Modifier.size(8.dp))
                             Text(
+                                text = "Protetor",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Gastando um ponto de Chi, uma vez por rodada, pode desviar um ataque contra si ou um aliado adjacente — o ataque falha automaticamente.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+
+                            Spacer(Modifier.size(8.dp))
+                            Text(
                                 text = "Kensai (Arma Predileta)",
                                 style = MaterialTheme.typography.labelLarge,
                                 fontWeight = FontWeight.Bold,
@@ -761,6 +839,19 @@ fun TroposSection(
                         }
 
                         if (selecionado && tropo.id == "tropo_artista_marcial") {
+                            Spacer(Modifier.size(8.dp))
+                            Text(
+                                text = "Precisão Desarmada",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp)
+                            )
+                            Text(
+                                text = "Penalidades de Ataque Localizado usando Jutsu (Desarmado) são reduzidas em dois. O requisito mínimo de Força para todos os efeitos da regra \"Artes Marciais Estão Em Toda Parte\" é d4.",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(start = 40.dp, top = 4.dp, end = 8.dp)
+                            )
+
                             Spacer(Modifier.size(8.dp))
                             Text(
                                 text = "Jutsu inicial",

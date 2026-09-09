@@ -3,6 +3,7 @@ package com.example.swadebuilder.ui.sections
 import com.example.swadebuilder.EditionConfig
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -71,6 +73,17 @@ import com.example.swadebuilder.util.semAcentos
 import com.example.swadebuilder.util.toFancyTitleCase
 
 
+// `when (curr) { 0 -> 4; 12 -> 13; else -> curr + 2 }` só tratava a
+// transição exata 12→13 — qualquer valor ACIMA de 12 (13, 14, 15, ...)
+// caía no `else` e voltava a somar 2 em vez de 1, pulando um valor a
+// cada passo (13→15→17 em vez de 13→14→15→16→17). Isso subcontava
+// passos sempre que o intervalo cruzava 2+ passos acima de d12 — o
+// carrossel de Atributos/Perícias (que usa esta contagem tanto pro
+// rótulo de custo quanto pro número de iterações do repeat() que
+// aplica a compra) parava a compra no meio do caminho, exigindo vários
+// cliques pra completar um salto de vários passos (bug relatado pelo
+// usuário: pedir d12+5 a partir de d8 só chegava em d12+3 no primeiro
+// clique).
 fun dieStepsCount(fromRaw: Int, toRaw: Int): Int {
     if (fromRaw == toRaw) return 0
     var steps = 0
@@ -78,10 +91,10 @@ fun dieStepsCount(fromRaw: Int, toRaw: Int): Int {
     val target = maxOf(fromRaw, toRaw)
     while (curr < target) {
         steps++
-        curr = when (curr) {
-            0 -> 4
-            12 -> 13
-            else -> curr + 2
+        curr = when {
+            curr == 0 -> 4
+            curr < 12 -> curr + 2
+            else -> curr + 1
         }
     }
     return steps
@@ -96,10 +109,10 @@ fun calcularCustoAcumuladoPericia(
     var cost = 0
     var curr = startRaw
     while (curr < targetRaw) {
-        val next = when (curr) {
-            0 -> 4
-            12 -> 13
-            else -> curr + 2
+        val next = when {
+            curr == 0 -> 4
+            curr < 12 -> curr + 2
+            else -> curr + 1
         }
         val stepCost = if (curr >= attrRaw) 2 else 1
         cost += stepCost
@@ -119,15 +132,22 @@ fun SkillCarouselPopoverDialog(
     onSelectRaw: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val steps = remember(startRaw) {
+    // Perícia pode passar de d12 pagando custo dobrado acima do atributo vinculado
+    // (texto abaixo, "dobrados acima") — não existe um teto fixo pra isso, então
+    // a lista estica até um pouco além do maior entre o atributo vinculado e o
+    // valor atual, cobrindo qualquer build razoável (ex.: perícia de Meio-Gigante
+    // vinculada a uma Força d12+5). Antes esta lista sempre parava em d12, então
+    // nunca dava pra escolher acima disso mesmo pagando o custo dobrado.
+    val steps = remember(startRaw, attrRaw, currentRaw) {
         val list = mutableListOf<Int>()
         if (startRaw == 0) {
             list.add(0)
         }
+        val upperBound = maxOf(12, attrRaw, currentRaw) + 8
         var v = maxOf(4, startRaw)
-        while (v <= 12) {
+        while (v <= upperBound) {
             if (!list.contains(v)) list.add(v)
-            v += 2
+            v = if (v < 12) v + 2 else v + 1
         }
         list
     }
@@ -151,7 +171,9 @@ fun SkillCarouselPopoverDialog(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -177,7 +199,7 @@ fun SkillCarouselPopoverDialog(
                                 }
                             },
                             enabled = canAfford,
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.width(64.dp),
                             colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
                                 containerColor = containerColor,
                                 disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)
@@ -1031,6 +1053,13 @@ fun PericiasContent(
                     val stepsToRemove = dieStepsCount(targetRaw, currentRaw)
                     repeat(stepsToRemove) {
                         state.decreasePericia(per)
+                    }
+                    // Mesmo "auto-refund" que o stepper de um passo só já tinha — sem
+                    // isso, reduzir vários passos de uma vez pelo carrossel nunca
+                    // soltava de volta Ponto(s) de Complicação gastos num passo
+                    // comprado com PB em vez de PP.
+                    while (state.pontosPericia > 0 && state.cpSpStack.isNotEmpty()) {
+                        state.devolverPcDePericia()
                     }
                 }
                 state.rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit = true)

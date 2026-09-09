@@ -25,8 +25,6 @@ class CriadorStateAdaptavelInitTest {
 
         val humanos = RacialModifier(
             nome = "HUMANOS",
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             habilidades = listOf(
                 RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
             ),
@@ -38,8 +36,6 @@ class CriadorStateAdaptavelInitTest {
             listaCoracoesCrystal = emptyList<CrystalHeart>(),
             listaAncestralidadesJson = listOf(humanos),
             listaMonstroTemplates = emptyList<MonstroTemplate>(),
-            racialAttrMinMap = emptyMap(),
-            racialSkillStartMap = emptyMap(),
             listaAtributos = emptyList(),
             mapaAtributosDisplay = emptyMap(),
             listaPericias = emptyList<Pericia>(),

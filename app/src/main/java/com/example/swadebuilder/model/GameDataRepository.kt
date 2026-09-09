@@ -19,8 +19,6 @@ data class GameDataSnapshot(
     val listaCoracoesCrystal: List<CrystalHeart>,
     val listaAncestralidadesJson: List<RacialModifier>,
     val listaMonstroTemplates: List<MonstroTemplate>,
-    val racialAttrMinMap: Map<String, Map<String, Int>>,
-    val racialSkillStartMap: Map<String, Map<String, Int>>,
     val listaAtributos: List<String>,
     val mapaAtributosDisplay: Map<String, String>,
     val listaPericias: List<Pericia>,

@@ -33,12 +33,15 @@ class ApplyAncestryChangeCoordinatorUseCase(
         val anoesScifiSelecionado: String? = null,
         val scifiVariant: String? = null,
         val humanoMineradorAtributo: String? = null,
+        val humanoFantasiaSelecaoAninhada: String? = null,
         val anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
         val quadroidesTracoNegativoSelecionado: String? = null,
         val allAdvantages: List<Vantagem>,
         val availableComplications: List<Complicacao>,
         val selectedComplications: Map<Complicacao, String?>,
         val automaticTropoAdvantageIds: Set<String>,
+        // Ver o mesmo campo em RemoveInvalidAdvantagesAfterAncestryChangeUseCase.Params.
+        val additionalProtectedAdvantageIds: Set<String> = emptySet(),
         val meetsRequirements: (Vantagem) -> Boolean,
         val originPriorityResolver: (String?) -> Int,
         val compendioArteDaGuerraAtivo: Boolean,
@@ -108,6 +111,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 anoesScifiSelecionado = params.anoesScifiSelecionado,
                 scifiVariant = params.scifiVariant,
                 humanoMineradorAtributo = params.humanoMineradorAtributo,
+                humanoFantasiaSelecaoAninhada = params.humanoFantasiaSelecaoAninhada,
                 anaoCiberTracosSelecionados = params.anaoCiberTracosSelecionados,
                 quadroidesTracoNegativoSelecionado = params.quadroidesTracoNegativoSelecionado,
                 ancestryOptions = params.targetAncestryDef?.opcoes ?: emptyList(),
@@ -155,6 +159,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
                 automaticAdvantages = racialPackage.vantagensAutomaticas,
                 automaticRacialAdvantages = racialPackage.vantagensRaciais,
                 automaticTropoAdvantageIds = params.automaticTropoAdvantageIds,
+                additionalProtectedAdvantageIds = params.additionalProtectedAdvantageIds,
                 meetsRequirements = params.meetsRequirements
             )
         )

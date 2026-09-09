@@ -770,16 +770,111 @@ private fun CombatAndEquipmentCard(
                 CombatRow(name = displayName.toFancyTitleCase(), stats = dmg, notes = notes)
             }
 
-            // Weapons
-            val weapons = state.equipamentosComprados.filter { it.dano != null }
-            weapons.forEach { weapon ->
-                val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
-                val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content
-                val ap = if (!apVal.isNullOrBlank() && apVal != "0") "PA $apVal" else ""
-                val range = (weapon.distancia as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
-                val stats = listOf(dmg, ap, range).filter { it.isNotBlank() && it != "-" }.joinToString(", ")
-                val notes = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
-                CombatRow(name = weapon.nome.toFancyTitleCase(), stats = stats.ifBlank { dmg }, notes = notes)
+            // Força atual do personagem, na mesma escala raw usada por ForcaMinimaCalculator
+            // (4/6/8/10/12/13/14...) — base de todas as contas de Força Mínima abaixo.
+            val forcaRaw = state.valoresAtributos["FORCA"]?.intValue ?: 4
+
+            // Armas: uma arma corpo a corpo/arremesso E uma arma à distância não são
+            // categorias que se excluem — um item de arremesso (ex.: Machado de Arremesso,
+            // Adaga/Faca (Arremesso)) já vem do catálogo com `dano` E `distancia`
+            // preenchidos ao mesmo tempo, então aparece nas duas listas a partir de uma
+            // única compra. "Usável corpo a corpo" é: não tem distância cadastrada, OU é
+            // uma arma de arremesso de verdade (ForcaMinimaCalculator.ehArmaDeArremesso
+            // exclui arcos/fundas/boleadeiras, que usam "For" no dano sem nunca serem
+            // empunhadas pra golpear).
+            val todasArmas = state.equipamentosComprados.filter { it.dano != null }
+            val armasCorpoACorpo = todasArmas.filter { weapon ->
+                val danoTxt = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                // usavelCorpoACorpo, quando definido no formulário de criação (ver
+                // SettingsDialog.kt), tem prioridade sobre a heurística — só o catálogo
+                // oficial (que não tem esse campo) cai de volta em ehArmaDeArremesso().
+                weapon.distancia == null || (weapon.usavelCorpoACorpo
+                    ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, danoTxt))
+            }
+            val armasADistancia = todasArmas.filter { it.distancia != null }
+            val temBrutamontes = state.vantagensSelecionadas.any { it.id == Constants.ID_BRUTAMONTES }
+
+            Text(text = "Armas Corpo a Corpo", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(4.dp))
+            if (armasCorpoACorpo.isEmpty()) {
+                Text(
+                    "– Nenhuma",
+                    style = MaterialTheme.typography.bodySmall.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+            } else {
+                armasCorpoACorpo.forEach { weapon ->
+                    val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
+                    val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val ap = if (!apVal.isNullOrBlank() && apVal != "0") "PA $apVal" else ""
+                    val stats = listOf(dmg, ap).filter { it.isNotBlank() && it != "-" }.joinToString(", ")
+
+                    // Regra incondicional (livro básico, "Força Mínima > Armas de Combate
+                    // Corpo a Corpo/Arremesso"): o dado próprio da arma nunca passa do dado
+                    // de Força de quem usa — independe de a arma ter Força Mínima cadastrada.
+                    val danoEfetivo = com.example.swadebuilder.util.ForcaMinimaCalculator.danoLimitadoPelaForca(dmg, forcaRaw)
+                    val forcaMinTxt = (weapon.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val passos = com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
+
+                    val notasExtras = mutableListOf<String>()
+                    if (danoEfetivo != null) notasExtras.add("Dano efetivo: $danoEfetivo (Força abaixo do dado da arma)")
+                    if (passos > 0) {
+                        val apararVal = (weapon.aparar as? kotlinx.serialization.json.JsonPrimitive)?.content
+                        if (!apararVal.isNullOrBlank() && apararVal != "0") {
+                            notasExtras.add("Bônus de Aparar $apararVal perdido (Força abaixo da Força Mínima)")
+                        } else {
+                            notasExtras.add("Força abaixo da Força Mínima desta arma")
+                        }
+                    }
+                    val notesBase = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                    val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
+                    CombatRow(name = weapon.nome.toFancyTitleCase(), stats = stats.ifBlank { dmg }, notes = notes)
+                }
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            Text(text = "Armas à Distância", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+            Spacer(Modifier.height(4.dp))
+            if (armasADistancia.isEmpty()) {
+                Text(
+                    "– Nenhuma",
+                    style = MaterialTheme.typography.bodySmall.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                )
+            } else {
+                armasADistancia.forEach { weapon ->
+                    val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
+                    val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val ap = if (!apVal.isNullOrBlank() && apVal != "0") "PA $apVal" else ""
+                    val range = (weapon.distancia as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                    val tirosVal = (weapon.tiros as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val tiros = if (!tirosVal.isNullOrBlank()) "Tiros $tirosVal" else ""
+                    val cdtVal = (weapon.cdt as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val cdt = if (!cdtVal.isNullOrBlank()) "CdT $cdtVal" else ""
+                    val stats = listOf(dmg, ap, range, tiros, cdt).filter { it.isNotBlank() && it != "-" }.joinToString(", ")
+
+                    // Livro básico, "Força Mínima > Armas de Combate à Distância": -1 no
+                    // ataque por passo de tipo de dado abaixo do mínimo da arma.
+                    val forcaMinTxt = (weapon.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val passos = com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
+                    val notasExtras = mutableListOf<String>()
+                    if (passos > 0) notasExtras.add("Ataque -$passos (Força abaixo da Força Mínima)")
+
+                    // Vantagem Brutamontes (livro básico, pág. 42): +1 na Curta Distância de
+                    // qualquer item ARREMESSADO (arcos/fundas não contam — ver
+                    // ehArmaDeArremesso), dobrado pra Média e dobrado de novo pra Longa.
+                    val ehArremesso = weapon.usavelCorpoACorpo
+                        ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(weapon.nome, dmg)
+                    if (temBrutamontes && range.isNotBlank() && ehArremesso) {
+                        com.example.swadebuilder.util.ForcaMinimaCalculator.alcanceComBrutamontes(range)?.let {
+                            notasExtras.add("Alcance com Brutamontes: $it")
+                        }
+                    }
+                    val notesBase = (weapon.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                    val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
+                    CombatRow(name = weapon.nome.toFancyTitleCase(), stats = stats.ifBlank { dmg }, notes = notes)
+                }
             }
 
             Spacer(Modifier.height(12.dp))
@@ -795,15 +890,38 @@ private fun CombatAndEquipmentCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             } else {
+                // Livro básico, "Força Mínima > Armadura/Equipamento Vestidos": -1 Movimentação
+                // (já aplicado de verdade em ModifierEngine, soma ARMOR/PACE) e -1 Agilidade e
+                // perícias de Agilidade por passo abaixo do mínimo, cumulativo entre peças
+                // vestidas. A parte de Agilidade é uma penalidade de ROLAGEM situacional, sem
+                // stat fixo correspondente na ficha — por isso só aparece como nota aqui.
+                val passosArmaduraTotal = armors.sumOf { item ->
+                    val forcaMinTxt = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
+                }
+                if (passosArmaduraTotal > 0) {
+                    Text(
+                        "Força abaixo da Força Mínima: -$passosArmaduraTotal Movimentação (já aplicado acima) e -$passosArmaduraTotal Agilidade/perícias de Agilidade (aplique ao rolar)",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    Spacer(Modifier.height(4.dp))
+                }
                 armors.forEach { item ->
                     val armorVal = (item.armadura as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
                     val parryVal = (item.aparar as? kotlinx.serialization.json.JsonPrimitive)?.content?.toIntOrNull()
+                    val coberturaVal = (item.cobertura as? kotlinx.serialization.json.JsonPrimitive)?.content
 
                     val parts = mutableListOf<String>()
                     if (armorVal != null && armorVal != 0) parts.add("Armadura +$armorVal")
                     if (parryVal != null && parryVal != 0) parts.add("Aparar +$parryVal")
+                    if (!coberturaVal.isNullOrBlank() && coberturaVal != "-") parts.add("Cobertura $coberturaVal")
 
-                    val notes = (item.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                    val forcaMinTxt = (item.forcaMin as? kotlinx.serialization.json.JsonPrimitive)?.content
+                    val passos = com.example.swadebuilder.util.ForcaMinimaCalculator.passosAbaixoDoMinimo(forcaRaw, forcaMinTxt)
+                    val notasExtras = if (passos > 0) listOf("Força abaixo da Força Mínima desta peça (-$passos)") else emptyList()
+                    val notesBase = (item.observacoes as? kotlinx.serialization.json.JsonPrimitive)?.content ?: ""
+                    val notes = (listOf(notesBase) + notasExtras).filter { it.isNotBlank() }.joinToString(" • ")
                     CombatRow(name = item.nome.toFancyTitleCase(), stats = parts.joinToString(", "), notes = notes)
                 }
             }

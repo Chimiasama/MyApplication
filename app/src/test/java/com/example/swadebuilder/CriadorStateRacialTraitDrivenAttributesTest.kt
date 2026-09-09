@@ -35,8 +35,6 @@ class CriadorStateRacialTraitDrivenAttributesTest {
         listaCoracoesCrystal = emptyList<CrystalHeart>(),
         listaAncestralidadesJson = racas,
         listaMonstroTemplates = emptyList<MonstroTemplate>(),
-        racialAttrMinMap = emptyMap(),
-        racialSkillStartMap = emptyMap(),
         listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
         mapaAtributosDisplay = emptyMap(),
         listaPericias = listOf(
@@ -59,8 +57,6 @@ class CriadorStateRacialTraitDrivenAttributesTest {
     private fun racaComTraco(nome: String, traitId: String, origem: String = "BASICO"): RacialModifier =
         RacialModifier(
             nome = nome,
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             habilidades = listOf(
                 RacialAbility(nome = traitId, descricao = "traço de teste", id = traitId)
             ),
@@ -129,8 +125,6 @@ class CriadorStateRacialTraitDrivenAttributesTest {
                 listOf(
                     RacialModifier(
                         nome = "FERAL",
-                        atributos = emptyMap(),
-                        pericias = emptyMap(),
                         habilidades = listOf(
                             RacialAbility(nome = "Mente Primitiva", descricao = "teste", id = "MENTE_PRIMITIVA")
                         ),
@@ -201,8 +195,6 @@ class CriadorStateRacialTraitDrivenAttributesTest {
                 listOf(
                     RacialModifier(
                         nome = "FERAL",
-                        atributos = emptyMap(),
-                        pericias = emptyMap(),
                         habilidades = listOf(
                             RacialAbility(nome = "Perceber d6", descricao = "teste", id = "PERCEBER_D6")
                         ),

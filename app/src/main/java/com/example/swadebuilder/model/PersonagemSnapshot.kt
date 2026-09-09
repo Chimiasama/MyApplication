@@ -150,6 +150,15 @@ data class SnapshotSelecoes(
     val portraitOffsetY: Float = 0.5f,
     val portraitZoom: Float = 1f,
     val signoAdgSelecionado: String? = null,
+    // Pacote Cultural de Humanos (Fantasia): a escolha do pacote em si vem de
+    // `scifiVariant` (campo genérico já serializado abaixo) — este campo é só
+    // a resposta da Seleção aninhada (compensação de Povo do Mar, grupo
+    // cultural de Senhores dos Cavalos).
+    val humanoFantasiaSelecaoAninhada: String? = null,
+    // Legado (pré-migração do Pacote Cultural pro sistema genérico de
+    // Variante) — mantidos só pra saves antigos não perderem a escolha ao
+    // carregar; migrados pra scifiVariant/humanoFantasiaSelecaoAninhada na
+    // restauração (ver CriadorState.restaurarSnapshot) e nunca mais escritos.
     val pacoteCulturalFantasiaSelecionado: String? = null,
     val povoDoMarOpcao: String? = null,
     val senhoresCavalosExtra: Boolean? = false,

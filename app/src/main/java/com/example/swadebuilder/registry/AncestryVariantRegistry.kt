@@ -52,10 +52,20 @@ object AncestryVariantRegistry {
         yetis(),
         robos(),
         seresSinteticos(),
-        descendenteElemental()
-    ).associateBy { it.ancestralidadeId }
+        descendenteElemental(),
+        humanoFantasia()
+    ).associateBy { configKey(it.livro, it.ancestralidadeId) }
 
-    fun get(ancestralidadeId: String): AncestryVariantConfig? = configs[ancestralidadeId]
+    private fun configKey(livro: String, ancestralidadeId: String): String = "$livro::$ancestralidadeId"
+
+    /**
+     * Cada livro registra suas próprias Variantes — "HUMANOS" do Sci-Fi
+     * (Baixa Gravidade/Minerador) e "HUMANOS" do Fantasia (Pacotes
+     * Culturais) são raças diferentes que só compartilham o nome de
+     * exibição, então `livro` é obrigatório pra desambiguar (ver comentário
+     * de AncestryVariantConfig).
+     */
+    fun get(ancestralidadeId: String, livro: String): AncestryVariantConfig? = configs[configKey(livro, ancestralidadeId)]
 
     /**
      * Ids de ancestralidade cujo lote de Variante Sci-Fi (2 e 3, ver
@@ -86,6 +96,7 @@ object AncestryVariantRegistry {
 
     private fun rakashanos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "RAKASHANOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -114,6 +125,7 @@ object AncestryVariantRegistry {
 
     private fun aquarianos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "AQUARIANOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(id = "basico", nome = "Básico", pacoteFixo = ResolvedTraitPackage()),
@@ -134,6 +146,7 @@ object AncestryVariantRegistry {
 
     private fun avianos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "AVIANOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -171,6 +184,7 @@ object AncestryVariantRegistry {
 
     private fun elfos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ELFOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -196,6 +210,7 @@ object AncestryVariantRegistry {
 
     private fun humanos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "HUMANOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
@@ -220,6 +235,7 @@ object AncestryVariantRegistry {
 
     private fun centaux(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "CENTAUX",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -255,6 +271,7 @@ object AncestryVariantRegistry {
 
     private fun drakens(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "DRAKENS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 // Padrão não adiciona nada além da raça base: Força d6 e
@@ -283,6 +300,7 @@ object AncestryVariantRegistry {
 
     private fun ferais(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "FERAIS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -308,6 +326,7 @@ object AncestryVariantRegistry {
 
     private fun florans(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "FLORANS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -331,6 +350,7 @@ object AncestryVariantRegistry {
 
     private fun gelatinoides(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "GELATINOIDES",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -352,6 +372,7 @@ object AncestryVariantRegistry {
 
     private fun insetoidesScifi(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "INSETOIDES",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -387,6 +408,7 @@ object AncestryVariantRegistry {
 
     private fun mimicos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "MIMICOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -424,6 +446,7 @@ object AncestryVariantRegistry {
 
     private fun mineradoresGeneticos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "MINERADORES GENETICOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -459,6 +482,7 @@ object AncestryVariantRegistry {
 
     private fun oraculos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ORACULOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -484,6 +508,7 @@ object AncestryVariantRegistry {
 
     private fun possessores(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "POSSESSORES",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -511,6 +536,7 @@ object AncestryVariantRegistry {
 
     private fun quadroides(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "QUADROIDES",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 // "Padrão" não é uma Variante de verdade — Ação Adicional
@@ -561,6 +587,7 @@ object AncestryVariantRegistry {
 
     private fun soldadosGeneticos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "SOLDADOS GENETICOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -608,6 +635,7 @@ object AncestryVariantRegistry {
     // removendo CIRCUITOS DE ASIMOV pelo nome real da habilidade base.
     private fun robos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ROBOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
@@ -641,6 +669,7 @@ object AncestryVariantRegistry {
 
     private fun seresSinteticos(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "SERES SINTETICOS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -672,6 +701,7 @@ object AncestryVariantRegistry {
 
     private fun yetis(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "YETIS",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
@@ -691,6 +721,7 @@ object AncestryVariantRegistry {
     // Complicação Maior "de nascença" — todo Terracota tem uma das duas). ---
     private fun terracota(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "TERRACOTA",
+        livro = "ARTE_DA_GUERRA",
         selecoes = listOf(
             SelectionDef(
                 id = "terracota_complicacao",
@@ -725,6 +756,7 @@ object AncestryVariantRegistry {
     // campo próprio no schema).
     private fun umvee(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "UMVEE (FILHOS DA LUA)",
+        livro = "ARTE_DA_GUERRA",
         selecoes = listOf(
             SelectionDef(
                 id = "umvee_dom_da_natureza",
@@ -799,47 +831,31 @@ object AncestryVariantRegistry {
     // Resistência +2 (a raça é de pedra/terra, física e resistente); Ar,
     // Fogo ou Água troca os dois por Forma de Energia (o corpo já não é mais
     // sólido nem musculoso). ---
+    // Elementais é candidato único em ancestralidades.json (só existe no
+    // Sci-Fi), então cai fora de getAncestralidadeDef() antes de chegar a ler
+    // este registro pro caminho genérico de scifiVariantDrivenKeys (ver o
+    // curto-circuito de candidato único lá, e a exceção específica que
+    // Elementais ganhou nele) — os pacotes abaixo, portanto, não são
+    // resolvidos/aplicados por esse caminho genérico. A troca real
+    // Padrão↔"Ar, Fogo ou Água" (MUITO_FORTE + RESISTENCIA vira FORMA_DE_ENERGIA
+    // + um traço invisível de ajuste de orçamento) mora direto num bloco
+    // dedicado em CriadorState.applyAncestryVariantAdjustments(), que já entra
+    // em habilidades[] de verdade — mesmo padrão de exceção que Umvee/
+    // Meio-Demônio usam. Mantido com `selecoes`/FIXED_PACKAGE (em vez de
+    // `grupoVariante`) só pra preservar o rótulo "Seleção:" já exibido em
+    // AncestralidadesSection (isSelecaoPura), sem trocas paralelas de
+    // conteúdo mecânico que já não são lidas por ninguém.
     private fun elementaisScifi(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ELEMENTAIS",
+        livro = "SCI_FI",
         selecoes = listOf(
             SelectionDef(
                 id = "elementais_scifi_elemento",
                 rotulo = "Escolha o elemento",
                 tipo = SelectionType.FIXED_PACKAGE,
                 pacotesFixos = listOf(
-                    FixedPackageOption(
-                        "padrao",
-                        "Padrão",
-                        // Força d8 (atributos.Força=4 no JSON, 2 passos) = MUITO_FORTE
-                        // (4pts), não FORTE (2pts, d6 — esse é o da variante "Ar,
-                        // Fogo ou Água", mais fraca). Id errado aqui não muda o dado
-                        // de Força na ficha (AtributoStep não é aplicado por esta
-                        // lista — ver ModifierEngine.aplicarEfeito/atributoBaseRacial),
-                        // mas fazia o traço exibido/custo de auditoria não bater com
-                        // o d8 real.
-                        ResolvedTraitPackage(
-                            tracosParaAdicionar = listOf(
-                                TraitAddition("MUITO FORTE", "MUITO_FORTE"),
-                                TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)
-                            )
-                        )
-                    ),
-                    FixedPackageOption(
-                        "ar_fogo_ou_agua",
-                        "Ar, Fogo ou Água",
-                        // Trocam Resistência (não incluída aqui: ela só existe em
-                        // Padrão) pelo Forte mais fraco (Força d6, não d8 — ver
-                        // atributoBaseRacial()) mais Forma de Energia. "livro:
-                        // Elementais do ar, fogo e água têm Forma de Energia em
-                        // vez de Forte e Resistência" — o Forte que sobra aqui é
-                        // o d6 genérico, não o d8 de Padrão.
-                        ResolvedTraitPackage(
-                            tracosParaAdicionar = listOf(
-                                TraitAddition("FORTE", "FORTE"),
-                                TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")
-                            )
-                        )
-                    )
+                    FixedPackageOption("padrao", "Padrão", ResolvedTraitPackage()),
+                    FixedPackageOption("ar_fogo_ou_agua", "Ar, Fogo ou Água", ResolvedTraitPackage())
                 )
             )
         )
@@ -854,6 +870,7 @@ object AncestryVariantRegistry {
     // (-1+1+0 do placeholder, +2 do elemento) qualquer que seja a escolha.
     private fun descendenteElemental(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "DESCENDENTE ELEMENTAL",
+        livro = "FANTASIA",
         selecoes = listOf(
             SelectionDef(
                 id = "descendente_elemental_elemento",
@@ -886,6 +903,7 @@ object AncestryVariantRegistry {
     // delegado a AnaoCiberTraitCatalog). ---
     private fun anoes(): AncestryVariantConfig = AncestryVariantConfig(
         ancestralidadeId = "ANOES",
+        livro = "SCI_FI",
         grupoVariante = VariantGroup(
             opcoes = listOf(
                 VariantOption(
@@ -900,6 +918,137 @@ object AncestryVariantRegistry {
                             rotulo = "Escolha até 2 pontos de traços raciais negativos (nenhum maior que -2)",
                             tipo = SelectionType.BUDGETED_CATALOG,
                             catalogId = "anao_ciber"
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    // --- Humanos (Fantasia): Variante real (o mestre/grupo escolhe o Pacote
+    // Cultural do personagem pra a mesa) — substitui o antigo sistema
+    // dedicado de Pacote Cultural (PACOTES_CULTURAIS_FANTASIA em
+    // CriadorState, removido), agora só mais uma Variante registrada como
+    // qualquer outra. "Humano padrão" não tem VariantOption própria (mesmo
+    // padrão de "Padrão" nas raças Sci-Fi/Anão Ciber): resolver()
+    // com variantOptionId nulo já cai no ResolvedTraitPackage() vazio, que
+    // mantém Adaptável (só removido pelo bloco de habilidades[] em
+    // CriadorState.applyAncestryVariantAdjustments quando outro pacote é
+    // escolhido).
+    //
+    // d6 inicial de perícia/atributo (NOMADES_DESERTO_SOBREVIVENCIA,
+    // POVO_MONTANHA_VIGOR, POVO_MAR_ATLETISMO/NAVEGAR, SENHORES_CAVALOS_CAVALGAR)
+    // usa os mesmos ids já cadastrados em RacialTraitPointCatalog.EFEITOS —
+    // entram em habilidades[] da raça (via applyAncestryVariantAdjustments),
+    // lidos pelo mesmo loop genérico de PericiaStep/AtributoStep que qualquer
+    // outra raça já usa.
+    //
+    // Fraqueza/Resistência Ambiental e Penalidade em Cavalgar são só texto
+    // informativo (modificam testes "em jogo", sem valor de construção do
+    // personagem — regra do usuário: só entram como id+descrição, nunca como
+    // efeito mecânico). Procurado (Maior)/Código de Honra/Sem Escrúpulos/
+    // Analfabeto são Complicações reais do catálogo (complicacoes.json) — o
+    // texto tem que bater com o nome catalogado pra
+    // ResolveRacialAutomaticComplicationsUseCase reconhecer e conceder
+    // automaticamente. Nascido na Sela é Vantagem real (vantagens.json,
+    // id "nascido_na_sela") — concedida via vantagensGratisIds, não por nome
+    // solto, pra garantir a rerrolagem/movimentação mecânica dela (o sistema
+    // antigo só guardava o nome em bookkeeping, sem conceder o efeito de
+    // verdade).
+    private fun humanoFantasia(): AncestryVariantConfig = AncestryVariantConfig(
+        ancestralidadeId = "HUMANOS",
+        livro = "FANTASIA",
+        grupoVariante = VariantGroup(
+            opcoes = listOf(
+                VariantOption(id = "padrao", nome = "Padrão", pacoteFixo = ResolvedTraitPackage()),
+                VariantOption(
+                    id = "nomades_do_deserto",
+                    nome = "Nômades do Deserto",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf(TraitAddition("Sobrevivência d6", "NOMADES_DESERTO_SOBREVIVENCIA")),
+                        tracosNegativosParaAdicionar = listOf(TraitAddition("Fraqueza Ambiental (Frio)", "FRAQUEZA_AMBIENTAL_FRIO")),
+                        vantagensGratisParaAdicionar = listOf(TraitAddition("Resistência Ambiental (Calor)", "RESISTENCIA_AMBIENTAL_CALOR"))
+                    )
+                ),
+                VariantOption(
+                    id = "povo_da_montanha",
+                    nome = "Povo da Montanha",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf(TraitAddition("Vigor d6", "POVO_MONTANHA_VIGOR")),
+                        tracosNegativosParaAdicionar = listOf(TraitAddition("Fraqueza Ambiental (Calor)", "FRAQUEZA_AMBIENTAL_CALOR")),
+                        vantagensGratisParaAdicionar = listOf(TraitAddition("Resistência Ambiental (Frio)", "RESISTENCIA_AMBIENTAL_FRIO"))
+                    )
+                ),
+                VariantOption(
+                    id = "povo_do_mar",
+                    nome = "Povo do Mar",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf(
+                            TraitAddition("Atletismo d6", "POVO_MAR_ATLETISMO"),
+                            TraitAddition("Navegar d6", "POVO_MAR_NAVEGAR")
+                        )
+                    ),
+                    selecoes = listOf(
+                        SelectionDef(
+                            id = "povo_do_mar_compensacao",
+                            rotulo = "Compensação (a critério do Mestre)",
+                            tipo = SelectionType.FIXED_PACKAGE,
+                            pacotesFixos = listOf(
+                                FixedPackageOption("nenhuma", "Nenhuma", ResolvedTraitPackage()),
+                                FixedPackageOption(
+                                    "penalidade_cavalgar", "Penalidade em Cavalgar",
+                                    ResolvedTraitPackage(
+                                        tracosNegativosParaAdicionar = listOf(
+                                            TraitAddition("Penalidade em Cavalgar", "PENALIDADE_CAVALGAR")
+                                        )
+                                    )
+                                ),
+                                FixedPackageOption(
+                                    "procurado_maior", "Procurado (Maior)",
+                                    ResolvedTraitPackage(
+                                        desvantagensParaAdicionar = listOf(TraitAddition("PROCURADO (Maior)", "PROCURADO_MAIOR"))
+                                    )
+                                )
+                            )
+                        )
+                    )
+                ),
+                VariantOption(
+                    id = "senhores_dos_cavalos",
+                    nome = "Senhores dos Cavalos",
+                    pacoteFixo = ResolvedTraitPackage(
+                        tracosParaAdicionar = listOf(TraitAddition("Cavalgar d6", "SENHORES_CAVALOS_CAVALGAR"))
+                    ),
+                    selecoes = listOf(
+                        SelectionDef(
+                            id = "senhores_cavalos_grupo",
+                            rotulo = "Grupo cultural (a critério do Mestre)",
+                            tipo = SelectionType.FIXED_PACKAGE,
+                            pacotesFixos = listOf(
+                                FixedPackageOption("nenhum", "Nenhum", ResolvedTraitPackage()),
+                                // "Nascido na Sela" sozinho (sem Complicação) foi removido: pelo
+                                // livro, ganhar a Vantagem precisa vir com uma Complicação pra
+                                // compensar (Código de Honra ou Sem Escrúpulos + Analfabeto) —
+                                // as duas opções abaixo. Sem Complicação nenhuma, a única opção
+                                // válida é "Nenhum" (só o Cavalgar d6 do pacote cultural).
+                                FixedPackageOption(
+                                    "codigo_de_honra", "Nascido na Sela + Código de Honra",
+                                    ResolvedTraitPackage(
+                                        vantagensGratisIds = listOf("nascido_na_sela"),
+                                        desvantagensParaAdicionar = listOf(TraitAddition("CÓDIGO DE HONRA", "CODIGO_DE_HONRA"))
+                                    )
+                                ),
+                                FixedPackageOption(
+                                    "sem_escrupulos_analfabeto", "Nascido na Sela + Sem Escrúpulos e Analfabeto",
+                                    ResolvedTraitPackage(
+                                        vantagensGratisIds = listOf("nascido_na_sela"),
+                                        desvantagensParaAdicionar = listOf(
+                                            TraitAddition("SEM ESCRÚPULOS (Menor)", "SEM_ESCRUPULOS_MENOR"),
+                                            TraitAddition("ANALFABETO", "ANALFABETO")
+                                        )
+                                    )
+                                )
+                            )
                         )
                     )
                 )

@@ -12,8 +12,6 @@ class ModifierEngineCidadeSolVaporTest {
             id = "anc_demonio_csv",
             nome = "Demônio (Abismo)",
             origem = "CIDADE_SOL_VAPOR",
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             habilidades = listOf(
                 RacialAbility(
                     nome = "Frágil",
@@ -45,8 +43,6 @@ class ModifierEngineCidadeSolVaporTest {
                     superequipCategorias = emptyList(),
                     mapaAtributosDisplay = emptyMap(),
                     mapaPericias = emptyMap(),
-                    racialAttrMinMap = emptyMap(),
-                    racialSkillStartMap = emptyMap(),
                     arcanoInfo = emptyList(),
                     mapaAtributosDescricao = emptyMap()
                 )

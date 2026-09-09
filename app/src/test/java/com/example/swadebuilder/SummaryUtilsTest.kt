@@ -30,7 +30,6 @@ class SummaryUtilsTest {
 
         val personagem = MeuPersonagem(
             nome = "Test Char",
-            atributos = emptyMap(),
             pericias = mapOf("Atletismo" to 4),
             ancestralidade = "Humano",
             celestialAAMilagresDesabilitado = false,
@@ -40,6 +39,7 @@ class SummaryUtilsTest {
             equipamentos = emptyList(),
             poderes = emptyMap(),
             dinheiro = 500,
+            atributos = emptyMap(),
             pontosRestantes = 0
         )
 
@@ -70,8 +70,6 @@ class SummaryUtilsTest {
         val listaAncestralidades = listOf(
             com.example.swadebuilder.model.RacialModifier(
                 nome = "AVIANOS",
-                atributos = emptyMap(),
-                pericias = mapOf("Perceber" to 2),
                 habilidades = listOf(
                     com.example.swadebuilder.model.RacialAbility("Frágil", ""),
                     com.example.swadebuilder.model.RacialAbility("Movimentação Reduzida", ""),
@@ -100,7 +98,6 @@ class SummaryUtilsTest {
 
         val personagem = MeuPersonagem(
             nome = "Ave",
-            atributos = emptyMap(),
             pericias = mapOf("Perceber" to 6),
             ancestralidade = "AVIANOS",
             celestialAAMilagresDesabilitado = false,
@@ -115,6 +112,7 @@ class SummaryUtilsTest {
             poderes = emptyMap(),
             dinheiro = 0,
             pontosRestantes = 0,
+            atributos = emptyMap(),
             compendioSciFiAtivo = true
         )
 
@@ -145,8 +143,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Dwarf",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "ANÕES",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
@@ -156,6 +152,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -187,8 +185,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Elf",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "ELFOS",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
@@ -199,6 +195,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -206,8 +204,6 @@ class SummaryUtilsTest {
                 com.example.swadebuilder.model.RacialModifier(
                     nome = "ELFOS",
                     origem = "FC",
-                    atributos = emptyMap(),
-                    pericias = emptyMap(),
                     opcoes = listOf("Básico", "Comunitário"),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Ágil", ""),
@@ -247,8 +243,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Possessor",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "POSSESSORES",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
@@ -258,6 +252,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -288,8 +284,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Quadroide",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "QUADROIDES",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
@@ -299,6 +293,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -343,8 +339,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Gazela",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "CENTAUX",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
@@ -355,6 +349,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioSciFiAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -362,8 +358,6 @@ class SummaryUtilsTest {
                 com.example.swadebuilder.model.RacialModifier(
                     nome = "CENTAUX",
                     origem = "FC",
-                    atributos = emptyMap(),
-                    pericias = emptyMap(),
                     opcoes = listOf("Padrão", "Gazela"),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Estável", ""),
@@ -402,8 +396,6 @@ class SummaryUtilsTest {
     fun `summary deduplica vantagens com mesmo nome exibido`() {
         val personagem = MeuPersonagem(
             nome = "Oracle",
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             ancestralidade = "ORÁCULOS",
             celestialAAMilagresDesabilitado = false,
             vantagens = listOf("poderes_misticos", "poderes_misticos"),
@@ -413,6 +405,8 @@ class SummaryUtilsTest {
             poderes = emptyMap(),
             dinheiro = 0,
             pontosRestantes = 0,
+            atributos = emptyMap(),
+            pericias = emptyMap(),
             compendioSciFiAtivo = true
         )
 
@@ -453,7 +447,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Garca",
-                atributos = emptyMap(),
                 pericias = mapOf("Lutar" to 4),
                 ancestralidade = "HUMANOS",
                 signoAdgSelecionado = "Garça",
@@ -465,6 +458,7 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -472,8 +466,6 @@ class SummaryUtilsTest {
                 com.example.swadebuilder.model.RacialModifier(
                     nome = "HUMANOS",
                     origem = "ARTE_DA_GUERRA",
-                    atributos = emptyMap(),
-                    pericias = emptyMap(),
                     especieId = "humano"
                 )
             ),
@@ -494,7 +486,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Parry",
-                atributos = emptyMap(),
                 pericias = mapOf("Lutar" to 4),
                 ancestralidade = "HUMANOS",
                 celestialAAMilagresDesabilitado = false,
@@ -504,6 +495,7 @@ class SummaryUtilsTest {
                 equipamentos = emptyList(),
                 poderes = emptyMap(),
                 dinheiro = 0,
+                atributos = emptyMap(),
                 pontosRestantes = 0
             ),
             allAdvantages = emptyList(),
@@ -525,8 +517,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Tanu",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "TANUKIMIMI",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
@@ -537,6 +527,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = listOf(
@@ -552,8 +544,6 @@ class SummaryUtilsTest {
                 com.example.swadebuilder.model.RacialModifier(
                     nome = "TANUKIMIMI",
                     origem = "ARTE_DA_GUERRA",
-                    atributos = emptyMap(),
-                    pericias = emptyMap(),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Pensamentos Positivos", ""),
                         com.example.swadebuilder.model.RacialAbility("Lentos para Agir", "")
@@ -581,8 +571,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Terra",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "TERRACOTA",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
@@ -592,6 +580,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -629,8 +619,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Feral",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "FERAL",
                 celestialAAMilagresDesabilitado = false,
                 vantagens = emptyList(),
@@ -641,6 +629,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = listOf(
@@ -656,8 +646,6 @@ class SummaryUtilsTest {
                 com.example.swadebuilder.model.RacialModifier(
                     nome = "FERAL",
                     origem = "ARTE_DA_GUERRA",
-                    atributos = emptyMap(),
-                    pericias = emptyMap(),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Insanidade (Sanguinário)", ""),
                         com.example.swadebuilder.model.RacialAbility("Primitivo", "")
@@ -686,8 +674,6 @@ class SummaryUtilsTest {
         val semSigno = buildAncestralidadeDisplay(
             MeuPersonagem(
                 nome = "Hum",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "HUMANOS",
                 signoAdgSelecionado = "Nenhum",
                 celestialAAMilagresDesabilitado = false,
@@ -698,6 +684,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             ancestralidadeNomeBase = "Humano (Império San)"
@@ -706,8 +694,6 @@ class SummaryUtilsTest {
         val comSigno = buildAncestralidadeDisplay(
             MeuPersonagem(
                 nome = "Hum",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "HUMANOS",
                 signoAdgSelecionado = "Garça",
                 celestialAAMilagresDesabilitado = false,
@@ -718,6 +704,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             ancestralidadeNomeBase = "Humano (Império San)"
@@ -732,8 +720,6 @@ class SummaryUtilsTest {
         val lines = buildSummaryLines(
             personagem = MeuPersonagem(
                 nome = "Hum",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 ancestralidade = "HUMANO (IMPÉRIO SAN)",
                 signoAdgSelecionado = "Garça",
                 celestialAAMilagresDesabilitado = false,
@@ -744,6 +730,8 @@ class SummaryUtilsTest {
                 poderes = emptyMap(),
                 dinheiro = 0,
                 pontosRestantes = 0,
+                atributos = emptyMap(),
+                pericias = emptyMap(),
                 compendioArteDaGuerraAtivo = true
             ),
             allAdvantages = emptyList(),
@@ -751,8 +739,6 @@ class SummaryUtilsTest {
                 com.example.swadebuilder.model.RacialModifier(
                     nome = "Humano (Império San)",
                     origem = "ARTE_DA_GUERRA",
-                    atributos = emptyMap(),
-                    pericias = emptyMap(),
                     habilidades = listOf(
                         com.example.swadebuilder.model.RacialAbility("Pontos de Perícia", ""),
                         com.example.swadebuilder.model.RacialAbility("Adaptável ou Signo", ""),
@@ -809,8 +795,6 @@ class SummaryUtilsTest {
 
         val personagem = MeuPersonagem(
             nome = "Mafioso",
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             ancestralidade = "HUMANOS",
             modoOficialAtivo = true, // Attempt to force official mode
             celestialAAMilagresDesabilitado = false,
@@ -820,6 +804,8 @@ class SummaryUtilsTest {
             equipamentos = eq,
             poderes = emptyMap(),
             dinheiro = 100,
+            atributos = emptyMap(),
+            pericias = emptyMap(),
             pontosRestantes = 0
         )
 

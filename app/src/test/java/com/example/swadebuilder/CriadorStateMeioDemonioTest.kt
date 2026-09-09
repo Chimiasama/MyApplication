@@ -34,8 +34,6 @@ class CriadorStateMeioDemonioTest {
 
     private fun meioDemonio(): RacialModifier = RacialModifier(
         nome = "Meio-Demônio",
-        atributos = emptyMap(),
-        pericias = emptyMap(),
         habilidades = listOf(
             RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
         ),
@@ -56,8 +54,6 @@ class CriadorStateMeioDemonioTest {
         listaCoracoesCrystal = emptyList<CrystalHeart>(),
         listaAncestralidadesJson = listOf(meioDemonio()),
         listaMonstroTemplates = emptyList<MonstroTemplate>(),
-        racialAttrMinMap = emptyMap(),
-        racialSkillStartMap = emptyMap(),
         listaAtributos = listOf("AGILIDADE", "ASTUCIA", "ESPIRITO", "FORCA", "VIGOR"),
         mapaAtributosDisplay = emptyMap(),
         listaPericias = emptyList<Pericia>(),

@@ -15,6 +15,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `ancestralidade desconhecida retorna pacote vazio`() {
         val result = useCase.resolve(
             ancestralidadeId = "RACA_QUE_NAO_EXISTE",
+            livro = "SCI_FI",
             variantOptionId = null,
             selectionAnswers = emptyList()
         )
@@ -26,6 +27,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `terracota escolhe voto`() {
         val result = useCase.resolve(
             ancestralidadeId = "TERRACOTA",
+            livro = "ARTE_DA_GUERRA",
             variantOptionId = null,
             selectionAnswers = listOf(
                 SelectionAnswer(selectionId = "terracota_complicacao", fixedPackageChoiceId = "voto")
@@ -39,6 +41,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `terracota escolhe obrigacao`() {
         val result = useCase.resolve(
             ancestralidadeId = "TERRACOTA",
+            livro = "ARTE_DA_GUERRA",
             variantOptionId = null,
             selectionAnswers = listOf(
                 SelectionAnswer(selectionId = "terracota_complicacao", fixedPackageChoiceId = "obrigacao")
@@ -52,6 +55,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `terracota sem resposta cai no primeiro pacote (voto)`() {
         val result = useCase.resolve(
             ancestralidadeId = "TERRACOTA",
+            livro = "ARTE_DA_GUERRA",
             variantOptionId = null,
             selectionAnswers = emptyList()
         )
@@ -63,6 +67,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `umvee vinculo bestial concede vantagem de verdade`() {
         val result = useCase.resolve(
             ancestralidadeId = "UMVEE (FILHOS DA LUA)",
+            livro = "ARTE_DA_GUERRA",
             variantOptionId = null,
             selectionAnswers = listOf(
                 SelectionAnswer(selectionId = "umvee_dom_da_natureza", fixedPackageChoiceId = "vinculo_bestial")
@@ -77,6 +82,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `umvee pedregoso concede traco de resistencia`() {
         val result = useCase.resolve(
             ancestralidadeId = "UMVEE (FILHOS DA LUA)",
+            livro = "ARTE_DA_GUERRA",
             variantOptionId = null,
             selectionAnswers = listOf(
                 SelectionAnswer(selectionId = "umvee_dom_da_natureza", fixedPackageChoiceId = "pedregoso")
@@ -96,6 +102,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `umvee sem resposta cai no primeiro dom (apice)`() {
         val result = useCase.resolve(
             ancestralidadeId = "UMVEE (FILHOS DA LUA)",
+            livro = "ARTE_DA_GUERRA",
             variantOptionId = null,
             selectionAnswers = emptyList()
         )
@@ -104,43 +111,47 @@ class ResolveAncestryVariantPackageUseCaseTest {
     }
 
     @Test
-    fun `elementais padrao mantem forte e resistencia`() {
+    fun `elementais padrao nao injeta traco por aqui`() {
         val result = useCase.resolve(
             ancestralidadeId = "ELEMENTAIS",
+            livro = "SCI_FI",
             variantOptionId = null,
             selectionAnswers = listOf(
                 SelectionAnswer(selectionId = "elementais_scifi_elemento", fixedPackageChoiceId = "padrao")
             )
         )
 
-        // Força d8 = MUITO_FORTE (4pts), não FORTE (2pts, d6 — esse é o da
-        // variante "Ar, Fogo ou Água", mais fraca).
-        assertEquals(
-            listOf(TraitAddition("MUITO FORTE", "MUITO_FORTE"), TraitAddition("RESISTÊNCIA +2", "RESISTENCIA", vezes = 2)),
-            result.tracosParaAdicionar
-        )
+        // MUITO_FORTE (Força d8) e RESISTENCIA +2 são habilidades base da
+        // raça em ancestralidades.json ("Padrão" é o default, nada extra a
+        // adicionar) — os pacotes fixos deste registro ficaram vazios de
+        // propósito porque Elementais é candidato único e nunca passa pelo
+        // caminho genérico que os leria (scifiVariantDrivenKeys); a troca
+        // real Padrão↔"Ar, Fogo ou Água" mora em
+        // CriadorState.applyAncestryVariantAdjustments, direto em
+        // habilidades[].
+        assertEquals(emptyList<TraitAddition>(), result.tracosParaAdicionar)
     }
 
     @Test
-    fun `elementais ar fogo ou agua troca por forma de energia`() {
+    fun `elementais ar fogo ou agua tambem nao injeta traco por aqui`() {
         val result = useCase.resolve(
             ancestralidadeId = "ELEMENTAIS",
+            livro = "SCI_FI",
             variantOptionId = null,
             selectionAnswers = listOf(
                 SelectionAnswer(selectionId = "elementais_scifi_elemento", fixedPackageChoiceId = "ar_fogo_ou_agua")
             )
         )
 
-        assertEquals(
-            listOf(TraitAddition("FORTE", "FORTE"), TraitAddition("FORMA DE ENERGIA", "FORMA_DE_ENERGIA")),
-            result.tracosParaAdicionar
-        )
+        // Ver comentário do teste "padrao" acima.
+        assertEquals(emptyList<TraitAddition>(), result.tracosParaAdicionar)
     }
 
     @Test
     fun `anoes ciber combina pacote fixo da variante com o catalogo de tracos negativos`() {
         val result = useCase.resolve(
             ancestralidadeId = "ANOES",
+            livro = "SCI_FI",
             variantOptionId = "ciber",
             selectionAnswers = emptyList(),
             catalogPackages = mapOf(
@@ -164,6 +175,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `anoes sem variante (basico) nao concede nada`() {
         val result = useCase.resolve(
             ancestralidadeId = "ANOES",
+            livro = "SCI_FI",
             variantOptionId = null,
             selectionAnswers = emptyList()
         )
@@ -175,6 +187,7 @@ class ResolveAncestryVariantPackageUseCaseTest {
     fun `anoes com id de variante desconhecido se comporta como basico`() {
         val result = useCase.resolve(
             ancestralidadeId = "ANOES",
+            livro = "SCI_FI",
             variantOptionId = "variante_que_nao_existe",
             selectionAnswers = emptyList()
         )

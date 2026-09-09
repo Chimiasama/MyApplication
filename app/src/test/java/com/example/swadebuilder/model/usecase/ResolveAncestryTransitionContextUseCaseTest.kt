@@ -14,8 +14,6 @@ class ResolveAncestryTransitionContextUseCaseTest {
     fun `detects human transitions through adaptavel and computes previous free keys`() {
         val previousDef = RacialModifier(
             nome = "Povo Adaptado",
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             habilidades = listOf(
                 RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
             ),

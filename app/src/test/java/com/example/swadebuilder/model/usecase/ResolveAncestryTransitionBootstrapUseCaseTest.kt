@@ -35,8 +35,6 @@ class ResolveAncestryTransitionBootstrapUseCaseTest {
     fun `uses transition context free keys but does not change points when leaving humano via adaptavel ancestry (legacy logic disabled)`() {
         val previousDef = RacialModifier(
             nome = "Povo Adaptado",
-            atributos = emptyMap(),
-            pericias = emptyMap(),
             habilidades = listOf(
                 RacialAbility(nome = "Adaptável", descricao = "", id = "ADAPTAVEL", category = "racial_trait_positive")
             ),

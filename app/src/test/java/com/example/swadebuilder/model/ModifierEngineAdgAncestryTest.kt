@@ -15,8 +15,6 @@ class ModifierEngineAdgAncestryTest {
                     listaCoracoesCrystal = emptyList(),
                     listaAncestralidadesJson = listOf(modifier),
                     listaMonstroTemplates = emptyList(),
-                    racialAttrMinMap = emptyMap(),
-                    racialSkillStartMap = emptyMap(),
                     listaAtributos = emptyList(),
                     mapaAtributosDisplay = emptyMap(),
                     listaPericias = emptyList(),
@@ -42,8 +40,6 @@ class ModifierEngineAdgAncestryTest {
             modifier = RacialModifier(
                 nome = "Tanukimimi (Tanuki)",
                 origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 habilidades = listOf(
                     RacialAbility(
                         nome = "Despretensiosos e Barrigudos (Aparar Baixo)",
@@ -74,8 +70,6 @@ class ModifierEngineAdgAncestryTest {
             modifier = RacialModifier(
                 nome = "Usagimimi (Coelho)",
                 origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 habilidades = emptyList(),
                 movimentacao = 2
             )
@@ -93,8 +87,6 @@ class ModifierEngineAdgAncestryTest {
             modifier = RacialModifier(
                 nome = "Povo Rato",
                 origem = "FANTASIA",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 habilidades = listOf(
                     RacialAbility(
                         nome = "DIMINUTO (Tamanho -4)",
@@ -120,8 +112,6 @@ class ModifierEngineAdgAncestryTest {
             modifier = RacialModifier(
                 nome = "Terracota",
                 origem = "ARTE_DA_GUERRA",
-                atributos = emptyMap(),
-                pericias = emptyMap(),
                 habilidades = listOf(
                     RacialAbility(
                         nome = "Metade Construto",

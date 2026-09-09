@@ -62,8 +62,6 @@ class GameDataRepositorySanitizationTest {
         listaCoracoesCrystal = emptyList(),
         listaAncestralidadesJson = emptyList(),
         listaMonstroTemplates = emptyList(),
-        racialAttrMinMap = emptyMap(),
-        racialSkillStartMap = emptyMap(),
         listaAtributos = emptyList(),
         mapaAtributosDisplay = emptyMap(),
         listaPericias = pericias,

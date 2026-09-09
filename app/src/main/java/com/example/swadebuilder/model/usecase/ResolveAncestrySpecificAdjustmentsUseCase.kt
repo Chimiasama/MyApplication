@@ -54,10 +54,15 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
      * forçar o reset primeiro), igual ao "when" fixo que este substitui.
      */
     private fun buildResultFromVariantRegistry(ancestralidadeId: String, effectiveVariant: String?): Result? {
-        val config = AncestryVariantRegistry.get(ancestralidadeId) ?: return null
+        // Só chamado dentro de `isSciFiActive` (ver `ancKey in
+        // AncestryVariantRegistry.scifiVariantDrivenKeys` abaixo) — todas as
+        // raças desse conjunto são do Sci-Fi.
+        val livro = "SCI_FI"
+        val config = AncestryVariantRegistry.get(ancestralidadeId, livro) ?: return null
         val variantOptionId = variantOptionIdFrom(config, effectiveVariant) ?: return null
         val resolved = resolveAncestryVariantPackageUseCase.resolve(
             ancestralidadeId = ancestralidadeId,
+            livro = livro,
             variantOptionId = variantOptionId,
             selectionAnswers = emptyList()
         )
@@ -106,6 +111,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
         anoesScifiSelecionado: String? = null,
         scifiVariant: String? = null,
         humanoMineradorAtributo: String? = null,
+        humanoFantasiaSelecaoAninhada: String? = null,
         anaoCiberTracosSelecionados: List<AnaoCiberTraitSelection> = emptyList(),
         quadroidesTracoNegativoSelecionado: String? = null,
         ancestryOptions: List<String> = emptyList(),
@@ -166,12 +172,13 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                             )
                         )
                     }
-                    val catalogSelection = AncestryVariantRegistry.get("ANOES")
+                    val catalogSelection = AncestryVariantRegistry.get("ANOES", "SCI_FI")
                         ?.grupoVariante?.opcoes?.firstOrNull { it.id == "ciber" }
                         ?.selecoes?.firstOrNull { it.id == "anao_ciber_tracos_negativos" }
                     val resolved = if (catalogSelection != null) {
                         resolveAncestryVariantPackageUseCase.resolve(
                             ancestralidadeId = "ANOES",
+                            livro = "SCI_FI",
                             variantOptionId = "ciber",
                             selectionAnswers = emptyList(),
                             catalogPackages = mapOf(
@@ -221,6 +228,7 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 )
                 val resolved = resolveAncestryVariantPackageUseCase.resolve(
                     ancestralidadeId = "QUADROIDES",
+                    livro = "SCI_FI",
                     variantOptionId = "habilidoso",
                     selectionAnswers = emptyList(),
                     catalogPackages = mapOf(
@@ -239,7 +247,23 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 )
             }
 
-            if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys) {
+            // Guarda extra só pra "HUMANOS": é o único id de
+            // scifiVariantDrivenKeys que é um nome de exibição compartilhado
+            // por raças DIFERENTES em livros diferentes (Sci-Fi "Humanos" —
+            // Baixa Gravidade/Minerador — vs. Fantasia "Humanos" — Pacotes
+            // Culturais). As outras 19 raças do set não têm esse tipo de
+            // colisão, então não precisam checar o livro (e os testes
+            // existentes desse use case não passam `ancestryOrigin`, só
+            // `isSciFiActive` — exigir o livro pra todas quebraria esses
+            // testes sem ganho real). Sem essa checagem pra HUMANOS
+            // especificamente, um jogador com Sci-Fi E Fantasia ativos ao
+            // mesmo tempo, jogando um Humano de Fantasia, caía neste bloco
+            // genérico (que só conhece a config Sci-Fi), sempre resolvendo
+            // pra "Padrão" — Pacotes Culturais nunca era aplicado (bug
+            // relatado pelo usuário: Senhores dos Cavalos não concedia nada
+            // e Adaptável continuava presente).
+            val isHumanosDeOutroLivro = ancKey == "HUMANOS" && canonicalOriginKey(ancestryOrigin) != "SCI_FI"
+            if (ancKey in AncestryVariantRegistry.scifiVariantDrivenKeys && !isHumanosDeOutroLivro) {
                 buildResultFromVariantRegistry(ancKey, effectiveVariant)?.let { return it }
             }
 
@@ -248,11 +272,12 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
                 // elemental é de algum elemento). Resolvido via
                 // AncestryVariantRegistry em vez do "when" fixo que existia
                 // aqui antes.
-                val def = AncestryVariantRegistry.get("ELEMENTAIS")
+                val def = AncestryVariantRegistry.get("ELEMENTAIS", "SCI_FI")
                     ?.selecoes?.firstOrNull { it.id == "elementais_scifi_elemento" }
                 val resolved = if (def != null) {
                     resolveAncestryVariantPackageUseCase.resolve(
                         ancestralidadeId = "ELEMENTAIS",
+                        livro = "SCI_FI",
                         variantOptionId = null,
                         selectionAnswers = listOf(fixedPackageAnswerFrom(def, effectiveVariant))
                     )
@@ -277,11 +302,12 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             // pacote fixo (o jogador escolhe 1 de 6, não o mestre reconfigura
             // a raça). Resolvido via AncestryVariantRegistry em vez do "when"
             // fixo que existia aqui antes.
-            val def = AncestryVariantRegistry.get("UMVEE (FILHOS DA LUA)")
+            val def = AncestryVariantRegistry.get("UMVEE (FILHOS DA LUA)", "ARTE_DA_GUERRA")
                 ?.selecoes?.firstOrNull { it.id == "umvee_dom_da_natureza" }
             val resolved = if (def != null) {
                 resolveAncestryVariantPackageUseCase.resolve(
                     ancestralidadeId = "UMVEE (FILHOS DA LUA)",
+                    livro = "ARTE_DA_GUERRA",
                     variantOptionId = null,
                     selectionAnswers = listOf(fixedPackageAnswerFrom(def, effectiveVariant))
                 )
@@ -291,10 +317,56 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             return Result(
                 naturalArmorFromRace = if (effectiveVariant == "Pedregoso") 2 else 0,
                 forceArmorZero = true,
-                ensureAdvantageNames = resolved.vantagensGratisParaAdicionar.map { it.nome },
-                ensureAdvantageIds = emptyList(),
+                ensureAdvantageNames = emptyList(),
+                // Casa por id (TraitAddition.id), não mais por nome — o
+                // comparador em ResolveAncestryRacialPackageUseCase agora
+                // normaliza via keyify(), então bate certo com o catálogo
+                // mesmo o id interno vindo em maiúsculo/underscore (ex.:
+                // "SENHOR_DAS_FERAS" → "senhor_das_feras" no catálogo).
+                ensureAdvantageIds = resolved.vantagensGratisParaAdicionar.map { it.id },
                 ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
                 ensureRacialDisadvantages = resolved.desvantagensParaAdicionar,
+                elementalAction = ElementalAction.NONE
+            )
+        }
+
+        if (canonicalOriginKey(ancestryOrigin) == "FANTASIA" && ancKey.contains("HUMANO")) {
+            // Pacotes Culturais: Variante de verdade (mestre/grupo escolhe pra
+            // mesa), resolvida via AncestryVariantRegistry.humanoFantasia() em
+            // vez do antigo sistema dedicado de Pacote Cultural. As perícias/
+            // atributo iniciais (Sobrevivência d6 etc.) e os traços narrativos
+            // negativos (Fraqueza Ambiental, Penalidade em Cavalgar) já entram
+            // em habilidades[] direto por CriadorState.applyAncestryVariantAdjustments
+            // (efeito mecânico via RacialTraitEffect + texto informativo na
+            // ficha); aqui só cuida do canal de bookkeeping (vantagensRaciais/
+            // desvantagensRaciais) e das Vantagens/Complicações reais
+            // (Resistência Ambiental é só texto, Procurado/Código de Honra/Sem
+            // Escrúpulos/Analfabeto são Complicações do catálogo, Nascido na
+            // Sela é Vantagem real via vantagensGratisIds).
+            val config = AncestryVariantRegistry.get("HUMANOS", "FANTASIA")
+            val variantOptionId = config?.let { variantOptionIdFrom(it, effectiveVariant) }
+            val nestedDef = config?.grupoVariante?.opcoes
+                ?.firstOrNull { it.id == variantOptionId }
+                ?.selecoes?.firstOrNull()
+            val resolved = if (variantOptionId != null) {
+                resolveAncestryVariantPackageUseCase.resolve(
+                    ancestralidadeId = "HUMANOS",
+                    livro = "FANTASIA",
+                    variantOptionId = variantOptionId,
+                    selectionAnswers = listOfNotNull(
+                        nestedDef?.let { fixedPackageAnswerFrom(it, humanoFantasiaSelecaoAninhada) }
+                    )
+                )
+            } else {
+                ResolvedTraitPackage()
+            }
+            return Result(
+                naturalArmorFromRace = 0,
+                forceArmorZero = true,
+                ensureAdvantageNames = emptyList(),
+                ensureAdvantageIds = resolved.vantagensGratisIds,
+                ensureAutomaticAdvantages = resolved.vantagensGratisParaAdicionar + resolved.tracosParaAdicionar,
+                ensureRacialDisadvantages = resolved.desvantagensParaAdicionar + resolved.tracosNegativosParaAdicionar,
                 elementalAction = ElementalAction.NONE
             )
         }
@@ -314,11 +386,12 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             // Terracota não tem Variante — é Seleção de pacote fixo: todo
             // Terracota nasce com Voto OU Obrigação (Maior), o jogador só
             // escolhe qual das duas. Resolvido via AncestryVariantRegistry.
-            val def = AncestryVariantRegistry.get("TERRACOTA")
+            val def = AncestryVariantRegistry.get("TERRACOTA", "ARTE_DA_GUERRA")
                 ?.selecoes?.firstOrNull { it.id == "terracota_complicacao" }
             val resolved = if (def != null) {
                 resolveAncestryVariantPackageUseCase.resolve(
                     ancestralidadeId = "TERRACOTA",
+                    livro = "ARTE_DA_GUERRA",
                     variantOptionId = null,
                     selectionAnswers = listOf(fixedPackageAnswerFrom(def, effectiveVariant))
                 )
@@ -398,7 +471,14 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             "PEQUENINOS" -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = true,
-                ensureAdvantageNames = listOf("Sorte", "Espirituoso"),
+                // "Espirituoso" nunca foi uma Vantagem de catálogo — é o traço
+                // racial (habilidades[], category "racial_trait_positive") que dá
+                // Espírito d6, já resolvido por atributoBaseRacial(); estava aqui
+                // por engano e nunca batia com nada. "Sorte" já é concedida pelo
+                // caminho genérico de vantagensGratisEfetivas (habilidade
+                // "SORTE" com category "racial_edge" no JSON da raça); mantida
+                // aqui só como reforço redundante (idempotente, sem duplicar).
+                ensureAdvantageNames = listOf("Sorte"),
                 ensureAdvantageIds = emptyList(),
                 ensureAutomaticAdvantages = emptyList(),
                 ensureRacialDisadvantages = listOf(
@@ -435,8 +515,15 @@ class ResolveAncestrySpecificAdjustmentsUseCase(
             "HUMANO (WISEGUYS)".keyify() -> Result(
                 naturalArmorFromRace = 0,
                 forceArmorZero = false,
-                ensureAdvantageNames = listOf("Conexões (Máfia)"),
-                ensureAdvantageIds = emptyList(),
+                ensureAdvantageNames = emptyList(),
+                // "conexoes_mafia": pseudo-id tratado em
+                // ResolveAncestryRacialPackageUseCase (concede "Conexões" com a
+                // escolha "Máfia" pré-marcada). Era `ensureAdvantageNames =
+                // listOf("Conexões (Máfia)")`, que nunca batia com nenhuma
+                // Vantagem do catálogo (lá é só "Conexões", sem esse sufixo) —
+                // Humano (Wiseguys) nunca recebia a Vantagem de raça de verdade
+                // (bug real, silencioso).
+                ensureAdvantageIds = listOf("conexoes_mafia"),
                 ensureAutomaticAdvantages = emptyList(),
                 ensureRacialDisadvantages = emptyList(),
                 elementalAction = ElementalAction.NONE
