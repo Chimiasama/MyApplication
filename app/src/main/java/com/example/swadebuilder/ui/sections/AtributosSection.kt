@@ -733,6 +733,13 @@ fun AtributosContent(
                     repeat(stepsToRemove) {
                         state.decreasePericia(per)
                     }
+                    // Mesmo "auto-refund" que o stepper de um passo só já tinha — sem
+                    // isso, reduzir vários passos de uma vez pelo carrossel nunca
+                    // soltava de volta Ponto(s) de Complicação gastos num passo
+                    // comprado com PB em vez de PP.
+                    while (state.pontosPericia > 0 && state.cpSpStack.isNotEmpty()) {
+                        state.devolverPcDePericia()
+                    }
                 }
                 state.rebuildAllPericiaStacks(enforcePoolLimit = true)
                 onUserFeedback()
@@ -913,6 +920,15 @@ fun AtributosContent(
                             state.pontosAtributo++
                             state.recalcularPontosAtributo()
                         }
+                    }
+                    // Mesmo "auto-refund" que o stepper de um passo só já tinha (ver
+                    // IconButton "-" acima): sem isso, reduzir vários passos de uma vez
+                    // pelo carrossel devolvia Ponto de Atributo, mas nunca soltava de
+                    // volta o(s) Ponto(s) de Complicação gastos quando algum desses
+                    // passos tinha sido comprado com PB em vez de PA — o PB ficava
+                    // preso, gasto sem nada em troca (bug relatado pelo usuário).
+                    while (state.pontosAtributo > 0 && state.cpPaStack.isNotEmpty()) {
+                        state.devolverPcDeAtributo()
                     }
                 }
                 onUserFeedback()

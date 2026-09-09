@@ -1043,6 +1043,13 @@ fun PericiasContent(
                     repeat(stepsToRemove) {
                         state.decreasePericia(per)
                     }
+                    // Mesmo "auto-refund" que o stepper de um passo só já tinha — sem
+                    // isso, reduzir vários passos de uma vez pelo carrossel nunca
+                    // soltava de volta Ponto(s) de Complicação gastos num passo
+                    // comprado com PB em vez de PP.
+                    while (state.pontosPericia > 0 && state.cpSpStack.isNotEmpty()) {
+                        state.devolverPcDePericia()
+                    }
                 }
                 state.rebuildAllPericiaStacks(feedbackMessages, enforcePoolLimit = true)
                 onUserFeedback()
