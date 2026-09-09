@@ -3,6 +3,7 @@ package com.example.swadebuilder.ui.sections
 import com.example.swadebuilder.EditionConfig
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -119,15 +121,22 @@ fun SkillCarouselPopoverDialog(
     onSelectRaw: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val steps = remember(startRaw) {
+    // Perícia pode passar de d12 pagando custo dobrado acima do atributo vinculado
+    // (texto abaixo, "dobrados acima") — não existe um teto fixo pra isso, então
+    // a lista estica até um pouco além do maior entre o atributo vinculado e o
+    // valor atual, cobrindo qualquer build razoável (ex.: perícia de Meio-Gigante
+    // vinculada a uma Força d12+5). Antes esta lista sempre parava em d12, então
+    // nunca dava pra escolher acima disso mesmo pagando o custo dobrado.
+    val steps = remember(startRaw, attrRaw, currentRaw) {
         val list = mutableListOf<Int>()
         if (startRaw == 0) {
             list.add(0)
         }
+        val upperBound = maxOf(12, attrRaw, currentRaw) + 8
         var v = maxOf(4, startRaw)
-        while (v <= 12) {
+        while (v <= upperBound) {
             if (!list.contains(v)) list.add(v)
-            v += 2
+            v = if (v < 12) v + 2 else v + 1
         }
         list
     }
@@ -151,7 +160,9 @@ fun SkillCarouselPopoverDialog(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -177,7 +188,7 @@ fun SkillCarouselPopoverDialog(
                                 }
                             },
                             enabled = canAfford,
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.width(64.dp),
                             colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
                                 containerColor = containerColor,
                                 disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)

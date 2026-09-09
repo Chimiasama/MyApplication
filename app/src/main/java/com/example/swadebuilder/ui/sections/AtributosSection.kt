@@ -2,6 +2,7 @@ package com.example.swadebuilder.ui.sections
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -110,12 +111,16 @@ fun AttributeCarouselPopoverDialog(
     onSelectRaw: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Progressão SWADE: d4→d6→...→d10→d12 sobe de 2 em 2, mas além de d12 (d12+1,
+    // d12+2, ...) sobe de 1 em 1 — ver dieStepsCount/toDiceString. Antes esta lista
+    // sempre parava em 12 mesmo quando `maxRaw` (teto racial/de variante, ex.: Força
+    // d12+5 de Meio-Gigante) ia além disso, escondendo as opções acima de d12.
     val steps = remember(minRaw, maxRaw) {
         val list = mutableListOf<Int>()
         var v = maxOf(4, minRaw)
-        while (v <= minOf(12, maxRaw)) {
+        while (v <= maxRaw) {
             list.add(v)
-            v += 2
+            v = if (v < 12) v + 2 else v + 1
         }
         list
     }
@@ -132,13 +137,15 @@ fun AttributeCarouselPopoverDialog(
                     style = MaterialTheme.typography.bodySmall
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     steps.forEach { targetRaw ->
-                        val cost = (targetRaw - minRaw) / 2
-                        val stepsFromCurrent = if (targetRaw > currentRaw) (targetRaw - currentRaw) / 2 else 0
+                        val cost = dieStepsCount(minRaw, targetRaw)
+                        val stepsFromCurrent = if (targetRaw > currentRaw) dieStepsCount(currentRaw, targetRaw) else 0
                         val canAfford = availablePa == null || targetRaw <= currentRaw || stepsFromCurrent <= availablePa
 
                         val isSelected = targetRaw == currentRaw
@@ -156,7 +163,7 @@ fun AttributeCarouselPopoverDialog(
                                 }
                             },
                             enabled = canAfford,
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.width(64.dp),
                             colors = androidx.compose.material3.CardDefaults.outlinedCardColors(
                                 containerColor = containerColor,
                                 disabledContainerColor = MaterialTheme.colorScheme.surfaceContainerLow.copy(alpha = 0.3f)
@@ -883,7 +890,7 @@ fun AtributosContent(
             onSelectRaw = { targetRaw ->
                 val stack = state.paCostStackPorAtributo.getValue(nome)
                 if (targetRaw > baseRaw) {
-                    val stepsToAdd = (targetRaw - baseRaw) / 2
+                    val stepsToAdd = dieStepsCount(baseRaw, targetRaw)
                     repeat(stepsToAdd) {
                         val currentBase = state.valoresAtributos[nome]!!.intValue
                         val nextR = if (currentBase < 12) currentBase + 2 else currentBase + 1
@@ -896,7 +903,7 @@ fun AtributosContent(
                         state.recalcularPontosAtributo()
                     }
                 } else if (targetRaw < baseRaw) {
-                    val stepsToRemove = (baseRaw - targetRaw) / 2
+                    val stepsToRemove = dieStepsCount(targetRaw, baseRaw)
                     repeat(stepsToRemove) {
                         if (stack.isNotEmpty()) {
                             stack.removeAt(stack.lastIndex)
