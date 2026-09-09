@@ -104,19 +104,41 @@ class ResolveAncestryRacialPackageUseCase(
             racialAbilityIds = params.racialAbilityIds
         )
 
+        // Ambos os blocos abaixo (ensureAdvantageNames/ensureAdvantageIds) concedem a
+        // Vantagem de verdade — igual a uma comprada manualmente, pra herdar toda a
+        // mecânica dela (rerrolagem, bônus, etc.) — mas são grátis (parte do pacote
+        // racial, sem gastar PV). Sem marcar em `vantagensRaciais`, essa Vantagem cai
+        // sem proteção em RemoveInvalidAdvantagesAfterAncestryChangeUseCase (que só
+        // pula a checagem de requisitos pra quem está em `automaticAdvantages`/
+        // `automaticRacialAdvantages`) — se ela tiver um requisito de atributo/perícia
+        // que o personagem não atenda ainda (ex.: Nascido na Sela exige Agilidade d8,
+        // que um Humano recém-criado não tem), a validação a remove na mesma hora que
+        // a concede, e como não está em `previousFreeAdvantageKeys` (que só lê
+        // vantagensAutomaticas/vantagensRaciais), CriadorState.aplicarAncestralidade
+        // trata a remoção como se fosse uma Vantagem comprada perdendo requisito e
+        // devolve 1 PV — um PV fantasma, já que o jogador nunca gastou nada nela (bug
+        // relatado pelo usuário com Senhores dos Cavalos/Nascido na Sela).
         ancestrySpecificAdjustments.ensureAdvantageNames.forEach { advantageName ->
             params.allAdvantages.firstOrNull { it.nome.equals(advantageName, ignoreCase = true) }
                 ?.let { edge ->
                     if (selected.none { it.id == edge.id }) {
                         selected.add(edge)
                     }
+                    if (vantagensRaciais.none { it.equals(edge.nome, ignoreCase = true) }) {
+                        vantagensRaciais.add(edge.nome)
+                    }
                 }
         }
 
         ancestrySpecificAdjustments.ensureAdvantageIds.forEach { advantageId ->
             val edge = params.allAdvantages.firstOrNull { it.id == advantageId }
-            if (edge != null && selected.none { it.id == edge.id }) {
-                selected.add(edge)
+            if (edge != null) {
+                if (selected.none { it.id == edge.id }) {
+                    selected.add(edge)
+                }
+                if (vantagensRaciais.none { it.equals(edge.nome, ignoreCase = true) }) {
+                    vantagensRaciais.add(edge.nome)
+                }
                 return@forEach
             }
 
@@ -124,8 +146,13 @@ class ResolveAncestryRacialPackageUseCase(
             // Example: Transmorfos need AA (Dom) even when "antecedente_arcano_dom" is not present in loaded advantages.
             if (advantageId == "antecedente_arcano_dom") {
                 val genericArcane = params.allAdvantages.firstOrNull { it.id == "antecedente_arcano" }
-                if (genericArcane != null && selected.none { it.id == genericArcane.id && (it.choice ?: "").keyify() == "DOM" }) {
-                    selected.add(genericArcane.copy(choice = "DOM"))
+                if (genericArcane != null) {
+                    if (selected.none { it.id == genericArcane.id && (it.choice ?: "").keyify() == "DOM" }) {
+                        selected.add(genericArcane.copy(choice = "DOM"))
+                    }
+                    if (vantagensRaciais.none { it.equals(genericArcane.nome, ignoreCase = true) }) {
+                        vantagensRaciais.add(genericArcane.nome)
+                    }
                 }
             }
         }

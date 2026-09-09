@@ -1026,10 +1026,11 @@ object AncestryVariantRegistry {
                             tipo = SelectionType.FIXED_PACKAGE,
                             pacotesFixos = listOf(
                                 FixedPackageOption("nenhum", "Nenhum", ResolvedTraitPackage()),
-                                FixedPackageOption(
-                                    "nascido_na_sela", "Nascido na Sela",
-                                    ResolvedTraitPackage(vantagensGratisIds = listOf("nascido_na_sela"))
-                                ),
+                                // "Nascido na Sela" sozinho (sem Complicação) foi removido: pelo
+                                // livro, ganhar a Vantagem precisa vir com uma Complicação pra
+                                // compensar (Código de Honra ou Sem Escrúpulos + Analfabeto) —
+                                // as duas opções abaixo. Sem Complicação nenhuma, a única opção
+                                // válida é "Nenhum" (só o Cavalgar d6 do pacote cultural).
                                 FixedPackageOption(
                                     "codigo_de_honra", "Nascido na Sela + Código de Honra",
                                     ResolvedTraitPackage(

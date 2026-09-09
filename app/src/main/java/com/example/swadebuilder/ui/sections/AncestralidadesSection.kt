@@ -865,7 +865,6 @@ fun AncestralidadesSection(
                                     Column {
                                         listOf(
                                             null to "Nenhum",
-                                            "Nascido na Sela" to "Nascido na Sela",
                                             "Nascido na Sela + Código de Honra" to "Nascido na Sela + Código de Honra (Maior)",
                                             "Nascido na Sela + Sem Escrúpulos e Analfabeto" to "Nascido na Sela + Sem Escrúpulos (Menor) e Analfabeto (Menor)"
                                         ).forEach { (valor, label) ->
