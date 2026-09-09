@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     // Plugin de serialization
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.20"
 }
 
 // 🔹 Exclui globalmente a versão duplicada da JetBrains IntelliJ Annotations

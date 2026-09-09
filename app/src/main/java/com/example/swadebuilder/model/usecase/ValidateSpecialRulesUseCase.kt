@@ -157,7 +157,7 @@ class ValidateSpecialRulesUseCase {
         val choiceSeguro2 = v.choice
         if (v.requiresChoice && choiceSeguro2 != null) {
             val repetida = input.vantagensSelecionadas.any {
-                it.id == v.id && it.choice == choiceSeguro2
+                it.id == v.id && it.choice?.keyify() == choiceSeguro2.keyify()
             }
             if (repetida) return false
         }

@@ -1,7 +1,7 @@
 [versions]
 # Build / Kotlin
 agp = "9.4.0"
-kotlin = "2.4.10"
+kotlin = "2.4.20"
 
 # AndroidX / Google libs (non-Compose BOM)
 appcompat = "1.8.0"

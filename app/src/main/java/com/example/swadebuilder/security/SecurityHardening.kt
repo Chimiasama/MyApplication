@@ -51,8 +51,10 @@ object SecurityHardening {
         for (path in paths) {
             if (File(path).exists()) return true
         }
-        val tags = Build.TAGS
-        return tags != null && tags.contains("test-keys")
+        // Build.TAGS.contains("test-keys") NÃO entra aqui: é assinatura de build não-Google
+        // (comum em ROMs AOSP/OEM legítimas e até em alguns emuladores), não prova de root —
+        // um falso positivo conhecido que derrubaria o app em dispositivos sem root nenhum.
+        return false
     }
 
     private fun checkEmulator(): Boolean {

@@ -7,4 +7,27 @@
     <issue id="InvalidPackage">
         <ignore path="**/itextg*.jar" />
     </issue>
+
+    <!-- Sugestão de conversão pra WebP: o logo da splash é exibido em tamanho fixo, uma
+         única vez, na abertura do app — o ganho de espaço não compensa reprocessar (e
+         revisar visualmente) o asset sem ferramenta de imagem disponível pra validar que
+         a conversão não introduziu artefato. -->
+    <issue id="ConvertToWebp">
+        <ignore path="**/swade_splash_logo_img.png" />
+    </issue>
+
+    <!-- O ícone do launcher preenche a área quadrada de propósito (estilo do app antes da
+         adoção de ícones adaptativos por padrão); mudar a forma é decisão de arte/branding,
+         não algo pra alterar sem revisão visual do design. -->
+    <issue id="IconLauncherShape">
+        <ignore path="**/mipmap-*/swade_icon.png" />
+    </issue>
+
+    <!-- sw_fan_logo.webp e swade_splash_logo_img.png são logos de tela única (splash/marca),
+         escalados em tempo de execução — de propósito sem variantes por densidade, não um
+         asset esquecido fora da pasta certa. -->
+    <issue id="IconLocation">
+        <ignore path="**/drawable/sw_fan_logo.webp" />
+        <ignore path="**/drawable/swade_splash_logo_img.png" />
+    </issue>
 </lint>

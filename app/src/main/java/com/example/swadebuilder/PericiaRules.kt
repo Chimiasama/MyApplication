@@ -52,6 +52,15 @@ fun CriadorState.calcularPericiaRules(
     val linguistaMin = linguistaMinRawFor(pericia)
     val minimoTotal = max(max(minimoBasico, minimoOpcional), linguistaMin)
 
+    // Espelha o mesmo passo assimétrico de `nextRaw`: sobe 2 em 2 até d12, 1 em 1 dali
+    // pra cima, e o primeiro passo (0 -> d4) é de 4. Um "-2" fixo aqui subestimava o
+    // quanto reduzir realmente devolve acima de d12, travando o botão de diminuir.
+    val previousRaw = when {
+        currentRaw == 4 && pericia.basica -> 0
+        currentRaw > 12 -> currentRaw - 1
+        else -> currentRaw - 2
+    }
+
     val canDecrease = when {
         modoLivre -> currentRaw > 0
         modoProgressaoAtivo -> {
@@ -61,7 +70,7 @@ fun CriadorState.calcularPericiaRules(
         else -> {
             !locked &&
                 (compStack.isNotEmpty() || spStack.any { it > 0 }) &&
-                (currentRaw - 2 >= minimoTotal)
+                (previousRaw >= minimoTotal)
         }
     }
 

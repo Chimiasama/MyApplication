@@ -156,9 +156,14 @@ object RequirementValidator {
                             }
                         }
                         else -> {
-                            state.vantagensSelecionadas.none { poss ->
-                                poss.id.keyify().replace(" ", "_") == prevId.keyify().replace(" ", "_")
+                            val idNorm = prevId.keyify().replace(" ", "_")
+                            val temVantagem = state.vantagensSelecionadas.any { poss ->
+                                poss.id.keyify().replace(" ", "_") == idNorm
                             }
+                            val temComplicacao = state.complicacoesSelecionadas.keys.any {
+                                it.id.keyify().replace(" ", "_") == idNorm
+                            }
+                            !temVantagem && !temComplicacao
                         }
                     }
                 }

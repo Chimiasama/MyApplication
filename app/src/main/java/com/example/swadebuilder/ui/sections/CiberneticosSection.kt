@@ -46,6 +46,14 @@ import kotlinx.serialization.json.decodeFromStream
 
 private val ciberneticosSectionJson = Json { ignoreUnknownKeys = true }
 
+// Instâncias instaladas usam id = "${catalogId}_${UUID}". Comparar por startsWith(catalogId)
+// colide quando um id de catálogo é prefixo literal de outro (ex.: "..._substituto" e
+// "..._substituto_clonado"): a instância instalada do item mais específico batia também no
+// item genérico. Removendo o sufixo de UUID recuperamos o id de catálogo exato pra comparar
+// por igualdade.
+private val uuidSuffixRegex = Regex("_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")
+private fun instalarBaseId(instaladoId: String): String = uuidSuffixRegex.replace(instaladoId, "")
+
 @OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun CiberneticosSection(
@@ -155,7 +163,7 @@ fun CiberneticosSection(
             }
 
             items(itemsInCat, key = { it.id }) { item ->
-                val currentInstalledCount = state.ciberneticosInstalados.count { it.id.startsWith(item.id) }
+                val currentInstalledCount = state.ciberneticosInstalados.count { instalarBaseId(it.id) == item.id }
 
                 OutlinedCard(
                     modifier = Modifier.fillMaxWidth(),
@@ -215,7 +223,7 @@ fun CiberneticosSection(
                                     modifier = Modifier
                                         .clip(CircleShape)
                                         .clickable {
-                                            val idx = state.ciberneticosInstalados.indexOfFirst { it.id.startsWith(item.id) }
+                                            val idx = state.ciberneticosInstalados.indexOfFirst { instalarBaseId(it.id) == item.id }
                                             if (idx != -1) {
                                                 state.ciberneticosInstalados.removeAt(idx)
                                             }

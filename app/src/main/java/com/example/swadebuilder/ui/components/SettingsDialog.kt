@@ -1694,6 +1694,8 @@ fun SettingsDialog(
                                             racaPericiasIniciais = emptyMap()
                                             racaMovimentacao = "0"
                                             customRacialTrait = ""
+                                            selectedRacialTraits = emptyList()
+                                            customAaPoderesEspecificos = emptySet()
                                             }
                                         } else {
                                                     statusMessage = "Preencha o Nome do item."

@@ -173,7 +173,7 @@ class ApplyAncestryChangeCoordinatorUseCase(
             resetMeioElfoAgil = params.targetAncestry != "MEIO-ELFOS",
             clearDescendenteElemental = targetKey != "DESCENDENTE ELEMENTAL" && targetKey != "DESC_ELEMENTAL",
             resetAnoesScifi = !targetKey.contains("ANOES"),
-            resetScifiVariant = params.previousAncestry != params.targetAncestry,
+            resetScifiVariant = params.previousAncestry.keyify() != targetKey,
             clearPericiaGnomo = !targetKey.contains("GNOMO"),
             racialPackage = racialPackage,
             complicationsSnapshot = complicationsSnapshot,

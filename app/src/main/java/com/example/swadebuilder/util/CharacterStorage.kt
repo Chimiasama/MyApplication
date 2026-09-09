@@ -10,6 +10,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.decodeFromStream
 import java.io.File
 import java.security.MessageDigest
@@ -81,13 +83,32 @@ object CharacterStorage {
         return digest.joinToString("") { "%02x".format(it) }
     }
 
-    private fun validateChecksum(snapshot: PersonagemSnapshot): Boolean {
+    // Computa o checksum a partir do texto JSON exatamente como está em disco, em vez de
+    // re-serializar o objeto Kotlin já decodificado. Isso mantém a verificação estável quando o
+    // schema de PersonagemSnapshot ganha um campo novo entre a gravação e a leitura: o objeto
+    // decodificado passaria a serializar o campo novo (com valor default) e o hash recalculado
+    // sobre ele nunca bateria com o hash gravado no arquivo antigo.
+    private fun checksumForRawJson(rawText: String): String? {
+        return try {
+            val element = json.parseToJsonElement(rawText)
+            if (element !is JsonObject || "checksum" !in element) return null
+            val semChecksum = JsonObject(element.toMutableMap().apply { this["checksum"] = JsonNull })
+            val payload = json.encodeToString(semChecksum)
+            val digest = MessageDigest.getInstance("SHA-256").digest(payload.toByteArray())
+            digest.joinToString("") { "%02x".format(it) }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private fun validateChecksum(snapshot: PersonagemSnapshot, rawText: String? = null): Boolean {
         // For new save files (version 2+), checksum is mandatory to prevent tampering
         if (snapshot.version >= 2 && snapshot.checksum == null) {
             return false
         }
         val expected = snapshot.checksum ?: return true
-        return expected == checksumFor(snapshot)
+        val actual = rawText?.let { checksumForRawJson(it) } ?: checksumFor(snapshot)
+        return expected == actual
     }
 
     private fun indexFile(context: Context): File = File(savesDirectory(context), INDEX_FILE_NAME)
@@ -146,15 +167,15 @@ object CharacterStorage {
 
                 val metadata = decodeMetadataSafely(context, file, masterKey)
                     ?: decodeSnapshotSafely(context, file, masterKey)
-                        ?.takeIf { validateChecksum(it) }
+                        ?.takeIf { validateChecksum(it.snapshot, it.rawText) }
                         ?.let {
                             MetadataSnapshot(
-                                version = it.version,
-                                id = it.id,
-                                nome = it.nome,
-                                timestamp = it.timestamp,
-                                flags = it.flags,
-                                checksum = it.checksum
+                                version = it.snapshot.version,
+                                id = it.snapshot.id,
+                                nome = it.snapshot.nome,
+                                timestamp = it.snapshot.timestamp,
+                                flags = it.snapshot.flags,
+                                checksum = it.snapshot.checksum
                             )
                         }
                     ?: return@mapNotNull null
@@ -219,14 +240,14 @@ object CharacterStorage {
         return null
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
+    private data class DecodedSnapshot(val snapshot: PersonagemSnapshot, val rawText: String)
+
     @Suppress("DEPRECATION")
-    private fun decodeSnapshotSafely(context: Context, file: File, masterKey: MasterKey): PersonagemSnapshot? {
+    private fun decodeSnapshotSafely(context: Context, file: File, masterKey: MasterKey): DecodedSnapshot? {
         // 1. Try Plaintext (Preferred)
         try {
-            file.inputStream().use { input ->
-                return json.decodeFromStream<PersonagemSnapshot>(input)
-            }
+            val text = file.readText(Charsets.UTF_8)
+            return DecodedSnapshot(json.decodeFromString<PersonagemSnapshot>(text), text)
         } catch (e: Exception) {
             // If failed, fall through to encrypted check
         }
@@ -240,16 +261,14 @@ object CharacterStorage {
                 EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
             ).build()
 
-            return encryptedFile.openFileInput().use { input ->
-                json.decodeFromStream<PersonagemSnapshot>(input)
-            }
+            val text = encryptedFile.openFileInput().use { it.readBytes().toString(Charsets.UTF_8) }
+            return DecodedSnapshot(json.decodeFromString<PersonagemSnapshot>(text), text)
         } catch (e: Exception) {
             // Both failed
         }
         return null
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     @Suppress("DEPRECATION")
     suspend fun load(context: Context, id: String): LoadResult = withContext(Dispatchers.IO) {
         try {
@@ -260,12 +279,13 @@ object CharacterStorage {
             }
 
             var snapshot: PersonagemSnapshot? = null
+            var rawText: String? = null
 
             // 1. Try Plaintext (Preferred)
             try {
-                snapshot = file.inputStream().use { input ->
-                    json.decodeFromStream<PersonagemSnapshot>(input)
-                }
+                val text = file.readText(Charsets.UTF_8)
+                snapshot = json.decodeFromString<PersonagemSnapshot>(text)
+                rawText = text
             } catch (e: Exception) {
                 // Ignore and try encrypted
             }
@@ -280,9 +300,9 @@ object CharacterStorage {
                         EncryptedFile.FileEncryptionScheme.AES256_GCM_HKDF_4KB
                     ).build()
 
-                    snapshot = encryptedFile.openFileInput().use { input ->
-                        json.decodeFromStream<PersonagemSnapshot>(input)
-                    }
+                    val text = encryptedFile.openFileInput().use { it.readBytes().toString(Charsets.UTF_8) }
+                    snapshot = json.decodeFromString<PersonagemSnapshot>(text)
+                    rawText = text
                 } catch (e: Exception) {
                     // Ignore
                 }
@@ -294,7 +314,7 @@ object CharacterStorage {
                 )
             }
 
-            if (!validateChecksum(snapshot)) {
+            if (!validateChecksum(snapshot, rawText)) {
                 return@withContext LoadResult.Failure(
                     "Falha na verificação de integridade do personagem."
                 )

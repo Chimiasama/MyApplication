@@ -55,7 +55,7 @@ fun SelectableItemRow(
     subtitle: String? = null,
     mode: SelectionMode = SelectionMode.MULTIPLA,
     enabled: Boolean = true,
-    trailingContent: (@Composable () -> Unit)? = null
+    content: (@Composable () -> Unit)? = null
 ) {
     val scheme = MaterialTheme.colorScheme
     val shape = MaterialTheme.shapes.small
@@ -109,7 +109,7 @@ fun SelectableItemRow(
                 )
             }
         }
-        trailingContent?.invoke()
+        content?.invoke()
         SelectionIndicator(selected = selected, mode = mode, enabled = enabled)
     }
 }

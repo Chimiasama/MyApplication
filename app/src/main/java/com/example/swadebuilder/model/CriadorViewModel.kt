@@ -674,8 +674,18 @@ class CriadorViewModel(
     }
 
     suspend fun salvarRetratoRecortado(context: Context, bitmap: android.graphics.Bitmap) {
+        val previousFileName = state.portraitFileName
         val fileName = CharacterPortraitStorage.saveCroppedBitmap(context, bitmap)
-        fileName?.let { state.portraitFileName = it }
+        if (fileName != null) {
+            state.portraitFileName = fileName
+            // Se o jogador recortar a foto de novo antes de salvar o personagem, o arquivo
+            // anterior (já substituído em memória) nunca seria referenciado por nenhum save e
+            // ficaria órfão em disco pra sempre. deleteIfUnused só apaga se nenhum personagem
+            // salvo ainda apontar pra ele.
+            if (!previousFileName.isNullOrBlank() && previousFileName != fileName) {
+                CharacterPortraitStorage.deleteIfUnused(context, previousFileName)
+            }
+        }
     }
 
     fun perPowerLimit(poderId: String): Int {

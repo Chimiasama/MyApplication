@@ -446,7 +446,7 @@ fun ComplicacoesSection(
                                                     complicationToRemove = null
                                                 }
                                             }) {
-                                                Text("Devolver (+2 BP)")
+                                                Text("$label (+2 BP)")
                                             }
                                         }
                                     }
