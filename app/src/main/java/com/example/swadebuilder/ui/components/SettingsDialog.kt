@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Vibration
 import androidx.compose.material.icons.automirrored.filled.VolumeUp
@@ -457,9 +459,10 @@ fun SettingsDialog(
                         val equipForm = rememberEquipamentoFormState()
                         var customPp by remember { mutableStateOf("1") }
                         var customSuperPoderCustoBase by remember { mutableStateOf("2") }
-                        // Um modificador por linha, no mesmo formato usado pelo catálogo oficial
-                        // ("Nome (+custo): descrição"), ex.: "Área (+2): Modelo Médio de Explosão".
-                        var customSuperPoderModificadores by remember { mutableStateOf("") }
+                        // Lista de modificadores do SuperPoder sendo criado
+                        var customSuperPoderModificadoresList by remember { mutableStateOf(listOf<String>()) }
+                        var showSuperPoderModificadoresPickerDialog by remember { mutableStateOf(false) }
+                        var customSuperPoderNovoModTexto by remember { mutableStateOf("") }
                         // Modificador de Poder (ver model/ModificadorCustomizado.kt): não cria um
                         // Super Poder novo, cria um modificador avulso e o anexa a um poder já
                         // existente (oficial ou customizado) — cobre o modificador "Especial" do
@@ -1006,12 +1009,98 @@ fun SettingsDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
-                                                    androidx.compose.material3.OutlinedTextField(
-                                                        value = customSuperPoderModificadores,
-                                                        onValueChange = { customSuperPoderModificadores = it },
-                                                        label = { Text("Modificadores (1 por linha, ex: Área (+2): Modelo Médio de Explosão)") },
-                                                        modifier = Modifier.fillMaxWidth().padding(top = 4.dp)
+                                                    Spacer(modifier = Modifier.height(8.dp))
+                                                    Text(
+                                                        text = "Modificadores do Super Poder",
+                                                        style = MaterialTheme.typography.labelMedium,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                                     )
+                                                    Row(
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .padding(vertical = 4.dp),
+                                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                    ) {
+                                                        OutlinedButton(
+                                                            onClick = { showSuperPoderModificadoresPickerDialog = true },
+                                                            modifier = Modifier.weight(1f)
+                                                        ) {
+                                                            Icon(
+                                                                imageVector = Icons.Default.Add,
+                                                                contentDescription = null,
+                                                                modifier = Modifier.size(18.dp)
+                                                            )
+                                                            Spacer(Modifier.width(4.dp))
+                                                            Text("Catálogo de Modificadores", style = MaterialTheme.typography.labelSmall)
+                                                        }
+                                                    }
+                                                    Row(
+                                                        modifier = Modifier.fillMaxWidth(),
+                                                        verticalAlignment = Alignment.CenterVertically,
+                                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                    ) {
+                                                        androidx.compose.material3.OutlinedTextField(
+                                                            value = customSuperPoderNovoModTexto,
+                                                            onValueChange = { customSuperPoderNovoModTexto = it },
+                                                            label = { Text("Novo Modificador Manual") },
+                                                            placeholder = { Text("ex: Área (+2): Descrição") },
+                                                            singleLine = true,
+                                                            modifier = Modifier.weight(1f)
+                                                        )
+                                                        IconButton(
+                                                            onClick = {
+                                                                val trimmed = customSuperPoderNovoModTexto.trim()
+                                                                if (trimmed.isNotBlank() && trimmed !in customSuperPoderModificadoresList) {
+                                                                    customSuperPoderModificadoresList = customSuperPoderModificadoresList + trimmed
+                                                                    customSuperPoderNovoModTexto = ""
+                                                                }
+                                                            },
+                                                            enabled = customSuperPoderNovoModTexto.isNotBlank()
+                                                        ) {
+                                                            Icon(imageVector = Icons.Default.Add, contentDescription = "Adicionar Modificador")
+                                                        }
+                                                    }
+                                                    if (customSuperPoderModificadoresList.isNotEmpty()) {
+                                                        Spacer(Modifier.height(4.dp))
+                                                        Column(
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .background(
+                                                                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                                                                    RoundedCornerShape(8.dp)
+                                                                )
+                                                                .padding(8.dp),
+                                                            verticalArrangement = Arrangement.spacedBy(4.dp)
+                                                        ) {
+                                                            customSuperPoderModificadoresList.forEach { mod ->
+                                                                Row(
+                                                                    modifier = Modifier.fillMaxWidth(),
+                                                                    verticalAlignment = Alignment.CenterVertically,
+                                                                    horizontalArrangement = Arrangement.SpaceBetween
+                                                                ) {
+                                                                    Text(
+                                                                        text = "• $mod",
+                                                                        style = MaterialTheme.typography.bodySmall,
+                                                                        modifier = Modifier.weight(1f)
+                                                                    )
+                                                                    IconButton(
+                                                                        onClick = {
+                                                                            customSuperPoderModificadoresList = customSuperPoderModificadoresList - mod
+                                                                        },
+                                                                        modifier = Modifier.size(24.dp)
+                                                                    ) {
+                                                                        Icon(
+                                                                            imageVector = Icons.Default.Close,
+                                                                            contentDescription = "Remover",
+                                                                            modifier = Modifier.size(16.dp),
+                                                                            tint = MaterialTheme.colorScheme.error
+                                                                        )
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    Spacer(modifier = Modifier.height(8.dp))
                                                     com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
                                                         label = "Categoria (opcional):",
                                                         categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER },
@@ -1821,15 +1910,11 @@ fun SettingsDialog(
                                                             statusMessage = "Poder '$customItemName' salvo em: $tagsLabel"
                                                 }
                                                 "Super Poder" -> {
-                                                    val modificadoresList = customSuperPoderModificadores
-                                                        .lines()
-                                                        .map { it.trim() }
-                                                        .filter { it.isNotBlank() }
                                                     val newSuperPoder = com.example.swadebuilder.model.SuperPoder(
                                                         nome = customItemName,
                                                         custoBase = customSuperPoderCustoBase.ifBlank { "2" },
                                                         descricao = safeDesc,
-                                                        modificadores = modificadoresList.ifEmpty { null },
+                                                        modificadores = customSuperPoderModificadoresList.ifEmpty { null },
                                                         id = id,
                                                         categoriaCustomizadaId = customSuperPoderCategoriaId
                                                     )
@@ -2886,6 +2971,55 @@ fun SettingsDialog(
                                     }
                                 },
                                 confirmButton = { TextButton(onClick = { groupPickerTarget = null }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        if (showSuperPoderModificadoresPickerDialog) {
+                            val allMods = remember(state.listaSuperPoderes) {
+                                state.listaSuperPoderes.flatMap { it.modificadores ?: emptyList() }
+                                    .map { it.trim() }
+                                    .filter { it.isNotBlank() }
+                                    .distinct()
+                                    .sorted()
+                            }
+                            var filterModText by remember { mutableStateOf("") }
+                            AlertDialog(
+                                onDismissRequest = { showSuperPoderModificadoresPickerDialog = false },
+                                title = { Text("Catálogo de Modificadores") },
+                                text = {
+                                    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = filterModText,
+                                            onValueChange = { filterModText = it },
+                                            label = { Text("Filtrar Modificador") },
+                                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                                        )
+                                        allMods.filter { it.contains(filterModText, ignoreCase = true) }.forEach { mod ->
+                                            val isSel = mod in customSuperPoderModificadoresList
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clickable {
+                                                        customSuperPoderModificadoresList = if (isSel) {
+                                                            customSuperPoderModificadoresList - mod
+                                                        } else {
+                                                            customSuperPoderModificadoresList + mod
+                                                        }
+                                                    }
+                                                    .padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically
+                                            ) {
+                                                Checkbox(
+                                                    checked = isSel,
+                                                    onCheckedChange = null
+                                                )
+                                                Spacer(Modifier.width(8.dp))
+                                                Text(mod, style = MaterialTheme.typography.bodySmall)
+                                            }
+                                        }
+                                    }
+                                },
+                                confirmButton = { TextButton(onClick = { showSuperPoderModificadoresPickerDialog = false }) { Text("Concluído") } }
                             )
                         }
 
