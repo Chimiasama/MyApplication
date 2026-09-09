@@ -16,6 +16,7 @@ object AppPreferences {
     private const val KEY_APP_THEME = "app_theme"
     private const val KEY_PULAR_SELECAO_REGRAS = "pular_selecao_regras"
     private const val KEY_MODO_PERICIA = "modo_selecao_pericia"
+    private const val KEY_CRIACAO_NAS_ABAS = "habilitar_criacao_nas_abas"
 
     enum class ModoSelecaoPericia {
         CARROSSEL_POPOVER,
@@ -32,7 +33,8 @@ object AppPreferences {
         val showSystemMessages: Boolean,
         val appTheme: AppTheme,
         val pularSelecaoRegras: Boolean,
-        val modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER
+        val modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER,
+        val habilitarCriacaoNasAbas: Boolean = false
     )
 
     fun loadPrefs(context: Context, defaultHaptics: Int, defaultSound: Int): GlobalPrefs {
@@ -65,6 +67,7 @@ object AppPreferences {
         } catch (e: IllegalArgumentException) {
             ModoSelecaoPericia.CARROSSEL_POPOVER
         }
+        val habilitarCriacaoNasAbas = prefs.getBoolean(KEY_CRIACAO_NAS_ABAS, false)
 
         return GlobalPrefs(
             hapticStrength = haptics,
@@ -75,7 +78,8 @@ object AppPreferences {
             showSystemMessages = showSystemMessages,
             appTheme = appTheme,
             pularSelecaoRegras = pularSelecaoRegras,
-            modoSelecaoPericia = modoSelecaoPericia
+            modoSelecaoPericia = modoSelecaoPericia,
+            habilitarCriacaoNasAbas = habilitarCriacaoNasAbas
         )
     }
 
@@ -89,7 +93,8 @@ object AppPreferences {
         showSystemMessages: Boolean,
         appTheme: AppTheme,
         pularSelecaoRegras: Boolean,
-        modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER
+        modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER,
+        habilitarCriacaoNasAbas: Boolean = false
     ) {
         context
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
@@ -103,6 +108,7 @@ object AppPreferences {
                 putString(KEY_APP_THEME, appTheme.name)
                 putBoolean(KEY_PULAR_SELECAO_REGRAS, pularSelecaoRegras)
                 putString(KEY_MODO_PERICIA, modoSelecaoPericia.name)
+                putBoolean(KEY_CRIACAO_NAS_ABAS, habilitarCriacaoNasAbas)
             }
     }
 

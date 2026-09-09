@@ -13,11 +13,15 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -307,6 +311,82 @@ fun AncestralidadesSection(
             onListaCompletaClick = null,
             listaCompletaText = ""
         )
+
+        if (state.habilitarCriacaoNasAbas) {
+            var showCreateOptionsDialog by rememberSaveable { mutableStateOf(false) }
+            var targetCreationCategory by rememberSaveable { mutableStateOf<String?>(null) }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedButton(
+                    onClick = { showCreateOptionsDialog = true },
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                    modifier = Modifier.height(32.dp)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("Criar...", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+
+            if (showCreateOptionsDialog) {
+                AlertDialog(
+                    onDismissRequest = { showCreateOptionsDialog = false },
+                    title = { Text("Criar em Ancestralidades") },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("O que você deseja criar?", style = MaterialTheme.typography.bodyMedium)
+                            OutlinedButton(
+                                onClick = {
+                                    showCreateOptionsDialog = false
+                                    targetCreationCategory = "Raça"
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Nova Raça")
+                            }
+                            OutlinedButton(
+                                onClick = {
+                                    showCreateOptionsDialog = false
+                                    targetCreationCategory = "Variante de Raça"
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Nova Variante de Raça")
+                            }
+                            OutlinedButton(
+                                onClick = {
+                                    showCreateOptionsDialog = false
+                                    targetCreationCategory = "Traço Racial"
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Novo Traço Racial")
+                            }
+                        }
+                    },
+                    confirmButton = {},
+                    dismissButton = {
+                        TextButton(onClick = { showCreateOptionsDialog = false }) {
+                            Text("Cancelar")
+                        }
+                    }
+                )
+            }
+
+            targetCreationCategory?.let { cat ->
+                com.example.swadebuilder.ui.components.CustomContentManageDialog(
+                    state = state,
+                    initialCategory = cat,
+                    onDismiss = { targetCreationCategory = null }
+                )
+            }
+        }
 
         Spacer(Modifier.height(8.dp))
 

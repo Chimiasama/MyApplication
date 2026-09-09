@@ -385,6 +385,7 @@ class CriadorState {
     var showSystemMessages by mutableStateOf(true)
     var pularSelecaoRegras by mutableStateOf(false)
     var modoSelecaoPericia by mutableStateOf(com.example.swadebuilder.util.AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER)
+    var habilitarCriacaoNasAbas by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
