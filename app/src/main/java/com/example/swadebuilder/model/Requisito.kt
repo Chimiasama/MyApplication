@@ -47,6 +47,15 @@ data class Requisito(
     @SerialName("tags")
     val tags: List<String> = emptyList(),
 
+    // Ids de CategoriaCustomizada (ver model/CategoriaCustomizada.kt) — pré-requisito
+    // "genérico" além de vantagensPrevias (vantagem específica): exige que o
+    // personagem já tenha ao menos uma Vantagem de CADA categoria customizada
+    // listada aqui, sem precisar saber o id exato de qual vantagem daquela
+    // categoria (ver ValidateCustomCategoryPrerequisiteUseCase). Só faz sentido
+    // pra vantagens customizadas — o catálogo oficial nunca preenche isto.
+    @SerialName("categoriasCustomizadasRequeridas")
+    val categoriasCustomizadasRequeridas: List<String> = emptyList(),
+
     @SerialName("template")
     val template: JsonElement? = null
 ) {
@@ -71,6 +80,7 @@ object RequisitoSerializer : KSerializer<Requisito> {
         element<String>("observacoes", isOptional = true)
         element<List<String>>("choiceOptions", isOptional = true)
         element<List<String>>("tags", isOptional = true)
+        element<List<String>>("categoriasCustomizadasRequeridas", isOptional = true)
         element<JsonElement?>("template", isOptional = true)
     }
 
@@ -92,6 +102,8 @@ object RequisitoSerializer : KSerializer<Requisito> {
         val choiceOptions: List<String> = emptyList(),
         @SerialName("tags")
         val tags: List<String> = emptyList(),
+        @SerialName("categoriasCustomizadasRequeridas")
+        val categoriasCustomizadasRequeridas: List<String> = emptyList(),
         @SerialName("template")
         val template: JsonElement? = null
     ) {
@@ -104,6 +116,7 @@ object RequisitoSerializer : KSerializer<Requisito> {
             observacoes = observacoes,
             choiceOptions = choiceOptions,
             tags = tags,
+            categoriasCustomizadasRequeridas = categoriasCustomizadasRequeridas,
             template = template
         )
     }
@@ -134,6 +147,7 @@ object RequisitoSerializer : KSerializer<Requisito> {
             observacoes = value.observacoes,
             choiceOptions = value.choiceOptions,
             tags = value.tags,
+            categoriasCustomizadasRequeridas = value.categoriasCustomizadasRequeridas,
             template = value.template
         )
         jsonEncoder.encodeJsonElement(jsonEncoder.json.encodeToJsonElement(RequisitoRaw.serializer(), raw))

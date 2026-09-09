@@ -4949,7 +4949,7 @@
     ]
   },
   {
-    "tipo": "Armadura",
+    "tipo": "Armaduras",
     "subtipo": "Proteção e Escudos",
     "livros": [
       "FANTASIA"
@@ -14040,7 +14040,7 @@
     ]
   },
   {
-    "tipo": "Acessórios para Armas",
+    "tipo": "Acessórios para armas",
     "subtipo": "Geral",
     "livros": [
       "SCI_FI"

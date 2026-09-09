@@ -59,7 +59,9 @@ fun CrystalHeartSection(
     ) {
         val context = LocalContext.current
         val temAgenteSyn = state.vantagensSelecionadas.any { it.id == "aa_agente_syn" }
-        val stageOrder = listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário")
+        // Nomes vêm de model/Estagio.kt (fonte única da ordem/regras de progressão) em vez
+        // de uma cópia solta aqui — evita as duas listas divergirem se os estágios mudarem.
+        val stageOrder = com.example.swadebuilder.model.listaDeEstagios.map { it.nome }
         val maxNameLength = 60
         val maxTextLength = 500
         val maxPowersLength = 1000

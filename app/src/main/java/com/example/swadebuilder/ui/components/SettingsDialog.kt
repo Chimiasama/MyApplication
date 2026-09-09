@@ -435,6 +435,11 @@ fun SettingsDialog(
                         var customSkillMin by remember { mutableStateOf(mapOf<String, Int>()) }
                         var customPrereqEdges by remember { mutableStateOf(listOf<String>()) }
                         var customPrereqComps by remember { mutableStateOf(listOf<String>()) }
+                        // Pré-requisito por Categoria Customizada (ver
+                        // ValidateCustomCategoryPrerequisiteUseCase) — alternativa a
+                        // customPrereqEdges quando o Mestre quer exigir "qualquer vantagem
+                        // desta categoria" em vez de uma vantagem específica por id.
+                        var customPrereqCategoriasCustomizadas by remember { mutableStateOf(setOf<String>()) }
                         var showAttrDialog by remember { mutableStateOf(false) }
                         var showSkillDialog by remember { mutableStateOf(false) }
                         var showEdgeDialog by remember { mutableStateOf(false) }
@@ -761,6 +766,7 @@ fun SettingsDialog(
                                                             if (customSkillMin.isNotEmpty()) add("Perícias: " + customSkillMin.entries.joinToString { "${it.key} d${it.value}" })
                                                             if (customPrereqEdges.isNotEmpty()) add("Vantagens Prévias: ${customPrereqEdges.size} selecionada(s)")
                                                             if (customPrereqComps.isNotEmpty()) add("Complicações: ${customPrereqComps.size} selecionada(s)")
+                                                            if (customPrereqCategoriasCustomizadas.isNotEmpty()) add("Categoria(s) prévia(s): ${customPrereqCategoriasCustomizadas.size} selecionada(s)")
                                                         }
                                                         if (reqSummary.isNotEmpty()) {
                                                             Text(
@@ -868,8 +874,33 @@ fun SettingsDialog(
                                                         allowNone = true,
                                                         noneLabel = "Nenhuma (usar acima)"
                                                     )
+                                                    // Pré-requisito por Categoria Customizada: exige que o personagem já
+                                                    // tenha alguma Vantagem da(s) categoria(s) marcada(s), sem precisar
+                                                    // apontar uma vantagem específica (isso já existe em "+ Vantagens
+                                                    // Prévias" acima). Útil pra campanhas com progressão em categorias
+                                                    // próprias (ex.: "Pacto Menor" libera "Pacto Maior").
+                                                    val categoriasVantagemParaPrereq = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM }
+                                                    if (categoriasVantagemParaPrereq.isNotEmpty()) {
+                                                        LabeledChipGroup("Exige Vantagem de categoria (pré-requisito, opcional):") {
+                                                            categoriasVantagemParaPrereq.forEach { cat ->
+                                                                androidx.compose.material3.FilterChip(
+                                                                    selected = cat.id in customPrereqCategoriasCustomizadas,
+                                                                    onClick = {
+                                                                        customPrereqCategoriasCustomizadas = if (cat.id in customPrereqCategoriasCustomizadas) {
+                                                                            customPrereqCategoriasCustomizadas - cat.id
+                                                                        } else {
+                                                                            customPrereqCategoriasCustomizadas + cat.id
+                                                                        }
+                                                                    },
+                                                                    label = { Text(cat.nome, style = MaterialTheme.typography.labelSmall) }
+                                                                )
+                                                            }
+                                                        }
+                                                    }
                                                     LabeledChipGroup("Estágio Mínimo:") {
-                                                        listOf("Novato", "Experiente", "Veterano", "Heroico", "Lendário").forEach { stage ->
+                                                        // Nomes vêm de model/Estagio.kt (fonte única) em vez de uma cópia
+                                                        // solta aqui — evita divergir se os estágios mudarem.
+                                                        com.example.swadebuilder.model.listaDeEstagios.map { it.nome }.forEach { stage ->
                                                             androidx.compose.material3.FilterChip(
                                                                 selected = customStage == stage,
                                                                 onClick = { customStage = stage },
@@ -1637,7 +1668,8 @@ fun SettingsDialog(
                                                         atributoMin = customAttrMin,
                                                         periciaMin = customSkillMin,
                                                         vantagensPrevias = combinedPrevEdges,
-                                                        observacoes = customRequirements
+                                                        observacoes = customRequirements,
+                                                        categoriasCustomizadasRequeridas = customPrereqCategoriasCustomizadas.toList()
                                                     )
                                                     val newAdv = com.example.swadebuilder.model.Vantagem(
                                                         id = id,
