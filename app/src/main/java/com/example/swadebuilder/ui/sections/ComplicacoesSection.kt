@@ -105,6 +105,12 @@ fun ComplicacoesSection(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedSeverity by rememberSaveable { mutableStateOf("Todos") }
+    // Filtro por Categoria Customizada (ver model/CategoriaCustomizada.kt) — só aparece se
+    // existir ao menos uma categoria criada pro Mestre pra Complicação nesta campanha.
+    var selectedCategoriaId by rememberSaveable { mutableStateOf<String?>(null) }
+    val categoriasComplicacao = remember(state.listaCategoriasCustomizadas) {
+        state.listaCategoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO }
+    }
 
     val complicacoesFiltradas = state.listaComplicacoes.filter { comp ->
         if (!state.isComplicacaoVisible(comp, origensAtivas)) return@filter false
@@ -118,6 +124,8 @@ fun ComplicacoesSection(
         }
 
         if (!matchesSeverity) return@filter false
+
+        if (selectedCategoriaId != null && comp.categoriaCustomizadaId != selectedCategoriaId) return@filter false
 
         if (searchQuery.isNotBlank()) {
             val q = searchQuery.semAcentos().lowercase()
@@ -341,6 +349,39 @@ fun ComplicacoesSection(
                                         onClick = { selectedSeverity = type },
                                         label = { Text("$type ($count)") }
                                     )
+                                }
+                            }
+
+                            if (categoriasComplicacao.isNotEmpty()) {
+                                Spacer(Modifier.height(4.dp))
+                                LazyRow(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 4.dp),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    item {
+                                        Text(
+                                            "Categoria:",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            modifier = Modifier.padding(end = 4.dp)
+                                        )
+                                    }
+                                    item {
+                                        FilterChip(
+                                            selected = selectedCategoriaId == null,
+                                            onClick = { selectedCategoriaId = null },
+                                            label = { Text("Todas") }
+                                        )
+                                    }
+                                    items(categoriasComplicacao, key = { it.id }) { cat ->
+                                        FilterChip(
+                                            selected = selectedCategoriaId == cat.id,
+                                            onClick = { selectedCategoriaId = cat.id },
+                                            label = { Text(cat.nome) }
+                                        )
+                                    }
                                 }
                             }
                         }

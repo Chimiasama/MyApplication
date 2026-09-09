@@ -184,6 +184,12 @@ fun PoderesSection(
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var isSearchExpanded by rememberSaveable { mutableStateOf(false) }
     var selectedRank by rememberSaveable { mutableStateOf("Todos") }
+    // Filtro por Categoria Customizada (ver model/CategoriaCustomizada.kt) — só aparece se o
+    // Mestre tiver criado alguma categoria pra Poder nesta campanha.
+    var selectedCategoriaCustomId by rememberSaveable { mutableStateOf<String?>(null) }
+    val categoriasPoder = remember(state.listaCategoriasCustomizadas) {
+        state.listaCategoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.PODER }
+    }
 
     // Track expanded state for each AB section. Default to true (expanded).
     // Using remember instead of rememberSaveable to avoid crash with Map serialization.
@@ -230,6 +236,7 @@ fun PoderesSection(
         powerCache,
         searchQuery,
         selectedRank,
+        selectedCategoriaCustomId,
         displayKeys,
         includeBasicPowers,
         state.vantagensSelecionadas,
@@ -379,7 +386,11 @@ fun PoderesSection(
                     rankSource.semAcentos().equals(selectedRank.semAcentos(), ignoreCase = true)
                 }
 
-                matchSearch && matchRank
+                // 4. Check Categoria Customizada
+                val matchCategoria = selectedCategoriaCustomId == null ||
+                    power.categoriaCustomizadaId == selectedCategoriaCustomId
+
+                matchSearch && matchRank && matchCategoria
             }.sortedWith(compareBy(ptBrCollator) { it.nome.toFancyTitleCase() })
         }
     }
@@ -427,6 +438,37 @@ fun PoderesSection(
                         onClick = { selectedRank = rank },
                         label = { Text("$rank ($count)") }
                     )
+                }
+            }
+        }
+
+        if (categoriasPoder.isNotEmpty()) {
+            item {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    item {
+                        Text(
+                            "Categoria:",
+                            style = MaterialTheme.typography.labelMedium,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                    }
+                    item {
+                        FilterChip(
+                            selected = selectedCategoriaCustomId == null,
+                            onClick = { selectedCategoriaCustomId = null },
+                            label = { Text("Todas") }
+                        )
+                    }
+                    items(categoriasPoder, key = { it.id }) { cat ->
+                        FilterChip(
+                            selected = selectedCategoriaCustomId == cat.id,
+                            onClick = { selectedCategoriaCustomId = cat.id },
+                            label = { Text(cat.nome) }
+                        )
+                    }
                 }
             }
         }

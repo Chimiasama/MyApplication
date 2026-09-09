@@ -2016,7 +2016,11 @@ fun SettingsDialog(
 
                         // Requirement Selector Modals
                         if (showAttrDialog) {
-                            val attrs = listOf("AGILIDADE" to "Agilidade", "ASTUCIA" to "Astúcia", "ESPIRITO" to "Espírito", "FORCA" to "Força", "VIGOR" to "Vigor")
+                            // Vem de state.mapaAtributosDisplay (não mais uma lista fixa de 5) pra
+                            // incluir também Atributos Customizados (ver CriadorState.addCustomAtributo)
+                            // como opção de pré-requisito — a ordem de inserção já deixa os 5
+                            // oficiais primeiro, seguidos dos customizados.
+                            val attrs = state.mapaAtributosDisplay.entries.map { it.key to it.value }
                             val steps = listOf(0, 4, 6, 8, 10, 12, 13)
                             AlertDialog(
                                 onDismissRequest = { showAttrDialog = false },
