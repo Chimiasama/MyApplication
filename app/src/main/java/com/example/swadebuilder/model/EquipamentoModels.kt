@@ -72,7 +72,7 @@ data class EquipamentoItem(
     val usavelCorpoACorpo: Boolean? = null,
     // Id de CategoriaCustomizada (ver model/CategoriaCustomizada.kt) do tipo
     // EQUIPAMENTO. Quando presente, tem prioridade sobre `categoriaTipo` pra decidir
-    // em qual seção da tela de Equipamento o item aparece (ver DataLoader.kt) — o
+    // em qual seção da tela de Equipamento o item aparece (ver model/DataLoader) — o
     // nome da categoria é resolvido dinamicamente, então renomear a categoria
     // atualiza a seção sem precisar editar cada item.
     @SerialName("categoriaCustomizadaId")

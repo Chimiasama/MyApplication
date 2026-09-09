@@ -79,7 +79,7 @@ class EquipamentoFormState {
     // Categoria Customizada (ver model/CategoriaCustomizada.kt) escolhida pelo Mestre —
     // quando presente, tem prioridade sobre `categoriaTipo()` calculado a partir de
     // superType/subtype pra decidir em qual seção da tela de Equipamento o item cai
-    // (ver DataLoader.kt updateActiveModules). Os campos mecânicos (dano, armadura
+    // (ver model/DataLoader updateActiveModules). Os campos mecânicos (dano, armadura
     // etc.) continuam vindo de superType/subtype normalmente — a categoria
     // customizada só substitui o agrupamento visual, não a mecânica do item.
     var categoriaCustomizadaId by mutableStateOf<String?>(null)
