@@ -462,7 +462,6 @@ fun SettingsDialog(
                         // Lista de modificadores do SuperPoder sendo criado
                         var customSuperPoderModificadoresList by remember { mutableStateOf(listOf<String>()) }
                         var showSuperPoderModificadoresPickerDialog by remember { mutableStateOf(false) }
-                        var customSuperPoderNovoModTexto by remember { mutableStateOf("") }
                         // Modificador de Poder (ver model/ModificadorCustomizado.kt): não cria um
                         // Super Poder novo, cria um modificador avulso e o anexa a um poder já
                         // existente (oficial ou customizado) — cobre o modificador "Especial" do
@@ -1015,50 +1014,19 @@ fun SettingsDialog(
                                                         style = MaterialTheme.typography.labelMedium,
                                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                                     )
-                                                    Row(
+                                                    OutlinedButton(
+                                                        onClick = { showSuperPoderModificadoresPickerDialog = true },
                                                         modifier = Modifier
                                                             .fillMaxWidth()
-                                                            .padding(vertical = 4.dp),
-                                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                                            .padding(vertical = 4.dp)
                                                     ) {
-                                                        OutlinedButton(
-                                                            onClick = { showSuperPoderModificadoresPickerDialog = true },
-                                                            modifier = Modifier.weight(1f)
-                                                        ) {
-                                                            Icon(
-                                                                imageVector = Icons.Default.Add,
-                                                                contentDescription = null,
-                                                                modifier = Modifier.size(18.dp)
-                                                            )
-                                                            Spacer(Modifier.width(4.dp))
-                                                            Text("Catálogo de Modificadores", style = MaterialTheme.typography.labelSmall)
-                                                        }
-                                                    }
-                                                    Row(
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        verticalAlignment = Alignment.CenterVertically,
-                                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                                    ) {
-                                                        androidx.compose.material3.OutlinedTextField(
-                                                            value = customSuperPoderNovoModTexto,
-                                                            onValueChange = { customSuperPoderNovoModTexto = it },
-                                                            label = { Text("Novo Modificador Manual") },
-                                                            placeholder = { Text("ex: Área (+2): Descrição") },
-                                                            singleLine = true,
-                                                            modifier = Modifier.weight(1f)
+                                                        Icon(
+                                                            imageVector = Icons.Default.Add,
+                                                            contentDescription = null,
+                                                            modifier = Modifier.size(18.dp)
                                                         )
-                                                        IconButton(
-                                                            onClick = {
-                                                                val trimmed = customSuperPoderNovoModTexto.trim()
-                                                                if (trimmed.isNotBlank() && trimmed !in customSuperPoderModificadoresList) {
-                                                                    customSuperPoderModificadoresList = customSuperPoderModificadoresList + trimmed
-                                                                    customSuperPoderNovoModTexto = ""
-                                                                }
-                                                            },
-                                                            enabled = customSuperPoderNovoModTexto.isNotBlank()
-                                                        ) {
-                                                            Icon(imageVector = Icons.Default.Add, contentDescription = "Adicionar Modificador")
-                                                        }
+                                                        Spacer(Modifier.width(4.dp))
+                                                        Text("Catálogo de Modificadores", style = MaterialTheme.typography.labelSmall)
                                                     }
                                                     if (customSuperPoderModificadoresList.isNotEmpty()) {
                                                         Spacer(Modifier.height(4.dp))
@@ -2975,8 +2943,9 @@ fun SettingsDialog(
                         }
 
                         if (showSuperPoderModificadoresPickerDialog) {
-                            val allMods = remember(state.listaSuperPoderes) {
-                                state.listaSuperPoderes.flatMap { it.modificadores ?: emptyList() }
+                            val allMods = remember(state.listaSuperPoderes, activeBookCustomData.modificadoresCustomizados) {
+                                (state.listaSuperPoderes.flatMap { it.modificadores ?: emptyList() } +
+                                 activeBookCustomData.modificadoresCustomizados.map { it.paraTexto() })
                                     .map { it.trim() }
                                     .filter { it.isNotBlank() }
                                     .distinct()
