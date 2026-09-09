@@ -4878,6 +4878,15 @@ class CriadorState {
                 availableComplications = listaComplicacoes,
                 selectedComplications = complicacoesSelecionadas,
                 automaticTropoAdvantageIds = vantagensAutomaticasDoTropo.toSet(),
+                additionalProtectedAdvantageIds = (
+                    vantagensAutomaticasDoSigno +
+                        vantagensAutomaticasDoPotencialFisico +
+                        vantagensAutomaticasDoProtagonista +
+                        vantagensSlotProtagonista +
+                        vantagensAutomaticasDoElemento +
+                        samuraiCombatSlotIds +
+                        listOfNotNull(pathfinderFreeSlotId, vantagemAdaptavelSelecionadaId)
+                    ).toSet(),
                 meetsRequirements = { atendeRequisitosMantidos(it) },
                 originPriorityResolver = { getOriginPriority(it) },
                 compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
