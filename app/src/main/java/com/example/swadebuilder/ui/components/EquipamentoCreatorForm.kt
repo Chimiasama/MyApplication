@@ -76,6 +76,14 @@ class EquipamentoFormState {
     // sentido (ex.: subtipo "Modernas e Futuristas"), por isso não é single-choice.
     var eras by mutableStateOf(setOf<String>())
 
+    // Categoria Customizada (ver model/CategoriaCustomizada.kt) escolhida pelo Mestre —
+    // quando presente, tem prioridade sobre `categoriaTipo()` calculado a partir de
+    // superType/subtype pra decidir em qual seção da tela de Equipamento o item cai
+    // (ver model/DataLoader updateActiveModules). Os campos mecânicos (dano, armadura
+    // etc.) continuam vindo de superType/subtype normalmente — a categoria
+    // customizada só substitui o agrupamento visual, não a mecânica do item.
+    var categoriaCustomizadaId by mutableStateOf<String?>(null)
+
     fun montarDano(): String {
         val bonus = danoBonus.toIntOrNull()?.takeIf { it != 0 }
         val sufixoBonus = when {
@@ -155,6 +163,7 @@ class EquipamentoFormState {
             subtipo = subtype,
             subsubtipo = eras.takeIf { it.isNotEmpty() }?.sorted()?.joinToString(", "),
             categoriaTipo = categoriaTipo(),
+            categoriaCustomizadaId = categoriaCustomizadaId,
             usavelCorpoACorpo = usavelCorpoACorpoValor,
             id = id
         )
@@ -170,6 +179,7 @@ class EquipamentoFormState {
         explosao = ""; cobertura = ""
         usavelCorpoACorpo = false
         eras = emptySet()
+        categoriaCustomizadaId = null
     }
 }
 
@@ -230,7 +240,13 @@ private fun EraDropdownPicker(selecionadas: Set<String>, onChange: (Set<String>)
 }
 
 @Composable
-fun EquipamentoCreatorFields(state: EquipamentoFormState) {
+fun EquipamentoCreatorFields(
+    state: EquipamentoFormState,
+    categoriasCustomizadas: List<com.example.swadebuilder.model.CategoriaCustomizada> = emptyList(),
+    onCreateCategoria: (String) -> com.example.swadebuilder.model.CategoriaCustomizada = { com.example.swadebuilder.model.CategoriaCustomizada(id = "", nome = it, tipoEntidade = com.example.swadebuilder.model.TipoEntidadeCategoria.EQUIPAMENTO) },
+    onRenameCategoria: (String, String) -> Unit = { _, _ -> },
+    onDeleteCategoria: (String) -> Unit = {}
+) {
     // Tipo escolhido aqui decide (a) quais campos mecânicos aparecem abaixo e (b) o
     // `categoriaTipo` gravado no item — é o que faz o item cair na seção certa
     // (Armas/Armaduras/Veículos/etc.) da tela de Equipamento em vez de sempre em
@@ -286,6 +302,16 @@ fun EquipamentoCreatorFields(state: EquipamentoFormState) {
             }
         }
     }
+
+    CategoriaCustomizadaChipRow(
+        label = "Categoria customizada (opcional):",
+        categorias = categoriasCustomizadas,
+        selectedId = state.categoriaCustomizadaId,
+        onSelect = { state.categoriaCustomizadaId = it },
+        onCreate = onCreateCategoria,
+        onRename = onRenameCategoria,
+        onDelete = onDeleteCategoria
+    )
 
     // Custo e Peso valem pra qualquer tipo de item (livro básico, Cap. 2).
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {

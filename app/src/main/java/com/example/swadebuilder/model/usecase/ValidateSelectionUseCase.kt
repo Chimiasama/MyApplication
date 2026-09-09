@@ -14,7 +14,8 @@ class ValidateSelectionUseCase(
     private val validateConflictsUseCase: ValidateConflictsUseCase = ValidateConflictsUseCase(),
     private val validatePowerPointsLimitUseCase: ValidatePowerPointsLimitUseCase = ValidatePowerPointsLimitUseCase(),
     private val validateSpecialRulesUseCase: ValidateSpecialRulesUseCase = ValidateSpecialRulesUseCase(),
-    private val validatePrerequisiteUseCase: ValidatePrerequisiteUseCase = ValidatePrerequisiteUseCase()
+    private val validatePrerequisiteUseCase: ValidatePrerequisiteUseCase = ValidatePrerequisiteUseCase(),
+    private val validateCustomCategoryPrerequisiteUseCase: ValidateCustomCategoryPrerequisiteUseCase = ValidateCustomCategoryPrerequisiteUseCase()
 ) {
 
     data class Context(
@@ -88,6 +89,10 @@ class ValidateSelectionUseCase(
                     context.complicacoesSelecionadas.keys
                 )
             )) return false
+
+        // 3b. Prerequisites by Custom Category (any Vantagem already owned from
+        // each required CategoriaCustomizada — see model/CategoriaCustomizada.kt)
+        if (!validateCustomCategoryPrerequisiteUseCase.execute(vantagem, context.vantagensSelecionadas)) return false
 
         // 4. Conflicts
         if (!validateConflictsUseCase.execute(

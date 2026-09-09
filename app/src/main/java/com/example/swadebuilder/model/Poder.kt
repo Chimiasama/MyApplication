@@ -46,5 +46,9 @@ data class Poder(
     val duracao: String,
     val manifestacoes: List<String> = emptyList(),
     val descricao: String,
-    val modificadores: List<Modificador> = emptyList()
+    val modificadores: List<Modificador> = emptyList(),
+    // Id de CategoriaCustomizada (ver model/CategoriaCustomizada.kt) — Poder não tem
+    // categoria oficial fixa, então isto é a única categorização possível, e só se
+    // aplica a Poderes customizados criados pelo Mestre.
+    val categoriaCustomizadaId: String? = null
 )

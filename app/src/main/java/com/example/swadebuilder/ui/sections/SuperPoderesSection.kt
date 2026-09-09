@@ -772,15 +772,24 @@ fun SuperPoderesSection(
         var searchQuery by rememberSaveable { mutableStateOf("") }
         var isSearchExpanded by rememberSaveable { mutableStateOf(value = false) }
         var selectedCategory by rememberSaveable { mutableStateOf(SuperCategory.TODOS) }
+        // Filtro por Categoria Customizada (ver model/CategoriaCustomizada.kt) — separado do
+        // SuperCategory acima (heurística fixa por nome do poder, ex.: Físico/Mental); esta
+        // aqui é a categoria que o Mestre criou pra organizar Super Poderes customizados.
+        var selectedCategoriaCustomId by rememberSaveable { mutableStateOf<String?>(null) }
+        val categoriasSuperPoder = remember(state.listaCategoriasCustomizadas) {
+            state.listaCategoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER }
+        }
 
-        val filteredList = remember(listaSuperPoderes, searchQuery, selectedCategory) {
+        val filteredList = remember(listaSuperPoderes, searchQuery, selectedCategory, selectedCategoriaCustomId) {
             listaSuperPoderes.filter { poder ->
                 val matchesCategory = selectedCategory == SuperCategory.TODOS ||
                         SuperCategory.fromPowerName(poder.nome) == selectedCategory
+                val matchesCategoriaCustom = selectedCategoriaCustomId == null ||
+                        poder.categoriaCustomizadaId == selectedCategoriaCustomId
                 val matchesQuery = searchQuery.isBlank() ||
                         poder.nome.semAcentos().contains(searchQuery.semAcentos(), ignoreCase = true) ||
                         (poder.descricao?.semAcentos()?.contains(searchQuery.semAcentos(), ignoreCase = true) == true)
-                matchesCategory && matchesQuery
+                matchesCategory && matchesCategoriaCustom && matchesQuery
             }
         }
 
@@ -817,6 +826,37 @@ fun SuperPoderesSection(
                     label = { Text(labelText, style = MaterialTheme.typography.labelSmall) },
                     colors = FilterChipDefaults.filterChipColors()
                 )
+            }
+        }
+
+        if (categoriasSuperPoder.isNotEmpty()) {
+            Spacer(Modifier.height(4.dp))
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                contentPadding = PaddingValues(horizontal = 2.dp, vertical = 2.dp)
+            ) {
+                item {
+                    Text(
+                        "Categoria:",
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                }
+                item {
+                    FilterChip(
+                        selected = selectedCategoriaCustomId == null,
+                        onClick = { selectedCategoriaCustomId = null },
+                        label = { Text("Todas", style = MaterialTheme.typography.labelSmall) }
+                    )
+                }
+                items(categoriasSuperPoder, key = { it.id }) { cat ->
+                    FilterChip(
+                        selected = selectedCategoriaCustomId == cat.id,
+                        onClick = { selectedCategoriaCustomId = cat.id },
+                        label = { Text(cat.nome, style = MaterialTheme.typography.labelSmall) }
+                    )
+                }
             }
         }
 
@@ -933,11 +973,24 @@ fun SuperPoderesSection(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            MarqueeText(
-                                text = poder.nome.toFancyTitleCase(),
-                                modifier = Modifier.weight(1f),
-                                style = MaterialTheme.typography.titleSmall
-                            )
+                            Column(modifier = Modifier.weight(1f)) {
+                                MarqueeText(
+                                    text = poder.nome.toFancyTitleCase(),
+                                    style = MaterialTheme.typography.titleSmall
+                                )
+                                // Categoria Customizada (ver model/CategoriaCustomizada.kt) — só
+                                // aparece pra Super Poderes customizados organizados numa categoria.
+                                poder.categoriaCustomizadaId?.let { catId ->
+                                    val nomeCategoria = state.listaCategoriasCustomizadas.firstOrNull { it.id == catId }?.nome
+                                    if (nomeCategoria != null) {
+                                        Text(
+                                            text = nomeCategoria,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.secondary
+                                        )
+                                    }
+                                }
+                            }
 
                             if (temOMelhorQueHa) {
                                 val favoritoAtual = state.poderFavoritoId

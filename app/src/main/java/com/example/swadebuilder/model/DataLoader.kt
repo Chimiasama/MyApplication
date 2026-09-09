@@ -550,6 +550,10 @@ object DataLoader {
         val customSuperPoderes = mutableListOf<SuperPoder>()
         val customRacas = mutableListOf<RacialModifier>()
         val customVariantesRaciais = mutableListOf<CustomAncestryVariant>()
+        val customCategoriasCustomizadas = mutableListOf<CategoriaCustomizada>()
+        val customAtributosJson = mutableListOf<AtributoJson>()
+        val customPericiasJson = mutableListOf<PericiaJson>()
+        val customModificadoresCustomizados = mutableListOf<ModificadorCustomizado>()
 
         // TAG_GERAL sempre entra, além dos livros realmente ativos: é onde fica
         // o conteúdo customizado que o jogador marcou como "Geral" na criação,
@@ -563,7 +567,41 @@ object DataLoader {
             customSuperPoderes += customData.superPoderes
             customRacas += customData.racas
             customVariantesRaciais += customData.variantesRaciais
+            customCategoriasCustomizadas += customData.categoriasCustomizadas
+            customAtributosJson += customData.atributosCustomizados
+            customPericiasJson += customData.periciasCustomizadas
+            customModificadoresCustomizados += customData.modificadoresCustomizados
         }
+        // Mesma categoria (mesmo id) pode existir em mais de um livro de armazenamento
+        // se o Mestre marcou vários livros ao criá-la — distinctBy fica só com uma cópia.
+        val mergedCategoriasCustomizadas = customCategoriasCustomizadas.distinctBy { it.id }
+
+        // Atributos e Perícias customizados (ver model/CategoriaCustomizada.kt — mesmo
+        // padrão de conteúdo por livro/campanha, mas pra Atributo/Perícia). Mesclados aqui
+        // (não nas seções "5. Atributos"/"6. Pericias" acima, que só leem o catálogo
+        // oficial) porque dependem do resultado do loop de conteúdo customizado por livro.
+        val mergedListaAtributos = (localListaAtributos + customAtributosJson.map { it.nome.keyify() }).distinct()
+        val mergedMapaAtributosDisplay = localMapaAtributosDisplay + customAtributosJson.associate { it.nome.keyify() to it.nome }
+        val mergedMapaAtributosDescricao = localMapaAtributosDescricao + customAtributosJson.associate { atr ->
+            val texto = if (!EditionConfig.isFullEdition) atr.descricaoLite ?: atr.descricao else atr.descricao
+            atr.nome.keyify() to (texto ?: "")
+        }
+        val customPericias = customPericiasJson.map { pj ->
+            Pericia(
+                nome = pj.nome,
+                atributo = pj.atributo.uppercase().semAcentos(),
+                basica = pj.basica,
+                origem = pj.origem,
+                descricao = pj.descricao,
+                id = pj.id
+            )
+        }
+        // distinctBy simples (não distinctByOriginPriority): mantém a primeira ocorrência
+        // por nome — como o catálogo oficial vem primeiro na lista, uma perícia custom com
+        // nome colidente é descartada em favor da oficial, e não há ambiguidade de "qual
+        // livro" já que perícias customizadas não têm essa granularidade de origem.
+        val mergedListaPericias = (localListaPericias + customPericias).distinctBy { it.nome.keyify() }
+        val mergedMapaPericias = mergedListaPericias.associateBy { it.nome.keyify() }
 
         // Usa distinctByOriginPriority (não distinctBy simples) porque um mesmo id/nome pode
         // existir em mais de um livro ativo ao mesmo tempo (Modo Livre, ou um livro
@@ -579,10 +617,31 @@ object DataLoader {
         // gate que já vale pro catálogo oficial (super_poderes.json só carrega
         // com "SUPER" em keys), já que o traço só faz sentido junto com o
         // Antecedente Arcano (Super Poderes) desse cenário.
-        val mergedSuperPoderes = if ("SUPER" in keys) {
+        val mergedSuperPoderesSemModificadores = if ("SUPER" in keys) {
             (localListaSuperPoderes + customSuperPoderes).distinctBy { it.nome.keyify() }
         } else {
             localListaSuperPoderes
+        }
+        // Injeta modificadores customizados (ver model/ModificadorCustomizado.kt) no poder
+        // alvo depois do merge acima — funciona tanto pra poder oficial (só existe em
+        // memória, nunca reescreve super_poderes.json) quanto pra poder customizado.
+        // Acrescenta o mesmo texto em modificadoresLite quando presente pra manter as
+        // duas listas do mesmo tamanho (ver SuperPoder.exibido()); sem isso a rewrite pra
+        // edição Lite seria ignorada pro poder inteiro, não só pro modificador novo.
+        val modificadoresCustomizadosPorPoder = customModificadoresCustomizados.groupBy { it.poderAlvoNome.keyify() }
+        val mergedSuperPoderes = if (modificadoresCustomizadosPorPoder.isEmpty()) {
+            mergedSuperPoderesSemModificadores
+        } else {
+            mergedSuperPoderesSemModificadores.map { sp ->
+                val extras = modificadoresCustomizadosPorPoder[sp.nome.keyify()]
+                if (extras.isNullOrEmpty()) sp else {
+                    val textos = extras.map { it.paraTexto() }
+                    sp.copy(
+                        modificadores = (sp.modificadores.orEmpty() + textos),
+                        modificadoresLite = sp.modificadoresLite?.let { it + textos }
+                    )
+                }
+            }
         }
 
         // Inject custom equipment into categories so they appear in EquipamentoSection.
@@ -594,9 +653,19 @@ object DataLoader {
         // assim que qualquer item customizado existisse. O `tipo` de cada item novo vem de
         // `categoriaTipo` (definido no formulário de criação, ver SettingsDialog.kt) pra cair na
         // seção certa (Armas/Armaduras/Veículos/etc.) em vez de sempre em "Equipamento Geral".
+        // Resolve o "tipo" efetivo de cada item customizado: uma CategoriaCustomizada
+        // (Mestre) tem prioridade sobre `categoriaTipo` — e como é resolvida pelo nome
+        // atual da categoria (não uma cópia congelada), renomear a categoria já reflete
+        // na seção do item sem precisar reescrever cada item no disco.
+        val categoriasCustomizadasPorId = mergedCategoriasCustomizadas.associateBy { it.id }
+        fun tipoEfetivo(item: EquipamentoItem): String {
+            val categoriaCustom = item.categoriaCustomizadaId?.let { categoriasCustomizadasPorId[it] }
+            return categoriaCustom?.nome ?: item.categoriaTipo ?: "Equipamento Geral"
+        }
+
         val updatedEquipamentoCategorias = if (customEquipamentos.isNotEmpty()) {
             val categorizedCustoms = customEquipamentos.groupBy {
-                (it.categoriaTipo ?: "Equipamento Geral") to (it.subtipo ?: "Equipamento Geral")
+                tipoEfetivo(it) to (it.subtipo ?: "Equipamento Geral")
             }
             val existingTypes = localEquipamentoCategorias.associateBy { it.tipo to it.subtipo }.toMutableMap()
             categorizedCustoms.forEach { (chave, items) ->
@@ -623,11 +692,11 @@ object DataLoader {
             listaCoracoesCrystal = localListaCoracoesCrystal,
             listaAncestralidadesJson = mergedAncestralidades,
             listaMonstroTemplates = localListaMonstroTemplates,
-            listaAtributos = localListaAtributos,
-            mapaAtributosDisplay = localMapaAtributosDisplay,
-            listaPericias = localListaPericias,
-            mapaPericias = localMapaPericias,
-            mapaAtributosDescricao = localMapaAtributosDescricao,
+            listaAtributos = mergedListaAtributos,
+            mapaAtributosDisplay = mergedMapaAtributosDisplay,
+            listaPericias = mergedListaPericias,
+            mapaPericias = mergedMapaPericias,
+            mapaAtributosDescricao = mergedMapaAtributosDescricao,
             listaVantagens = mergedVantagens,
             listaPoderes = mergedPoderes,
             listaTropos = localListaTropos,
@@ -636,7 +705,8 @@ object DataLoader {
             superequipCategorias = localSuperequipCategorias,
             listaSuperPoderes = mergedSuperPoderes,
             arcanoInfo = loadedArcanoInfoList,
-            listaVariantesRaciaisCustom = customVariantesRaciais
+            listaVariantesRaciaisCustom = customVariantesRaciais,
+            listaCategoriasCustomizadas = mergedCategoriasCustomizadas
         )
     }
 

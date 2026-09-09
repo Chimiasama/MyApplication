@@ -361,7 +361,21 @@ class MainActivity : ComponentActivity() {
                         onDismiss = { showSettingsDialog = false },
                         persistPrefs = { persistPrefs() },
                         feedbackController = feedbackController,
-                        onCustomContentChanged = { criadorViewModel.invalidateGameDataCache() }
+                        onCustomContentChanged = {
+                            // Invalidar sozinho não bastava: só evita que uma PRÓXIMA chamada de
+                            // carregarDadosDeJogo() devolva o snapshot antigo do cache — mas nada
+                            // disparava essa próxima chamada, então gameDataStore.currentSnapshot()
+                            // (de onde Vantagens/Atributos/Poderes/etc leem os catálogos na tela)
+                            // ficava travado no snapshot de quando o app abriu. Um Atributo/Vantagem/
+                            // Perícia customizado recém-criado só apareceria depois de reabrir o app
+                            // ou trocar de livro ativo (o que já disparava um reload em outro lugar).
+                            // Recarrega em background com os módulos atualmente ativos pra refletir
+                            // o conteúdo customizado imediatamente, sem esperar por isso.
+                            criadorViewModel.invalidateGameDataCache()
+                            scope.launch(Dispatchers.IO) {
+                                criadorViewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                            }
+                        }
                     ) { theme ->
                         criadorViewModel.setAppTheme(theme)
                     }

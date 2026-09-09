@@ -33,6 +33,7 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
         add("CIDADE_SOL_VAPOR")
         add("WISEGUYS")
         add("CRYSTAL_HEART")
+        add(com.example.swadebuilder.util.TAG_GERAL)
         return@buildSet
     }
     // 1. Add active compendiums to the set
@@ -60,6 +61,15 @@ fun CriadorState.getActiveOrigins(): Set<String> = buildSet {
     if (!replacementSettingsActive) {
         add("BASICO")
     }
+
+    // 3. TAG_GERAL ("GERAL") sempre visível, em qualquer combinação de livros — é onde fica
+    // o conteúdo customizado que o Mestre marcou como "Geral" na criação (ver
+    // CustomStorageManager.kt), pra aparecer não importa quais livros estejam ativos.
+    // Adicionado por ÚLTIMO (não no início): os poucos lugares que fazem
+    // getActiveOrigins().firstOrNull() esperam o primeiro livro REAL/ativo como padrão pra
+    // marcar na criação de conteúdo customizado (ver SettingsDialog.kt), não "GERAL" — e
+    // buildSet preserva ordem de inserção.
+    add(com.example.swadebuilder.util.TAG_GERAL)
 }
 
 fun CriadorState.isComplicacaoVisible(

@@ -1,8 +1,12 @@
 package com.example.swadebuilder.util
 
 import android.content.Context
+import com.example.swadebuilder.model.AtributoJson
+import com.example.swadebuilder.model.CategoriaCustomizada
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.ModificadorCustomizado
+import com.example.swadebuilder.model.PericiaJson
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperPoder
@@ -49,7 +53,11 @@ data class BookCustomContent(
     val superPoderes: List<SuperPoder> = emptyList(),
     val racas: List<RacialModifier> = emptyList(),
     val habilidadesRaciais: List<HabilidadeCriacao> = emptyList(),
-    val variantesRaciais: List<CustomAncestryVariant> = emptyList()
+    val variantesRaciais: List<CustomAncestryVariant> = emptyList(),
+    val categoriasCustomizadas: List<CategoriaCustomizada> = emptyList(),
+    val atributosCustomizados: List<AtributoJson> = emptyList(),
+    val periciasCustomizadas: List<PericiaJson> = emptyList(),
+    val modificadoresCustomizados: List<ModificadorCustomizado> = emptyList()
 )
 
 class CustomStorageManager(
@@ -185,9 +193,17 @@ class CustomStorageManager(
         addSuperPoder(context.filesDir, bookKey, item)
     }
 
+    // Também derruba modificadores customizados (ver ModificadorCustomizado) que
+    // apontavam pro poder apagado, deste mesmo livro — diferente da categoria
+    // customizada (que só desvincula), aqui não faz sentido manter um
+    // modificador órfão sem poder alvo.
     fun deleteSuperPoder(baseDir: File, bookKey: String, itemNome: String) {
         val current = loadCustomContent(baseDir, bookKey)
-        val updated = current.copy(superPoderes = current.superPoderes.filterNot { it.nome.equals(itemNome, ignoreCase = true) })
+        val alvoKey = itemNome.keyify()
+        val updated = current.copy(
+            superPoderes = current.superPoderes.filterNot { it.nome.equals(itemNome, ignoreCase = true) },
+            modificadoresCustomizados = current.modificadoresCustomizados.filterNot { it.poderAlvoNome.keyify() == alvoKey }
+        )
         saveCustomContent(baseDir, updated)
     }
 
@@ -259,6 +275,127 @@ class CustomStorageManager(
 
     fun deleteVarianteRacial(context: Context, bookKey: String, itemId: String) {
         deleteVarianteRacial(context.filesDir, bookKey, itemId)
+    }
+
+    fun addCategoriaCustomizada(baseDir: File, bookKey: String, item: CategoriaCustomizada) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            categoriasCustomizadas = (current.categoriasCustomizadas.filterNot { it.id == item.id } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addCategoriaCustomizada(context: Context, bookKey: String, item: CategoriaCustomizada) {
+        addCategoriaCustomizada(context.filesDir, bookKey, item)
+    }
+
+    // Apaga a categoria e desvincula (não apaga) todo item deste livro que a
+    // referenciava — eles voltam a ficar sem categoria em vez de sumir da lista.
+    fun deleteCategoriaCustomizada(baseDir: File, bookKey: String, categoriaId: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            categoriasCustomizadas = current.categoriasCustomizadas.filterNot { it.id == categoriaId },
+            vantagens = current.vantagens.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            },
+            equipamentos = current.equipamentos.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            },
+            poderes = current.poderes.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            },
+            superPoderes = current.superPoderes.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            },
+            complicacoes = current.complicacoes.map {
+                if (it.categoriaCustomizadaId == categoriaId) it.copy(categoriaCustomizadaId = null) else it
+            }
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteCategoriaCustomizada(context: Context, bookKey: String, categoriaId: String) {
+        deleteCategoriaCustomizada(context.filesDir, bookKey, categoriaId)
+    }
+
+    fun renameCategoriaCustomizada(baseDir: File, bookKey: String, categoriaId: String, novoNome: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            categoriasCustomizadas = current.categoriasCustomizadas.map {
+                if (it.id == categoriaId) it.copy(nome = novoNome) else it
+            }
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun renameCategoriaCustomizada(context: Context, bookKey: String, categoriaId: String, novoNome: String) {
+        renameCategoriaCustomizada(context.filesDir, bookKey, categoriaId, novoNome)
+    }
+
+    fun addAtributoCustomizado(baseDir: File, bookKey: String, item: AtributoJson) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            atributosCustomizados = (current.atributosCustomizados.filterNot { it.nome.equals(item.nome, ignoreCase = true) } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addAtributoCustomizado(context: Context, bookKey: String, item: AtributoJson) {
+        addAtributoCustomizado(context.filesDir, bookKey, item)
+    }
+
+    fun deleteAtributoCustomizado(baseDir: File, bookKey: String, itemNome: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(atributosCustomizados = current.atributosCustomizados.filterNot { it.nome.equals(itemNome, ignoreCase = true) })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteAtributoCustomizado(context: Context, bookKey: String, itemNome: String) {
+        deleteAtributoCustomizado(context.filesDir, bookKey, itemNome)
+    }
+
+    fun addPericiaCustomizada(baseDir: File, bookKey: String, item: PericiaJson) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            periciasCustomizadas = (current.periciasCustomizadas.filterNot { it.nome.equals(item.nome, ignoreCase = true) } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addPericiaCustomizada(context: Context, bookKey: String, item: PericiaJson) {
+        addPericiaCustomizada(context.filesDir, bookKey, item)
+    }
+
+    fun deletePericiaCustomizada(baseDir: File, bookKey: String, itemNome: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(periciasCustomizadas = current.periciasCustomizadas.filterNot { it.nome.equals(itemNome, ignoreCase = true) })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deletePericiaCustomizada(context: Context, bookKey: String, itemNome: String) {
+        deletePericiaCustomizada(context.filesDir, bookKey, itemNome)
+    }
+
+    fun addModificadorCustomizado(baseDir: File, bookKey: String, item: ModificadorCustomizado) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            modificadoresCustomizados = (current.modificadoresCustomizados.filterNot { it.id == item.id } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addModificadorCustomizado(context: Context, bookKey: String, item: ModificadorCustomizado) {
+        addModificadorCustomizado(context.filesDir, bookKey, item)
+    }
+
+    fun deleteModificadorCustomizado(baseDir: File, bookKey: String, itemId: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(modificadoresCustomizados = current.modificadoresCustomizados.filterNot { it.id == itemId })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteModificadorCustomizado(context: Context, bookKey: String, itemId: String) {
+        deleteModificadorCustomizado(context.filesDir, bookKey, itemId)
     }
 
     fun importItemFromAnotherBook(baseDir: File, targetBookKey: String, sourceBookKey: String, itemType: String, itemIdOrName: String): Boolean {

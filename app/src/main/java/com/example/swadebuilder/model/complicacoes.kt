@@ -16,7 +16,10 @@ data class Complicacao(
     val origem: String,
     val observacoes: String = "",
     @SerialName("vantagens_previas")
-    val vantagensPrevias: List<String> = emptyList()
+    val vantagensPrevias: List<String> = emptyList(),
+    // Id de CategoriaCustomizada (ver model/CategoriaCustomizada.kt) — Complicação não
+    // tem categoria oficial fixa, só se aplica a Complicações customizadas do Mestre.
+    val categoriaCustomizadaId: String? = null
 ) {
     val nomeExibicao: String
         get() = if (EditionConfig.isFullEdition) {
