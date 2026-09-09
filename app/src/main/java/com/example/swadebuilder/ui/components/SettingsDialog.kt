@@ -445,6 +445,11 @@ fun SettingsDialog(
                         var showEdgeDialog by remember { mutableStateOf(false) }
                         var showCompDialog by remember { mutableStateOf(false) }
                         var customSeverity by remember { mutableStateOf("Maior") }
+                        // Perícia customizada: qual Atributo ela usa como base do teste, e se
+                        // já começa em d4 grátis (perícia "básica") — mesmos dois campos que o
+                        // catálogo oficial (Pericia.atributo/basica, ver model/Pericia.kt).
+                        var customPericiaAtributoVinculado by remember { mutableStateOf<String?>(null) }
+                        var customPericiaBasica by remember { mutableStateOf(false) }
                         // Categoria "Equipamento" extraída pra EquipamentoCreatorForm.kt — já
                         // tinha crescido demais (Tipo/Subtipo, dano estruturado, Força Mínima,
                         // estatísticas de arma/armadura/escudo/veículo) pra continuar inline
@@ -576,7 +581,7 @@ fun SettingsDialog(
                         // já é global (tela inicial, criação, fase de XP), então não há mais
                         // motivo pra esconder categorias por causa de "isHomeScreen".
                         val categories = remember {
-                            listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Super Poder", "Antecedente Arcano", "Raça", "Traço Racial", "Variante de Raça")
+                            listOf("Vantagem", "Complicação", "Equipamento", "Poder", "Super Poder", "Antecedente Arcano", "Raça", "Traço Racial", "Variante de Raça", "Atributo", "Perícia")
                         }
                         if (selectedCategory !in categories) {
                             selectedCategory = categories.first()
@@ -585,7 +590,7 @@ fun SettingsDialog(
                         // <categoria>" abaixo — as demais ("Vantagem", "Complicação", "Raça",
                         // "Variante de Raça") são femininas e usam "da" por padrão.
                         val categoriasMasculinas = remember {
-                            setOf("Equipamento", "Poder", "Super Poder", "Antecedente Arcano", "Traço Racial")
+                            setOf("Equipamento", "Poder", "Super Poder", "Antecedente Arcano", "Traço Racial", "Atributo")
                         }
                         val artigoCategoria = if (selectedCategory in categoriasMasculinas) "do" else "da"
                         // Todos os "livros" de armazenamento que existem (livros reais + Geral).
@@ -610,7 +615,9 @@ fun SettingsDialog(
                                 racas = all.flatMap { it.racas }.distinctBy { it.nome.lowercase() },
                                 habilidadesRaciais = all.flatMap { it.habilidadesRaciais }.distinctBy { it.nome.lowercase() },
                                 variantesRaciais = all.flatMap { it.variantesRaciais }.distinctBy { it.id },
-                                categoriasCustomizadas = all.flatMap { it.categoriasCustomizadas }.distinctBy { it.id }
+                                categoriasCustomizadas = all.flatMap { it.categoriasCustomizadas }.distinctBy { it.id },
+                                atributosCustomizados = all.flatMap { it.atributosCustomizados }.distinctBy { it.nome.lowercase() },
+                                periciasCustomizadas = all.flatMap { it.periciasCustomizadas }.distinctBy { it.nome.lowercase() }
                             )
                         }
 
@@ -1387,6 +1394,40 @@ fun SettingsDialog(
                                                         }
                                                     }
                                                 }
+                                                "Atributo" -> {
+                                                    Text(
+                                                        "Cria um novo Atributo pra esta campanha (ex.: uma característica extra numa variante de regra própria). Começa em d4, igual aos demais, e aparece na ficha de todo personagem.",
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                                    )
+                                                }
+                                                "Perícia" -> {
+                                                    val atributosDisponiveis = remember(state.mapaAtributosDisplay) {
+                                                        state.mapaAtributosDisplay.values.distinct().sorted()
+                                                    }
+                                                    if (customPericiaAtributoVinculado == null || customPericiaAtributoVinculado !in atributosDisponiveis) {
+                                                        customPericiaAtributoVinculado = atributosDisponiveis.firstOrNull()
+                                                    }
+                                                    LabeledChipGroup("Atributo vinculado:") {
+                                                        atributosDisponiveis.forEach { nomeAtr ->
+                                                            androidx.compose.material3.FilterChip(
+                                                                selected = customPericiaAtributoVinculado == nomeAtr,
+                                                                onClick = { customPericiaAtributoVinculado = nomeAtr },
+                                                                label = { Text(nomeAtr, style = MaterialTheme.typography.labelSmall) }
+                                                            )
+                                                        }
+                                                    }
+                                                    Row(
+                                                        verticalAlignment = Alignment.CenterVertically,
+                                                        modifier = Modifier.fillMaxWidth()
+                                                    ) {
+                                                        Checkbox(checked = customPericiaBasica, onCheckedChange = { customPericiaBasica = it })
+                                                        Text(
+                                                            "Perícia básica (todo personagem já começa com d4 de graça)",
+                                                            style = MaterialTheme.typography.bodySmall
+                                                        )
+                                                    }
+                                                }
                                             }
 
                                             // Common Description field
@@ -1419,6 +1460,8 @@ fun SettingsDialog(
                                             activeBookCustomData.racas.forEach { add("Raça" to it.nome) }
                                             activeBookCustomData.habilidadesRaciais.forEach { add("Traço Racial" to it.nome) }
                                             activeBookCustomData.variantesRaciais.forEach { add("Variante de Raça" to it.nome) }
+                                            activeBookCustomData.atributosCustomizados.forEach { add("Atributo" to it.nome) }
+                                            activeBookCustomData.periciasCustomizadas.forEach { add("Perícia" to it.nome) }
                                         }
                                     }
 
@@ -1497,6 +1540,14 @@ fun SettingsDialog(
                                                                     todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVarianteRacial(context, it, i.id) }
                                                                     state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom.filterNot { v -> v.id == i.id }
                                                                 }
+                                                            }
+                                                            "Atributo" -> {
+                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteAtributoCustomizado(context, it, name) }
+                                                                state.removeCustomAtributo(name)
+                                                            }
+                                                            "Perícia" -> {
+                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePericiaCustomizada(context, it, name) }
+                                                                state.removeCustomPericia(name)
                                                             }
                                                         }
                                                         refreshTrigger++
@@ -1655,6 +1706,10 @@ fun SettingsDialog(
                                                     if (baseRacialCatalog.any { it.nome.keyify() == normalizedName } || activeBookCustomData.habilidadesRaciais.any { it.nome.keyify() == normalizedName }) "Traço Racial" else null
                                                 "Variante de Raça" ->
                                                     if (state.listaVariantesRaciaisCustom.any { it.id == id } || activeBookCustomData.variantesRaciais.any { it.id == id }) "Variante de Raça" else null
+                                                "Atributo" ->
+                                                    if (state.mapaAtributosDisplay.values.any { it.equals(customItemName, ignoreCase = true) } || activeBookCustomData.atributosCustomizados.any { it.nome.equals(customItemName, ignoreCase = true) }) "Atributo" else null
+                                                "Perícia" ->
+                                                    if (state.listaPericias.any { it.nome.equals(customItemName, ignoreCase = true) } || activeBookCustomData.periciasCustomizadas.any { it.nome.equals(customItemName, ignoreCase = true) }) "Perícia" else null
                                                 else -> null
                                             }
                                             if (colisao != null) {
@@ -1906,6 +1961,29 @@ fun SettingsDialog(
                                                         }
                                                     }
                                                 }
+                                                "Atributo" -> {
+                                                    val newAtributo = com.example.swadebuilder.model.AtributoJson(
+                                                        nome = customItemName,
+                                                        min = 4,
+                                                        descricao = safeDesc
+                                                    )
+                                                    tags.forEach { tag -> customStorageManager.addAtributoCustomizado(context, tag, newAtributo) }
+                                                    state.addCustomAtributo(newAtributo)
+                                                    statusMessage = "Atributo '$customItemName' salvo em: $tagsLabel"
+                                                }
+                                                "Perícia" -> {
+                                                    val newPericia = com.example.swadebuilder.model.PericiaJson(
+                                                        nome = customItemName,
+                                                        atributo = customPericiaAtributoVinculado ?: "Força",
+                                                        basica = customPericiaBasica,
+                                                        origem = tags.first(),
+                                                        descricao = safeDesc,
+                                                        id = id
+                                                    )
+                                                    tags.forEach { tag -> customStorageManager.addPericiaCustomizada(context, tag, newPericia.copy(origem = tag)) }
+                                                    state.addCustomPericia(newPericia)
+                                                    statusMessage = "Perícia '$customItemName' salva em: $tagsLabel"
+                                                }
                                             }
                                                     refreshTrigger++
                                             onCustomContentChanged()
@@ -1923,6 +2001,8 @@ fun SettingsDialog(
                                             customRacialTrait = ""
                                             selectedRacialTraits = emptyList()
                                             customAaPoderesEspecificos = emptySet()
+                                            customPericiaAtributoVinculado = null
+                                            customPericiaBasica = false
                                             }
                                         } else {
                                                     statusMessage = "Preencha o Nome do item."

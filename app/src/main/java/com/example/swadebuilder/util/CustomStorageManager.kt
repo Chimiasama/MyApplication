@@ -1,9 +1,11 @@
 package com.example.swadebuilder.util
 
 import android.content.Context
+import com.example.swadebuilder.model.AtributoJson
 import com.example.swadebuilder.model.CategoriaCustomizada
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.PericiaJson
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.RacialModifier
 import com.example.swadebuilder.model.SuperPoder
@@ -51,7 +53,9 @@ data class BookCustomContent(
     val racas: List<RacialModifier> = emptyList(),
     val habilidadesRaciais: List<HabilidadeCriacao> = emptyList(),
     val variantesRaciais: List<CustomAncestryVariant> = emptyList(),
-    val categoriasCustomizadas: List<CategoriaCustomizada> = emptyList()
+    val categoriasCustomizadas: List<CategoriaCustomizada> = emptyList(),
+    val atributosCustomizados: List<AtributoJson> = emptyList(),
+    val periciasCustomizadas: List<PericiaJson> = emptyList()
 )
 
 class CustomStorageManager(
@@ -316,6 +320,50 @@ class CustomStorageManager(
 
     fun renameCategoriaCustomizada(context: Context, bookKey: String, categoriaId: String, novoNome: String) {
         renameCategoriaCustomizada(context.filesDir, bookKey, categoriaId, novoNome)
+    }
+
+    fun addAtributoCustomizado(baseDir: File, bookKey: String, item: AtributoJson) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            atributosCustomizados = (current.atributosCustomizados.filterNot { it.nome.equals(item.nome, ignoreCase = true) } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addAtributoCustomizado(context: Context, bookKey: String, item: AtributoJson) {
+        addAtributoCustomizado(context.filesDir, bookKey, item)
+    }
+
+    fun deleteAtributoCustomizado(baseDir: File, bookKey: String, itemNome: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(atributosCustomizados = current.atributosCustomizados.filterNot { it.nome.equals(itemNome, ignoreCase = true) })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deleteAtributoCustomizado(context: Context, bookKey: String, itemNome: String) {
+        deleteAtributoCustomizado(context.filesDir, bookKey, itemNome)
+    }
+
+    fun addPericiaCustomizada(baseDir: File, bookKey: String, item: PericiaJson) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(
+            periciasCustomizadas = (current.periciasCustomizadas.filterNot { it.nome.equals(item.nome, ignoreCase = true) } + item)
+        )
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun addPericiaCustomizada(context: Context, bookKey: String, item: PericiaJson) {
+        addPericiaCustomizada(context.filesDir, bookKey, item)
+    }
+
+    fun deletePericiaCustomizada(baseDir: File, bookKey: String, itemNome: String) {
+        val current = loadCustomContent(baseDir, bookKey)
+        val updated = current.copy(periciasCustomizadas = current.periciasCustomizadas.filterNot { it.nome.equals(itemNome, ignoreCase = true) })
+        saveCustomContent(baseDir, updated)
+    }
+
+    fun deletePericiaCustomizada(context: Context, bookKey: String, itemNome: String) {
+        deletePericiaCustomizada(context.filesDir, bookKey, itemNome)
     }
 
     fun importItemFromAnotherBook(baseDir: File, targetBookKey: String, sourceBookKey: String, itemType: String, itemIdOrName: String): Boolean {

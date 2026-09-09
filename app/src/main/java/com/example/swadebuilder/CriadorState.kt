@@ -16,6 +16,7 @@ import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
 import com.example.swadebuilder.model.ArcaneConfig
 import com.example.swadebuilder.model.ArmaNatural
+import com.example.swadebuilder.model.AtributoJson
 import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CategoriaCustomizada
 import com.example.swadebuilder.model.CiberneticoItem
@@ -36,6 +37,7 @@ import com.example.swadebuilder.model.ModifierEngine
 import com.example.swadebuilder.model.ModifierTarget
 import com.example.swadebuilder.model.MonstroTemplate
 import com.example.swadebuilder.model.Pericia
+import com.example.swadebuilder.model.PericiaJson
 import com.example.swadebuilder.model.PersonagemSnapshot
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.PowerEffect
@@ -216,6 +218,50 @@ class CriadorState {
 
     fun renameCustomCategoriaCustomizada(categoriaId: String, novoNome: String) {
         listaCategoriasCustomizadas = listaCategoriasCustomizadas.map { if (it.id == categoriaId) it.copy(nome = novoNome) else it }
+    }
+
+    fun addCustomAtributo(atributo: AtributoJson) {
+        val key = atributo.nome.keyify()
+        if (key !in listaAtributos) {
+            listaAtributos = listaAtributos + key
+        }
+        mapaAtributosDisplay = mapaAtributosDisplay + (key to atributo.nome)
+        // Reaproveita a mesma função usada no load inicial (ver updateGameData) pra
+        // registrar os mapas de estado por atributo (valoresAtributos, pilha de PA) —
+        // evita duplicar essa lógica aqui.
+        ensureAllAtributosRegistered()
+    }
+
+    fun removeCustomAtributo(nome: String) {
+        val key = nome.keyify()
+        listaAtributos = listaAtributos.filterNot { it == key }
+        mapaAtributosDisplay = mapaAtributosDisplay - key
+        valoresAtributos.remove(key)
+        paCostStackPorAtributo.remove(key)
+    }
+
+    fun addCustomPericia(pericia: PericiaJson) {
+        val nova = Pericia(
+            nome = pericia.nome,
+            atributo = pericia.atributo.uppercase().semAcentos(),
+            basica = pericia.basica,
+            origem = pericia.origem,
+            descricao = pericia.descricao,
+            id = pericia.id
+        )
+        if (listaPericias.none { it.nome.equals(nova.nome, ignoreCase = true) }) {
+            listaPericias = listaPericias + nova
+            mapaPericias = mapaPericias + (nova.nome.keyify() to nova)
+        }
+        // Reaproveita a mesma função usada no load inicial (ver updateGameData) pra
+        // registrar os mapas de estado por perícia (incrementos, pilhas de custo).
+        ensurePericiasRegistered(listOf(nova))
+    }
+
+    fun removeCustomPericia(nome: String) {
+        val key = nome.keyify()
+        listaPericias = listaPericias.filterNot { it.nome.keyify() == key }
+        mapaPericias = mapaPericias - key
     }
 
     fun updateGameData(snapshot: GameDataSnapshot) {

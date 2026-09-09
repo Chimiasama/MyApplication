@@ -551,6 +551,8 @@ object DataLoader {
         val customRacas = mutableListOf<RacialModifier>()
         val customVariantesRaciais = mutableListOf<CustomAncestryVariant>()
         val customCategoriasCustomizadas = mutableListOf<CategoriaCustomizada>()
+        val customAtributosJson = mutableListOf<AtributoJson>()
+        val customPericiasJson = mutableListOf<PericiaJson>()
 
         // TAG_GERAL sempre entra, além dos livros realmente ativos: é onde fica
         // o conteúdo customizado que o jogador marcou como "Geral" na criação,
@@ -565,10 +567,39 @@ object DataLoader {
             customRacas += customData.racas
             customVariantesRaciais += customData.variantesRaciais
             customCategoriasCustomizadas += customData.categoriasCustomizadas
+            customAtributosJson += customData.atributosCustomizados
+            customPericiasJson += customData.periciasCustomizadas
         }
         // Mesma categoria (mesmo id) pode existir em mais de um livro de armazenamento
         // se o Mestre marcou vários livros ao criá-la — distinctBy fica só com uma cópia.
         val mergedCategoriasCustomizadas = customCategoriasCustomizadas.distinctBy { it.id }
+
+        // Atributos e Perícias customizados (ver model/CategoriaCustomizada.kt — mesmo
+        // padrão de conteúdo por livro/campanha, mas pra Atributo/Perícia). Mesclados aqui
+        // (não nas seções "5. Atributos"/"6. Pericias" acima, que só leem o catálogo
+        // oficial) porque dependem do resultado do loop de conteúdo customizado por livro.
+        val mergedListaAtributos = (localListaAtributos + customAtributosJson.map { it.nome.keyify() }).distinct()
+        val mergedMapaAtributosDisplay = localMapaAtributosDisplay + customAtributosJson.associate { it.nome.keyify() to it.nome }
+        val mergedMapaAtributosDescricao = localMapaAtributosDescricao + customAtributosJson.associate { atr ->
+            val texto = if (!EditionConfig.isFullEdition) atr.descricaoLite ?: atr.descricao else atr.descricao
+            atr.nome.keyify() to (texto ?: "")
+        }
+        val customPericias = customPericiasJson.map { pj ->
+            Pericia(
+                nome = pj.nome,
+                atributo = pj.atributo.uppercase().semAcentos(),
+                basica = pj.basica,
+                origem = pj.origem,
+                descricao = pj.descricao,
+                id = pj.id
+            )
+        }
+        // distinctBy simples (não distinctByOriginPriority): mantém a primeira ocorrência
+        // por nome — como o catálogo oficial vem primeiro na lista, uma perícia custom com
+        // nome colidente é descartada em favor da oficial, e não há ambiguidade de "qual
+        // livro" já que perícias customizadas não têm essa granularidade de origem.
+        val mergedListaPericias = (localListaPericias + customPericias).distinctBy { it.nome.keyify() }
+        val mergedMapaPericias = mergedListaPericias.associateBy { it.nome.keyify() }
 
         // Usa distinctByOriginPriority (não distinctBy simples) porque um mesmo id/nome pode
         // existir em mais de um livro ativo ao mesmo tempo (Modo Livre, ou um livro
@@ -638,11 +669,11 @@ object DataLoader {
             listaCoracoesCrystal = localListaCoracoesCrystal,
             listaAncestralidadesJson = mergedAncestralidades,
             listaMonstroTemplates = localListaMonstroTemplates,
-            listaAtributos = localListaAtributos,
-            mapaAtributosDisplay = localMapaAtributosDisplay,
-            listaPericias = localListaPericias,
-            mapaPericias = localMapaPericias,
-            mapaAtributosDescricao = localMapaAtributosDescricao,
+            listaAtributos = mergedListaAtributos,
+            mapaAtributosDisplay = mergedMapaAtributosDisplay,
+            listaPericias = mergedListaPericias,
+            mapaPericias = mergedMapaPericias,
+            mapaAtributosDescricao = mergedMapaAtributosDescricao,
             listaVantagens = mergedVantagens,
             listaPoderes = mergedPoderes,
             listaTropos = localListaTropos,
