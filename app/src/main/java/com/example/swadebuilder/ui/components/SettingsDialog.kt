@@ -1,4 +1,6 @@
 package com.example.swadebuilder.ui.components
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -184,6 +186,59 @@ private fun BookTagsDropdownPicker(selected: Set<String>, onChange: (Set<String>
     }
 }
 
+suspend fun findSavedCharactersUsingCustomItem(
+    context: android.content.Context,
+    type: String,
+    name: String
+): List<Pair<String, String>> {
+    val normName = name.keyify()
+    val saves = com.example.swadebuilder.util.CharacterStorage.listSaves(context)
+    val affected = mutableListOf<Pair<String, String>>()
+
+    for (save in saves) {
+        val loadResult = com.example.swadebuilder.util.CharacterStorage.load(context, save.id)
+        if (loadResult is com.example.swadebuilder.util.CharacterStorage.LoadResult.Success) {
+            val snapshot = loadResult.snapshot
+            val charName = snapshot.nome.ifBlank { save.nome }
+            val inUse = when (type) {
+                "Atributo" -> {
+                    snapshot.atributos.valoresAtributos.entries.any { (k, v) -> k.keyify() == normName && v > 4 } ||
+                    (snapshot.atributos.paCostStackPorAtributo[normName]?.size ?: 0) > 0
+                }
+                "Perícia" -> {
+                    snapshot.pericias.baseIncsPorPericia.keys.any { it.keyify() == normName } ||
+                    snapshot.pericias.spCostStackPorPericia.keys.any { it.keyify() == normName }
+                }
+                "Vantagem" -> {
+                    snapshot.selecoes.vantagens.any { it.id == name || it.id.keyify() == normName }
+                }
+                "Complicação" -> {
+                    snapshot.selecoes.complicacoesSelecionadas.any { it.id == name || it.id.keyify() == normName }
+                }
+                "Equipamento" -> {
+                    snapshot.selecoes.equipamentosComprados.any { it.nome.keyify() == normName }
+                }
+                "Poder" -> {
+                    snapshot.selecoes.poderesSelecionados.any { it == name || it.keyify() == normName } ||
+                    snapshot.selecoes.poderSlotsPorArcano.values.any { slots -> slots.any { it != null && (it == name || it.keyify() == normName) } }
+                }
+                "Super Poder" -> {
+                    snapshot.selecoes.poderesSelecionados.any { it == name || it.keyify() == normName }
+                }
+                "Raça" -> {
+                    snapshot.atributos.ancestralidade.keyify() == normName
+                }
+                else -> false
+            }
+            if (inUse) {
+                affected.add(save.id to charName)
+            }
+        }
+    }
+    return affected
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
@@ -205,6 +260,7 @@ fun SettingsDialog(
 ) {
     var showNpcWarning by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showCustomContentDialog by remember { mutableStateOf(false) }
 
     val themeNames = remember {
         mapOf(
@@ -369,9 +425,6 @@ fun SettingsDialog(
                     )
                 ) {
                     var showCustomContentDialog by remember { mutableStateOf(false) }
-                    var customItemName by remember { mutableStateOf("") }
-                    var customItemDesc by remember { mutableStateOf("") }
-                    var statusMessage by remember { mutableStateOf<String?>(null) }
 
                     Column(
                         modifier = Modifier.padding(16.dp),
@@ -382,6 +435,24 @@ fun SettingsDialog(
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Criação Direta nas Abas", style = MaterialTheme.typography.bodyMedium)
+                                Text("Exibe botão de criação rápida '+ Criar' dentro das abas.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            Switch(
+                                checked = state.habilitarCriacaoNasAbas,
+                                onCheckedChange = {
+                                    state.habilitarCriacaoNasAbas = it
+                                    persistPrefs()
+                                },
+                                modifier = Modifier.scale(0.8f)
+                            )
+                        }
                         Text(
                             text = "Crie vantagens e itens caseiros com prefixo 'custom:'.",
                             style = MaterialTheme.typography.labelSmall,
@@ -389,9 +460,6 @@ fun SettingsDialog(
                         )
                         OutlinedButton(
                             onClick = {
-                                customItemName = ""
-                                customItemDesc = ""
-                                statusMessage = null
                                 showCustomContentDialog = true
                             },
                             shape = MaterialTheme.shapes.small,
@@ -409,7 +477,302 @@ fun SettingsDialog(
                     }
 
                     if (showCustomContentDialog) {
-                        val context = androidx.compose.ui.platform.LocalContext.current
+                        CustomContentManageDialog(
+                            state = state,
+                            initialCategory = "Vantagem",
+                            onDismiss = { showCustomContentDialog = false },
+                            onCustomContentChanged = onCustomContentChanged
+                        )
+                    }
+                }
+
+                // Card "Visual e Tema"
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Text(
+                            text = "Visual e Tema",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        Text("Estilo das Abas / Opções", style = MaterialTheme.typography.bodyMedium)
+
+                        SingleChoiceSegmentedButtonRow(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            val options = listOf(TabStyle.ICONES, TabStyle.TEXTO)
+                            val labels = listOf("Ícones", "Texto")
+
+                            options.forEachIndexed { index, option ->
+                                SegmentedButton(
+                                    selected = state.estiloAbas == option,
+                                    onClick = {
+                                        state.estiloAbas = option
+                                        persistPrefs()
+                                    },
+                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
+                                ) {
+                                    Text(labels[index])
+                                }
+                            }
+                        }
+
+                        Spacer(Modifier.height(4.dp))
+
+                        // Theme Selection Trigger Button
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text("Tema do App", style = MaterialTheme.typography.bodyMedium)
+                                Text(
+                                    text = themeNames[state.appTheme] ?: state.appTheme.name,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                            OutlinedButton(
+                                onClick = { showThemeDialog = true }
+                            ) {
+                                Text("Alterar Tema")
+                            }
+                        }
+                    }
+                }
+
+                // Card "Sons e Vibração"
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp) // Increased spacing for cleaner look
+                    ) {
+                        Text(
+                            text = "Sons e Vibração",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        // Haptic Feedback
+                        Column {
+                            Text("Intensidade da Vibração", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Vibration,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Slider(
+                                    value = state.hapticStrength.toFloat(),
+                                    onValueChange = { state.hapticStrength = it.roundToInt() },
+                                    onValueChangeFinished = {
+                                        persistPrefs()
+                                        feedbackController.play(state.hapticStrength, 0)
+                                    },
+                                    valueRange = 0f..100f,
+                                    modifier = Modifier.weight(1f),
+                                    thumb = {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(12.dp)
+                                                .background(MaterialTheme.colorScheme.primary, CircleShape)
+                                        )
+                                    },
+                                    track = { sliderState ->
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(2.dp)
+                                                .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
+                                        ) {
+                                            val fraction = (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(fraction)
+                                                    .fillMaxHeight()
+                                                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+                                            )
+                                        }
+                                    }
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("${state.hapticStrength}%", style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+
+                        // App Sounds
+                        Column {
+                            Text("Volume", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Slider(
+                                    value = state.soundVolume.toFloat(),
+                                    onValueChange = { state.soundVolume = it.roundToInt() },
+                                    onValueChangeFinished = {
+                                        persistPrefs()
+                                        feedbackController.play(0, state.soundVolume)
+                                    },
+                                    valueRange = 0f..100f,
+                                    modifier = Modifier.weight(1f),
+                                    thumb = {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(12.dp)
+                                                .background(MaterialTheme.colorScheme.secondary, CircleShape)
+                                        )
+                                    },
+                                    track = { sliderState ->
+                                        Box(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .height(2.dp)
+                                                .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f), CircleShape)
+                                        ) {
+                                            val fraction = (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
+                                            Box(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(fraction)
+                                                    .fillMaxHeight()
+                                                    .background(MaterialTheme.colorScheme.secondary, CircleShape)
+                                            )
+                                        }
+                                    }
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("${state.soundVolume}%", style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Fechar")
+            }
+        }
+    )
+
+    if (showNpcWarning) {
+        AlertDialog(
+            onDismissRequest = { showNpcWarning = false },
+            title = { Text("Transformar em NPC?") },
+            text = { Text("Ao ativar o Modo Livre, este personagem será transformado em um NPC. Custos de pontos e requisitos serão ignorados, e a progressão de XP padrão será desabilitada. Esta ação é irreversível para este personagem.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    state.modoLivre = true
+                    showNpcWarning = false
+                }) { Text("Confirmar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showNpcWarning = false }) { Text("Cancelar") }
+            }
+        )
+    }
+
+    if (showThemeDialog) {
+        AlertDialog(
+            onDismissRequest = { showThemeDialog = false },
+            title = { Text("Selecionar Tema do App", style = MaterialTheme.typography.titleLarge) },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    sortedThemes.forEach { theme ->
+                        val isSelected = state.appTheme == theme
+                        val themeLabel = themeNames[theme] ?: theme.name
+                        val themeDesc = themeDescriptions[theme] ?: ""
+                        Column(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)
+                        ) {
+                            if (isSelected) {
+                                TextButton(
+                                    onClick = { showThemeDialog = false },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text("✓ $themeLabel", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                                        if (themeDesc.isNotBlank()) {
+                                            Text(themeDesc, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        }
+                                    }
+                                }
+                            } else {
+                                OutlinedButton(
+                                    onClick = {
+                                        onThemeSelected(theme)
+                                        persistPrefs()
+                                        feedbackController.play(state.hapticStrength, state.soundVolume)
+                                        showThemeDialog = false
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(themeLabel, style = MaterialTheme.typography.titleMedium)
+                                        if (themeDesc.isNotBlank()) {
+                                            Text(themeDesc, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showThemeDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomContentManageDialog(
+    state: CriadorState,
+    initialCategory: String = "Vantagem",
+    onDismiss: () -> Unit,
+    onCustomContentChanged: () -> Unit = {}
+) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    var customItemName by remember { mutableStateOf("") }
+    var customItemDesc by remember { mutableStateOf("") }
+    var statusMessage by remember { mutableStateOf<String?>(null) }
+    var itemToDeleteTarget by remember { mutableStateOf<Pair<String, String>?>(null) }
+    val scope = rememberCoroutineScope()
+    var affectedSavesTarget by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
                         val customStorageManager = remember { com.example.swadebuilder.util.CustomStorageManager() }
                         // Livro(s) a que o item sendo criado vai ficar vinculado — o jogador
                         // escolhe isso na hora de salvar (ver "Seletor de Livros" abaixo), não
@@ -418,7 +781,7 @@ fun SettingsDialog(
                         var selectedBookTags by remember(state) {
                             mutableStateOf(setOf(state.getActiveOrigins().firstOrNull() ?: "BASICO"))
                         }
-                        var selectedCategory by remember { mutableStateOf("Vantagem") }
+                        var selectedCategory by remember { mutableStateOf(initialCategory) }
                         var customRequirements by remember { mutableStateOf("") }
                         var customAdvCategory by remember { mutableStateOf(com.example.swadebuilder.model.Categoria.PROFISSIONAL) }
                         // Categoria Customizada (ver model/CategoriaCustomizada.kt) escolhida pelo
@@ -632,6 +995,78 @@ fun SettingsDialog(
                             )
                         }
 
+                        val executeDeleteCustomItem: (String, String) -> Unit = { delType, delName ->
+                            when (delType) {
+                                "Vantagem" -> {
+                                    val item = activeBookCustomData.vantagens.firstOrNull { it.nome == delName }
+                                    item?.let { i ->
+                                        state.refundAndRemoveCustomVantagem(i.id)
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVantagem(context, it, i.id) }
+                                        state.listaVantagens = state.listaVantagens.filterNot { it.id == i.id }
+                                    }
+                                }
+                                "Complicação" -> {
+                                    val item = activeBookCustomData.complicacoes.firstOrNull { it.name == delName }
+                                    item?.let { i ->
+                                        state.refundAndRemoveCustomComplicacao(i.id)
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteComplicacao(context, it, i.id) }
+                                        state.listaComplicacoes = state.listaComplicacoes.filterNot { it.id == i.id }
+                                    }
+                                }
+                                "Equipamento" -> {
+                                    state.refundAndRemoveCustomEquipamento(delName)
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteEquipamento(context, it, delName) }
+                                    state.listaEquipamentos = state.listaEquipamentos.filterNot { it.nome.equals(delName, ignoreCase = true) }
+                                }
+                                "Poder" -> {
+                                    val item = activeBookCustomData.poderes.firstOrNull { it.nome == delName }
+                                    item?.let { i ->
+                                        state.refundAndRemoveCustomPoder(i.id)
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePoder(context, it, i.id) }
+                                        state.listaPoderes = state.listaPoderes.filterNot { it.id == i.id }
+                                    }
+                                }
+                                "Super Poder" -> {
+                                    val item = activeBookCustomData.superPoderes.firstOrNull { it.nome.equals(delName, ignoreCase = true) }
+                                    item?.let { i ->
+                                        i.id?.let { state.refundAndRemoveCustomPoder(it) }
+                                    }
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteSuperPoder(context, it, delName) }
+                                    state.listaSuperPoderes = state.listaSuperPoderes.filterNot { it.nome.equals(delName, ignoreCase = true) }
+                                }
+                                "Raça" -> {
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteRaca(context, it, delName) }
+                                    state.listaAncestralidadesJson = state.listaAncestralidadesJson.filterNot { it.nome.equals(delName, ignoreCase = true) }
+                                }
+                                "Traço Racial" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteHabilidadeRacial(context, it, delName) }
+                                "Variante de Raça" -> {
+                                    val item = activeBookCustomData.variantesRaciais.firstOrNull { it.nome == delName }
+                                    item?.let { i ->
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVarianteRacial(context, it, i.id) }
+                                        state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom.filterNot { v -> v.id == i.id }
+                                    }
+                                }
+                                "Atributo" -> {
+                                    state.refundAndRemoveCustomAtributo(delName)
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteAtributoCustomizado(context, it, delName) }
+                                }
+                                "Perícia" -> {
+                                    state.refundAndRemoveCustomPericia(delName)
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePericiaCustomizada(context, it, delName) }
+                                }
+                                "Modificador de Poder" -> {
+                                    val item = activeBookCustomData.modificadoresCustomizados.firstOrNull { "${it.nome} (→ ${it.poderAlvoNome})" == delName }
+                                    item?.let { i ->
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteModificadorCustomizado(context, it, i.id) }
+                                        state.removeCustomModificador(i)
+                                    }
+                                }
+                            }
+                            statusMessage = "Item [$delType] '$delName' excluído com sucesso. Pontos e recursos foram atualizados."
+                            refreshTrigger++
+                            onCustomContentChanged()
+                        }
+
                         // Todos os Super Poderes que podem receber um Modificador de Poder
                         // (ver "Modificador de Poder" mais abaixo): catálogo oficial + qualquer
                         // Super Poder customizado já criado em qualquer livro de armazenamento.
@@ -678,7 +1113,7 @@ fun SettingsDialog(
                         }
 
                         AlertDialog(
-                            onDismissRequest = { showCustomContentDialog = false },
+                            onDismissRequest = onDismiss,
                             // Mesmo motivo do diálogo de Configurações: essa tela tem
                             // formulário longo, um toque de leve fora da área não pode
                             // derrubar o que já foi digitado.
@@ -1586,78 +2021,39 @@ fun SettingsDialog(
                                                             Text("Categoria", style = MaterialTheme.typography.labelSmall)
                                                         }
                                                     }
-                                                    TextButton(onClick = {
-                                                        // Apaga em TODOS os livros de armazenamento: o mesmo item pode ter
-                                                        // sido salvo sob várias tags (ver selectedBookTags na criação), e
-                                                        // cada chamada de delete é um no-op inofensivo nos livros onde o
-                                                        // item não existe.
-                                                        // Sincroniza também state.lista* (não só o disco): sem isso, o item
-                                                        // apagado continuava selecionável nas telas de ficha até o app
-                                                        // recarregar os dados do zero, e um novo item criado com o mesmo
-                                                        // nome logo em seguida seria barrado por falso positivo de colisão.
-                                                        when (type) {
-                                                            "Vantagem" -> {
-                                                                val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVantagem(context, it, i.id) }
-                                                                    state.listaVantagens = state.listaVantagens.filterNot { it.id == i.id }
+                                                        TextButton(onClick = {
+                                                            scope.launch {
+                                                                val affectedSaves = findSavedCharactersUsingCustomItem(context, type, name)
+                                                                val inActiveChar = when (type) {
+                                                                    "Vantagem" -> {
+                                                                        val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
+                                                                        item != null && state.isCustomVantagemInUse(item.id)
+                                                                    }
+                                                                    "Complicação" -> {
+                                                                        val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
+                                                                        item != null && state.isCustomComplicacaoInUse(item.id)
+                                                                    }
+                                                                    "Equipamento" -> state.isCustomEquipamentoInUse(name)
+                                                                    "Poder" -> {
+                                                                        val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
+                                                                        item != null && state.isCustomPoderInUse(item.id)
+                                                                    }
+                                                                    "Atributo" -> state.isCustomAtributoInUse(name)
+                                                                    "Perícia" -> state.isCustomPericiaInUse(name)
+                                                                    "Raça" -> state.ancestralidade.equals(name, ignoreCase = true)
+                                                                    else -> false
+                                                                }
+
+                                                                if (affectedSaves.isNotEmpty() || inActiveChar) {
+                                                                    affectedSavesTarget = affectedSaves
+                                                                    itemToDeleteTarget = type to name
+                                                                } else {
+                                                                    executeDeleteCustomItem(type, name)
                                                                 }
                                                             }
-                                                            "Complicação" -> {
-                                                                val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteComplicacao(context, it, i.id) }
-                                                                    state.listaComplicacoes = state.listaComplicacoes.filterNot { it.id == i.id }
-                                                                }
-                                                            }
-                                                            "Equipamento" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteEquipamento(context, it, name) }
-                                                                state.listaEquipamentos = state.listaEquipamentos.filterNot { it.nome.equals(name, ignoreCase = true) }
-                                                            }
-                                                            "Poder" -> {
-                                                                val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePoder(context, it, i.id) }
-                                                                    state.listaPoderes = state.listaPoderes.filterNot { it.id == i.id }
-                                                                }
-                                                            }
-                                                            "Super Poder" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteSuperPoder(context, it, name) }
-                                                                state.listaSuperPoderes = state.listaSuperPoderes.filterNot { it.nome.equals(name, ignoreCase = true) }
-                                                            }
-                                                            "Raça" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteRaca(context, it, name) }
-                                                                state.listaAncestralidadesJson = state.listaAncestralidadesJson.filterNot { it.nome.equals(name, ignoreCase = true) }
-                                                            }
-                                                            "Traço Racial" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteHabilidadeRacial(context, it, name) }
-                                                            "Variante de Raça" -> {
-                                                                val item = activeBookCustomData.variantesRaciais.firstOrNull { it.nome == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVarianteRacial(context, it, i.id) }
-                                                                    state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom.filterNot { v -> v.id == i.id }
-                                                                }
-                                                            }
-                                                            "Atributo" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteAtributoCustomizado(context, it, name) }
-                                                                state.removeCustomAtributo(name)
-                                                            }
-                                                            "Perícia" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePericiaCustomizada(context, it, name) }
-                                                                state.removeCustomPericia(name)
-                                                            }
-                                                            "Modificador de Poder" -> {
-                                                                val item = activeBookCustomData.modificadoresCustomizados.firstOrNull { "${it.nome} (→ ${it.poderAlvoNome})" == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteModificadorCustomizado(context, it, i.id) }
-                                                                    state.removeCustomModificador(i)
-                                                                }
-                                                            }
+                                                        }) {
+                                                            Text("Deletar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
                                                         }
-                                                        refreshTrigger++
-                                                        onCustomContentChanged()
-                                                    }) {
-                                                        Text("Deletar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
-                                                    }
                                                 }
                                             }
                                         }
@@ -2126,7 +2522,7 @@ fun SettingsDialog(
                                                     statusMessage = "Preencha o Nome do item."
                                         }
                                             }) { Text("Salvar Item") }
-                                    TextButton(onClick = { showCustomContentDialog = false }) { Text("Fechar") }
+                                    TextButton(onClick = onDismiss) { Text("Fechar") }
                                 }
                                 }
                             }
@@ -3090,6 +3486,90 @@ fun SettingsDialog(
                             )
                         }
 
+                        if (itemToDeleteTarget != null) {
+                            val (type, name) = itemToDeleteTarget!!
+                            val inActiveChar = when (type) {
+                                "Vantagem" -> {
+                                    val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
+                                    item != null && state.isCustomVantagemInUse(item.id)
+                                }
+                                "Complicação" -> {
+                                    val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
+                                    item != null && state.isCustomComplicacaoInUse(item.id)
+                                }
+                                "Equipamento" -> state.isCustomEquipamentoInUse(name)
+                                "Poder" -> {
+                                    val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
+                                    item != null && state.isCustomPoderInUse(item.id)
+                                }
+                                "Atributo" -> state.isCustomAtributoInUse(name)
+                                "Perícia" -> state.isCustomPericiaInUse(name)
+                                "Raça" -> state.ancestralidade.equals(name, ignoreCase = true)
+                                else -> false
+                            }
+
+                            val warningLines = buildList {
+                                if (inActiveChar) {
+                                    add("• Personagem em edição atual")
+                                }
+                                affectedSavesTarget.forEach { (_, charName) ->
+                                    add("• Personagem salvo \"$charName\"")
+                                }
+                            }
+
+                            AlertDialog(
+                                onDismissRequest = {
+                                    itemToDeleteTarget = null
+                                    affectedSavesTarget = emptyList()
+                                },
+                                title = { Text("Excluir Item em Uso") },
+                                text = {
+                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Text(
+                                            "O item [$type] \"$name\" está atualmente em uso por:",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        warningLines.forEach { line ->
+                                            Text(line, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                                        }
+                                        Spacer(Modifier.height(4.dp))
+                                        Text(
+                                            "Ao confirmar a exclusão:\n1. No personagem em edição, o item será removido e os pontos/recursos gastos serão devolvidos.\n2. Os personagens salvos listados acima serão EXCLUÍDOS para evitar erros na ficha.\n\nDeseja realmente continuar?",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+                                },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            scope.launch {
+                                                affectedSavesTarget.forEach { (saveId, _) ->
+                                                    com.example.swadebuilder.util.CharacterStorage.delete(context, saveId)
+                                                }
+                                                executeDeleteCustomItem(type, name)
+                                                statusMessage = "Item [$type] '$name' e ${affectedSavesTarget.size} personagem(ns) salvo(s) afetado(s) foram excluídos."
+                                                itemToDeleteTarget = null
+                                                affectedSavesTarget = emptyList()
+                                            }
+                                        }
+                                    ) {
+                                        Text("Excluir e Atualizar", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                                    }
+                                },
+                                dismissButton = {
+                                    TextButton(
+                                        onClick = {
+                                            itemToDeleteTarget = null
+                                            affectedSavesTarget = emptyList()
+                                        }
+                                    ) {
+                                        Text("Cancelar")
+                                    }
+                                }
+                            )
+                        }
+
                         if (showVarianteComplicacaoPickDialog) {
                             val comoMaior = varianteComplicacaoComoMaiorEscolhido
                             val availableVarianteComps = state.listaComplicacoes.distinctBy { it.id }.filter { comp ->
@@ -3140,276 +3620,5 @@ fun SettingsDialog(
                                 confirmButton = { TextButton(onClick = { showVarianteComplicacaoPickDialog = false }) { Text("OK") } }
                             )
                         }
-                    }
-                }
 
-                // Card "Visual e Tema"
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Text(
-                            text = "Visual e Tema",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-
-                        Text("Estilo das Abas / Opções", style = MaterialTheme.typography.bodyMedium)
-
-                        SingleChoiceSegmentedButtonRow(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val options = listOf(TabStyle.ICONES, TabStyle.TEXTO)
-                            val labels = listOf("Ícones", "Texto")
-
-                            options.forEachIndexed { index, option ->
-                                SegmentedButton(
-                                    selected = state.estiloAbas == option,
-                                    onClick = {
-                                        state.estiloAbas = option
-                                        persistPrefs()
-                                    },
-                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
-                                ) {
-                                    Text(labels[index])
-                                }
-                            }
-                        }
-
-                        Spacer(Modifier.height(4.dp))
-
-                        // Theme Selection Trigger Button
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text("Tema do App", style = MaterialTheme.typography.bodyMedium)
-                                Text(
-                                    text = themeNames[state.appTheme] ?: state.appTheme.name,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                            OutlinedButton(
-                                onClick = { showThemeDialog = true }
-                            ) {
-                                Text("Alterar Tema")
-                            }
-                        }
-                    }
-                }
-
-                // Card "Sons e Vibração"
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp) // Increased spacing for cleaner look
-                    ) {
-                        Text(
-                            text = "Sons e Vibração",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-
-                        // Haptic Feedback
-                        Column {
-                            Text("Intensidade da Vibração", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Vibration,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Slider(
-                                    value = state.hapticStrength.toFloat(),
-                                    onValueChange = { state.hapticStrength = it.roundToInt() },
-                                    onValueChangeFinished = {
-                                        persistPrefs()
-                                        feedbackController.play(state.hapticStrength, 0)
-                                    },
-                                    valueRange = 0f..100f,
-                                    modifier = Modifier.weight(1f),
-                                    thumb = {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(12.dp)
-                                                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                                        )
-                                    },
-                                    track = { sliderState ->
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(2.dp)
-                                                .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                                        ) {
-                                            val fraction = (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth(fraction)
-                                                    .fillMaxHeight()
-                                                    .background(MaterialTheme.colorScheme.primary, CircleShape)
-                                            )
-                                        }
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("${state.hapticStrength}%", style = MaterialTheme.typography.bodySmall)
-                            }
-                        }
-
-                        // App Sounds
-                        Column {
-                            Text("Volume", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Slider(
-                                    value = state.soundVolume.toFloat(),
-                                    onValueChange = { state.soundVolume = it.roundToInt() },
-                                    onValueChangeFinished = {
-                                        persistPrefs()
-                                        feedbackController.play(0, state.soundVolume)
-                                    },
-                                    valueRange = 0f..100f,
-                                    modifier = Modifier.weight(1f),
-                                    thumb = {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(12.dp)
-                                                .background(MaterialTheme.colorScheme.secondary, CircleShape)
-                                        )
-                                    },
-                                    track = { sliderState ->
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(2.dp)
-                                                .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f), CircleShape)
-                                        ) {
-                                            val fraction = (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth(fraction)
-                                                    .fillMaxHeight()
-                                                    .background(MaterialTheme.colorScheme.secondary, CircleShape)
-                                            )
-                                        }
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("${state.soundVolume}%", style = MaterialTheme.typography.bodySmall)
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Fechar")
-            }
-        }
-    )
-
-    if (showNpcWarning) {
-        AlertDialog(
-            onDismissRequest = { showNpcWarning = false },
-            title = { Text("Transformar em NPC?") },
-            text = { Text("Ao ativar o Modo Livre, este personagem será transformado em um NPC. Custos de pontos e requisitos serão ignorados, e a progressão de XP padrão será desabilitada. Esta ação é irreversível para este personagem.") },
-            confirmButton = {
-                TextButton(onClick = {
-                    state.modoLivre = true
-                    showNpcWarning = false
-                }) { Text("Confirmar") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showNpcWarning = false }) { Text("Cancelar") }
-            }
-        )
-    }
-
-    if (showThemeDialog) {
-        AlertDialog(
-            onDismissRequest = { showThemeDialog = false },
-            title = { Text("Selecionar Tema do App", style = MaterialTheme.typography.titleLarge) },
-            text = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    sortedThemes.forEach { theme ->
-                        val isSelected = state.appTheme == theme
-                        val themeLabel = themeNames[theme] ?: theme.name
-                        val themeDesc = themeDescriptions[theme] ?: ""
-                        Column(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp)
-                        ) {
-                            if (isSelected) {
-                                TextButton(
-                                    onClick = { showThemeDialog = false },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Text("✓ $themeLabel", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                                        if (themeDesc.isNotBlank()) {
-                                            Text(themeDesc, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                        }
-                                    }
-                                }
-                            } else {
-                                OutlinedButton(
-                                    onClick = {
-                                        onThemeSelected(theme)
-                                        persistPrefs()
-                                        feedbackController.play(state.hapticStrength, state.soundVolume)
-                                        showThemeDialog = false
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Text(themeLabel, style = MaterialTheme.typography.titleMedium)
-                                        if (themeDesc.isNotBlank()) {
-                                            Text(themeDesc, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { showThemeDialog = false }) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
 }

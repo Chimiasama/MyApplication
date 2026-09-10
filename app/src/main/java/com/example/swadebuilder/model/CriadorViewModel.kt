@@ -348,6 +348,7 @@ class CriadorViewModel(
         clearFeedbackMessages()
         val flags = snapshot.flags
 
+        invalidateGameDataCache()
         val snapshotData = gameDataRepository.load(context, moduleKeysFromFlags(flags))
         aplicarGameDataSnapshot(snapshotData)
 

@@ -8,17 +8,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ExpandLess
@@ -34,6 +38,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -113,7 +118,8 @@ private fun aspectOnlyPowerDisplayName(rawDisplayName: String, arcKey: String): 
 fun PoderesSection(
     state: CriadorState,
     arcanoInfoMap: Map<String, Triple<Int, Int, String>>,
-    onShowMessage: (String) -> Unit = {}
+    onShowMessage: (String) -> Unit = {},
+    onCustomContentChanged: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -401,6 +407,76 @@ fun PoderesSection(
             .padding(bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        if (state.habilitarCriacaoNasAbas) {
+            item {
+                var showCreateOptionsDialog by rememberSaveable { mutableStateOf(false) }
+                var targetCreationCategory by rememberSaveable { mutableStateOf<String?>(null) }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp, vertical = 2.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedButton(
+                        onClick = { showCreateOptionsDialog = true },
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                        modifier = Modifier.height(32.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Criar...", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+
+                if (showCreateOptionsDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showCreateOptionsDialog = false },
+                        title = { Text("Criar em Poderes") },
+                        text = {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                Text("O que você deseja criar?", style = MaterialTheme.typography.bodyMedium)
+                                OutlinedButton(
+                                    onClick = {
+                                        showCreateOptionsDialog = false
+                                        targetCreationCategory = "Poder"
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Novo Poder")
+                                }
+                                OutlinedButton(
+                                    onClick = {
+                                        showCreateOptionsDialog = false
+                                        targetCreationCategory = "Antecedente Arcano"
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Novo Antecedente Arcano")
+                                }
+                            }
+                        },
+                        confirmButton = {},
+                        dismissButton = {
+                            TextButton(onClick = { showCreateOptionsDialog = false }) {
+                                Text("Cancelar")
+                            }
+                        }
+                    )
+                }
+
+                targetCreationCategory?.let { cat ->
+                    com.example.swadebuilder.ui.components.CustomContentManageDialog(
+                        state = state,
+                        initialCategory = cat,
+                        onDismiss = { targetCreationCategory = null },
+                        onCustomContentChanged = onCustomContentChanged
+                    )
+                }
+            }
+        }
+
         // --- FILTERS ---
         item {
             ExpandableSearchFilter(

@@ -37,6 +37,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.PrimaryScrollableTabRow
@@ -552,6 +556,8 @@ private fun SectionDetailPane(
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -691,6 +697,8 @@ private fun ProgressionDetailContent(
     onUseProgress: (Int) -> Unit,
     onUserFeedback: () -> Unit
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     when (selectedSection) {
         MainSection.VANTAGENS -> {
             SectionCard(
@@ -777,10 +785,16 @@ private fun ProgressionDetailContent(
             ) {
                 AtributosContent(
                     state = state,
-                    listaAtributos = viewModel.gameDataStore.getAtributos(),
-                    mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
-                    mapaAtributosDescricao = viewModel.gameDataStore.currentSnapshot()?.mapaAtributosDescricao ?: emptyMap(),
-                    onUserFeedback = onUserFeedback
+                    listaAtributos = state.listaAtributos,
+                    mapaAtributosDisplay = state.mapaAtributosDisplay,
+                    mapaAtributosDescricao = state.mapaAtributosDescricao,
+                    onUserFeedback = onUserFeedback,
+                    onCustomContentChanged = {
+                        viewModel.invalidateGameDataCache()
+                        scope.launch(Dispatchers.IO) {
+                            viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                        }
+                    }
                 )
             }
 
@@ -823,7 +837,13 @@ private fun ProgressionDetailContent(
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
             onUserFeedback = onUserFeedback,
-            onLogFeedback = viewModel::logFeedback
+            onLogFeedback = viewModel::logFeedback,
+            onCustomContentChanged = {
+                viewModel.invalidateGameDataCache()
+                scope.launch(Dispatchers.IO) {
+                    viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                }
+            }
         )
         MainSection.XP -> XpSection(
             state = state,
@@ -858,6 +878,8 @@ private fun CreationDetailContent(
     onSelectAncestralidade: (String) -> Unit,
     onUserFeedback: () -> Unit
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val creationLocked = state.criacaoBasicaCongelada
 
     when (selectedSection) {
@@ -875,7 +897,13 @@ private fun CreationDetailContent(
             ancestralidadeEmFoco = state.ancestralidadeEmFoco,
             feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
             onSelectAncestralidade = onSelectAncestralidade,
-            onUserFeedback = onUserFeedback
+            onUserFeedback = onUserFeedback,
+            onCustomContentChanged = {
+                viewModel.invalidateGameDataCache()
+                scope.launch(Dispatchers.IO) {
+                    viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                }
+            }
         )
         MainSection.TROPOS -> TroposSection(
             state = state,
@@ -893,7 +921,13 @@ private fun CreationDetailContent(
             state = state,
             feedbackMessages = viewModel.feedbackMessages as MutableList<String>,
             onUserFeedback = onUserFeedback,
-            onLogFeedback = viewModel::logFeedback
+            onLogFeedback = viewModel::logFeedback,
+            onCustomContentChanged = {
+                viewModel.invalidateGameDataCache()
+                scope.launch(Dispatchers.IO) {
+                    viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                }
+            }
         )
         MainSection.ATRIBUTOS -> SectionCard(
             title    = "Atributos",
@@ -902,10 +936,16 @@ private fun CreationDetailContent(
         ) {
             AtributosContent(
                 state = state,
-                listaAtributos = viewModel.gameDataStore.getAtributos(),
-                mapaAtributosDisplay = viewModel.gameDataStore.getMapaAtributosDisplay(),
-                mapaAtributosDescricao = viewModel.gameDataStore.currentSnapshot()?.mapaAtributosDescricao ?: emptyMap(),
-                onUserFeedback = onUserFeedback
+                listaAtributos = state.listaAtributos,
+                mapaAtributosDisplay = state.mapaAtributosDisplay,
+                mapaAtributosDescricao = state.mapaAtributosDescricao,
+                onUserFeedback = onUserFeedback,
+                onCustomContentChanged = {
+                    viewModel.invalidateGameDataCache()
+                    scope.launch(Dispatchers.IO) {
+                        viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                    }
+                }
             )
         }
         MainSection.PERICIAS -> PericiasContent(
@@ -925,7 +965,13 @@ private fun CreationDetailContent(
                 allAdvantages = viewModel.gameDataStore.getVantagens(),
                 allSkills = viewModel.gameDataStore.getPericias(),
                 allEstagios = listaDeEstagios,
-                onUserFeedback = onUserFeedback
+                onUserFeedback = onUserFeedback,
+                onCustomContentChanged = {
+                    viewModel.invalidateGameDataCache()
+                    scope.launch(Dispatchers.IO) {
+                        viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                    }
+                }
             )
         }
         MainSection.CRYSTAL_HEART -> CrystalHeartSection(
@@ -937,7 +983,13 @@ private fun CreationDetailContent(
                 PoderesSection(
                     state = state,
                     arcanoInfoMap = viewModel.gameDataStore.getArcanoInfoMap(),
-                    onShowMessage = onShowMessage
+                    onShowMessage = onShowMessage,
+                    onCustomContentChanged = {
+                        viewModel.invalidateGameDataCache()
+                        scope.launch(Dispatchers.IO) {
+                            viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                        }
+                    }
                 )
                 Spacer(Modifier.height(8.dp))
             }
@@ -945,7 +997,13 @@ private fun CreationDetailContent(
                 state = state,
                 listaSuperPoderes = listaSuperPoderes,
                 allAdvantages = viewModel.gameDataStore.getVantagens(),
-                onShowMessage = onShowMessage
+                onShowMessage = onShowMessage,
+                onCustomContentChanged = {
+                    viewModel.invalidateGameDataCache()
+                    scope.launch(Dispatchers.IO) {
+                        viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                    }
+                }
             )
         }
         MainSection.MECHAS -> MechasSection(
@@ -961,7 +1019,13 @@ private fun CreationDetailContent(
             equipamentoCategorias = equipamentoCategorias,
             superequipCategorias = superequipCategorias,
             onUserFeedback = onUserFeedback,
-            onLogFeedback = viewModel::logFeedback
+            onLogFeedback = viewModel::logFeedback,
+            onCustomContentChanged = {
+                viewModel.invalidateGameDataCache()
+                scope.launch(Dispatchers.IO) {
+                    viewModel.carregarDadosDeJogo(context, state.getActiveModuleKeys())
+                }
+            }
         )
         else -> SummaryTabContent(
             state = state,
@@ -1072,14 +1136,16 @@ private fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     allAdvantages: List<Vantagem>,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     if (state.modoSupers) {
-        SuperPoderesContent(
+        com.example.swadebuilder.ui.sections.SuperPoderesSection(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
             allAdvantages = allAdvantages,
-            onShowMessage = onShowMessage
+            onShowMessage = onShowMessage,
+            onCustomContentChanged = onCustomContentChanged
         )
     }
 }
@@ -1090,7 +1156,8 @@ private fun EquipamentoSection(
     equipamentoCategorias: List<EquipamentoCategoria>,
     superequipCategorias: List<EquipamentoCategoria>,
     onUserFeedback: () -> Unit,
-    onLogFeedback: (String) -> Unit = {}
+    onLogFeedback: (String) -> Unit = {},
+    onCustomContentChanged: () -> Unit = {}
 ) {
     val hasMusculoso = state.vantagensSelecionadas.any { it.id == Constants.ID_MUSCULOSO }
     val hasSoldado = state.vantagensSelecionadas.any { it.id == Constants.ID_SOLDADO }
@@ -1230,6 +1297,7 @@ private fun EquipamentoSection(
         compendioWiseguysAtivo = state.compendioWiseguysAtivo,
         compendioCrystalHeartAtivo = state.compendioCrystalHeartAtivo,
         modoOficialAtivo = state.modoOficialAtivo,
-        onUserFeedback = onUserFeedback
+        onUserFeedback = onUserFeedback,
+        onCustomContentChanged = onCustomContentChanged
     )
 }

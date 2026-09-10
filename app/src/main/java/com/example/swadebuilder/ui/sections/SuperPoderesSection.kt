@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
@@ -42,6 +43,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -495,7 +497,8 @@ fun SuperPoderesSection(
     listaSuperPoderes: List<SuperPoder>,
     viewModel: CriadorViewModel = viewModel(),
     allAdvantages: List<Vantagem>,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
 
@@ -573,6 +576,74 @@ fun SuperPoderesSection(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
+        if (state.habilitarCriacaoNasAbas) {
+            var showCreateOptionsDialog by rememberSaveable { mutableStateOf(false) }
+            var targetCreationCategory by rememberSaveable { mutableStateOf<String?>(null) }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedButton(
+                    onClick = { showCreateOptionsDialog = true },
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                    modifier = Modifier.height(32.dp)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("Criar...", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+
+            if (showCreateOptionsDialog) {
+                AlertDialog(
+                    onDismissRequest = { showCreateOptionsDialog = false },
+                    title = { Text("Criar em Super Poderes") },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("O que você deseja criar?", style = MaterialTheme.typography.bodyMedium)
+                            OutlinedButton(
+                                onClick = {
+                                    showCreateOptionsDialog = false
+                                    targetCreationCategory = "Super Poder"
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Novo Super Poder")
+                            }
+                            OutlinedButton(
+                                onClick = {
+                                    showCreateOptionsDialog = false
+                                    targetCreationCategory = "Modificador de Poder"
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Novo Modificador de Poder")
+                            }
+                        }
+                    },
+                    confirmButton = {},
+                    dismissButton = {
+                        TextButton(onClick = { showCreateOptionsDialog = false }) {
+                            Text("Cancelar")
+                        }
+                    }
+                )
+            }
+
+            targetCreationCategory?.let { cat ->
+                com.example.swadebuilder.ui.components.CustomContentManageDialog(
+                    state = state,
+                    initialCategory = cat,
+                    onDismiss = { targetCreationCategory = null },
+                    onCustomContentChanged = onCustomContentChanged
+                )
+            }
+        }
+
         if (state.superInvestments.isNotEmpty()) {
             val genericosAgrupados = state.superInvestments
                 .asSequence()

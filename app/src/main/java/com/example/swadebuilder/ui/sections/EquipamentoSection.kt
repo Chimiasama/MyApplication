@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -20,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -30,6 +32,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -301,7 +304,8 @@ fun EquipamentoSection(
     compendioWiseguysAtivo: Boolean = false,
     compendioCrystalHeartAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
@@ -438,6 +442,37 @@ fun EquipamentoSection(
                 )
             } else {
                 Spacer(Modifier.height(8.dp))
+            }
+
+            if (state.habilitarCriacaoNasAbas) {
+                var targetCreationCategory by rememberSaveable { mutableStateOf<String?>(null) }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp, vertical = 2.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedButton(
+                        onClick = { targetCreationCategory = "Equipamento" },
+                        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                        modifier = Modifier.height(32.dp)
+                    ) {
+                        Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(4.dp))
+                        Text("Criar Equipamento", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+
+                targetCreationCategory?.let { cat ->
+                    com.example.swadebuilder.ui.components.CustomContentManageDialog(
+                        state = state,
+                        initialCategory = cat,
+                        onDismiss = { targetCreationCategory = null },
+                        onCustomContentChanged = onCustomContentChanged
+                    )
+                }
             }
 
             if (usaRequisicao && (emProgresso || modoProgressaoAtivo)) {

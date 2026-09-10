@@ -158,6 +158,7 @@ class CriadorState {
     var superequipCategorias by mutableStateOf<List<EquipamentoCategoria>>(emptyList())
 
     var mapaAtributosDisplay by mutableStateOf<Map<String, String>>(emptyMap())
+    var mapaAtributosDescricao by mutableStateOf<Map<String, String>>(emptyMap())
     var mapaPericias by mutableStateOf<Map<String, Pericia>>(emptyMap())
     var arcanoInfo by mutableStateOf<Map<String, Triple<Int, Int, String>>>(emptyMap())
 
@@ -257,6 +258,9 @@ class CriadorState {
             listaAtributos = listaAtributos + key
         }
         mapaAtributosDisplay = mapaAtributosDisplay + (key to atributo.nome)
+        if (!atributo.descricao.isNullOrBlank()) {
+            mapaAtributosDescricao = mapaAtributosDescricao + (atributo.nome.uppercase().semAcentos() to atributo.descricao)
+        }
         // Reaproveita a mesma função usada no load inicial (ver updateGameData) pra
         // registrar os mapas de estado por atributo (valoresAtributos, pilha de PA) —
         // evita duplicar essa lógica aqui.
@@ -267,8 +271,94 @@ class CriadorState {
         val key = nome.keyify()
         listaAtributos = listaAtributos.filterNot { it == key }
         mapaAtributosDisplay = mapaAtributosDisplay - key
+        mapaAtributosDescricao = mapaAtributosDescricao - nome.uppercase().semAcentos()
         valoresAtributos.remove(key)
         paCostStackPorAtributo.remove(key)
+    }
+
+    fun isCustomAtributoInUse(nome: String): Boolean {
+        val key = nome.keyify()
+        val stackSize = paCostStackPorAtributo[key]?.size ?: 0
+        val baseVal = valoresAtributos[key]?.intValue ?: 4
+        return stackSize > 0 || baseVal > 4
+    }
+
+    fun refundAndRemoveCustomAtributo(nome: String) {
+        val key = nome.keyify()
+        val stackSize = paCostStackPorAtributo[key]?.size ?: 0
+        if (stackSize > 0) {
+            pontosAtributo += stackSize
+        }
+        removeCustomAtributo(nome)
+    }
+
+    fun isCustomPericiaInUse(nome: String): Boolean {
+        val per = listaPericias.firstOrNull { it.nome.equals(nome, ignoreCase = true) } ?: return false
+        val stackSize = spCostStackPorPericia[per]?.size ?: 0
+        return rawTotal(per) > 0 || stackSize > 0
+    }
+
+    fun refundAndRemoveCustomPericia(nome: String) {
+        val per = listaPericias.firstOrNull { it.nome.equals(nome, ignoreCase = true) }
+        if (per != null) {
+            spCostStackPorPericia.remove(per)
+            compCostStackPorPericia.remove(per)
+            baseIncsPorPericia.remove(per)
+            compIncsPorPericia.remove(per)
+            notasPericia.remove(per.nome)
+            removeCustomPericia(nome)
+        }
+    }
+
+    fun isCustomVantagemInUse(id: String): Boolean {
+        return vantagensSelecionadas.any { it.id == id }
+    }
+
+    fun refundAndRemoveCustomVantagem(id: String) {
+        vantagensSelecionadas.filter { it.id == id }.toList().forEach { v ->
+            venderVantagem(v)
+        }
+    }
+
+    fun isCustomComplicacaoInUse(id: String): Boolean {
+        return complicacoesSelecionadas.keys.any { it.id == id }
+    }
+
+    fun refundAndRemoveCustomComplicacao(id: String) {
+        val target = complicacoesSelecionadas.keys.firstOrNull { it.id == id }
+        if (target != null) {
+            removerComplicacao(target)
+        }
+    }
+
+    fun isCustomEquipamentoInUse(nome: String): Boolean {
+        return equipamentosComprados.any { it.nome.equals(nome, ignoreCase = true) }
+    }
+
+    fun refundAndRemoveCustomEquipamento(nome: String) {
+        val emUso = equipamentosComprados.filter { it.nome.equals(nome, ignoreCase = true) }.toList()
+        emUso.forEach { eq ->
+            val custoBase = com.example.swadebuilder.util.MoneyUtils.parseCostInBaseUnit(eq.custo, compendioPathfinderAtivo)
+            dinheiro += custoBase
+            equipamentosComprados.remove(eq)
+        }
+    }
+
+    fun isCustomPoderInUse(id: String): Boolean {
+        val emSlots = poderSlotsPorArcano.values.any { slots -> slots.any { it?.equals(id, ignoreCase = true) == true } }
+        return poderesSelecionados.any { it?.equals(id, ignoreCase = true) == true } || emSlots
+    }
+
+    fun refundAndRemoveCustomPoder(id: String) {
+        poderSlotsPorArcano.forEach { (_, slots) ->
+            for (i in slots.indices) {
+                if (slots[i]?.equals(id, ignoreCase = true) == true) {
+                    slots[i] = null
+                }
+            }
+        }
+        syncPoderesSelecionadosFromSlots()
+        manifestacoesPoderes.remove(id)
     }
 
     fun addCustomPericia(pericia: PericiaJson) {
@@ -314,6 +404,7 @@ class CriadorState {
         this.equipamentoCategorias = snapshot.equipamentoCategorias
         this.superequipCategorias = snapshot.superequipCategorias
         this.mapaAtributosDisplay = snapshot.mapaAtributosDisplay
+        this.mapaAtributosDescricao = snapshot.mapaAtributosDescricao
         this.mapaPericias = snapshot.mapaPericias
 
         this.arcanoInfo = snapshot.arcanoInfo.associate {
@@ -385,6 +476,7 @@ class CriadorState {
     var showSystemMessages by mutableStateOf(true)
     var pularSelecaoRegras by mutableStateOf(false)
     var modoSelecaoPericia by mutableStateOf(com.example.swadebuilder.util.AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER)
+    var habilitarCriacaoNasAbas by mutableStateOf(false)
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
@@ -7012,16 +7104,40 @@ class CriadorState {
         cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvStack.size) { add(Unit) } }
         cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosStack.size) { add(Unit) } }
 
+        // Ensure any custom attribute saved in the snapshot exists in listaAtributos & maps
+        val savedAttrs = (snapshot.atributos.paCostStackPorAtributo.keys + snapshot.atributos.valoresAtributos.keys)
+            .map { it.keyify() }.toSet()
+        savedAttrs.forEach { attrKey ->
+            if (attrKey !in listaAtributos) {
+                val displayName = snapshot.atributos.valoresAtributos.keys.find { it.keyify() == attrKey } ?: attrKey
+                listaAtributos = listaAtributos + attrKey
+                mapaAtributosDisplay = mapaAtributosDisplay + (attrKey to displayName)
+            }
+        }
+        ensureAllAtributosRegistered()
+
         paCostStackPorAtributo.forEach { (attr, stack) ->
             stack.clear()
             stack.addAll(snapshot.atributos.paCostStackPorAtributo[attr].orEmpty())
             val base = atributoFloorDeRaca(snapshot.atributos.ancestralidade, attr)
-            valoresAtributos[attr]!!.intValue = applySuperStepsFrom(base, stack.size)
+            valoresAtributos[attr]?.intValue = applySuperStepsFrom(base, stack.size)
         }
         pontosAtributo = snapshot.recursos.pontosAtributo
 
         especializacoesPorPericia.clear()
         ensureIdiomaSlotsFromSnapshot(snapshot.pericias.baseIncsPorPericia.keys)
+
+        // Ensure any custom skill saved in the snapshot exists in listaPericias & maps
+        snapshot.pericias.baseIncsPorPericia.keys.forEach { perName ->
+            if (mapaPericias.none { it.key.keyify() == perName.keyify() }) {
+                val per = Pericia(nome = perName, atributo = "ASTUCIA", basica = false, origem = "CUSTOM")
+                if (listaPericias.none { it.nome.keyify() == per.nome.keyify() }) {
+                    listaPericias = listaPericias + per
+                }
+                mapaPericias = listaPericias.associateBy { it.nome.keyify() }
+                ensurePericiaEntry(per)
+            }
+        }
 
         // --- Restore Loop ---
         periciasComIdiomas().forEach { per ->

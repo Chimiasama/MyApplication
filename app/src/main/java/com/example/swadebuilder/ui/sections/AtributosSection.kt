@@ -30,9 +30,12 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -211,11 +214,12 @@ fun AttributeCarouselPopoverDialog(
 @Composable
 fun AtributosContent(
     state: CriadorState,
-    listaAtributos: List<String>,
-    mapaAtributosDisplay: Map<String, String>,
-    mapaAtributosDescricao: Map<String, String>,
+    listaAtributos: List<String> = state.listaAtributos,
+    mapaAtributosDisplay: Map<String, String> = state.mapaAtributosDisplay,
+    mapaAtributosDescricao: Map<String, String> = state.mapaAtributosDescricao,
     onUserFeedback: () -> Unit,
-    feedbackMessages: MutableList<String>? = null
+    feedbackMessages: MutableList<String>? = null,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -279,6 +283,74 @@ fun AtributosContent(
             )
         } else {
             Spacer(Modifier.height(8.dp))
+        }
+
+        if (state.habilitarCriacaoNasAbas) {
+            var showCreateOptionsDialog by rememberSaveable { mutableStateOf(false) }
+            var targetCreationCategory by rememberSaveable { mutableStateOf<String?>(null) }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedButton(
+                    onClick = { showCreateOptionsDialog = true },
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 4.dp),
+                    modifier = Modifier.height(32.dp)
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(4.dp))
+                    Text("Criar...", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+
+            if (showCreateOptionsDialog) {
+                AlertDialog(
+                    onDismissRequest = { showCreateOptionsDialog = false },
+                    title = { Text("Criar em Atributos e Perícias") },
+                    text = {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("O que você deseja criar?", style = MaterialTheme.typography.bodyMedium)
+                            OutlinedButton(
+                                onClick = {
+                                    showCreateOptionsDialog = false
+                                    targetCreationCategory = "Atributo"
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Novo Atributo")
+                            }
+                            OutlinedButton(
+                                onClick = {
+                                    showCreateOptionsDialog = false
+                                    targetCreationCategory = "Perícia"
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Nova Perícia")
+                            }
+                        }
+                    },
+                    confirmButton = {},
+                    dismissButton = {
+                        TextButton(onClick = { showCreateOptionsDialog = false }) {
+                            Text("Cancelar")
+                        }
+                    }
+                )
+            }
+
+            targetCreationCategory?.let { cat ->
+                com.example.swadebuilder.ui.components.CustomContentManageDialog(
+                    state = state,
+                    initialCategory = cat,
+                    onDismiss = { targetCreationCategory = null },
+                    onCustomContentChanged = onCustomContentChanged
+                )
+            }
         }
 
         Spacer(Modifier.height(4.dp))
