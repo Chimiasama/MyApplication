@@ -34,6 +34,7 @@ import com.example.swadebuilder.util.CharacterStorage
 import com.example.swadebuilder.util.CustomCrystalHeartStorage
 import com.example.swadebuilder.util.debugLog
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.toEditionDisplayName
 
 // ---- OBJETOS DE RETORNO ----
 data class InvestCheck(val ok: Boolean, val motivoBloqueio: String? = null)
@@ -77,28 +78,51 @@ class CriadorViewModel(
     private fun coracoesData() = gameDataStore.getCoracoesCrystal()
     private fun periciasMapData() = gameDataStore.getPericiasMap()
 
-    private fun moduleKeysFromFlags(flags: SnapshotFlags): Set<String> = buildSet {
+    fun moduleKeysFromFlags(flags: SnapshotFlags?): Set<String> {
+        if (flags == null) return emptySet()
         if (flags.modoLivre) {
-            addAll(
-                listOf(
-                    ModuleIds.FANTASIA, ModuleIds.HORROR, ModuleIds.SCI_FI,
-                    ModuleIds.PATHFINDER, ModuleIds.DEADLANDS, ModuleIds.CRYSTAL_HEART,
-                    ModuleIds.ARTE_DA_GUERRA, ModuleIds.CIDADE_SOL_VAPOR,
-                    ModuleIds.WISEGUYS, ModuleIds.SUPER,
-                ),
+            return setOf(
+                ModuleIds.FANTASIA, ModuleIds.HORROR, ModuleIds.SCI_FI,
+                ModuleIds.PATHFINDER, ModuleIds.DEADLANDS, ModuleIds.CRYSTAL_HEART,
+                ModuleIds.ARTE_DA_GUERRA, ModuleIds.CIDADE_SOL_VAPOR,
+                ModuleIds.WISEGUYS, ModuleIds.SUPER,
             )
-            return@buildSet
         }
-        if (flags.compendioFantasiaAtivo) add(ModuleIds.FANTASIA)
-        if (flags.compendioHorrorAtivo) add(ModuleIds.HORROR)
-        if (flags.compendioSciFiAtivo) add(ModuleIds.SCI_FI)
-        if (flags.compendioPathfinderAtivo) add(ModuleIds.PATHFINDER)
-        if (flags.compendioDeadlandsAtivo) add(ModuleIds.DEADLANDS)
-        if (flags.compendioCrystalHeartAtivo) add(ModuleIds.CRYSTAL_HEART)
-        if (flags.compendioArteDaGuerraAtivo) add(ModuleIds.ARTE_DA_GUERRA)
-        if (flags.compendioCidadeSolVaporAtivo) add(ModuleIds.CIDADE_SOL_VAPOR)
-        if (flags.compendioWiseguysAtivo) add(ModuleIds.WISEGUYS)
-        if (flags.modoSupers) add(ModuleIds.SUPER)
+        return buildSet {
+            if (flags.compendioFantasiaAtivo) add(ModuleIds.FANTASIA)
+            if (flags.compendioHorrorAtivo) add(ModuleIds.HORROR)
+            if (flags.compendioSciFiAtivo) add(ModuleIds.SCI_FI)
+            if (flags.compendioPathfinderAtivo) add(ModuleIds.PATHFINDER)
+            if (flags.compendioDeadlandsAtivo) add(ModuleIds.DEADLANDS)
+            if (flags.compendioCrystalHeartAtivo) add(ModuleIds.CRYSTAL_HEART)
+            if (flags.compendioArteDaGuerraAtivo) add(ModuleIds.ARTE_DA_GUERRA)
+            if (flags.compendioCidadeSolVaporAtivo) add(ModuleIds.CIDADE_SOL_VAPOR)
+            if (flags.compendioWiseguysAtivo) add(ModuleIds.WISEGUYS)
+            if (flags.modoSupers) add(ModuleIds.SUPER)
+        }
+    }
+
+    fun getModuleNamesDescription(flags: SnapshotFlags?): String {
+        if (flags == null) return "Básico".toEditionDisplayName()
+
+        val activeNames = mutableListOf<String>()
+
+        if (flags.modoSupers) activeNames.add("Superpoderes".toEditionDisplayName())
+        if (flags.compendioPathfinderAtivo) activeNames.add("Pathfinder".toEditionDisplayName())
+        if (flags.compendioDeadlandsAtivo) activeNames.add("Deadlands".toEditionDisplayName())
+        if (flags.compendioCrystalHeartAtivo) activeNames.add("Crystal Heart".toEditionDisplayName())
+        if (flags.compendioArteDaGuerraAtivo) activeNames.add("Arte da Guerra".toEditionDisplayName())
+        if (flags.compendioCidadeSolVaporAtivo) activeNames.add("Cidade do Sol a Vapor".toEditionDisplayName())
+        if (flags.compendioWiseguysAtivo) activeNames.add("Wiseguys".toEditionDisplayName())
+        if (flags.compendioFantasiaAtivo) activeNames.add("Fantasia".toEditionDisplayName())
+        if (flags.compendioHorrorAtivo) activeNames.add("Horror".toEditionDisplayName())
+        if (flags.compendioSciFiAtivo) activeNames.add("Sci-Fi".toEditionDisplayName())
+
+        return if (activeNames.isEmpty()) {
+            "Básico".toEditionDisplayName()
+        } else {
+            activeNames.joinToString(", ")
+        }
     }
 
     suspend fun carregarDadosDeJogo(context: Context, activeModules: Set<String>): GameDataSnapshot {

@@ -590,6 +590,7 @@ class MainActivity : ComponentActivity() {
 
             if (showLoadDialog) {
                 var selectedEntry by remember { mutableStateOf<CharacterStorage.SaveEntry?>(null) }
+                var entryToConfirmLoad by remember { mutableStateOf<CharacterStorage.SaveEntry?>(null) }
 
                 AlertDialog(
                     onDismissRequest = { showLoadDialog = false },
@@ -662,21 +663,27 @@ class MainActivity : ComponentActivity() {
                                     onClick = {
                                         selectedEntry?.let { entry ->
                                             triggerFeedback()
-                                            scope.launch {
-                                                val result = criadorViewModel.carregarPersonagem(
-                                                    context,
-                                                    entry.id
-                                                )
-                                                if (result.success) {
-                                                    creationSession++
-                                                    mostrouTelaInicial = false
-                                                    showLoadDialog = false
-                                                    snackHost.showSnackbar("Carregado: ${entry.nome}")
-                                                } else {
-                                                    snackHost.showSnackbar(
-                                                        result.message
-                                                            ?: "Falha ao carregar o personagem"
+                                            val targetModules = criadorViewModel.moduleKeysFromFlags(entry.flags)
+                                            val currentModules = criadorViewModel.state.getActiveModuleKeys()
+                                            if (targetModules != currentModules) {
+                                                entryToConfirmLoad = entry
+                                            } else {
+                                                scope.launch {
+                                                    val result = criadorViewModel.carregarPersonagem(
+                                                        context,
+                                                        entry.id
                                                     )
+                                                    if (result.success) {
+                                                        creationSession++
+                                                        mostrouTelaInicial = false
+                                                        showLoadDialog = false
+                                                        snackHost.showSnackbar("Carregado: ${entry.nome}")
+                                                    } else {
+                                                        snackHost.showSnackbar(
+                                                            result.message
+                                                                ?: "Falha ao carregar o personagem"
+                                                        )
+                                                    }
                                                 }
                                             }
                                         }
@@ -694,6 +701,50 @@ class MainActivity : ComponentActivity() {
                     },
                     dismissButton = null
                 )
+
+                if (entryToConfirmLoad != null) {
+                    val targetEntry = entryToConfirmLoad!!
+                    val bookDescription = criadorViewModel.getModuleNamesDescription(targetEntry.flags)
+                    AlertDialog(
+                        onDismissRequest = { entryToConfirmLoad = null },
+                        title = { Text("Alternar Livro / Compêndio") },
+                        text = {
+                            Text("O personagem '${targetEntry.nome}' foi criado para o livro/compêndio:\n\n• $bookDescription\n\nO livro atual será fechado e o contexto alterado para carregar este personagem. Deseja continuar?")
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    val entry = targetEntry
+                                    entryToConfirmLoad = null
+                                    scope.launch {
+                                        val result = criadorViewModel.carregarPersonagem(
+                                            context,
+                                            entry.id
+                                        )
+                                        if (result.success) {
+                                            creationSession++
+                                            mostrouTelaInicial = false
+                                            showLoadDialog = false
+                                            snackHost.showSnackbar("Carregado: ${entry.nome}")
+                                        } else {
+                                            snackHost.showSnackbar(
+                                                result.message
+                                                    ?: "Falha ao carregar o personagem"
+                                            )
+                                        }
+                                    }
+                                }
+                            ) {
+                                Text("Alternar e Carregar")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { entryToConfirmLoad = null }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
+                    )
+                }
             }
 
             if (showResetDialog) {
