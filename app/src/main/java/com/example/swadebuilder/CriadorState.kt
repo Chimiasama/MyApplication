@@ -276,6 +276,86 @@ class CriadorState {
         paCostStackPorAtributo.remove(key)
     }
 
+    fun isCustomAtributoInUse(nome: String): Boolean {
+        val key = nome.keyify()
+        val stackSize = paCostStackPorAtributo[key]?.size ?: 0
+        val baseVal = valoresAtributos[key]?.intValue ?: 4
+        return stackSize > 0 || baseVal > 4
+    }
+
+    fun refundAndRemoveCustomAtributo(nome: String) {
+        removeCustomAtributo(nome)
+    }
+
+    fun isCustomPericiaInUse(nome: String): Boolean {
+        val per = listaPericias.firstOrNull { it.nome.equals(nome, ignoreCase = true) } ?: return false
+        val stackSize = spCostStackPorPericia[per]?.size ?: 0
+        return rawTotal(per) > 0 || stackSize > 0
+    }
+
+    fun refundAndRemoveCustomPericia(nome: String) {
+        val per = listaPericias.firstOrNull { it.nome.equals(nome, ignoreCase = true) }
+        if (per != null) {
+            spCostStackPorPericia.remove(per)
+            compCostStackPorPericia.remove(per)
+            baseIncsPorPericia.remove(per)
+            compIncsPorPericia.remove(per)
+            notasPericia.remove(per.nome)
+            removeCustomPericia(nome)
+        }
+    }
+
+    fun isCustomVantagemInUse(id: String): Boolean {
+        return vantagensSelecionadas.any { it.id == id }
+    }
+
+    fun refundAndRemoveCustomVantagem(id: String) {
+        vantagensSelecionadas.filter { it.id == id }.toList().forEach { v ->
+            venderVantagem(v)
+        }
+    }
+
+    fun isCustomComplicacaoInUse(id: String): Boolean {
+        return complicacoesSelecionadas.keys.any { it.id == id }
+    }
+
+    fun refundAndRemoveCustomComplicacao(id: String) {
+        val target = complicacoesSelecionadas.keys.firstOrNull { it.id == id }
+        if (target != null) {
+            removerComplicacao(target)
+        }
+    }
+
+    fun isCustomEquipamentoInUse(nome: String): Boolean {
+        return equipamentosComprados.any { it.nome.equals(nome, ignoreCase = true) }
+    }
+
+    fun refundAndRemoveCustomEquipamento(nome: String) {
+        val emUso = equipamentosComprados.filter { it.nome.equals(nome, ignoreCase = true) }.toList()
+        emUso.forEach { eq ->
+            val custoBase = com.example.swadebuilder.util.MoneyUtils.parseCostInBaseUnit(eq.custo, compendioPathfinderAtivo)
+            dinheiro += custoBase
+            equipamentosComprados.remove(eq)
+        }
+    }
+
+    fun isCustomPoderInUse(id: String): Boolean {
+        val emSlots = poderSlotsPorArcano.values.any { slots -> slots.any { it?.equals(id, ignoreCase = true) == true } }
+        return poderesSelecionados.any { it?.equals(id, ignoreCase = true) == true } || emSlots
+    }
+
+    fun refundAndRemoveCustomPoder(id: String) {
+        poderSlotsPorArcano.forEach { (_, slots) ->
+            for (i in slots.indices) {
+                if (slots[i]?.equals(id, ignoreCase = true) == true) {
+                    slots[i] = null
+                }
+            }
+        }
+        syncPoderesSelecionadosFromSlots()
+        manifestacoesPoderes.remove(id)
+    }
+
     fun addCustomPericia(pericia: PericiaJson) {
         val nova = Pericia(
             nome = pericia.nome,
