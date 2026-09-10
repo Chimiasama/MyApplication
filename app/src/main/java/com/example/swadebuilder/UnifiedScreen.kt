@@ -1136,14 +1136,16 @@ private fun SuperPoderesSection(
     state: CriadorState,
     listaSuperPoderes: List<SuperPoder>,
     allAdvantages: List<Vantagem>,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     if (state.modoSupers) {
-        SuperPoderesContent(
+        com.example.swadebuilder.ui.sections.SuperPoderesSection(
             state = state,
             listaSuperPoderes = listaSuperPoderes,
             allAdvantages = allAdvantages,
-            onShowMessage = onShowMessage
+            onShowMessage = onShowMessage,
+            onCustomContentChanged = onCustomContentChanged
         )
     }
 }
