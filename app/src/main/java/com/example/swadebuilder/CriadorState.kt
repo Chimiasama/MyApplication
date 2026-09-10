@@ -284,6 +284,11 @@ class CriadorState {
     }
 
     fun refundAndRemoveCustomAtributo(nome: String) {
+        val key = nome.keyify()
+        val stackSize = paCostStackPorAtributo[key]?.size ?: 0
+        if (stackSize > 0) {
+            pontosAtributo += stackSize
+        }
         removeCustomAtributo(nome)
     }
 

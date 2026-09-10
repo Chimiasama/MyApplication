@@ -1,4 +1,6 @@
 package com.example.swadebuilder.ui.components
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -184,6 +186,59 @@ private fun BookTagsDropdownPicker(selected: Set<String>, onChange: (Set<String>
     }
 }
 
+suspend fun findSavedCharactersUsingCustomItem(
+    context: android.content.Context,
+    type: String,
+    name: String
+): List<Pair<String, String>> {
+    val normName = name.keyify()
+    val saves = com.example.swadebuilder.util.CharacterStorage.listSaves(context)
+    val affected = mutableListOf<Pair<String, String>>()
+
+    for (save in saves) {
+        val loadResult = com.example.swadebuilder.util.CharacterStorage.load(context, save.id)
+        if (loadResult is com.example.swadebuilder.util.CharacterStorage.LoadResult.Success) {
+            val snapshot = loadResult.snapshot
+            val charName = snapshot.nome.ifBlank { save.nome }
+            val inUse = when (type) {
+                "Atributo" -> {
+                    snapshot.atributos.valoresAtributos.entries.any { (k, v) -> k.keyify() == normName && v > 4 } ||
+                    (snapshot.atributos.paCostStackPorAtributo[normName]?.size ?: 0) > 0
+                }
+                "Perícia" -> {
+                    snapshot.pericias.baseIncsPorPericia.keys.any { it.keyify() == normName } ||
+                    snapshot.pericias.spCostStackPorPericia.keys.any { it.keyify() == normName }
+                }
+                "Vantagem" -> {
+                    snapshot.selecoes.vantagens.any { it.id == name || it.id.keyify() == normName }
+                }
+                "Complicação" -> {
+                    snapshot.selecoes.complicacoesSelecionadas.any { it.id == name || it.id.keyify() == normName }
+                }
+                "Equipamento" -> {
+                    snapshot.selecoes.equipamentosComprados.any { it.nome.keyify() == normName }
+                }
+                "Poder" -> {
+                    snapshot.selecoes.poderesSelecionados.any { it == name || it.keyify() == normName } ||
+                    snapshot.selecoes.poderSlotsPorArcano.values.any { slots -> slots.any { it != null && (it == name || it.keyify() == normName) } }
+                }
+                "Super Poder" -> {
+                    snapshot.selecoes.poderesSelecionados.any { it == name || it.keyify() == normName }
+                }
+                "Raça" -> {
+                    snapshot.atributos.ancestralidade.keyify() == normName
+                }
+                else -> false
+            }
+            if (inUse) {
+                affected.add(save.id to charName)
+            }
+        }
+    }
+    return affected
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsDialog(
@@ -205,6 +260,7 @@ fun SettingsDialog(
 ) {
     var showNpcWarning by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showCustomContentDialog by remember { mutableStateOf(false) }
 
     val themeNames = remember {
         mapOf(
@@ -714,7 +770,9 @@ fun CustomContentManageDialog(
     var customItemName by remember { mutableStateOf("") }
     var customItemDesc by remember { mutableStateOf("") }
     var statusMessage by remember { mutableStateOf<String?>(null) }
-
+    var itemToDeleteTarget by remember { mutableStateOf<Pair<String, String>?>(null) }
+    val scope = rememberCoroutineScope()
+    var affectedSavesTarget by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
                         val customStorageManager = remember { com.example.swadebuilder.util.CustomStorageManager() }
                         // Livro(s) a que o item sendo criado vai ficar vinculado — o jogador
                         // escolhe isso na hora de salvar (ver "Seletor de Livros" abaixo), não
@@ -935,6 +993,78 @@ fun CustomContentManageDialog(
                                 periciasCustomizadas = all.flatMap { it.periciasCustomizadas }.distinctBy { it.nome.lowercase() },
                                 modificadoresCustomizados = all.flatMap { it.modificadoresCustomizados }.distinctBy { it.id }
                             )
+                        }
+
+                        val executeDeleteCustomItem: (String, String) -> Unit = { delType, delName ->
+                            when (delType) {
+                                "Vantagem" -> {
+                                    val item = activeBookCustomData.vantagens.firstOrNull { it.nome == delName }
+                                    item?.let { i ->
+                                        state.refundAndRemoveCustomVantagem(i.id)
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVantagem(context, it, i.id) }
+                                        state.listaVantagens = state.listaVantagens.filterNot { it.id == i.id }
+                                    }
+                                }
+                                "Complicação" -> {
+                                    val item = activeBookCustomData.complicacoes.firstOrNull { it.name == delName }
+                                    item?.let { i ->
+                                        state.refundAndRemoveCustomComplicacao(i.id)
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteComplicacao(context, it, i.id) }
+                                        state.listaComplicacoes = state.listaComplicacoes.filterNot { it.id == i.id }
+                                    }
+                                }
+                                "Equipamento" -> {
+                                    state.refundAndRemoveCustomEquipamento(delName)
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteEquipamento(context, it, delName) }
+                                    state.listaEquipamentos = state.listaEquipamentos.filterNot { it.nome.equals(delName, ignoreCase = true) }
+                                }
+                                "Poder" -> {
+                                    val item = activeBookCustomData.poderes.firstOrNull { it.nome == delName }
+                                    item?.let { i ->
+                                        state.refundAndRemoveCustomPoder(i.id)
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePoder(context, it, i.id) }
+                                        state.listaPoderes = state.listaPoderes.filterNot { it.id == i.id }
+                                    }
+                                }
+                                "Super Poder" -> {
+                                    val item = activeBookCustomData.superPoderes.firstOrNull { it.nome.equals(delName, ignoreCase = true) }
+                                    item?.let { i ->
+                                        i.id?.let { state.refundAndRemoveCustomPoder(it) }
+                                    }
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteSuperPoder(context, it, delName) }
+                                    state.listaSuperPoderes = state.listaSuperPoderes.filterNot { it.nome.equals(delName, ignoreCase = true) }
+                                }
+                                "Raça" -> {
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteRaca(context, it, delName) }
+                                    state.listaAncestralidadesJson = state.listaAncestralidadesJson.filterNot { it.nome.equals(delName, ignoreCase = true) }
+                                }
+                                "Traço Racial" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteHabilidadeRacial(context, it, delName) }
+                                "Variante de Raça" -> {
+                                    val item = activeBookCustomData.variantesRaciais.firstOrNull { it.nome == delName }
+                                    item?.let { i ->
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVarianteRacial(context, it, i.id) }
+                                        state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom.filterNot { v -> v.id == i.id }
+                                    }
+                                }
+                                "Atributo" -> {
+                                    state.refundAndRemoveCustomAtributo(delName)
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteAtributoCustomizado(context, it, delName) }
+                                }
+                                "Perícia" -> {
+                                    state.refundAndRemoveCustomPericia(delName)
+                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePericiaCustomizada(context, it, delName) }
+                                }
+                                "Modificador de Poder" -> {
+                                    val item = activeBookCustomData.modificadoresCustomizados.firstOrNull { "${it.nome} (→ ${it.poderAlvoNome})" == delName }
+                                    item?.let { i ->
+                                        todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteModificadorCustomizado(context, it, i.id) }
+                                        state.removeCustomModificador(i)
+                                    }
+                                }
+                            }
+                            statusMessage = "Item [$delType] '$delName' excluído com sucesso. Pontos e recursos foram atualizados."
+                            refreshTrigger++
+                            onCustomContentChanged()
                         }
 
                         // Todos os Super Poderes que podem receber um Modificador de Poder
@@ -1891,78 +2021,39 @@ fun CustomContentManageDialog(
                                                             Text("Categoria", style = MaterialTheme.typography.labelSmall)
                                                         }
                                                     }
-                                                    TextButton(onClick = {
-                                                        // Apaga em TODOS os livros de armazenamento: o mesmo item pode ter
-                                                        // sido salvo sob várias tags (ver selectedBookTags na criação), e
-                                                        // cada chamada de delete é um no-op inofensivo nos livros onde o
-                                                        // item não existe.
-                                                        // Sincroniza também state.lista* (não só o disco): sem isso, o item
-                                                        // apagado continuava selecionável nas telas de ficha até o app
-                                                        // recarregar os dados do zero, e um novo item criado com o mesmo
-                                                        // nome logo em seguida seria barrado por falso positivo de colisão.
-                                                        when (type) {
-                                                            "Vantagem" -> {
-                                                                val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVantagem(context, it, i.id) }
-                                                                    state.listaVantagens = state.listaVantagens.filterNot { it.id == i.id }
+                                                        TextButton(onClick = {
+                                                            scope.launch {
+                                                                val affectedSaves = findSavedCharactersUsingCustomItem(context, type, name)
+                                                                val inActiveChar = when (type) {
+                                                                    "Vantagem" -> {
+                                                                        val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
+                                                                        item != null && state.isCustomVantagemInUse(item.id)
+                                                                    }
+                                                                    "Complicação" -> {
+                                                                        val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
+                                                                        item != null && state.isCustomComplicacaoInUse(item.id)
+                                                                    }
+                                                                    "Equipamento" -> state.isCustomEquipamentoInUse(name)
+                                                                    "Poder" -> {
+                                                                        val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
+                                                                        item != null && state.isCustomPoderInUse(item.id)
+                                                                    }
+                                                                    "Atributo" -> state.isCustomAtributoInUse(name)
+                                                                    "Perícia" -> state.isCustomPericiaInUse(name)
+                                                                    "Raça" -> state.ancestralidade.equals(name, ignoreCase = true)
+                                                                    else -> false
+                                                                }
+
+                                                                if (affectedSaves.isNotEmpty() || inActiveChar) {
+                                                                    affectedSavesTarget = affectedSaves
+                                                                    itemToDeleteTarget = type to name
+                                                                } else {
+                                                                    executeDeleteCustomItem(type, name)
                                                                 }
                                                             }
-                                                            "Complicação" -> {
-                                                                val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteComplicacao(context, it, i.id) }
-                                                                    state.listaComplicacoes = state.listaComplicacoes.filterNot { it.id == i.id }
-                                                                }
-                                                            }
-                                                            "Equipamento" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteEquipamento(context, it, name) }
-                                                                state.listaEquipamentos = state.listaEquipamentos.filterNot { it.nome.equals(name, ignoreCase = true) }
-                                                            }
-                                                            "Poder" -> {
-                                                                val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePoder(context, it, i.id) }
-                                                                    state.listaPoderes = state.listaPoderes.filterNot { it.id == i.id }
-                                                                }
-                                                            }
-                                                            "Super Poder" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteSuperPoder(context, it, name) }
-                                                                state.listaSuperPoderes = state.listaSuperPoderes.filterNot { it.nome.equals(name, ignoreCase = true) }
-                                                            }
-                                                            "Raça" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteRaca(context, it, name) }
-                                                                state.listaAncestralidadesJson = state.listaAncestralidadesJson.filterNot { it.nome.equals(name, ignoreCase = true) }
-                                                            }
-                                                            "Traço Racial" -> todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteHabilidadeRacial(context, it, name) }
-                                                            "Variante de Raça" -> {
-                                                                val item = activeBookCustomData.variantesRaciais.firstOrNull { it.nome == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteVarianteRacial(context, it, i.id) }
-                                                                    state.listaVariantesRaciaisCustom = state.listaVariantesRaciaisCustom.filterNot { v -> v.id == i.id }
-                                                                }
-                                                            }
-                                                            "Atributo" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteAtributoCustomizado(context, it, name) }
-                                                                state.removeCustomAtributo(name)
-                                                            }
-                                                            "Perícia" -> {
-                                                                todosOsLivrosDeArmazenamento.forEach { customStorageManager.deletePericiaCustomizada(context, it, name) }
-                                                                state.removeCustomPericia(name)
-                                                            }
-                                                            "Modificador de Poder" -> {
-                                                                val item = activeBookCustomData.modificadoresCustomizados.firstOrNull { "${it.nome} (→ ${it.poderAlvoNome})" == name }
-                                                                item?.let { i ->
-                                                                    todosOsLivrosDeArmazenamento.forEach { customStorageManager.deleteModificadorCustomizado(context, it, i.id) }
-                                                                    state.removeCustomModificador(i)
-                                                                }
-                                                            }
+                                                        }) {
+                                                            Text("Deletar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
                                                         }
-                                                        refreshTrigger++
-                                                        onCustomContentChanged()
-                                                    }) {
-                                                        Text("Deletar", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
-                                                    }
                                                 }
                                             }
                                         }
@@ -3392,6 +3483,90 @@ fun CustomContentManageDialog(
                                     }
                                 },
                                 dismissButton = { TextButton(onClick = { showVarianteComplicacaoSeveridadeDialog = false }) { Text("Cancelar") } }
+                            )
+                        }
+
+                        if (itemToDeleteTarget != null) {
+                            val (type, name) = itemToDeleteTarget!!
+                            val inActiveChar = when (type) {
+                                "Vantagem" -> {
+                                    val item = activeBookCustomData.vantagens.firstOrNull { it.nome == name }
+                                    item != null && state.isCustomVantagemInUse(item.id)
+                                }
+                                "Complicação" -> {
+                                    val item = activeBookCustomData.complicacoes.firstOrNull { it.name == name }
+                                    item != null && state.isCustomComplicacaoInUse(item.id)
+                                }
+                                "Equipamento" -> state.isCustomEquipamentoInUse(name)
+                                "Poder" -> {
+                                    val item = activeBookCustomData.poderes.firstOrNull { it.nome == name }
+                                    item != null && state.isCustomPoderInUse(item.id)
+                                }
+                                "Atributo" -> state.isCustomAtributoInUse(name)
+                                "Perícia" -> state.isCustomPericiaInUse(name)
+                                "Raça" -> state.ancestralidade.equals(name, ignoreCase = true)
+                                else -> false
+                            }
+
+                            val warningLines = buildList {
+                                if (inActiveChar) {
+                                    add("• Personagem em edição atual")
+                                }
+                                affectedSavesTarget.forEach { (_, charName) ->
+                                    add("• Personagem salvo \"$charName\"")
+                                }
+                            }
+
+                            AlertDialog(
+                                onDismissRequest = {
+                                    itemToDeleteTarget = null
+                                    affectedSavesTarget = emptyList()
+                                },
+                                title = { Text("Excluir Item em Uso") },
+                                text = {
+                                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                        Text(
+                                            "O item [$type] \"$name\" está atualmente em uso por:",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        warningLines.forEach { line ->
+                                            Text(line, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                                        }
+                                        Spacer(Modifier.height(4.dp))
+                                        Text(
+                                            "Ao confirmar a exclusão:\n1. No personagem em edição, o item será removido e os pontos/recursos gastos serão devolvidos.\n2. Os personagens salvos listados acima serão EXCLUÍDOS para evitar erros na ficha.\n\nDeseja realmente continuar?",
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+                                },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            scope.launch {
+                                                affectedSavesTarget.forEach { (saveId, _) ->
+                                                    com.example.swadebuilder.util.CharacterStorage.delete(context, saveId)
+                                                }
+                                                executeDeleteCustomItem(type, name)
+                                                statusMessage = "Item [$type] '$name' e ${affectedSavesTarget.size} personagem(ns) salvo(s) afetado(s) foram excluídos."
+                                                itemToDeleteTarget = null
+                                                affectedSavesTarget = emptyList()
+                                            }
+                                        }
+                                    ) {
+                                        Text("Excluir e Atualizar", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold)
+                                    }
+                                },
+                                dismissButton = {
+                                    TextButton(
+                                        onClick = {
+                                            itemToDeleteTarget = null
+                                            affectedSavesTarget = emptyList()
+                                        }
+                                    ) {
+                                        Text("Cancelar")
+                                    }
+                                }
                             )
                         }
 
