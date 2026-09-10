@@ -304,7 +304,8 @@ fun EquipamentoSection(
     compendioWiseguysAtivo: Boolean = false,
     compendioCrystalHeartAtivo: Boolean = false,
     modoOficialAtivo: Boolean = false,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     val focusManager = LocalFocusManager.current
     var showMoneyDialog by rememberSaveable { mutableStateOf(false) }
@@ -468,7 +469,8 @@ fun EquipamentoSection(
                     com.example.swadebuilder.ui.components.CustomContentManageDialog(
                         state = state,
                         initialCategory = cat,
-                        onDismiss = { targetCreationCategory = null }
+                        onDismiss = { targetCreationCategory = null },
+                        onCustomContentChanged = onCustomContentChanged
                     )
                 }
             }

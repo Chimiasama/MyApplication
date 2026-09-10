@@ -77,7 +77,8 @@ fun ComplicacoesSection(
     state: CriadorState,
     feedbackMessages: MutableList<String>,
     onUserFeedback: () -> Unit,
-    onLogFeedback: (String) -> Unit = {}
+    onLogFeedback: (String) -> Unit = {},
+    onCustomContentChanged: () -> Unit = {}
 ) {
     val locked = state.criacaoBasicaCongelada
 
@@ -205,7 +206,8 @@ fun ComplicacoesSection(
                         com.example.swadebuilder.ui.components.CustomContentManageDialog(
                             state = state,
                             initialCategory = cat,
-                            onDismiss = { targetCreationCategory = null }
+                            onDismiss = { targetCreationCategory = null },
+                            onCustomContentChanged = onCustomContentChanged
                         )
                     }
                 }

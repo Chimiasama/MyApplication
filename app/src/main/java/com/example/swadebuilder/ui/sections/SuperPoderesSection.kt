@@ -497,7 +497,8 @@ fun SuperPoderesSection(
     listaSuperPoderes: List<SuperPoder>,
     viewModel: CriadorViewModel = viewModel(),
     allAdvantages: List<Vantagem>,
-    onShowMessage: (String) -> Unit
+    onShowMessage: (String) -> Unit,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     var poderParaComprar by remember { mutableStateOf<SuperPoder?>(null) }
 
@@ -637,7 +638,8 @@ fun SuperPoderesSection(
                 com.example.swadebuilder.ui.components.CustomContentManageDialog(
                     state = state,
                     initialCategory = cat,
-                    onDismiss = { targetCreationCategory = null }
+                    onDismiss = { targetCreationCategory = null },
+                    onCustomContentChanged = onCustomContentChanged
                 )
             }
         }

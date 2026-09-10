@@ -7104,16 +7104,40 @@ class CriadorState {
         cpPvStack.apply { clear(); repeat(snapshot.recursos.cpPvStack.size) { add(Unit) } }
         cpRecursosStack.apply { clear(); repeat(snapshot.recursos.cpRecursosStack.size) { add(Unit) } }
 
+        // Ensure any custom attribute saved in the snapshot exists in listaAtributos & maps
+        val savedAttrs = (snapshot.atributos.paCostStackPorAtributo.keys + snapshot.atributos.valoresAtributos.keys)
+            .map { it.keyify() }.toSet()
+        savedAttrs.forEach { attrKey ->
+            if (attrKey !in listaAtributos) {
+                val displayName = snapshot.atributos.valoresAtributos.keys.find { it.keyify() == attrKey } ?: attrKey
+                listaAtributos = listaAtributos + attrKey
+                mapaAtributosDisplay = mapaAtributosDisplay + (attrKey to displayName)
+            }
+        }
+        ensureAllAtributosRegistered()
+
         paCostStackPorAtributo.forEach { (attr, stack) ->
             stack.clear()
             stack.addAll(snapshot.atributos.paCostStackPorAtributo[attr].orEmpty())
             val base = atributoFloorDeRaca(snapshot.atributos.ancestralidade, attr)
-            valoresAtributos[attr]!!.intValue = applySuperStepsFrom(base, stack.size)
+            valoresAtributos[attr]?.intValue = applySuperStepsFrom(base, stack.size)
         }
         pontosAtributo = snapshot.recursos.pontosAtributo
 
         especializacoesPorPericia.clear()
         ensureIdiomaSlotsFromSnapshot(snapshot.pericias.baseIncsPorPericia.keys)
+
+        // Ensure any custom skill saved in the snapshot exists in listaPericias & maps
+        snapshot.pericias.baseIncsPorPericia.keys.forEach { perName ->
+            if (mapaPericias.none { it.key.keyify() == perName.keyify() }) {
+                val per = Pericia(nome = perName, atributo = "ASTUCIA", basica = false, origem = "CUSTOM")
+                if (listaPericias.none { it.nome.keyify() == per.nome.keyify() }) {
+                    listaPericias = listaPericias + per
+                }
+                mapaPericias = listaPericias.associateBy { it.nome.keyify() }
+                ensurePericiaEntry(per)
+            }
+        }
 
         // --- Restore Loop ---
         periciasComIdiomas().forEach { per ->

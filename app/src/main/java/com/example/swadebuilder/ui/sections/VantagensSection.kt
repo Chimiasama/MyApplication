@@ -176,7 +176,8 @@ fun VantagensContent(
     allAdvantages: List<Vantagem>,
     allSkills: List<Pericia>,
     allEstagios: List<Estagio>,
-    onUserFeedback: () -> Unit = {}
+    onUserFeedback: () -> Unit = {},
+    onCustomContentChanged: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val powerCacheState by androidx.compose.runtime.produceState<Map<String, List<Poder>>?>(initialValue = null) {
@@ -486,7 +487,8 @@ fun VantagensContent(
                     com.example.swadebuilder.ui.components.CustomContentManageDialog(
                         state = state,
                         initialCategory = cat,
-                        onDismiss = { targetCreationCategory = null }
+                        onDismiss = { targetCreationCategory = null },
+                        onCustomContentChanged = onCustomContentChanged
                     )
                 }
             }

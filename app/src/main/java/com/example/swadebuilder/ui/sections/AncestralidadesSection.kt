@@ -117,7 +117,8 @@ fun AncestralidadesSection(
     ancestralidadeEmFoco: String?,
     feedbackMessages: MutableList<String>,
     onSelectAncestralidade: (String) -> Unit,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
@@ -383,7 +384,8 @@ fun AncestralidadesSection(
                 com.example.swadebuilder.ui.components.CustomContentManageDialog(
                     state = state,
                     initialCategory = cat,
-                    onDismiss = { targetCreationCategory = null }
+                    onDismiss = { targetCreationCategory = null },
+                    onCustomContentChanged = onCustomContentChanged
                 )
             }
         }

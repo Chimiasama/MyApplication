@@ -218,7 +218,8 @@ fun AtributosContent(
     mapaAtributosDisplay: Map<String, String> = state.mapaAtributosDisplay,
     mapaAtributosDescricao: Map<String, String> = state.mapaAtributosDescricao,
     onUserFeedback: () -> Unit,
-    feedbackMessages: MutableList<String>? = null
+    feedbackMessages: MutableList<String>? = null,
+    onCustomContentChanged: () -> Unit = {}
 ) {
     LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -346,7 +347,8 @@ fun AtributosContent(
                 com.example.swadebuilder.ui.components.CustomContentManageDialog(
                     state = state,
                     initialCategory = cat,
-                    onDismiss = { targetCreationCategory = null }
+                    onDismiss = { targetCreationCategory = null },
+                    onCustomContentChanged = onCustomContentChanged
                 )
             }
         }

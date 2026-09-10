@@ -118,7 +118,8 @@ private fun aspectOnlyPowerDisplayName(rawDisplayName: String, arcKey: String): 
 fun PoderesSection(
     state: CriadorState,
     arcanoInfoMap: Map<String, Triple<Int, Int, String>>,
-    onShowMessage: (String) -> Unit = {}
+    onShowMessage: (String) -> Unit = {},
+    onCustomContentChanged: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val allowLongTexts = booleanResource(R.bool.enable_long_texts)
@@ -469,7 +470,8 @@ fun PoderesSection(
                     com.example.swadebuilder.ui.components.CustomContentManageDialog(
                         state = state,
                         initialCategory = cat,
-                        onDismiss = { targetCreationCategory = null }
+                        onDismiss = { targetCreationCategory = null },
+                        onCustomContentChanged = onCustomContentChanged
                     )
                 }
             }
