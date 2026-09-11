@@ -171,18 +171,18 @@ fun BuySuperPowerDialog(
 
     val totalCap = minOf(limitePorPoder, pontosDisponiveis)
 
-    val capParaBase = (totalCap - modCost).coerceAtLeast(baseMinDeclarado)
+    val capBaseSemMods = minOf(baseMaxDeclarado, totalCap)
     val allowedBaseOptions = baseOptionsAll
-        .filter { it in (baseMinDeclarado..minOf(baseMaxDeclarado, capParaBase)) }
-        .ifEmpty { listOf(baseMinDeclarado.coerceAtMost(capParaBase)) }
+        .filter { it in baseMinDeclarado..capBaseSemMods }
+        .ifEmpty { listOf(baseMinDeclarado) }
 
     val minAllowed = allowedBaseOptions.first()
     val maxAllowed = allowedBaseOptions.last()
     val isLongRange = (allowedBaseOptions.size > 7) ||
             ((maxAllowed - minAllowed) > 10)
 
-    var baseIdx by rememberSaveable(poder.nome) { mutableIntStateOf(0) }
-    val baseCost = allowedBaseOptions.getOrElse(baseIdx) { allowedBaseOptions.last() }
+    var selectedBaseCost by rememberSaveable(poder.nome) { mutableIntStateOf(allowedBaseOptions.first()) }
+    val baseCost = if (selectedBaseCost in allowedBaseOptions) selectedBaseCost else allowedBaseOptions.first()
 
     LaunchedEffect(baseCost) {
         if ((poder.nome.keyify() == "VELOCIDADE") && (baseCost < 13)) {
@@ -255,15 +255,16 @@ fun BuySuperPowerDialog(
                     }
                 }
                 if (allowedBaseOptions.size > 1) {
+                    val currentIdx = allowedBaseOptions.indexOf(baseCost).coerceAtLeast(0)
                     if (!isLongRange) {
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(4.dp),
                             verticalArrangement = Arrangement.spacedBy(4.dp),
                         ) {
-                            allowedBaseOptions.forEachIndexed { idx, opt ->
+                            allowedBaseOptions.forEach { opt ->
                                 FilterChip(
-                                    selected = (idx == baseIdx),
-                                    onClick = { baseIdx = idx },
+                                    selected = (opt == baseCost),
+                                    onClick = { selectedBaseCost = opt },
                                     label = { Text("$opt SP") },
                                 )
                             }
@@ -279,12 +280,12 @@ fun BuySuperPowerDialog(
                                 fontWeight = FontWeight.SemiBold
                             )
                             TextButton(
-                                onClick = { if (baseIdx > 0) baseIdx-- },
-                                enabled = baseIdx > 0
+                                onClick = { if (currentIdx > 0) selectedBaseCost = allowedBaseOptions[currentIdx - 1] },
+                                enabled = currentIdx > 0
                             ) { Text("−") }
                             TextButton(
-                                onClick = { if (baseIdx < allowedBaseOptions.lastIndex) baseIdx++ },
-                                enabled = baseIdx < allowedBaseOptions.lastIndex
+                                onClick = { if (currentIdx < allowedBaseOptions.lastIndex) selectedBaseCost = allowedBaseOptions[currentIdx + 1] },
+                                enabled = currentIdx < allowedBaseOptions.lastIndex
                             ) { Text("+") }
                         }
                         Text(
