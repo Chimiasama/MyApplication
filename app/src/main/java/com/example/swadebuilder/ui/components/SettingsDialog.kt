@@ -450,7 +450,7 @@ fun SettingsDialog(
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(6.dp))
-                    Text("Gerenciar Conteúdo Customizado", style = MaterialTheme.typography.labelLarge)
+                    Text("Gerenciar", style = MaterialTheme.typography.labelLarge)
                 }
 
                 if (showCustomContentDialog) {
@@ -1352,15 +1352,6 @@ fun CustomContentManageDialog(
                                                             }
                                                         }
                                                     }
-                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
-                                                        label = "Categoria (opcional):",
-                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO },
-                                                        selectedId = customComplicacaoCategoriaId,
-                                                        onSelect = { customComplicacaoCategoriaId = it },
-                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO) },
-                                                        onRename = ::renomearCategoriaCustomizada,
-                                                        onDelete = ::excluirCategoriaCustomizada
-                                                    )
                                                 }
                                                 "Equipamento" -> {
                                                     EquipamentoCreatorFields(
