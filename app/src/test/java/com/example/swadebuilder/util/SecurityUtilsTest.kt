@@ -119,4 +119,24 @@ class SecurityUtilsTest {
         assertEquals(50, sanitized.length)
         assertEquals("a".repeat(50), sanitized)
     }
+
+    @Test
+    fun `isValidCharacterName validation logic`() {
+        // Valid character names with spaces, accents, special characters, symbols, numbers
+        assert(SecurityUtils.isValidCharacterName("Conan, o Bárbaro"))
+        assert(SecurityUtils.isValidCharacterName("Sir Lancelot du Lac"))
+        assert(SecurityUtils.isValidCharacterName("José da Silva"))
+        assert(SecurityUtils.isValidCharacterName("São João"))
+        assert(SecurityUtils.isValidCharacterName("D'Artagnan"))
+        assert(SecurityUtils.isValidCharacterName("Éowyn"))
+        assert(SecurityUtils.isValidCharacterName("Hero #1"))
+        assert(SecurityUtils.isValidCharacterName("Cyber-Samurai 2077"))
+        assert(SecurityUtils.isValidCharacterName("X-Æ A-12"))
+
+        // Invalid cases
+        assert(!SecurityUtils.isValidCharacterName(""))
+        assert(!SecurityUtils.isValidCharacterName("   "))
+        assert(!SecurityUtils.isValidCharacterName("a".repeat(61)))
+        assert(!SecurityUtils.isValidCharacterName("Text\u0000WithControlChar"))
+    }
 }

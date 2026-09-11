@@ -456,7 +456,7 @@ class MainActivity : ComponentActivity() {
             }
 
             if (showSaveDialog) {
-                val isValid = SecurityUtils.isValidFilename(saveName)
+                val isValid = SecurityUtils.isValidCharacterName(saveName)
                 var saveAsNew by rememberSaveable { mutableStateOf(false) }
 
                 AlertDialog(
@@ -468,10 +468,10 @@ class MainActivity : ComponentActivity() {
                             OutlinedTextField(
                                 value = saveName,
                                 onValueChange = { saveName = it },
-                                label = { Text("Nome do arquivo") },
+                                label = { Text("Nome do personagem") },
                                 isError = !isValid,
                                 supportingText = if (!isValid) {
-                                    { Text("Inválido: use apenas letras, números, '.', '_' ou '-' (máx 50).") }
+                                    { Text(if (saveName.isBlank()) "Informe um nome para o personagem." else "Nome muito longo (máximo 60 caracteres).") }
                                 } else null,
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -929,7 +929,7 @@ class MainActivity : ComponentActivity() {
 
                                             IconButton(onClick = {
                                                 triggerFeedback()
-                                                saveName = SecurityUtils.sanitizeFilename(state.nomePersonagem)
+                                                saveName = state.nomePersonagem.ifBlank { "Personagem sem Nome" }
                                                 showSaveDialog = true
                                             }) {
                                                 Icon(Icons.Default.Save, contentDescription = "Salvar personagem")

@@ -50,6 +50,17 @@ object SecurityUtils {
     }
 
     /**
+     * Verifica se o nome de personagem fornecido é válido.
+     * Permite espaços, letras com acentos, números e caracteres especiais/símbolos,
+     * rejeitando apenas entradas em branco, nomes que excedam 60 caracteres ou caracteres de controle.
+     */
+    fun isValidCharacterName(name: String): Boolean {
+        val trimmed = name.trim()
+        if (trimmed.isBlank() || trimmed.length > 60) return false
+        return !trimmed.any { it.isISOControl() }
+    }
+
+    /**
      * Sanitiza texto geral removendo caracteres de controle que podem causar problemas em exportações (PDF/JSON).
      */
     fun sanitizeText(input: String): String {
