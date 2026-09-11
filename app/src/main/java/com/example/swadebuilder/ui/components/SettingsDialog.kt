@@ -173,7 +173,7 @@ private fun BookTagsDropdownPicker(selected: Set<String>, onChange: (Set<String>
         }
     }
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text("Vincular a quais livros:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        Text("Livro de Origem:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
         OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
             Text(
                 resumo.ifBlank { "Nenhum livro marcado" },
