@@ -128,22 +128,21 @@ fun SkillCarouselPopoverDialog(
     attrName: String,
     attrRaw: Int,
     currentRaw: Int,
+    capRaw: Int = 12,
     availableSp: Int? = null,
     onSelectRaw: (Int) -> Unit,
     onDismiss: () -> Unit
 ) {
-    // Perícia pode passar de d12 pagando custo dobrado acima do atributo vinculado
-    // (texto abaixo, "dobrados acima") — não existe um teto fixo pra isso, então
-    // a lista estica até um pouco além do maior entre o atributo vinculado e o
-    // valor atual, cobrindo qualquer build razoável (ex.: perícia de Meio-Gigante
-    // vinculada a uma Força d12+5). Antes esta lista sempre parava em d12, então
-    // nunca dava pra escolher acima disso mesmo pagando o custo dobrado.
-    val steps = remember(startRaw, attrRaw, currentRaw) {
+    val steps = remember(startRaw, attrRaw, currentRaw, capRaw) {
         val list = mutableListOf<Int>()
         if (startRaw == 0) {
             list.add(0)
         }
-        val upperBound = maxOf(12, attrRaw, currentRaw) + 8
+        val upperBound = if (capRaw >= 100) {
+            maxOf(12, attrRaw, currentRaw) + 8
+        } else {
+            maxOf(capRaw, currentRaw)
+        }
         var v = maxOf(4, startRaw)
         while (v <= upperBound) {
             if (!list.contains(v)) list.add(v)
@@ -180,7 +179,7 @@ fun SkillCarouselPopoverDialog(
                     steps.forEach { targetRaw ->
                         val cost = calcularCustoAcumuladoPericia(startRaw, attrRaw, targetRaw)
                         val additionalCost = if (targetRaw > currentRaw) calcularCustoAcumuladoPericia(currentRaw, attrRaw, targetRaw) else 0
-                        val canAfford = availableSp == null || targetRaw <= currentRaw || additionalCost <= availableSp
+                        val canAfford = availableSp == null || targetRaw <= currentRaw || (additionalCost <= availableSp && (capRaw >= 100 || targetRaw <= capRaw))
 
                         val isSelected = targetRaw == currentRaw
                         val isAboveAttr = targetRaw > attrRaw
@@ -1026,6 +1025,7 @@ fun PericiasContent(
         val attrName = state.mapaAtributosDisplay[baseAttr] ?: baseAttr
         val attrRaw = state.valoresAtributos[baseAttr]?.intValue ?: 4
         val currentRaw = state.rawTotal(per)
+        val capRaw = state.periciaCapRaw(per)
 
         SkillCarouselPopoverDialog(
             skillName = per.nome,
@@ -1033,6 +1033,8 @@ fun PericiasContent(
             attrName = attrName,
             attrRaw = attrRaw,
             currentRaw = currentRaw,
+            capRaw = capRaw,
+            availableSp = if (state.modoLivre) null else (state.pontosPericia + pcLivres),
             onSelectRaw = { targetRaw ->
                 if (targetRaw > currentRaw) {
                     val stepsToAdd = dieStepsCount(currentRaw, targetRaw)

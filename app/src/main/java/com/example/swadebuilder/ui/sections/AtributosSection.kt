@@ -784,6 +784,7 @@ fun AtributosContent(
         val attrName = state.mapaAtributosDisplay[baseAttr] ?: baseAttr
         val attrRaw = state.valoresAtributos[baseAttr]?.intValue ?: 4
         val currentRaw = state.rawTotal(per)
+        val capRaw = state.periciaCapRaw(per)
         val idosoActive = state.idosoBonusSp > 0
 
         SkillCarouselPopoverDialog(
@@ -792,6 +793,7 @@ fun AtributosContent(
             attrName = attrName,
             attrRaw = attrRaw,
             currentRaw = currentRaw,
+            capRaw = capRaw,
             availableSp = if (state.modoLivre) null else (state.pontosPericia + pcLivres),
             onSelectRaw = { targetRaw: Int ->
                 if (targetRaw > currentRaw) {
