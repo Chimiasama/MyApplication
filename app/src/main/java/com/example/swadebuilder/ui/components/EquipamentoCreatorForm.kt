@@ -13,6 +13,9 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -186,18 +189,22 @@ class EquipamentoFormState {
 @Composable
 fun rememberEquipamentoFormState(): EquipamentoFormState = remember { EquipamentoFormState() }
 
-// Chips de dado pra Força Mínima em vez de texto livre — só os 5 dados válidos de SWADE
-// (d4/d6/d8/d10/d12) mais "-" (sem mínimo cadastrado), pra nunca deixar salvar algo como
-// "d7" que o ForcaMinimaCalculator não saberia interpretar.
+// Seletor em Segmented Control de linha única pra Força Mínima (d4 a d12 mais "-").
 @Composable
 private fun ForcaMinimaChipPicker(value: String, onValueChange: (String) -> Unit) {
-    LabeledChipGroup("Força Mínima:") {
-        listOf("-", "d4", "d6", "d8", "d10", "d12").forEach { dado ->
-            FilterChip(
-                selected = value == dado,
-                onClick = { onValueChange(dado) },
-                label = { Text(dado, style = MaterialTheme.typography.labelSmall) }
-            )
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text("Força Mínima:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+            val dice = listOf("-", "d4", "d6", "d8", "d10", "d12")
+            dice.forEachIndexed { index, dado ->
+                SegmentedButton(
+                    selected = value == dado,
+                    onClick = { onValueChange(dado) },
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = dice.size)
+                ) {
+                    Text(dado, style = MaterialTheme.typography.labelSmall)
+                }
+            }
         }
     }
 }
@@ -362,15 +369,20 @@ fun EquipamentoCreatorFields(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        // Só os 5 dados válidos de SWADE — nada de "d7" ou outro valor que o resto do app
-        // (ForcaMinimaCalculator incluso) não saberia interpretar.
-        LabeledChipGroup(if (state.danoBaseadoEmForca) "Dado (For+):" else "Dado:") {
-            listOf("d4", "d6", "d8", "d10", "d12").forEach { dado ->
-                FilterChip(
-                    selected = state.danoDado == dado,
-                    onClick = { state.danoDado = dado },
-                    label = { Text(dado, style = MaterialTheme.typography.labelSmall) }
-                )
+        // Segmented control de linha única para os 5 dados válidos de SWADE (d4 a d12).
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(if (state.danoBaseadoEmForca) "Dado (For+):" else "Dado:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
+                val dice = listOf("d4", "d6", "d8", "d10", "d12")
+                dice.forEachIndexed { index, dado ->
+                    SegmentedButton(
+                        selected = state.danoDado == dado,
+                        onClick = { state.danoDado = dado },
+                        shape = SegmentedButtonDefaults.itemShape(index = index, count = dice.size)
+                    ) {
+                        Text(dado, style = MaterialTheme.typography.labelSmall)
+                    }
+                }
             }
         }
         OutlinedTextField(
