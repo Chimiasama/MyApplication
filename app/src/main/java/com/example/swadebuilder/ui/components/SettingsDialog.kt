@@ -75,6 +75,11 @@ import com.example.swadebuilder.ui.theme.AppTheme
 import kotlin.math.roundToInt
 
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Button
+import androidx.compose.material3.InputChip
 
 // Livro Básico: "Super Poderes (2+X)... o custo é 2 — pelo Antecedente Arcano
 // (Super Poderes) — mais o custo do poder selecionado (X)." Muitos poderes do
@@ -100,6 +105,43 @@ private fun primeiroCustoSuperPoder(custoBase: String?): Int =
  * no topo daquele arquivo).
  */
 @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+@Composable
+private fun AdvantageCategoryDropdownPicker(
+    selectedCategory: Categoria,
+    categories: List<Categoria>,
+    onSelect: (Categoria) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text("Categoria:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        Box {
+            OutlinedButton(
+                onClick = { expanded = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = selectedCategory.getDisplayName(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Start
+                )
+                Text("▾", style = MaterialTheme.typography.bodyMedium)
+            }
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                categories.forEach { cat ->
+                    DropdownMenuItem(
+                        text = { Text(cat.getDisplayName(), style = MaterialTheme.typography.bodyMedium) },
+                        onClick = {
+                            onSelect(cat)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun LabeledChipGroup(
     label: String,
@@ -131,7 +173,7 @@ private fun BookTagsDropdownPicker(selected: Set<String>, onChange: (Set<String>
         }
     }
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text("Vincular a quais livros:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        Text("Livro de Origem:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
         OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
             Text(
                 resumo.ifBlank { "Nenhum livro marcado" },
@@ -249,12 +291,6 @@ fun SettingsDialog(
     persistPrefs: () -> Unit,
     feedbackController: FeedbackController,
     onResetRulesToDefaults: (() -> Unit)? = null,
-    // Chamado depois de qualquer criação/edição/exclusão de conteúdo customizado
-    // (Vantagem, Complicação, Equipamento, Poder, Raça, Variante de Raça etc.):
-    // invalida o cache de GameDataSnapshot por combinação de livros
-    // (GameDataRepository/ModuleSnapshotCache), que senão continuaria devolvendo
-    // um snapshot desatualizado — sem o conteúdo recém-criado — na próxima vez
-    // que um personagem NOVO for criado com a mesma combinação de livros.
     onCustomContentChanged: () -> Unit = {},
     onThemeSelected: (AppTheme) -> Unit
 ) {
@@ -294,9 +330,6 @@ fun SettingsDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        // Um toque sem querer fora da área do diálogo (comum numa tela cheia de
-        // opções) não deve fechar tudo e voltar pra ficha — só o botão
-        // "Fechar"/voltar do sistema fecha.
         properties = androidx.compose.ui.window.DialogProperties(dismissOnClickOutside = false),
         title = { Text("Configurações", style = MaterialTheme.typography.headlineSmall) },
         text = {
@@ -306,380 +339,242 @@ fun SettingsDialog(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Card "Interface do Sistema"
-                ElevatedCard(
+                // Section 1: Interface
+                Text("Interface do Sistema", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    Text("Mensagens do Sistema", style = MaterialTheme.typography.bodyMedium)
+                    Switch(
+                        checked = state.showSystemMessages,
+                        onCheckedChange = {
+                            state.showSystemMessages = it
+                            persistPrefs()
+                        },
+                        modifier = Modifier.scale(0.8f)
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text("Modo de Distribuição", style = MaterialTheme.typography.bodyMedium)
+                    SingleChoiceSegmentedButtonRow(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            text = "Interface do Sistema",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
+                        val options = listOf(
+                            AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER,
+                            AppPreferences.ModoSelecaoPericia.STEPPER_CORES
                         )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text("Mensagens do Sistema", style = MaterialTheme.typography.bodyMedium)
-                            Switch(
-                                checked = state.showSystemMessages,
-                                onCheckedChange = {
-                                    state.showSystemMessages = it
+                        val labels = listOf("Tocar e Escolher", "Botões + e -")
+
+                        options.forEachIndexed { index, option ->
+                            SegmentedButton(
+                                selected = state.modoSelecaoPericia == option,
+                                onClick = {
+                                    state.modoSelecaoPericia = option
                                     persistPrefs()
                                 },
-                                modifier = Modifier.scale(0.8f)
-                            )
-                        }
-
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Text(
-                                "Modo de Distribuição (Atributos e Perícias)",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            SingleChoiceSegmentedButtonRow(
-                                modifier = Modifier.fillMaxWidth()
+                                shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
                             ) {
-                                val options = listOf(
-                                    AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER,
-                                    AppPreferences.ModoSelecaoPericia.STEPPER_CORES
-                                )
-                                val labels = listOf("Tocar e Escolher", "Botões + e -")
-
-                                options.forEachIndexed { index, option ->
-                                    SegmentedButton(
-                                        selected = state.modoSelecaoPericia == option,
-                                        onClick = {
-                                            state.modoSelecaoPericia = option
-                                            persistPrefs()
-                                        },
-                                        shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
-                                    ) {
-                                        Text(labels[index], style = MaterialTheme.typography.labelSmall)
-                                    }
-                                }
-                            }
-                        }
-
-                        if (isHomeScreen) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text("Não solicitar escolha de regras", style = MaterialTheme.typography.bodyMedium)
-                                    Text("Direto para criação com regras padrão.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                }
-                                Switch(
-                                    checked = state.pularSelecaoRegras,
-                                    onCheckedChange = {
-                                        state.pularSelecaoRegras = it
-                                        persistPrefs()
-                                        onResetRulesToDefaults?.invoke()
-                                    },
-                                    modifier = Modifier.scale(0.8f)
-                                )
-                            }
-                        }
-
-                        // NPC Mode Toggle (Only during creation phase and if not already NPC)
-                        if (isCreationPhase && !state.modoProgressaoAtivo && !state.isNpcExibicao) {
-                            HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp), thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text("Modo Livre (NPC)", style = MaterialTheme.typography.bodyMedium)
-                                    Text("Ignora custos e requisitos.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                                }
-                                Switch(
-                                    checked = state.modoLivre,
-                                    onCheckedChange = { if (it && !state.modoLivre) showNpcWarning = true },
-                                    enabled = !state.modoLivre, // Irreversible
-                                    modifier = Modifier.scale(0.8f)
-                                )
+                                Text(labels[index], style = MaterialTheme.typography.labelSmall)
                             }
                         }
                     }
                 }
 
-                // Card "Conteúdo Customizado"
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
-                ) {
-                    var showCustomContentDialog by remember { mutableStateOf(false) }
-
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                if (isHomeScreen) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = "Conteúdo Customizado",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text("Criação Direta nas Abas", style = MaterialTheme.typography.bodyMedium)
-                                Text("Exibe botão de criação rápida '+ Criar' dentro das abas.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                            }
-                            Switch(
-                                checked = state.habilitarCriacaoNasAbas,
-                                onCheckedChange = {
-                                    state.habilitarCriacaoNasAbas = it
-                                    persistPrefs()
-                                },
-                                modifier = Modifier.scale(0.8f)
-                            )
-                        }
-                        Text(
-                            text = "Crie vantagens e itens caseiros com prefixo 'custom:'.",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        OutlinedButton(
-                            onClick = {
-                                showCustomContentDialog = true
+                        Text("Não solicitar escolha de regras", style = MaterialTheme.typography.bodyMedium)
+                        Switch(
+                            checked = state.pularSelecaoRegras,
+                            onCheckedChange = {
+                                state.pularSelecaoRegras = it
+                                persistPrefs()
+                                onResetRulesToDefaults?.invoke()
                             },
-                            shape = MaterialTheme.shapes.small,
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(Modifier.width(6.dp))
-                            Text("Gerenciar", style = MaterialTheme.typography.labelLarge)
-                        }
-                    }
-
-                    if (showCustomContentDialog) {
-                        CustomContentManageDialog(
-                            state = state,
-                            initialCategory = "Vantagem",
-                            onDismiss = { showCustomContentDialog = false },
-                            onCustomContentChanged = onCustomContentChanged
+                            modifier = Modifier.scale(0.8f)
                         )
                     }
                 }
 
-                // Card "Visual e Tema"
-                ElevatedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                if (isCreationPhase && !state.modoProgressaoAtivo && !state.isNpcExibicao) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = "Visual e Tema",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary
+                        Text("Modo Livre (NPC)", style = MaterialTheme.typography.bodyMedium)
+                        Switch(
+                            checked = state.modoLivre,
+                            onCheckedChange = { if (it && !state.modoLivre) showNpcWarning = true },
+                            enabled = !state.modoLivre,
+                            modifier = Modifier.scale(0.8f)
                         )
+                    }
+                }
 
-                        Text("Estilo das Abas / Opções", style = MaterialTheme.typography.bodyMedium)
+                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-                        SingleChoiceSegmentedButtonRow(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            val options = listOf(TabStyle.ICONES, TabStyle.TEXTO)
-                            val labels = listOf("Ícones", "Texto")
+                // Section 2: Conteúdo Customizado
+                Text("Conteúdo Customizado", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
 
-                            options.forEachIndexed { index, option ->
-                                SegmentedButton(
-                                    selected = state.estiloAbas == option,
-                                    onClick = {
-                                        state.estiloAbas = option
-                                        persistPrefs()
-                                    },
-                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
-                                ) {
-                                    Text(labels[index])
-                                }
-                            }
-                        }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Exibir criação rápida nas abas", style = MaterialTheme.typography.bodyMedium)
+                    Switch(
+                        checked = state.habilitarCriacaoNasAbas,
+                        onCheckedChange = {
+                            state.habilitarCriacaoNasAbas = it
+                            persistPrefs()
+                        },
+                        modifier = Modifier.scale(0.8f)
+                    )
+                }
 
-                        Spacer(Modifier.height(4.dp))
+                OutlinedButton(
+                    onClick = { showCustomContentDialog = true },
+                    shape = MaterialTheme.shapes.small,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(6.dp))
+                    Text("Gerenciar", style = MaterialTheme.typography.labelLarge)
+                }
 
-                        // Theme Selection Trigger Button
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text("Tema do App", style = MaterialTheme.typography.bodyMedium)
-                                Text(
-                                    text = themeNames[state.appTheme] ?: state.appTheme.name,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                            OutlinedButton(
-                                onClick = { showThemeDialog = true }
+                if (showCustomContentDialog) {
+                    CustomContentManageDialog(
+                        state = state,
+                        initialCategory = "Vantagem",
+                        onDismiss = { showCustomContentDialog = false },
+                        onCustomContentChanged = onCustomContentChanged
+                    )
+                }
+
+                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+
+                // Section 3: Visual e Tema
+                Text("Visual e Tema", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text("Estilo das Abas", style = MaterialTheme.typography.bodyMedium)
+                    SingleChoiceSegmentedButtonRow(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val options = listOf(TabStyle.ICONES, TabStyle.TEXTO)
+                        val labels = listOf("Ícones", "Texto")
+
+                        options.forEachIndexed { index, option ->
+                            SegmentedButton(
+                                selected = state.estiloAbas == option,
+                                onClick = {
+                                    state.estiloAbas = option
+                                    persistPrefs()
+                                },
+                                shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
                             ) {
-                                Text("Alterar Tema")
+                                Text(labels[index])
                             }
                         }
                     }
                 }
 
-                // Card "Sons e Vibração"
-                ElevatedCard(
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.elevatedCardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                    )
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp) // Increased spacing for cleaner look
-                    ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Tema do App", style = MaterialTheme.typography.bodyMedium)
                         Text(
-                            text = "Sons e Vibração",
-                            style = MaterialTheme.typography.titleMedium,
+                            text = themeNames[state.appTheme] ?: state.appTheme.name,
+                            style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.primary
                         )
+                    }
+                    OutlinedButton(onClick = { showThemeDialog = true }) {
+                        Text("Alterar Tema")
+                    }
+                }
 
-                        // Haptic Feedback
-                        Column {
-                            Text("Intensidade da Vibração", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Vibration,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Slider(
-                                    value = state.hapticStrength.toFloat(),
-                                    onValueChange = { state.hapticStrength = it.roundToInt() },
-                                    onValueChangeFinished = {
-                                        persistPrefs()
-                                        feedbackController.play(state.hapticStrength, 0)
-                                    },
-                                    valueRange = 0f..100f,
-                                    modifier = Modifier.weight(1f),
-                                    thumb = {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(12.dp)
-                                                .background(MaterialTheme.colorScheme.primary, CircleShape)
-                                        )
-                                    },
-                                    track = { sliderState ->
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(2.dp)
-                                                .background(MaterialTheme.colorScheme.surfaceVariant, CircleShape)
-                                        ) {
-                                            val fraction = (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth(fraction)
-                                                    .fillMaxHeight()
-                                                    .background(MaterialTheme.colorScheme.primary, CircleShape)
-                                            )
-                                        }
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("${state.hapticStrength}%", style = MaterialTheme.typography.bodySmall)
-                            }
-                        }
+                HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
-                        // App Sounds
-                        Column {
-                            Text("Volume", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.VolumeUp,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
-                                Slider(
-                                    value = state.soundVolume.toFloat(),
-                                    onValueChange = { state.soundVolume = it.roundToInt() },
-                                    onValueChangeFinished = {
-                                        persistPrefs()
-                                        feedbackController.play(0, state.soundVolume)
-                                    },
-                                    valueRange = 0f..100f,
-                                    modifier = Modifier.weight(1f),
-                                    thumb = {
-                                        Box(
-                                            modifier = Modifier
-                                                .size(12.dp)
-                                                .background(MaterialTheme.colorScheme.secondary, CircleShape)
-                                        )
-                                    },
-                                    track = { sliderState ->
-                                        Box(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .height(2.dp)
-                                                .background(MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f), CircleShape)
-                                        ) {
-                                            val fraction = (sliderState.value - sliderState.valueRange.start) / (sliderState.valueRange.endInclusive - sliderState.valueRange.start)
-                                            Box(
-                                                modifier = Modifier
-                                                    .fillMaxWidth(fraction)
-                                                    .fillMaxHeight()
-                                                    .background(MaterialTheme.colorScheme.secondary, CircleShape)
-                                            )
-                                        }
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text("${state.soundVolume}%", style = MaterialTheme.typography.bodySmall)
-                            }
-                        }
+                // Section 4: Sons e Vibração
+                Text("Sons e Vibração", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+
+                Column {
+                    Text("Intensidade da Vibração", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Vibration, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Slider(
+                            value = state.hapticStrength.toFloat(),
+                            onValueChange = { state.hapticStrength = it.roundToInt() },
+                            onValueChangeFinished = {
+                                persistPrefs()
+                                feedbackController.play(state.hapticStrength, 0)
+                            },
+                            valueRange = 0f..100f,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("${state.hapticStrength}%", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+
+                Column {
+                    Text("Volume", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Slider(
+                            value = state.soundVolume.toFloat(),
+                            onValueChange = { state.soundVolume = it.roundToInt() },
+                            onValueChangeFinished = {
+                                persistPrefs()
+                                feedbackController.play(0, state.soundVolume)
+                            },
+                            valueRange = 0f..100f,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("${state.soundVolume}%", style = MaterialTheme.typography.bodySmall)
                     }
                 }
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) {
+            Button(onClick = onDismiss) {
+                Text("Concluído")
+            }
+        },
+        dismissButton = {
+            OutlinedButton(onClick = onDismiss) {
                 Text("Fechar")
             }
         }
     )
-
-    if (showNpcWarning) {
+if (showNpcWarning) {
         AlertDialog(
             onDismissRequest = { showNpcWarning = false },
             title = { Text("Transformar em NPC?") },
@@ -1126,61 +1021,64 @@ fun CustomContentManageDialog(
                                         .fillMaxWidth(),
                                     verticalArrangement = Arrangement.spacedBy(10.dp)
                                 ) {
-                                    Text(
-                                        text = "O que você deseja criar?",
-                                        style = MaterialTheme.typography.labelLarge,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-
-                                    // Category selector horizontal carousel (styled like superpower carousel with smooth edge gradient)
-                                    Box(
+                                    // 1. Pinned Top Header Navigation Tabs
+                                    androidx.compose.material3.ScrollableTabRow(
+                                        selectedTabIndex = categories.indexOf(selectedCategory).coerceAtLeast(0),
+                                        edgePadding = 0.dp,
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        androidx.compose.foundation.lazy.LazyRow(
-                                            modifier = Modifier.fillMaxWidth(),
-                                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                            contentPadding = androidx.compose.foundation.layout.PaddingValues(end = 24.dp)
-                                        ) {
-                                            items(categories.size) { index ->
-                                                val cat = categories[index]
-                                                val isSel = selectedCategory == cat
-                                                androidx.compose.material3.FilterChip(
-                                                    selected = isSel,
-                                                    onClick = { selectedCategory = cat },
-                                                    label = {
-                                                        Text(
-                                                            text = cat,
-                                                            style = MaterialTheme.typography.labelMedium,
-                                                            fontWeight = if (isSel) FontWeight.Bold else FontWeight.Normal
-                                                        )
-                                                    },
-                                                    colors = androidx.compose.material3.FilterChipDefaults.filterChipColors(
-                                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
-                                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
-                                                    )
-                                                )
-                                            }
+                                        categories.forEach { cat ->
+                                            androidx.compose.material3.Tab(
+                                                selected = selectedCategory == cat,
+                                                onClick = { selectedCategory = cat },
+                                                text = { Text(cat, style = MaterialTheme.typography.labelMedium) }
+                                            )
                                         }
-
-                                        // Edge gradient fade
-                                        Box(
-                                            modifier = Modifier
-                                                .width(20.dp)
-                                                .align(Alignment.CenterEnd)
-                                                .fillMaxHeight()
-                                                .background(
-                                                    androidx.compose.ui.graphics.Brush.horizontalGradient(
-                                                        colors = listOf(
-                                                            androidx.compose.ui.graphics.Color.Transparent,
-                                                            MaterialTheme.colorScheme.surfaceContainerHigh
-                                                        )
-                                                    )
-                                                )
-                                        )
                                     }
 
-                                    HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
+                                    Spacer(Modifier.height(8.dp))
+
+                                    // 2. Fixed Dynamic Preview Badge
+                                    val previewBadgeText = remember(selectedCategory, customItemName, selectedRacialTraits, customStage, customAttrMin, customSkillMin, equipForm) {
+                                        when (selectedCategory) {
+                                            "Raça" -> {
+                                                val pts = selectedRacialTraits.sumOf { it.custo }
+                                                "Pontos Raciais: $pts / +2"
+                                            }
+                                            "Vantagem" -> {
+                                                val reqs = buildList {
+                                                    if (customStage.isNotBlank()) add(customStage)
+                                                    if (customAttrMin.isNotEmpty()) add("${customAttrMin.size} Attr")
+                                                    if (customSkillMin.isNotEmpty()) add("${customSkillMin.size} Per")
+                                                }
+                                                "Requisitos: ${if (reqs.isEmpty()) "Livre" else reqs.joinToString(", ")}"
+                                            }
+                                            "Equipamento" -> {
+                                                val stats = mutableListOf<String>()
+                                                val danoText = equipForm.montarDano()
+                                                if (danoText.isNotBlank()) stats.add("Dano: $danoText")
+                                                if (equipForm.armadura.isNotBlank()) stats.add("Armadura: ${equipForm.armadura}")
+                                                stats.add("Custo: $${equipForm.cost}")
+                                                stats.add("Peso: ${equipForm.weight}kg")
+                                                stats.joinToString(" • ")
+                                            }
+                                            else -> "$selectedCategory: ${customItemName.ifBlank { "Novo Item" }}"
+                                        }
+                                    }
+
+                                    androidx.compose.material3.Surface(
+                                        color = MaterialTheme.colorScheme.primaryContainer,
+                                        shape = RoundedCornerShape(6.dp),
+                                        modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)
+                                    ) {
+                                        Text(
+                                            text = previewBadgeText,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                                        )
+                                    }
 
                                     // Container card for form elements to prevent overlapping and maintain clean spacing
                                     androidx.compose.material3.Surface(
@@ -1217,42 +1115,107 @@ fun CustomContentManageDialog(
                                                 "Vantagem" -> {
                                                     // Modular Requirements Section
                                                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                                        Text("Requisitos Modulares da Vantagem:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                                                        var reqMenuExpanded by remember { mutableStateOf(false) }
 
-                                                        // Summary of configured requirements
-                                                        val reqSummary = buildList {
-                                                            if (customStage.isNotBlank()) add("Estágio: $customStage")
-                                                            if (customAttrMin.isNotEmpty()) add("Atributos: " + customAttrMin.entries.joinToString { "${it.key} d${it.value}" })
-                                                            if (customSkillMin.isNotEmpty()) add("Perícias: " + customSkillMin.entries.joinToString { "${it.key} d${it.value}" })
-                                                            if (customPrereqEdges.isNotEmpty()) add("Vantagens Prévias: ${customPrereqEdges.size} selecionada(s)")
-                                                            if (customPrereqComps.isNotEmpty()) add("Complicações: ${customPrereqComps.size} selecionada(s)")
-                                                            if (customPrereqCategoriasCustomizadas.isNotEmpty()) add("Categoria(s) prévia(s): ${customPrereqCategoriasCustomizadas.size} selecionada(s)")
-                                                        }
-                                                        if (reqSummary.isNotEmpty()) {
-                                                            Text(
-                                                                text = reqSummary.joinToString(" | "),
-                                                                style = MaterialTheme.typography.bodySmall,
-                                                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                                                            )
+                                                        Row(
+                                                            modifier = Modifier.fillMaxWidth(),
+                                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                                            verticalAlignment = Alignment.CenterVertically
+                                                        ) {
+                                                            Text("Requisitos Modulares:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+                                                            Box {
+                                                                OutlinedButton(
+                                                                    onClick = { reqMenuExpanded = true },
+                                                                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 2.dp)
+                                                                ) {
+                                                                    Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
+                                                                    Spacer(Modifier.width(4.dp))
+                                                                    Text("Adicionar Requisito", style = MaterialTheme.typography.labelSmall)
+                                                                }
+                                                                DropdownMenu(
+                                                                    expanded = reqMenuExpanded,
+                                                                    onDismissRequest = { reqMenuExpanded = false }
+                                                                ) {
+                                                                    DropdownMenuItem(
+                                                                        text = { Text("Atributos Mínimos") },
+                                                                        onClick = { showAttrDialog = true; reqMenuExpanded = false }
+                                                                    )
+                                                                    DropdownMenuItem(
+                                                                        text = { Text("Perícias Mínimas") },
+                                                                        onClick = { showSkillDialog = true; reqMenuExpanded = false }
+                                                                    )
+                                                                    DropdownMenuItem(
+                                                                        text = { Text("Vantagens Prévias") },
+                                                                        onClick = { showEdgeDialog = true; reqMenuExpanded = false }
+                                                                    )
+                                                                    DropdownMenuItem(
+                                                                        text = { Text("Complicações Requeridas") },
+                                                                        onClick = { showCompDialog = true; reqMenuExpanded = false }
+                                                                    )
+                                                                }
+                                                            }
                                                         }
 
-                                                        // Interactive Selector Buttons
                                                         @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
                                                         androidx.compose.foundation.layout.FlowRow(
                                                             horizontalArrangement = Arrangement.spacedBy(6.dp),
                                                             verticalArrangement = Arrangement.spacedBy(4.dp)
                                                         ) {
-                                                            OutlinedButton(onClick = { showAttrDialog = true }) {
-                                                                Text(if (customAttrMin.isEmpty()) "+ Atributos" else "Atributos (${customAttrMin.size})", style = MaterialTheme.typography.labelSmall)
+                                                            if (customAttrMin.isNotEmpty()) {
+                                                                androidx.compose.material3.InputChip(
+                                                                    selected = true,
+                                                                    onClick = { showAttrDialog = true },
+                                                                    label = { Text("Atributos (${customAttrMin.size})", style = MaterialTheme.typography.labelSmall) },
+                                                                    trailingIcon = {
+                                                                        Icon(
+                                                                            imageVector = Icons.Default.Close,
+                                                                            contentDescription = "Limpar",
+                                                                            modifier = Modifier.size(14.dp).clickable { customAttrMin = emptyMap() }
+                                                                        )
+                                                                    }
+                                                                )
                                                             }
-                                                            OutlinedButton(onClick = { showSkillDialog = true }) {
-                                                                Text(if (customSkillMin.isEmpty()) "+ Perícias" else "Perícias (${customSkillMin.size})", style = MaterialTheme.typography.labelSmall)
+                                                            if (customSkillMin.isNotEmpty()) {
+                                                                androidx.compose.material3.InputChip(
+                                                                    selected = true,
+                                                                    onClick = { showSkillDialog = true },
+                                                                    label = { Text("Perícias (${customSkillMin.size})", style = MaterialTheme.typography.labelSmall) },
+                                                                    trailingIcon = {
+                                                                        Icon(
+                                                                            imageVector = Icons.Default.Close,
+                                                                            contentDescription = "Limpar",
+                                                                            modifier = Modifier.size(14.dp).clickable { customSkillMin = emptyMap() }
+                                                                        )
+                                                                    }
+                                                                )
                                                             }
-                                                            OutlinedButton(onClick = { showEdgeDialog = true }) {
-                                                                Text(if (customPrereqEdges.isEmpty()) "+ Vantagens Prévias" else "Vantagens (${customPrereqEdges.size})", style = MaterialTheme.typography.labelSmall)
+                                                            if (customPrereqEdges.isNotEmpty()) {
+                                                                androidx.compose.material3.InputChip(
+                                                                    selected = true,
+                                                                    onClick = { showEdgeDialog = true },
+                                                                    label = { Text("Vantagens (${customPrereqEdges.size})", style = MaterialTheme.typography.labelSmall) },
+                                                                    trailingIcon = {
+                                                                        Icon(
+                                                                            imageVector = Icons.Default.Close,
+                                                                            contentDescription = "Limpar",
+                                                                            modifier = Modifier.size(14.dp).clickable { customPrereqEdges = emptyList() }
+                                                                        )
+                                                                    }
+                                                                )
                                                             }
-                                                            OutlinedButton(onClick = { showCompDialog = true }) {
-                                                                Text(if (customPrereqComps.isEmpty()) "+ Complicações" else "Complicações (${customPrereqComps.size})", style = MaterialTheme.typography.labelSmall)
+                                                            if (customPrereqComps.isNotEmpty()) {
+                                                                androidx.compose.material3.InputChip(
+                                                                    selected = true,
+                                                                    onClick = { showCompDialog = true },
+                                                                    label = { Text("Complicações (${customPrereqComps.size})", style = MaterialTheme.typography.labelSmall) },
+                                                                    trailingIcon = {
+                                                                        Icon(
+                                                                            imageVector = Icons.Default.Close,
+                                                                            contentDescription = "Limpar",
+                                                                            modifier = Modifier.size(14.dp).clickable { customPrereqComps = emptyList() }
+                                                                        )
+                                                                    }
+                                                                )
                                                             }
                                                         }
                                                     }
@@ -1305,18 +1268,14 @@ fun CustomContentManageDialog(
                                                         customAdvCategory = availableAdvCategories.firstOrNull() ?: Categoria.PROFISSIONAL
                                                     }
 
-                                                    LabeledChipGroup("Categoria da Vantagem:") {
-                                                        availableAdvCategories.forEach { catEnum ->
-                                                            androidx.compose.material3.FilterChip(
-                                                                selected = customAdvCategory == catEnum && customAdvCategoriaCustomizadaId == null,
-                                                                onClick = {
-                                                                    customAdvCategory = catEnum
-                                                                    customAdvCategoriaCustomizadaId = null
-                                                                },
-                                                                label = { Text(catEnum.getDisplayName(), style = MaterialTheme.typography.labelSmall) }
-                                                            )
+                                                    AdvantageCategoryDropdownPicker(
+                                                        selectedCategory = customAdvCategory,
+                                                        categories = availableAdvCategories,
+                                                        onSelect = {
+                                                            customAdvCategory = it
+                                                            customAdvCategoriaCustomizadaId = null
                                                         }
-                                                    }
+                                                    )
                                                     // Categoria Customizada do Mestre: alternativa às categorias oficiais
                                                     // fixas acima — escolher uma força customAdvCategory = CUSTOMIZADA
                                                     // (ver Vantagem.categoriaExibicao()).
@@ -1357,37 +1316,42 @@ fun CustomContentManageDialog(
                                                             }
                                                         }
                                                     }
-                                                    LabeledChipGroup("Estágio Mínimo:") {
-                                                        // Nomes vêm de model/Estagio.kt (fonte única) em vez de uma cópia
-                                                        // solta aqui — evita divergir se os estágios mudarem.
-                                                        com.example.swadebuilder.model.listaDeEstagios.map { it.nome }.forEach { stage ->
-                                                            androidx.compose.material3.FilterChip(
-                                                                selected = customStage == stage,
-                                                                onClick = { customStage = stage },
-                                                                label = { Text(stage, style = MaterialTheme.typography.labelSmall) }
-                                                            )
+                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                        Text("Estágio Mínimo:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                        SingleChoiceSegmentedButtonRow(
+                                                            modifier = Modifier.fillMaxWidth()
+                                                        ) {
+                                                            val stages = com.example.swadebuilder.model.listaDeEstagios.map { it.nome }
+                                                            stages.forEachIndexed { index, stage ->
+                                                                SegmentedButton(
+                                                                    selected = customStage == stage,
+                                                                    onClick = { customStage = stage },
+                                                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = stages.size)
+                                                                ) {
+                                                                    Text(stage, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
                                                 "Complicação" -> {
-                                                    LabeledChipGroup("Severidade Permitida:") {
-                                                        listOf("Maior", "Menor", "Maior ou Menor").forEach { sev ->
-                                                            androidx.compose.material3.FilterChip(
-                                                                selected = customSeverity == sev,
-                                                                onClick = { customSeverity = sev },
-                                                                label = { Text(sev, style = MaterialTheme.typography.labelSmall) }
-                                                            )
+                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                        Text("Severidade Permitida:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                                                        SingleChoiceSegmentedButtonRow(
+                                                            modifier = Modifier.fillMaxWidth()
+                                                        ) {
+                                                            val options = listOf("Maior", "Menor", "Maior ou Menor")
+                                                            options.forEachIndexed { index, sev ->
+                                                                SegmentedButton(
+                                                                    selected = customSeverity == sev,
+                                                                    onClick = { customSeverity = sev },
+                                                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
+                                                                ) {
+                                                                    Text(sev, style = MaterialTheme.typography.labelSmall, maxLines = 1)
+                                                                }
+                                                            }
                                                         }
                                                     }
-                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
-                                                        label = "Categoria (opcional):",
-                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO },
-                                                        selectedId = customComplicacaoCategoriaId,
-                                                        onSelect = { customComplicacaoCategoriaId = it },
-                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.COMPLICACAO) },
-                                                        onRename = ::renomearCategoriaCustomizada,
-                                                        onDelete = ::excluirCategoriaCustomizada
-                                                    )
                                                 }
                                                 "Equipamento" -> {
                                                     EquipamentoCreatorFields(
@@ -2165,7 +2129,7 @@ fun CustomContentManageDialog(
                                         )
                                     }
                                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    TextButton(onClick = {
+                                    androidx.compose.material3.Button(onClick = {
                                                 val safeDesc = customItemDesc.ifBlank { "-" }
                                                 if (customItemName.isNotBlank()) {
                                             // toIdSlug() normaliza acento/espaço/pontuação (ver StringExtensions.kt) — evita
@@ -2521,8 +2485,8 @@ fun CustomContentManageDialog(
                                         } else {
                                                     statusMessage = "Preencha o Nome do item."
                                         }
-                                            }) { Text("Salvar Item") }
-                                    TextButton(onClick = onDismiss) { Text("Fechar") }
+                                            }) { Text("Salvar") }
+                                    OutlinedButton(onClick = onDismiss) { Text("Cancelar") }
                                 }
                                 }
                             }
