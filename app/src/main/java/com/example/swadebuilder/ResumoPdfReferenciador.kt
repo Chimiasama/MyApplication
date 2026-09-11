@@ -1326,7 +1326,7 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     // Vão entre o nome e o retrato: em vez de deixar em branco, mostra as estatísticas
     // derivadas ali (texto simples, sem caixinha) — o nome passa a truncar antes dessa
     // coluna, em vez de ir quase até o retrato.
-    val statsColumnLeft = rect.left + 240f
+    val statsColumnLeft = portraitRect.left - 115f
     val textAreaWidth = statsColumnLeft - rect.left - 20f
     var displayedName = p.nome.ifBlank { "Sem Nome" }
     if (titlePaint.measureText(displayedName) > textAreaWidth) {
