@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -33,9 +34,12 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -137,7 +141,8 @@ fun BuySuperPowerDialog(
         val options: List<Int>,
         val included: MutableState<Boolean>,
         val selected: MutableState<Int>,
-        val isNegative: Boolean
+        val isNegative: Boolean,
+        val expanded: MutableState<Boolean>
     )
 
     val modStates = remember(poder.modificadores) {
@@ -166,7 +171,8 @@ fun BuySuperPowerDialog(
                 options = opts,
                 included = mutableStateOf(value = initialModifiers.containsKey(cleanName)),
                 selected = mutableIntStateOf(value = initialModifiers[cleanName] ?: opts.first()),
-                isNegative = isNeg
+                isNegative = isNeg,
+                expanded = mutableStateOf(value = false)
             )
         }
     }
@@ -348,17 +354,24 @@ fun BuySuperPowerDialog(
                                     com.example.swadebuilder.ui.components.SelectableItemRow(
                                         title = rowTitle,
                                         selected = mod.included.value,
-                                        onClick = { mod.included.value = !mod.included.value },
+                                        // Toca no nome pra ver a descrição da regra; a caixinha
+                                        // de seleção (indicador) continua marcando a compra —
+                                        // antes a descrição ficava sempre visível, ocupando a
+                                        // tela mesmo quando o jogador só queria escolher rápido.
+                                        onClick = { mod.expanded.value = !mod.expanded.value },
+                                        onIndicatorClick = { mod.included.value = !mod.included.value },
                                         mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
                                         enabled = isModEnabled
                                     )
                                     if (mod.descricao.isNotBlank()) {
-                                        Text(
-                                            text = mod.descricao,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            modifier = Modifier.padding(start = 4.dp, top = 2.dp)
-                                        )
+                                        AnimatedVisibility(visible = mod.expanded.value) {
+                                            Text(
+                                                text = mod.descricao,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.padding(start = 4.dp, top = 2.dp)
+                                            )
+                                        }
                                     }
                                     if (mod.included.value) {
                                         FlowRow(
@@ -411,16 +424,19 @@ fun BuySuperPowerDialog(
                                     com.example.swadebuilder.ui.components.SelectableItemRow(
                                         title = rowTitle,
                                         selected = mod.included.value,
-                                        onClick = { mod.included.value = !mod.included.value },
+                                        onClick = { mod.expanded.value = !mod.expanded.value },
+                                        onIndicatorClick = { mod.included.value = !mod.included.value },
                                         mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA
                                     )
                                     if (mod.descricao.isNotBlank()) {
-                                        Text(
-                                            text = mod.descricao,
-                                            style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                            modifier = Modifier.padding(start = 4.dp, top = 2.dp)
-                                        )
+                                        AnimatedVisibility(visible = mod.expanded.value) {
+                                            Text(
+                                                text = mod.descricao,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.padding(start = 4.dp, top = 2.dp)
+                                            )
+                                        }
                                     }
                                     if (mod.included.value && mod.options.size > 1) {
                                         FlowRow(
@@ -759,6 +775,12 @@ fun SuperPoderesSection(
                 ) {
                     items(uniqueInvestments, key = { it.first.id }) { pair ->
                         val (investment, cost) = pair
+                        // Nome + selo de custo ficam numa largura travada (em vez de crescer
+                        // livremente) pra um poder de nome longo/composto nunca "brigar" de
+                        // espaço com o botão de ações ao lado — cada linha quebra dentro da
+                        // própria caixa em vez de invadir o vizinho no carrossel.
+                        var menuExpanded by remember(investment.id) { mutableStateOf(false) }
+
                         Surface(
                             shape = MaterialTheme.shapes.small,
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)),
@@ -769,26 +791,27 @@ fun SuperPoderesSection(
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                Column(modifier = Modifier.widthIn(max = 190.dp)) {
+                                    Text(
+                                        text = investment.displayName,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 2,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Surface(
+                                        shape = MaterialTheme.shapes.extraSmall,
+                                        color = MaterialTheme.colorScheme.primaryContainer,
+                                        modifier = Modifier.align(Alignment.Start)
+                                    ) {
                                         Text(
-                                            text = investment.displayName,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.Bold
+                                            text = "$cost SP",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                                         )
-                                        Spacer(Modifier.width(6.dp))
-                                        Surface(
-                                            shape = MaterialTheme.shapes.extraSmall,
-                                            color = MaterialTheme.colorScheme.primaryContainer
-                                        ) {
-                                            Text(
-                                                text = "$cost SP",
-                                                style = MaterialTheme.typography.labelSmall,
-                                                fontWeight = FontWeight.Bold,
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                                            )
-                                        }
                                     }
                                     if (investment.modifiers.isNotEmpty()) {
                                         val modSummary = investment.modifiers.entries.joinToString(", ") { (modName, modVal) ->
@@ -798,11 +821,13 @@ fun SuperPoderesSection(
                                         Text(
                                             text = modSummary,
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            maxLines = 2,
+                                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                         )
                                     }
                                 }
-                                Spacer(Modifier.width(8.dp))
+                                Spacer(Modifier.width(4.dp))
 
                                 val investmentsDoGrupo = if (investment.effect is PowerEffect.Generico) {
                                     genericosAgrupados[investment.powerId].orEmpty()
@@ -815,10 +840,8 @@ fun SuperPoderesSection(
                                 // novo nesse caso raro do que arriscar misturar dados de duas compras.
                                 val podeEditar = investmentsDoGrupo.size <= 1
 
-                                IconButton(
-                                    enabled = podeEditar,
-                                    onClick = {
-                                        when (investment.effect) {
+                                fun editarInvestimento() {
+                                    when (investment.effect) {
                                             is PowerEffect.SuperAtributo -> {
                                                 val r = viewModel.desfazerInvestimentoSuper(investment)
                                                 if (r.ok) {
@@ -916,41 +939,71 @@ fun SuperPoderesSection(
                                                 }
                                             }
                                         }
-                                    },
-                                    modifier = Modifier.size(20.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Edit,
-                                        contentDescription = if (podeEditar) "Editar ${investment.displayName}" else "Compra múltipla: remova e compre novamente para editar",
-                                        tint = if (podeEditar) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                }
-                                IconButton(
-                                    onClick = {
-                                        if (investment.effect is PowerEffect.Generico) {
-                                            val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
-                                            listaMesmoPoder.forEach { inv ->
-                                                viewModel.desfazerInvestimentoSuper(inv)
-                                                state.removerSuperPoder(inv, desfazerNoLedger = false)
-                                            }
-                                        } else {
-                                            val r = viewModel.desfazerInvestimentoSuper(investment)
-                                            if (r.ok) {
-                                                state.removerSuperPoder(investment, desfazerNoLedger = false)
-                                            } else {
-                                                onShowMessage(r.mensagem)
-                                            }
+                                    }
+
+                                fun removerInvestimento() {
+                                    if (investment.effect is PowerEffect.Generico) {
+                                        val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
+                                        listaMesmoPoder.forEach { inv ->
+                                            viewModel.desfazerInvestimentoSuper(inv)
+                                            state.removerSuperPoder(inv, desfazerNoLedger = false)
                                         }
-                                    },
-                                    modifier = Modifier.size(20.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Close,
-                                        contentDescription = "Remover ${investment.displayName}",
-                                        tint = MaterialTheme.colorScheme.error,
-                                        modifier = Modifier.size(16.dp)
-                                    )
+                                    } else {
+                                        val r = viewModel.desfazerInvestimentoSuper(investment)
+                                        if (r.ok) {
+                                            state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                        } else {
+                                            onShowMessage(r.mensagem)
+                                        }
+                                    }
+                                }
+
+                                // Um único botão de "mais opções" em vez de dois ícones lado a
+                                // lado: o chip volta a ter a mesma largura/altura de antes (um só
+                                // alvo de toque), então um nome composto de poder não precisa
+                                // mais disputar espaço com dois botões — editar e remover viram
+                                // itens de um menu.
+                                Box {
+                                    IconButton(
+                                        onClick = { menuExpanded = true },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.MoreVert,
+                                            contentDescription = "Mais opções para ${investment.displayName}",
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                    DropdownMenu(
+                                        expanded = menuExpanded,
+                                        onDismissRequest = { menuExpanded = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(if (podeEditar) "Editar" else "Editar (remova e compre de novo)") },
+                                            enabled = podeEditar,
+                                            leadingIcon = {
+                                                Icon(Icons.Filled.Edit, contentDescription = null)
+                                            },
+                                            onClick = {
+                                                menuExpanded = false
+                                                editarInvestimento()
+                                            }
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text("Remover") },
+                                            leadingIcon = {
+                                                Icon(
+                                                    Icons.Filled.Close,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.error
+                                                )
+                                            },
+                                            onClick = {
+                                                menuExpanded = false
+                                                removerInvestimento()
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }

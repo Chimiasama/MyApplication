@@ -55,7 +55,12 @@ fun SelectableItemRow(
     subtitle: String? = null,
     mode: SelectionMode = SelectionMode.MULTIPLA,
     enabled: Boolean = true,
-    content: (@Composable () -> Unit)? = null
+    content: (@Composable () -> Unit)? = null,
+    // Quando informado, só o indicador (checkbox/rádio) fica responsável por marcar a
+    // seleção — o resto da linha (título/subtítulo) passa a chamar [onClick] pra outra
+    // coisa (ex.: expandir uma descrição). Deixando null (padrão), a linha inteira
+    // continua marcando a seleção como sempre, sem mudar nenhum uso existente.
+    onIndicatorClick: (() -> Unit)? = null
 ) {
     val scheme = MaterialTheme.colorScheme
     val shape = MaterialTheme.shapes.small
@@ -110,7 +115,18 @@ fun SelectableItemRow(
             }
         }
         content?.invoke()
-        SelectionIndicator(selected = selected, mode = mode, enabled = enabled)
+        if (onIndicatorClick != null) {
+            Box(
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(enabled = enabled, onClick = onIndicatorClick)
+                    .padding(Spacing.xs)
+            ) {
+                SelectionIndicator(selected = selected, mode = mode, enabled = enabled)
+            }
+        } else {
+            SelectionIndicator(selected = selected, mode = mode, enabled = enabled)
+        }
     }
 }
 
