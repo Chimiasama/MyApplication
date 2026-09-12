@@ -542,16 +542,25 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
         w.distancia == null || (w.usavelCorpoACorpo
             ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(w.nome, danoTxt))
     }
-    val armasADistancia = todasArmas.filter { it.distancia != null }
+    // "Toque" (ver CriadorState.extrairArmasNaturais) é o alcance de ataques naturais —
+    // desarmado, garra, mordida etc. — que são só corpo a corpo mesmo tendo `distancia`
+    // preenchido; sem essa exclusão eles apareceriam também na tabela de Armas à Distância.
+    // Um ataque racial genuinamente à distância (ex.: cuspe venenoso) viria com um alcance
+    // de verdade (não "Toque") e cairia aqui normalmente.
+    val armasADistancia = todasArmas.filter { w -> w.distancia != null && w.campoTexto(w.distancia) != "Toque" }
     val armaduras = p.equipamentos.filter { it.armadura != null || it.aparar != null }
 
     val meleeRows = armasCorpoACorpo.map { w ->
         val isNatural = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
+        // "Toque" é o alcance-padrão de ataque natural (não é um alcance de verdade) — só
+        // interessa mostrar Alcance aqui quando é um valor numérico real, tipo arma de
+        // arremesso ("3/6/12"); o resto fica "-".
+        val alcanceMelee = w.campoTexto(w.distancia).takeUnless { it == "Toque" } ?: "-"
         listOf(
             nomeExibido(w),
             w.campoTexto(w.dano),
             if (isNatural) "-" else w.campoTexto(w.pa),
-            w.campoTexto(w.distancia),
+            alcanceMelee,
             if (isNatural) "-" else w.campoTexto(w.peso)
         )
     }
@@ -1427,7 +1436,7 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
 
     val statLabelPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody }
-    val statValuePaint = TextPaint().apply { color = theme.textColor; textSize = 9.5f; typeface = theme.typefaceTitle; isFakeBoldText = true; textAlign = Paint.Align.CENTER }
+    val statValuePaint = TextPaint().apply { color = theme.textColor; textSize = 8.5f; typeface = theme.typefaceTitle; isFakeBoldText = true; textAlign = Paint.Align.CENTER }
     val statCirclePaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1.5f; isAntiAlias = true }
     val statPairs = listOf(
         "Aparar" to calcAparar(p, especieId).toString(),
@@ -1439,7 +1448,11 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     // Coluna de valores numa posição fixa (calculada a partir do rótulo mais largo, "Movimentação")
     // em vez de logo após cada rótulo — antes cada valor ficava numa posição X diferente
     // porque os rótulos têm larguras diferentes, o que deixava a coluna de números torta.
-    val circleRadius = 11f
+    // Círculo um pouco menor e linhas mais espaçadas (8f de raio pra 26f de altura de linha,
+    // não os 11f/20f de antes) pra garantir folga entre um círculo e o próximo — 22f de
+    // diâmetro em cima de 20f de altura de linha fazia eles se sobreporem.
+    val circleRadius = 8f
+    val rowHeight = 26f
     val maxLabelWidth = statPairs.maxOf { (label, _) -> statLabelPaint.measureText(label) }
     val valueColumnCx = statsColumnLeft + maxLabelWidth + 14f + circleRadius
     var statY = rect.top + 20f
@@ -1450,7 +1463,7 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
         val metrics = statValuePaint.fontMetrics
         val dy = (metrics.descent + metrics.ascent) / 2
         canvas.drawText(value, valueColumnCx, circleCy - dy, statValuePaint)
-        statY += 20f
+        statY += rowHeight
     }
 }
 
