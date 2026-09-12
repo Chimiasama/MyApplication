@@ -21,6 +21,9 @@ import androidx.core.graphics.withClip
 import androidx.core.graphics.withTranslation
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.Constants
+import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.ataquesCorpoACorpoDeSuperPoderes
+import com.example.swadebuilder.model.ataquesADistanciaDeSuperPoderes
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.SuperPoder
@@ -152,10 +155,13 @@ enum class FichaPdfSecao(val titulo: String) {
 
 fun secoesPdfDisponiveis(personagem: MeuPersonagem): Set<FichaPdfSecao> {
     val isPathfinderGnome = personagem.compendioPathfinderAtivo && personagem.ancestralidade.uppercase().contains("GNOMO")
-    val gear = personagem.equipamentos.filterNot { it.dano != null }
+    // Armas e Armaduras (dano != null || armadura/aparar != null) já têm tabela própria
+    // na página principal — não contam pra decidir se a seção "Equipamentos" (o resto,
+    // ver buildEquipamentosBlocks) tem conteúdo.
+    val gear = personagem.equipamentos.filter { it.dano == null && it.armadura == null && it.aparar == null }
     return buildSet {
         if (personagem.poderes.isNotEmpty() || isPathfinderGnome) add(FichaPdfSecao.PODERES)
-        if (personagem.modoSupers && personagem.gastosPorPoder.isNotEmpty()) add(FichaPdfSecao.SUPERPODERES)
+        if (personagem.modoSupers && personagem.superInvestments.isNotEmpty()) add(FichaPdfSecao.SUPERPODERES)
         if (personagem.mechasSelecionados.isNotEmpty()) add(FichaPdfSecao.MECHAS)
         if (gear.isNotEmpty()) add(FichaPdfSecao.EQUIPAMENTOS)
         if (personagem.ciberneticosInstalados.isNotEmpty()) add(FichaPdfSecao.CIBERNETICOS)
@@ -442,26 +448,32 @@ class SkillListBlock(private val p: MeuPersonagem) : PdfBlock {
     }
 }
 
-class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
-    private val weapons = p.equipamentos.filter { it.dano != null }
-
+/**
+ * Tabela genérica de itens com colunas configuráveis — separa Armas Corpo a Corpo, Armas
+ * à Distância e Armaduras em tabelas próprias (ver [buildWeaponAndArmorBlocks]) em vez de
+ * uma tabela única, já que colunas como CdT/Tiros não existem em combate corpo a corpo e
+ * Armadura/Aparar não existem em armas.
+ */
+class ItemTableBlock(
+    private val title: String,
+    private val cols: List<String>,
+    private val colWeights: List<Float>,
+    private val rows: List<List<String>>
+) : PdfBlock {
     override fun measure(width: Float, theme: PdfTheme): Float {
-        if (weapons.isEmpty()) return 0f
+        if (rows.isEmpty()) return 0f
         val rowHeight = 20f
-        // Header + rows + borders
-        return 20f + 20f + (weapons.size * rowHeight) + 5f
+        return 20f + 20f + (rows.size * rowHeight) + 5f
     }
 
     override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
-        if (weapons.isEmpty()) return
+        if (rows.isEmpty()) return
         val titlePaint = TextPaint().apply { color = theme.primaryColor; textSize = 14f; typeface = theme.typefaceTitle; isFakeBoldText = true }
-        canvas.drawText("Armas", x, y + 14f, titlePaint)
+        canvas.drawText(title, x, y + 14f, titlePaint)
 
         var currY = y + 20f
         val rowHeight = 20f
 
-        val cols = listOf("Arma", "Dist", "Dano", "PA", "CdT", "Peso")
-        val colWeights = listOf(3f, 1f, 1.5f, 0.5f, 0.5f, 0.8f)
         val totalWeight = colWeights.sum()
         val unitW = width / totalWeight
         val colWidths = colWeights.map { it * unitW }
@@ -481,33 +493,8 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
         val rowPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody }
         val linePaint = Paint().apply { color = theme.gridLineColor; strokeWidth = 1f }
 
-        weapons.forEach { w ->
+        rows.forEach { data ->
             cx = x
-
-            val naturalKeywords = listOf(
-                "Desarmado", "Ataque Natural", "Garra", "Mordida",
-                "Casco", "Chifre", "Cabeça Dura", "Ferrão",
-                "Toque Arrepiante", "Toque da Morte", "Toque Venenoso", "Tentáculo"
-            )
-            val isNaturalWeapon = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
-
-            val cdtStr = if (isNaturalWeapon) "-" else w.cdt?.toString()?.replace("\"", "") ?: "1"
-            val pesoStr = if (isNaturalWeapon) "-" else w.peso?.toString()?.replace("\"", "") ?: "-"
-
-            val paVal = w.pa?.toString()?.replace("\"", "")
-            val paStr = if (isNaturalWeapon && (paVal == null || paVal == "0" || paVal.isBlank())) "-" else paVal ?: "0"
-
-            val showOfficialNames = EditionConfig.isFullEdition && p.modoOficialAtivo
-            val nomeArma = if (showOfficialNames && !w.originalName.isNullOrBlank()) w.originalName else w.nomeExibicao
-
-            val data = listOf(
-                nomeArma,
-                w.distancia?.toString()?.replace("\"", "") ?: "-",
-                w.dano?.toString()?.replace("\"", "") ?: "-",
-                paStr,
-                cdtStr,
-                pesoStr
-            )
             data.forEachIndexed { i, txt ->
                 val safe = truncate(txt, rowPaint, colWidths[i] - 2f)
                 canvas.drawText(safe, cx + 2f, currY + 14f, rowPaint)
@@ -527,6 +514,97 @@ class WeaponTableBlock(private val p: MeuPersonagem) : PdfBlock {
         // Atomic table for now
         return null to this
     }
+}
+
+// Lê um JsonElement de EquipamentoItem como texto pra tabela, tratando tanto null quanto
+// string vazia como "sem valor" — antes um `distancia` vazio (em vez de null) escapava do
+// fallback e a coluna de Alcance ficava em branco em vez de mostrar "-".
+private fun EquipamentoItem.campoTexto(campo: kotlinx.serialization.json.JsonElement?): String =
+    campo?.toString()?.replace("\"", "")?.takeIf { it.isNotBlank() } ?: "-"
+
+/**
+ * Separa Armas Corpo a Corpo, Armas à Distância e Armaduras em tabelas próprias — mesma
+ * classificação de [com.example.swadebuilder.ui.sections.ResumoSection] (weapon.distancia
+ * == null, ou é arma de arremesso de verdade via ForcaMinimaCalculator.ehArmaDeArremesso
+ * pro catálogo oficial, que não tem `usavelCorpoACorpo`): um item de arremesso tem `dano`
+ * E `distancia` ao mesmo tempo, então aparece nas duas tabelas a partir de uma única compra.
+ */
+private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boolean): List<PdfBlock> {
+    val naturalKeywords = listOf(
+        "Desarmado", "Ataque Natural", "Garra", "Mordida",
+        "Casco", "Chifre", "Cabeça Dura", "Ferrão",
+        "Toque Arrepiante", "Toque da Morte", "Toque Venenoso", "Tentáculo"
+    )
+    fun nomeExibido(item: EquipamentoItem): String =
+        (if (showOfficialNames) item.originalName else null)?.takeIf { it.isNotBlank() } ?: item.nomeExibicao
+
+    val todasArmas = p.equipamentos.filter { it.dano != null }
+    val armasCorpoACorpo = todasArmas.filter { w ->
+        val danoTxt = w.campoTexto(w.dano).takeIf { it != "-" } ?: ""
+        w.distancia == null || (w.usavelCorpoACorpo
+            ?: com.example.swadebuilder.util.ForcaMinimaCalculator.ehArmaDeArremesso(w.nome, danoTxt))
+    }
+    // "Toque" (ver CriadorState.extrairArmasNaturais) é o alcance de ataques naturais —
+    // desarmado, garra, mordida etc. — que são só corpo a corpo mesmo tendo `distancia`
+    // preenchido; sem essa exclusão eles apareceriam também na tabela de Armas à Distância.
+    // Um ataque racial genuinamente à distância (ex.: cuspe venenoso) viria com um alcance
+    // de verdade (não "Toque") e cairia aqui normalmente.
+    val armasADistancia = todasArmas.filter { w -> w.distancia != null && w.campoTexto(w.distancia) != "Toque" }
+    val armaduras = p.equipamentos.filter { it.armadura != null || it.aparar != null }
+
+    // Ataques dos Super Poderes "Ataque Corpo a Corpo"/"Ataque de Longa Distância" (ver
+    // model/SuperPoderAtaques.kt) — nunca viram EquipamentoItem, então entram direto nas
+    // linhas da tabela em vez de passar por p.equipamentos.
+    val ataquesSuperMelee = p.superInvestments.ataquesCorpoACorpoDeSuperPoderes().map { a ->
+        listOf(a.nome, a.dano, a.pa, a.alcance, "-")
+    }
+    val ataquesSuperRanged = p.superInvestments.ataquesADistanciaDeSuperPoderes().map { a ->
+        listOf(a.nome, a.alcance, a.dano, a.pa, "-", a.cdt, "-")
+    }
+
+    val meleeRows = ataquesSuperMelee + armasCorpoACorpo.map { w ->
+        val isNatural = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
+        // "Toque" é o alcance-padrão de ataque natural (não é um alcance de verdade) — só
+        // interessa mostrar Alcance aqui quando é um valor numérico real, tipo arma de
+        // arremesso ("3/6/12"); o resto fica "-".
+        val alcanceMelee = w.campoTexto(w.distancia).takeUnless { it == "Toque" } ?: "-"
+        listOf(
+            nomeExibido(w),
+            w.campoTexto(w.dano),
+            if (isNatural) "-" else w.campoTexto(w.pa),
+            alcanceMelee,
+            if (isNatural) "-" else w.campoTexto(w.peso)
+        )
+    }
+    val rangedRows = ataquesSuperRanged + armasADistancia.map { w ->
+        listOf(
+            nomeExibido(w),
+            w.campoTexto(w.distancia),
+            w.campoTexto(w.dano),
+            w.campoTexto(w.pa),
+            w.campoTexto(w.tiros),
+            w.campoTexto(w.cdt),
+            w.campoTexto(w.peso)
+        )
+    }
+    val armorRows = armaduras.map { item ->
+        listOf(
+            nomeExibido(item),
+            item.campoTexto(item.armadura),
+            item.campoTexto(item.aparar),
+            item.campoTexto(item.cobertura),
+            item.campoTexto(item.forcaMin),
+            item.campoTexto(item.peso)
+        )
+    }
+
+    // ItemTableBlock já mede/desenha 0 pra uma tabela sem linhas (mesmo comportamento do
+    // WeaponTableBlock original quando o personagem não tinha nenhuma arma).
+    return listOf(
+        ItemTableBlock("Armas Corpo a Corpo", listOf("Arma", "Dano", "PA", "Alcance", "Peso"), listOf(3.2f, 1.3f, 0.6f, 0.8f, 0.8f), meleeRows),
+        ItemTableBlock("Armas à Distância", listOf("Arma", "Alcance", "Dano", "PA", "Tiros", "CdT", "Peso"), listOf(2.6f, 0.9f, 1.1f, 0.5f, 0.6f, 0.5f, 0.7f), rangedRows),
+        ItemTableBlock("Armaduras", listOf("Item", "Armadura", "Aparar", "Cobertura", "Força Mín.", "Peso"), listOf(2.6f, 0.8f, 0.7f, 0.8f, 0.8f, 0.7f), armorRows)
+    )
 }
 
 // =================================================================================================
@@ -609,28 +687,37 @@ class PowerCardRowBlock(private val cards: List<PowerCardSpec>) : PdfBlock {
     }
 }
 
-/** Só estatísticas do superpoder — sem os modificadores em prosa, mesma regra dos Poderes. */
+/**
+ * Estatísticas do que foi de fato comprado pra esse Super Poder — não a tabela de custos
+ * possíveis do catálogo. Sem "Estágio": ao contrário dos Poderes de Antecedente Arcano
+ * (que têm estágio mínimo de verdade), Super Poderes podem ser comprados em qualquer
+ * estágio, então esse campo nunca fez sentido aqui.
+ */
 data class SuperPoderCardSpec(
     val nome: String,
-    val estagio: String,
-    val custoBase: String,
-    val investido: Int
+    val custoBase: Int,
+    val investido: Int,
+    val modificadores: List<String> = emptyList()
 )
 
 /** Até dois cards de superpoder lado a lado, mesmo layout de [PowerCardRowBlock]. */
 class SuperPoderCardRowBlock(private val cards: List<SuperPoderCardSpec>) : PdfBlock {
-    private val cardHeight = 62f
+    private val cardHeight = if (cards.any { it.modificadores.isNotEmpty() }) 74f else 62f
     override fun measure(width: Float, theme: PdfTheme): Float = cardHeight
     override fun draw(canvas: Canvas, x: Float, y: Float, width: Float, theme: PdfTheme) {
         val gap = 10f
         val cardW = if (cards.size > 1) (width - gap) / 2f else width
         cards.forEachIndexed { i, spec ->
             val cx = x + i * (cardW + gap)
-            val statLines = listOf(
-                "Estágio: ${spec.estagio}",
-                "Custo base: ${spec.custoBase}   •   Investido: ${spec.investido} SP"
-            )
-            drawStatCard(canvas, cx, y, cardW, cardHeight - 8f, spec.nome, statLines, emptyList(), theme)
+            val statLine = if (spec.custoBase != spec.investido) {
+                "Custo Base: ${spec.custoBase} SP   •   Total: ${spec.investido} SP"
+            } else {
+                "Custo: ${spec.investido} SP"
+            }
+            val extraLines = if (spec.modificadores.isNotEmpty()) {
+                listOf("Modificadores: " + spec.modificadores.joinToString(", "))
+            } else emptyList()
+            drawStatCard(canvas, cx, y, cardW, cardHeight - 8f, spec.nome, listOf(statLine), extraLines, theme)
         }
     }
     override fun split(availableHeight: Float, width: Float, theme: PdfTheme): Pair<PdfBlock?, PdfBlock?> {
@@ -750,6 +837,9 @@ fun gerarFichaEmPdf(
     listaComplicacoes: List<Complicacao>,
     listaVantagens: List<Vantagem>,
     listaPoderes: List<Poder>,
+    // Não é mais lido internamente (buildSuperPoderesBlocks usa personagem.superInvestments,
+    // que já carrega nome/custo/modificadores da compra) — mantido só pra não quebrar quem
+    // já chama esta função posicionalmente.
     listaSuperPoderes: List<SuperPoder> = emptyList(),
     // Id estável da espécie da ancestralidade atual (RacialModifier.especieId,
     // ex.: state.currentAncestryDef?.especieId), resolvido pelo chamador —
@@ -845,8 +935,10 @@ fun gerarFichaEmPdf(
         mainQueue.add(object : TextListBlock("Superpoderes", superLines) {})
     }
 
-    // Weapons — fica na página principal por ser referência constante em combate.
-    mainQueue.add(WeaponTableBlock(personagem))
+    // Armas e Armaduras — ficam na página principal por serem referência constante em
+    // combate. Corpo a Corpo / à Distância / Armaduras em tabelas separadas (ver
+    // buildWeaponAndArmorBlocks), já que colunas como CdT não fazem sentido em todas.
+    mainQueue.addAll(buildWeaponAndArmorBlocks(personagem, showOfficialNames))
 
     // Equipamentos gerais, Mechas e Cibernéticos agora têm página dedicada (abaixo).
 
@@ -936,8 +1028,8 @@ fun gerarFichaEmPdf(
     if (FichaPdfSecao.PODERES in secoesIncluidas && (personagem.poderes.isNotEmpty() || isPathfinderGnome)) {
         renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.PODERES.titulo, buildPoderesBlocks(personagem, listaPoderes, isPathfinderGnome, mapaAtributosDisplay))
     }
-    if (FichaPdfSecao.SUPERPODERES in secoesIncluidas && personagem.modoSupers && personagem.gastosPorPoder.isNotEmpty()) {
-        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.SUPERPODERES.titulo, buildSuperPoderesBlocks(personagem, listaSuperPoderes))
+    if (FichaPdfSecao.SUPERPODERES in secoesIncluidas && personagem.modoSupers && personagem.superInvestments.isNotEmpty()) {
+        renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.SUPERPODERES.titulo, buildSuperPoderesBlocks(personagem))
     }
     if (FichaPdfSecao.MECHAS in secoesIncluidas && personagem.mechasSelecionados.isNotEmpty()) {
         renderSectionPages(doc, pageInfo, theme, FichaPdfSecao.MECHAS.titulo, buildMechasBlocks(personagem))
@@ -1117,16 +1209,27 @@ private fun buildPoderesBlocks(
     return blocks
 }
 
-private fun buildSuperPoderesBlocks(personagem: MeuPersonagem, listaSuperPoderes: List<SuperPoder>): List<PdfBlock> {
-    if (personagem.gastosPorPoder.isEmpty()) return emptyList()
-    val specs = personagem.gastosPorPoder.map { (poderId, custo) ->
-        val cleanId = if (poderId.startsWith("sp_", ignoreCase = true)) poderId.substring(3) else poderId
-        val sp = listaSuperPoderes.firstOrNull { "sp_${it.nome.keyify()}" == poderId }
+// Personagens salvos antes da correção da regex em SuperPoderesSection.kt (que não
+// previa o "+" repetido depois de cada barra, ex.: "+2/+4/+6/+8/+10") ainda têm esse
+// intervalo de custo do catálogo colado no nome do modificador salvo — remove de novo
+// aqui, na leitura, pra também corrigir a ficha desses personagens já existentes.
+private val MODIFIER_RANGE_SUFFIX = Regex("""\s*\([+-]?\d+(?:/[+-]?\d+)*\)\s*$""")
+
+// Lê de personagem.superInvestments (o registro de cada compra feita, com nível/custo
+// base e modificadores escolhidos) em vez de personagem.gastosPorPoder (só o total gasto
+// por id, sem detalhe do que foi comprado) — é o que permite mostrar o que interessa pra
+// consulta em mesa: o nível pago e os modificadores, não a tabela de custos do catálogo.
+private fun buildSuperPoderesBlocks(personagem: MeuPersonagem): List<PdfBlock> {
+    if (personagem.superInvestments.isEmpty()) return emptyList()
+    val specs = personagem.superInvestments.map { inv ->
         SuperPoderCardSpec(
-            nome = (sp?.nome ?: cleanId).toFancyTitleCase(),
-            estagio = sp?.estagio?.toFancyTitleCase() ?: "-",
-            custoBase = sp?.custoBase ?: "-",
-            investido = custo
+            nome = inv.displayName,
+            custoBase = inv.baseCost,
+            investido = inv.cost,
+            modificadores = inv.modifiers.map { (nome, valor) ->
+                val nomeLimpo = nome.replace(MODIFIER_RANGE_SUFFIX, "")
+                "$nomeLimpo (${if (valor > 0) "+" else ""}$valor)"
+            }
         )
     }
     return specs.chunked(2).map { pair -> SuperPoderCardRowBlock(pair) }
@@ -1139,7 +1242,9 @@ private fun buildCiberneticosBlocks(personagem: MeuPersonagem): List<PdfBlock> =
     personagem.ciberneticosInstalados.map { CiberneticoCardBlock(it) }
 
 private fun buildEquipamentosBlocks(personagem: MeuPersonagem, showOfficialNames: Boolean): List<PdfBlock> {
-    val gear = personagem.equipamentos.filterNot { it.dano != null }
+    // Armas e Armaduras saem daqui: já aparecem nas tabelas próprias da página principal
+    // (ver buildWeaponAndArmorBlocks) — esta lista é só o restante (itens gerais).
+    val gear = personagem.equipamentos.filter { it.dano == null && it.armadura == null && it.aparar == null }
     if (gear.isEmpty()) return emptyList()
     val rows = gear.map { eq ->
         val name = if (showOfficialNames && !eq.originalName.isNullOrBlank()) eq.originalName else eq.nomeExibicao
@@ -1350,7 +1455,8 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
 
     val statLabelPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody }
-    val statValuePaint = TextPaint().apply { color = theme.primaryColor; textSize = 12f; typeface = theme.typefaceTitle; isFakeBoldText = true }
+    val statValuePaint = TextPaint().apply { color = theme.textColor; textSize = 8.5f; typeface = theme.typefaceTitle; isFakeBoldText = true; textAlign = Paint.Align.CENTER }
+    val statCirclePaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1.5f; isAntiAlias = true }
     val statPairs = listOf(
         "Aparar" to calcAparar(p, especieId).toString(),
         "Resistência" to calcResistencia(p),
@@ -1358,12 +1464,25 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
         "Movimentação" to p.movimentacao.toString(),
         "Corrida" to p.dadoCorrida
     )
+    // Coluna de valores numa posição fixa (calculada a partir do rótulo mais largo, "Movimentação")
+    // em vez de logo após cada rótulo — antes cada valor ficava numa posição X diferente
+    // porque os rótulos têm larguras diferentes, o que deixava a coluna de números torta.
+    // Círculo um pouco menor e linhas mais espaçadas (8f de raio pra 26f de altura de linha,
+    // não os 11f/20f de antes) pra garantir folga entre um círculo e o próximo — 22f de
+    // diâmetro em cima de 20f de altura de linha fazia eles se sobreporem.
+    val circleRadius = 8f
+    val rowHeight = 26f
+    val maxLabelWidth = statPairs.maxOf { (label, _) -> statLabelPaint.measureText(label) }
+    val valueColumnCx = statsColumnLeft + maxLabelWidth + 14f + circleRadius
     var statY = rect.top + 20f
     statPairs.forEach { (label, value) ->
         canvas.drawText(label, statsColumnLeft, statY, statLabelPaint)
-        val labelWidth = statLabelPaint.measureText(label)
-        canvas.drawText(value, statsColumnLeft + labelWidth + 6f, statY, statValuePaint)
-        statY += 20f
+        val circleCy = statY - 3.5f
+        canvas.drawCircle(valueColumnCx, circleCy, circleRadius, statCirclePaint)
+        val metrics = statValuePaint.fontMetrics
+        val dy = (metrics.descent + metrics.ascent) / 2
+        canvas.drawText(value, valueColumnCx, circleCy - dy, statValuePaint)
+        statY += rowHeight
     }
 }
 
