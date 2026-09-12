@@ -17,6 +17,8 @@ object AppPreferences {
     private const val KEY_PULAR_SELECAO_REGRAS = "pular_selecao_regras"
     private const val KEY_MODO_PERICIA = "modo_selecao_pericia"
     private const val KEY_CRIACAO_NAS_ABAS = "habilitar_criacao_nas_abas"
+    private const val KEY_INSTRUCOES_ABAS_ATIVAS = "instrucoes_abas_ativas"
+    private const val KEY_ABAS_INSTRUCAO_VISTAS = "abas_instrucao_vistas"
 
     enum class ModoSelecaoPericia {
         CARROSSEL_POPOVER,
@@ -34,7 +36,9 @@ object AppPreferences {
         val appTheme: AppTheme,
         val pularSelecaoRegras: Boolean,
         val modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER,
-        val habilitarCriacaoNasAbas: Boolean = false
+        val habilitarCriacaoNasAbas: Boolean = false,
+        val instrucoesAbasAtivas: Boolean = true,
+        val abasComInstrucaoVista: Set<String> = emptySet()
     )
 
     fun loadPrefs(context: Context, defaultHaptics: Int, defaultSound: Int): GlobalPrefs {
@@ -68,6 +72,8 @@ object AppPreferences {
             ModoSelecaoPericia.CARROSSEL_POPOVER
         }
         val habilitarCriacaoNasAbas = prefs.getBoolean(KEY_CRIACAO_NAS_ABAS, false)
+        val instrucoesAbasAtivas = prefs.getBoolean(KEY_INSTRUCOES_ABAS_ATIVAS, true)
+        val abasComInstrucaoVista = prefs.getStringSet(KEY_ABAS_INSTRUCAO_VISTAS, emptySet()) ?: emptySet()
 
         return GlobalPrefs(
             hapticStrength = haptics,
@@ -79,7 +85,9 @@ object AppPreferences {
             appTheme = appTheme,
             pularSelecaoRegras = pularSelecaoRegras,
             modoSelecaoPericia = modoSelecaoPericia,
-            habilitarCriacaoNasAbas = habilitarCriacaoNasAbas
+            habilitarCriacaoNasAbas = habilitarCriacaoNasAbas,
+            instrucoesAbasAtivas = instrucoesAbasAtivas,
+            abasComInstrucaoVista = abasComInstrucaoVista
         )
     }
 
@@ -94,7 +102,9 @@ object AppPreferences {
         appTheme: AppTheme,
         pularSelecaoRegras: Boolean,
         modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER,
-        habilitarCriacaoNasAbas: Boolean = false
+        habilitarCriacaoNasAbas: Boolean = false,
+        instrucoesAbasAtivas: Boolean = true,
+        abasComInstrucaoVista: Set<String> = emptySet()
     ) {
         context
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
@@ -109,6 +119,8 @@ object AppPreferences {
                 putBoolean(KEY_PULAR_SELECAO_REGRAS, pularSelecaoRegras)
                 putString(KEY_MODO_PERICIA, modoSelecaoPericia.name)
                 putBoolean(KEY_CRIACAO_NAS_ABAS, habilitarCriacaoNasAbas)
+                putBoolean(KEY_INSTRUCOES_ABAS_ATIVAS, instrucoesAbasAtivas)
+                putStringSet(KEY_ABAS_INSTRUCAO_VISTAS, abasComInstrucaoVista)
             }
     }
 

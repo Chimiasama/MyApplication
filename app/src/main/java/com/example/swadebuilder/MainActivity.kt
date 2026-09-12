@@ -243,6 +243,13 @@ class MainActivity : ComponentActivity() {
                 state.pularSelecaoRegras = prefs.pularSelecaoRegras
                 state.modoSelecaoPericia = prefs.modoSelecaoPericia
                 state.habilitarCriacaoNasAbas = prefs.habilitarCriacaoNasAbas
+                state.instrucoesAbasAtivas = prefs.instrucoesAbasAtivas
+                state.abasComInstrucaoVista.clear()
+                prefs.abasComInstrucaoVista.forEach { nome ->
+                    runCatching { com.example.swadebuilder.ui.MainSection.valueOf(nome) }
+                        .getOrNull()
+                        ?.let { state.abasComInstrucaoVista.add(it) }
+                }
             }
             val persistPrefs: () -> Unit = remember {
                 {
@@ -257,7 +264,9 @@ class MainActivity : ComponentActivity() {
                         state.appTheme,
                         state.pularSelecaoRegras,
                         state.modoSelecaoPericia,
-                        state.habilitarCriacaoNasAbas
+                        state.habilitarCriacaoNasAbas,
+                        state.instrucoesAbasAtivas,
+                        state.abasComInstrucaoVista.map { it.name }.toSet()
                     )
                 }
             }
@@ -990,7 +999,8 @@ class MainActivity : ComponentActivity() {
                                             onUserFeedback        = triggerFeedback,
                                             onRequestProgression  = {
                                                 requestNavigation(PendingNavigationAction.StartProgression)
-                                            }
+                                            },
+                                            onPersistPrefs        = persistPrefs
                                         )
                                     }
                                 }

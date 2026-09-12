@@ -78,6 +78,7 @@ import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.TabTutorialOverlay
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
@@ -115,7 +116,8 @@ fun UnifiedScreen(
     modoOficialAtivo: Boolean = false,
     onShowMessage: (String) -> Unit,
     onUserFeedback: () -> Unit,
-    onRequestProgression: () -> Unit
+    onRequestProgression: () -> Unit,
+    onPersistPrefs: () -> Unit = {}
 ) {
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
@@ -279,7 +281,8 @@ fun UnifiedScreen(
                                 showAllocDialog = true
                             }
                         },
-                        onUserFeedback = onUserFeedback
+                        onUserFeedback = onUserFeedback,
+                        onPersistPrefs = onPersistPrefs
                     )
                 }
             }
@@ -355,7 +358,8 @@ fun UnifiedScreen(
                             showAllocDialog = true
                         }
                     },
-                    onUserFeedback = onUserFeedback
+                    onUserFeedback = onUserFeedback,
+                    onPersistPrefs = onPersistPrefs
                 )
             }
         }
@@ -554,10 +558,18 @@ private fun SectionDetailPane(
     onRequestProgression: () -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
-    onUserFeedback: () -> Unit
+    onUserFeedback: () -> Unit,
+    onPersistPrefs: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
+    TabTutorialOverlay(
+        state = state,
+        section = selectedSection,
+        onDismissed = onPersistPrefs
+    )
+
     Column(
         modifier = modifier
             .fillMaxWidth()

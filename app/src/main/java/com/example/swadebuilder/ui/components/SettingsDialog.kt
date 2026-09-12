@@ -330,6 +330,34 @@ fun SettingsDialog(
                     )
                 }
 
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Instruções das Abas", style = MaterialTheme.typography.bodyMedium)
+                    Switch(
+                        checked = state.instrucoesAbasAtivas,
+                        onCheckedChange = {
+                            state.instrucoesAbasAtivas = it
+                            persistPrefs()
+                        },
+                        modifier = Modifier.scale(0.8f)
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = {
+                        state.abasComInstrucaoVista.clear()
+                        state.instrucoesAbasAtivas = true
+                        persistPrefs()
+                    },
+                    shape = MaterialTheme.shapes.small,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Ver instruções das abas novamente", style = MaterialTheme.typography.labelLarge)
+                }
+
                 // Segmented Control único do design system (ver CreatorFormComponents.kt) —
                 // mesmo componente usado nas telas de Criar Conteúdo Customizado, em vez de
                 // uma variação própria desta tela.

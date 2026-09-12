@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.snapshots.SnapshotStateMap
+import androidx.compose.runtime.snapshots.SnapshotStateSet
 import com.example.swadebuilder.model.AdvantageSnapshot
 import com.example.swadebuilder.model.AnaoCiberTraitCatalog
 import com.example.swadebuilder.model.AnaoCiberTraitSelection
@@ -477,6 +478,11 @@ class CriadorState {
     var pularSelecaoRegras by mutableStateOf(false)
     var modoSelecaoPericia by mutableStateOf(com.example.swadebuilder.util.AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER)
     var habilitarCriacaoNasAbas by mutableStateOf(false)
+    // Tutorial de primeira visita por aba (ver ui/components/TabTutorialOverlay.kt):
+    // instrucoesAbasAtivas é o interruptor mestre em Configurações; abasComInstrucaoVista
+    // guarda em quais abas o jogador já fechou a instrução, pra não repetir.
+    var instrucoesAbasAtivas by mutableStateOf(true)
+    val abasComInstrucaoVista: SnapshotStateSet<MainSection> = mutableStateSetOf()
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)
