@@ -1197,6 +1197,12 @@ private fun buildPoderesBlocks(
     return blocks
 }
 
+// Personagens salvos antes da correção da regex em SuperPoderesSection.kt (que não
+// previa o "+" repetido depois de cada barra, ex.: "+2/+4/+6/+8/+10") ainda têm esse
+// intervalo de custo do catálogo colado no nome do modificador salvo — remove de novo
+// aqui, na leitura, pra também corrigir a ficha desses personagens já existentes.
+private val MODIFIER_RANGE_SUFFIX = Regex("""\s*\([+-]?\d+(?:/[+-]?\d+)*\)\s*$""")
+
 // Lê de personagem.superInvestments (o registro de cada compra feita, com nível/custo
 // base e modificadores escolhidos) em vez de personagem.gastosPorPoder (só o total gasto
 // por id, sem detalhe do que foi comprado) — é o que permite mostrar o que interessa pra
@@ -1209,7 +1215,8 @@ private fun buildSuperPoderesBlocks(personagem: MeuPersonagem): List<PdfBlock> {
             custoBase = inv.baseCost,
             investido = inv.cost,
             modificadores = inv.modifiers.map { (nome, valor) ->
-                "$nome (${if (valor > 0) "+" else ""}$valor)"
+                val nomeLimpo = nome.replace(MODIFIER_RANGE_SUFFIX, "")
+                "$nomeLimpo (${if (valor > 0) "+" else ""}$valor)"
             }
         )
     }

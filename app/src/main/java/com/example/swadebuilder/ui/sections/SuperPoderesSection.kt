@@ -139,7 +139,11 @@ fun BuySuperPowerDialog(
     val modStates = remember(poder.modificadores) {
         poder.modificadores.orEmpty().map { modObj ->
             val fullName = modObj.substringBefore(":").trim()
-            val cleanName = fullName.replace(Regex("\\s*\\([+-]?\\d+(/\\d+)*\\)\\s*$"), "")
+            // Cada opção depois da primeira barra também pode ter seu próprio sinal
+            // (ex.: "Arma Especial (+2/+4/+6/+8/+10)") — sem o "[+-]?" depois da "/" a
+            // regex não casava e o intervalo inteiro ficava colado no nome (aparecia
+            // errado até na ficha em PDF, ver ResumoPdfReferenciador.kt).
+            val cleanName = fullName.replace(Regex("\\s*\\([+-]?\\d+(?:/[+-]?\\d+)*\\)\\s*$"), "")
             val paren = Regex("\\(([^)]*)\\)").find(fullName)?.groupValues?.get(1).orEmpty()
             val opts = paren.split("/")
                 .mapNotNull { it.trim().removePrefix("+").toIntOrNull() }
