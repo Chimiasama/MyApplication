@@ -82,6 +82,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.model.getActiveOrigins
+import com.example.swadebuilder.model.ataquesCorpoACorpoDeSuperPoderes
+import com.example.swadebuilder.model.ataquesADistanciaDeSuperPoderes
 import com.example.swadebuilder.buildAncestralidadeDisplay
 import com.example.swadebuilder.buildSummaryLines
 import com.example.swadebuilder.model.Constants
@@ -800,15 +802,26 @@ private fun CombatAndEquipmentCard(
             val armasADistancia = todasArmas.filter { it.distancia != null }
             val temBrutamontes = state.vantagensSelecionadas.any { it.id == Constants.ID_BRUTAMONTES }
 
+            // Ataques dos Super Poderes "Ataque Corpo a Corpo"/"Ataque de Longa Distância"
+            // (ver model/SuperPoderAtaques.kt) — nunca viram EquipamentoItem de verdade,
+            // então entram direto aqui em vez de passar por todasArmas/equipamentosComprados.
+            val ataquesSuperCorpoACorpo = state.superInvestments.toList().ataquesCorpoACorpoDeSuperPoderes()
+            val ataquesSuperADistancia = state.superInvestments.toList().ataquesADistanciaDeSuperPoderes()
+
             Text(text = "Armas Corpo a Corpo", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
-            if (armasCorpoACorpo.isEmpty()) {
+            if (armasCorpoACorpo.isEmpty() && ataquesSuperCorpoACorpo.isEmpty()) {
                 Text(
                     "– Nenhuma",
                     style = MaterialTheme.typography.bodySmall.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             } else {
+                ataquesSuperCorpoACorpo.forEach { ataque ->
+                    val stats = listOf(ataque.dano, ataque.pa.takeIf { it != "-" }?.let { "PA $it" })
+                        .filterNotNull().filter { it.isNotBlank() }.joinToString(", ")
+                    CombatRow(name = ataque.nome, stats = stats.ifBlank { ataque.dano }, notes = ataque.notas)
+                }
                 armasCorpoACorpo.forEach { weapon ->
                     val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
                     val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content
@@ -842,13 +855,22 @@ private fun CombatAndEquipmentCard(
 
             Text(text = "Armas à Distância", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
             Spacer(Modifier.height(4.dp))
-            if (armasADistancia.isEmpty()) {
+            if (armasADistancia.isEmpty() && ataquesSuperADistancia.isEmpty()) {
                 Text(
                     "– Nenhuma",
                     style = MaterialTheme.typography.bodySmall.copy(fontStyle = androidx.compose.ui.text.font.FontStyle.Italic),
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
             } else {
+                ataquesSuperADistancia.forEach { ataque ->
+                    val stats = listOf(
+                        ataque.dano,
+                        ataque.pa.takeIf { it != "-" }?.let { "PA $it" },
+                        ataque.alcance.takeIf { it != "-" },
+                        ataque.cdt.takeIf { it != "-" }?.let { "CdT $it" }
+                    ).filterNotNull().filter { it.isNotBlank() }.joinToString(", ")
+                    CombatRow(name = ataque.nome, stats = stats.ifBlank { ataque.dano }, notes = ataque.notas)
+                }
                 armasADistancia.forEach { weapon ->
                     val dmg = (weapon.dano as? kotlinx.serialization.json.JsonPrimitive)?.content ?: "-"
                     val apVal = (weapon.pa as? kotlinx.serialization.json.JsonPrimitive)?.content

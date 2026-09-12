@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -29,12 +30,16 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -93,6 +98,8 @@ fun BuySuperPowerDialog(
     poder: SuperPoder,
     pontosDisponiveis: Int,
     limitePorPoder: Int,
+    initialBaseCost: Int? = null,
+    initialModifiers: Map<String, Int> = emptyMap(),
     onConfirm: (baseCost: Int, totalCost: Int, modifiers: Map<String, Int>) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -130,27 +137,42 @@ fun BuySuperPowerDialog(
 
     data class ModState(
         val name: String,
+        val descricao: String,
         val options: List<Int>,
         val included: MutableState<Boolean>,
         val selected: MutableState<Int>,
-        val isNegative: Boolean
+        val isNegative: Boolean,
+        val expanded: MutableState<Boolean>
     )
 
     val modStates = remember(poder.modificadores) {
         poder.modificadores.orEmpty().map { modObj ->
             val fullName = modObj.substringBefore(":").trim()
-            val cleanName = fullName.replace(Regex("\\s*\\([+-]?\\d+(/\\d+)*\\)\\s*$"), "")
-            val paren = Regex("\\(([^)]*)\\)").find(fullName)?.groupValues?.get(1).orEmpty()
+            // Texto depois dos ":" — o jogador via só nome+custo aqui, sem saber o que o
+            // modificador realmente faz (tinha que checar o livro à parte).
+            val descricao = modObj.substringAfter(":", "").trim()
+            // Cada opção depois da primeira barra também pode ter seu próprio sinal
+            // (ex.: "Arma Especial (+2/+4/+6/+8/+10)") — sem o "[+-]?" depois da "/" a
+            // regex não casava e o intervalo inteiro ficava colado no nome (aparecia
+            // errado até na ficha em PDF, ver ResumoPdfReferenciador.kt).
+            val cleanName = fullName.replace(Regex("\\s*\\([+-]?\\d+(?:/[+-]?\\d+)*\\)\\s*$"), "")
+            // Último parêntese, não o primeiro: alguns modificadores têm um qualificador
+            // entre parênteses antes do intervalo de custo (ex.: "Perfurante de Armadura
+            // (Garras) (+1/+2/.../+10)", ver Ataque Corpo a Corpo) — pegar o primeiro
+            // capturaria "Garras" em vez do intervalo de pontos.
+            val paren = Regex("\\(([^)]*)\\)").findAll(fullName).lastOrNull()?.groupValues?.get(1).orEmpty()
             val opts = paren.split("/")
                 .mapNotNull { it.trim().removePrefix("+").toIntOrNull() }
                 .takeIf { it.isNotEmpty() } ?: listOf(0)
             val isNeg = opts.all { it < 0 } || paren.contains("-")
             ModState(
                 name = cleanName,
+                descricao = descricao,
                 options = opts,
-                included = mutableStateOf(value = false),
-                selected = mutableIntStateOf(value = opts.first()),
-                isNegative = isNeg
+                included = mutableStateOf(value = initialModifiers.containsKey(cleanName)),
+                selected = mutableIntStateOf(value = initialModifiers[cleanName] ?: opts.first()),
+                isNegative = isNeg,
+                expanded = mutableStateOf(value = false)
             )
         }
     }
@@ -181,7 +203,9 @@ fun BuySuperPowerDialog(
     val isLongRange = (allowedBaseOptions.size > 7) ||
             ((maxAllowed - minAllowed) > 10)
 
-    var selectedBaseCost by rememberSaveable(poder.nome) { mutableIntStateOf(allowedBaseOptions.first()) }
+    var selectedBaseCost by rememberSaveable(poder.nome) {
+        mutableIntStateOf(initialBaseCost?.takeIf { it in allowedBaseOptions } ?: allowedBaseOptions.first())
+    }
     val baseCost = if (selectedBaseCost in allowedBaseOptions) selectedBaseCost else allowedBaseOptions.first()
 
     LaunchedEffect(baseCost) {
@@ -330,10 +354,25 @@ fun BuySuperPowerDialog(
                                     com.example.swadebuilder.ui.components.SelectableItemRow(
                                         title = rowTitle,
                                         selected = mod.included.value,
-                                        onClick = { mod.included.value = !mod.included.value },
+                                        // Toca no nome pra ver a descrição da regra; a caixinha
+                                        // de seleção (indicador) continua marcando a compra —
+                                        // antes a descrição ficava sempre visível, ocupando a
+                                        // tela mesmo quando o jogador só queria escolher rápido.
+                                        onClick = { mod.expanded.value = !mod.expanded.value },
+                                        onIndicatorClick = { mod.included.value = !mod.included.value },
                                         mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
                                         enabled = isModEnabled
                                     )
+                                    if (mod.descricao.isNotBlank()) {
+                                        AnimatedVisibility(visible = mod.expanded.value) {
+                                            Text(
+                                                text = mod.descricao,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.padding(start = 4.dp, top = 2.dp)
+                                            )
+                                        }
+                                    }
                                     if (mod.included.value) {
                                         FlowRow(
                                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -385,9 +424,20 @@ fun BuySuperPowerDialog(
                                     com.example.swadebuilder.ui.components.SelectableItemRow(
                                         title = rowTitle,
                                         selected = mod.included.value,
-                                        onClick = { mod.included.value = !mod.included.value },
+                                        onClick = { mod.expanded.value = !mod.expanded.value },
+                                        onIndicatorClick = { mod.included.value = !mod.included.value },
                                         mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA
                                     )
+                                    if (mod.descricao.isNotBlank()) {
+                                        AnimatedVisibility(visible = mod.expanded.value) {
+                                            Text(
+                                                text = mod.descricao,
+                                                style = MaterialTheme.typography.bodySmall,
+                                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                modifier = Modifier.padding(start = 4.dp, top = 2.dp)
+                                            )
+                                        }
+                                    }
                                     if (mod.included.value && mod.options.size > 1) {
                                         FlowRow(
                                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -474,7 +524,13 @@ private enum class SuperCategory(val label: String, val icon: String) {
 
     companion object {
         fun fromPowerName(nome: String): SuperCategory {
-            val key = nome.keyify()
+            // keyify() só tira acento e deixa maiúsculo — mantém espaço, "/" e "-" como
+            // estão (ex.: "Ataque Corpo a Corpo" -> "ATAQUE CORPO A CORPO"), enquanto as
+            // listas abaixo usam "_" (ex.: "ATAQUE_CORPO_A_CORPO"). Sem essa normalização
+            // nenhuma entrada batia e todo poder caía no fallback (Capacitação) — inclusive
+            // Ataque Corpo a Corpo/Ataque de Longa Distância/Campo de Dano (Combate) e
+            // Campo de Força (Defesa), que já estavam nas listas certas mas nunca casavam.
+            val key = nome.keyify().replace(Regex("[\\s/-]+"), "_")
             return when {
                 key in listOf("ATAQUE_CORPO_A_CORPO", "ATAQUE_DE_LONGA_DISTANCIA", "CAMPO_DE_DANO", "EXPLODIR", "FURACAO", "INFECCAO", "PRECISAO_MORTAL", "TERREMOTO", "VENENO") -> COMBATE_OFENSIVO
                 key in listOf("ABSORCAO", "ARMADURA", "CAMPO_DE_FORCA", "ESCUDO_MENTAL", "ESQUIVA", "IMUNE_A_DOENCAS_VENENOS", "INTANGIBILIDADE", "INVISIBILIDADE", "RESISTENCIA", "RESISTENCIA_AMBIENTAL", "ROBUSTO", "SEM_ORGAOS_VITAIS") -> DEFESA_PROTECAO
@@ -582,6 +638,30 @@ fun SuperPoderesSection(
     var bonusPericiaBaseCost by rememberSaveable { mutableIntStateOf(0) }
     var bonusPericiaTotalCost by rememberSaveable { mutableIntStateOf(0) }
     var bonusPericiaNivel by rememberSaveable { mutableIntStateOf(0) }
+    var selectedBonusPericia by remember { mutableStateOf<Pericia?>(null) }
+
+    // Edição de poderes já comprados (ver "Meus Poderes" abaixo): guardam o investimento
+    // ORIGINAL sendo editado pra poder devolvê-lo intacto caso o jogador cancele o diálogo
+    // de edição sem confirmar uma nova escolha — o desfazer só é definitivo quando uma nova
+    // compra é de fato confirmada (mesma lógica de tentarInvestirSuper/desfazerInvestimentoSuper
+    // já usada por compra/remoção normais, então não há caminho novo de "pontos fantasmas").
+    var editingSimpleInvestment by remember { mutableStateOf<SuperInvestment?>(null) }
+    var editingAtributoInvestment by remember { mutableStateOf<SuperInvestment?>(null) }
+    var editingPericiaInvestment by remember { mutableStateOf<SuperInvestment?>(null) }
+    var editingVantagemInvestment by remember { mutableStateOf<SuperInvestment?>(null) }
+
+    fun encontrarPoderCatalogo(investment: SuperInvestment): SuperPoder? {
+        return when (investment.powerId) {
+            "sp_aparar" -> listaSuperPoderes.firstOrNull { it.nome.keyify() == "APARAR" }
+            "sp_armor" -> listaSuperPoderes.firstOrNull { it.nome.keyify() == "ARMADURA" }
+            "sp_res" -> listaSuperPoderes.firstOrNull { it.nome.keyify() == "RESISTENCIA" }
+            "sp_movimentacao" -> listaSuperPoderes.firstOrNull { it.nome.keyify() == "MOVIMENTACAO" }
+            "sp_bonus_pericia" -> listaSuperPoderes.firstOrNull {
+                it.nome.keyify().replace(" ", "") == "BONUSDEPERICIA"
+            }
+            else -> listaSuperPoderes.firstOrNull { "sp_${it.nome.keyify()}" == investment.powerId }
+        }
+    }
 
     Column(
         Modifier
@@ -695,6 +775,12 @@ fun SuperPoderesSection(
                 ) {
                     items(uniqueInvestments, key = { it.first.id }) { pair ->
                         val (investment, cost) = pair
+                        // Nome + selo de custo ficam numa largura travada (em vez de crescer
+                        // livremente) pra um poder de nome longo/composto nunca "brigar" de
+                        // espaço com o botão de ações ao lado — cada linha quebra dentro da
+                        // própria caixa em vez de invadir o vizinho no carrossel.
+                        var menuExpanded by remember(investment.id) { mutableStateOf(false) }
+
                         Surface(
                             shape = MaterialTheme.shapes.small,
                             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)),
@@ -705,26 +791,27 @@ fun SuperPoderesSection(
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Column {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                Column(modifier = Modifier.widthIn(max = 190.dp)) {
+                                    Text(
+                                        text = investment.displayName,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        maxLines = 2,
+                                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                                    )
+                                    Spacer(Modifier.height(2.dp))
+                                    Surface(
+                                        shape = MaterialTheme.shapes.extraSmall,
+                                        color = MaterialTheme.colorScheme.primaryContainer,
+                                        modifier = Modifier.align(Alignment.Start)
+                                    ) {
                                         Text(
-                                            text = investment.displayName,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.Bold
+                                            text = "$cost SP",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
                                         )
-                                        Spacer(Modifier.width(6.dp))
-                                        Surface(
-                                            shape = MaterialTheme.shapes.extraSmall,
-                                            color = MaterialTheme.colorScheme.primaryContainer
-                                        ) {
-                                            Text(
-                                                text = "$cost SP",
-                                                style = MaterialTheme.typography.labelSmall,
-                                                fontWeight = FontWeight.Bold,
-                                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                                modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
-                                            )
-                                        }
                                     }
                                     if (investment.modifiers.isNotEmpty()) {
                                         val modSummary = investment.modifiers.entries.joinToString(", ") { (modName, modVal) ->
@@ -734,36 +821,189 @@ fun SuperPoderesSection(
                                         Text(
                                             text = modSummary,
                                             style = MaterialTheme.typography.labelSmall,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            maxLines = 2,
+                                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                                         )
                                     }
                                 }
-                                Spacer(Modifier.width(8.dp))
-                                IconButton(
-                                    onClick = {
-                                        if (investment.effect is PowerEffect.Generico) {
-                                            val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
-                                            listaMesmoPoder.forEach { inv ->
-                                                viewModel.desfazerInvestimentoSuper(inv)
-                                                state.removerSuperPoder(inv, desfazerNoLedger = false)
+                                Spacer(Modifier.width(4.dp))
+
+                                val investmentsDoGrupo = if (investment.effect is PowerEffect.Generico) {
+                                    genericosAgrupados[investment.powerId].orEmpty()
+                                } else {
+                                    listOf(investment)
+                                }
+                                // Edição de um poder comprado múltiplas vezes (mesma catálogo, custos/
+                                // modificadores diferentes por compra) fica ambígua: qual das compras
+                                // o jogador quer alterar? Mais seguro pedir pra remover e comprar de
+                                // novo nesse caso raro do que arriscar misturar dados de duas compras.
+                                val podeEditar = investmentsDoGrupo.size <= 1
+
+                                fun editarInvestimento() {
+                                    when (investment.effect) {
+                                            is PowerEffect.SuperAtributo -> {
+                                                val r = viewModel.desfazerInvestimentoSuper(investment)
+                                                if (r.ok) {
+                                                    state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                                    editingAtributoInvestment = investment
+                                                    val gastoAtual = state.gastosPorPoder["sp_superatributo"] ?: 0
+                                                    val limiteInd = viewModel.perPowerLimit("sp_superatributo")
+                                                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                                                    poolSuperAttr = minOf(restoInd, state.superPontosDisponiveis) / 2
+                                                    showSuperAttrPicker = true
+                                                } else {
+                                                    onShowMessage(r.mensagem)
+                                                }
                                             }
-                                        } else {
-                                            val r = viewModel.desfazerInvestimentoSuper(investment)
-                                            if (r.ok) {
-                                                state.removerSuperPoder(investment, desfazerNoLedger = false)
-                                            } else {
-                                                onShowMessage(r.mensagem)
+                                            is PowerEffect.SuperPericia -> {
+                                                val r = viewModel.desfazerInvestimentoSuper(investment)
+                                                if (r.ok) {
+                                                    state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                                    editingPericiaInvestment = investment
+                                                    val gastoAtual = state.gastosPorPoder["sp_superpericia"] ?: 0
+                                                    val limiteInd = viewModel.perPowerLimit("sp_superpericia")
+                                                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                                                    poolSuperPericia = minOf(restoInd, state.superPontosDisponiveis)
+                                                    showSuperPericiaPicker = true
+                                                } else {
+                                                    onShowMessage(r.mensagem)
+                                                }
+                                            }
+                                            is PowerEffect.SuperVantagem -> {
+                                                val r = viewModel.desfazerInvestimentoSuper(investment)
+                                                if (r.ok) {
+                                                    state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                                    editingVantagemInvestment = investment
+                                                    val gastoAtual = state.gastosPorPoder["sp_supervantagem"] ?: 0
+                                                    val limiteInd = viewModel.perPowerLimit("sp_supervantagem")
+                                                    val restoInd = (limiteInd - gastoAtual).coerceAtLeast(0)
+                                                    poolSuperVant = minOf(restoInd, state.superPontosDisponiveis)
+                                                    showSuperVantPicker = true
+                                                } else {
+                                                    onShowMessage(r.mensagem)
+                                                }
+                                            }
+                                            is PowerEffect.Generico -> {
+                                                if (investment.powerId == "sp_bonus_pericia") {
+                                                    val poderCatalogo = encontrarPoderCatalogo(investment)
+                                                    val perNomeAlvo = Regex("em (.+)\\)$").find(investment.displayName)
+                                                        ?.groupValues?.get(1)
+                                                    if (poderCatalogo != null) {
+                                                        // Reverte já aqui (e não deixa pro "existente != null" do
+                                                        // diálogo de Bônus de Perícia) porque aquele só substitui
+                                                        // quando o jogador reescolhe a MESMA perícia; escolhendo
+                                                        // outra, o antigo ficaria pra trás gastando SP à toa.
+                                                        val r = viewModel.desfazerInvestimentoSuper(investment)
+                                                        if (r.ok) {
+                                                            state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                                            selectedBonusPericia = state.listaPericias.firstOrNull { it.nome == perNomeAlvo }
+                                                            editingSimpleInvestment = investment
+                                                            poderParaComprar = poderCatalogo
+                                                        } else {
+                                                            onShowMessage(r.mensagem)
+                                                        }
+                                                    } else {
+                                                        onShowMessage("Não foi possível localizar este poder no catálogo para edição.")
+                                                    }
+                                                } else {
+                                                    val poderCatalogo = encontrarPoderCatalogo(investment)
+                                                    if (poderCatalogo != null) {
+                                                        val r = viewModel.desfazerInvestimentoSuper(investment)
+                                                        if (r.ok) {
+                                                            state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                                            editingSimpleInvestment = investment
+                                                            poderParaComprar = poderCatalogo
+                                                        } else {
+                                                            onShowMessage(r.mensagem)
+                                                        }
+                                                    } else {
+                                                        onShowMessage("Não foi possível localizar este poder no catálogo para edição.")
+                                                    }
+                                                }
+                                            }
+                                            else -> {
+                                                // BonusAparar/BonusMovimentacao/BonusArmadura/BonusResistencia
+                                                val poderCatalogo = encontrarPoderCatalogo(investment)
+                                                if (poderCatalogo != null) {
+                                                    val r = viewModel.desfazerInvestimentoSuper(investment)
+                                                    if (r.ok) {
+                                                        state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                                        editingSimpleInvestment = investment
+                                                        poderParaComprar = poderCatalogo
+                                                    } else {
+                                                        onShowMessage(r.mensagem)
+                                                    }
+                                                } else {
+                                                    onShowMessage("Não foi possível localizar este poder no catálogo para edição.")
+                                                }
                                             }
                                         }
-                                    },
-                                    modifier = Modifier.size(20.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Close,
-                                        contentDescription = "Remover ${investment.displayName}",
-                                        tint = MaterialTheme.colorScheme.error,
-                                        modifier = Modifier.size(16.dp)
-                                    )
+                                    }
+
+                                fun removerInvestimento() {
+                                    if (investment.effect is PowerEffect.Generico) {
+                                        val listaMesmoPoder = genericosAgrupados[investment.powerId].orEmpty()
+                                        listaMesmoPoder.forEach { inv ->
+                                            viewModel.desfazerInvestimentoSuper(inv)
+                                            state.removerSuperPoder(inv, desfazerNoLedger = false)
+                                        }
+                                    } else {
+                                        val r = viewModel.desfazerInvestimentoSuper(investment)
+                                        if (r.ok) {
+                                            state.removerSuperPoder(investment, desfazerNoLedger = false)
+                                        } else {
+                                            onShowMessage(r.mensagem)
+                                        }
+                                    }
+                                }
+
+                                // Um único botão de "mais opções" em vez de dois ícones lado a
+                                // lado: o chip volta a ter a mesma largura/altura de antes (um só
+                                // alvo de toque), então um nome composto de poder não precisa
+                                // mais disputar espaço com dois botões — editar e remover viram
+                                // itens de um menu.
+                                Box {
+                                    IconButton(
+                                        onClick = { menuExpanded = true },
+                                        modifier = Modifier.size(24.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.MoreVert,
+                                            contentDescription = "Mais opções para ${investment.displayName}",
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                    DropdownMenu(
+                                        expanded = menuExpanded,
+                                        onDismissRequest = { menuExpanded = false }
+                                    ) {
+                                        DropdownMenuItem(
+                                            text = { Text(if (podeEditar) "Editar" else "Editar (remova e compre de novo)") },
+                                            enabled = podeEditar,
+                                            leadingIcon = {
+                                                Icon(Icons.Filled.Edit, contentDescription = null)
+                                            },
+                                            onClick = {
+                                                menuExpanded = false
+                                                editarInvestimento()
+                                            }
+                                        )
+                                        DropdownMenuItem(
+                                            text = { Text("Remover") },
+                                            leadingIcon = {
+                                                Icon(
+                                                    Icons.Filled.Close,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.error
+                                                )
+                                            },
+                                            onClick = {
+                                                menuExpanded = false
+                                                removerInvestimento()
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -1007,6 +1247,7 @@ fun SuperPoderesSection(
                                         val maxSp = minOf(restoInd, state.superPontosDisponiveis)
                                         poolSuperAttr = maxSp / 2
                                         if (poolSuperAttr > 0) {
+                                            editingAtributoInvestment = null
                                             showSuperAttrPicker = true
                                         } else {
                                             onShowMessage("Limite ou pontos insuficientes para Superatributo.")
@@ -1019,6 +1260,7 @@ fun SuperPoderesSection(
                                         val maxSp = minOf(restoInd, state.superPontosDisponiveis)
                                         poolSuperPericia = maxSp
                                         if (poolSuperPericia > 0) {
+                                            editingPericiaInvestment = null
                                             showSuperPericiaPicker = true
                                         } else {
                                             onShowMessage("Limite ou pontos insuficientes para Superperícia.")
@@ -1031,12 +1273,14 @@ fun SuperPoderesSection(
                                         val maxSp = minOf(restoInd, state.superPontosDisponiveis)
                                         poolSuperVant = maxSp / 2
                                         if (poolSuperVant > 0) {
+                                            editingVantagemInvestment = null
                                             showSuperVantPicker = true
                                         } else {
                                             onShowMessage("Limite ou pontos insuficientes para Supervantagem.")
                                         }
                                     }
                                     else -> {
+                                        editingSimpleInvestment = null
                                         poderParaComprar = poder
                                     }
                                 }
@@ -1280,6 +1524,8 @@ fun SuperPoderesSection(
                 poder = poder,
                 pontosDisponiveis = saldoSp,
                 limitePorPoder = limiteParaDialog,
+                initialBaseCost = editingSimpleInvestment?.baseCost,
+                initialModifiers = editingSimpleInvestment?.modifiers ?: emptyMap(),
                 onConfirm = { baseCost, custoTotal, modifiers ->
                     val nome = poder.nome.trim().uppercase()
                     var result: com.example.swadebuilder.model.InvestResult? = null
@@ -1379,15 +1625,28 @@ fun SuperPoderesSection(
 
                     if (result != null) {
                         if (result.ok) {
+                            editingSimpleInvestment = null
                             poderParaComprar = null
                         } else {
                             onShowMessage(result.mensagem)
                         }
                     } else {
+                        // SUPERATRIBUTO/SUPERPERÍCIA/SUPERVANTAGEM/BÔNUS DE PERÍCIA só fecham
+                        // este diálogo pra abrir o próximo (picker específico) — se estivermos
+                        // editando um Bônus de Perícia, editingSimpleInvestment tem que
+                        // sobreviver até aquele próximo diálogo confirmar ou cancelar, senão
+                        // o investimento original (já revertido) nunca seria devolvido.
                         poderParaComprar = null
                     }
                 }
-            ) { poderParaComprar = null }
+            ) {
+                // Cancelou a edição: devolve o investimento original exatamente como
+                // estava (já foi revertido ao abrir este diálogo) — nenhuma compra nova
+                // foi confirmada, então nada deve mudar na ficha.
+                editingSimpleInvestment?.let { original -> viewModel.tentarInvestirSuper(original) }
+                editingSimpleInvestment = null
+                poderParaComprar = null
+            }
         }
     }
 
@@ -1422,9 +1681,16 @@ fun SuperPoderesSection(
                     }
                 }
 
+                editingAtributoInvestment = null
                 showSuperAttrPicker = false
             },
-            onDismiss = { showSuperAttrPicker = false }
+            onDismiss = {
+                // Cancelou a edição: devolve exatamente o step revertido, sem mexer em
+                // nenhum outro atributo.
+                editingAtributoInvestment?.let { original -> viewModel.tentarInvestirSuper(original) }
+                editingAtributoInvestment = null
+                showSuperAttrPicker = false
+            }
         )
     }
 
@@ -1461,9 +1727,16 @@ fun SuperPoderesSection(
                     }
                 }
 
+                editingPericiaInvestment = null
                 showSuperPericiaPicker = false
             },
-            onDismiss = { showSuperPericiaPicker = false }
+            onDismiss = {
+                // Cancelou a edição: devolve exatamente os pontos revertidos, sem mexer em
+                // nenhuma outra perícia.
+                editingPericiaInvestment?.let { original -> viewModel.tentarInvestirSuper(original) }
+                editingPericiaInvestment = null
+                showSuperPericiaPicker = false
+            }
         )
     }
 
@@ -1503,17 +1776,27 @@ fun SuperPoderesSection(
                     }
                 }
 
+                editingVantagemInvestment = null
                 showSuperVantPicker = false
             },
-            onDismiss = { showSuperVantPicker = false }
+            onDismiss = {
+                // Cancelou a edição: devolve exatamente a supervantagem revertida, sem
+                // mexer em nenhuma outra.
+                editingVantagemInvestment?.let { original -> viewModel.tentarInvestirSuper(original) }
+                editingVantagemInvestment = null
+                showSuperVantPicker = false
+            }
         )
     }
 
     if (showBonusPericiaPicker) {
-        var selectedPericia by remember { mutableStateOf<Pericia?>(null) }
-
         AlertDialog(
-            onDismissRequest = { showBonusPericiaPicker = false },
+            onDismissRequest = {
+                editingSimpleInvestment?.let { original -> viewModel.tentarInvestirSuper(original) }
+                selectedBonusPericia = null
+                editingSimpleInvestment = null
+                showBonusPericiaPicker = false
+            },
             title = { Text("Escolher perícia para Bônus de Perícia") },
             text = {
                 val scroll = rememberScrollState()
@@ -1535,8 +1818,8 @@ fun SuperPoderesSection(
                     state.listaPericias.forEach { per ->
                         com.example.swadebuilder.ui.components.SelectableItemRow(
                             title = per.nome,
-                            selected = selectedPericia == per,
-                            onClick = { selectedPericia = per },
+                            selected = selectedBonusPericia == per,
+                            onClick = { selectedBonusPericia = per },
                             modifier = Modifier.padding(vertical = 2.dp),
                             mode = com.example.swadebuilder.ui.components.SelectionMode.UNICA
                         )
@@ -1544,7 +1827,7 @@ fun SuperPoderesSection(
                 }
             },
             confirmButton = {
-                val per = selectedPericia
+                val per = selectedBonusPericia
                 val gastosTotais = state.gastosPorPoder["sp_bonus_pericia"] ?: 0
                 val limiteIndividual = viewModel.perPowerLimit("sp_bonus_pericia")
                 val custoNovo = bonusPericiaTotalCost
@@ -1573,7 +1856,7 @@ fun SuperPoderesSection(
                 TextButton(
                     enabled = podeConfirmar,
                     onClick = {
-                        val pericia = selectedPericia ?: return@TextButton
+                        val pericia = selectedBonusPericia ?: return@TextButton
                         val poderId = "sp_bonus_pericia"
                         val custoNovoLocal = bonusPericiaTotalCost
 
@@ -1600,6 +1883,8 @@ fun SuperPoderesSection(
                                 effect = PowerEffect.Generico(nomeChip)
                             )
                         )
+                        selectedBonusPericia = null
+                        editingSimpleInvestment = null
                         showBonusPericiaPicker = false
                     }
                 ) {
@@ -1607,7 +1892,12 @@ fun SuperPoderesSection(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showBonusPericiaPicker = false }) {
+                TextButton(onClick = {
+                    editingSimpleInvestment?.let { original -> viewModel.tentarInvestirSuper(original) }
+                    selectedBonusPericia = null
+                    editingSimpleInvestment = null
+                    showBonusPericiaPicker = false
+                }) {
                     Text("Cancelar")
                 }
             }

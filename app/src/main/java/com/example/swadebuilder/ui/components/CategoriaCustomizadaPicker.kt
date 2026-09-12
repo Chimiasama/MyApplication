@@ -1,19 +1,27 @@
 package com.example.swadebuilder.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -24,95 +32,130 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.swadebuilder.model.Categoria
 import com.example.swadebuilder.model.CategoriaCustomizada
 import com.example.swadebuilder.model.TipoEntidadeCategoria
+import com.example.swadebuilder.model.getDisplayName
 
 /**
- * Linha de chips pra escolher (ou criar) a Categoria Customizada de uma Vantagem/
- * Equipamento/Poder/Super Poder/Complicação, dentro do formulário de Conteúdo
- * Customizado (ver SettingsDialog.kt). `categorias` já deve vir filtrada pelo
- * `tipoEntidade` correspondente.
+ * Controle único de "Categoria": dropdown com as opções oficiais (quando existem — ex.:
+ * Vantagem) seguidas das Categorias Customizadas do Mestre e, por fim, "Personalizada…",
+ * que revela um campo de texto abaixo pra criar uma nova. Antes disso existiam dois
+ * controles concorrentes fazendo a mesma coisa (dropdown de categoria oficial + chip row
+ * de categoria customizada, ver Vantagem no formulário de Conteúdo Customizado) — este
+ * composable substitui os dois em todo lugar (Vantagem, Poder, Super Poder, Equipamento).
+ *
+ * Exatamente um de [selectedOfficial]/[selectedCustomId] deve estar preenchido por vez;
+ * escolher um lado limpa o outro através dos callbacks `onSelectOfficial`/`onSelectCustomId`.
  */
 @Composable
-fun CategoriaCustomizadaChipRow(
-    label: String,
-    categorias: List<CategoriaCustomizada>,
-    selectedId: String?,
-    onSelect: (String?) -> Unit,
-    onCreate: (nome: String) -> CategoriaCustomizada,
-    onRename: (id: String, novoNome: String) -> Unit,
-    onDelete: (id: String) -> Unit,
-    allowNone: Boolean = true,
+fun CategorySelector(
+    officialOptions: List<Categoria>,
+    selectedOfficial: Categoria?,
+    customCategorias: List<CategoriaCustomizada>,
+    selectedCustomId: String?,
+    onSelectOfficial: (Categoria) -> Unit,
+    onSelectCustomId: (String?) -> Unit,
+    onCreateCustom: (nome: String) -> CategoriaCustomizada,
+    onRenameCustom: (id: String, novoNome: String) -> Unit,
+    onDeleteCustom: (id: String) -> Unit,
+    label: String = "Categoria:",
     noneLabel: String = "Nenhuma"
 ) {
-    var showCreateDialog by remember { mutableStateOf(false) }
+    var expanded by remember { mutableStateOf(false) }
+    var showCreateField by remember { mutableStateOf(false) }
+    var novoNome by remember { mutableStateOf("") }
     var showManageDialog by remember { mutableStateOf(false) }
 
+    val currentLabel = when {
+        selectedCustomId != null -> customCategorias.firstOrNull { it.id == selectedCustomId }?.nome ?: noneLabel
+        selectedOfficial != null -> selectedOfficial.getDisplayName()
+        else -> noneLabel
+    }
+
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        LabeledChipGroup(label) {
-            if (allowNone) {
-                FilterChip(
-                    selected = selectedId == null,
-                    onClick = { onSelect(null) },
-                    label = { Text(noneLabel, style = MaterialTheme.typography.labelSmall) }
+        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        Box {
+            OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = currentLabel,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Start
                 )
+                Text("▾", style = MaterialTheme.typography.bodyMedium)
             }
-            categorias.forEach { cat ->
-                FilterChip(
-                    selected = selectedId == cat.id,
-                    onClick = { onSelect(cat.id) },
-                    label = { Text(cat.nome, style = MaterialTheme.typography.labelSmall) }
-                )
-            }
-            FilterChip(
-                selected = false,
-                onClick = { showCreateDialog = true },
-                label = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        androidx.compose.material3.Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(14.dp))
-                        Spacer(Modifier.size(2.dp))
-                        Text("Nova categoria", style = MaterialTheme.typography.labelSmall)
-                    }
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                if (selectedOfficial == null && selectedCustomId == null) {
+                    DropdownMenuItem(text = { Text(noneLabel) }, onClick = { expanded = false })
                 }
-            )
+                officialOptions.forEach { cat ->
+                    DropdownMenuItem(
+                        text = { Text(cat.getDisplayName()) },
+                        onClick = {
+                            onSelectOfficial(cat)
+                            expanded = false
+                        }
+                    )
+                }
+                if (officialOptions.isNotEmpty() && customCategorias.isNotEmpty()) {
+                    HorizontalDivider()
+                }
+                customCategorias.forEach { cat ->
+                    DropdownMenuItem(
+                        text = { Text(cat.nome) },
+                        onClick = {
+                            onSelectCustomId(cat.id)
+                            expanded = false
+                        }
+                    )
+                }
+                HorizontalDivider()
+                DropdownMenuItem(
+                    text = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Spacer(Modifier.width(4.dp))
+                            Text("Personalizada…")
+                        }
+                    },
+                    onClick = {
+                        showCreateField = true
+                        expanded = false
+                    }
+                )
+            }
         }
-        if (categorias.isNotEmpty()) {
+
+        if (showCreateField) {
+            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+                OutlinedTextField(
+                    value = novoNome,
+                    onValueChange = { novoNome = it },
+                    label = { Text("Nome da categoria") },
+                    singleLine = true,
+                    modifier = Modifier.weight(1f)
+                )
+                IconButton(onClick = {
+                    if (novoNome.isNotBlank()) {
+                        val created = onCreateCustom(novoNome.trim())
+                        onSelectCustomId(created.id)
+                        novoNome = ""
+                        showCreateField = false
+                    }
+                }) {
+                    Icon(Icons.Default.Add, contentDescription = "Criar categoria")
+                }
+            }
+        }
+
+        if (customCategorias.isNotEmpty()) {
             TextButton(onClick = { showManageDialog = true }) {
                 Text("Gerenciar categorias", style = MaterialTheme.typography.labelSmall)
             }
         }
-    }
-
-    if (showCreateDialog) {
-        var nome by remember { mutableStateOf("") }
-        AlertDialog(
-            onDismissRequest = { showCreateDialog = false },
-            title = { Text("Nova categoria") },
-            text = {
-                OutlinedTextField(
-                    value = nome,
-                    onValueChange = { nome = it },
-                    label = { Text("Nome da categoria") },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        if (nome.isNotBlank()) {
-                            val created = onCreate(nome.trim())
-                            onSelect(created.id)
-                            showCreateDialog = false
-                        }
-                    }
-                ) { Text("Criar") }
-            },
-            dismissButton = {
-                TextButton(onClick = { showCreateDialog = false }) { Text("Cancelar") }
-            }
-        )
     }
 
     if (showManageDialog) {
@@ -123,7 +166,7 @@ fun CategoriaCustomizadaChipRow(
             title = { Text("Gerenciar categorias") },
             text = {
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(categorias, key = { it.id }) { cat ->
+                    items(customCategorias, key = { it.id }) { cat ->
                         if (renamingId == cat.id) {
                             Row(
                                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -136,7 +179,7 @@ fun CategoriaCustomizadaChipRow(
                                     modifier = Modifier.weight(1f)
                                 )
                                 TextButton(onClick = {
-                                    if (renamingValue.isNotBlank()) onRename(cat.id, renamingValue.trim())
+                                    if (renamingValue.isNotBlank()) onRenameCustom(cat.id, renamingValue.trim())
                                     renamingId = null
                                 }) { Text("OK") }
                             }
@@ -150,7 +193,10 @@ fun CategoriaCustomizadaChipRow(
                                 TextButton(onClick = { renamingId = cat.id; renamingValue = cat.nome }) {
                                     Text("Renomear", style = MaterialTheme.typography.labelSmall)
                                 }
-                                TextButton(onClick = { onDelete(cat.id) }) {
+                                TextButton(onClick = {
+                                    onDeleteCustom(cat.id)
+                                    if (selectedCustomId == cat.id) onSelectCustomId(null)
+                                }) {
                                     Text("Excluir", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.labelSmall)
                                 }
                             }
@@ -183,7 +229,7 @@ fun MoverCategoriaDialog(
         onDismissRequest = onDismiss,
         title = { Text("Mover categoria: $itemNome") },
         text = {
-            LabeledChipGroup("Categoria:") {
+            ChipRow("Categoria:") {
                 FilterChip(
                     selected = selecionada == null,
                     onClick = { selecionada = null },

@@ -1,6 +1,7 @@
 package com.example.swadebuilder.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,9 +14,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,17 +49,19 @@ class EquipamentoFormState {
     var danoBaseadoEmForca by mutableStateOf(true)
     var danoDado by mutableStateOf("d6")
     var danoQtd by mutableStateOf("2")
-    var danoBonus by mutableStateOf("")
+    // 0 = sem bônus fixo ("-" no seletor, ver NumeroBonusPicker) — mesmo padrão de "sem
+    // valor cadastrado" que forcaMin usa com "-".
+    var danoBonus by mutableStateOf(0)
 
-    var pa by mutableStateOf("")
+    var pa by mutableStateOf(0)
     var alcance by mutableStateOf("")
     var tiros by mutableStateOf("")
     var cdt by mutableStateOf("")
     // "-" = sem Força Mínima cadastrada; qualquer outro valor vem sempre de um dos 5 dados
     // válidos de SWADE (ver ForcaMinimaChipPicker).
     var forcaMin by mutableStateOf("-")
-    var aparar by mutableStateOf("")
-    var armadura by mutableStateOf("")
+    var aparar by mutableStateOf(0)
+    var armadura by mutableStateOf(0)
     var tamanho by mutableStateOf("")
     var manobrabilidade by mutableStateOf("")
     var velMaxima by mutableStateOf("")
@@ -88,12 +88,7 @@ class EquipamentoFormState {
     var categoriaCustomizadaId by mutableStateOf<String?>(null)
 
     fun montarDano(): String {
-        val bonus = danoBonus.toIntOrNull()?.takeIf { it != 0 }
-        val sufixoBonus = when {
-            bonus == null -> ""
-            bonus > 0 -> "+$bonus"
-            else -> "$bonus"
-        }
+        val sufixoBonus = if (danoBonus != 0) "+$danoBonus" else ""
         return if (danoBaseadoEmForca) {
             "For+$danoDado$sufixoBonus"
         } else {
@@ -124,6 +119,10 @@ class EquipamentoFormState {
 
     fun build(nome: String, descricao: String, origem: String, id: String): EquipamentoItem {
         fun textoOuNulo(v: String) = v.takeIf { it.isNotBlank() }?.let { JsonPrimitive(it) }
+        // PA é gravado sem sinal (convenção do catálogo oficial, ex.: "2"); Aparar e
+        // Armadura sempre com "+" (ex.: "+2") — mesma convenção usada pelos itens oficiais
+        // em equipamentos.json. 0 = campo não preenchido ("-" no seletor).
+        fun numeroOuNulo(v: Int, comSinal: Boolean) = v.takeIf { it != 0 }?.let { JsonPrimitive(if (comSinal) "+$it" else "$it") }
         val isArma = superType == "Arma"
         // "Efeito" (Geral/Munição) não é dano de arma — vai pra observação em vez do campo
         // `dano`, senão EquipamentoFormatters.toResumo() mostraria "Dano: <texto>" num item
@@ -147,13 +146,13 @@ class EquipamentoFormState {
             custo = JsonPrimitive(cost.toIntOrNull() ?: 0),
             peso = JsonPrimitive(weight.toFloatOrNull() ?: 0f),
             dano = if (isArma) JsonPrimitive(montarDano()) else null,
-            pa = textoOuNulo(pa),
+            pa = numeroOuNulo(pa, comSinal = false),
             distancia = textoOuNulo(alcance),
             tiros = textoOuNulo(tiros),
             cdt = textoOuNulo(cdt),
             forcaMin = forcaMinValor,
-            aparar = textoOuNulo(aparar),
-            armadura = textoOuNulo(armadura),
+            aparar = numeroOuNulo(aparar, comSinal = true),
+            armadura = numeroOuNulo(armadura, comSinal = true),
             tamanho = textoOuNulo(tamanho),
             manobrabilidade = textoOuNulo(manobrabilidade),
             velMaxima = textoOuNulo(velMaxima),
@@ -175,9 +174,9 @@ class EquipamentoFormState {
     fun reset() {
         superType = "Arma"; subtype = "Corpo a Corpo"
         cost = "0"; weight = "0"; effectText = ""
-        danoBaseadoEmForca = true; danoDado = "d6"; danoQtd = "2"; danoBonus = ""
-        pa = ""; alcance = ""; tiros = ""; cdt = ""
-        forcaMin = "-"; aparar = ""; armadura = ""
+        danoBaseadoEmForca = true; danoDado = "d6"; danoQtd = "2"; danoBonus = 0
+        pa = 0; alcance = ""; tiros = ""; cdt = ""
+        forcaMin = "-"; aparar = 0; armadura = 0
         tamanho = ""; manobrabilidade = ""; velMaxima = ""; resistencia = ""; tripulacao = ""
         explosao = ""; cobertura = ""
         usavelCorpoACorpo = false
@@ -189,20 +188,52 @@ class EquipamentoFormState {
 @Composable
 fun rememberEquipamentoFormState(): EquipamentoFormState = remember { EquipamentoFormState() }
 
-// Seletor em Segmented Control de linha única pra Força Mínima (d4 a d12 mais "-").
+// Força Mínima (d4 a d12 mais "-") como Chip Row: 6 opções é demais pra um Segmented
+// Control de linha única continuar legível.
 @Composable
 private fun ForcaMinimaChipPicker(value: String, onValueChange: (String) -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text("Força Mínima:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            val dice = listOf("-", "d4", "d6", "d8", "d10", "d12")
-            dice.forEachIndexed { index, dado ->
-                SegmentedButton(
-                    selected = value == dado,
-                    onClick = { onValueChange(dado) },
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = dice.size)
-                ) {
-                    Text(dado, style = MaterialTheme.typography.labelSmall)
+    ChipRow("Força Mínima:") {
+        listOf("-", "d4", "d6", "d8", "d10", "d12").forEach { dado ->
+            FilterChip(
+                selected = value == dado,
+                onClick = { onValueChange(dado) },
+                label = { Text(dado, style = MaterialTheme.typography.labelSmall) }
+            )
+        }
+    }
+}
+
+// Seletor compacto de bônus numérico (0 = "-", até 10) — em vez de texto livre, que
+// aceitava qualquer coisa e ocupava uma linha inteira de OutlinedTextField por campo.
+// Dropdown (não Chip Row) de propósito: cabe em Modifier.weight(1f) numa Row ao lado de
+// outro campo (ex.: PA + Aparar), economizando espaço vertical.
+@Composable
+private fun NumeroBonusPicker(
+    label: String,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    comSinal: Boolean = true,
+    range: IntRange = 0..10
+) {
+    var expanded by remember { mutableStateOf(false) }
+    fun textoDe(n: Int) = if (n == 0) "-" else if (comSinal) "+$n" else "$n"
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary, maxLines = 1)
+        Box {
+            OutlinedButton(onClick = { expanded = true }, modifier = Modifier.fillMaxWidth()) {
+                Text(textoDe(value), modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
+                Text("▾", style = MaterialTheme.typography.bodyMedium)
+            }
+            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                range.forEach { n ->
+                    DropdownMenuItem(
+                        text = { Text(textoDe(n)) },
+                        onClick = {
+                            onValueChange(n)
+                            expanded = false
+                        }
+                    )
                 }
             }
         }
@@ -258,7 +289,7 @@ fun EquipamentoCreatorFields(
     // `categoriaTipo` gravado no item — é o que faz o item cair na seção certa
     // (Armas/Armaduras/Veículos/etc.) da tela de Equipamento em vez de sempre em
     // "Equipamento Geral" (ver updateActiveModules em DataLoader e EquipamentoSection.mapCategory).
-    LabeledChipGroup("Tipo de Item:") {
+    ChipRow("Tipo de Item:") {
         listOf("Arma", "Armadura", "Escudo", "Munição", "Veículo", "Geral").forEach { st ->
             FilterChip(
                 selected = state.superType == st,
@@ -275,14 +306,14 @@ fun EquipamentoCreatorFields(
                     // Cada tipo cuida só das próprias tags mecânicas — troca de tipo limpa
                     // os campos do tipo anterior pra não salvar, por exemplo,
                     // Manobrabilidade de veículo numa arma.
-                    state.pa = ""; state.alcance = ""; state.tiros = ""; state.cdt = ""
-                    state.forcaMin = "-"; state.aparar = ""; state.armadura = ""
+                    state.pa = 0; state.alcance = ""; state.tiros = ""; state.cdt = ""
+                    state.forcaMin = "-"; state.aparar = 0; state.armadura = 0
                     state.tamanho = ""; state.manobrabilidade = ""
                     state.velMaxima = ""; state.resistencia = ""; state.tripulacao = ""
                     state.explosao = ""; state.cobertura = ""
                     state.effectText = ""
                     state.danoBaseadoEmForca = true
-                    state.danoDado = "d6"; state.danoQtd = "2"; state.danoBonus = ""
+                    state.danoDado = "d6"; state.danoQtd = "2"; state.danoBonus = 0
                     state.usavelCorpoACorpo = false
                     state.eras = emptySet()
                 },
@@ -291,7 +322,7 @@ fun EquipamentoCreatorFields(
         }
     }
     if (state.superType == "Arma") {
-        LabeledChipGroup("Subtipo de Arma:") {
+        ChipRow("Subtipo de Arma:") {
             listOf("Corpo a Corpo", "Distância", "Fogo", "Energia").forEach { sub ->
                 FilterChip(
                     selected = state.subtype == sub,
@@ -310,14 +341,17 @@ fun EquipamentoCreatorFields(
         }
     }
 
-    CategoriaCustomizadaChipRow(
+    CategorySelector(
         label = "Categoria customizada (opcional):",
-        categorias = categoriasCustomizadas,
-        selectedId = state.categoriaCustomizadaId,
-        onSelect = { state.categoriaCustomizadaId = it },
-        onCreate = onCreateCategoria,
-        onRename = onRenameCategoria,
-        onDelete = onDeleteCategoria
+        officialOptions = emptyList(),
+        selectedOfficial = null,
+        customCategorias = categoriasCustomizadas,
+        selectedCustomId = state.categoriaCustomizadaId,
+        onSelectOfficial = {},
+        onSelectCustomId = { state.categoriaCustomizadaId = it },
+        onCreateCustom = onCreateCategoria,
+        onRenameCustom = onRenameCategoria,
+        onDeleteCustom = onDeleteCategoria
     )
 
     // Custo e Peso valem pra qualquer tipo de item (livro básico, Cap. 2).
@@ -347,18 +381,12 @@ fun EquipamentoCreatorFields(
     val isArmaCorpoACorpo = isArma && state.subtype == "Corpo a Corpo"
 
     if (isArma) {
-        LabeledChipGroup("Dano baseado em:") {
-            FilterChip(
-                selected = state.danoBaseadoEmForca,
-                onClick = { state.danoBaseadoEmForca = true },
-                label = { Text("Força + dado", style = MaterialTheme.typography.labelSmall) }
-            )
-            FilterChip(
-                selected = !state.danoBaseadoEmForca,
-                onClick = { state.danoBaseadoEmForca = false },
-                label = { Text("Dado fixo", style = MaterialTheme.typography.labelSmall) }
-            )
-        }
+        SegmentedControl(
+            label = "Dano baseado em:",
+            options = listOf("Força + dado", "Dado fixo"),
+            selectedIndex = if (state.danoBaseadoEmForca) 0 else 1,
+            onSelect = { state.danoBaseadoEmForca = it == 0 }
+        )
         if (!state.danoBaseadoEmForca) {
             OutlinedTextField(
                 value = state.danoQtd,
@@ -369,29 +397,20 @@ fun EquipamentoCreatorFields(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        // Segmented control de linha única para os 5 dados válidos de SWADE (d4 a d12).
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(if (state.danoBaseadoEmForca) "Dado (For+):" else "Dado:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                val dice = listOf("d4", "d6", "d8", "d10", "d12")
-                dice.forEachIndexed { index, dado ->
-                    SegmentedButton(
-                        selected = state.danoDado == dado,
-                        onClick = { state.danoDado = dado },
-                        shape = SegmentedButtonDefaults.itemShape(index = index, count = dice.size)
-                    ) {
-                        Text(dado, style = MaterialTheme.typography.labelSmall)
-                    }
-                }
-            }
+        run {
+            val dice = listOf("d4", "d6", "d8", "d10", "d12")
+            SegmentedControl(
+                label = if (state.danoBaseadoEmForca) "Dado (For+):" else "Dado:",
+                options = dice,
+                selectedIndex = dice.indexOf(state.danoDado).coerceAtLeast(0),
+                onSelect = { state.danoDado = dice[it] }
+            )
         }
-        OutlinedTextField(
+        NumeroBonusPicker(
+            label = "Bônus de Dano",
             value = state.danoBonus,
             onValueChange = { state.danoBonus = it },
-            label = { Text("Bônus fixo (opcional, ex: 2 ou -1)") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            comSinal = true
         )
         Text(
             "Dano final: ${state.montarDano()}",
@@ -399,26 +418,27 @@ fun EquipamentoCreatorFields(
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
         )
+        // PA e Aparar juntos na mesma linha — dois seletores compactos em vez de dois
+        // OutlinedTextField inteiros, economiza espaço vertical do formulário.
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedTextField(
+            NumeroBonusPicker(
+                label = "PA (Perf. Armadura)",
                 value = state.pa,
                 onValueChange = { state.pa = it },
-                label = { Text("PA (Perf. Armadura)") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                comSinal = false,
                 modifier = Modifier.weight(1f)
             )
+            if (isArmaCorpoACorpo) {
+                NumeroBonusPicker(
+                    label = "Bônus de Aparar",
+                    value = state.aparar,
+                    onValueChange = { state.aparar = it },
+                    comSinal = true,
+                    modifier = Modifier.weight(1f)
+                )
+            }
         }
         ForcaMinimaChipPicker(value = state.forcaMin, onValueChange = { state.forcaMin = it })
-    }
-    if (isArmaCorpoACorpo) {
-        OutlinedTextField(
-            value = state.aparar,
-            onValueChange = { state.aparar = it },
-            label = { Text("Bônus de Aparar (ex: +1)") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
     }
     if (isArmaADistancia) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -470,24 +490,22 @@ fun EquipamentoCreatorFields(
     }
 
     if (state.superType == "Armadura") {
-        OutlinedTextField(
+        NumeroBonusPicker(
+            label = "Bônus de Armadura",
             value = state.armadura,
             onValueChange = { state.armadura = it },
-            label = { Text("Bônus de Armadura (ex: +2)") },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
+            comSinal = true
         )
         ForcaMinimaChipPicker(value = state.forcaMin, onValueChange = { state.forcaMin = it })
     }
 
     if (state.superType == "Escudo") {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            OutlinedTextField(
+            NumeroBonusPicker(
+                label = "Bônus de Aparar",
                 value = state.aparar,
                 onValueChange = { state.aparar = it },
-                label = { Text("Bônus de Aparar (ex: +1)") },
-                singleLine = true,
+                comSinal = true,
                 modifier = Modifier.weight(1f)
             )
             OutlinedTextField(
