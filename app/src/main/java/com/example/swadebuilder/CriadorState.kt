@@ -478,11 +478,11 @@ class CriadorState {
     var pularSelecaoRegras by mutableStateOf(false)
     var modoSelecaoPericia by mutableStateOf(com.example.swadebuilder.util.AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER)
     var habilitarCriacaoNasAbas by mutableStateOf(false)
-    // Tutorial de primeira visita por aba (ver ui/components/TabTutorialOverlay.kt):
-    // instrucoesAbasAtivas é o interruptor mestre em Configurações; abasComInstrucaoVista
-    // guarda em quais abas o jogador já fechou a instrução, pra não repetir.
-    var instrucoesAbasAtivas by mutableStateOf(true)
-    val abasComInstrucaoVista: SnapshotStateSet<MainSection> = mutableStateSetOf()
+    // Tutorial de primeira visita por tela (ver ui/components/TabTutorialOverlay.kt): guarda
+    // as chaves (abas do MainSection, mais "CONFIGURACOES" e "GERENCIAR_CONTEUDO") cuja
+    // instrução o jogador já fechou, pra não repetir. O interruptor de Configurações liga
+    // um replay geral simplesmente esvaziando este conjunto (ver SettingsDialog.kt).
+    val abasComInstrucaoVista: SnapshotStateSet<String> = mutableStateSetOf()
     var modoSupers by mutableStateOf(false)
     var compendioFantasiaAtivo by mutableStateOf(false)
     var compendioHorrorAtivo by mutableStateOf(false)

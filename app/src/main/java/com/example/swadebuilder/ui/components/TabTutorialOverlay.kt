@@ -8,8 +8,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import com.example.swadebuilder.CriadorState
+import com.example.swadebuilder.availableSectionsFor
 import com.example.swadebuilder.ui.MainSection
+import com.example.swadebuilder.util.AppPreferences
+
+const val TUTORIAL_KEY_CONFIGURACOES = "CONFIGURACOES"
+const val TUTORIAL_KEY_GERENCIAR_CONTEUDO = "GERENCIAR_CONTEUDO"
 
 private data class TabTutorialContent(
     val title: String,
@@ -75,48 +81,93 @@ private val tabTutorials: Map<MainSection, TabTutorialContent> = mapOf(
     )
 )
 
-/**
- * Instrução de primeira visita para cada aba do criador. Aparece uma única vez por aba
- * (controlado por [CriadorState.abasComInstrucaoVista], persistido globalmente em
- * AppPreferences) e pode ser desligada de vez em Configurações ou direto no botão
- * "Não mostrar instruções" do próprio diálogo — pra não obrigar o jogador a fechar
- * uma tela dessas em cada aba se ele não quiser ver.
- */
-@Composable
-fun TabTutorialOverlay(
-    state: CriadorState,
-    section: MainSection,
-    onDismissed: () -> Unit = {}
-) {
-    if (!state.instrucoesAbasAtivas) return
-    if (section in state.abasComInstrucaoVista) return
-    val content = tabTutorials[section] ?: return
+private val configuracoesTutorial = TabTutorialContent(
+    title = "Configurações",
+    body = "Aqui você ajusta as preferências do app: estilo e visual das abas, tema, vibração, som e o conteúdo customizado. O interruptor \"Instruções das Abas\", logo no topo, liga um replay completo destas instruções — ele se desliga sozinho quando você termina de ver todas de novo."
+)
 
-    var visible by remember(section) { mutableStateOf(true) }
+private val gerenciarConteudoTutorial = TabTutorialContent(
+    title = "Gerenciar Conteúdo Customizado",
+    body = "Aqui você cria e edita vantagens, perícias, complicações, poderes, equipamentos e outros itens personalizados, que passam a ficar disponíveis nas abas de criação junto com o conteúdo oficial."
+)
+
+/**
+ * Todas as chaves de tutorial que existem no momento para o personagem atual: as abas do
+ * pager disponíveis (ver [availableSectionsFor]) mais as telas que não são abas do pager
+ * (Configurações e Gerenciar Conteúdo Customizado, sempre acessíveis). Usado para saber se
+ * ainda falta alguma instrução a mostrar — ver o interruptor em SettingsDialog.kt.
+ */
+fun tutorialKeysDisponiveis(state: CriadorState): List<String> =
+    availableSectionsFor(state).map { it.name } +
+        listOf(TUTORIAL_KEY_CONFIGURACOES, TUTORIAL_KEY_GERENCIAR_CONTEUDO)
+
+@Composable
+private fun TutorialOverlay(
+    state: CriadorState,
+    key: String,
+    content: TabTutorialContent
+) {
+    if (key in state.abasComInstrucaoVista) return
+
+    val context = LocalContext.current
+    var visible by remember(key) { mutableStateOf(true) }
     if (!visible) return
 
-    fun markSeen() {
-        state.abasComInstrucaoVista.add(section)
-        visible = false
-        onDismissed()
-    }
-
     AlertDialog(
-        onDismissRequest = { markSeen() },
+        onDismissRequest = {
+            state.abasComInstrucaoVista.add(key)
+            AppPreferences.saveTutorialSeen(context, state.abasComInstrucaoVista.toSet())
+            visible = false
+        },
         title = { Text(content.title) },
         text = { Text(content.body) },
         confirmButton = {
-            TextButton(onClick = { markSeen() }) {
+            TextButton(onClick = {
+                state.abasComInstrucaoVista.add(key)
+                AppPreferences.saveTutorialSeen(context, state.abasComInstrucaoVista.toSet())
+                visible = false
+            }) {
                 Text("Entendi")
             }
         },
         dismissButton = {
             TextButton(onClick = {
-                state.instrucoesAbasAtivas = false
-                markSeen()
+                // Encerra o replay inteiro de uma vez, não só esta tela — ver o
+                // interruptor "Instruções das Abas" em SettingsDialog.kt.
+                state.abasComInstrucaoVista.addAll(tutorialKeysDisponiveis(state))
+                AppPreferences.saveTutorialSeen(context, state.abasComInstrucaoVista.toSet())
+                visible = false
             }) {
                 Text("Não mostrar instruções")
             }
         }
     )
+}
+
+/**
+ * Instrução de primeira visita para cada aba do criador. Aparece uma única vez por aba,
+ * controlada por [CriadorState.abasComInstrucaoVista] (persistido globalmente via
+ * AppPreferences) e pode ser revista a qualquer momento com o interruptor "Instruções das
+ * Abas" em Configurações, ou desligada de vez no botão "Não mostrar instruções" do próprio
+ * diálogo — pra não obrigar o jogador a fechar uma tela dessas em cada aba se não quiser ver.
+ */
+@Composable
+fun TabTutorialOverlay(
+    state: CriadorState,
+    section: MainSection
+) {
+    val content = tabTutorials[section] ?: return
+    TutorialOverlay(state = state, key = section.name, content = content)
+}
+
+/** Instrução de primeira visita para a tela de Configurações (ver [SettingsDialog]). */
+@Composable
+fun ConfiguracoesTutorialOverlay(state: CriadorState) {
+    TutorialOverlay(state = state, key = TUTORIAL_KEY_CONFIGURACOES, content = configuracoesTutorial)
+}
+
+/** Instrução de primeira visita para o diálogo de Gerenciar Conteúdo Customizado. */
+@Composable
+fun GerenciarConteudoTutorialOverlay(state: CriadorState) {
+    TutorialOverlay(state = state, key = TUTORIAL_KEY_GERENCIAR_CONTEUDO, content = gerenciarConteudoTutorial)
 }

@@ -17,7 +17,6 @@ object AppPreferences {
     private const val KEY_PULAR_SELECAO_REGRAS = "pular_selecao_regras"
     private const val KEY_MODO_PERICIA = "modo_selecao_pericia"
     private const val KEY_CRIACAO_NAS_ABAS = "habilitar_criacao_nas_abas"
-    private const val KEY_INSTRUCOES_ABAS_ATIVAS = "instrucoes_abas_ativas"
     private const val KEY_ABAS_INSTRUCAO_VISTAS = "abas_instrucao_vistas"
 
     enum class ModoSelecaoPericia {
@@ -36,9 +35,7 @@ object AppPreferences {
         val appTheme: AppTheme,
         val pularSelecaoRegras: Boolean,
         val modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER,
-        val habilitarCriacaoNasAbas: Boolean = false,
-        val instrucoesAbasAtivas: Boolean = true,
-        val abasComInstrucaoVista: Set<String> = emptySet()
+        val habilitarCriacaoNasAbas: Boolean = false
     )
 
     fun loadPrefs(context: Context, defaultHaptics: Int, defaultSound: Int): GlobalPrefs {
@@ -72,8 +69,6 @@ object AppPreferences {
             ModoSelecaoPericia.CARROSSEL_POPOVER
         }
         val habilitarCriacaoNasAbas = prefs.getBoolean(KEY_CRIACAO_NAS_ABAS, false)
-        val instrucoesAbasAtivas = prefs.getBoolean(KEY_INSTRUCOES_ABAS_ATIVAS, true)
-        val abasComInstrucaoVista = prefs.getStringSet(KEY_ABAS_INSTRUCAO_VISTAS, emptySet()) ?: emptySet()
 
         return GlobalPrefs(
             hapticStrength = haptics,
@@ -85,9 +80,7 @@ object AppPreferences {
             appTheme = appTheme,
             pularSelecaoRegras = pularSelecaoRegras,
             modoSelecaoPericia = modoSelecaoPericia,
-            habilitarCriacaoNasAbas = habilitarCriacaoNasAbas,
-            instrucoesAbasAtivas = instrucoesAbasAtivas,
-            abasComInstrucaoVista = abasComInstrucaoVista
+            habilitarCriacaoNasAbas = habilitarCriacaoNasAbas
         )
     }
 
@@ -102,9 +95,7 @@ object AppPreferences {
         appTheme: AppTheme,
         pularSelecaoRegras: Boolean,
         modoSelecaoPericia: ModoSelecaoPericia = ModoSelecaoPericia.CARROSSEL_POPOVER,
-        habilitarCriacaoNasAbas: Boolean = false,
-        instrucoesAbasAtivas: Boolean = true,
-        abasComInstrucaoVista: Set<String> = emptySet()
+        habilitarCriacaoNasAbas: Boolean = false
     ) {
         context
             .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
@@ -119,9 +110,21 @@ object AppPreferences {
                 putBoolean(KEY_PULAR_SELECAO_REGRAS, pularSelecaoRegras)
                 putString(KEY_MODO_PERICIA, modoSelecaoPericia.name)
                 putBoolean(KEY_CRIACAO_NAS_ABAS, habilitarCriacaoNasAbas)
-                putBoolean(KEY_INSTRUCOES_ABAS_ATIVAS, instrucoesAbasAtivas)
-                putStringSet(KEY_ABAS_INSTRUCAO_VISTAS, abasComInstrucaoVista)
             }
     }
 
+    // Chaves das telas/abas de tutorial (ver ui/components/TabTutorialOverlay.kt) cujas
+    // instruções o jogador já fechou. Guardado à parte de GlobalPrefs porque é escrito a
+    // cada diálogo fechado, bem mais seguido que o resto das preferências.
+    fun loadTutorialSeen(context: Context): Set<String> =
+        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .getStringSet(KEY_ABAS_INSTRUCAO_VISTAS, emptySet()) ?: emptySet()
+
+    fun saveTutorialSeen(context: Context, seen: Set<String>) {
+        context
+            .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .edit {
+                putStringSet(KEY_ABAS_INSTRUCAO_VISTAS, seen)
+            }
+    }
 }

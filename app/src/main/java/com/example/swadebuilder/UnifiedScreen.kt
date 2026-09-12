@@ -116,8 +116,7 @@ fun UnifiedScreen(
     modoOficialAtivo: Boolean = false,
     onShowMessage: (String) -> Unit,
     onUserFeedback: () -> Unit,
-    onRequestProgression: () -> Unit,
-    onPersistPrefs: () -> Unit = {}
+    onRequestProgression: () -> Unit
 ) {
     var showAllocDialog by rememberSaveable { mutableStateOf(false) }
     var currentSlotIndex by rememberSaveable { mutableIntStateOf(-1) }
@@ -223,8 +222,7 @@ fun UnifiedScreen(
     if (!pagerState.isScrollInProgress) {
         TabTutorialOverlay(
             state = state,
-            section = activeSection,
-            onDismissed = onPersistPrefs
+            section = activeSection
         )
     }
 
@@ -628,7 +626,7 @@ private fun SectionDetailPane(
     }
 }
 
-private fun availableSectionsFor(state: CriadorState): List<MainSection> {
+internal fun availableSectionsFor(state: CriadorState): List<MainSection> {
     if (state.isNpcExibicao) return listOf(MainSection.RESUMO)
     val sections = mutableListOf(MainSection.RESUMO)
     if (state.modoProgressaoAtivo && !state.modoLivre) {
