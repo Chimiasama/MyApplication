@@ -218,7 +218,11 @@
       "Arremesso de armas (+2): O bônus de ataque corpo a corpo se aplica a armas arremessadas.",
       "Carga (+1): O herói ou heroína pode fazer uma carga com sua forma de ataque como ação limitada, adicionam +1d6 a sua primeira rolagem de dano feita em sua próxima ação (ou +1d10 se combinado com Ataque Total (pág. 39).",
       "Esmagar (+3): O herói ou heroína pode ignorar a Armadura de objetos inanimados e veículos (exceto pessoas e a armadura que usam) em um ataque em seu turno. Uma vez que é declarado o uso de Esmagar, o herói ou heroína fica Vulnerável até o fim de seu próximo turno.",
-      "Perfurante de armadura (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): cada ponto gasto adiciona PA +2 (máximo PA 20) a uma forma de ataque.",
+      "Perfurante de Armadura (Socos/Chutes) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto gasto adiciona PA +2 (máximo PA 20) à forma básica de socos e chutes. Pode ser comprado separadamente pra cada forma de ataque deste poder.",
+      "Perfurante de Armadura (Mordida) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto gasto adiciona PA +2 (máximo PA 20) à forma de Mordida. Pode ser comprado separadamente pra cada forma de ataque deste poder.",
+      "Perfurante de Armadura (Garras) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto gasto adiciona PA +2 (máximo PA 20) à forma de Garras. Pode ser comprado separadamente pra cada forma de ataque deste poder.",
+      "Perfurante de Armadura (Chifres) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto gasto adiciona PA +2 (máximo PA 20) à forma de Chifres. Pode ser comprado separadamente pra cada forma de ataque deste poder.",
+      "Perfurante de Armadura (Arma Especial) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto gasto adiciona PA +2 (máximo PA 20) à forma de Arma Especial. Pode ser comprado separadamente pra cada forma de ataque deste poder.",
       "Dispositivo (-1/-2): Pode ser adquirido separadamente para cada forma de ataque (Mordida, Garras, Arma Especial etc.), nunca reduzindo o custo daquela forma abaixo de 1. Nunca funciona para outro personagem."
     ],
     "manifestacoes": [
@@ -245,7 +249,11 @@
       "Arremesso de armas (+2): O bônus de dano deste poder também vale quando a arma é arremessada.",
       "Carga (+1): Como ação limitada, o personagem pode avançar em carga com essa forma de ataque, somando +1d6 (ou +1d10 se combinado com Ataque Total) à próxima rolagem de dano.",
       "Esmagar (+3): Uma vez por turno, o personagem pode ignorar a Armadura de objetos inanimados e veículos (mas não a de pessoas) em um ataque; ao usar esse recurso, fica Vulnerável até o fim do seu próximo turno.",
-      "Perfurante de armadura (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto investido soma PA +2 a uma forma de ataque específica, até o teto de PA 20.",
+      "Perfurante de Armadura (Socos/Chutes) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto investido soma PA +2 à forma básica de socos e chutes, até o teto de PA 20. Compra-se separadamente para cada forma de ataque deste poder.",
+      "Perfurante de Armadura (Mordida) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto investido soma PA +2 à forma de Mordida, até o teto de PA 20. Compra-se separadamente para cada forma de ataque deste poder.",
+      "Perfurante de Armadura (Garras) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto investido soma PA +2 à forma de Garras, até o teto de PA 20. Compra-se separadamente para cada forma de ataque deste poder.",
+      "Perfurante de Armadura (Chifres) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto investido soma PA +2 à forma de Chifres, até o teto de PA 20. Compra-se separadamente para cada forma de ataque deste poder.",
+      "Perfurante de Armadura (Arma Especial) (+1/+2/+3/+4/+5/+6/+7/+8/+9/+10): Cada ponto investido soma PA +2 à forma de Arma Especial, até o teto de PA 20. Compra-se separadamente para cada forma de ataque deste poder.",
       "Dispositivo (-1/-2): Pode ser adquirido separadamente para cada forma de ataque (Mordida, Garras, Arma Especial etc.), nunca reduzindo o custo daquela forma abaixo de 1. Nunca funciona para outro personagem."
     ]
   },

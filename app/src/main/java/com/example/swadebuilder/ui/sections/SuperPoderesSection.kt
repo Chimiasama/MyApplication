@@ -144,7 +144,11 @@ fun BuySuperPowerDialog(
             // regex não casava e o intervalo inteiro ficava colado no nome (aparecia
             // errado até na ficha em PDF, ver ResumoPdfReferenciador.kt).
             val cleanName = fullName.replace(Regex("\\s*\\([+-]?\\d+(?:/[+-]?\\d+)*\\)\\s*$"), "")
-            val paren = Regex("\\(([^)]*)\\)").find(fullName)?.groupValues?.get(1).orEmpty()
+            // Último parêntese, não o primeiro: alguns modificadores têm um qualificador
+            // entre parênteses antes do intervalo de custo (ex.: "Perfurante de Armadura
+            // (Garras) (+1/+2/.../+10)", ver Ataque Corpo a Corpo) — pegar o primeiro
+            // capturaria "Garras" em vez do intervalo de pontos.
+            val paren = Regex("\\(([^)]*)\\)").findAll(fullName).lastOrNull()?.groupValues?.get(1).orEmpty()
             val opts = paren.split("/")
                 .mapNotNull { it.trim().removePrefix("+").toIntOrNull() }
                 .takeIf { it.isNotEmpty() } ?: listOf(0)
@@ -478,7 +482,13 @@ private enum class SuperCategory(val label: String, val icon: String) {
 
     companion object {
         fun fromPowerName(nome: String): SuperCategory {
-            val key = nome.keyify()
+            // keyify() só tira acento e deixa maiúsculo — mantém espaço, "/" e "-" como
+            // estão (ex.: "Ataque Corpo a Corpo" -> "ATAQUE CORPO A CORPO"), enquanto as
+            // listas abaixo usam "_" (ex.: "ATAQUE_CORPO_A_CORPO"). Sem essa normalização
+            // nenhuma entrada batia e todo poder caía no fallback (Capacitação) — inclusive
+            // Ataque Corpo a Corpo/Ataque de Longa Distância/Campo de Dano (Combate) e
+            // Campo de Força (Defesa), que já estavam nas listas certas mas nunca casavam.
+            val key = nome.keyify().replace(Regex("[\\s/-]+"), "_")
             return when {
                 key in listOf("ATAQUE_CORPO_A_CORPO", "ATAQUE_DE_LONGA_DISTANCIA", "CAMPO_DE_DANO", "EXPLODIR", "FURACAO", "INFECCAO", "PRECISAO_MORTAL", "TERREMOTO", "VENENO") -> COMBATE_OFENSIVO
                 key in listOf("ABSORCAO", "ARMADURA", "CAMPO_DE_FORCA", "ESCUDO_MENTAL", "ESQUIVA", "IMUNE_A_DOENCAS_VENENOS", "INTANGIBILIDADE", "INVISIBILIDADE", "RESISTENCIA", "RESISTENCIA_AMBIENTAL", "ROBUSTO", "SEM_ORGAOS_VITAIS") -> DEFESA_PROTECAO

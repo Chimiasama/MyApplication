@@ -22,6 +22,8 @@ import androidx.core.graphics.withTranslation
 import com.example.swadebuilder.model.Complicacao
 import com.example.swadebuilder.model.Constants
 import com.example.swadebuilder.model.EquipamentoItem
+import com.example.swadebuilder.model.ataquesCorpoACorpoDeSuperPoderes
+import com.example.swadebuilder.model.ataquesADistanciaDeSuperPoderes
 import com.example.swadebuilder.model.MeuPersonagem
 import com.example.swadebuilder.model.Poder
 import com.example.swadebuilder.model.SuperPoder
@@ -550,7 +552,17 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
     val armasADistancia = todasArmas.filter { w -> w.distancia != null && w.campoTexto(w.distancia) != "Toque" }
     val armaduras = p.equipamentos.filter { it.armadura != null || it.aparar != null }
 
-    val meleeRows = armasCorpoACorpo.map { w ->
+    // Ataques dos Super Poderes "Ataque Corpo a Corpo"/"Ataque de Longa Distância" (ver
+    // model/SuperPoderAtaques.kt) — nunca viram EquipamentoItem, então entram direto nas
+    // linhas da tabela em vez de passar por p.equipamentos.
+    val ataquesSuperMelee = p.superInvestments.ataquesCorpoACorpoDeSuperPoderes().map { a ->
+        listOf(a.nome, a.dano, a.pa, a.alcance, "-")
+    }
+    val ataquesSuperRanged = p.superInvestments.ataquesADistanciaDeSuperPoderes().map { a ->
+        listOf(a.nome, a.alcance, a.dano, a.pa, "-", a.cdt, "-")
+    }
+
+    val meleeRows = ataquesSuperMelee + armasCorpoACorpo.map { w ->
         val isNatural = naturalKeywords.any { w.nome.contains(it, ignoreCase = true) }
         // "Toque" é o alcance-padrão de ataque natural (não é um alcance de verdade) — só
         // interessa mostrar Alcance aqui quando é um valor numérico real, tipo arma de
@@ -564,7 +576,7 @@ private fun buildWeaponAndArmorBlocks(p: MeuPersonagem, showOfficialNames: Boole
             if (isNatural) "-" else w.campoTexto(w.peso)
         )
     }
-    val rangedRows = armasADistancia.map { w ->
+    val rangedRows = ataquesSuperRanged + armasADistancia.map { w ->
         listOf(
             nomeExibido(w),
             w.campoTexto(w.distancia),
