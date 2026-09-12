@@ -130,6 +130,7 @@ fun BuySuperPowerDialog(
 
     data class ModState(
         val name: String,
+        val descricao: String,
         val options: List<Int>,
         val included: MutableState<Boolean>,
         val selected: MutableState<Int>,
@@ -139,6 +140,9 @@ fun BuySuperPowerDialog(
     val modStates = remember(poder.modificadores) {
         poder.modificadores.orEmpty().map { modObj ->
             val fullName = modObj.substringBefore(":").trim()
+            // Texto depois dos ":" — o jogador via só nome+custo aqui, sem saber o que o
+            // modificador realmente faz (tinha que checar o livro à parte).
+            val descricao = modObj.substringAfter(":", "").trim()
             // Cada opção depois da primeira barra também pode ter seu próprio sinal
             // (ex.: "Arma Especial (+2/+4/+6/+8/+10)") — sem o "[+-]?" depois da "/" a
             // regex não casava e o intervalo inteiro ficava colado no nome (aparecia
@@ -155,6 +159,7 @@ fun BuySuperPowerDialog(
             val isNeg = opts.all { it < 0 } || paren.contains("-")
             ModState(
                 name = cleanName,
+                descricao = descricao,
                 options = opts,
                 included = mutableStateOf(value = false),
                 selected = mutableIntStateOf(value = opts.first()),
@@ -342,6 +347,14 @@ fun BuySuperPowerDialog(
                                         mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA,
                                         enabled = isModEnabled
                                     )
+                                    if (mod.descricao.isNotBlank()) {
+                                        Text(
+                                            text = mod.descricao,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(start = 4.dp, top = 2.dp)
+                                        )
+                                    }
                                     if (mod.included.value) {
                                         FlowRow(
                                             horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -396,6 +409,14 @@ fun BuySuperPowerDialog(
                                         onClick = { mod.included.value = !mod.included.value },
                                         mode = com.example.swadebuilder.ui.components.SelectionMode.MULTIPLA
                                     )
+                                    if (mod.descricao.isNotBlank()) {
+                                        Text(
+                                            text = mod.descricao,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(start = 4.dp, top = 2.dp)
+                                        )
+                                    }
                                     if (mod.included.value && mod.options.size > 1) {
                                         FlowRow(
                                             horizontalArrangement = Arrangement.spacedBy(4.dp),
