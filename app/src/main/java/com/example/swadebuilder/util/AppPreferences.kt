@@ -17,6 +17,7 @@ object AppPreferences {
     private const val KEY_PULAR_SELECAO_REGRAS = "pular_selecao_regras"
     private const val KEY_MODO_PERICIA = "modo_selecao_pericia"
     private const val KEY_CRIACAO_NAS_ABAS = "habilitar_criacao_nas_abas"
+    private const val KEY_ABAS_INSTRUCAO_VISTAS = "abas_instrucao_vistas"
 
     enum class ModoSelecaoPericia {
         CARROSSEL_POPOVER,
@@ -112,4 +113,18 @@ object AppPreferences {
             }
     }
 
+    // Chaves das telas/abas de tutorial (ver ui/components/TabTutorialOverlay.kt) cujas
+    // instruções o jogador já fechou. Guardado à parte de GlobalPrefs porque é escrito a
+    // cada diálogo fechado, bem mais seguido que o resto das preferências.
+    fun loadTutorialSeen(context: Context): Set<String> =
+        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .getStringSet(KEY_ABAS_INSTRUCAO_VISTAS, emptySet()) ?: emptySet()
+
+    fun saveTutorialSeen(context: Context, seen: Set<String>) {
+        context
+            .getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+            .edit {
+                putStringSet(KEY_ABAS_INSTRUCAO_VISTAS, seen)
+            }
+    }
 }

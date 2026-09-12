@@ -243,6 +243,8 @@ class MainActivity : ComponentActivity() {
                 state.pularSelecaoRegras = prefs.pularSelecaoRegras
                 state.modoSelecaoPericia = prefs.modoSelecaoPericia
                 state.habilitarCriacaoNasAbas = prefs.habilitarCriacaoNasAbas
+                state.abasComInstrucaoVista.clear()
+                state.abasComInstrucaoVista.addAll(AppPreferences.loadTutorialSeen(context))
             }
             val persistPrefs: () -> Unit = remember {
                 {

@@ -78,6 +78,7 @@ import com.example.swadebuilder.model.listaDeEstagios
 import com.example.swadebuilder.ui.MainSection
 import com.example.swadebuilder.ui.components.MarqueeText
 import com.example.swadebuilder.ui.components.SectionCard
+import com.example.swadebuilder.ui.components.TabTutorialOverlay
 import com.example.swadebuilder.ui.dialogs.ProgressosDialog
 import com.example.swadebuilder.ui.sections.AncestralidadesSection
 import com.example.swadebuilder.ui.sections.AtributosContent
@@ -211,6 +212,19 @@ fun UnifiedScreen(
 
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    // Overlay único fora do HorizontalPager: o pager mantém mais de uma página composta
+    // ao mesmo tempo (a atual + vizinhas em cache), e um AlertDialog não fica preso à
+    // posição da sua página — ele flutua por cima de tudo mesmo se a página que o criou
+    // estiver fora de tela. Por isso a instrução só é avaliada aqui, uma vez, pra aba que
+    // realmente "assentou" (arrasto do pager já concluído), em vez de uma vez por página
+    // composta dentro de SectionDetailPane.
+    if (!pagerState.isScrollInProgress) {
+        TabTutorialOverlay(
+            state = state,
+            section = activeSection
+        )
+    }
 
     if (isLandscape) {
         Row(Modifier.fillMaxSize()) {
@@ -558,6 +572,7 @@ private fun SectionDetailPane(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -611,7 +626,7 @@ private fun SectionDetailPane(
     }
 }
 
-private fun availableSectionsFor(state: CriadorState): List<MainSection> {
+internal fun availableSectionsFor(state: CriadorState): List<MainSection> {
     if (state.isNpcExibicao) return listOf(MainSection.RESUMO)
     val sections = mutableListOf(MainSection.RESUMO)
     if (state.modoProgressaoAtivo && !state.modoLivre) {

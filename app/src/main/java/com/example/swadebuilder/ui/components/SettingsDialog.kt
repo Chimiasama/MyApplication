@@ -258,6 +258,9 @@ fun SettingsDialog(
     var showNpcWarning by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showCustomContentDialog by remember { mutableStateOf(false) }
+    val tutorialContext = androidx.compose.ui.platform.LocalContext.current
+
+    ConfiguracoesTutorialOverlay(state = state)
 
     val themeNames = remember {
         mapOf(
@@ -325,6 +328,33 @@ fun SettingsDialog(
                         onCheckedChange = {
                             state.showSystemMessages = it
                             persistPrefs()
+                        },
+                        modifier = Modifier.scale(0.8f)
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Instruções das Abas", style = MaterialTheme.typography.bodyMedium)
+                    // Não é uma preferência persistida à parte: reflete se ainda existe
+                    // alguma instrução de aba não vista. Ligar limpa tudo e reinicia o
+                    // replay; desligar marca tudo como visto (mesmo efeito de "Não mostrar
+                    // instruções" em cada diálogo) — ver TabTutorialOverlay.kt.
+                    val tutoriaisPendentes = tutorialKeysDisponiveis(state).any {
+                        it !in state.abasComInstrucaoVista
+                    }
+                    Switch(
+                        checked = tutoriaisPendentes,
+                        onCheckedChange = { ligar ->
+                            if (ligar) {
+                                state.abasComInstrucaoVista.clear()
+                            } else {
+                                state.abasComInstrucaoVista.addAll(tutorialKeysDisponiveis(state))
+                            }
+                            AppPreferences.saveTutorialSeen(tutorialContext, state.abasComInstrucaoVista.toSet())
                         },
                         modifier = Modifier.scale(0.8f)
                     )
@@ -604,6 +634,9 @@ fun CustomContentManageDialog(
     onCustomContentChanged: () -> Unit = {}
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
+
+    GerenciarConteudoTutorialOverlay(state = state)
+
     var customItemName by remember { mutableStateOf("") }
     var customItemDesc by remember { mutableStateOf("") }
     var descricaoExpanded by remember { mutableStateOf(false) }
