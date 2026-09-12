@@ -214,6 +214,20 @@ fun UnifiedScreen(
     val configuration = LocalConfiguration.current
     val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
+    // Overlay único fora do HorizontalPager: o pager mantém mais de uma página composta
+    // ao mesmo tempo (a atual + vizinhas em cache), e um AlertDialog não fica preso à
+    // posição da sua página — ele flutua por cima de tudo mesmo se a página que o criou
+    // estiver fora de tela. Por isso a instrução só é avaliada aqui, uma vez, pra aba que
+    // realmente "assentou" (arrasto do pager já concluído), em vez de uma vez por página
+    // composta dentro de SectionDetailPane.
+    if (!pagerState.isScrollInProgress) {
+        TabTutorialOverlay(
+            state = state,
+            section = activeSection,
+            onDismissed = onPersistPrefs
+        )
+    }
+
     if (isLandscape) {
         Row(Modifier.fillMaxSize()) {
             CreatorNavigationRail(
@@ -281,8 +295,7 @@ fun UnifiedScreen(
                                 showAllocDialog = true
                             }
                         },
-                        onUserFeedback = onUserFeedback,
-                        onPersistPrefs = onPersistPrefs
+                        onUserFeedback = onUserFeedback
                     )
                 }
             }
@@ -358,8 +371,7 @@ fun UnifiedScreen(
                             showAllocDialog = true
                         }
                     },
-                    onUserFeedback = onUserFeedback,
-                    onPersistPrefs = onPersistPrefs
+                    onUserFeedback = onUserFeedback
                 )
             }
         }
@@ -558,17 +570,10 @@ private fun SectionDetailPane(
     onRequestProgression: () -> Unit,
     onSelectAncestralidade: (String) -> Unit,
     onUseProgress: (Int) -> Unit,
-    onUserFeedback: () -> Unit,
-    onPersistPrefs: () -> Unit = {}
+    onUserFeedback: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
-    TabTutorialOverlay(
-        state = state,
-        section = selectedSection,
-        onDismissed = onPersistPrefs
-    )
 
     Column(
         modifier = modifier
