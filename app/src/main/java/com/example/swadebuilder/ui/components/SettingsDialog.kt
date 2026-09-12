@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -42,9 +43,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -67,7 +65,6 @@ import com.example.swadebuilder.util.toIdSlug
 import com.example.swadebuilder.util.toEditionDisplayName
 import com.example.swadebuilder.model.Requisito
 import com.example.swadebuilder.model.getActiveOrigins
-import com.example.swadebuilder.model.getDisplayName
 import com.example.swadebuilder.CriadorState
 import com.example.swadebuilder.FeedbackController
 import com.example.swadebuilder.TabStyle
@@ -75,8 +72,6 @@ import com.example.swadebuilder.ui.theme.AppTheme
 import kotlin.math.roundToInt
 
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.ScrollableTabRow
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Button
 import androidx.compose.material3.InputChip
@@ -95,64 +90,30 @@ private fun primeiroCustoSuperPoder(custoBase: String?): Int =
         ?: 1
 
 /**
- * Rótulo + grupo de FilterChips do formulário de Conteúdo Customizado — era repetido em cada
- * categoria com pequenas inconsistências (algumas usavam Row sem quebra de linha, que cortava
- * os chips em telas estreitas quando havia várias opções).
- */
-/**
+ * Rótulo + fileira de chips com scroll horizontal — o padrão único de "Chip Row" do
+ * formulário de Conteúdo Customizado (e de Configurações), pra qualquer escolha que não
+ * seja um Segmented Control de 2-3 opções curtas (ver CreatorFormComponents.kt). Rola
+ * em vez de quebrar linha, então nunca corta chips nem estoura a largura da tela.
+ *
  * Sem `private`: além de usado nas outras categorias deste diálogo, é reaproveitado por
  * EquipamentoCreatorForm.kt (categoria "Equipamento" foi extraída pra lá — ver comentário
- * no topo daquele arquivo).
+ * no topo daquele arquivo) e por CategoriaCustomizadaPicker.kt.
  */
-@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
-private fun AdvantageCategoryDropdownPicker(
-    selectedCategory: Categoria,
-    categories: List<Categoria>,
-    onSelect: (Categoria) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text("Categoria:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-        Box {
-            OutlinedButton(
-                onClick = { expanded = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = selectedCategory.getDisplayName(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Start
-                )
-                Text("▾", style = MaterialTheme.typography.bodyMedium)
-            }
-            DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                categories.forEach { cat ->
-                    DropdownMenuItem(
-                        text = { Text(cat.getDisplayName(), style = MaterialTheme.typography.bodyMedium) },
-                        onClick = {
-                            onSelect(cat)
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun LabeledChipGroup(
-    label: String,
+fun ChipRow(
+    label: String? = null,
     modifier: Modifier = Modifier,
-    content: @Composable androidx.compose.foundation.layout.FlowRowScope.() -> Unit
+    content: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-        androidx.compose.foundation.layout.FlowRow(
+        if (!label.isNullOrBlank()) {
+            Text(label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
             content = content
         )
     }
@@ -328,20 +289,31 @@ fun SettingsDialog(
         AppTheme.entries.sortedBy { themeNames[it] ?: it.name }
     }
 
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        properties = androidx.compose.ui.window.DialogProperties(dismissOnClickOutside = false),
-        title = { Text("Configurações", style = MaterialTheme.typography.headlineSmall) },
-        text = {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Section 1: Interface
-                Text("Interface do Sistema", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+    // Quais seções do accordion estão expandidas — por padrão todas, igual ao scroll
+    // único de antes; a diferença é que agora dá pra recolher o que não interessa no
+    // momento em vez de rolar às cegas até achar (ver CollapsibleSection.kt).
+    var expandedSections by remember {
+        mutableStateOf(setOf("Interface", "Conteúdo Customizado", "Visual e Tema", "Sons e Vibração"))
+    }
+    fun toggleSection(title: String) {
+        expandedSections = if (title in expandedSections) expandedSections - title else expandedSections + title
+    }
 
+    com.example.swadebuilder.ui.components.FullScreenActionSheet(
+        title = "Configurações",
+        onDismiss = onDismiss,
+        actions = {
+            OutlinedButton(onClick = onDismiss) { Text("Fechar") }
+            Spacer(Modifier.width(8.dp))
+            Button(onClick = onDismiss) { Text("Concluído") }
+        }
+    ) {
+                // Section 1: Interface
+                CollapsibleSection(
+                    title = "Interface do Sistema",
+                    expanded = "Interface" in expandedSections,
+                    onToggle = { toggleSection("Interface") }
+                ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -358,34 +330,22 @@ fun SettingsDialog(
                     )
                 }
 
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Text("Modo de Distribuição", style = MaterialTheme.typography.bodyMedium)
-                    SingleChoiceSegmentedButtonRow(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        val options = listOf(
-                            AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER,
+                // Segmented Control único do design system (ver CreatorFormComponents.kt) —
+                // mesmo componente usado nas telas de Criar Conteúdo Customizado, em vez de
+                // uma variação própria desta tela.
+                com.example.swadebuilder.ui.components.SegmentedControl(
+                    label = "Modo de Distribuição",
+                    options = listOf("Tocar e Escolher", "Botões + e -"),
+                    selectedIndex = if (state.modoSelecaoPericia == AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER) 0 else 1,
+                    onSelect = { index ->
+                        state.modoSelecaoPericia = if (index == 0) {
+                            AppPreferences.ModoSelecaoPericia.CARROSSEL_POPOVER
+                        } else {
                             AppPreferences.ModoSelecaoPericia.STEPPER_CORES
-                        )
-                        val labels = listOf("Tocar e Escolher", "Botões + e -")
-
-                        options.forEachIndexed { index, option ->
-                            SegmentedButton(
-                                selected = state.modoSelecaoPericia == option,
-                                onClick = {
-                                    state.modoSelecaoPericia = option
-                                    persistPrefs()
-                                },
-                                shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
-                            ) {
-                                Text(labels[index], style = MaterialTheme.typography.labelSmall)
-                            }
                         }
+                        persistPrefs()
                     }
-                }
+                )
 
                 if (isHomeScreen) {
                     Row(
@@ -421,12 +381,15 @@ fun SettingsDialog(
                         )
                     }
                 }
-
+                }
                 HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
                 // Section 2: Conteúdo Customizado
-                Text("Conteúdo Customizado", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
+                CollapsibleSection(
+                    title = "Conteúdo Customizado",
+                    expanded = "Conteúdo Customizado" in expandedSections,
+                    onToggle = { toggleSection("Conteúdo Customizado") }
+                ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -461,37 +424,24 @@ fun SettingsDialog(
                         onCustomContentChanged = onCustomContentChanged
                     )
                 }
-
+                }
                 HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
                 // Section 3: Visual e Tema
-                Text("Visual e Tema", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                CollapsibleSection(
+                    title = "Visual e Tema",
+                    expanded = "Visual e Tema" in expandedSections,
+                    onToggle = { toggleSection("Visual e Tema") }
                 ) {
-                    Text("Estilo das Abas", style = MaterialTheme.typography.bodyMedium)
-                    SingleChoiceSegmentedButtonRow(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        val options = listOf(TabStyle.ICONES, TabStyle.TEXTO)
-                        val labels = listOf("Ícones", "Texto")
-
-                        options.forEachIndexed { index, option ->
-                            SegmentedButton(
-                                selected = state.estiloAbas == option,
-                                onClick = {
-                                    state.estiloAbas = option
-                                    persistPrefs()
-                                },
-                                shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
-                            ) {
-                                Text(labels[index])
-                            }
-                        }
+                com.example.swadebuilder.ui.components.SegmentedControl(
+                    label = "Estilo das Abas",
+                    options = listOf("Ícones", "Texto"),
+                    selectedIndex = if (state.estiloAbas == TabStyle.ICONES) 0 else 1,
+                    onSelect = { index ->
+                        state.estiloAbas = if (index == 0) TabStyle.ICONES else TabStyle.TEXTO
+                        persistPrefs()
                     }
-                }
+                )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -510,12 +460,15 @@ fun SettingsDialog(
                         Text("Alterar Tema")
                     }
                 }
-
+                }
                 HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
 
                 // Section 4: Sons e Vibração
-                Text("Sons e Vibração", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-
+                CollapsibleSection(
+                    title = "Sons e Vibração",
+                    expanded = "Sons e Vibração" in expandedSections,
+                    onToggle = { toggleSection("Sons e Vibração") }
+                ) {
                 Column {
                     Text("Intensidade da Vibração", style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(bottom = 4.dp))
                     Row(
@@ -561,19 +514,8 @@ fun SettingsDialog(
                         Text("${state.soundVolume}%", style = MaterialTheme.typography.bodySmall)
                     }
                 }
-            }
-        },
-        confirmButton = {
-            Button(onClick = onDismiss) {
-                Text("Concluído")
-            }
-        },
-        dismissButton = {
-            OutlinedButton(onClick = onDismiss) {
-                Text("Fechar")
-            }
-        }
-    )
+                }
+    }
 if (showNpcWarning) {
         AlertDialog(
             onDismissRequest = { showNpcWarning = false },
@@ -664,6 +606,7 @@ fun CustomContentManageDialog(
     val context = androidx.compose.ui.platform.LocalContext.current
     var customItemName by remember { mutableStateOf("") }
     var customItemDesc by remember { mutableStateOf("") }
+    var descricaoExpanded by remember { mutableStateOf(false) }
     var statusMessage by remember { mutableStateOf<String?>(null) }
     var itemToDeleteTarget by remember { mutableStateOf<Pair<String, String>?>(null) }
     val scope = rememberCoroutineScope()
@@ -1007,34 +950,23 @@ fun CustomContentManageDialog(
                             (baseRacialCatalog + activeBookCustomData.habilidadesRaciais).distinctBy { it.nome }
                         }
 
-                        AlertDialog(
-                            onDismissRequest = onDismiss,
-                            // Mesmo motivo do diálogo de Configurações: essa tela tem
-                            // formulário longo, um toque de leve fora da área não pode
-                            // derrubar o que já foi digitado.
-                            properties = androidx.compose.ui.window.DialogProperties(dismissOnClickOutside = false),
-                            title = { Text("Criar Conteúdo Customizado", style = MaterialTheme.typography.titleMedium) },
-                            text = {
-                                Column(
-                                    modifier = Modifier
-                                        .verticalScroll(rememberScrollState())
-                                        .fillMaxWidth(),
-                                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                                ) {
-                                    // 1. Pinned Top Header Navigation Tabs
-                                    androidx.compose.material3.ScrollableTabRow(
-                                        selectedTabIndex = categories.indexOf(selectedCategory).coerceAtLeast(0),
-                                        edgePadding = 0.dp,
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        categories.forEach { cat ->
-                                            androidx.compose.material3.Tab(
-                                                selected = selectedCategory == cat,
-                                                onClick = { selectedCategory = cat },
-                                                text = { Text(cat, style = MaterialTheme.typography.labelMedium) }
-                                            )
-                                        }
-                                    }
+                        // Full-screen sheet com barra de ação fixa no rodapé (fora da área de
+                        // scroll) em vez do AlertDialog centralizado de altura fixa — formulário
+                        // é comprido, então precisa de rolagem sem correr risco de cortar
+                        // Salvar/Cancelar (ver FullScreenActionSheet em CreatorFormComponents.kt).
+                        com.example.swadebuilder.ui.components.FullScreenActionSheet(
+                            title = "Criar Conteúdo Customizado",
+                            onDismiss = onDismiss,
+                            content = {
+                                    // 1. Seletor único de Tipo — substitui as abas de texto que
+                                    // cortavam nome ("ente Arcano", "quipamento") com 12 categorias
+                                    // disputando a largura da tela.
+                                    com.example.swadebuilder.ui.components.TypeSelector(
+                                        label = "Tipo",
+                                        options = categories,
+                                        selected = selectedCategory,
+                                        onSelect = { selectedCategory = it }
+                                    )
 
                                     Spacer(Modifier.height(8.dp))
 
@@ -1080,38 +1012,34 @@ fun CustomContentManageDialog(
                                         )
                                     }
 
-                                    // Container card for form elements to prevent overlapping and maintain clean spacing
-                                    androidx.compose.material3.Surface(
-                                        shape = MaterialTheme.shapes.medium,
-                                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f),
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        Column(
-                                            modifier = Modifier.padding(12.dp),
-                                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                                        ) {
-                                            // Common Name field
-                                            androidx.compose.material3.OutlinedTextField(
-                                                value = customItemName,
-                                                onValueChange = { customItemName = it },
-                                                label = { Text("Nome $artigoCategoria $selectedCategory") },
-                                                singleLine = true,
-                                                modifier = Modifier.fillMaxWidth()
-                                            )
+                                    com.example.swadebuilder.ui.components.FormSectionCard("Identificação") {
+                                        // Common Name field — sem repetir a categoria no label: o
+                                        // TypeSelector já mostra "Tipo: $selectedCategory" acima, então
+                                        // "Nome $artigoCategoria $selectedCategory" só forçava o label a
+                                        // quebrar em 2 linhas quando o campo estava vazio/desfocado.
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = customItemName,
+                                            onValueChange = { customItemName = it },
+                                            label = { Text("Nome") },
+                                            singleLine = true,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
 
-                                            // Seletor de Livros: em quais livros esse item vai aparecer. "Geral"
-                                            // funciona em qualquer combinação de livros ativos; os demais são
-                                            // específicos. Vale pra todas as categorias, é escolhido uma vez só
-                                            // aqui e usado na hora de salvar. Lista suspensa em vez de chips
-                                            // sempre expandidos: por padrão já vem só com o livro ativo marcado
-                                            // (ver selectedBookTags acima), abrindo é que mostra os demais.
-                                            BookTagsDropdownPicker(
-                                                selected = selectedBookTags,
-                                                onChange = { selectedBookTags = it }
-                                            )
+                                        // Seletor de Livros: em quais livros esse item vai aparecer. "Geral"
+                                        // funciona em qualquer combinação de livros ativos; os demais são
+                                        // específicos. Vale pra todas as categorias, é escolhido uma vez só
+                                        // aqui e usado na hora de salvar. Lista suspensa em vez de chips
+                                        // sempre expandidos: por padrão já vem só com o livro ativo marcado
+                                        // (ver selectedBookTags acima), abrindo é que mostra os demais.
+                                        BookTagsDropdownPicker(
+                                            selected = selectedBookTags,
+                                            onChange = { selectedBookTags = it }
+                                        )
+                                    }
 
-                                            // Category-specific fields
-                                            when (selectedCategory) {
+                                    // Category-specific fields
+                                    com.example.swadebuilder.ui.components.FormSectionCard("Detalhes") {
+                                        when (selectedCategory) {
                                                 "Vantagem" -> {
                                                     // Modular Requirements Section
                                                     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -1260,38 +1188,34 @@ fun CustomContentManageDialog(
                                                     }
 
                                                     // CUSTOMIZADA nunca está em availableAdvCategories (não é uma
-                                                    // categoria oficial escolhível nos chips acima) — sem essa
+                                                    // categoria oficial escolhível no CategorySelector) — sem essa
                                                     // exceção, este reset rodaria a cada recomposição e desfaria
                                                     // a escolha de categoria customizada assim que o Mestre a
-                                                    // selecionasse no CategoriaCustomizadaChipRow abaixo.
+                                                    // selecionasse.
                                                     if (customAdvCategory != Categoria.CUSTOMIZADA && customAdvCategory !in availableAdvCategories) {
                                                         customAdvCategory = availableAdvCategories.firstOrNull() ?: Categoria.PROFISSIONAL
                                                     }
 
-                                                    AdvantageCategoryDropdownPicker(
-                                                        selectedCategory = customAdvCategory,
-                                                        categories = availableAdvCategories,
-                                                        onSelect = {
+                                                    // Categoria oficial (enum Categoria) e Categoria Customizada do
+                                                    // Mestre eram dois controles concorrentes (dropdown + chip row);
+                                                    // agora é um único CategorySelector — escolher uma customizada
+                                                    // força customAdvCategory = CUSTOMIZADA (ver Vantagem.categoriaExibicao()).
+                                                    com.example.swadebuilder.ui.components.CategorySelector(
+                                                        officialOptions = availableAdvCategories,
+                                                        selectedOfficial = customAdvCategory.takeIf { it != Categoria.CUSTOMIZADA },
+                                                        customCategorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM },
+                                                        selectedCustomId = customAdvCategoriaCustomizadaId,
+                                                        onSelectOfficial = {
                                                             customAdvCategory = it
                                                             customAdvCategoriaCustomizadaId = null
-                                                        }
-                                                    )
-                                                    // Categoria Customizada do Mestre: alternativa às categorias oficiais
-                                                    // fixas acima — escolher uma força customAdvCategory = CUSTOMIZADA
-                                                    // (ver Vantagem.categoriaExibicao()).
-                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
-                                                        label = "Ou categoria customizada:",
-                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM },
-                                                        selectedId = customAdvCategoriaCustomizadaId,
-                                                        onSelect = { id ->
+                                                        },
+                                                        onSelectCustomId = { id ->
                                                             customAdvCategoriaCustomizadaId = id
                                                             if (id != null) customAdvCategory = com.example.swadebuilder.model.Categoria.CUSTOMIZADA
                                                         },
-                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM) },
-                                                        onRename = ::renomearCategoriaCustomizada,
-                                                        onDelete = ::excluirCategoriaCustomizada,
-                                                        allowNone = true,
-                                                        noneLabel = "Nenhuma (usar acima)"
+                                                        onCreateCustom = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM) },
+                                                        onRenameCustom = ::renomearCategoriaCustomizada,
+                                                        onDeleteCustom = ::excluirCategoriaCustomizada
                                                     )
                                                     // Pré-requisito por Categoria Customizada: exige que o personagem já
                                                     // tenha alguma Vantagem da(s) categoria(s) marcada(s), sem precisar
@@ -1300,7 +1224,7 @@ fun CustomContentManageDialog(
                                                     // próprias (ex.: "Pacto Menor" libera "Pacto Maior").
                                                     val categoriasVantagemParaPrereq = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.VANTAGEM }
                                                     if (categoriasVantagemParaPrereq.isNotEmpty()) {
-                                                        LabeledChipGroup("Exige Vantagem de categoria (pré-requisito, opcional):") {
+                                                        ChipRow("Exige Vantagem de categoria (pré-requisito, opcional):") {
                                                             categoriasVantagemParaPrereq.forEach { cat ->
                                                                 androidx.compose.material3.FilterChip(
                                                                     selected = cat.id in customPrereqCategoriasCustomizadas,
@@ -1316,42 +1240,24 @@ fun CustomContentManageDialog(
                                                             }
                                                         }
                                                     }
-                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                        Text("Estágio Mínimo:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                                                        SingleChoiceSegmentedButtonRow(
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        ) {
-                                                            val stages = com.example.swadebuilder.model.listaDeEstagios.map { it.nome }
-                                                            stages.forEachIndexed { index, stage ->
-                                                                SegmentedButton(
-                                                                    selected = customStage == stage,
-                                                                    onClick = { customStage = stage },
-                                                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = stages.size)
-                                                                ) {
-                                                                    Text(stage, style = MaterialTheme.typography.labelSmall, maxLines = 1)
-                                                                }
-                                                            }
-                                                        }
+                                                    run {
+                                                        val stages = com.example.swadebuilder.model.listaDeEstagios.map { it.nome }
+                                                        com.example.swadebuilder.ui.components.SegmentedControl(
+                                                            label = "Estágio Mínimo:",
+                                                            options = stages,
+                                                            selectedIndex = stages.indexOf(customStage).coerceAtLeast(0),
+                                                            onSelect = { customStage = stages[it] }
+                                                        )
                                                     }
                                                 }
                                                 "Complicação" -> {
-                                                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                                                        Text("Severidade Permitida:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-                                                        SingleChoiceSegmentedButtonRow(
-                                                            modifier = Modifier.fillMaxWidth()
-                                                        ) {
-                                                            val options = listOf("Maior", "Menor", "Maior ou Menor")
-                                                            options.forEachIndexed { index, sev ->
-                                                                SegmentedButton(
-                                                                    selected = customSeverity == sev,
-                                                                    onClick = { customSeverity = sev },
-                                                                    shape = SegmentedButtonDefaults.itemShape(index = index, count = options.size)
-                                                                ) {
-                                                                    Text(sev, style = MaterialTheme.typography.labelSmall, maxLines = 1)
-                                                                }
-                                                            }
-                                                        }
-                                                    }
+                                                    val severityOptions = listOf("Maior", "Menor", "Maior ou Menor")
+                                                    com.example.swadebuilder.ui.components.SegmentedControl(
+                                                        label = "Severidade Permitida:",
+                                                        options = severityOptions,
+                                                        selectedIndex = severityOptions.indexOf(customSeverity).coerceAtLeast(0),
+                                                        onSelect = { customSeverity = severityOptions[it] }
+                                                    )
                                                 }
                                                 "Equipamento" -> {
                                                     EquipamentoCreatorFields(
@@ -1389,14 +1295,17 @@ fun CustomContentManageDialog(
                                                         singleLine = true,
                                                         modifier = Modifier.fillMaxWidth()
                                                     )
-                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
+                                                    com.example.swadebuilder.ui.components.CategorySelector(
                                                         label = "Categoria (opcional):",
-                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.PODER },
-                                                        selectedId = customPoderCategoriaId,
-                                                        onSelect = { customPoderCategoriaId = it },
-                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.PODER) },
-                                                        onRename = ::renomearCategoriaCustomizada,
-                                                        onDelete = ::excluirCategoriaCustomizada
+                                                        officialOptions = emptyList(),
+                                                        selectedOfficial = null,
+                                                        customCategorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.PODER },
+                                                        selectedCustomId = customPoderCategoriaId,
+                                                        onSelectOfficial = {},
+                                                        onSelectCustomId = { customPoderCategoriaId = it },
+                                                        onCreateCustom = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.PODER) },
+                                                        onRenameCustom = ::renomearCategoriaCustomizada,
+                                                        onDeleteCustom = ::excluirCategoriaCustomizada
                                                     )
                                                 }
                                                 "Super Poder" -> {
@@ -1468,14 +1377,17 @@ fun CustomContentManageDialog(
                                                         }
                                                     }
                                                     Spacer(modifier = Modifier.height(8.dp))
-                                                    com.example.swadebuilder.ui.components.CategoriaCustomizadaChipRow(
+                                                    com.example.swadebuilder.ui.components.CategorySelector(
                                                         label = "Categoria (opcional):",
-                                                        categorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER },
-                                                        selectedId = customSuperPoderCategoriaId,
-                                                        onSelect = { customSuperPoderCategoriaId = it },
-                                                        onCreate = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER) },
-                                                        onRename = ::renomearCategoriaCustomizada,
-                                                        onDelete = ::excluirCategoriaCustomizada
+                                                        officialOptions = emptyList(),
+                                                        selectedOfficial = null,
+                                                        customCategorias = activeBookCustomData.categoriasCustomizadas.filter { it.tipoEntidade == com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER },
+                                                        selectedCustomId = customSuperPoderCategoriaId,
+                                                        onSelectOfficial = {},
+                                                        onSelectCustomId = { customSuperPoderCategoriaId = it },
+                                                        onCreateCustom = { nome -> criarCategoriaCustomizada(nome, com.example.swadebuilder.model.TipoEntidadeCategoria.SUPER_PODER) },
+                                                        onRenameCustom = ::renomearCategoriaCustomizada,
+                                                        onDeleteCustom = ::excluirCategoriaCustomizada
                                                     )
                                                 }
                                                 "Modificador de Poder" -> {
@@ -1506,21 +1418,11 @@ fun CustomContentManageDialog(
                                                         style = MaterialTheme.typography.labelSmall,
                                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                                     )
-                                                    Row(
-                                                        modifier = Modifier.fillMaxWidth(),
-                                                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                                                    ) {
-                                                        androidx.compose.material3.FilterChip(
-                                                            selected = customAaListaAberta,
-                                                            onClick = { customAaListaAberta = true },
-                                                            label = { Text("Lista aberta", style = MaterialTheme.typography.labelSmall) }
-                                                        )
-                                                        androidx.compose.material3.FilterChip(
-                                                            selected = !customAaListaAberta,
-                                                            onClick = { customAaListaAberta = false },
-                                                            label = { Text("Poderes específicos", style = MaterialTheme.typography.labelSmall) }
-                                                        )
-                                                    }
+                                                    com.example.swadebuilder.ui.components.SegmentedControl(
+                                                        options = listOf("Lista aberta", "Poderes específicos"),
+                                                        selectedIndex = if (customAaListaAberta) 0 else 1,
+                                                        onSelect = { customAaListaAberta = it == 0 }
+                                                    )
                                                     if (customAaListaAberta) {
                                                         Text(
                                                             if (com.example.swadebuilder.util.TAG_GERAL in selectedBookTags) {
@@ -1645,17 +1547,17 @@ fun CustomContentManageDialog(
                                                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                                                 )
                                                             }
-                                                            @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
-                                                            androidx.compose.foundation.layout.FlowRow(
-                                                                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                                                verticalArrangement = Arrangement.spacedBy(4.dp)
-                                                            ) {
-                                                                OutlinedButton(onClick = { showRacaAttrDialog = true }) {
-                                                                    Text(if (racaAtributosMin.isEmpty()) "+ Atributos Mínimos" else "Atributos (${racaAtributosMin.size})", style = MaterialTheme.typography.labelSmall)
-                                                                }
-                                                                OutlinedButton(onClick = { showRacaSkillDialog = true }) {
-                                                                    Text(if (racaPericiasIniciais.isEmpty()) "+ Perícias Iniciais" else "Perícias (${racaPericiasIniciais.size})", style = MaterialTheme.typography.labelSmall)
-                                                                }
+                                                            com.example.swadebuilder.ui.components.ChipRow {
+                                                                androidx.compose.material3.FilterChip(
+                                                                    selected = racaAtributosMin.isNotEmpty(),
+                                                                    onClick = { showRacaAttrDialog = true },
+                                                                    label = { Text(if (racaAtributosMin.isEmpty()) "+ Atributos Mínimos" else "Atributos (${racaAtributosMin.size})", style = MaterialTheme.typography.labelSmall) }
+                                                                )
+                                                                androidx.compose.material3.FilterChip(
+                                                                    selected = racaPericiasIniciais.isNotEmpty(),
+                                                                    onClick = { showRacaSkillDialog = true },
+                                                                    label = { Text(if (racaPericiasIniciais.isEmpty()) "+ Perícias Iniciais" else "Perícias (${racaPericiasIniciais.size})", style = MaterialTheme.typography.labelSmall) }
+                                                                )
                                                             }
                                                             androidx.compose.material3.OutlinedTextField(
                                                                 value = racaMovimentacao,
@@ -1688,11 +1590,7 @@ fun CustomContentManageDialog(
                                                         style = MaterialTheme.typography.labelMedium,
                                                         color = MaterialTheme.colorScheme.primary
                                                     )
-                                                    @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
-                                                    androidx.compose.foundation.layout.FlowRow(
-                                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                                                    ) {
+                                                    com.example.swadebuilder.ui.components.ChipRow {
                                                         listOf(
                                                             "Nenhum",
                                                             "Bônus de Pontos de Perícia",
@@ -1826,20 +1724,22 @@ fun CustomContentManageDialog(
                                                                 HorizontalDivider(thickness = 0.5.dp, color = MaterialTheme.colorScheme.outlineVariant)
                                                                 Text("Adicionar à Variante:", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
 
-                                                                @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
-                                                                androidx.compose.foundation.layout.FlowRow(
-                                                                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                                                                    verticalArrangement = Arrangement.spacedBy(4.dp)
-                                                                ) {
-                                                                    OutlinedButton(onClick = { showVarianteTraitAddDialog = true }) {
-                                                                        Text("+ Traço Racial", style = MaterialTheme.typography.labelSmall)
-                                                                    }
-                                                                    OutlinedButton(onClick = { showVarianteVantagemAddDialog = true }) {
-                                                                        Text("+ Vantagem", style = MaterialTheme.typography.labelSmall)
-                                                                    }
-                                                                    OutlinedButton(onClick = { showVarianteComplicacaoSeveridadeDialog = true }) {
-                                                                        Text("+ Complicação", style = MaterialTheme.typography.labelSmall)
-                                                                    }
+                                                                com.example.swadebuilder.ui.components.ChipRow {
+                                                                    androidx.compose.material3.FilterChip(
+                                                                        selected = false,
+                                                                        onClick = { showVarianteTraitAddDialog = true },
+                                                                        label = { Text("+ Traço Racial", style = MaterialTheme.typography.labelSmall) }
+                                                                    )
+                                                                    androidx.compose.material3.FilterChip(
+                                                                        selected = false,
+                                                                        onClick = { showVarianteVantagemAddDialog = true },
+                                                                        label = { Text("+ Vantagem", style = MaterialTheme.typography.labelSmall) }
+                                                                    )
+                                                                    androidx.compose.material3.FilterChip(
+                                                                        selected = false,
+                                                                        onClick = { showVarianteComplicacaoSeveridadeDialog = true },
+                                                                        label = { Text("+ Complicação", style = MaterialTheme.typography.labelSmall) }
+                                                                    )
                                                                 }
 
                                                                 if (itensAdicionadosSelecionados.isNotEmpty()) {
@@ -1902,7 +1802,7 @@ fun CustomContentManageDialog(
                                                     if (customPericiaAtributoVinculado == null || customPericiaAtributoVinculado !in atributosDisponiveis) {
                                                         customPericiaAtributoVinculado = atributosDisponiveis.firstOrNull()
                                                     }
-                                                    LabeledChipGroup("Atributo vinculado:") {
+                                                    ChipRow("Atributo vinculado:") {
                                                         atributosDisponiveis.forEach { nomeAtr ->
                                                             androidx.compose.material3.FilterChip(
                                                                 selected = customPericiaAtributoVinculado == nomeAtr,
@@ -1923,16 +1823,22 @@ fun CustomContentManageDialog(
                                                     }
                                                 }
                                             }
+                                    }
 
-                                            // Common Description field
-                                            androidx.compose.material3.OutlinedTextField(
-                                                value = customItemDesc,
-                                                onValueChange = { customItemDesc = it },
-                                                label = { Text("Descrição / Efeitos") },
-                                                modifier = Modifier.fillMaxWidth().height(90.dp),
-                                                maxLines = 4
-                                            )
-                                        }
+                                    // Descrição/Efeitos: seção opcional — colapsável em vez de sempre
+                                    // aberta ocupando espaço quando o Mestre ainda não for preenchê-la.
+                                    CollapsibleSection(
+                                        title = "Descrição / Efeitos (opcional)",
+                                        expanded = descricaoExpanded,
+                                        onToggle = { descricaoExpanded = !descricaoExpanded }
+                                    ) {
+                                        androidx.compose.material3.OutlinedTextField(
+                                            value = customItemDesc,
+                                            onValueChange = { customItemDesc = it },
+                                            label = { Text("Descrição / Efeitos") },
+                                            modifier = Modifier.fillMaxWidth().height(90.dp),
+                                            maxLines = 4
+                                        )
                                     }
 
                                     // Custom Content Items Manager List (todos os livros)
@@ -2108,12 +2014,10 @@ fun CustomContentManageDialog(
                                             onDismiss = { moverCategoriaTarget = null }
                                         )
                                     }
-                                }
                             },
-                            confirmButton = {
-                                Column(horizontalAlignment = Alignment.End) {
-                                    // Fora da área rolável (diferente de onde estava antes, dentro do
-                                    // Column de `text`): fica sempre visível colado nos botões, sem
+                            actions = {
+                                    // Fica fora da área rolável (barra de ação fixa do
+                                    // FullScreenActionSheet), sempre visível colada nos botões, sem
                                     // precisar rolar a tela pra descobrir se salvou ou por que não salvou.
                                     if (statusMessage != null) {
                                         val isErro = statusMessage!!.let {
@@ -2125,10 +2029,11 @@ fun CustomContentManageDialog(
                                             color = if (isErro) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                                             style = MaterialTheme.typography.bodySmall,
                                             fontWeight = FontWeight.SemiBold,
-                                            modifier = Modifier.padding(bottom = 4.dp, end = 4.dp)
+                                            modifier = Modifier.weight(1f).padding(end = 8.dp)
                                         )
+                                    } else {
+                                        Spacer(Modifier.weight(1f))
                                     }
-                                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                                     androidx.compose.material3.Button(onClick = {
                                                 val safeDesc = customItemDesc.ifBlank { "-" }
                                                 if (customItemName.isNotBlank()) {
@@ -2486,9 +2391,8 @@ fun CustomContentManageDialog(
                                                     statusMessage = "Preencha o Nome do item."
                                         }
                                             }) { Text("Salvar") }
+                                    Spacer(Modifier.width(8.dp))
                                     OutlinedButton(onClick = onDismiss) { Text("Cancelar") }
-                                }
-                                }
                             }
                         )
 

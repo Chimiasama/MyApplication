@@ -13,9 +13,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -189,22 +186,17 @@ class EquipamentoFormState {
 @Composable
 fun rememberEquipamentoFormState(): EquipamentoFormState = remember { EquipamentoFormState() }
 
-// Seletor em Segmented Control de linha única pra Força Mínima (d4 a d12 mais "-").
+// Força Mínima (d4 a d12 mais "-") como Chip Row: 6 opções é demais pra um Segmented
+// Control de linha única continuar legível.
 @Composable
 private fun ForcaMinimaChipPicker(value: String, onValueChange: (String) -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-        Text("Força Mínima:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-        SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-            val dice = listOf("-", "d4", "d6", "d8", "d10", "d12")
-            dice.forEachIndexed { index, dado ->
-                SegmentedButton(
-                    selected = value == dado,
-                    onClick = { onValueChange(dado) },
-                    shape = SegmentedButtonDefaults.itemShape(index = index, count = dice.size)
-                ) {
-                    Text(dado, style = MaterialTheme.typography.labelSmall)
-                }
-            }
+    ChipRow("Força Mínima:") {
+        listOf("-", "d4", "d6", "d8", "d10", "d12").forEach { dado ->
+            FilterChip(
+                selected = value == dado,
+                onClick = { onValueChange(dado) },
+                label = { Text(dado, style = MaterialTheme.typography.labelSmall) }
+            )
         }
     }
 }
@@ -258,7 +250,7 @@ fun EquipamentoCreatorFields(
     // `categoriaTipo` gravado no item — é o que faz o item cair na seção certa
     // (Armas/Armaduras/Veículos/etc.) da tela de Equipamento em vez de sempre em
     // "Equipamento Geral" (ver updateActiveModules em DataLoader e EquipamentoSection.mapCategory).
-    LabeledChipGroup("Tipo de Item:") {
+    ChipRow("Tipo de Item:") {
         listOf("Arma", "Armadura", "Escudo", "Munição", "Veículo", "Geral").forEach { st ->
             FilterChip(
                 selected = state.superType == st,
@@ -291,7 +283,7 @@ fun EquipamentoCreatorFields(
         }
     }
     if (state.superType == "Arma") {
-        LabeledChipGroup("Subtipo de Arma:") {
+        ChipRow("Subtipo de Arma:") {
             listOf("Corpo a Corpo", "Distância", "Fogo", "Energia").forEach { sub ->
                 FilterChip(
                     selected = state.subtype == sub,
@@ -310,14 +302,17 @@ fun EquipamentoCreatorFields(
         }
     }
 
-    CategoriaCustomizadaChipRow(
+    CategorySelector(
         label = "Categoria customizada (opcional):",
-        categorias = categoriasCustomizadas,
-        selectedId = state.categoriaCustomizadaId,
-        onSelect = { state.categoriaCustomizadaId = it },
-        onCreate = onCreateCategoria,
-        onRename = onRenameCategoria,
-        onDelete = onDeleteCategoria
+        officialOptions = emptyList(),
+        selectedOfficial = null,
+        customCategorias = categoriasCustomizadas,
+        selectedCustomId = state.categoriaCustomizadaId,
+        onSelectOfficial = {},
+        onSelectCustomId = { state.categoriaCustomizadaId = it },
+        onCreateCustom = onCreateCategoria,
+        onRenameCustom = onRenameCategoria,
+        onDeleteCustom = onDeleteCategoria
     )
 
     // Custo e Peso valem pra qualquer tipo de item (livro básico, Cap. 2).
@@ -347,18 +342,12 @@ fun EquipamentoCreatorFields(
     val isArmaCorpoACorpo = isArma && state.subtype == "Corpo a Corpo"
 
     if (isArma) {
-        LabeledChipGroup("Dano baseado em:") {
-            FilterChip(
-                selected = state.danoBaseadoEmForca,
-                onClick = { state.danoBaseadoEmForca = true },
-                label = { Text("Força + dado", style = MaterialTheme.typography.labelSmall) }
-            )
-            FilterChip(
-                selected = !state.danoBaseadoEmForca,
-                onClick = { state.danoBaseadoEmForca = false },
-                label = { Text("Dado fixo", style = MaterialTheme.typography.labelSmall) }
-            )
-        }
+        SegmentedControl(
+            label = "Dano baseado em:",
+            options = listOf("Força + dado", "Dado fixo"),
+            selectedIndex = if (state.danoBaseadoEmForca) 0 else 1,
+            onSelect = { state.danoBaseadoEmForca = it == 0 }
+        )
         if (!state.danoBaseadoEmForca) {
             OutlinedTextField(
                 value = state.danoQtd,
@@ -369,21 +358,14 @@ fun EquipamentoCreatorFields(
                 modifier = Modifier.fillMaxWidth()
             )
         }
-        // Segmented control de linha única para os 5 dados válidos de SWADE (d4 a d12).
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(if (state.danoBaseadoEmForca) "Dado (For+):" else "Dado:", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
-            SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-                val dice = listOf("d4", "d6", "d8", "d10", "d12")
-                dice.forEachIndexed { index, dado ->
-                    SegmentedButton(
-                        selected = state.danoDado == dado,
-                        onClick = { state.danoDado = dado },
-                        shape = SegmentedButtonDefaults.itemShape(index = index, count = dice.size)
-                    ) {
-                        Text(dado, style = MaterialTheme.typography.labelSmall)
-                    }
-                }
-            }
+        run {
+            val dice = listOf("d4", "d6", "d8", "d10", "d12")
+            SegmentedControl(
+                label = if (state.danoBaseadoEmForca) "Dado (For+):" else "Dado:",
+                options = dice,
+                selectedIndex = dice.indexOf(state.danoDado).coerceAtLeast(0),
+                onSelect = { state.danoDado = dice[it] }
+            )
         }
         OutlinedTextField(
             value = state.danoBonus,
