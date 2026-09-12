@@ -957,19 +957,20 @@ fun CustomContentManageDialog(
                         com.example.swadebuilder.ui.components.FullScreenActionSheet(
                             title = "Criar Conteúdo Customizado",
                             onDismiss = onDismiss,
+                            // Seletor único de Tipo fixo no topo (fora da área que rola) — substitui
+                            // as abas de texto que cortavam nome ("ente Arcano", "quipamento") com 12
+                            // categorias disputando a largura da tela, e fica sempre acessível pra
+                            // trocar de categoria sem precisar rolar a tela de volta pro topo.
+                            topBarExtra = {
+                                com.example.swadebuilder.ui.components.TypeSelector(
+                                    label = "Tipo",
+                                    options = categories,
+                                    selected = selectedCategory,
+                                    onSelect = { selectedCategory = it }
+                                )
+                                Spacer(Modifier.height(8.dp))
+                            },
                             content = {
-                                    // 1. Seletor único de Tipo — substitui as abas de texto que
-                                    // cortavam nome ("ente Arcano", "quipamento") com 12 categorias
-                                    // disputando a largura da tela.
-                                    com.example.swadebuilder.ui.components.TypeSelector(
-                                        label = "Tipo",
-                                        options = categories,
-                                        selected = selectedCategory,
-                                        onSelect = { selectedCategory = it }
-                                    )
-
-                                    Spacer(Modifier.height(8.dp))
-
                                     // 2. Fixed Dynamic Preview Badge
                                     val previewBadgeText = remember(selectedCategory, customItemName, selectedRacialTraits, customStage, customAttrMin, customSkillMin, equipForm) {
                                         when (selectedCategory) {
@@ -989,7 +990,7 @@ fun CustomContentManageDialog(
                                                 val stats = mutableListOf<String>()
                                                 val danoText = equipForm.montarDano()
                                                 if (danoText.isNotBlank()) stats.add("Dano: $danoText")
-                                                if (equipForm.armadura.isNotBlank()) stats.add("Armadura: ${equipForm.armadura}")
+                                                if (equipForm.armadura != 0) stats.add("Armadura: +${equipForm.armadura}")
                                                 stats.add("Custo: $${equipForm.cost}")
                                                 stats.add("Peso: ${equipForm.weight}kg")
                                                 stats.joinToString(" • ")
