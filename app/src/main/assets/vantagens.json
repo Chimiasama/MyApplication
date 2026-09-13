@@ -1486,7 +1486,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por encontro, gasta 1 Bene para ganhar 5 marcadores de Inspiração. Pode distribuir a aliados no alcance (Astúcia) para rerrolar Traços ou Dano.",
+    "descricao": "Bardos inspiram seus camaradas com histórias épicas de valor e bravura. Uma vez durante um encontro de combate (a critério do Mestre), o bardo pode gastar um Bene para ganhar cinco marcadores de Inspiração. Isso é uma ação livre limitada. Pelo restante do encontro, o bardo pode dar esses marcadores a qualquer um dentro de uma Distância igual sua Astúcia, exceto a si mesmo. Isso pode ser feito a qualquer momento (desde que o bardo esteja consciente). O alvo deve usar o marcador imediatamente — não pode ser guardado. Cada marcador de Inspiração permite a uma personagem rerrolar uma Característica ou rolagem de dano. Uma Característica ou rolagem de dano só pode se beneficiar de um único marcador de Inspiração, mesmo que existam vários bardos presentes. Para rerrolagens adicionais, é necessário gastar um Bene ou habilidade especial. Marcadores de Inspiração não são Benes, não podem ativar Vantagens que requeiram o uso de Benes (como Impulso) e não podem ser usados de outras formas como o saque de uma nova Carta de Ação ou para Absorver Ferimentos.",
     "livros": [
       "FANTASIA"
     ],
@@ -1530,7 +1530,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Inimigos a até 10 quadros subtraem 2 do total ao gastar Benes para Absorver ou rerrolar.",
+    "descricao": "Esta canção sinistra causa terror nos seus adversários. A critério do bardo, qualquer inimigo dentro de 10 quadros (20 metros) e linha de visão que gastar um Bene para Absorver ou rolar novamente uma Característica ou rolagem de dano subtrai 2 do total. É necessário conseguir falar, cantar ou tocar seu instrumento para usar esta habilidade.",
     "livros": [
       "FANTASIA"
     ],
@@ -3190,7 +3190,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano.",
+    "descricao": "Tendo nascido em um berço de ouro ou conquistado suas posses através de trabalho duro, quem possui essa Vantagem tem mais dinheiro que a maioria. Personagens com Riqueza iniciam com três vezes os recursos iniciais normais para o cenário. Se o cenário precisar de uma renda fixa, a pessoa recebe o equivalente moderno de um salário anual de $150.000.",
     "livros": [
       "FANTASIA"
     ],
@@ -3746,7 +3746,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "FANTASIA"
     ],
@@ -3812,7 +3812,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "FANTASIA"
     ],
@@ -3856,7 +3856,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "FANTASIA"
     ],
@@ -3962,7 +3962,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "FANTASIA"
     ],
@@ -4292,7 +4292,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "FANTASIA"
     ],
@@ -4318,7 +4318,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "FANTASIA"
     ],
@@ -4364,7 +4364,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "FANTASIA"
     ],
@@ -4456,7 +4456,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana.",
+    "descricao": "Quando a personagem consegue uma ampliação na sua rolagem da perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), ela reduz seu custo em Pontos de Poder em 1. Isso pode reduzí-lo a 0.",
     "livros": [
       "FANTASIA"
     ],
@@ -4478,7 +4478,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dobra Duração de poderes Não Instantâneos.",
+    "descricao": "Através de treino e foco, quem tem essa Vantagem é extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes.",
     "livros": [
       "FANTASIA"
     ],
@@ -4502,7 +4502,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe 1 Fadiga para recuperar 5 PP; pode receber mais um nível para +5 PP.",
+    "descricao": "Tempos desesperados requerem medidas desesperadas. Drenar a Alma permite à personagem canalizar sua energia física em poder, recebendo um nível de Fadiga para recuperar cinco Pontos de Poder. Pode-se receber um nível adicional de Fadiga (até a Exaustão) para recuperar mais cinco Pontos de Poder. Não se pode ficar Incapacitado dessa maneira. Fadiga em decorrência de Drenar a Alma vem do âmago e só pode ser recuperada naturalmente. O poder ajuda e habilidades similares não têm efeito.",
     "livros": [
       "FANTASIA"
     ],
@@ -4620,7 +4620,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir.",
+    "descricao": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo. Ela poderia adicionar a Manifestação gelo para seu raio de fogo já existente, por exemplo, se tornando capaz de trocar entre fogo e gelo livremente.",
     "livros": [
       "FANTASIA"
     ],
@@ -4642,7 +4642,7 @@
     "limite_compra": "uma_vez_por_estagio",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+5 PP adicionais (1 vez por Estágio, 2 pontos no Lendário).",
+    "descricao": "Quem usa magia, ciência estranha e outros tipos de manifestações arcanas sempre almeja mais poder. Esta Vantagem concede 5 Pontos de Poder adicionais. Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só concede 2 pontos adicionais.",
     "livros": [
       "FANTASIA"
     ],
@@ -4736,7 +4736,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias.",
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar.",
     "livros": [
       "FANTASIA"
     ],
@@ -4780,7 +4780,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "FANTASIA"
     ],
@@ -4805,7 +4805,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "FANTASIA"
     ],
@@ -4851,7 +4851,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "FANTASIA"
     ],
@@ -4876,7 +4876,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "FANTASIA"
     ],
@@ -5061,7 +5061,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "FANTASIA"
     ],
@@ -5235,7 +5235,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "FANTASIA"
     ],
@@ -5326,7 +5326,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 dano a criaturas sobrenaturais malignas (ou benignas) em qualquer ataque ou poder.",
+    "descricao": "Campeões são pessoas sagradas (ou profanas) escolhidas para lutarem por uma divindade ou religião em particular. A maioria é de almas devotas, prontas e dispostas a entregar suas vidas por uma causa maior, mas também é possível nascer na função e seguir seu caminho com alguma relutância. Campeões combatem as forças da escuridão (ou do bem) adicionando +2 ao dano quando atacam criaturas sobrenaturais malignas (ou benignas). O bônus se aplica a ataques de efeito em área, ataques à distância, poderes, etc. O Mestre pode decidir a quais inimigos este bônus se aplica, mas geralmente é contra qualquer criatura má (ou boa!) nascida através de magia ou com quaisquer habilidades sobrenaturais.",
     "livros": [
       "FANTASIA"
     ],
@@ -5412,7 +5412,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "FANTASIA"
     ],
@@ -5585,7 +5585,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "FANTASIA"
     ],
@@ -5607,7 +5607,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "FANTASIA"
     ],
@@ -7992,7 +7992,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Com acesso ao livro de feitiços, gasta 1 Bene para conjurar qualquer poder de seu estágio ou menor (não é adicionado à lista permanentemente).",
+    "descricao": "Ocultistas são curiosos por natureza, reunindo informações de qualquer fonte — tomos antigos, internet ou até mesmo os sussurros de entidades sobrenaturais. Guardam esse conhecimento em livros de feitiço, embora possam usar meios eletrônicos na modernidade. Desde que ocultistas tenham acesso a seu livro de feitiços, é possível gastar um Bene para conjurar qualquer poder de seu Estágio ou menor. O poder pode ser mantido normalmente, mas depois disso é esquecido (ele não é adicionado à sua lista de poderes). Não é possível usar esta habilidade se o livro de feitiços não estiver ao alcance.",
     "livros": [
       "HORROR"
     ],
@@ -8186,7 +8186,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe uma rerrolagem gratuita em todas as rolagens de Fé.",
+    "descricao": "Este herói ou heroína quase morreu em algum momento, mas retornou após ver a encruzilhada entre os mundos e agora os espíritos ouvem o seu chamado melhor do que os da maioria. Esta Vantagem só pode ser escolhida na criação da personagem. A personagem deve ter sido Incapacitada devido a um efeito que poderia causar a morte (a critério do Mestre). Assumindo que de alguma forma sobreviveu, o voduísta recebe uma rerrolagem gratuita em rolagens de Fé.",
     "livros": [
       "HORROR"
     ],
@@ -8786,7 +8786,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano.",
+    "descricao": "Tendo nascido em um berço de ouro ou conquistado suas posses através de trabalho duro, quem possui essa Vantagem tem mais dinheiro que a maioria. Personagens com Riqueza iniciam com três vezes os recursos iniciais normais para o cenário. Se o cenário precisar de uma renda fixa, a pessoa recebe o equivalente moderno de um salário anual de $150.000.",
     "livros": [
       "HORROR"
     ],
@@ -9342,7 +9342,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "HORROR"
     ],
@@ -9408,7 +9408,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "HORROR"
     ],
@@ -9452,7 +9452,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "HORROR"
     ],
@@ -9558,7 +9558,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "HORROR"
     ],
@@ -9888,7 +9888,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "HORROR"
     ],
@@ -9914,7 +9914,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "HORROR"
     ],
@@ -9960,7 +9960,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "HORROR"
     ],
@@ -10052,7 +10052,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode criar Dispositivos Arcanos temporários e itens mágicos permanentes.",
+    "descricao": "Quem lida com as forças sobrenaturais às vezes encontra meios de imbuir poderes em itens. É possível transformar uma lâmina comum em uma espada mágica, fornecer poções mágicas para suas amizades ou até mesmo abençoar relíquias sagradas com a graça divina. Artífices podem criar Dispositivos Arcanos e dá-los a quem estiver em sua aliança. Veja pág. 184.",
     "livros": [
       "HORROR"
     ],
@@ -10074,7 +10074,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana.",
+    "descricao": "Quando a personagem consegue uma ampliação na sua rolagem da perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), ela reduz seu custo em Pontos de Poder em 1. Isso pode reduzí-lo a 0.",
     "livros": [
       "HORROR"
     ],
@@ -10096,7 +10096,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dobra Duração de poderes Não Instantâneos.",
+    "descricao": "Através de treino e foco, quem tem essa Vantagem é extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes.",
     "livros": [
       "HORROR"
     ],
@@ -10120,7 +10120,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe 1 Fadiga para recuperar 5 PP; pode receber mais um nível para +5 PP.",
+    "descricao": "Tempos desesperados requerem medidas desesperadas. Drenar a Alma permite à personagem canalizar sua energia física em poder, recebendo um nível de Fadiga para recuperar cinco Pontos de Poder. Pode-se receber um nível adicional de Fadiga (até a Exaustão) para recuperar mais cinco Pontos de Poder. Não se pode ficar Incapacitado dessa maneira. Fadiga em decorrência de Drenar a Alma vem do âmago e só pode ser recuperada naturalmente. O poder ajuda e habilidades similares não têm efeito.",
     "livros": [
       "HORROR"
     ],
@@ -10263,7 +10263,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir.",
+    "descricao": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo. Ela poderia adicionar a Manifestação gelo para seu raio de fogo já existente, por exemplo, se tornando capaz de trocar entre fogo e gelo livremente.",
     "livros": [
       "HORROR"
     ],
@@ -10285,7 +10285,7 @@
     "limite_compra": "uma_vez_por_estagio",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+5 PP adicionais (1 vez por Estágio, 2 pontos no Lendário).",
+    "descricao": "Quem usa magia, ciência estranha e outros tipos de manifestações arcanas sempre almeja mais poder. Esta Vantagem concede 5 Pontos de Poder adicionais. Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só concede 2 pontos adicionais.",
     "livros": [
       "HORROR"
     ],
@@ -10379,7 +10379,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias.",
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar.",
     "livros": [
       "HORROR"
     ],
@@ -10423,7 +10423,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "HORROR"
     ],
@@ -10448,7 +10448,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "HORROR"
     ],
@@ -10494,7 +10494,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "HORROR"
     ],
@@ -10519,7 +10519,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "HORROR"
     ],
@@ -10704,7 +10704,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "HORROR"
     ],
@@ -10878,7 +10878,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "HORROR"
     ],
@@ -10969,7 +10969,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 dano a criaturas sobrenaturais malignas (ou benignas) em qualquer ataque ou poder.",
+    "descricao": "Campeões são pessoas sagradas (ou profanas) escolhidas para lutarem por uma divindade ou religião em particular. A maioria é de almas devotas, prontas e dispostas a entregar suas vidas por uma causa maior, mas também é possível nascer na função e seguir seu caminho com alguma relutância. Campeões combatem as forças da escuridão (ou do bem) adicionando +2 ao dano quando atacam criaturas sobrenaturais malignas (ou benignas). O bônus se aplica a ataques de efeito em área, ataques à distância, poderes, etc. O Mestre pode decidir a quais inimigos este bônus se aplica, mas geralmente é contra qualquer criatura má (ou boa!) nascida através de magia ou com quaisquer habilidades sobrenaturais.",
     "livros": [
       "HORROR"
     ],
@@ -11055,7 +11055,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "HORROR"
     ],
@@ -11228,7 +11228,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "HORROR"
     ],
@@ -11250,7 +11250,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "HORROR"
     ],
@@ -11890,7 +11890,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano.",
+    "descricao": "Tendo nascido em um berço de ouro ou conquistado suas posses através de trabalho duro, quem possui essa Vantagem tem mais dinheiro que a maioria. Personagens com Riqueza iniciam com três vezes os recursos iniciais normais para o cenário. Se o cenário precisar de uma renda fixa, a pessoa recebe o equivalente moderno de um salário anual de $150.000.",
     "livros": [
       "SCI_FI"
     ],
@@ -12446,7 +12446,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "SCI_FI"
     ],
@@ -12512,7 +12512,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "SCI_FI"
     ],
@@ -12556,7 +12556,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "SCI_FI"
     ],
@@ -12662,7 +12662,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "SCI_FI"
     ],
@@ -12992,7 +12992,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "SCI_FI"
     ],
@@ -13018,7 +13018,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "SCI_FI"
     ],
@@ -13064,7 +13064,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "SCI_FI"
     ],
@@ -13156,7 +13156,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode criar Dispositivos Arcanos temporários e itens mágicos permanentes.",
+    "descricao": "Quem lida com as forças sobrenaturais às vezes encontra meios de imbuir poderes em itens. É possível transformar uma lâmina comum em uma espada mágica, fornecer poções mágicas para suas amizades ou até mesmo abençoar relíquias sagradas com a graça divina. Artífices podem criar Dispositivos Arcanos e dá-los a quem estiver em sua aliança. Veja pág. 184.",
     "livros": [
       "SCI_FI"
     ],
@@ -13178,7 +13178,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana.",
+    "descricao": "Quando a personagem consegue uma ampliação na sua rolagem da perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), ela reduz seu custo em Pontos de Poder em 1. Isso pode reduzí-lo a 0.",
     "livros": [
       "SCI_FI"
     ],
@@ -13200,7 +13200,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dobra Duração de poderes Não Instantâneos.",
+    "descricao": "Através de treino e foco, quem tem essa Vantagem é extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes.",
     "livros": [
       "SCI_FI"
     ],
@@ -13224,7 +13224,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe 1 Fadiga para recuperar 5 PP; pode receber mais um nível para +5 PP.",
+    "descricao": "Tempos desesperados requerem medidas desesperadas. Drenar a Alma permite à personagem canalizar sua energia física em poder, recebendo um nível de Fadiga para recuperar cinco Pontos de Poder. Pode-se receber um nível adicional de Fadiga (até a Exaustão) para recuperar mais cinco Pontos de Poder. Não se pode ficar Incapacitado dessa maneira. Fadiga em decorrência de Drenar a Alma vem do âmago e só pode ser recuperada naturalmente. O poder ajuda e habilidades similares não têm efeito.",
     "livros": [
       "SCI_FI"
     ],
@@ -13367,7 +13367,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir.",
+    "descricao": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo. Ela poderia adicionar a Manifestação gelo para seu raio de fogo já existente, por exemplo, se tornando capaz de trocar entre fogo e gelo livremente.",
     "livros": [
       "SCI_FI"
     ],
@@ -13389,7 +13389,7 @@
     "limite_compra": "uma_vez_por_estagio",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+5 PP adicionais (1 vez por Estágio, 2 pontos no Lendário).",
+    "descricao": "Quem usa magia, ciência estranha e outros tipos de manifestações arcanas sempre almeja mais poder. Esta Vantagem concede 5 Pontos de Poder adicionais. Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só concede 2 pontos adicionais.",
     "livros": [
       "SCI_FI"
     ],
@@ -13483,7 +13483,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias.",
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar.",
     "livros": [
       "SCI_FI"
     ],
@@ -13527,7 +13527,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "SCI_FI"
     ],
@@ -13552,7 +13552,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "SCI_FI"
     ],
@@ -13598,7 +13598,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "SCI_FI"
     ],
@@ -13623,7 +13623,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "SCI_FI"
     ],
@@ -13808,7 +13808,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "SCI_FI"
     ],
@@ -13982,7 +13982,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "SCI_FI"
     ],
@@ -14073,7 +14073,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 dano a criaturas sobrenaturais malignas (ou benignas) em qualquer ataque ou poder.",
+    "descricao": "Campeões são pessoas sagradas (ou profanas) escolhidas para lutarem por uma divindade ou religião em particular. A maioria é de almas devotas, prontas e dispostas a entregar suas vidas por uma causa maior, mas também é possível nascer na função e seguir seu caminho com alguma relutância. Campeões combatem as forças da escuridão (ou do bem) adicionando +2 ao dano quando atacam criaturas sobrenaturais malignas (ou benignas). O bônus se aplica a ataques de efeito em área, ataques à distância, poderes, etc. O Mestre pode decidir a quais inimigos este bônus se aplica, mas geralmente é contra qualquer criatura má (ou boa!) nascida através de magia ou com quaisquer habilidades sobrenaturais.",
     "livros": [
       "SCI_FI"
     ],
@@ -14159,7 +14159,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "SCI_FI"
     ],
@@ -14332,7 +14332,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "SCI_FI"
     ],
@@ -14354,7 +14354,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "SCI_FI"
     ],
@@ -14618,7 +14618,7 @@
     "requisitos": {
       "estagio": "Veterano"
     },
-    "descricao": "Quando sacar um Curinga, adiciona +4 às jogadas de Característica e dano em vez de +2.",
+    "descricao": "Oportunidade é o que se faz dela. Quando personagens com esta Vantagem sacarem um Curinga, adicionam +4 às suas jogadas de Característica e dano em vez de +2.",
     "livros": [
       "SCI_FI"
     ],
@@ -14626,7 +14626,7 @@
   },
   {
     "id": "saque_rapido",
-    "nome": "SAQUE RÁPIDO (Aprimorado)",
+    "nome": "SAQUE RÁPIDO",
     "categoria": "COMBATE",
     "requisitos": {
       "estagio": "Novato",
@@ -14634,7 +14634,7 @@
         "Agilidade": 8
       }
     },
-    "descricao": "Compra duas cartas ao gastar um Bene para sacar carta extra na rodada. Adiciona +2 em Atletismo para interromper ações dos outros.",
+    "descricao": "Você compra duas cartas ao gastar um Bene para sacar uma Carta de Ação adicional no início de uma rodada. Você pode escolher sua Carta de Ação final dentre qualquer uma das opções disponíveis, incluindo compras adicionais por Focado, Rápido etc. Você também adiciona +2 às rolagens de Atletismo feitas para interromper ações dos outros (incluindo quando está Aguardando e resistindo a interrupções).",
     "livros": [
       "SCI_FI"
     ],
@@ -14865,7 +14865,7 @@
         "Atletismo": 8
       }
     },
-    "descricao": "Ignora penalidade de -2 ao Evadir. Recebe tentativa de Evasão (com -2) contra efeitos de área que normalmente não permitiriam (explosão, rajada).",
+    "descricao": "Esta personagem tem uma habilidade incrível de evitar ataques e efeitos de área, seja por meio de reflexos rápidos ou talvez até mesmo percepção extrassensorial. Ela ignora a penalidade usual de -2 em Agilidade ao tentar Evadir. Também recebe (com a penalidade usual de -2) uma tentativa regular de Evasão contra efeitos ou ataques que afetem área que normalmente não permitiriam isso, como explosão ou rajada, ou mesmo confusão ou poderes similares conjurados com o modificador Área.",
     "livros": [
       "SCI_FI"
     ],
@@ -16222,7 +16222,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16288,7 +16288,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16332,7 +16332,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16438,7 +16438,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16746,7 +16746,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16772,7 +16772,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16818,7 +16818,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16912,7 +16912,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias.",
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16956,7 +16956,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -16981,7 +16981,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -17027,7 +17027,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -17052,7 +17052,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -17237,7 +17237,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -17391,7 +17391,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -17522,7 +17522,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -17695,7 +17695,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -17717,7 +17717,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "CRYSTAL_HEART"
     ],
@@ -18261,7 +18261,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano.",
+    "descricao": "Tendo nascido em um berço de ouro ou conquistado suas posses através de trabalho duro, quem possui essa Vantagem tem mais dinheiro que a maioria. Personagens com Riqueza iniciam com três vezes os recursos iniciais normais para o cenário. Se o cenário precisar de uma renda fixa, a pessoa recebe o equivalente moderno de um salário anual de $150.000.",
     "livros": [
       "WISEGUYS"
     ],
@@ -18817,7 +18817,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "WISEGUYS"
     ],
@@ -18883,7 +18883,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "WISEGUYS"
     ],
@@ -18927,7 +18927,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19033,7 +19033,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19343,7 +19343,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "WISEGUYS"
     ],
@@ -19369,7 +19369,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19415,7 +19415,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19509,7 +19509,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias.",
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19553,7 +19553,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19578,7 +19578,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19624,7 +19624,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19649,7 +19649,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "WISEGUYS"
     ],
@@ -19834,7 +19834,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "WISEGUYS"
     ],
@@ -20008,7 +20008,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "WISEGUYS"
     ],
@@ -20139,7 +20139,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "WISEGUYS"
     ],
@@ -20312,7 +20312,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "WISEGUYS"
     ],
@@ -20334,7 +20334,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "WISEGUYS"
     ],
@@ -22081,7 +22081,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22147,7 +22147,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22191,7 +22191,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22297,7 +22297,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22627,7 +22627,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22653,7 +22653,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22699,7 +22699,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22813,7 +22813,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22838,7 +22838,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22884,7 +22884,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -22909,7 +22909,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -23072,7 +23072,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -23246,7 +23246,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -23337,7 +23337,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 dano a criaturas sobrenaturais malignas (ou benignas) em qualquer ataque ou poder.",
+    "descricao": "Campeões são pessoas sagradas (ou profanas) escolhidas para lutarem por uma divindade ou religião em particular. A maioria é de almas devotas, prontas e dispostas a entregar suas vidas por uma causa maior, mas também é possível nascer na função e seguir seu caminho com alguma relutância. Campeões combatem as forças da escuridão (ou do bem) adicionando +2 ao dano quando atacam criaturas sobrenaturais malignas (ou benignas). O bônus se aplica a ataques de efeito em área, ataques à distância, poderes, etc. O Mestre pode decidir a quais inimigos este bônus se aplica, mas geralmente é contra qualquer criatura má (ou boa!) nascida através de magia ou com quaisquer habilidades sobrenaturais.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -23401,7 +23401,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -23574,7 +23574,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -23596,7 +23596,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "ARTE_DA_GUERRA"
     ],
@@ -25560,7 +25560,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano.",
+    "descricao": "Tendo nascido em um berço de ouro ou conquistado suas posses através de trabalho duro, quem possui essa Vantagem tem mais dinheiro que a maioria. Personagens com Riqueza iniciam com três vezes os recursos iniciais normais para o cenário. Se o cenário precisar de uma renda fixa, a pessoa recebe o equivalente moderno de um salário anual de $150.000.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26116,7 +26116,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26182,7 +26182,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26226,7 +26226,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26332,7 +26332,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26662,7 +26662,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26688,7 +26688,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26734,7 +26734,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26826,7 +26826,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana.",
+    "descricao": "Quando a personagem consegue uma ampliação na sua rolagem da perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), ela reduz seu custo em Pontos de Poder em 1. Isso pode reduzí-lo a 0.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26848,7 +26848,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dobra Duração de poderes Não Instantâneos.",
+    "descricao": "Através de treino e foco, quem tem essa Vantagem é extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26894,7 +26894,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir.",
+    "descricao": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo. Ela poderia adicionar a Manifestação gelo para seu raio de fogo já existente, por exemplo, se tornando capaz de trocar entre fogo e gelo livremente.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26918,7 +26918,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias.",
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26962,7 +26962,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -26987,7 +26987,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -27033,7 +27033,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -27058,7 +27058,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -27243,7 +27243,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -27417,7 +27417,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -27570,7 +27570,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -27721,7 +27721,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -27743,7 +27743,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
@@ -27847,7 +27847,9 @@
     "categoria": "PODER",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens_previas": ["aa_demonio_meio_demonio"],
+      "vantagens_previas": [
+        "aa_demonio_meio_demonio"
+      ],
       "observacoes": "Antecedente Arcano (Demônio) do traço racial dos Meio-Demônios"
     },
     "descricao": "O sangue demoníaco do meio-demônio finalmente se manifesta o bastante para sustentar uma ilusão sobre a própria forma. Adiciona o poder Disfarce Demoníaco à lista de poderes conhecidos, por um custo de 2 Pontos de Poder por ativação — em vez dos 0 PP que os demônios de sangue puro pagam.",
@@ -29066,7 +29068,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano.",
+    "descricao": "Tendo nascido em um berço de ouro ou conquistado suas posses através de trabalho duro, quem possui essa Vantagem tem mais dinheiro que a maioria. Personagens com Riqueza iniciam com três vezes os recursos iniciais normais para o cenário. Se o cenário precisar de uma renda fixa, a pessoa recebe o equivalente moderno de um salário anual de $150.000.",
     "livros": [
       "DEADLANDS"
     ],
@@ -29622,7 +29624,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "DEADLANDS"
     ],
@@ -29688,7 +29690,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "DEADLANDS"
     ],
@@ -29732,7 +29734,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "DEADLANDS"
     ],
@@ -29838,7 +29840,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30168,7 +30170,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "DEADLANDS"
     ],
@@ -30194,7 +30196,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30240,7 +30242,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30332,7 +30334,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode criar Dispositivos Arcanos temporários e itens mágicos permanentes.",
+    "descricao": "Quem lida com as forças sobrenaturais às vezes encontra meios de imbuir poderes em itens. É possível transformar uma lâmina comum em uma espada mágica, fornecer poções mágicas para suas amizades ou até mesmo abençoar relíquias sagradas com a graça divina. Artífices podem criar Dispositivos Arcanos e dá-los a quem estiver em sua aliança. Veja pág. 184.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30354,7 +30356,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana.",
+    "descricao": "Quando a personagem consegue uma ampliação na sua rolagem da perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), ela reduz seu custo em Pontos de Poder em 1. Isso pode reduzí-lo a 0.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30376,7 +30378,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dobra Duração de poderes Não Instantâneos.",
+    "descricao": "Através de treino e foco, quem tem essa Vantagem é extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30519,7 +30521,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir.",
+    "descricao": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo. Ela poderia adicionar a Manifestação gelo para seu raio de fogo já existente, por exemplo, se tornando capaz de trocar entre fogo e gelo livremente.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30541,7 +30543,7 @@
     "limite_compra": "uma_vez_por_estagio",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+5 PP adicionais (1 vez por Estágio, 2 pontos no Lendário).",
+    "descricao": "Quem usa magia, ciência estranha e outros tipos de manifestações arcanas sempre almeja mais poder. Esta Vantagem concede 5 Pontos de Poder adicionais. Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só concede 2 pontos adicionais.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30635,7 +30637,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias.",
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30679,7 +30681,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30704,7 +30706,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30750,7 +30752,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30775,7 +30777,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "DEADLANDS"
     ],
@@ -30960,7 +30962,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "DEADLANDS"
     ],
@@ -31134,7 +31136,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "DEADLANDS"
     ],
@@ -31225,7 +31227,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 dano a criaturas sobrenaturais malignas (ou benignas) em qualquer ataque ou poder.",
+    "descricao": "Campeões são pessoas sagradas (ou profanas) escolhidas para lutarem por uma divindade ou religião em particular. A maioria é de almas devotas, prontas e dispostas a entregar suas vidas por uma causa maior, mas também é possível nascer na função e seguir seu caminho com alguma relutância. Campeões combatem as forças da escuridão (ou do bem) adicionando +2 ao dano quando atacam criaturas sobrenaturais malignas (ou benignas). O bônus se aplica a ataques de efeito em área, ataques à distância, poderes, etc. O Mestre pode decidir a quais inimigos este bônus se aplica, mas geralmente é contra qualquer criatura má (ou boa!) nascida através de magia ou com quaisquer habilidades sobrenaturais.",
     "livros": [
       "DEADLANDS"
     ],
@@ -31311,7 +31313,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "DEADLANDS"
     ],
@@ -31484,7 +31486,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "DEADLANDS"
     ],
@@ -31506,7 +31508,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "DEADLANDS"
     ],
@@ -35659,7 +35661,7 @@
         "Cavalgar": 6
       }
     },
-    "descricao": "Esta Vantagem garante uma rerrolagem gratuita em todas as rolagens de Cavalgar e aumenta a Movimentação da montaria em 2 e o dado de corrida em um nível.",
+    "descricao": "Quer esteja na garupa de um cavalo ou de outra montaria mais exótica, esse herói ou heroína se sente mais em casa quando está em cima de uma sela do que sobre seus dois pés. Esta Vantagem garante uma rerrolagem gratuita em todas as rolagens de Cavalgar e aumenta a Movimentação da montaria em 2 e o dado de corrida em um nível.",
     "livros": [
       "PATHFINDER"
     ],
@@ -36741,7 +36743,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Nascido ou tornado rico. Inicia com 3× recursos normais; se cenário usar salário, equivale a US$ 150 000/ano.",
+    "descricao": "Tendo nascido em um berço de ouro ou conquistado suas posses através de trabalho duro, quem possui essa Vantagem tem mais dinheiro que a maioria. Personagens com Riqueza iniciam com três vezes os recursos iniciais normais para o cenário. Se o cenário precisar de uma renda fixa, a pessoa recebe o equivalente moderno de um salário anual de $150.000.",
     "livros": [
       "BASICO"
     ],
@@ -37297,7 +37299,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Subtrai 2 de todos os ataques à distância feitos contra a personagem, não cumulativo com cobertura.",
+    "descricao": "Possibilita antecipar ataques ou se movimentar de modo errático sob fogo. A menos que seja vítima de um ataque surpresa e não tenha como se prevenir, Esquiva subtrai 2 de todos os ataques à distância feitos contra a personagem. Entretanto, Esquiva não se acumula com cobertura.",
     "livros": [
       "BASICO"
     ],
@@ -37363,7 +37365,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação adicional em combate e escolhe qual usar.",
+    "descricao": "Personagens que conseguem manter a calma quando o resto das pessoas está correndo para achar cobertura são mortais em combate. Esta vantagem permite sacar uma Carta de Ação adicional em combate e escolhe qual usar.",
     "livros": [
       "BASICO"
     ],
@@ -37407,7 +37409,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Como ação limitada, role um segundo dado de Lutar em ataque corpo a corpo no turno.",
+    "descricao": "Como uma ação limitada, personagens com Frenesi podem rolar um segundo dado de Lutar em uma ação de ataque corpo-à-corpo naquele turno. Trate este dado como um ataque extra naquela ação, que pode ser feito contra qualquer alvo no alcance. Resolva cada um separadamente.",
     "livros": [
       "BASICO"
     ],
@@ -37513,7 +37515,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": true,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora penalidade −2 ao usar armas improvisadas (veja pág. 114).",
+    "descricao": "É frequente acabar lutando com equipamento ou mobília não projetada para o combate. Um lutador com esta Vantagem tem um instinto para usar tais armas improvisadas e ignora a penalidade habitual de -2 quando as empunha. Veja pág. 114 para mais detalhes a respeito de Armas Improvisadas.",
     "livros": [
       "BASICO"
     ],
@@ -37843,7 +37845,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Raio de Comando passa a 10 quadros (20 m).",
+    "descricao": "Uma voz firme, comandos eficientes, carisma natural ou simplesmente treino resultam em um elemento de combate mais eficiente. Quem tem esta Vantagem tem um Raio de Comando de 10 quadros (20 metros).",
     "livros": [
       "BASICO"
     ],
@@ -37869,7 +37871,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Saca uma Carta de Ação extra por rodada para dar a um Extra no Raio de Comando.",
+    "descricao": "A personagem tem um talento natural para lidar com pequenas unidades táticas e frequentemente pode tirar proveito de uma mudança rápida de situação. Quem tem Estrategista saca uma Carta de Ação extra a cada rodada de combate ou perseguição — mantida em separado das suas próprias cartas. No começo da rodada, pode descartá-la ou dá-la a qualquer Extra (ou grupo de Extras compartilhando uma Carta de Ação) no Raio de Comando. A carta é recebida por quem controla tal Extra (Mestre ou não) que pode decidir aceitá-la e substituir sua Carta de Ação atual, ou descartá-la.",
     "livros": [
       "BASICO"
     ],
@@ -37915,7 +37917,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Extras no Raio de Comando +1 em dano de Lutar.",
+    "descricao": "Uma simples frase proferida por grandes líderes às vezes pode ter grandes resultados. Quem comanda com esta habilidade pode inspirar sua tropas a um fervor sanguinário bradando um tema, slogan ou outras palavras inspiradoras. Extras no Raio de Comando adicionam +1 nas rolagens de dano com Lutar.",
     "livros": [
       "BASICO"
     ],
@@ -38007,7 +38009,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode criar Dispositivos Arcanos temporários e itens mágicos permanentes.",
+    "descricao": "Quem lida com as forças sobrenaturais às vezes encontra meios de imbuir poderes em itens. É possível transformar uma lâmina comum em uma espada mágica, fornecer poções mágicas para suas amizades ou até mesmo abençoar relíquias sagradas com a graça divina. Artífices podem criar Dispositivos Arcanos e dá-los a quem estiver em sua aliança. Veja pág. 184.",
     "livros": [
       "BASICO"
     ],
@@ -38029,7 +38031,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Reduz custo de PP em 1 ao obter ampliação em rolagem arcana.",
+    "descricao": "Quando a personagem consegue uma ampliação na sua rolagem da perícia arcana (ou rolagem para ativar ou usar um dispositivo arcano), ela reduz seu custo em Pontos de Poder em 1. Isso pode reduzí-lo a 0.",
     "livros": [
       "BASICO"
     ],
@@ -38051,7 +38053,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Dobra Duração de poderes Não Instantâneos.",
+    "descricao": "Através de treino e foco, quem tem essa Vantagem é extremamente eficiente em canalizar as forças arcanas. A Duração base de qualquer poder Não Instantâneo é dobrada. Isso também inclui manter poderes.",
     "livros": [
       "BASICO"
     ],
@@ -38075,7 +38077,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe 1 Fadiga para recuperar 5 PP; pode receber mais um nível para +5 PP.",
+    "descricao": "Tempos desesperados requerem medidas desesperadas. Drenar a Alma permite à personagem canalizar sua energia física em poder, recebendo um nível de Fadiga para recuperar cinco Pontos de Poder. Pode-se receber um nível adicional de Fadiga (até a Exaustão) para recuperar mais cinco Pontos de Poder. Não se pode ficar Incapacitado dessa maneira. Fadiga em decorrência de Drenar a Alma vem do âmago e só pode ser recuperada naturalmente. O poder ajuda e habilidades similares não têm efeito.",
     "livros": [
       "BASICO"
     ],
@@ -38218,7 +38220,7 @@
     "limite_compra": "infinito",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha 2 novos poderes de seu Estágio ou menor; pode repetir.",
+    "descricao": "Uma personagem arcanista pode aprender dois novos poderes escolhendo esta Vantagem (que pode ser escolhida várias vezes). É permitido escolher quaisquer poderes do seu Estágio ou menor disponíveis ao seu Antecedente Arcano em particular. Uma personagem pode adicionar uma nova Manifestação a um poder que já possui em vez de ganhar um novo. Ela poderia adicionar a Manifestação gelo para seu raio de fogo já existente, por exemplo, se tornando capaz de trocar entre fogo e gelo livremente.",
     "livros": [
       "BASICO"
     ],
@@ -38240,7 +38242,7 @@
     "limite_compra": "uma_vez_por_estagio",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+5 PP adicionais (1 vez por Estágio, 2 pontos no Lendário).",
+    "descricao": "Quem usa magia, ciência estranha e outros tipos de manifestações arcanas sempre almeja mais poder. Esta Vantagem concede 5 Pontos de Poder adicionais. Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário, mas só concede 2 pontos adicionais.",
     "livros": [
       "BASICO"
     ],
@@ -38334,7 +38336,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Rerrolagem gratuita em Atletismo envolvendo equilíbrio ou acrobacias.",
+    "descricao": "Acrobatas ganham uma rerrolagem gratuita em Atletismo que envolva equilíbrio, acrobacias ou agarrões. Não afeta rolagens para interromper ações, escalar, nadar ou arremessar.",
     "livros": [
       "BASICO"
     ],
@@ -38378,7 +38380,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ignora −2 em Navegar, Dirigir ou Pilotar e pode gastar Benes para Absorver dano em veículos que controla.",
+    "descricao": "Ases são pilotos e motoristas que têm uma afinidade especial com seu carro, barco, avião ou outro veículo. Ignoram dois pontos por penalidades para qualquer rolagem de Navegar, Dirigir ou Pilotar e podem gastar Benes para Absorver dano para qualquer veículo que eles controlem ou comandem usando a perícia apropriada entre Navegar, Dirigir ou Pilotar em vez de Vigor. Cada sucesso e ampliação negam um Ferimento.",
     "livros": [
       "BASICO"
     ],
@@ -38403,7 +38405,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em dano contra vulneráveis ou em Finalizações.",
+    "descricao": "São personagens com treinamento para matar quaisquer oponentes, por mais fortes que sejam. Adicionam +2 em rolagens de dano contra rivais em Estado Vulnerável, ou quando usam a manobra Finalização.",
     "livros": [
       "BASICO"
     ],
@@ -38449,7 +38451,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 em Pesquisar e Perceber ao buscar documentos, pistas ou itens escondidos.",
+    "descricao": "Tais profissionais passam bastante tempo pesquisando lendas antigas, angariando informações nas ruas ou deduzindo mistérios diabólicos. Podem trabalhar como detetives particulares, pesquisar magia em um mundo de fantasia, ou estar lecionando em universidades quando seus espíritos inquisitivos os levam a esbarrar em “Coisas Que o Homem Não Deveria Saber”. Adicione +2 em rolagens de Pesquisar e Perceber feitas para buscar papéis importantes em uma mesa, olhar pilhas de correspondência inútil atrás de algo digno de nota, ou notar itens escondidos em meio a montes de lixo ou detritos.",
     "livros": [
       "BASICO"
     ],
@@ -38474,7 +38476,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+1 em Atletismo para escalar em áreas urbanas, +1 em Furtividade urbana e +1 em Ladinagem.",
+    "descricao": "Tais personagens são especialistas em enganação, traição e acrobacias e podem ser imprescindíveis onde armadilhas precisam ser detectadas, muros escalados e trancas arrombadas. Sabem como usar saliências em muros e beirais em janelas para escalar os prédios mais altos, correndo pelas ruas e vielas como gatos. Adicione +1 em rolagens de Atletismo feitas para escalar em áreas urbanas. Também podem usar as áreas escuras entre a iluminação das cidades para ocultar seus movimentos e adicionam +1 para rolagens de Furtividade em ambientes urbanos. Por fim, são obviamente adeptos da Ladinagem em si, adicionando +1 a essas rolagens em todas as circunstâncias.",
     "livros": [
       "BASICO"
     ],
@@ -38659,7 +38661,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Uma vez por turno, ao dar Suporte com Persuadir ou Performance, role um dado adicional de perícia.",
+    "descricao": "As palavras de alguém tão cativante não inspiram apenas àqueles a quem foram dirigidas — geralmente elas também inspiram quem mais as ouvir. Uma vez por turno, como ação limitada, você pode usar Cativar o Ambiente para rolar um dado adicional de perícia quando dá Suporte com Persuadir ou Performance. O dado adicional proporciona Suporte a qualquer outro aliado normalmente e pode ser usado para qualquer Característica escolhida. Não precisa ser a mesma Característica para ambos os aliados.",
     "livros": [
       "BASICO"
     ],
@@ -38833,7 +38835,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 ao resistir a Desafios com Astúcia ou Espírito.",
+    "descricao": "Auto-confiança é uma armadura poderosa contra quem tenta atacar a vontade deste indivíduo. Adicione +2 em seu total quando resiste a Desafios com Astúcia ou Espírito.",
     "livros": [
       "BASICO"
     ],
@@ -38924,7 +38926,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "+2 dano a criaturas sobrenaturais malignas (ou benignas) em qualquer ataque ou poder.",
+    "descricao": "Campeões são pessoas sagradas (ou profanas) escolhidas para lutarem por uma divindade ou religião em particular. A maioria é de almas devotas, prontas e dispostas a entregar suas vidas por uma causa maior, mas também é possível nascer na função e seguir seu caminho com alguma relutância. Campeões combatem as forças da escuridão (ou do bem) adicionando +2 ao dano quando atacam criaturas sobrenaturais malignas (ou benignas). O bônus se aplica a ataques de efeito em área, ataques à distância, poderes, etc. O Mestre pode decidir a quais inimigos este bônus se aplica, mas geralmente é contra qualquer criatura má (ou boa!) nascida através de magia ou com quaisquer habilidades sobrenaturais.",
     "livros": [
       "BASICO"
     ],
@@ -39010,7 +39012,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Pode gastar seus Benes em quaisquer animais sob controle (montarias, pets, familiares).",
+    "descricao": "Alguns indivíduos podem exercer incrível domínio sobre suas companhias animais. É permitido que gastem seus próprios Benes para quaisquer animais sob o seu controle, incluindo montarias, animais de estimação, familiares e assim por diante.",
     "livros": [
       "BASICO"
     ],
@@ -39183,7 +39185,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Ganha um NPC parceiro Selvagem Novato (2 Benes, Progresso); pode compartilhar Benes como Elo Comum.",
+    "descricao": "Personagens que triunfam contra o mal diversas vezes tornam-se uma inspiração. Eventualmente alguém jovem pode tentar se juntar em suas missões épicas. A habilidade concede parceria com uma Carta Selvagem de Estágio Novato, que começa cada sessão com dois Benes, pode Progredir e tem habilidades que complementam as de quem o mentora. Seu controle é feito como o de demais Extras, mas esta figura nova pode causar problemas sofrendo captura, indo de encontro ao perigo quando supostamente não deveria fazê-lo e assim por diante. Por este motivo, esta Vantagem ocasionalmente pode se tornar uma Complicação! Se o Parceiro morrer, não há substituição, a menos que esta vantagem seja escolhida novamente. Felizmente, é possível gastar Benes por Parceiros como se tivessem a Vantagem Elo Comum. Parceiros devem selecionar essa Vantagem para fazer o mesmo.",
     "livros": [
       "BASICO"
     ],
@@ -39205,7 +39207,7 @@
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
     "ganha_ao_comprar": [],
-    "descricao": "Recebe até 4 Ferimentos antes de Incapacitar (penalidade máxima −3).",
+    "descricao": "Personagens com esta Vantagem ficam de pé enquanto outras pessoas caem. Podem receber quatro Ferimentos antes de ficarem Incapacitados (sua penalidade máxima por Ferimento ainda é -3).",
     "livros": [
       "BASICO"
     ],
