@@ -71,10 +71,27 @@ fun CiberneticosSection(
     }
 
     val tensaoTotal = state.totalTensaoCibernetica()
-    val tensaoLimite = state.valorLimiteTensao().second
     val isPersonagemRobotico = state.isPersonagemRobotico()
-    val tensaoLabel = if (isPersonagemRobotico) "Mods" else "Tensão"
-    val tensaoExcedida = tensaoTotal > tensaoLimite
+    val tensaoLabel = if (isPersonagemRobotico) "Mods Robóticos" else "Tensão"
+
+    // Robôs usam um limite único (espaços de Mods Robóticos, baseado no Tamanho — livro, p.150).
+    // Personagens orgânicos usam os dois limiares do livro: o Limite de Tensão "seguro" (metade do
+    // menor entre Espírito/Vigor — passar dele já força um Efeito Colateral por implante novo) e o
+    // Máximo absoluto (o valor cheio — passar dele é descrito como colapso catastrófico dos sistemas,
+    // por isso é a trava rígida abaixo).
+    val limiteSeguro: Int
+    val limiteMaximo: Int
+    if (isPersonagemRobotico) {
+        val limiteRobo = state.limiteModsRoboticos()
+        limiteSeguro = limiteRobo
+        limiteMaximo = limiteRobo
+    } else {
+        val (base, max) = state.valorLimiteTensao()
+        limiteSeguro = base
+        limiteMaximo = max
+    }
+    val tensaoNoRisco = tensaoTotal > limiteSeguro && tensaoTotal <= limiteMaximo
+    val tensaoExcedida = tensaoTotal > limiteMaximo
 
     var customName by remember { mutableStateOf("") }
     var customStrainText by remember { mutableStateOf("1") }
@@ -89,8 +106,16 @@ fun CiberneticosSection(
         item {
             SectionHeader(centerText = "Implantes Cibernéticos")
             Text(
-                text = "Gerencie e instale peças cibernéticas das categorias Corpo, Defensivo, Ofensivo e Locomoção. O limite de Tensão depende de Espírito e Vigor.",
+                text = if (isPersonagemRobotico)
+                    "Gerencie e instale peças cibernéticas das categorias Corpo, Defensivo, Ofensivo e Locomoção. Personagens robóticos contam isso como espaços de Mods Robóticos, baseados no Tamanho, em vez de Tensão."
+                else
+                    "Gerencie e instale peças cibernéticas das categorias Corpo, Defensivo, Ofensivo e Locomoção. O limite de Tensão depende de Espírito e Vigor.",
                 style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = "Os preços em \$ mostrados abaixo são só de referência/registro (tabela do livro) — o app não desconta esse valor do seu dinheiro. Instalar peças sem descontar o custo depende da aprovação do mestre.",
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -114,32 +139,79 @@ fun CiberneticosSection(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "$tensaoLabel Cibernética: $tensaoTotal / $tensaoLimite",
+                            text = "$tensaoLabel: $tensaoTotal / $limiteMaximo (seguro até $limiteSeguro)",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = if (tensaoExcedida) MaterialTheme.colorScheme.error
+                            else if (tensaoNoRisco) MaterialTheme.colorScheme.tertiary
                             else MaterialTheme.colorScheme.primary
                         )
-                        if (tensaoExcedida) {
+                        if (tensaoExcedida || tensaoNoRisco) {
                             Icon(
                                 imageVector = Icons.Default.Warning,
-                                contentDescription = "Limite de Tensão Excedido",
-                                tint = MaterialTheme.colorScheme.error
+                                contentDescription = "Limite de Tensão",
+                                tint = if (tensaoExcedida) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.tertiary
                             )
                         }
                     }
 
                     LinearProgressIndicator(
-                        progress = { if (tensaoLimite > 0) (tensaoTotal.toFloat() / tensaoLimite.toFloat()).coerceIn(0f, 1f) else 1f },
+                        progress = { if (limiteMaximo > 0) (tensaoTotal.toFloat() / limiteMaximo.toFloat()).coerceIn(0f, 1f) else 1f },
                         modifier = Modifier.fillMaxWidth(),
-                        color = if (tensaoExcedida) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                        color = if (tensaoExcedida) MaterialTheme.colorScheme.error
+                        else if (tensaoNoRisco) MaterialTheme.colorScheme.tertiary
+                        else MaterialTheme.colorScheme.primary,
                     )
 
+                    if (!isPersonagemRobotico && tensaoNoRisco) {
+                        Text(
+                            text = "Acima do limite seguro ($limiteSeguro): cada novo implante força automaticamente uma rolagem de Efeito Colateral de Cibernéticos.",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
                     if (tensaoExcedida) {
                         Text(
-                            text = "Atenção: Tensão limite excedida (+${tensaoTotal - tensaoLimite}). Efeitos colaterais e penalidades podem ser aplicados.",
+                            text = if (isPersonagemRobotico)
+                                "Limite de Mods Robóticos atingido — não é possível instalar mais peças."
+                            else
+                                "Máximo absoluto de Tensão atingido: o livro descreve isso como colapso catastrófico dos sistemas do personagem. Novas instalações estão bloqueadas.",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+            }
+        }
+
+        // Aviso Vantagem Ciborgue: como o app não desconta dinheiro, os efeitos do livro que dependem
+        // de custo/cura/complicação precisam ser aplicados manualmente pelo mestre.
+        if (state.vantagensSelecionadas.any { it.id == "ciborgue" }) {
+            item {
+                ElevatedCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = "Vantagem Ciborgue — combine com o mestre",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
+                        )
+                        Text(
+                            text = "Além do bônus de Tensão (já aplicado), o livro dá $20K em implantes de graça, " +
+                                "remove as rolagens de cura natural (o personagem precisa ser consertado) e exige " +
+                                "uma Complicação Maior extra ligada aos implantes ou uma rolagem permanente de " +
+                                "Efeito Colateral. Como o app não controla dinheiro, nada disso é aplicado " +
+                                "automaticamente — registre os implantes extras aqui e combine o resto com o mestre.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onTertiaryContainer
                         )
                     }
                 }
@@ -164,6 +236,9 @@ fun CiberneticosSection(
 
             items(itemsInCat, key = { it.id }) { item ->
                 val currentInstalledCount = state.ciberneticosInstalados.count { instalarBaseId(it.id) == item.id }
+                val atingiuMaxUses = currentInstalledCount >= item.max_uses
+                val ultrapassariaMaximo = tensaoTotal + item.strain_custo > limiteMaximo
+                val podeInstalar = !atingiuMaxUses && !ultrapassariaMaximo
 
                 OutlinedCard(
                     modifier = Modifier.fillMaxWidth(),
@@ -185,7 +260,9 @@ fun CiberneticosSection(
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "Tensão: ${item.strain_custo}",
+                                text = "Tensão: ${item.strain_custo}" +
+                                    (if (item.max_uses < 99) " | Máx: ${item.max_uses}" else "") +
+                                    (if (item.custo.isNotBlank()) " | ${item.custo}" else ""),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -203,10 +280,10 @@ fun CiberneticosSection(
                             verticalArrangement = Arrangement.spacedBy(2.dp)
                         ) {
                             Text(
-                                text = "+",
+                                text = if (atingiuMaxUses) "Máx" else "+",
                                 modifier = Modifier
                                     .clip(CircleShape)
-                                    .clickable {
+                                    .clickable(enabled = podeInstalar) {
                                         // UUID em vez de currentTimeMillis(): dois cliques rápidos no mesmo
                                         // item podiam cair no mesmo milissegundo e gerar ids duplicados.
                                         state.ciberneticosInstalados.add(item.copy(id = "${item.id}_${java.util.UUID.randomUUID()}"))
@@ -214,7 +291,7 @@ fun CiberneticosSection(
                                     }
                                     .padding(horizontal = 10.dp, vertical = 2.dp),
                                 style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.primary,
+                                color = if (!podeInstalar) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Bold
                             )
                             if (currentInstalledCount > 0) {

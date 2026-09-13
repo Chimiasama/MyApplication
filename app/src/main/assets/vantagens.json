@@ -5490,10 +5490,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -5555,10 +5553,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -5577,10 +5574,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -11133,10 +11128,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -11198,10 +11191,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -11220,10 +11212,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -14237,10 +14227,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -14302,10 +14290,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -14324,10 +14311,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -17600,10 +17585,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -17665,10 +17648,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -17687,10 +17669,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -20217,10 +20197,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -20282,10 +20260,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -20304,10 +20281,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -20484,7 +20459,7 @@
         "Intimidar": 8
       },
       "vantagens_previas": [],
-      "observacoes": "",
+      "observacoes": "Carta Selvagem",
       "choiceOptions": []
     },
     "limite_compra": "",
@@ -23479,10 +23454,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -23544,10 +23517,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -23566,10 +23538,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -27626,10 +27596,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -27691,10 +27659,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -27713,10 +27680,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -31391,10 +31356,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -31456,10 +31419,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -31478,10 +31440,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -31740,9 +31700,8 @@
       "pericias": {
         "Ocultismo": 6
       },
-      "vantagens": [
-        "Carta Selvagem"
-      ]
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "descricao": "Então você quer ser um herói? Um herói grande, durão e experiente? Saquei. Apenas verifique a sua sanidade antes de entrar, porque aqueles que já deram a volta pelos cactos algumas vezes, viram coisas que paralisariam a maioria das pessoas. Como resultado, eles já não são como eram!\nVeteranos do Oeste Estranho começam jogando como Experiente (ou um Estágio acima do restante dos vaqueiros e vaqueiras em sua campanha), o que significa que eles ganham quatro Progressos imediatamente. Vá em frente e os aplique agora.\nMas há um preço. Quando você escolher esta Vantagem, saque uma única carta do Baralho de Ação. Mostre-a ao Xerife e ele vai checar a tabela na página 100 para ver em que tipo de azar você esbarrou no seu caminho para tornar-se calejado.\nCuidado – os resultados podem variar de mutilação a insanidade. O seu Xerife tem todos os detalhes. Lhe avisamos, Tex!",
     "livros": [
@@ -32021,9 +31980,8 @@
       "atributos": {
         "Espírito": 6
       },
-      "vantagens": [
-        "Carta Selvagem"
-      ]
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "descricao": "Alguns pistoleiros são demasiadamente tenazes para se deitarem e ficarem mortos depois de serem assassinados. O preço que pagam é uma batalha eterna pela sua própria alma. Se escolher esta Vantagem, a sua personagem renasceu na não-vida e você pode ler detalhes pavorosos na página 63.\nA Vantagem Atormentado só pode ser selecionada na criação da personagem. Tornar-se um Atormentado mais tarde requer a eliminação da carcaça mortal e muita sorte (o Xerife tem informações sobre como isso pode ocorrer), ou pegando a Vantagem Condenado no estágio lendário.\nObservação: Converse com o seu Xerife antes de escolher esta Vantagem, porque ela às vezes pode se tornar uma Complicação involuntária para todos os outros no grupo!",
     "livros": [
@@ -32072,10 +32030,10 @@
       "atributos": {
         "Espírito": 6
       },
-      "vantagens": [
-        "Carta Selvagem",
-        "Reputação"
-      ]
+      "vantagens_previas": [
+        "reputacao"
+      ],
+      "observacoes": "Carta Selvagem"
     },
     "descricao": "Pistoleiros velhos não morrem, eles apenas.… Está bem, eles de fato morrem. Normalmente de formas confusas e embaraçosas. Mas se o sua personagem veterana calejada do Oeste Estranho cair, ela definitivamente vai voltar. Escolher esta Vantagem é uma apólice de seguro contra ter seus planos para esta velha mão encerrados prematuramente.\nSe o seu herói ou heroína for morto, ele ou ela retorna automaticamente do túmulo como um Atormentado (veja página 63 para mais detalhes). O tempo que isso leva depende dos caprichos do Xerife e da história. Pode ser quase instantaneamente, ou pode ser depois dos seus colegas terem lhe colocado numa caixa de pinho e lido o Salmo 23. Uma vez que você retorne como um Atormentado, você pode trocar esta Vantagem por uma Vantagem de Atormentado adicional.",
     "livros": [
@@ -39090,10 +39048,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -39155,10 +39111,9 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [
-        "especialista",
-        "carta_selvagem"
+        "especialista"
       ],
-      "observacoes": ""
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez_por_caracteristica",
     "vinculado_pericia": false,
@@ -39177,10 +39132,8 @@
       "estagio": "Lendário",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "carta_selvagem"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Carta Selvagem"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,

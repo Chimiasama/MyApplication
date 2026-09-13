@@ -206,7 +206,10 @@ fun PoderesSection(
     }
 
     // Determine which ABs to display
-    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo) {
+    // Fantasia/Horror/SciFi/Pathfinder tratam múltiplos Antecedentes Arcanos como prática normal
+    // do cenário (reserva de PP compartilhada, livro) — não dependem da regra opcional pra mostrar
+    // mais de um AB de uma vez.
+    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo && !state.compendioSciFiAtivo) {
         listOf(arcanosAtivos.first())
     } else {
         arcanosAtivos
@@ -214,8 +217,8 @@ fun PoderesSection(
 
     val hasStandardAB = arcanosAtivos.any { it.normAAKey() != "MISTICO" }
 
-    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap, hasStandardAB) {
-        if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo) 0 else {
+    val sharedTotalPP = remember(state.compendioFantasiaAtivo, state.compendioHorrorAtivo, state.compendioPathfinderAtivo, state.compendioSciFiAtivo, state.ancestralidade, arcanosAtivos, state.bonusPoderExtra, arcanoInfoMap, hasStandardAB) {
+        if (!state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo && !state.compendioSciFiAtivo) 0 else {
             val maxBase = arcanosAtivos.filter { it.normAAKey() != "MISTICO" }.maxOfOrNull { k -> arcanoInfoMap[k.normAAKey()]?.second ?: 0 } ?: 0
             val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && hasStandardAB) 1 else 0
             maxBase + state.bonusPoderExtra + gnomeBonus
@@ -566,7 +569,7 @@ fun PoderesSection(
                 val ppDisplay = if (arcKey == "MISTICO") {
                     val gnomeBonus = if (state.compendioPathfinderAtivo && state.ancestralidade.uppercase().contains("GNOMO") && !hasStandardAB) 1 else 0
                     ppTotal + gnomeBonus
-                } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo) {
+                } else if (state.compendioFantasiaAtivo || state.compendioHorrorAtivo || state.compendioPathfinderAtivo || state.compendioSciFiAtivo) {
                     sharedTotalPP
                 } else {
                     ppTotal

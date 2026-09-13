@@ -26,6 +26,7 @@ class ValidateSpecialRulesUseCase {
         val compendioFantasiaAtivo: Boolean,
         val compendioHorrorAtivo: Boolean,
         val compendioPathfinderAtivo: Boolean,
+        val compendioSciFiAtivo: Boolean,
         val compendioCrystalHeartAtivo: Boolean,
         val estagioAtual: Estagio,
         val listaDeEstagios: List<Estagio>,
@@ -70,7 +71,8 @@ class ValidateSpecialRulesUseCase {
             } else if (!input.permiteMultiAntecedenteArcano &&
                 !input.compendioFantasiaAtivo &&
                 !input.compendioHorrorAtivo &&
-                !input.compendioPathfinderAtivo) {
+                !input.compendioPathfinderAtivo &&
+                !input.compendioSciFiAtivo) {
 
                 val anyArcano = input.vantagensSelecionadas.any { it.nome.keyify().startsWith("ANTECEDENTE ARCANO") }
                 if (anyArcano && input.vantagensSelecionadas.none { it.nome.keyify() == key }) {

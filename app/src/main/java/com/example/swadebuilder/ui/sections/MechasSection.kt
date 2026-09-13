@@ -129,6 +129,11 @@ fun MechasSection(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Text(
+                text = "Os preços em \$ mostrados abaixo são só de referência/registro (tabela do livro) — o app não desconta esse valor do seu dinheiro. Montar um Mecha sem descontar o custo depende da aprovação do mestre.",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
 
         // Catálogo de Chassis Disponíveis e Botão para Criar do Zero
@@ -373,6 +378,17 @@ private fun CreateCustomMechaDialog(
                         singleLine = true
                     )
                 }
+
+                TextButton(
+                    onClick = {
+                        val tamanho = tamanhoText.toIntOrNull() ?: 0
+                        val multiplicador = if (categoriaChassiText.trim().equals("Colossal", ignoreCase = true)) 4 else 3
+                        modMaxText = (tamanho * multiplicador).coerceAtLeast(0).toString()
+                    },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text("Calcular MODs pelo Tamanho (Tam. × 3, ou × 4 se Colossal)")
+                }
             }
         }
     )
@@ -404,6 +420,28 @@ private fun CircleToggle(
     }
 }
 
+// Os mechas prontos do catálogo (scifi_mechas.json) descrevem armas equipadas em texto livre
+// (ex.: "2x Lança-Mísseis (6d6, PA 16, Guiado)"), com prefixos de quantidade e sufixos que não
+// batem por igualdade exata com o nome canônico do catálogo de armas (ex.: "Lança-Mísseis Leve
+// (6d6, PA 16)") — isso fazia o custo em MODs dessas armas nunca ser contabilizado. As estatísticas
+// entre parênteses (dano/PA) são estáveis entre os dois textos, então usamos elas como assinatura:
+// a entrada do catálogo casa se seu conteúdo entre parênteses for um prefixo do texto do mecha.
+private val parenStatsRegex = Regex("\\(([^)]*)\\)")
+
+private fun extractParenStats(text: String): String? =
+    parenStatsRegex.find(text)?.groupValues?.getOrNull(1)?.trim()?.lowercase()
+
+private fun matchWeaponFromCatalog(armaStr: String, catalog: List<MechaWeaponItem>): MechaWeaponItem? {
+    val trimmed = armaStr.trim()
+    catalog.firstOrNull { it.nome.equals(trimmed, ignoreCase = true) }?.let { return it }
+
+    val armaStats = extractParenStats(trimmed) ?: return null
+    return catalog.firstOrNull { w ->
+        val catalogStats = extractParenStats(w.nome) ?: return@firstOrNull false
+        catalogStats.isNotBlank() && armaStats.startsWith(catalogStats)
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun MechaCardItem(
@@ -418,11 +456,12 @@ private fun MechaCardItem(
     var showModDialog by remember { mutableStateOf(false) }
     var showWeaponCatalogDialog by remember { mutableStateOf(false) }
 
-    // Dynamic stat calculations with modifiers and equipped weapons MOD costs
-    val modsDoModifiers = mecha.mods_instalados.sumOf { it.mods_cost }
+    // Dynamic stat calculations with modifiers and equipped weapons MOD costs. Mods cujo custo
+    // escala com o Tamanho ("Metade do Tam." no livro) são resolvidos contra o tamanho ATUAL do
+    // chassi a cada recomposição, em vez de ficar congelado no valor de quando foram instalados.
+    val modsDoModifiers = mecha.mods_instalados.sumOf { it.custoResolvido(mecha.tamanho) }
     val modsDasArmas = mecha.armas_equipadas.sumOf { armaStr ->
-        val found = weaponCatalog.firstOrNull { w -> w.nome.equals(armaStr.trim(), ignoreCase = true) }
-        found?.mods_cost ?: 0
+        matchWeaponFromCatalog(armaStr, weaponCatalog)?.mods_cost ?: 0
     }
     val modsGasto = modsDoModifiers + modsDasArmas
     val modsRestantes = mecha.mod_pontos_max - modsGasto
@@ -430,8 +469,12 @@ private fun MechaCardItem(
     val extraRes = mecha.mods_instalados.count { it.id == "mod_def_resistencia" } - (2 * mecha.mods_instalados.count { it.id == "mod_neg_danificado" })
     val resistenciaCalc = mecha.resistencia_base + extraRes
 
-    val extraArmadura = (2 * mecha.mods_instalados.count { it.id == "mod_def_armadura_extra" }) + (2 * mecha.customizacoes.blindagem_extra)
-    val armaduraCalc = mecha.armadura_base + extraArmadura
+    val armaduraExtraBruta = (2 * mecha.mods_instalados.count { it.id == "mod_def_armadura_extra" }) + (2 * mecha.customizacoes.blindagem_extra)
+    val armaduraExtraMax = mecha.armaduraExtraMaximaResolvida()
+    // armaduraExtraMax = 0 significa "categoria de chassi desconhecida" (não trava).
+    val armaduraExtraLimitada = if (armaduraExtraMax > 0) armaduraExtraBruta.coerceAtMost(armaduraExtraMax) else armaduraExtraBruta
+    val armaduraCalc = mecha.armadura_base + armaduraExtraLimitada
+    val armaduraNoLimite = armaduraExtraMax > 0 && armaduraExtraBruta > armaduraExtraMax
 
     val manobCalc = mecha.manobrabilidade + mecha.mods_instalados.count { it.id == "mod_loc_manobrabilidade" } - mecha.mods_instalados.count { it.id == "mod_neg_manob_reduzida" }
     val velCalc = mecha.vel_maxima + mecha.mods_instalados.count { it.id == "mod_loc_velocidade_ampliada" } - mecha.mods_instalados.count { it.id == "mod_neg_vel_reduzida" }
@@ -474,11 +517,25 @@ private fun MechaCardItem(
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold
             )
+            if (mecha.custo.isNotBlank()) {
+                Text(
+                    text = "Preço de referência do chassi: ${mecha.custo} (não descontado do seu dinheiro)",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
             Text(
                 text = "Capacidade MODs: Espaços Usados: $modsGasto / ${mecha.mod_pontos_max} (Restantes: $modsRestantes)",
                 style = MaterialTheme.typography.labelSmall,
                 color = if (modsRestantes < 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
             )
+            if (armaduraNoLimite) {
+                Text(
+                    text = "Armadura Extra no limite máximo do chassi (+$armaduraExtraMax); o excedente não é aplicado.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.tertiary
+                )
+            }
 
             HorizontalDivider(thickness = 0.5.dp)
 
@@ -730,8 +787,20 @@ private fun MechaCardItem(
                         if (isExpanded) {
                             items(mods) { mod ->
                                 val currentUses = mecha.mods_instalados.count { it.id == mod.id }
-                                val isMaxed = currentUses >= mod.max_uses
-                                val isNeg = mod.mods_cost < 0
+                                // Armadura Extra tem um limite próprio (Armadura Máxima da categoria do
+                                // chassi, livro), não um max_uses fixo — cada compra soma +2 de Armadura.
+                                val isMaxed = if (mod.id == "mod_def_armadura_extra") {
+                                    armaduraExtraMax > 0 && armaduraExtraBruta >= armaduraExtraMax
+                                } else {
+                                    currentUses >= mod.max_uses
+                                }
+                                val custoMod = mod.custoResolvido(mecha.tamanho)
+                                val isNeg = custoMod < 0
+                                // Qualidades negativas devolvem espaços de MODs, então nunca são
+                                // bloqueadas pelo orçamento — só por max_uses. Mods de custo
+                                // positivo são bloqueados se ultrapassarem o total do chassi.
+                                val estouraOrcamento = custoMod > 0 && modsGasto + custoMod > mecha.mod_pontos_max
+                                val podeInstalarMod = !isMaxed && !estouraOrcamento
 
                                 OutlinedCard(
                                     modifier = Modifier
@@ -758,7 +827,7 @@ private fun MechaCardItem(
                                                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                                             )
                                             Text(
-                                                text = mod.descricao,
+                                                text = mod.descricao + if (mod.custo.isNotBlank()) " (${mod.custo})" else "",
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -769,10 +838,10 @@ private fun MechaCardItem(
                                             verticalArrangement = Arrangement.spacedBy(4.dp)
                                         ) {
                                             Text(
-                                                text = if (isMaxed) "Máx" else if (mod.mods_cost >= 0) "+${mod.mods_cost}" else "${mod.mods_cost}",
+                                                text = if (isMaxed) "Máx" else if (estouraOrcamento) "Sem MODs" else if (custoMod >= 0) "+$custoMod" else "$custoMod",
                                                 modifier = Modifier
                                                     .clip(CircleShape)
-                                                    .clickable(enabled = !isMaxed) {
+                                                    .clickable(enabled = podeInstalarMod) {
                                                         onUpdateMecha(
                                                             mecha.copy(
                                                                 mods_instalados = mecha.mods_instalados + mod
@@ -781,7 +850,7 @@ private fun MechaCardItem(
                                                     }
                                                     .padding(horizontal = 10.dp, vertical = 2.dp),
                                                 style = MaterialTheme.typography.titleMedium,
-                                                color = if (isMaxed) MaterialTheme.colorScheme.onSurfaceVariant else if (isNeg) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
+                                                color = if (!podeInstalarMod) MaterialTheme.colorScheme.onSurfaceVariant else if (isNeg) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary,
                                                 fontWeight = FontWeight.Bold
                                             )
                                             if (currentUses > 0) {
@@ -830,6 +899,7 @@ private fun MechaCardItem(
             text = {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(weaponCatalog) { w ->
+                        val estouraOrcamentoArma = modsGasto + w.mods_cost > mecha.mod_pontos_max
                         OutlinedCard(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.outlinedCardColors(
@@ -857,7 +927,7 @@ private fun MechaCardItem(
                                             fontWeight = FontWeight.Bold
                                         )
                                         Text(
-                                            text = "${w.mods_cost} MODs",
+                                            text = "${w.mods_cost} MODs" + if (w.custo.isNotBlank()) " (${w.custo})" else "",
                                             style = MaterialTheme.typography.labelSmall,
                                             color = MaterialTheme.colorScheme.primary,
                                             fontWeight = FontWeight.SemiBold
@@ -871,6 +941,7 @@ private fun MechaCardItem(
                                 }
                                 Spacer(Modifier.width(8.dp))
                                 OutlinedButton(
+                                    enabled = !estouraOrcamentoArma,
                                     onClick = {
                                         onUpdateMecha(
                                             mecha.copy(
@@ -880,7 +951,7 @@ private fun MechaCardItem(
                                     },
                                     contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
                                 ) {
-                                    Text("Equipar", fontSize = 11.sp)
+                                    Text(if (estouraOrcamentoArma) "Sem MODs" else "Equipar", fontSize = 11.sp)
                                 }
                             }
                         }

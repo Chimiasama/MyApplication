@@ -4619,6 +4619,7 @@ class CriadorState {
             compendioFantasiaAtivo = compendioFantasiaAtivo,
             compendioPathfinderAtivo = compendioPathfinderAtivo,
             compendioHorrorAtivo = compendioHorrorAtivo,
+            compendioSciFiAtivo = compendioSciFiAtivo,
             compendioArteDaGuerraAtivo = compendioArteDaGuerraAtivo,
             valoresAtributos = valoresAtributos.mapValues { it.value.intValue },
             pericias = periciasComIdiomas(),

@@ -6,6 +6,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 2,
+      "custo": "$10K × Tam.",
       "descricao": "Reduz a Resistência base em 2. Devolve 2 espaços de MODs.",
       "descricaoLite": "Reduz a Resistência base em 2. Devolve 2 espaços de MODs."
     },
@@ -15,6 +16,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$5K × Tam.",
       "descricao": "Sem piloto/tripulação. Requer controle remoto ou IA. Devolve 2 MODs.",
       "descricaoLite": "Sem piloto/tripulação. Requer controle remoto ou IA. Devolve 2 MODs."
     },
@@ -24,6 +26,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 2,
+      "custo": "$10K × Tam.",
       "descricao": "-2 em testes de Consertar. Devolve 2 MODs.",
       "descricaoLite": "-2 em testes de Consertar. Devolve 2 MODs."
     },
@@ -33,6 +36,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$10K × Tam.",
       "descricao": "O piloto fica Abalado sempre que o mecha sofre Ferimento. Devolve 2 MODs.",
       "descricaoLite": "O piloto fica Abalado sempre que o mecha sofre Ferimento. Devolve 2 MODs."
     },
@@ -42,6 +46,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 4,
+      "custo": "$5K × Tam.",
       "descricao": "Reduz a Força em 1 passo de dado. Devolve 2 MODs.",
       "descricaoLite": "Reduz a Força em 1 passo de dado. Devolve 2 MODs."
     },
@@ -51,6 +56,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 2,
+      "custo": "$10K × Tam.",
       "descricao": "Reduz o total de Ferimentos em 1. Devolve 2 MODs.",
       "descricaoLite": "Reduz o total de Ferimentos em 1. Devolve 2 MODs."
     },
@@ -60,6 +66,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$10K × Tam.",
       "descricao": "Dobre o consumo diário de combustível/energia. Devolve 2 MODs.",
       "descricaoLite": "Dobre o consumo diário de combustível/energia. Devolve 2 MODs."
     },
@@ -69,6 +76,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$10K × Tam.",
       "descricao": "Passageiros sofrem dano total em colisões e -2 para ejetar. Devolve 2 MODs.",
       "descricaoLite": "Passageiros sofrem dano total em colisões e -2 para ejetar. Devolve 2 MODs."
     },
@@ -78,6 +86,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 6,
+      "custo": "$10K × Tam.",
       "descricao": "Subtrai 1 da Manobrabilidade. Devolve 2 MODs.",
       "descricaoLite": "Subtrai 1 da Manobrabilidade. Devolve 2 MODs."
     },
@@ -87,6 +96,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$10K × Tam.",
       "descricao": "Sem componentes eletrônicos automatizados. Devolve 2 MODs.",
       "descricaoLite": "Sem componentes eletrônicos automatizados. Devolve 2 MODs."
     },
@@ -96,6 +106,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$10K × Tam.",
       "descricao": "Penalidade de Plataforma Instável é -4. Devolve 2 MODs.",
       "descricaoLite": "Penalidade de Plataforma Instável é -4. Devolve 2 MODs."
     },
@@ -105,6 +116,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$10K × Tam.",
       "descricao": "Requer dois pilotos, que compartilham uma Carta de Ação e usam a menor rolagem de Pilotar da dupla. Devolve 2 MODs.",
       "descricaoLite": "O mecha exige uma tripulação de dois pilotos, que compartilham uma única Carta de Ação em combate e usam a menor das duas rolagens de Pilotar. Devolve 2 espaços de MODs."
     },
@@ -114,6 +126,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$5K × Tam.",
       "descricao": "Não pode agarrar ou usar armas manuais. Devolve 2 MODs.",
       "descricaoLite": "Não pode agarrar ou usar armas manuais. Devolve 2 MODs."
     },
@@ -123,6 +136,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 1,
+      "custo": "$10K × Tam.",
       "descricao": "O piloto fica exposto às condições atmosféricas, pode ser alvejado individualmente e não recebe bônus de Armadura. Devolve 2 MODs.",
       "descricaoLite": "O mecha é aberto ou deixa o piloto exposto às condições atmosféricas: ele pode ser alvejado individualmente e não recebe o bônus de Armadura do mecha, mesmo em um Acerto Crítico de Tripulação. Devolve 2 espaços de MODs."
     },
@@ -132,6 +146,7 @@
       "categoria": "QUALIDADES NEGATIVAS",
       "mods_cost": -2,
       "max_uses": 3,
+      "custo": "$10K × Tam.",
       "descricao": "Reduz a Velocidade Máxima em 1 passo. Devolve 2 MODs.",
       "descricaoLite": "Reduz a Velocidade Máxima em 1 passo. Devolve 2 MODs."
     },
@@ -141,6 +156,7 @@
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 2,
       "max_uses": 2,
+      "custo": "$10K",
       "descricao": "Adiciona assentos para tripulantes extras.",
       "descricaoLite": "Adiciona assentos para tripulantes extras."
     },
@@ -149,7 +165,8 @@
       "nome": "Comunicações Emaranhadas",
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 1,
-      "max_uses": 1,
+      "max_uses": 99,
+      "custo": "$50K",
       "descricao": "Comunicação quântica ilimitada e inquebrável com receptor pareado.",
       "descricaoLite": "Sistema de comunicação por entrelaçamento quântico que mantém contato instantâneo e à prova de interceptação com um receptor sincronizado, sem limite de alcance."
     },
@@ -159,6 +176,7 @@
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 4,
       "max_uses": 1,
+      "custo": "$25K",
       "descricao": "Antena parabólica extensível para escaneamento planetário e espacial.",
       "descricaoLite": "Antena parabólica retrátil capaz de realizar varreduras de longo alcance, cobrindo escala planetária e espacial."
     },
@@ -168,8 +186,9 @@
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 1,
       "max_uses": 2,
-      "descricao": "Detecta e identifica matéria/energia a até 50m (+2 Perceber).",
-      "descricaoLite": "Detecta e identifica matéria/energia a até 50m (+2 Perceber)."
+      "custo": "$500 (1ª compra) / $5K (2ª compra)",
+      "descricao": "Detecta e identifica matéria/energia a até 50m (+2 Perceber). Se adquirido uma 2ª vez, o alcance aumenta para 500m e o custo total do Mod sobe em +1.",
+      "descricaoLite": "Detecta e identifica matéria/energia a até 50m (+2 Perceber). Se adquirido uma 2ª vez, o alcance aumenta para 500m e o custo total do Mod sobe em +1."
     },
     {
       "id": "mod_cent_forca_ampliada",
@@ -177,6 +196,7 @@
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 2,
       "max_uses": 5,
+      "custo": "$5K × Tam.",
       "descricao": "Aumenta a Força do mecha em 1 passo de dado.",
       "descricaoLite": "Aumenta a Força do mecha em 1 passo de dado."
     },
@@ -186,8 +206,10 @@
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 3,
       "max_uses": 1,
-      "descricao": "Alterna entre forma humanoide e modo veicular/caça.",
-      "descricaoLite": "Sistema de transformação que permite ao mecha alternar entre uma configuração humanoide e um modo veicular ou de caça."
+      "escala_tamanho_divisor": 2,
+      "custo": "$100K",
+      "descricao": "Alterna entre forma humanoide e modo veicular/caça. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "Sistema de transformação que permite ao mecha alternar entre uma configuração humanoide e um modo veicular ou de caça. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_cent_ia",
@@ -195,6 +217,7 @@
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 1,
       "max_uses": 3,
+      "custo": "$5K × Tam.",
       "descricao": "IA automatizada que atua como co-piloto/artilheiro aliado.",
       "descricaoLite": "Núcleo de IA que assume o papel de copiloto ou artilheiro automatizado, auxiliando a tripulação em combate."
     },
@@ -204,6 +227,7 @@
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 1,
       "max_uses": 1,
+      "custo": "$10K",
       "descricao": "HUD integrado conectando biolinks da equipe e estendendo Raio de Comando.",
       "descricaoLite": "Display integrado que sincroniza os sinais vitais da equipe e amplia o alcance de comando do mecha."
     },
@@ -213,6 +237,7 @@
       "categoria": "SISTEMAS CENTRAIS",
       "mods_cost": 1,
       "max_uses": 1,
+      "custo": "$50K",
       "descricao": "Sensores óticos ampliados para 100× e adiciona sensores químicos e de movimento (+2 em Surpresa e Perceber relevantes).",
       "descricaoLite": "Amplia os sensores óticos para 100× e adiciona sensores químicos, de movimento e outros, concedendo +2 aos testes de Surpresa e rolagens de Perceber relevantes."
     },
@@ -222,17 +247,20 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 2,
       "max_uses": 1,
-      "descricao": "Inimigos subtraem 2 das rolagens de Atirar contra o mecha.",
-      "descricaoLite": "Inimigos subtraem 2 das rolagens de Atirar contra o mecha."
+      "escala_tamanho_divisor": 2,
+      "custo": "$5K × Tam.",
+      "descricao": "Inimigos subtraem 2 das rolagens de Atirar contra o mecha. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "Inimigos subtraem 2 das rolagens de Atirar contra o mecha. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_def_armadura_extra",
       "nome": "Armadura Extra",
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 1,
-      "max_uses": 5,
-      "descricao": "+2 de Armadura Pesada por nível.",
-      "descricaoLite": "+2 de Armadura Pesada por nível."
+      "max_uses": 20,
+      "custo": "$5K × Tam.",
+      "descricao": "+2 de Armadura Pesada por nível, até a Armadura Máxima da categoria do chassi (Grande +20, Enorme +30, Colossal +40).",
+      "descricaoLite": "+2 de Armadura Pesada por nível, até a Armadura Máxima da categoria do chassi (Grande +20, Enorme +30, Colossal +40)."
     },
     {
       "id": "mod_def_blindagem_pem",
@@ -240,6 +268,7 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 2,
       "max_uses": 1,
+      "custo": "$5K × Tam.",
       "descricao": "Ignora 2 pontos de penalidade contra pulso eletromagnético.",
       "descricaoLite": "Ignora 2 pontos de penalidade contra pulso eletromagnético."
     },
@@ -249,6 +278,7 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 1,
       "max_uses": 1,
+      "custo": "$5K × Tam.",
       "descricao": "Elimina 2 pontos de penalidade de Evasão contra armas guiadas.",
       "descricaoLite": "Elimina 2 pontos de penalidade de Evasão contra armas guiadas."
     },
@@ -258,8 +288,10 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 2,
       "max_uses": 1,
-      "descricao": "Drones reparadores automáticos em combate.",
-      "descricaoLite": "Pequenos drones autônomos que realizam reparos no mecha durante o combate."
+      "escala_tamanho_divisor": 2,
+      "custo": "$25K × Tam.",
+      "descricao": "Drones reparadores automáticos em combate. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "Pequenos drones autônomos que realizam reparos no mecha durante o combate. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_def_escudo_bracal",
@@ -267,8 +299,10 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 2,
       "max_uses": 1,
-      "descricao": "Fornece Aparar +2 e Cobertura -2 (Dureza 20).",
-      "descricaoLite": "Fornece Aparar +2 e Cobertura -2 (Dureza 20)."
+      "escala_tamanho_divisor": 2,
+      "custo": "$10K × Tam.",
+      "descricao": "Fornece Aparar +2 e Cobertura -2 (Dureza 20). Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "Fornece Aparar +2 e Cobertura -2 (Dureza 20). Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_def_escudos_energia",
@@ -276,8 +310,10 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 2,
       "max_uses": 1,
-      "descricao": "Campo de força defensivo recarregável para Absorção.",
-      "descricaoLite": "Gerador de campo de força que se recarrega com o tempo e pode ser usado para Absorção de dano."
+      "escala_tamanho_divisor": 2,
+      "custo": "$50K × Tam.",
+      "descricao": "Campo de força defensivo recarregável para Absorção. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "Gerador de campo de força que se recarrega com o tempo e pode ser usado para Absorção de dano. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_def_nanomaquinas",
@@ -285,6 +321,7 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 3,
       "max_uses": 1,
+      "custo": "$50K × Tam.",
       "descricao": "Nanorrobôs tentam Consertar como ação limitada (1x/rodada); cada sucesso e ampliação remove um Ferimento. Após reparar 3 Ferimentos, ficam dispersos por 24h.",
       "descricaoLite": "Enxame de nanorrobôs que tenta uma rolagem de Consertar como ação limitada uma vez por rodada, removendo um Ferimento a cada sucesso ou ampliação; após reparar três Ferimentos, os nanorrobôs ficam muito dispersos e não oferecem mais benefícios até se recuperarem 24 horas depois."
     },
@@ -294,6 +331,7 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 1,
       "max_uses": 5,
+      "custo": "$5K × Tam.",
       "descricao": "+1 de Resistência base por nível.",
       "descricaoLite": "+1 de Resistência base por nível."
     },
@@ -303,8 +341,10 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 2,
       "max_uses": 1,
-      "descricao": "Camuflagem e absorção de radar (-4 em rolagens para detectar/travar).",
-      "descricaoLite": "Camuflagem e absorção de radar (-4 em rolagens para detectar/travar)."
+      "escala_tamanho_divisor": 1,
+      "custo": "$50K × Tam.",
+      "descricao": "Camuflagem e absorção de radar (-4 em rolagens para detectar/travar). Custo em MODs: igual ao Tamanho do chassi.",
+      "descricaoLite": "Camuflagem e absorção de radar (-4 em rolagens para detectar/travar). Custo em MODs: igual ao Tamanho do chassi."
     },
     {
       "id": "mod_def_antiteleporte",
@@ -312,6 +352,7 @@
       "categoria": "SISTEMAS DEFENSIVOS",
       "mods_cost": 4,
       "max_uses": 1,
+      "custo": "$10K × Tam.",
       "descricao": "Embaralhadores eletrônicos impedem que pessoas ou materiais sejam teleportados para dentro do mecha.",
       "descricaoLite": "Embaralhadores eletrônicos impedem que pessoas ou materiais sejam teleportados para dentro do mecha."
     },
@@ -321,6 +362,7 @@
       "categoria": "LOCOMOÇÃO",
       "mods_cost": 1,
       "max_uses": 2,
+      "custo": "$1K × Tam.",
       "descricao": "Permite operação e deslocamento sob a água.",
       "descricaoLite": "Permite operação e deslocamento sob a água."
     },
@@ -330,8 +372,10 @@
       "categoria": "LOCOMOÇÃO",
       "mods_cost": 2,
       "max_uses": 99,
-      "descricao": "Cada cápsula adiciona à capacidade máxima do mecha o dobro da sua Classificação de Energia em combustível ou potência.",
-      "descricaoLite": "Cada cápsula de energia adicional adiciona à capacidade máxima do mecha o dobro da sua Classificação de Energia em combustível ou potência armazenada."
+      "escala_tamanho_divisor": 2,
+      "custo": "$5K × Tam.",
+      "descricao": "Cada cápsula adiciona à capacidade máxima do mecha o dobro da sua Classificação de Energia em combustível ou potência. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "Cada cápsula de energia adicional adiciona à capacidade máxima do mecha o dobro da sua Classificação de Energia em combustível ou potência armazenada. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_loc_manobrabilidade",
@@ -339,8 +383,10 @@
       "categoria": "LOCOMOÇÃO",
       "mods_cost": 2,
       "max_uses": 2,
-      "descricao": "+1 de Manobrabilidade.",
-      "descricaoLite": "+1 de Manobrabilidade."
+      "escala_tamanho_divisor": 2,
+      "custo": "$10K × Tam.",
+      "descricao": "+1 de Manobrabilidade. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "+1 de Manobrabilidade. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_loc_propulsores_salto",
@@ -348,8 +394,10 @@
       "categoria": "LOCOMOÇÃO",
       "mods_cost": 2,
       "max_uses": 1,
-      "descricao": "Jatos de salto para manobras 'Morte Vinda de Cima'.",
-      "descricaoLite": "Propulsores que permitem saltos de combate, possibilitando ataques aéreos descendentes contra alvos no chão."
+      "escala_tamanho_divisor": 2,
+      "custo": "$10K × Tam.",
+      "descricao": "Jatos de salto para manobras 'Morte Vinda de Cima'. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "Propulsores que permitem saltos de combate, possibilitando ataques aéreos descendentes contra alvos no chão. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_loc_propulsores_voo",
@@ -357,8 +405,10 @@
       "categoria": "LOCOMOÇÃO",
       "mods_cost": 3,
       "max_uses": 1,
-      "descricao": "Permite voo com Classificação de Velocidade 8.",
-      "descricaoLite": "Permite voo com Classificação de Velocidade 8."
+      "escala_tamanho_divisor": 2,
+      "custo": "$25K × Tam.",
+      "descricao": "Permite voo com Classificação de Velocidade 8. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "Permite voo com Classificação de Velocidade 8. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_loc_quadrupede",
@@ -366,6 +416,7 @@
       "categoria": "LOCOMOÇÃO",
       "mods_cost": 2,
       "max_uses": 1,
+      "custo": "$10K",
       "descricao": "O mecha tem quatro pernas em vez de bípede; ganha rerrolagem de Pilotar contra Fora de Controle.",
       "descricaoLite": "O mecha tem quatro pernas em vez de ser bípede, ganhando uma rerrolagem de Pilotar sempre que fizer um teste para evitar ficar Fora de Controle."
     },
@@ -375,8 +426,10 @@
       "categoria": "LOCOMOÇÃO",
       "mods_cost": 2,
       "max_uses": 99,
-      "descricao": "+1 na Classificação de Velocidade Máxima.",
-      "descricaoLite": "+1 na Classificação de Velocidade Máxima."
+      "escala_tamanho_divisor": 2,
+      "custo": "$10K × Tam.",
+      "descricao": "+1 na Classificação de Velocidade Máxima. Custo em MODs: Metade do Tamanho do chassi (arredondado pra cima).",
+      "descricaoLite": "+1 na Classificação de Velocidade Máxima. Custo em MODs: metade do Tamanho do chassi (arredondado pra cima)."
     },
     {
       "id": "mod_of_acessorios_extras",
@@ -384,6 +437,7 @@
       "categoria": "SISTEMAS OFENSIVOS",
       "mods_cost": 1,
       "max_uses": 3,
+      "custo": "$10K",
       "descricao": "Cada aquisição adiciona um conjunto extra de membros com mãos para segurar itens/armas, com +1 de bônus de Agrupar contra um único inimigo.",
       "descricaoLite": "Cada vez que for adquirido, o mecha ganha um conjunto adicional de membros com mãos capazes de segurar itens ou armas, concedendo +1 de bônus de Agrupar se todos forem focados em um único inimigo."
     },
@@ -391,10 +445,11 @@
       "id": "mod_of_arma_transportada",
       "nome": "Arma Transportada (Rifle Mecha)",
       "categoria": "SISTEMAS OFENSIVOS",
-      "mods_cost": 2,
-      "max_uses": 2,
-      "descricao": "Configura uma arma grande empunhada pelas duas mãos.",
-      "descricaoLite": "Suporte que permite empunhar com as duas mãos uma arma de grande porte destinada a mechas."
+      "mods_cost": 0,
+      "max_uses": 1,
+      "custo": "$10K + custo da arma",
+      "descricao": "Configura uma arma grande empunhada pelas duas mãos. O custo em MODs é o custo da própria arma equipada (some o custo dela em Armas Equipadas); este Mod só libera o suporte.",
+      "descricaoLite": "Suporte que permite empunhar com as duas mãos uma arma de grande porte destinada a mechas. O custo em MODs é o da arma equipada, contado em Armas Equipadas — este Mod só libera o suporte."
     },
     {
       "id": "mod_of_controle_remoto",
@@ -402,6 +457,7 @@
       "categoria": "SISTEMAS OFENSIVOS",
       "mods_cost": 1,
       "max_uses": 1,
+      "custo": "$10K",
       "descricao": "Um operador com os códigos de acesso e um transmissor pode controlar o mecha à distância, usando Eletrônica -2 no lugar da perícia de manobra usual.",
       "descricaoLite": "Um operador com os códigos de acesso adequados e um transmissor (como um dispositivo móvel) pode controlar o mecha de longe, usando Eletrônica -2 no lugar da perícia de manobra usual."
     },
@@ -411,6 +467,7 @@
       "categoria": "SISTEMAS OFENSIVOS",
       "mods_cost": 1,
       "max_uses": 1,
+      "custo": "$5K",
       "descricao": "Anula penalidade de Plataforma Instável e corrida.",
       "descricaoLite": "Anula penalidade de Plataforma Instável e corrida."
     },
@@ -420,6 +477,7 @@
       "categoria": "SISTEMAS OFENSIVOS",
       "mods_cost": 2,
       "max_uses": 1,
+      "custo": "$50K",
       "descricao": "Espada de corte para combate corpo a corpo de mechas.",
       "descricaoLite": "Lâmina montada no braço, projetada para combate corpo a corpo entre mechas (For+d12, PA 6)."
     },
@@ -429,6 +487,7 @@
       "categoria": "SISTEMAS OFENSIVOS",
       "mods_cost": 2,
       "max_uses": 1,
+      "custo": "$100K",
       "descricao": "Lâmina de plasma/energia com PA 12 como Arma Pesada.",
       "descricaoLite": "Lâmina composta de energia ou plasma, tratada como Arma Pesada (For+d12, PA 12)."
     },
@@ -438,6 +497,7 @@
       "categoria": "SISTEMAS OFENSIVOS",
       "mods_cost": 1,
       "max_uses": 1,
+      "custo": "$25K",
       "descricao": "Reduz 2 pontos de penalidades de disparo (Ataque Localizado, Cobertura, Escala).",
       "descricaoLite": "Reduz 2 pontos de penalidades de disparo (Ataque Localizado, Cobertura, Escala)."
     }

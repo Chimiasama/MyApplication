@@ -13,6 +13,7 @@
       "forca": "d12+4",
       "energia_dias": 5,
       "mod_pontos_max": 12,
+      "custo": "$1,1M",
       "sistemas_instalados": ["Armadura x3", "CA/CE", "Estabilizador", "Velocidade Ampliada"],
       "armas_equipadas": [
         "Canhões Automáticos Leves Duplos (3d8, PA 4, CdT 4)",
@@ -37,6 +38,7 @@
       "forca": "d12+7",
       "energia_dias": 5,
       "mod_pontos_max": 21,
+      "custo": "$2,1M",
       "sistemas_instalados": ["Armadura x2", "Armadura Inclinada", "Manobrabilidade x2", "Resistência", "Sistema de Mira"],
       "armas_equipadas": [
         "2x Lança-Projéteis Médios (2d8+1, PA 2, CdT 3)",
@@ -61,6 +63,7 @@
       "forca": "d12+7",
       "energia_dias": 5,
       "mod_pontos_max": 21,
+      "custo": "$2,5M",
       "sistemas_instalados": ["Armadura x3", "CA/CE", "Forma Variável (Caça Espacial)", "Manobrabilidade x2", "Resistência", "Sistema de Mira"],
       "armas_equipadas": [
         "Laser Gatling (3d6+4, PA 4)",
@@ -86,6 +89,7 @@
       "forca": "d12+8",
       "energia_dias": 5,
       "mod_pontos_max": 24,
+      "custo": "$4,5M",
       "sistemas_instalados": ["Armadura x5", "Armadura Inclinada", "Manobrabilidade", "Propulsores para Salto", "Sistema de Mira"],
       "armas_equipadas": [
         "Lâmina de Braço (For+d12, PA 6)",
@@ -111,6 +115,7 @@
       "forca": "d12+9",
       "energia_dias": 5,
       "mod_pontos_max": 27,
+      "custo": "$5,2M",
       "sistemas_instalados": ["Armadura x10", "Sistema de Mira"],
       "armas_equipadas": [
         "Lasers Médios Quádruplos Conectados (3d10, PA 20)",
@@ -136,6 +141,7 @@
       "forca": "d12+10",
       "energia_dias": 5,
       "mod_pontos_max": 30,
+      "custo": "$5,9M",
       "sistemas_instalados": ["Armadura x10", "Resistência x5", "Sistema de Mira"],
       "armas_equipadas": [
         "Lasers Médios Quádruplos Conectados (3d10, PA 20)",
@@ -161,6 +167,7 @@
       "forca": "d12+14",
       "energia_dias": 5,
       "mod_pontos_max": 52,
+      "custo": "$15,1M",
       "sistemas_instalados": ["Armadura x12", "CA/CE", "Escudo de Braço", "Força Ampliada", "Manobrabilidade x2", "Propulsores", "Resistência", "Sistema de Mira"],
       "armas_equipadas": [
         "Lança-Projéteis Médios Duplos (2d8+1, PA 2, CdT 3)",
@@ -181,11 +188,12 @@
       "manobrabilidade": 0,
       "vel_maxima": 8,
       "resistencia_base": 15,
-      "armadura_base": 20,
+      "armadura_base": 0,
       "ferimentos": 4,
       "forca": "d12+7",
       "energia_dias": 5,
       "mod_pontos_max": 21,
+      "custo": "$1,75M ($250K × Tamanho)",
       "sistemas_instalados": ["Selado", "Sensores HUD"],
       "armas_equipadas": [],
       "customizacoes": {
@@ -202,11 +210,12 @@
       "manobrabilidade": -1,
       "vel_maxima": 6,
       "resistencia_base": 20,
-      "armadura_base": 30,
+      "armadura_base": 0,
       "ferimentos": 5,
       "forca": "d12+10",
       "energia_dias": 5,
       "mod_pontos_max": 30,
+      "custo": "$5M ($500K × Tamanho)",
       "sistemas_instalados": ["Selado", "Sensores HUD"],
       "armas_equipadas": [],
       "customizacoes": {
@@ -223,11 +232,12 @@
       "manobrabilidade": -2,
       "vel_maxima": 4,
       "resistencia_base": 25,
-      "armadura_base": 40,
+      "armadura_base": 0,
       "ferimentos": 6,
       "forca": "d12+14",
       "energia_dias": 5,
       "mod_pontos_max": 56,
+      "custo": "$14M ($1M × Tamanho)",
       "sistemas_instalados": ["Selado", "Sensores HUD Avançados", "Pisotear Colossal"],
       "armas_equipadas": [],
       "customizacoes": {

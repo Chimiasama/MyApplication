@@ -315,6 +315,14 @@ fun buildSummaryLines(
     if (personagem.dominio != null) {
         lines += "Domínio: ${personagem.dominio}"
     }
+    if (personagem.vantagens.contains("ciborgue")) {
+        lines += ""
+        lines += "Aviso (Vantagem Ciborgue): o app não desconta dinheiro, então os $20K em implantes " +
+            "que a Vantagem concede de graça precisam ser adicionados manualmente em Cibernéticos, com o " +
+            "aval do mestre. Além disso, pelo livro o Ciborgue não faz mais testes de cura natural (deve " +
+            "ser consertado) e exige uma Complicação Maior extra ligada aos implantes ou uma rolagem " +
+            "permanente na tabela de Efeitos Colaterais — nenhum dos dois é aplicado automaticamente aqui."
+    }
     if (!personagem.scifiVariant.isNullOrBlank()) {
         lines += "Variante Racial: ${personagem.scifiVariant}"
     }
