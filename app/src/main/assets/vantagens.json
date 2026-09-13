@@ -31602,9 +31602,10 @@
       "pericias": {
         "Foco": 4
       },
-      "vantagens": [
-        "Artista Marcial"
-      ]
+      "vantagens_previas": [
+        "artista_marcial"
+      ],
+      "observacoes": ""
     },
     "descricao": "Algumas pessoas no oeste estranho estudaram as antigas artes asiáticas de combate. Muito poucos desses combatentes extremamente habilidosos alcançaram a disciplina espiritual necessária para canalizar a força sobrenatural chamada chi através de seus próprios corpos. Esses combatentes iluminados usam a Vantagem Antecedente Arcano (Mestre do Chi) para refletir suas habilidades surpreendentes. Mestres e mestras do chi usam Foco como sua perícia arcana.",
     "livros": [
@@ -31756,9 +31757,10 @@
       "pericias": {
         "Atirar": 10
       },
-      "vantagens": [
-        "Martelar o Cão"
-      ]
+      "vantagens_previas": [
+        "martelar_o_cao"
+      ],
+      "observacoes": ""
     },
     "descricao": "Como Martelar o Cão, acima, mas a penalidade de Atirar aplicada a cada tiro é de apenas –2.",
     "livros": [
@@ -31822,9 +31824,10 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Mateiro"
-      ]
+      "vantagens_previas": [
+        "mateiro"
+      ],
+      "observacoes": ""
     },
     "descricao": "Batedores são mestres da navegação na vastidão selvagem do Oeste. Quando o Xerife sacar uma carta de figura enquanto o grupo estiver viajando — indicando um encontro — o Batedor pode fazer uma rolagem de Perceber com –2 para detectar antes o perigo, criatura ou evento. Batedores sempre são considerados atentos para rolagens resistidas de Perceber contra Furtividade, ignoram até 2 pontos de penalidades em rolagens de Sobrevivência para rastrear, com uma ampliação recebem informações mais específicas sobre o que eles estão seguindo. Também adicionam +2 as rolagens de Conhecimento Geral para recordar informações sobre cidades, postos avançados, pontos de referência e poços, pessoas ou tribos ao longo de uma rota específica que já percorreram antes.",
     "livros": [
@@ -31998,9 +32001,10 @@
       "atributos": {
         "Espírito": 8
       },
-      "vantagens": [
-        "Coragem"
-      ]
+      "vantagens_previas": [
+        "coragem"
+      ],
+      "observacoes": ""
     },
     "descricao": "Através da perseverança e talvez um pouco de insanidade, estes casca-grossa reduzem em 2 as penalidades nos teste de Medo. Isto se acumula com Corajoso.",
     "livros": [
@@ -32050,9 +32054,10 @@
       "atributos": {
         "Espírito": 10
       },
-      "vantagens": [
-        "Determinação"
-      ]
+      "vantagens_previas": [
+        "determinacao"
+      ],
+      "observacoes": ""
     },
     "descricao": "Estas pessoas veteranas e calejadas viram coisas que fariam os olhos dos outros saltarem como se tivessem visto uma cascavel no seu leito de rocha. Elas ignoram todas as penalidades ao fazerem testes de Medo e se falharem, recebem uma rerrolagem gratuita na Tabela de Efeitos de Medo se assim desejarem.",
     "livros": [
@@ -32079,14 +32084,15 @@
     "categoria": "LENDARIAS",
     "requisitos": {
       "estagio": "Lendário",
-      "pericias": {
+      "periciaMinOpcional": {
         "Atirar": 10,
         "Lutar": 10,
         "Atletismo": 10
       },
-      "vantagens": [
-        "Arma Predileta"
-      ]
+      "vantagens_previas": [
+        "arma_predileta"
+      ],
+      "observacoes": ""
     },
     "descricao": "O teu herói ou heroína é rápido no gatilho e renomado como um \"hombre\" ruim. As pessoas começaram a lhe chamar de Mão Direita do Diabo (ou Esquerda se o seu vaqueiro ou vaqueira é canhoto, em vez de destro). Seja qual for a arma que o seu atirador normalmente usa na sua mão favorecida, ela foi infundida com parte do status mítico que lhe foi concedido, transformando essa arma numa poderosa relíquia. Uma arma relíquia causa um dado extra de dano do mesmo tipo que o maior dado de dano dessa arma. Então, um rifle Colt revolver relíquia causaria um dano terrível de 3d8. A Vantagem permanece com a arma, por isso, se o atirador perdê-la, também perde a Vantagem – pelo menos até recuperá-la de volta. E sim, qualquer outro que a encontre nesse meio tempo recebe os seus benefícios!",
     "livros": [
@@ -32103,9 +32109,10 @@
       "atributos": {
         "Agilidade": 10
       },
-      "vantagens": [
-        "Rápido"
-      ]
+      "vantagens_previas": [
+        "rapido"
+      ],
+      "observacoes": ""
     },
     "descricao": "Quando o seu herói ou heroína pega o ferro, as pessoas raramente têm tempo para piscar, muito menos para derrubá-lo. Alguns dizem que ele ou ela tem o gatilho mais rápido do Oeste. Você ganha uma quarta ação. Isto aumenta a penalidade máxima de Ação Múltipla para –6 (que pode ser reduzida por quaisquer Vantagens ou habilidades que o fazem, como Atirar ou Lutar com Duas Armas).",
     "livros": [
@@ -32119,9 +32126,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Esta Vantagem permite a um desmorto criar uma barreira que mantém afastado fantasmas, assombrações e outras entidades etéreas — não tem nenhum efeito em entidades físicas. O Atormentado faz uma rolagem de Espírito e, em seguida, coloca um Modelo Médio de Explosão centrado em si mesmo. O Arame Espiritual persiste enquanto o vaqueiro ou vaqueira se concentrar nele, o que inflige uma penalidade de –2 em outras rolagens.",
     "livros": [
@@ -32135,9 +32141,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "O Atormentado ganha a capacidade de escavar através da terra bruta, como no poder (veja em Savage Worlds). O desmorto pode cavar em terra macia e se mover através dela com metade de sua Movimentação (ele ou ela não pode correr). Normalmente, não se pode ser atacado enquanto cavando, e é possível tentar surpreender oponentes que não lhes vejam chegando ao fazer uma rolagem resistida de Furtividade contra Perceber. Se tiver sucesso, quem cava adiciona +2 ao seu ataque e rolagens de dano nessa rodada, ou +4 com uma ampliação e, nesse caso, ganha a Finalização sobre o alvo.",
     "livros": [
@@ -32151,9 +32156,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Chamado dos Mortos é a habilidade de sentir a direção de todos os cadáveres — animais, humanos ou outros — dentro de 1,5 km. Isto aparece quase como um radar na mente dos Atormentados. Detectar os mortos é uma ação, mas não requer uma rolagem de característica. E sim, isso absolutamente pode ser usado para dizer se um indivíduo é um cadáver ambulante, embora não lhe diga de que tipo — outro Atormentado, um vampiro, um morto ambulante, etc.",
     "livros": [
@@ -32167,9 +32171,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Contorcer permite que um Atormentado desloque praticamente todos os ossos do seu corpo – incluindo escápulas, costelas e pelve. Para escapar de estar Preso ou Enredado, ou se espremer através de uma fenda com aproximadamente a largura do crânio do Atormentado, como uma ação, o desmorto faz uma rolagem de Vigor para deslocar alguns ossos de suas juntas e deslizar ou rastejar através de uma abertura. Falha significa que ele sofre Fadiga e não consegue nenhum progresso (ou recebe um Ferimento com uma Falha Crítica). Sucesso significa que ele ou melhora sua situação em um passo (de Preso para Enredado) ou desliza através da fenda (mas isto leva todo o seu turno — nenhuma outra ação é permitida). Uma ampliação significa que o contorcionista não está mais Preso ou Enredado, ou se move através de uma abertura como um movimento normal.",
     "livros": [
@@ -32183,9 +32186,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Um Corcel Infernal é um tipo estranho de cavalo desenterrado dos Campos de Caça pelo manitu do Atormentado. Quando invocado (escolhendo esta Vantagem), ele sai de um portal do Inferno, bufando fogo, com olhos flamejantes e uma nuvem de enxofre em seu encalço. Em poucos minutos a besta chega a um acordo com o reino mortal e se torna um cavalo normal — embora um que é claramente mais feroz e poderoso.\nO cavalo tem as estatísticas habituais para um Cavalo de Guerra (veja em Savage Worlds), é destemido e uma Carta Selvagem. A besta é Leal e tem uma inteligência sinistra que compreende os comandos do seu mestre (trate a sua Astúcia como humana em vez de animal). Se o Corcel Infernal for morto, o Atormentado não recebe um substituto automaticamente! No entanto, ele pode pegar a Vantagem novamente para convocar uma nova besta. Um Atormentado não pode ter mais do que um Corcel Infernal por vez.",
     "livros": [
@@ -32199,9 +32201,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Atormentados com este poder podem se aproveitar da conexão espiritual para convocar o espírito de um cadáver e falar com ele. O contato requer toque e o cadáver não pode estar morto há mais tempo do que o dado de Astúcia do Atormentado em meses. Uma vez iniciado o contato, o Xerife rola um d6. Em um 2-6, o espírito é arrastado e responde a algumas perguntas antes de ser puxado de volta para os Campos de Caça e não pode ser convocado novamente até a próxima lua cheia. Com 1, um manitu responde em vez disso, fingindo ser o espírito do cadáver e causa o máximo de estrago possível!",
     "livros": [
@@ -32215,9 +32216,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Hálito da Sepultura é a habilidade de reunir o pior fedor de decadência no corpo de um Atormentado, sobrenaturalmente piorá-lo ainda mais e expeli-lo sobre um alvo desavisado ao alcance do braço. Para fazer isso, ele ou ela sopra uma nuvem de vapores tóxicos em um Modelo Médio de Explosão adjacente à sua posição. Aqueles atingidos devem fazer uma rolagem de Vigor com –2 ou sofrem Fadiga. Este efeito só pode causar Incapacitação, não morte. Seres que não respiram são imunes. Um Atormentado só pode liberar esses vapores imundos depois de comer alguma coisa e esperar pelo menos uma hora.",
     "livros": [
@@ -32231,9 +32231,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Lendário",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Esta Vantagem concede ao Atormentado um grupo de cinco aliados Extras. A hoste consiste em cinco Mortos Errantes. Eles são animados por manitus menores, que servem como aliados cruéis e caóticos. Eles podem falar, usar armas ou fazer qualquer outra coisa que uma pessoa normal pode fazer. O herói ou heroína não tem uma ligação mental com a sua Hoste Profana, mas quando lhes dá ordens, eles são obrigados a segui-las. Se algum deles for perdido, o Atormentado precisa apenas de um novo suprimento de cadáveres para deixar os manitus voltarem.",
     "livros": [
@@ -32247,9 +32246,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Lendário",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Quando qualquer poder que usa a perícia Conjurar é usado diante do Atormentado, ele ganha a capacidade de lançá-lo. Ele só pode fazer isto uma vez e deve estar no mesmo encontro em que o viu sendo usado. O Atormentado usa Conjurar para lançar o feitiço se possuir essa perícia, ou Astúcia se não a tiver. Quaisquer Pontos de Poder ou modificadores devem ser idênticos. Uma Falha Crítica significa que o Atormentado está Fadigado e todos os poderes atualmente mantidos (se houver) terminam.",
     "livros": [
@@ -32263,9 +32261,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Atormentados com esse poder continuam a controlar partes decepadas de seu corpo – normalmente uma mão ou um olho – por curtos períodos de tempo. Para usar a Vantagem, o desmorto decepa a própria mão ou arranca um globo ocular. A parte do corpo decepada permanece ativa e sob o controle mental do seu dono até uma Distância de 1,5 km. Mãos cortadas usam o perfil da Mão Animada (Mov 6). Olhos magicamente transmitem tudo o que enxergam para o seu dono e podem rolar com Mov 6. Decepar uma parte do corpo causa um Ferimento imediato e qualquer Complicação associada.",
     "livros": [
@@ -32282,9 +32279,8 @@
       "pericias": {
         "Persuadir": 6
       },
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "O uso desta Vantagem permite que um Atormentado se pareça como quando ainda estava vivo, negando as atitudes hostis dos outros e a penalidade inata de –2 em Persuadir que os Atormentados possuem. Máscara da Morte é ativada com uma ação, mas não requer uma rolagem de Característica. Uma vez ativada, os Atormentados podem mantê-la pelo tempo que quiserem. Se o Atormentado for Abalado, Atordoado ou sofrer um ou mais Ferimentos, ele deve fazer uma rolagem de Espírito com –2 para manter o disfarce ativo.",
     "livros": [
@@ -32298,9 +32294,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Um Atormentado cujo verme cerebral lhe concede este poder, pode partilhar a sua miséria, dando a outras mentes vivas sonhos sombrios e terríveis. O Atormentado precisa de algo do alvo para causar pesadelos sobre ele — pode ser algo de seu corpo ou um item de significado. O desmorto então simplesmente decide se ele quer que seu manitu atormente o alvo todas as noites. Se assim for, a vítima tem a Complicação Terrores Noturnos enquanto o Atormentado desejar atormentá-la. Uma vítima pode livrar-se dos pesadelos matando o Atormentado ou dormindo em solo santificado. Dissipar não tem efeito, mas detectar arcano sente uma presença maligna na vítima.",
     "livros": [
@@ -32314,9 +32309,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Se um manitu é bom em alguma coisa, é assumir o controle do corpo de outra pessoa. Este poder concede ao Atormentado uma capacidade limitada de fazer o mesmo. Controlar alguém funciona exatamente como o poder fantoche do Savage Worlds, mas o Atormentado usa seu Espírito –2 para a rolagem de perícia arcana. O desmorto fica Distraído enquanto mantiver o controle. Ele pode manter o poder o quanto quiser, mas permanece Distraído ao fazê-lo. Se for Abalado, Atordoado ou Ferido, ele tem que fazer uma rolagem de Astúcia ou o poder também termina.",
     "livros": [
@@ -32330,9 +32324,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Novato",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Normalmente, os cadáveres não se movem muito depressa. Mas o Atormentado com esta Vantagem pode se mover com velocidade sobrenatural quando a necessidade surge. Isto aumenta a sua Movimentação em 3 e o seu dado de corrida em um passo. Isto se acumula com Ligeiro e habilidades semelhantes!",
     "livros": [
@@ -32346,9 +32339,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Aqueles com esta Vantagem podem controlar partes do corpo, estejam ligadas ao resto do cadáver ou não! Um Atormentado inteligente pode aprender a usá-la não só para manter o controle de suas partes, mas também saber do paradeiro de seus inimigos. Ele precisa simplesmente colocar um pedaço substancial de si mesmo (osso, dente) dentro de uma pessoa ou em algo dela. Enquanto a parte do Atormentado estiver dentro de 15 km, ele ou ela pode automaticamente sentir sua direção e distância aproximada.",
     "livros": [
@@ -32362,10 +32354,10 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
-        "Atormentado",
-        "Rastro de Dentes"
-      ]
+      "vantagens_previas": [
+        "rastro_de_dentes"
+      ],
+      "observacoes": ""
     },
     "descricao": "Como acima, exceto que a parte pode ser rastreada até 150 km de distância.",
     "livros": [
@@ -32379,9 +32371,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Heroico",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Um desmorto usa este poder para infligir uma dor terrível a todos os que se aproximam demais do seu cadáver. Ativar Rigor Mortis é uma ação livre que cria um campo de agonia do tamanho de um Modelo Médio de Explosão centrado no Atormentado. Todos os que entram no modelo (amigos e inimigos) são devastados pela dor e rigidez e ficam Distraídos. A condição termina no final do turno da vítima, se ela não estiver mais na área de efeito. Rigor Mortis pode ser mantido enquanto o Atormentado desejar, mas termina se ele não fizer uma rolagem de Astúcia quando for Abalado, Atordoado ou Ferido.",
     "livros": [
@@ -32398,9 +32389,8 @@
       "pericias": {
         "Furtividade": 8
       },
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Enquanto os pés deste desmorto estiverem em contato com a terra, ele pode se mover sem fazer barulho (mesmo que esteja usando botas). Ele adiciona +4 à Furtividade onde o som for o principal fator de detecção.",
     "livros": [
@@ -32414,9 +32404,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Manitus têm um talento para fazer os mortais dormirem. Atormentados com esta Vantagem podem acessar as habilidades dos manitus para enviar uma vítima diretamente para a Terra de Nod com um único toque. Até mesmo outros atormentados são afetados. Isso funciona muito como o poder do sono (veja em Savage Worlds), exceto que não custa Pontos de Poder, tem um Alcance de Toque e é decretado com uma rolagem resistida de Espírito contra o alvo como uma ação. Se o Atormentado vencer a rolagem resistida de Espírito, o alvo adormece por um minuto ou 1d6 horas com uma ampliação. Isto não pode ser mantido.",
     "livros": [
@@ -32430,9 +32419,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Um Atormentado com esta vantagem pode, com um toque, interromper o funcionamento de qualquer engenhoca de cientista louco ou dispositivo Infernal. Isto é uma ação e uma rolagem de Espirito. Se for bem-sucedido, qualquer falha ao usar o dispositivo conta como uma Falha Crítica. Isto dura três rodadas após o dispositivo ser tocado, ou cinco com uma ampliação.",
     "livros": [
@@ -32446,9 +32434,8 @@
     "categoria": "ATORMENTADO",
     "requisitos": {
       "estagio": "Experiente",
-      "vantagens": [
-        "Atormentado"
-      ]
+      "vantagens_previas": [],
+      "observacoes": ""
     },
     "descricao": "Visão Espiritual permite que o Atormentado toque a mente do manitu e consiga dar uma rápida olhada no mundo dos espíritos. Ativar a Visão Espiritual é uma ação livre (mas só pode ser feito uma vez por turno se o jogo estiver em rodadas). Isto é desorientador, pois a personagem fica Distraída até o final do turno após desativar a Visão Espiritual. Enquanto espreita os campos de Caça, o Atormentado pode ver coisas como manitus, Nível de Medo, efeitos mágicos, ou se um manitu está contorcendo-se dentro de alguém. Isto pode permitir ao desmorto notar uma criatura Invisível se ela possuir um espírito. Além disso, qualquer criatura com a Habilidade Especial de Medo deixa um rastro sombrio através do mundo espiritual por até uma hora (teste de Perceber para seguir).",
     "livros": [
@@ -32466,9 +32453,10 @@
         "Ciência Estranha": 8,
         "Ocultismo": 6
       },
-      "vantagens": [
-        "Antecedente Arcano (Cientista Louco)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_cientista_louco"
+      ],
+      "observacoes": ""
     },
     "descricao": "Magos do Metal são inventores que descobriram e aceitaram o fato de que seus poderes são dados a eles por manitus. Magos de Metal usam dispositivos como qualquer outro cientista estranho, mas também podem Barganhar com o Diabo como um mascate! Isso permite que eles lancem quaisquer poderes disponíveis para cientistas loucos, mesmo aqueles que eles não possuem ou que estão acima de seu Estágio. O processo envolve sacar cartas de poker. Veja detalhes completos nas regras de Barganhar com o Diabo para Magos do Metal.",
     "livros": [
@@ -32509,9 +32497,10 @@
       "pericias": {
         "Fé": 8
       },
-      "vantagens": [
-        "Antecedente Arcano (Vuduísmo)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_vuduismo"
+      ],
+      "observacoes": ""
     },
     "descricao": "Este herói ou heroína quase morreu em algum momento, mas retornou. Ele ou ela viu a encruzilhada entre os mundos e os espíritos ouvem o seu chamado melhor do que os da maioria. Essa Vantagem só pode ser escolhida na criação da personagem. A personagem deve ter sido Incapacitado devido a um efeito que poderia causar a morte. Recebe uma rerrolagem gratuita em rolagens de Fé.",
     "livros": [
@@ -32531,9 +32520,10 @@
       "pericias": {
         "Fé": 8
       },
-      "vantagens": [
-        "Antecedente Arcano (Vuduísmo)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_vuduismo"
+      ],
+      "observacoes": ""
     },
     "descricao": "Esta Vantagem só pode ser escolhida uma vez e significa uma relação especial entre uma mambo ou um houngan e um loa específico. Só beneficia aqueles que têm os feitiços aspecto do loa rada ou a fúria do loa petro. O herói ou heroína deve clara e visivelmente marcar sua lealdade ao loa escolhido de alguma forma. Enquanto esta homenagem estiver presente, ambos os poderes custam 3 Pontos de Poder ao invés de 5.",
     "livros": [
@@ -32570,9 +32560,10 @@
       "pericias": {
         "Conjurar": 8
       },
-      "vantagens": [
-        "Antecedente Arcano (Bruxa)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_bruxa"
+      ],
+      "observacoes": ""
     },
     "descricao": "Mina Devlin ensina suas meninas órfãs a ler, escrever, aritmética, etiqueta e, é claro, bruxaria! A máscara negra e roupas de couro identificam a bruxa. Quando totalmente paramentada, ela adiciona +1 às rolagens de Intimidar e +1 às rolagens de Persuadir com quem possa sentir atração por ela (mas -1 com autoridades). As bruxas de Wichita também aprendem a carregar o seu chicote com energia violenta (custa 1 PP, ação livre, se acertar com ampliação adiciona dado de bônus ao dano).",
     "livros": [
@@ -32590,9 +32581,10 @@
       "pericias": {
         "Conjurar": 8
       },
-      "vantagens": [
-        "Antecedente Arcano (Bruxa)"
-      ]
+      "vantagens_previas": [
+        "antecedente_arcano_bruxa"
+      ],
+      "observacoes": ""
     },
     "descricao": "Sua bruxa tem uma pequena criatura (Tamanho –3) que a serve. O familiar é Leal, uma Carta Selvagem, e tem ligação mental. A bruxa pode transferir Ferimentos/Fadiga para ele, aumentar uma característica dele, usar seus sentidos (15km) ou usar seus 5 Pontos de Poder próprios.",
     "livros": [
