@@ -376,10 +376,19 @@ fun PericiasContent(
                 if (!state.modoLivre) {
                     SectionHeader(
                         onHelpClick          = null,
-                        centerText           = "Pontos de Perícia: ${state.pontosPericia}${if (!locked && pcLivres >= 1) " (+${pcLivres} via PB)" else ""}",
+                        centerText           = "Pontos de Perícia: ${state.pontosPericia}${if (!locked && pcLivres >= 1) " (+${pcLivres} via PC livres)" else ""}",
                         onListaCompletaClick = null,
                         listaCompletaText    = ""
                     )
+                    val spViaPc = state.cpSpStack.size
+                    if (!locked && spViaPc > 0) {
+                        Text(
+                            text = "Já usando $spViaPc Ponto(s) de Complicação aqui.",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
                     Spacer(Modifier.height(4.dp))
                 } else {
                     Spacer(Modifier.height(8.dp))

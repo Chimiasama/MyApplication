@@ -41,19 +41,19 @@ private val tabTutorials: Map<MainSection, TabTutorialContent> = mapOf(
     ),
     MainSection.COMPLICACOES to TabTutorialContent(
         title = "Aba Complicações",
-        body = "Escolha as Complicações do personagem. Cada Complicação Menor gera 1 Ponto de Complicação e cada Maior gera 2. Use esses pontos para comprar Perícias, Atributos, Vantagens e outros extras nas demais abas."
+        body = "Escolha as Complicações do personagem. Cada Complicação Menor gera 1 Ponto de Complicação e cada Maior gera 2. Use esses pontos para comprar Perícias, Atributos, Vantagens e outros extras nas demais abas — mas atenção: cada compra extra feita com eles GASTA Pontos de Complicação na hora, mesmo aparecendo só como um \"+N\" na outra aba. É fácil gastar tudo sem perceber; volte aqui sempre que quiser conferir quanto ainda sobrou."
     ),
     MainSection.ATRIBUTOS to TabTutorialContent(
         title = "Aba Atributos / Perícias",
-        body = "Gaste os Pontos de Atributo para aumentar os dados de Agilidade, Astúcia, Espírito, Força e Vigor, e os Pontos de Perícia para aumentar as perícias. Cada aumento de um grau no dado custa 1 ponto (perícias acima do atributo relacionado custam mais). Pontos de Complicação sobrando também podem ser usados aqui."
+        body = "Gaste os Pontos de Atributo para aumentar os dados de Agilidade, Astúcia, Espírito, Força e Vigor, e os Pontos de Perícia para aumentar as perícias. Cada aumento de um grau no dado custa 1 ponto (perícias acima do atributo relacionado custam mais). Pontos de Complicação sobrando também podem ser usados aqui como \"PC livres\": cada aumento comprado assim GASTA Pontos de Complicação (2 por atributo, 1 por perícia) — a aba mostra abaixo do cabeçalho quanto você já usou desse jeito."
     ),
     MainSection.PERICIAS to TabTutorialContent(
         title = "Aba Perícias",
-        body = "Gaste Pontos de Perícia para aumentar os dados das perícias do personagem. O custo aumenta quando a perícia fica com um dado maior que o do atributo relacionado."
+        body = "Gaste Pontos de Perícia para aumentar os dados das perícias do personagem. O custo aumenta quando a perícia fica com um dado maior que o do atributo relacionado. Perícias compradas com Pontos de Complicação (\"PC livres\") também gastam esses pontos na hora."
     ),
     MainSection.VANTAGENS to TabTutorialContent(
         title = "Aba Vantagens",
-        body = "Escolha as Vantagens do personagem, respeitando os pré-requisitos de atributo, perícia, estágio (Rank) e outras vantagens. Quando disponíveis, Pontos de Complicação também podem ser usados para comprá-las."
+        body = "Escolha as Vantagens do personagem, respeitando os pré-requisitos de atributo, perícia, estágio (Rank) e outras vantagens. Quando disponíveis, Pontos de Complicação também podem ser usados para comprá-las (2 PC por Vantagem) — isso gasta os PC na hora, mesmo aparecendo só como pontos extra de Vantagem."
     ),
     MainSection.EQUIPAMENTOS to TabTutorialContent(
         title = "Aba Equipamentos",

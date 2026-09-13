@@ -279,6 +279,16 @@ fun SummaryContent(
     }
 
     Column(Modifier.fillMaxWidth()) {
+        // Explicação curta e permanente do que essa aba é — diferente do diálogo de
+        // instrução de primeira visita (TabTutorialOverlay), que some para sempre
+        // assim que o jogador o fecha uma vez.
+        Text(
+            text = "Aqui fica o resumo completo da ficha: atributos, perícias, vantagens, complicações, poderes e equipamentos escolhidos nas outras abas.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
         HeroIdentityCard(
             nome = nome,
             onNomeChange = { state.nomePersonagem = it },
