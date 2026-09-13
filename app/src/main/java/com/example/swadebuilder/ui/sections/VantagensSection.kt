@@ -417,10 +417,19 @@ fun VantagensContent(
             if (!state.modoLivre) {
                 SectionHeader(
                     onHelpClick = null,
-                    centerText = "Pontos de Vantagem: ${state.pontosVantagem}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}",
+                    centerText = "Pontos de Vantagem: ${state.pontosVantagem}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PC livres)" else ""}",
                     onListaCompletaClick = null,
                     listaCompletaText = ""
                 )
+                val pvViaPc = state.cpPvStack.size
+                if (!locked && pvViaPc > 0) {
+                    Text(
+                        text = "Já usando $pvViaPc Ponto(s) de Complicação aqui.",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.tertiary,
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                }
             } else {
                 Spacer(Modifier.height(8.dp))
             }

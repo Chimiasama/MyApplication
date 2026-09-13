@@ -177,6 +177,19 @@ fun ComplicacoesSection(
                         onListaCompletaClick = null,
                         listaCompletaText    = ""
                     )
+                    if (usadosPc > 0) {
+                        // Lembrete de onde os PC já gastos foram parar — sem isso, quem
+                        // comprou atributos/perícias/vantagens extras com PC nas outras
+                        // abas só vê esse número cair por aqui, sem ligar os pontos e sem
+                        // perceber que já usou tudo (relato de usuário: jogadores gastando
+                        // os PC "sem querer" comprando extras e só notando aqui depois).
+                        Text(
+                            text = "$usadosPc já usado(s) comprando Atributos, Perícias, Vantagens ou Dinheiro extra nas outras abas.",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
+                    }
                 } else {
                     Spacer(Modifier.height(8.dp))
                 }

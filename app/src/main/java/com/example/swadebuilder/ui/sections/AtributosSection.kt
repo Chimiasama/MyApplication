@@ -277,10 +277,29 @@ fun AtributosContent(
         if (!state.modoLivre) {
             SectionHeader(
                 onHelpClick = null,
-                centerText = "Atributos: ${state.pontosAtributo}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PB)" else ""}  |  Perícias: ${state.pontosPericia}${if (!locked && pcLivres >= 1) " (+${pcLivres} via PB)" else ""}",
+                centerText = "Atributos: ${state.pontosAtributo}${if (!locked && pcLivres >= 2) " (+${pcLivres / 2} via PC livres)" else ""}  |  Perícias: ${state.pontosPericia}${if (!locked && pcLivres >= 1) " (+${pcLivres} via PC livres)" else ""}",
                 onListaCompletaClick = null,
                 listaCompletaText = ""
             )
+            // Recibo permanente do que já foi comprado gastando Pontos de Complicação
+            // (não só o que ainda dá pra comprar) — sem isso, o "(+N via PC livres)"
+            // acima é a única pista, e ela encolhe/some conforme o jogador gasta, o
+            // que mascara o quanto ele já gastou (jogador relatou não perceber que
+            // tinha zerado os PC comprando atributos/perícias assim).
+            val paViaPc = state.cpPaStack.size
+            val spViaPc = state.cpSpStack.size
+            if (!locked && (paViaPc > 0 || spViaPc > 0)) {
+                Text(
+                    text = "Já usando Pontos de Complicação aqui: " +
+                        listOfNotNull(
+                            "$paViaPc em Atributos".takeIf { paViaPc > 0 },
+                            "$spViaPc em Perícias".takeIf { spViaPc > 0 }
+                        ).joinToString(", "),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
         } else {
             Spacer(Modifier.height(8.dp))
         }

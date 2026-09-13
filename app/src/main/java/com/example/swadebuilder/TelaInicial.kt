@@ -22,6 +22,8 @@ import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Groups
@@ -33,6 +35,8 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsMartialArts
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -143,6 +147,11 @@ fun TelaInicial(
     // Dialog States
     var showCreditsDialog by remember { mutableStateOf(false) }
     var showRulesDialog by remember { mutableStateOf(false) }
+
+    // Explicação de como livros/compêndios/cenários se combinam — aberta por
+    // padrão na primeira vez que a tela aparece, pois é a primeira coisa que o
+    // jogador vê antes mesmo de escolher um livro; pode ser recolhida depois.
+    var showBookHelpExpanded by rememberSaveable { mutableStateOf(true) }
 
     // Reset all rule flags to clean slate. Só reseta o que CreationPreset
     // realmente controla (tem um default*Xxx correspondente) — Múltiplos Ant.
@@ -481,6 +490,60 @@ fun TelaInicial(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
+                }
+            }
+
+            // --- Explicação: como livros e compêndios se combinam ---
+            item(span = { GridItemSpan(2) }) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showBookHelpExpanded = !showBookHelpExpanded }
+                            .padding(12.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    Icons.Default.Info,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(Modifier.width(6.dp))
+                                Text(
+                                    text = "Como funciona a escolha do livro?",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                            Icon(
+                                if (showBookHelpExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                contentDescription = null
+                            )
+                        }
+                        if (showBookHelpExpanded) {
+                            Spacer(Modifier.height(6.dp))
+                            Text(
+                                text = "O Livro Básico traz as regras principais do sistema.\n" +
+                                    "Um Compêndio (Fantasia, Ficção, Horror, Superpoderes) ADICIONA conteúdo às regras do Básico — por exemplo, escolhendo Ficção você usa Básico + Ficção.\n" +
+                                    "Já um Cenário de Campanha (Arte da Guerra, Pathfinder, Deadlands, Crystal Heart, A Cidade do Sol a Vapor, Wiseguys) considera SOMENTE as regras daquele mundo — raças, itens, mecânicas próprias — e pode excluir partes do Básico. Por exemplo, em Arte da Guerra: Nova Era você não terá todo o conteúdo do Básico, mas ganha mecânicas exclusivas do cenário, como Tropos e raças específicas.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
                 }
             }
 
