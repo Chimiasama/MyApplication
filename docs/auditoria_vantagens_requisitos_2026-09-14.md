@@ -560,6 +560,34 @@ tinha identificado 5 vantagens tageadas `CRYSTAL_HEART`
 textual nos dois arquivos-fonte disponíveis — não achei nada de novo pra
 mudar essa conclusão, mantidas como estão.
 
+## WISEGUYS — 33 vantagens novas
+
+Cenário substituto (`BASICO` desligado quando ativo). Conferidas as 33
+vantagens novas do Capítulo 3 contra `docs/swade_wiseguys_jogador`.
+
+### Bugs confirmados — CORRIGIDOS
+
+1. **Notório (`notorio`) — Intimidar d8+ inventado, sem base no livro.**
+   Livro (linha ~4397-4398): "REQUISITOS: Carta Selvagem, Novato" — só
+   isso. O JSON tinha `"pericias": {"Intimidar": 8}` — aparentemente um
+   copia-e-cola do EFEITO da vantagem ("rerrolagem gratuita em testes de
+   Intimidação...") pro campo de requisito, travando por engano quem não
+   tem Intimidar d8+. **Corrigido**: `pericias` volta a `{}`.
+2. **Motorista de Fuga (`motorista_fuga`) — faltava Astúcia d6+.** Livro
+   (linha ~4740-4742): "Novato, Astúcia d6+, Dirigir d8+". O JSON só tinha
+   `Dirigir: 8`. **Corrigido**: adicionado `"Astúcia": 6` em `atributos`.
+
+### Confirmado correto (nada a corrigir)
+
+As outras 31 vantagens (Assassino Impiedoso, Bom Companheiro, Nascido nas
+Ruas, Artista Gun-Fu, Beijo da Morte/Aprimorado, Guarda-Costas, Fanfarrão,
+Lutadora de Patins, Manobrar e Atirar, Sequestrador, Telecatch, Líder de
+Time, Rebaixar, Cozinheiro, Especialista em Explosivos, Falsificador,
+Limpador, Mestre da Fuga, Mestre do Disfarce, Motorista Agressivo,
+Trambiqueiro, Trapaceiro, Acima da Lei, Capanga, Insistente/Persistente,
+Amigo Meu, Dama da Sorte, Em Outro Patamar, Intocável) batem exatamente
+com o texto.
+
 ## Próximos livros
 
-Ainda faltam: Wiseguys, Cidade do Sol a Vapor (3 livros).
+Ainda falta: Cidade do Sol a Vapor (3 livros).

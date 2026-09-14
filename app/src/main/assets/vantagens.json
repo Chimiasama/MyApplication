@@ -20502,9 +20502,7 @@
     "requisitos": {
       "estagio": "Novato",
       "atributos": {},
-      "pericias": {
-        "Intimidar": 8
-      },
+      "pericias": {},
       "vantagens_previas": [],
       "observacoes": "Carta Selvagem",
       "choiceOptions": []
@@ -20914,7 +20912,9 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Novato",
-      "atributos": {},
+      "atributos": {
+        "Astúcia": 6
+      },
       "pericias": {
         "Dirigir": 8
       },
