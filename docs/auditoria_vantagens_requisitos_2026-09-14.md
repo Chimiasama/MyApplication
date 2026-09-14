@@ -1008,3 +1008,183 @@ edição.
   `poderesPermitidos` está de fato preenchido pra restringir
   mecanicamente os poderes fixos de cada pacote — nenhuma das duas coisas
   é requisito de compra, por isso não mexi nelas nesta rodada.
+
+## Rodada 4 — mecânicas vinculadas a Vantagens específicas (mesma data)
+
+Pedido novo do dono do projeto: verificar três mecânicas que dependem de
+código (não só do campo `requisitos`) — (1) o bônus do Grimório (Mago,
+Fantasia) sobre Novos Poderes, (2) se a restrição "uma vez por Estágio"
+de Pontos de Poder (e afins) está implementada corretamente, com o
+direito de compensar Estágios pulados, e (3) a regra de custo em Avanços
+pra aumentar atributos além do normal no Estágio Lendário.
+
+### 1) Grimório (Mago) × Novos Poderes — confirmado no livro, NÃO estava implementado
+
+`docs/swade_fantasia`, linhas 7373-7385 — Vantagem **Grimório** (não é o
+próprio Antecedente Arcano Mago, é uma Vantagem separada que EXIGE
+Antecedente Arcano (Mago)):
+
+> REQUISITOS: Novato, Antecedente Arcano (Mago)
+> Sempre que adquire a Vantagem Novos Poderes, recebe três novos poderes
+> em vez de dois. Também ganha imediatamente um poder de seu Estágio ou
+> inferior ao adquirir a Vantagem Grimório.
+
+A Vantagem `grimorio` já existia no catálogo (`vantagens.json`, tageada
+FANTASIA, requisito `antecedente_arcano_mago_fantasia` correto) e sua
+`descricao` já registrava as duas regras em texto — mas **nenhum lugar
+do código lia o id `"grimorio"`** (`grep -rn "grimorio" app/src/main/java/`
+não retornava nada antes desta rodada): a contagem de poderes ganhos por
+Novos Poderes, em `CriadorState.getSlotsCountForArcano()`, somava
+`+2` fixo por compra, sem checar Grimório, e o poder imediato nunca era
+concedido. Ou seja, um Mago com Grimório recebia exatamente os mesmos
+poderes que um Mago sem Grimório — o bônus da Vantagem não tinha efeito
+nenhum no app.
+
+**Corrigido** em `getSlotsCountForArcano()`: quando a personagem tem
+`antecedente_arcano` = Mago (chave `"MAGO"`) e possui `grimorio`, cada
+compra de Novos Poderes agora soma 3 em vez de 2, e a função soma mais
++1 fixo (o poder imediato do Grimório), independente de qualquer compra
+de Novos Poderes. Só afeta a contagem de poderes do próprio Mago — se a
+personagem tiver outro Antecedente Arcano além do Mago (caso raro de
+multi-AA), os poderes daquele outro AA continuam valendo 2 por compra,
+como manda o livro (o bônus é só "ao adquirir a Vantagem Novos Poderes"
+associada ao Mago, não um bônus geral).
+
+Não mexido (fora do escopo desta verificação, resultado idêntico ao já
+registrado na Rodada 2/3 sobre Poderes Místicos): o caso raro de Novos
+Poderes dividido entre 2 Antecedentes Arcanos diferentes na mesma
+compra (formato interno `"Chave1 & Chave2"`) continua sempre 1+1,
+mesmo que um dos lados seja o Mago com Grimório — o livro não cobre
+esse cenário de divisão (é uma extensão própria do app pra multi-AA),
+então não tem uma "resposta certa" clara pra estender o bônus ali.
+
+### 2) Pontos de Poder — restrição "uma vez por Estágio" — confirmados 3 bugs, corrigidos
+
+Livro (`docs/swade_basico`, linhas 3893-3904, texto idêntico nas cópias
+de Fantasia/Horror/Sci-Fi/Deadlands e igual em espírito no Pathfinder,
+que só troca o valor fixo por Espírito d8+):
+
+> Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma
+> vez por Estágio. Pode ser escolhida quantas vezes for desejada no
+> Estágio Lendário, mas só concede 2 pontos adicionais [em vez dos 5
+> normais].
+
+Isso implica DOIS direitos que o app precisa respeitar: (a) se a
+personagem NÃO comprou em um Estágio anterior, pode comprar mais de uma
+vez no Estágio atual pra compensar (é o mesmo "direito de compensação"
+que já existe pra aumento de atributos); (b) uma vez chegando no
+Lendário, o teto de "uma por Estágio" deixa de existir (pode comprar
+quantas vezes quiser, cada uma só valendo 2 em vez de 5).
+
+O motor já tinha a distinção certa entre "quantas comprei no total" e
+"quantas eu já poderia ter comprado até agora" (`comprasPpPorEstagio` +
+`maxComprasPpAteAgora()`) — a ideia de base estava certa — mas achei 3
+bugs concretos nessa implementação, todos em
+`CriadorState.kt`:
+
+1. **Sem teto ilimitado no Lendário**: `maxComprasPpAteAgora()` sempre
+   retornava `índice_do_Estágio + 1` (1 no Novato, 2 no Experiente... 5
+   no Lendário), nunca removendo o teto no Lendário como o livro manda.
+   Na prática, uma personagem só conseguia comprar Pontos de Poder até
+   5 vezes NA VIDA TODA, mesmo estando no Lendário há muitos Avanços —
+   o "pode comprar quantas vezes quiser" nunca acontecia.
+   **Corrigido**: a função agora retorna `Int.MAX_VALUE` (sem teto)
+   assim que o Estágio atual é Lendário.
+2. **Comparação incompatível (o bug mais sério, afetava TODOS os
+   Estágios)**: o portão de compra (`ValidateSelectionUseCase` →
+   `ValidatePowerPointsLimitUseCase`, usado por `podeSelecionar`)
+   comparava "quantas comprei só neste Estágio"
+   (`comprasPpPorEstagio[estagioAtual().nome]`) contra "quantas posso
+   ter comprado no total, desde o Novato" (`maxComprasPpAteAgora()`) —
+   dois números de naturezas diferentes. Efeito prático: a cada Estágio
+   novo, o contador "só deste Estágio" reiniciava do zero, e o portão
+   liberava comprar até `índice+1` vezes de novo DENTRO DO MESMO
+   Estágio, além do que já tinha sido comprado em Estágios anteriores —
+   ex.: comprar 1x no Novato, 1x no Experiente, e ainda conseguir
+   comprar mais 2x só no Veterano (o teto real ali deveria ser 3 no
+   total, não 2 a mais). **Corrigido**: agora compara a soma cumulativa
+   de todos os Estágios (`comprasPpPorEstagio.values.sum()`) contra o
+   mesmo teto cumulativo, igual ao que a função interna
+   `selecionarPontosDePoder()` já fazia (essa parte interna sempre
+   esteve certa — o bug era só no portão externo que decide se o botão
+   de compra fica habilitado).
+3. **Duplicação a cada compra**: `comprarPontoDePoder()` chamava
+   `selecionarPontosDePoder(v)` (que já adiciona `v` a
+   `vantagensSelecionadas` quando aceita a compra) e DEPOIS adicionava
+   `v` de novo, incondicionalmente. Resultado: toda compra válida de
+   Pontos de Poder duplicava a entrada na lista de vantagens da
+   personagem (os Pontos de Poder ganhos continuavam corretos, porque
+   isso é contado à parte em `bonusPoderExtra`, mas a lista de
+   vantagens ficava com uma cópia fantasma a mais por compra — o que
+   also corrompe qualquer remoção, já que `removerVantagem`/
+   `vantagensSelecionadas.remove(v)` só apaga UMA ocorrência por
+   chamada). **Corrigido**: removida a segunda adição.
+
+Escrevi testes novos em `ValidatePowerPointsLimitUseCaseTest.kt`
+cobrindo os cenários de teto cumulativo, compensação de Estágio pulado e
+teto ilimitado no Lendário.
+
+### 3) Achado extra (mesma família, não pedido nominalmente, mas dentro do "verifica todas as vantagens que dizem uma vez por Estágio")
+
+Busquei todo `limite_compra == "uma_vez_por_estagio"` no catálogo e achei
+mais uma Vantagem além de Pontos de Poder: **`pontos_de_chi`** (Arte da
+Guerra). Livro (`docs/swade_adg`, linhas 7602-7608):
+
+> Pontos de Chi ... Esta Vantagem aumenta a Reserva Máxima de Chi do
+> herói em 4 pontos de Chi. Pontos de Chi pode ser escolhido uma vez por
+> Estágio.
+
+Diferente de Pontos de Poder, o livro NÃO dá uma exceção pro Lendário
+aqui — é só "uma vez por Estágio", ponto. Mas o app **não tem nenhum
+tratamento especial pra Pontos de Chi** (o código de
+`comprarVantagem`/`comprarPontoDePoder` só reconhece o nome "Pontos de
+Poder"), então essa Vantagem cai no portão genérico
+(`ValidatePowerPointsLimitUseCase`, ramo `limiteCompra != "infinito"`),
+que usa `maxSelections` — e como `pontos_de_chi` não define
+`maxSelections` no JSON, o padrão é `1`. **Confirmado bug**: hoje a
+personagem só consegue comprar Pontos de Chi **uma vez na vida toda**,
+em vez de uma vez por Estágio (até 5 vezes ao longo da carreira).
+
+Além disso, o valor ganho por compra também parece errado: o bônus de
+Chi (`CriadorState.reservaChi`) soma
+`vantagensSelecionadas.count { categoria == CHI }` — ou seja, cada
+Vantagem de categoria CHI que a personagem tiver (a maioria são técnicas
+de uso único, não Vantagens de "aumentar reserva") soma **+1** à reserva
+máxima, então mesmo comprando Pontos de Chi, o bônus seria +1 em vez dos
++4 que o livro concede.
+
+**Não corrigi isso nesta rodada** — ao contrário dos 3 bugs de Pontos de
+Poder (que só ajustavam comparações num mecanismo já existente e testado
+o dia inteiro nesta sessão), consertar Pontos de Chi direito precisaria
+replicar toda a infraestrutura de Pontos de Poder (um mapa
+`comprasChiPorEstagio` novo, uma variável de bônus dedicada, gancho em
+`comprarVantagem`/`venderVantagem`, e — mais delicado — entrar no
+`PersonagemSnapshot` pra sobreviver a salvar/carregar personagem), e
+esse Corretor está fora do que foi pedido nominalmente. Prefiro reportar
+com precisão e implementar só se você confirmar que quer — me avise se
+quiser que eu faça esse fix completo (Pontos de Chi só importa se o
+compêndio Arte da Guerra estiver ativo).
+
+### 4) Custo em Avanços de atributo no Estágio Lendário (2 Avanços por 1 aumento) — verificado, já está correto
+
+Livro (`docs/swade_basico`, linhas 4585-4590):
+
+> Aumentar um atributo em um tipo de dado. Esta opção só pode ser
+> escolhida uma vez por Estágio... Personagens no Estágio Lendário podem
+> aumentar um atributo a cada dois Progressos, até o máximo racial.
+
+Ou seja: mesmo direito de compensação de Estágios pulados que Pontos de
+Poder, e no Lendário passa a custar 2 Avanços por aumento (não 4).
+Conferido em `CriadorState.isAttributeRankLimitReached()` +
+`CriadorViewModel.reserveLegendaryAttribute()`/`startAttributeAdvancement()`:
+o teto "de graça" (`baseAllowance`) é travado em 4 (um por Estágio até o
+Heroico, com compensação cumulativa via `comprasAttrPorEstagio`) e NÃO
+ganha um 5º de graça só por chegar no Lendário — bate com o livro, que
+não dá um aumento "de graça" extra no Lendário, só a opção paga de 2
+Avanços. O fluxo de 2 Avanços por aumento já existe e está certo:
+`reserveLegendaryAttribute()` gasta 1 Avanço e marca uma "reserva"
+(`legendaryAttrReservations`, no máximo 1 pendente por vez);
+`startAttributeAdvancement(..., consumesLegendaryReservation = true)`
+gasta MAIS 1 Avanço e consome essa reserva pra efetivamente aplicar o
+aumento — total 2 Avanços por 1 tipo de dado a mais, exatamente como o
+livro pede. **Nenhuma mudança necessária aqui.**

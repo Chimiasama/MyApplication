@@ -3781,6 +3781,11 @@ class CriadorState {
 
 
     fun maxComprasPpAteAgora(): Int {
+        // "Pontos de Poder pode ser selecionada mais de uma vez, mas apenas uma vez por
+        // Estágio. Pode ser escolhida quantas vezes for desejada no Estágio Lendário" — o
+        // limite cumulativo de 1-por-Estágio (com direito a compensar Estágios anteriores em
+        // que não foi comprada) só vale até o Heroico; no Lendário deixa de haver teto.
+        if (estagioAtual().nome == "Lendário") return Int.MAX_VALUE
         return listaDeEstagios.indexOf(estagioAtual()) + 1
     }
 
@@ -3846,8 +3851,10 @@ class CriadorState {
 
     fun comprarPontoDePoder(v: Vantagem) {
         if (!podeSelecionar(v)) return
+        // selecionarPontosDePoder() já adiciona `v` a vantagensSelecionadas quando a compra é
+        // aceita (e não adiciona nada se o teto de "uma vez por Estágio" bloquear) — um
+        // segundo `vantagensSelecionadas += v` aqui duplicava a entrada a cada compra válida.
         selecionarPontosDePoder(v)
-        vantagensSelecionadas += v
     }
 
     val comprasAttrPorEstagio = mutableStateMapOf<String, Int>().apply {
@@ -4102,6 +4109,12 @@ class CriadorState {
         val base = if (usaTecnicasTropo) 0 else (arcanoInfo[arcKeyNorm]?.first ?: 3)
         var bonusSlots = 0
 
+        // Grimório (Fantasia, requer Antecedente Arcano Mago): "Sempre que adquire a Vantagem
+        // Novos Poderes, recebe três novos poderes em vez de dois" — só se aplica aos poderes
+        // ligados ao próprio Mago, não a outro Antecedente Arcano que a personagem também tenha.
+        val temGrimorio = arcKeyNorm == "MAGO" && vantagensSelecionadas.any { it.id == "grimorio" }
+        val poderesPorNovosPoderes = if (temGrimorio) 3 else 2
+
         vantagensSelecionadas
             .filter { it.id == "novos_poderes" }
             .forEach { vant ->
@@ -4113,7 +4126,7 @@ class CriadorState {
                     // To be safe, if blank, we assume it adds +2 if this is the only AB?
                     // Or we let the new logic handle it.
                     // For now, if blank, +2 (Standard behavior)
-                    bonusSlots += 2
+                    bonusSlots += poderesPorNovosPoderes
                 } else {
                     if (choice.contains("&")) {
                         // Split logic: "Key1 & Key2"
@@ -4124,14 +4137,19 @@ class CriadorState {
                     } else {
                         // Single target
                         if (choice.normAAKey() == arcKeyNorm) {
-                            bonusSlots += 2
+                            bonusSlots += poderesPorNovosPoderes
                         }
                     }
                 }
             }
 
+        // "Também ganha imediatamente um poder de seu Estágio ou inferior ao adquirir a
+        // Vantagem Grimório" — bônus fixo de +1, independente de qualquer compra de Novos
+        // Poderes.
+        val bonusGrimorio = if (temGrimorio) 1 else 0
+
         val bonusTecnicas = if (arcKeyNorm == "MESTRE DO CHI") tecnicasIniciaisFromTropo else 0
-        val totalSlots = base + bonusSlots + bonusTecnicas
+        val totalSlots = base + bonusSlots + bonusGrimorio + bonusTecnicas
         return if (isCidadeSolVaporDemonAncestry) maxOf(totalSlots, 4) else totalSlots
     }
 
@@ -4713,7 +4731,12 @@ class CriadorState {
             tipoMonstroSelecionado = tipoMonstroSelecionado,
             cartaSelvagem = cartaSelvagem,
             complicacoesSelecionadas = complicacoesSelecionadas.toMap(),
-            ppPurchasesThisRank = comprasPpPorEstagio[estagioAtual().nome] ?: 0,
+            // maxComprasPpAteAgora() é um teto CUMULATIVO (desde o Novato), então o valor
+            // comparado com ele também precisa ser a soma de todos os Estágios, não só o
+            // Estágio atual — do contrário, a cada novo Estágio o teto "reabre" contando de
+            // zero, permitindo comprar bem mais de uma vez por Estágio (bug antigo: comparava
+            // "compras neste Estágio" com "compras cumulativas permitidas").
+            ppPurchasesThisRank = comprasPpPorEstagio.values.sum(),
             maxPpPurchasesAllowed = maxComprasPpAteAgora(),
             vantagensSelecionadas = vantagensSelecionadas.toList(),
             emProgresso = emProgresso,

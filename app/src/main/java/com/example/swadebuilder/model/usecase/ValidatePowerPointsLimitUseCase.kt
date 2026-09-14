@@ -6,7 +6,7 @@ class ValidatePowerPointsLimitUseCase {
 
     data class Input(
         val vantagem: Vantagem,
-        val ppPurchasesThisRank: Int, // purchases of PP at current rank context
+        val ppPurchasesThisRank: Int, // total cumulative PP purchases so far (all stages), NOT just the current stage — must match the cumulative cap in maxPpPurchasesAllowed
         val maxPpPurchasesAllowed: Int,
         val currentSelectionCount: Int // For general maxSelections
     )
