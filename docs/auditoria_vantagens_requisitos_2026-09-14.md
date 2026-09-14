@@ -588,6 +588,102 @@ Trambiqueiro, Trapaceiro, Acima da Lei, Capanga, Insistente/Persistente,
 Amigo Meu, Dama da Sorte, Em Outro Patamar, Intocável) batem exatamente
 com o texto.
 
-## Próximos livros
+## CIDADE DO SOL A VAPOR (3 livros: Livro do Criador, Livro dos Mortais, Movimento Vermelho)
 
-Ainda falta: Cidade do Sol a Vapor (3 livros).
+### Bug estrutural grande, atravessando o livro inteiro — CORRIGIDO
+
+Ao conferir a primeira vantagem nova deste livro (`cavalheiro_completo`),
+percebi que o campo `requisitos` não era um objeto (`{estagio, atributos,
+pericias, ...}`) como em todos os outros 1800+ registros do catálogo — era
+uma **string única** (ex.: `"Novato, Aristocrata, Lutar d8+, Atirar d8+."`).
+Fui conferir `Requisito.kt`/`RequisitoSerializer` pra entender como o app
+lê isso, e o comportamento é sério: quando `requisitos` é uma string, o
+deserializador (`RequisitoSerializer.deserialize`, ramo `is JsonPrimitive`)
+só extrai o Estágio (primeiro token antes da vírgula, se bater com um dos
+nomes conhecidos: Novato/Experiente/Veterano/Heroico/Lendário) e joga a
+string inteira pra `observacoes` — **nenhum atributo, perícia ou vantagem
+prévia é checado**, só o Estágio (e olhe lá: se o Estágio não vier em
+primeiro na frase, tipo `"Anjo, Novato"`, nem isso é reconhecido, e a
+Vantagem fica sem NENHUM requisito).
+
+Contei quantas vantagens do catálogo inteiro (não só deste livro) usam esse
+formato de string solta: **72, todas no `CIDADE_SOL_VAPOR`** — nenhum outro
+livro usa esse formato. Ou seja, as 72 vantagens novas deste cenário
+(Antecedentes Arcanos e suas vantagens exclusivas, vantagens de Combate/
+Profissional/Social/Estranha do Livro dos Mortais, as 8 de Organizações/
+Sociedades Secretas, as 22 cartas de Tarô da Nova Era, e as 11 do Movimento
+Vermelho) estavam publicadas no app sem NENHUMA das checagens de atributo/
+perícia/pré-requisito que o texto do livro realmente pede — só o Estágio
+(quando reconhecido). Isso é bem mais sério que os bugs pontuais dos outros
+livros: não é "uma vantagem com um requisito errado", é "72 vantagens sem
+quase nenhum requisito aplicado".
+
+**Corrigido**: reescrevi as 72 entradas para o formato estruturado normal
+(`estagio`/`atributos`/`pericias`/`periciaMinOpcional`/`vantagens_previas`/
+`observacoes`), lendo cada uma contra o texto original
+(`docs/swade_csv_livro_do_criador`, `docs/swade_csv_livro_dos_mortais`,
+`docs/swade_csv_movimento_vermelho`) pra confirmar atributo/perícia/dado
+certos antes de estruturar — não confiei só na string já cadastrada, reli
+o "Requisitos:" de cada uma no livro-fonte. Pontos de atenção durante a
+conversão:
+
+- **`aa_magia_negra` vs. `aa_magia_das_trevas`**: o livro nomeia o mesmo
+  Antecedente Arcano de duas formas em lugares diferentes (resumo do
+  Capítulo Um chama de "Magia Negra", a definição completa no Capítulo Sete
+  chama de "Magia das Trevas") — e o catálogo tinha as DUAS como entradas
+  separadas com descrição idêntica. Conferi qual delas é a realmente
+  acessível pelo jogador: `VantagensSection.kt` (linha ~1292) usa
+  `"Magia Negra" to "aa_magia_negra"` no seletor de Antecedente Arcano do
+  cenário — `aa_magia_das_trevas` nunca aparece em nenhuma tela. Por isso,
+  ao estruturar as 3 vantagens exclusivas (Irmão da Noite, Poder do Sangue,
+  Vontade Sombria — o livro as descreve como dependentes de "Antecedente
+  Arcano (Magia das Trevas)"), apontei `vantagens_previas` pra
+  `aa_magia_negra` (a que o jogador realmente consegue ter), não pro nome
+  literal do texto. Não apaguei `aa_magia_das_trevas` — é conteúdo órfão
+  (existe no catálogo mas nenhuma tela leva a ele), fora do escopo desta
+  auditoria de requisitos; fica registrado caso você queira limpar depois.
+- **Requisitos sem estrutura possível hoje** (mesma categoria de limitação
+  já documentada em outros livros — raça/ancestralidade exigida por nome,
+  "não pode ter Vantagem X", "A ou (B e C)"): mantidos em `observacoes`, com
+  o texto do livro preservado. Casos: `aa_demonio`/`aa_demonio_meio_demonio`/
+  `aa_anjo`/`anjo_cinza`/`guerreiro_celestial` (exigem ancestralidade
+  Demônio/Meio-Demônio/Anjo — não há campo de "requer esta raça" no schema,
+  só o mecanismo de Monstro Heroico do Horror, que não se aplica aqui);
+  `aa_tecnomagia`/`aa_magia_negra`/`aa_magia_das_trevas`/`aa_milagres`
+  (exigem "Humano" — mesma limitação); `acordo_com_demonios` ("não pode ter
+  a Vantagem Rico" — schema só sabe expressar "tem que ter", não "não pode
+  ter"); `irmandade_das_seis_chaves` ("Magomecânico OU Consertar d10+ E
+  Ciência d10+" — combinação OU/E que `vantagens_previas`/
+  `periciaMinOpcional` não conseguem expressar sem arriscar ficar mais
+  permissivo ou mais restritivo do que o livro pede); `taro_sem_alma`
+  (exclusão cruzada com outra Vantagem/Antecedente Arcano/duas
+  Complicações). Para `cavaleiro_de_sao_germain`, consegui uma checagem
+  parcial: o livro exige a Complicação "Código de Honra (Ordem de São
+  Germain)" especificamente, e o catálogo só tem `codigo_de_honra` genérico
+  (sem variante por sabor) — usei `vantagens_previas: ["codigo_de_honra"]`
+  (funciona citando complicações também, não só vantagens) para pelo menos
+  exigir ALGUM Código de Honra, com o sabor exato só documentado em texto.
+- **`Conhecimento Batalha` → `Conhecimento de Batalha`**: o livro (Líder de
+  Manifestação, Vox Populi, Desmobilizar) escreve a perícia sem o "de", mas
+  o nome real cadastrado em `pericias.json` para este livro é "Conhecimento
+  de Batalha" — usei o nome real, senão a perícia nunca seria encontrada
+  (mesma classe de bug do "Perícia Arcana" genérica already corrigida em
+  outros livros).
+
+### Confirmado correto após a conversão
+
+As 72 reescritas foram conferidas uma a uma contra "Requisitos:" dos 3
+livros-fonte (Antecedente Arcano de Demônio/Anjo/Tecnomagia/Magia Negra/
+Milagres e suas 8 vantagens exclusivas; Acordo com Demônios, Parrudo,
+Cavalheiro Completo; os 5 de Combate do Livro dos Mortais; Mecânico Cego,
+Mestre das Caldeiras; Elegante; Me Chamo Igor, Seguidor de Nietzsche, as 22
+cartas de Tarô; as 8 de Organizações; as 11 do Movimento Vermelho). Os
+~127 ids restantes tageados `CIDADE_SOL_VAPOR` (reimpressões do Básico,
+incluindo a exceção já conhecida de Novos Poderes usando `aa_tecnomagia`)
+já tinham sido conferidos no início desta auditoria (comparação
+programática contra o Básico) sem divergência nova.
+
+Isso fecha a auditoria pedida: todos os livros do catálogo (Básico,
+Fantasia, Sci-Fi, Horror, Superpoderes, Pathfinder, Deadlands, Arte da
+Guerra, Crystal Heart, Wiseguys, Cidade do Sol a Vapor) foram conferidos
+vantagem por vantagem contra o texto original.
