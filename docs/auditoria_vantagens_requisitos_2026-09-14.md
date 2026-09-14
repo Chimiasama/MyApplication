@@ -537,7 +537,29 @@ Ordem-Unida repete a mesma limitação de schema já registrada no Fantasia
 (Bando de Guerra): "quaisquer duas Vantagens de Liderança" fica só em
 `observacoes`, sem checagem estrutural de "2 de um grupo".
 
+## CRYSTAL HEART (+ Muitos Corações) — 19 vantagens novas + 4 de uso alterado
+
+Cenário substituto (`BASICO` desligado quando ativo). Conferidas as 19
+vantagens novas e as 4 com "uso alterado" (Aristocrata, Arma Predileta,
+Comando, Conexões — o livro só reescreve o efeito de texto, sem mudar
+requisito) contra `docs/swade_crystal_heart`. "Muitos Corações" é só
+catálogo adicional de Cristais (`crystal_coracoes.json`), não introduz
+vantagens novas.
+
+### Confirmado correto (nada a corrigir)
+
+Todas as 23 batem exatamente com "Requisitos:" do livro (aqui em
+minúsculas, formato diferente dos outros livros — só variação de
+digitação da fonte, sem efeito). Inclui os 5 traços culturais por Terra
+Natal (Bogoviano, Fjordstadiano, Ilhéu, Maseiano, Zingamaiano), todos
+corretamente modelados via `tags` em vez de `vantagens_previas` (aponta
+pra origem/ancestralidade, não pra outra vantagem). O índice do livro já
+tinha identificado 5 vantagens tageadas `CRYSTAL_HEART`
+(`sintonizacao_cristal`, `troca_rapida`, `resiliencia_cristalina`,
+`sobrecarga_segura`, `arma_predileta_aprimorada`) sem correspondência
+textual nos dois arquivos-fonte disponíveis — não achei nada de novo pra
+mudar essa conclusão, mantidas como estão.
+
 ## Próximos livros
 
-Ainda faltam: Crystal Heart (+ Muitos Corações), Wiseguys, Cidade do Sol a
-Vapor (3 livros).
+Ainda faltam: Wiseguys, Cidade do Sol a Vapor (3 livros).
