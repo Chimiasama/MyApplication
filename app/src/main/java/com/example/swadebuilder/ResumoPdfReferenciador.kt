@@ -1428,11 +1428,27 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
         color = theme.textColor; typeface = theme.typefaceBody; textSize = 12f; isAntiAlias = true
     }
 
-    // Atributos secundários extras liberados por regras específicas (Arte da Guerra,
-    // Fama, Riqueza/Requisição, Domínio) — antes ficavam de fora do PDF por completo
-    // (só apareciam no resumo do app). Entram numa segunda coluna, no mesmo vão entre
-    // nome e retrato, reaproveitando o espaço que sobrava ali.
-    val extraStatPairs = buildList {
+    val statLabelPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody }
+    val statValuePaint = TextPaint().apply { color = theme.textColor; textSize = 8.5f; typeface = theme.typefaceTitle; isFakeBoldText = true; textAlign = Paint.Align.CENTER }
+    val statCirclePaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1.5f; isAntiAlias = true }
+    // Círculo um pouco menor e linhas mais espaçadas (8f de raio pra 26f de altura de linha,
+    // não os 11f/20f de antes) pra garantir folga entre um círculo e o próximo — 22f de
+    // diâmetro em cima de 20f de altura de linha fazia eles se sobreporem.
+    val circleRadius = 8f
+    val rowHeight = 26f
+
+    // Atributos secundários: primeiro os fixos (Aparar/Resistência/Tamanho/Movimentação/
+    // Corrida), depois os liberados por regras específicas (Arte da Guerra, Fama,
+    // Riqueza/Requisição, Domínio) — antes esses extras ficavam de fora do PDF por
+    // completo (só apareciam no resumo do app).
+    val corePairs = listOf(
+        "Aparar" to calcAparar(p, especieId).toString(),
+        "Resistência" to calcResistencia(p),
+        "Tamanho" to p.tamanho.toString(),
+        "Movimentação" to p.movimentacao.toString(),
+        "Corrida" to p.dadoCorrida
+    )
+    val extraPairs = buildList {
         if (p.compendioArteDaGuerraAtivo) add("Chi" to (p.reservaChi ?: 0).toString())
         if (p.regraFamaAtiva) add("Fama" to p.fama.toString())
         val dadoRiqueza = p.dadoRiqueza
@@ -1441,13 +1457,37 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
         val dominio = p.dominio
         if (dominio != null) add("Domínio" to dominio.toString())
     }
+    val allStatPairs = corePairs + extraPairs
+    // Até 5 atributos cabem numa coluna só; acima disso quebra em duas, com a
+    // quantidade de linhas equilibrada entre elas (nunca uma bem mais alta que a
+    // outra — ex.: 9 no total vira 5 numa coluna e 4 na outra, não 5 e 4 fixos por
+    // categoria).
+    val statColumns = if (allStatPairs.size <= 5) {
+        listOf(allStatPairs)
+    } else {
+        val firstHalfSize = (allStatPairs.size + 1) / 2
+        listOf(allStatPairs.take(firstHalfSize), allStatPairs.drop(firstHalfSize))
+    }
 
-    // Vão entre o nome e o retrato: em vez de deixar em branco, mostra as estatísticas
-    // derivadas ali (texto simples, sem caixinha) — o nome passa a truncar antes dessa
-    // coluna, em vez de ir quase até o retrato. Alargado quando há atributos extras, pra
-    // caber as duas colunas sem invadir o retrato.
-    val statsZoneWidth = if (extraStatPairs.isEmpty()) 115f else 230f
-    val statsColumnLeft = portraitRect.left - statsZoneWidth
+    fun columnLeftFor(rightEdge: Float, pairs: List<Pair<String, String>>): Float {
+        val maxLabelWidth = pairs.maxOf { (label, _) -> statLabelPaint.measureText(label) }
+        return rightEdge - circleRadius * 2f - 14f - maxLabelWidth
+    }
+
+    // Colunas coladas no retrato, da direita pra esquerda, em vez de um vão de largura
+    // fixa reservado a partir do nome — assim elas só tomam a largura que o conteúdo
+    // realmente precisa (ficam alinhadas mais pro centro/direita da faixa) e sobra o
+    // máximo de espaço possível pro nome à esquerda, mesmo quando há atributos extras.
+    val columnGap = 16f
+    val statColumnLefts = mutableListOf<Float>()
+    var nextRightEdge = portraitRect.left - 12f
+    for (col in statColumns.asReversed()) {
+        val left = columnLeftFor(nextRightEdge, col)
+        statColumnLefts.add(0, left)
+        nextRightEdge = left - columnGap
+    }
+    val statsColumnLeft = statColumnLefts.first()
+
     val textAreaWidth = statsColumnLeft - rect.left - 20f
     var displayedName = p.nome.ifBlank { "Sem Nome" }
     if (titlePaint.measureText(displayedName) > textAreaWidth) {
@@ -1470,25 +1510,10 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     drawTrack(canvas, trackX, trackY, "Ferimentos", 3, -1, theme)
     drawTrack(canvas, trackX + 100f, trackY, "Fadiga", 2, -1, theme)
 
-    val statLabelPaint = TextPaint().apply { color = theme.textColor; textSize = 10f; typeface = theme.typefaceBody }
-    val statValuePaint = TextPaint().apply { color = theme.textColor; textSize = 8.5f; typeface = theme.typefaceTitle; isFakeBoldText = true; textAlign = Paint.Align.CENTER }
-    val statCirclePaint = Paint().apply { color = theme.primaryColor; style = Paint.Style.STROKE; strokeWidth = 1.5f; isAntiAlias = true }
-    val statPairs = listOf(
-        "Aparar" to calcAparar(p, especieId).toString(),
-        "Resistência" to calcResistencia(p),
-        "Tamanho" to p.tamanho.toString(),
-        "Movimentação" to p.movimentacao.toString(),
-        "Corrida" to p.dadoCorrida
-    )
-    // Coluna de valores numa posição fixa (calculada a partir do rótulo mais largo, "Movimentação")
-    // em vez de logo após cada rótulo — antes cada valor ficava numa posição X diferente
-    // porque os rótulos têm larguras diferentes, o que deixava a coluna de números torta.
-    // Círculo um pouco menor e linhas mais espaçadas (8f de raio pra 26f de altura de linha,
-    // não os 11f/20f de antes) pra garantir folga entre um círculo e o próximo — 22f de
-    // diâmetro em cima de 20f de altura de linha fazia eles se sobreporem.
-    val circleRadius = 8f
-    val rowHeight = 26f
-
+    // Coluna de valores numa posição fixa (calculada a partir do rótulo mais largo da
+    // própria coluna) em vez de logo após cada rótulo — antes cada valor ficava numa
+    // posição X diferente porque os rótulos têm larguras diferentes, o que deixava a
+    // coluna de números torta.
     fun drawStatColumn(columnLeft: Float, pairs: List<Pair<String, String>>) {
         if (pairs.isEmpty()) return
         val maxLabelWidth = pairs.maxOf { (label, _) -> statLabelPaint.measureText(label) }
@@ -1505,12 +1530,7 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
         }
     }
 
-    drawStatColumn(statsColumnLeft, statPairs)
-    if (extraStatPairs.isNotEmpty()) {
-        val col1MaxLabelWidth = statPairs.maxOf { (label, _) -> statLabelPaint.measureText(label) }
-        val col1Right = statsColumnLeft + col1MaxLabelWidth + 14f + circleRadius * 2
-        drawStatColumn(col1Right + 16f, extraStatPairs)
-    }
+    statColumns.forEachIndexed { i, col -> drawStatColumn(statColumnLefts[i], col) }
 }
 
 fun drawTrack(canvas: Canvas, x: Float, y: Float, label: String, boxes: Int, current: Int, theme: PdfTheme) {
