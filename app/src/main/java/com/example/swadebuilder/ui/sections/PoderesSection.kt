@@ -264,6 +264,12 @@ fun PoderesSection(
                 advantage == null &&
                 (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
             val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "MESTRE DO CHI"
+            val originRaw = when {
+                usaListaChi -> "ARTE DA GUERRA"
+                else -> advantage?.origem
+                    ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
+            }
+            val normalizedOrigin = powerAssetOriginKey(originRaw)
 
             // "MESTRE DO CHI" é usado tanto pelo Antecedente Arcano de Deadlands (via
             // `advantage`) quanto pelo sistema de Mestre do Chi por Tropo da Arte da
@@ -271,18 +277,12 @@ fun PoderesSection(
             // Os dois têm listas de poderes diferentes; corrigir a chave de Deadlands
             // em ArcaneConfig sem esse guard vazaria a lista de Deadlands pro Tropo da
             // Arte da Guerra (ou o inverso), então só consulta ArcaneConfig fora do
-            // caminho por Tropo.
+            // caminho por Tropo. `originRaw` desambigua outras colisões (ex.: ALQUIMIA
+            // entre Fantasia/Horror, ELEMENTALISTA entre Fantasia/Arte da Guerra).
             val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
-                ?: if (usaTecnicasTropo) null else ArcaneConfig.getPermittedPowers(arcKey)
-            val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
+                ?: if (usaTecnicasTropo) null else ArcaneConfig.getPermittedPowers(arcKey, originRaw)
             val stageBasedPowers = state.poderesDisponiveisPorEstagioParaArcano(arcKey)
             val usaPoderesPorEstagio = stageBasedPowers.isNotEmpty()
-            val originRaw = when {
-                usaListaChi -> "ARTE DA GUERRA"
-                else -> advantage?.origem
-                    ?: if (state.compendioArteDaGuerraAtivo && arcKey == "ELEMENTALISTA") "ARTE DA GUERRA" else "BASICO"
-            }
-            val normalizedOrigin = powerAssetOriginKey(originRaw)
 
             val specificList = powerCache[normalizedOrigin] ?: emptyList()
             val basicList = powerCache["BASICO"] ?: emptyList()
@@ -366,8 +366,6 @@ fun PoderesSection(
                     true // Already filtered by domain logic above (Miracles AB)
                 } else if (permittedSet != null) {
                     power.id in permittedSet
-                } else if (blockedSet.isNotEmpty()) {
-                    power.id !in blockedSet
                 } else {
                     true // No restriction
                 }

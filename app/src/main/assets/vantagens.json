@@ -48,7 +48,12 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "Atletismo, Lutar ou Atirar d6+"
+      "observacoes": "Atletismo, Lutar ou Atirar d6+",
+      "periciaMinOpcional": {
+        "Atletismo": 6,
+        "Lutar": 6,
+        "Atirar": 6
+      }
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -646,7 +651,11 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "Atletismo d8+ ou Atirar d8+"
+      "observacoes": "Atletismo d8+ ou Atirar d8+",
+      "periciaMinOpcional": {
+        "Atletismo": 8,
+        "Atirar": 8
+      }
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -813,9 +822,7 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Permite que a personagem conjure seus poderes de forma a afetar grandes unidades de Extras, como tropas ou grupos de inimigos.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Permite que a personagem conjure seus poderes de forma a afetar grandes unidades de Extras, como tropas ou grupos de inimigos."  },
   {
     "id": "mago_de_sangue",
     "nome": "MAGO DE SANGUE",
@@ -836,9 +843,7 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Sempre que a personagem causar diretamente (com poderes, mãos ou armas) um Ferimento não Absorvido em um ser consciente, recupera d6 Pontos de Poder; dano causado indiretamente, por aliados ou lacaios controlados, não conta.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Sempre que a personagem causar diretamente (com poderes, mãos ou armas) um Ferimento não Absorvido em um ser consciente, recupera d6 Pontos de Poder; dano causado indiretamente, por aliados ou lacaios controlados, não conta."  },
   {
     "id": "poder_favorito",
     "nome": "PODER FAVORITO",
@@ -1007,7 +1012,12 @@
       "atributos": {},
       "pericias": {},
       "vantagens_previas": [],
-      "observacoes": "Alquimia, Curar ou Sobrevivência d6+"
+      "observacoes": "Alquimia, Curar ou Sobrevivência d6+",
+      "periciaMinOpcional": {
+        "Alquimia": 6,
+        "Curar": 6,
+        "Sobrevivência": 6
+      }
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -1205,10 +1215,8 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "licantropo"
-      ],
-      "observacoes": ""
+      "vantagens_previas": [],
+      "observacoes": "Requer ter contraído Licantropia (condição narrativa, não uma Vantagem/Complicação selecionável)"
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -1642,9 +1650,7 @@
     "livros": [
       "FANTASIA"
     ],
-    "descricaoLite": "Das 0h à 1h, elimina o risco de Falha Crítica e oferece uma tentativa gratuita de Absorção a cada ferimento sofrido.",
-    "subtipoArcano": "BRUXA"
-  },
+    "descricaoLite": "Das 0h à 1h, elimina o risco de Falha Crítica e oferece uma tentativa gratuita de Absorção a cada ferimento sofrido."  },
   {
     "id": "mau_olhado",
     "nome": "MAU-OLHADO",
@@ -6219,9 +6225,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Asas retráteis dão ao demônio Movimentação 12 em voo; uma segunda aquisição da vantagem eleva isso para 24, e uma terceira, para 48.",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "Asas retráteis dão ao demônio Movimentação 12 em voo; uma segunda aquisição da vantagem eleva isso para 24, e uma terceira, para 48."  },
   {
     "id": "couro_blindado",
     "nome": "COURO BLINDADO",
@@ -6260,9 +6264,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Armas não mágicas causam apenas metade do dano (arredondado para cima) ao ser demoníaco, com exceção das feitas de ferro frio.",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "Armas não mágicas causam apenas metade do dano (arredondado para cima) ao ser demoníaco, com exceção das feitas de ferro frio."  },
   {
     "id": "fogo_infernal",
     "nome": "FOGO INFERNAL",
@@ -6303,9 +6305,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "O Fogo Infernal do demônio sobe para 2d6 de dano, liberando ainda o uso irrestrito do Modelo de Cone (ou Raio).",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "O Fogo Infernal do demônio sobe para 2d6 de dano, liberando ainda o uso irrestrito do Modelo de Cone (ou Raio)."  },
   {
     "id": "garras_demonio",
     "nome": "GARRAS (Demônio)",
@@ -6324,9 +6324,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Garras retráteis causam For+d4 de dano ao demônio e somam +2 em Atletismo para escalar; adquirida pela segunda vez, o dano das garras sobe para For+d6 com PA 2.",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "Garras retráteis causam For+d4 de dano ao demônio e somam +2 em Atletismo para escalar; adquirida pela segunda vez, o dano das garras sobe para For+d6 com PA 2."  },
   {
     "id": "sentido_sobrenatural_demonio",
     "nome": "SENTIDO SOBRENATURAL",
@@ -6407,9 +6405,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Concede presas que causam For+d6 de dano, usáveis contra alvos agarrados; adquirida novamente, ganham PA 2.",
-    "subtipoArcano": "DEMONIO"
-  },
+    "descricaoLite": "Concede presas que causam For+d6 de dano, usáveis contra alvos agarrados; adquirida novamente, ganham PA 2."  },
   {
     "id": "poderes_misticos_demonio",
     "nome": "PODERES MÍSTICOS (Demônio)",
@@ -7445,9 +7441,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Durante a hora entre meia-noite e uma da manhã, o personagem fica imune a Falhas Críticas (suas falhas contam como normais) e, ao sofrer um Ferimento, pode fazer uma rolagem de Absorção sem custo.",
-    "subtipoArcano": "BRUXA"
-  },
+    "descricaoLite": "Durante a hora entre meia-noite e uma da manhã, o personagem fica imune a Falhas Críticas (suas falhas contam como normais) e, ao sofrer um Ferimento, pode fazer uma rolagem de Absorção sem custo."  },
   {
     "id": "poder_sombrio",
     "nome": "PODER SOMBRIO",
@@ -10215,9 +10209,7 @@
     "livros": [
       "HORROR"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."  },
   {
     "id": "mentalista",
     "nome": "MENTALISTA",
@@ -13314,9 +13306,7 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."  },
   {
     "id": "mentalista",
     "nome": "MENTALISTA",
@@ -14747,7 +14737,10 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Novato",
-      "pericias": {
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Navegar": 4,
+        "Dirigir": 4,
         "Pilotar": 4
       }
     },
@@ -14862,7 +14855,9 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Experiente",
-      "pericias": {
+      "pericias": {},
+      "periciaMinOpcional": {
+        "Atletismo": 8,
         "Atirar": 8
       }
     },
@@ -15142,9 +15137,10 @@
       "pericias": {
         "Canalizar Cristal": 8
       },
-      "vantagensPrevias": [
+      "vantagens_previas": [
         "focus_ch"
-      ]
+      ],
+      "observacoes": ""
     },
     "descricao": "Rerrolagem gratuita em Canalizar Cristal.",
     "livros": [
@@ -15239,9 +15235,10 @@
     "categoria": "PROFISSIONAL",
     "requisitos": {
       "estagio": "Veterano",
-      "vantagensPrevias": [
+      "vantagens_previas": [
         "especialista_cristal"
-      ]
+      ],
+      "observacoes": ""
     },
     "descricao": "Ganha novo poder com o Cristal especializado. No Heroico, ganha mais um.",
     "livros": [
@@ -20392,9 +20389,9 @@
       },
       "pericias": {},
       "vantagens_previas": [
-        "sem escrúpulos (maior)"
+        "sem_escrupulos"
       ],
-      "observacoes": "",
+      "observacoes": "Exige a Complicação Sem Escrúpulos no grau Maior",
       "choiceOptions": []
     },
     "limite_compra": "",
@@ -24605,10 +24602,8 @@
       "pericias": {
         "Ocultismo": 8
       },
-      "vantagens_previas": [
-        "vinculo_espiritual"
-      ],
-      "observacoes": "Requer Tropo Kui"
+      "vantagens_previas": [],
+      "observacoes": "Requer Tropo Kui com a escolha de Ferramentas do Ofício \"Vínculo Espiritual\""
     },
     "limite_compra": "infinito",
     "vinculado_pericia": false,
@@ -24796,10 +24791,8 @@
       "pericias": {
         "Idiomas": 6
       },
-      "vantagens_previas": [
-        "talismas"
-      ],
-      "observacoes": "Requer Tropo Kui"
+      "vantagens_previas": [],
+      "observacoes": "Requer Tropo Kui com a escolha de Ferramentas do Ofício \"Talismãs\""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -24820,10 +24813,8 @@
         "Espírito": 8
       },
       "pericias": {},
-      "vantagens_previas": [
-        "talismas"
-      ],
-      "observacoes": "Requer Tropo Kui"
+      "vantagens_previas": [],
+      "observacoes": "Requer Tropo Kui com a escolha de Ferramentas do Ofício \"Talismãs\""
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -30439,9 +30430,7 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."  },
   {
     "id": "mentalista",
     "nome": "MENTALISTA",
@@ -32458,9 +32447,7 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Vantagem de inventor que usa dispositivos como um cientista louco, mas também pode Barganhar com o Diabo como um mascate para lançar, por meio de saque de cartas, qualquer poder de cientista louco disponível ao seu Estágio, mesmo os que não possui ou que estão acima dele.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Vantagem de inventor que usa dispositivos como um cientista louco, mas também pode Barganhar com o Diabo como um mascate para lançar, por meio de saque de cartas, qualquer poder de cientista louco disponível ao seu Estágio, mesmo os que não possui ou que estão acima dele."  },
   {
     "id": "antecedente_arcano_vuduismo",
     "nome": "Antecedente Arcano (Vuduísmo)",
@@ -32565,9 +32552,7 @@
     "livros": [
       "DEADLANDS"
     ],
-    "descricaoLite": "Quando totalmente paramentada com trajes característicos, adiciona +1 em Intimidar e +1 em Persuadir contra quem sinta atração por ela, mas -1 contra autoridades. Também pode carregar seu chicote com energia por 1 Ponto de Poder (ação livre); se acertar o ataque com ampliação, adiciona um dado de bônus ao dano.",
-    "subtipoArcano": "BRUXA"
-  },
+    "descricaoLite": "Quando totalmente paramentada com trajes característicos, adiciona +1 em Intimidar e +1 em Persuadir contra quem sinta atração por ela, mas -1 contra autoridades. Também pode carregar seu chicote com energia por 1 Ponto de Poder (ação livre); se acertar o ataque com ampliação, adiciona um dado de bônus ao dano."  },
   {
     "id": "familiar",
     "nome": "Familiar",
@@ -33226,9 +33211,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) ao conjurar os poderes cura, santuário ou ferir, desde que a personagem já os possua.",
-    "subtipoArcano": "CLERIGO"
-  },
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades (Ações Múltiplas, Ferimentos, Fadiga etc.) ao conjurar os poderes cura, santuário ou ferir, desde que a personagem já os possua."  },
   {
     "id": "maestria_divina_clerigo",
     "nome": "MAESTRIA DIVINA (CLÉRIGO)",
@@ -33244,9 +33227,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes.",
-    "subtipoArcano": "CLERIGO"
-  },
+    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes."  },
   {
     "id": "classe_druida",
     "nome": "DRUIDA",
@@ -33331,9 +33312,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes enredar, ferir ou proteção, desde que já os possua.",
-    "subtipoArcano": "DRUIDA"
-  },
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes enredar, ferir ou proteção, desde que já os possua."  },
   {
     "id": "maestria_divina_druida",
     "nome": "MAESTRIA DIVINA (DRUIDA)",
@@ -33349,9 +33328,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes.",
-    "subtipoArcano": "DRUIDA"
-  },
+    "descricaoLite": "Concede acesso a todos os Modificadores Épicos de Poderes."  },
   {
     "id": "classe_feiticeiro",
     "nome": "FEITICEIRO",
@@ -33451,9 +33428,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes manipulação elemental, proteção ou raio, desde que já os possua.",
-    "subtipoArcano": "FEITICEIRO"
-  },
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes manipulação elemental, proteção ou raio, desde que já os possua."  },
   {
     "id": "maestria_arcana_feiticeiro",
     "nome": "MAESTRIA ARCANA (FEITICEIRO)",
@@ -33469,9 +33444,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes.",
-    "subtipoArcano": "FEITICEIRO"
-  },
+    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes."  },
   {
     "id": "linhagem_avancada",
     "nome": "LINHAGEM AVANÇADA",
@@ -33738,9 +33711,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes proteção arcana, deflexão ou dissipar, desde que já os possua.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Como ação livre limitada, permite ignorar até 2 pontos de penalidades ao conjurar os poderes proteção arcana, deflexão ou dissipar, desde que já os possua."  },
   {
     "id": "maestria_arcana_mago",
     "nome": "MAESTRIA ARCANA (MAGO)",
@@ -33756,9 +33727,7 @@
     "livros": [
       "PATHFINDER"
     ],
-    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Concede acesso aos Modificadores Épicos de Poderes."  },
   {
     "id": "inspiracao_mistica",
     "nome": "INSPIRAÇÃO MÍSTICA",
@@ -38123,9 +38092,7 @@
     "livros": [
       "BASICO"
     ],
-    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito).",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Ao gastar 1 Ponto de Poder adicional ao conjurar um poder, permite alterar sua Manifestação (aparência do efeito)."  },
   {
     "id": "mentalista",
     "nome": "MENTALISTA",
@@ -39332,6 +39299,10 @@
         "Perceber": 6,
         "Furtividade": 8
       },
+      "vantagens_previas": [
+        "arma_predileta",
+        "lutar_com_duas_armas"
+      ],
       "observacoes": "Arma Predileta (sabre serrilhado), Lutar com Duas Armas"
     },
     "descricao": "Assassinas louva-a-deus vermelhas matam com o \"ataque louvador\": segurando o(s) sabre(s) serrilhado(s) apontado(s) para baixo e entrelaçando as lâminas no ar, a até 5 quadros (10 metros) e visível para a vítima. Uma vez por encontro, como ação limitada, a assassina faz um Desafio com Lutar resistido pelo Espírito do alvo. Sucesso deixa o alvo Atordoado (ou Paralisado com uma ampliação). Criaturas Atordoadas desta forma não são consideradas indefesas e não podem ser atingidas com um Golpe de Misericórdia.",
@@ -39624,9 +39595,7 @@
     "livros": [
       "SCI_FI"
     ],
-    "descricaoLite": "Adiciona cegar, visão sombria, disfarce, dissipar, medo, voar, cura, ilusão, iluminar/obscurecer, ajuda, morosidade/velocidade e som/silêncio aos Poderes Disponíveis, ganhando um deles de imediato; exclui Renegado Estelar.",
-    "subtipoArcano": "MAGO"
-  },
+    "descricaoLite": "Adiciona cegar, visão sombria, disfarce, dissipar, medo, voar, cura, ilusão, iluminar/obscurecer, ajuda, morosidade/velocidade e som/silêncio aos Poderes Disponíveis, ganhando um deles de imediato; exclui Renegado Estelar."  },
   {
     "id": "ascensao_estelar",
     "nome": "ASCENSÃO ESTELAR",
