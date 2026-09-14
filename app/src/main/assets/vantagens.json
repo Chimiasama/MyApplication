@@ -5818,6 +5818,10 @@
       "estagio": "Experiente",
       "atributos": {},
       "pericias": {},
+      "periciaMinOpcional": {
+        "Conjurar": 8,
+        "Foco": 8
+      },
       "vantagens_previas": [
         "antecedente_arcano"
       ],

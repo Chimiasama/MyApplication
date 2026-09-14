@@ -296,8 +296,64 @@ Estelar) e o caso "Harmonizado", onde o próprio livro não define um
 Estágio explícito — o JSON já documentava essa ambiguidade em
 `observacoes` antes desta auditoria, sem precisar de mudança.
 
+## HORROR — 10 vantagens gerais + 65 Vantagens Monstruosas (8 templates) + 10 Antecedentes Arcanos + 19 vantagens de arquétipo
+
+### Bug confirmado — CORRIGIDO
+
+1. **Poder Favorito (`poder_favorito_horror`) — mesmo bug da "perícia arcana
+   genérica", versão ainda pior (faltava por completo).** Livro (linha
+   ~656-658): "Experiente, Antecedente Arcano (Corrompido, Ocultista,
+   Bruxaria), perícia arcana d8+". O JSON já documentava a restrição de
+   Antecedente Arcano específico em `observacoes`, mas não tinha NENHUM
+   campo estruturado pra perícia — nem o "Perícia Arcana" genérico
+   (inexistente) que pelo menos registrava a intenção em outros livros, só
+   texto solto. **Corrigido** adicionando `"periciaMinOpcional": {"Conjurar":
+   8, "Foco": 8}` (Conjurar é a perícia de Ocultista/Bruxaria, Foco é a de
+   Corrompido — as únicas 2 perícias arcanas entre os 3 Antecedentes
+   permitidos por esta Vantagem).
+
+### Achado sem correção — mesma limitação de schema já registrada
+
+2. **Servo (`servo`, Vampiro) — teto "até cinco vezes" não capturado.**
+   Mesmo padrão do Sci-Fi (Sinfonia Celestial/Drones): `limite_compra` está
+   como `infinito`, sem representar o teto de 5 compras do livro.
+
+### Verificação extra: dois "sumiços" que na verdade não eram bugs
+
+Durante a conferência dos Antecedentes Arcanos por arquétipo apareceram
+dois alarmes falsos que vale documentar para não repetir o trabalho:
+
+- **Sexto Sentido** (exclusiva do Vidente) parecia estar faltando no
+  catálogo — na verdade existe com o id `sexto_sentido_vidente` (não
+  `sexto_sentido`, que é como o índice antigo do livro nomeava); requisitos
+  batem 100% com o texto (Veterano, Antecedente Arcano (Vidente)).
+- **Esteve na Encruzilhada** e **Favorecido**, exclusivas do Voduísta,
+  existem DUAS vezes cada uma: uma tageada `HORROR` (Antecedente Arcano
+  `antecedente_arcano_vuduista`, requisitos Novato+Espírito d8+Fé d8) e
+  outra tageada `DEADLANDS` (Antecedente Arcano `antecedente_arcano_vuduismo`,
+  requisitos Experiente+Espírito d8+Fé d8). Parecia duplicata/mistagueamento
+  à primeira vista, mas são duas Vantagens DIFERENTES: o Compêndio de
+  Horror e o Compêndio de Deadlands (`docs/swade_deadlands_compendio`, não
+  o Deadlands básico) trazem cada um sua própria versão do Antecedente
+  Arcano Voduísta/Vuduísmo, com nomes e flavor quase idênticos (a mesma
+  mitologia real de loa rada/petro, mambo/houngan) mas Estágio de
+  Antecedente Arcano diferente — conferi as duas cópias linha a linha
+  contra os dois livros-fonte e ambas batem exatamente com o texto do seu
+  próprio livro. Nenhuma mudança necessária.
+
+### Confirmado correto (nada a corrigir)
+
+As outras 9 vantagens gerais, as 65 Vantagens Monstruosas dos 8 templates
+de Monstro Heroico (Anjo, Demônio, Fantasma, Lobisomem, Monstro de
+Retalhos, Múmia, Revivido, Vampiro — incluindo todas as cadeias de
+pré-requisito entre elas, tipo Fogo Infernal→Queimar, Luz Sagrada→Rajada
+Abrasadora, Resistência→Resistência Divina, Invocar Bando→Invocar Bando
+Maior, Regeneração Lenta→Regeneração Rápida), os 10 Antecedentes Arcanos
+por arquétipo e as 19 vantagens específicas de arquétipo restantes batem
+exatamente com o texto "REQUISITOS:" do livro.
+
 ## Próximos livros
 
-Ainda faltam: Horror, Superpoderes, Pathfinder (Básico + Compêndio),
-Deadlands (Básico + Compêndio), Arte da Guerra (+ Diário do Kui), Crystal
-Heart (+ Muitos Corações), Wiseguys, Cidade do Sol a Vapor (3 livros).
+Ainda faltam: Superpoderes, Pathfinder (Básico + Compêndio), Deadlands
+(Básico + Compêndio), Arte da Guerra (+ Diário do Kui), Crystal Heart (+
+Muitos Corações), Wiseguys, Cidade do Sol a Vapor (3 livros).
