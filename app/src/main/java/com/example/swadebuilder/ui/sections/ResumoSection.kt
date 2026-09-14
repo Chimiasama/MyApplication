@@ -3,7 +3,6 @@ package com.example.swadebuilder.ui.sections
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +21,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuBook
@@ -311,16 +311,18 @@ fun SummaryContent(
         }
 
         derivedSection?.let {
-            val showWealthControl = state.modoProgressaoAtivo && state.usaRiqueza
+            // Riqueza é um atributo secundário como Chi/Fama/Domínio: aparece no resumo
+            // sempre que a regra estiver ativa, não só durante progressão — só o controle
+            // de +/- (avanço "Riqueza") fica reservado pra progressão, igual à Fama.
             SecondaryAttributesBar(
                 stats = it.toStats(),
                 onFamaChange = if (state.modoProgressaoAtivo && state.optRegraFama) { delta ->
                     state.famaManual += delta
                 } else null,
-                onWealthChange = if (showWealthControl) { delta ->
+                onWealthChange = if (state.modoProgressaoAtivo && state.usaRiqueza) { delta ->
                     state.riquezaModifier += delta
                 } else null,
-                wealthDieValue = if (showWealthControl) state.dadoRiqueza.toDiceString() else null
+                wealthDieValue = if (state.usaRiqueza) state.dadoRiqueza.toDiceString() else null
             )
             Spacer(Modifier.height(12.dp))
         }
@@ -998,6 +1000,20 @@ private fun CombatRow(name: String, stats: String, notes: String) {
     }
 }
 
+private data class SecondaryStat(
+    val label: String,
+    val value: String,
+    val onDelta: ((Int) -> Unit)? = null
+)
+
+/**
+ * Todos os atributos secundários (os fixos — Aparar/Resistência/Tamanho/Movimentação/
+ * Corrida — e os liberados por regras específicas, como Reserva de Chi, Fama, Domínio,
+ * Requisição e Riqueza) vivem num único card, no mesmo padrão visual. Antes os extras
+ * ficavam num bloco separado, em círculos, com um estilo destoante do resto; agora
+ * entram na mesma grade e o FlowRow quebra pra uma segunda linha sozinho quando não
+ * cabem todos numa linha só.
+ */
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
 fun SecondaryAttributesBar(
@@ -1008,140 +1024,79 @@ fun SecondaryAttributesBar(
     wealthDieValue: String? = null
 ) {
     val statsMap = stats.toMap()
-    val mainMetrics = listOf(
-        "APARAR" to (statsMap["Aparar"] ?: "-"),
-        "RESIST." to (statsMap["Resistência"] ?: "-"),
-        "TAM." to (statsMap["Tamanho"] ?: "0"),
-        "MOV." to (statsMap["Movimento"] ?: "6"),
-        "CORRIDA" to (statsMap["Corrida"] ?: "d6")
-    )
+    val coreKeys = setOf("Aparar", "Resistência", "Tamanho", "Movimento", "Corrida")
 
-    val extraStats = stats.filterNot { (k, _) ->
-        k in setOf("Aparar", "Resistência", "Tamanho", "Movimento", "Corrida")
+    val cells = buildList {
+        add(SecondaryStat("APARAR", statsMap["Aparar"] ?: "-"))
+        add(SecondaryStat("RESIST.", statsMap["Resistência"] ?: "-"))
+        add(SecondaryStat("TAM.", statsMap["Tamanho"] ?: "0"))
+        add(SecondaryStat("MOV.", statsMap["Movimento"] ?: "6"))
+        add(SecondaryStat("CORRIDA", statsMap["Corrida"] ?: "d6"))
+        stats.filterNot { (label, _) -> label in coreKeys }.forEach { (label, value) ->
+            val onDelta = if (label == "Fama") onFamaChange else null
+            add(SecondaryStat(label.uppercase(), value, onDelta))
+        }
+        if (wealthDieValue != null) {
+            add(SecondaryStat("RIQUEZA", wealthDieValue, onWealthChange))
+        }
     }
 
-    Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceVariant
-            ),
-            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+    ) {
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 4.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                mainMetrics.forEachIndexed { index, (label, value) ->
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = label,
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Spacer(Modifier.height(4.dp))
-                        Text(
-                            text = value,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-
-                    if (index < mainMetrics.lastIndex) {
-                        androidx.compose.material3.VerticalDivider(
-                            modifier = Modifier.height(28.dp),
-                            thickness = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
-                        )
-                    }
-                }
-            }
-        }
-
-        if (extraStats.isNotEmpty() || (wealthDieValue != null && onWealthChange != null)) {
-            FlowRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 4.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                extraStats.forEach { (label, value) ->
-                    if (label == "Fama" && onFamaChange != null) {
-                        EditableCircleStat(label = label, value = value, onDelta = onFamaChange)
-                    } else {
-                        CircleStat(label = label, value = value)
-                    }
-                }
-                if (wealthDieValue != null && onWealthChange != null) {
-                    EditableCircleStat(label = "Riqueza", value = wealthDieValue, onDelta = onWealthChange)
-                }
+            cells.forEach { cell ->
+                SecondaryStatCell(cell)
             }
         }
     }
 }
 
 @Composable
-fun EditableCircleStat(
-    label: String,
-    value: String,
-    onDelta: (Int) -> Unit
-) {
+private fun SecondaryStatCell(stat: SecondaryStat) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier.widthIn(min = 60.dp, max = 96.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(68.dp)
-                .background(MaterialTheme.colorScheme.surface, CircleShape)
-                .clip(CircleShape)
-                .border(
-                    width = 2.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = CircleShape
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                ),
-                textAlign = TextAlign.Center
-            )
-        }
+        Text(
+            text = stat.label,
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp),
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
+            maxLines = 2
+        )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
+            text = stat.value,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            IconButton(
-                onClick = { onDelta(-1) },
-                modifier = Modifier.size(24.dp)
+        val onDelta = stat.onDelta
+        if (onDelta != null) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                Icon(Icons.Default.Remove, "Diminuir", modifier = Modifier.size(16.dp))
-            }
-            IconButton(
-                onClick = { onDelta(1) },
-                modifier = Modifier.size(24.dp)
-            ) {
-                Icon(Icons.Default.Add, "Aumentar", modifier = Modifier.size(16.dp))
+                IconButton(onClick = { onDelta(-1) }, modifier = Modifier.size(22.dp)) {
+                    Icon(Icons.Default.Remove, contentDescription = "Diminuir ${stat.label.lowercase()}", modifier = Modifier.size(14.dp))
+                }
+                IconButton(onClick = { onDelta(1) }, modifier = Modifier.size(22.dp)) {
+                    Icon(Icons.Default.Add, contentDescription = "Aumentar ${stat.label.lowercase()}", modifier = Modifier.size(14.dp))
+                }
             }
         }
     }
@@ -1220,45 +1175,6 @@ private fun BulletRow(text: String, textStyle: TextStyle) {
                 .background(MaterialTheme.colorScheme.primary, CircleShape)
         )
         Text(text = text, style = textStyle)
-    }
-}
-
-@Composable
-fun CircleStat(
-    label: String,
-    value: String
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(4.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(68.dp)
-                .background(MaterialTheme.colorScheme.surface, CircleShape)
-                .clip(CircleShape)
-                .border(
-                    width = 2.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = CircleShape
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                ),
-                textAlign = TextAlign.Center
-            )
-        }
-        Spacer(Modifier.height(4.dp))
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Center
-        )
     }
 }
 

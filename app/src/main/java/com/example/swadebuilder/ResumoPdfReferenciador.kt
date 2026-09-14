@@ -1428,10 +1428,26 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
         color = theme.textColor; typeface = theme.typefaceBody; textSize = 12f; isAntiAlias = true
     }
 
+    // Atributos secundários extras liberados por regras específicas (Arte da Guerra,
+    // Fama, Riqueza/Requisição, Domínio) — antes ficavam de fora do PDF por completo
+    // (só apareciam no resumo do app). Entram numa segunda coluna, no mesmo vão entre
+    // nome e retrato, reaproveitando o espaço que sobrava ali.
+    val extraStatPairs = buildList {
+        if (p.compendioArteDaGuerraAtivo) add("Chi" to (p.reservaChi ?: 0).toString())
+        if (p.regraFamaAtiva) add("Fama" to p.fama.toString())
+        val dadoRiqueza = p.dadoRiqueza
+        if (p.usaRiqueza && dadoRiqueza != null) add("Riqueza" to dadoRiqueza.toDiceString())
+        if (p.usaRequisicao) add("Requisição" to p.requisicao.toString())
+        val dominio = p.dominio
+        if (dominio != null) add("Domínio" to dominio.toString())
+    }
+
     // Vão entre o nome e o retrato: em vez de deixar em branco, mostra as estatísticas
     // derivadas ali (texto simples, sem caixinha) — o nome passa a truncar antes dessa
-    // coluna, em vez de ir quase até o retrato.
-    val statsColumnLeft = portraitRect.left - 115f
+    // coluna, em vez de ir quase até o retrato. Alargado quando há atributos extras, pra
+    // caber as duas colunas sem invadir o retrato.
+    val statsZoneWidth = if (extraStatPairs.isEmpty()) 115f else 230f
+    val statsColumnLeft = portraitRect.left - statsZoneWidth
     val textAreaWidth = statsColumnLeft - rect.left - 20f
     var displayedName = p.nome.ifBlank { "Sem Nome" }
     if (titlePaint.measureText(displayedName) > textAreaWidth) {
@@ -1472,17 +1488,28 @@ fun drawHeader(canvas: Canvas, rect: RectF, p: MeuPersonagem, theme: PdfTheme, p
     // diâmetro em cima de 20f de altura de linha fazia eles se sobreporem.
     val circleRadius = 8f
     val rowHeight = 26f
-    val maxLabelWidth = statPairs.maxOf { (label, _) -> statLabelPaint.measureText(label) }
-    val valueColumnCx = statsColumnLeft + maxLabelWidth + 14f + circleRadius
-    var statY = rect.top + 20f
-    statPairs.forEach { (label, value) ->
-        canvas.drawText(label, statsColumnLeft, statY, statLabelPaint)
-        val circleCy = statY - 3.5f
-        canvas.drawCircle(valueColumnCx, circleCy, circleRadius, statCirclePaint)
-        val metrics = statValuePaint.fontMetrics
-        val dy = (metrics.descent + metrics.ascent) / 2
-        canvas.drawText(value, valueColumnCx, circleCy - dy, statValuePaint)
-        statY += rowHeight
+
+    fun drawStatColumn(columnLeft: Float, pairs: List<Pair<String, String>>) {
+        if (pairs.isEmpty()) return
+        val maxLabelWidth = pairs.maxOf { (label, _) -> statLabelPaint.measureText(label) }
+        val valueColumnCx = columnLeft + maxLabelWidth + 14f + circleRadius
+        var statY = rect.top + 20f
+        pairs.forEach { (label, value) ->
+            canvas.drawText(label, columnLeft, statY, statLabelPaint)
+            val circleCy = statY - 3.5f
+            canvas.drawCircle(valueColumnCx, circleCy, circleRadius, statCirclePaint)
+            val metrics = statValuePaint.fontMetrics
+            val dy = (metrics.descent + metrics.ascent) / 2
+            canvas.drawText(value, valueColumnCx, circleCy - dy, statValuePaint)
+            statY += rowHeight
+        }
+    }
+
+    drawStatColumn(statsColumnLeft, statPairs)
+    if (extraStatPairs.isNotEmpty()) {
+        val col1MaxLabelWidth = statPairs.maxOf { (label, _) -> statLabelPaint.measureText(label) }
+        val col1Right = statsColumnLeft + col1MaxLabelWidth + 14f + circleRadius * 2
+        drawStatColumn(col1Right + 16f, extraStatPairs)
     }
 }
 
