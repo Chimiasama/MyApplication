@@ -17,6 +17,12 @@ object Constants {
     const val ID_ESPECIALISTA = "especialista"
     const val ID_IDOSO = "idoso"
     const val ID_LENTO = "lento"
+    // Crystal Heart reskina Lento (mesmo efeito mecânico de Movimentação, só muda a
+    // narrativa pra prótese/cadeira de rodas da Syn) e BLOQUEIA a escolha do id base
+    // "lento" pra personagens desse cenário (ver CriadorState.podeSelecionarComplicacao)
+    // — sem este id aqui, todo personagem de Crystal Heart com Lento ficava sem a
+    // penalidade de Movimentação/dado de corrida, já que era a única versão disponível.
+    const val ID_LENTO_CH = "lento_ch"
     const val ID_OBESO = "obeso"
     const val ID_PEQUENO = "pequeno"
     const val ID_AA_AGENT_SYN = "aa_agente_syn"

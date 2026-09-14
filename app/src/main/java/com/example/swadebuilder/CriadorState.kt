@@ -4519,8 +4519,28 @@ class CriadorState {
 
     fun podeSelecionarComplicacao(complicacao: Complicacao): Pair<Boolean, String?> {
         if (modoLivre) return true to null
-        if (complicacao.id == "talisma" && !temAntecedenteArcano()) {
-            return false to "Talismã requer um Antecedente Arcano."
+        if (complicacao.id == "talisma") {
+            if (!temAntecedenteArcano()) {
+                return false to "Talismã requer um Antecedente Arcano."
+            }
+            // Deadlands (docs/swade_deadlands, l.~1160): Cientista Louco já depende de uma
+            // engenhoca física pra criar poderes — dependência real, não a "dependência
+            // mental" que Talismã representa — então esse Antecedente Arcano não é elegível.
+            val ehCientistaLouco = vantagensSelecionadas.any { it.id == "antecedente_arcano_cientista_louco" }
+            if (ehCientistaLouco) {
+                return false to "Talismã não está disponível para Cientista Louco (já depende de uma engenhoca)."
+            }
+        }
+        // Componentes Materiais/Corrupção/Interferência de Armadura (Fantasia) e Componentes
+        // Materiais/Corrupção (Horror) são, pelo próprio texto do livro, exclusivas de quem
+        // rola perícia arcana (penalizam essa rolagem) — mesmo requisito de Talismã acima,
+        // só que faltava aqui.
+        val exclusivasDeArcano = setOf(
+            "componentes_materiais", "corrupcao", "interferencia_de_armadura",
+            "componentes_materiais_horror", "corrupcao_horror"
+        )
+        if (complicacao.id in exclusivasDeArcano && !temAntecedenteArcano()) {
+            return false to "${complicacao.nomeExibicao} requer um Antecedente Arcano."
         }
 
         if (compendioCrystalHeartAtivo) {
