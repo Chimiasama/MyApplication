@@ -90,7 +90,8 @@ class ValidateSelectionUseCase(
                     complicacoesSelecionadas = context.complicacoesSelecionadas.keys,
                     pericias = context.pericias,
                     rawTotalPericia = context.rawTotalPericia,
-                    getBestPericia = context.getBestPericia
+                    getBestPericia = context.getBestPericia,
+                    valoresAtributos = context.valoresAtributos
                 )
             )) return false
 

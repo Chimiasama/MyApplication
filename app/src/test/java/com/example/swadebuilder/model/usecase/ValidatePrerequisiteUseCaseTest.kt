@@ -23,13 +23,15 @@ class ValidatePrerequisiteUseCaseTest {
         vantagensSelecionadas: List<Vantagem> = emptyList(),
         complicacoesSelecionadas: Collection<Complicacao> = emptyList(),
         pericias: List<Pericia> = emptyList(),
-        totais: Map<String, Int> = emptyMap()
+        totais: Map<String, Int> = emptyMap(),
+        valoresAtributos: Map<String, Int> = emptyMap()
     ) = ValidatePrerequisiteUseCase.Input(
         vantagem = vantagem,
         vantagensSelecionadas = vantagensSelecionadas,
         complicacoesSelecionadas = complicacoesSelecionadas,
         pericias = pericias,
-        rawTotalPericia = { p -> totais[p.nome] ?: 0 }
+        rawTotalPericia = { p -> totais[p.nome] ?: 0 },
+        valoresAtributos = valoresAtributos
     )
 
     // --- grupoMinimo: "pelo menos N destas opções" (Bando de Guerra / Ordem-Unida) ---
@@ -181,6 +183,88 @@ class ValidatePrerequisiteUseCaseTest {
                 v,
                 pericias = listOf(consertar, ciencia),
                 totais = mapOf("Consertar" to 10, "Ciência" to 8)
+            )
+        )
+        assertFalse(ok)
+    }
+
+    // --- gruposAlternativos com perícia/atributo por alternativa (Sci-Fi "Drenar a Alma":
+    // Antecedente Arcano com perícia arcana d10+, OU Poderes Místicos substituindo a perícia
+    // arcana por Espírito d10+) ---
+
+    @Test
+    fun `gruposAlternativos aceita AA com pericia arcana opcional dentro da alternativa`() {
+        val v = vantagem(
+            "drenar_a_alma_scifi",
+            Requisito(
+                gruposAlternativos = listOf(
+                    GrupoAlternativo(
+                        vantagens = listOf("antecedente_arcano"),
+                        periciaMinOpcional = mapOf("Fé" to 10, "Conjurar" to 10, "Ciência Estranha" to 10)
+                    ),
+                    GrupoAlternativo(
+                        vantagens = listOf("poderes_misticos"),
+                        atributos = mapOf("Espírito" to 10)
+                    )
+                )
+            )
+        )
+        val fe = Pericia(nome = "Fé", atributo = "ESPIRITO", basica = false)
+        val ok = useCase.execute(
+            input(
+                v,
+                vantagensSelecionadas = listOf(vantagem("antecedente_arcano_milagreiro")),
+                pericias = listOf(fe),
+                totais = mapOf("Fé" to 10)
+            )
+        )
+        assertTrue(ok)
+    }
+
+    @Test
+    fun `gruposAlternativos aceita Poderes Misticos com Espirito substituindo a pericia arcana`() {
+        val v = vantagem(
+            "drenar_a_alma_scifi",
+            Requisito(
+                gruposAlternativos = listOf(
+                    GrupoAlternativo(
+                        vantagens = listOf("antecedente_arcano"),
+                        periciaMinOpcional = mapOf("Fé" to 10, "Conjurar" to 10)
+                    ),
+                    GrupoAlternativo(
+                        vantagens = listOf("poderes_misticos"),
+                        atributos = mapOf("Espírito" to 10)
+                    )
+                )
+            )
+        )
+        // Não tem Antecedente Arcano nem nenhuma perícia arcana — só Poderes Místicos e Espírito d10.
+        val ok = useCase.execute(
+            input(
+                v,
+                vantagensSelecionadas = listOf(vantagem("poderes_misticos")),
+                valoresAtributos = mapOf("ESPIRITO" to 10)
+            )
+        )
+        assertTrue(ok)
+    }
+
+    @Test
+    fun `gruposAlternativos rejeita Poderes Misticos quando falta o Espirito minimo`() {
+        val v = vantagem(
+            "drenar_a_alma_scifi",
+            Requisito(
+                gruposAlternativos = listOf(
+                    GrupoAlternativo(vantagens = listOf("antecedente_arcano"), periciaMinOpcional = mapOf("Fé" to 10)),
+                    GrupoAlternativo(vantagens = listOf("poderes_misticos"), atributos = mapOf("Espírito" to 10))
+                )
+            )
+        )
+        val ok = useCase.execute(
+            input(
+                v,
+                vantagensSelecionadas = listOf(vantagem("poderes_misticos")),
+                valoresAtributos = mapOf("ESPIRITO" to 8)
             )
         )
         assertFalse(ok)

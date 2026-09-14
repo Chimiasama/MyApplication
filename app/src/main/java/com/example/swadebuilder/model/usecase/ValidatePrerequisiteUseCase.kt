@@ -5,6 +5,7 @@ import com.example.swadebuilder.model.GrupoAlternativo
 import com.example.swadebuilder.model.Pericia
 import com.example.swadebuilder.model.Vantagem
 import com.example.swadebuilder.util.keyify
+import com.example.swadebuilder.util.semAcentos
 
 class ValidatePrerequisiteUseCase {
 
@@ -12,15 +13,18 @@ class ValidatePrerequisiteUseCase {
         val vantagem: Vantagem,
         val vantagensSelecionadas: List<Vantagem>,
         val complicacoesSelecionadas: Collection<Complicacao>,
-        // Só usados por `requisitos.gruposAlternativos` (perícia mínima dentro de uma
-        // alternativa, ex.: "Magomecânico OU Consertar d10+ e Ciência d10+"). Todo o resto
-        // desta classe (vantagensPrevias/grupoMinimo) não precisa de perícia nenhuma.
+        // Só usados por `requisitos.gruposAlternativos` (perícia mínima ou atributo mínimo
+        // dentro de uma alternativa, ex.: "Magomecânico OU Consertar d10+ e Ciência d10+", ou
+        // Ciência Ficção "Drenar a Alma" via Poderes Místicos substituindo a perícia arcana por
+        // Espírito). Todo o resto desta classe (vantagensPrevias/grupoMinimo) não precisa nem
+        // de perícia nem de atributo.
         val pericias: List<Pericia> = emptyList(),
         val rawTotalPericia: (Pericia) -> Int = { 0 },
         val getBestPericia: (String) -> Pericia? = { nome ->
             val key = nome.keyify()
             pericias.firstOrNull { it.nome.keyify() == key }
-        }
+        },
+        val valoresAtributos: Map<String, Int> = emptyMap()
     )
 
     private val ameacadorComplicacoesLiberadoras = setOf(
@@ -76,7 +80,16 @@ class ValidatePrerequisiteUseCase {
             val per = input.getBestPericia(nome) ?: return@all false
             input.rawTotalPericia(per) >= min
         }
-        return vantagensOk && periciasOk
+        val periciaOpcionalOk = alt.periciaMinOpcional.isEmpty() || alt.periciaMinOpcional.any { (nome, min) ->
+            val per = input.getBestPericia(nome)
+            per != null && input.rawTotalPericia(per) >= min
+        }
+        val atributosOk = alt.atributos.all { (nome, min) ->
+            val chaveNorm = nome.uppercase().semAcentos().trim()
+            val attrKey = input.valoresAtributos.keys.firstOrNull { it.equals(chaveNorm, ignoreCase = true) } ?: chaveNorm
+            (input.valoresAtributos[attrKey] ?: 0) >= min
+        }
+        return vantagensOk && periciasOk && periciaOpcionalOk && atributosOk
     }
 
     fun execute(input: Input): Boolean {

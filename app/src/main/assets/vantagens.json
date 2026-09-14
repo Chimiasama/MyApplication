@@ -888,7 +888,7 @@
     "descricaoLite": "Concede 10 Pontos de Poder dedicados, que recarregam normalmente, e acesso a um conjunto fixo de poderes ligado a uma trilha escolhida (guerreira, ladina, mística etc.), cada uma exigindo um atributo ou perícia mínimo; como ação livre limitada, ativa automaticamente um desses poderes com sucesso, ou com ampliação gastando 2 PP extras. Não dá acesso a vantagens que exigem Antecedente Arcano, e suas habilidades não podem ser combinadas com as de um Antecedente Arcano que a personagem já possua.",
     "subtipoArcano": "MISTICO",
     "livros": [
-      "PATHFINDER"
+      "FANTASIA"
     ]
   },
   {
@@ -4521,10 +4521,19 @@
         "Psiônicos": 10,
         "Ciência Estranha": 10
       },
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -4661,10 +4670,19 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "limite_compra": "uma_vez_por_estagio",
     "vinculado_pericia": false,
@@ -13240,17 +13258,29 @@
       "estagio": "Experiente",
       "atributos": {},
       "pericias": {},
-      "periciaMinOpcional": {
-        "Fé": 10,
-        "Conjurar": 10,
-        "Foco": 10,
-        "Psiônicos": 10,
-        "Ciência Estranha": 10
-      },
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
+      "observacoes": "Antecedente Arcano (qualquer um) com perícia arcana d10+, ou Poderes Místicos substituindo a perícia arcana por Espírito d10+",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ],
+          "periciaMinOpcional": {
+            "Fé": 10,
+            "Conjurar": 10,
+            "Foco": 10,
+            "Psiônicos": 10,
+            "Ciência Estranha": 10
+          }
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ],
+          "atributos": {
+            "Espírito": 10
+          }
+        }
+      ]
     },
     "limite_compra": "uma_vez",
     "vinculado_pericia": false,
@@ -13410,10 +13440,19 @@
       "estagio": "Novato",
       "atributos": {},
       "pericias": {},
-      "vantagens_previas": [
-        "antecedente_arcano"
-      ],
-      "observacoes": ""
+      "observacoes": "Antecedente Arcano (qualquer um) ou Poderes Místicos",
+      "gruposAlternativos": [
+        {
+          "vantagens": [
+            "antecedente_arcano"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos"
+          ]
+        }
+      ]
     },
     "limite_compra": "uma_vez_por_estagio",
     "vinculado_pericia": false,
@@ -35506,7 +35545,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]
@@ -35535,7 +35584,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]
@@ -35564,7 +35623,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]
@@ -35608,7 +35677,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]
@@ -35660,7 +35739,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]
@@ -35767,7 +35856,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]
@@ -35933,7 +36032,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]
@@ -36147,7 +36256,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]
@@ -39987,7 +40106,17 @@
         },
         {
           "vantagens": [
-            "poderes_misticos"
+            "poderes_misticos_monge"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_paladino"
+          ]
+        },
+        {
+          "vantagens": [
+            "poderes_misticos_patrulheiro"
           ]
         }
       ]

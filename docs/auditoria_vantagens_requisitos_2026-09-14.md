@@ -821,3 +821,190 @@ caso especial hardcoded (mesmo padrão já usado pro Ameaçador/Tiro Duplo
 Aprimorado). Como é uma vantagem só no catálogo inteiro, não implementei
 pra não introduzir um mecanismo genérico só usado uma vez — me avise se
 quiser que eu resolva esse caso também.
+
+## Rodada 3 — correção do erro sobre "Poderes Místicos" (mesma data)
+
+O dono do projeto apontou, com razão, que a conclusão da Rodada 2 sobre
+`poderes_misticos` pertencer ao Pathfinder estava **errada**, e pediu uma
+reconferência bem mais cuidadosa: Poderes Místicos é um mecanismo do
+SWADE que concede um pacote FIXO e pequeno de poderes (sem testar
+perícia — ativa automaticamente gastando Pontos de Poder) pra personagens
+que não têm Antecedente Arcano nenhum, e cada livro que tem essa Vantagem
+tem o SEU PRÓPRIO pacote de poderes — não pode haver confusão/vazamento
+entre o pacote de um livro e o de outro.
+
+### Onde eu errei
+
+Na Rodada 2, vi que a descrição de `poderes_misticos` (tageada
+`FANTASIA`) citava "Bárbaro, Guerreiro, Ladrão, Monge, Paladino,
+Patrulheiro" e, por coincidência esses nomes também serem classes reais
+do Pathfinder, concluí (sem confirmar) que era conteúdo mal tageado do
+Pathfinder e movi pra `["PATHFINDER"]`. **Isso estava errado.** Reli
+`docs/swade_fantasia`, linhas 2428-2489, e o texto bate PALAVRA POR
+PALAVRA (inclusive o caractere de marcador "􀂄" da extração do PDF) com o
+que eu tinha movido — é conteúdo genuíno e correto do Fantasia. No
+Fantasia, "Bárbaro/Guerreiro/Ladrão/Monge/Paladino/Patrulheiro" são só
+nomes de 6 pacotes de sabor (arquétipos), não uma referência ao sistema
+de classes do Pathfinder.
+
+O Pathfinder tem sua PRÓPRIA implementação de Poderes Místicos, e ela já
+estava correta no catálogo antes de qualquer uma das minhas mudanças:
+três Vantagens SEPARADAS, uma por classe —
+`poderes_misticos_monge` (livro, linha 4788), `poderes_misticos_paladino`
+(linha 4878) e `poderes_misticos_patrulheiro` (linha 5083), cada uma com
+seu próprio requisito ("Experiente, [Classe]") e sua própria progressão
+de nível 2/3 (Grande Ki, Corpo Vazio, Misericórdia, Montaria).
+
+**Corrigido:** `poderes_misticos` voltou pra `livros: ["FANTASIA"]`.
+
+### As 9 Vantagens do Pathfinder que citam "AA ou PM" também precisaram de correção
+
+Na Rodada 2, os `gruposAlternativos` dessas 9 Vantagens (Concentração,
+Drenar a Alma, Guerreiro Sagrado/Profano, Pontos de Poder, Arqueiro
+Arcano, Cavaleiro Místico, Discípulo do Dragão, Trapaceiro Arcano,
+Agoureiro) referenciavam `poderes_misticos` — um id que, no Pathfinder,
+**não existe** (era o id genérico do Fantasia). Reconferi o texto do
+livro (`docs/swade_pathfinder_basico`, ex.: linha 5624: "Antecedente
+Arcano (qualquer um) ou Poderes Místicos (qualquer um)") — "qualquer um"
+aqui quer dizer qualquer UMA das três Vantagens de classe. Troquei a
+alternativa única e errada por três alternativas separadas, uma pra cada
+classe (`poderes_misticos_monge`, `poderes_misticos_paladino`,
+`poderes_misticos_patrulheiro`) — ter QUALQUER UMA das três libera,
+exatamente como no livro.
+
+### Confirmando que não há vazamento entre livros
+
+Levantei TODOS os ids que começam com `poderes_misticos` no catálogo
+inteiro e confirmei que representam mecanismos genuinamente diferentes,
+sem nenhum código fazendo correspondência por prefixo (só por id exato)
+que pudesse misturá-los:
+
+- `poderes_misticos` (**FANTASIA**) — 6 pacotes de sabor (Bárbaro,
+  Guerreiro, Ladrão, Monge, Paladino, Patrulheiro), Estágio Experiente.
+- `poderes_misticos` (**SCI_FI**) — pacotes "Guerreiro Estelar" e
+  "Telepata" (`docs/swade_scifi`, linha 1637), com `choiceOptions`
+  preenchido; já estava correto e não foi tocado.
+- `poderes_misticos_monge` / `_paladino` / `_patrulheiro` (**PATHFINDER**)
+  — três Vantagens de classe separadas; já estavam corretas e não foram
+  tocadas (só os 9 `gruposAlternativos` que as referenciam foram
+  corrigidos, ver acima).
+- `poderes_misticos_anjo` / `_demonio` / `_fantasma` / `_mumia`
+  (**HORROR**) — mecanismo **completamente diferente e não relacionado**:
+  são habilidades exclusivas de 4 templates de Monstro Heroico
+  (`docs/swade_horror`, regra geral na linha 856, cabeçalhos específicos
+  nas linhas 1040/1242/1327/1684), categoria `MONSTRUOSAS`, liberadas por
+  `template` (tipo de monstro escolhido) — não por Antecedente Arcano
+  nem por nenhum dos dois pacotes acima. Compartilham o nome "Poderes
+  Místicos" por coincidência de terminologia do livro, nada mais. Busquei
+  no código (`grep -rn "poderes_misticos"` em `app/src/main/java`) e
+  confirmei que todo código existente (`VantagensSection.kt`,
+  `ProgressosDialog.kt`, `CriadorState.kt`, etc.) compara por id EXATO,
+  nunca por prefixo — não há risco de um código genérico "pegar" os ids
+  do Horror por engano.
+
+### Confirmando a regra "Poderes Místicos ≠ Antecedente Arcano" (e as duas exceções nomeadas)
+
+Reconferi literalmente nos livros a afirmação de que Poderes Místicos NÃO
+dá acesso às Vantagens que pedem Antecedente Arcano — e ela está correta
+e é explícita nos dois livros que têm o mecanismo genérico:
+
+- **Fantasia** (linha 2454-2457): "A Vantagem Poderes Místicos não
+  concede acesso a Vantagens que exigem um Antecedente Arcano, **mas pode
+  adquirir Pontos de Poder ou Drenar Alma**."
+- **Sci-Fi** (linha 1656-1661): "Poderes Místicos não garantem acesso a
+  Vantagens que requeiram um Antecedente Arcano, **mas é possível
+  adquirir as Vantagens Pontos de Poder ou Drenar Alma (substituindo o
+  requisito de perícia arcana por Espírito)**."
+
+Ou seja: sua lembrança estava certa — Poderes Místicos NÃO libera as
+Vantagens de Poder que pedem Antecedente Arcano (ex.: os Talentos de
+Poder do Básico) — com exatamente DUAS exceções nomeadas em cada livro:
+Pontos de Poder e Drenar a Alma. O catálogo tinha essas duas Vantagens
+travadas em `vantagens_previas: ["antecedente_arcano"]` fixo, sem a
+exceção — **corrigido**:
+
+- **`pontos_de_poder`** (Fantasia e Sci-Fi): trocado `vantagens_previas`
+  fixo por `gruposAlternativos` (Antecedente Arcano OU Poderes Místicos
+  do respectivo livro).
+- **`drenar_a_alma`** (Fantasia): mesma troca; manteve a perícia arcana
+  opcional (`periciaMinOpcional`: Fé/Conjurar/Foco/Psiônicos/Ciência
+  Estranha d10+) igual pros dois caminhos, porque o Fantasia não fala em
+  substituir nada.
+- **`drenar_a_alma`** (Sci-Fi): mesma troca, mas aqui o livro explicita a
+  substituição ("substituindo o requisito de perícia arcana por
+  Espírito") — implementei isso de verdade: a alternativa de Antecedente
+  Arcano continua pedindo perícia arcana d10+ (qualquer uma das cinco),
+  e a alternativa de Poderes Místicos pede **Espírito d10+** no lugar
+  (mesmo grau d10 da perícia que está sendo substituída — o livro não diz
+  outro valor). Isso exigiu estender o schema `GrupoAlternativo` com dois
+  campos novos, `periciaMinOpcional` (perícia mínima, só UMA das listadas
+  precisa bater, dentro da alternativa) e `atributos` (atributo mínimo,
+  dentro da alternativa) — ambos opcionais e com default vazio, sem
+  quebrar nenhuma alternativa já existente que não os usa. `drenar_a_alma`
+  do Pathfinder **não precisou de mudança nenhuma**: o próprio livro do
+  Pathfinder já pede Espírito d8+ incondicionalmente (pros dois
+  caminhos, não é uma substituição só do caminho de Poderes Místicos) —
+  conferido na linha 5622-5625 de `docs/swade_pathfinder_basico`, e isso
+  já estava certo no catálogo antes desta rodada.
+- `drenar_a_alma`/`pontos_de_poder` do **Básico, Horror e Deadlands**
+  não têm Poderes Místicos como alternativa nesses livros (Horror tem um
+  "Poderes Místicos" de sentido totalmente diferente, ver acima) —
+  mantidos como Antecedente Arcano puro, sem alteração.
+
+### Implementação (código) desta rodada
+
+- `model/Requisito.kt`: `GrupoAlternativo` ganhou `periciaMinOpcional:
+  Map<String, Int>` (OU — basta uma bater) e `atributos: Map<String,
+  Int>` (E — todos os listados precisam bater), os dois com default
+  `emptyMap()`.
+- `ValidatePrerequisiteUseCase.kt`: `Input` ganhou `valoresAtributos:
+  Map<String, Int>` (default vazio); `satisfazAlternativa` passou a
+  checar também `periciaMinOpcional` e `atributos` da alternativa, além
+  de `vantagens`/`pericias` que já existiam.
+- `ValidateSelectionUseCase.kt`: passa `context.valoresAtributos`
+  adiante pro `ValidatePrerequisiteUseCase.Input`.
+- `CriadorState.kt`: `satisfazAlternativa` (cópia inline da mesma lógica,
+  usada por `atendeVantagensPrevias`) recebeu a mesma extensão, usando
+  `valoresAtributos`/`atributoRawComSupers` que a classe já tinha.
+- Testes novos em `ValidatePrerequisiteUseCaseTest.kt` cobrindo: perícia
+  arcana opcional dentro de uma alternativa (caminho Antecedente Arcano),
+  atributo mínimo dentro de outra alternativa (caminho Poderes Místicos
+  com Espírito), e o caso de bloqueio quando o atributo não bate.
+
+**Build/teste automatizado continuam impossíveis neste ambiente** (mesma
+falha de rede pra resolver o Android Gradle Plugin já registrada nas
+rodadas anteriores) — toda a verificação foi manual: releitura linha a
+linha dos trechos do livro citados acima, validação de JSON
+(`json.load`), e inspeção direta de cada bloco alterado antes e depois da
+edição.
+
+### Vantagens corrigidas nesta rodada (revisão do erro da Rodada 2)
+
+- **`poderes_misticos`**: `livros` revertido de `["PATHFINDER"]` (errado,
+  Rodada 2) de volta pra `["FANTASIA"]` (correto).
+- **`concentracao`, `drenar_a_alma`, `guerreiro_sagrado_profano`,
+  `pontos_de_poder`, `arqueiro_arcano`, `cavaleiro_mistico`,
+  `discipulo_do_dragao`, `trapaceiro_arcano`, `agoureiro`** (Pathfinder):
+  `gruposAlternativos` corrigido — a alternativa única e inválida
+  (`poderes_misticos`, id inexistente no Pathfinder) virou três
+  alternativas (`poderes_misticos_monge`, `poderes_misticos_paladino`,
+  `poderes_misticos_patrulheiro`).
+- **`pontos_de_poder`** (Fantasia, Sci-Fi): ganhou `gruposAlternativos`
+  (Antecedente Arcano OU Poderes Místicos do próprio livro), no lugar do
+  `vantagens_previas` fixo que ignorava a exceção do livro.
+- **`drenar_a_alma`** (Fantasia): mesma troca, perícia arcana opcional
+  mantida igual nos dois caminhos.
+- **`drenar_a_alma`** (Sci-Fi): mesma troca, com a perícia arcana
+  substituída por Espírito d10+ especificamente no caminho de Poderes
+  Místicos, via os novos campos de `GrupoAlternativo`.
+
+### Pendente, não implementado (sem mudança nesta rodada)
+
+- **Místico Teurgo** (Pathfinder) segue pendente, como já registrado na
+  Rodada 2 — não foi pedido nesta rodada.
+- Continua valendo a observação da Rodada 2: `poderes_misticos`
+  (Fantasia) não tem `choiceOptions` preenchido pros 6 pacotes de sabor
+  (ao contrário da versão do Sci-Fi, que tem); e não confirmei se
+  `poderesPermitidos` está de fato preenchido pra restringir
+  mecanicamente os poderes fixos de cada pacote — nenhuma das duas coisas
+  é requisito de compra, por isso não mexi nelas nesta rodada.

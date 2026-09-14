@@ -472,7 +472,16 @@ class CriadorState {
             val per = getBestPericia(nome) ?: return@all false
             rawTotal(per) >= min
         }
-        return vantagensOk && periciasOk
+        val periciaOpcionalOk = alt.periciaMinOpcional.isEmpty() || alt.periciaMinOpcional.any { (nome, min) ->
+            val per = getBestPericia(nome)
+            per != null && rawTotal(per) >= min
+        }
+        val atributosOk = alt.atributos.all { (nome, min) ->
+            val chaveNorm = nome.uppercase().semAcentos().trim()
+            val attrKey = valoresAtributos.keys.firstOrNull { it.equals(chaveNorm, ignoreCase = true) } ?: chaveNorm
+            atributoRawComSupers(attrKey) >= min
+        }
+        return vantagensOk && periciasOk && periciaOpcionalOk && atributosOk
     }
 
     private fun atendeVantagensPrevias(v: Vantagem): Boolean {

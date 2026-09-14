@@ -39,12 +39,20 @@ data class GrupoMinimo(
 // por completo. Ex.: Pathfinder "Antecedente Arcano (qualquer um) OU Poderes Místicos
 // (qualquer um)" vira duas alternativas de 1 vantagem cada; "Magomecânico OU Consertar d10+ e
 // Ciência d10+" (Cidade do Sol a Vapor) vira uma alternativa de vantagem e outra de 2 perícias.
+// `pericias` é E entre si (todas exigidas); `periciaMinOpcional` é OU (basta uma), pro caso de
+// Ciência Ficção "Drenar a Alma" via Poderes Místicos substituir a perícia arcana (Fé/Conjurar/
+// Foco/Psiônicos/Ciência Estranha, qualquer uma) por Espírito — daí o campo `atributos` (E
+// entre si) na mesma alternativa.
 @Serializable
 data class GrupoAlternativo(
     @SerialName("vantagens")
     val vantagens: List<String> = emptyList(),
     @SerialName("pericias")
-    val pericias: Map<String, Int> = emptyMap()
+    val pericias: Map<String, Int> = emptyMap(),
+    @SerialName("periciaMinOpcional")
+    val periciaMinOpcional: Map<String, Int> = emptyMap(),
+    @SerialName("atributos")
+    val atributos: Map<String, Int> = emptyMap()
 )
 
 @Serializable(with = RequisitoSerializer::class)
