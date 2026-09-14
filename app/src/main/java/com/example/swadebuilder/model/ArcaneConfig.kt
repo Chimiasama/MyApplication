@@ -285,6 +285,12 @@ object ArcaneConfig {
             "ELEMENTALISTA" -> ARTE_GUERRA_ELEMENTALISTA
             "DEMONIO" -> SOL_VAPOR_DEMONIO_ALLOWED_POWERS
             "DEMONIO_MEIO" -> SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS
+            // Crystal Heart (livro, linhas ~4199-4201): o Antecedente Arcano (Canalizar
+            // Cristal) não usa Pontos de Poder nem escolhe poderes livremente — todo o
+            // acesso a poder vem exclusivamente do Coração de Cristal equipado
+            // (crystal_coracoes.json, fora deste sistema). Sem essa entrada, a chave
+            // caía no "sem restrição" e abria 1 slot de poder livre que o livro não tem.
+            "CANALIZAR CRISTAL" -> emptySet()
             // Mad Scientist is special, returning null here to signify "check blocked" or handle differently
             else -> null
         }

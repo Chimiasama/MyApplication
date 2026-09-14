@@ -24402,8 +24402,7 @@
     "livros": [
       "ARTE_DA_GUERRA"
     ],
-    "descricaoLite": "Escolha um tipo de criatura (demônio, oni ou shamni): ganha +2 em Sobrevivência para rastreá-la ou caçá-la, +1 em Jutsu, Atletismo (arremesso) ou Atirar e no dano contra ela, e +1 em Ocultismo para obter informações sobre o tipo. Se já enfrentou um exemplar específico como Carta Selvagem, o bônus também vale para Perceber e para o Aparar contra ele. Pode ser escolhida várias vezes para tipos diferentes.",
-    "subtipoArcano": "DEMONIO"
+    "descricaoLite": "Escolha um tipo de criatura (demônio, oni ou shamni): ganha +2 em Sobrevivência para rastreá-la ou caçá-la, +1 em Jutsu, Atletismo (arremesso) ou Atirar e no dano contra ela, e +1 em Ocultismo para obter informações sobre o tipo. Se já enfrentou um exemplar específico como Carta Selvagem, o bônus também vale para Perceber e para o Aparar contra ele. Pode ser escolhida várias vezes para tipos diferentes."
   },
   {
     "id": "detetive",
@@ -27880,8 +27879,7 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Permite usar a perícia Tecnomagia no lugar de Consertar (aplicando os modificadores de nível do emissor) para reparar objetos, inclusive os normalmente irreparáveis; processar matéria dessa forma custa 1 PP e 10 minutos.",
-    "subtipoArcano": "MAGO"
+    "descricaoLite": "Permite usar a perícia Tecnomagia no lugar de Consertar (aplicando os modificadores de nível do emissor) para reparar objetos, inclusive os normalmente irreparáveis; processar matéria dessa forma custa 1 PP e 10 minutos."
   },
   {
     "id": "molda_carne",
@@ -28394,8 +28392,7 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Concede +2 em todas as rolagens de Ocultismo; gastando um Bene e tocando a cabeça de um cadáver, o personagem pode ver a última cena vivida pelo morto ou conversar com seu espírito usando um objeto ligado a ele, com cada pergunta após a primeira exigindo uma rolagem de Persuadir com penalidade cumulativa de -2.",
-    "subtipoArcano": "RITUALISTA"
+    "descricaoLite": "Concede +2 em todas as rolagens de Ocultismo; gastando um Bene e tocando a cabeça de um cadáver, o personagem pode ver a última cena vivida pelo morto ou conversar com seu espírito usando um objeto ligado a ele, com cada pergunta após a primeira exigindo uma rolagem de Persuadir com penalidade cumulativa de -2."
   },
   {
     "id": "taro_confusao",
@@ -28538,8 +28535,7 @@
     "livros": [
       "CIDADE_SOL_VAPOR"
     ],
-    "descricaoLite": "Quando atacado, o personagem pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante; vencendo, redireciona o dano do ataque para um personagem aleatório a até cinco quadros de distância.",
-    "subtipoArcano": "DEMONIO"
+    "descricaoLite": "Quando atacado, o personagem pode gastar um Bene e fazer uma rolagem resistida de Astúcia contra o atacante; vencendo, redireciona o dano do ataque para um personagem aleatório a até cinco quadros de distância."
   },
   {
     "id": "taro_estrela_morta",
