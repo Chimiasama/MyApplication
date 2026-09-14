@@ -4263,6 +4263,21 @@ class CriadorState {
         return requeridoIdx >= 0 && atualIdx >= requeridoIdx
     }
 
+    // Livro: todo poder tem um Estágio mínimo pra ser aprendido (Novato/Experiente/
+    // Veterano/Heroico/Lendário), igual a uma Vantagem — mas isso só era checado pros
+    // Antecedentes Arcanos "por estágio" de Cidade do Sol a Vapor (ArcaneConfig.
+    // getStageBasedPowersByStage). Pro sistema normal de slots (todo o resto dos
+    // livros), nada impedia escolher um poder de Estágio mais alto do que o
+    // personagem alcançou. Mesma exceção de "Nasce um Herói" que já vale pra
+    // Vantagens (ValidateSpecialRulesUseCase): só ignora o Estágio na criação, não
+    // em Progressos nem enquanto há PV de XP pendente.
+    fun poderAtendeEstagio(poderEstagio: String): Boolean {
+        if (poderEstagio.isBlank()) return true
+        val ignorarPorNasce = nasceUmHeroi && !emProgresso && pvFromXpOutstanding == 0
+        if (ignorarPorNasce) return true
+        return estagioAtinge(poderEstagio)
+    }
+
     fun poderesDisponiveisPorEstagioParaArcano(arcKey: String): Map<String, String> {
         val key = arcKey.normAAKey()
         if (!usaPoderesDisponiveisPorEstagio(key)) return emptyMap()

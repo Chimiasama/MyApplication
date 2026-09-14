@@ -265,8 +265,15 @@ fun PoderesSection(
                 (state.tropoSelecionado?.tecnicasIniciais ?: 0) > 0
             val usaListaChi = state.compendioArteDaGuerraAtivo && arcKey == "MESTRE DO CHI"
 
+            // "MESTRE DO CHI" é usado tanto pelo Antecedente Arcano de Deadlands (via
+            // `advantage`) quanto pelo sistema de Mestre do Chi por Tropo da Arte da
+            // Guerra (chave literal, sem Vantagem correspondente — `usaTecnicasTropo`).
+            // Os dois têm listas de poderes diferentes; corrigir a chave de Deadlands
+            // em ArcaneConfig sem esse guard vazaria a lista de Deadlands pro Tropo da
+            // Arte da Guerra (ou o inverso), então só consulta ArcaneConfig fora do
+            // caminho por Tropo.
             val permittedSet = advantage?.poderesPermitidos?.takeIf { it.isNotEmpty() }?.toSet()
-                ?: ArcaneConfig.getPermittedPowers(arcKey)
+                ?: if (usaTecnicasTropo) null else ArcaneConfig.getPermittedPowers(arcKey)
             val blockedSet = ArcaneConfig.getBlockedPowers(arcKey)
             val stageBasedPowers = state.poderesDisponiveisPorEstagioParaArcano(arcKey)
             val usaPoderesPorEstagio = stageBasedPowers.isNotEmpty()
@@ -370,6 +377,8 @@ fun PoderesSection(
                 if (usaPoderesPorEstagio) {
                     val requiredStage = stageBasedPowers[power.id] ?: return@filter false
                     if (!state.estagioAtinge(requiredStage)) return@filter false
+                } else if (!state.poderAtendeEstagio(power.estagio)) {
+                    return@filter false
                 }
 
                 // Requisito de "precisa ter outra Vantagem antes" (ex.: Disfarce

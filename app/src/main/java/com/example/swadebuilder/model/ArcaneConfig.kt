@@ -261,19 +261,27 @@ object ArcaneConfig {
         "manobra_desequilibrar"
     )
 
+    // IMPORTANTE: a chave recebida aqui NUNCA é o id do catálogo (ex.:
+    // "antecedente_arcano_abencoado") — é `Vantagem.subtipoArcano` já normalizado
+    // por `normAAKey()` (maiúsculo, sem acento) em ArcanoExtensions.kt/toArcanoKey().
+    // Os `when` abaixo usavam chaves no formato do id ("aa_abencoado", "aa_bardo"
+    // etc.), que nunca batem com o valor normalizado real (ex.: "ABENCOADO",
+    // "BARDO") — toda essa restrição de lista de poderes por Antecedente Arcano
+    // ficava morta, e o personagem via a lista cheia do livro (todos os AAs
+    // daquele cenário misturados) em vez da lista correta do seu próprio AA.
     fun getPermittedPowers(arcaneKey: String): Set<String>? {
         return when (arcaneKey) {
-            "aa_abencoado" -> DEADLANDS_ABENCOADO
-            "aa_xama" -> DEADLANDS_XAMA
-            "aa_vigarista", "aa_mascate" -> DEADLANDS_HUCKSTER
-            "aa_mestre_chi" -> DEADLANDS_MESTRE_CHI
-            "aa_alquimista" -> FANTASIA_ALQUIMISTA
-            "aa_bardo" -> FANTASIA_BARDO
-            "aa_druida" -> FANTASIA_DRUIDA
-            "aa_necromante" -> FANTASIA_NECROMANTE
-            "aa_demonologista" -> HORROR_DEMONOLOGISTA
-            "aa_voduista" -> HORROR_VODUISTA
-            "aa_bruxa" -> DEADLANDS_BRUXA
+            "ABENCOADO" -> DEADLANDS_ABENCOADO
+            "XAMA" -> DEADLANDS_XAMA
+            "MASCATE" -> DEADLANDS_HUCKSTER
+            "MESTRE DO CHI" -> DEADLANDS_MESTRE_CHI
+            "ALQUIMIA" -> FANTASIA_ALQUIMISTA
+            "BARDO" -> FANTASIA_BARDO
+            "DRUIDA" -> FANTASIA_DRUIDA
+            "NECROMANTE" -> FANTASIA_NECROMANTE
+            "INFERNAL" -> HORROR_DEMONOLOGISTA
+            "VODU" -> HORROR_VODUISTA
+            "BRUXA" -> DEADLANDS_BRUXA
             "ELEMENTALISTA" -> ARTE_GUERRA_ELEMENTALISTA
             "DEMONIO" -> SOL_VAPOR_DEMONIO_ALLOWED_POWERS
             "DEMONIO_MEIO" -> SOL_VAPOR_DEMONIO_MEIO_ALLOWED_POWERS
@@ -284,7 +292,7 @@ object ArcaneConfig {
 
     fun getBlockedPowers(arcaneKey: String): Set<String> {
         return when (arcaneKey) {
-            "aa_cientista_louco" -> DEADLANDS_CIENTISTA_LOUCO_BLOCKED
+            "CIENTISTA LOUCO" -> DEADLANDS_CIENTISTA_LOUCO_BLOCKED
             else -> emptySet()
         }
     }
