@@ -58,19 +58,10 @@ object RequirementValidator {
                 if (v.id != Constants.ID_AA_AGENT_SYN) return false
             }
 
-            // Fantasia/Horror/SciFi/Pathfinder tratam múltiplos Antecedentes Arcanos como prática
-            // normal do cenário (reserva de Pontos de Poder compartilhada, livro) — não deveriam
-            // depender da regra opcional "Múltiplos Ant. Arcanos" pra permitir o 2º AA. Mesma
-            // condição usada em ValidateSpecialRulesUseCase (criação); antes esta checagem (usada
-            // em Progressos) faltava esse bypass, bloqueando na evolução o que era permitido na
-            // criação.
-            val multiAaPermitidoPeloCenario = state.permiteMultiAntecedenteArcano ||
-                state.compendioFantasiaAtivo ||
-                state.compendioHorrorAtivo ||
-                state.compendioPathfinderAtivo ||
-                state.compendioSciFiAtivo
-
-            if (!multiAaPermitidoPeloCenario) {
+            // CriadorState.permiteMultiplosAntecedentesArcanos: mesma condição usada em
+            // ValidateSpecialRulesUseCase (criação); antes esta checagem (usada em Progressos)
+            // faltava esse bypass, bloqueando na evolução o que era permitido na criação.
+            if (!state.permiteMultiplosAntecedentesArcanos) {
                 val anyArcano = state.vantagensSelecionadas.any { it.nome.keyify().startsWith(Constants.EDGE_ARCANE_BACKGROUND) }
                 if (anyArcano && state.vantagensSelecionadas.none { it.nome.keyify() == key }) {
                     return false

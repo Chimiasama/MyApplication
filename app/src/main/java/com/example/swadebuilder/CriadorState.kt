@@ -1447,6 +1447,14 @@ class CriadorState {
     }
 
     companion object {
+        // Complicações exclusivas de quem tem Antecedente Arcano (ver podeSelecionarComplicacao)
+        // — constante de classe pra não realocar o Set a cada seleção/deseleção de Complicação
+        // na tela (a função é chamada uma vez por linha visível, via remember(comp, ...)).
+        private val COMPLICACOES_EXCLUSIVAS_DE_ARCANO = setOf(
+            "componentes_materiais", "corrupcao", "interferencia_de_armadura",
+            "componentes_materiais_horror", "corrupcao_horror"
+        )
+
         fun getOriginPriority(origin: String?): Int {
             val o = canonicalOriginKey(origin)
             return when {
@@ -4115,6 +4123,19 @@ class CriadorState {
     }
 
     var permiteMultiAntecedenteArcano by mutableStateOf(false)
+
+    // Fantasia/Horror/Pathfinder/SciFi tratam múltiplos Antecedentes Arcanos como prática
+    // normal do cenário (reserva de Pontos de Poder compartilhada, livro) — não dependem da
+    // regra opcional `permiteMultiAntecedenteArcano` pra permitir um 2º AA. Fonte única desta
+    // condição: antes de existir aqui, ela era escrita por extenso em CriadorState,
+    // RequirementValidator e PoderesSection (3 cópias), e adicionar SciFi exigiu editar as 3.
+    val permiteMultiplosAntecedentesArcanos: Boolean
+        get() = permiteMultiAntecedenteArcano ||
+            compendioFantasiaAtivo ||
+            compendioHorrorAtivo ||
+            compendioPathfinderAtivo ||
+            compendioSciFiAtivo
+
     var usarEspecializacoesDePericia by mutableStateOf(false)
 
     val especializacoesPorPericia: SnapshotStateMap<String, com.example.swadebuilder.model.EspecializacoesDto> = mutableStateMapOf()
@@ -4535,11 +4556,7 @@ class CriadorState {
         // Materiais/Corrupção (Horror) são, pelo próprio texto do livro, exclusivas de quem
         // rola perícia arcana (penalizam essa rolagem) — mesmo requisito de Talismã acima,
         // só que faltava aqui.
-        val exclusivasDeArcano = setOf(
-            "componentes_materiais", "corrupcao", "interferencia_de_armadura",
-            "componentes_materiais_horror", "corrupcao_horror"
-        )
-        if (complicacao.id in exclusivasDeArcano && !temAntecedenteArcano()) {
+        if (complicacao.id in COMPLICACOES_EXCLUSIVAS_DE_ARCANO && !temAntecedenteArcano()) {
             return false to "${complicacao.nomeExibicao} requer um Antecedente Arcano."
         }
 
@@ -4547,14 +4564,9 @@ class CriadorState {
             val forbidden = setOf(
                 "incredulo", "ganancioso", "analfabeto", "pobreza",
                 "forasteiro", "inimigo", "lento", "procurado", "um_braco_so",
-                "obrigacao" // Block generic obligation to favor specific ones if needed, or keeping it?
-                // Prompt said "Normalmente não pode ser escolhida... mas alguns casos raros...".
-                // If blocked, users can't take it. Maybe I should NOT block obligacao?
-                // But text says "Normalmente não pode ser escolhida".
-                // And points to "Dependente".
-                // I'll block it to force setting compliance, assuming "rare cases" are handled by GM override or using Dependente.
-                // Re-reading: "Veja também a nova Complicação, Dependente."
-                // I'll block standard 'obrigacao' since description is generic.
+                // Livro: "Normalmente não pode ser escolhida [...] veja também a nova
+                // Complicação, Dependente" — bloqueia a genérica e aponta pra "dependente".
+                "obrigacao"
             )
             if (complicacao.id.keyify() in forbidden) {
                 return false to "Não utilizada em Crystal Heart (ou substituída por versão específica)."

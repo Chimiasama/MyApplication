@@ -79,16 +79,11 @@ fun CiberneticosSection(
     // menor entre Espírito/Vigor — passar dele já força um Efeito Colateral por implante novo) e o
     // Máximo absoluto (o valor cheio — passar dele é descrito como colapso catastrófico dos sistemas,
     // por isso é a trava rígida abaixo).
-    val limiteSeguro: Int
-    val limiteMaximo: Int
-    if (isPersonagemRobotico) {
+    val (limiteSeguro, limiteMaximo) = if (isPersonagemRobotico) {
         val limiteRobo = state.limiteModsRoboticos()
-        limiteSeguro = limiteRobo
-        limiteMaximo = limiteRobo
+        limiteRobo to limiteRobo
     } else {
-        val (base, max) = state.valorLimiteTensao()
-        limiteSeguro = base
-        limiteMaximo = max
+        state.valorLimiteTensao()
     }
     val tensaoNoRisco = tensaoTotal > limiteSeguro && tensaoTotal <= limiteMaximo
     val tensaoExcedida = tensaoTotal > limiteMaximo

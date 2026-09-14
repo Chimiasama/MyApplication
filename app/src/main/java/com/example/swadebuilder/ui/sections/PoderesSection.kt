@@ -209,7 +209,7 @@ fun PoderesSection(
     // Fantasia/Horror/SciFi/Pathfinder tratam múltiplos Antecedentes Arcanos como prática normal
     // do cenário (reserva de PP compartilhada, livro) — não dependem da regra opcional pra mostrar
     // mais de um AB de uma vez.
-    val displayKeys = if (!state.permiteMultiAntecedenteArcano && !state.compendioFantasiaAtivo && !state.compendioHorrorAtivo && !state.compendioPathfinderAtivo && !state.compendioSciFiAtivo) {
+    val displayKeys = if (!state.permiteMultiplosAntecedentesArcanos) {
         listOf(arcanosAtivos.first())
     } else {
         arcanosAtivos
