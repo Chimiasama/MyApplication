@@ -34972,7 +34972,9 @@
     "requisitos": {
       "estagio": "Novato",
       "periciaMinOpcional": {
-        "Perícia Arcana": 8
+        "Conjurar": 8,
+        "Performance": 8,
+        "Fé": 8
       },
       "observacoes": "Carta Selvagem, Antecedente Arcano (qualquer um)"
     },

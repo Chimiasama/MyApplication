@@ -375,8 +375,94 @@ específicas (`superpoderes`, `o_melhor_que_ha`, `aguenta_o_tranco`,
 As outras 5 vantagens (Superpoderes, O Melhor que Há, Aguenta o Tranco,
 Líder de Equipe, Dupla Dinâmica) batem exatamente com o texto do livro.
 
+## PATHFINDER (Básico + Compêndio) — ~200 vantagens
+
+Este livro usa um schema de JSON mais antigo (várias entradas não têm
+`limite_compra`/`vinculado_pericia`, alguns campos `requisitos` vêm mais
+enxutos) e é um "cenário substituto": confirmei em
+`ContentVisibility.kt` (`getActiveOrigins()`) que ativar o Compêndio de
+Pathfinder **remove** `BASICO` do conjunto de livros ativos (mesma regra
+para Deadlands, Crystal Heart, Arte da Guerra, Cidade do Sol a Vapor e
+Wiseguys — são cenários que SUBSTITUEM o livro básico, não o estendem
+como Fantasia/Sci-Fi/Horror/Supers). Ou seja, os ~112 ids que reaparecem
+tageados `PATHFINDER` com conteúdo diferente do Básico **não são
+duplicatas conflitantes** — é o livro básico inteiro sendo desligado e
+substituído pelas versões próprias do Pathfinder, que valem sozinhas.
+Por isso, toda comparação de conteúdo Pathfinder foi feita contra o
+próprio texto de `docs/swade_pathfinder_basico`/`docs/swade_pathfinder_compendio`,
+nunca contra o Básico.
+
+### Achado sem correção — gap estrutural relevante, precisa de decisão de engine
+
+1. **"Antecedente Arcano (qualquer um) OU Poderes Místicos (qualquer um)"
+   não é validado em NENHUMA das ~13 vantagens que exigem isso.** O
+   Pathfinder introduz "Poderes Místicos" como alternativa ao Antecedente
+   Arcano tradicional (pacotes simplificados tipo Bárbaro/Guerreiro/Ladino
+   dão poderes sem a Vantagem cheia), e o livro frequentemente permite "AA
+   OU PM" como pré-requisito: Artífice, Canalização, Concentração,
+   Guerreiro Sagrado/Profano, Novos Poderes, Pontos de Poder (Poder);
+   Arqueiro Arcano, Cavaleiro Místico, Discípulo do Dragão, Trapaceiro
+   Arcano, Agoureiro (Prestígio); Místico Teurgo (exige dois Antecedentes
+   Arcanos diferentes, ainda mais específico). Nenhuma dessas tem
+   `vantagens_previas` apontando pra `antecedente_arcano` (ao contrário do
+   Básico/Fantasia/Sci-Fi/Horror, que pelo menos fixam o lado "Antecedente
+   Arcano" do requisito) — só existe um texto solto em `observacoes`. Não
+   dá pra simplesmente adicionar `vantagens_previas: ["antecedente_arcano"]`
+   porque isso quebraria quem tem só Poderes Místicos (a Vantagem ficaria
+   impossível pra metade de quem deveria poder pegá-la) — precisaria de um
+   mecanismo novo tipo "qualquer um destes dois grupos", que não existe
+   hoje. Documentando pra decisão de produto/engine, não mexi.
+
+### Bug confirmado — CORRIGIDO
+
+2. **Surto de Poder (`surto_de_poder`, tag PATHFINDER) — "Perícia Arcana"
+   genérica quebrada ao contrário do resto: em vez de nunca bloquear (bug
+   do Básico/Sci-Fi/Horror), aqui ela SEMPRE bloqueia.** Livro (linha
+   ~5778-5781): "Carta Selvagem, Novato, Antecedente Arcano (qualquer um),
+   perícia arcana d8+". O JSON usava `"periciaMinOpcional": {"Perícia
+   Arcana": 8}` — só que como não existe perícia chamada "Perícia Arcana",
+   e `periciaMinOpcional` usa lógica "OU" (precisa bater pelo menos uma),
+   nenhuma perícia real bate NUNCA, então o requisito é impossível de
+   cumprir — ninguém consegue comprar essa Vantagem, pro personagem
+   nenhum. **Corrigido** trocando pelas 3 perícias arcanas reais que o
+   Pathfinder realmente usa (conferido em `geral_arcano_info.json`, chaves
+   `_PF`): `"periciaMinOpcional": {"Conjurar": 8, "Performance": 8, "Fé":
+   8}` (Conjurar p/ Mago/Feiticeiro, Performance p/ Bardo, Fé p/
+   Clérigo/Druida/Paladino).
+
+### Confirmado correto (nada a corrigir)
+
+Verifiquei nome-a-nome contra "REQUISITOS:" do livro: as 11 Vantagens de
+Classe base (Bárbaro, Bardo, Clérigo, Druida, Feiticeiro, Guerreiro,
+Ladino, Mago, Monge, Paladino, Patrulheiro) e suas 33 vantagens de
+subclasse (3 cada, em cadeia Experiente→Veterano→Heroico requerendo só a
+classe base), as 13 cadeias de Prestígio (10 do livro básico + 3 do
+Compêndio: Arqueiro Arcano, Assassino, Cavaleiro Místico, Cronista
+Desbravador, Dançarino das Sombras, Discípulo do Dragão, Duelista, Mestre
+do Conhecimento, Místico Teurgo, Trapaceiro Arcano, Agoureiro, Cavaleiro
+Infernal, Louva-a-Deus Vermelha), e uma amostra ampla das reimpressões que
+divergem do Básico (Arma Predileta Aprimorada realmente é Veterano nesta
+edição, não Experiente; Erudito/Investigador realmente usam Astúcia em
+vez de Pesquisar; Drenar a Alma realmente usa Espírito d8+ em vez de
+perícia arcana d10+ — 3 divergências reais confirmadas contra o texto,
+não erros de dado). Único ponto de atenção sem ação: o requisito de Bardo
+cita "Conhecimento Comum d6+", termo que não aparece em nenhum outro
+lugar do livro — o JSON usa "Conhecimento Geral" (perícia real do
+sistema), o que é quase certamente a leitura correta e a extração de
+texto do PDF que está com um termo estranho, não o contrário.
+
+### Nota especial: id `assassino` reaproveitado sem colisão
+
+`assassino` no Pathfinder é uma Vantagem de Prestígio (Experiente,
+habilidade Ataque Furtivo) completamente diferente da Vantagem
+Profissional "Assassino" do Básico — mesmo id, conteúdo diferente. Cheguei
+a suspeitar de colisão de id dentro do app, mas confirmei em
+`ContentVisibility.kt` que isso nunca coexiste: como Pathfinder desliga
+`BASICO` por completo (ver nota no topo desta seção), só uma das duas
+versões de `assassino` fica visível de cada vez. Nenhuma ação necessária.
+
 ## Próximos livros
 
-Ainda faltam: Pathfinder (Básico + Compêndio), Deadlands (Básico +
-Compêndio), Arte da Guerra (+ Diário do Kui), Crystal Heart (+ Muitos
-Corações), Wiseguys, Cidade do Sol a Vapor (3 livros).
+Ainda faltam: Deadlands (Básico + Compêndio), Arte da Guerra (+ Diário do
+Kui), Crystal Heart (+ Muitos Corações), Wiseguys, Cidade do Sol a Vapor (3
+livros).
