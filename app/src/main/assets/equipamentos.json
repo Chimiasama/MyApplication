@@ -27913,6 +27913,23 @@
     ]
   },
   {
+    "tipo": "Veículos",
+    "subtipo": "Modificações (Wiseguys)",
+    "livros": [
+      "WISEGUYS"
+    ],
+    "itens": [
+      {
+        "id": "vidros_peliculados",
+        "nome": "Vidros Peliculados",
+        "custo": "-",
+        "observacoes": "O interior do veículo é tratado como Penumbra (Nível I), Escuridão (Nível II) ou Escuro como Breu (Nível III) para fins de visibilidade.",
+        "origem": "WISEGUYS",
+        "descricaoLite": "Trata o interior do veículo como Penumbra/Escuridão/Escuro como Breu (Níveis I-III) para visibilidade."
+      }
+    ]
+  },
+  {
     "tipo": "Equipamento Comum",
     "subtipo": "Animais e Arreios",
     "livros": [
